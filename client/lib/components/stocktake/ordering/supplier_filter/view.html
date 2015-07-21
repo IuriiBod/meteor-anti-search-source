@@ -1,0 +1,21 @@
+<template name="supplierFilter">
+  <!--DESIGN: These buttons are for each suppier included in the stocktake. They need to be activated like tabs so that users can switch easily to different suppliers.-->
+  <!--DEV: Only show the suppliers that are active for this order.-->
+  <a class="btn btn-primary">Supplier 1<i class="fa fa-fw fa-check"></i></a>
+  <a class="btn btn-default">Supplier 2</a>
+  <a class="btn btn-default">Supplier 3</a>
+  <a class="btn btn-default">Supplier 4</a>
+  <hr>
+  <h2>Supplier 1
+    <small class="text-info pull-right">
+    <!-- Set this date with x editable -->
+    Expected delivery date
+    <!--DEV: Mail button - opens modal with draft email to send to supplier. -->
+    <a class="btn btn-primary"><i class="fa fa-envelope-o fa-fw fa-lg"></i>Send email</a>
+    <!--DEV: Phone button - Marks the order as have been phones through and what time it has been marked. -->
+    <a class="btn btn-primary"><i class="fa fa-fw fa-lg fa-phone"></i>Mark as phoned through</a>
+    <!--DEV: This shows the success state when the order is marked as sent or called through, buttons should disappear, this status message should be displayed -->
+    <i class="fa fa-fw fa-check"></i>Status: email sent 15th of June 10:51am</small>
+  </h2>
+  <hr>
+</template>

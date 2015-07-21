@@ -1,0 +1,25 @@
+<template name="stockCounting">
+  <div class="row">
+    <div class="col-lg-12">
+      <a class="btn btn-primary btn-sm pull-right">Save stocktake &amp; generate orders<br></a>
+      <a class="btn btn-link btn-sm pull-right"><i class="fa fa-fw fa-edit"></i>Edit</a>
+      <a class="btn btn-link btn-sm pull-right"><i class="fa fa-fw fa-reorder"></i>Reorder</a>Stocktake date
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    {{> render component="areaFilters"}}
+    <div class="col-md-8">
+      <ul class="list-group">
+        <li class="list-group-item">Stock Item
+          <span class="pull-right">1 kg (change number with xeditable, automatically go to next one.)</span>
+        </li>
+        <li class="list-group-item">
+          <i class="fa fa-fw fa-reorder"></i>Stock Item
+          <span class="pull-right">1 kg</span>
+        </li>
+      </ul>
+      <a class="btn btn-block btn-default btn-outline">Add stock item to this area<br></a>
+    </div>
+  </div>
+</template>

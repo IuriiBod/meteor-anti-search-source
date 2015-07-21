@@ -117,8 +117,25 @@
           </li>
           {{/if}}
 
-          <li class="{{isActiveRoute regex='stocktake'}}">
-            <a href="/stocktake"><i class="fa fa-list"></i> <span class="nav-label">Stocktake</span> </a>
+          <li class="{{isActiveRoute name='stocktake|stocktakeCounting|stocktakeOrdering'}}">
+            <a href="#">
+              <i class="fa fa-list"></i>
+              <span class="nav-label">Stocktake</span>
+            </a>
+            <ul class="nav nav-second-level {{isActiveRoute name='stocktake|stocktakeCounting|stocktakeOrdering' className='in'}}">
+              <li class="{{isActiveRoute name='stocktake'}}">
+                <a href="/stocktake">History</a>
+              </li>
+              <li class="{{isActiveRoute name='stocktakeCounting'}}">
+                <a href="/stocktakeCounting">Counting</a>
+              </li> 
+              <li class="{{isActiveRoute name='stocktakeOrdering'}}">
+                <a href="/stocktakeOrdering">Ordering</a>
+              </li> 
+              <li class="{{isActiveRoute name='suppleirOrdering'}}">
+                <a href="/suppleirOrder/supplierId">Suppler recipts</a>
+              </li> 
+            </ul>
           </li>
           <!-- {{/if}} -->
 
