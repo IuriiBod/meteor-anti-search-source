@@ -1,1 +1,0 @@
-var component = FlowComponents.define("supplierOrderReceive", function(props) {});

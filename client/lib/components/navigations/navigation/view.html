@@ -81,20 +81,14 @@
               <span class="nav-label">Stocktaking</span>
             </a>
             <ul class="nav nav-second-level {{isActiveRoute name='stocktake|stocktakeCounting|stocktakeOrdering' className='in'}}">
+              <li class="{{isActiveRoute name='stocktakeCounting'}}">
+                <a href="/stocktake/new">New</a>
+              </li> 
               <li class="{{isActiveRoute name='stocktake'}}">
                 <a href="/stocktake">History</a>
               </li>
-              <li class="{{isActiveRoute name='stocktakeCounting'}}">
-                <a href="/stocktakeCounting">New</a>
-              </li> 
-              <li class="{{isActiveRoute name='stocktakeOrdering'}}">
-                <a href="/stocktakeOrdering">Ordering</a>
-              </li> 
               <li class="{{isActiveRoute name='suppleirOrdering'}}">
-                <a href="/suppleirOrder/supplierId">Supplier recipts</a>
-              </li> 
-              <li class="{{isActiveRoute name='supplierOrderReceive'}}">
-                <a href="/supplierOrderReceive/supplierId">Supplier order receive</a>
+                <a href="/stocktake/order/receipts">Order Receipts</a>
               </li> 
             </ul>
           </li>
