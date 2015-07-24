@@ -19,6 +19,7 @@ Meteor.methods({
       logger.error('Category name should be unique', exist);
       throw new Meteor.Error(404, "Category name should be unique");
     }
+    logger.info("New Category created", id);
     return Categories.insert({"name": name});
   },
 
@@ -42,6 +43,7 @@ Meteor.methods({
       logger.error('Status name should be unique', exist);
       throw new Meteor.Error(404, "Status name should be unique");
     }
+    logger.info("New Status created", id);
     return Statuses.insert({"name": name.toLowerCase()});
   },
 
@@ -122,4 +124,53 @@ Meteor.methods({
     logger.info("Section name updated", id);
     return;
   },
+
+  'createGeneralArea': function(name) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to add job items");
+      throw new Meteor.Error(404, "User not permitted to add jobs");
+    }
+    if(!name) {
+      logger.error("General area should have a name");
+      return new Meteor.Error(404, "General area should have a name");
+    }
+    var exist = GeneralAreas.findOne({"name": name});
+    if(exist) {
+      logger.error('General area name should be unique', exist);
+      throw new Meteor.Error(404, "General area name should be unique");
+    }
+    logger.info("New General area created", id);
+    return GeneralAreas.insert({"name": name, "specialAreas": []});
+  },
+
+  'createSpecialArea': function(name) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to add job items");
+      throw new Meteor.Error(404, "User not permitted to add jobs");
+    }
+    if(!name) {
+      logger.error("Special area should have a name");
+      return new Meteor.Error(404, "Special area should have a name");
+    }
+    var exist = SpecialAreas.findOne({"name": name});
+    if(exist) {
+      logger.error('Special area name should be unique', exist);
+      throw new Meteor.Error(404, "Special area name should be unique");
+    }
+    logger.info("New Special area created", id);
+    return SpecialAreas.insert({"name": name, "specialAreas": []});
+  },
+
 });

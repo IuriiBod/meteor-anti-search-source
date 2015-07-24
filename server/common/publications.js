@@ -22,3 +22,8 @@ Meteor.publish("allStatuses", function() {
   logger.info("Statuses published");
   return Statuses.find();
 });
+
+Meteor.publish("allGeneralAreas", function() {
+  logger.info("General areas published");
+  return GeneralAreas.find();
+});
