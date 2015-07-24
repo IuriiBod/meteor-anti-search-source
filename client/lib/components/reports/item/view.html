@@ -1,8 +1,8 @@
 <template name="teamHoursItem">
   <tr class="gradeX">
     <td>{{state$user.username}}</td>
-    <td>{{timeDurationWithDecimal state$totaltime}}</td>
-    <td>${{state$totalwage}}</td>
+    <td>{{state$totaltime}}</td>
+    <td>${{state$wage}}</td>
     {{#if state$activeState}}
       {{#each state$dailyShifts}}
         <td class="center activeTime">
