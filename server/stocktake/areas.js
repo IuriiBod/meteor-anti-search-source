@@ -24,6 +24,37 @@ Meteor.methods({
     return id;
   },
 
+  'editGeneralArea': function(id, info) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to add job items");
+      throw new Meteor.Error(404, "User not permitted to add jobs");
+    }
+    if(!id) {
+      logger.error("General area should have a id");
+      return new Meteor.Error(404, "General area should have a id");
+    }
+    var exist = GeneralAreas.findOne(id);
+    if(!exist) {
+      logger.error('General area does not exist', id);
+      throw new Meteor.Error(404, "General area does not exist");
+    }
+    var updateDoc = {};
+    if(info.name != exist.name) {
+      updateDoc.name = info.name;
+    }
+    if(Object.keys(updateDoc).length > 0) {
+      GeneralAreas.update({"_id": id}, {$set: updateDoc});
+      logger.info("General area updated", id);
+      return;
+    }
+  },
+
   'createSpecialArea': function(name, gareaId) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
@@ -57,6 +88,37 @@ Meteor.methods({
     GeneralAreas.update({"_id": gareaId}, {$addToSet: {"specialAreas": id}});
     logger.info("New Special area created", id);
     return id;
+  },
+
+  'editSpecialArea': function(id, info) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to add job items");
+      throw new Meteor.Error(404, "User not permitted to add jobs");
+    }
+    if(!id) {
+      logger.error("Special area should have a id");
+      return new Meteor.Error(404, "Special area should have a id");
+    }
+    var exist = SpecialAreas.findOne(id);
+    if(!exist) {
+      logger.error('Special area does not exist', id);
+      throw new Meteor.Error(404, "Special area does not exist");
+    }
+    var updateDoc = {};
+    if(info.name != exist.name) {
+      updateDoc.name = info.name;
+    }
+    if(Object.keys(updateDoc).length > 0) {
+      SpecialAreas.update({"_id": id}, {$set: updateDoc});
+      logger.info("Special area updated", id);
+      return;
+    }
   },
 
   assignStocksToAreas: function(stockId, gareaId, sareaId) {

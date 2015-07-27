@@ -20,9 +20,7 @@ component.prototype.setIds = function() {
         ids.push(doc._id);
       });
     } else if(this.item.stocks && this.item.stocks.length > 0) {
-      this.item.stocks.forEach(function(doc) {
-        ids.push(doc._id);
-      });
+      ids = this.item.stocks;
     }
   }
   this.set("ids", ids);
@@ -30,18 +28,24 @@ component.prototype.setIds = function() {
 }
 
 component.prototype.renderShowIngList = function() {
-  if(this.name) {
-    if(this.name == "editJob") {
-      this.item = JobItems.findOne(id);
-    } else if(this.name == "editMenu") {
-      this.item = MenuItems.findOne(id);
-    } else if(this.name == "stockModal") {
-      this.item = SpecialAreas.findOne(Session.get("activeSArea"));
+  var self = this;
+  Tracker.autorun(function() {
+    if(self.name) {
+      if(self.name == "editJob") {
+        self.item = JobItems.findOne(id);
+      } else if(self.name == "editMenu") {
+        self.item = MenuItems.findOne(id);
+      } else if(self.name == "stockModal") {
+        self.item = SpecialAreas.findOne(Session.get("activeSArea"));
+      }
     }
-  }
 
-  var ids = this.setIds();
-  this.IngredientsSearch.search("", {"ids": ids, "limit": 10});
+    var ids = self.setIds();
+    if(ids.length > 0) {
+      self.IngredientsSearch.cleanHistory();
+    }
+    self.IngredientsSearch.search("", {"ids": ids, "limit": 10});
+  });
 }
 
 component.state.getIngredients = function() {

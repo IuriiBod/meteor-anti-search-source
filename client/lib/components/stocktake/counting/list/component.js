@@ -1,5 +1,3 @@
-var subs = new SubsManager();
-
 var component = FlowComponents.define("stockCounting", function(props) {});
 
 component.state.list = function() {
@@ -16,4 +14,8 @@ component.state.list = function() {
 
 component.state.date = function() {
   return Date.now();
+}
+
+component.state.filtered = function() {
+  return Session.get("activeSArea");
 }

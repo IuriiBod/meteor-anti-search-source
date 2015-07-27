@@ -1,6 +1,9 @@
 <template name="stockCountingListItem">
-  <li class="list-group-item">
+  <li class="list-group-item" data-id="{{state$item._id}}">
     <i class="fa fa-fw fa-reorder"></i>{{state$item.description}}
-    <span class="pull-right">1 kg</span>
+    <i class="fa fa-trash pull-right removeFromList"></i>
+    <span class="pull-right">
+      <a href="" class="noOfPortions">1</a> &nbsp; [{{#if state$item.portionOrdered}} {{state$item.portionOrdered}} {{else}} {{state$item.portionUsed}} {{/if}}]
+    </span>
   </li>
 </template>
