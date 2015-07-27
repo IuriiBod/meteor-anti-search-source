@@ -23,7 +23,10 @@ Meteor.publish("allStatuses", function() {
   return Statuses.find();
 });
 
-Meteor.publish("allGeneralAreas", function() {
-  logger.info("General areas published");
-  return GeneralAreas.find();
+Meteor.publish("allAreas", function() {
+  var cursors = [];
+  cursors.push(GeneralAreas.find())
+  cursors.push(SpecialAreas.find());
+  logger.info("All areas published");
+  return cursors;
 });
