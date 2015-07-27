@@ -19,8 +19,9 @@ Meteor.methods({
       logger.error('Category name should be unique', exist);
       throw new Meteor.Error(404, "Category name should be unique");
     }
+    var id = Categories.insert({"name": name});
     logger.info("New Category created", id);
-    return Categories.insert({"name": name});
+    return id;
   },
 
   'createStatus': function(name) {
@@ -43,8 +44,9 @@ Meteor.methods({
       logger.error('Status name should be unique', exist);
       throw new Meteor.Error(404, "Status name should be unique");
     }
+    var id = Statuses.insert({"name": name.toLowerCase()});
     logger.info("New Status created", id);
-    return Statuses.insert({"name": name.toLowerCase()});
+    return id;
   },
 
   'createSection': function(name) {
@@ -123,66 +125,5 @@ Meteor.methods({
     Sections.update({"_id": id}, {$set: {"name": name}});
     logger.info("Section name updated", id);
     return;
-  },
-
-  'createGeneralArea': function(name) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
-    }
-    if(!name) {
-      logger.error("General area should have a name");
-      return new Meteor.Error(404, "General area should have a name");
-    }
-    var exist = GeneralAreas.findOne({"name": name});
-    if(exist) {
-      logger.error('General area name should be unique', exist);
-      throw new Meteor.Error(404, "General area name should be unique");
-    }
-    var id = GeneralAreas.insert({"name": name, "specialAreas": [], "createdAt": Date.now()});
-    logger.info("New General area created", id);
-    return id;
-  },
-
-  'createSpecialArea': function(name, gareaId) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
-    }
-    if(!name) {
-      logger.error("Special area should have a name");
-      return new Meteor.Error(404, "Special area should have a name");
-    }
-    if(!gareaId) {
-      logger.error("General area id not found");
-      return new Meteor.Error(404, "General area id not found");
-    }
-    var gAreaExist = GeneralAreas.findOne(gareaId);
-    if(!gAreaExist) {
-      logger.error('General area does not exist', gareaId);
-      throw new Meteor.Error(404, "General area does not exist");
-    }
-    var exist = SpecialAreas.findOne({"name": name});
-    if(exist) {
-      logger.error('Special area name should be unique', exist);
-      throw new Meteor.Error(404, "Special area name should be unique");
-    }
-    var id = SpecialAreas.insert({"name": name, "generalArea": gareaId, "createdAt": Date.now()});
-    GeneralAreas.update({"_id": gareaId}, {$addToSet: {"specialAreas": id}});
-    logger.info("New Special area created", id);
-    return id;
-  },
-
+  }
 });

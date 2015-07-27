@@ -1,4 +1,4 @@
-Template.ingredientItemListed.helpers({
+Template.ingredientModalItem.helpers({
   costPerPortionUsed: function() {
     var costPerPortionUsed = 0;
     if((this.costPerPortion > 0) && (this.unitSize > 0)) {
@@ -12,8 +12,8 @@ Template.ingredientItemListed.helpers({
   }
 });
 
-Template.ingredientItemListed.rendered = function() {
+Template.ingredientModalItem.rendered = function() {
   $('.i-checks').iCheck({
-    checkboxClass: 'icheckbox_square-green',
+    checkboxClass: 'icheckbox_square-green'
   });
 }

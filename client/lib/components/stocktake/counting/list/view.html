@@ -3,25 +3,29 @@
     <div class="col-lg-12">
       <a class="btn btn-primary btn-sm pull-right">Save stocktake &amp; generate orders<br></a>
       <a class="btn btn-link btn-sm pull-right"><i class="fa fa-fw fa-edit"></i>Edit</a>
-      <a class="btn btn-link btn-sm pull-right"><i class="fa fa-fw fa-reorder"></i>Reorder</a>Stocktake date
+      <a class="btn btn-link btn-sm pull-right"><i class="fa fa-fw fa-reorder"></i>Reorder</a>
+      {{dateFormat state$date}}
       <hr>
     </div>
   </div>
+  
   <div class="row">
     {{> render component="areaFilters"}}
     <div class="col-md-8">
       <ul class="list-group">
-        <li class="list-group-item">Stock Item
-          <span class="pull-right">1 kg (change number with xeditable, automatically go to next one.)</span>
-        </li>
-        <li class="list-group-item">
-          <i class="fa fa-fw fa-reorder"></i>Stock Item
-          <span class="pull-right">1 kg</span>
-        </li>
+        {{#each state$list}}
+          {{> render component="stockCountingListItem" id=this}}
+        {{else}}
+          No items on this list
+        {{/each}}
       </ul>
       <a class="btn btn-block btn-default btn-outline addStock">Add stock items to this area<br></a>
     </div>
   </div>
 
-
+  <!-- STOCKS MODAL LIST-->
+  <div class="modal fade" id="stocksListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component = 'stocksModalList' name="stockModal"}}
+  </div>
+  <!-- /STOCKS MODAL LIST -->
 </template>

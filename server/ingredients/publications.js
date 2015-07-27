@@ -21,6 +21,6 @@ Meteor.publish("ingredients", function(ids) {
     ings = Ingredients.find({}, {sort: {'code': 1}, limit: 10});
   }
   cursors.push(ings);
-  logger.info("Ingredients published", ids);
+  logger.info("Ingredients published", {"ids": ids});
   return cursors;
 });
