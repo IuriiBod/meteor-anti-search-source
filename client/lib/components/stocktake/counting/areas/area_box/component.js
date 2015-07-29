@@ -14,6 +14,7 @@ component.state.item = function() {
 
 component.state.widthofBar = function() {
   if(this.class == "sarea-filter") {
+    // if(this.item.)
     return '50%';
   } else if(this.class == "garea-filter") {
     return '70%';

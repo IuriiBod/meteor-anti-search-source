@@ -5,3 +5,8 @@ Meteor.publish("allAreas", function() {
   logger.info("All areas published");
   return cursors;
 });
+
+Meteor.publish("stocktakesOnDate", function(date) {
+  logger.info("Stocktakes published for date ", date);
+  return Stocktakes.find({"date": new Date(date).getTime()});
+});

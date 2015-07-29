@@ -14,8 +14,8 @@
     {{#if state$filtered}}
       <div class="col-md-8">
         <ul class="list-group">
-          {{#each state$list}}
-            {{> render component="stockCountingListItem" id=this}}
+          {{#each state$list.stocks}}
+            {{> render component="stockCountingListItem" id=this date=state$date garea=state$list.generalArea sarea=state$list._id}}
           {{else}}
             No items on this list
           {{/each}}

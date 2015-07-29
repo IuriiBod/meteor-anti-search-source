@@ -1,4 +1,11 @@
-var component = FlowComponents.define("stockCounting", function(props) {});
+var component = FlowComponents.define("stockCounting", function(props) {
+  var route = Router.current().params.date;
+  if(route == "new") {
+    route = moment().format("YYYY-MM-DD");
+  }
+  this.date = new Date(route).getTime();
+  subs.subscribe("stocktakesOnDate", this.date);
+});
 
 component.state.list = function() {
   var gareaId = Session.get("activeGArea");
@@ -8,12 +15,12 @@ component.state.list = function() {
     if(list.stocks && list.stocks.length > 0) {
       subs.subscribe("ingredients", list.stocks);
     }
-    return list.stocks;
+    return list;
   }
 }
 
 component.state.date = function() {
-  return Date.now();
+  return this.date;
 }
 
 component.state.filtered = function() {
