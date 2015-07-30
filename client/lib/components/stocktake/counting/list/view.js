@@ -2,6 +2,18 @@ Template.stockCounting.events({
   'click .addStock': function(event) {
     event.preventDefault();
     $("#stocksListModal").modal("show");
+  },
+
+  'click .reOrder': function(event) {
+    event.preventDefault();
+    Meteor.call("checkReOrdering", function(err, list) {
+      if(err) {
+        console.log(err);
+        return alert(err.reason);
+      } else {
+        console.log("......", list)
+      }
+    });
   }
 });
 
