@@ -1,6 +1,6 @@
 Template.stocktakeCountingMainView.helpers({
   'new': function() {
-    var view = Router.current().params.date;
+    var view = Session.get("thisDate");
     if(view == "new") {
       return true;
     } else {

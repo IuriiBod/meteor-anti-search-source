@@ -152,11 +152,11 @@ Meteor.methods({
       throw new Meteor.Error(404, "Special area does not exist in general area");
     }
     SpecialAreas.update({"_id": sareaId}, {$addToSet: {"stocks": stockId}});
-    logger.info('Stock item added to special area', {"stock": stockId, "sarea": sareaId});
+    logger.info('Stock item added to area', {"stock": stockId, "sarea": sareaId});
     return;
   },
   
-  removeStocksToAreas: function(stockId, gareaId, sareaId) {
+  removeStocksFromAreas: function(stockId, gareaId, sareaId) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -191,7 +191,7 @@ Meteor.methods({
       throw new Meteor.Error(404, "Stock item not in special area");
     }
     SpecialAreas.update({"_id": sareaId}, {$pull: {"stocks": stockId}});
-    logger.info('Stock item remove from special area', {"stock": stockId, "sarea": sareaId});
+    logger.info('Stock item removed from area', {"stock": stockId, "sarea": sareaId});
     return;
   }
 });

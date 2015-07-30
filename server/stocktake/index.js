@@ -1,6 +1,5 @@
 Meteor.methods({
   'updateStocktake': function(info) {
-    console.log("...........", info);
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');
@@ -46,37 +45,6 @@ Meteor.methods({
       logger.info("New stocktake created", id);
     }
     return;
-  },
-
-  updateStockItems: function(stocktakeId, info) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
-      logger.error("User not permitted to create ingredients");
-      throw new Meteor.Error(403, "User not permitted to create ingredients");
-    }
-    var stockTakeExists = Stocktakes.findOne(stocktakeId);
-    if(!stockTakeExists) {
-      logger.error('Stocktake does not exist');
-      throw new Meteor.Error(404, "Stocktake does not exist");
-    }
-    
-    var updateQuery = {};
-    if(info.quantity) {
-      updateQuery['quantity'] = info.quantity;
-    }
-    if(info.costPerPortion) {
-      updateQuery['costPerPortion'] = info.costPerPortion;
-    }
-
-    if(info.quantity) {
-      Stocktakes.update({"_id": stocktakeId}, {$set: updateQuery});
-      logger.info("Stocktake updated with new stock quantity", {"stocktakeId": stocktakeId, "stockId": stockId});  
-    }
   },
 
   removeStockItems: function(stocktakeId) {

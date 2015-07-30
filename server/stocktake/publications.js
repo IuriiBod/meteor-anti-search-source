@@ -9,6 +9,5 @@ Meteor.publish("allAreas", function() {
 Meteor.publish("stocktakesOnDate", function(date) {
   logger.info("Stocktakes published for date ", date);
   var data = Stocktakes.find({"date": new Date(date).getTime()});
-  console.log("..........", date, data.fetch())
   return data;
 });

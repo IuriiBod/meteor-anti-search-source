@@ -25,7 +25,7 @@ component.prototype.onItemRendered = function() {
   });
 
   $('input').on('ifChecked', function(event){
-    var route = Router.current().params._id;
+    var route = Router.current().params._date;
     if(route == "new") {
       var id = $(this).attr("data-id");
       var gareaId = Session.get("activeGArea");
@@ -39,12 +39,12 @@ component.prototype.onItemRendered = function() {
     }
   });
   $('input').on('ifUnchecked', function(event){
-    var route = Router.current().params._id;
+    var route = Router.current().params._date;
     if(route == "new") {
       var id = $(this).attr("data-id");
       var gareaId = Session.get("activeGArea");
       var sareaId = Session.get("activeSArea");
-      Meteor.call("removeStocksToAreas", id, gareaId, sareaId, function(err) {
+      Meteor.call("removeStocksFromAreas", id, gareaId, sareaId, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);

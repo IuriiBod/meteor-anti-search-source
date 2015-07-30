@@ -9,23 +9,20 @@ var component = FlowComponents.define("stockCountingListItem", function(props) {
 component.state.item = function() {
   subs.subscribe("ingredients", [this.id]);
   var stock = Ingredients.findOne(this.id);
-  console.log("....date", this.date);
-  // subs.subscribe("ingredients", list.stocks);
-  // subs.subscribe("")
   var stocktake = Stocktakes.findOne({
     "date": this.date, 
     "stockId": this.id, 
     "generalArea": this.garea,
     "specialArea": this.sarea
   });
-  console.log("..........", stocktake);
   if(stock) {
     if(stocktake) {
+      stock['stockRef'] = stocktake._id;
       stock['counting'] = stocktake.counting;
     } else {
+      stock['stockRef'] = null;
       stock['counting'] = 0;
     }
-    stock['date'] = this.date;
     return stock;
   }
 }
@@ -35,11 +32,11 @@ component.prototype.onItemRendered = function() {
     type: "text",
     title: 'Edit No of Portions',
     showbuttons: true,
+    display: false,
     mode: 'inline',
     success: function(response, newValue) {
       var id = $(this).closest("li").attr("data-id");
-      var date = $(this).closest("li").attr("data-date");
-      console.log("......", self);
+      var date = Session.get("thisDate");
       if(newValue) {
         var info = {
           "date": date,
@@ -48,7 +45,6 @@ component.prototype.onItemRendered = function() {
           "stockId": id,
           "counting": parseFloat(newValue)
         }
-        console.log(".........", info);
         Meteor.call("updateStocktake", info, function(err, id) {
           if(err) {
             console.log(err);

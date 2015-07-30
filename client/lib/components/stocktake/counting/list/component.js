@@ -1,10 +1,5 @@
 var component = FlowComponents.define("stockCounting", function(props) {
-  var route = Router.current().params.date;
-  if(route == "new") {
-    route = moment().format("YYYY-MM-DD");
-  }
-  this.date = new Date(route).getTime();
-
+  this.date = Session.get("thisDate");
 });
 
 component.state.list = function() {
