@@ -1,10 +1,6 @@
 <template name="stocktakeCountingMainView">
   <!-- Page heading -->
-  {{#if new}}
-    {{> render component="pageHeading" title='New Stocktake' category="Stocktake"}}
-  {{else}}
-    {{> render component="pageHeading" title='Stocktake Counting' category="Stocktake"}}
-  {{/if}}
+  {{> render component="pageHeading" title='Stocktake Counting' category="Stocktake"}}
 
   <div class="wrapper wrapper-content">
     {{> render component='stockCounting'}}

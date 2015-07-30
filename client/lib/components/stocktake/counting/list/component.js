@@ -8,6 +8,7 @@ component.state.list = function() {
   var list = SpecialAreas.findOne({"_id": sareaId, "generalArea": gareaId});
   if(list) {
     if(list.stocks && list.stocks.length > 0) {
+      subs.subscribe("ingredients", list.stocks);
     }
     return list;
   }

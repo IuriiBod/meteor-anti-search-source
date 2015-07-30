@@ -7,7 +7,6 @@ var component = FlowComponents.define("stockCountingListItem", function(props) {
 });
 
 component.state.item = function() {
-  subs.subscribe("ingredients", [this.id]);
   var stock = Ingredients.findOne(this.id);
   var stocktake = Stocktakes.findOne({
     "date": this.date, 

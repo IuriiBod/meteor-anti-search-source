@@ -224,3 +224,7 @@ component.state.isStockTakeList = function() {
     return false;
   }
 }
+
+component.state.date = function() {
+  return moment().format("YYYY-MM-DD");
+}
