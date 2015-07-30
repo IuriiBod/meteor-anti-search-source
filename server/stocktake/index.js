@@ -1,5 +1,6 @@
 Meteor.methods({
   'updateStocktake': function(info) {
+    console.log("...........", info);
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');
@@ -11,7 +12,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
     var stock = Ingredients.findOne(info.stockId);
-    if(stock) {
+    if(!stock) {
       logger.error("Stock item does not exist");
       throw new Meteor.Error(403, "Stock item does not exist");
     }

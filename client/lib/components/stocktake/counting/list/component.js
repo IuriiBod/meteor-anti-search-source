@@ -4,7 +4,7 @@ var component = FlowComponents.define("stockCounting", function(props) {
     route = moment().format("YYYY-MM-DD");
   }
   this.date = new Date(route).getTime();
-  subs.subscribe("stocktakesOnDate", this.date);
+
 });
 
 component.state.list = function() {
@@ -13,7 +13,6 @@ component.state.list = function() {
   var list = SpecialAreas.findOne({"_id": sareaId, "generalArea": gareaId});
   if(list) {
     if(list.stocks && list.stocks.length > 0) {
-      subs.subscribe("ingredients", list.stocks);
     }
     return list;
   }

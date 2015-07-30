@@ -1,5 +1,5 @@
 <template name="stockCountingListItem">
-  <li class="list-group-item" data-id="{{state$item._id}}">
+  <li class="list-group-item" data-id="{{state$item._id}}" data-date="{{state$item.date}}">
     <i class="fa fa-fw fa-reorder"></i>{{state$item.description}}
     <i class="fa fa-trash pull-right removeFromList"></i>
     <span class="pull-right">

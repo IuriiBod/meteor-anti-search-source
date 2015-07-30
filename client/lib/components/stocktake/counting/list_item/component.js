@@ -7,21 +7,25 @@ var component = FlowComponents.define("stockCountingListItem", function(props) {
 });
 
 component.state.item = function() {
-  console.log(".........this", this);
+  subs.subscribe("ingredients", [this.id]);
   var stock = Ingredients.findOne(this.id);
+  console.log("....date", this.date);
+  // subs.subscribe("ingredients", list.stocks);
+  // subs.subscribe("")
   var stocktake = Stocktakes.findOne({
     "date": this.date, 
     "stockId": this.id, 
     "generalArea": this.garea,
     "specialArea": this.sarea
   });
+  console.log("..........", stocktake);
   if(stock) {
-    console.log("......", stock, stocktake);
     if(stocktake) {
       stock['counting'] = stocktake.counting;
     } else {
       stock['counting'] = 0;
     }
+    stock['date'] = this.date;
     return stock;
   }
 }
@@ -33,16 +37,18 @@ component.prototype.onItemRendered = function() {
     showbuttons: true,
     mode: 'inline',
     success: function(response, newValue) {
-      var self = this;
-      console.log("..........", self);
+      var id = $(this).closest("li").attr("data-id");
+      var date = $(this).closest("li").attr("data-date");
+      console.log("......", self);
       if(newValue) {
         var info = {
-          "date": self.date,
-          "generalArea": self.garea,
-          "specialArea": self.sarea,
-          "stockId": self.id,
-          "counting": newValue
+          "date": date,
+          "generalArea": Session.get("activeGArea"),
+          "specialArea": Session.get("activeSArea"),
+          "stockId": id,
+          "counting": parseFloat(newValue)
         }
+        console.log(".........", info);
         Meteor.call("updateStocktake", info, function(err, id) {
           if(err) {
             console.log(err);
