@@ -24,6 +24,8 @@ Template.stockCounting.events({
         if(err) {
           console.log(err);
           return alert(err.reason);
+        } else {
+          Router.go("stocktakeOrdering", {"date": moment(Session.get("thisDate")).format("YYYY-MM-DD")})
         }
       });
     }
