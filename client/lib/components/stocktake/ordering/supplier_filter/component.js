@@ -1,7 +1,9 @@
 var component = FlowComponents.define("supplierFilter", function(props) {});
 
 component.state.suppliers = function() {
-  var ordersList = OrdersPlaced.find({"stocktakeDate": Session.get("thisDate")});
+  var ordersList = OrdersPlaced.find({
+    "stocktakeDate": Session.get("thisDate")
+  });
   var supplierslist = [];
   ordersList.forEach(function(order) {
     if(order.supplier) {
@@ -10,6 +12,7 @@ component.state.suppliers = function() {
       }
     }
   });
+  Session.set("activeSupplier", supplierslist[0])
   return supplierslist;
 }
 
@@ -23,5 +26,43 @@ component.state.thisSupplierActive = function(id) {
     return true;
   } else {
     return false;
+  }
+}
+
+component.state.orderViaEmail = function() {
+  var list = OrdersPlaced.find({
+    "stocktakeDate": Session.get("thisDate"), 
+    "orderedThrough": "email", 
+    "supplier": Session.get("activeSupplier")
+  });
+  if(list && list.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+component.state.orderViaPhone = function() {
+ var list = OrdersPlaced.find({
+  "stocktakeDate": Session.get("thisDate"), 
+  "orderedThrough": "phone", 
+  "supplier": Session.get("activeSupplier")
+});
+  if(list && list.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+component.state.deliveryDate = function() {
+  var list = OrdersPlaced.find({
+    "stocktakeDate": Session.get("thisDate"), 
+    "orderedThrough": {$exists: true}, 
+    "deliveryDate": {$exists: true},
+    "supplier": Session.get("activeSupplier")
+  });
+  if(list && list.length > 0) {
+    return list[0].deliveryDate
   }
 }

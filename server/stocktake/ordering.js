@@ -1,6 +1,5 @@
 Meteor.methods({
   generateOrders: function(stockTakeDate) {
-    console.log("...........", stockTakeDate);
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -97,5 +96,37 @@ Meteor.methods({
     ]
     var data = CurrentStocks.aggregate(pipe, {cursor: {batchSize: 0}});
     return data;
+  },
+
+  generateReceipts: function(stocktakeDate, supplier, through) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to add job items");
+      throw new Meteor.Error(404, "User not permitted to add jobs");
+    }
+    if(!stocktakeDate) {
+      logger.error("Stocktake date should have a value");
+      return new Meteor.Error(404, "Stocktake date should have a value");
+    }
+    if(!supplier) {
+      logger.error("Supplier should exist");
+      return new Meteor.Error(404, "Supplier should exist");
+    }
+    if(!through) {
+      logger.error("Ordered through should exist");
+      return new Meteor.Error(404, "Ordered through should exist");
+    }
+    var orders = OrdersPlaced.update(
+      {"stocktakeDate": stocktakeDate, "supplier": supplier},
+      {$set: {"orderedThrough": through, "orderedOn": Date.now()}},
+      {$multi: true}
+    )
+    logger.info("Order receipt generated");
+    return;
   }
 });
