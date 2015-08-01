@@ -1,12 +1,13 @@
 <template name="supplierFilter">
-  <!--DESIGN: These buttons are for each suppier included in the stocktake. They need to be activated like tabs so that users can switch easily to different suppliers.-->
-  <!--DEV: Only show the suppliers that are active for this order.-->
-  <a class="btn btn-primary">Supplier 1<i class="fa fa-fw fa-check"></i></a>
-  <a class="btn btn-default">Supplier 2</a>
-  <a class="btn btn-default">Supplier 3</a>
-  <a class="btn btn-default">Supplier 4</a>
+  {{#each state$suppliers}}
+    <a class="btn {{#if state$thisSupplierActive this}} btn-primary {{else}} btn-default {{/if}} activateSupplier" data-id="{{this}}">{{this}}
+      {{#if state$thisSupplierActive this}}
+        <i class="fa fa-fw fa-check"></i>
+      {{/if}}
+    </a>
+  {{/each}}
   <hr>
-  <h2>Supplier 1
+  <h2>{{state$activeSupplier}}
     <small class="text-info pull-right">
     <!-- Set this date with x editable -->
     Expected delivery date

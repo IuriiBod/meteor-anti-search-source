@@ -81,3 +81,7 @@ UI.registerHelper("username", function(id) {
     return user.username;
   }
 });
+
+UI.registerHelper("roundCount", function(count) {
+  return Math.round(count * 100)/100;
+});

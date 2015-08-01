@@ -13,20 +13,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Stock Item</td>
-              <td>2kg</td>
-              <td>10kg</td>
-              <!--DEV: The 'to order' number needs to be editable with x editable.
-              This allows the user to adjust the order before they send it. -->
-              <td>8kg</td>
-            </tr>
-            <tr>
-              <td>Stock Item</td>
-              <td>2kg</td>
-              <td>10kg</td>
-              <td>8kg</td>
-            </tr>
+            {{#each state$list}}
+              {{> render component="ordersListItem" item=this}}
+            {{/each}}
           </tbody>
         </table>
       </div>

@@ -14,6 +14,19 @@ Template.stockCounting.events({
         console.log("......", list)
       }
     });
+  },
+
+  'click .generateOrders': function(event) {
+    event.preventDefault();
+    var date = Session.get("thisDate");
+    if(date) {
+      Meteor.call("generateOrders", date, function(err, result) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        }
+      });
+    }
   }
 });
 
