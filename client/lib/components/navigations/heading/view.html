@@ -113,6 +113,7 @@
 
       {{#if state$weeklyNavigation}}
         <div class="title-action" data-type="{{state$type}}">
+            <button class="btn btn-link" type="button" data-target="#collapse" data-toggle="collapse">Show/ Hide Figures</button>
           {{#if state$isWeeklyRosterCreated}}
             {{#if state$isWeeklyRosterPublished}}
               <button class="btn btn-primary" disabled="disabled">Published Roster on {{dayFormat state$publishedOn}}</button>

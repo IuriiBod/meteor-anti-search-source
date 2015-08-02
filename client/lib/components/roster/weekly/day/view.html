@@ -1,7 +1,5 @@
 <template name="weeklyRosterDay">
-  <div class="col-lg-13 no-padding">
-    <div class="ibox">
-      <div class="ibox-content">
+  <div class="col-lg-13">
         {{#if state$isTemplate}}
           <h3>{{state$name}}</h3>
         {{else}}
@@ -22,7 +20,5 @@
             {{> render component="shiftBasic" shift=this origin=state$origin}}
           {{/each}}
         </ul>
-      </div>
-    </div>
-  </div>
+ </div>
 </template>
