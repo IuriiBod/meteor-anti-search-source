@@ -4,6 +4,7 @@
     <td>{{secondsToMinutes state$job.activeTime}} mins</td>
     {{#if state$showSection}}
       <td>{{sectionById state$job.section}}</td>
+      <td>{{state$job.frequency}}</td>
     {{else}}
       <td>{{#if state$job.shelfLife}}{{state$job.shelfLife}} days {{else}} -NA- {{/if}}</td>
       <td>{{#if state$job.portions}} {{state$job.portions}} {{else}} -NA- {{/if}}</td>
