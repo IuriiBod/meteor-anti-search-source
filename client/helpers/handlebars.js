@@ -76,3 +76,10 @@ UI.registerHelper("username", function(id) {
     return user.username;
   }
 });
+
+UI.registerHelper("jobTypeById", function(id) {
+  var type = JobTypes.findOne(id);
+  if(type) {
+    return type.name;
+  }
+});

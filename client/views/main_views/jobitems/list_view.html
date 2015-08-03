@@ -2,9 +2,30 @@
   <!-- Page heading -->
   {{> render component="pageHeading" title='Jobs List' category='Jobs' name="jobslist"}}
 
-  <div class="wrapper wrapper-content animated">
+  <div class="wrapper wrapper-content">
     <div class="row">
-      {{> render component='jobItemsList'}}
+      <div class="col-md-12">
+        <div class="panel-options">
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#type1" data-toggle="tab">Job type 1</a>
+            </li>
+            <li class="">
+              <a href="#type2" data-toggle="tab">Type 2</a>
+            </li>
+          </ul>
+          <div class="panel-body">
+            <div class="tab-content">
+              <div class="tab-pane active" id="type1">
+                {{> render component='jobItemsList'}}
+              </div>
+              <div class="tab-pane" id="type2">
+                {{> render component='jobItemsList'}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
