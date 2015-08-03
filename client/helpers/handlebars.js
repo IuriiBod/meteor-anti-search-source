@@ -83,3 +83,10 @@ UI.registerHelper("jobTypeById", function(id) {
     return type.name;
   }
 });
+
+UI.registerHelper("sectionById", function(id) {
+  var section = Sections.findOne(id);
+  if(section) {
+    return section.name;
+  }
+});

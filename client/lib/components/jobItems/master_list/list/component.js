@@ -1,5 +1,4 @@
 var component = FlowComponents.define('jobItemsList', function(props) {
-  console.log(".............", props);
   this.type = props.id;
   var options = {
     keepHistory: 1000 * 60 * 5,
@@ -10,6 +9,20 @@ var component = FlowComponents.define('jobItemsList', function(props) {
   this.JobItemsSearch = new SearchSource('jobItemsSearch', fields, options);
   this.onRendered(this.onJobListRendered);
 });
+
+component.state.type = function() {
+  return this.type;
+}
+
+component.state.showSection = function() {
+  var id = this.type;
+  var type = JobTypes.findOne(id);
+  if(type && type.name == "Recurring") {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 component.action.keyup = function(text) {
   this.JobItemsSearch.search(text, {"type": this.type, limit: 10});
