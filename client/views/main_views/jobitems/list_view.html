@@ -6,22 +6,20 @@
     <div class="row">
       <div class="col-md-12">
         <div class="panel-options">
-          <ul class="nav nav-tabs">
-            <li class="active">
-              <a href="#type1" data-toggle="tab">Job type 1</a>
-            </li>
-            <li class="">
-              <a href="#type2" data-toggle="tab">Type 2</a>
-            </li>
+          <ul class="nav nav-tabs jobtypesPanel">
+            {{#each jobTypes}}
+              <li class="">
+                <a href="#{{_id}}" data-toggle="tab">{{name}}</a>
+              </li>
+            {{/each}}
           </ul>
           <div class="panel-body">
             <div class="tab-content">
-              <div class="tab-pane active" id="type1">
-                {{> render component='jobItemsList'}}
-              </div>
-              <div class="tab-pane" id="type2">
-                {{> render component='jobItemsList'}}
-              </div>
+              {{#each jobTypes}}
+                <div class="tab-pane jobtypepanes" id="{{_id}}">
+                  {{> render component='jobItemsList' id=_id}}
+               </div>
+              {{/each}}
             </div>
           </div>
         </div>
