@@ -53,7 +53,12 @@ component.state.text = function() {
 };
 component.state.like = function() {
     var like = this.post.like;
-    return like;
+    if(like=="")
+        return 0;
+    else {
+        var likearray = like.split(",");
+        return likearray.length;
+    }
 };
 component.action.submitcommenttopost = function(text) {
     var ref = Session.get("comment_post_id");
@@ -104,9 +109,9 @@ component.action.submitcommenttopost = function(text) {
         $('.message-input-comment').val("");
     });
 };
-component.action.submitlikepost = function(countlike) {
-    var ref = Session.get("post_like_id");
-    Meteor.call("updatePost", countlike, ref, function(err, id) {
+component.action.submitlikepost = function(likelist) {
+    var ref = Session.get("post-like-id");
+    Meteor.call("updatePost", likelist, ref, function(err, id) {
         if(err) {
             console.log(err);
             return alert(err.reason);

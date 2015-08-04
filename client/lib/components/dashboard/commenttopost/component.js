@@ -28,5 +28,11 @@ component.state.cid = function(){
     return this.commentp._id;
 }
 component.state.like = function(){
-    return this.commentp.like;
+    var like = this.commentp.like;
+    if(like=="")
+        return 0;
+    else {
+        var likearray = like.split(",");
+        return likearray.length;
+    }
 }

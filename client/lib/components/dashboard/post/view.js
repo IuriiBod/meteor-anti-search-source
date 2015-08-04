@@ -6,11 +6,20 @@ Template.onePost.events({
     'click .like-post': function(event) {
         event.preventDefault();
         var idbuf = $(event.target).closest("div").attr("data-id");
-        if(Session.get("post_like_id")!=idbuf) {
-            Session.set({"post_like_id": idbuf});
-            var countlike = Posts.findOne({_id: idbuf}).like;
-            FlowComponents.callAction('submitlikepost', countlike + 1);
+        var likes = Posts.findOne({_id: idbuf}).like;
+        var currentuid = Meteor.userId();
+        if(likes.indexOf(currentuid)<0){
+            //var likesarray = countlike.split(",");
+            Session.set({"post-like-id":idbuf});
+            var likelist="";
+            if(likes=='')
+                likelist = currentuid;
+            else
+                likelist =  likes+","+currentuid;
+            alert(likelist);
+            FlowComponents.callAction('submitlikepost', likelist);
         }
+
     },
     'keypress .message-input-comment': function(event) {
         if(event.keyCode == 10 || event.keyCode == 13) {
@@ -19,7 +28,6 @@ Template.onePost.events({
             var idbuf = $(event.target).closest("div").attr("data-id");
             Session.set({"comment_post_id":idbuf});
             FlowComponents.callAction('submitcommenttopost', text);
-            $('.comment_field').css("display", "none");
         }
     }
 });

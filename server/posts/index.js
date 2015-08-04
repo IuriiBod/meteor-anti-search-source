@@ -17,18 +17,18 @@ Meteor.methods({
             "createdOn": Date.now(),
             "createdBy": Meteor.userId(),
             "reference": ref,
-            "like":0
+            "like":''
         }
         var id = Posts.insert(doc);
         logger.info("Post inserted", id);
         return id;
     },
-    'updatePost': function(likecount,id) {
+    'updatePost': function(likelist,id) {
         if(!Meteor.userId()) {
             logger.error('No user has logged in');
             throw new Meteor.Error(401, "User not logged in");
         }
-        if(!likecount) {
+        if(!likelist) {
             logger.error("Text field not found");
             throw new Meteor.Error(404, "Text field not found");
         }
@@ -36,7 +36,7 @@ Meteor.methods({
             logger.error("Reference field not found");
             throw new Meteor.Error(404, "Reference field not found");
         }
-        Posts.update({_id:id},{$set:{like:likecount}});
+        Posts.update({_id:id},{$set:{like:likelist}});
         logger.info("Post updated", id);
         return id;
     }
