@@ -135,6 +135,6 @@ component.state.commentsof=function(){
 component.state.activecomment=function(){
     var count = Posts.find({"reference":this.post._id},{"createdBy":{$not:this.post._id}},{sort:{"createdOn":-1}}).count();
     if(count) {
-        return true;
-    }else return false;
+        return false;
+    }else return true;
 }

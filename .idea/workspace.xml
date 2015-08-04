@@ -27,8 +27,10 @@
       <change type="DELETED" beforePath="C:\Bitnami\rubystack-2.0.0-28\projects\hero\client\lib\components\ingredients\submit\view.html" afterPath="" />
       <change type="DELETED" beforePath="C:\Bitnami\rubystack-2.0.0-28\projects\hero\client\lib\components\ingredients\submit\view.js" afterPath="" />
       <change type="DELETED" beforePath="C:\Bitnami\rubystack-2.0.0-28\projects\hero\client\views\main_views\ingredients\list_view.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/view.html" afterPath="$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/view.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/lib/components/dashboard/post/component.js" afterPath="$PROJECT_DIR$/client/lib/components/dashboard/post/component.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/stylesheets/globals/pages.import.less" afterPath="$PROJECT_DIR$/client/stylesheets/globals/pages.import.less" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/lib/components/dashboard/post/view.html" afterPath="$PROJECT_DIR$/client/lib/components/dashboard/post/view.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="hero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -69,11 +71,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="view.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="view.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/view.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6910569">
-              <caret line="35" column="18" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
+            <state vertical-scroll-proportion="-18.961538">
+              <caret line="29" column="24" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pages.import.less" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/stylesheets/globals/pages.import.less">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.73564595">
+              <caret line="1084" column="18" selection-start-line="1084" selection-start-column="18" selection-end-line="1084" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="component.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/component.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="138" column="21" selection-start-line="138" selection-start-column="21" selection-end-line="138" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -125,13 +147,13 @@
         <option value="$PROJECT_DIR$/server/posts/index.js" />
         <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/view.js" />
         <option value="$PROJECT_DIR$/lib/collections.js" />
-        <option value="$PROJECT_DIR$/client/stylesheets/globals/pages.import.less" />
         <option value="$PROJECT_DIR$/client/views/main_views/home.html" />
         <option value="$PROJECT_DIR$/client/lib/components/dashboard/commenttopost/view.html" />
         <option value="$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/component.js" />
-        <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/component.js" />
         <option value="$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/view.html" />
+        <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/component.js" />
         <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/view.html" />
+        <option value="$PROJECT_DIR$/client/stylesheets/globals/pages.import.less" />
       </list>
     </option>
   </component>
@@ -254,6 +276,46 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="hero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="hero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stylesheets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="hero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="hero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stylesheets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="globals" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -666,6 +728,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-13.076923">
           <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -783,26 +846,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/stylesheets/globals/pages.import.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.81698567">
-          <caret line="1086" column="0" selection-start-line="1086" selection-start-column="0" selection-end-line="1086" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/publications.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/component.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.7632469">
-          <caret line="92" column="69" selection-start-line="92" selection-start-column="69" selection-end-line="92" selection-end-column="69" />
           <folding />
         </state>
       </provider>
@@ -865,8 +912,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/view.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6910569">
-          <caret line="35" column="18" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
+        <state vertical-scroll-proportion="-18.961538">
+          <caret line="29" column="24" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/component.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="138" column="21" selection-start-line="138" selection-start-column="21" selection-end-line="138" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/stylesheets/globals/pages.import.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.73564595">
+          <caret line="1084" column="18" selection-start-line="1084" selection-start-column="18" selection-end-line="1084" selection-end-column="18" />
           <folding />
         </state>
       </provider>
