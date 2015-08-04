@@ -16,7 +16,6 @@ Template.onePost.events({
                 likelist = currentuid;
             else
                 likelist =  likes+","+currentuid;
-            alert(likelist);
             FlowComponents.callAction('submitlikepost', likelist);
         }
 
