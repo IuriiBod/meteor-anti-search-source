@@ -76,3 +76,17 @@ UI.registerHelper("username", function(id) {
     return user.username;
   }
 });
+
+UI.registerHelper("jobTypeById", function(id) {
+  var type = JobTypes.findOne(id);
+  if(type) {
+    return type.name;
+  }
+});
+
+UI.registerHelper("sectionById", function(id) {
+  var section = Sections.findOne(id);
+  if(section) {
+    return section.name;
+  }
+});
