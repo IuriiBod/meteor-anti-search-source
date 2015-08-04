@@ -27,9 +27,11 @@
       <change type="DELETED" beforePath="C:\Bitnami\rubystack-2.0.0-28\projects\hero\client\lib\components\ingredients\submit\view.html" afterPath="" />
       <change type="DELETED" beforePath="C:\Bitnami\rubystack-2.0.0-28\projects\hero\client\lib\components\ingredients\submit\view.js" afterPath="" />
       <change type="DELETED" beforePath="C:\Bitnami\rubystack-2.0.0-28\projects\hero\client\views\main_views\ingredients\list_view.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/component.js" afterPath="$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/component.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/lib/components/dashboard/post/component.js" afterPath="$PROJECT_DIR$/client/lib/components/dashboard/post/component.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/stylesheets/globals/pages.import.less" afterPath="$PROJECT_DIR$/client/stylesheets/globals/pages.import.less" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/lib/components/dashboard/post/view.html" afterPath="$PROJECT_DIR$/client/lib/components/dashboard/post/view.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/lib/components/dashboard/post/view.js" afterPath="$PROJECT_DIR$/client/lib/components/dashboard/post/view.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="hero.iws" />
@@ -55,7 +57,17 @@
         <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/component.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="39" column="9" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
+              <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="view.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/view.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -74,18 +86,18 @@
       <file leaf-file-name="view.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/view.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-18.961538">
-              <caret line="29" column="24" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
+            <state vertical-scroll-proportion="-16.346153">
+              <caret line="25" column="24" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pages.import.less" pinned="false" current-in-tab="true">
+      <file leaf-file-name="pages.import.less" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/stylesheets/globals/pages.import.less">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.73564595">
-              <caret line="1084" column="18" selection-start-line="1084" selection-start-column="18" selection-end-line="1084" selection-end-column="18" />
+            <state vertical-scroll-proportion="-12.90196">
+              <caret line="1084" column="0" selection-start-line="1084" selection-start-column="0" selection-end-line="1084" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -95,7 +107,7 @@
         <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/component.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="138" column="21" selection-start-line="138" selection-start-column="21" selection-end-line="138" selection-end-column="21" />
+              <caret line="69" column="42" selection-start-line="69" selection-start-column="42" selection-end-line="69" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -106,6 +118,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-3.9230769">
               <caret line="6" column="81" selection-start-line="6" selection-start-column="81" selection-end-line="6" selection-end-column="81" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="view.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/view.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.22767857">
+              <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -145,15 +167,15 @@
         <option value="$PROJECT_DIR$/server/posts/publications.js" />
         <option value="$PROJECT_DIR$/client/lib/components/dashboard/commenttopost/component.js" />
         <option value="$PROJECT_DIR$/server/posts/index.js" />
-        <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/view.js" />
         <option value="$PROJECT_DIR$/lib/collections.js" />
         <option value="$PROJECT_DIR$/client/views/main_views/home.html" />
         <option value="$PROJECT_DIR$/client/lib/components/dashboard/commenttopost/view.html" />
-        <option value="$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/component.js" />
         <option value="$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/view.html" />
-        <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/component.js" />
-        <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/view.html" />
         <option value="$PROJECT_DIR$/client/stylesheets/globals/pages.import.less" />
+        <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/view.html" />
+        <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/component.js" />
+        <option value="$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/component.js" />
+        <option value="$PROJECT_DIR$/client/lib/components/dashboard/post/view.js" />
       </list>
     </option>
   </component>
@@ -165,9 +187,10 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-7" />
-    <option name="width" value="1924" />
-    <option name="height" value="1047" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -529,10 +552,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1924" height="1047" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17656416" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17544784" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -771,13 +794,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/view.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/notifications/view.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-7.1923075">
@@ -812,6 +828,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8333333">
           <caret line="5" column="13334" selection-start-line="5" selection-start-column="13334" selection-end-line="5" selection-end-column="13334" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -819,14 +836,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33281004">
           <caret line="1497" column="43" selection-start-line="1497" selection-start-column="43" selection-end-line="1497" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/view.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="29" column="5" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -894,14 +903,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/component.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="39" column="9" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/view.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-15.038462">
@@ -910,10 +911,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/view.html">
+    <entry file="file://$PROJECT_DIR$/client/stylesheets/globals/pages.import.less">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.961538">
-          <caret line="29" column="24" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
+        <state vertical-scroll-proportion="-12.90196">
+          <caret line="1084" column="0" selection-start-line="1084" selection-start-column="0" selection-end-line="1084" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -921,15 +922,39 @@
     <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/component.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="138" column="21" selection-start-line="138" selection-start-column="21" selection-end-line="138" selection-end-column="21" />
+          <caret line="69" column="42" selection-start-line="69" selection-start-column="42" selection-end-line="69" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/stylesheets/globals/pages.import.less">
+    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/component.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.73564595">
-          <caret line="1084" column="18" selection-start-line="1084" selection-start-column="18" selection-end-line="1084" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/newsfeed/view.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/view.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.346153">
+          <caret line="25" column="24" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/lib/components/dashboard/post/view.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22767857">
+          <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
           <folding />
         </state>
       </provider>

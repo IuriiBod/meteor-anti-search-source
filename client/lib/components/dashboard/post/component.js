@@ -55,7 +55,6 @@ component.state.like = function() {
     var like = this.post.like;
     return like;
 };
-
 component.action.submitcommenttopost = function(text) {
     var ref = Session.get("comment_post_id");
     //find tagged users
@@ -68,7 +67,7 @@ component.action.submitcommenttopost = function(text) {
         var filter = new RegExp(username, 'i');
         var subscriber = Meteor.users.findOne({"username": filter});
         if(subscriber) {
-            var userClass = "label-primary";
+            var userClass = "label-success";
             var doc = {
                 "user": "@" + subscriber.username,
                 "class": userClass
