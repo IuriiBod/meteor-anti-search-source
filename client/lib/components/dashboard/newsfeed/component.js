@@ -31,7 +31,7 @@ component.action.submit = function(text) {
         var filter = new RegExp(username, 'i');
         var subscriber = Meteor.users.findOne({"username": filter});
         if(subscriber) {
-            var userClass = "label-info";
+            var userClass = "label-primary";
             var doc = {
                 "user": "@" + subscriber.username,
                 "class": userClass

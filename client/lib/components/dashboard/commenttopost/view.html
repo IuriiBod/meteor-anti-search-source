@@ -1,10 +1,10 @@
 <template name="onecommentofPost">
     <div class="social-comment">
         <a class="pull-left" href="#">
-            <img src="{{state$commentprofileimg}}" alt="image">
+            <img src="{{state$commentprofileimg}}" alt="image" />
         </a>
         <div class="media-body" data-id="{{state$cid}}">
-            <span><a href="#">{{state$commentname}}</a>{{{state$commenttext}}}</span>
+            <span><a href="#" class="pull-left">{{state$commentname}} &nbsp;&nbsp;</a>  {{{state$commenttext}}}</span>
             <a href="#" class="small like-post"><i class="fa fa-thumbs-up"></i> {{state$like}} Like this!</a> -
             <small class="text-muted">{{timeFormattedWithDate state$createdOn}}</small>
         </div>
