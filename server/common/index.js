@@ -43,7 +43,9 @@ Meteor.methods({
       logger.error('Category name should be unique', exist);
       throw new Meteor.Error(404, "Category name should be unique");
     }
-    return Categories.insert({"name": name});
+    var id = Categories.insert({"name": name});
+    logger.info("New Category created", id);
+    return id;
   },
 
   'createStatus': function(name) {
@@ -66,7 +68,9 @@ Meteor.methods({
       logger.error('Status name should be unique', exist);
       throw new Meteor.Error(404, "Status name should be unique");
     }
-    return Statuses.insert({"name": name.toLowerCase()});
+    var id = Statuses.insert({"name": name.toLowerCase()});
+    logger.info("New Status created", id);
+    return id;
   },
 
   'createSection': function(name) {
@@ -145,5 +149,5 @@ Meteor.methods({
     Sections.update({"_id": id}, {$set: {"name": name}});
     logger.info("Section name updated", id);
     return;
-  },
+  }
 });

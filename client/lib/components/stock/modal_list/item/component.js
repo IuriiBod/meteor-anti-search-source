@@ -1,4 +1,4 @@
-var component = FlowComponents.define('ingredientItemListed', function(props) {
+var component = FlowComponents.define('ingredientModalItem', function(props) {
   this.ingredient = props.ingredient;
 });
 
