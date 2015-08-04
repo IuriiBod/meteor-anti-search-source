@@ -18,7 +18,6 @@
             </div>
         </div>
 
-        {{#if state$activecomment}}
             <div class="social-footer">
                 {{#each state$commentsof}}
                     {{> render component='onecommentofPost' commentp=this}}
@@ -35,7 +34,6 @@
                     </div>
                 </div>
             </div>
-        {{/if}}
     </div>
 {{/if}}
 </template>
