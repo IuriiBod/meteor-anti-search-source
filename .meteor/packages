@@ -21,6 +21,8 @@ service-configuration
 useraccounts:bootstrap
 meteorhacks:aggregate
 mizzao:autocomplete
+meteorhacks:kadira
+meteorhacks:kadira-profiler
 konecty:autolinker
 less
 fortawesome:fontawesome
@@ -31,3 +33,4 @@ okgrow:iron-router-autoscroll
 dbarrett:dropzonejs
 anti:gagarin
 email
+tsega:mentions
