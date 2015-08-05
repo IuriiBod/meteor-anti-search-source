@@ -1,7 +1,7 @@
 var component = FlowComponents.define("supplierFilter", function(props) {});
 
 component.state.suppliers = function() {
-  var ordersList = OrdersPlaced.find({
+  var ordersList = StockOrders.find({
     "stocktakeDate": Session.get("thisDate")
   });
   var supplierslist = [];
@@ -29,40 +29,3 @@ component.state.thisSupplierActive = function(id) {
   }
 }
 
-component.state.orderViaEmail = function() {
-  var list = OrdersPlaced.find({
-    "stocktakeDate": Session.get("thisDate"), 
-    "orderedThrough": "email", 
-    "supplier": Session.get("activeSupplier")
-  });
-  if(list && list.length > 0) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-component.state.orderViaPhone = function() {
- var list = OrdersPlaced.find({
-  "stocktakeDate": Session.get("thisDate"), 
-  "orderedThrough": "phone", 
-  "supplier": Session.get("activeSupplier")
-});
-  if(list && list.length > 0) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-component.state.deliveryDate = function() {
-  var list = OrdersPlaced.find({
-    "stocktakeDate": Session.get("thisDate"), 
-    "orderedThrough": {$exists: true}, 
-    "deliveryDate": {$exists: true},
-    "supplier": Session.get("activeSupplier")
-  });
-  if(list && list.length > 0) {
-    return list[0].deliveryDate
-  }
-}

@@ -1,4 +1,48 @@
 Meteor.methods({
+  'generateStocktakes': function(stocktakeDate) {
+    var user = Meteor.user();
+    if(!user) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var permitted = isManagerOrAdmin(user);
+    if(!permitted) {
+      logger.error("User not permitted to create ingredients");
+      throw new Meteor.Error(403, "User not permitted to create ingredients");
+    }
+    var specialAreas = SpecialAreas.find().fetch();
+    
+    if(specialAreas.length > 0) {
+      specialAreas.forEach(function(area) {
+        if(area && area.stocks.length > 0) {
+          area.stocks.forEach(function(id) {
+            var existingStocktake = Stocktakes.findOne({
+              "date": new Date(stocktakeDate).getTime,
+              "generalArea": area.generalArea,
+              "specialArea": area._id,
+              "stockId": id
+            });
+            if(!existingStocktake) {
+              var place = area.stocks.indexOf(id);
+              var doc = {
+                "date": new Date(stocktakeDate).getTime(),
+                "generalArea": area.generalArea,
+                "specialArea": area._id,
+                "stockId": id,
+                "counting": 0,
+                "createdAt": Date.now(),
+                "place": place
+              }
+              Stocktakes.insert(doc);
+            }
+          });
+        }
+      });
+      logger.info("Stocktakes inserted for date", stocktakeDate)
+      return;
+    }
+  },
+
   'updateStocktake': function(info) {
     var user = Meteor.user();
     if(!user) {
@@ -15,6 +59,17 @@ Meteor.methods({
       logger.error("Stock item does not exist");
       throw new Meteor.Error(403, "Stock item does not exist");
     }
+    var generalArea = GeneralAreas.findOne(info.generalArea);
+    if(!generalArea) {
+      logger.error("General area does not exist");
+      throw new Meteor.Error(403, "General area does not exist");
+    }
+    var specialArea = SpecialAreas.findOne(info.specialArea);
+    if(!specialArea) {
+      logger.error("Special area does not exist");
+      throw new Meteor.Error(403, "Special area does not exist");
+    }
+
     var stockTakeExists = Stocktakes.findOne({
       "date": new Date(info.date).getTime(),
       "generalArea": info.generalArea,
@@ -22,31 +77,45 @@ Meteor.methods({
       "stockId": info.stockId
     });
     if(stockTakeExists) {
+      var setQuery = {};
+      if(info.hasOwnProperty("counting")) {
+        setQuery['counting'] = info.counting;
+        if(stockTakeExists.status) {
+          setQuery['status'] = false;
+          setQuery['orderedCount'] = stockTakeExists.counting;
+        }
+      }
+      if(info.hasOwnProperty("place")) {
+        setQuery['place'] = info.place;
+      }
+
       Stocktakes.update({
         "date": new Date(info.date).getTime(),
         "generalArea": info.generalArea,
         "specialArea": info.specialArea,
         "stockId": info.stockId
-        }, {$set: {"counting": info.counting}}
+        }, {$set: setQuery}
       );
       logger.info("Stocktake updated", stockTakeExists._id);
 
     } else {
+      var place = specialArea.stocks.indexOf(info.stockId);
       var doc = {
         "date": new Date(info.date).getTime(),
         "generalArea": info.generalArea,
         "specialArea": info.specialArea,
         "stockId": info.stockId,
         "counting": info.counting,
-        "createdAt": Date.now()
+        "createdAt": Date.now(),
+        "place": place
       }
       var id = Stocktakes.insert(doc);
-      logger.info("New stocktake created", id);
+      logger.info("New stocktake created", id, place);
     }
     return;
   },
 
-  removeStockItems: function(stocktakeId) {
+  removeStocktake: function(stocktakeId) {
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');

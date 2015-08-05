@@ -26,25 +26,26 @@ component.prototype.onItemRendered = function() {
 
   $('input').on('ifChecked', function(event){
     var id = $(this).attr("data-id");
-    var gareaId = Session.get("activeGArea");
     var sareaId = Session.get("activeSArea");
-    Meteor.call("assignStocksToAreas", id, gareaId, sareaId, function(err) {
+    Meteor.call("assignStocksToAreas", id, sareaId, function(err) {
       if(err) {
         console.log(err);
         return alert(err.reason);
       }
-    });
-  });
-
-  $('input').on('ifUnchecked', function(event){
-    var id = $(this).attr("data-id");
-    var gareaId = Session.get("activeGArea");
-    var sareaId = Session.get("activeSArea");
-    Meteor.call("removeStocksFromAreas", id, gareaId, sareaId, function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
+      var date = Session.get("thisDate");
+      var info = {
+        "stockId": id,
+        "generalArea": Session.get("activeGArea"),
+        "specialArea": sareaId,
+        "date": date,
+        "counting": 0
       }
+      Meteor.call("updateStocktake", info, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        }
+      })
     });
   });
 };

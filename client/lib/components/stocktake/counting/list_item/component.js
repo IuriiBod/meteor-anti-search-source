@@ -29,7 +29,6 @@ component.state.item = function() {
 component.state.ordering = function() {
   var item = CurrentStocks.findOne(this.id);
   if(item) {
-    console.log("..........................", item)
     return item;
   }
 }

@@ -15,7 +15,6 @@ Meteor.publish("stocktakesOnDate", function(date) {
 
 Meteor.publish("ordersPlaced", function(date) {
   logger.info("Stock orders published for date ", date);
-  var data = OrdersPlaced.find({"stocktakeDate": new Date(date).getTime()});
-  console.log("............", data.fetch());
+  var data = StockOrders.find({"stocktakeDate": new Date(date).getTime()});
   return data;
 });

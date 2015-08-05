@@ -121,7 +121,7 @@ Meteor.methods({
     }
   },
 
-  assignStocksToAreas: function(stockId, gareaId, sareaId) {
+  assignStocksToAreas: function(stockId, sareaId) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -137,26 +137,23 @@ Meteor.methods({
       logger.error('Stock item does not exist', stockId);
       throw new Meteor.Error(404, "Stock item does not exist");
     }
-    var gAreaExist = GeneralAreas.findOne(gareaId);
-    if(!gAreaExist) {
-      logger.error('General area does not exist', gareaId);
-      throw new Meteor.Error(404, "General area does not exist");
-    }
     var sAreaExist = SpecialAreas.findOne(sareaId);
     if(!sAreaExist) {
       logger.error('Special area does not exist', sareaId);
       throw new Meteor.Error(404, "Special area does not exist");
     }
-    if(gareaId != sAreaExist.generalArea) {
-      logger.error('Special area does not exist in general area', {"sarea": sareaId, "garea": gareaId});
-      throw new Meteor.Error(404, "Special area does not exist in general area");
+    var gAreaExist = GeneralAreas.findOne(sAreaExist.generalArea);
+    if(!gAreaExist) {
+      logger.error('General area does not exist', gareaId);
+      throw new Meteor.Error(404, "General area does not exist");
     }
     SpecialAreas.update({"_id": sareaId}, {$addToSet: {"stocks": stockId}});
+    Ingredients.update({"_id": stockId}, {$addToSet: {"specialAreas": sareaId, "generalAreas": sAreaExist.generalArea}})
     logger.info('Stock item added to area', {"stock": stockId, "sarea": sareaId});
     return;
   },
   
-  removeStocksFromAreas: function(stockId, gareaId, sareaId) {
+  removeStocksFromAreas: function(stockId, sareaId) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -172,25 +169,22 @@ Meteor.methods({
       logger.error('Stock item does not exist', stockId);
       throw new Meteor.Error(404, "Stock item does not exist");
     }
-    var gAreaExist = GeneralAreas.findOne(gareaId);
-    if(!gAreaExist) {
-      logger.error('General area does not exist', gareaId);
-      throw new Meteor.Error(404, "General area does not exist");
-    }
     var sAreaExist = SpecialAreas.findOne(sareaId);
     if(!sAreaExist) {
       logger.error('Special area does not exist', sareaId);
       throw new Meteor.Error(404, "Special area does not exist");
     }
-    if(gareaId != sAreaExist.generalArea) {
-      logger.error('Special area does not exist in general area', {"sarea": sareaId, "garea": gareaId});
-      throw new Meteor.Error(404, "Special area does not exist in general area");
+    var gAreaExist = GeneralAreas.findOne(sAreaExist.generalArea);
+    if(!gAreaExist) {
+      logger.error('General area does not exist', gareaId);
+      throw new Meteor.Error(404, "General area does not exist");
     }
     if(sAreaExist.stocks.indexOf(stockId) < 0) {
       logger.error('Stock item not in special area', stockId);
       throw new Meteor.Error(404, "Stock item not in special area");
     }
     SpecialAreas.update({"_id": sareaId}, {$pull: {"stocks": stockId}});
+    Ingredients.update({"_id": stockId}, {$pull: {"specialAreas": sareaId, "generalAreas": sAreaExist.generalArea}})
     logger.info('Stock item removed from area', {"stock": stockId, "sarea": sareaId});
     return;
   }

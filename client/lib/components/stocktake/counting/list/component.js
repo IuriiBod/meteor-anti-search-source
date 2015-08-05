@@ -19,14 +19,20 @@ component.state.list = function() {
       resultData = list;
     }
   } else {
-    var list = Stocktakes.find({"generalArea": gareaId, "specialArea": sareaId, "date": thisDate});
+    var list = Stocktakes.find(
+      {
+        "generalArea": gareaId, 
+        "specialArea": sareaId, 
+        "date": thisDate
+      }, {
+        sort: {"order": 1}
+      });
     resultData['_id'] = sareaId;
     resultData['generalArea'] = gareaId;
     resultData['stocks'] = [];
 
     if(list.fetch().length > 0) {
       list.fetch().forEach(function(item) {
-        console.log(item);
         if(resultData.stocks.indexOf(item.stockId) < 0) {
           resultData.stocks.push(item.stockId);
         }
