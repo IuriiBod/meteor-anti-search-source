@@ -4,20 +4,15 @@ Template.stockCounting.events({
     $("#stocksListModal").modal("show");
   },
 
-  'click .reOrder': function(event) {
+  'click .editStockTake': function(event) {
     event.preventDefault();
-    Meteor.call("checkReOrdering", function(err, list) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
-      } else {
-        console.log("......", list)
-      }
-    });
+    Session.set("editStockTake", true);
+    $(event.target).hide();
   },
 
   'click .generateOrders': function(event) {
     event.preventDefault();
+    Session.set("editStockTake", false);
     var date = Session.get("thisDate");
     if(date) {
       Meteor.call("generateOrders", date, function(err, result) {
@@ -33,20 +28,24 @@ Template.stockCounting.events({
 });
 
 Template.stockCounting.rendered = function() {
-  $('#newStocktakeDate').editable({
-    type: "combodate",
-    title: "Select date",
-    mode: "inline",
-    format: 'YYYY-MM-DD',    
-    viewformat: 'YYYY-MM-DD',    
-    template: 'YYYY-MM-DD',    
-    combodate: {
-      minYear: 2000,
-      maxYear: 2020,
-      minuteStep: 1
-    },
-    success: function(response, newValue) {
-      console.log("...........", newValue);
+  Tracker.autorun(function() {
+    if(Session.get("editStockTake")) {
+      $('#newStocktakeDate').editable({
+        type: "combodate",
+        title: "Select date",
+        mode: "inline",
+        format: 'YYYY-MM-DD',    
+        viewformat: 'YYYY-MM-DD',    
+        template: 'YYYY-MM-DD',    
+        combodate: {
+          minYear: 2000,
+          maxYear: 2020,
+          minuteStep: 1
+        },
+        success: function(response, newValue) {
+          console.log("...........", newValue);
+        }
+      });
     }
   });
 }

@@ -37,7 +37,7 @@ component.state.ordering = function() {
 component.prototype.onItemRendered = function() {
   $(".counting").editable({
     type: "text",
-    title: 'Edit No of Portions',
+    title: 'Edit count',
     showbuttons: true,
     display: false,
     mode: 'inline',

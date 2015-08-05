@@ -38,8 +38,7 @@ Meteor.methods({
         "specialArea": info.specialArea,
         "stockId": info.stockId,
         "counting": info.counting,
-        "costPerPortion": stock.costPerPortion,
-        "active": false
+        "createdAt": Date.now()
       }
       var id = Stocktakes.insert(doc);
       logger.info("New stocktake created", id);
@@ -65,6 +64,5 @@ Meteor.methods({
     }
     Stocktakes.remove({"_id": stocktakeId});
     logger.info("Stocktake removed", stocktakeId);
-
   }
 });
