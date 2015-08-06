@@ -52,7 +52,8 @@ Meteor.methods({
             "supplier": supplier,
             "onhandCount": count,
             "countNeeded": 0,
-            "unit": stockItem.portionOrdered
+            "unit": stockItem.portionOrdered,
+            "unitPrice": stockItem.costPerPortion
           }
           var id = StockOrders.insert(newOrder);
           logger.info("New order created", id);
@@ -86,7 +87,7 @@ Meteor.methods({
     logger.info("Stock order count updated", orderId);
   },
 
-  generateReceipts: function(stocktakeDate, supplier, through) {
+  generateReceipts: function(stocktakeDate, supplier, info) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -105,15 +106,53 @@ Meteor.methods({
       logger.error("Supplier should exist");
       return new Meteor.Error(404, "Supplier should exist");
     }
-    if(!through) {
-      logger.error("Ordered through should exist");
-      return new Meteor.Error(404, "Ordered through should exist");
+    if(!info.through) {
+      logger.error("Ordered method should exist");
+      return new Meteor.Error(404, "Ordered method should exist");
     }
-    var orders = OrdersPlaced.update(
+    var ordersExist = StockOrders.find({"stocktakeDate": stocktakeDate, "supplier": supplier}).fetch();
+    if(ordersExist.length < 0) {
+      logger.error("Orders does not exist");
+      return new Meteor.Error(404, "Orders does not exist");
+    }
+    var ordersReceiptExist = OrderReceipts.findOne({"stocktakeDate": stocktakeDate, "supplier": supplier});
+    if(ordersReceiptExist) {
+      logger.error("Orders receipt exists");
+      return new Meteor.Error(404, "Orders receipt exists");
+    }
+    var orderedMethod = {
+      "through": info.through,
+      "details": info.details
+    }
+    var orders = StockOrders.update(
       {"stocktakeDate": stocktakeDate, "supplier": supplier},
-      {$set: {"orderedThrough": through, "orderedOn": Date.now()}},
-      {$multi: true}
-    )
+      {$set: {
+        "orderedThrough": orderedMethod, 
+        "orderedOn": Date.now(),
+        "expectedDeliveryDate": info.deliveryDate
+      }},
+      {multi: true}
+    );
+    logger.info("Orders updated", {"stocktakeDate": stocktakeDate, "supplier": supplier});
+    //generating order receipt
+    var orderIds = [];
+    ordersExist.forEach(function(order) {
+      if(orderIds.indexOf(order._id) < 0) {
+        orderIds.push(order._id);
+      }
+    });
+    OrderReceipts.insert({
+      "date": Date.now(),
+      "stocktakeDate": stocktakeDate,
+      "supplier": supplier,
+      "orderedThrough": orderedMethod,
+      "orders": orderIds,
+      "expectedDeliveryDate": info.deliveryDate
+    });
+
+    if(info.through == "emailed") {
+      //send email to supplier
+    }
     logger.info("Order receipt generated");
     return;
   }

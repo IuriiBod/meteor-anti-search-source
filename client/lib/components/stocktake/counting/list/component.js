@@ -6,6 +6,18 @@ component.state.editable = function() {
   return Session.get("editStockTake");
 }
 
+component.state.ordersExist = function() {
+  var ordersExist = Stocktakes.findOne({
+    "date": Session.get("thisDate"),
+    "status": true
+  });
+  if(ordersExist) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 component.state.list = function() {
   var thisDate = Session.get("thisDate");
   var editable = Session.get("editStockTake");

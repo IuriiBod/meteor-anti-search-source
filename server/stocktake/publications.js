@@ -18,3 +18,10 @@ Meteor.publish("ordersPlaced", function(date) {
   var data = StockOrders.find({"stocktakeDate": new Date(date).getTime()});
   return data;
 });
+
+Meteor.publish("orderReceipts", function(stocktakeDate) {
+  logger.info("Stock order receipts published for stocktake date ", stocktakeDate);
+  var data = OrderReceipts.find({"stocktakeDate": new Date(stocktakeDate).getTime()});
+  console.log("....receipts...", data.fetch());
+  return data;
+});

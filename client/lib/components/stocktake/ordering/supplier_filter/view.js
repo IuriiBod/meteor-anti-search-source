@@ -5,11 +5,20 @@ Template.supplierFilter.events({
     Session.set("activeSupplier", supplier);
   },
 
-  'click .orderByEmail': function(event) {
+  'click .setOrder': function(event) {
     event.preventDefault();
+    var orderType = $(event.target).attr("data-type");
     var supplier = Session.get("activeSupplier");
     var stocktakeDate = Session.get("thisDate");
-    Meteor.call("generateReceipts", stocktakeDate, supplier, "email", function(err) {
+    var address = null;
+    var deliveryDate = moment().add(7, 'days');
+    deliveryDate = moment(deliveryDate).format("YYYY-MM-DD");
+    var info = {
+      "through": orderType,
+      "details": address,
+      "deliveryDate": new Date(deliveryDate).getTime()
+    }
+    Meteor.call("generateReceipts", stocktakeDate, supplier, info, function(err) {
       if(err) {
         console.log(err);
         return alert(err.reason);

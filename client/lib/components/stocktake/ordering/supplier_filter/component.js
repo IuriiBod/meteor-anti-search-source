@@ -29,3 +29,27 @@ component.state.thisSupplierActive = function(id) {
   }
 }
 
+component.state.receipt = function() {
+  var receipt = OrderReceipts.findOne({
+    "stocktakeDate": Session.get("thisDate"),
+    "supplier": Session.get("activeSupplier")
+  });
+  return receipt;
+}
+
+component.state.orderSentDetails = function() {
+  var receipt = OrderReceipts.findOne({
+    "stocktakeDate": Session.get("thisDate"),
+    "supplier": Session.get("activeSupplier")
+  });
+  var text = null;
+  if(receipt) {
+    if(receipt.orderedThrough.through == "emailed") {
+      text = "Email sent ";
+    } else if(receipt.orderedThrough.through == "phoned") {
+      text = "Phoned ";
+    }
+    text += moment(receipt.date).format("MMMM Do YYYY, h:mm:ss a");
+  }
+  return text;
+}
