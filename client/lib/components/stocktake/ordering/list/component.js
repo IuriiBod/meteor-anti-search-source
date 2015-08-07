@@ -20,3 +20,7 @@ component.state.list = function() {
   }
   return data;
 }
+
+component.state.supplier = function() {
+  return Session.get("activeSupplier");
+}

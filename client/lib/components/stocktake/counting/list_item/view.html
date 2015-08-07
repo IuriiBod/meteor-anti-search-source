@@ -2,7 +2,10 @@
   <li class="list-group-item" data-id="{{state$item._id}}" data-stockRef="{{state$item.stockRef}}">
     <!-- <i class="fa fa-fw fa-reorder"></i> -->
     {{state$item.description}}
-    <i class="fa fa-trash pull-right removeFromList"></i>
+    {{#if state$item.status}}
+    {{else}}
+      <i class="fa fa-trash pull-right removeFromList"></i>
+    {{/if}}
     <span class="pull-right">
       <a href="" class="counting">{{state$item.counting}}</a> &nbsp; [{{state$item.portionOrdered}}]
     </span>

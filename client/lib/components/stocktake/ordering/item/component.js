@@ -14,6 +14,10 @@ component.state.order = function() {
   return this.order;
 }
 
+component.state.supplier = function() {
+  return Session.get("activeSupplier");
+}
+
 component.prototype.onItemRendered = function() {
   $(".orderingCount").editable({
     type: "text",
@@ -23,7 +27,6 @@ component.prototype.onItemRendered = function() {
     mode: 'inline',
     success: function(response, newValue) {
       var id = $(this).closest("tr").attr("data-id");
-      console.log("......", id, newValue);
       Meteor.call("editOrderingCount", id, parseFloat(newValue), function(err) {
         if(err) {
           console.log(err);

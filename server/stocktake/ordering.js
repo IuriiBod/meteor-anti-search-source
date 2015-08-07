@@ -7,8 +7,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to generate orders");
+      throw new Meteor.Error(404, "User not permitted to generate orders");
     }
     if(!stockTakeDate) {
       logger.error("Stocktake date should have a value");
@@ -43,7 +43,9 @@ Meteor.methods({
           "supplier": supplier
         })
         //generate order
+        var orderRef = null;
         if(existingOrder) {
+          orderRef = existingOrder._id;
           StockOrders.update({"_id": existingOrder._id}, {$inc: {"onhandCount": count}})
         } else {
           var newOrder = {
@@ -56,11 +58,20 @@ Meteor.methods({
             "unitPrice": stockItem.costPerPortion
           }
           var id = StockOrders.insert(newOrder);
+          orderRef = id;
           logger.info("New order created", id);
         }
 
         //update stocktake for order generated count
-        Stocktakes.update({"_id": stock._id}, {$set: {"status": true, "orderedCount": stock.counting}})
+        Stocktakes.update({"_id": stock._id}, { 
+          $set: {
+            "status": true, 
+            "orderedCount": stock.counting
+          },
+          $addToSet: {
+            "orderRef": orderRef
+          }
+        });
 
         //update current stock with count
       }
@@ -75,8 +86,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to edit ordering count");
+      throw new Meteor.Error(404, "User not permitted to edit ordering count");
     }
     var order = StockOrders.findOne(orderId);
     if(!order) {
@@ -95,8 +106,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to generate receipts");
+      throw new Meteor.Error(404, "User not permitted to generate receipts");
     }
     if(!stocktakeDate) {
       logger.error("Stocktake date should have a value");
@@ -154,6 +165,37 @@ Meteor.methods({
       //send email to supplier
     }
     logger.info("Order receipt generated");
+    return;
+  },
+
+  'removeOrder': function(id) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to remove placed orders");
+      throw new Meteor.Error(404, "User not permitted to remove placed orders");
+    }
+    if(!id) {
+      logger.error('Stock order id not found');
+      throw new Meteor.Error(401, 'Stock order id not found');
+    }
+    var order = StockOrders.findOne(id);
+    if(!order) {
+      logger.error("Order does not exist");
+      throw new Meteor.Error(401, "Order does not exist");
+    }
+    var receipt = OrderReceipts.findOne({"orders": id});
+    if(receipt) {
+      logger.error("You can't delete this order. This has a order receipt");
+      throw new Meteor.Error(401, "You can't delete this order. This has a order receipt");
+    }
+    StockOrders.remove({"_id": id});
+    // Stocktakes.update({"order": {$in: }})
+    logger.info("Stock order removed");
     return;
   }
 });

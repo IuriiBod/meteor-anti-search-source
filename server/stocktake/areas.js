@@ -7,8 +7,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to create general Areas");
+      throw new Meteor.Error(404, "User not permitted to create general Areas");
     }
     if(!name) {
       logger.error("General area should have a name");
@@ -32,8 +32,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to edi general areas");
+      throw new Meteor.Error(404, "User not permitted to edi general areas");
     }
     if(!id) {
       logger.error("General area should have a id");
@@ -63,8 +63,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to create special areas");
+      throw new Meteor.Error(404, "User not permitted to create special areas");
     }
     if(!name) {
       logger.error("Special area should have a name");
@@ -98,8 +98,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to edit special areas");
+      throw new Meteor.Error(404, "User not permitted to edit special areas");
     }
     if(!id) {
       logger.error("Special area should have a id");
@@ -129,8 +129,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to assign stock to areas");
+      throw new Meteor.Error(404, "User not permitted to assign stock to areas");
     }
     var stock = Ingredients.findOne(stockId);
     if(!stock) {
@@ -161,8 +161,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to remove stocks from areas");
+      throw new Meteor.Error(404, "User not permitted to remove stocks from areas");
     }
     var stock = Ingredients.findOne(stockId);
     if(!stock) {

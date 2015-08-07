@@ -18,6 +18,7 @@ component.state.item = function() {
     if(stocktake) {
       stock['stockRef'] = stocktake._id;
       stock['counting'] = stocktake.counting;
+      stock['status'] = stocktake.status;
     } else {
       stock['stockRef'] = null;
       stock['counting'] = 0;
@@ -33,7 +34,7 @@ component.prototype.onItemRendered = function() {
     showbuttons: true,
     display: false,
     mode: 'inline',
-    success: function(response, newValue) {
+    success: function(response, newValue, q) {
       var id = $(this).closest("li").attr("data-id");
       var date = Session.get("thisDate");
       if(newValue) {

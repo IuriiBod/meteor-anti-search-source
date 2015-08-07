@@ -7,8 +7,8 @@ Meteor.methods({
     }
     var permitted = isManagerOrAdmin(user);
     if(!permitted) {
-      logger.error("User not permitted to create ingredients");
-      throw new Meteor.Error(403, "User not permitted to create ingredients");
+      logger.error("User not permitted to generate stocktakes");
+      throw new Meteor.Error(403, "User not permitted to generate stocktakes");
     }
     var specialAreas = SpecialAreas.find().fetch();
     
@@ -23,17 +23,21 @@ Meteor.methods({
               "stockId": id
             });
             if(!existingStocktake) {
-              var place = area.stocks.indexOf(id);
-              var doc = {
-                "date": new Date(stocktakeDate).getTime(),
-                "generalArea": area.generalArea,
-                "specialArea": area._id,
-                "stockId": id,
-                "counting": 0,
-                "createdAt": Date.now(),
-                "place": place
+              var ingredient = Ingredients.findOne(id);
+              if(ingredient) {
+                var place = area.stocks.indexOf(id);
+                var doc = {
+                  "date": new Date(stocktakeDate).getTime(),
+                  "generalArea": area.generalArea,
+                  "specialArea": area._id,
+                  "stockId": id,
+                  "counting": 0,
+                  "createdAt": Date.now(),
+                  "place": place,
+                  "costPerPortion": ingredient.costPerPortion
+                }
+                Stocktakes.insert(doc);
               }
-              Stocktakes.insert(doc);
             }
           });
         }
@@ -51,8 +55,8 @@ Meteor.methods({
     }
     var permitted = isManagerOrAdmin(user);
     if(!permitted) {
-      logger.error("User not permitted to create ingredients");
-      throw new Meteor.Error(403, "User not permitted to create ingredients");
+      logger.error("User not permitted to update stocktakes");
+      throw new Meteor.Error(403, "User not permitted to update stocktakes");
     }
     var stock = Ingredients.findOne(info.stockId);
     if(!stock) {
@@ -107,7 +111,8 @@ Meteor.methods({
         "stockId": info.stockId,
         "counting": info.counting,
         "createdAt": Date.now(),
-        "place": place
+        "place": place,
+        "costPerPortion": stock.costPerPortion
       }
       var id = Stocktakes.insert(doc);
       logger.info("New stocktake created", id, place);
@@ -123,8 +128,8 @@ Meteor.methods({
     }
     var permitted = isManagerOrAdmin(user);
     if(!permitted) {
-      logger.error("User not permitted to create ingredients");
-      throw new Meteor.Error(403, "User not permitted to create ingredients");
+      logger.error("User not permitted to remove stocktakes");
+      throw new Meteor.Error(403, "User not permitted to remove stocktakes");
     }
     var stockItemExists = Stocktakes.findOne(stocktakeId);
     if(!stockItemExists) {

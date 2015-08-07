@@ -10,6 +10,10 @@
               <th>On hand</th>
               <th>Needed</th>
               <th>To order</th>
+              {{#if state$supplier}}
+              {{else}}
+                <th>Action</th>
+              {{/if}}
             </tr>
           </thead>
           <tbody>

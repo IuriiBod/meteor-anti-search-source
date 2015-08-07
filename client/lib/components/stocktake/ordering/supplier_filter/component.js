@@ -23,7 +23,9 @@ component.state.suppliers = function() {
     } else {
       activeSupplier = supplierslist[0];
     }
-    Session.set("activeSupplier", activeSupplier)
+    if(!Session.get("activeSupplier")) {
+      Session.set("activeSupplier", activeSupplier)
+    }
     return supplierslist;
   }
 }
