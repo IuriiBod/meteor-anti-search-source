@@ -4,7 +4,6 @@ var component = FlowComponents.define("ordersListItem", function(props) {
 });
 
 component.state.order = function() {
-  subs.subscribe("ingredients", [this.order.stockId]);
   var stock = Ingredients.findOne({"_id": this.order.stockId});
   if(stock) {
     this.order.stockName = stock.description;
