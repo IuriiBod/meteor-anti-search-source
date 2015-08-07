@@ -2,8 +2,9 @@ var component = FlowComponents.define("ordersList", function(props) {
 });
 
 component.state.list = function() {
-  return StockOrders.find({
+  var data = StockOrders.find({
     "stocktakeDate": Session.get("thisDate"),
     "supplier": Session.get("activeSupplier")
   });
+  return data;
 }

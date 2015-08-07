@@ -8,15 +8,17 @@
   {{/each}}
   <hr>
   <h2>{{state$activeSupplier}}
-    <!-- <small class="text-info pull-right"> -->
-    <!-- Set this date with x editable -->
-    <!--DEV: Mail button - opens modal with draft email to send to supplier. -->
+    <small class="text-info pull-right">
     {{#if state$receipt}}
-      <small class="text-info pull-right"><i class="fa fa-fw fa-check"></i>Status: {{state$orderSentDetails}}</small>
+    <!-- Set this date with x editable -->
       {{#if state$receipt.expectedDeliveryDate}}
-        <small class="text-success pull-right">Expected delivery on {{timeFormattedWithDate state$receipt.expectedDeliveryDate}}</small>
+        Expect delivery on {{timeFormattedWithDate state$receipt.expectedDeliveryDate}}
+      {{/if}}
+      {{#if state$orderSentDetails}}
+      <i class="fa fa-fw fa-check"></i>Status: {{state$orderSentDetails}}
       {{/if}}
     {{else}}
+    <!--DEV: Mail button - opens modal with draft email to send to supplier. -->
       <a class="btn btn-primary setOrder" data-type="emailed">
         <i class="fa fa-envelope-o fa-fw fa-lg"></i>Send email
       </a>
@@ -24,9 +26,9 @@
       <a class="btn btn-primary setOrder" data-type="phoned">
         <i class="fa fa-fw fa-lg fa-phone"></i>Mark as phoned through
       </a>
-    {{/if}}
     <!--DEV: This shows the success state when the order is marked as sent or called through, buttons should disappear, this status message should be displayed -->
-    <!-- </small> -->
+    {{/if}}
+    </small>
   </h2>
   <hr>
 </template>

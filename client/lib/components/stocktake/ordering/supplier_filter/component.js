@@ -1,28 +1,47 @@
-var component = FlowComponents.define("supplierFilter", function(props) {});
+var component = FlowComponents.define("supplierFilter", function(props) {
+});
 
 component.state.suppliers = function() {
-  var ordersList = StockOrders.find({
-    "stocktakeDate": Session.get("thisDate")
-  });
+  var ordersList = StockOrders.find({"stocktakeDate": Session.get("thisDate")}, {sort: {"supplier": 1}}).fetch();
   var supplierslist = [];
-  ordersList.forEach(function(order) {
-    if(order.supplier) {
-      if(supplierslist.indexOf(order.supplier) < 0) {
-        supplierslist.push(order.supplier);
+  var activeSupplier = null;
+  if(ordersList) {
+    ordersList.forEach(function(order) {
+      var supplier = null;
+      if(order.supplier) {
+        supplier = order.supplier;
+      } else {
+        supplier = "Non-assigned";
       }
+      if(supplierslist.indexOf(supplier) < 0) {
+        supplierslist.push(supplier);
+      }
+    });
+
+    if(supplierslist[0] == "Non-assigned") {
+      activeSupplier = null;
+    } else {
+      activeSupplier = supplierslist[0];
     }
-  });
-  Session.set("activeSupplier", supplierslist[0])
-  return supplierslist;
+    Session.set("activeSupplier", activeSupplier)
+    return supplierslist;
+  }
 }
 
 component.state.activeSupplier = function() {
-  return Session.get("activeSupplier");
+  var supplier = Session.get("activeSupplier");
+  if(supplier) {
+    return supplier;
+  } else {
+    return "Non-assigned";
+  }
 }
 
 component.state.thisSupplierActive = function(id) {
   var active = Session.get("activeSupplier");
   if(active == id) {
+    return true;
+  } else if(active == null && id == "Non-assigned") {
     return true;
   } else {
     return false;
