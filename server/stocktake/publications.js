@@ -24,3 +24,15 @@ Meteor.publish("orderReceipts", function(stocktakeDate) {
   var data = OrderReceipts.find({"stocktakeDate": new Date(stocktakeDate).getTime()});
   return data;
 });
+
+Meteor.publish("allOrderReceipts", function() {
+  logger.info("Stock order receipts published");
+  var data = OrderReceipts.find({}, {sort: {"date": -1}, limit: 10});
+  return data;
+});
+
+Meteor.publish("receiptOrders", function(receiptId) {
+  logger.info("Stock orders published for receipt ", receiptId);
+  var data = StockOrders.find({"orderReceipt": receiptId});
+  return data;
+});

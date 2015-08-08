@@ -46,7 +46,8 @@ Meteor.methods({
         "orderedThrough": orderedMethod,
         "expectedDeliveryDate": info.deliveryDate,
         "received": false,
-        "receivedDate": null
+        "receivedDate": null,
+        "invoiceFaceValue": 0
       });
       logger.info("Order receipt generated", id);
       //update orders
