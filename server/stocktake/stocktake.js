@@ -34,7 +34,11 @@ Meteor.methods({
                   "counting": 0,
                   "createdAt": Date.now(),
                   "place": place,
-                  "costPerPortion": ingredient.costPerPortion
+                  "unit": ingredient.portionOrdered,
+                  "unitCost": ingredient.costPerPortion,
+                  "status": false,
+                  "orderRef": null,
+                  "orderedCount": 0
                 }
                 Stocktakes.insert(doc);
               }
@@ -47,7 +51,7 @@ Meteor.methods({
     }
   },
 
-  'updateStocktake': function(info) {
+  'updateStocktake': function(id, info) {
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');
@@ -58,28 +62,8 @@ Meteor.methods({
       logger.error("User not permitted to update stocktakes");
       throw new Meteor.Error(403, "User not permitted to update stocktakes");
     }
-    var stock = Ingredients.findOne(info.stockId);
-    if(!stock) {
-      logger.error("Stock item does not exist");
-      throw new Meteor.Error(403, "Stock item does not exist");
-    }
-    var generalArea = GeneralAreas.findOne(info.generalArea);
-    if(!generalArea) {
-      logger.error("General area does not exist");
-      throw new Meteor.Error(403, "General area does not exist");
-    }
-    var specialArea = SpecialAreas.findOne(info.specialArea);
-    if(!specialArea) {
-      logger.error("Special area does not exist");
-      throw new Meteor.Error(403, "Special area does not exist");
-    }
 
-    var stockTakeExists = Stocktakes.findOne({
-      "date": new Date(info.date).getTime(),
-      "generalArea": info.generalArea,
-      "specialArea": info.specialArea,
-      "stockId": info.stockId
-    });
+    var stockTakeExists = Stocktakes.findOne(id);
     if(stockTakeExists) {
       var setQuery = {};
       if(info.hasOwnProperty("counting")) {
@@ -103,6 +87,22 @@ Meteor.methods({
       logger.info("Stocktake updated", stockTakeExists._id);
 
     } else {
+      var stock = Ingredients.findOne(info.stockId);
+      if(!stock) {
+        logger.error("Stock item does not exist");
+        throw new Meteor.Error(403, "Stock item does not exist");
+      }
+      var generalArea = GeneralAreas.findOne(info.generalArea);
+      if(!generalArea) {
+        logger.error("General area does not exist");
+        throw new Meteor.Error(403, "General area does not exist");
+      }
+      var specialArea = SpecialAreas.findOne(info.specialArea);
+      if(!specialArea) {
+        logger.error("Special area does not exist");
+        throw new Meteor.Error(403, "Special area does not exist");
+      }
+
       var place = specialArea.stocks.indexOf(info.stockId);
       var doc = {
         "date": new Date(info.date).getTime(),
@@ -112,7 +112,11 @@ Meteor.methods({
         "counting": info.counting,
         "createdAt": Date.now(),
         "place": place,
-        "costPerPortion": stock.costPerPortion
+        "unit": stock.portionOrdered,
+        "unitCost": stock.costPerPortion,
+        "status": false,
+        "orderRef": null,
+        "orderedCount": 0
       }
       var id = Stocktakes.insert(doc);
       logger.info("New stocktake created", id, place);
@@ -135,6 +139,10 @@ Meteor.methods({
     if(!stockItemExists) {
       logger.error('Stock item does not exist in stocktake', {"stockId": stockId, "stocktakeId": stocktakeId});
       throw new Meteor.Error(404, "Stock item does not exist in stocktake");
+    }
+    if(stockItemExists.status && stockItemExists.orderRef) {
+      logger.error("Can't remove stocktake. Order has been placed already");
+      throw new Meteor.Error(403, "Can't remove stocktake. Order has been placed already");
     }
     Stocktakes.remove({"_id": stocktakeId});
     logger.info("Stocktake removed", stocktakeId);

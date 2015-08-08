@@ -46,16 +46,19 @@ Meteor.methods({
         var orderRef = null;
         if(existingOrder) {
           orderRef = existingOrder._id;
-          StockOrders.update({"_id": existingOrder._id}, {$inc: {"onhandCount": count}})
+          StockOrders.update({"_id": existingOrder._id}, {$inc: {"countOnHand": count}})
         } else {
           var newOrder = {
             "stockId": stock.stockId,
             "stocktakeDate": stockTakeDate,
             "supplier": supplier,
-            "onhandCount": count,
+            "countOnHand": count,
             "countNeeded": 0,
             "unit": stockItem.portionOrdered,
-            "unitPrice": stockItem.costPerPortion
+            "unitPrice": stockItem.costPerPortion,
+            "countOrdered": 0,
+            "orderReceipt": null,
+            "received": false
           }
           var id = StockOrders.insert(newOrder);
           orderRef = id;
@@ -66,9 +69,7 @@ Meteor.methods({
         Stocktakes.update({"_id": stock._id}, { 
           $set: {
             "status": true, 
-            "orderedCount": stock.counting
-          },
-          $addToSet: {
+            "orderedCount": stock.counting,
             "orderRef": orderRef
           }
         });
@@ -96,75 +97,6 @@ Meteor.methods({
     }
     StockOrders.update({"_id": orderId}, {$set: {"countOrdered": parseFloat(count)}});
     logger.info("Stock order count updated", orderId);
-  },
-
-  generateReceipts: function(stocktakeDate, supplier, info) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
-      logger.error("User not permitted to generate receipts");
-      throw new Meteor.Error(404, "User not permitted to generate receipts");
-    }
-    if(!stocktakeDate) {
-      logger.error("Stocktake date should have a value");
-      return new Meteor.Error(404, "Stocktake date should have a value");
-    }
-    if(!supplier) {
-      logger.error("Supplier should exist");
-      return new Meteor.Error(404, "Supplier should exist");
-    }
-    if(!info.through) {
-      logger.error("Ordered method should exist");
-      return new Meteor.Error(404, "Ordered method should exist");
-    }
-    var ordersExist = StockOrders.find({"stocktakeDate": stocktakeDate, "supplier": supplier}).fetch();
-    if(ordersExist.length < 0) {
-      logger.error("Orders does not exist");
-      return new Meteor.Error(404, "Orders does not exist");
-    }
-    var ordersReceiptExist = OrderReceipts.findOne({"stocktakeDate": stocktakeDate, "supplier": supplier});
-    if(ordersReceiptExist) {
-      logger.error("Orders receipt exists");
-      return new Meteor.Error(404, "Orders receipt exists");
-    }
-    var orderedMethod = {
-      "through": info.through,
-      "details": info.details
-    }
-    var orders = StockOrders.update(
-      {"stocktakeDate": stocktakeDate, "supplier": supplier},
-      {$set: {
-        "orderedThrough": orderedMethod, 
-        "orderedOn": Date.now(),
-        "expectedDeliveryDate": info.deliveryDate
-      }},
-      {multi: true}
-    );
-    logger.info("Orders updated", {"stocktakeDate": stocktakeDate, "supplier": supplier});
-    //generating order receipt
-    var orderIds = [];
-    ordersExist.forEach(function(order) {
-      if(orderIds.indexOf(order._id) < 0) {
-        orderIds.push(order._id);
-      }
-    });
-    OrderReceipts.insert({
-      "date": Date.now(),
-      "stocktakeDate": stocktakeDate,
-      "supplier": supplier,
-      "orderedThrough": orderedMethod,
-      "orders": orderIds,
-      "expectedDeliveryDate": info.deliveryDate
-    });
-
-    if(info.through == "emailed") {
-      //send email to supplier
-    }
-    logger.info("Order receipt generated");
     return;
   },
 
@@ -188,13 +120,21 @@ Meteor.methods({
       logger.error("Order does not exist");
       throw new Meteor.Error(401, "Order does not exist");
     }
-    var receipt = OrderReceipts.findOne({"orders": id});
+    var receipt = OrderReceipts.findOne(order.orderReceipt);
     if(receipt) {
       logger.error("You can't delete this order. This has a order receipt");
       throw new Meteor.Error(401, "You can't delete this order. This has a order receipt");
     }
     StockOrders.remove({"_id": id});
-    // Stocktakes.update({"order": {$in: }})
+    Stocktakes.update(
+      {"orderRef": id},
+      {$set: {
+        "status": false,
+        "orderedCount": 0,
+        "orderRef": null
+      }},
+      {multi: true}
+    )
     logger.info("Stock order removed");
     return;
   }
