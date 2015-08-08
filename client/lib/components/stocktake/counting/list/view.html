@@ -1,17 +1,11 @@
 <template name="stockCounting">
   <div class="row">
     <div class="col-lg-12">
-      {{#if state$editable}}
-        <a class="btn btn-primary btn-sm pull-right generateOrders">Save stocktake &amp; generate orders<br></a>
-      {{else}}
-        {{#if state$ordersExist}}
-          <a class="btn btn-primary btn-sm pull-right" href="/stocktake/orders/{{dateFormat state$date}}">View Orders placed<br></a>
-        {{/if}}
-        <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit</a>
-      {{/if}}
-      {{#if state$editable}}
-        <a class="btn btn-link btn-sm pull-right reOrder"><i class="fa fa-fw fa-reorder"></i>Reorder</a>
-      {{/if}}
+      <a class="btn btn-primary btn-sm pull-right generateOrders">Save stocktake &amp; generate orders<br></a>
+      <!-- {{#if state$ordersExist}} -->
+        <!-- <a class="btn btn-primary btn-sm pull-right" href="/stocktake/orders/{{dateFormat state$date}}">View Orders placed<br></a> -->
+      <!-- {{/if}} -->
+      <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit</a>
       {{#if state$editable}}
         <a href="" id="newStocktakeDate">{{dateFormat state$date}}</a>
       {{else}}

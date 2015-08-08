@@ -41,6 +41,7 @@ Meteor.methods({
       //generating order receipt
       var id = OrderReceipts.insert({
         "date": date,
+        "stocktakeDate": stocktakeDate,
         "supplier": supplier,
         "orderedThrough": orderedMethod,
         "expectedDeliveryDate": info.deliveryDate,

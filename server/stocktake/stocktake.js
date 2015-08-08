@@ -77,13 +77,7 @@ Meteor.methods({
         setQuery['place'] = info.place;
       }
 
-      Stocktakes.update({
-        "date": new Date(info.date).getTime(),
-        "generalArea": info.generalArea,
-        "specialArea": info.specialArea,
-        "stockId": info.stockId
-        }, {$set: setQuery}
-      );
+      Stocktakes.update({"_id": id}, {$set: setQuery});
       logger.info("Stocktake updated", stockTakeExists._id);
 
     } else {

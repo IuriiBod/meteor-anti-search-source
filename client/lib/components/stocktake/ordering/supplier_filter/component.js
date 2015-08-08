@@ -74,3 +74,15 @@ component.state.orderSentDetails = function() {
   }
   return text;
 }
+
+component.state.receiptExists = function(supplier) {
+  var receipt = OrderReceipts.findOne({
+    "stocktakeDate": Session.get("thisDate"),
+    "supplier": supplier
+  });
+  if(receipt) {
+    return true;
+  } else {
+    return false;
+  }
+}

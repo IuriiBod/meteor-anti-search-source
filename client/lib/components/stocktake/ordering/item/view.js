@@ -1,6 +1,5 @@
 Template.ordersListItem.events({
   'click .removeStockOrder': function(event) {
-    console.log("...............", event);
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
     var confirmDelete = confirm("Are you sure you want to delete this order ?");

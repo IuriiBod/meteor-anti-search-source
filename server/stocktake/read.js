@@ -13,7 +13,7 @@ Meteor.methods({
     var pipe = [
       {$group: {
           _id: "$date",
-          totalStockValue: {$sum: {$multiply: ["$counting", "$costPerPortion"]}},
+          totalStockValue: {$sum: {$multiply: ["$counting", "$unitCost"]}},
         }
       },
       {$sort: {_id: -1}}

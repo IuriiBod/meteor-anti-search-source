@@ -2,7 +2,7 @@
   {{#if state$order}}
     <tr data-id="{{state$order._id}}">
       <td>{{state$order.stockName}}</td>
-      <td>{{state$order.onhandCount}} [{{state$order.unit}}]</td>
+      <td>{{state$order.countOnHand}} [{{state$order.unit}}]</td>
       <td>{{state$order.countNeeded}} [{{state$order.unit}}]</td>
       <!--DEV: The 'to order' number needs to be editable with x editable.
       This allows the user to adjust the order before they send it. -->

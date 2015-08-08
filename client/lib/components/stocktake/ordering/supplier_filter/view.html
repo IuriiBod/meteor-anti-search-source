@@ -1,6 +1,6 @@
 <template name="supplierFilter">
   {{#each state$suppliers}}
-    <a class="btn {{#if state$thisSupplierActive this}} btn-primary {{else}} btn-default {{/if}} activateSupplier" data-id="{{this}}">{{this}}
+    <a class="btn {{#if state$receiptExists this}} btn-primary {{else}} btn-default {{/if}} activateSupplier" data-id="{{this}}">{{this}}
       {{#if state$thisSupplierActive this}}
         <i class="fa fa-fw fa-check"></i>
       {{/if}}

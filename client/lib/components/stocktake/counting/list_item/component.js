@@ -27,6 +27,19 @@ component.state.item = function() {
   }
 }
 
+component.state.editable = function() {
+  return Session.get("editStockTake");
+}
+
+component.state.deletable = function(id) {
+  var stocktake = Stocktakes.findOne(id);
+  if(stocktake && !stocktake.status && !stocktake.orderRef) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 component.prototype.onItemRendered = function() {
   $(".counting").editable({
     type: "text",
@@ -35,17 +48,18 @@ component.prototype.onItemRendered = function() {
     display: false,
     mode: 'inline',
     success: function(response, newValue, q) {
-      var id = $(this).closest("li").attr("data-id");
+      var stockId = $(this).closest("li").attr("data-id");
+      var id = $(this).closest("li").attr("data-stockRef");
       var date = Session.get("thisDate");
       if(newValue) {
         var info = {
           "date": date,
           "generalArea": Session.get("activeGArea"),
           "specialArea": Session.get("activeSArea"),
-          "stockId": id,
+          "stockId": stockId,
           "counting": parseFloat(newValue)
         }
-        Meteor.call("updateStocktake", info, function(err, id) {
+        Meteor.call("updateStocktake", id, info, function(err) {
           if(err) {
             console.log(err);
             return alert(err.reason);

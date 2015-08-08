@@ -12,7 +12,7 @@ Template.stockCountingListItem.events({
         } else {
           var stockRefId = $(event.target).closest("li").attr("data-stockRef");
           if(stockRefId) {
-            Meteor.call("removeStockItems", stockRefId, function(err) {
+            Meteor.call("removeStocktake", stockRefId, function(err) {
               if(err) {
                 console.log(err);
                 return alert(err.reason);
