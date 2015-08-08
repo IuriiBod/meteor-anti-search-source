@@ -1,0 +1,13 @@
+<template name="orderReceiveItem">
+  <tr data-id="{{state$stock._id}}">
+    <td>{{state$stock.description}}</td>
+    <td>{{state$stock.countOrdered}} [{{state$stock.unit}}]</td>
+    <td>$ {{state$stock.unitPrice}}</td>
+    <td>$ {{state$total}}</td>
+    <td>
+      <a class="btn btn-primary deliveredCorrectly disabled">Delivered correctly</a>
+      <a class="btn btn-danger wrongPrice disabled">Wrong Price</a>
+      <a class="btn btn-danger wrongQuantity disabled">Wrong Quantity</a>
+    </td>
+  </tr>
+</template>

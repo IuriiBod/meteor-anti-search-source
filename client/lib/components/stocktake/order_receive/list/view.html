@@ -1,0 +1,37 @@
+<template name="orderReceive">
+  <div class="col-lg-12">
+    <div class="ibox ">
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-md-12">
+            <h3>What you ordered</h3>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Stock Name</th>
+                  <th>Qty</th>
+                  <th>Price per unit</th>
+                  <th>Total</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each state$list}}
+                  {{> render component="orderReceiveItem" item=this}}
+                {{/each}}
+              </tbody>
+            </table>
+            <hr>
+            <textarea name="orderReceiveNotes" class="form-control message-input-post" placeholder="Add notes here."></textarea>
+            <br>
+            <a class="btn btn-primary disabled">Take a photo/ Upload Invoice</a>
+            <a class="btn btn-primary disabled">Check temperatures</a>
+            <br>
+            <br>
+            <a class="btn btn-primary disabled">Mark delivery as received</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
