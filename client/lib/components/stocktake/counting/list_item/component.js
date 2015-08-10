@@ -58,6 +58,7 @@ component.prototype.onItemRendered = function() {
           "stockId": stockId,
           "counting": parseFloat(newValue)
         }
+        console.log(".......", id, info);
         Meteor.call("updateStocktake", id, info, function(err) {
           if(err) {
             console.log(err);

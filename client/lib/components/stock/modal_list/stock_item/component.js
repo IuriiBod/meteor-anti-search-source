@@ -40,7 +40,7 @@ component.prototype.onItemRendered = function() {
         "date": date,
         "counting": 0
       }
-      Meteor.call("updateStocktake", info, function(err) {
+      Meteor.call("updateStocktake", null, info, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);
