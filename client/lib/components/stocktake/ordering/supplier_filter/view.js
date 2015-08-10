@@ -24,7 +24,6 @@ Template.supplierFilter.events({
     Meteor.call("generateReceipts", version, supplier, info, function(err) {
       if(err) {
         console.log(err);
-        console.log("..........")
         return alert(err.reason);
       }
     });

@@ -1,5 +1,6 @@
 Meteor.methods({
   generateReceipts: function(version, supplier, info) {
+    console.log(".......", arguments);
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -34,8 +35,8 @@ Meteor.methods({
     }
     var ordersReceiptExist = OrderReceipts.findOne({"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplier});
     if(ordersReceiptExist && !ordersReceiptExist.received) {
-      logger.error("Orders receipt exists");
-      throw new Meteor.Error(404, "Orders receipt exists");
+      logger.error("Undelivered orders receipt exists");
+      throw new Meteor.Error(404, "Undelivered orders receipt exists");
     } else {
       var date = new Date().toDateString();
       date = new Date(date).getTime();
@@ -50,6 +51,7 @@ Meteor.methods({
         "stocktakeDate": stocktakeMain.stocktakeDate,
         "supplier": supplier,
         "orderedThrough": orderedMethod,
+        "orderPlacedBy": Meteor.userId(),
         "expectedDeliveryDate": info.deliveryDate,
         "received": false,
         "receivedDate": null,

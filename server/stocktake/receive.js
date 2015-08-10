@@ -13,7 +13,8 @@ Meteor.methods({
       {"_id": receiptId},
       {$set: {
         "received": true,
-        "receivedDate": Date.now()
+        "receivedDate": Date.now(),
+        "receivedBy": Meteor.userId()
       }}
     );
   },
@@ -33,7 +34,9 @@ Meteor.methods({
     }
     var updateQuery = {
       "received": true,
-      "deliveryStatus": status
+      "deliveryStatus": status,
+      "receivedBy": Meteor.userId(),
+      "receivedDate": Date.now()
     };
 
     if(status == "wrongPrice") {
