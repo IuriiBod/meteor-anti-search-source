@@ -28,7 +28,10 @@
             <a class="btn btn-primary disabled">Check temperatures</a>
             <br>
             <br>
-            <a class="btn btn-primary disabled">Mark delivery as received</a>
+            {{#if state$receipt.received}}
+            {{else}}
+              <a class="btn btn-primary markDeliveryReceived">Mark delivery as received</a>
+            {{/if}}
           </div>
         </div>
       </div>

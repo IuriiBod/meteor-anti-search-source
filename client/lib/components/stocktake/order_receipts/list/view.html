@@ -5,13 +5,13 @@
         <!--DESIGN: These buttons are for each suppier included in the stocktake. They need to be activated like tabs so that users can switch easily to different suppliers.-->
         <!--DEV: Only show the suppliers that are active for this order.-->
         <div class="btn-group">
-          <a href="#" class="btn btn-white">To be received</a>
-          <a href="#" class="btn btn-white">Received</a>
+          <a href="#" class="btn btn-white toBeReceived {{#if state$toBeReceived}} active {{/if}}">To be received</a>
+          <a href="#" class="btn btn-white received {{#if state$received}} active {{/if}}">Received</a>
         </div>
         <div class="btn-group">
-          <a href="#" class="btn btn-white">This week</a>
-          <a href="#" class="btn btn-white">This month</a>
-          <a href="#" class="btn btn-white">All time</a>
+          <a href="#" class="btn btn-white thisWeekReceipts {{#if state$week}} active {{/if}}">This week</a>
+          <a href="#" class="btn btn-white thisMonthReceipts {{#if state$month}} active {{/if}}">This month</a>
+          <a href="#" class="btn btn-white allTimeReceipts {{#if state$allTime}} active {{/if}}">All time</a>
         </div>
         <hr>
         <table class="table table-condensed table-hover table-striped">
@@ -28,6 +28,8 @@
           <tbody>
             {{#each state$list}}
               {{> render component="orderReceiptItem" item=this}}
+            {{else}}
+              No entries to show
             {{/each}}
           </tbody>
         </table>

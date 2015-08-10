@@ -15,3 +15,12 @@ component.state.list = function() {
     return data;
   }
 }
+
+component.state.receipt = function() {
+  var id = Session.get("stockReceipt")
+  var data = OrderReceipts.findOne(id);
+  if(data) {
+    console.log("data", data);
+    return data;
+  }
+}

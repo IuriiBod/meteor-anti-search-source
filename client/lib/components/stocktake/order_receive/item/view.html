@@ -5,9 +5,12 @@
     <td>$ {{state$stock.unitPrice}}</td>
     <td>$ {{state$total}}</td>
     <td>
-      <a class="btn btn-primary deliveredCorrectly disabled">Delivered correctly</a>
-      <a class="btn btn-danger wrongPrice disabled">Wrong Price</a>
-      <a class="btn btn-danger wrongQuantity disabled">Wrong Quantity</a>
+      {{#if state$stock.received}}
+      {{else}}
+        <a class="btn btn-primary deliveredCorrectly">Delivered correctly</a>
+        <a class="btn btn-danger wrongPrice">Wrong Price</a>
+        <a class="btn btn-danger wrongQuantity">Wrong Quantity</a>
+      {{/if}}
     </td>
   </tr>
 </template>

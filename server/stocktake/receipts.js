@@ -33,7 +33,7 @@ Meteor.methods({
       throw new Meteor.Error(404, "Orders does not exist");
     }
     var ordersReceiptExist = OrderReceipts.findOne({"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplier});
-    if(ordersReceiptExist) {
+    if(ordersReceiptExist && !ordersReceiptExist.received) {
       logger.error("Orders receipt exists");
       throw new Meteor.Error(404, "Orders receipt exists");
     } else {
@@ -58,7 +58,7 @@ Meteor.methods({
       logger.info("Order receipt generated", id);
       //update orders
       var orders = StockOrders.update(
-        {"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplier},
+        {"version": version, "supplier": supplier},
         {$set: {
           "orderedThrough": orderedMethod, 
           "orderedOn": date,

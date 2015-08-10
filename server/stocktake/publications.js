@@ -20,9 +20,9 @@ Meteor.publish("ordersPlaced", function(version) {
   return data;
 });
 
-Meteor.publish("orderReceipts", function(version) {
-  logger.info("Stock order receipts published for stocktake version ", version);
-  var data = OrderReceipts.find({"version": version});
+Meteor.publish("orderReceipts", function(ids) {
+  logger.info("Stock order receipts published ", ids);
+  var data = OrderReceipts.find({"_id": {$in: ids}});
   return data;
 });
 
