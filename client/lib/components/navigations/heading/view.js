@@ -295,6 +295,26 @@ Template.pageHeading.events({
   'click #startNewStocktake': function(event) {
     event.preventDefault();
     var date = moment().format("YYYY-MM-DD");
-    $("#newStocktakeModal").modal();
+    var stocktake = StocktakeMain.findOne({"stocktakeDate": new Date(date).getTime()});
+    console.log(stocktake);
+    if(stocktake) {
+      $("#newStocktakeModal").modal();
+    } else {
+      Meteor.call("createMainStocktake", date, function(err, id) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        } else {
+          Meteor.call("generateStocktakes", new Date(date).getTime(), function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.reason);
+            } else {
+              Router.go("stocktakeCounting", {"_id": id})
+            }
+          });
+        }
+      });
+    }
   }
 });

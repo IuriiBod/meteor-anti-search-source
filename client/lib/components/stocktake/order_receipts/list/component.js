@@ -11,7 +11,7 @@ component.state.list = function() {
         $gte: new Date(thisWeek.monday).getTime(),
         $lte: new Date(thisWeek.sunday).getTime()
       }
-    }, {sort: {"receivedDate": -1}});
+    }, {sort: {"receivedDate": -1, "supplier": 1}});
   } else if(time == "month") {
     var thisMonth = getDaysOfMonth(moment());
     return OrderReceipts.find({
@@ -20,9 +20,9 @@ component.state.list = function() {
         $gte: new Date(thisMonth.start).getTime(),
         $lte: new Date(thisMonth.end).getTime()
       }
-    }, {sort: {"receivedDate": -1}});
+    }, {sort: {"receivedDate": -1, "supplier": 1}});
   } else {
-    return OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1}});
+    return OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1, "supplier": 1}});
   }
 }
 

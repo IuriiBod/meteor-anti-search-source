@@ -55,5 +55,24 @@ Meteor.methods({
     StockOrders.update({"_id": id}, {$set: updateQuery});
     logger.info("Stock order updated", id, status);
     return;
-  }
+  },
+
+  receiptUpdate: function(id, info) {
+    if(!id) {
+      logger.error("Id not found");
+      throw new Meteor.Error(401, "Id not found");
+    }
+    var receipt = OrderReceipts.findOne(id);
+    if(!receipt) {
+      logger.error("Receipt not found");
+      throw new Meteor.Error(401, "Receipt not found");
+    }
+    var updateQuery = {};
+    if(info.hasOwnProperty("invoiceFaceValue")) {
+      updateQuery['invoiceFaceValue'] = info.invoiceFaceValue;
+    }
+    OrderReceipts.update({"_id": id}, {$set: updateQuery});
+    logger.info("Update receipt", info);
+    return;
+  } 
 });

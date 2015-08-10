@@ -28,7 +28,16 @@ component.prototype.onItemRendered = function() {
     display: false,
     mode: 'inline',
     success: function(response, newValue) {
-      console.log("..........");
+      var id = $(this).closest("tr").attr("data-id");
+      var info = {
+        "invoiceFaceValue": parseFloat(newValue)
+      }
+      Meteor.call("receiptUpdate", id, info, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        }
+      });
     }
   });
 }

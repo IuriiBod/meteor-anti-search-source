@@ -2,8 +2,8 @@
   <tr data-id="{{state$stock._id}}">
     <td>{{state$stock.description}}</td>
     <td>{{state$stock.countOrdered}} [{{state$stock.unit}}]</td>
-    <td>$ {{state$stock.unitPrice}}</td>
-    <td>$ {{state$total}}</td>
+    <td>$ {{roundCount state$stock.unitPrice}}</td>
+    <td>$ {{roundCount state$total}}</td>
     <td>
       {{#if state$stock.received}}
       {{else}}

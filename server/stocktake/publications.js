@@ -6,6 +6,12 @@ Meteor.publish("allAreas", function() {
   return cursors;
 });
 
+Meteor.publish("stocktakeMains", function(date) {
+  logger.info("Stocktake mains published for date ------", date);
+  var data = StocktakeMain.find({"stocktakeDate": new Date(date).getTime()});
+  return data;
+});
+
 Meteor.publish("stocktakes", function(version) {
   var cursors = [];
   cursors.push(Stocktakes.find({"version": version}));
