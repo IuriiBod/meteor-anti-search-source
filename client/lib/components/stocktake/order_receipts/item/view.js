@@ -1,5 +1,5 @@
 Template.orderReceiptItem.events({
-  'click .showDelivery': function(event) {
+  'click .receiveDelivery': function(event) {
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
     if(id) {
