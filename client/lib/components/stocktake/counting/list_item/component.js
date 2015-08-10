@@ -1,6 +1,6 @@
 var component = FlowComponents.define("stockCountingListItem", function(props) {
   this.id = props.id;
-  this.date = props.date;
+  this.version = props.version;
   this.garea = props.garea;
   this.sarea = props.sarea;
   this.onRendered(this.onItemRendered);
@@ -9,7 +9,7 @@ var component = FlowComponents.define("stockCountingListItem", function(props) {
 component.state.item = function() {
   var stock = Ingredients.findOne(this.id);
   var stocktake = Stocktakes.findOne({
-    "date": this.date, 
+    "version": this.version, 
     "stockId": this.id, 
     "generalArea": this.garea,
     "specialArea": this.sarea
@@ -50,10 +50,9 @@ component.prototype.onItemRendered = function() {
     success: function(response, newValue, q) {
       var stockId = $(this).closest("li").attr("data-id");
       var id = $(this).closest("li").attr("data-stockRef");
-      var date = Session.get("thisDate");
       if(newValue) {
         var info = {
-          "date": date,
+          "version": this.version,
           "generalArea": Session.get("activeGArea"),
           "specialArea": Session.get("activeSArea"),
           "stockId": stockId,

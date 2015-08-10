@@ -1,5 +1,5 @@
 Meteor.methods({
-  generateReceipts: function(stocktakeDate, supplier, info) {
+  generateReceipts: function(version, supplier, info) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -10,27 +10,32 @@ Meteor.methods({
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(404, "User not permitted to generate receipts");
     }
-    if(!stocktakeDate) {
-      logger.error("Stocktake date should have a value");
-      return new Meteor.Error(404, "Stocktake date should have a value");
+    if(!version) {
+      logger.error("Stocktake version should have a value");
+      throw new Meteor.Error(404, "Stocktake version should have a value");
+    }
+    var stocktakeMain = StocktakeMain.findOne(version);
+    if(!stocktakeMain) {
+      logger.error("Stocktake main should exist");
+      throw new Meteor.Error(404, "Stocktake main should exist");
     }
     if(!supplier) {
       logger.error("Supplier should exist");
-      return new Meteor.Error(404, "Supplier should exist");
+      throw new Meteor.Error(404, "Supplier should exist");
     }
     if(!info.through) {
       logger.error("Ordered method should exist");
-      return new Meteor.Error(404, "Ordered method should exist");
+      throw new Meteor.Error(404, "Ordered method should exist");
     }
-    var ordersExist = StockOrders.find({"stocktakeDate": stocktakeDate, "supplier": supplier}).fetch();
+    var ordersExist = StockOrders.find({"version": version, "supplier": supplier}).fetch();
     if(ordersExist.length < 0) {
       logger.error("Orders does not exist");
-      return new Meteor.Error(404, "Orders does not exist");
+      throw new Meteor.Error(404, "Orders does not exist");
     }
-    var ordersReceiptExist = OrderReceipts.findOne({"stocktakeDate": stocktakeDate, "supplier": supplier});
+    var ordersReceiptExist = OrderReceipts.findOne({"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplier});
     if(ordersReceiptExist) {
       logger.error("Orders receipt exists");
-      return new Meteor.Error(404, "Orders receipt exists");
+      throw new Meteor.Error(404, "Orders receipt exists");
     } else {
       var date = new Date().toDateString();
       date = new Date(date).getTime();
@@ -41,7 +46,8 @@ Meteor.methods({
       //generating order receipt
       var id = OrderReceipts.insert({
         "date": date,
-        "stocktakeDate": stocktakeDate,
+        "version": version,
+        "stocktakeDate": stocktakeMain.stocktakeDate,
         "supplier": supplier,
         "orderedThrough": orderedMethod,
         "expectedDeliveryDate": info.deliveryDate,
@@ -52,7 +58,7 @@ Meteor.methods({
       logger.info("Order receipt generated", id);
       //update orders
       var orders = StockOrders.update(
-        {"stocktakeDate": stocktakeDate, "supplier": supplier},
+        {"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplier},
         {$set: {
           "orderedThrough": orderedMethod, 
           "orderedOn": date,
@@ -63,7 +69,7 @@ Meteor.methods({
         }},
         {multi: true}
       );
-      logger.info("Orders updated", {"stocktakeDate": stocktakeDate, "supplier": supplier});
+      logger.info("Orders updated", {"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplier});
     }
 
     if(info.through == "emailed") {

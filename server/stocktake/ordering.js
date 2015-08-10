@@ -1,5 +1,5 @@
 Meteor.methods({
-  generateOrders: function(stockTakeDate) {
+  generateOrders: function(stocktakeVersion) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -10,21 +10,26 @@ Meteor.methods({
       logger.error("User not permitted to generate orders");
       throw new Meteor.Error(404, "User not permitted to generate orders");
     }
-    if(!stockTakeDate) {
-      logger.error("Stocktake date should have a value");
-      return new Meteor.Error(404, "Stocktake date should have a value");
+    if(!stocktakeVersion) {
+      logger.error("Stocktake version should have a value");
+      throw new Meteor.Error(404, "Stocktake version should have a value");
     }
-    var stocktakes = Stocktakes.find({"date": stockTakeDate}).fetch();
+    var version = StocktakeMain.findOne(stocktakeVersion);
+    if(!version) {
+      logger.error("Stocktake version should exist");
+      throw new Meteor.Error(404, "Stocktake version should exist")
+    }
+    var stocktakes = Stocktakes.find({"version": stocktakeVersion}).fetch();
     if(stocktakes.length <= 0) {
       logger.error("No recorded stocktakes found");
-      return new Meteor.Error(404, "No recorded stocktakes found");
+      throw new Meteor.Error(404, "No recorded stocktakes found");
     }
     stocktakes.forEach(function(stock) {
       if(!stock.status) {
         var stockItem = Ingredients.findOne(stock.stockId);
         if(!stockItem) {
           logger.error("Stock item not found");
-          return new Meteor.Error(404, "Stock item not found");
+          throw new Meteor.Error(404, "Stock item not found");
         }
 
         var count = stock.counting;
@@ -39,7 +44,7 @@ Meteor.methods({
 
         var existingOrder = StockOrders.findOne({
           "stockId": stock.stockId,
-          "stocktakeDate": stockTakeDate,
+          "version": stocktakeVersion,
           "supplier": supplier
         })
         //generate order
@@ -50,7 +55,7 @@ Meteor.methods({
         } else {
           var newOrder = {
             "stockId": stock.stockId,
-            "stocktakeDate": stockTakeDate,
+            "version": stocktakeVersion,
             "supplier": supplier,
             "countOnHand": count,
             "countNeeded": 0,

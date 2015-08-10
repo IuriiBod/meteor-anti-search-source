@@ -2,7 +2,7 @@ var component = FlowComponents.define("supplierFilter", function(props) {
 });
 
 component.state.suppliers = function() {
-  var ordersList = StockOrders.find({"stocktakeDate": Session.get("thisDate")}, {sort: {"supplier": 1}}).fetch();
+  var ordersList = StockOrders.find({"version": Session.get("thisVersion")}, {sort: {"supplier": 1}}).fetch();
   var supplierslist = [];
   var activeSupplier = null;
   if(ordersList) {
@@ -52,7 +52,7 @@ component.state.thisSupplierActive = function(id) {
 
 component.state.receipt = function() {
   var receipt = OrderReceipts.findOne({
-    "stocktakeDate": Session.get("thisDate"),
+    "version": Session.get("thisVersion"),
     "supplier": Session.get("activeSupplier")
   });
   return receipt;
@@ -60,7 +60,7 @@ component.state.receipt = function() {
 
 component.state.orderSentDetails = function() {
   var receipt = OrderReceipts.findOne({
-    "stocktakeDate": Session.get("thisDate"),
+    "version": Session.get("thisVersion"),
     "supplier": Session.get("activeSupplier")
   });
   var text = null;
@@ -77,7 +77,7 @@ component.state.orderSentDetails = function() {
 
 component.state.receiptExists = function(supplier) {
   var receipt = OrderReceipts.findOne({
-    "stocktakeDate": Session.get("thisDate"),
+    "version": Session.get("thisVersion"),
     "supplier": supplier
   });
   if(receipt) {

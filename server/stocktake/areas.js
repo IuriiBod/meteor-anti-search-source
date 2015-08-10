@@ -12,7 +12,7 @@ Meteor.methods({
     }
     if(!name) {
       logger.error("General area should have a name");
-      return new Meteor.Error(404, "General area should have a name");
+      throw new Meteor.Error(404, "General area should have a name");
     }
     var exist = GeneralAreas.findOne({"name": name});
     if(exist) {
@@ -37,7 +37,7 @@ Meteor.methods({
     }
     if(!id) {
       logger.error("General area should have a id");
-      return new Meteor.Error(404, "General area should have a id");
+      throw new Meteor.Error(404, "General area should have a id");
     }
     var exist = GeneralAreas.findOne(id);
     if(!exist) {

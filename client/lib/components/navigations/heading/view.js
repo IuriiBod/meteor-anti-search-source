@@ -295,12 +295,6 @@ Template.pageHeading.events({
   'click #startNewStocktake': function(event) {
     event.preventDefault();
     var date = moment().format("YYYY-MM-DD");
-    Meteor.call("generateStocktakes", new Date(date).getTime(), function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
-      }
-      Router.go("stocktakeCounting", {"_date": date})
-    });
+    $("#newStocktakeModal").modal();
   }
 });

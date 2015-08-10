@@ -13,14 +13,14 @@ Template.stockCounting.events({
   'click .generateOrders': function(event) {
     event.preventDefault();
     Session.set("editStockTake", false);
-    var date = Session.get("thisDate");
-    if(date) {
-      Meteor.call("generateOrders", date, function(err, result) {
+    var version = Session.get("thisVersion");
+    if(version) {
+      Meteor.call("generateOrders", version, function(err, result) {
         if(err) {
           console.log(err);
           return alert(err.reason);
         } else {
-          Router.go("stocktakeOrdering", {"date": moment(Session.get("thisDate")).format("YYYY-MM-DD")})
+          Router.go("stocktakeOrdering", {"_id": version})
         }
       });
     }

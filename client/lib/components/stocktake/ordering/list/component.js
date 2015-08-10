@@ -3,7 +3,7 @@ var component = FlowComponents.define("ordersList", function(props) {
 
 component.state.list = function() {
   var data = StockOrders.find({
-    "stocktakeDate": Session.get("thisDate"),
+    "version": Session.get("thisVersion"),
     "supplier": Session.get("activeSupplier")
   });
   var dataFetched = data.fetch();

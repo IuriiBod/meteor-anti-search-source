@@ -1,5 +1,5 @@
 var component = FlowComponents.define("stockCounting", function(props) {
-  this.date = Session.get("thisDate");
+  this.version = Session.get("thisVersion");
 });
 
 component.state.editable = function() {
@@ -8,7 +8,7 @@ component.state.editable = function() {
 
 component.state.ordersExist = function() {
   var ordersExist = Stocktakes.findOne({
-    "date": Session.get("thisDate"),
+    "version": Session.get("thisVersion"),
     "status": true
   });
   if(ordersExist) {
@@ -19,7 +19,7 @@ component.state.ordersExist = function() {
 }
 
 component.state.list = function() {
-  var thisDate = Session.get("thisDate");
+  var thisVersion = Session.get("thisVersion");
   var editable = Session.get("editStockTake");
   var gareaId = Session.get("activeGArea");
   var sareaId = Session.get("activeSArea");
@@ -35,7 +35,7 @@ component.state.list = function() {
       {
         "generalArea": gareaId, 
         "specialArea": sareaId, 
-        "date": thisDate
+        "version": thisVersion
       }, {
         sort: {"order": 1}
       });
@@ -58,8 +58,8 @@ component.state.list = function() {
   return resultData;
 }
 
-component.state.date = function() {
-  return this.date;
+component.state.stocktakeMain = function() {
+  return StocktakeMain.findOne(this.version);
 }
 
 component.state.filtered = function() {

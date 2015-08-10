@@ -7,9 +7,9 @@
       <!-- {{/if}} -->
       <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit</a>
       {{#if state$editable}}
-        <a href="" id="newStocktakeDate">{{dateFormat state$date}}</a>
+        <a href="" id="newStocktakeDate">{{dateFormat state$stocktakeMain.stocktakeDate}}</a>
       {{else}}
-        {{dateFormat state$date}}
+        {{dateFormat state$stocktakeMain.stocktakeDate}}
       {{/if}}
       <hr>
     </div>
@@ -21,7 +21,7 @@
       <div class="col-md-8">
         <ul class="list-group">
           {{#each state$list.stocks}}
-            {{> render component="stockCountingListItem" id=this date=state$date garea=state$list.generalArea sarea=state$list._id}}
+            {{> render component="stockCountingListItem" id=this version=state$stocktakeMain._id garea=state$list.generalArea sarea=state$list._id}}
           {{else}}
             No items on this list
           {{/each}}

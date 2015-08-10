@@ -12,7 +12,7 @@ Template.supplierFilter.events({
     event.preventDefault();
     var orderType = $(event.target).attr("data-type");
     var supplier = Session.get("activeSupplier");
-    var stocktakeDate = Session.get("thisDate");
+    var version = Session.get("thisVersion");
     var address = null;
     var deliveryDate = moment().add(7, 'days');
     deliveryDate = moment(deliveryDate).format("YYYY-MM-DD");
@@ -21,9 +21,10 @@ Template.supplierFilter.events({
       "details": address,
       "deliveryDate": new Date(deliveryDate).getTime()
     }
-    Meteor.call("generateReceipts", stocktakeDate, supplier, info, function(err) {
+    Meteor.call("generateReceipts", version, supplier, info, function(err) {
       if(err) {
         console.log(err);
+        console.log("..........")
         return alert(err.reason);
       }
     });

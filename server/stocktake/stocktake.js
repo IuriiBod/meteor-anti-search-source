@@ -1,4 +1,24 @@
 Meteor.methods({
+  'createMainStocktake': function(date) {
+    var user = Meteor.user();
+    if(!user) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var permitted = isManagerOrAdmin(user);
+    if(!permitted) {
+      logger.error("User not permitted to generate stocktakes");
+      throw new Meteor.Error(403, "User not permitted to generate stocktakes");
+    }
+    var doc = {
+      "stocktakeDate": new Date(date).getTime(),
+      "date": Date.now()
+    }
+    var id = StocktakeMain.insert(doc);
+    logger.info("Creating new stocktake", date, id);
+    return id;
+  },
+
   'generateStocktakes': function(stocktakeDate) {
     var user = Meteor.user();
     if(!user) {
@@ -10,6 +30,18 @@ Meteor.methods({
       logger.error("User not permitted to generate stocktakes");
       throw new Meteor.Error(403, "User not permitted to generate stocktakes");
     }
+    var mainId = null;
+    var stocktakeMain = StocktakeMain.find({"stocktakeDate": stocktakeDate}, {sort: {"date": -1}, limit: 1}).fetch();
+
+    if(!stocktakeMain.length > 0) {
+      var doc = {
+      "stocktakeDate": new Date(date).getTime(),
+        "date": Date.now()
+      }
+      mainId = StocktakeMain.insert(doc);
+    } else {
+      mainId = stocktakeMain[0]._id;
+    }
     var specialAreas = SpecialAreas.find().fetch();
     
     if(specialAreas.length > 0) {
@@ -17,7 +49,8 @@ Meteor.methods({
         if(area && area.stocks.length > 0) {
           area.stocks.forEach(function(id) {
             var existingStocktake = Stocktakes.findOne({
-              "date": new Date(stocktakeDate).getTime,
+              "date": new Date(stocktakeDate).getTime(),
+              "version": mainId,
               "generalArea": area.generalArea,
               "specialArea": area._id,
               "stockId": id
@@ -27,6 +60,7 @@ Meteor.methods({
               if(ingredient) {
                 var place = area.stocks.indexOf(id);
                 var doc = {
+                  "version": mainId,
                   "date": new Date(stocktakeDate).getTime(),
                   "generalArea": area.generalArea,
                   "specialArea": area._id,

@@ -21,23 +21,35 @@ component.state.widthofBar = function() {
   }
 }
 
+component.state.editable = function() {
+  return Session.get("editStockTake");
+}
+
 component.prototype.onItemRendered = function() {
-  $(".sarea").editable({
-    type: "text",
-    title: 'Edit Special area name',
-    showbuttons: false,
-    mode: 'inline',
-    success: function(response, newValue) {
-      var self = this;
-      var id = $(self).parent().attr("data-id");
-      if(newValue) {
-        Meteor.call("editSpecialArea", id, {"name": newValue}, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
+  var editPermitted = Session.get("editStockTake") 
+    console.log(".......if....");
+
+  Tracker.autorun(function() {
+    if(editPermitted) {
+      console.log(".......Tracker....");
+      $(".sarea").editable({
+        type: "text",
+        title: 'Edit Special area name',
+        showbuttons: false,
+        mode: 'inline',
+        success: function(response, newValue) {
+          var self = this;
+          var id = $(self).parent().attr("data-id");
+          if(newValue) {
+            Meteor.call("editSpecialArea", id, {"name": newValue}, function(err) {
+              if(err) {
+                console.log(err);
+                return alert(err.reason);
+              }
+            });
           }
-        });
-      }
+        }
+      });    
     }
   });
 

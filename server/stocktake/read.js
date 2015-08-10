@@ -12,11 +12,12 @@ Meteor.methods({
     // }
     var pipe = [
       {$group: {
-          _id: "$date",
+          _id: "$version",
+          date: {$first: "$date"},
           totalStockValue: {$sum: {$multiply: ["$counting", "$unitCost"]}},
         }
       },
-      {$sort: {_id: -1}}
+      {$sort: {date: -1}}
     ]
     var data = Stocktakes.aggregate(pipe, {cursor: {batchSize: 0}});
     logger.info("Stocktake history published");
