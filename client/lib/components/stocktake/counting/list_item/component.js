@@ -19,6 +19,7 @@ component.state.item = function() {
       stock['stockRef'] = stocktake._id;
       stock['counting'] = stocktake.counting;
       stock['status'] = stocktake.status;
+      stock['place'] = stocktake.place;
     } else {
       stock['stockRef'] = null;
       stock['counting'] = 0;

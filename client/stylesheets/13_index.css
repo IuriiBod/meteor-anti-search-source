@@ -81,3 +81,7 @@ input {
 .form-inline .form-control{
   width: 100% !important;
 }
+
+.fa-reorder {
+  cursor: move;
+}

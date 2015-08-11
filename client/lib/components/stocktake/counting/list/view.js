@@ -47,6 +47,43 @@ Template.stockCounting.events({
         }
       });
     }, 10);
+
+    $(".sortableStockItems").sortable({
+      stop: function(event, ui) {
+        var itemId = $(ui.item).attr("data-stockRef");
+        var itemPosition = $(ui.item).attr("data-place");
+        var nextItemId = $($($(ui.item)[0]).next()).attr("data-id");
+        var nextItemPosition = $($($(ui.item)[0]).next()).attr("data-place");
+        var prevItemPosition = $($($(ui.item)[0]).prev()).attr("data-place");
+        var sareaId = Session.get("activeSArea");
+
+        console.log(".....", itemId);
+        console.log(".....", nextItemPosition, prevItemPosition);
+
+        if(!prevItemPosition) {
+          prevItemPosition = 0;
+        } 
+        Meteor.call("stocktakePositionUpdate", itemId, prevItemPosition, nextItemPosition, function(err) {
+          if(err) {
+            console.log(err);
+            return alert(err.reason);
+          } else {
+            // console.log("......position updated");
+            // Meteor.call("specialAreasPositionUpdate", sareaId, itemId, itemPosition, nextItemPosition, function(err) {
+            //   if(err) {
+            //     console.log(err);
+            //     return alert(err.reason);
+            //   }
+            // });
+          }
+        });
+        // if(!nextItemPosition) {
+        //   // nextItemPosition = 
+        // }
+        
+
+      }
+    });
   },
 
   'click .generateOrders': function(event) {
