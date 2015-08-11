@@ -27,6 +27,7 @@ component.prototype.onItemRendered = function() {
     mode: 'inline',
     success: function(response, newValue) {
       var id = $(this).closest("tr").attr("data-id");
+      $(this).closest("tr").next().find("a").click();
       Meteor.call("editOrderingCount", id, parseFloat(newValue), function(err) {
         if(err) {
           console.log(err);

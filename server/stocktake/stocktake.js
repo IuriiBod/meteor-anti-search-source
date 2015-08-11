@@ -96,12 +96,21 @@ Meteor.methods({
       logger.error("User not permitted to update stocktakes");
       throw new Meteor.Error(403, "User not permitted to update stocktakes");
     }
+    var mainStocktake = StocktakeMain.findOne(info.version);
+    if(!mainStocktake) {
+      logger.error('Stocktake main does not exist');
+      throw new Meteor.Error(401, 'Stocktake main does not exist');
+    }
 
     var stockTakeExists = Stocktakes.findOne(id);
     if(stockTakeExists) {
       var setQuery = {};
       if(info.hasOwnProperty("counting")) {
-        setQuery['counting'] = info.counting;
+        var counting = parseFloat(info.counting);
+        if(counting != counting) {
+          counting = 0;
+        }
+        setQuery['counting'] = counting;
         if(stockTakeExists.status) {
           setQuery['status'] = false;
           setQuery['orderedCount'] = stockTakeExists.counting;
@@ -133,7 +142,8 @@ Meteor.methods({
 
       var place = specialArea.stocks.indexOf(info.stockId);
       var doc = {
-        "date": new Date(info.date).getTime(),
+        "version": info.version,
+        "date": new Date(mainStocktake.stocktakeDate).getTime(),
         "generalArea": info.generalArea,
         "specialArea": info.specialArea,
         "stockId": info.stockId,

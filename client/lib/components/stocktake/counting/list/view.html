@@ -6,11 +6,7 @@
         <!-- <a class="btn btn-primary btn-sm pull-right" href="/stocktake/orders/{{dateFormat state$date}}">View Orders placed<br></a> -->
       <!-- {{/if}} -->
       <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit</a>
-      {{#if state$editable}}
-        <a href="" id="newStocktakeDate">{{dateFormat state$stocktakeMain.stocktakeDate}}</a>
-      {{else}}
-        {{dateFormat state$stocktakeMain.stocktakeDate}}
-      {{/if}}
+      {{dateFormat state$stocktakeMain.stocktakeDate}}
       <hr>
     </div>
   </div>

@@ -47,18 +47,19 @@ component.prototype.onItemRendered = function() {
     showbuttons: true,
     display: false,
     mode: 'inline',
-    success: function(response, newValue, q) {
-      var stockId = $(this).closest("li").attr("data-id");
-      var id = $(this).closest("li").attr("data-stockRef");
+    success: function(response, newValue) {
+      var elem = $(this).closest("li");
+      var stockId = $(elem).closest("li").attr("data-id");
+      var id = $(elem).closest("li").attr("data-stockRef");
       if(newValue) {
         var info = {
-          "version": this.version,
+          "version": Session.get("thisVersion"),
           "generalArea": Session.get("activeGArea"),
           "specialArea": Session.get("activeSArea"),
           "stockId": stockId,
           "counting": parseFloat(newValue)
         }
-        console.log(".......", id, info);
+        $(elem).next().find("a").click();
         Meteor.call("updateStocktake", id, info, function(err) {
           if(err) {
             console.log(err);

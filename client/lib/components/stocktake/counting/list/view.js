@@ -8,6 +8,45 @@ Template.stockCounting.events({
     event.preventDefault();
     Session.set("editStockTake", true);
     $(event.target).hide();
+    setTimeout(function() {
+      $(".sarea").editable({
+        type: "text",
+        title: 'Edit Special area name',
+        showbuttons: false,
+        mode: 'inline',
+        success: function(response, newValue) {
+          var self = this;
+          var id = $(self).parent().attr("data-id");
+          if(newValue) {
+            Meteor.call("editSpecialArea", id, {"name": newValue}, function(err) {
+              if(err) {
+                console.log(err);
+                return alert(err.reason);
+              }
+            });
+          }
+        }
+      });    
+
+      $(".garea").editable({
+        type: "text",
+        title: 'Edit General area name',
+        showbuttons: false,
+        mode: 'inline',
+        success: function(response, newValue) {
+          var self = this;
+          var id = $(self).parent().attr("data-id");
+          if(newValue) {
+            Meteor.call("editGeneralArea", id, {"name": newValue}, function(err) {
+              if(err) {
+                console.log(err);
+                return alert(err.reason);
+              }
+            });
+          }
+        }
+      });
+    }, 10);
   },
 
   'click .generateOrders': function(event) {
@@ -26,26 +65,3 @@ Template.stockCounting.events({
     }
   }
 });
-
-Template.stockCounting.rendered = function() {
-  Tracker.autorun(function() {
-    if(Session.get("editStockTake")) {
-      $('#newStocktakeDate').editable({
-        type: "combodate",
-        title: "Select date",
-        mode: "inline",
-        format: 'YYYY-MM-DD',    
-        viewformat: 'YYYY-MM-DD',    
-        template: 'YYYY-MM-DD',    
-        combodate: {
-          minYear: 2000,
-          maxYear: 2020,
-          minuteStep: 1
-        },
-        success: function(response, newValue) {
-          console.log("...........", newValue);
-        }
-      });
-    }
-  });
-}

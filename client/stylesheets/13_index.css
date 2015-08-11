@@ -78,3 +78,6 @@ input {
   color: #555 !important;
 }
 
+.form-inline .form-control{
+  width: 100% !important;
+}

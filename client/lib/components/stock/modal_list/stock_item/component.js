@@ -32,20 +32,6 @@ component.prototype.onItemRendered = function() {
         console.log(err);
         return alert(err.reason);
       }
-      var date = Session.get("thisDate");
-      var info = {
-        "stockId": id,
-        "generalArea": Session.get("activeGArea"),
-        "specialArea": sareaId,
-        "date": date,
-        "counting": 0
-      }
-      Meteor.call("updateStocktake", null, info, function(err) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        }
-      })
     });
   });
 };
