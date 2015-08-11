@@ -7,7 +7,7 @@ Meteor.publish("allAreas", function() {
 });
 
 Meteor.publish("stocktakeMains", function(date) {
-  logger.info("Stocktake mains published for date ------", date);
+  logger.info("Stocktake mains published for date", date);
   var data = StocktakeMain.find({"stocktakeDate": new Date(date).getTime()});
   return data;
 });
