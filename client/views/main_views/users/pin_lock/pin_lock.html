@@ -1,9 +1,9 @@
 <template name="pinLock">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        {{> render component="pinCode" id=currentUser._id backwardUrl=backwardUrl}}
-      </div>
-    </div>
+  <div class="lock-word animated fadeInDown">
+    <span class="first-word"></span>
+    <span></span>
+  </div>
+  <div class="middle-box text-center lockscreen animated fadeInDown">
+    {{> render component="pinCode" id=currentUser._id backwardUrl=backwardUrl}}
   </div>
 </template>
