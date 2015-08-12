@@ -2,7 +2,8 @@ StaleSession = {
 
   // inactivityTimeout
   get inactivityTimeout() {
-    return Session.get("StaleSession.inactivityTimeout");
+    var val = Session.get("StaleSession.inactivityTimeout");
+    return val || 600000;
   },
   set inactivityTimeout(val) {
     Session.set("StaleSession.inactivityTimeout", val);
@@ -10,7 +11,8 @@ StaleSession = {
 
   // heartbeatInterval
   get heartbeatInterval() {
-    return Session.get("StaleSession.heartbeatInterval");
+    var val = Session.get("StaleSession.heartbeatInterval");
+    return val || 500;
   },
   set heartbeatInterval(val) {
     Session.set("StaleSession.heartbeatInterval", val);
@@ -18,7 +20,9 @@ StaleSession = {
 
   // activityEvents
   get activityEvents() {
-    return Session.get("StaleSession.activityEvents");
+    var val = Session.get("StaleSession.activityEvents");
+    var defaultVal = "mousemove click keydown touchstart touchend";
+    return val || defaultVal;
   },
   set activityEvents(val) {
     Session.set("StaleSession.activityEvents", val);
@@ -77,11 +81,6 @@ StaleSession = {
 
 
 Meteor.startup(function () {
-  StaleSession.configure({
-    inactivityTimeout: 600000,
-    heartbeatInterval: 500,
-    activityEvents: "mousemove click keydown touchstart touchend"
-  });
   StaleSession.lastActivity = new Date();
   $(document).on(StaleSession.activityEvents, function() {
     StaleSession.lastActivity = new Date();
