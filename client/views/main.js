@@ -25,10 +25,8 @@ if (Meteor.isClient) {
           type = "Admin";
         }
       }
-      console.log("....user", user);
       info['created_at'] = new Date(user.createdAt).getTime();
-      info['type'] = type;
+      info['user_type'] = type;
     }
- 
   }
 }
