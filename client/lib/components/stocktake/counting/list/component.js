@@ -18,6 +18,19 @@ component.state.ordersExist = function() {
   }
 }
 
+component.state.version = function() {
+  return this.version;
+}
+
+component.state.specialArea = function() {
+  return Session.get("activeSArea");
+}
+
+
+component.state.generalArea = function() {
+  return Session.get("activeGArea");
+}
+
 component.state.list = function() {
   var thisVersion = Session.get("thisVersion");
   var editable = Session.get("editStockTake");
@@ -37,7 +50,7 @@ component.state.list = function() {
         "specialArea": sareaId, 
         "version": thisVersion
       }, {
-        sort: {"order": 1}
+        sort: {"place": 1}
       });
     resultData['_id'] = sareaId;
     resultData['generalArea'] = gareaId;
@@ -51,7 +64,6 @@ component.state.list = function() {
       });
     }
   }
-
   if(resultData.stocks && resultData.stocks.length > 0) {
     subs.subscribe("ingredients", resultData.stocks);
   }

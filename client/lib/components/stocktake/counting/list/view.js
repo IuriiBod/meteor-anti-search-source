@@ -50,38 +50,37 @@ Template.stockCounting.events({
 
     $(".sortableStockItems").sortable({
       stop: function(event, ui) {
-        var itemId = $(ui.item).attr("data-stockRef");
+        var stocktakeId = $(ui.item).attr("data-stockRef");
+        var stockId = $(ui.item).attr("data-id");
         var itemPosition = $(ui.item).attr("data-place");
+
         var nextItemId = $($($(ui.item)[0]).next()).attr("data-id");
         var nextItemPosition = $($($(ui.item)[0]).next()).attr("data-place");
+        var prevItemId = $($($(ui.item)[0]).prev()).attr("data-id");
         var prevItemPosition = $($($(ui.item)[0]).prev()).attr("data-place");
+
         var sareaId = Session.get("activeSArea");
-
-        console.log(".....", itemId);
-        console.log(".....", nextItemPosition, prevItemPosition);
-
         if(!prevItemPosition) {
           prevItemPosition = 0;
         } 
-        Meteor.call("stocktakePositionUpdate", itemId, prevItemPosition, nextItemPosition, function(err) {
+
+        var info = {
+          "nextItemId": nextItemId,
+          "prevItemId": prevItemId
+        }
+        if(nextItemPosition) {
+          info['nextItemPosition'] = nextItemPosition
+        }
+
+        if(prevItemPosition) {
+          info['prevItemPosition'] = prevItemPosition
+        }
+        Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, function(err) {
           if(err) {
             console.log(err);
             return alert(err.reason);
-          } else {
-            // console.log("......position updated");
-            // Meteor.call("specialAreasPositionUpdate", sareaId, itemId, itemPosition, nextItemPosition, function(err) {
-            //   if(err) {
-            //     console.log(err);
-            //     return alert(err.reason);
-            //   }
-            // });
-          }
+          } 
         });
-        // if(!nextItemPosition) {
-        //   // nextItemPosition = 
-        // }
-        
-
       }
     });
   },

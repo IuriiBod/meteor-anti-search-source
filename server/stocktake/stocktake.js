@@ -186,28 +186,41 @@ Meteor.methods({
     logger.info("Stocktake removed", stocktakeId);
   },
 
-  stocktakePositionUpdate: function(stocktakeId, prevElemPosition, nextElemPosition) {
+  stocktakePositionUpdate: function(stocktakeId, stockId, sAreaId, info) {
     var stocktake = Stocktakes.findOne(stocktakeId);
+    //update stocktakes places
     if(stocktake) {
-      if(!nextElemPosition) {
-        var count = Stocktakes.find({"specialArea": stocktake.specialArea}).fetch().length;
-        if(count > 0) {
-          nextElemPosition = count;
-        }
+      var nextPosition = 0;
+      var prevPosition = 0;
+      var count = Stocktakes.find({"specialArea": stocktake.specialArea}).fetch().length;
+
+      if(info.hasOwnProperty("nextItemPosition")) {
+        nextPosition = info.nextItemPosition;
       }
-      var newPosition = (parseFloat(nextElemPosition) + parseFloat(prevElemPosition))/2;
+      if(info.hasOwnProperty("prevItemPosition")) {
+        prevPosition = info.prevItemPosition;
+      }
+
+      var newPosition = (parseFloat(nextPosition) + parseFloat(prevPosition))/2;
       Stocktakes.update({"_id": stocktakeId}, {$set: {"place": newPosition}});
+    }
 
-      var specialArea = SpecialAreas.findOne(stocktake.specialArea);
-      if(specialArea) {
-        var array = specialArea.stocks;
-        var oldPosition = array.indexOf(stocktake.stockId);
-        SpecialAreas.update({"_id": stocktake.specialArea}, {$set: {"stocks": []}});
-
-        array.splice(newPosition, 0, array.splice(oldPosition, 1)[0]);
-        SpecialAreas.update({"_id": stocktake.specialArea}, {$set: {"stocks": array}});
-        return;
+    //update special area original places
+    var specialArea = SpecialAreas.findOne(sAreaId);
+    if(specialArea) {
+      var array = specialArea.stocks;
+      var oldPosition = array.indexOf(stockId);
+      var newPosition = null;
+      if(info.hasOwnProperty("nextItemId")) {
+        newPosition = (array.indexOf(info.nextItemId) - 1);
+      } else if(info.hasOwnProperty("prevItemId")) {
+        newPosition = (array.indexOf(info.prevItemId) + 1);
       }
+
+      SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": []}});
+      array.splice(newPosition, 0, array.splice(oldPosition, 1)[0]);
+      SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": array}});
+      return;
     }
   }
 });
