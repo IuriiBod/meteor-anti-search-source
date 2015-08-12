@@ -25,11 +25,12 @@ component.state.image = function() {
 
 component.action.inputPinCode = function(pinCode) {
   var backwardUrl = this.get("backwardUrl") || '/';
-  Meteor.call("inputPinCode", pinCode, function (err) {
+  Meteor.call("inputPinCode", pinCode, function (err, res) {
     if (err) {
       console.log(err);
       return alert(err.reason);
-    } else {
+    }
+    else if (res) {
       StaleSession.reset();
       Router.go(backwardUrl);
     }
