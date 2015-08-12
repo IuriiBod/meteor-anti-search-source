@@ -8,13 +8,7 @@ Template.newStocktakeModal.events({
         console.log(err);
         return alert(err.reason);
       } else {
-        Meteor.call("generateStocktakes", new Date(date).getTime(), function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          } 
-          Router.go("stocktakeCounting", {"_id": id})
-        });
+        Router.go("stocktakeCounting", {"_id": id});
       }
     });
   },

@@ -296,7 +296,6 @@ Template.pageHeading.events({
     event.preventDefault();
     var date = moment().format("YYYY-MM-DD");
     var stocktake = StocktakeMain.findOne({"stocktakeDate": new Date(date).getTime()});
-    console.log(stocktake);
     if(stocktake) {
       $("#newStocktakeModal").modal();
     } else {
@@ -305,14 +304,7 @@ Template.pageHeading.events({
           console.log(err);
           return alert(err.reason);
         } else {
-          Meteor.call("generateStocktakes", new Date(date).getTime(), function(err) {
-            if(err) {
-              console.log(err);
-              return alert(err.reason);
-            } else {
-              Router.go("stocktakeCounting", {"_id": id})
-            }
-          });
+          Router.go("stocktakeCounting", {"_id": id});
         }
       });
     }
