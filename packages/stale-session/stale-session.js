@@ -1,44 +1,90 @@
-StaleSession = new function () {
-  var self = this;
+StaleSession = {
 
-  self.configure = function (kwargs) {
+  // inactivityTimeout
+  get inactivityTimeout() {
+    return Session.get("StaleSession.inactivityTimeout");
+  },
+  set inactivityTimeout(val) {
+    Session.set("StaleSession.inactivityTimeout", val);
+  },
+
+  // heartbeatInterval
+  get heartbeatInterval() {
+    return Session.get("StaleSession.heartbeatInterval");
+  },
+  set heartbeatInterval(val) {
+    Session.set("StaleSession.heartbeatInterval", val);
+  },
+
+  // activityEvents
+  get activityEvents() {
+    return Session.get("StaleSession.activityEvents");
+  },
+  set activityEvents(val) {
+    Session.set("StaleSession.activityEvents", val);
+  },
+
+  // sessionExpired
+  get sessionExpired() {
+    return Session.get("StaleSession.sessionExpired")
+  },
+  set sessionExpired(val) {
+    Session.set("StaleSession.sessionExpired", val)
+  },
+
+  lastActivity: new Date(),
+
+  onSessionExpiration: function () {},
+  onReset: function () {},
+
+  configure: function (kwargs) {
     kwargs = kwargs || {};
-    self.inactivityTimeout = kwargs.inactivityTimeout || 600000;
-    self.heartbeatInterval = kwargs.heartbeatInterval || 500;
-    self.activityEvents = kwargs.activityEvents ||
-      'mousemove click keydown touchstart touchend';
-    self.onSessionExpiration = kwargs.onSessionExpiration || function () {};
-    self.onReset = kwargs.onReset || function () {};
-  };
+    kwargs = _.pick(
+      kwargs,
+      "inactivityTimeout",
+      "heartbeatInterval",
+      "activityEvents",
+      "onSessionExpiration",
+      "onReset"
+    );
+    var self = this;
+    _.each(kwargs, function (val, key) {
+      self[key] = val;
+    });
+  },
 
-  // Configure first time
-  self.configure();
+  reset: function () {
+    this.lastActivity = new Date();
+    this.sessionExpired = false;
+    this.onReset();
+  },
 
-  self.reset = function () {
-    self.lastActivity = new Date();
-    Session.set('sessionExpired', false);
-    self.onReset();
-  };
-
-  var tick = function () {
-    var isExpired = Session.get('sessionExpired');
-    if (isExpired) {
-      self.onSessionExpiration();
+  start: function () {
+    if (this.sessionExpired) {
+      this.onSessionExpiration();
     }
     else {
-      var interval = new Date() - self.lastActivity;
-      if (interval >= self.inactivityTimeout) {
-        Session.set('sessionExpired', true);
+      var interval = new Date() - this.lastActivity;
+      if (interval >= this.inactivityTimeout) {
+        this.sessionExpired = true;
       }
     }
-    Meteor.setTimeout(tick.bind(self), self.heartbeatInterval);
-  };
+    Meteor.setTimeout(this.start.bind(this), this.heartbeatInterval);
+  }
 
-  Meteor.startup(function () {
-    self.lastActivity = new Date();
-    $(document).on(self.activityEvents, function() {
-      self.lastActivity = new Date();
-    });
-    tick();
+};
+
+
+
+Meteor.startup(function () {
+  StaleSession.configure({
+    inactivityTimeout: 600000,
+    heartbeatInterval: 500,
+    activityEvents: "mousemove click keydown touchstart touchend"
   });
-}();
+  StaleSession.lastActivity = new Date();
+  $(document).on(StaleSession.activityEvents, function() {
+    StaleSession.lastActivity = new Date();
+  });
+  StaleSession.start();
+});

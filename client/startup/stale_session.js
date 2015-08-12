@@ -1,7 +1,7 @@
 Meteor.startup(function () {
   StaleSession.onSessionExpiration = function () {
     var userId = Meteor.userId();
-    if (_.isUndefined(userId)) {
+    if (!userId) {
       return;
     }
     var currRouter = Router.current();
