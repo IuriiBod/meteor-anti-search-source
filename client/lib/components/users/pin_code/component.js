@@ -24,7 +24,7 @@ component.state.image = function() {
 };
 
 component.action.inputPinCode = function(pinCode) {
-  var backwardUrl = this.get("backwardUrl");
+  var backwardUrl = this.get("backwardUrl") || '/';
   Meteor.call("inputPinCode", pinCode, function (err) {
     if (err) {
       console.log(err);
