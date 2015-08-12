@@ -1,0 +1,44 @@
+<template name="pinCode">
+  <div class="ibox float-e-margins">
+    <div>
+      <div class="ibox-content no-padding border-left-right">
+        <img alt="image" class="img-responsive" src="{{state$image}}">
+      </div>
+      <div class="ibox-content profile-content">
+        <h4>
+          <strong>
+            {{#if state$isEditPermitted}}
+              <a href="#" id="username" data-id="{{state$basic._id}}" class="editable">{{state$basic.username}}</a>
+            {{else}}
+              {{state$basic.username}}
+            {{/if}}
+          </strong>
+        </h4>
+        <br>
+        <form>
+          <label for="pin-code">Enter your PIN to unlock</label>
+          <div class="row">
+            <div class="col-xs-4">
+              <input type="password"
+                     id="pin-code"
+                     class="form-control"
+                     maxlength="4"
+                     minlength="4"
+                     pattern="^\d{4}$"
+                     required
+                     placeholder="****">
+            </div>
+          </div>
+          <br>
+          <button type="submit" class="btn btn-default">Unlock</button>
+        </form>
+        <hr>
+        <p>
+        <h4>Not you?</h4>
+        <br>
+        <button class="btn btn-default" id="switch-user">Switch user</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
