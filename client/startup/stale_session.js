@@ -12,7 +12,7 @@ Meteor.startup(function () {
     }
     if (routeName !== "pinLock") {
       Router.go("pinLock", {}, {
-        query: "backwardUrl=" + backwardUrl
+        query: "backwardUrl=" + backwardUrl.replace(Meteor.absoluteUrl(), '/')
       });
     }
   };
