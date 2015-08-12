@@ -1,4 +1,11 @@
 Template.stockCounting.events({
+  'click .saveStockTake': function(event) {
+    event.preventDefault();
+    Session.set("editStockTake", false);
+    $(event.target).hide();
+    $(".editStockTake").show();
+  },
+
   'click .addStock': function(event) {
     event.preventDefault();
     $("#stocksListModal").modal("show");
