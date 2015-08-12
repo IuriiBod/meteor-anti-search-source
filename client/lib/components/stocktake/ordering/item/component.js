@@ -1,17 +1,21 @@
 var component = FlowComponents.define("ordersListItem", function(props) {
-  this.order = props.item;
+  this.orderId = props.itemId;
   this.onRendered(this.onItemRendered);
 });
 
 component.state.order = function() {
-  var stock = Ingredients.findOne({"_id": this.order.stockId});
-  if(stock) {
-    this.order.stockName = stock.description;
+  // console.log("........order");
+  var order = StockOrders.findOne(this.orderId);
+  if(order) {
+    var stock = Ingredients.findOne({"_id": order.stockId});
+    if(stock) {
+      order.stockName = stock.description;
+    }
+    if(!order.hasOwnProperty("countOrdered")) {
+      order.countOrdered = 0;
+    }
+    return order;
   }
-  if(!this.order.hasOwnProperty("countOrdered")) {
-    this.order.countOrdered = 0;
-  }
-  return this.order;
 }
 
 component.state.supplier = function() {

@@ -39,17 +39,6 @@ component.state.activeSupplier = function() {
   }
 }
 
-component.state.thisSupplierActive = function(id) {
-  var active = Session.get("activeSupplier");
-  if(active == id) {
-    return true;
-  } else if(active == null && id == "Non-assigned") {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 component.state.receipt = function() {
   var receipt = OrderReceipts.findOne({
     "version": Session.get("thisVersion"),
