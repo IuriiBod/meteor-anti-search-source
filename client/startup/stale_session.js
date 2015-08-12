@@ -1,18 +1,18 @@
 Meteor.startup(function () {
   StaleSession.onSessionExpiration = function () {
-    var user = Meteor.user();
-    if (!user || !user.profile.pinLock) {
+    var userId = Meteor.userId();
+    if (_.isUndefined(userId)) {
       return;
     }
     var currRouter = Router.current();
-    if (!currRouter) {
-      return;
+    var backwardUrl = '/';
+    if (currRouter && currRouter.route) {
+      var routeName = currRouter.route.getName();
+      backwardUrl = currRouter.url;
     }
-    var routeName = currRouter.route.getName();
-    if (routeName && routeName !== 'pinLock') {
-      var backwardUrl = currRouter.url || '/';
-      Router.go('pinLock', {}, {
-        query: 'backwardUrl=' + backwardUrl
+    if (routeName !== "pinLock") {
+      Router.go("pinLock", {}, {
+        query: "backwardUrl=" + backwardUrl
       });
     }
   };
