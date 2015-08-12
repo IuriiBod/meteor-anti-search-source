@@ -4,14 +4,16 @@ if (Meteor.isClient) {
   Meteor.subscribe('profileUser', Meteor.userId());
 
   IntercomSettings.userInfo = function(user, info) {
-    if(user.intercomHash) {
+    if(!user.intercomHash) {
+      return false;
+    } else {
       // add properties to the info object, for instance:
       if(user.services && user.services.google) {
         info.email = user.services.google.email;
-        info['Name'] = user.services.google.given_name + ' ' + user.services.google.family_name;
+        info['name'] = user.services.google.given_name + ' ' + user.services.google.family_name;
       } else {
         info.email = user.emails[0].address;
-        info['Name'] = user.username;
+        info['name'] = user.username;
       }
       var type = "Worker";
       if(user) {
@@ -23,10 +25,8 @@ if (Meteor.isClient) {
           type = "Admin";
         }
       }
-      info['Type'] = type;
-
-    } else {
-      return false;
+      info['created_at'] = new Date(user.createdAt).getTime();
+      info['user_type'] = type;
     }
   }
 }
