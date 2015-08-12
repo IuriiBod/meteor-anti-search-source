@@ -10,6 +10,10 @@ Accounts.onCreateUser(function(options, user){
   if(!user.profile.name) {
     user.profile.name = user.username;
   }
+  if(user.profile.pinCode) {
+    user.pinCode = user.profile.pinCode;
+    delete user.profile.pinCode;
+  }
   
   // if this is the first user ever, make them an admin
   if(!Meteor.users.find().count()) {
@@ -24,7 +28,7 @@ Meteor.methods({
   inputPinCode: function ( pinCode) {
     var user = Meteor.users.findOne({
       _id: this.userId,
-      'profile.pinCode': pinCode
+      pinCode: pinCode
     });
     if (_.isUndefined(user)) {
       throw new Meteor.Error(401, "Wrong pin code");
