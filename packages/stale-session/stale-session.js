@@ -23,17 +23,19 @@ StaleSession = new function () {
   var tick = function () {
     var isExpired = Session.get('sessionExpired');
     if (isExpired) {
-      return;
-    }
-    var interval = new Date() - self.lastActivity;
-    if (interval >= self.inactivityTimeout) {
-      Session.set('sessionExpired', true);
       self.onSessionExpiration();
+    }
+    else {
+      var interval = new Date() - self.lastActivity;
+      if (interval >= self.inactivityTimeout) {
+        Session.set('sessionExpired', true);
+      }
     }
     Meteor.setTimeout(tick.bind(self), self.heartbeatInterval);
   };
 
   Meteor.startup(function () {
+    self.lastActivity = new Date();
     $(document).on(self.activityEvents, function() {
       self.lastActivity = new Date();
     });
