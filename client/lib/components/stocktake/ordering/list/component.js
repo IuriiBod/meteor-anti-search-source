@@ -25,6 +25,10 @@ component.state.list = function() {
   return orderIds;
 }
 
+component.state.version = function() {
+  return Session.get("thisVersion");
+}
+
 component.state.supplier = function() {
   return Session.get("activeSupplier");
 }

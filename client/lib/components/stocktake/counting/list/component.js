@@ -36,38 +36,14 @@ component.state.list = function() {
   var editable = Session.get("editStockTake");
   var gareaId = Session.get("activeGArea");
   var sareaId = Session.get("activeSArea");
-  var resultData = {};
 
-  if(editable) {
-    var list = SpecialAreas.findOne({"_id": sareaId, "generalArea": gareaId});
-    if(list) {
-      resultData = list;
+  var list = SpecialAreas.findOne({"_id": sareaId, "generalArea": gareaId});
+  if(list) {
+    if(list.stocks && list.stocks.length > 0) {
+      subs.subscribe("ingredients", list.stocks);
     }
-  } else {
-    var list = Stocktakes.find(
-      {
-        "generalArea": gareaId, 
-        "specialArea": sareaId, 
-        "version": thisVersion
-      }, {
-        sort: {"place": 1}
-      });
-    resultData['_id'] = sareaId;
-    resultData['generalArea'] = gareaId;
-    resultData['stocks'] = [];
-
-    if(list.fetch().length > 0) {
-      list.fetch().forEach(function(item) {
-        if(resultData.stocks.indexOf(item.stockId) < 0) {
-          resultData.stocks.push(item.stockId);
-        }
-      });
-    }
+    return list;
   }
-  if(resultData.stocks && resultData.stocks.length > 0) {
-    subs.subscribe("ingredients", resultData.stocks);
-  }
-  return resultData;
 }
 
 component.state.stocktakeMain = function() {

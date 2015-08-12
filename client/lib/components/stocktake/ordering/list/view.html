@@ -27,7 +27,9 @@
           <h4>You haven't created any orders.</h4> <br>
           <a href="#" class="gotoStocktake">Click here</a> to go to the stocktake and create orders. 
         {{/if}}
+
       </div>
     </div>
   </div>
+  {{> render component='commentsPanel' id=state$version type='stockOrders'}}
 </template>
