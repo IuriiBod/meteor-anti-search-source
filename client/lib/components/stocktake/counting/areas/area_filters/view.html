@@ -7,12 +7,14 @@
       <a class="btn btn-block btn-default btn-outline addNewGArea">Add</a>
     {{/if}}
   </div>
-  <div class="col-md-2">
-    {{#each state$specialAreas}}
-      {{> render component="areaBox" item=this class="sarea-filter" name="sarea"}}
-    {{/each}}
-    {{#if state$editable}}
-      <a class="btn btn-block btn-default btn-outline addNewSArea">Add</a>
-    {{/if}}
-  </div>
+  {{#if state$ifGAreaExists}}
+    <div class="col-md-2">
+      {{#each state$specialAreas}}
+        {{> render component="areaBox" item=this class="sarea-filter" name="sarea"}}
+      {{/each}}
+      {{#if state$editable}}
+        <a class="btn btn-block btn-default btn-outline addNewSArea">Add</a>
+      {{/if}}
+    </div>
+  {{/if}}
 </template>

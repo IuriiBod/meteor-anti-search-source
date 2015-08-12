@@ -7,6 +7,14 @@ component.state.generalAreas = function() {
   return data;
 }
 
+component.state.ifGAreaExists = function() {
+  if(Session.get("activeGArea")) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 component.state.specialAreas = function() {
   var id = Session.get("activeGArea");
   if(id) {
