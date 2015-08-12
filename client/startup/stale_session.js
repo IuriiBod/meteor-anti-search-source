@@ -17,3 +17,7 @@ Meteor.startup(function () {
     }
   };
 });
+
+Accounts.onLogin(function () {
+  StaleSession.reset();
+});
