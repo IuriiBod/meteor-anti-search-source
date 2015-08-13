@@ -25,7 +25,7 @@ Accounts.onCreateUser(function(options, user){
 });
 
 Meteor.methods({
-  inputPinCode: function ( pinCode) {
+  inputPinCode: function (pinCode) {
     var user = Meteor.users.findOne({
       _id: this.userId,
       pinCode: pinCode
@@ -35,6 +35,16 @@ Meteor.methods({
     }
     else {
       return true;
+    }
+  },
+  changePinCode: function (oldPinCode, newPinCode) {
+    var correctPin = Meteor.call('inputPinCode', oldPinCode);
+    if (correctPin) {
+      Meteor.users.update({
+        _id: this.userId
+      }, {
+        pinCode: newPinCode
+      });
     }
   },
   changeUserPermission: function(id, type) {
