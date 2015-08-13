@@ -1,31 +1,53 @@
 StaleSession = {
 
+  _getConfig: function(name, defaultVal) {
+    var conf = StaleSessionConfigs.findOne({name: name});
+    return conf ? conf.value : defaultVal;
+  },
+
+  _setConfig: function(name, value) {
+    var conf = StaleSessionConfigs.findOne({name: name});
+    if (conf && conf.value !== value) {
+      StaleSessionConfigs.update({
+        _id: conf._id
+      }, {
+        $set: {
+          name: name,
+          value: value
+        }
+      });
+    }
+    else {
+      StaleSessionConfigs.insert({
+        name: name,
+        value: value
+      });
+    }
+  },
+
   // inactivityTimeout
   get inactivityTimeout() {
-    var val = Session.get("StaleSession.inactivityTimeout");
-    return val || 600000;
+    return this._getConfig("inactivityTimeout", 600000)
   },
   set inactivityTimeout(val) {
-    Session.set("StaleSession.inactivityTimeout", val);
+    this._setConfig("inactivityTimeout", val);
   },
 
   // heartbeatInterval
   get heartbeatInterval() {
-    var val = Session.get("StaleSession.heartbeatInterval");
-    return val || 500;
+    return this._getConfig("heartbeatInterval", 500);
   },
   set heartbeatInterval(val) {
-    Session.set("StaleSession.heartbeatInterval", val);
+    this._setConfig("heartbeatInterval", val);
   },
 
   // activityEvents
   get activityEvents() {
-    var val = Session.get("StaleSession.activityEvents");
     var defaultVal = "mousemove click keydown touchstart touchend";
-    return val || defaultVal;
+    return this._getConfig("activityEvents", defaultVal);
   },
   set activityEvents(val) {
-    Session.set("StaleSession.activityEvents", val);
+    this._setConfig("activityEvents", val);
   },
 
   // sessionExpired
