@@ -60,7 +60,12 @@ StaleSession = {
 
   lastActivity: new Date(),
 
+  allowChangeSettings: function () {
+    return true;
+  },
+
   onSessionExpiration: function () {},
+
   onReset: function () {},
 
   configure: function (kwargs) {
