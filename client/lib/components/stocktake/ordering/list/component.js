@@ -1,6 +1,17 @@
 var component = FlowComponents.define("ordersList", function(props) {
 });
 
+component.state.isNull = function() {
+  var data = StockOrders.find({
+    "version": Session.get("thisVersion")
+  }).fetch();
+  if(data && data.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 component.state.list = function() {
   var data = StockOrders.find({
     "version": Session.get("thisVersion"),
@@ -31,4 +42,14 @@ component.state.version = function() {
 
 component.state.supplier = function() {
   return Session.get("activeSupplier");
+}
+
+component.state.orderNote = function() {
+  var data = OrderReceipts.findOne({
+    "version": Session.get("thisVersion"),
+    "supplier": Session.get("activeSupplier")
+  });
+  if(data && data.orderNote) {
+    return data.orderNote;
+  }
 }

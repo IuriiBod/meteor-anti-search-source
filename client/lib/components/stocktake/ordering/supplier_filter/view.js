@@ -21,11 +21,15 @@ Template.supplierFilter.events({
       "details": address,
       "deliveryDate": new Date(deliveryDate).getTime()
     }
-    Meteor.call("generateReceipts", version, supplier, info, function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
-      }
-    });
+    if(orderType == "emailed") {
+      $("#composeMailModal").modal();
+    } else {
+      Meteor.call("generateReceipts", version, supplier, info, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        }
+      });
+    }
   }
 });

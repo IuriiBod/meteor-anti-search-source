@@ -8,8 +8,8 @@
     <small class="text-info pull-right">
     {{#if state$receipt}}
     <!-- Set this date with x editable -->
-      {{#if state$receipt.expectedDeliveryDate}}
-        Expect delivery on {{timeFormattedWithDate state$receipt.expectedDeliveryDate}}
+      {{#if state$deliveryDate}}
+        Expect delivery on {{timeFormattedWithDate state$deliveryDate}}
       {{/if}}
       {{#if state$orderSentDetails}}
       <i class="fa fa-fw fa-check"></i>Status: {{state$orderSentDetails}}

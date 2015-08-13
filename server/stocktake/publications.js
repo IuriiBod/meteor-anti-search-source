@@ -32,6 +32,12 @@ Meteor.publish("orderReceipts", function(ids) {
   return data;
 });
 
+Meteor.publish("orderReceiptsByVersion", function(version) {
+  logger.info("Stock order receipts published by version", version);
+  var data = OrderReceipts.find({"version": version});
+  return data;
+});
+
 Meteor.publish("allOrderReceipts", function() {
   logger.info("Stock order receipts published");
   var data = OrderReceipts.find({}, {sort: {"date": -1}, limit: 10});

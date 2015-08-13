@@ -17,7 +17,7 @@ component.state.widthofBar = function() {
   if(this.class == "sarea-filter") {
     var sProgress = 0;
     var specialArea = SpecialAreas.findOne(id);
-    var stocktakes = Stocktakes.find({"specialArea": id}).fetch();
+    var stocktakes = Stocktakes.find({"version": Session.get("thisVersion"), "specialArea": id}).fetch();
     if(specialArea && specialArea.stocks) {
       if(specialArea.stocks.length > 0 && stocktakes.length > 0) {
         sProgress = (stocktakes.length/specialArea.stocks.length) * 100;
@@ -39,7 +39,7 @@ component.state.widthofBar = function() {
       }
     }
 
-    var stocktakes = Stocktakes.find({"generalArea": id}).fetch();
+    var stocktakes = Stocktakes.find({"version": Session.get("thisVersion"), "generalArea": id}).fetch();
     if(stocktakes && stocktakes.length > 0) {
       gProgress = (stocktakes.length/totalCount) * 100;
     }

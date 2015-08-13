@@ -42,21 +42,34 @@ component.state.activeSupplier = function() {
 component.state.receipt = function() {
   var receipt = OrderReceipts.findOne({
     "version": Session.get("thisVersion"),
-    "supplier": Session.get("activeSupplier")
+    "supplier": Session.get("activeSupplier"),
+    "orderedThrough": {$ne: null}
   });
   return receipt;
+}
+
+component.state.deliveryDate = function() {
+  var receipt = OrderReceipts.findOne({
+    "version": Session.get("thisVersion"),
+    "supplier": Session.get("activeSupplier"),
+    "orderedThrough": {$ne: null}
+  });
+  if(receipt && receipt.expectedDeliveryDate) {
+    return receipt.expectedDeliveryDate;
+  }
 }
 
 component.state.orderSentDetails = function() {
   var receipt = OrderReceipts.findOne({
     "version": Session.get("thisVersion"),
-    "supplier": Session.get("activeSupplier")
+    "supplier": Session.get("activeSupplier"),
+    "orderedThrough": {$ne: null}
   });
   var text = null;
   if(receipt) {
-    if(receipt.orderedThrough.through == "emailed") {
+    if(receipt.orderedThrough && receipt.orderedThrough.through == "emailed") {
       text = "Email sent ";
-    } else if(receipt.orderedThrough.through == "phoned") {
+    } else if(receipt.orderedThrough && receipt.orderedThrough.through == "phoned") {
       text = "Phoned ";
     }
     text += moment(receipt.date).format("MMMM Do YYYY, h:mm:ss a");
@@ -67,9 +80,10 @@ component.state.orderSentDetails = function() {
 component.state.receiptExists = function(supplier) {
   var receipt = OrderReceipts.findOne({
     "version": Session.get("thisVersion"),
-    "supplier": supplier
+    "supplier": supplier,
+    "orderedThrough": {$ne: null}
   });
-  if(receipt) {
+  if(receipt && receipt.orderedThrough && receipt.orderedThrough.through) {
     return true;
   } else {
     return false;

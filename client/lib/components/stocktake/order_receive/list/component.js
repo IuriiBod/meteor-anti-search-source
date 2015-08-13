@@ -1,7 +1,7 @@
 var component = FlowComponents.define("orderReceive", function(props) {});
 
 component.state.list = function() {
-  var data = StockOrders.find({"orderReceipt": Session.get("stockReceipt")});
+  var data = StockOrders.find({"orderReceipt": Session.get("thisReceipt")});
   var stockIds = [];
   if(data) {
     data.forEach(function(doc) {
@@ -17,7 +17,7 @@ component.state.list = function() {
 }
 
 component.state.receipt = function() {
-  var id = Session.get("stockReceipt")
+  var id = Session.get("thisReceipt")
   var data = OrderReceipts.findOne(id);
   if(data) {
     return data;
