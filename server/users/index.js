@@ -37,15 +37,14 @@ Meteor.methods({
       return true;
     }
   },
-  changePinCode: function (oldPinCode, newPinCode) {
-    var correctPin = Meteor.call('inputPinCode', oldPinCode);
-    if (correctPin) {
-      Meteor.users.update({
-        _id: this.userId
-      }, {
+  changePinCode: function (newPinCode) {
+    Meteor.users.update({
+      _id: this.userId
+    }, {
+      $set: {
         pinCode: newPinCode
-      });
-    }
+      }
+    });
   },
   changeUserPermission: function(id, type) {
     var user = Meteor.user();
