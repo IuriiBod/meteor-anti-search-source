@@ -1,0 +1,21 @@
+<template name="switchUser">
+  <div class="switch-user">
+    <div class="row">
+      <div class="col-md-12 col-lg-12">
+        {{# autoForm id="switchUser" schema=state$schema}}
+          {{> afQuickField id="userPicker"
+                           name="username"}}
+        {{/ autoForm}}
+      </div>
+    </div>
+    <div class="row">
+      {{# each state$users}}
+        {{# if contains this.username state$searchRequest}}
+          <div class="col-md-3 col-lg-3 text-center">
+            {{> render component="userBio" user=this onClick=action$switchUser}}
+          </div>
+        {{/ if}}
+      {{/ each}}
+    </div>
+  </div>
+</template>

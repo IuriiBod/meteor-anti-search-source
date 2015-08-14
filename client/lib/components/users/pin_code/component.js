@@ -30,5 +30,5 @@ component.action.inputPinCode = function(pinCode) {
 };
 
 component.action.switchUser = function() {
-  Meteor.logout();
+  Router.go("switchUser");
 };

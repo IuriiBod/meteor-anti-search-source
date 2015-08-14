@@ -1,5 +1,6 @@
 var component = FlowComponents.define("userBio", function (props) {
   this.set("user", props.user);
+  this.onClick = props.onClick;
 });
 
 component.state.username = function () {
@@ -17,5 +18,12 @@ component.state.image = function () {
     } else {
       return "/images/user-image.jpeg";
     }
+  }
+};
+
+component.action.onClick = function () {
+  if (_.isFunction(this.onClick)) {
+    var user = this.get("user");
+    this.onClick(user._id);
   }
 };
