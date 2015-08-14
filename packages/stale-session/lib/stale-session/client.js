@@ -99,8 +99,8 @@ StaleSession = {
   },
 
   reset: function () {
-    this.lastActivity = new Date();
     this.sessionExpired = false;
+    this.lastActivity = new Date();
     this.onReset();
   },
 
