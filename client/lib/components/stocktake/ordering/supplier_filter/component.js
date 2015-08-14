@@ -1,4 +1,5 @@
 var component = FlowComponents.define("supplierFilter", function(props) {
+  this.onRendered(this.onListRendered);
 });
 
 component.state.suppliers = function() {
@@ -51,11 +52,13 @@ component.state.receipt = function() {
 component.state.deliveryDate = function() {
   var receipt = OrderReceipts.findOne({
     "version": Session.get("thisVersion"),
-    "supplier": Session.get("activeSupplier"),
-    "orderedThrough": {$ne: null}
+    "supplier": Session.get("activeSupplier")
   });
   if(receipt && receipt.expectedDeliveryDate) {
     return receipt.expectedDeliveryDate;
+  } else {
+    var date = moment().add(7, 'day');
+    return date;
   }
 }
 
@@ -88,4 +91,36 @@ component.state.receiptExists = function(supplier) {
   } else {
     return false;
   }
+}
+
+component.prototype.onListRendered = function() {
+  $(".expectedDeliveryDate").editable({
+    type: 'combodate',
+    format: 'YYYY-MM-DD',    
+    viewformat: 'YYYY-MM-DD',    
+    title: 'Select time',
+    template: "YYYY-MM-DD",
+    mode: 'inline',
+    success: function(response, newValue) {
+      var supplier = Session.get("activeSupplier");
+      var version = Session.get("thisVersion");
+      var date = newValue.format("YYYY-MM-DD");
+      var id = null;
+      var receipt = OrderReceipts.findOne({"supplier": supplier, "version": version});
+      var info = {
+        "expectedDeliveryDate": new Date(date).getTime(),
+        "version": version,
+        "supplier": supplier
+      };
+      if(receipt) {
+        id = receipt._id;
+      }
+      Meteor.call("updateReceipt", id, info, function(err, id) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        } 
+      });
+    }
+  });
 }

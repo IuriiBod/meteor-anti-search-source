@@ -6,11 +6,11 @@
   <hr>
   <h2>{{state$activeSupplier}}
     <small class="text-info pull-right">
+    {{#if state$deliveryDate}}
+      Expect delivery on <a href="#" class="expectedDeliveryDate" data-pk="1">{{timeFormattedWithDate state$deliveryDate}}</a>      
+    {{/if}}
     {{#if state$receipt}}
     <!-- Set this date with x editable -->
-      {{#if state$deliveryDate}}
-        Expect delivery on {{timeFormattedWithDate state$deliveryDate}}
-      {{/if}}
       {{#if state$orderSentDetails}}
       <i class="fa fa-fw fa-check"></i>Status: {{state$orderSentDetails}}
       {{/if}}

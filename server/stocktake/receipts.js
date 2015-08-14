@@ -162,7 +162,7 @@ Meteor.methods({
       logger.info("Order receipt updated", id);
 
     } else {
-      if(info.hasOwnProperty("orderNote")) {
+      if(info.hasOwnProperty("orderNote") || info.hasOwnProperty("expectedDeliveryDate")) {
         if(!info.hasOwnProperty("supplier")) {
           logger.error("Supplier does not exist");
           throw new Meteor.Error(404, "Supplier does not exist");
@@ -190,8 +190,13 @@ Meteor.methods({
           "expectedDeliveryDate": null,
           "received": false,
           "receivedDate": null,
-          "invoiceFaceValue": 0,
-          "orderNote": info.orderNote
+          "invoiceFaceValue": 0
+        }
+        if(info.hasOwnProperty("orderNote")) {
+          doc['orderNote'] = info.orderNote;
+        }
+        if(info.hasOwnProperty("expectedDeliveryDate")) {
+          doc['expectedDeliveryDate'] = info.expectedDeliveryDate;
         }
         var receiptId = OrderReceipts.insert(doc);
         logger.info("New order receipt inserted ", receiptId);

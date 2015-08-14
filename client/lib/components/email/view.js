@@ -4,7 +4,6 @@ Template.composeMail.events({
     var mailBody = FlowComponents.child('composeMailEditorSubmit').getState('content');
     var title = $(".emailTitle").val();
     var to = $(".emailTo").val();
-    console.log("........email....", mailBody, title, to);
 
     var orderType = "emailed";
     var supplier = Session.get("activeSupplier");
