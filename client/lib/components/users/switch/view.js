@@ -7,6 +7,9 @@ Template.switchUser.events({
     var username = event.target.value;
     var user = Meteor.users.findOne({username: username});
     FlowComponents.callAction("switchUser", user._id);
+  },
+  "click .other-user": function () {
+    FlowComponents.callAction("logout");
   }
 });
 

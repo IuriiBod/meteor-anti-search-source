@@ -32,6 +32,10 @@ component.action.findUser = function(request) {
   this.userSearchRequest.set(request);
 };
 
+component.action.logout = function() {
+  Meteor.logout();
+  Router.go('signIn');
+};
 
 component.action.switchUser = function(userId) {
   var loggedUsers = Session.get("loggedUsers");
