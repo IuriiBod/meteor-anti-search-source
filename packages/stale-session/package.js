@@ -1,6 +1,6 @@
 Package.describe({
   name: 'hospohero:stale-session',
-  version: '0.0.4',
+  version: '0.0.5',
   summary: 'Session timeout handling',
   git: 'https://github.com/tomhay/heroche',
   documentation: 'README.md'

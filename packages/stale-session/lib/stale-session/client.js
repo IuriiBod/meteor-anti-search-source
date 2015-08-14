@@ -1,11 +1,11 @@
 StaleSession = {
 
-  _getConfig: function(name, defaultVal) {
+  _getConfig: function (name, defaultVal) {
     var conf = StaleSessionConfigs.findOne({name: name});
     return conf ? conf.value : defaultVal;
   },
 
-  _setConfig: function(name, value) {
+  _setConfig: function (name, value) {
     var conf = StaleSessionConfigs.findOne({name: name});
     if (conf && conf.value !== value) {
       StaleSessionConfigs.update({
@@ -52,21 +52,35 @@ StaleSession = {
 
   // sessionExpired
   get sessionExpired() {
-    return Session.get("StaleSession.sessionExpired")
+    return Session.get("StaleSession.sessionExpired");
   },
   set sessionExpired(val) {
-    Session.set("StaleSession.sessionExpired", val)
+    Session.set("StaleSession.sessionExpired", val);
   },
 
-  lastActivity: new Date(),
+  // lastActivity
+  get lastActivity() {
+    var val = Session.get("StaleSession.lastActivity");
+    return val || new Date();
+  },
+  set lastActivity(val) {
+    if (_.isDate(val)) {
+      val = val.getTime();
+    }
+    Session.set("StaleSession.lastActivity", val);
+  },
+
+  get timeFromLastActivity() {
+    return new Date() - this.lastActivity;
+  },
 
   allowChangeSettings: function () {
     return true;
   },
 
-  onSessionExpiration: function () {},
+  onSessionExpiration: function () { },
 
-  onReset: function () {},
+  onReset: function () { },
 
   configure: function (kwargs) {
     kwargs = kwargs || {};
@@ -95,8 +109,7 @@ StaleSession = {
       this.onSessionExpiration();
     }
     else {
-      var interval = new Date() - this.lastActivity;
-      if (interval >= this.inactivityTimeout) {
+      if (this.timeFromLastActivity >= this.inactivityTimeout) {
         this.sessionExpired = true;
       }
     }
@@ -106,10 +119,9 @@ StaleSession = {
 };
 
 
-
 Meteor.startup(function () {
   StaleSession.lastActivity = new Date();
-  $(document).on(StaleSession.activityEvents, function() {
+  $(document).on(StaleSession.activityEvents, function () {
     StaleSession.lastActivity = new Date();
   });
   StaleSession.start();
