@@ -1,16 +1,8 @@
 var component = FlowComponents.define('pinCode', function(props) {
-  this.set("id", props.id);
+  var user = Meteor.users.findOne(props.id);
+  this.set("user", user);
   this.set("backwardUrl", props.backwardUrl);
 });
-
-component.state.basic = function() {
-  var id = this.get("id");
-  var user = Meteor.users.findOne(id);
-  this.set("user", user);
-  if(user) {
-    return user;
-  }
-};
 
 component.state.image = function() {
   var user = this.get("user");
