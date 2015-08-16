@@ -3,9 +3,7 @@
     <td>{{dateFormat state$receipt.expectedDeliveryDate}}</td>
     <td>{{state$receipt.supplier}}</td>
     <td>$ {{roundCount state$orderedValue}}</td>
-    <!--this amount is entered by xeditable by user receiving the
-    delivery-->
-    <td>$ <a href="#" class="invoiceValue">{{state$receipt.invoiceFaceValue}}</a></td>
+    <td>$ {{state$invoiceFaceValue}}</td>
     <td>
       {{#if state$receipt.received}}
         <a class="btn btn-link receiveDelivery">Delivery received by {{Username state$receipt.receivedBy}} @ {{DateTime state$receipt.receivedDate}}</a>

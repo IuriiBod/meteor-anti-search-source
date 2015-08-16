@@ -11,7 +11,14 @@ component.state.stock = function() {
 }
 
 component.state.total = function() {
-  return this.item.unitPrice * this.item.countOrdered;
+  var total = 0;
+  var quantity = this.item.countOrdered;
+  if(this.item.hasOwnProperty("countDelivered")) {
+    quantity = this.item.countDelivered;
+  }
+  total = this.item.unitPrice * quantity;
+  return total;
+
 }
 
 component.state.deliveryStatus = function() {
