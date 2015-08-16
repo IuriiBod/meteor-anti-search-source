@@ -15,11 +15,8 @@ component.state.ifGAreaExists = function() {
   }
 }
 
-component.state.specialAreas = function() {
-  var id = Session.get("activeGArea");
-  if(id) {
-    return SpecialAreas.find({"generalArea": id}, {sort: {"createdAt": 1}});  
-  }
+component.state.specialAreas = function(gareaId) {
+  return SpecialAreas.find({"generalArea": gareaId}, {sort: {"createdAt": 1}});  
 }
 
 component.state.editable = function() {
