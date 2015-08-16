@@ -32,6 +32,11 @@ Meteor.methods({
       logger.error("Status not found");
       throw new Meteor.Error(401, "Status not found");
     }
+    var order = StockOrders.findOne(id);
+    if(!order) {
+      logger.error("Order not found");
+      throw new Meteor.Error(401, "Order not found");
+    }
     var updateQuery = {
       "received": true,
       "deliveryStatus": status,
@@ -44,7 +49,8 @@ Meteor.methods({
         logger.error("Price not found");
         throw new Meteor.Error(401, "Price not found");
       }
-      updateQuery['deliveredPrice'] = info.price;
+      updateQuery['unitPrice'] = info.price;
+      updateQuery['originalPrice'] = order.unitPrice;
     } else if(status == "wrongQuantity") {
       if(!info.quantity) {
         logger.error("Quantity not found");
@@ -52,7 +58,7 @@ Meteor.methods({
       }
       updateQuery['countDelivered'] = info.quantity;
     }
-    StockOrders.update({"_id": id}, {$set: updateQuery});
+    StockOrders.update({"_id": id, "orderReceipt": receiptId}, {$set: updateQuery});
     logger.info("Stock order updated", id, status);
     return;
   },

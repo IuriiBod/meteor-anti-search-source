@@ -2,7 +2,7 @@ Template.orderReceiveItem.events({
   'click .deliveredCorrectly': function(event) {
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
-    var receiptId = Session.get("stockReceipt");
+    var receiptId = Session.get("thisReceipt");
     var status = "deliveredCorrectly";
     var info = {};
     receiveReceiptItems(id, receiptId, status, info);
@@ -11,19 +11,17 @@ Template.orderReceiveItem.events({
   'click .wrongPrice': function(event) {
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
-    var receiptId = Session.get("stockReceipt");
-    var status = "wrongPrice";
-    var info = {"price": 10};
-    receiveReceiptItems(id, receiptId, status, info);
+    Session.set("thisOrder", id);
+    $("#updateInvoicePrice").text("Save").attr("disabled", false);
+    $("#updateStockPrice").text("Save").attr("disabled", false);
+    $("#wrongPriceModal").modal();
   },
     
   'click .wrongQuantity': function(event) {
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
-    var receiptId = Session.get("stockReceipt");
-    var status = "wrongQuantity";
-    var info = {"quantity": 10};
-    receiveReceiptItems(id, receiptId, status, info);
+    Session.set("thisOrder", id);
+    $("#wrongQuantityModal").modal();
   }
 });
 

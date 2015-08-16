@@ -105,6 +105,31 @@ Meteor.methods({
     return;
   },
 
+  updateOrderValues: function(orderId, receiptId, info) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to edit ordering count");
+      throw new Meteor.Error(404, "User not permitted to edit ordering count");
+    }
+    var order = StockOrders.findOne(orderId);
+    if(!order) {
+      logger.error('Stock order not found');
+      throw new Meteor.Error(401, "Stock order not found");
+    }
+    var query = {};
+    if(info.hasOwnProperty("unitPrice")) {
+      query['unitPrice'] = info.unitPrice;
+    }
+    StockOrders.update({"_id": orderId, "orderReceipt": receiptId}, {$set: query});
+    logger.info("Stock order updated", orderId, info);
+    return;
+  },
+
   'removeOrder': function(id) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');

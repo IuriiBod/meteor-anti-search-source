@@ -132,6 +132,7 @@ Meteor.methods({
   },
 
   updateReceipt: function(id, info) {
+    console.log("........", id, info);
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");

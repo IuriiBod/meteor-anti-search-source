@@ -22,7 +22,11 @@
               </tbody>
             </table>
             <hr>
-            <textarea name="orderReceiveNotes" class="form-control message-input-post" placeholder="Add notes here."></textarea>
+            {{#if state$receivedNote}}
+              <div><p class="text-danger pull-left">Note: &nbsp;</p>{{state$receivedNote}}</div>
+            {{else}}
+              <textarea name="orderReceiveNotes" id="orderReceiveNotes" class="form-control message-input-post" placeholder="Add notes here."></textarea>
+            {{/if}}
             <br>
             <a class="btn btn-primary disabled">Take a photo/ Upload Invoice</a>
             <a class="btn btn-primary disabled">Check temperatures</a>
@@ -37,4 +41,17 @@
       </div>
     </div>
   </div>
+
+
+  <!-- WRONG PRICE MODAL-->
+  <div class="modal fade" id="wrongPriceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component='receiveModal' name='wrongPrice'}}
+  </div>
+  <!-- /WRONG PRICE MODAL -->
+
+   <!-- WRONG PRICE MODAL-->
+  <div class="modal fade" id="wrongQuantityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component='receiveModal' name='wrongQuantity'}}
+  </div>
+  <!-- /WRONG PRICE MODAL -->
 </template>

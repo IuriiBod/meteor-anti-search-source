@@ -23,3 +23,10 @@ component.state.receipt = function() {
     return data;
   }
 }
+
+component.state.receivedNote = function() {
+  var receipt = OrderReceipts.findOne(Session.get("thisReceipt"));
+  if(receipt) {
+    return receipt.receiveNote;
+  }
+}

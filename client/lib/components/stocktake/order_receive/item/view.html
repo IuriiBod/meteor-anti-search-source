@@ -1,11 +1,16 @@
 <template name="orderReceiveItem">
   <tr data-id="{{state$stock._id}}">
     <td>{{state$stock.description}}</td>
-    <td>{{state$stock.countOrdered}} [{{state$stock.unit}}]</td>
+    {{#if state$isWrongQuantity}}
+      <td>{{state$stock.countDelivered}} [{{state$stock.unit}}]</td>
+    {{else}}
+      <td>{{state$stock.countOrdered}} [{{state$stock.unit}}]</td>
+    {{/if}}
     <td>$ {{roundCount state$stock.unitPrice}}</td>
     <td>$ {{roundCount state$total}}</td>
     <td>
       {{#if state$stock.received}}
+        {{state$deliveryStatus}}
       {{else}}
         <a class="btn btn-primary deliveredCorrectly">Delivered correctly</a>
         <a class="btn btn-danger wrongPrice">Wrong Price</a>
