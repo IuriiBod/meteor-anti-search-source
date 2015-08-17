@@ -14,7 +14,7 @@ Template.receiveModal.events({
         if(err) {
           console.log(err);
           return alert(err.reason);
-        } 
+        }
       });
     }
 
@@ -34,6 +34,13 @@ Template.receiveModal.events({
         }
       });
     }
+
+    Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, function(err) {
+      if(err) {
+        console.log(err);
+        return alert(err.reason);
+      }
+    });
 
     $(event.target).find('[name=invoicePrice]').val("");
     $(event.target).find('[name=stockPrice]').val("");
@@ -55,6 +62,15 @@ Template.receiveModal.events({
           console.log(err);
           return alert(err.reason);
         } 
+      });
+    }
+    var order = StockOrders.findOne(orderId);
+    if(order) {
+      Meteor.call("updateCurrentStock", order.stockId, "Stock receive", parseFloat(invoiceQuantity), function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        }
       });
     }
 

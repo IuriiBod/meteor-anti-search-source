@@ -65,6 +65,13 @@ component.prototype.onItemRendered = function() {
           if(err) {
             console.log(err);
             return alert(err.reason);
+          } else {
+            Meteor.call("resetCurrentStock", stockId, "New stock count", newValue, function(err) {
+              if(err) {
+                console.log(err);
+                return alert(err.reason);
+              }
+            });
           }
         });
       }

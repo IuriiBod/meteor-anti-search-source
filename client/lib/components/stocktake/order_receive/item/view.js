@@ -26,10 +26,20 @@ Template.orderReceiveItem.events({
 });
 
 function receiveReceiptItems(id, receiptId, status, info) {
-  Meteor.call("receiveReceiptItems", id, receiptId, status, info, function(err) {
-    if(err) {
-      console.log(err);
-      return alert(err.reason);
-    }
-  });
+  var order = StockOrders.findOne(id);
+  if(order) {
+    Meteor.call("receiveReceiptItems", id, receiptId, status, info, function(err) {
+      if(err) {
+        console.log(err);
+        return alert(err.reason);
+      } else {
+        Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, function(err) {
+          if(err) {
+            console.log(err);
+            return alert(err.reason);
+          }
+        });
+      }
+    });
+  }
 }

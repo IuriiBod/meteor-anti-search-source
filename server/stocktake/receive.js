@@ -39,7 +39,6 @@ Meteor.methods({
     }
     var updateQuery = {
       "received": true,
-      "deliveryStatus": status,
       "receivedBy": Meteor.userId(),
       "receivedDate": Date.now()
     };
@@ -49,17 +48,29 @@ Meteor.methods({
         logger.error("Price not found");
         throw new Meteor.Error(401, "Price not found");
       }
-      updateQuery['unitPrice'] = info.price;
-      updateQuery['originalPrice'] = order.unitPrice;
+      if(order.unitPrice != info.price) {
+        updateQuery['unitPrice'] = info.price;
+        updateQuery['originalPrice'] = order.unitPrice;
+        updateQuery['deliveryStatus'] = status;
+      } else {
+        updateQuery['deliveryStatus'] = "deliveredCorrectly";
+      }
     } else if(status == "wrongQuantity") {
       if(!info.quantity) {
         logger.error("Quantity not found");
         throw new Meteor.Error(401, "Quantity not found");
       }
-      updateQuery['countDelivered'] = info.quantity;
+      if(order.countOrdered != info.quantity) {
+        updateQuery['countDelivered'] = info.quantity;
+        updateQuery['deliveryStatus'] = "wrongQuantity";
+      } else {
+        updateQuery['deliveryStatus'] = "deliveredCorrectly";
+      }
+    } else {
+      updateQuery['deliveryStatus'] = "deliveredCorrectly";
     }
     StockOrders.update({"_id": id, "orderReceipt": receiptId}, {$set: updateQuery});
-    logger.info("Stock order updated", id, status);
+    logger.info("Stock order updated", id, status, updateQuery['deliveryStatus']);
     return;
   },
 
