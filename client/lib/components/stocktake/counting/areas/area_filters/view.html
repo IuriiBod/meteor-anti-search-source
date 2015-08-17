@@ -6,9 +6,15 @@
         <div class="well">
         {{#each state$specialAreas this._id}}
           {{> render component="areaBox" item=this class="sarea-filter" name="sarea"}}
+        {{else}}
+          No Special Areas
         {{/each}}
+        <!-- <button class="btn btn-default">Add</button> -->
         </div>
       </div>
+    {{else}}
+      No General Areas
     {{/each}}
+    <!-- <button class="btn btn-default">Add</button> -->
   </div>            
 </template>
