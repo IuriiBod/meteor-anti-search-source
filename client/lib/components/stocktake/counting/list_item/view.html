@@ -1,7 +1,14 @@
 <template name="stockCountingListItem">
-  <li class="list-group-item" data-id="{{state$item._id}}" data-stockRef="{{state$item.stockRef}}">
-    <i class="fa fa-fw fa-reorder"></i>{{state$item.description}}
-    <i class="fa fa-trash pull-right removeFromList">{{state$ordering}}</i>
+  <li class="list-group-item" data-id="{{state$item._id}}" data-stockRef="{{state$item.stockRef}}" data-place="{{state$item.place}}">
+    {{#if state$editable}}
+      <i class="fa fa-fw fa-reorder"></i>
+    {{/if}}
+    {{state$item.description}}
+    {{#if state$editable}}
+      {{#if state$deletable state$item.stockRef}}
+        <i class="fa fa-trash pull-right removeFromList"></i>
+      {{/if}}
+    {{/if}}
     <span class="pull-right">
       <a href="" class="counting">{{state$item.counting}}</a> &nbsp; [{{state$item.portionOrdered}}]
     </span>

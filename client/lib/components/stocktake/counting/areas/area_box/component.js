@@ -13,50 +13,43 @@ component.state.item = function() {
 }
 
 component.state.widthofBar = function() {
+  var id = this.item._id;
   if(this.class == "sarea-filter") {
-    // if(this.item.)
-    return '50%';
+    var sProgress = 0;
+    var specialArea = SpecialAreas.findOne(id);
+    var stocktakes = Stocktakes.find({"version": Session.get("thisVersion"), "specialArea": id}).fetch();
+    if(specialArea && specialArea.stocks) {
+      if(specialArea.stocks.length > 0 && stocktakes.length > 0) {
+        sProgress = (stocktakes.length/specialArea.stocks.length) * 100;
+      }
+    }
+    return (sProgress + "%");
   } else if(this.class == "garea-filter") {
-    return '70%';
+    var gProgress = 0;
+    var totalCount = 0;
+    var generalArea = GeneralAreas.findOne(id);
+    if(generalArea) {
+      var specialAreas = SpecialAreas.find({"generalArea": id}).fetch();
+      if(specialAreas && specialAreas.length > 0) {
+        specialAreas.forEach(function(doc) {
+          if(doc.stocks && doc.stocks.length > 0) {
+            totalCount += doc.stocks.length;
+          }
+        });
+      }
+    }
+
+    var stocktakes = Stocktakes.find({"version": Session.get("thisVersion"), "generalArea": id}).fetch();
+    if(stocktakes && stocktakes.length > 0) {
+      gProgress = (stocktakes.length/totalCount) * 100;
+    }
+    return (gProgress + "%");
   }
 }
 
-component.prototype.onItemRendered = function() {
-  $(".sarea").editable({
-    type: "text",
-    title: 'Edit Special area name',
-    showbuttons: false,
-    mode: 'inline',
-    success: function(response, newValue) {
-      var self = this;
-      var id = $(self).parent().attr("data-id");
-      if(newValue) {
-        Meteor.call("editSpecialArea", id, {"name": newValue}, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          }
-        });
-      }
-    }
-  });
+component.state.editable = function() {
+  return Session.get("editStockTake");
+}
 
-  $(".garea").editable({
-    type: "text",
-    title: 'Edit General area name',
-    showbuttons: false,
-    mode: 'inline',
-    success: function(response, newValue) {
-      var self = this;
-      var id = $(self).parent().attr("data-id");
-      if(newValue) {
-        Meteor.call("editGeneralArea", id, {"name": newValue}, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          }
-        });
-      }
-    }
-  });
+component.prototype.onItemRendered = function() {
 };

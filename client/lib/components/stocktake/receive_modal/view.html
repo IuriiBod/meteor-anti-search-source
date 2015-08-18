@@ -1,0 +1,63 @@
+<template name="receiveModal">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width: 130%">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        {{#if state$isWrongPrice}}
+        <h4 class="modal-title" id="myModalLabel">Price is wrong..!</h4>
+        {{/if}}
+        {{#if state$isWrongQuantity}}
+        <h4 class="modal-title" id="myModalLabel">Quantity is wrong..!</h4>
+        {{/if}}
+      </div>
+      <div class="modal-body">
+        <div>
+          {{#if state$isWrongPrice}}
+            <p>Do you want to update the price of the stock item?</p>
+            <form class="form-horizontal" id="price">
+              <div class="form-group">
+                <label class="col-sm-4 control-label">Update Invoice price</label>
+                <div class="col-sm-4">
+                  <div class="input-group m-b">
+                    <div class="input-group-addon">$</div>
+                    <input type="text" class="form-control" name="invoicePrice" placeholder="Invoice price"> 
+                  </div>
+                </div>   
+              </div> 
+              <div class="form-group">
+                <label class="col-sm-4 control-label">Update stock price</label>
+                <div class="col-sm-4">
+                  <div class="input-group m-b">
+                    <div class="input-group-addon">$</div>
+                    <input type="text" class="form-control" name="stockPrice" placeholder="Stock price">     
+                  </div>
+                </div>  
+              </div> 
+              <br>
+              <div class="pull-right">
+                <button class="btn btn-primary" type="submit" id="updatePrices">Save</button> 
+                <button class="btn btn-small btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+            </form>
+          {{/if}}
+          {{#if state$isWrongQuantity}}
+            <p>Do you want to update the quantity of the stock order?</p>
+            <form class="form-horizontal" id="quantity">
+              <div class="form-group">
+                <label class="col-sm-4 control-label">Update Invoice quantity</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" name="invoiceQuantity" placeholder="Order Quantity"> 
+                </div>   
+              </div> 
+              <div class="pull-right">
+                <button class="btn btn-primary" type="submit" id="updateQuantity">Save</button> 
+                <button class="btn btn-small btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+            </form>
+          {{/if}}
+          <br><br>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

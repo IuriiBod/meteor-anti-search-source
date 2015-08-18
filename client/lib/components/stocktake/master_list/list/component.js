@@ -19,4 +19,7 @@ component.prototype.onListRender = function() {
       self.set("historyList", list);
     }
   });
+
+  var date = moment().format("YYYY-MM-DD");
+  subs.subscribe("stocktakeMains", new Date(date).getTime());
 }
