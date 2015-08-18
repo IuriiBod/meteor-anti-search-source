@@ -84,12 +84,14 @@
               <li class="{{isActiveRoute name='ingredientsList'}}">
                 <a href="/stocklist">List</a>
               </li>
-              <li class="{{isActiveRoute name='stocktake'}}">
-                <a href="/stocktake">Stocktake</a>
-              </li>
-              <li class="{{isActiveRoute name='supplierOrdering'}}">
-                <a href="/stocktake/order/receipts">Receive Orders</a>
-              </li> 
+              {{#if state$isManagerOrAdmin}}
+                <li class="{{isActiveRoute name='stocktake'}}">
+                  <a href="/stocktake">Stocktake</a>
+                </li>
+                <li class="{{isActiveRoute name='supplierOrdering'}}">
+                  <a href="/stocktake/order/receipts">Receive Orders</a>
+                </li> 
+              {{/if}}
             </ul>
           </li>
 
