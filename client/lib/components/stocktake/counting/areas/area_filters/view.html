@@ -1,0 +1,20 @@
+<template name="areaFilters">
+  <div class="col-md-4 no-margin">
+    {{#each state$generalAreas}}
+      {{> render component="areaBox" item=this class="garea-filter" name="garea"}}
+      <div class="collapse" id="{{this._id}}">
+        <div class="well">
+        {{#each state$specialAreas this._id}}
+          {{> render component="areaBox" item=this class="sarea-filter" name="sarea"}}
+        {{else}}
+          No Special Areas
+        {{/each}}
+        <!-- <button class="btn btn-default">Add</button> -->
+        </div>
+      </div>
+    {{else}}
+      No General Areas
+    {{/each}}
+    <!-- <button class="btn btn-default">Add</button> -->
+  </div>            
+</template>

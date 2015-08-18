@@ -1,0 +1,18 @@
+<template name="orderReceiptItem">
+  <tr data-id="{{state$receipt._id}}">
+    <td>{{dateFormat state$receipt.expectedDeliveryDate}}</td>
+    <td>{{state$receipt.supplier}}</td>
+    <td>$ {{roundCount state$orderedValue}}</td>
+    <td>$ {{roundCount state$invoiceFaceValue}}</td>
+    <td>
+      {{#if state$receipt.received}}
+        <a class="btn btn-link receiveDelivery">Delivery received by {{Username state$receipt.receivedBy}} @ {{DateTime state$receipt.receivedDate}}</a>
+      {{else}}
+        <a href="#" class="btn btn-primary receiveDelivery"><i class="fa -o fa-fw fa-lg fa-check-square-o"></i>Receive this delivery now</a>
+      {{/if}}
+    </td>
+    <!-- <td>
+      <a class="btn btn-link"><i class="-o -square-o fa fa-check fa-fw fa-lg text-primary"></i></a>
+    </td> -->
+  </tr>
+</template>

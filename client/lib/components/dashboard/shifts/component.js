@@ -17,7 +17,7 @@ component.state.shifts = function() {
   var state = Session.get("shiftState");
   var shifts = [];
   if(state == "future") {
-    shifts = Shifts.find({"assignedTo": Meteor.userId(), "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}});
+    shifts = Shifts.find({"assignedTo": Meteor.userId(), "published": true, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}});
   } else if(state == "past") {
     var today = moment().format("YYYY-MM-DD");
     shifts = Shifts.find({
@@ -25,7 +25,7 @@ component.state.shifts = function() {
       "shiftDate": {$lte: new Date(today).getTime()},
     }, {sort: {'shiftDate': -1}});
   } else if(state == "open") {
-    shifts = Shifts.find({"assignedTo": null, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}});
+    shifts = Shifts.find({"assignedTo": null, "published": true, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}});
   }
   return shifts;
 }
@@ -43,11 +43,11 @@ component.state.shiftsCount = function() {
   var state = Session.get("shiftState");
   var shifts = [];
   if(state == "future") {
-    shifts = Shifts.find({"assignedTo": Meteor.userId(), "shiftDate": {$gte: Date.now()}}).fetch();
+    shifts = Shifts.find({"assignedTo": Meteor.userId(), "published": true, "shiftDate": {$gte: Date.now()}}).fetch();
   } else if(state == "past") {
     shifts = Shifts.find({"assignedTo": Meteor.userId(), "shiftDate": {$lt: Date.now()}}).fetch();
   } else if(state == "open") {
-    shifts = Shifts.find({"assignedTo": null, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}}).fetch();
+    shifts = Shifts.find({"assignedTo": null, "published": true, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}}).fetch();
   }
   if(shifts.length > 0) {
     return true;

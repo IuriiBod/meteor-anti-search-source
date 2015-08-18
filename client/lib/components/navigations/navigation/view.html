@@ -71,8 +71,28 @@
             <a href="/jobItems"><i class="fa fa-spoon"></i> <span class="nav-label">Jobs</span> </a>
           </li>
 
-          <li class="{{isActiveRoute regex='ingredientsList'}}">
-            <a href="/ingredients"><i class="fa fa-list"></i> <span class="nav-label">Ingredients</span></a>
+         <!--  <li class="{{isActiveRoute regex='ingredientsList'}}">
+            <a href="/stocks"><i class="fa fa-list"></i> <span class="nav-label">Stocks</span></a>
+          </li> -->
+
+          <li class="{{isActiveRoute name='ingredientsList|stocktake|supplierOrdering'}}">
+            <a href="#">
+              <i class="fa fa-list"></i>
+              <span class="nav-label">Stock</span>
+            </a>
+            <ul class="nav nav-second-level {{isActiveRoute name='ingredientsList|stocktake|supplierOrdering' className='in'}}">
+              <li class="{{isActiveRoute name='ingredientsList'}}">
+                <a href="/stocklist">List</a>
+              </li>
+              {{#if state$isManagerOrAdmin}}
+                <li class="{{isActiveRoute name='stocktake'}}">
+                  <a href="/stocktake">Stocktake</a>
+                </li>
+                <li class="{{isActiveRoute name='supplierOrdering'}}">
+                  <a href="/stocktake/order/receipts">Receive Orders</a>
+                </li> 
+              {{/if}}
+            </ul>
           </li>
 
           {{#if state$isManagerOrAdmin}}
@@ -103,11 +123,19 @@
             </ul>
           </li>
 
-          <li class="{{isActiveRoute regex='teamHours'}}">
-            <a href="/reports/{{week}}#shifts">
-              <i class="fa fa-area-chart"></i>
+          <li class="{{isActiveRoute name='teamHours|currentStocks'}}">
+            <a href="#">
+              <i class="fa fa-list"></i>
               <span class="nav-label">Reports</span>
             </a>
+            <ul class="nav nav-second-level {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
+              <li class="{{isActiveRoute name='teamHours'}}">
+                <a href="/reports/{{week}}#shifts">Team Hours</a>
+              </li>
+              <li class="{{isActiveRoute name='currentStocks'}}">
+                <a href="/reports/stocktake/currentStocks/{{week}}">Daily stock</a>
+              </li>
+            </ul>
           </li>
           {{/if}}
           

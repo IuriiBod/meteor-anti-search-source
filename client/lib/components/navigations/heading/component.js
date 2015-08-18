@@ -156,7 +156,7 @@ component.state.isIngredientsList = function() {
 }
 
 component.state.weeklyNavigation = function() {
-  if(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster") {
+  if(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport") {
     return true; 
   } else {
     return false;
@@ -215,4 +215,16 @@ component.state.isWeeklyRosterPublished = function() {
       return false;
     }
   }
+}
+
+component.state.isStockTakeList = function() {
+  if(this.type == "stocktakeList") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+component.state.date = function() {
+  return moment().format("YYYY-MM-DD");
 }
