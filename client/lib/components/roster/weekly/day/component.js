@@ -48,7 +48,7 @@ component.action.addShift = function(day, dates) {
     doc.startTime = new Date().setHours(8, 0);
     doc.endTime = new Date().setHours(17, 0);
     doc.shiftDate = new Date(daysOfWeek.indexOf(day));
-    doc.section = Sections.findOne({"name": "Kitchen hand"})._id;
+    doc.section = null;
     doc.type = "template";
   }
 
