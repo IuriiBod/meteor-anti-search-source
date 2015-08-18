@@ -49,3 +49,10 @@ Meteor.publish("receiptOrders", function(receiptId) {
   var data = StockOrders.find({"orderReceipt": receiptId});
   return data;
 });
+
+
+Meteor.publish("currentStocks", function(ids) {
+  logger.info("Current stocks published ", ids);
+  var data = CurrentStocks.find({"_id": {$in: ids}});
+  return data;
+});

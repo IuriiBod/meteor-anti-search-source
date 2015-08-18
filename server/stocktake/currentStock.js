@@ -1,14 +1,14 @@
 rawColl = CurrentStocks.rawCollection();
 
 Meteor.methods({
-  updateCurrentStock: function(stockId, note, quantity) {
+  updateCurrentStock: function(stockId, note, quantity, date) {
     var query = {"stockId": stockId};
     var sort = {"version": -1};
     var count = parseFloat(quantity);
     if(count != count) {
       count = 0;
     }
-    var update = {$inc: {"count": count, "version": 1}, $set: {"date": new Date().getTime(), "note": note}};
+    var update = {$inc: {"count": count, "version": 1}, $set: {"date": new Date(date), "note": note}};
     var options = {
       upsert: true,
       new: false
@@ -22,7 +22,7 @@ Meteor.methods({
     }
   },
 
-  resetCurrentStock: function(stockId, note, quantity) {
+  resetCurrentStock: function(stockId, note, quantity, date) {
     var query = {"stockId": stockId};
     var latest = CurrentStocks.find({"stockId": stockId}, {sort: {"version": -1}}).fetch();
     var count = parseFloat(quantity);
@@ -33,7 +33,7 @@ Meteor.methods({
       "stockId": stockId,
       "count": count,
       "note": note,
-      "date": new Date().getTime()
+      "date": new Date(date)
     }
     if(latest && latest.length > 0) {
       var old = latest[0];
@@ -46,5 +46,21 @@ Meteor.methods({
     var id = CurrentStocks.insert(doc);
     logger.info("New current stock entry added",{"_id": id, "stockId": stockId});
     return;
+  },
+
+  readDaily: function(start, end) {
+    var pipe = [
+      {$match: {"date": {$gte: new Date(start), $lte: new Date(end)}}},
+      {$sort: {version: -1}},
+      {$group: {
+          _id : {stockId: "$stockId", date: "$date"},
+          count: {$first: "$count"}
+        }
+      }
+    ]
+    var data = CurrentStocks.aggregate(pipe, {cursor: {batchSize: 0}});
+    logger.info("Current stock published");
+    return data;
   }
+
 });

@@ -33,7 +33,7 @@ function receiveReceiptItems(id, receiptId, status, info) {
         console.log(err);
         return alert(err.reason);
       } else {
-        Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, function(err) {
+        Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, new Date(), function(err) {
           if(err) {
             console.log(err);
             return alert(err.reason);

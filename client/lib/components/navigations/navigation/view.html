@@ -121,11 +121,19 @@
             </ul>
           </li>
 
-          <li class="{{isActiveRoute regex='teamHours'}}">
-            <a href="/reports/{{week}}#shifts">
-              <i class="fa fa-area-chart"></i>
+          <li class="{{isActiveRoute name='teamHours|currentStocks'}}">
+            <a href="#">
+              <i class="fa fa-list"></i>
               <span class="nav-label">Reports</span>
             </a>
+            <ul class="nav nav-second-level {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
+              <li class="{{isActiveRoute name='teamHours'}}">
+                <a href="/reports/{{week}}#shifts">Team Hours</a>
+              </li>
+              <li class="{{isActiveRoute name='currentStocks'}}">
+                <a href="/reports/stocktake/currentStocks/{{week}}">Daily stock</a>
+              </li>
+            </ul>
           </li>
           {{/if}}
           

@@ -35,7 +35,7 @@ Template.receiveModal.events({
       });
     }
 
-    Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, function(err) {
+    Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, new Date(), function(err) {
       if(err) {
         console.log(err);
         return alert(err.reason);
@@ -66,7 +66,7 @@ Template.receiveModal.events({
     }
     var order = StockOrders.findOne(orderId);
     if(order) {
-      Meteor.call("updateCurrentStock", order.stockId, "Stock receive", parseFloat(invoiceQuantity), function(err) {
+      Meteor.call("updateCurrentStock", order.stockId, "Stock receive", parseFloat(invoiceQuantity), new Date(), function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);

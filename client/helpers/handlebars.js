@@ -101,6 +101,13 @@ UI.registerHelper("sectionById", function(id) {
   }
 });
 
+UI.registerHelper("stockById", function(id) {
+  var stock = Ingredients.findOne(id);
+  if(stock) {
+    return stock.description;
+  }
+});
+
 UI.registerHelper("roundCount", function(count) {
   return Math.round(count * 100)/100;
 });

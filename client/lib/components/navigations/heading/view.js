@@ -148,6 +148,8 @@ Template.pageHeading.events({
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
       Router.go("weeklyRoster", {"week": week});
+    } else if(type == "currentStocksReport") {
+      Router.go("currentStocks", {"week": week});
     }
   },
 
@@ -166,6 +168,8 @@ Template.pageHeading.events({
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
       Router.go("weeklyRoster", {"week": week});
+    } else if(type == "currentStocksReport") {
+      Router.go("currentStocks", {"week": week});
     }
   },
 
@@ -184,6 +188,8 @@ Template.pageHeading.events({
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
       Router.go("weeklyRoster", {"week": week});
+    } else if(type == "currentStocksReport") {
+      Router.go("currentStocks", {"week": week});
     }
   },
 

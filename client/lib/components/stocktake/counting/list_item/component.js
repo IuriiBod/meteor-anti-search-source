@@ -61,19 +61,22 @@ component.prototype.onItemRendered = function() {
           "counting": parseFloat(newValue)
         }
         $(elem).next().find("a").click();
-        Meteor.call("updateStocktake", id, info, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          } else {
-            Meteor.call("resetCurrentStock", stockId, "New stock count", newValue, function(err) {
-              if(err) {
-                console.log(err);
-                return alert(err.reason);
-              }
-            });
-          }
-        });
+        var main = StocktakeMain.findOne(Session.get("thisVersion"));
+        if(main) {
+          Meteor.call("updateStocktake", id, info, function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.reason);
+            } else {
+              Meteor.call("resetCurrentStock", stockId, "New stock count", newValue, main.stocktakeDate, function(err) {
+                if(err) {
+                  console.log(err);
+                  return alert(err.reason);
+                }
+              });
+            }
+          });
+        }
       }
     }
   });
