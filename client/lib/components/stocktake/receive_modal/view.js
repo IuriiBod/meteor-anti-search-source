@@ -35,7 +35,8 @@ Template.receiveModal.events({
       });
     }
 
-    Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, new Date(), function(err) {
+    var date = moment().format("YYYY-MM-DD");
+    Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, new Date(date), function(err) {
       if(err) {
         console.log(err);
         return alert(err.reason);
@@ -66,14 +67,14 @@ Template.receiveModal.events({
     }
     var order = StockOrders.findOne(orderId);
     if(order) {
-      Meteor.call("updateCurrentStock", order.stockId, "Stock receive", parseFloat(invoiceQuantity), new Date(), function(err) {
+      var date = moment().format("YYYY-MM-DD");
+      Meteor.call("updateCurrentStock", order.stockId, "Stock receive", parseFloat(invoiceQuantity), new Date(date), function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);
         }
       });
     }
-
     $(event.target).find('[name=invoiceQuantity]').val("");
     $("#wrongQuantityModal").modal("hide");
   },

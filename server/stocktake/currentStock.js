@@ -20,6 +20,8 @@ Meteor.methods({
       delete oldDoc._id;
       CurrentStocks.insert(oldDoc);
     }
+    logger.info("Current stock updated", {"stockId": stockId});
+    return;
   },
 
   resetCurrentStock: function(stockId, note, quantity, date) {
