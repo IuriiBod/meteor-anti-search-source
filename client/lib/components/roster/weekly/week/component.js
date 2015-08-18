@@ -21,6 +21,7 @@ component.state.origin = function() {
 
 component.prototype.onListRendered = function() {
   var user = Meteor.user();
+  $(".col-lg-13:first").css("margin-left", "0px");
   if(user.isAdmin || Meteor.isManager) {
     $(".sortable-list > div > li").css("cursor", "move");
     var origin = this.name;
