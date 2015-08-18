@@ -1,5 +1,4 @@
 var component = FlowComponents.define("switchUser", function(props) {
-  this.userSearchRequest = new ReactiveVar();
   this.set("users", props.users);
 });
 
@@ -24,17 +23,9 @@ component.state.schema = function () {
   });
 };
 
-component.state.searchRequest = function () {
-  return this.userSearchRequest.get();
-};
-
-component.action.findUser = function(request) {
-  this.userSearchRequest.set(request);
-};
-
 component.action.logout = function() {
   Meteor.logout();
-  Router.go('signIn');
+  Router.go("signIn");
 };
 
 component.action.switchUser = function(userId) {

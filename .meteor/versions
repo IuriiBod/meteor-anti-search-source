@@ -4,10 +4,6 @@ accounts-oauth@1.1.5
 accounts-password@1.1.1
 accounts-ui@1.1.5
 accounts-ui-unstyled@1.1.7
-aldeed:autoform@4.2.2
-aldeed:autoform-select2@2.0.2
-aldeed:simple-schema@1.1.0
-aldeed:template-extension@3.4.3
 amplify@1.0.0
 anti:gagarin@0.4.11
 autoupdate@1.2.1
@@ -72,10 +68,8 @@ minifiers@1.1.5
 minimongo@1.0.8
 mizzao:autocomplete@0.5.1
 mobile-status-bar@1.0.3
-momentjs:moment@2.8.4
 mongo@1.1.0
 mongo-livedata@1.0.8
-natestrauser:select2@3.5.1
 npm-bcrypt@0.7.8_2
 npm-container@1.0.0
 oauth@1.1.4
@@ -111,4 +105,3 @@ webapp@1.2.0
 webapp-hashing@1.0.3
 zimme:active-route@2.0.4_1
 zimme:iron-router-active@2.0.1
-zimme:select2-bootstrap3-css@1.4.6
