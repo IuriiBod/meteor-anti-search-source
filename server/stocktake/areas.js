@@ -32,8 +32,8 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to edi general areas");
-      throw new Meteor.Error(404, "User not permitted to edi general areas");
+      logger.error("User not permitted to edit general areas");
+      throw new Meteor.Error(404, "User not permitted to edit general areas");
     }
     if(!id) {
       logger.error("General area should have a id");
@@ -55,6 +55,35 @@ Meteor.methods({
     }
   },
 
+  deleteGeneralArea: function(id) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to delete general areas");
+      throw new Meteor.Error(404, "User not permitted to delete general areas");
+    }
+    if(!id) {
+      logger.error("Id should have a value");
+      throw new Meteor.Error(404, "Id should have a value");
+    }
+    var generalArea = GeneralAreas.findOne(id);
+    if(!generalArea) {
+      logger.error("General area does not exist");
+      throw new Meteor.Error(404, "General area does not exist");
+    }
+    if(generalArea.specialAreas && generalArea.specialAreas.length > 0) {
+      logger.error("Existing special areas. Can't delete. Archiving..", id);
+      GeneralAreas.update({"_id": id}, {$set: {"active": false}})
+    } else {
+      GeneralAreas.remove({"_id": id});
+      logger.error("General area removed", id);
+    }
+  },
+
   'createSpecialArea': function(name, gareaId) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
@@ -68,11 +97,11 @@ Meteor.methods({
     }
     if(!name) {
       logger.error("Special area should have a name");
-      return new Meteor.Error(404, "Special area should have a name");
+      throw new Meteor.Error(404, "Special area should have a name");
     }
     if(!gareaId) {
       logger.error("General area id not found");
-      return new Meteor.Error(404, "General area id not found");
+      throw new Meteor.Error(404, "General area id not found");
     }
     var gAreaExist = GeneralAreas.findOne(gareaId);
     if(!gAreaExist) {
@@ -103,7 +132,7 @@ Meteor.methods({
     }
     if(!id) {
       logger.error("Special area should have a id");
-      return new Meteor.Error(404, "Special area should have a id");
+      throw new Meteor.Error(404, "Special area should have a id");
     }
     var exist = SpecialAreas.findOne(id);
     if(!exist) {
@@ -187,5 +216,35 @@ Meteor.methods({
     Ingredients.update({"_id": stockId}, {$pull: {"specialAreas": sareaId, "generalAreas": sAreaExist.generalArea}})
     logger.info('Stock item removed from area', {"stock": stockId, "sarea": sareaId});
     return;
-  }
+  },
+
+  deleteSpecialArea: function(id) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to delete special areas");
+      throw new Meteor.Error(404, "User not permitted to delete special areas");
+    }
+    if(!id) {
+      logger.error("Id should have a value");
+      throw new Meteor.Error(404, "Id should have a value");
+    }
+    var specialArea = SpecialAreas.findOne(id);
+    if(!specialArea) {
+      logger.error("Special area does not exist");
+      throw new Meteor.Error(404, "Special area does not exist");
+    }
+    if(specialArea.stocks && specialArea.stocks.length > 0) {
+      logger.error("Existing stocks. Can't delete. Archiving..", id);
+      SpecialAreas.update({"_id": id}, {$set: {"active": false}})
+    } else {
+      SpecialAreas.remove({"_id": id});
+      GeneralAreas.update({"_id": specialArea.generalArea}, {$pull: {"specialAreas": id}});
+      logger.error("Special area removed", id);
+    }
+  },
 });
