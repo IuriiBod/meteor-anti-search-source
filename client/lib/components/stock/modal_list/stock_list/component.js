@@ -30,6 +30,7 @@ component.prototype.setIds = function() {
 component.prototype.renderShowIngList = function() {
   var self = this;
   Tracker.autorun(function() {
+
     if(self.name) {
       if(self.name == "editJob") {
         self.item = JobItems.findOne(id);
@@ -44,7 +45,7 @@ component.prototype.renderShowIngList = function() {
     if(ids.length > 0) {
       self.IngredientsSearch.cleanHistory();
     }
-    self.IngredientsSearch.search("", {"ids": ids, "limit": 10});
+    self.IngredientsSearch.search(self.get("text"), {"ids": ids, "limit": 10});
   });
 }
 
@@ -59,9 +60,6 @@ component.state.getIngredients = function() {
 
 component.action.keyup = function(text) {
   var ids = this.setIds();
+  this.set("text", text);
   this.IngredientsSearch.search(text, {"ids": ids, "limit": 10});
-}
-
-component.action.submit = function() {
-  this.IngredientsSearch.search("", {limit: 10});
 }
