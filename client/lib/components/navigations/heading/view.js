@@ -8,6 +8,8 @@ Template.pageHeading.events({
       Router.go("menuItemsMaster", {"category": Session.get("category"), "status": Session.get("status")});
     } else if(category == "Settings") {
       Router.go("admin");
+    } else if(category == "Stocktake List") {
+      Router.go("stocktakeList");
     }
   },
 
