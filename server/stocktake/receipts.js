@@ -64,7 +64,7 @@ Meteor.methods({
         Email.send({
           "to": info.to,
           "from": Meteor.user().emails[0].address,
-          "subject": "[Hospo Hero] " + info.title,
+          "subject": "Order from [Hospo Hero]",
           "html": info.emailText
         });
         logger.info("Email sent to supplier", supplier);
@@ -132,7 +132,6 @@ Meteor.methods({
   },
 
   updateReceipt: function(id, info) {
-    console.log("........", id, info);
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");

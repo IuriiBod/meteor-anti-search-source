@@ -4,9 +4,11 @@
       <td>{{state$order.stockName}}</td>
       <td>{{state$order.countOnHand}} [{{state$order.unit}}]</td>
       <td>{{state$order.countNeeded}} [{{state$order.unit}}]</td>
-      <!--DEV: The 'to order' number needs to be editable with x editable.
-      This allows the user to adjust the order before they send it. -->
-      <td><a href="#" class="orderingCount">{{state$order.countOrdered}} </a>[{{state$order.unit}}]</td>
+      {{#if state$editable}}
+        <td><a href="#" class="orderingCount">{{state$order.countOrdered}} </a>[{{state$order.unit}}]</td>
+      {{else}}
+        <td>{{state$order.countOrdered}} [{{state$order.unit}}]</td>
+      {{/if}}
       {{#if state$supplier}}
       {{else}}
         <td>

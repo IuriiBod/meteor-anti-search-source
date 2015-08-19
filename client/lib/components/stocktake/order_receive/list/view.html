@@ -19,6 +19,12 @@
                 {{#each state$list}}
                   {{> render component="orderReceiveItem" item=this}}
                 {{/each}}
+                <tr>
+                  <td><b>Total</b></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>$ {{state$total}}</b></td>
+                </tr>
               </tbody>
             </table>
             <hr>

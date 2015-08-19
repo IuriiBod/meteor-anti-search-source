@@ -3,7 +3,7 @@
     {{#if state$editable}}
       <i class="fa fa-fw fa-reorder"></i>
     {{/if}}
-    {{state$item.description}}
+    {{state$item.description}} <small>({{state$supplier}})</small>
     {{#if state$editable}}
       {{#if state$deletable state$item.stockRef}}
         <i class="fa fa-trash pull-right removeFromList"></i>

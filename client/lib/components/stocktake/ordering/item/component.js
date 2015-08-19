@@ -4,7 +4,6 @@ var component = FlowComponents.define("ordersListItem", function(props) {
 });
 
 component.state.order = function() {
-  // console.log("........order");
   var order = StockOrders.findOne(this.orderId);
   if(order) {
     var stock = Ingredients.findOne({"_id": order.stockId});
@@ -15,6 +14,17 @@ component.state.order = function() {
       order.countOrdered = 0;
     }
     return order;
+  }
+}
+
+component.state.editable = function() {
+  var order = StockOrders.findOne(this.orderId);
+  if(order) {
+    if(order.orderReceipt) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
 
