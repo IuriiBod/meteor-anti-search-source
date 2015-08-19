@@ -36,7 +36,7 @@ Template.jobItemsListMainView.helpers({
   },
 
   jobTypes: function() {
-    return JobTypes.find();
+    return JobTypes.find({}, {sort: {"name": 1}});
   }
 });
 
