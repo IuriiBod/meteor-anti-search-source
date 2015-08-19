@@ -42,7 +42,7 @@ component.state.list = function() {
     if(list.stocks && list.stocks.length > 0) {
       subs.subscribe("ingredients", list.stocks);
     }
-    return list;
+    return list.stocks;
   }
 }
 

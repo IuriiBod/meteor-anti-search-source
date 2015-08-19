@@ -3,7 +3,7 @@ Template.orderReceiveItem.events({
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
     var receiptId = Session.get("thisReceipt");
-    var status = "deliveredCorrectly";
+    var status = "Delivered Correctly";
     var info = {};
     receiveReceiptItems(id, receiptId, status, info);
   },
@@ -12,8 +12,6 @@ Template.orderReceiveItem.events({
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
     Session.set("thisOrder", id);
-    $("#updateInvoicePrice").text("Save").attr("disabled", false);
-    $("#updateStockPrice").text("Save").attr("disabled", false);
     $("#wrongPriceModal").modal();
   },
     

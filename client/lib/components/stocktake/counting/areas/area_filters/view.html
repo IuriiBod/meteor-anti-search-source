@@ -8,13 +8,15 @@
           {{> render component="areaBox" item=this class="sarea-filter" name="sarea"}}
         {{else}}
           No Special Areas
+          <br>
         {{/each}}
-        <!-- <button class="btn btn-default">Add</button> -->
+        <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea" data-id="{{this._id}}">Add</a>
+        <br><br>
         </div>
       </div>
     {{else}}
       No General Areas
     {{/each}}
-    <!-- <button class="btn btn-default">Add</button> -->
+    <a href="#addNewGeneralAreaModal" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin">Add</a>
   </div>            
 </template>

@@ -10,7 +10,7 @@ Template.receiveModal.events({
       "price": parseFloat(invoicePrice)
     }
     if(invoicePrice && receiptId && orderId) {
-      Meteor.call("receiveReceiptItems", orderId, receiptId, "wrongPrice", info, function(err) {
+      Meteor.call("receiveReceiptItems", orderId, receiptId, "Wrong Price", info, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);
@@ -58,7 +58,7 @@ Template.receiveModal.events({
       "quantity": parseFloat(invoiceQuantity)
     }
     if(invoiceQuantity && receiptId && orderId) {
-      Meteor.call("receiveReceiptItems", orderId, receiptId, "wrongQuantity", info, function(err) {
+      Meteor.call("receiveReceiptItems", orderId, receiptId, "Wrong Quantity", info, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);

@@ -23,5 +23,24 @@ Template.orderReceive.events({
         }
       });
     }
+  },
+
+  'click #uploadInvoice': function(event) {
+    event.preventDefault();
+    filepicker.pickAndStore({mimetype:"image/*"}, {},
+      function(InkBlobs){
+        var doc = (InkBlobs);
+        if(doc) {
+          var url = doc[0].url;
+          Meteor.call("updateReceipt", Session.get("thisReceipt"), {"invoiceImage": url}, function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.reason);
+            }
+          });
+          $(".uploadedInvoiceDiv").removeClass("hide");
+          $("#uploadedInvoiceUrl").attr("src", url);
+        }
+    });
   }
 });
