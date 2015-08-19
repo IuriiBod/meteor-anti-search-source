@@ -12,9 +12,24 @@
       {{#if state$stock.received}}
         {{state$deliveryStatus}}
       {{else}}
-        <a class="btn btn-primary deliveredCorrectly">Delivered correctly</a>
-        <a class="btn btn-danger wrongPrice">Wrong Price</a>
-        <a class="btn btn-danger wrongQuantity">Wrong Quantity</a>
+        {{#if state$isDeliveredCorreclty}}
+        {{else}}
+          {{#if state$isWrongQuantity}}
+          {{else}}
+            {{#if state$isWrongPrice}}
+            {{else}}
+              <a class="btn btn-primary deliveredCorrectly">Delivered correctly</a>
+            {{/if}}
+          {{/if}}
+          {{#if state$isWrongPrice}}
+          {{else}}
+            <a class="btn btn-danger wrongPrice">Wrong Price</a>
+          {{/if}}
+          {{#if state$isWrongQuantity}}
+          {{else}}
+            <a class="btn btn-danger wrongQuantity">Wrong Quantity</a>
+          {{/if}}
+        {{/if}}
       {{/if}}
     </td>
   </tr>

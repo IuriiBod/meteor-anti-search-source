@@ -17,6 +17,11 @@ Meteor.methods({
         "receivedBy": Meteor.userId()
       }}
     );
+    logger.info("Order receipt marked as received", receiptId);
+
+    StockOrders.update({"orderReceipt": receiptId}, {$set: {"received": true}}, {multi: true});
+    logger.info("Stock orders marked received", {"receipt": receiptId});
+    return;
   },
 
   receiveReceiptItems: function(id, receiptId, status, info) {
@@ -38,12 +43,11 @@ Meteor.methods({
       throw new Meteor.Error(401, "Order not found");
     }
     var updateQuery = {
-      "received": true,
       "receivedBy": Meteor.userId(),
       "receivedDate": Date.now()
     };
 
-    if(status == "wrongPrice") {
+    if(status == "Wrong Price") {
       if(!info.price) {
         logger.error("Price not found");
         throw new Meteor.Error(401, "Price not found");
@@ -51,26 +55,21 @@ Meteor.methods({
       if(order.unitPrice != info.price) {
         updateQuery['unitPrice'] = info.price;
         updateQuery['originalPrice'] = order.unitPrice;
-        updateQuery['deliveryStatus'] = status;
-      } else {
-        updateQuery['deliveryStatus'] = "deliveredCorrectly";
       }
-    } else if(status == "wrongQuantity") {
+    } else if(status == "Wrong Quantity") {
       if(!info.quantity) {
         logger.error("Quantity not found");
         throw new Meteor.Error(401, "Quantity not found");
       }
       if(order.countOrdered != info.quantity) {
         updateQuery['countDelivered'] = info.quantity;
-        updateQuery['deliveryStatus'] = "wrongQuantity";
-      } else {
-        updateQuery['deliveryStatus'] = "deliveredCorrectly";
-      }
-    } else {
-      updateQuery['deliveryStatus'] = "deliveredCorrectly";
+      } 
     }
-    StockOrders.update({"_id": id, "orderReceipt": receiptId}, {$set: updateQuery});
-    logger.info("Stock order updated", id, status, updateQuery['deliveryStatus']);
+    StockOrders.update(
+      {"_id": id, "orderReceipt": receiptId},
+      {$set: updateQuery, $addToSet: {"deliveryStatus": status}}
+    );
+    logger.info("Stock order updated", id, status);
     return;
   },
 
