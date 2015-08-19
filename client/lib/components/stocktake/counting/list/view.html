@@ -37,4 +37,16 @@
     {{> render component = 'stocksModalList' name="stockModal"}}
   </div>
   <!-- /STOCKS MODAL LIST -->
+
+  <!-- ADD GENERAL AREA MODAL LIST-->
+  <div class="modal fade" id="addNewGeneralAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component = 'newAreaModal' name="general"}}
+  </div>
+  <!-- /ADD GENERAL AREA MODAL LIST-->
+
+   <!-- ADD SPECIAL AREA MODAL LIST-->
+  <div class="modal fade" id="addNewSpecialAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component = 'newAreaModal' name="special"}}
+  </div>
+  <!-- /ADD SPECIAL AREA MODAL LIST-->
 </template>
