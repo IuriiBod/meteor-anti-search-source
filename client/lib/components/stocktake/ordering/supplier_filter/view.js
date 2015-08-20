@@ -14,7 +14,7 @@ Template.supplierFilter.events({
     var supplier = Session.get("activeSupplier");
     var version = Session.get("thisVersion");
     var address = null;
-    var deliveryDate = moment().add(7, 'days');
+    var deliveryDate = moment().add(1, 'days');
     deliveryDate = moment(deliveryDate).format("YYYY-MM-DD");
     var info = {
       "through": orderType,

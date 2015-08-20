@@ -19,7 +19,7 @@ component.state.initialHTML = function() {
   if(receipt && receipt.expectedDeliveryDate) {
     text += moment(receipt.expectedDeliveryDate).format("YYYY-MM-DD") + ".</p>";
   } else {
-    var date = moment().add(7, 'day');
+    var date = moment().add(1, 'day');
     text += moment(date).format("YYYY-MM-DD") + ".</p>";
   }
   text += "<p>If there are any items that you cannot supply or changes you wish, please email us.</p><br>";
@@ -47,7 +47,16 @@ component.state.initialHTML = function() {
   text += "<tr><td><b>Total</b></td><td></td><td></td><td><b>$ " + Math.round(total * 100)/100 + "</b></td></tr>"
   text += "</tbody></table>";
   text += "<br><br><p>" + this.get("username") + ",</p>"
-  text += "<p>" + this.get("userType") + "</p>";
+  text += "<p>" + this.get("userType") + ".</p>";
+  var user = Meteor.user();
+  if(user) {
+    if(user.emails && user.emails[0].address) {
+      text += "<p>" + user.emails[0].address + "</p>";
+    }
+    if(user.profile && user.profile.phone) {
+      text += "<p>" + user.profile.phone + "</p>";
+    }
+  }
   return text;
 }
 
