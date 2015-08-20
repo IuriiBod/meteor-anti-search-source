@@ -57,7 +57,7 @@ component.state.deliveryDate = function() {
   if(receipt && receipt.expectedDeliveryDate) {
     return receipt.expectedDeliveryDate;
   } else {
-    var date = moment().add(7, 'day');
+    var date = moment().add(1, 'day');
     return date;
   }
 }

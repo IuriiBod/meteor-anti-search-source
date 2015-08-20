@@ -31,7 +31,7 @@ component.state.item = function() {
 component.state.supplier = function() {
   var stock = Ingredients.findOne(this.id);
   if(stock && stock.suppliers && stock.suppliers.length > 0) {
-    return "by " + stock.suppliers[0];
+    return stock.suppliers[0];
   } else {
     return "Not assigned";
   }
