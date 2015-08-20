@@ -89,7 +89,7 @@ Template.pageHeading.events({
     event.preventDefault();
     print();
   },
-  
+
   'click #submitJobItem': function(event) {
     event.preventDefault();
     Router.go("submitJobItem");
@@ -158,7 +158,7 @@ Template.pageHeading.events({
   'click .nextWeek': function(event) {
     event.preventDefault();
     var week = parseInt(Router.current().params.week) + 1;
-    var type = $(event.target).closest("div").attr("data-type");
+    var type = $(event.target).parent().parent().attr("data-type");
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
@@ -178,7 +178,7 @@ Template.pageHeading.events({
   'click .previousWeek': function(event) {
     event.preventDefault();
     var week = parseInt(Router.current().params.week) - 1;
-    var type = $(event.target).closest("div").attr("data-type");
+    var type = $(event.target).parent().parent().attr("data-type");
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
@@ -241,7 +241,7 @@ Template.pageHeading.events({
         if(err) {
           console.log(err);
           return alert(err.reason);
-        } 
+        }
       });
       users.forEach(function(user) {
         var to = Meteor.users.findOne(user);
@@ -268,8 +268,8 @@ Template.pageHeading.events({
             }
 
             var info = {
-              "title": title, 
-              "text": text, 
+              "title": title,
+              "text": text,
               "startDate": weekStart,
               "week": weekNo
             }
@@ -292,7 +292,7 @@ Template.pageHeading.events({
               if(err) {
                 console.log(err);
                 return alert(err.reason);
-              } 
+              }
             });
           }
         }
@@ -316,5 +316,42 @@ Template.pageHeading.events({
         }
       });
     }
+  },
+  'changeDate .datepicker': function(e, tpl) {
+    var date = e.date;
+    var week = moment(date).week();
+    tpl.$(".datepicker").datepicker("remove");
+
+    tpl.$(".datepicker").datepicker({
+      calendarWeeks: true
+    });
+
+    var checkedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    Session.set("checkedDate", checkedDate);
+    tpl.$(".datepicker").datepicker("update", checkedDate);
+    Router.go("weeklyRoster", {"week": week});
+  },
+  'click .calendar-toggle': function(e, tpl) {
+
+
+    if ($(e.target).parent().hasClass("open")) {
+      $(".day.active").removeClass("week");
+      tpl.$(".datepicker").datepicker("hide");
+    } else {
+      $(".day.active").siblings(".day").addClass("week");
+      tpl.$(".datepicker").datepicker("show");
+    }
   }
 });
+
+Template.pageHeading.rendered = function() {
+  var checkedDate = Session.get("checkedDate");
+  if (!checkedDate) {
+    var date = new Date();
+    checkedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+  this.$(".datepicker").datepicker({
+    todayHighlight: true,
+    calendarWeeks: true
+  }).datepicker("update", checkedDate);
+};
