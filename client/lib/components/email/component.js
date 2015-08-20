@@ -29,7 +29,7 @@ component.state.initialHTML = function() {
     if(receipt && receipt.expectedDeliveryDate) {
       text += moment(receipt.expectedDeliveryDate).format("YYYY-MM-DD") + ".</p>";
     } else {
-      var date = moment().add(7, 'day');
+      var date = moment().add(1, 'day');
       text += moment(date).format("YYYY-MM-DD") + ".</p>";
     }
     text += "<p>If there are any items that you cannot supply or changes you wish, please email us.</p><br>";
