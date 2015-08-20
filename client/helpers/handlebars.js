@@ -80,6 +80,11 @@ UI.registerHelper("dateFormat", function(date) {
   return dateFormatted;
 });
 
+UI.registerHelper("dateFormatDahsed", function(date) {
+  var dateFormatted = moment(date).format('DD/MM/YYYY');
+  return dateFormatted;
+});
+
 UI.registerHelper("username", function(id) {
   var user = Meteor.users.findOne(id);
   if(user) {

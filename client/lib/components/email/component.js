@@ -2,7 +2,7 @@ var component = FlowComponents.define("composeMail", function(props) {});
 
 component.state.subject = function() {
   var date = moment().format("YYYY-MM-DD");
-  var title = "Stock order for " + date;
+  var title = "Order from Hospo Hero";
   return title;
 }
 
