@@ -20,6 +20,12 @@ Template.orderReceiveItem.events({
     var id = $(event.target).closest("tr").attr("data-id");
     Session.set("thisOrder", id);
     $("#wrongQuantityModal").modal();
+  },
+
+  'click .setEditable': function(event) {
+    event.preventDefault();
+    // $(event.target).hide();
+    // $(event.target).
   }
 });
 
