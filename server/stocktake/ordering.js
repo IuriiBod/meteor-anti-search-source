@@ -38,8 +38,8 @@ Meteor.methods({
           count = stock.counting - stock.orderedCount;
         }
         var supplier = null;
-        if(stockItem && stockItem.hasOwnProperty("suppliers") && stockItem.suppliers.length > 0) {
-          supplier = stockItem.suppliers[0];
+        if(stockItem && stockItem.hasOwnProperty("suppliers") && stockItem.suppliers) {
+          supplier = stockItem.suppliers;
         }
 
         var existingOrder = StockOrders.findOne({

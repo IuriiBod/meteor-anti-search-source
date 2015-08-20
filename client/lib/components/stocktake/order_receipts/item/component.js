@@ -7,6 +7,14 @@ component.state.receipt = function() {
   return this.item;
 }
 
+component.state.isInvoiceUploaded = function() {
+  if(this.item.hasOwnProperty("invoiceImage")) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 component.state.orderedValue = function() {
   var cost = 0;
   var id = this.item._id;

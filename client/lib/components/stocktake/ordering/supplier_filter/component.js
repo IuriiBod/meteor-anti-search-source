@@ -27,6 +27,9 @@ component.state.suppliers = function() {
     if(!Session.get("activeSupplier")) {
       Session.set("activeSupplier", activeSupplier)
     }
+    if(supplierslist && supplierslist.length > 0) {
+      subs.subscribe("suppliers", supplierslist);
+    }
     return supplierslist;
   }
 }

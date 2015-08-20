@@ -1,7 +1,7 @@
 <template name="orderReceiptItem">
   <tr data-id="{{state$receipt._id}}">
     <td>{{dateFormat state$receipt.expectedDeliveryDate}}</td>
-    <td>{{state$receipt.supplier}}</td>
+    <td>{{SupplierName state$receipt.supplier}}</td>
     <td>$ {{roundCount state$orderedValue}}</td>
     <td>$ {{roundCount state$invoiceFaceValue}}</td>
     <td>
@@ -11,8 +11,11 @@
         <a href="#" class="btn btn-primary receiveDelivery"><i class="fa -o fa-fw fa-lg fa-check-square-o"></i>Receive this delivery now</a>
       {{/if}}
     </td>
-    <!-- <td>
+    <td>
+      {{#if state$isInvoiceUploaded}}
       <a class="btn btn-link"><i class="-o -square-o fa fa-check fa-fw fa-lg text-primary"></i></a>
-    </td> -->
+      {{else}}
+      {{/if}}
+    </td>
   </tr>
 </template>

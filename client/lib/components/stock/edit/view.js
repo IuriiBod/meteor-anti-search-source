@@ -31,7 +31,7 @@ Template.editIngredientItem.events({
       "description": desc,
       "portionOrdered": portionOrdered,
       "portionUsed": portionUsed,
-      "suppliers": []
+      "suppliers": supplier
     }
 
     if(!costPerPortion || typeof(parseFloat(costPerPortion)) != "number") {
@@ -47,9 +47,6 @@ Template.editIngredientItem.events({
       info.unitSize = parseFloat(unitSize);
     }
 
-    if(supplier.length) {
-      info.suppliers.push(supplier);
-    }
     FlowComponents.callAction('submit', id, info, event);
   },
 

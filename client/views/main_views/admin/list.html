@@ -26,15 +26,12 @@
           <div class="panel-body">
             <div class="tab-content">
               <div class="tab-pane active" id="usersList">
-                <strong>Users List</strong>
                 {{> render component='usersList'}}
               </div>
               <div class="tab-pane" id="sections">
-                <strong>Sections</strong>
                 {{> render component='sections'}}
               </div>
               <div class="tab-pane" id="areas">
-                <strong>Stock Areas</strong>
                 {{> render component='stockAreas'}}
               </div>
               <div class="tab-pane" id="details">
@@ -42,8 +39,7 @@
                 <p>Coming soon...!</p>
               </div>
               <div class="tab-pane" id="suppliers">
-                <strong>Suppliers</strong>
-                <p>Coming soon...!</p>
+                {{> render component="suppliersList"}}
               </div>
             </div>
           </div>
