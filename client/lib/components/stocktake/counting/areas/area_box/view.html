@@ -1,7 +1,17 @@
 <template name="areaBox">
-  <a class="btn btn-block {{#if activeG state$item._id}} btn-info {{/if}} {{#if activeS state$item._id}} btn-info {{/if}} {{#if inActive state$item._id}} btn-default {{/if}} btn-sm {{state$item.class}}" data-id="{{state$item._id}}"><a href="#" class="{{state$item.type}}">{{state$item.name}}</a>
-    <div class="progress progress-mini">
-      <div class="progress-bar" style="width: {{state$widthofBar}}"></div>
+  <div class="areaBox">
+    <div class="box-wrapper pull-right" style="display: none;">
+      <span class="box-remove glyphicon glyphicon-remove removeArea" data-id="{{state$item._id}}" data-type="{{state$item.type}}" style="margin: 2px"></span>
     </div>
-  </a>
+    <a class="btn btn-block {{#if activeG state$item._id}} btn-info {{/if}} {{#if activeS state$item._id}} btn-info {{/if}} {{#if inActive state$item._id}} btn-default {{/if}} btn-sm {{state$item.class}} m-b-sm" data-id="{{state$item._id}}"  role="button" data-toggle="collapse" href="#{{state$item._id}}" aria-expanded="false" aria-controls="{{state$item._id}}">
+    {{#if state$editable}}
+      <a href="#" class="{{state$item.type}}">{{state$item.name}}</a>
+    {{else}}
+      {{state$item.name}}
+    {{/if}}
+      <div class="progress progress-mini">
+        <div class="progress-bar" style="width: {{state$widthofBar}}"></div>
+      </div>
+    </a>
+  </div>
 </template>

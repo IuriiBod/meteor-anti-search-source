@@ -24,6 +24,14 @@ component.action.submit = function(id, info, event) {
   });
 };
 
+component.state.suppliers = function() {
+  var id = Session.get("thisIngredientId");
+  var ing = Ingredients.findOne(id);
+  if(ing) {
+    return Suppliers.find({"_id": {$nin: [ing.suppliers]}}, {sort: {"name": 1}});
+  }
+}
+
 component.state.isManagerOrAdmin = function() {
   var userId = Meteor.userId();
   return isManagerOrAdmin(userId);

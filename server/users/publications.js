@@ -48,3 +48,14 @@ Meteor.publish("workers", function() {
 
   return cursors;
 });
+
+Meteor.publish("selectedUsers", function(ids) {
+  if(!this.userId) {
+    logger.error('User not found : ' + this.userId);
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+  var cursors = [];
+  cursors.push(Meteor.users.find({"_id": {$in: ids}}));
+  logger.info("Selected users published", ids);
+  return cursors;
+});

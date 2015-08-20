@@ -1,14 +1,22 @@
 <template name="areaFilters">
-  <div class="col-md-2 no-margin">
+  <div class="col-md-4 no-margin">
     {{#each state$generalAreas}}
       {{> render component="areaBox" item=this class="garea-filter" name="garea"}}
+      <div class="collapse" id="{{this._id}}">
+        <div class="well">
+        {{#each state$specialAreas this._id}}
+          {{> render component="areaBox" item=this class="sarea-filter" name="sarea"}}
+        {{else}}
+          No Special Areas
+          <br>
+        {{/each}}
+        <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea" data-id="{{this._id}}">Add</a>
+        <br><br>
+        </div>
+      </div>
+    {{else}}
+      No General Areas
     {{/each}}
-    <a class="btn btn-block btn-default btn-outline addNewGArea">Add</a>
-  </div>
-  <div class="col-md-2">
-    {{#each state$specialAreas}}
-      {{> render component="areaBox" item=this class="sarea-filter" name="sarea"}}
-    {{/each}}
-    <a class="btn btn-block btn-default btn-outline addNewSArea">Add</a>
-  </div>
+    <a href="#addNewGeneralAreaModal" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin">Add</a>
+  </div>            
 </template>

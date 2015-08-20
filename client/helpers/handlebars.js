@@ -13,6 +13,11 @@ UI.registerHelper('timeFromNow', function(time) {
   return moment(time).fromNow();
 });
 
+UI.registerHelper("DateTime", function(time) {
+  return moment(time).format("DD/MM/YY hh:mm a");
+});
+
+
 //duration
 UI.registerHelper('timeDuration', function(time) {
   var hours = moment.duration(time).hours();
@@ -75,6 +80,11 @@ UI.registerHelper("dateFormat", function(date) {
   return dateFormatted;
 });
 
+UI.registerHelper("dateFormatDahsed", function(date) {
+  var dateFormatted = moment(date).format('DD/MM/YYYY');
+  return dateFormatted;
+});
+
 UI.registerHelper("username", function(id) {
   var user = Meteor.users.findOne(id);
   if(user) {
@@ -96,6 +106,27 @@ UI.registerHelper("sectionById", function(id) {
   }
 });
 
+UI.registerHelper("stockById", function(id) {
+  var stock = Ingredients.findOne(id);
+  if(stock) {
+    return stock.description;
+  }
+});
+
 UI.registerHelper("roundCount", function(count) {
   return Math.round(count * 100)/100;
+});
+
+UI.registerHelper("Username", function(userId) {
+  var user = Meteor.users.findOne(userId);
+  if(user) {
+    return user.username;
+  }
+});
+
+UI.registerHelper("SupplierName", function(id) {
+  var supplier = Suppliers.findOne(id);
+  if(supplier) {
+    return supplier.name;
+  }
 });

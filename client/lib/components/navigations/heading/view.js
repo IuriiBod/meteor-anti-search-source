@@ -8,6 +8,8 @@ Template.pageHeading.events({
       Router.go("menuItemsMaster", {"category": Session.get("category"), "status": Session.get("status")});
     } else if(category == "Settings") {
       Router.go("admin");
+    } else if(category == "Stocktake List") {
+      Router.go("stocktakeList");
     }
   },
 
@@ -148,6 +150,8 @@ Template.pageHeading.events({
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
       Router.go("weeklyRoster", {"week": week});
+    } else if(type == "currentStocksReport") {
+      Router.go("currentStocks", {"week": week});
     }
   },
 
@@ -166,6 +170,8 @@ Template.pageHeading.events({
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
       Router.go("weeklyRoster", {"week": week});
+    } else if(type == "currentStocksReport") {
+      Router.go("currentStocks", {"week": week});
     }
   },
 
@@ -184,6 +190,8 @@ Template.pageHeading.events({
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
       Router.go("weeklyRoster", {"week": week});
+    } else if(type == "currentStocksReport") {
+      Router.go("currentStocks", {"week": week});
     }
   },
 
@@ -287,6 +295,24 @@ Template.pageHeading.events({
               } 
             });
           }
+        }
+      });
+    }
+  },
+
+  'click #startNewStocktake': function(event) {
+    event.preventDefault();
+    var date = moment().format("YYYY-MM-DD");
+    var stocktake = StocktakeMain.findOne({"stocktakeDate": new Date(date).getTime()});
+    if(stocktake) {
+      $("#newStocktakeModal").modal();
+    } else {
+      Meteor.call("createMainStocktake", date, function(err, id) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        } else {
+          Router.go("stocktakeCounting", {"_id": id});
         }
       });
     }

@@ -1,5 +1,5 @@
 Meteor.methods({
-  generateOrders: function(stockTakeDate) {
+  generateOrders: function(stocktakeVersion) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -7,98 +7,84 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to generate orders");
+      throw new Meteor.Error(404, "User not permitted to generate orders");
     }
-    if(!stockTakeDate) {
-      logger.error("Stocktake date should have a value");
-      return new Meteor.Error(404, "Stocktake date should have a value");
+    if(!stocktakeVersion) {
+      logger.error("Stocktake version should have a value");
+      throw new Meteor.Error(404, "Stocktake version should have a value");
     }
-    var stocktakes = Stocktakes.find({"date": stockTakeDate}).fetch();
+    var version = StocktakeMain.findOne(stocktakeVersion);
+    if(!version) {
+      logger.error("Stocktake version should exist");
+      throw new Meteor.Error(404, "Stocktake version should exist")
+    }
+    var stocktakes = Stocktakes.find({"version": stocktakeVersion}).fetch();
     if(stocktakes.length <= 0) {
       logger.error("No recorded stocktakes found");
-      return new Meteor.Error(404, "No recorded stocktakes found");
+      throw new Meteor.Error(404, "No recorded stocktakes found");
     }
     stocktakes.forEach(function(stock) {
-      var counting = stock.counting;
-      // if(stock.active) {
-      //   if(stock.ordered) {
-      //     counting = (counting - stock.orderedQuantity)
-      //   }
-      // }
-
-
-      if(counting > 0) {
-
+      if(!stock.status) {
         var stockItem = Ingredients.findOne(stock.stockId);
         if(!stockItem) {
           logger.error("Stock item not found");
-          return new Meteor.Error(404, "Stock item not found");
+          throw new Meteor.Error(404, "Stock item not found");
+        }
+
+        var count = stock.counting;
+        if(stock.hasOwnProperty("orderedCount")) {
+          //if count was reduced it will be minus value which will decrement the value
+          count = stock.counting - stock.orderedCount;
         }
         var supplier = null;
-
-        if(stockItem.hasOwnProperty("suppliers") && stockItem.suppliers.length > 0) {
-          supplier = stockItem.suppliers[0];
+        if(stockItem && stockItem.hasOwnProperty("suppliers") && stockItem.suppliers) {
+          supplier = stockItem.suppliers;
         }
 
-        var existingOrder = OrdersPlaced.findOne({
-          "stockId": stock.stockId, 
-          "supplier": supplier, 
-          "stocktakeDate": stockTakeDate
-        });
+        var existingOrder = StockOrders.findOne({
+          "stockId": stock.stockId,
+          "version": stocktakeVersion,
+          "supplier": supplier
+        })
+        //generate order
+        var orderRef = null;
         if(existingOrder) {
-
-          OrdersPlaced.update({"_id": existingOrder._id}, {$inc: {"orderedCount": counting}});
+          orderRef = existingOrder._id;
+          StockOrders.update({"_id": existingOrder._id}, {$inc: {"countOnHand": count}})
         } else {
-
-          var currentStock = CurrentStocks.find({"stockId": stock.stockId}, {sort: {"version": -1}, limit: 1}).fetch();
-          var countOnHand = 0;
-          var orderedCount = counting;
-          if(currentStock && currentStock.length > 0) {
-
-            countOnHand = currentStock[0].quantity;
-            if(countOnHand > counting) {
-              orderedCount = 0;
-            } else {
-              orderedCount = (counting - countOnHand);
-            }
+          var newOrder = {
+            "stockId": stock.stockId,
+            "version": stocktakeVersion,
+            "supplier": supplier,
+            "countOnHand": count,
+            "countNeeded": 0,
+            "unit": stockItem.portionOrdered,
+            "unitPrice": stockItem.costPerPortion,
+            "countOrdered": 0,
+            "orderReceipt": null,
+            "received": false
           }
-          if(orderedCount > 0) {
-            if(stockItem) {
-              var order = {
-                "stockId": stock.stockId,
-                "supplier": supplier,
-                "stocktakeDate": stockTakeDate,
-                "countOnHand": countOnHand,
-                "orderedCount": orderedCount,
-                "measure": stockItem.portionOrdered
-              }
-            }
-            OrdersPlaced.insert(order); 
+          var id = StockOrders.insert(newOrder);
+          orderRef = id;
+          logger.info("New order created", id);
+        }
+
+        //update stocktake for order generated count
+        Stocktakes.update({"_id": stock._id}, { 
+          $set: {
+            "status": true, 
+            "orderedCount": stock.counting,
+            "orderRef": orderRef
           }
-        }  
-      }    
+        });
+
+        //update current stock with count
+      }
     });
-
   },
 
-  'checkReOrdering': function() {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var pipe = [
-      {$group: {
-        "_id": "$stockId", 
-        "mostRecent": {$max: "$date"}
-      }}
-    ]
-    var data = CurrentStocks.aggregate(pipe, {cursor: {batchSize: 0}});
-    return data;
-  },
-
-  generateReceipts: function(stocktakeDate, supplier, through) {
+  editOrderingCount: function(orderId, count) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -106,27 +92,80 @@ Meteor.methods({
     var userId = Meteor.userId();
     var permitted = isManagerOrAdmin(userId);
     if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(404, "User not permitted to add jobs");
+      logger.error("User not permitted to edit ordering count");
+      throw new Meteor.Error(404, "User not permitted to edit ordering count");
     }
-    if(!stocktakeDate) {
-      logger.error("Stocktake date should have a value");
-      return new Meteor.Error(404, "Stocktake date should have a value");
+    var order = StockOrders.findOne(orderId);
+    if(!order) {
+      logger.error('Stock order not found');
+      throw new Meteor.Error(401, "Stock order not found");
     }
-    if(!supplier) {
-      logger.error("Supplier should exist");
-      return new Meteor.Error(404, "Supplier should exist");
+    StockOrders.update({"_id": orderId}, {$set: {"countOrdered": parseFloat(count)}});
+    logger.info("Stock order count updated", orderId);
+    return;
+  },
+
+  updateOrderValues: function(orderId, receiptId, info) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
     }
-    if(!through) {
-      logger.error("Ordered through should exist");
-      return new Meteor.Error(404, "Ordered through should exist");
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to edit ordering count");
+      throw new Meteor.Error(404, "User not permitted to edit ordering count");
     }
-    var orders = OrdersPlaced.update(
-      {"stocktakeDate": stocktakeDate, "supplier": supplier},
-      {$set: {"orderedThrough": through, "orderedOn": Date.now()}},
-      {$multi: true}
+    var order = StockOrders.findOne(orderId);
+    if(!order) {
+      logger.error('Stock order not found');
+      throw new Meteor.Error(401, "Stock order not found");
+    }
+    var query = {};
+    if(info.hasOwnProperty("unitPrice")) {
+      query['unitPrice'] = info.unitPrice;
+    }
+    StockOrders.update({"_id": orderId, "orderReceipt": receiptId}, {$set: query});
+    logger.info("Stock order updated", orderId, info);
+    return;
+  },
+
+  'removeOrder': function(id) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to remove placed orders");
+      throw new Meteor.Error(404, "User not permitted to remove placed orders");
+    }
+    if(!id) {
+      logger.error('Stock order id not found');
+      throw new Meteor.Error(401, 'Stock order id not found');
+    }
+    var order = StockOrders.findOne(id);
+    if(!order) {
+      logger.error("Order does not exist");
+      throw new Meteor.Error(401, "Order does not exist");
+    }
+    var receipt = OrderReceipts.findOne(order.orderReceipt);
+    if(receipt) {
+      logger.error("You can't delete this order. This has a order receipt");
+      throw new Meteor.Error(401, "You can't delete this order. This has a order receipt");
+    }
+    StockOrders.remove({"_id": id});
+    Stocktakes.update(
+      {"orderRef": id},
+      {$set: {
+        "status": false,
+        "orderedCount": 0,
+        "orderRef": null
+      }},
+      {multi: true}
     )
-    logger.info("Order receipt generated");
+    logger.info("Stock order removed");
     return;
   }
 });

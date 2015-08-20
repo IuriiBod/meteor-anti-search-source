@@ -98,7 +98,7 @@
       {{#if state$isIngredientsList}}
       <div class="title-action">
         {{#if state$isManagerOrAdmin}}
-        <a href="#addIngredientModal" class="btn btn-primary"  data-toggle="modal">Add new ingredient</a>
+        <a href="#addIngredientModal" class="btn btn-primary"  data-toggle="modal">Add new stock</a>
         {{/if}}
       </div>
       {{/if}}
@@ -147,7 +147,7 @@
 
       {{#if state$isStockTakeList}}
       <div class="title-action">
-        <a href="/stocktake/{{state$date}}" class="btn btn-primary">
+        <a href="" class="btn btn-primary" id="startNewStocktake">
           Start New Stocktake
         </a>
       </div>

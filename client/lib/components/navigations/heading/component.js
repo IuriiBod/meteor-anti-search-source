@@ -156,7 +156,7 @@ component.state.isIngredientsList = function() {
 }
 
 component.state.weeklyNavigation = function() {
-  if(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster") {
+  if(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport") {
     return true; 
   } else {
     return false;
