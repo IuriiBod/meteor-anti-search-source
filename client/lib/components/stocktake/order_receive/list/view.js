@@ -27,7 +27,9 @@ Template.orderReceive.events({
 
   'click #uploadInvoice': function(event) {
     event.preventDefault();
-    filepicker.pickAndStore({mimetype:"image/*"}, {},
+    filepicker.pickAndStore(
+      {mimetype:"image/*", services: ['COMPUTER']}, 
+      {},
       function(InkBlobs){
         var doc = (InkBlobs);
         if(doc) {
