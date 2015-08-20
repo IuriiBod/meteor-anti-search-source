@@ -118,3 +118,10 @@ UI.registerHelper("Username", function(userId) {
     return user.username;
   }
 });
+
+UI.registerHelper("SupplierName", function(id) {
+  var supplier = Suppliers.findOne(id);
+  if(supplier) {
+    return supplier.name;
+  }
+});

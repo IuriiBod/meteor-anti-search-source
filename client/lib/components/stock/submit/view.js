@@ -20,7 +20,7 @@ Template.submitIngredient.events({
       "description": desc,
       "portionOrdered": portionOrdered,
       "portionUsed": portionUsed,
-      "suppliers": []
+      "suppliers": supplier
     }
 
     if(!costPerPortion || typeof(parseFloat(costPerPortion)) != "number") {
@@ -33,10 +33,6 @@ Template.submitIngredient.events({
       info.unitSize =  0;
     } else {
       info.unitSize = parseFloat(unitSize);
-    }
-
-    if(supplier.length) {
-      info.suppliers.push(supplier);
     }
     FlowComponents.callAction('submit', event, info);
   }

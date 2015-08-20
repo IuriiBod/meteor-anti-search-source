@@ -2,7 +2,7 @@
   <tr data-id="{{state$item._id}}">
     <td><a href="" data-toggle="modal" class="editIngredient">{{{state$item.code}}}</a></td>
     <td>{{{state$item.description}}}</td>
-    <td>{{{state$item.suppliers}}}</td>
+    <td>{{SupplierName state$item.suppliers}}</td>
     <td>{{state$item.portionOrdered}}</td>
     <td>$ {{state$item.costPerPortion}}</td>
     <td>{{state$item.portionUsed}}</td>

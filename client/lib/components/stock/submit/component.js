@@ -14,3 +14,7 @@ component.action.submit = function(event, info) {
     $("#addIngredientModal").modal("hide");
   });
 };
+
+component.state.suppliers = function() {
+  return Suppliers.find({}, {sort: {"name": 1}});
+}

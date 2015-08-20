@@ -23,14 +23,6 @@ Meteor.methods({
       logger.error("Duplicate entry");
       throw new Meteor.Error(404, "Duplicate entry, change code and try again");
     }
-    var suppliers = [];
-    if(info.suppliers) {
-      if(info.suppliers.length > 0) {
-        suppliers = info.suppliers;
-      } else {
-        suppliers.push(info.suppliers);
-      }
-    }
     if(!info.costPerPortion || (info.costPerPortion != info.costPerPortion)) {
       info.costPerPortion = 0;
     }
@@ -46,7 +38,7 @@ Meteor.methods({
     var doc = {
       "code": info.code,
       "description": info.description,
-      "suppliers": suppliers,
+      "suppliers": info.suppliers,
       "portionOrdered": info.portionOrdered,
       "costPerPortion": info.costPerPortion,
       "portionUsed": info.portionUsed,
