@@ -10,13 +10,17 @@
           No Special Areas
           <br>
         {{/each}}
-        <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea" data-id="{{this._id}}">Add</a>
-        <br><br>
+        {{#if state$editable}}
+          <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea" data-id="{{this._id}}">Add</a>
+          <br><br>
+        {{/if}}
         </div>
       </div>
     {{else}}
       No General Areas
     {{/each}}
-    <a href="#addNewGeneralAreaModal" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin">Add</a>
+    {{#if state$editable}}
+      <a href="#addNewGeneralAreaModal" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin">Add</a>
+    {{/if}}
   </div>            
 </template>

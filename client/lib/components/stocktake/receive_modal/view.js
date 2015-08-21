@@ -3,9 +3,6 @@ Template.receiveModal.events({
     event.preventDefault();
     var price = $(event.target).find('[name=price]').val();
     var doUpdate = $(event.target).find('[name=updateStockPrice]')[0].checked;
-    price = price.substring(1);
-    price = price.replace(/[, ]+/g, "").trim();
-
     var receiptId = Session.get("thisReceipt");
     var orderId = Session.get("thisOrder");
     var info = {

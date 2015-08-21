@@ -12,6 +12,10 @@ component.state.item = function() {
   return area;
 }
 
+component.state.editable = function() {
+  return Session.get("editStockTake");
+}
+
 component.state.widthofBar = function() {
   var id = this.item._id;
   if(this.class == "sarea-filter") {
