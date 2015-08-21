@@ -3,6 +3,7 @@ var component = FlowComponents.define('editJobItem', function(props) {
   if(id) {
     var item = JobItems.findOne(id);
     if(item) {
+      Session.set("jobType", item.type);
       this.item = item;
     }
   }
@@ -11,28 +12,34 @@ var component = FlowComponents.define('editJobItem', function(props) {
 component.state.initialHTML = function() {
   var id = Session.get("thisJobItem");
   var item = JobItems.findOne(id);
-  var type = this.get("type");
-  if(item) {
-    if(type == "Prep") {
-      if(item.recipe) {
-        return item.recipe;
-      } else {
-        return "Add recipe here";
-      } 
-    } else if(type == "Recurring") {
-      if(item.description) {
-        return item.description;
-      } else {
-        return "Add description here";
-      }
+  var type = item.type;
+  if(Session.get("jobType")) {
+    type = Session.get("jobType");
+  }
+  var jobtype = JobTypes.findOne(type);
+  if(jobtype && jobtype.name == "Prep") {
+    if(item.recipe) {
+      return item.recipe;
+    } else {
+      return "Add recipe here";
+    } 
+  } else if(jobtype && jobtype.name == "Recurring") {
+    if(item.description) {
+      return item.description;
+    } else {
+      return "Add description here";
     } 
   }
 };
 
 component.state.isPrep = function() {
-  var type = this.get("type");
-  if(type) {
-    if(type == "Prep") {
+  var type = this.item.type;
+  if(Session.get("jobType")) {
+    type = Session.get("jobType");
+  }
+  var jobtype = JobTypes.findOne(type);
+  if(jobtype) {
+    if(jobtype.name == "Prep") {
       return true;
     } else {
       return false;
@@ -41,9 +48,13 @@ component.state.isPrep = function() {
 }
 
 component.state.isRecurring = function() {
-  var type = this.get("type");
-  if(type) {
-    if(type == "Recurring") {
+  var type = this.item.type;
+  if(Session.get("jobType")) {
+    type = Session.get("jobType");
+  }
+  var jobtype = JobTypes.findOne(type);
+  if(jobtype) {
+    if(jobtype.name == "Recurring") {
       return true;
     } else {
       return false;
@@ -62,24 +73,6 @@ component.state.ingredients = function() {
 
 component.state.jobTypes = function() {
   return JobTypes.find({"_id": {$nin: [this.item.type]}});
-}
-
-component.state.typesWithSelected = function() {
-  var types = [
-    {"index": "Prep", "selected": false},
-    {"index": "Recurring", "selected": false}
-  ];
-  var type = this.item.type;
-  if(Session.get("jobType")) {
-    type = Session.get("jobType");
-  }
-  this.set("type", type);
-  types.forEach(function(doc) {
-    if(type == doc.index) {
-      doc.selected = true;
-    }
-  });
-  return types;
 }
 
 component.state.frequencyWithSelected = function() {
@@ -122,9 +115,10 @@ component.state.checklist = function() {
 component.state.repeatAt = function() {
   var at = this.item.repeatAt;
   if(!this.item.repeatAt) {
-    at = "8:00 AM"
+    return "8:00 AM";
+  } else {
+    return moment(at).format("h:mm A");
   }
-  return moment(at).format("h:mm A");
 }
 
 component.state.startsOn = function() {
@@ -232,15 +226,6 @@ component.state.repeatOnDays = function() {
 
 component.state.wagePerHour = function() {
   return this.item.wagePerHour;
-}
-
-component.state.mySection = function() {
-  var section = Sections.findOne(this.item.section);
-  if(section) {
-    return section;
-  } else {
-    return {"name": this.item.section, "_id": this.item.section};
-  }
 }
 
 component.state.sectionsWithOutSelected = function() {

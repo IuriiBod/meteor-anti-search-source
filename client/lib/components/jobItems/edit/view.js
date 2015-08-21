@@ -66,7 +66,8 @@ Template.editJobItem.events({
       }
 
       //if Prep
-      if(type == "Prep") {
+      var type = JobTypes.findOne(id);
+      if(type.name == "Prep") {
         var portions = $(event.target).find('[name=portions]').val().trim();
         var shelfLife = $(event.target).find('[name=shelfLife]').val().trim();
         var ing = $(event.target).find("[name=ing_qty]").get();
@@ -137,7 +138,7 @@ Template.editJobItem.events({
       }
 
       //if Recurring
-      else if(type == "Recurring") {
+      else if(type.name == "Recurring") {
         var description = FlowComponents.child('jobItemEditorEdit').getState('content');
         if(job.description != description.trim()) {
           if($('.note-editable').text() === "Add description here" || $('.note-editable').text() === "") {

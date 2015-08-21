@@ -3,7 +3,9 @@ var component = FlowComponents.define('submitJobItem', function(props) {
 
 component.state.initialHTML = function() {
   var type = Session.get("jobType");
-  if(type == "Prep") {
+  var jobType = JobTypes.findOne(type);
+
+  if(jobType && jobType.name == "Prep") {
     return "Add recipe here";
   } else {
     return "Add description here";
