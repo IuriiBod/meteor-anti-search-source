@@ -18,9 +18,6 @@ Meteor.methods({
       }}
     );
     logger.info("Order receipt marked as received", receiptId);
-
-    StockOrders.update({"orderReceipt": receiptId}, {$set: {"received": true}}, {multi: true});
-    logger.info("Stock orders marked received", {"receipt": receiptId});
     return;
   },
 
