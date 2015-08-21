@@ -4,7 +4,7 @@ Template.menuItemsList.events({
     FlowComponents.callAction("keyup", name);
   },
 
-  'click #loadMoreMenuItems': function(event, tpl) {
+  'click #loadMoreMenuItems': function(event) {
     event.preventDefault();
     FlowComponents.callAction("loadMore");
   }
