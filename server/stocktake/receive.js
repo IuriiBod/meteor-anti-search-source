@@ -24,7 +24,7 @@ Meteor.methods({
     return;
   },
 
-  receiveReceiptItems: function(id, receiptId, status, info) {
+  updateOrderItems: function(id, receiptId, status, info) {
     if(!id) {
       logger.error("Id not found");
       throw new Meteor.Error(401, "Id not found");
@@ -42,10 +42,7 @@ Meteor.methods({
       logger.error("Order not found");
       throw new Meteor.Error(401, "Order not found");
     }
-    var updateQuery = {
-      "receivedBy": Meteor.userId(),
-      "receivedDate": Date.now()
-    };
+    var updateQuery = {};
 
     if(status == "Wrong Price") {
       if(!info.price) {
@@ -55,6 +52,8 @@ Meteor.methods({
       if(order.unitPrice != info.price) {
         updateQuery['unitPrice'] = info.price;
         updateQuery['originalPrice'] = order.unitPrice;
+        updateQuery['priceUpdatedBy'] = Meteor.userId();
+        updateQuery['stockPriceUpdated'] = info.stockPriceUpdated;
       }
     } else if(status == "Wrong Quantity") {
       if(!info.quantity) {
@@ -63,6 +62,7 @@ Meteor.methods({
       }
       if(order.countOrdered != info.quantity) {
         updateQuery['countDelivered'] = info.quantity;
+        updateQuery['countDeliveredUpdatedBy'] = Meteor.userId();
       } 
     }
     StockOrders.update(
@@ -70,6 +70,33 @@ Meteor.methods({
       {$set: updateQuery, $addToSet: {"deliveryStatus": status}}
     );
     logger.info("Stock order updated", id, status);
+    return;
+  },
+
+  receiveOrderItems: function(id, receiptId, info) {
+     if(!id) {
+      logger.error("Id not found");
+      throw new Meteor.Error(401, "Id not found");
+    }
+    if(!receiptId) {
+      logger.error("Receipt id not found");
+      throw new Meteor.Error(401, "Receipt id not found");
+    }
+    var order = StockOrders.findOne(id);
+    if(!order) {
+      logger.error("Order not found");
+      throw new Meteor.Error(401, "Order not found");
+    }
+    var updateQuery = {
+      "received": info.received,
+      "receivedBy": Meteor.userId(),
+      "receivedDate": Date.now()
+    };
+    StockOrders.update(
+      {"_id": id, "orderReceipt": receiptId},
+      {$set: updateQuery}
+    );
+    logger.info("Stock order received", id);
     return;
   },
 

@@ -3,17 +3,17 @@ Template.receiveModal.events({
     event.preventDefault();
     var price = $(event.target).find('[name=price]').val();
     var doUpdate = $(event.target).find('[name=updateStockPrice]')[0].checked;
-    console.log(".....", price, doUpdate);
     price = price.substring(1);
     price = price.replace(/[, ]+/g, "").trim();
 
     var receiptId = Session.get("thisReceipt");
     var orderId = Session.get("thisOrder");
     var info = {
-      "price": parseFloat(price)
+      "price": parseFloat(price),
+      "stockPriceUpdated": doUpdate
     }
     if(price && price > 0.00) {
-      Meteor.call("receiveReceiptItems", orderId, receiptId, "Wrong Price", info, function(err) {
+      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Price", info, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);
@@ -55,7 +55,7 @@ Template.receiveModal.events({
       "quantity": parseFloat(invoiceQuantity)
     }
     if(invoiceQuantity && receiptId && orderId) {
-      Meteor.call("receiveReceiptItems", orderId, receiptId, "Wrong Quantity", info, function(err) {
+      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Quantity", info, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);

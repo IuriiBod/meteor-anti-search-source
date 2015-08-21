@@ -58,3 +58,7 @@ component.state.isWrongPrice = function() {
     }
   }
 }
+
+component.state.isEditable = function(id) {
+  return Session.get("editable" + id);
+}
