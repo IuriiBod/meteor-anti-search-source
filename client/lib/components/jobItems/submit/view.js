@@ -39,6 +39,11 @@ Template.submitJobItem.helpers({
     }
   },
 
+  isRecurringEveryNWeeks: function() {
+    var type = Session.get("frequency");
+    return type === "EveryNWeeks";
+  },
+
   initChecklist: function () {
     var tmpl = Template.instance();
     Tracker.afterFlush(function () {
@@ -199,7 +204,15 @@ Template.submitJobItem.events({
       if(!frequency) {
         return alert("Frequency should be defined");
       }
-      info.frequency = frequency;
+      info.frequency = frequency === "EveryNWeeks" ? "Weekly": frequency;
+
+      if(frequency === "EveryNWeeks") {
+        var step = $(event.target).find("[name=step]").val();
+        if(!step) {
+          return alert("Step should be defined");
+        }
+        info.step = step;
+      }
 
       var repeatAt = $(event.target).find('[name=repeatAt]').val().trim();
       if(!repeatAt) {
@@ -243,7 +256,7 @@ Template.submitJobItem.events({
         info.section = section;
       }
 
-      if(frequency == "Weekly") {
+      if(info.frequency == "Weekly") {
         var repeatDays = [];
         var repeatOn = $(event.target).find('[name=daysSelected]').get();
         repeatOn.forEach(function(doc) {

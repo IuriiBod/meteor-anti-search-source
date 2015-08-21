@@ -106,11 +106,20 @@
               <option value="">Select frequency</option>
               <option value="Daily">Daily</option>
               <option value="Weekly">Weekly</option>
+              <option value="EveryNWeeks">Every N weeks</option>
             </select>
           </div>
-        </div> 
+        </div>
         {{#if isRecurringDaily}}
         {{else}}
+          {{#if isRecurringEveryNWeeks}}
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Step</label>
+              <div class="col-sm-10">
+                <input type="number" name="step" class="" value="{{state$step}}" min="2">
+              </div>
+            </div>
+          {{/if}}
           <div class="form-group">
             <label class="col-sm-2 control-label">Repeat On</label>
             <div class="col-sm-10">
@@ -118,7 +127,7 @@
               <div class="checkbox">
                 <input type="checkbox" id="{{this}}" name="daysSelected" value="{{this}}">
                 <label for="{{this}}">
-                    {{this}}
+                  {{this}}
                 </label>
               </div>
               {{/each}}
@@ -156,11 +165,17 @@
             </div>
             <div class="radio">
               <input type="radio" id="radio" data-doc="endsAfter" name="radioOption">
-              <label for="radio">After<input type="text" name="occurrences" class="" value="10">occurrences</label>
+              <label for="radio">
+                After
+                <input type="text" name="occurrences" class="" value="10">
+                occurrences
+              </label>
             </div>
             <div class="radio">
               <input type="radio" id="radio" name="radioOption" data-doc="endsOn">
-              <label for="radio">On<input type="text" name="endsOn" class="dateselecter" value="{{state$endsOn}}"></label>
+              <label for="radio">
+                On <input type="text" name="endsOn" class="dateselecter" value="{{state$endsOn}}">
+              </label>
             </div>
           </div>
         </div>
