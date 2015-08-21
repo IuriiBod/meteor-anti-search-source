@@ -37,6 +37,26 @@ Template.submitJobItem.helpers({
     } else {
       return false;
     }
+  },
+
+  initChecklist: function () {
+    var tmpl = Template.instance();
+    Tracker.afterFlush(function () {
+      tmpl.$(".checklist").sortable({
+        opacity: 0.8,
+        delay: 50,
+        update: function () {
+          var items = [];
+          var $list = $(this);
+          $list.find(".list-group-item").each(function () {
+            var $item = $(this);
+            var text = $item.text().trim();
+            items.push(text);
+          });
+          Session.set("checklist", items);
+        }
+      }).disableSelection();
+    });
   }
 });
 
@@ -78,7 +98,7 @@ Template.submitJobItem.events({
       "type": typeId,
       "activeTime": 0,
       "avgWagePerHour": 0
-    }
+    };
     if(activeTime) {
       activeTime = parseInt(activeTime);
       if((activeTime == activeTime) && (activeTime > 0)) {
@@ -118,7 +138,7 @@ Template.submitJobItem.events({
       if(!shelfLife) {
         info.shelfLife =  0;
       } else {
-        shelfLife = parseFloat(shelfLife)
+        shelfLife = parseFloat(shelfLife);
         if((shelfLife == shelfLife) && (shelfLife > 0)) {
           info.shelfLife = Math.round(shelfLife * 100)/100;
         } else {
@@ -143,7 +163,7 @@ Template.submitJobItem.events({
           var doc = {
             "_id": dataid,
             "quantity": 1
-          }
+          };
           if(quantity) {
             quantity = parseFloat(quantity);
             if((quantity == quantity) && (quantity > 0)) {
@@ -282,7 +302,11 @@ Template.submitJobItem.events({
         var listItems = Session.get("checklist");
         listItems.push(item);
         Session.set("checklist", listItems);
-        var listItem = "<li class='list-group-item'>" + item + "<i class='fa fa-minus-circle m-l-lg right removelistItem'></i></li>"
+        var listItem = [
+          "<li class='list-group-item'>",
+          item.toString(),
+          "<i class='fa fa-minus-circle m-l-lg right removelistItem'></i></li>"
+        ].join('');
         $(".checklist").append(listItem);
         $(event.target).val("");
       }
@@ -304,8 +328,8 @@ Template.submitJobItem.events({
   }
 });
 
-Template.submitJobItem.rendered = function() {
+Template.submitJobItem.onRendered(function() {
   Session.set("jobType", "Prep");
   Session.set("frequency", "Daily");
   Session.set("checklist", []);
-}
+});
