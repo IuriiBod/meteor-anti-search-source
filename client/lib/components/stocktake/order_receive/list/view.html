@@ -38,7 +38,7 @@
             {{else}}
               <a class="btn btn-primary" id="uploadInvoice">Take a photo/ Upload Invoice</a>
             {{/if}}
-            <a class="btn btn-primary disabled">Check temperatures</a>
+            <a class="btn btn-primary" href="#temperatureModal" data-toggle="modal">Check temperatures</a>
             <br>
             <div class="row col-md-12 m-t-md m-b-md">
               {{#if state$receipt.invoiceImage}}
@@ -72,9 +72,15 @@
   </div>
   <!-- /WRONG PRICE MODAL -->
 
-   <!-- WRONG PRICE MODAL-->
+  <!-- WRONG QUANTITY MODAL-->
   <div class="modal fade" id="wrongQuantityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component='receiveModal' name='wrongQuantity'}}
   </div>
-  <!-- /WRONG PRICE MODAL -->
+  <!-- /WRONG QUANTITY MODAL -->
+
+  <!-- TEMPERATURE MODAL-->
+  <div class="modal fade" id="temperatureModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component='temperatureModal'}}
+  </div>
+  <!-- /TEMPERATURE MODAL -->
 </template>

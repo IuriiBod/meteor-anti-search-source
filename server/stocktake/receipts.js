@@ -161,6 +161,9 @@ Meteor.methods({
       if(info.hasOwnProperty("invoiceImage")) {
         query['invoiceImage'] = info.invoiceImage;
       }
+      if(info.hasOwnProperty("temperature")) {
+        query['temperature'] = info.temperature;
+      }
       OrderReceipts.update({"_id": id}, {$set: query});
       logger.info("Order receipt updated", id);
 
