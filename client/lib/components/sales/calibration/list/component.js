@@ -9,7 +9,7 @@ component.state.dateRange = function() {
   } else {
     return 0;
   }
-}
+};
 
 component.state.totalRevenue = function() {
   var revenue = this.get("revenue");
@@ -18,14 +18,14 @@ component.state.totalRevenue = function() {
   } else {
     return 0;
   }
-}
+};
 
 component.state.itemsList = function() {
   var list = this.get("list");
   if(list) {
     return list;
   }
-}
+};
 
 component.prototype.renderCaliberatedList = function() {
   var list = SalesCalibration.findOne();
@@ -41,7 +41,7 @@ component.prototype.renderCaliberatedList = function() {
         var obj = {
           "_id": item._id,
           "qty": 0
-        }
+        };
         items.push(obj);
       });
     }
@@ -49,8 +49,9 @@ component.prototype.renderCaliberatedList = function() {
     this.set("range", 0);
     this.set("revenue", 0);
   }
-}
+};
 
 component.action.keyup = function(value) {
   this.set("range", value);
-}
+};
+
