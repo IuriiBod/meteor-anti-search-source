@@ -1,3 +1,9 @@
+Template.editMenuItem.helpers({
+  'equal': function(a, b) {
+    return (a === b);
+  }
+});
+
 Template.editMenuItem.events({
   'click #showIngredientsList': function(event) {
     event.preventDefault();
@@ -181,5 +187,33 @@ Template.editMenuItem.events({
     event.preventDefault();
     var id = $(event.target).attr("data-id");
     Router.go("menuItemDetail", {"_id": id});
+  },
+  
+  'change select[name="category"]': function(e) {
+    var id = e.target.dataset.id;
+    var value = e.target.value;
+    
+    if (id && value) {
+      Meteor.call("updateMenuItemCategory", id, value, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        }
+      });
+    }
+  },
+  
+  'change select[name="status"]': function(e) {
+    var id = e.target.dataset.id;
+    var value = e.target.value;
+    
+    if (id && value) {
+      Meteor.call("updateMenuItemStatus", id, value, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        }
+      });
+    }
   }
 });

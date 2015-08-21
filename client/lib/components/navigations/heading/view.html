@@ -3,7 +3,14 @@
     <!-- BREADCRUMBS -->
     <div class="col-sm-7">
       <h2>
-        {{state$title}} {{#if state$isActualSales}} on {{state$routeDate}}{{/if}}
+        {{#if state$isMenuDetailed}}
+          <a href="#" 
+             class="editMenuItemName" 
+             data-id="{{state$id}}" 
+             style="color: #676a6c; border-color: #676a6c;">{{state$title}}</a>
+        {{else}}
+          {{state$title}} {{#if state$isActualSales}} on {{state$routeDate}}{{/if}}
+        {{/if}}
       </h2>
       <ol class="breadcrumb">
         <li>
@@ -48,8 +55,13 @@
           <a href="" class="btn btn-white hidden-print subscribeMenuItemBtn" data-id="{{state$id}}"><i class="fa fa-lg fa-rss text-muted"></i></a>
           {{/if}}
           {{#if state$isManagerOrAdmin}}
+<!--
           <a href="" class="btn btn-primary hidden-print editMenuItemBtn" data-id="{{state$id}}">
             <i class="fa fa-edit" data-id="{{state$id}}"></i>Edit
+          </a>
+-->
+          <a href="" class="btn btn-danger hidden-print deleteMenuItemBtn" data-id="{{state$id}}">
+            <i class="fa fa-trash-o" data-id="{{state$id}}"></i> Delete
           </a>
           <a href="" class="btn btn-white hidden-print copyMenuItemBtn" data-id="{{state$id}}">
             <i class="fa fa-copy" data-id="{{state$id}}"></i>

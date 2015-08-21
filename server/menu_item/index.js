@@ -130,6 +130,142 @@ Meteor.methods({
       return;
     }
   },
+  
+  'updateSalesPrice': function(id, value) {    
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to update menu item");
+      throw new Meteor.Error(404, "User not permitted to update menu item");
+    }
+    if(!id) {
+      logger.error('Id not found');
+      throw new Meteor.Error(401, "Id not found");
+    }
+    var updateDoc = {};
+    var query = {
+      $set: {}
+    }
+    
+    if (value || value >= 0) {
+      updateDoc['salesPrice'] = value;
+    }
+    
+    if(Object.keys(updateDoc).length > 0) {
+      updateDoc['editedBy'] = userId;
+      updateDoc['editedOn'] = Date.now();
+      query['$set'] = updateDoc;
+      MenuItems.update({"_id": id}, query);
+      logger.info("Sale Price updated ", id);
+      return;
+    }
+  },
+  
+  'updateMenuItemName': function(id, value) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to update menu item");
+      throw new Meteor.Error(404, "User not permitted to update menu item");
+    }
+    if(!id) {
+      logger.error('Id not found');
+      throw new Meteor.Error(401, "Id not found");
+    }
+    var updateDoc = {};
+    var query = {
+      $set: {}
+    }
+    
+    if (value || value >= 0) {
+      updateDoc['name'] = value;
+    }
+    
+    if(Object.keys(updateDoc).length > 0) {
+      updateDoc['editedBy'] = userId;
+      updateDoc['editedOn'] = Date.now();
+      query['$set'] = updateDoc;
+      MenuItems.update({"_id": id}, query);
+      logger.info("Menu item name updated ", id);
+      return;
+    }
+  },
+  
+  'updateMenuItemCategory': function(id, value) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to update menu item");
+      throw new Meteor.Error(404, "User not permitted to update menu item");
+    }
+    if(!id) {
+      logger.error('Id not found');
+      throw new Meteor.Error(401, "Id not found");
+    }
+    var updateDoc = {};
+    var query = {
+      $set: {}
+    }
+    
+    if (value || value >= 0) {
+      updateDoc['category'] = value;
+    }
+    
+    if(Object.keys(updateDoc).length > 0) {
+      updateDoc['editedBy'] = userId;
+      updateDoc['editedOn'] = Date.now();
+      query['$set'] = updateDoc;
+      MenuItems.update({"_id": id}, query);
+      logger.info("Menu item category updated ", id);
+      return;
+    }
+  },
+  
+  'updateMenuItemStatus': function(id, value) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to update menu item");
+      throw new Meteor.Error(404, "User not permitted to update menu item");
+    }
+    if(!id) {
+      logger.error('Id not found');
+      throw new Meteor.Error(401, "Id not found");
+    }
+    var updateDoc = {};
+    var query = {
+      $set: {}
+    }
+    
+    if (value || value >= 0) {
+      updateDoc['status'] = value;
+    }
+    
+    if(Object.keys(updateDoc).length > 0) {
+      updateDoc['editedBy'] = userId;
+      updateDoc['editedOn'] = Date.now();
+      query['$set'] = updateDoc;
+      MenuItems.update({"_id": id}, query);
+      logger.info("Menu item status updated ", id);
+      return;
+    }
+  },
 
   deleteMenuItem: function(id) {
     var user = Meteor.user();
