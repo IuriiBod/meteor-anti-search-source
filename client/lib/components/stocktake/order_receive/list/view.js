@@ -1,10 +1,30 @@
 Template.orderReceive.events({
   'click .markDeliveryReceived': function(event) {
     event.preventDefault();
-    Meteor.call("receiveDelivery", Session.get("thisReceipt"), function(err) {
+    var receiptId = Session.get("thisReceipt");
+    Meteor.call("receiveDelivery", receiptId, function(err) {
       if(err) {
         console.log(err);
         return alert(err.reason);
+      } else {
+        var orders = StockOrders.find({"orderReceipt": receiptId}).fetch();
+        if(orders && orders.length > 0) {
+          orders.forEach(function(order) {
+            var note = "Order receive on receipt " + receiptId;
+            var quantity = order.countOrdered;
+            if(order.hasOwnProperty("countDelivered")) {
+              quantity = order.countDelivered;
+            }
+            var date = moment(date).format("YYYY-MM-DD");
+            Meteor.call("updateCurrentStock", order.stockId, note, quantity, date, function(err) {
+              if(err) {
+                console.log(err);
+                return alert(err.reason);
+              }
+            });
+
+          });
+        }
       }
     });
   },
