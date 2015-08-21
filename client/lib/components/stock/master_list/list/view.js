@@ -46,5 +46,20 @@ Template.ingredientsList.events({
 
 Template.ingredientsList.rendered = function() {
   IngredientsListSearch.cleanHistory();
-  IngredientsListSearch.search("", {"limit": 10});
+  IngredientsListSearch.search("", {"limit": 20});
 }
+
+Template.ingredientsList.onRendered(function() {
+  var tpl = this;
+  Meteor.defer(function() {
+    $(window).scroll(function(e){
+      var docHeight = $(document).height();
+      var winHeight = $(window).height();
+      var scrollTop = $(window).scrollTop();
+      
+      if ((docHeight - winHeight) == scrollTop) {
+        tpl.$('#loadMoreIngs').click();
+      }
+    });
+  });
+});

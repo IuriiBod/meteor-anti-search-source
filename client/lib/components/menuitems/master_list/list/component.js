@@ -47,16 +47,16 @@ component.prototype.onMenuListRendered = function() {
     filter.push({"status": status.toLowerCase()});
   }
   if(filter.length > 0) {
-    this.MenuItemsSearch.search("", {'limit': 10, 'filter': filter});
+    this.MenuItemsSearch.search("", {'limit': 20, 'filter': filter});
   } else {
-    this.MenuItemsSearch.search("", {'limit': 10});
+    this.MenuItemsSearch.search("", {'limit': 20});
   }
 }
 
 component.action.loadMore = function() {
   var text = $("#searchMenuItemsBox").val().trim();
   if(this.MenuItemsSearch.history && this.MenuItemsSearch.history[text]) {
-    var dataHistory = this.MenuItemsSearch.history[text].data;
+    var dataHistory = this.MenuItemsSearch.history[text].data;    
     if(dataHistory.length >= 9) {
       this.MenuItemsSearch.cleanHistory();
       var count = dataHistory.length;
