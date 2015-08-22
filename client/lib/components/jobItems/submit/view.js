@@ -265,12 +265,12 @@ Template.submitJobItem.events({
   'focus .dateselecter': function(event) {
     event.preventDefault();
     $(".dateselecter").datepicker({
-        todayBtn: "linked",
-        keyboardNavigation: false,
-        forceParse: false,
-        calendarWeeks: true,
-        autoclose: true,
-        format: "yyyy-mm-dd"
+      todayBtn: "linked",
+      keyboardNavigation: false,
+      forceParse: false,
+      calendarWeeks: true,
+      autoclose: true,
+      format: "yyyy-mm-dd"
     });
   },
 
@@ -305,7 +305,10 @@ Template.submitJobItem.events({
 });
 
 Template.submitJobItem.rendered = function() {
-  Session.set("jobType", "Prep");
+  var prep = JobTypes.findOne({"name": "Prep"});
+  if(prep) {
+    Session.set("jobType", prep._id);
+  }
   Session.set("frequency", "Daily");
   Session.set("checklist", []);
 }

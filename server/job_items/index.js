@@ -148,7 +148,8 @@ Meteor.methods({
         }
       }
     }
-    if(info.type == "Prep") {
+    var type = JobTypes.findOne(info.type);
+    if(type.name == "Prep") {
       if((info.shelfLife == info.shelfLife) && info.shelfLife >= 0) {
         var shelfLife = parseFloat(info.shelfLife);
         if(shelfLife != job.shelfLife) {
@@ -187,7 +188,7 @@ Meteor.methods({
       removeDoc.startsOn = "";
       removeDoc.section = "";
       removeDoc.description = "";
-    } else if(info.type == "Recurring") {
+    } else if(type.name == "Recurring") {
       if(info.repeatAt) {
         if(info.repeatAt != job.repeatAt) {
           updateDoc.repeatAt = info.repeatAt;
