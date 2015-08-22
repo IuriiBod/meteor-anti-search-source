@@ -66,7 +66,7 @@ Template.editJobItem.events({
       }
 
       //if Prep
-      var type = JobTypes.findOne(id);
+      var type = JobTypes.findOne(type);
       if(type.name == "Prep") {
         var portions = $(event.target).find('[name=portions]').val().trim();
         var shelfLife = $(event.target).find('[name=shelfLife]').val().trim();
