@@ -23,7 +23,9 @@ component.prototype.renderTextEditor = function() {
       $('#uploadImage').tooltip({container: 'body', placement: 'bottom'});
       // Button events
       $('#uploadImage').click(function(event) {
-        filepicker.pickAndStore({mimetype:"image/*"}, {},
+        filepicker.pickAndStore(
+          {mimetype:"image/*", services: ['COMPUTER']}, 
+          {},
           function(InkBlobs){
             var doc = (InkBlobs);
             if(doc && doc[0].url) {

@@ -5,7 +5,7 @@
       {{#if state$editable}}
         <a class="btn btn-link btn-sm pull-right saveStockTake"><i class="fa fa-fw fa-save"></i>Save</a>
       {{else}}
-        <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit</a>
+        <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit Stocktake Template</a>
       {{/if}}
       {{dateFormat state$stocktakeMain.stocktakeDate}}
       <hr>
@@ -17,7 +17,7 @@
     {{#if state$filtered}}
       <div class="col-md-8">
         <ul class="list-group sortableStockItems">
-          {{#each state$list.stocks}}
+          {{#each state$list}}
             {{> render component="stockCountingListItem" id=this version=state$version garea=state$generalArea sarea=state$specialArea}}
           {{else}}
             No items on this list
@@ -37,4 +37,16 @@
     {{> render component = 'stocksModalList' name="stockModal"}}
   </div>
   <!-- /STOCKS MODAL LIST -->
+
+  <!-- ADD GENERAL AREA MODAL LIST-->
+  <div class="modal fade" id="addNewGeneralAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component = 'newAreaModal' name="general"}}
+  </div>
+  <!-- /ADD GENERAL AREA MODAL LIST-->
+
+   <!-- ADD SPECIAL AREA MODAL LIST-->
+  <div class="modal fade" id="addNewSpecialAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component = 'newAreaModal' name="special"}}
+  </div>
+  <!-- /ADD SPECIAL AREA MODAL LIST-->
 </template>

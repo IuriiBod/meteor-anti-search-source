@@ -80,6 +80,11 @@ UI.registerHelper("dateFormat", function(date) {
   return dateFormatted;
 });
 
+UI.registerHelper("dateFormatDahsed", function(date) {
+  var dateFormatted = moment(date).format('DD/MM/YYYY');
+  return dateFormatted;
+});
+
 UI.registerHelper("username", function(id) {
   var user = Meteor.users.findOne(id);
   if(user) {
@@ -116,5 +121,12 @@ UI.registerHelper("Username", function(userId) {
   var user = Meteor.users.findOne(userId);
   if(user) {
     return user.username;
+  }
+});
+
+UI.registerHelper("SupplierName", function(id) {
+  var supplier = Suppliers.findOne(id);
+  if(supplier) {
+    return supplier.name;
   }
 });

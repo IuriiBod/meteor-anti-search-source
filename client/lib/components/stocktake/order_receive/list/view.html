@@ -19,6 +19,12 @@
                 {{#each state$list}}
                   {{> render component="orderReceiveItem" item=this}}
                 {{/each}}
+                <tr>
+                  <td><b>Total</b></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>$ {{roundCount state$total}}</b></td>
+                </tr>
               </tbody>
             </table>
             <hr>
@@ -28,9 +34,26 @@
               <textarea name="orderReceiveNotes" id="orderReceiveNotes" class="form-control message-input-post" placeholder="Add notes here."></textarea>
             {{/if}}
             <br>
-            <a class="btn btn-primary disabled">Take a photo/ Upload Invoice</a>
-            <a class="btn btn-primary disabled">Check temperatures</a>
+            {{#if state$receipt.invoiceImage}}
+            {{else}}
+              <a class="btn btn-primary" id="uploadInvoice">Take a photo/ Upload Invoice</a>
+            {{/if}}
+            <a class="btn btn-primary" href="#temperatureModal" data-toggle="modal">Check temperatures</a>
             <br>
+            <div class="row col-md-12 m-t-md m-b-md">
+              {{#if state$receipt.invoiceImage}}
+                <img src="{{state$receipt.invoiceImage}}" class="col-md-4 no-padding img-responsive">
+              {{else}}
+                <div class="file col-sm-2 uploadedInvoiceDiv hide">
+                  <a href="#">
+                    <span class="corner"></span>
+                    <div class="image">
+                      <img id="uploadedInvoiceUrl" src="" class="img-responsive">
+                    </div>
+                  </a>
+                </div>
+              {{/if}}
+            </div>
             <br>
             {{#if state$receipt.received}}
             {{else}}
@@ -49,9 +72,15 @@
   </div>
   <!-- /WRONG PRICE MODAL -->
 
-   <!-- WRONG PRICE MODAL-->
+  <!-- WRONG QUANTITY MODAL-->
   <div class="modal fade" id="wrongQuantityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component='receiveModal' name='wrongQuantity'}}
   </div>
-  <!-- /WRONG PRICE MODAL -->
+  <!-- /WRONG QUANTITY MODAL -->
+
+  <!-- TEMPERATURE MODAL-->
+  <div class="modal fade" id="temperatureModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component='temperatureModal'}}
+  </div>
+  <!-- /TEMPERATURE MODAL -->
 </template>

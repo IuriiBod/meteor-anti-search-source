@@ -28,16 +28,34 @@ component.state.item = function() {
   }
 }
 
+component.state.supplier = function() {
+  var stock = Ingredients.findOne(this.id);
+  if(stock && stock.suppliers) {
+    var supplier = Suppliers.findOne(stock.suppliers);
+    if(supplier) {
+      return supplier.name;
+    } else {
+      return stock.suppliers;
+    }
+  } else {
+    return "Not assigned";
+  }
+}
+
 component.state.editable = function() {
   return Session.get("editStockTake");
 }
 
 component.state.deletable = function(id) {
   var stocktake = Stocktakes.findOne(id);
-  if(stocktake && !stocktake.status && !stocktake.orderRef) {
-    return true;
+  if(stocktake) {
+    if(!stocktake.status && !stocktake.orderRef) {
+      return true;
+    } else {
+      return false;
+    }
   } else {
-    return false;
+    return true;
   }
 }
 

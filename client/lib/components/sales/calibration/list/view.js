@@ -1,3 +1,7 @@
+var successfullyCalibratedMessage = function () {
+  sweetAlert("Success!", "Sales item has been successfully calibrated.", "success");
+};
+
 Template.salesCalibratedList.events({
   'keyup #dateRange': function(event) {
     var value = $(event.target).val();
@@ -15,31 +19,46 @@ Template.salesCalibratedList.events({
         var qty = parseFloat($(item).val());
         var avg = qty/parseFloat(totalRevenue);
         var obj = {
-          "_id": $(item).attr("data-id"),
-          "qty": qty,
-          "avg": avg
-        }
+          _id: $(item).attr("data-id"),
+          qty: qty,
+          avg: avg
+        };
         items.push(obj);
       });
     }
     var exist = SalesCalibration.findOne();
-
+    
     if(exist) {
-      Meteor.call("updateSalesCalibration", exist._id, dateRange, totalRevenue, items, function(err, id) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        }
+      exist.menus.forEach(function(menu, key) {
+        var menuId = menu._id;
+        items.forEach(function(item) {
+          if (item._id == menuId) {
+            exist.menus[key] = {
+              _id: menuId,
+              qty: item.qty,
+              avg: item.avg
+            }
+          }
+        });
       });
-    } else {
-      Meteor.call("createSalesCalibration", dateRange, totalRevenue, items, function(err, id) {
+      
+      Meteor.call("updateSalesCalibration", exist._id, dateRange, totalRevenue, exist.menus, function(err, id) {
         if(err) {
           console.log(err);
           return alert(err.reason);
         } else {
-          return;
+          successfullyCalibratedMessage();
         }
-      });      
+      });
+    } else {
+      Meteor.call("createSalesCalibration", dateRange, totalRevenue, items, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        } else {
+          successfullyCalibratedMessage();
+        }
+      });
     }
   }
 });

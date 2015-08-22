@@ -24,13 +24,17 @@ component.state.total = function() {
 component.state.deliveryStatus = function() {
   var id = this.item._id;
   var order = StockOrders.findOne(id);
-  if(order) {
-    if(order.deliveryStatus == "wrongPrice") {
-      return "Wrong Price";
-    } else if(order.deliveryStatus == "wrongQuantity") {
-      return "Wrong Quantity";
-    } else if(order.deliveryStatus == "deliveredCorrectly") {
-      return "Delivered Correctly";
+  if(order && order.deliveryStatus) {
+    return order.deliveryStatus; 
+  }
+}
+
+component.state.isDeliveredCorreclty = function() {
+  var id = this.item._id;
+  var order = StockOrders.findOne(id);
+  if(order && order.deliveryStatus) {
+    if(order.deliveryStatus.length == 1 && order.deliveryStatus[0] == "Delivered Correctly") {
+      return true;
     }
   }
 }
@@ -38,7 +42,23 @@ component.state.deliveryStatus = function() {
 component.state.isWrongQuantity = function() {
   var id = this.item._id;
   var order = StockOrders.findOne(id);
-  if(order && order.hasOwnProperty("countDelivered")) {
-    return true;
+  if(order && order.deliveryStatus && order.deliveryStatus.length > 0) {
+    if(order.deliveryStatus.indexOf("Wrong Quantity") >= 0) {
+      return true;
+    }
   }
+}
+
+component.state.isWrongPrice = function() {
+  var id = this.item._id;
+  var order = StockOrders.findOne(id);
+  if(order && order.deliveryStatus && order.deliveryStatus.length > 0) {
+    if(order.deliveryStatus.indexOf("Wrong Price") >= 0) {
+      return true;
+    }
+  }
+}
+
+component.state.isEditable = function(id) {
+  return Session.get("editable" + id);
 }

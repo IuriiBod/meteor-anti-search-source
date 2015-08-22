@@ -1,16 +1,16 @@
 Template.receiveModal.events({
-  'submit #price': function(event) {
+  'submit #priceForm': function(event) {
     event.preventDefault();
-    var invoicePrice = $(event.target).find('[name=invoicePrice]').val();
-    var stockPrice = $(event.target).find('[name=stockPrice]').val();
-
+    var price = $(event.target).find('[name=price]').val();
+    var doUpdate = $(event.target).find('[name=updateStockPrice]')[0].checked;
     var receiptId = Session.get("thisReceipt");
     var orderId = Session.get("thisOrder");
     var info = {
-      "price": parseFloat(invoicePrice)
+      "price": parseFloat(price),
+      "stockPriceUpdated": doUpdate
     }
-    if(invoicePrice && receiptId && orderId) {
-      Meteor.call("receiveReceiptItems", orderId, receiptId, "wrongPrice", info, function(err) {
+    if(price && price > 0.00) {
+      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Price", info, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);
@@ -18,37 +18,31 @@ Template.receiveModal.events({
       });
     }
 
-    var order = StockOrders.findOne(orderId);
     var stockId = null;
+    var order = StockOrders.findOne(orderId);
     if(order) {
       stockId = order.stockId;
     }
-    var info = {
-      "costPerPortion": parseFloat(stockPrice)
-    }
-    if(stockPrice && stockId) {
-      Meteor.call("editIngredient", stockId, info, function(err) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        }
-      });
-    }
-
-    var date = moment().format("YYYY-MM-DD");
-    Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, new Date(date), function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
+    if(doUpdate) {
+      var info = {
+        "costPerPortion": parseFloat(price)
       }
-    });
+      if(price && price > 0.00) {
+        Meteor.call("editIngredient", stockId, info, function(err) {
+          if(err) {
+            console.log(err);
+            return alert(err.reason);
+          }
+        });
+      }
+      
+    }
 
-    $(event.target).find('[name=invoicePrice]').val("");
-    $(event.target).find('[name=stockPrice]').val("");
+    $(event.target).find('[name=price]').val("");
     $("#wrongPriceModal").modal("hide");
   },
 
-  'submit #quantity': function(event) {
+  'submit #quantityForm': function(event) {
     event.preventDefault();
     var invoiceQuantity = $(event.target).find('[name=invoiceQuantity]').val();
 
@@ -58,21 +52,11 @@ Template.receiveModal.events({
       "quantity": parseFloat(invoiceQuantity)
     }
     if(invoiceQuantity && receiptId && orderId) {
-      Meteor.call("receiveReceiptItems", orderId, receiptId, "wrongQuantity", info, function(err) {
+      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Quantity", info, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);
         } 
-      });
-    }
-    var order = StockOrders.findOne(orderId);
-    if(order) {
-      var date = moment().format("YYYY-MM-DD");
-      Meteor.call("updateCurrentStock", order.stockId, "Stock receive", parseFloat(invoiceQuantity), new Date(date), function(err) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        }
       });
     }
     $(event.target).find('[name=invoiceQuantity]').val("");

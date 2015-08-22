@@ -1,13 +1,14 @@
 <template name="supplierFilter">
   {{#each state$suppliers}}
-    <a class="btn {{#if state$receiptExists this}} btn-primary {{else}} btn-default {{/if}} activateSupplier" data-id="{{this}}">{{this}}
+    <a class="btn {{#if state$receiptExists this}} btn-primary {{else}} btn-default {{/if}} activateSupplier" data-id="{{this}}">{{SupplierName this}}
     </a>
   {{/each}}
   <hr>
-  <h2>{{state$activeSupplier}}
+  <h2>{{SupplierName state$activeSupplier}}
     <small class="text-info pull-right">
     {{#if state$deliveryDate}}
-      Expect delivery on <a href="#" class="expectedDeliveryDate" data-pk="1">{{timeFormattedWithDate state$deliveryDate}}</a>      
+      Expect delivery on 
+      <a href="#" data-date-format="yyyy-mm-dd" data-date="{{dateFormat state$deliveryDate}}" class="expectedDeliveryDate" data-pk="1">{{timeFormattedWithDate state$deliveryDate}}</a>      
     {{/if}}
     {{#if state$receipt}}
     <!-- Set this date with x editable -->

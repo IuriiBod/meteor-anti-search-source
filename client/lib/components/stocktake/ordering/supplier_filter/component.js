@@ -27,6 +27,9 @@ component.state.suppliers = function() {
     if(!Session.get("activeSupplier")) {
       Session.set("activeSupplier", activeSupplier)
     }
+    if(supplierslist && supplierslist.length > 0) {
+      subs.subscribe("suppliers", supplierslist);
+    }
     return supplierslist;
   }
 }
@@ -57,7 +60,7 @@ component.state.deliveryDate = function() {
   if(receipt && receipt.expectedDeliveryDate) {
     return receipt.expectedDeliveryDate;
   } else {
-    var date = moment().add(7, 'day');
+    var date = moment().add(1, 'day');
     return date;
   }
 }
@@ -94,33 +97,64 @@ component.state.receiptExists = function(supplier) {
 }
 
 component.prototype.onListRendered = function() {
-  $(".expectedDeliveryDate").editable({
-    type: 'combodate',
-    format: 'YYYY-MM-DD',    
-    viewformat: 'YYYY-MM-DD',    
-    title: 'Select time',
-    template: "YYYY-MM-DD",
-    mode: 'inline',
-    success: function(response, newValue) {
-      var supplier = Session.get("activeSupplier");
-      var version = Session.get("thisVersion");
-      var date = newValue.format("YYYY-MM-DD");
-      var id = null;
-      var receipt = OrderReceipts.findOne({"supplier": supplier, "version": version});
-      var info = {
-        "expectedDeliveryDate": new Date(date).getTime(),
-        "version": version,
-        "supplier": supplier
-      };
-      if(receipt) {
-        id = receipt._id;
-      }
-      Meteor.call("updateReceipt", id, info, function(err, id) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        } 
-      });
-    }
+  $(".expectedDeliveryDate").datepicker({
+    'todayBtn': true,
+    'todayHighlight': true,
+    'weekStart': 1
   });
+
+  $(".expectedDeliveryDate").on("changeDate", function(event) {
+    var supplier = Session.get("activeSupplier");
+    var version = Session.get("thisVersion");
+    var date = event.date;
+    date = moment(date).format("YYYY-MM-DD");
+    var id = null;
+    var receipt = OrderReceipts.findOne({"supplier": supplier, "version": version});
+    var info = {
+      "expectedDeliveryDate": new Date(date).getTime(),
+      "version": version,
+      "supplier": supplier
+    };
+    if(receipt) {
+      id = receipt._id;
+    }
+    Meteor.call("updateReceipt", id, info, function(err, id) {
+      if(err) {
+        console.log(err);
+        return alert(err.reason);
+      } 
+    });
+      // $("#my_hidden_input").val(
+      //     $("#datepicker").datepicker('getFormattedDate')
+      //  )
+  });
+  // $(".expectedDeliveryDate").editable({
+  //   type: 'combodate',
+  //   format: 'YYYY-MM-DD',    
+  //   viewformat: 'YYYY-MM-DD',    
+  //   title: 'Select time',
+  //   template: "YYYY-MM-DD",
+  //   mode: 'inline',
+  //   success: function(response, newValue) {
+  //     var supplier = Session.get("activeSupplier");
+  //     var version = Session.get("thisVersion");
+  //     var date = newValue.format("YYYY-MM-DD");
+  //     var id = null;
+  //     var receipt = OrderReceipts.findOne({"supplier": supplier, "version": version});
+  //     var info = {
+  //       "expectedDeliveryDate": new Date(date).getTime(),
+  //       "version": version,
+  //       "supplier": supplier
+  //     };
+  //     if(receipt) {
+  //       id = receipt._id;
+  //     }
+  //     Meteor.call("updateReceipt", id, info, function(err, id) {
+  //       if(err) {
+  //         console.log(err);
+  //         return alert(err.reason);
+  //       } 
+  //     });
+  //   }
+  // });
 }

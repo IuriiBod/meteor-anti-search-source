@@ -2,8 +2,6 @@
   <div class="col-lg-12">
     <div class="ibox ">
       <div class="ibox-content">
-        <!--DESIGN: These buttons are for each suppier included in the stocktake. They need to be activated like tabs so that users can switch easily to different suppliers.-->
-        <!--DEV: Only show the suppliers that are active for this order.-->
         <div class="btn-group">
           <a href="#" class="btn btn-white toBeReceived {{#if state$toBeReceived}} active {{/if}}">To be received</a>
           <a href="#" class="btn btn-white received {{#if state$received}} active {{/if}}">Received</a>
@@ -22,7 +20,7 @@
               <th>Ordered Value</th>
               <th>Actual Invoiced Amount</th>
               <th>Received</th>
-              <!-- <th>Invoice Uploaded</th> -->
+              <th>Invoice Uploaded</th>
             </tr>
           </thead>
           <tbody>

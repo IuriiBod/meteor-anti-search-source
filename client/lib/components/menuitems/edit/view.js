@@ -136,7 +136,9 @@ Template.editMenuItem.events({
 
   'click #uploadMenuItem': function(event) {
     event.preventDefault();
-    filepicker.pickAndStore({mimetype:"image/*"}, {},
+    filepicker.pickAndStore(
+      {mimetype:"image/*", services: ['COMPUTER']}, 
+      {},
       function(InkBlobs){
         var doc = (InkBlobs);
         if(doc) {
