@@ -37,12 +37,12 @@ component.state.list = function() {
   var gareaId = Session.get("activeGArea");
   var sareaId = Session.get("activeSArea");
 
-  var list = SpecialAreas.findOne({"_id": sareaId, "generalArea": gareaId});
+  if(gareaId) {
+    subs.subscribe("areaSpecificStocks", gareaId);
+  }
+  var list = Ingredients.find({"specialAreas": sareaId});
   if(list) {
-    if(list.stocks && list.stocks.length > 0) {
-      subs.subscribe("ingredients", list.stocks);
-    }
-    return list.stocks;
+    return list;
   }
 }
 

@@ -6,6 +6,13 @@ Meteor.publish("allAreas", function() {
   return cursors;
 });
 
+Meteor.publish("areaSpecificStocks", function(generalArea) {
+  var cursors = [];
+  cursors.push(Ingredients.find({"generalAreas": generalArea}));
+  logger.info("Ingredients on general area published", generalArea);
+  return cursors;
+});
+
 Meteor.publish("stocktakeMains", function(date) {
   logger.info("Stocktake mains published for date", date);
   var data = StocktakeMain.find({"stocktakeDate": new Date(date).getTime()});

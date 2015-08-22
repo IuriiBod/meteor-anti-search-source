@@ -18,7 +18,7 @@
       <div class="col-md-8">
         <ul class="list-group sortableStockItems">
           {{#each state$list}}
-            {{> render component="stockCountingListItem" id=this version=state$version garea=state$generalArea sarea=state$specialArea}}
+            {{> render component="stockCountingListItem" id=this._id version=state$version garea=state$generalArea sarea=state$specialArea}}
           {{else}}
             No items on this list
           {{/each}}
