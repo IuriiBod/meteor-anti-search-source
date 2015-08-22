@@ -204,7 +204,7 @@ Template.dailyShiftScheduling.rendered = function() {
 
     });  
   }
-}
+};
 
 function assignJob(job, shift, startAt) {
   Meteor.call("assignJob", job, shift, startAt, function(err) {
