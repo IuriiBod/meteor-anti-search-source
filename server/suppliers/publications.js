@@ -11,3 +11,11 @@ Meteor.publish("suppliers", function(ids) {
   logger.info("Suppliers have been published", ids);
   return cursors;
 });
+
+Meteor.publish("supplierProfile", function(id) {
+  var cursors = [];
+  cursors.push(Suppliers.find(id));
+  cursors.push(Ingredients.find({"suppliers": id}));
+  cursors.push(OrderReceipts.find({"supplier": id}));
+  return cursors;
+});

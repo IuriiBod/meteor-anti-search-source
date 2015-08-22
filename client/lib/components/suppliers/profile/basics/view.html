@@ -1,0 +1,30 @@
+<template name="basics">
+  <div class="row">
+    <div class="col-lg-12">
+      <dl class="dl-horizontal">
+        <dt>Status:</dt> 
+        <dd>
+          {{#if state$status}}
+          <span class="label label-primary">Active</span>
+          {{else}}
+          <span class="label label-danger">Archived</span>
+          {{/if}}
+        </dd>
+      </dl>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-5">
+      <dl class="dl-horizontal">
+        <dt>Email address:</dt> <dd>{{state$basics.email}}</dd>
+        <dt>Phone number:</dt> <dd>{{state$basics.phone}}</dd>
+      </dl>
+    </div>
+    <div class="col-lg-7" id="cluster_info">
+      <dl class="dl-horizontal" >
+        <dt>Last order on:</dt> <dd></dd>
+        <dt>Created on:</dt> <dd>{{dateFormat state$basics.createdOn}}</dd>
+      </dl>
+    </div>
+  </div>
+</template>
