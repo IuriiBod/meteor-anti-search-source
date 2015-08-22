@@ -55,8 +55,8 @@ Template.dailyShiftScheduling.rendered = function() {
   if(routeDate) {
     Tracker.autorun(function() {
     
-      setTimeout(function() {
-        Meteor.call("generateRecurrings", routeDate, function(err, result) {
+      Meteor.setTimeout(function() {
+        Meteor.call("generateRecurrings", routeDate, function(err) {
           if(err) {
             console.log(err);
           }
@@ -74,7 +74,7 @@ Template.dailyShiftScheduling.rendered = function() {
 
           ShiftsToTime = {};
           TimeToShifts = {};
-          var events = []
+          var events = [];
           var fetchedShifts = shifts.fetch();
           fetchedShifts.forEach(function(shift) {
             var a = -4;
@@ -98,8 +98,8 @@ Template.dailyShiftScheduling.rendered = function() {
                 var jobDoc = Jobs.findOne(job);
                 if(jobDoc) {
                   var activeTimeInMiliSecs = jobDoc.activeTime * 1000;
-                  var activeHours = moment.duration(activeTimeInMiliSecs).hours()
-                  var activeMins = moment.duration(activeTimeInMiliSecs).minutes()
+                  var activeHours = moment.duration(activeTimeInMiliSecs).hours();
+                  var activeMins = moment.duration(activeTimeInMiliSecs).minutes();
 
                   if(jobDoc.startAt) {
                     hourFix = moment(jobDoc.startAt).format("HH");
@@ -189,8 +189,15 @@ Template.dailyShiftScheduling.rendered = function() {
                 var shift = event.shift;
                 var job = event.id;
                 var startTime = event.start.format();
-               
-                if (!confirm("Are you sure about this change?")) {
+                var jobStartTime = convertDate(startTime);
+                var jobEndTime = convertDate(event.end.format());
+                var shiftDoc = Shifts.findOne(shift);
+                var shiftStartTime = convertDate(shiftDoc.startTime);
+                var shiftEndTime = convertDate(shiftDoc.endTime);
+                if (jobStartTime < shiftStartTime || jobEndTime > shiftEndTime) {
+                  revertFunc();
+                }
+                else if (!confirm("Are you sure about this change?")) {
                   revertFunc();
                 } else {
                   assignJob(job, shift, moment(startTime).format("YYYY-MM-DD HH:mm"));
@@ -202,7 +209,7 @@ Template.dailyShiftScheduling.rendered = function() {
         }
       }, 1000);
 
-    });  
+    });
   }
 };
 
@@ -214,4 +221,19 @@ function assignJob(job, shift, startAt) {
       $(this).remove();
     }
   })
+}
+
+function convertDate(date) {
+  date = moment(date);
+  var hours = date.get('hour');
+  var minutes = date.get('minute');
+  var seconds = date.get('second');
+  date = [seconds, minutes, hours];
+  date = _.map(date, function (val, key) {
+    return val * Math.pow(60, key);
+  });
+  date = _.reduce(date, function (memo, val) {
+    return memo + val;
+  });
+  return date;
 }
