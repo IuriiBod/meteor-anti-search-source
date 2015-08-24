@@ -1,0 +1,9 @@
+<template name="productItem">
+  <tr>
+    <td>{{state$product.code}}</td>
+    <td>{{state$product.description}}</td>
+    <td>{{dateFormat state$product.createdOn}}</td>
+    <td>{{state$product.portionOrdered}}</td>
+    <td>$ {{state$product.costPerPortion}}</td>
+  </tr>
+</template>
