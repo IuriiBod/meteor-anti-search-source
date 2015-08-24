@@ -10,7 +10,7 @@ component.state.week = function() {
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     return week;
   } else if(this.name == "weeklyrostertemplate") {
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     return daysOfWeek;
   }
 }
@@ -35,7 +35,7 @@ component.prototype.onListRendered = function() {
       var id = $(ui.item[0]).attr("data-id");//shiftid
       var  newDate = $(this).attr("data-date")//date of moved list
       if(origin == "weeklyrostertemplate") {
-        var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         newDate = parseInt(daysOfWeek.indexOf(newDate));
       }
       if(id && newDate) {
