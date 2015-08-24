@@ -1,6 +1,6 @@
 <template name="productItem">
-  <tr>
-    <td>{{state$product.code}}</td>
+  <tr data-id="{{state$product._id}}">
+    <td><a href="" class="editProduct">{{state$product.code}}</a></td>
     <td>{{state$product.description}}</td>
     <td>{{dateFormat state$product.createdOn}}</td>
     <td>{{state$product.portionOrdered}}</td>
