@@ -23,6 +23,10 @@
           <div class="panel-body">
             <div class="tab-content">
               <div class="tab-pane active" id="usersList">
+                <strong>Inactivity timeout</strong>
+                {{> render component='inactivityTimeoutField'}}
+                <br>
+                <strong>Users List</strong>
                 {{> render component='usersList'}}
               </div>
               <div class="tab-pane" id="sections">
