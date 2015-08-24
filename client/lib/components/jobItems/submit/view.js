@@ -348,4 +348,4 @@ Template.submitJobItem.rendered = function() {
   }
   Session.set("frequency", "Daily");
   Session.set("checklist", []);
-});
+}
