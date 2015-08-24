@@ -11,18 +11,18 @@ component.state.commentsExist = function() {
   } else {
     return false;
   }
-}
+};
 
 component.state.id = function() {
   return this.referenceId;
-}
+};
 
 component.state.type = function() {
   return this.refType;
-}
+};
 
 component.state.commentsList = function() {
   var item = this.referenceId;
   var comments = Comments.find({"reference": item}).fetch();
   return comments;
-}
+};

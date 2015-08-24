@@ -10,7 +10,8 @@ Meteor.publish('profileUser', function(id) {
     "isManager": 1,
     "isActive": 1,
     "profile": 1,
-    "username": 1
+    "username": 1,
+    "createdAt": 1
   }
   var user = Meteor.users.find({"_id": id}, {fields: options});
   logger.info("User published ", id);
