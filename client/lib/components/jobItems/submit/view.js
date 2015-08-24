@@ -37,6 +37,31 @@ Template.submitJobItem.helpers({
     } else {
       return false;
     }
+  },
+
+  isRecurringEveryNWeeks: function() {
+    var type = Session.get("frequency");
+    return type === "EveryNWeeks";
+  },
+
+  initChecklist: function () {
+    var tmpl = Template.instance();
+    Tracker.afterFlush(function () {
+      tmpl.$(".checklist").sortable({
+        opacity: 0.8,
+        delay: 50,
+        update: function () {
+          var items = [];
+          var $list = $(this);
+          $list.find(".list-group-item").each(function () {
+            var $item = $(this);
+            var text = $item.text().trim();
+            items.push(text);
+          });
+          Session.set("checklist", items);
+        }
+      }).disableSelection();
+    });
   }
 });
 
@@ -78,7 +103,7 @@ Template.submitJobItem.events({
       "type": typeId,
       "activeTime": 0,
       "avgWagePerHour": 0
-    }
+    };
     if(activeTime) {
       activeTime = parseInt(activeTime);
       if((activeTime == activeTime) && (activeTime > 0)) {
@@ -118,7 +143,7 @@ Template.submitJobItem.events({
       if(!shelfLife) {
         info.shelfLife =  0;
       } else {
-        shelfLife = parseFloat(shelfLife)
+        shelfLife = parseFloat(shelfLife);
         if((shelfLife == shelfLife) && (shelfLife > 0)) {
           info.shelfLife = Math.round(shelfLife * 100)/100;
         } else {
@@ -143,7 +168,7 @@ Template.submitJobItem.events({
           var doc = {
             "_id": dataid,
             "quantity": 1
-          }
+          };
           if(quantity) {
             quantity = parseFloat(quantity);
             if((quantity == quantity) && (quantity > 0)) {
@@ -179,7 +204,15 @@ Template.submitJobItem.events({
       if(!frequency) {
         return alert("Frequency should be defined");
       }
-      info.frequency = frequency;
+      info.frequency = frequency === "EveryNWeeks" ? "Weekly": frequency;
+
+      if(frequency === "EveryNWeeks") {
+        var step = $(event.target).find("[name=step]").val();
+        if(!step) {
+          return alert("Step should be defined");
+        }
+        info.step = step;
+      }
 
       var repeatAt = $(event.target).find('[name=repeatAt]').val().trim();
       if(!repeatAt) {
@@ -223,7 +256,7 @@ Template.submitJobItem.events({
         info.section = section;
       }
 
-      if(frequency == "Weekly") {
+      if(info.frequency == "Weekly") {
         var repeatDays = [];
         var repeatOn = $(event.target).find('[name=daysSelected]').get();
         repeatOn.forEach(function(doc) {
@@ -282,7 +315,11 @@ Template.submitJobItem.events({
         var listItems = Session.get("checklist");
         listItems.push(item);
         Session.set("checklist", listItems);
-        var listItem = "<li class='list-group-item'>" + item + "<i class='fa fa-minus-circle m-l-lg right removelistItem'></i></li>"
+        var listItem = [
+          "<li class='list-group-item'>",
+          item.toString(),
+          "<i class='fa fa-minus-circle m-l-lg right removelistItem'></i></li>"
+        ].join('');
         $(".checklist").append(listItem);
         $(event.target).val("");
       }

@@ -4,12 +4,24 @@ var component = FlowComponents.define('editIngredientItem', function(props) {
 });
 
 component.state.id = function() {
+  subs.clear();
   var id = Session.get("thisIngredientId");
   subs.subscribe("ingredients", [id]);
   var ing = Ingredients.findOne(id);
   return id;
 }
 
+component.state.relatedJobs = function() {
+  var id = Session.get("thisIngredientId");
+  subs.subscribe("ingredientsRelatedJobs", id);
+  var relatedJobs = [];
+  relatedJobs = JobItems.find().fetch();
+  return relatedJobs;
+}
+
+component.state.convertTime = function(time) {
+  return time/60;
+}
 
 component.action.submit = function(id, info, event) {
    Meteor.call("editIngredient", id, info, function(err) {

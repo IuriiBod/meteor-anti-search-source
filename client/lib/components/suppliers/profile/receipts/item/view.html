@@ -1,0 +1,36 @@
+<template name="receiptItem">
+  <tr>
+    <td> 
+      {{#if state$received}}
+      <span class="label label-primary"><i class="fa fa-check"></i> Completed</span>
+      {{else}}
+        {{#if state$pending}}
+          <span class="label label-warning"><i class="fa fa-check"></i>Pending</span>
+        {{else}}
+          <span class="label label-default"><i class="fa fa-check"></i>
+          Not ordered
+          </span>
+        {{/if}}
+      {{/if}}
+    </td>
+    <td>{{dateFormat state$receipt.date}}</td>
+    <td>{{Username state$receipt.orderPlacedBy}}</td>
+    <td>{{dateFormat state$receipt.expectedDeliveryDate}}</td>
+    <td>
+      {{#if state$received}}
+        {{dateFormat state$receipt.receivedDate}}
+      {{else}}
+        -NA-
+      {{/if}}
+    </td>
+    <td>
+      {{#if state$received}}
+        {{Username state$receipt.receivedBy}}
+      {{else}}
+        -NA-
+      {{/if}}
+    </td>
+    <td>{{#if state$receipt.orderNote}} {{state$receipt.orderNote}} {{else}} - {{/if}}</td>
+    <td>{{#if state$receipt.receiveNote}} {{state$receipt.receiveNote}} {{else}} - {{/if}}</td>
+  </tr>
+</template>

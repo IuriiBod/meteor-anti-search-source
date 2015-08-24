@@ -10,7 +10,8 @@ Meteor.publish('profileUser', function(id) {
     "isManager": 1,
     "isActive": 1,
     "profile": 1,
-    "username": 1
+    "username": 1,
+    "createdAt": 1
   }
   var user = Meteor.users.find({"_id": id}, {fields: options});
   logger.info("User published ", id);
@@ -33,6 +34,27 @@ Meteor.publish("usersList", function() {
   };
   var users = Meteor.users.find({}, {fields: options}, {limit: 10});
   logger.info("Userlist published");
+  return users;
+});
+
+Meteor.publish("selectedUsersList", function(usersIds) {
+  var options = {
+    "isAdmin": 1,
+    "isWorker": 1,
+    "isManager": 1,
+    "username": 1,
+    "emails": 1,
+    "isActive": 1,
+    "profile.payrates": 1
+  };
+  var users = Meteor.users.find({
+    _id: {
+      $in: usersIds
+    }
+  }, {
+    fields: options
+  });
+  logger.info("SelectedUserlist published");
   return users;
 });
 

@@ -24,3 +24,12 @@ Meteor.publish("ingredients", function(ids) {
   logger.info("Ingredients published", {"ids": ids});
   return cursors;
 });
+
+Meteor.publish("ingredientsRelatedJobs", function(id) {
+  if(!this.userId) {
+    logger.error('User not found : ' + this.userId);
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+  logger.info("Related jobs published", {"id": id});
+  return JobItems.find({"ingredients._id": id});
+});
