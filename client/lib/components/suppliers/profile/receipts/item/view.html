@@ -30,7 +30,7 @@
         -NA-
       {{/if}}
     </td>
-    <td>{{state$receipt.orderNote}}</td>
-    <td>{{state$receipt.receiveNote}}</td>
+    <td>{{#if state$receipt.orderNote}} {{state$receipt.orderNote}} {{else}} - {{/if}}</td>
+    <td>{{#if state$receipt.receiveNote}} {{state$receipt.receiveNote}} {{else}} - {{/if}}</td>
   </tr>
 </template>
