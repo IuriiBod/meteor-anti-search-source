@@ -24,7 +24,8 @@ Meteor.methods({
       "email": email,
       "phone": phone,
       "createdBy": user._id,
-      "createdOn": Date.now()
+      "createdOn": Date.now(),
+      "active": true
     }
     var id = Suppliers.insert(doc);
     logger.info("New supplier inserted ", id);
@@ -53,13 +54,19 @@ Meteor.methods({
     }
     var updateQuery = {};
     if(info.hasOwnProperty('name')) {
-      updateQuery['name'] = info.name;
+      if(info.name && info.name.trim()) {
+        updateQuery['name'] = info.name;
+      }
     }
     if(info.hasOwnProperty('email')) {
-      updateQuery['email'] = info.email;
+      if(info.email && info.email.trim()) {
+        updateQuery['email'] = info.email;
+      }
     }
     if(info.hasOwnProperty("phone")) {
-      updateQuery['phone'] = info.phone;
+      if(info.phone && info.phone.trim()) {
+        updateQuery['phone'] = info.phone;
+      }
     }
     Suppliers.update({"_id": id}, {$set: updateQuery});
     logger.info("Supplier information updated", id);
