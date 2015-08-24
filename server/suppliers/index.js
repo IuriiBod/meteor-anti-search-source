@@ -68,6 +68,11 @@ Meteor.methods({
         updateQuery['phone'] = info.phone;
       }
     }
+    if(info.hasOwnProperty("priceList")) {
+      if(info.priceList && info.priceList.trim()) {
+        updateQuery['priceList'] = info.priceList;
+      }
+    }
     Suppliers.update({"_id": id}, {$set: updateQuery});
     logger.info("Supplier information updated", id);
     return;
