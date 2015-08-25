@@ -55,7 +55,7 @@ StaleSession = {
     return Session.get("StaleSession.sessionExpired");
   },
   set sessionExpired(val) {
-    Session.set("StaleSession.sessionExpired", val);
+    Session.setPersistent("StaleSession.sessionExpired", val);
   },
 
   // lastActivity
@@ -67,7 +67,7 @@ StaleSession = {
     if (_.isDate(val)) {
       val = val.getTime();
     }
-    Session.set("StaleSession.lastActivity", val);
+    Session.setPersistent("StaleSession.lastActivity", val);
   },
 
   get timeFromLastActivity() {
