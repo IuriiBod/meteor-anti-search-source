@@ -1,13 +1,17 @@
 var component = FlowComponents.define("weeklyShiftRoster", function(props) {
   this.name = props.name;
   this.onRendered(this.onListRendered);
-
 });
 
 component.state.week = function() {
   if(this.name == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
-    var week = getDatesFromWeekNumber(parseInt(weekNo));
+    var currentDate = Session.get("checkedDate");
+    
+    if (!currentDate) {
+      currentDate = new Date();
+    }
+    var week = getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
     return week;
   } else if(this.name == "weeklyrostertemplate") {
     var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];

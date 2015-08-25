@@ -157,8 +157,25 @@ Template.pageHeading.events({
 
   'click .nextWeek': function(event) {
     event.preventDefault();
-    var week = parseInt(Router.current().params.week) + 1;
-    var type = $(event.target).parent().parent().attr("data-type");
+    var type = $(event.target).closest("div.title-action").attr("data-type");
+    if(type == "weeklyroster") {
+      var year = parseInt(Router.current().params.year);
+      var weeksNum = moment(year+"-12-31").format("w");
+      weeksNum = (weeksNum == 1) ? moment(year+"-12-24").format("w") : weeksNum;
+      var week = parseInt(Router.current().params.week) + 1;
+    
+      if (week > weeksNum) {
+        week = week%weeksNum;
+        year ++;
+      }
+    } else {
+      var week = parseInt(Router.current().params.week) + 1;
+    }
+    var a = new Date(year.toString());
+    var date = moment(a).week(week).format("YYYY-MM-DD");    
+    Session.set("thisWeek", week);
+    Session.set("checkedDate", new Date(date));
+    
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
@@ -169,7 +186,7 @@ Template.pageHeading.events({
     } else if(type == "cafeforecasting") {
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
-      Router.go("weeklyRoster", {"week": week});
+      Router.go("weeklyRoster", {"year": year, "week": week});
     } else if(type == "currentStocksReport") {
       Router.go("currentStocks", {"week": week});
     }
@@ -177,8 +194,27 @@ Template.pageHeading.events({
 
   'click .previousWeek': function(event) {
     event.preventDefault();
-    var week = parseInt(Router.current().params.week) - 1;
-    var type = $(event.target).parent().parent().attr("data-type");
+    var type = $(event.target).closest("div.title-action").attr("data-type");
+
+    if(type == "weeklyroster") {
+      var year = parseInt(Router.current().params.year);
+      var weeksNum = moment(year+"-12-31").format("w");
+      weeksNum = (weeksNum == 1) ? moment(year+"-12-24").format("w") : weeksNum;
+      var week = parseInt(Router.current().params.week) - 1;
+    
+      if (week < 1) {
+        week = weeksNum;
+        year --;
+      }
+    } else {
+      var week = parseInt(Router.current().params.week) - 1;
+    }
+    
+    var a = new Date(year.toString());
+    var date = moment(a).week(week).format("YYYY-MM-DD");    
+    Session.set("thisWeek", week);
+    Session.set("checkedDate", new Date(date));
+    
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
@@ -189,7 +225,7 @@ Template.pageHeading.events({
     } else if(type == "cafeforecasting") {
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
-      Router.go("weeklyRoster", {"week": week});
+      Router.go("weeklyRoster", {"year": year, "week": week});
     } else if(type == "currentStocksReport") {
       Router.go("currentStocks", {"week": week});
     }
@@ -320,16 +356,18 @@ Template.pageHeading.events({
   'changeDate .datepicker': function(e, tpl) {
     var date = e.date;
     var week = moment(date).week();
+    var year = moment(date).format("YYYY");
+    Session.set("week", week);    
     tpl.$(".datepicker").datepicker("remove");
 
     tpl.$(".datepicker").datepicker({
       calendarWeeks: true
     });
 
-    var checkedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    var checkedDate = new Date(year, date.getMonth(), date.getDate());
     Session.set("checkedDate", checkedDate);
     tpl.$(".datepicker").datepicker("update", checkedDate);
-    Router.go("weeklyRoster", {"week": week});
+    Router.go("weeklyRoster", {"year": year, "week": week});
   },
   'click .calendar-toggle': function(e, tpl) {
 
@@ -347,8 +385,10 @@ Template.pageHeading.events({
 Template.pageHeading.rendered = function() {
   var checkedDate = Session.get("checkedDate");
   if (!checkedDate) {
-    var date = new Date();
-    checkedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    var checkedDate = new Date();
+    var week = moment().format("w");
+    Session.set("thisWeek", week);
+    Session.set("checkedDate", checkedDate);
   }
   this.$(".datepicker").datepicker({
     todayHighlight: true,
