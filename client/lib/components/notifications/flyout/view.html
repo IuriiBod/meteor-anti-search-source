@@ -4,30 +4,26 @@
       <div class="skin-setttings">
         <div class="white-notify-bg">
           <div class="title clearfix"><a href="" class="theme-config-close-notifi-btn"><i class="fa fa-angle-right"></i></a>Notifications</div>
-          <ul class="notifi-alerts">
-            {{#if state$count}}
-              {{#each state$notifications}}
-                <li>
-                  {{> render component='notifiText' noti=this}}
-                  {{> render component='notifiButtons' noti=this}}
-                </li>
-                <li class="divider"></li>
-              {{/each}}
-              <li>
-                <div class="text-center link-block">
-                  <a href="#" class="markAllAsRead">
-                    <strong>Mark All As Read</strong>
-                  </a>
+          {{#if state$count}}
+            {{#each state$notifications}}
+              <div class="ibox float-e-margins" style="margin-bottom: 0;">
+                <div class="ibox-content" style="padding-bottom: 10px;">
+                  <div class="feed-activity-list">
+                    {{> render component='notifiText' noti=this}}
+                  </div>
                 </div>
-              </li>
-            {{else}}
-              <li>
-                <div class="text-center link-block">
-                  <strong>No unread notifications</strong>
-                </div>
-              </li>
-            {{/if}}
-          </ul>
+              </div>
+            {{/each}}
+            <div class="text-center link-block">
+              <a href="#" class="markAllAsRead">
+                <strong>Mark All As Read</strong>
+              </a>
+            </div>
+          {{else}}
+            <div class="text-center link-block">
+              <strong>No unread notifications</strong>
+            </div>
+          {{/if}}
         </div>
       </div>
     </div>

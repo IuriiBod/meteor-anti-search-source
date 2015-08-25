@@ -1,5 +1,5 @@
 <template name="notifiButtons">
-  <div class="m-l-xxxxl">
+  <div>
   {{#if state$permittedActionType}}
     <button class="btn btn-primary btn-xs goToItem" data-ref="{{state$notifi.ref}}" data-type="{{state$notifi.type}}" data-id="{{state$notifi._id}}">Go to this {{state$notifi.type}} Item</button>
   {{/if}}

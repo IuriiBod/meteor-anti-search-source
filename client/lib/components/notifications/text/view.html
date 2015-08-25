@@ -1,18 +1,17 @@
 <template name="notifiText">
-  <div class="timeline-item" data-shift="{{state$notifi._id}}">
-    <div class="row">
-      <div class="col-xs-3 date">
-        <i class="fa fa-{{state$icon}}"></i>{{timeFormat state$notifi.createdOn}}
-        <br>
-        <small class="text-navy">{{timeFromNow state$notifi.createdOn}}</small>
-      </div>
-      <div class="col-xs-7 content">
-        <p class="m-b-xs">
-          <strong>{{{state$notifi.title}}}</strong>
-        </p>
-        <p>
-          {{{state$notifi.text}}}
-        </p>
+  <div class="feed-element" data-shift="{{state$notifi._id}}">
+    <a href="#" class="pull-left">
+      <img alt="image" class="img-circle" src="{{state$createdByImage}}">
+    </a>
+    <div class="media-body ">
+      <small class="pull-right text-navy">{{timeFromNow state$notifi.createdOn}}</small>
+      {{{state$notifi.title}}}
+      <br>
+      <small class="text-muted">
+        <i class="fa fa-{{state$icon}}"></i> {{timeFormat state$notifi.createdOn}}
+      </small>
+      <div class="actions">
+        {{> render component='notifiButtons' noti=this}}
       </div>
     </div>
   </div>
