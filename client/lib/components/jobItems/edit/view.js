@@ -355,6 +355,7 @@ Template.editJobItem.onRendered(function() {
   Session.set("jobType", null);
   Session.set("frequency", null);
   this.$(".checklist").sortable({
+    cursor: "move",
     opacity: 0.8,
     delay: 50,
     update: function () {
