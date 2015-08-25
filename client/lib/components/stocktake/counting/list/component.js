@@ -31,18 +31,33 @@ component.state.generalArea = function() {
   return Session.get("activeGArea");
 }
 
-component.state.list = function() {
+component.state.stocktakeList = function() {
   var thisVersion = Session.get("thisVersion");
-  var editable = Session.get("editStockTake");
   var gareaId = Session.get("activeGArea");
   var sareaId = Session.get("activeSArea");
 
-  if(gareaId) {
-    subs.subscribe("areaSpecificStocks", gareaId);
+  if(gareaId && sareaId) {
+    var main = StocktakeMain.findOne(thisVersion);
+    if(main && main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
+      subs.subscribe("areaSpecificStockTakes", gareaId);
+      var stocktakes = Stocktakes.find({"version": thisVersion, "generalArea": gareaId, "specialArea": sareaId});
+      if(stocktakes) {
+        return stocktakes;
+      }
+    }
   }
-  var list = Ingredients.find({"generalAreas":gareaId, "specialAreas": sareaId}, {sort: {"description": 1}});
-  if(list) {
-    return list;
+}
+
+component.state.ingredientsList = function() {
+  var gareaId = Session.get("activeGArea");
+  var sareaId = Session.get("activeSArea");
+  if(gareaId && sareaId) {
+    subs.subscribe("areaSpecificStockTakes", gareaId);
+    subs.subscribe("areaSpecificStocks", gareaId);
+    var ingredients = Ingredients.find({"generalAreas": gareaId, "specialAreas": sareaId}, {sort: {"description": 1}});
+    if(ingredients) {
+      return ingredients;
+    }
   }
 }
 
@@ -52,4 +67,15 @@ component.state.stocktakeMain = function() {
 
 component.state.filtered = function() {
   return Session.get("activeSArea");
+}
+
+component.state.notTemplate = function() {
+  var main = StocktakeMain.findOne(this.version);
+  var permitted = true;
+  if(main) {
+    if(main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
+      permitted = false;
+    }
+  }
+  return permitted;
 }

@@ -13,6 +13,23 @@ Meteor.publish("areaSpecificStocks", function(generalArea) {
   return cursors;
 });
 
+Meteor.publish("areaSpecificStockTakes", function(generalArea) {
+  var cursors = [];
+  var stocktakes = Stocktakes.find({"generalArea": generalArea});
+  cursors.push(stocktakes);
+  var ids = [];
+  stocktakes.fetch().forEach(function(item) {
+    if(ids.indexOf(item._id) < 0) {
+      ids.push(item.stockId);
+    }
+  });
+  if(ids.length > 0) {
+    cursors.push(Ingredients.find({"_id": {$in: ids}}));
+  }
+  logger.info("Stocktakes on general area published", generalArea);
+  return cursors;
+});
+
 Meteor.publish("stocktakeMains", function(date) {
   logger.info("Stocktake mains published for date", date);
   var data = StocktakeMain.find({"stocktakeDate": new Date(date).getTime()});

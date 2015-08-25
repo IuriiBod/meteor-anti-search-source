@@ -19,7 +19,7 @@ Meteor.methods({
       logger.error('General area name should be unique', exist);
       throw new Meteor.Error(404, "General area name should be unique");
     }
-    var id = GeneralAreas.insert({"name": name, "specialAreas": [], "createdAt": Date.now()});
+    var id = GeneralAreas.insert({"name": name, "specialAreas": [], "createdAt": Date.now(), "active": true});
     logger.info("New General area created", id);
     return id;
   },
@@ -113,7 +113,7 @@ Meteor.methods({
       logger.error('Special area name should be unique', exist);
       throw new Meteor.Error(404, "Special area name should be unique");
     }
-    var id = SpecialAreas.insert({"name": name, "generalArea": gareaId, "createdAt": Date.now(), "stocks": []});
+    var id = SpecialAreas.insert({"name": name, "generalArea": gareaId, "createdAt": Date.now(), "stocks": [], "active": true});
     GeneralAreas.update({"_id": gareaId}, {$addToSet: {"specialAreas": id}});
     logger.info("New Special area created", id);
     return id;
