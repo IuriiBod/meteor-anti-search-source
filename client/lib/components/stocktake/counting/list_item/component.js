@@ -22,7 +22,7 @@ component.state.item = function() {
       stock['place'] = stocktake.place;
     } else {
       stock['stockRef'] = null;
-      stock['counting'] = 0;
+      stock['counting'] = null;
     }
     return stock;
   }
@@ -60,11 +60,12 @@ component.state.deletable = function(id) {
 }
 
 component.prototype.onItemRendered = function() {
+  $('[data-toggle="tooltip"]').tooltip();
+
   $(".counting").editable({
     type: "text",
     title: 'Edit count',
     showbuttons: true,
-    display: false,
     mode: 'inline',
     success: function(response, newValue) {
       var elem = $(this).closest("li");
@@ -96,6 +97,26 @@ component.prototype.onItemRendered = function() {
           });
         }
       }
+    },
+    display: function(a, b) {
     }
   });
+}
+
+component.state.countEditable = function(id) {
+  var permitted = true;
+  var stocktake = Stocktakes.findOne(id);
+  if(stocktake) {
+    if(stocktake.hasOwnProperty("orderRef")) {
+      if(stocktake.orderRef) {
+        var order = StockOrders.findOne(stocktake.orderRef);
+        if(order) {
+          if(order.hasOwnProperty("orderReceipt") && order.orderReceipt) {
+            permitted = false;
+          }
+        }
+      }
+    }
+  }
+  return permitted;
 }

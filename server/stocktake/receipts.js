@@ -128,6 +128,7 @@ Meteor.methods({
       {multi: true}
     );
     logger.info("Orders updated", {"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplier});
+    StocktakeMain.update({"_id": version}, {$addToSet: {"orderReceipt": id}});
     return;
   },
 

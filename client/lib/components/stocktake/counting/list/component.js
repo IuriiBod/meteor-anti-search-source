@@ -40,7 +40,7 @@ component.state.list = function() {
   if(gareaId) {
     subs.subscribe("areaSpecificStocks", gareaId);
   }
-  var list = Ingredients.find({"specialAreas": sareaId});
+  var list = Ingredients.find({"generalAreas":gareaId, "specialAreas": sareaId}, {sort: {"description": 1}});
   if(list) {
     return list;
   }

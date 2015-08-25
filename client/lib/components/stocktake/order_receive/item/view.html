@@ -16,7 +16,10 @@
           <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i></button>
         {{else}}
           {{state$deliveryStatus}}
-          <a href="#" class="editPermitted">[Edit]</a>
+          {{#if state$isReceived}}
+          {{else}}
+            <a href="#" class="editPermitted">[Edit]</a>
+          {{/if}}
         {{/if}}
       {{else}}
         {{#if state$isDeliveredCorreclty}}
