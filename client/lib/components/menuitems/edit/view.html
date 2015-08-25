@@ -3,7 +3,8 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Category</label>
       <div class="col-sm-10">
-        <select name="category" class="form-control text-capitalize" data-id="{{state$menu._id}}">
+        <a href="#" data-name="category" class="my-editable-link">{{state$myCategory.name}}</a>
+        <select name="category" class="form-control text-capitalize hide my-editable-select" data-id="{{state$menu._id}}">
           {{#each state$categoriesList}}
             {{# if equal _id state$myCategory._id}}
               <option value="{{state$myCategory._id}}" selected='selected'>{{state$myCategory.name}}</option>
@@ -17,7 +18,8 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Status</label>
       <div class="col-sm-10">
-        <select name="status" class="form-control text-capitalize" data-id="{{state$menu._id}}">
+        <a href="#" data-name="status" class="my-editable-link">{{state$menu.status}}</a>
+        <select name="status" class="form-control text-capitalize hide my-editable-select" data-id="{{state$menu._id}}">
           {{#each state$statusList}}
             {{# if equal this.name state$menu.status}}
               <option value="{{state$menu.status}}" selected="selected" >{{state$menu.status}}</option>

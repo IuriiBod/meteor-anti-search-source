@@ -192,7 +192,8 @@ Template.editMenuItem.events({
   'change select[name="category"]': function(e) {
     var id = e.target.dataset.id;
     var value = e.target.value;
-    
+    $(e.target).addClass("hide");
+    $('.my-editable-link[data-name="category"]').removeClass("hide");
     if (id && value) {
       Meteor.call("updateMenuItemCategory", id, value, function(err) {
         if(err) {
@@ -206,7 +207,8 @@ Template.editMenuItem.events({
   'change select[name="status"]': function(e) {
     var id = e.target.dataset.id;
     var value = e.target.value;
-    
+    $(e.target).addClass("hide");
+    $('.my-editable-link[data-name="status"]').removeClass("hide");
     if (id && value) {
       Meteor.call("updateMenuItemStatus", id, value, function(err) {
         if(err) {
@@ -215,5 +217,24 @@ Template.editMenuItem.events({
         }
       });
     }
+  },
+
+  'click .my-editable-link': function(e, tpl) {
+    e.preventDefault();
+    var name = e.target.dataset.name;
+
+    $(e.target).addClass("hide");
+    $('[name="'+name+'"]').removeClass("hide");
   }
 });
+
+Template.editMenuItem.rendered = function() {
+  $("body").on("click", function(e) {
+    var el = $(e.target);
+
+    if (!el.hasClass("my-editable-link") && !el.hasClass("my-editable-select")) {
+      $(".my-editable-select").addClass("hide");
+      $(".my-editable-link").removeClass("hide");
+    }
+  });
+}
