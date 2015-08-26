@@ -9,3 +9,18 @@ Template.jobItemsList.events({
     FlowComponents.callAction('click');
   }, 200)
 });
+
+Template.jobItemsList.onRendered(function() {
+  var tpl = this;
+  Meteor.defer(function() {
+    $(window).scroll(function(e){
+      var docHeight = $(document).height();
+      var winHeight = $(window).height();
+      var scrollTop = $(window).scrollTop();
+      
+      if ((docHeight - winHeight) == scrollTop) {
+        tpl.$('#loadMoreJobItems').click();
+      }
+    });
+  });
+});

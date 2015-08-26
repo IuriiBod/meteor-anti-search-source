@@ -9,3 +9,18 @@ Template.menuItemsList.events({
     FlowComponents.callAction("loadMore");
   }
 });
+
+Template.menuItemsList.onRendered(function() {
+  var tpl = this;
+  Meteor.defer(function() {
+    $(window).scroll(function(e){
+      var docHeight = $(document).height();
+      var winHeight = $(window).height();
+      var scrollTop = $(window).scrollTop();
+      
+      if ((docHeight - winHeight) == scrollTop) {
+        tpl.$('#loadMoreMenuItems').click();
+      }
+    });
+  });
+});
