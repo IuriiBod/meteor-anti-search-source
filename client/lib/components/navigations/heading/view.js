@@ -89,7 +89,7 @@ Template.pageHeading.events({
     event.preventDefault();
     print();
   },
-  
+
   'click #submitJobItem': function(event) {
     event.preventDefault();
     Router.go("submitJobItem");
@@ -157,8 +157,25 @@ Template.pageHeading.events({
 
   'click .nextWeek': function(event) {
     event.preventDefault();
-    var week = parseInt(Router.current().params.week) + 1;
-    var type = $(event.target).closest("div").attr("data-type");
+    var type = $(event.target).closest("div.title-action").attr("data-type");
+    if(type == "weeklyroster") {
+      var year = parseInt(Router.current().params.year);
+      var weeksNum = moment(year+"-12-31").format("w");
+      weeksNum = (weeksNum == 1) ? moment(year+"-12-24").format("w") : weeksNum;
+      var week = parseInt(Router.current().params.week) + 1;
+    
+      if (week > weeksNum) {
+        week = week%weeksNum;
+        year ++;
+      }
+    } else {
+      var week = parseInt(Router.current().params.week) + 1;
+    }
+    var a = new Date(year.toString());
+    var date = moment(a).week(week).format("YYYY-MM-DD");    
+    Session.set("thisWeek", week);
+    Session.set("checkedDate", new Date(date));
+    
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
@@ -169,7 +186,7 @@ Template.pageHeading.events({
     } else if(type == "cafeforecasting") {
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
-      Router.go("weeklyRoster", {"week": week});
+      Router.go("weeklyRoster", {"year": year, "week": week});
     } else if(type == "currentStocksReport") {
       Router.go("currentStocks", {"week": week});
     }
@@ -177,8 +194,27 @@ Template.pageHeading.events({
 
   'click .previousWeek': function(event) {
     event.preventDefault();
-    var week = parseInt(Router.current().params.week) - 1;
-    var type = $(event.target).closest("div").attr("data-type");
+    var type = $(event.target).closest("div.title-action").attr("data-type");
+
+    if(type == "weeklyroster") {
+      var year = parseInt(Router.current().params.year);
+      var weeksNum = moment(year+"-12-31").format("w");
+      weeksNum = (weeksNum == 1) ? moment(year+"-12-24").format("w") : weeksNum;
+      var week = parseInt(Router.current().params.week) - 1;
+    
+      if (week < 1) {
+        week = weeksNum;
+        year --;
+      }
+    } else {
+      var week = parseInt(Router.current().params.week) - 1;
+    }
+    
+    var a = new Date(year.toString());
+    var date = moment(a).week(week).format("YYYY-MM-DD");    
+    Session.set("thisWeek", week);
+    Session.set("checkedDate", new Date(date));
+    
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
@@ -189,7 +225,7 @@ Template.pageHeading.events({
     } else if(type == "cafeforecasting") {
       Router.go("cafeSalesForecast", {"week": week});
     } else if(type == "weeklyroster") {
-      Router.go("weeklyRoster", {"week": week});
+      Router.go("weeklyRoster", {"year": year, "week": week});
     } else if(type == "currentStocksReport") {
       Router.go("currentStocks", {"week": week});
     }
@@ -241,7 +277,7 @@ Template.pageHeading.events({
         if(err) {
           console.log(err);
           return alert(err.reason);
-        } 
+        }
       });
       users.forEach(function(user) {
         var to = Meteor.users.findOne(user);
@@ -268,8 +304,8 @@ Template.pageHeading.events({
             }
 
             var info = {
-              "title": title, 
-              "text": text, 
+              "title": title,
+              "text": text,
               "startDate": weekStart,
               "week": weekNo
             }
@@ -292,7 +328,7 @@ Template.pageHeading.events({
               if(err) {
                 console.log(err);
                 return alert(err.reason);
-              } 
+              }
             });
           }
         }
@@ -316,5 +352,46 @@ Template.pageHeading.events({
         }
       });
     }
+  },
+  'changeDate .datepicker': function(e, tpl) {
+    var date = e.date;
+    var week = moment(date).week();
+    var year = moment(date).format("YYYY");
+    Session.set("week", week);    
+    tpl.$(".datepicker").datepicker("remove");
+
+    tpl.$(".datepicker").datepicker({
+      calendarWeeks: true
+    });
+
+    var checkedDate = new Date(year, date.getMonth(), date.getDate());
+    Session.set("checkedDate", checkedDate);
+    tpl.$(".datepicker").datepicker("update", checkedDate);
+    Router.go("weeklyRoster", {"year": year, "week": week});
+  },
+  'click .calendar-toggle': function(e, tpl) {
+
+
+    if ($(e.target).parent().hasClass("open")) {
+      $(".day.active").removeClass("week");
+      tpl.$(".datepicker").datepicker("hide");
+    } else {
+      $(".day.active").siblings(".day").addClass("week");
+      tpl.$(".datepicker").datepicker("show");
+    }
   }
 });
+
+Template.pageHeading.rendered = function() {
+  var checkedDate = Session.get("checkedDate");
+  if (!checkedDate) {
+    var checkedDate = new Date();
+    var week = moment().format("w");
+    Session.set("thisWeek", week);
+    Session.set("checkedDate", checkedDate);
+  }
+  this.$(".datepicker").datepicker({
+    todayHighlight: true,
+    calendarWeeks: true
+  }).datepicker("update", checkedDate);
+};

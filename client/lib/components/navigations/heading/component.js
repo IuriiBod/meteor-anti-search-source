@@ -8,11 +8,11 @@ var component = FlowComponents.define("pageHeading", function(props) {
 
 component.state.title = function() {
   return this.title;
-} 
+}
 
 component.state.type = function() {
   return this.type;
-} 
+}
 
 component.state.category = function() {
   return this.category;
@@ -37,6 +37,43 @@ component.state.publishedOn = function() {
       return shift.publishedOn;
     }
   }
+}
+
+component.state.currentDate = function() {
+  var week = Session.get("thisWeek");
+  var weekStartEnd = getWeekStartEnd(week);
+  var firstDay = weekStartEnd.monday;
+  var lastDay = weekStartEnd.sunday;
+
+  var firstDayDate = firstDay.getDate();
+  var lastDayDate = lastDay.getDate();
+
+  var firstDayMonth = firstDay.getMonth();
+  var lastDayMonth = lastDay.getMonth();
+
+  var firstDayMonthName = getMonthName(firstDay.getMonth(), true);
+  firstDayMonthName = firstDayMonthName.toUpperCase();
+  var lastDayMonthName = getMonthName(lastDay.getMonth(), true);
+  lastDayMonthName = lastDayMonthName.toUpperCase();
+
+  var firstDayYear = firstDay.getFullYear();
+  var lastDayYear = lastDay.getFullYear();
+
+  var currentDate = "";
+
+  if (firstDayMonth == lastDayMonth) {
+    currentDate = firstDayDate + " - " + lastDayDate + " " + firstDayMonthName + ", " + firstDayYear + ", ";
+  } else if (firstDayMonth != lastDayMonth) {
+    if (firstDayYear == lastDayYear) {
+      currentDate = firstDayDate + " " + firstDayMonthName + " - " + lastDayDate + " " + lastDayMonthName + ", " + firstDayYear + ", ";
+    } else {
+      currentDate = firstDayDate + " " + firstDayMonthName + " " + firstDayYear + " - " + lastDayDate + " " + lastDayMonthName + " " + lastDayYear + ", ";
+    }
+  }
+
+  currentDate += "WEEK " + week;
+
+  return currentDate;
 }
 
 component.state.id = function() {
@@ -157,7 +194,7 @@ component.state.isIngredientsList = function() {
 
 component.state.weeklyNavigation = function() {
   if(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport") {
-    return true; 
+    return true;
   } else {
     return false;
   }
