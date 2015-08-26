@@ -14,7 +14,6 @@ Template.jobItemsList.onRendered(function() {
   var tpl = this;
   Meteor.defer(function() {
     $(window).scroll(function(e){
-      tpl.$('#loadMoreJobItems').hide();
       var docHeight = $(document).height();
       var winHeight = $(window).height();
       var scrollTop = $(window).scrollTop();
