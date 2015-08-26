@@ -1,7 +1,4 @@
 var component = FlowComponents.define("notifiButtons", function(props) {
-  
-  console.log("notifiButtons", props);
-  
   this.notification = props.noti;
 });
 

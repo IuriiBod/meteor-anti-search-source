@@ -2,9 +2,6 @@ var subs = new SubsManager();
 
 var component = FlowComponents.define("notifiText", function(props) {
   this.notification = props.noti;
-  
-  console.log("notifiText: ", this);
-  
   this.onRendered(this.onItemRendered);
 });
 

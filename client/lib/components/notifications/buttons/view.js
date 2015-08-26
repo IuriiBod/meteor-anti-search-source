@@ -20,9 +20,7 @@ Template.notifiButtons.events({
     var id = $(event.target).attr("data-id");
     var type = $(event.target).attr("data-type");
     var notifi = Notifications.findOne(id);
-    
     $(".flyout-notifi-container").removeClass("show");
-    
     if(notifi) {
       if(type == "job") {
         Router.go("jobItemDetailed", {"_id": ref});   
