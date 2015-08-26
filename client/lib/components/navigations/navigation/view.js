@@ -26,5 +26,10 @@ Template.navigation.helpers({
   week: function() {
     var week = moment().format("w");
     return week;
+  },
+  
+  year: function() {
+    var year = moment().format("YYYY");
+    return year;
   }
 });
