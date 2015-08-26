@@ -155,4 +155,21 @@ component.state.isManagerOrAdmin = function() {
   return isManagerOrAdmin(userId);
 }
 
+component.state.relatedMenus = function() {
+  var id = this.id;
+  subs.subscribe("jobsRelatedMenus", id);
+  var relatedMenus = [];
+  relatedMenus = MenuItems.find().fetch();
+  return relatedMenus;
+}
 
+component.state.getCategory = function(id) {
+  subs.subscribe("menuCategories");
+  var category = Categories.findOne({_id: id});
+  
+  if (category) {
+    return category.name;
+  } else {
+    return '';
+  }
+}

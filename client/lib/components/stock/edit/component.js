@@ -13,6 +13,7 @@ component.state.id = function() {
 
 component.state.relatedJobs = function() {
   var id = Session.get("thisIngredientId");
+  subs.reset();
   subs.subscribe("ingredientsRelatedJobs", id);
   var relatedJobs = [];
   relatedJobs = JobItems.find().fetch();
