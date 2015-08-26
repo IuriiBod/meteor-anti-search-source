@@ -109,7 +109,10 @@
                     <br/>
                     <ol class="checklist list-group">
                       {{#each state$checklist}}
-                        <li class="list-group-item">{{this}}
+                        <li class="list-group-item">
+                          <i class="fa fa-arrows-v text-muted small"></i>
+                          &nbsp;
+                          {{this}}
                           <i class='fa fa-minus-circle m-l-lg right removelistItem'></i>
                         </li>
                       {{/each}}

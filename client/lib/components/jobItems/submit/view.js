@@ -48,6 +48,7 @@ Template.submitJobItem.helpers({
     var tmpl = Template.instance();
     Tracker.afterFlush(function () {
       tmpl.$(".checklist").sortable({
+        cursor: "move",
         opacity: 0.8,
         delay: 50,
         update: function () {
@@ -317,6 +318,7 @@ Template.submitJobItem.events({
         Session.set("checklist", listItems);
         var listItem = [
           "<li class='list-group-item'>",
+          "<i class='fa fa-arrows-v text-muted small'></i> &nbsp; ",
           item.toString(),
           "<i class='fa fa-minus-circle m-l-lg right removelistItem'></i></li>"
         ].join('');
