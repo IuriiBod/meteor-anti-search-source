@@ -11,7 +11,7 @@
         <i class="fa fa-{{state$icon}}"></i> {{timeFormat state$notifi.createdOn}}
       </small>
       <div class="actions">
-        {{> render component='notifiButtons' noti=this}}
+        {{> render component='notifiButtons' noti=state$notifi}}
       </div>
     </div>
   </div>
