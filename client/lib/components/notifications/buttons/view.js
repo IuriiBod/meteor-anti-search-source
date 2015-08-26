@@ -31,6 +31,8 @@ Template.notifiButtons.events({
             Router.go("menuItemDetail", {"_id": ref});  
           } else if(notifi.refType == "job") {
             Router.go("jobItemDetailed", {"_id": ref});  
+          } else if(notifi.refType == "post") {
+            Router.go("home", {}, {hash: ref});
           }
       } else if(type == "roster") {
         if(notifi.actionType == "publish") {
