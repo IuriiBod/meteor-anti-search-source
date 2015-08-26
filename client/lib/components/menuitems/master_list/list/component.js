@@ -45,11 +45,11 @@ component.prototype.onMenuListRendered = function() {
   }
   if(status != "all") {
     filter.push({"status": status.toLowerCase()});
-  }
+  }  
   if(filter.length > 0) {
-    this.MenuItemsSearch.search("", {'limit': 20, 'filter': filter});
+    this.MenuItemsSearch.search("", {'limit': 30, 'filter': filter});
   } else {
-    this.MenuItemsSearch.search("", {'limit': 20});
+    this.MenuItemsSearch.search("", {'limit': 30});
   }
 }
 

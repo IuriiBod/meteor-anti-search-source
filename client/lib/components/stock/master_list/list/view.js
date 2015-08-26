@@ -46,14 +46,13 @@ Template.ingredientsList.events({
 
 Template.ingredientsList.rendered = function() {
   IngredientsListSearch.cleanHistory();
-  IngredientsListSearch.search("", {"limit": 20});
+  IngredientsListSearch.search("", {"limit": 30});
 }
 
 Template.ingredientsList.onRendered(function() {
   var tpl = this;
   Meteor.defer(function() {
     $(window).scroll(function(e){
-      tpl.$('#loadMoreIngs').hide();
       var docHeight = $(document).height();
       var winHeight = $(window).height();
       var scrollTop = $(window).scrollTop();
