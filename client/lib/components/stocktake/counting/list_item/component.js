@@ -1,5 +1,6 @@
 var component = FlowComponents.define("stockCountingListItem", function(props) {
   this.id = props.id;
+  this.stocktakeId = props.stocktakeId;
   this.version = props.version;
   this.garea = props.garea;
   this.sarea = props.sarea;
@@ -22,7 +23,7 @@ component.state.item = function() {
       stock['place'] = stocktake.place;
     } else {
       stock['stockRef'] = null;
-      stock['counting'] = 0;
+      stock['counting'] = null;
     }
     return stock;
   }
@@ -60,23 +61,30 @@ component.state.deletable = function(id) {
 }
 
 component.prototype.onItemRendered = function() {
+  $('[data-toggle="tooltip"]').tooltip();
+
   $(".counting").editable({
     type: "text",
     title: 'Edit count',
     showbuttons: true,
-    display: false,
     mode: 'inline',
     success: function(response, newValue) {
       var elem = $(this).closest("li");
       var stockId = $(elem).closest("li").attr("data-id");
       var id = $(elem).closest("li").attr("data-stockRef");
       if(newValue) {
+        var count = parseFloat(newValue);
+        if(count == count) {
+          count = count;
+        } else {
+          count = 0;
+        }
         var info = {
           "version": Session.get("thisVersion"),
           "generalArea": Session.get("activeGArea"),
           "specialArea": Session.get("activeSArea"),
           "stockId": stockId,
-          "counting": parseFloat(newValue)
+          "counting": count
         }
         $(elem).next().find("a").click();
         var main = StocktakeMain.findOne(Session.get("thisVersion"));
@@ -96,6 +104,26 @@ component.prototype.onItemRendered = function() {
           });
         }
       }
+    },
+    display: function(a, b) {
     }
   });
+}
+
+component.state.countEditable = function(id) {
+  var permitted = true;
+  var stocktake = Stocktakes.findOne(id);
+  if(stocktake) {
+    if(stocktake.hasOwnProperty("orderRef")) {
+      if(stocktake.orderRef) {
+        var order = StockOrders.findOne(stocktake.orderRef);
+        if(order) {
+          if(order.hasOwnProperty("orderReceipt") && order.orderReceipt) {
+            permitted = false;
+          }
+        }
+      }
+    }
+  }
+  return permitted;
 }

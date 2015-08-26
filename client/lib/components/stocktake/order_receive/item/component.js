@@ -62,3 +62,13 @@ component.state.isWrongPrice = function() {
 component.state.isEditable = function(id) {
   return Session.get("editable" + id);
 }
+
+component.state.isReceived = function() {
+  var id = Session.get("thisReceipt")
+  var data = OrderReceipts.findOne(id);
+  if(data) {
+    if(data.received) {
+      return true;
+    } 
+  }
+}
