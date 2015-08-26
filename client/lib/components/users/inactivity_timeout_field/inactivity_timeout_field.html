@@ -1,0 +1,12 @@
+<template name="inactivityTimeoutField">
+  <div class="input-group">
+    <span class="input-group-addon"><i class="fa fa-clock-o fa-fw"></i></span>
+    <input type="number"
+           class="form-control inactivity-timeout-field"
+           placeholder="10"
+           title="Minutes."
+           min="1"
+           max="65536"
+           value="{{inactivityTimeout}}">
+  </div>
+</template>

@@ -65,6 +65,8 @@ Template.editJobItem.events({
         }
       }
 
+      type = JobTypes.findOne(type).name;
+
       //if Prep
       var type = JobTypes.findOne(type);
       if(type.name == "Prep") {
@@ -119,14 +121,14 @@ Template.editJobItem.events({
                 var doc = {
                   "_id": dataid,
                   "quantity": quantity
-                }
+                };
                 ing_doc.push(doc);
               }
             } else {
               var doc = {
                 "_id": dataid,
                 "quantity": quantity
-              }
+              };
               ing_doc.push(doc);
             }
           }
@@ -265,10 +267,10 @@ Template.editJobItem.events({
           return alert(err.reason);
         } else {
           var options = {
-            "type": "delete",
-            "title": "Job " + item.name + " has been deleted",
-            "time": Date.now()
-          }
+            type: "delete",
+            title: "Job " + item.name + " has been deleted",
+            time: Date.now()
+          };
           Meteor.call("sendNotifications", id, "job", options, function(err) {
             if(err) {
               console.log(err);
@@ -323,7 +325,11 @@ Template.editJobItem.events({
         var listItems = Session.get("checklist");
         listItems.push(item);
         Session.set("checklist", listItems);
-        var listItem = "<li class='list-group-item'>" + item + "<i class='fa fa-minus-circle m-l-lg right removelistItem'></i></li>"
+        var listItem = [
+          "<li class='list-group-item'>",
+          item.toString(),
+          "<i class='fa fa-minus-circle m-l-lg right removelistItem'></i></li>"
+        ].join('');
         $(".checklist").append(listItem);
         $(event.target).val("");
       }
@@ -345,8 +351,22 @@ Template.editJobItem.events({
   }
 });
 
-Template.editJobItem.rendered = function() {
+Template.editJobItem.onRendered(function() {
   Session.set("selectedIngredients", null);
   Session.set("jobType", null);
   Session.set("frequency", null);
-}
+  this.$(".checklist").sortable({
+    opacity: 0.8,
+    delay: 50,
+    update: function () {
+      var items = [];
+      var $list = $(this);
+      $list.find(".list-group-item").each(function () {
+        var $item = $(this);
+        var text = $item.text().trim();
+        items.push(text);
+      });
+      Session.set("checklist", items);
+    }
+  }).disableSelection();
+});

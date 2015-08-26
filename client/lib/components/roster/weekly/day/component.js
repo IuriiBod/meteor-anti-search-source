@@ -27,7 +27,7 @@ component.state.shifts = function() {
     var date = this.name.date;
     return Shifts.find({"shiftDate": new Date(date).getTime(), "type": null});
   } else if(origin == "weeklyrostertemplate") {
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     return Shifts.find({"shiftDate": daysOfWeek.indexOf(this.name), "type": "template"});
   }
 }
@@ -44,7 +44,7 @@ component.action.addShift = function(day, dates) {
     doc.section = null;
     doc.type = null;
   } else if(this.origin == "weeklyrostertemplate") {
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     doc.startTime = new Date().setHours(8, 0);
     doc.endTime = new Date().setHours(17, 0);
     doc.shiftDate = new Date(daysOfWeek.indexOf(day));
