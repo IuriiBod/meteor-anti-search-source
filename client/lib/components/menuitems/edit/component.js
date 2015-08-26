@@ -29,6 +29,7 @@ component.state.menu = function() {
 }
 
 component.state.myCategory = function(categoryId) {
+  this.item = MenuItems.findOne(this.id);
   var myCategory = this.item.category;
   if(myCategory) {
     return Categories.findOne(myCategory);
@@ -39,63 +40,15 @@ component.state.myCategory = function(categoryId) {
 component.state.categoriesList = function() {
   var myCategory = this.item.category;
   if(myCategory) {
-    return Categories.find({"_id": {$nin: [myCategory]}}).fetch();
+    return Categories.find().fetch();
   }
 }
 
-component.state.jobItemsList = function() {
-  var jobItems = Session.get("selectedJobItems");
-  if(jobItems) {
-    if(jobItems.length > 0) {
-      subs.subscribe("jobItems", jobItems);
-      var jobItemsList = JobItems.find({'_id': {$in: jobItems}}).fetch();
-      return jobItemsList;
-    }
-  }
-}
-
-component.state.ingredientsList = function() {
-  var ing = Session.get("selectedIngredients");
-  if(ing) {
-    if(ing.length > 0) {
-      subs.subscribe("ingredients", ing);
-      var ingredientsList = Ingredients.find({'_id': {$in: ing}}).fetch();
-      return ingredientsList;
-    }
-  }
-}
 component.state.statusList = function() {
   var myStatus = this.item.status;
   var list = null;
   if(myStatus) {
-    list = Statuses.find({"name": {$nin: [myStatus]}}).fetch();
+    list = Statuses.find().fetch();
   }
   return list;
 }
-
-component.action.submit = function(id, info) {
-  Meteor.call("editMenuItem", id, info, function(err) {
-    if(err) {
-      console.log(err);
-      return alert(err.reason);
-    } else {
-      var desc = null;
-      if(info) {
-        var menuBefore = Session.get("updatingMenu");
-        var desc = createNotificationText(id, menuBefore, info);
-      }
-      var options = {
-        "type": "edit",
-        "title": menuBefore.name + " has been updated",
-        "text": desc
-      }
-      Meteor.call("sendNotifications", id, "menu", options, function(err) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        }
-      }); 
-      Router.go("menuItemDetail", {"_id": id});
-    }
-  });
-};
