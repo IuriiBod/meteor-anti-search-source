@@ -11,6 +11,12 @@ component.state.notifi = function() {
   }
 }
 
+component.state.notifiText = function() {
+  if(this.notification.text) {
+    return this.notification.text;
+  }
+}
+
 component.state.icon = function() {
   if(this.notification) {
     var type = this.notification.type;
