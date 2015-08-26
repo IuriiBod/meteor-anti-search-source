@@ -59,7 +59,7 @@ Template.pageHeading.events({
           console.log(err);
           return alert(err.reason);
         } else {
-          Router.go("menuItemEdit", {"_id": id});
+          Router.go("menuItemDetail", {"_id": id});
         }
       });
     }

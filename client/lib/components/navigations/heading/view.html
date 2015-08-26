@@ -50,13 +50,13 @@
       {{#if state$isMenuDetailed}}
         <div class="title-action">
 
-          <div class="btn-group" style="margin-right: 100px;">
+          <div class="btn-group">
             <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fa fa-cog"></i>
               Settings
               <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" style="margin-left: -56px;">
               {{#if state$isMenuSubscribed}}
                 <li class="text-info">
                   <a href="#" class="hidden-print unSubscribeMenuItemBtn" data-id="{{state$id}}"><i class="fa fa-lg fa-rss"></i> Unsubscribe</a>
@@ -67,12 +67,6 @@
                 </li>
               {{/if}}
               {{#if state$isManagerOrAdmin}}
-                <li>
-                  <a href="#" class="hidden-print deleteMenuItemBtn bg-danger" data-id="{{state$id}}">
-                    <i class="fa fa-trash-o" data-id="{{state$id}}"></i>
-                    Delete
-                  </a>
-                </li>
                 <li>
                   <a href="" class="hidden-print copyMenuItemBtn" data-id="{{state$id}}">
                     <i class="fa fa-copy" data-id="{{state$id}}"></i>
@@ -86,6 +80,15 @@
                   Print
                 </a>
               </li>
+              {{#if state$isManagerOrAdmin}}
+                <li role="separator" class="divider"></li>
+                <li>
+                  <a href="#" class="hidden-print deleteMenuItemBtn" data-id="{{state$id}}">
+                    <i class="fa fa-trash-o" data-id="{{state$id}}"></i>
+                    Delete
+                  </a>
+                </li>
+              {{/if}}
             </ul>
           </div>
         </div>
