@@ -22,6 +22,9 @@
             <li class="">
               <a href="#suppliers" data-toggle="tab">Suppliers</a>
             </li>
+            <li class="">
+              <a href="#cron-config" data-toggle="tab">Cron Config</a>
+            </li>
           </ul>
           <div class="panel-body">
             <div class="tab-content">
@@ -40,6 +43,9 @@
               </div>
               <div class="tab-pane" id="suppliers">
                 {{> render component="suppliersList"}}
+              </div>
+              <div class="tab-pane" id="cron-config">
+                {{> render component="cronConfig"}}
               </div>
             </div>
           </div>
