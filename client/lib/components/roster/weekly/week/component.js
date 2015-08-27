@@ -6,11 +6,8 @@ var component = FlowComponents.define("weeklyShiftRoster", function(props) {
 component.state.week = function() {
   if(this.name == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
-    var currentDate = Session.get("checkedDate");
-    
-    if (!currentDate) {
-      currentDate = new Date();
-    }
+    var year = Router.current().params.year;
+    var currentDate = new Date(year);
     var week = getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
     return week;
   } else if(this.name == "weeklyrostertemplate") {
