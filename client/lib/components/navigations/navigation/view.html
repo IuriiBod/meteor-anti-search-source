@@ -9,7 +9,7 @@
 
         <ul class="nav" id="side-menu">
           <li class="special_link">
-            <a href="/"><i class="fa fa-datbase"></i> <span class="nav-label">Hero Chef</span></a>
+            <a href="/"><span class="nav-label">Hospo Hero</span></a>
           </li>
         <!-- USER PROFILE HEADER -->
           <li class="nav-header">
@@ -101,7 +101,7 @@
           {{#if state$isManagerOrAdmin}}
           <li class="{{isActiveRoute regex='salesCalibration|actualSales|cafeSalesForecast|weeklySalesForecastMenusList'}}">
             <a href="#">
-              <i class="fa fa-line-chart"></i>
+              <i class="glyphicon glyphicon-usd"></i>
               <span class="nav-label">Sales</span>
               <span class="fa arrow"></span>
             </a>
@@ -128,7 +128,7 @@
 
           <li class="{{isActiveRoute name='teamHours|currentStocks'}}">
             <a href="#">
-              <i class="fa fa-list"></i>
+              <i class="fa fa-line-chart"></i>
               <span class="nav-label">Reports</span>
             </a>
             <ul class="nav nav-second-level {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
