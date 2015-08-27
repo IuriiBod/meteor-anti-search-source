@@ -32,6 +32,22 @@ Template.dailyShiftScheduling.events({
         return;
       }
     });
+
+    var shift = Shifts.find({_id: shiftId});
+    if(shift) {
+      var shiftUpdateDoc = {
+        userId: workerId,
+        shiftId: shiftId,
+        text: "You have been assigned to shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD"),
+        type: "update"
+      };
+      Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        }
+      });
+    }
   },
 
   'click .generateRecurring': function(event) {
