@@ -70,11 +70,12 @@ Meteor.methods({
       doc.frequency = info.frequency;
       doc.startsOn = new Date(info.startsOn).getTime();
       doc.endsOn = info.endsOn;
-      if(info.frequency === "Weekly") {
+      if (_.contains(["Every X Weeks", "Weekly"], info.frequency)) {
         doc.repeatOn = info.repeatOn;
-      }
-      else if(info.frequency === "Every X Weeks") {
-        doc.step = parseInt(info.step);
+
+        if (info.frequency === "Every X Weeks") {
+          doc.step = parseInt(info.step);
+        }
       }
       doc.section = info.section;
       doc.checklist = info.checklist;
@@ -214,12 +215,12 @@ Meteor.methods({
         if(info.frequency != job.frequency) {
           updateDoc.frequency = info.frequency;
         }
-        if(info.frequency == "Weekly") {
+        if(_.contains(["Every X Weeks", "Weekly"], info.frequency)) {
           updateDoc.repeatOn = info.repeatOn;
+          if(info.frequency === "Every X Weeks" && info.step) {
+            updateDoc.step = info.step;
+          }
         }
-      }
-      if(info.step) {
-        updateDoc.step = info.step;
       }
       if(info.startsOn) {
         if(info.startsOn != new Date(job.startsOn).getTime()) {
