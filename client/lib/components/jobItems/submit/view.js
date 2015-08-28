@@ -262,7 +262,7 @@ Template.submitJobItem.events({
         info.section = section;
       }
 
-      if(frequency == "Weekly") {
+      if(_.contains(["Every X Weeks", "Weekly"], frequency)) {
         var repeatDays = [];
         var repeatOn = $(event.target).find('[name=daysSelected]').get();
         repeatOn.forEach(function(doc) {
