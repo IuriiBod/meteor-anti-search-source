@@ -49,7 +49,7 @@
             <br>
             <div class="row col-md-12 m-t-md m-b-md">
               {{#if state$receipt.invoiceImage}}
-                <img src="{{state$receipt.invoiceImage}}" class="col-md-4 no-padding img-responsive">
+                {{> render component="invoiceImage" id=state$receipt._id}}
               {{else}}
                 <div class="file col-sm-2 uploadedInvoiceDiv hide">
                   <a href="#">
@@ -70,6 +70,17 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+  <div id="blueimp-gallery" class="blueimp-gallery">
+      <div class="slides"></div>
+      <h3 class="title"></h3>
+      <a class="prev">‹</a>
+      <a class="next">›</a>
+      <a class="close">×</a>
+      <a class="play-pause"></a>
+      <ol class="indicator"></ol>
   </div>
 
 
