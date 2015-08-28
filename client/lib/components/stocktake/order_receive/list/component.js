@@ -35,6 +35,16 @@ component.state.receipt = function() {
   }
 }
 
+component.state.isReceived = function() {
+  var id = Session.get("thisReceipt")
+  var data = OrderReceipts.findOne(id);
+  if(data) {
+    if(data.received) {
+      return true;
+    } 
+  }
+}
+
 component.state.receivedNote = function() {
   var receipt = OrderReceipts.findOne(Session.get("thisReceipt"));
   if(receipt) {

@@ -384,6 +384,7 @@ Template.pageHeading.events({
       });
     }
   },
+  
   'changeDate .datepicker': function(e, tpl) {
     var date = e.date;
     var week = moment(date).week();
@@ -400,9 +401,8 @@ Template.pageHeading.events({
     tpl.$(".datepicker").datepicker("update", checkedDate);
     Router.go("weeklyRoster", {"year": year, "week": week});
   },
+
   'click .calendar-toggle': function(e, tpl) {
-
-
     if ($(e.target).parent().hasClass("open")) {
       $(".day.active").removeClass("week");
       tpl.$(".datepicker").datepicker("hide");
@@ -421,6 +421,7 @@ Template.pageHeading.rendered = function() {
     Session.set("thisWeek", week);
     Session.set("checkedDate", checkedDate);
   }
+  
   this.$(".datepicker").datepicker({
     todayHighlight: true,
     calendarWeeks: true
@@ -446,4 +447,5 @@ Template.pageHeading.rendered = function() {
       }
     }
   });
-}
+};
+

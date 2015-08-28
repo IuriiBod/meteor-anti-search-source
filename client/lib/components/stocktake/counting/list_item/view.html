@@ -3,14 +3,18 @@
     {{#if state$editable}}
       <i class="fa fa-fw fa-reorder"></i>
     {{/if}}
-    {{state$item.description}} <small>({{state$supplier}})</small>
+    {{state$item.description}} <small>({{SupplierName state$item.suppliers}})</small>
     {{#if state$editable}}
       {{#if state$deletable state$item.stockRef}}
         <i class="fa fa-trash pull-right removeFromList"></i>
       {{/if}}
     {{/if}}
     <span class="pull-right">
-      <a href="" class="counting">{{state$item.counting}}</a> &nbsp; [{{state$item.portionOrdered}}]
+      {{#if state$countEditable state$item.stockRef}}
+        <a href="" class="counting">{{state$item.counting}}</a> &nbsp; [{{state$item.portionOrdered}}]
+      {{else}}
+      <p data-toggle="tooltip" data-placement="top" title="You have already placed an order for this stockItem. Can't edit now. Create a new stocktake to place another order.">{{state$item.counting}} &nbsp; [{{state$item.portionOrdered}}]</p>
+      {{/if}}
     </span>
   </li>
 </template>

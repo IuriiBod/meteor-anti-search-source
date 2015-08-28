@@ -138,8 +138,12 @@ UI.registerHelper("Username", function(userId) {
 });
 
 UI.registerHelper("SupplierName", function(id) {
-  var supplier = Suppliers.findOne(id);
-  if(supplier) {
-    return supplier.name;
+  if(id) {
+    var supplier = Suppliers.findOne(id);
+    if(supplier) {
+      return supplier.name;
+    }
+  } else {
+    return "Not assigned";
   }
 });
