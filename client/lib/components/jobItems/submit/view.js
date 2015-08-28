@@ -217,7 +217,7 @@ Template.submitJobItem.events({
         if(!step) {
           return alert("Step should be defined");
         }
-        info.step = step;
+        info.step = parseInt(step);
       }
 
       var repeatAt = $(event.target).find('[name=repeatAt]').val().trim();

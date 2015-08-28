@@ -70,8 +70,11 @@ Meteor.methods({
       doc.frequency = info.frequency;
       doc.startsOn = new Date(info.startsOn).getTime();
       doc.endsOn = info.endsOn;
-      if(info.frequency == "Weekly") {
+      if(info.frequency === "Weekly") {
         doc.repeatOn = info.repeatOn;
+      }
+      else if(info.frequency === "Every X Weeks") {
+        doc.step = parseInt(info.step);
       }
       doc.section = info.section;
       doc.checklist = info.checklist;
