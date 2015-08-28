@@ -15,7 +15,11 @@
         <div class="col-sm-10">
           <select name="type" class="form-control changeType">
             {{#each state$jobtypes}}
-              <option value="{{_id}}">{{name}}</option>
+              {{# if isSelectedJobType _id}}
+                <option value="{{_id}}" selected>{{name}}</option>
+              {{else}}
+                <option value="{{_id}}">{{name}}</option>
+              {{/ if}}
             {{/each}}
           </select>
         </div>
@@ -27,11 +31,7 @@
             <select name="sections" class="form-control">
             <option value="" selected="selected">Select Section</option>
             {{#each state$sections}}
-              {{# if isSelectedJobType}}
-                <option value="{{_id}}" selected>{{name}}</option>
-              {{else}}
-                <option value="{{_id}}">{{name}}</option>
-              {{/ if}}
+              <option value="{{_id}}">{{name}}</option>
             {{/each}}
             </select>
           </div>
