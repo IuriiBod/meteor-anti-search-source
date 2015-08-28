@@ -170,6 +170,26 @@ Meteor.methods({
     } else {
       logger.info("User status de-activated", id);
     }
+  },
+
+  'resignDate': function(type, id, val) {
+    var user = Meteor.user();
+    if(!user) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var permitted = isManagerOrAdmin(user);
+    if(!permitted) {
+      logger.error("User not permitted to create job items");
+      throw new Meteor.Error(403, "User not permitted to create jobs");
+    }
+    val = new Date(val).getTime();
+    if(type == "set" || type == "update") {
+      Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val}});
+      Shifts.update({assignedTo: id, shiftDate: {$gte: val}}, {$set: {assignedTo: "null"}}, {multi: true});
+    } else if(type == "remove") {
+      Meteor.users.update({_id: id}, {$unset: {"profile.resignDate": ""}});
+    }
   }
 });
 

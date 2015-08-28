@@ -89,7 +89,8 @@ component.prototype.itemRendered = function() {
         var workers = Meteor.users.find({
           "_id": {$nin: alreadyAssigned}, 
           "isActive": true, 
-          $or: [{"isWorker": true}, {"isManager": true}]
+          $or: [{"isWorker": true}, {"isManager": true}],
+          $or: [{"profile.resignDate": null}, {"profile.resignDate": {$gt: thisShift.shiftDate}}]
         }, {sort: {"username": 1}}).fetch();
 
         workers.forEach(function(worker) {

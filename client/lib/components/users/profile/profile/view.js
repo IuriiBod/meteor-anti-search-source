@@ -8,11 +8,70 @@ Template.profile.events({
         return alert(err.reason);
       }
     });
+  },
+
+  'click #set-resign-date': function(e, tpl) {
+    e.preventDefault();
+    var id = Router.current().params._id;
+    var val = tpl.$(".open-resigned-date-picker").val();
+
+    if (!val) {
+      tpl.$(".open-resigned-date-picker").focus().parent().addClass("has-error");
+      return;
+    } else {
+      tpl.$(".open-resigned-date-picker").parent().addClass("has-success");
+    }
+
+    Meteor.call("resignDate", "set", id, val, function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
+  },
+
+  'click #update-resign-date': function(e, tpl) {
+    e.preventDefault();
+    var id = Router.current().params._id;
+    var val = tpl.$(".open-resigned-date-picker").val();
+
+    if (!val) {
+      tpl.$(".open-resigned-date-picker").focus().parent().removeClass("has-success").addClass("has-error");
+      return;
+    } else {
+      tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
+    }
+
+    Meteor.call("resignDate", "update", id, val, function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      } else {
+        tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
+      }
+    });
+  },
+
+  'click #remove-resign-date': function(e, tpl) {
+    e.preventDefault();
+    var id = Router.current().params._id;
+    Meteor.call("resignDate", "remove", id, '', function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
   }
 });
 
 Template.profile.rendered = function(){
   $.fn.editable.defaults.mode = 'inline';
+
+  $(".open-resigned-date-picker").datepicker({
+    startDate: new Date(),
+    todayHighlight: true
+  });
+
   $('#datepicker').datepicker({
     todayBtn: true,
     todayHighlight: true

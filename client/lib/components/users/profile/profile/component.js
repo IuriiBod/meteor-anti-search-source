@@ -75,3 +75,13 @@ component.state.shiftsPerWeek = function() {
   return formattedShifts;
 }
 
+component.state.resignDate = function() {
+  var id = this.get("id");
+  var user = Meteor.users.findOne(id);
+  var resignDate = user.profile.resignDate;
+
+  if (resignDate) {
+    resignDate = moment(resignDate).format("MM/DD/YYYY");
+  }
+  return resignDate;
+}
