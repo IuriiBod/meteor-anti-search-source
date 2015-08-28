@@ -23,17 +23,17 @@
     {{#if state$filtered}}
       <div class="col-md-8">
         {{#if state$notTemplate}}
-          <ul class="list-group">
-            {{#each state$ingredientsList}}
-              {{> render component="stockCountingListItem" id=this._id version=state$version garea=state$generalArea sarea=state$specialArea}}
+          <ul class="list-group sortableStockItems">
+            {{#each state$stocktakeList}}
+              {{> render component="stockCountingListItem" id=this.stockId version=state$version garea=state$generalArea sarea=state$specialArea stocktakeId=this._id}}
             {{else}}
               No items on this list
             {{/each}}
           </ul>
         {{else}}
-          <ul class="list-group sortableStockItems">
-            {{#each state$stocktakeList}}
-              {{> render component="stockCountingListItem" id=this.stockId version=state$version garea=state$generalArea sarea=state$specialArea stocktakeId=this._id}}
+          <ul class="list-group">
+            {{#each state$ingredientsList}}
+              {{> render component="stockCountingListItem" id=this._id version=state$version garea=state$generalArea sarea=state$specialArea}}
             {{else}}
               No items on this list
             {{/each}}

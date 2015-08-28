@@ -71,10 +71,10 @@ component.state.filtered = function() {
 
 component.state.notTemplate = function() {
   var main = StocktakeMain.findOne(this.version);
-  var permitted = true;
+  var permitted = false;
   if(main) {
     if(main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
-      permitted = false;
+      permitted = true;
     }
   }
   return permitted;
