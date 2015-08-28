@@ -7,14 +7,21 @@ SyncedCron.add({
         console.log(err);
         return;
       }
-      t = time;
+      t = "at " + time.toLowerCase();
     });
+
     return parser.text(t);
   },
   job: function() {
-    var number = Math.random();
-    console.log("Generated number: " + number);
-    return "Generated number: " + number;
+     Meteor.call("sendShiftUpdates", function(err) {
+      if(err) {
+        console.log("Error while sending shift updates: ", err);
+        return err;
+      } else {
+        console.log("Shift updates have been successfully sended");
+        return "Shift updates have been successfully sended";
+      }
+    });
   }
 });
 SyncedCron.start();

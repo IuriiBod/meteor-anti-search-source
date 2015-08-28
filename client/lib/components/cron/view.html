@@ -5,17 +5,18 @@
         <div class="row">
           <div class="col-lg-5 alert-area"></div>
         </div>
+        <label for="cron-time">Set cron time for Shift Updates Email Sending</label>
         <form class="form-inline" id="shift-updates-cron">
           <div class="form-group">
-            <label for="cron-time">Set cron time for Shift Updates Email Sending</label>
-            <input type="text"
-                   class="form-control"
-                   placeholder="at 5:45pm"
-                   name="cron-time"
-                   value="{{state$cronInfo.time}}"
-                   data-id="{{state$cronInfo._id}}" />
+            <div class="input-group datetimepicker">
+              <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+              <input class="set-cron-time form-control"
+                     type="text" name="cron-time"
+                     value="{{state$cronInfo.time}}"
+                     data-id="{{state$cronInfo._id}}" />
+            </div>
           </div>
-          <button type="submit" class="btn btn-primary disabled" style="margin-top: 22px;" id="shift-updates-cron-submit">
+          <button type="submit" class="btn btn-primary" id="shift-updates-cron-submit">
             <i class="fa fa-check"></i>
           </button>
         </form>

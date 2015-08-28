@@ -116,7 +116,8 @@ component.prototype.itemRendered = function() {
             sendNotification(shiftId, shift.assignedTo, title, text);
 
             var shiftUpdateDoc = {
-              userId: shift.assignedTo,
+              to: shift.assignedTo,
+              userId: Meteor.userId(),
               shiftId: shift._id,
               text: "You have been removed from shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD"),
               type: "remove"
@@ -231,7 +232,8 @@ function editShift(obj) {
         var title = "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
         var text = null;
         var shiftUpdateDoc = {
-          userId: shift.assignedTo,
+          to: shift.assignedTo,
+          userId: Meteor.userId(),
           shiftId: shift._id,
           type: "update"
         };
@@ -275,7 +277,8 @@ assignWorkerToShift = function(worker, shiftId, target) {
           var text = "You have been assigned to this shift";
           sendNotification(shiftId, worker, title, text);
           var shiftUpdateDoc = {
-            userId: worker,
+            to: worker,
+            userId: Meteor.userId(),
             shiftId: shift._id,
             text: "You have been assigned to shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD"),
             type: "update"

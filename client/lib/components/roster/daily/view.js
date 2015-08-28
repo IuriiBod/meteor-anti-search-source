@@ -36,7 +36,8 @@ Template.dailyShiftScheduling.events({
     var shift = Shifts.find({_id: shiftId});
     if(shift) {
       var shiftUpdateDoc = {
-        userId: workerId,
+        to: workerId,
+        userId: Meteor.userId(),
         shiftId: shiftId,
         text: "You have been assigned to shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD"),
         type: "update"
