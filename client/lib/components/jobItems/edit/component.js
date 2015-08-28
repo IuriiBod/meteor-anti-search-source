@@ -66,7 +66,7 @@ component.state.item = function () {
 };
 
 component.state.step = function () {
-  return this.item.step;
+  return this.item.step || 2;
 };
 
 component.state.ingredients = function () {
