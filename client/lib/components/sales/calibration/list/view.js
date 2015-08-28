@@ -27,9 +27,22 @@ Template.salesCalibratedList.events({
       });
     }
     var exist = SalesCalibration.findOne();
-
+    
     if(exist) {
-      Meteor.call("updateSalesCalibration", exist._id, dateRange, totalRevenue, items, function(err) {
+      exist.menus.forEach(function(menu, key) {
+        var menuId = menu._id;
+        items.forEach(function(item) {
+          if (item._id == menuId) {
+            exist.menus[key] = {
+              _id: menuId,
+              qty: item.qty,
+              avg: item.avg
+            }
+          }
+        });
+      });
+      
+      Meteor.call("updateSalesCalibration", exist._id, dateRange, totalRevenue, exist.menus, function(err, id) {
         if(err) {
           console.log(err);
           return alert(err.reason);

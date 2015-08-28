@@ -3,6 +3,13 @@ Template.topNavbar.rendered = function(){
   // Uncomment this if you want to have fixed top navbar
   // $('body').addClass('fixed-nav');
   // $(".navbar-static-top").removeClass('navbar-static-top').addClass('navbar-fixed-top');
+
+  $('html').click(function (event) {
+    var flyout = $(".flyout-notifi-container");
+    if (!flyout.is(event.target) && flyout.has(event.target).length === 0){
+      flyout.removeClass('show');
+    }
+  });
 };
 
 Template.topNavbar.events({
@@ -57,7 +64,17 @@ Template.topNavbar.events({
         }
       });
     });
-  }
+  },
+
+  'click .notifi-toggler': function(event) {
+    event.stopPropagation();
+    if($(".flyout-notifi-container").hasClass("show")) {
+      $(".flyout-notifi-container").removeClass("show");
+    } else {
+      $(".flyout-notifi-container").addClass("show");
+    }
+    return false;
+  },
 });
 
 Template.topNavbar.helpers({

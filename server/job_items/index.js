@@ -109,11 +109,19 @@ Meteor.methods({
       logger.error("No editing fields found");
       throw new Meteor.Error(404, "No editing fields found");
     }
+    var jobType = JobTypes.findOne({_id: info.type});
+    if (jobType) {
+      jobType = jobType.name;
+    }
+    else {
+      logger.error("Unknown job type");
+      throw new Meteor.Error(404, "Unknown job type");
+    }
     var query = {
       $set: {}
-    }
+    };
     var updateDoc = {};
-    var removeDoc = {}
+    var removeDoc = {};
     if(info.name) {
       if(info.name.trim() == "") {
         logger.error("Name field null");
@@ -148,7 +156,8 @@ Meteor.methods({
         }
       }
     }
-    if(info.type == "Prep") {
+    var type = JobTypes.findOne(info.type);
+    if(type.name == "Prep") {
       if((info.shelfLife == info.shelfLife) && info.shelfLife >= 0) {
         var shelfLife = parseFloat(info.shelfLife);
         if(shelfLife != job.shelfLife) {
@@ -187,7 +196,7 @@ Meteor.methods({
       removeDoc.startsOn = "";
       removeDoc.section = "";
       removeDoc.description = "";
-    } else if(info.type == "Recurring") {
+    } else if(type.name == "Recurring") {
       if(info.repeatAt) {
         if(info.repeatAt != job.repeatAt) {
           updateDoc.repeatAt = info.repeatAt;

@@ -96,10 +96,10 @@ component.action.submitcommenttopost = function(text) {
             var options = {
                 "title": "New Posts on by " + Meteor.user().username,
                 "users": matches,
-                "postId": id,
+                "commentId": id,
                 "type": "post"
             }
-            Meteor.call("sendNotifications", ref, "post", options, function(err) {
+            Meteor.call("sendNotifications", ref, "comment", options, function(err) {
                 if(err) {
                     console.log(err);
                     return alert(err.reason);

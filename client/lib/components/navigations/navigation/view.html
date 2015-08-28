@@ -9,7 +9,7 @@
 
         <ul class="nav" id="side-menu">
           <li class="special_link">
-            <a href="/"><i class="fa fa-datbase"></i> <span class="nav-label">Hero Chef</span></a>
+            <a href="/"><span class="nav-label">Hospo Hero</span></a>
           </li>
         <!-- USER PROFILE HEADER -->
           <li class="nav-header">
@@ -33,6 +33,7 @@
                 <li><a href="/users">Users</a></li>
                 {{/if}} -->
                 <li class="divider"></li>
+                <li><a href="{{pathFor 'switchUser'}}">Switch user</a></li>
                 <li><a href="" id="signOutButton">Logout</a></li>
               </ul>
             </div>
@@ -50,7 +51,7 @@
             </a>
             <ul class="nav nav-second-level {{isActiveRoute regex='dailyRoster|weeklyRoster|templateWeeklyRoster' className='in'}}">
               <li class="{{isActiveRoute regex='weeklyRoster'}}">
-                <a href="/roster/weekly/{{week}}">Weekly</a>
+                <a href="/roster/weekly/{{year}}/{{week}}">Weekly</a>
               </li>
               <li class="{{isActiveRoute regex='dailyRoster'}}">
                 <a href="/roster/daily/{{today}}">Daily</a>
@@ -91,6 +92,9 @@
                 <li class="{{isActiveRoute name='supplierOrdering'}}">
                   <a href="/stocktake/order/receipts">Receive Orders</a>
                 </li> 
+                <li class="{{isActiveRoute name='suppliersList'}}">
+                  <a href="/suppliers">Suppliers</a>
+                </li>
               {{/if}}
             </ul>
           </li>
@@ -98,13 +102,13 @@
           {{#if state$isManagerOrAdmin}}
           <li class="{{isActiveRoute regex='salesCalibration|actualSales|cafeSalesForecast|weeklySalesForecastMenusList'}}">
             <a href="#">
-              <i class="fa fa-line-chart"></i>
+              <i class="glyphicon glyphicon-usd"></i>
               <span class="nav-label">Sales</span>
               <span class="fa arrow"></span>
             </a>
             <ul class="nav nav-second-level {{isActiveRoute regex='salesCalibration|actualSales|cafeSalesForecast|weeklySalesForecastMenusList' className='in'}}">
               <li class="{{isActiveRoute regex='salesCalibration'}}">
-                <a href="/sales/calibration">Calibration</a>
+                <a href="/sales/calibration/all/all">Calibration</a>
               </li>
               <li class="{{isActiveRoute regex='actualSales'}}">
                 <a href="/sales/{{today}}">Actual Sales</a>
@@ -125,7 +129,7 @@
 
           <li class="{{isActiveRoute name='teamHours|currentStocks'}}">
             <a href="#">
-              <i class="fa fa-list"></i>
+              <i class="fa fa-line-chart"></i>
               <span class="nav-label">Reports</span>
             </a>
             <ul class="nav nav-second-level {{isActiveRoute name='teamHours|currentStocks' className='in'}}">

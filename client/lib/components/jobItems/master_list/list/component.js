@@ -52,5 +52,5 @@ component.state.getJobItems = function() {
 }
 
 component.prototype.onJobListRendered = function() {
-  this.JobItemsSearch.search("", {"type": this.type, limit: 10});
+  this.JobItemsSearch.search("", {"type": this.type, limit: 30});
 }

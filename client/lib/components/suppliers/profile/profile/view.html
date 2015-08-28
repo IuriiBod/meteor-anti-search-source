@@ -1,0 +1,34 @@
+<template name="supplierProfile">
+  <div class="col-lg-12">
+    <div class="wrapper wrapper-content">
+      <div class="ibox">
+        <div class="ibox-content">
+          {{> render component="basics"}}
+          <div class="row m-t-sm">
+            <div class="col-lg-12">
+              <div class="panel blank-panel">
+                <div class="panel-heading">
+                  <div class="panel-options">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#tab_1" data-toggle="tab">Products</a></li>
+                      <li class=""><a href="#tab_2" data-toggle="tab">Receipts</a></li>
+                    </ul>
+                  </div>
+                </div>                      
+                <div class="panel-body">
+                  <div class="tab-content">
+                    {{> render component="receiptsList"}}
+                    {{> render component="productsList"}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          {{> render component="commentsPanel" id=state$supplierId type='supplier'}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

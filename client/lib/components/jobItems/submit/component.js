@@ -12,28 +12,32 @@ component.state.initialHTML = function() {
   }
 };
 
+component.state.step = function() {
+  return 2;
+};
+
 component.state.repeatAt = function() {
   return "8:00 AM";
-}
+};
 
 
 component.state.startsOn = function() {
   return moment().format("YYYY-MM-DD");
-}
+};
 
 component.state.endsOn = function() {
   var endDate = moment().add(7, 'days').format("YYYY-MM-DD");
   return endDate;
-}
+};
 
 component.state.week = function() {
   var week = ["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat", "Sun"];
   return week;
-}
+};
 
 component.state.sections = function() {
   return Sections.find();
-}
+};
 
 component.action.submit = function(info) {
   Meteor.call("createJobItem", info, function(err, id) {
@@ -45,7 +49,7 @@ component.action.submit = function(info) {
       Session.set("selectedJobItems", null);
       var options = {
         "type": "create",
-        "title": "New Job created"
+        "title": "New Job " + info.name + " created"
       }
       Meteor.call("sendNotifications", id, "job", options, function(err) {
         if(err) {

@@ -1,18 +1,21 @@
 Template.areaBox.events({
  'click .garea-filter': function(event) {
     event.preventDefault();
-    var id = $(event.target).attr("data-id");
+    var id = $(event.target).parent().attr("data-id");
     Session.set("activeGArea", id);
-
-    var sareas = SpecialAreas.find({"generalArea": id}, {sort: {"name": 1}}).fetch();
-    if(sareas && sareas.length > 0) {
-      Session.set("activeSArea", sareas[0]._id);
+    $(".collapse").removeClass("in");
+    var sarea = $(event.target).parent().next().find(".areaBox")[0];
+    if(sarea) {
+      var sId = $(sarea).attr("data-id");
+      Session.set("activeSArea", sId);
+    } else {
+      Session.set("activeSArea", null);
     }
   },
 
   'click .sarea-filter': function(event) {
     event.preventDefault();
-    var id = $(event.target).attr("data-id");
+    var id = $(event.target).parent().attr("data-id");
     Session.set("activeSArea", id);
   },
 

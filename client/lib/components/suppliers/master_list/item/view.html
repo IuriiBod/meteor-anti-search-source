@@ -1,6 +1,8 @@
 <template name="suppliersItem">
    <tr data-id="">
-    <td>{{state$supplier.name}}</td>
+    <td>
+      <a href="/supplier/profile/{{state$supplier._id}}">{{state$supplier.name}}</a>
+    </td>
     <td>{{state$supplier.email}}</td>
     <td>{{state$supplier.phone}}</td>
   </tr>
