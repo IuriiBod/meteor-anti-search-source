@@ -218,6 +218,9 @@ Meteor.methods({
           updateDoc.repeatOn = info.repeatOn;
         }
       }
+      if(info.step) {
+        updateDoc.step = info.step;
+      }
       if(info.startsOn) {
         if(info.startsOn != new Date(job.startsOn).getTime()) {
           updateDoc.startsOn = new Date(info.startsOn).getTime();
