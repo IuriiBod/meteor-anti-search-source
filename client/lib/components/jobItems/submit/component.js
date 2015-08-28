@@ -50,7 +50,7 @@ component.action.submit = function(info) {
       var options = {
         "type": "create",
         "title": "New Job " + info.name + " created"
-      }
+      };
       Meteor.call("sendNotifications", id, "job", options, function(err) {
         if(err) {
           console.log(err);
@@ -66,4 +66,4 @@ component.action.submit = function(info) {
 
 component.state.jobtypes = function() {
   return JobTypes.find();
-}
+};

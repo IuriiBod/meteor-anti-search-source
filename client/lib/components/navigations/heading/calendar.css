@@ -2,18 +2,11 @@
   background-image: none !important;
   border-radius: 0 !important;
   color: #444 !important;
-}
-
-.day.week, .day.active {
   background-color: #eee !important;
-}
-
-.day.active {
-  background-color: #ddd !important;
 }
 
 .day.today {
   background-image: none !important;
   border-radius: 0 !important;
-  background-color: transparent !important;
+  background-color: #ddd !important;
 }
