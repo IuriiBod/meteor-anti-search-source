@@ -103,11 +103,14 @@ component.state.endsOn = function() {
 component.state.isWeekly = function() {
   var item = this.get("job");
   if(item) {
-    if(item.frequency == "Weekly") {
-      return true;
-    } else {
-      return false;
-    }
+    return item.frequency === "Weekly";
+  }
+};
+
+component.state.isDaily = function() {
+  var item = this.get("job");
+  if(item) {
+    return item.frequency === "Daily";
   }
 };
 
@@ -124,7 +127,7 @@ component.state.repeatOnDays = function() {
   var item = this.get("job");
   var repeat = null;
   if(item) {
-    if(item.frequency == "Weekly") {
+    if(_.contains(["Every X Weeks", "Weekly"], item.frequency)) {
       if(item.repeatOn.length > 0) {
         if(item.repeatOn.length == 7) {
           repeat = "Everyday";
