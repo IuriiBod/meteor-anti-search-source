@@ -54,8 +54,12 @@ component.prototype.onItemRendered = function() {
   $(".counting").editable({
     type: "text",
     title: 'Edit count',
-    showbuttons: true,
+    showbuttons: false,
     mode: 'inline',
+    defaultValue: 0,
+    autotext: 'auto',
+    display: function(value, response) {
+    },
     success: function(response, newValue) {
       var elem = $(this).closest("li");
       var stockId = $(elem).closest("li").attr("data-id");
@@ -74,7 +78,6 @@ component.prototype.onItemRendered = function() {
           "stockId": stockId,
           "counting": count
         }
-        $(elem).next().find("a").click();
         var main = StocktakeMain.findOne(Session.get("thisVersion"));
         if(main) {
           Meteor.call("updateStocktake", id, info, function(err) {
@@ -82,6 +85,9 @@ component.prototype.onItemRendered = function() {
               console.log(err);
               return alert(err.reason);
             } else {
+              if($(elem).next().length > 0) {
+                $(elem).next().find("a").click();
+              }
               Meteor.call("resetCurrentStock", stockId, "New stock count", newValue, main.stocktakeDate, function(err) {
                 if(err) {
                   console.log(err);
@@ -92,8 +98,6 @@ component.prototype.onItemRendered = function() {
           });
         }
       }
-    },
-    display: function(a, b) {
     }
   });
 }
