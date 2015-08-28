@@ -2,15 +2,13 @@
   <div class="row">
     <div class="col-lg-12">
       {{#if state$notTemplate}}
-        <a class="btn btn-primary btn-sm pull-right generateOrders">Save stocktake &amp; generate orders<br></a>
-      {{else}}
         <a class="btn btn-primary btn-sm pull-right" href="/stocktake/orders/{{state$version}}">View Orders<br></a>
-      {{/if}}
-      {{#if state$editable}}
-        <a class="btn btn-link btn-sm pull-right saveStockTake"><i class="fa fa-fw fa-save"></i>Save</a>
       {{else}}
-        {{#if state$notTemplate}}
-        <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit Stocktake Template</a>
+        <a class="btn btn-primary btn-sm pull-right generateOrders">Save stocktake &amp; generate orders<br></a>
+        {{#if state$editable}}
+          <a class="btn btn-link btn-sm pull-right saveStockTake"><i class="fa fa-fw fa-save"></i>Save</a>
+        {{else}}
+          <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit Stocktake Template</a>
         {{/if}}
       {{/if}}
       {{dateFormat state$stocktakeMain.stocktakeDate}}
