@@ -111,6 +111,15 @@ component.state.isWeekly = function() {
   }
 };
 
+component.state.frequency = function() {
+  var item = this.get("job");
+  var frequency = item.frequency;
+  if (frequency === "Every X Weeks") {
+    frequency = frequency.replace("X", item.step);
+  }
+  return frequency;
+};
+
 component.state.repeatOnDays = function() {
   var item = this.get("job");
   var repeat = null;
