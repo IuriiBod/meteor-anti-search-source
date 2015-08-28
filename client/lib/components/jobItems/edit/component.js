@@ -20,13 +20,13 @@ component.state.initialHTML = function () {
     type = Session.get("jobType");
   }
   var jobtype = JobTypes.findOne(type);
-  if(jobtype && jobtype.name == "Prep") {
+  if(jobtype && jobtype.name === "Prep") {
     if(item.recipe) {
       return item.recipe;
     } else {
       return "Add recipe here";
     } 
-  } else if(jobtype && jobtype.name == "Recurring") {
+  } else if(jobtype && jobtype.name === "Recurring") {
     if(item.description) {
       return item.description;
     } else {
@@ -42,11 +42,7 @@ component.state.isPrep = function() {
   }
   var jobtype = JobTypes.findOne(type);
   if(jobtype) {
-    if(jobtype.name == "Prep") {
-      return true;
-    } else {
-      return false;
-    }
+    return jobtype.name === "Prep";
   }
 };
 
@@ -65,9 +61,12 @@ component.state.isRecurring = function() {
   }
 };
 
-
 component.state.item = function () {
   return this.item;
+};
+
+component.state.step = function () {
+  return this.item.step;
 };
 
 component.state.ingredients = function () {
@@ -104,11 +103,12 @@ component.state.frequencyWithSelected = function() {
 
 
 component.state.isRecurringDaily = function () {
-  if (this.get("frequency") == "Daily") {
-    return true;
-  } else {
-    return false;
-  }
+  return this.get("frequency") === "Daily";
+};
+
+
+component.state.isRecurringEveryXWeeks = function () {
+  return this.get("frequency") === "Every X Weeks";
 };
 
 component.state.checklist = function () {

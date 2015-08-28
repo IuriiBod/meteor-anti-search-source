@@ -131,6 +131,14 @@
                 </div>
                 {{#if state$isRecurringDaily}}
                 {{else}}
+                  {{#if state$isRecurringEveryXWeeks}}
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">Step</label>
+                      <div class="col-sm-10">
+                        <input type="number" name="step" class="" value="{{state$step}}" min="2">
+                      </div>
+                    </div>
+                  {{/if}}
                   <div class="form-group">
                     <label class="col-sm-2 control-label">Repeat On</label>
                     <div class="col-sm-10">
