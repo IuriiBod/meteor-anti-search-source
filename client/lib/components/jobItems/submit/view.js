@@ -63,6 +63,11 @@ Template.submitJobItem.helpers({
         }
       }).disableSelection();
     });
+  },
+
+  isSelectedJobType: function (jobType) {
+    var selectedJobType = Session.get("jobType");
+    return jobType === selectedJobType;
   }
 });
 
@@ -205,7 +210,6 @@ Template.submitJobItem.events({
       if(!frequency) {
         return alert("Frequency should be defined");
       }
-      info.frequency = frequency === "EveryNWeeks" ? "Weekly": frequency;
 
       if(frequency === "EveryNWeeks") {
         var step = $(event.target).find("[name=step]").val();
@@ -343,11 +347,11 @@ Template.submitJobItem.events({
   }
 });
 
-Template.submitJobItem.rendered = function() {
+Template.submitJobItem.onRendered(function() {
   var prep = JobTypes.findOne({"name": "Prep"});
   if(prep) {
     Session.set("jobType", prep._id);
   }
   Session.set("frequency", "Daily");
   Session.set("checklist", []);
-}
+});
