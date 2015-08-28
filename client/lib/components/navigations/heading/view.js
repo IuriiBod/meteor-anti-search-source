@@ -417,19 +417,22 @@ Template.pageHeading.events({
 
 Template.pageHeading.rendered = function() {
   var checkedDate = Router.current().params.year;
-  checkedDate = checkedDate+"-01-01";
-  checkedDate = new Date(checkedDate);
-  var week = Router.current().params.week;
-  checkedDate = moment(checkedDate).week(week).toDate();
-  Session.set("thisWeek", week);
-  this.$(".datepicker")
-    .datepicker({
-      todayHighlight: true,
-      calendarWeeks: true,
-      weekStart: 1,
-      toggleActive: true
-    })
-    .datepicker("setDate", checkedDate)
-    .datepicker("fill");
-  $(".day.active").siblings(".day").addClass("week");
+
+  if (checkedDate) {
+    checkedDate = checkedDate+"-01-01";
+    checkedDate = new Date(checkedDate);
+    var week = Router.current().params.week;
+    checkedDate = moment(checkedDate).week(week).toDate();
+    Session.set("thisWeek", week);
+    this.$(".datepicker")
+      .datepicker({
+        todayHighlight: true,
+        calendarWeeks: true,
+        weekStart: 1,
+        toggleActive: true
+      })
+      .datepicker("setDate", checkedDate)
+      .datepicker("fill");
+    $(".day.active").siblings(".day").addClass("week");
+  }
 };
