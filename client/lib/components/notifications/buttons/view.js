@@ -20,6 +20,7 @@ Template.notifiButtons.events({
     var id = $(event.target).attr("data-id");
     var type = $(event.target).attr("data-type");
     var notifi = Notifications.findOne(id);
+    $(".flyout-notifi-container").removeClass("show");
     if(notifi) {
       if(type == "job") {
         Router.go("jobItemDetailed", {"_id": ref});   
@@ -30,6 +31,8 @@ Template.notifiButtons.events({
             Router.go("menuItemDetail", {"_id": ref});  
           } else if(notifi.refType == "job") {
             Router.go("jobItemDetailed", {"_id": ref});  
+          } else if(notifi.refType == "post") {
+            Router.go("home", {}, {hash: ref});
           }
       } else if(type == "roster") {
         if(notifi.actionType == "publish") {
