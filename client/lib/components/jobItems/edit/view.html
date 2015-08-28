@@ -173,15 +173,24 @@
                     {{#if state$endsOnNotNull}}
                     <div class="radio">
                       <input type="radio" id="radio" name="radioOption" data-doc="endsNever" checked="{{state$endsNever}}" >
-                      <label for="radio">Never</label>
+                      <label for="radio">
+                        Never
+                      </label>
                     </div>
                     <div class="radio">
                       <input type="radio" id="radio" data-doc="endsAfter" name="radioOption" checked="{{state$endsAfter}}">
-                      <label for="radio">After<input type="text" name="occurrences" class="" value="{{state$endOccurrences}}">occurrences</label>
+                      <label for="radio">
+                        After
+                        <input type="text" name="occurrences" class="" value="{{state$endOccurrences}}">
+                        occurrences
+                      </label>
                     </div>
                     <div class="radio">
                       <input type="radio" id="radio" name="radioOption" data-doc="endsOn" checked="{{state$endsOn}}">
-                      <label for="radio">On<input type="text" name="endsOn" class="dateselecter" value="{{state$endDate}}"></label>
+                      <label for="radio">
+                        On
+                        <input type="text" name="endsOn" class="dateselecter" value="{{state$endDate}}">
+                      </label>
                     </div>
                     {{else}}
                     <div class="radio">

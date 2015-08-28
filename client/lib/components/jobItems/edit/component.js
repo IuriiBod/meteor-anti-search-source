@@ -79,10 +79,16 @@ component.state.jobTypes = function () {
 };
 
 component.state.frequencyWithSelected = function() {
-  var frequencies = [
-    {"index": "Daily", "selected": false},
-    {"index": "Weekly", "selected": false}
-  ];
+  var frequencies = [{
+    index: "Daily",
+    selected: false
+  }, {
+    index: "Weekly",
+    selected: false
+  }, {
+    index: "EveryXWeeks",
+    selected: false
+  }];
   var frequency = this.item.frequency;
   if (Session.get("frequency")) {
     frequency = Session.get("frequency");
@@ -122,7 +128,7 @@ component.state.repeatAt = function () {
   } else {
     return moment(at).format("h:mm A");
   }
-}
+};
 component.state.startsOn = function () {
   if (this.item.startsOn) {
     return moment(this.item.startsOn).format("YYYY-MM-DD");
