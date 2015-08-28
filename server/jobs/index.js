@@ -22,6 +22,8 @@ Meteor.methods({
       throw new Meteor.Error(404, "Job not found");
     }
 
+    job.type = JobTypes.findOne(job.type).name;
+
     var doc = {
       "ref": job._id,
       "type": job.type,
@@ -31,7 +33,7 @@ Meteor.methods({
       "assignedTo": null,
       "createdOn": Date.now(),
       "createdBy": Meteor.userId()
-    }
+    };
     doc.name = job.type + " " + job.name;
     if(job.type == "Prep") {
       doc.portions = info.portions;

@@ -4,19 +4,24 @@ var component = FlowComponents.define("submitJob", function(props) {
 
 component.state.jobTypes = function() {
   return ["Prep", "Recurring"];
-}
+};
 
 component.state.jobs = function() {
-  return JobItems.find({"type": this.get("type")});
-}
+  var jobTypeName = this.get("type");
+  if (!jobTypeName) {
+    return;
+  }
+  var jobTypeId = JobTypes.findOne({name: jobTypeName})._id;
+  return JobItems.find({"type": jobTypeId});
+};
 
 component.action.onChangeType = function(type) {
   this.set("type", type);
-}
+};
 
 component.action.onChangeJob = function(job) {
   this.set("jobRef", job);
-}
+};
 
 component.state.portions = function() {
   var jobId = this.get("jobRef");
@@ -28,7 +33,7 @@ component.state.portions = function() {
       return job.portions;
     }
   }
-}
+};
 
 component.action.keyup = function(portions) {
   var jobId = this.get("jobRef");
@@ -39,7 +44,7 @@ component.action.keyup = function(portions) {
       this.set("activeTime", time);
     }
   }
-}
+};
 
 component.state.isPrep = function() {
   if(this.get('type') == "Prep") {
@@ -47,7 +52,7 @@ component.state.isPrep = function() {
   } else {
     return false;
   }
-}
+};
 
 component.state.activeTimes = function() {
   if(this.get('type') == "Prep") {
@@ -67,12 +72,12 @@ component.state.activeTimes = function() {
     }
     return text;
   }
-}
+};
 
 component.prototype.onJobRendered = function() {
   this.set("type", "Prep");
   this.set("activeTime", 0);
-}
+};
 
 component.action.submit = function(info) {
   var self = this;
@@ -87,4 +92,4 @@ component.action.submit = function(info) {
       $("#submitJobModal").modal("hide");
     }
   });
-}
+};

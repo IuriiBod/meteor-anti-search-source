@@ -1,9 +1,9 @@
 Template.submitJob.events({
   'submit form': function(event, instance) {
     event.preventDefault();
-    var type = $(event.target).find('[name=type]').val();;
+    var type = $(event.target).find('[name=type]').val();
     var job = $(event.target).find('[name=job]').val();
-    var portions = $(event.target).find('[name=portions]').val();;
+    var portions = $(event.target).find('[name=portions]').val();
     var activeTime = $(event.target).find('[name=activeTime]').val();
     
 
@@ -21,11 +21,11 @@ Template.submitJob.events({
     }
     
     var info = {
-      "type": type,
-      "ref": job,
-      "portions": portions,
-      "activeTime": activeTime,
-    }
+      type: type,
+      ref: job,
+      portions: portions,
+      activeTime: activeTime
+    };
     FlowComponents.callAction("submit", info);
   }
 });
