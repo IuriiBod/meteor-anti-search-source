@@ -41,7 +41,7 @@ Template.submitJobItem.helpers({
 
   isRecurringEveryXWeeks: function() {
     var type = Session.get("frequency");
-    return type === "EveryXWeeks";
+    return type === "Every X Weeks";
   },
 
   initChecklist: function () {
@@ -212,7 +212,7 @@ Template.submitJobItem.events({
       }
       info.frequency = frequency;
 
-      if(frequency === "EveryXWeeks") {
+      if(frequency === "Every X Weeks") {
         var step = $(event.target).find("[name=step]").val();
         if(!step) {
           return alert("Step should be defined");

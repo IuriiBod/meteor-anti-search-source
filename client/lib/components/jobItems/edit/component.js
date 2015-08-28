@@ -86,7 +86,7 @@ component.state.frequencyWithSelected = function() {
     index: "Weekly",
     selected: false
   }, {
-    index: "EveryXWeeks",
+    index: "Every X Weeks",
     selected: false
   }];
   var frequency = this.item.frequency;
