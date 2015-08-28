@@ -58,10 +58,12 @@ Template.orderReceive.events({
             if(err) {
               console.log(err);
               return alert(err.reason);
+            } else {
             }
           });
           $(".uploadedInvoiceDiv").removeClass("hide");
           $("#uploadedInvoiceUrl").attr("src", url);
+          blueimpImageFullScreen();
         }
     });
   }
