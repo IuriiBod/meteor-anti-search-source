@@ -18,7 +18,7 @@ Template.cronConfig.events({
           return alert(err.reason);
         } else {
           tpl.$('[name="cron-time"]').attr("data-id", id);
-          tpl.$(".alert-area").html('<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>You should restart Meteor server to apply cron time change</div>');
+          tpl.$(".alert-area").html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>You should restart Meteor server to apply cron time change</div>');
         }
       });
     }

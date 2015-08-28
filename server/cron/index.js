@@ -24,7 +24,7 @@ Meteor.methods({
       var shiftUpdatesInfo = ShiftsUpdates.find({to: userId}).fetch();
 
       var emailText = "Hi " + receiver.username + ", <br>";
-      emailText += "You have the next changes on your shifts:<br><br>";
+      emailText += "There have been some changes to your shifts:<br><br>";
 
       shiftUpdatesInfo.forEach(function(shift) {
         var color = shift.type == "update" ? "#009293" : "#FF2138";

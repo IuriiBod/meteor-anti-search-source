@@ -119,7 +119,7 @@ component.prototype.itemRendered = function() {
               to: shift.assignedTo,
               userId: Meteor.userId(),
               shiftId: shift._id,
-              text: "You have been removed from shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD"),
+              text: "You have been removed from shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b>",
               type: "remove"
             };
 
@@ -239,15 +239,15 @@ function editShift(obj) {
         };
         if(obj.hasOwnProperty("endTime")) {
           text = "Shift end time has been updated";
-          shiftUpdateDoc.text = "Shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD") + " end time has been updated";
+          shiftUpdateDoc.text = "Shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b> end time has been updated";
         }
         if(obj.hasOwnProperty("startTime")) {
           text = "Shift start time has been updated";
-          shiftUpdateDoc.text = "Shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD") + " start time has been updated";
+          shiftUpdateDoc.text = "Shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b> start time has been updated";
         }
         if(obj.hasOwnProperty("section")) {
           text = "Shift section has been updated";
-          shiftUpdateDoc.text = "Shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD") + " section has been updated";
+          shiftUpdateDoc.text = "Shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b> section has been updated";
         }
         sendNotification(obj._id, shift.assignedTo, title, text);
         Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
@@ -280,7 +280,7 @@ assignWorkerToShift = function(worker, shiftId, target) {
             to: worker,
             userId: Meteor.userId(),
             shiftId: shift._id,
-            text: "You have been assigned to shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD"),
+            text: "You have been assigned to shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b>",
             type: "update"
           };
 
