@@ -48,15 +48,17 @@ component.state.editable = function() {
 }
 
 component.state.deletable = function(id) {
-  var stocktake = Stocktakes.findOne(id);
-  if(stocktake) {
-    if(!stocktake.status && !stocktake.orderRef) {
-      return true;
+  if(id) {
+    var stocktake = Stocktakes.findOne(id);
+    if(stocktake) {
+      if(!stocktake.status && !stocktake.orderRef) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
-      return false;
+      return true;
     }
-  } else {
-    return true;
   }
 }
 
