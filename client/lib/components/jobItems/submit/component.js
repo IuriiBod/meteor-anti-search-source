@@ -43,7 +43,7 @@ component.action.submit = function(info) {
       Session.set("selectedJobItems", null);
       var options = {
         "type": "create",
-        "title": "New Job created"
+        "title": "New Job " + info.name + " created"
       }
       Meteor.call("sendNotifications", id, "job", options, function(err) {
         if(err) {
