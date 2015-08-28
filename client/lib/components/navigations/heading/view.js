@@ -421,7 +421,7 @@ Template.pageHeading.rendered = function() {
     Session.set("thisWeek", week);
     Session.set("checkedDate", checkedDate);
   }
-
+  
   this.$(".datepicker").datepicker({
     todayHighlight: true,
     calendarWeeks: true
@@ -448,3 +448,4 @@ Template.pageHeading.rendered = function() {
     }
   });
 };
+
