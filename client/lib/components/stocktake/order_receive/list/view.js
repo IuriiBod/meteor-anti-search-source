@@ -66,5 +66,10 @@ Template.orderReceive.events({
           blueimpImageFullScreen();
         }
     });
+  },
+
+  'click #viewReceipt': function(event) {
+    event.preventDefault();
+    $("#links").click();
   }
 });
