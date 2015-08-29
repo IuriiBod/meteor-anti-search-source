@@ -67,11 +67,6 @@ Template.dailyShiftScheduling.rendered = function() {
         var businessStartsAt = 8;
         var businessEndsAt = 5;
         if(shifts) {
-          var date = new Date(0);
-          var d = date.getDate();
-          var m = date.getMonth();
-          var y = date.getFullYear();
-
           ShiftsToTime = {};
           TimeToShifts = {};
           var events = [];
