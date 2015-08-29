@@ -5,9 +5,9 @@
         <dt>Status:</dt> 
         <dd>
           {{#if state$status}}
-          <span class="label label-primary">Active</span>
+          <span class="label label-primary supplierStatus">Active</span>
           {{else}}
-          <span class="label label-danger">Archived</span>
+          <span class="label label-danger supplierStatus">Archived</span>
           {{/if}}
         </dd>
       </dl>
@@ -22,7 +22,7 @@
     </div>
     <div class="col-lg-4" id="cluster_info">
       <dl class="dl-horizontal" >
-        <dt>Last order on:</dt> <dd></dd>
+        <dt>Last order on:</dt> <dd>{{dateFormat state$lastOrder}}</dd>
         <dt>Created on:</dt> <dd>{{dateFormat state$basics.createdOn}}</dd>
       </dl>
     </div>
