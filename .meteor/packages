@@ -42,3 +42,4 @@ reactive-var
 ogourment:settings
 u2622:persistent-session
 deepwell:bootstrap-datepicker2
+momentjs:moment
