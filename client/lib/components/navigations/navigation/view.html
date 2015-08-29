@@ -120,7 +120,7 @@
                 </a>
                 <ul class="nav nav-third-level {{isActiveRoute regex='cafeSalesForecast|weeklySalesForecastMenusList' className='in'}}">
                   <li class="{{isActiveRoute regex='cafeSalesForecast|weeklySalesForecastMenusList'}}">
-                    <a href="/sales/forecast/cafe/{{week}}">Cafe</a>
+                    <a href="/sales/forecast/cafe/{{year}}/{{week}}">Cafe</a>
                   </li>
                 </ul>
               </li>
@@ -134,10 +134,10 @@
             </a>
             <ul class="nav nav-second-level {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
               <li class="{{isActiveRoute name='teamHours'}}">
-                <a href="/reports/{{week}}#shifts">Team Hours</a>
+                <a href="/reports/{{year}}/{{week}}#shifts">Team Hours</a>
               </li>
               <li class="{{isActiveRoute name='currentStocks'}}">
-                <a href="/reports/stocktake/currentStocks/{{week}}">Daily stock</a>
+                <a href="/reports/stocktake/currentStocks/{{year}}/{{week}}">Daily stock</a>
               </li>
             </ul>
           </li>

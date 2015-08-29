@@ -4,7 +4,9 @@ var component = FlowComponents.define("teamHours", function(props) {
 
 component.state.week = function() {
   var weekNo = Router.current().params.week;
-  var week = getDatesFromWeekNumber(weekNo);
+  var year = Router.current().params.year;
+  var currentDate = new Date(year);
+  var week = getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
   return week;
 }
 

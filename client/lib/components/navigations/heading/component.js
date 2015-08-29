@@ -40,8 +40,9 @@ component.state.publishedOn = function() {
 }
 
 component.state.currentDate = function() {
-  var week = Session.get("thisWeek");
-  var weekStartEnd = getWeekStartEnd(week);
+  var week = Router.current().params.week;
+  var year = Router.current().params.year;
+  var weekStartEnd = getWeekStartEnd(week, year);
   var firstDay = weekStartEnd.monday;
   var lastDay = weekStartEnd.sunday;
 
