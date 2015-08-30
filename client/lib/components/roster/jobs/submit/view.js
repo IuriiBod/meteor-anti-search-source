@@ -9,9 +9,9 @@ Template.submitJob.events({
 
     if(!job || job.trim() == "") {
       return alert("Please select a job from list");
-
     }
-    if(type == "Prep") {
+    var jobType = JobTypes.findOne(type);
+    if(jobType && jobType,name == "Prep") {
       if(!portions || portions <= 0) {
         return alert("Please add no of portions you need");
       }

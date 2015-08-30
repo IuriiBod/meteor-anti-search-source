@@ -8,11 +8,15 @@ Meteor.methods({
       logger.error("Job type field not found");
       throw new Meteor.Error(404, "Job type field not found");
     }
-    if((info.type == "Prep") && (!info.portions)) {
+    var type = JobTypes.findOne(info.type);
+    if(!type) {
+      logger.error("Job type not found");
+      throw new Meteor.Error(404, "Job type not found");
+    }
+    if((type.name == "Prep") && (!info.portions)) {
       logger.error("No of portions not found for prep type job");
       throw new Meteor.Error(404, "No of portions not found for prep type job");
-    }
-    if((info.type == "Recurring") && (!info.activeTime)) {
+    } else if((type.type == "Recurring") && (!info.activeTime)) {
       logger.error("Active time not found for recurring type job");
       throw new Meteor.Error(404, "Active time not found for recurring type job");
     }
@@ -22,11 +26,9 @@ Meteor.methods({
       throw new Meteor.Error(404, "Job not found");
     }
 
-    job.type = JobTypes.findOne(job.type).name;
-
     var doc = {
       "ref": job._id,
-      "type": job.type,
+      "type": info.type,
       "status": 'draft',
       "options": [],
       "onshift": null,
@@ -34,8 +36,8 @@ Meteor.methods({
       "createdOn": Date.now(),
       "createdBy": Meteor.userId()
     };
-    doc.name = job.type + " " + job.name;
-    if(job.type == "Prep") {
+    doc.name = type.name + " " + job.name;
+    if(type.name == "Prep") {
       doc.portions = info.portions;
       var time = parseInt((job.activeTime/job.portions) * info.portions);
       if(time == time) {
