@@ -45,7 +45,7 @@ Template.orderReceive.events({
     }
   },
 
-  'click #uploadInvoice': function(event) {
+  'click .uploadInvoice': function(event) {
     event.preventDefault();
     filepicker.pickAndStore(
       {mimetype:"image/*", services: ['COMPUTER']}, 

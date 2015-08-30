@@ -44,9 +44,10 @@
             {{else}}
               <br><br>
               {{#if state$receipt.invoiceImage}}
-                <a class="btn btn-primary" href="{{state$receipt.invoiceImage}}" id="viewReceipt">View Receipt</a>
+                <a class="btn btn-primary" href="{{state$receipt.invoiceImage}}" id="viewReceipt">View Invoice</a>
+                <a class="btn btn-default uploadInvoice">Edit Invoice</a>
               {{else}}
-                <a class="btn btn-primary" id="uploadInvoice">Take a photo/ Upload Invoice</a>
+                <a class="btn btn-primary uploadInvoice">Take a photo/ Upload Invoice</a>
               {{/if}}
               <a class="btn btn-primary" href="#temperatureModal" data-toggle="modal">Check temperatures</a>
             {{/if}}
