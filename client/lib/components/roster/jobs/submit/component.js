@@ -3,16 +3,15 @@ var component = FlowComponents.define("submitJob", function(props) {
 });
 
 component.state.jobTypes = function() {
-  return ["Prep", "Recurring"];
+  return JobTypes.find();
 };
 
 component.state.jobs = function() {
-  var jobTypeName = this.get("type");
-  if (!jobTypeName) {
+  var jobType = this.get("type");
+  if (!jobType) {
     return;
   }
-  var jobTypeId = JobTypes.findOne({name: jobTypeName})._id;
-  return JobItems.find({"type": jobTypeId});
+  return JobItems.find({"type": jobType});
 };
 
 component.action.onChangeType = function(type) {
@@ -47,7 +46,8 @@ component.action.keyup = function(portions) {
 };
 
 component.state.isPrep = function() {
-  if(this.get('type') == "Prep") {
+  var type = JobTypes.findOne(this.get("type"));
+  if(type && type.name == "Prep") {
     return true;
   } else {
     return false;
@@ -55,7 +55,8 @@ component.state.isPrep = function() {
 };
 
 component.state.activeTimes = function() {
-  if(this.get('type') == "Prep") {
+  var type = JobTypes.findOne(this.get("type"));
+  if(type && type.name == "Prep") {
     var miliSeconds = parseInt(this.get("activeTime")) * 1000;
     var hours = moment.duration(miliSeconds).hours();
     var minutes = moment.duration(miliSeconds).minutes();
@@ -75,7 +76,8 @@ component.state.activeTimes = function() {
 };
 
 component.prototype.onJobRendered = function() {
-  this.set("type", "Prep");
+  var prep = JobTypes.findOne({"name": "Prep"});
+  this.set("type", prep._id);
   this.set("activeTime", 0);
 };
 
@@ -85,7 +87,8 @@ component.action.submit = function(info) {
     if(err) {
       return alert(err.reason);
     } else {
-      self.set("type", "Prep");
+      var prep = JobTypes.findOne({"name": "Prep"});
+      self.set("type", prep._id);
       $("input").val(0);
       $('select').prop('selectedIndex', 0);
       self.set("activeTime", 0);
