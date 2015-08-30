@@ -26,7 +26,9 @@ Template.onePost.events({
             var text = $(event.target).val();
             var idbuf = $(event.target).closest("div").attr("data-id");
             Session.set({"comment_post_id":idbuf});
-            FlowComponents.callAction('submitcommenttopost', text);
+            if(text) {
+                FlowComponents.callAction('submitcommenttopost', text);
+            }
         }
     }
 });
