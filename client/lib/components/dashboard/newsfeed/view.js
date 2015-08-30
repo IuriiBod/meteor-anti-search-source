@@ -25,7 +25,9 @@ Template.newsFeed.events({
         if(event.keyCode == 10 || event.keyCode == 13) {
             event.preventDefault();
             var text = $(".message-input-post").val();
-            FlowComponents.callAction('submit', text);
+            if(text) {
+                FlowComponents.callAction('submit', text);
+            }
         }
     }
 });
