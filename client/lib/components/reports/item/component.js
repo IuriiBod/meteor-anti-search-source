@@ -2,7 +2,6 @@ var component = FlowComponents.define("teamHoursItem", function(props) {
   this.user = props.user;
 });
 
-
 component.state.user = function() {
   if(this.user) {
     return this.user;
@@ -16,7 +15,6 @@ component.state.totaltime = function() {
     var userId = this.user._id;
     var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(weekNo);
-    console.log("......week..", week);
     week.forEach(function(day) {
       var date = day.date;
       var shift = Shifts.findOne({
@@ -62,7 +60,7 @@ component.state.wage = function() {
   var totalWage = 0;
   if(this.user) {
     var user = this.user;
-    var weekNo = Router.current().params.week;
+    var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(weekNo);
     week.forEach(function(day) {
       var totalhours = 0;
@@ -115,7 +113,7 @@ component.state.dailyHours = function() {
   var hours = [];
   if(this.user) {
     var userId = this.user._id;
-    var weekNo = Router.current().params.week;
+    var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(weekNo);
     week.forEach(function(day) {
       var doc = {}
@@ -145,7 +143,7 @@ component.state.dailyShifts = function() {
   var shifts = [];
   if(this.user) {
     var userId = this.user._id;
-    var weekNo = Router.current().params.week;
+    var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(weekNo);
     week.forEach(function(day) {
       var doc = {}
@@ -186,7 +184,7 @@ component.state.activeWage = function() {
   var totalWage = 0;
   if(this.user) {
     var user = this.user;
-    var weekNo = Router.current().params.week;
+    var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(weekNo);
     week.forEach(function(day) {
       var totalhours = 0;
@@ -247,7 +245,3 @@ component.state.activeWage = function() {
     return false;
   }
 }
-
-
-
-
