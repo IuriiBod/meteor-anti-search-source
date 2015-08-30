@@ -5,7 +5,7 @@ var component = FlowComponents.define("teamHoursItem", function(props) {
 
 component.state.user = function() {
   if(this.user) {
-      return this.user;
+    return this.user;
   }
 }
 
@@ -14,8 +14,9 @@ component.state.totaltime = function() {
   var totalmins = 0;
   if(this.user) {
     var userId = this.user._id;
-    var weekNo = Router.current().params.week;
+    var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(weekNo);
+    console.log("......week..", week);
     week.forEach(function(day) {
       var date = day.date;
       var shift = Shifts.findOne({

@@ -3,15 +3,16 @@ var component = FlowComponents.define("teamHours", function(props) {
 });
 
 component.state.week = function() {
-  var weekNo = Router.current().params.week;
-  var year = Router.current().params.year;
+  var weekNo = Session.get("thisWeek");
+  var year = Session.get("thisYear");
   var currentDate = new Date(year);
   var week = getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
   return week;
 }
 
 component.state.users = function() {
-  return Meteor.users.find();
+  var users = Meteor.users.find();
+  return users;
 }
 
 component.prototype.onListRendered = function() {
