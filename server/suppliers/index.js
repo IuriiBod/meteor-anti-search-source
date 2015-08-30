@@ -78,7 +78,7 @@ Meteor.methods({
     return;
   },
 
-  removeSupplier: function(id) {
+  activateReactivateSuppliers: function(id) {
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');
@@ -98,14 +98,21 @@ Meteor.methods({
       logger.error("Supplier does not exist", id);
       throw new Meteor.Error(404, "Supplier does not exist");
     }
-    var ingsExist = Ingredients.findOne({"supplier": id});
-    var receipts = OrderReceipts.findOne({"supplier": id});
-    var orders = StockOrders.findOne({"supplier": id});
-    if(ingsExist || receipts || orders) {
-      logger.error("Supplier has past records. Can't be deleted. Archiving...");
-      Suppliers.update({"_id": id}, {$set: {"active": false}});
-    } else {
-      Suppliers.remove({"_id": id});
+    var status = supplier.active;
+    if(status) {
+      var ingsExist = Ingredients.findOne({"suppliers": id});
+      var receipts = OrderReceipts.findOne({"supplier": id});
+      var orders = StockOrders.findOne({"supplier": id});
+      if(ingsExist || receipts || orders) {
+        logger.error("Supplier has past records. Can't be deleted. Archiving...");
+      } else {
+        Suppliers.remove({"_id": id});
+        logger.info("Supplier removed", id);
+        return;
+      }
     }
+    Suppliers.update({"_id": id}, {$set: {"active": !status}});
+    logger.info("Supplier status updated", id, !status);
+    return;
   }
 });

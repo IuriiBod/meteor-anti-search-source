@@ -45,7 +45,7 @@ Template.orderReceive.events({
     }
   },
 
-  'click #uploadInvoice': function(event) {
+  'click .uploadInvoice': function(event) {
     event.preventDefault();
     filepicker.pickAndStore(
       {mimetype:"image/*", services: ['COMPUTER']}, 
@@ -58,11 +58,18 @@ Template.orderReceive.events({
             if(err) {
               console.log(err);
               return alert(err.reason);
+            } else {
             }
           });
           $(".uploadedInvoiceDiv").removeClass("hide");
           $("#uploadedInvoiceUrl").attr("src", url);
+          blueimpImageFullScreen();
         }
     });
+  },
+
+  'click #viewReceipt': function(event) {
+    event.preventDefault();
+    $("#links").click();
   }
 });
