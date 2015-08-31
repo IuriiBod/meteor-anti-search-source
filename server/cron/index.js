@@ -10,7 +10,11 @@ Meteor.methods({
 
   'getCronTime': function() {
     var cronConfig = CronConfig.findOne();
-    return cronConfig.time;
+    if(cronConfig) {
+      return cronConfig.time;
+    } else {
+      return false;
+    }
   },
 
   'sendShiftUpdates': function() {

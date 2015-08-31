@@ -7,9 +7,15 @@ SyncedCron.add({
         console.log(err);
         return;
       }
-      t = "at " + time.toLowerCase();
-    });
+      if(time) {
+        t = "at " + time.toLowerCase();
+      } else {
+        var d = new Date();
+        d.setFullYear(d.getFullYear() + 50);
+        t = "at 10:15 am in " + d.getFullYear();
+      }
 
+    });
     return parser.text(t);
   },
   job: function() {
