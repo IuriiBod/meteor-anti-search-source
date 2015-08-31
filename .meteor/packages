@@ -37,9 +37,9 @@ percolate:intercom
 tsega:mentions
 tsega:bootstrap3-datetimepicker
 kevohagan:sweetalert
-deepwell:bootstrap-datepicker2
 mrt:jquery-ui-sortable
 hospohero:stale-session
 reactive-var
 ogourment:settings
-u2622:persistent-session
+deepwell:bootstrap-datepicker2
+momentjs:moment
