@@ -34,7 +34,12 @@ Template.navigation.helpers({
   },
 
   week: function() {
-    var week = moment().format("w");
+    var today = moment();
+    var week = today.format("w");
+    week = parseInt(week);
+    if(today.format("dd") == "Su") {
+      week = (week - 1);
+    }
     return week;
   },
   

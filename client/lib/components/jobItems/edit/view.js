@@ -65,8 +65,6 @@ Template.editJobItem.events({
         }
       }
 
-      type = JobTypes.findOne(type).name;
-
       //if Prep
       var type = JobTypes.findOne(type);
       if(type.name == "Prep") {
@@ -159,6 +157,14 @@ Template.editJobItem.events({
         }
         info.frequency = frequency;
 
+        if(frequency === "Every X Weeks") {
+          var step = $(event.target).find("[name=step]").val();
+          if(!step) {
+            return alert("Step should be defined");
+          }
+          info.step = parseInt(step);
+        }
+
         var repeatAt = $(event.target).find('[name=repeatAt]').val().trim();
         if(!repeatAt) {
           return alert("Should have an time to repeat");
@@ -222,7 +228,7 @@ Template.editJobItem.events({
           info.section = section;
         }
 
-        if(frequency == "Weekly") {
+        if(_.contains(["Every X Weeks", "Weekly"], frequency)) {
           var repeatDays = [];
           var repeatOn = $(event.target).find('[name=daysSelected]').get();
           repeatOn.forEach(function(doc) {
