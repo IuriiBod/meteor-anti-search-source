@@ -66,7 +66,8 @@ Template.editJobItem.events({
       }
 
       //if Prep
-      if(type == "Prep") {
+      var type = JobTypes.findOne(type);
+      if(type.name == "Prep") {
         var portions = $(event.target).find('[name=portions]').val().trim();
         var shelfLife = $(event.target).find('[name=shelfLife]').val().trim();
         var ing = $(event.target).find("[name=ing_qty]").get();
@@ -118,14 +119,14 @@ Template.editJobItem.events({
                 var doc = {
                   "_id": dataid,
                   "quantity": quantity
-                }
+                };
                 ing_doc.push(doc);
               }
             } else {
               var doc = {
                 "_id": dataid,
                 "quantity": quantity
-              }
+              };
               ing_doc.push(doc);
             }
           }
@@ -137,7 +138,7 @@ Template.editJobItem.events({
       }
 
       //if Recurring
-      else if(type == "Recurring") {
+      else if(type.name == "Recurring") {
         var description = FlowComponents.child('jobItemEditorEdit').getState('content');
         if(job.description != description.trim()) {
           if($('.note-editable').text() === "Add description here" || $('.note-editable').text() === "") {
@@ -155,6 +156,14 @@ Template.editJobItem.events({
           return alert("Should have an frequency for the job");
         }
         info.frequency = frequency;
+
+        if(frequency === "Every X Weeks") {
+          var step = $(event.target).find("[name=step]").val();
+          if(!step) {
+            return alert("Step should be defined");
+          }
+          info.step = parseInt(step);
+        }
 
         var repeatAt = $(event.target).find('[name=repeatAt]').val().trim();
         if(!repeatAt) {
@@ -219,7 +228,7 @@ Template.editJobItem.events({
           info.section = section;
         }
 
-        if(frequency == "Weekly") {
+        if(_.contains(["Every X Weeks", "Weekly"], frequency)) {
           var repeatDays = [];
           var repeatOn = $(event.target).find('[name=daysSelected]').get();
           repeatOn.forEach(function(doc) {
@@ -264,10 +273,10 @@ Template.editJobItem.events({
           return alert(err.reason);
         } else {
           var options = {
-            "type": "delete",
-            "title": "Job " + item.name + " has been deleted",
-            "time": Date.now()
-          }
+            type: "delete",
+            title: "Job " + item.name + " has been deleted",
+            time: Date.now()
+          };
           Meteor.call("sendNotifications", id, "job", options, function(err) {
             if(err) {
               console.log(err);
@@ -322,7 +331,11 @@ Template.editJobItem.events({
         var listItems = Session.get("checklist");
         listItems.push(item);
         Session.set("checklist", listItems);
-        var listItem = "<li class='list-group-item'>" + item + "<i class='fa fa-minus-circle m-l-lg right removelistItem'></i></li>"
+        var listItem = [
+          "<li class='list-group-item'>",
+          item.toString(),
+          "<i class='fa fa-minus-circle m-l-lg right removelistItem'></i></li>"
+        ].join('');
         $(".checklist").append(listItem);
         $(event.target).val("");
       }
@@ -344,8 +357,23 @@ Template.editJobItem.events({
   }
 });
 
-Template.editJobItem.rendered = function() {
+Template.editJobItem.onRendered(function() {
   Session.set("selectedIngredients", null);
   Session.set("jobType", null);
   Session.set("frequency", null);
-}
+  this.$(".checklist").sortable({
+    cursor: "move",
+    opacity: 0.8,
+    delay: 50,
+    update: function () {
+      var items = [];
+      var $list = $(this);
+      $list.find(".list-group-item").each(function () {
+        var $item = $(this);
+        var text = $item.text().trim();
+        items.push(text);
+      });
+      Session.set("checklist", items);
+    }
+  }).disableSelection();
+});

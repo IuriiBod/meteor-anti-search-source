@@ -66,18 +66,36 @@ UI.registerHelper('secondsToMinutes', function(secs) {
 });
 
 UI.registerHelper("timeFormattedWithDate", function(time) {
-  var timeFormatted = moment(time).format('MMMM Do YYYY, h:mm:ss a');
-  return timeFormatted;
+  if(time) {
+    return moment(time).format('MMMM Do YYYY, h:mm:ss a');
+  } else {
+    return "-"
+  }
 });
 
 UI.registerHelper("dayFormat", function(date) {
-  var dateFormatted = moment(date).format('ddd, Do MMMM');
-  return dateFormatted;
+  if(date) {
+    return moment(date).format('ddd, Do MMMM');
+  } else {
+    return "-"
+  }
 });
 
 UI.registerHelper("dateFormat", function(date) {
-  var dateFormatted = moment(date).format('YYYY-MM-DD');
-  return dateFormatted;
+  if(date) {
+    var dateFormatted = moment(date).format('YYYY-MM-DD');
+    return dateFormatted;
+  } else {
+    return "-"
+  }
+});
+
+UI.registerHelper("dateFormatDahsed", function(date) {
+  if(date) {
+    return moment(date).format('DD/MM/YYYY');
+  } else {
+    return "-";
+  }
 });
 
 UI.registerHelper("username", function(id) {
@@ -120,8 +138,12 @@ UI.registerHelper("Username", function(userId) {
 });
 
 UI.registerHelper("SupplierName", function(id) {
-  var supplier = Suppliers.findOne(id);
-  if(supplier) {
-    return supplier.name;
+  if(id) {
+    var supplier = Suppliers.findOne(id);
+    if(supplier) {
+      return supplier.name;
+    }
+  } else {
+    return "Not assigned";
   }
 });

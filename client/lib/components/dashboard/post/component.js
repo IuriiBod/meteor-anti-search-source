@@ -96,10 +96,10 @@ component.action.submitcommenttopost = function(text) {
             var options = {
                 "title": "New Posts on by " + Meteor.user().username,
                 "users": matches,
-                "postId": id,
+                "commentId": id,
                 "type": "post"
             }
-            Meteor.call("sendNotifications", ref, "post", options, function(err) {
+            Meteor.call("sendNotifications", ref, "comment", options, function(err) {
                 if(err) {
                     console.log(err);
                     return alert(err.reason);
@@ -133,11 +133,20 @@ component.action.submitlikepost = function(likelist) {
 
 
 component.state.commentsof=function(){
-    return Posts.find({"reference":this.post._id},{"createdBy":{$not:this.post._id}},{sort:{"createdOn":-1}});
+    return Posts.find({
+            "reference":this.post._id, 
+            "createdBy":{$not:this.post._id}
+        },{sort:{"createdOn":1}
+    });
 }
 
 component.state.activecomment=function(){
-    var count = Posts.find({"reference":this.post._id},{"createdBy":{$not:this.post._id}},{sort:{"createdOn":-1}}).count();
+    var count = Posts.find({
+            "reference":this.post._id, 
+            "createdBy":{$not:this.post._id}
+        },
+        {sort:{"createdOn":1}
+    }).count();
     if(count) {
         return false;
     }else return true;

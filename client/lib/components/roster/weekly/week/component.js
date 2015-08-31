@@ -1,16 +1,17 @@
 var component = FlowComponents.define("weeklyShiftRoster", function(props) {
   this.name = props.name;
   this.onRendered(this.onListRendered);
-
 });
 
 component.state.week = function() {
   if(this.name == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
-    var week = getDatesFromWeekNumber(parseInt(weekNo));
+    var year = Router.current().params.year;
+    var currentDate = new Date(year);
+    var week = getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
     return week;
   } else if(this.name == "weeklyrostertemplate") {
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     return daysOfWeek;
   }
 }
@@ -35,7 +36,7 @@ component.prototype.onListRendered = function() {
       var id = $(ui.item[0]).attr("data-id");//shiftid
       var  newDate = $(this).attr("data-date")//date of moved list
       if(origin == "weeklyrostertemplate") {
-        var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         newDate = parseInt(daysOfWeek.indexOf(newDate));
       }
       if(id && newDate) {

@@ -19,3 +19,12 @@ Meteor.publish("menu", function(id) {
   }
   return cursors;
 });
+
+Meteor.publish("menuCategories", function() {
+  if(!this.userId) {
+    logger.error('User not found : ' + this.userId);
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+  logger.info("Menu categories published");
+  return Categories.find();
+});

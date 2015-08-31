@@ -1,0 +1,51 @@
+<template name="basics">
+  <div class="row">
+    <div class="col-lg-12">
+      <dl class="dl-horizontal">
+        <dt>Status:</dt> 
+        <dd>
+          {{#if state$status}}
+          <span class="label label-primary supplierStatus">Active</span>
+          {{else}}
+          <span class="label label-danger supplierStatus">Archived</span>
+          {{/if}}
+        </dd>
+      </dl>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4">
+      <dl class="dl-horizontal">
+        <dt>Email address:</dt> <dd><a href="" id="supplierEmail">{{state$basics.email}}</a></dd>
+        <dt>Phone number:</dt> <dd><a href="" id="supplierPhone">{{state$basics.phone}}</a></dd>
+      </dl>
+    </div>
+    <div class="col-lg-4" id="cluster_info">
+      <dl class="dl-horizontal" >
+        <dt>Last order on:</dt> <dd>{{dateFormat state$lastOrder}}</dd>
+        <dt>Created on:</dt> <dd>{{dateFormat state$basics.createdOn}}</dd>
+      </dl>
+    </div>
+    <div class="col-lg-4" id="cluster_info">
+      <dl class="dl-horizontal" >
+        <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
+        {{#if state$basics.priceList}}
+          <div class="file uploadedPriceList">
+              <div class="image">
+                <img id="uploadedImageUrl" src="{{state$basics.priceList}}" class="img-responsive menu-item-image">
+              </div>
+          </div>
+        {{else}}
+          <div class="file uploadedPriceList hide">
+            <a href="#">
+              <span class="corner"></span>
+              <div class="image">
+                <img id="uploadedImageUrl" src="" class="img-responsive menu-item-image">
+              </div>
+            </a>
+          </div>
+        {{/if}}
+      </dl>
+    </div>
+  </div>
+</template>

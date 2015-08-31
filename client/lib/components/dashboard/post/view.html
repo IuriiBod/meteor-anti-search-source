@@ -5,7 +5,7 @@
             <a class="pull-left" href="#">
                 <img src="{{state$profilePicture}}" alt="image">
             </a>
-            <div class="media-body" data-id="{{state$id}}">
+            <div class="media-body" data-id="{{state$id}}" id="{{state$id}}">
                 <a href="#">{{state$name}}</a>
                 <a href="#" class="small thumbsup-like pull-left like-post"><i class="fa fa-thumbs-up"></i> {{state$like}} Like this!</a><small class="text-muted pull-left">&nbsp;  - &nbsp;{{timeFormattedWithDate state$createdOn}}</small>
             </div>

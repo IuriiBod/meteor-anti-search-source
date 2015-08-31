@@ -59,7 +59,7 @@ Template.pageHeading.events({
           console.log(err);
           return alert(err.reason);
         } else {
-          Router.go("menuItemEdit", {"_id": id});
+          Router.go("menuItemDetail", {"_id": id});
         }
       });
     }
@@ -84,12 +84,43 @@ Template.pageHeading.events({
     e.preventDefault();
     Router.go("menuItemEdit", {"_id": $(e.target).attr("data-id")})
   },
+  
+  'click .deleteMenuItemBtn': function(e) {
+    e.preventDefault();
+    var result = confirm("Are you sure, you want to delete this menu ?");
+    if(result) {
+      var id = $(event.target).attr("data-id");
+      var item = MenuItems.findOne(id);
+      
+      if(id) {
+        Meteor.call("deleteMenuItem", id, function(err) {
+          if(err) {
+            console.log(err);
+            return alert(err.reason);
+          } else {
+             var options = {
+              "type": "delete",
+              "title": "Menu " + item.name + " has been deleted",
+              "time": Date.now()
+            }
+            Meteor.call("sendNotifications", id, "menu", options, function(err) {
+              if(err) {
+                console.log(err);
+                return alert(err.reason);
+              }
+            });
+            Router.go("menuItemsMaster", {"category": "all", "status": "all"});
+          }
+        });
+      }
+    }
+  },
 
   'click .printMenuItemBtn': function(event) {
     event.preventDefault();
     print();
   },
-  
+
   'click #submitJobItem': function(event) {
     event.preventDefault();
     Router.go("submitJobItem");
@@ -155,43 +186,88 @@ Template.pageHeading.events({
     }
   },
 
-  'click .nextWeek': function(event) {
+  'click .nextWeek': function(event, tpl) {
     event.preventDefault();
+    var type = $(event.target).closest("div.title-action").attr("data-type");
+    var year = parseInt(Router.current().params.year);
+    var weeksNum = moment(year+"-12-31").format("w");
+    weeksNum = (weeksNum == 1) ? moment(year+"-12-24").format("w") : weeksNum;
     var week = parseInt(Router.current().params.week) + 1;
-    var type = $(event.target).closest("div").attr("data-type");
+    if (week > weeksNum) {
+      week = week%weeksNum;
+      year ++;
+    }
+    Session.set("thisWeek", week);
+
+    var checkedDate = moment(new Date(year.toString())).week(week).toDate();
+    tpl.$(".datepicker").datepicker("remove");
+    tpl.$(".datepicker").datepicker({
+      calendarWeeks: true,
+      todayHighlight: true,
+      weekStart: 1,
+      toggleActive: true
+    });
+    tpl.$(".datepicker")
+      .datepicker("setDate", checkedDate)
+      .datepicker("fill");
+    $(".day.active").siblings(".day").addClass("week");
+    
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
       if(sessionHash) {
         hash = sessionHash;
       }
-      Router.go("teamHours", {"week": week}, {"hash": hash});
+      Router.go("teamHours", {"year": year, "week": week}, {"hash": hash});
     } else if(type == "cafeforecasting") {
-      Router.go("cafeSalesForecast", {"week": week});
+      Router.go("cafeSalesForecast", {"year": year, "week": week});
     } else if(type == "weeklyroster") {
-      Router.go("weeklyRoster", {"week": week});
+      Router.go("weeklyRoster", {"year": year, "week": week});
     } else if(type == "currentStocksReport") {
-      Router.go("currentStocks", {"week": week});
+      Router.go("currentStocks", {"year": year, "week": week});
     }
   },
 
-  'click .previousWeek': function(event) {
+  'click .previousWeek': function(event, tpl) {
     event.preventDefault();
+    var type = $(event.target).closest("div.title-action").attr("data-type");
+    var year = parseInt(Router.current().params.year);
+    var weeksNum = moment(year+"-12-31").format("w");
+    weeksNum = (weeksNum == 1) ? moment(year+"-12-24").format("w") : weeksNum;
     var week = parseInt(Router.current().params.week) - 1;
-    var type = $(event.target).closest("div").attr("data-type");
+
+    if (week < 1) {
+      week = weeksNum;
+      year --;
+    }
+    Session.set("thisWeek", week);
+
+    var checkedDate = moment(new Date(year.toString())).week(week).toDate();
+    tpl.$(".datepicker").datepicker("remove");
+    tpl.$(".datepicker").datepicker({
+      calendarWeeks: true,
+      todayHighlight: true,
+      weekStart: 1,
+      toggleActive: true
+    });
+    tpl.$(".datepicker")
+      .datepicker("setDate", checkedDate)
+      .datepicker("fill");
+    $(".day.active").siblings(".day").addClass("week");
+    
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
       if(sessionHash) {
         hash = sessionHash;
       }
-      Router.go("teamHours", {"week": week}, {"hash": hash});
+      Router.go("teamHours", {"year": year, "week": week}, {"hash": hash});
     } else if(type == "cafeforecasting") {
-      Router.go("cafeSalesForecast", {"week": week});
+      Router.go("cafeSalesForecast", {"year": year, "week": week});
     } else if(type == "weeklyroster") {
-      Router.go("weeklyRoster", {"week": week});
+      Router.go("weeklyRoster", {"year": year, "week": week});
     } else if(type == "currentStocksReport") {
-      Router.go("currentStocks", {"week": week});
+      Router.go("currentStocks", {"year": year, "week": week});
     }
   },
 
@@ -241,7 +317,7 @@ Template.pageHeading.events({
         if(err) {
           console.log(err);
           return alert(err.reason);
-        } 
+        }
       });
       users.forEach(function(user) {
         var to = Meteor.users.findOne(user);
@@ -268,8 +344,8 @@ Template.pageHeading.events({
             }
 
             var info = {
-              "title": title, 
-              "text": text, 
+              "title": title,
+              "text": text,
               "startDate": weekStart,
               "week": weekNo
             }
@@ -292,7 +368,7 @@ Template.pageHeading.events({
               if(err) {
                 console.log(err);
                 return alert(err.reason);
-              } 
+              }
             });
           }
         }
@@ -316,5 +392,102 @@ Template.pageHeading.events({
         }
       });
     }
+  },
+  
+  'changeDate .datepicker': function(e, tpl) {
+    var date = e.date;
+    if(date) {
+      var week = moment(date).week();
+      var year = moment(date).format("YYYY");
+      Session.set("week", week);
+      tpl.$(".datepicker").datepicker("remove");
+
+      tpl.$(".datepicker").datepicker({
+        calendarWeeks: true,
+        todayHighlight: true,
+        weekStart: 1,
+        toggleActive: true
+      });
+
+      var checkedDate = new Date(year, date.getMonth(), date.getDate());
+      checkedDate = moment(checkedDate).week(week).toDate();
+      tpl.$(".datepicker").datepicker("update", checkedDate);
+
+      var type = $(e.target).closest("div.title-action").attr("data-type");
+      if(type == "teamHoursReport") {
+        var sessionHash = Session.get("reportHash");
+        var hash = "shifts";
+        if(sessionHash) {
+          hash = sessionHash;
+        }
+        Router.go("teamHours", {"year": year, "week": week}, {"hash": hash});
+      } else if(type == "cafeforecasting") {
+        Router.go("cafeSalesForecast", {"year": year, "week": week});
+      } else if(type == "weeklyroster") {
+        Router.go("weeklyRoster", {"year": year, "week": week});
+      } else if(type == "currentStocksReport") {
+        Router.go("currentStocks", {"year": year, "week": week});
+      }
+    }
+  },
+  'changeMonth .datepicker': function() {
+    $(".day.active").siblings(".day").addClass("week");
+  },
+  'changeYear .datepicker': function() {
+    $(".day.active").siblings(".day").addClass("week");
+  },
+
+  'click .calendar-toggle': function(e, tpl) {
+    if ($(e.target).parent().hasClass("open")) {
+      $(".day.active").removeClass("week");
+      tpl.$(".datepicker").datepicker("hide");
+    } else {
+      $(".day.active").siblings(".day").addClass("week");
+      tpl.$(".datepicker").datepicker("show");
+    }
   }
 });
+
+Template.pageHeading.rendered = function() {
+  var checkedDate = Router.current().params.year;
+
+  if (checkedDate) {
+    checkedDate = checkedDate+"-01-01";
+    checkedDate = new Date(checkedDate);
+    var week = Router.current().params.week;
+    checkedDate = moment(checkedDate).week(week).toDate();
+    Session.set("thisWeek", week);
+    this.$(".datepicker")
+      .datepicker({
+        todayHighlight: true,
+        calendarWeeks: true,
+        weekStart: 1,
+        toggleActive: true
+      })
+      .datepicker("setDate", checkedDate)
+      .datepicker("fill");
+    $(".day.active").siblings(".day").addClass("week");
+  }
+
+  $('.editMenuItemName').editable({
+    type: "text",
+    title: 'Edit menu name',
+    showbuttons: true,
+    display: false,
+    mode: 'inline',
+    toggle: 'mouseenter',
+    success: function(response, newValue) {
+      var id = $(this).attr("data-id");
+      
+      if(id) {
+        Meteor.call("updateMenuItemName", id, newValue, function(err) {
+          if(err) {
+            console.log(err);
+            return alert(err.reason);
+          }
+        });
+      }
+    }
+  });
+};
+

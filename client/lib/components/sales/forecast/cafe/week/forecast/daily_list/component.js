@@ -6,26 +6,29 @@ var component = FlowComponents.define("dailyForecastList", function(props) {
 
 component.state.week = function() {
   var week = Router.current().params.week;
+  var year = Router.current().params.year;
+  var currentDate = new Date(year);
+
   var daysOfWeek = [];
-  var monday = moment().day("Monday").week(week).format("YYYY-MM-DD");
+  var monday = moment(currentDate).day("Monday").week(week).format("YYYY-MM-DD");
   daysOfWeek.push(monday);
 
-  var tuesday = moment().day("Tuesday").week(week).format("YYYY-MM-DD");
+  var tuesday = moment(currentDate).day("Tuesday").week(week).format("YYYY-MM-DD");
   daysOfWeek.push(tuesday);
 
-  var wednesday = moment().day("WednesDay").week(week).format("YYYY-MM-DD");
+  var wednesday = moment(currentDate).day("WednesDay").week(week).format("YYYY-MM-DD");
   daysOfWeek.push(wednesday);
 
-  var thursday = moment().day("Thursday").week(week).format("YYYY-MM-DD");
+  var thursday = moment(currentDate).day("Thursday").week(week).format("YYYY-MM-DD");
   daysOfWeek.push(thursday);
 
-  var friday = moment().day("Friday").week(week).format("YYYY-MM-DD");
+  var friday = moment(currentDate).day("Friday").week(week).format("YYYY-MM-DD");
   daysOfWeek.push(friday);
 
-  var saturday = moment().day("Saturday").week(week).format("YYYY-MM-DD");
+  var saturday = moment(currentDate).day("Saturday").week(week).format("YYYY-MM-DD");
   daysOfWeek.push(saturday);
 
-  var sunday = moment().day("Sunday").week(parseInt(week) + 1).format("YYYY-MM-DD");
+  var sunday = moment(currentDate).day("Sunday").week(parseInt(week) + 1).format("YYYY-MM-DD");
   daysOfWeek.push(sunday);
 
 

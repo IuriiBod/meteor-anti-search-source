@@ -6,38 +6,17 @@
       </div>
       <ul class="nav navbar-top-links navbar-right">
         <li><a><i class="fa fa-check-square-o"></i></a></li>
-
-        <li class="dropdown dropdown-notifi">
-          <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+        <li>
+          <a class="count-info notifi-toggler" href="#">
             <i class="fa fa-bell"></i>
             {{#if state$count}}
               <span class="label label-primary">{{state$count}}</span>
             {{/if}}
           </a>
-          <ul class="dropdown-menu dropdown-alerts">
-            {{#if state$count}}
-              {{#each state$notifications}}
-                <li>
-                  {{> render component='notifiText' noti=this}}
-                  {{> render component='notifiButtons' noti=this}}
-                </li>
-                <li class="divider"></li>
-              {{/each}}
-              <li>
-                <div class="text-center link-block">
-                  <a href="#" class="markAllAsRead">
-                    <strong>Mark All As Read</strong>
-                  </a>
-                </div>
-              </li>
-            {{else}}
-              <li>
-                <div class="text-center link-block">
-                  <strong>No unread notifications</strong>
-                </div>
-              </li>
-            {{/if}}
-          </ul>
+
+          <div class="flyout">
+            {{> render component="notifiFlyout"}}
+          </div>
         </li>
       </ul>
     </nav>

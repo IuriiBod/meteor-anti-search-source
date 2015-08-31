@@ -8,14 +8,14 @@ component.state.job = function() {
   var item = getPrepItem(id);
   this.set("job", item);
   return item;
-}
+};
 
 component.state.section = function() {
   var item = this.get("job");
   if(item && item.section) {
     return Sections.findOne(item.section).name;
   }
-}
+};
 
 component.state.isPrep = function() {
   var item = this.get("job");
@@ -29,7 +29,7 @@ component.state.isPrep = function() {
       }
     }
   }
-}
+};
 
 component.state.isRecurring = function() {
   var item = this.get("job");
@@ -43,7 +43,7 @@ component.state.isRecurring = function() {
       }
     }
   }
-}
+};
 
 component.state.ingExists = function() {
   var item = this.get("job");
@@ -52,7 +52,7 @@ component.state.ingExists = function() {
   } else {
     return false;
   }
-}
+};
 
 
 component.state.isChecklist = function() {
@@ -60,28 +60,28 @@ component.state.isChecklist = function() {
   if(item && item.checklist && item.checklist.length > 0) {
     return true;
   }
-}
+};
 
 component.state.checklist = function() {
   var item = this.get("job");
   if(item && item.checklist) {
     return item.checklist;
   }
-}
+};
 
 component.state.startsOn = function() {
   var item = this.get("job");
   if(item && item.startsOn) {
     return moment(item.startsOn).format("YYYY-MM-DD");
   }
-}
+};
 
 component.state.repeatAt = function() {
   var item = this.get("job");
   if(item && item.repeatAt) {
     return moment(item.repeatAt).format("hh:mm A");
   }
-}
+};
 
 component.state.endsOn = function() {
   var item = this.get("job");
@@ -98,24 +98,36 @@ component.state.endsOn = function() {
     }
     return ends;
   }
-}
+};
 
 component.state.isWeekly = function() {
   var item = this.get("job");
   if(item) {
-    if(item.frequency == "Weekly") {
-      return true;
-    } else {
-      return false;
-    }
+    return item.frequency === "Weekly";
   }
-}
+};
+
+component.state.isDaily = function() {
+  var item = this.get("job");
+  if(item) {
+    return item.frequency === "Daily";
+  }
+};
+
+component.state.frequency = function() {
+  var item = this.get("job");
+  var frequency = item.frequency;
+  if (frequency === "Every X Weeks") {
+    frequency = frequency.replace("X", item.step);
+  }
+  return frequency;
+};
 
 component.state.repeatOnDays = function() {
   var item = this.get("job");
   var repeat = null;
   if(item) {
-    if(item.frequency == "Weekly") {
+    if(_.contains(["Every X Weeks", "Weekly"], item.frequency)) {
       if(item.repeatOn.length > 0) {
         if(item.repeatOn.length == 7) {
           repeat = "Everyday";
@@ -126,7 +138,7 @@ component.state.repeatOnDays = function() {
       return repeat;
     } 
   }
-}
+};
 
 
 component.state.description = function() {
@@ -134,25 +146,41 @@ component.state.description = function() {
   if(item) {
     return item.description;
   }
-}
+};
 
 component.state.labourCost = function() {
   var item = this.get("job");
   if(item) {
     return item.labourCost;
   }
-}
+};
 
 component.state.prepCostPerPortion = function() {
   var item = this.get("job");
   if(item) {
     return item.prepCostPerPortion;
   }
-}
+};
 
 component.state.isManagerOrAdmin = function() {
   var userId = Meteor.userId();
   return isManagerOrAdmin(userId);
-}
+};
 
+component.state.relatedMenus = function() {
+  var id = this.id;
+  subs.subscribe("jobsRelatedMenus", id);
+  var relatedMenus = MenuItems.find().fetch();
+  return relatedMenus;
+};
 
+component.state.getCategory = function(id) {
+  subs.subscribe("menuCategories");
+  var category = Categories.findOne({_id: id});
+  
+  if (category) {
+    return category.name;
+  } else {
+    return '';
+  }
+};

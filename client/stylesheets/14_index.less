@@ -1,0 +1,36 @@
+@import "globals/variables.import.less";
+
+
+.user-bio {
+  .m-b-md {
+    > img {
+      max-width: 216px;
+      max-height: 216px;
+    }
+  }
+}
+
+.switch-user {
+  .user-bio {
+    margin: 1em 0;
+    padding: 1em;
+
+    &:hover {
+      cursor: pointer;
+      background-color: @lazur;
+      color: @gray;
+    }
+
+    .username {
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .m-b-md {
+      > img {
+        width: 75%;
+        height: 75%;
+      }
+    }
+  }
+}

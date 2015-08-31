@@ -12,7 +12,25 @@ Meteor.methods({
     }
     var doc = {
       "stocktakeDate": new Date(date).getTime(),
-      "date": Date.now()
+      "date": Date.now(),
+      "generalAreas": [],
+      "specialAreas": []
+    }
+    var generalAreas = GeneralAreas.find({"active": true}).fetch();
+    if(generalAreas && generalAreas.length > 0) {
+      generalAreas.forEach(function(area) {
+        if(doc.generalAreas.indexOf(area._id) < 0) {
+          doc['generalAreas'].push(area._id);
+        }
+      });
+    }
+    var specialAreas = SpecialAreas.find({"active": true}).fetch();
+    if(specialAreas && specialAreas.length > 0) {
+      specialAreas.forEach(function(area) {
+        if(doc.specialAreas.indexOf(area._id) < 0) {
+          doc['specialAreas'].push(area._id);
+        }
+      });
     }
     var id = StocktakeMain.insert(doc);
     logger.info("Creating new stocktake", date, id);
@@ -158,6 +176,9 @@ Meteor.methods({
       }
       var id = Stocktakes.insert(doc);
       logger.info("New stocktake created", id, place);
+
+      StocktakeMain.update({"_id": info.version}, {$addToSet: {"generalAreas": info.generalArea, "specialAreas": info.specialArea}});
+      logger.info("Stocktake main updated with areas", info.version);
     }
     return;
   },

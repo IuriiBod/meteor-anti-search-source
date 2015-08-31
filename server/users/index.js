@@ -4,11 +4,15 @@ Accounts.onCreateUser(function(options, user){
   if(user.services.google) {
       user.emails = [{ "address": null}];
       user.emails[0].address = user.services.google.email;
-      user.emails[0].verified = user.services.google.verified_email
+      user.emails[0].verified = user.services.google.verified_email;
       user.username = options.profile.name;
   }     
   if(!user.profile.name) {
     user.profile.name = user.username;
+  }
+  if(user.profile.pinCode) {
+    user.pinCode = user.profile.pinCode;
+    delete user.profile.pinCode;
   }
   
   // if this is the first user ever, make them an admin
@@ -21,6 +25,27 @@ Accounts.onCreateUser(function(options, user){
 });
 
 Meteor.methods({
+  inputPinCode: function (pinCode) {
+    var user = Meteor.users.findOne({
+      _id: this.userId,
+      pinCode: pinCode
+    });
+    if (_.isUndefined(user)) {
+      throw new Meteor.Error(401, "Wrong pin code");
+    }
+    else {
+      return true;
+    }
+  },
+  changePinCode: function (newPinCode) {
+    Meteor.users.update({
+      _id: this.userId
+    }, {
+      $set: {
+        pinCode: newPinCode
+      }
+    });
+  },
   changeUserPermission: function(id, type) {
     var user = Meteor.user();
     if(!user) {

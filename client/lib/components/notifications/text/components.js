@@ -11,7 +11,6 @@ component.state.notifi = function() {
   }
 }
 
-
 component.state.icon = function() {
   if(this.notification) {
     var type = this.notification.type;
@@ -25,6 +24,18 @@ component.state.icon = function() {
       return "calendar-o"
     }
   }
+}
+
+component.state.createdByImage = function() {
+  var createdBy = this.notification.createdBy;
+  var user = Meteor.users.findOne({_id: createdBy});
+  var image = '/images/user-image.jpeg';
+  if(user && user.services) {
+    if(user.services.google) {
+      image = user.services.google.picture;
+    }
+  } 
+  return image;
 }
 
 component.prototype.onItemRendered = function() {

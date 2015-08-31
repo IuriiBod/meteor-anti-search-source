@@ -3,8 +3,13 @@ var component = FlowComponents.define("areaFilters", function(props) {
 });
 
 component.state.generalAreas = function() {
-  var data = GeneralAreas.find({}, {sort: {"createdAt": 1}});
-  return data;
+  var main = StocktakeMain.findOne(Session.get("thisVersion"));
+  if(main && main.orderReceipts && main.orderReceipts.length > 0) {
+    var gareas = main.generalAreas;
+    return GeneralAreas.find({"_id": {$in: gareas}});
+  } else {
+    return GeneralAreas.find({"active": true});
+  }
 }
 
 component.state.ifGAreaExists = function() {
@@ -16,7 +21,13 @@ component.state.ifGAreaExists = function() {
 }
 
 component.state.specialAreas = function(gareaId) {
-  return SpecialAreas.find({"generalArea": gareaId}, {sort: {"createdAt": 1}});  
+  var main = StocktakeMain.findOne(Session.get("thisVersion"));
+  if(main && main.orderReceipts && main.orderReceipts.length > 0) {
+    var sareas = main.specialAreas;
+    return SpecialAreas.find({"_id": {$in: sareas}});
+  } else {
+    return SpecialAreas.find({"generalArea": gareaId, "active": true});
+  }
 }
 
 component.state.editable = function() {
@@ -26,11 +37,8 @@ component.state.editable = function() {
 component.prototype.onListRendered = function() {
   var garea = GeneralAreas.findOne({}, {sort: {"createdAt": 1}});
   if(garea && !Session.get("activeGArea")) {
-    Session.set("activeGArea", garea._id)
-    if(garea.specialAreas && garea.specialAreas.length > 0) {
-      var s = garea.specialAreas[0];
-      Session.set("activeSArea", garea.specialAreas[0]);
-    }
+    Session.set("activeGArea", garea._id);
+    Session.set("activeSArea", null);
   }
 
 }

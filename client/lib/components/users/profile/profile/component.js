@@ -9,14 +9,14 @@ component.state.basic = function() {
   if(user) {
     return user;
   }
-}
+};
 
 component.state.email = function() {
   var user = this.get("user");
   if(user && user.emails) {
-    return user.emails[0].address;;
+    return user.emails[0].address;
   }
-}
+};
 
 component.state.image = function() {
   var user = this.get("user");
@@ -27,7 +27,7 @@ component.state.image = function() {
       return "/images/user-image.jpeg";
     }
   }
-}
+};
 
 //permitted for profile owner and admins
 component.state.isEditPermitted = function() {
@@ -41,7 +41,7 @@ component.state.isEditPermitted = function() {
       return false;
     }
   }
-}
+};
 
 //permitted for admin only
 component.state.isAdminAndManagerPermitted = function() {
@@ -51,7 +51,7 @@ component.state.isAdminAndManagerPermitted = function() {
   } else {
     return false;
   }
-}
+};
 
 
 component.state.shiftsPerWeek = function() {
@@ -73,7 +73,7 @@ component.state.shiftsPerWeek = function() {
     formattedShifts.push(doc);
   });
   return formattedShifts;
-}
+};
 
 component.state.resignDate = function() {
   var id = this.get("id");
