@@ -18,6 +18,9 @@ SearchSource.defineSource('jobItemsSearch', function(searchText, options) {
     if(options.type) {
       selector["type"] = options.type;
     }
+    if(options.isArchive) {
+      selector["isArchive"] = options.isArchive;
+    }
   } else {
     optionFileds['limit'] = 10;
   }

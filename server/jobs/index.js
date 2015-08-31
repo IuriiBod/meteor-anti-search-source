@@ -201,5 +201,16 @@ Meteor.methods({
       logger.info("Inventory update ", {"jobId": jobId, "portions": job.portions});
       //add inventory update here (Not designed yet)
     }
-  }  
+  },
+
+  'archiveJobItem': function(id) {
+    var doc = {};
+    var job = JobItems.findOne({_id: id});
+    if(job && job.isArchive) {
+      doc.isArchive = false;
+    } else {
+      doc.isArchive = true;
+    }
+    JobItems.update({_id: id}, {$set: doc});
+  }
 });

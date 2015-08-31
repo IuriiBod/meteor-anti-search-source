@@ -271,3 +271,13 @@ component.action.submit = function (id, info) {
     }
   });
 };
+
+component.state.isArchive = function() {
+  var id = Router.current().params._id;
+  if (id) {
+    var item = JobItems.findOne(id);
+    if(item) {
+      return item.isArchive;
+    }
+  }
+}

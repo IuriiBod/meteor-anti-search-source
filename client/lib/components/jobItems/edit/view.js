@@ -354,6 +354,17 @@ Template.editJobItem.events({
     }
     Session.set("checklist", listItems);
     var item = $(event.target).closest("li").remove();
+  },
+
+  'click .archiveJobItem': function(e, tpl) {
+    e.preventDefault();
+    var id = tpl.$(e.target).attr("data-id");
+    Meteor.call("archiveJobItem", id, function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
   }
 });
 
