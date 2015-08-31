@@ -3,20 +3,24 @@ var component = FlowComponents.define("submitJob", function(props) {
 });
 
 component.state.jobTypes = function() {
-  return ["Prep", "Recurring"];
-}
+  return JobTypes.find();
+};
 
 component.state.jobs = function() {
-  return JobItems.find({"type": this.get("type")});
-}
+  var jobType = this.get("type");
+  if (!jobType) {
+    return;
+  }
+  return JobItems.find({"type": jobType});
+};
 
 component.action.onChangeType = function(type) {
   this.set("type", type);
-}
+};
 
 component.action.onChangeJob = function(job) {
   this.set("jobRef", job);
-}
+};
 
 component.state.portions = function() {
   var jobId = this.get("jobRef");
@@ -28,7 +32,7 @@ component.state.portions = function() {
       return job.portions;
     }
   }
-}
+};
 
 component.action.keyup = function(portions) {
   var jobId = this.get("jobRef");
@@ -39,18 +43,20 @@ component.action.keyup = function(portions) {
       this.set("activeTime", time);
     }
   }
-}
+};
 
 component.state.isPrep = function() {
-  if(this.get('type') == "Prep") {
+  var type = JobTypes.findOne(this.get("type"));
+  if(type && type.name == "Prep") {
     return true;
   } else {
     return false;
   }
-}
+};
 
 component.state.activeTimes = function() {
-  if(this.get('type') == "Prep") {
+  var type = JobTypes.findOne(this.get("type"));
+  if(type && type.name == "Prep") {
     var miliSeconds = parseInt(this.get("activeTime")) * 1000;
     var hours = moment.duration(miliSeconds).hours();
     var minutes = moment.duration(miliSeconds).minutes();
@@ -67,12 +73,15 @@ component.state.activeTimes = function() {
     }
     return text;
   }
-}
+};
 
 component.prototype.onJobRendered = function() {
-  this.set("type", "Prep");
-  this.set("activeTime", 0);
-}
+  var prep = JobTypes.findOne({"name": "Prep"});
+  if(prep) {
+    this.set("type", prep._id);
+    this.set("activeTime", 0);  
+  }
+};
 
 component.action.submit = function(info) {
   var self = this;
@@ -80,11 +89,12 @@ component.action.submit = function(info) {
     if(err) {
       return alert(err.reason);
     } else {
-      self.set("type", "Prep");
+      var prep = JobTypes.findOne({"name": "Prep"});
+      self.set("type", prep._id);
       $("input").val(0);
       $('select').prop('selectedIndex', 0);
       self.set("activeTime", 0);
       $("#submitJobModal").modal("hide");
     }
   });
-}
+};

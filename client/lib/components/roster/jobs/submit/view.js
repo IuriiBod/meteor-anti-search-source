@@ -1,17 +1,17 @@
 Template.submitJob.events({
   'submit form': function(event, instance) {
     event.preventDefault();
-    var type = $(event.target).find('[name=type]').val();;
+    var type = $(event.target).find('[name=type]').val();
     var job = $(event.target).find('[name=job]').val();
-    var portions = $(event.target).find('[name=portions]').val();;
+    var portions = $(event.target).find('[name=portions]').val();
     var activeTime = $(event.target).find('[name=activeTime]').val();
     
 
     if(!job || job.trim() == "") {
       return alert("Please select a job from list");
-
     }
-    if(type == "Prep") {
+    var jobType = JobTypes.findOne(type);
+    if(jobType && jobType,name == "Prep") {
       if(!portions || portions <= 0) {
         return alert("Please add no of portions you need");
       }
@@ -21,11 +21,11 @@ Template.submitJob.events({
     }
     
     var info = {
-      "type": type,
-      "ref": job,
-      "portions": portions,
-      "activeTime": activeTime,
-    }
+      type: type,
+      ref: job,
+      portions: portions,
+      activeTime: activeTime
+    };
     FlowComponents.callAction("submit", info);
   }
 });
