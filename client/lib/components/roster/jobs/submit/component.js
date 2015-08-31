@@ -77,8 +77,10 @@ component.state.activeTimes = function() {
 
 component.prototype.onJobRendered = function() {
   var prep = JobTypes.findOne({"name": "Prep"});
-  this.set("type", prep._id);
-  this.set("activeTime", 0);
+  if(prep) {
+    this.set("type", prep._id);
+    this.set("activeTime", 0);  
+  }
 };
 
 component.action.submit = function(info) {
