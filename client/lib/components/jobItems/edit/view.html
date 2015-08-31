@@ -131,6 +131,14 @@
                 </div>
                 {{#if state$isRecurringDaily}}
                 {{else}}
+                  {{#if state$isRecurringEveryXWeeks}}
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">Step</label>
+                      <div class="col-sm-10">
+                        <input type="number" name="step" class="" value="{{state$step}}" min="2">
+                      </div>
+                    </div>
+                  {{/if}}
                   <div class="form-group">
                     <label class="col-sm-2 control-label">Repeat On</label>
                     <div class="col-sm-10">
@@ -173,15 +181,24 @@
                     {{#if state$endsOnNotNull}}
                     <div class="radio">
                       <input type="radio" id="radio" name="radioOption" data-doc="endsNever" checked="{{state$endsNever}}" >
-                      <label for="radio">Never</label>
+                      <label for="radio">
+                        Never
+                      </label>
                     </div>
                     <div class="radio">
                       <input type="radio" id="radio" data-doc="endsAfter" name="radioOption" checked="{{state$endsAfter}}">
-                      <label for="radio">After<input type="text" name="occurrences" class="" value="{{state$endOccurrences}}">occurrences</label>
+                      <label for="radio">
+                        After
+                        <input type="text" name="occurrences" class="" value="{{state$endOccurrences}}">
+                        occurrences
+                      </label>
                     </div>
                     <div class="radio">
                       <input type="radio" id="radio" name="radioOption" data-doc="endsOn" checked="{{state$endsOn}}">
-                      <label for="radio">On<input type="text" name="endsOn" class="dateselecter" value="{{state$endDate}}"></label>
+                      <label for="radio">
+                        On
+                        <input type="text" name="endsOn" class="dateselecter" value="{{state$endDate}}">
+                      </label>
                     </div>
                     {{else}}
                     <div class="radio">
