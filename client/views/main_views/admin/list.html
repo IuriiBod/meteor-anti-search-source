@@ -1,6 +1,6 @@
 <template name="adminMainView">
    <!-- Page heading -->
-  {{> render component="pageHeading" title="Admin" }}
+  {{> render component="pageHeading" title="Admin"}}
 
   <div class="wrapper wrapper-content">
     <div class="row">
@@ -14,28 +14,29 @@
               <a href="#sections" data-toggle="tab">Sections</a>
             </li>
             <li class="">
-              <a href="#details" data-toggle="tab">Details</a>
+              <a href="#areas" data-toggle="tab">Stock Areas</a>
             </li>
             <li class="">
-              <a href="#suppliers" data-toggle="tab">Suppliers</a>
+              <a href="#details" data-toggle="tab">Details</a>
             </li>
           </ul>
           <div class="panel-body">
             <div class="tab-content">
               <div class="tab-pane active" id="usersList">
+                <strong>Inactivity timeout</strong>
+                {{> render component='inactivityTimeoutField'}}
+                <br>
                 <strong>Users List</strong>
                 {{> render component='usersList'}}
               </div>
               <div class="tab-pane" id="sections">
-                <strong>Sections</strong>
                 {{> render component='sections'}}
+              </div>
+              <div class="tab-pane" id="areas">
+                {{> render component='stockAreas'}}
               </div>
               <div class="tab-pane" id="details">
                 <strong>Details</strong>
-                <p>Coming soon...!</p>
-              </div>
-              <div class="tab-pane" id="suppliers">
-                <strong>Suppliers</strong>
                 <p>Coming soon...!</p>
               </div>
             </div>

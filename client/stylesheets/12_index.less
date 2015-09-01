@@ -53,7 +53,7 @@
     margin-right: -300px;
 }
 // flyout-container redesign
-.flyout-container {
+.flyout-container, .flyout-notifi-container {
     position: fixed;
     top: 0 !important;
     width: 500px;
@@ -121,7 +121,7 @@
             font-size: 13px;
             color: #696969;
             position: relative;
-            .theme-config-close-btn {
+            .theme-config-close-btn, .theme-config-close-notifi-btn {
                 position: absolute;
                 left: 0;
                 top: 0;
@@ -138,21 +138,11 @@
         }
     }
 
-    .skin-setttings:after {
-        content: "";
-        height: 80px;
-        width: 100%;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        background: -moz-linear-gradient(top,  rgba(243,243,244,0) 0%, rgba(243,243,244,1) 100%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(243,243,244,0)), color-stop(100%,rgba(243,243,244,1)));
-        background: -webkit-linear-gradient(top,  rgba(243,243,244,0) 0%,rgba(243,243,244,1) 100%);
-        background: -o-linear-gradient(top,  rgba(243,243,244,0) 0%,rgba(243,243,244,1) 100%);
-        background: -ms-linear-gradient(top,  rgba(243,243,244,0) 0%,rgba(243,243,244,1) 100%);
-        background: linear-gradient(to bottom,  rgba(243,243,244,0) 0%,rgba(243,243,244,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00f3f3f4', endColorstr='#f3f3f4',GradientType=0 );
-    }
+  .white-notify-bg {
+      background: #fff;
+      width: 100%;
+      height: 100%;
+  }
 
     .setings-item::after {
         clear: both;
@@ -253,11 +243,16 @@
     }
 }
 .navbar-top-links {
-    .dropdown-alerts {
-        width: 400px;
-        min-width: 0;
-        margin-left: -74px;
+  .dropdown-alerts {
+      width: 400px;
+      min-width: 0;
+      margin-left: -74px;
+  }
+  .notifi-alerts {
+    & > li {
+      width: 400px;
     }
+  }
 }
 .filter-menus {
     width: 93% !important;
@@ -282,14 +277,14 @@ span {
 
 // media queries for tablet
 @media (min-width: 768px) and (max-width: 991px){
-  .flyout-container{
+  .flyout-container, .flyout-notifi-container{
     width: 50%;
   }
 }
 
 
 @media (max-width: 768px){
-  .flyout-container{
+  .flyout-container, .flyout-notifi-container{
     width: 100%;
 
     .setings-item{
@@ -326,13 +321,8 @@ span {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
+.my-editable-link {
+  top: 8px;
+  position: relative;
+  border-bottom: 1px dashed;
+}

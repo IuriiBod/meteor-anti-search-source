@@ -8,6 +8,19 @@ Template.profile.events({
         return alert(err.reason);
       }
     });
+  },
+  "submit form#change-pin": function(event) {
+    event.preventDefault();
+    var newPin = Template.instance().find("#new-pin").value;
+    Meteor.call("changePinCode", newPin, function (err) {
+      if (err) {
+        console.log(err);
+        return alert(err.reason);
+      }
+      else {
+        alert("PIN has been changed.");
+      }
+    });
   }
 });
 

@@ -1,0 +1,10 @@
+<template name="currentStockData">
+  {{#each state$stockIds}}
+    <tr>
+      <td>{{stockById this}}</td>
+      {{#each state$countByDate this}}
+        <td>{{this}}</td>
+      {{/each}}
+    </tr>
+  {{/each}}
+</template>

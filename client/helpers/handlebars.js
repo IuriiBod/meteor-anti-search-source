@@ -13,6 +13,11 @@ UI.registerHelper('timeFromNow', function(time) {
   return moment(time).fromNow();
 });
 
+UI.registerHelper("DateTime", function(time) {
+  return moment(time).format("DD/MM/YY hh:mm a");
+});
+
+
 //duration
 UI.registerHelper('timeDuration', function(time) {
   var hours = moment.duration(time).hours();
@@ -61,18 +66,84 @@ UI.registerHelper('secondsToMinutes', function(secs) {
 });
 
 UI.registerHelper("timeFormattedWithDate", function(time) {
-  var timeFormatted = moment(time).format('MMMM Do YYYY, h:mm:ss a');
-  return timeFormatted;
+  if(time) {
+    return moment(time).format('MMMM Do YYYY, h:mm:ss a');
+  } else {
+    return "-"
+  }
 });
 
 UI.registerHelper("dayFormat", function(date) {
-  var dateFormatted = moment(date).format('ddd, Do MMMM');
-  return dateFormatted;
+  if(date) {
+    return moment(date).format('ddd, Do MMMM');
+  } else {
+    return "-"
+  }
+});
+
+UI.registerHelper("dateFormat", function(date) {
+  if(date) {
+    var dateFormatted = moment(date).format('YYYY-MM-DD');
+    return dateFormatted;
+  } else {
+    return "-"
+  }
+});
+
+UI.registerHelper("dateFormatDahsed", function(date) {
+  if(date) {
+    return moment(date).format('DD/MM/YYYY');
+  } else {
+    return "-";
+  }
 });
 
 UI.registerHelper("username", function(id) {
   var user = Meteor.users.findOne(id);
   if(user) {
     return user.username;
+  }
+});
+
+UI.registerHelper("jobTypeById", function(id) {
+  var type = JobTypes.findOne(id);
+  if(type) {
+    return type.name;
+  }
+});
+
+UI.registerHelper("sectionById", function(id) {
+  var section = Sections.findOne(id);
+  if(section) {
+    return section.name;
+  }
+});
+
+UI.registerHelper("stockById", function(id) {
+  var stock = Ingredients.findOne(id);
+  if(stock) {
+    return stock.description;
+  }
+});
+
+UI.registerHelper("roundCount", function(count) {
+  return Math.round(count * 100)/100;
+});
+
+UI.registerHelper("Username", function(userId) {
+  var user = Meteor.users.findOne(userId);
+  if(user) {
+    return user.username;
+  }
+});
+
+UI.registerHelper("SupplierName", function(id) {
+  if(id) {
+    var supplier = Suppliers.findOne(id);
+    if(supplier) {
+      return supplier.name;
+    }
+  } else {
+    return "Not assigned";
   }
 });

@@ -15,6 +15,16 @@ Template.navigation.events({
     event.preventDefault();
     Meteor.logout();
   },
+  
+  'click #side-menu>li': function(e, tpl) {
+    var li = $(e.target).parent();
+    
+    if (li.closest("ul").attr("id") == "side-menu") {
+      tpl.$("ul.collapse").removeClass("in");
+      li.siblings().removeClass("active");
+      li.addClass("active");
+    }
+  }
 });
 
 Template.navigation.helpers({
@@ -24,7 +34,17 @@ Template.navigation.helpers({
   },
 
   week: function() {
-    var week = moment().format("w");
+    var today = moment();
+    var week = today.format("w");
+    week = parseInt(week);
+    if(today.format("dd") == "Su") {
+      week = (week - 1);
+    }
     return week;
+  },
+  
+  year: function() {
+    var year = moment().format("YYYY");
+    return year;
   }
 });

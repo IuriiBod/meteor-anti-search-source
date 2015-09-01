@@ -1,0 +1,21 @@
+<template name="ordersListItem">
+  {{#if state$order}}
+    <tr data-id="{{state$order._id}}">
+      <td>{{state$order.stockName}}</td>
+      <td>{{state$order.countOnHand}} [{{state$order.unit}}]</td>
+      <td>{{state$order.countNeeded}} [{{state$order.unit}}]</td>
+      {{#if state$editable}}
+        <td><a href="#" class="orderingCount">{{state$order.countOrdered}} </a>[{{state$order.unit}}]</td>
+      {{else}}
+        <td>{{state$order.countOrdered}} [{{state$order.unit}}]</td>
+      {{/if}}
+      {{#if state$supplier}}
+      {{else}}
+        <td>
+          <a href="" class="removeStockOrder">Delete</a>
+          <!-- |<a>Add to supplier</a> -->
+        </td>
+      {{/if}}
+    </tr>
+  {{/if}}
+</template>

@@ -65,3 +65,28 @@
   cursor: pointer;
 }
 
+.flyout-container .skin-setttings {
+  padding-bottom: 10px !important;
+}
+
+.flyout-container .theme-config-box .removeAssignedJob {
+  position: relative !important;
+  top: 2px;
+  bottom: 2px;
+  margin: auto;
+  width: 98%;
+  left: -4px;
+  background-color: #f64747;
+}
+
+input {
+  color: #555 !important;
+}
+
+.form-inline .form-control{
+  width: 100% !important;
+}
+
+.fa-reorder {
+  cursor: move;
+}

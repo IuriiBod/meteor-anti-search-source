@@ -1,0 +1,15 @@
+<template name="currentStocksReport">
+  <table class="dataTables-example table table-hover table-striped" id="dataTablesEx">
+    <thead>
+      <tr>
+        <th>Stock Item</th>
+        {{#each state$week}}
+          <th>{{this.day}} <br>{{this.date}}</th>
+        {{/each}}
+      </tr>
+    </thead>
+    <tbody>
+      {{> render component="currentStockData"}}
+    </tbody>
+  </table>
+</template>

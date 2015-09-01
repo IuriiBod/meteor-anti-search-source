@@ -24,3 +24,12 @@ Meteor.publish("jobItems", function(ids) {
   logger.info("Job items published", ids);
   return cursors;
 });
+
+Meteor.publish("jobsRelatedMenus", function(id) {
+  if(!this.userId) {
+    logger.error('User not found : ' + this.userId);
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+  logger.info("Related menus published", {"id": id});
+  return MenuItems.find({"jobItems._id": id});
+});

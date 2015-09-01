@@ -32,3 +32,7 @@ component.state.item = function() {
   menu.contribution = Math.round(menu.contribution * 100)/100;
   return menu;
 }
+
+component.state.id = function() {
+  return this.item._id;
+}

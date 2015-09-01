@@ -1,0 +1,40 @@
+<template name="orderReceiveItem">
+  <tr data-id="{{state$stock._id}}">
+    <td>{{state$stock.description}}</td>
+    {{#if state$isWrongQuantity}}
+      <td>{{state$stock.countDelivered}} [{{state$stock.unit}}]</td>
+    {{else}}
+      <td>{{state$stock.countOrdered}} [{{state$stock.unit}}]</td>
+    {{/if}}
+    <td>$ {{roundCount state$stock.unitPrice}}</td>
+    <td>$ {{roundCount state$total}}</td>
+    <td>
+      {{#if state$stock.received}}
+        {{#if state$isEditable state$stock._id}}
+          <a class="btn btn-sm btn-outline btn-danger wrongQuantity">Wrong Quantity</a>
+          <a class="btn btn-sm btn-outline btn-danger wrongPrice">Wrong Price</a>
+          <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i></button>
+        {{else}}
+          {{state$deliveryStatus}}
+          {{#if state$isReceived}}
+          {{else}}
+            <a href="#" class="editPermitted">[Edit]</a>
+          {{/if}}
+        {{/if}}
+      {{else}}
+        {{#if state$isDeliveredCorreclty}}
+        {{else}}
+          {{#if state$isWrongPrice}}
+          {{else}}
+            <a class="btn btn-sm btn-outline btn-danger wrongPrice">Wrong Price</a>
+          {{/if}}
+          {{#if state$isWrongQuantity}}
+          {{else}}
+            <a class="btn btn-sm btn-outline btn-danger wrongQuantity">Wrong Quantity</a>
+          {{/if}}
+        {{/if}}
+        <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i></button>
+      {{/if}}
+    </td>
+  </tr>
+</template>
