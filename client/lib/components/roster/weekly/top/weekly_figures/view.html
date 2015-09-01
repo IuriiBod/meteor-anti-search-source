@@ -32,19 +32,19 @@
             <tr>
               <td>Sales</td>
               {{#each state$week}}
-                {{> render component="salesTr"}}
+                {{> render component="salesTr" day=this}}
               {{/each}}
             </tr>
             <tr>
               <td>Staff Cost ($)</td>
               {{#each state$week}}
-                {{> render component="staffCostTr"}}
+                {{> render component="staffCostTr" day=this}}
               {{/each}}
             </tr>
             <tr>
               <td>Staff Cost (%)</td> 
               {{#each state$week}}
-                {{> render component="staffCostPercentagesTr"}}
+                {{> render component="staffCostPercentagesTr" day=this}}
               {{/each}}
             </tr>
           </tbody>

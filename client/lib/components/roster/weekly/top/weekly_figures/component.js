@@ -3,6 +3,5 @@ var component = FlowComponents.define("weeklyFigures", function(props) {
 });
 
 component.state.week = function() {
-  console.log(this.week);
   return this.week;
 }
