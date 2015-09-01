@@ -266,3 +266,13 @@ component.state.isStockTakeList = function() {
 component.state.date = function() {
   return moment().format("YYYY-MM-DD");
 }
+
+component.state.isArchive = function() {
+  var id = Router.current().params._id;
+  var menu = MenuItems.findOne({_id: id});
+  if(menu.status == 'archived') {
+    return true;
+  } else {
+    return false;
+  }
+}

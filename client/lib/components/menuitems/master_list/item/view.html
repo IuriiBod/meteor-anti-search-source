@@ -1,9 +1,22 @@
 <template name="menuItem">
   <a class="list-group-item" href="/menuItem/{{state$item._id}}">
     {{{state$item.name}}}
+<!--
     <span class="badge">
       <i class="fa fa-fw fa-angle-right"></i>
     </span>
+-->
+    {{# if state$isPermitted}}
+      {{# if state$isArchive}}
+        <button class="btn btn-warning btn-xs pull-right archiveMenuItem" data-id="{{state$item._id}}">
+          <i class="fa fa-dropbox"></i>
+        </button>
+      {{else}}
+        <button class="btn btn-warning btn-xs pull-right archiveMenuItem" data-id="{{state$item._id}}">
+          <i class="fa fa-archive"></i>
+        </button>
+      {{/ if}}
+    {{/ if}}
   </a>
 </template>
 

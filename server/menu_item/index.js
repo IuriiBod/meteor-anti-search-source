@@ -506,5 +506,16 @@ Meteor.methods({
       logger.info("Duplicate Menu items added ", {"original": id, "duplicate": newid});
       return newid;
     }
+  },
+
+  'archiveMenuItem': function(id) {
+    var doc = {};
+    var menu = MenuItems.findOne({_id: id});
+    if(menu && menu.status == "archived") {
+      doc.status = "active";
+    } else {
+      doc.status = "archived";
+    }
+    MenuItems.update({_id: id}, {$set: doc});
   }
 });

@@ -82,12 +82,27 @@
               </li>
               {{#if state$isManagerOrAdmin}}
                 <li role="separator" class="divider"></li>
+                {{#if state$isArchive}}
+                <li>
+                  <a href="#" class="hidden-print archiveMenuItemBtn" data-id="{{state$id}}">
+                    <i class="fa fa-dropbox" data-id="{{state$id}}"></i>
+                    Restore
+                  </a>
+                </li>
                 <li>
                   <a href="#" class="hidden-print deleteMenuItemBtn" data-id="{{state$id}}">
                     <i class="fa fa-trash-o" data-id="{{state$id}}"></i>
                     Delete
                   </a>
                 </li>
+                {{else}}
+                  <li>
+                  <a href="#" class="hidden-print archiveMenuItemBtn" data-id="{{state$id}}">
+                    <i class="fa fa-archive" data-id="{{state$id}}"></i>
+                    Archive
+                  </a>
+                </li>
+                {{/ if}}
               {{/if}}
             </ul>
           </div>

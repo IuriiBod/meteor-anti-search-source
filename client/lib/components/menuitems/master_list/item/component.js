@@ -14,3 +14,21 @@ component.state.category = function() {
     }
   }
 }
+
+component.state.isArchive = function() {
+  var status = this.menuitem.status;
+  if (status == "archived") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+component.state.isPermitted = function() {
+  var user = Meteor.user();
+  if(user && (user.isManager || user.isAdmin)) {
+    return true;
+  } else {
+    return false;
+  }
+}

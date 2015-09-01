@@ -13,5 +13,24 @@ Template.menuItem.events({
         });
       }
     }
+  },
+
+  'click .archiveMenuItem': function(e, tpl) {
+    e.preventDefault();
+    var i, id;
+    if($(e.target).hasClass('fa')) {
+      i = $(e.target);
+    } else {
+      i = $(e.target).find('.fa');
+    }
+    id = i.parent().attr("data-id");
+
+    Meteor.call("archiveMenuItem", id, function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
+    i.toggleClass('fa-dropbox').toggleClass('fa-archive');
   }
 });
