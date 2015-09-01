@@ -104,7 +104,7 @@ Meteor.methods({
       if(info.costPerPortion == info.costPerPortion) {
         if(item.costPerPortion != info.costPerPortion) {
           updateDoc.costPerPortion = parseFloat(info.costPerPortion);
-        }    
+        }
       }
     }
     if(info.portionUsed) {
@@ -168,5 +168,16 @@ Meteor.methods({
 
   ingredientsCount: function() {
     return Ingredients.find().count();
+  },
+
+  'archiveIngredient': function(id) {
+    var doc = {};
+    var ing = Ingredients.findOne({_id: id});
+    if(ing && ing.status == "active") {
+      doc.status = "archived";
+    } else {
+      doc.status = "active";
+    }
+    Ingredients.update({_id: id}, {$set: doc});
   }
 });

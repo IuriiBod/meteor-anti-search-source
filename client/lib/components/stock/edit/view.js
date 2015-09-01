@@ -69,5 +69,17 @@ Template.editIngredientItem.events({
         });
       }
     }
+  },
+
+  'click .archiveIngredient': function(e, tpl) {
+    e.preventDefault();
+    var id = $(e.target).attr("data-id");
+    Meteor.call("archiveIngredient", id, function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
+    $('tr[data-id="'+id+'"]').find(".archiveIngredient").children(".fa").toggleClass("fa-archive").toggleClass("fa-dropbox");
   }
 });
