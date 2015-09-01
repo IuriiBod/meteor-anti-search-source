@@ -6,10 +6,12 @@ var Calendar = function (tpl, options) {
 
 
 Calendar.prototype.convertDate = function (date) {
-  date = moment(date);
-  var hours = date.get('hour');
-  var minutes = date.get('minute');
-  var seconds = date.get('second');
+  if (!moment.isMoment(date)) {
+    date = moment(date);
+  }
+  var hours = date.hours();
+  var minutes = date.minutes();
+  var seconds = date.second();
   date = [seconds, minutes, hours];
   date = _.map(date, function (val, key) {
     return val * Math.pow(60, key);
