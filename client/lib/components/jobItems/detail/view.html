@@ -91,13 +91,13 @@
                 </li>
                 {{#if state$isRecurring}}
                   <li class="list-group-item">
-                    <span class="pull-right">{{state$job.frequency}}</span>Repeat Frequency
+                    <span class="pull-right">{{state$frequency}}</span>Repeat Frequency
                   </li>
-                  {{#if state$isWeekly}}
+                  {{#unless state$isDaily}}
                     <li class="list-group-item">
                       <span class="pull-right">{{state$repeatOnDays}}</span>Repeat On
                     </li>
-                  {{/if}}
+                  {{/unless}}
                   <li class="list-group-item">
                     <span class="pull-right">{{state$repeatAt}}</span>Repeat At
                   </li>

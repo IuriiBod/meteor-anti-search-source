@@ -39,9 +39,9 @@ Template.submitJobItem.helpers({
     }
   },
 
-  isRecurringEveryNWeeks: function() {
+  isRecurringEveryXWeeks: function() {
     var type = Session.get("frequency");
-    return type === "EveryNWeeks";
+    return type === "Every X Weeks";
   },
 
   initChecklist: function () {
@@ -63,6 +63,11 @@ Template.submitJobItem.helpers({
         }
       }).disableSelection();
     });
+  },
+
+  isSelectedJobType: function (jobType) {
+    var selectedJobType = Session.get("jobType");
+    return jobType === selectedJobType;
   }
 });
 
@@ -205,14 +210,14 @@ Template.submitJobItem.events({
       if(!frequency) {
         return alert("Frequency should be defined");
       }
-      info.frequency = frequency === "EveryNWeeks" ? "Weekly": frequency;
+      info.frequency = frequency;
 
-      if(frequency === "EveryNWeeks") {
+      if(frequency === "Every X Weeks") {
         var step = $(event.target).find("[name=step]").val();
         if(!step) {
           return alert("Step should be defined");
         }
-        info.step = step;
+        info.step = parseInt(step);
       }
 
       var repeatAt = $(event.target).find('[name=repeatAt]').val().trim();
@@ -257,7 +262,7 @@ Template.submitJobItem.events({
         info.section = section;
       }
 
-      if(info.frequency == "Weekly") {
+      if(_.contains(["Every X Weeks", "Weekly"], frequency)) {
         var repeatDays = [];
         var repeatOn = $(event.target).find('[name=daysSelected]').get();
         repeatOn.forEach(function(doc) {
@@ -343,11 +348,11 @@ Template.submitJobItem.events({
   }
 });
 
-Template.submitJobItem.rendered = function() {
+Template.submitJobItem.onRendered(function() {
   var prep = JobTypes.findOne({"name": "Prep"});
   if(prep) {
     Session.set("jobType", prep._id);
   }
   Session.set("frequency", "Daily");
   Session.set("checklist", []);
-}
+});

@@ -24,14 +24,24 @@ component.state.status = function() {
   }
 }
 
+component.state.lastOrder = function() {
+  var orders = OrderReceipts.find({"supplier": Session.get("thisSupplier")}, {sort: {"date": -1}, limit: 1}).fetch();
+  if(orders && orders.length > 0) {
+    if(orders[0].date) {
+      return orders[0].date;
+    }
+  }
+}
+
 component.prototype.onSupplierRendered = function() {
   $("#supplierEmail").editable({
-    type: 'text',
-    title: 'Edit Email Address',
-    showbuttons: true,
+    type: "text",
+    title: 'Edit supplier email',
+    showbuttons: false,
     mode: 'inline',
-    emptytext: 'Empty',
-    display: false,
+    autotext: 'auto',
+    display: function(value, response) {
+    },
     success: function(response, newValue) {
       var self = this;
       if(newValue) {
@@ -47,9 +57,11 @@ component.prototype.onSupplierRendered = function() {
   $("#supplierPhone").editable({
     type: 'text',
     title: 'Edit phone number',
-    showbuttons: true,
+    showbuttons: false,
     mode: 'inline',
-    emptytext: 'Empty',
+    autotext: 'auto',
+    display: function(value, response) {
+    },
     success: function(response, newValue) {
       var self = this;
       if(newValue) {
@@ -57,8 +69,6 @@ component.prototype.onSupplierRendered = function() {
         var editDetail = {"phone": newValue};
         updateSupplierDetails(id, editDetail);
       }
-    },
-    display: function(value, sourceData) {
     }
   });
 }

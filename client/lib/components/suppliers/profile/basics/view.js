@@ -18,5 +18,16 @@ Template.basics.events({
         });
       }
   });
+ },
+
+ 'click .supplierStatus': function(event) {
+    event.preventDefault();
+    var id = Session.get("thisSupplier");
+    Meteor.call("activateReactivateSuppliers", id, function(err) {
+      if(err) {
+        console.log(err);
+        return alert(err.reason);
+      }
+    });
  }
 });
