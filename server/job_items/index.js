@@ -391,5 +391,16 @@ Meteor.methods({
       logger.info("Duplicate job item added ", {"original": id, "duplicate": newId});
       return newId;
     }
+  },
+
+  'archiveJobItem': function(id) {
+    var doc = {};
+    var job = JobItems.findOne({_id: id});
+    if(job && job.isArchive) {
+      doc.isArchive = false;
+    } else {
+      doc.isArchive = true;
+    }
+    JobItems.update({_id: id}, {$set: doc});
   }
 });
