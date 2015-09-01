@@ -58,20 +58,21 @@ Template.dailyShiftScheduling.onRendered(function () {
   }
 
   var calendar = new Template.dailyShiftScheduling.Calendar(this, {
-    shiftDate: routeDate,
+    shiftDate: new Date(routeDate),
     oneDay: 1000 * 3600 * 24,
     businessStartsAt: 8,
     businessEndsAt: 5
   });
-  Tracker.autorun(function () {
-    Meteor.defer(function () {
-      Meteor.call("generateRecurrings", routeDate, function (err) {
-        if (err) {
-          console.log(err);
-        } else {
-          calendar.update();
-        }
-      });
-    });
-  });
+  //Tracker.autorun(function () {
+  //  Meteor.defer(function () {
+  //    Meteor.call("generateRecurrings", routeDate, function (err) {
+  //      if (err) {
+  //        console.log(err);
+  //      } else {
+  //        calendar.update();
+  //      }
+  //    });
+  //  });
+  //});
+  calendar.autoUpdate();
 });

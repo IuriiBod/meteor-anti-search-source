@@ -39,15 +39,56 @@ Calendar.prototype.destroy = function () {
 };
 
 
-Calendar.prototype.getShifts = function () {
+Calendar.prototype._getShifts = function () {
   var shifts = Shifts.find({
-    shiftDate: new Date(this.options.shiftDate).getTime()
+    shiftDate: this.options.shiftDate.getTime()
   }, {
     sort: {
       startTime: 1
     }
   });
+  return shifts;
+};
+
+
+
+Calendar.prototype.getShifts = function () {
+  var shifts = this._getShifts();
   this.options.shifts = shifts.fetch();
+};
+
+
+Calendar.prototype._autoUpdateCB = function () {
+  var self = this;
+  var hasDate = _.isDate(self.options.shiftDate);
+  if (!hasDate) {
+    return;
+  }
+  Meteor.call("generateRecurrings", self.options.shiftDate, function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      self.update();
+    }
+  });
+};
+
+Calendar.prototype.autoUpdate = function () {
+  var self = this;
+  Meteor.defer(function () {
+    var shifts = self._getShifts();
+    shifts.observe({
+      added: function () {
+        self._autoUpdateCB();
+      },
+      changed: function () {
+        self._autoUpdateCB();
+      },
+      removed: function () {
+        self._autoUpdateCB();
+      }
+    });
+  });
 };
 
 
