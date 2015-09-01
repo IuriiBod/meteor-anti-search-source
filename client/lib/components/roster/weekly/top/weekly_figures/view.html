@@ -31,15 +31,21 @@
           <tbody>
             <tr>
               <td>Sales</td>
-              {{> render component="salesTr"}}
+              {{#each state$week}}
+                {{> render component="salesTr"}}
+              {{/each}}
             </tr>
             <tr>
-              <td>Staff Cost $</td>
-              {{> render component="staffCostTr"}}
+              <td>Staff Cost ($)</td>
+              {{#each state$week}}
+                {{> render component="staffCostTr"}}
+              {{/each}}
             </tr>
             <tr>
-              <td>Staff Cost %</td>
-              {{> render component="staffCostPercentagesTr"}}
+              <td>Staff Cost (%)</td> 
+              {{#each state$week}}
+                {{> render component="staffCostPercentagesTr"}}
+              {{/each}}
             </tr>
           </tbody>
         </table>
