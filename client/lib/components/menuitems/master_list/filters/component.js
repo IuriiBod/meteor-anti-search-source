@@ -15,11 +15,11 @@ component.state.categories = function() {
 component.state.statuses = function() {
   var selected = Session.get("status");
   if(selected != "all") {
-    var statuses = Statuses.find({"name": {$nin: [selected]}}).fetch();
+    var statuses = Statuses.find({"name": {$nin: [selected, "archived"]}}).fetch();
     statuses.push({"name": "all", "_id": "all"});
     return statuses;
   } else {
-    return Statuses.find().fetch();
+    return Statuses.find({"name": {$ne: "archived"}}).fetch();
   }
 }
 

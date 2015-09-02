@@ -33,16 +33,12 @@ Template.menuItemsList.events({
     }
     if(status && status.toLowerCase() != "all") {
       filter.push({"status": status.toLowerCase()});
+    } else if(status && status.toLowerCase() == "all") {
+      filter.push({"status": {$ne: "archived"}});
     }
     if(filter.length > 0) {
       selector.filter = filter;
     }
-    if(Router.current().params.type) {
-      selector.isArchived = true;
-    } else {
-      selector.isArchived = {$ne: true};
-    }
-
     MenuItemsSearch.search(text, selector);
   },
 
@@ -60,11 +56,6 @@ Template.menuItemsList.events({
           "limit": count + 10,
           "endingAt": lastItem
         };
-        if(Router.current().params.type) {
-          selector.isArchived = true;
-        } else {
-          selector.isArchived = {$ne: true};
-        }
         MenuItemsSearch.search(text, selector);
       }
     }
@@ -84,14 +75,11 @@ Template.menuItemsList.rendered = function() {
   }
   if(status && status.toLowerCase() != "all") {
     filter.push({"status": status.toLowerCase()});
+  } else if(status && status.toLowerCase() == "all") {
+    filter.push({"status": {$ne: "archived"}});
   }
   if(filter.length > 0) {
     selector.filter = filter;
-  }
-  if(Router.current().params.type) {
-    selector.isArchived = true;
-  } else {
-    selector.isArchived = {$ne: true};
   }
   MenuItemsSearch.search("", selector);
 }

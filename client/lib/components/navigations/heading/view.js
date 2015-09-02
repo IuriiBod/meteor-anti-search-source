@@ -14,7 +14,6 @@ Template.pageHeading.events({
     } else {
       selector.status = {$ne: "archived"};
     }
-
     IngredientsListSearch.search("", selector);
     Router.go(event.target.dataset.link, params);
   },
@@ -23,6 +22,7 @@ Template.pageHeading.events({
     event.preventDefault();
     JobItemsSearch.cleanHistory();
     var selector = {
+      type: Session.get("type"),
       limit: 30,
     };
     var params = {};
@@ -35,28 +35,6 @@ Template.pageHeading.events({
       selector.status = {$ne: "archived"};
     }
     JobItemsSearch.search("", selector);
-    Router.go(event.target.dataset.link, params);
-  },
-
-  'click [data-action="changeStatusM"]': function (event) {
-    event.preventDefault();
-    MenuItemsSearch.cleanHistory();
-    var selector = {
-      limit: 30,
-    };
-    var params = {};
-    if(event.target.dataset.link == "menuItemsMaster") {
-      params = {
-        category: "all",
-        status: "all"
-      };
-    } else {
-      selector.isArchived = true;
-      params = {
-        type: "archive"
-      };
-    }
-    MenuItemsSearch.search("", selector);
     Router.go(event.target.dataset.link, params);
   },
 
@@ -519,7 +497,45 @@ Template.pageHeading.events({
         alert(err.reason);
       }
     });
-//    i.toggleClass('fa-dropbox').toggleClass('fa-archive');
+  },
+  'click .archiveJobItem': function(e, tpl) {
+    e.preventDefault();
+    var id = tpl.$(e.target).attr("data-id");
+    Meteor.call("archiveJobItem", id, function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
+  },
+
+  'click .deleteJobItem': function(event) {
+    event.preventDefault();
+    var id = $(event.target).attr("data-id");
+    var item = JobItems.findOne(id);
+
+    var result = confirm("Are you sure you want to delete this job ?");
+    if(result) {
+      Meteor.call("deleteJobItem", id, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        } else {
+          var options = {
+            type: "delete",
+            title: "Job " + item.name + " has been deleted",
+            time: Date.now()
+          };
+          Meteor.call("sendNotifications", id, "job", options, function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.reason);
+            }
+          });
+          Router.go("jobItemsMaster");
+        }
+      });
+    }
   }
 });
 
@@ -567,8 +583,16 @@ Template.pageHeading.rendered = function() {
 
 Template.pageHeading.helpers({
   'isArchive': function() {
+    var archive = Router.current().params.status;
+    if(archive && archive == "archived") {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  'isArchiveJob': function() {
     var archive = Router.current().params.type;
-    if(archive) {
+    if(archive && archive == "archive") {
       return true;
     } else {
       return false;

@@ -16,7 +16,7 @@ Template.menuFilters.events({
 
 Template.menuFilters.helpers({
   'notArchive': function() {
-    if(Router.current().params.type) {
+    if(Router.current().params.status == "archived") {
       return false;
     } else {
       return true;

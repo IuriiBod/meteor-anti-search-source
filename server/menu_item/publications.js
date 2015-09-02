@@ -13,6 +13,8 @@ Meteor.publish("menuList", function(categoryId, status) {
   }
   if(status && status != "all" ) {
     query.status = status;
+  } else if(status && status == "all") {
+    query.status = {$ne: "archived"};
   }
   menuCursor = MenuItems.find(query,
     {sort: {"name": 1}, limit: 30});

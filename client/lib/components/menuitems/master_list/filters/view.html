@@ -18,6 +18,7 @@
     <div class="col-md-6">
     </div>
     <div class="col-md-3">
+      {{# if notArchive}}
       <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize" style="text-align: left">{{state$selectedStatus.name}}
         <span class="caret pull-right m-t-sm" ></span>
       </button>
@@ -26,6 +27,7 @@
           <li><a href="/menuItems/{{state$selectedCategory._id}}/{{this.name}}" class="">{{this.name}}</a></li>
         {{/each}}
       </ul>
+      {{/if}}
     </div>
   </div>
   {{/ if}}

@@ -80,6 +80,16 @@ Template.editIngredientItem.events({
         alert(err.reason);
       }
     });
-    $('tr[data-id="'+id+'"]').find(".archiveIngredient").children(".fa").toggleClass("fa-archive").toggleClass("fa-dropbox");
+    IngredientsListSearch.cleanHistory();
+    var selector = {
+      limit: 30
+    };
+    var params = {};
+    if(Router.current().params.type == "archive") {
+      selector.status = "archived";
+    } else {
+      selector.status = {$ne: "archived"};
+    }
+    IngredientsListSearch.search("", selector);
   }
 });

@@ -511,17 +511,11 @@ Meteor.methods({
   'archiveMenuItem': function(id) {
     var doc = {};
     var menu = MenuItems.findOne({_id: id});
-
-    console.log(menu);
-
-    if(menu && menu.isArchived) {
-      doc.isArchived = false;
+    if(menu && menu.status == "archived") {
+      doc.status = "active";
     } else {
-      doc.isArchived = true;
+      doc.status = "archived";
     }
-
-    console.log(doc);
-
     MenuItems.update({_id: id}, {$set: doc});
   }
 });

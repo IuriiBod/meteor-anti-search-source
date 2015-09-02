@@ -36,7 +36,13 @@
     <div class="col-sm-5">
       {{#if state$isMenuList}}
       <div class="title-action">
-        {{#if state$isManagerOrAdmin}}
+
+        {{#if isArchive}}
+          {{#linkTo route="menuItemsMaster" category="all" status="all" class="btn btn-info"}}
+            <i class="fa fa-long-arrow-left"></i> Active Items
+          {{/linkTo}}
+        {{else}}
+          {{#if state$isManagerOrAdmin}}
           <div class="btn-group">
             <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fa fa-cog"></i>
@@ -45,22 +51,21 @@
             </button>
             <ul class="dropdown-menu" style="margin-left: -56px;">
               <li>
-              {{# if isArchive}}
-                <a href="#" data-action="changeStatusM" data-link="menuItemsMaster">Active Items</a>
-              {{else}}
-                <a href="#" data-action="changeStatusM" data-link="menuItemsMasterType">Archive Items</a>
-              {{/ if}}
+                {{#linkTo route="menuItemsMaster" category="all" status="archived"}}
+                Archive Items
+                {{/linkTo}}
               </li>
               <li>
                 <a href="/menuItems/submit">Add new menu</a>
               </li>
               {{#if state$isMenuListSubscribed}}
-                <li><a href="#" class="btn btn-white unSubscribeMenuList"><i class="fa fa-lg fa-rss text-info"></i> Unsubscribe</a></li>
+              <li><a href="#" class="unSubscribeMenuList"><i class="fa fa-lg fa-rss text-info"></i> Unsubscribe</a></li>
               {{else}}
-                <li><a href="#" class="btn btn-white subscribeMenuList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a></li>
+              <li><a href="#" class="subscribeMenuList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a></li>
               {{/if}}
             </ul>
           </div>
+          {{/if}}
         {{/if}}
       </div>
       {{/if}}
@@ -100,7 +105,7 @@
               </li>
               {{#if state$isManagerOrAdmin}}
                 <li role="separator" class="divider"></li>
-                {{#if state$isArchive}}
+                {{#if state$isArchiveMenu}}
                 <li>
                   <a href="#" class="hidden-print archiveMenuItemBtn" data-id="{{state$id}}">
                     <i class="fa fa-dropbox" data-id="{{state$id}}"></i>
@@ -129,59 +134,6 @@
 
       {{#if state$isJobItemDetailed}}
         <div class="title-action">
-          {{#if state$isJobItemSubscribed}}
-          <a href="#" class="btn hidden-print  btn-white unSubscribeJobItemBtn" data-id="{{state$id}}"><i class="fa fa-lg fa-rss text-info" data-id="{{state$id}}"></i></a>
-          {{else}}
-          <a href="" class="btn btn-white hidden-print subscribeJobItemBtn" data-id="{{state$id}}"><i class="fa fa-lg fa-rss text-muted" data-id="{{state$id}}"></i></a>
-          {{/if}}
-          {{#if state$isManagerOrAdmin}}
-          <a href="" class="btn btn-primary hidden-print editJobItemBtn" data-id="{{state$id}}">
-            <i class="fa fa-edit" data-id="{{state$id}}"></i>Edit
-          </a>
-          <a href="" class="btn btn-white hidden-print copyJobItemBtn" data-id="{{state$id}}">
-            <i class="fa fa-copy" data-id="{{state$id}}"></i>
-          </a>
-          {{/if}}
-          <a href="" class="btn btn-white hidden-print printJobItemBtn" data-id="{{state$id}}">
-            <i class="fa fa-print"></i>
-          </a>
-        </div>
-      {{/if}}
-
-      {{#if state$isJobsList}}
-      <div class="title-action">
-        <div class="btn-group">
-          <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-cog"></i>
-            Settings
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" style="margin-left: -56px;">
-            <li>
-              {{# if isArchive}}
-                <a href="#" data-action="changeStatusJ" data-link="jobItemsMaster">Active Items</a>
-              {{else}}
-                <a href="#" data-action="changeStatusJ" data-link="jobItemsMasterType" data-type="archive">Archived Items</a>
-              {{/ if}}
-            </li>
-            <li>
-              <a href="/jobItem/submit">Add new job</a>
-            </li>
-            <li>
-            {{#if state$isJobListSubscribed}}
-              <a href="#" class="btn btn-white unSubscribeJobsList"><i class="fa fa-lg fa-rss text-info"></i> Unsubscribe</a>
-            {{else}}
-              <a href="#" class="btn btn-white subscribeJobsList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
-            {{/if}}
-            </li>
-          </ul>
-        </div>
-      </div>
-      {{/if}}
-
-      {{#if state$isIngredientsList}}
-      <div class="title-action">
-        {{#if state$isManagerOrAdmin}}
           <div class="btn-group">
             <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fa fa-cog"></i>
@@ -190,17 +142,115 @@
             </button>
             <ul class="dropdown-menu" style="margin-left: -56px;">
               <li>
-              {{# if isArchive}}
-                <a href="#" data-action="changeStatus" data-link="ingredientsList">Active Items</a>
-              {{else}}
-                <a href="#" data-action="changeStatus" data-link="ingredientsListType" data-type="archive">Archived Items</a>
+                {{#if state$isJobItemSubscribed}}
+                <a href="#" class="hidden-print unSubscribeJobItemBtn" data-id="{{state$id}}"><i class="fa fa-lg fa-rss text-info" data-id="{{state$id}}"></i> Unsubscribe</a>
+                {{else}}
+                <a href="" class="hidden-print subscribeJobItemBtn" data-id="{{state$id}}"><i class="fa fa-lg fa-rss text-muted" data-id="{{state$id}}"></i> Subscribe</a>
+                {{/if}}
+              </li>
+              {{#if state$isManagerOrAdmin}}
+              <li>
+                <a href="" class="hidden-print editJobItemBtn" data-id="{{state$id}}">
+                  <i class="fa fa-edit" data-id="{{state$id}}"></i>Edit
+                </a>
+              </li>
+              <li>
+                <a href="" class="hidden-print copyJobItemBtn" data-id="{{state$id}}">
+                  <i class="fa fa-copy" data-id="{{state$id}}"></i> Copy
+                </a>
+              </li>
+              {{/if}}
+              <li>
+                <a href="" class="hidden-print printJobItemBtn" data-id="{{state$id}}">
+                  <i class="fa fa-print"></i> Print
+                </a>
+              </li>
+              {{#if state$isManagerOrAdmin}}
+              <li role="separator" class="divider"></li>
+                {{#if state$isArchiveJob}}
+                <li>
+                  <a href="#" class="hidden-print archiveJobItem" data-id="{{state$id}}">
+                    <i class="fa fa-dropbox" data-id="{{state$id}}"></i>
+                    Restore
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="hidden-print deleteJobItem" data-id="{{state$id}}">
+                    <i class="fa fa-trash-o" data-id="{{state$id}}"></i>
+                    Delete
+                  </a>
+                </li>
+                {{else}}
+                <li>
+                  <a href="#" class="hidden-print archiveJobItem" data-id="{{state$id}}">
+                    <i class="fa fa-archive" data-id="{{state$id}}"></i>
+                    Archive
+                  </a>
+                </li>
+                {{/ if}}
               {{/ if}}
+            </ul>
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if state$isJobsList}}
+      <div class="title-action">
+        {{#if isArchiveJob}}
+          <a href="" data-action="changeStatusJ" data-link="jobItemsMaster" class="btn btn-info">
+            <i class="fa fa-long-arrow-left"></i> Active Items
+          </a>
+        {{else}}
+        <div class="btn-group">
+          <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-cog"></i>
+            Settings
+            <span class="caret"></span>
+          </button>
+            <ul class="dropdown-menu" style="margin-left: -56px;">
+              <li>
+                <a href="#" data-action="changeStatusJ" data-link="jobItemsMasterType" data-type="archive">Archived Items</a>
+              </li>
+              <li>
+                <a href="/jobItem/submit">Add new job</a>
+              </li>
+              <li>
+              {{#if state$isJobListSubscribed}}
+                <a href="#" class="btn btn-white unSubscribeJobsList"><i class="fa fa-lg fa-rss text-info"></i> Unsubscribe</a>
+              {{else}}
+                <a href="#" class="btn btn-white subscribeJobsList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
+              {{/if}}
+              </li>
+            </ul>
+        </div>
+        {{/if}}
+      </div>
+      {{/if}}
+
+      {{#if state$isIngredientsList}}
+      <div class="title-action">
+        {{#if isArchiveJob}}
+          <a href="" data-action="changeStatus" data-link="ingredientsList" class="btn btn-info">
+            <i class="fa fa-long-arrow-left"></i> Active Items
+          </a>
+        {{else}}
+          {{#if state$isManagerOrAdmin}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-cog"></i>
+              Settings
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" style="margin-left: -56px;">
+              <li>
+                <a href="#" data-action="changeStatus" data-link="ingredientsListType" data-type="archive">Archived Items</a>
               </li>
               <li>
                 <a href="#addIngredientModal" data-toggle="modal">Add new stock</a>
               </li>
             </ul>
           </div>
+          {{/if}}
         {{/if}}
       </div>
       {{/if}}

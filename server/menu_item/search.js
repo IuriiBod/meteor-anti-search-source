@@ -18,8 +18,8 @@ SearchSource.defineSource('menuItemsSearch', function(searchText, options) {
     if(options.ids) {
       selector['_id'] = {$nin: options.ids}
     }
-    if(options.isArchived) {
-      selector['isArchived'] = options.isArchived;
+    if(options.status) {
+      selector['status'] = options.status;
     }
   } else {
     optionFileds['limit'] = 10;
