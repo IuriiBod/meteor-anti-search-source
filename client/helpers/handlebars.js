@@ -127,7 +127,11 @@ UI.registerHelper("stockById", function(id) {
 });
 
 UI.registerHelper("roundCount", function(count) {
-  return Math.round(count * 100)/100;
+  if(count) {
+    return Math.round(count * 100)/100;
+  } else {
+    return 0;
+  }
 });
 
 UI.registerHelper("formatCurrency", function(amount) {
