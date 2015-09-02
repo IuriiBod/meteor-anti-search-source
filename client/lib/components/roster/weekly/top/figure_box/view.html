@@ -6,11 +6,13 @@
           <i class="fa fa-question-circle pull-right"></i>
         </button>
         <h5>{{state$item.name}}</h5>
-        <h1 class="no-margins">$22,000</h1>
+        <h1 class="no-margins">${{formatCurrency state$actualCost}}</h1>
         <div class="stat-percent font-bold text-navy">10%
             <i class="fa fa-angle-up"></i>
         </div>
-        <small>{{state$item.subText}}: $20,000</small>
+        <small>{{state$item.subText}}: 
+          ${{formatCurrency state$forecastedCost}}
+        </small>
       </div>
     </div>
   </div>  

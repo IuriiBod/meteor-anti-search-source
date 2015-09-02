@@ -130,6 +130,10 @@ UI.registerHelper("roundCount", function(count) {
   return Math.round(count * 100)/100;
 });
 
+UI.registerHelper("formatCurrency", function(amount) {
+  return amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+});
+
 UI.registerHelper("Username", function(userId) {
   var user = Meteor.users.findOne(userId);
   if(user) {
