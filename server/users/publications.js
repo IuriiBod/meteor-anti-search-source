@@ -45,7 +45,7 @@ Meteor.publish("selectedUsersList", function(usersIds) {
     "username": 1,
     "emails": 1,
     "isActive": 1,
-    "profile.payrates": 1
+    "profile": 1
   };
   var users = Meteor.users.find({
     _id: {

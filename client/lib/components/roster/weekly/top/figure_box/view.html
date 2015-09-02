@@ -1,0 +1,29 @@
+<template name="figureBox">
+  <div class="col-md-4" data-pg-collapsed>
+    <div class="ibox">
+      <div class="ibox-content">
+        <button class="btn btn-sm pull-right btn-link" data-toggle="popover" data-placement="top" type="button" data-content="{{state$item.dataContent}}">
+          <i class="fa fa-question-circle pull-right"></i>
+        </button>
+        <h5>{{state$item.name}}</h5>
+        <h1 class="no-margins">
+          {{#if state$currency}}
+            {{state$icon}}{{formatCurrency state$actualCost}}
+          {{else}}
+            {{roundCount state$actualCost}}{{state$icon}}
+          {{/if}}
+          </h1>
+        <div class="stat-percent font-bold text-navy">10%
+            <i class="fa fa-angle-up"></i>
+        </div>
+        <small>{{state$item.subText}}: 
+          {{#if state$currency}}
+            {{state$icon}}{{formatCurrency state$forecastedCost}}
+          {{else}}
+            {{roundCount state$forecastedCost}}{{state$icon}}
+          {{/if}}
+        </small>
+      </div>
+    </div>
+  </div>  
+</template>
