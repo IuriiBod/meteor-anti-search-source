@@ -5,8 +5,7 @@ var component = FlowComponents.define("staffCostTr", function(props) {
 component.state.actual = function() {
   var total = 0;
   var self = this;
-  var shifts = Shifts.find({"shiftDate": new Date(this.dayObj.date).getTime(), "status": {$ne: "draft"}}).fetch();
-  console.log(".....", shifts);
+  var shifts = Shifts.find({"shiftDate": new Date(this.dayObj.date).getTime(), "status": {$ne: "draft"}, "type": null}).fetch();
   shifts.forEach(function(shift) {
     var user = Meteor.users.findOne(shift.assignedTo);
     if(user && user.profile && user.profile.payrates) {
@@ -58,8 +57,7 @@ component.state.actual = function() {
 component.state.forecast = function() {
   var total = 0;
   var self = this;
-  var shifts = Shifts.find({"shiftDate": new Date(this.dayObj.date).getTime()}).fetch();
-  console.log(".....", shifts);
+  var shifts = Shifts.find({"shiftDate": new Date(this.dayObj.date).getTime(), "type": null}).fetch();
   shifts.forEach(function(shift) {
     var user = Meteor.users.findOne(shift.assignedTo);
     if(user && user.profile && user.profile.payrates) {
