@@ -9,6 +9,96 @@ Template.profile.events({
       }
     });
   },
+
+  'click #set-resign-date': function(e, tpl) {
+    e.preventDefault();
+    var id = Router.current().params._id;
+    var val = tpl.$(".open-resigned-date-picker").val();
+
+    if (!val) {
+      tpl.$(".open-resigned-date-picker").focus().parent().addClass("has-error");
+      return;
+    } else {
+      tpl.$(".open-resigned-date-picker").parent().addClass("has-success");
+    }
+
+    Meteor.call("resignDate", "set", id, val, function(err, data) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+
+      if(data && data !== true) {
+        var content = "<h4>The user has next future shifts:</h4>";
+
+        data.forEach(function(shift) {
+          content += '<p><a target="blank" href="/roster/shift/' + shift._id + '">';
+          content += moment(shift.shiftDate).format("ddd, Do MMMM ");
+          content += moment(shift.startTime).format("HH:mm - ");
+          content += moment(shift.endTime).format("HH:mm");
+          content += '</a></p>';
+        });
+
+        content += '<p>Please, remove them before resigning user.</p>';
+
+        $("#future-shifts-modal").modal();
+        $("#future-shifts-modal").find(".modal-body").html(content);
+        $("#future-shifts-modal").modal("show");
+      }
+    });
+  },
+
+  'click #update-resign-date': function(e, tpl) {
+    e.preventDefault();
+    var id = Router.current().params._id;
+    var val = tpl.$(".open-resigned-date-picker").val();
+
+    if (!val) {
+      tpl.$(".open-resigned-date-picker").focus().parent().removeClass("has-success").addClass("has-error");
+      return;
+    } else {
+      tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
+    }
+
+    Meteor.call("resignDate", "update", id, val, function(err, data) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+
+      tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
+
+      if(data && data !== true) {
+        var content = "<h4>The user has next future shifts:</h4>";
+
+        data.forEach(function(shift) {
+          content += '<p><a target="blank" href="/roster/shift/' + shift._id + '">';
+          content += moment(shift.shiftDate).format("ddd, Do MMMM ");
+          content += moment(shift.startTime).format("HH:mm - ");
+          content += moment(shift.endTime).format("HH:mm");
+          content += '</a></p>';
+        });
+
+        content += '<p>Please, remove them before resigning user.</p>';
+
+        $("#future-shifts-modal").modal();
+        $("#future-shifts-modal").find(".modal-body").html(content);
+        $("#future-shifts-modal").modal("show");
+      }
+    });
+  },
+
+  'click #remove-resign-date': function(e, tpl) {
+    e.preventDefault();
+    var id = Router.current().params._id;
+    Meteor.call("resignDate", "remove", id, '', function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
+  },
+
   "submit form#change-pin": function(event) {
     event.preventDefault();
     var newPin = Template.instance().find("#new-pin").value;
@@ -26,6 +116,12 @@ Template.profile.events({
 
 Template.profile.rendered = function(){
   $.fn.editable.defaults.mode = 'inline';
+
+  $(".open-resigned-date-picker").datepicker({
+    startDate: new Date(),
+    todayHighlight: true
+  });
+
   $('#datepicker').datepicker({
     todayBtn: true,
     todayHighlight: true

@@ -195,6 +195,37 @@ Meteor.methods({
     } else {
       logger.info("User status de-activated", id);
     }
+  },
+
+  'resignDate': function(type, id, val) {
+    var user = Meteor.user();
+    if(!user) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var permitted = isManagerOrAdmin(user);
+    if(!permitted) {
+      logger.error("User not permitted to change resign date");
+      throw new Meteor.Error(403, "User not permitted to change resign date");
+    }
+
+    if(type == "remove") {
+      Meteor.users.update({_id: id}, {$unset: {"profile.resignDate": ""}});
+      Meteor.call("changeStatus", id);
+    } else {
+      val = new Date(val).getTime();
+      var nextShifts = Shifts.find({assignedTo: id, shiftDate: {$gte: val}}).fetch();
+      if (nextShifts && nextShifts.length > 0) {
+        return nextShifts;
+      }
+      if(type == "set" || type == "update") {
+        Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val}});
+        if(type == "set") {
+          Meteor.call("changeStatus", id);
+        }
+      }
+    }
+    return true;
   }
 });
 
