@@ -131,7 +131,11 @@ UI.registerHelper("roundCount", function(count) {
 });
 
 UI.registerHelper("formatCurrency", function(amount) {
-  return amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+  if(amount && amount > 0) {
+    return amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+  } else {
+    return 0;
+  }
 });
 
 UI.registerHelper("Username", function(userId) {
