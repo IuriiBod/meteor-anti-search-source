@@ -11,7 +11,7 @@ component.state.week = function() {
     var week = getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
     return week;
   } else if(this.name == "weeklyrostertemplate") {
-    var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     return daysOfWeek;
   }
 }
