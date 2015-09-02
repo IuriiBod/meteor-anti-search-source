@@ -23,6 +23,15 @@ Template.ingredientItemDetailed.events({
         alert(err.reason);
       }
     });
-    i.toggleClass('fa-dropbox').toggleClass('fa-archive');
+    IngredientsListSearch.cleanHistory();
+    var selector = {
+      limit: 30
+    };
+    if(Router.current().params.type) {
+      selector.status = "archived";
+    } else {
+      selector.status = {$ne: "archived"};
+    }
+    IngredientsListSearch.search("", selector);
   }
 });

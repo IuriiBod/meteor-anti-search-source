@@ -1,7 +1,8 @@
 <template name="menuFilters">
+  {{# if notArchive}}
   <div class="row m-b">
     <div class="col-md-3">
-      <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize" style="text-align: left">{{state$selectedCategory.name}} 
+      <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize" style="text-align: left">{{state$selectedCategory.name}}
         <span class="caret pull-right m-t-sm" ></span>
       </button>
       <ul class="dropdown-menu text-capitalize filter-menus">
@@ -17,7 +18,7 @@
     <div class="col-md-6">
     </div>
     <div class="col-md-3">
-      <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize" style="text-align: left">{{state$selectedStatus.name}} 
+      <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize" style="text-align: left">{{state$selectedStatus.name}}
         <span class="caret pull-right m-t-sm" ></span>
       </button>
       <ul class="dropdown-menu text-capitalize filter-menus">
@@ -27,4 +28,5 @@
       </ul>
     </div>
   </div>
+  {{/ if}}
 </template>

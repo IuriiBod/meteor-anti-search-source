@@ -31,6 +31,6 @@ Template.menuItem.events({
         alert(err.reason);
       }
     });
-    i.toggleClass('fa-dropbox').toggleClass('fa-archive');
+    i.parent().parent().remove();
   }
 });

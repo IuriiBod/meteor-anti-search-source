@@ -16,7 +16,7 @@ Template.ingredientsList.helpers({
     });
     return data;
   },
-  
+
   isLoading: function() {
     return IngredientsListSearch.getStatus().loading;
   }
@@ -24,8 +24,16 @@ Template.ingredientsList.helpers({
 
 Template.ingredientsList.events({
   "keyup #searchIngBox": _.throttle(function(e) {
+    var selector = {
+      limit: 30
+    };
+    if(Router.current().params.type) {
+      selector.status = "archived";
+    } else {
+      selector.status = {$ne: "archived"};
+    }
     var text = $(e.target).val().trim();
-    IngredientsListSearch.search(text, {"limit": 10});
+    IngredientsListSearch.search(text, selector);
   }, 200),
 
   'click #loadMoreIngs': _.throttle(function(e) {
@@ -37,7 +45,16 @@ Template.ingredientsList.events({
         IngredientsListSearch.cleanHistory();
         var count = dataHistory.length;
         var lastItem = dataHistory[count - 1]['code'];
-        IngredientsListSearch.search(text, {"limit": count + 10, "endingAt": lastItem});
+        var selector = {
+          "limit": count + 10,
+          "endingAt": lastItem
+        };
+        if(Router.current().params.type) {
+          selector.status = "archived";
+        } else {
+          selector.status = {$ne: "archived"};
+        }
+        IngredientsListSearch.search(text, selector);
       }
     }
   }, 200)
@@ -46,7 +63,15 @@ Template.ingredientsList.events({
 
 Template.ingredientsList.rendered = function() {
   IngredientsListSearch.cleanHistory();
-  IngredientsListSearch.search("", {"limit": 30});
+  var selector = {
+    limit: 30
+  };
+  if(Router.current().params.type) {
+    selector.status = "archived";
+  } else {
+    selector.status = {$ne: "archived"};
+  }
+  IngredientsListSearch.search("", selector);
 }
 
 Template.ingredientsList.onRendered(function() {
@@ -56,7 +81,7 @@ Template.ingredientsList.onRendered(function() {
       var docHeight = $(document).height();
       var winHeight = $(window).height();
       var scrollTop = $(window).scrollTop();
-      
+
       if ((docHeight - winHeight) == scrollTop) {
         tpl.$('#loadMoreIngs').click();
       }

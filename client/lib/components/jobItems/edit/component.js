@@ -25,13 +25,13 @@ component.state.initialHTML = function () {
       return item.recipe;
     } else {
       return "Add recipe here";
-    } 
+    }
   } else if(jobtype && jobtype.name === "Recurring") {
     if(item.description) {
       return item.description;
     } else {
       return "Add description here";
-    } 
+    }
   }
 };
 
@@ -277,7 +277,11 @@ component.state.isArchive = function() {
   if (id) {
     var item = JobItems.findOne(id);
     if(item) {
-      return item.isArchive;
+      if(item.status == "archived") {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 }

@@ -22,6 +22,17 @@ Template.jobItemDetailed.events({
         alert(err.reason);
       }
     });
-    i.toggleClass('fa-dropbox').toggleClass('fa-archive');
+    JobItemsSearch.cleanHistory();
+    var selector = {
+      "type": Session.get("type"),
+      limit: 30
+    };
+    if(Router.current().params.type) {
+      selector.status = 'archived';
+    } else {
+      selector.status = {$ne: 'archived'};
+    }
+    var text = $("#searchJobItemsBox").val().trim();
+    JobItemsSearch.search(text, selector);
   }
 });

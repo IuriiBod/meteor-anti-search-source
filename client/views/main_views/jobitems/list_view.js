@@ -22,6 +22,22 @@ Template.jobItemsListMainView.events({
         return alert(err.reason);
       }
     });
+  },
+
+  'click .jobtypesPanel>li': function(e, tpl) {
+    Session.set("type", $(e.target).parent().attr("data-id"));
+    JobItemsSearch.cleanHistory();
+    var selector = {
+      "type": Session.get("type"),
+      limit: 30
+    };
+    if(Router.current().params.type) {
+      selector.status = 'archived';
+    } else {
+      selector.status = {$ne: 'archived'};
+    }
+    var text = $("#searchJobItemsBox").val().trim();
+    JobItemsSearch.search(text, selector);
   }
 });
 
@@ -45,6 +61,6 @@ Template.jobItemsListMainView.rendered = function() {
   if($(".jobtypepanes") && $(".jobtypepanes").length > 0) {
     var elem = $(".jobtypepanes")[0];
     $(elem).addClass("active");
-
+    Session.set("type", $(elem).attr("id"));
   }
 }

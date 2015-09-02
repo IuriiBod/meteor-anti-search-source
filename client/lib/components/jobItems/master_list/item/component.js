@@ -83,5 +83,9 @@ component.state.isPermitted = function() {
 }
 
 component.state.isArchive = function() {
-  return this.jobitem.isArchive;
+  if(this.jobitem.status == "archived") {
+    return true;
+  } else {
+    return false;
+  }
 }

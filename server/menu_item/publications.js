@@ -14,9 +14,8 @@ Meteor.publish("menuList", function(categoryId, status) {
   if(status && status != "all" ) {
     query.status = status;
   }
-  menuCursor = MenuItems.find(query, 
-    {fields: {"name": 1, "category": 1, "image": 1, "salesPrice": 1, "status": 1}}, 
-    {sort: {"name": 1}, limit: 10});
+  menuCursor = MenuItems.find(query,
+    {sort: {"name": 1}, limit: 30});
   logger.info("Menu Items list published", categoryId, status);
   return menuCursor;
 });

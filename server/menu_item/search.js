@@ -18,10 +18,13 @@ SearchSource.defineSource('menuItemsSearch', function(searchText, options) {
     if(options.ids) {
       selector['_id'] = {$nin: options.ids}
     }
+    if(options.isArchived) {
+      selector['isArchived'] = options.isArchived;
+    }
   } else {
     optionFileds['limit'] = 10;
   }
-  optionFileds.fields = {"name": 1, "category": 1, "salesPrice": 1, "status": 1}
+  optionFileds.fields = {"name": 1, "category": 1, "salesPrice": 1, "status": 1, "isArchived": 1}
   if(searchText) {
     var regExp = buildRegExp(searchText);
     selector['$or'] = [

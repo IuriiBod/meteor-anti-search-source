@@ -25,7 +25,7 @@
             </tr>
           </thead>
           <tbody>
-            {{#each state$getJobItems}}
+            {{#each getJobItems}}
               {{> render component='jobItemDetailed' jobitem=this type=state$type}}
             {{/each}}
           </tbody>
