@@ -10,6 +10,22 @@ component.state.item = function() {
   return this;
 }
 
+component.state.currency = function() {
+  if(this.type == "sales" || this.type == "staffCost") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+component.state.icon = function() {
+  if(this.type == "sales" || this.type == "staffCost") {
+    return "$";
+  } else if(this.type == "staffCostPercentage") {
+    return "%";
+  }
+}
+
 component.state.actualCost = function() {
   var total = 0;
   var week = getWeekStartEnd(Session.get("thisWeek"), Session.get("thisYear"));
