@@ -1,4 +1,20 @@
 <template name="salesTr">
-  <td>$<a href="" class="editableSalesForecast" data-date="{{state$doc.date}}"></a></td>
-  <td class="text-info">$2200</td>
+  <td>$
+    <a href="" class="editableSalesForecast" data-date="{{state$doc.date}}">
+    {{#if state$forecast.forecastedRevenue}}
+      {{state$forecast.forecastedRevenue}}
+    {{else}}
+      {{state$empty}}
+    {{/if}}
+    </a>
+  </td>
+  <td>$
+    <a href="" class="editableActualSales" data-date="{{state$doc.date}}">
+    {{#if state$sales.revenue}}
+      {{state$sales.revenue}}
+    {{else}}
+      {{state$empty}}
+    {{/if}}
+    </a>
+  </td>
 </template>
