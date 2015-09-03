@@ -4,6 +4,7 @@ var component = FlowComponents.define("figureBox", function(props) {
   this.subText = props.subtext;
   this.dataContent = props.dataContent;
   this.onRendered(this.itemRendered);
+
 });
 
 component.state.item = function() {
@@ -40,7 +41,6 @@ component.state.actualCost = function() {
         query["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
         var sales = ActualSales.find(query, {sort: {"date": 1}}).fetch();
         total = calcActualSalesCost(sales);
-
         //for current week: past days actual sales and for fututre dates forecasted sales
       } else if(Session.get("thisWeek") == moment().week()) {
         var total = 0;
@@ -218,6 +218,7 @@ component.state.actualCost = function() {
       total = percentage * 100;
     }
   }
+  this.set("actual", total)
   return total;
 }
 
@@ -229,9 +230,7 @@ component.state.forecastedCost = function() {
       "department": "cafe"
     };
     
-    if(week.monday && week.sunday) {
-      query["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
-    }
+    query["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
     var sales = SalesForecast.find(query, {sort: {"date": 1}}).fetch();
     total = calcActualSalesCost(sales);
 
@@ -239,9 +238,7 @@ component.state.forecastedCost = function() {
     var query = {
       "type": null
     };
-    if(week.monday && week.sunday) {
-      query["shiftDate"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
-    }
+    query["shiftDate"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
     var shifts = Shifts.find(query, {sort: {"shiftDate": 1}}).fetch();
     total = calcStaffCost(shifts);
     
@@ -254,18 +251,14 @@ component.state.forecastedCost = function() {
     };
     
     var cursors = [];
-    if(week.monday && week.sunday) {
-      salesQuery["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
-    }
+    salesQuery["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
     var sales = SalesForecast.find(salesQuery, {sort: {"date": 1}}).fetch();
     totalSalesOfWeek = calcForecastedSalesCost(sales);
 
     var query = {
       "type": null
     };
-    if(week.monday && week.sunday) {
-      query["shiftDate"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
-    }
+    query["shiftDate"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
     var shifts = Shifts.find(query, {sort: {"shiftDate": 1}}).fetch();
     totalWageOfWeek = calcStaffCost(shifts);
 
@@ -275,7 +268,30 @@ component.state.forecastedCost = function() {
     }
     total = percentage * 100;
   }
+  this.set("forecasted", total)
   return total;
+}
+
+component.state.percent = function() {
+  var actual = this.get("actual");
+  var forecasted = this.get("forecasted");
+  var diff = parseFloat(actual) - parseFloat(forecasted);
+  console.log("........", actual, forecasted);
+
+  var doc = {
+    "value": 0,
+    "textColor": "text-navy"
+  }
+
+  if(this.type == "sales" || this.type == "staffCost") {
+    doc.value = (diff/parseFloat(actual)) * 100;
+  } else if(this.type == "staffCostPercentage") {
+    doc.value = diff;
+  }
+  if(diff < 0) {
+    doc.textColor = "text-danger";
+  }
+  return doc;
 }
 
 component.prototype.itemRendered = function() {
