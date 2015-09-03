@@ -1,8 +1,10 @@
 var component = FlowComponents.define('ingredientItemEdit', function(props) {
-  this.ingredient = props.ingredient;
-  var item = getIngredientItem(this.ingredient._id);
-  this.ingredient = item;
-  this.ingredient.quantity = props.ingredient.quantity;
+  this.id = props.ingredient._id;
+  var item = getIngredientItem(this.id);
+  if(item) {
+    this.ingredient = item;
+    this.quantity = props.ingredient.quantity;
+  }
 });
 
 component.state.item = function() {
@@ -10,8 +12,8 @@ component.state.item = function() {
 }
 
 component.state.quantity = function() {
-  if(this.ingredient.quantity) {
-    return this.ingredient.quantity;
+  if(this.quantity) {
+    return this.quantity;
   } else {
     return 1;
   }
