@@ -1,4 +1,43 @@
 Template.pageHeading.events({
+  'click [data-action="changeStatus"]': function (event) {
+    event.preventDefault();
+    IngredientsListSearch.cleanHistory();
+    var selector = {
+      limit: 30,
+    };
+    var params = {};
+    if(event.target.dataset.type) {
+      selector.status = "archived";
+      params = {
+        type: "archive"
+      };
+    } else {
+      selector.status = {$ne: "archived"};
+    }
+    IngredientsListSearch.search("", selector);
+    Router.go(event.target.dataset.link, params);
+  },
+
+  'click [data-action="changeStatusJ"]': function (event) {
+    event.preventDefault();
+    JobItemsSearch.cleanHistory();
+    var selector = {
+      type: Session.get("type"),
+      limit: 30,
+    };
+    var params = {};
+    if(event.target.dataset.type) {
+      selector.status = "archived";
+      params = {
+        type: "archive"
+      };
+    } else {
+      selector.status = {$ne: "archived"};
+    }
+    JobItemsSearch.search("", selector);
+    Router.go(event.target.dataset.link, params);
+  },
+
   'click .breadcrumbCategory': function(event) {
     event.preventDefault();
     var category = $(event.target).attr("data-category");
@@ -84,14 +123,12 @@ Template.pageHeading.events({
     e.preventDefault();
     Router.go("menuItemEdit", {"_id": $(e.target).attr("data-id")})
   },
-  
   'click .deleteMenuItemBtn': function(e) {
     e.preventDefault();
     var result = confirm("Are you sure, you want to delete this menu ?");
     if(result) {
       var id = $(event.target).attr("data-id");
       var item = MenuItems.findOne(id);
-      
       if(id) {
         Meteor.call("deleteMenuItem", id, function(err) {
           if(err) {
@@ -211,7 +248,6 @@ Template.pageHeading.events({
       .datepicker("setDate", checkedDate)
       .datepicker("fill");
     $(".day.active").siblings(".day").addClass("week");
-    
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
@@ -254,7 +290,6 @@ Template.pageHeading.events({
       .datepicker("setDate", checkedDate)
       .datepicker("fill");
     $(".day.active").siblings(".day").addClass("week");
-    
     if(type == "teamHoursReport") {
       var sessionHash = Session.get("reportHash");
       var hash = "shifts";
@@ -393,7 +428,6 @@ Template.pageHeading.events({
       });
     }
   },
-  
   'changeDate .datepicker': function(e, tpl) {
     var date = e.date;
     if(date) {
@@ -453,6 +487,63 @@ Template.pageHeading.events({
     } else {
       Session.set("collapsed", true);
     }
+  },
+
+  'click .archiveMenuItemBtn': function(e, tpl) {
+    e.preventDefault();
+    var i, id;
+    if($(e.target).hasClass('fa')) {
+      i = $(e.target);
+    } else {
+      i = $(e.target).find('.fa');
+    }
+    id = i.parent().attr("data-id");
+
+    Meteor.call("archiveMenuItem", id, function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
+  },
+  'click .archiveJobItem': function(e, tpl) {
+    e.preventDefault();
+    var id = tpl.$(e.target).attr("data-id");
+    Meteor.call("archiveJobItem", id, function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
+  },
+
+  'click .deleteJobItem': function(event) {
+    event.preventDefault();
+    var id = $(event.target).attr("data-id");
+    var item = JobItems.findOne(id);
+
+    var result = confirm("Are you sure you want to delete this job ?");
+    if(result) {
+      Meteor.call("deleteJobItem", id, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        } else {
+          var options = {
+            type: "delete",
+            title: "Job " + item.name + " has been deleted",
+            time: Date.now()
+          };
+          Meteor.call("sendNotifications", id, "job", options, function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.reason);
+            }
+          });
+          Router.go("jobItemsMaster");
+        }
+      });
+    }
   }
 });
 
@@ -487,7 +578,6 @@ Template.pageHeading.rendered = function() {
     toggle: 'mouseenter',
     success: function(response, newValue) {
       var id = $(this).attr("data-id");
-      
       if(id) {
         Meteor.call("updateMenuItemName", id, newValue, function(err) {
           if(err) {
@@ -500,3 +590,21 @@ Template.pageHeading.rendered = function() {
   });
 };
 
+Template.pageHeading.helpers({
+  'isArchive': function() {
+    var archive = Router.current().params.status;
+    if(archive && archive == "archived") {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  'isArchiveJob': function() {
+    var archive = Router.current().params.type;
+    if(archive && archive == "archive") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+});

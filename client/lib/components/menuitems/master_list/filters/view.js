@@ -13,3 +13,13 @@ Template.menuFilters.events({
     Router.go("menuItemsMaster", {'category': category, "status": status});
   }
 });
+
+Template.menuFilters.helpers({
+  'notArchive': function() {
+    if(Router.current().params.status == "archived") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+});

@@ -80,14 +80,14 @@ Meteor.methods({
       doc.section = info.section;
       doc.checklist = info.checklist;
     }
-    
+
     doc.createdOn = Date.now();
     doc.createdBy = user._id;
     var id = JobItems.insert(doc);
     logger.info("Job Item inserted", {"jobId": id, 'type': type.name});
     return id;
   },
-  
+
   'editJobItem': function(id, info) {
 
     var user = Meteor.user();
@@ -314,7 +314,7 @@ Meteor.methods({
       logger.error("Job item or ingredient does not exist");
       throw new Meteor.Error(404, "Job item or ingredient does not exist");
     }
-    
+
     var query = {
       $addToSet: {}
     };
@@ -351,7 +351,7 @@ Meteor.methods({
         $pull: {
           "ingredients": jobItem.ingredients[0]
         }
-      };   
+      };
     }
     logger.info("Ingredients removed from job item", id);
     return JobItems.update({'_id': id}, query);
@@ -379,7 +379,7 @@ Meteor.methods({
     }
     var filter = new RegExp(exist.name, 'i');
     var count = JobItems.find({"name": filter}).count();
-    
+
     var result = delete exist['_id'];
     if(result) {
       var duplicate = exist;
@@ -391,5 +391,16 @@ Meteor.methods({
       logger.info("Duplicate job item added ", {"original": id, "duplicate": newId});
       return newId;
     }
+  },
+
+  'archiveJobItem': function(id) {
+    var doc = {};
+    var job = JobItems.findOne({_id: id});
+    if(job && job.status == "archived") {
+      doc.status = "active";
+    } else {
+      doc.status = "archived";
+    }
+    JobItems.update({_id: id}, {$set: doc});
   }
 });
