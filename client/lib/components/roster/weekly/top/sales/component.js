@@ -10,6 +10,7 @@ component.state.doc = function() {
 component.state.forecast = function() {
   var salesForecast = SalesForecast.findOne({"date": new Date(this.dayObj.date).getTime(), "department": "cafe"});
   if(salesForecast) {
+    this.set("forecastSales", salesForecast.forecastedRevenue);
     return salesForecast;
   }
 }
@@ -17,7 +18,20 @@ component.state.forecast = function() {
 component.state.sales = function() {
   var sales = ActualSales.findOne({"date": new Date(this.dayObj.date).getTime(), "department": "cafe"});
   if(sales) {
+    this.set("actualSales", sales.revenue);
     return sales;
+  }
+}
+
+component.state.class = function() {
+  var actual = this.get("actualSales");
+  var forecast = this.get("forecastSales");
+  if(actual && forecast) {
+    if(actual >= forecast) {
+      return "text-info";
+    } else {
+      return "text-danger";
+    }
   }
 }
 
