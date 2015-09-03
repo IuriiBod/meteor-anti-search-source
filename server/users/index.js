@@ -211,7 +211,11 @@ Meteor.methods({
 
     if(type == "remove") {
       Meteor.users.update({_id: id}, {$unset: {"profile.resignDate": ""}});
-      Meteor.call("changeStatus", id);
+      Meteor.call("changeStatus", id, function(err) {
+        if(err) {
+          console.log(err);
+        }
+      });
     } else {
       val = new Date(val).getTime();
       var nextShifts = Shifts.find({assignedTo: id, shiftDate: {$gte: val}}).fetch();
@@ -221,7 +225,11 @@ Meteor.methods({
       if(type == "set" || type == "update") {
         Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val}});
         if(type == "set") {
-          Meteor.call("changeStatus", id);
+          Meteor.call("changeStatus", id, function(err) {
+            if(err) {
+              console.log(err);
+            }
+          });
         }
       }
     }

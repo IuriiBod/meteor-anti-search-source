@@ -30,7 +30,8 @@ Meteor.publish("usersList", function() {
     "username": 1,
     "emails": 1,
     "isActive": 1,
-    "profile.payrates": 1
+    "profile.payrates": 1,
+    "profile.resignDate": 1
   };
   var users = Meteor.users.find({}, {fields: options}, {limit: 10});
   logger.info("Userlist published");
