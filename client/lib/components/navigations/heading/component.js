@@ -266,3 +266,11 @@ component.state.isStockTakeList = function() {
 component.state.date = function() {
   return moment().format("YYYY-MM-DD");
 }
+
+component.state.collapseIn = function() {
+  if(Session.get("collapsed")) {
+    return true;
+  } else {
+    return false;
+  }
+}
