@@ -63,7 +63,9 @@ component.state.actual = function() {
   if(sales > 0) {
     percentage = (wages/sales);
   }
-  return percentage * 100;
+  percentage = percentage * 100;
+  this.set("actualStaffCostPercentage", percentage);
+  return percentage;
 }
 
 component.state.forecast = function() {
@@ -123,5 +125,19 @@ component.state.forecast = function() {
   if(sales > 0) {
     percentage = (wages/sales);
   }
-  return percentage * 100;
+  percentage = percentage * 100;
+  this.set("forecastedStaffCostPercentage", percentage);
+  return percentage;
+}
+
+component.state.class = function() {
+  var actual = this.get("actualStaffCostPercentage");
+  var forecast = this.get("forecastedStaffCostPercentage");
+  if(actual && forecast) {
+    if(actual <= forecast) {
+      return "text-info";
+    } else {
+      return "text-danger";
+    }
+  }
 }

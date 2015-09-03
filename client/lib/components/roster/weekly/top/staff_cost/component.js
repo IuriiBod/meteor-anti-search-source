@@ -51,6 +51,7 @@ component.state.actual = function() {
       }
     }
   });
+  this.set("actualStaffCost", total);
   return total;
 }
 
@@ -99,5 +100,18 @@ component.state.forecast = function() {
       }
     }
   });
+  this.set("forecastedStaffCost", total);
   return total;
+}
+
+component.state.class = function() {
+  var actual = this.get("actualStaffCost");
+  var forecast = this.get("forecastedStaffCost");
+  if(actual && forecast) {
+    if(actual <= forecast) {
+      return "text-info";
+    } else {
+      return "text-danger";
+    }
+  }
 }

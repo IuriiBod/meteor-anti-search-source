@@ -13,8 +13,8 @@
             {{roundCount state$actualCost}}{{state$icon}}
           {{/if}}
           </h1>
-        <div class="stat-percent font-bold text-navy">10%
-            <i class="fa fa-angle-up"></i>
+        <div class="stat-percent font-bold {{state$percent.textColor}}">{{roundCount state$percent.value}}%
+          <i class="fa {{state$percent.icon}}"></i>
         </div>
         <small>{{state$item.subText}}: 
           {{#if state$currency}}

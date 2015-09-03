@@ -8,8 +8,8 @@
     {{/if}}
     </a>
   </td>
-  <td>$
-    <a href="" class="editableActualSales" data-date="{{state$doc.date}}">
+  <td class="{{state$class}}">$
+    <a href="" class="editableActualSales {{state$class}}" data-date="{{state$doc.date}}">
     {{#if state$sales.revenue}}
       {{state$sales.revenue}}
     {{else}}
