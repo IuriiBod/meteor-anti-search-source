@@ -38,12 +38,26 @@ component.prototype.renderShowIngList = function() {
 }
 
 component.state.getIngredients = function() {
-  return this.IngredientsSearch.getData({
+  var data = this.IngredientsSearch.getData({
     transform: function(matchText, regExp) {
       return matchText.replace(regExp, "<b>$&</b>")
     },
     sort: {'code': 1}
   });
+  var suppliers = [];
+  if(data && data.length > 0) {
+    data.forEach(function(doc) {
+      if(doc.suppliers) {
+        if(suppliers.indexOf(doc.suppliers) < 0) {
+          suppliers.push(doc.suppliers);
+        }
+      }
+    });
+  }
+  if(suppliers && suppliers.length > 0) {
+    subs.subscribe("suppliers", suppliers);
+  }
+  return data;
 }
 
 component.action.keyup = function(text) {
