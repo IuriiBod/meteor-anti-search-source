@@ -227,12 +227,12 @@ component.state.forecastedCost = function() {
   var week = getWeekStartEnd(Session.get("thisWeek"), Session.get("thisYear"));
   if(this.type == "sales") {
     var query = {
-      "department": "cafe"
+      "department": "cafe",
+      "date": {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()}
     };
-    
-    query["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
+  
     var sales = SalesForecast.find(query, {sort: {"date": 1}}).fetch();
-    total = calcActualSalesCost(sales);
+    total = calcForecastedSalesCost(sales);
 
   } else if(this.type == "staffCost") {
     var query = {
@@ -275,21 +275,22 @@ component.state.forecastedCost = function() {
 component.state.percent = function() {
   var actual = this.get("actual");
   var forecasted = this.get("forecasted");
-  var diff = parseFloat(actual) - parseFloat(forecasted);
-  console.log("........", actual, forecasted);
 
+  var diff = parseFloat(actual) - parseFloat(forecasted);
   var doc = {
     "value": 0,
-    "textColor": "text-navy"
+    "textColor": "text-navy",
+    "icon": "fa-angle-up"
   }
 
   if(this.type == "sales" || this.type == "staffCost") {
-    doc.value = (diff/parseFloat(actual)) * 100;
+    doc.value = (diff/parseFloat(forecasted)) * 100;
   } else if(this.type == "staffCostPercentage") {
     doc.value = diff;
   }
   if(diff < 0) {
     doc.textColor = "text-danger";
+    doc.icon = "fa-angle-down";
   }
   return doc;
 }

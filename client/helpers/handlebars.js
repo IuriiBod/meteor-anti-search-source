@@ -136,7 +136,7 @@ UI.registerHelper("roundCount", function(count) {
 
 UI.registerHelper("formatCurrency", function(amount) {
   if(amount && amount > 0) {
-    return amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+    return amount.toFixed(0).replace(/(\d)(?=(\d{3}))/g, '$1,');
   } else {
     return 0;
   }
