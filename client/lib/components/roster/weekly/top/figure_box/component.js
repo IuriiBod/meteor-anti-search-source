@@ -276,17 +276,21 @@ component.state.percent = function() {
   var actual = this.get("actual");
   var forecasted = this.get("forecasted");
 
-  var diff = parseFloat(actual) - parseFloat(forecasted);
+  var diff = 0;
   var doc = {
     "value": 0,
     "textColor": "text-navy",
     "icon": "fa-angle-up"
   }
 
-  if(this.type == "sales" || this.type == "staffCost") {
+  if(this.type == "sales") {
+    diff = parseFloat(actual) - parseFloat(forecasted);
     doc.value = (diff/parseFloat(forecasted)) * 100;
   } else if(this.type == "staffCostPercentage") {
-    doc.value = diff;
+    doc.value = parseFloat(forecasted) - parseFloat(actual);
+  } else if(this.type == "staffCost") {
+    diff = parseFloat(forecasted) - parseFloat(actual);
+    doc.value = (diff/parseFloat(forecasted)) * 100;
   }
   if(diff < 0) {
     doc.textColor = "text-danger";
