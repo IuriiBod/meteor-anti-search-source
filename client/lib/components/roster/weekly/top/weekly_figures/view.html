@@ -15,7 +15,10 @@
             <tr>
               <th></th>
                 {{#each state$week}}
-                  <th colspan="2">{{this.day}}</th>
+                  <th colspan="2">
+                    {{this.day}}
+                    <h5>{{this.date}}</h5>
+                  </th>
                 {{/each}}
               </tr>
           </thead>
