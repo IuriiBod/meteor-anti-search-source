@@ -445,10 +445,19 @@ Template.pageHeading.events({
       $(".day.active").siblings(".day").addClass("week");
       tpl.$(".datepicker").datepicker("show");
     }
+  },
+
+  'click .showHideButton': function(event) {
+    if(Session.get("collapsed")) {
+      Session.set("collapsed", false);
+    } else {
+      Session.set("collapsed", true);
+    }
   }
 });
 
 Template.pageHeading.rendered = function() {
+  Session.set("collapsed", false);
   var checkedDate = Router.current().params.year;
 
   if (checkedDate) {

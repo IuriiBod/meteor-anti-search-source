@@ -25,7 +25,18 @@ component.state.shifts = function() {
       "shiftDate": {$lte: new Date(today).getTime()},
     }, {sort: {'shiftDate': -1}});
   } else if(state == "open") {
-    shifts = Shifts.find({"assignedTo": null, "published": true, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}});
+    var user = Meteor.user();
+    if(user.profile.resignDate) {
+      shifts = Shifts.find({
+        "assignedTo": null,
+        "published": true,
+        $and: [
+          {"shiftDate": {$gte: Date.now()}},
+          {"shiftDate": {$lt: user.profile.resignDate}}
+        ]}, {sort: {'shiftDate': 1}}).fetch();
+    } else {
+      shifts = Shifts.find({"assignedTo": null, "published": true, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}}).fetch();
+    }
   }
   return shifts;
 }
@@ -47,7 +58,18 @@ component.state.shiftsCount = function() {
   } else if(state == "past") {
     shifts = Shifts.find({"assignedTo": Meteor.userId(), "shiftDate": {$lt: Date.now()}}).fetch();
   } else if(state == "open") {
-    shifts = Shifts.find({"assignedTo": null, "published": true, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}}).fetch();
+    var user = Meteor.user();
+    if(user.profile.resignDate) {
+      shifts = Shifts.find({
+        "assignedTo": null,
+        "published": true,
+        $and: [
+          {"shiftDate": {$lt: user.profile.resignDate}},
+          {"shiftDate": {$gte: Date.now()}}
+        ]}, {sort: {'shiftDate': 1}}).fetch();
+    } else {
+      shifts = Shifts.find({"assignedTo": null, "published": true, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}}).fetch();
+    }
   }
   if(shifts.length > 0) {
     return true;

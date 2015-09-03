@@ -11,7 +11,7 @@ component.state.week = function() {
     var week = getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
     return week;
   } else if(this.name == "weeklyrostertemplate") {
-    var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     return daysOfWeek;
   }
 }
@@ -22,6 +22,7 @@ component.state.origin = function() {
 
 component.prototype.onListRendered = function() {
   var user = Meteor.user();
+  $(".col-lg-13:first").css("margin-left", "0px");
   if(user.isAdmin || Meteor.isManager) {
     $(".sortable-list > div > li").css("cursor", "move");
     var origin = this.name;

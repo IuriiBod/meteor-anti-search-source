@@ -3413,7 +3413,7 @@ var Grid = fc.Grid = RowRenderer.extend({
             alreadyAssigned.push(shift.assignedTo);
           }
         });
-        var workers = Meteor.users.find({"_id": {$nin: alreadyAssigned}, "isActive": true, $or: [{"isWorker": true}, {"isManager": true}]}).fetch();
+        var workers = Meteor.users.find({"_id": {$nin: alreadyAssigned}, "isActive": true, $or: [{"isWorker": true}, {"isManager": true}], $or: [{"profile.resignDate": null}, {"profile.resignDate": {$gt: shift.shiftDate}}]}).fetch();
 
         var options = null;
         if(shift.assignedTo) {

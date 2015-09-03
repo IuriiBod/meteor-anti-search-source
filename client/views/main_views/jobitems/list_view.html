@@ -5,7 +5,7 @@
   <div class="wrapper wrapper-content">
     <div class="row">
       <div class="col-md-12">
-        <div class="panel-options">
+        <div class="tabs-container">
           <ul class="nav nav-tabs jobtypesPanel">
             {{#each jobTypes}}
               <li class="">
@@ -13,14 +13,16 @@
               </li>
             {{/each}}
           </ul>
-          <div class="panel-body">
+
             <div class="tab-content">
+
               {{#each jobTypes}}
                 <div class="tab-pane jobtypepanes" id="{{_id}}">
+                    <div class="panel-body">
                   {{> render component='jobItemsList' id=_id}}
-               </div>
+               </div></div>
               {{/each}}
-            </div>
+
           </div>
         </div>
       </div>

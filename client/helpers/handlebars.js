@@ -127,7 +127,21 @@ UI.registerHelper("stockById", function(id) {
 });
 
 UI.registerHelper("roundCount", function(count) {
-  return Math.round(count * 100)/100;
+  if(count) {
+    return Math.round(count * 100)/100;
+  } else {
+    return 0;
+  }
+});
+
+UI.registerHelper("formatCurrency", function(amount) {
+  if(amount && amount > 0) {
+    amount = amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+    amount = amount.substring(0, amount.lastIndexOf('.'));
+    return amount;
+  } else {
+    return 0;
+  }
 });
 
 UI.registerHelper("Username", function(userId) {

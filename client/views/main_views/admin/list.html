@@ -1,48 +1,41 @@
 <template name="adminMainView">
-   <!-- Page heading -->
-  {{> render component="pageHeading" title="Admin"}}
+    <!-- Page heading -->
+    {{> render component="pageHeading" title="Admin"}}
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#usersList" data-toggle="tab">Users</a>
+                        </li>
+                        <li class="">
+                            <a href="#sections" data-toggle="tab">Sections</a>
+                        </li>
+                        <li class="">
+                            <a href="#areas" data-toggle="tab">Stock Areas</a>
+                        </li>
+                        <li class="">
+                            <a href="#timeout" data-toggle="tab">Timeout</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="usersList">
+                            {{> render component='usersList'}}
+                        </div>
+                        <div class="tab-pane" id="sections">
+                            {{> render component='sections'}}
+                        </div>
+                        <div class="tab-pane" id="areas">
+                            {{> render component='stockAreas'}}
+                        </div>
+                        <div class="tab-pane" id="timeout">
+                            {{> render component='inactivityTimeoutField'}}
+                        </div>
+                    </div>
 
-  <div class="wrapper wrapper-content">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="panel-options">
-          <ul class="nav nav-tabs">
-            <li class="active">
-              <a href="#usersList" data-toggle="tab">Users</a>
-            </li>
-            <li class="">
-              <a href="#sections" data-toggle="tab">Sections</a>
-            </li>
-            <li class="">
-              <a href="#areas" data-toggle="tab">Stock Areas</a>
-            </li>
-            <li class="">
-              <a href="#details" data-toggle="tab">Details</a>
-            </li>
-          </ul>
-          <div class="panel-body">
-            <div class="tab-content">
-              <div class="tab-pane active" id="usersList">
-                <strong>Inactivity timeout</strong>
-                {{> render component='inactivityTimeoutField'}}
-                <br>
-                <strong>Users List</strong>
-                {{> render component='usersList'}}
-              </div>
-              <div class="tab-pane" id="sections">
-                {{> render component='sections'}}
-              </div>
-              <div class="tab-pane" id="areas">
-                {{> render component='stockAreas'}}
-              </div>
-              <div class="tab-pane" id="details">
-                <strong>Details</strong>
-                <p>Coming soon...!</p>
-              </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
