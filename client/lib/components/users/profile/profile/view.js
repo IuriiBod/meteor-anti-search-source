@@ -22,28 +22,10 @@ Template.profile.events({
       tpl.$(".open-resigned-date-picker").parent().addClass("has-success");
     }
 
-    Meteor.call("resignDate", "set", id, val, function(err, data) {
+    Meteor.call("resignDate", "set", id, val, function(err) {
       if(err) {
         console.log(err);
         alert(err.reason);
-      }
-
-      if(data && data !== true) {
-        var content = "<h4>The user has next future shifts:</h4>";
-
-        data.forEach(function(shift) {
-          content += '<p><a target="blank" href="/roster/shift/' + shift._id + '">';
-          content += moment(shift.shiftDate).format("ddd, Do MMMM ");
-          content += moment(shift.startTime).format("HH:mm - ");
-          content += moment(shift.endTime).format("HH:mm");
-          content += '</a></p>';
-        });
-
-        content += '<p>Please, remove them before resigning user.</p>';
-
-        $("#future-shifts-modal").modal();
-        $("#future-shifts-modal").find(".modal-body").html(content);
-        $("#future-shifts-modal").modal("show");
       }
     });
   },
@@ -60,30 +42,12 @@ Template.profile.events({
       tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
     }
 
-    Meteor.call("resignDate", "update", id, val, function(err, data) {
+    Meteor.call("resignDate", "update", id, val, function(err) {
       if(err) {
         console.log(err);
         alert(err.reason);
-      }
-
-      tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
-
-      if(data && data !== true) {
-        var content = "<h4>The user has next future shifts:</h4>";
-
-        data.forEach(function(shift) {
-          content += '<p><a target="blank" href="/roster/shift/' + shift._id + '">';
-          content += moment(shift.shiftDate).format("ddd, Do MMMM ");
-          content += moment(shift.startTime).format("HH:mm - ");
-          content += moment(shift.endTime).format("HH:mm");
-          content += '</a></p>';
-        });
-
-        content += '<p>Please, remove them before resigning user.</p>';
-
-        $("#future-shifts-modal").modal();
-        $("#future-shifts-modal").find(".modal-body").html(content);
-        $("#future-shifts-modal").modal("show");
+      } else {
+        tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
       }
     });
   },
