@@ -80,3 +80,7 @@ component.state.permittedAdmin = function() {
     return false;
   }
 }
+
+component.state.userStyle = function() {
+  return this.user.isActive ? '' : 'text-decoration: line-through';
+}
