@@ -7,6 +7,6 @@ Template.notifiModal.events({
   'click .toWeek': function(event) {
     event.preventDefault();
     $("#notifiModal").modal("hide");
-    Router.go("weeklyRoster", {"week": Session.get("templateToWeek")})
+    Router.go("weeklyRoster", {"year": Session.get("templateToYear"), "week": Session.get("templateToWeek")})
   }
 });

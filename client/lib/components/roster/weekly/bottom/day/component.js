@@ -51,7 +51,6 @@ component.action.addShift = function(day, dates) {
     doc.section = null;
     doc.type = "template";
   }
-
   Meteor.call("createShift", doc, function(err, id) {
     if(err) {
       console.log(err);
