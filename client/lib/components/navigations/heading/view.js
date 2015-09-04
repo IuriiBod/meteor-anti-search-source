@@ -6,7 +6,7 @@ Template.pageHeading.events({
       limit: 30,
     };
     var params = {};
-    if(event.target.dataset.type) {
+    if(event.target.dataset.type == "archive") {
       selector.status = "archived";
       params = {
         type: "archive"
@@ -26,7 +26,7 @@ Template.pageHeading.events({
       limit: 30,
     };
     var params = {};
-    if(event.target.dataset.type) {
+    if(event.target.dataset.type == "archive") {
       selector.status = "archived";
       params = {
         type: "archive"
