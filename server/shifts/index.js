@@ -56,7 +56,7 @@ Meteor.methods({
       var alreadyPublished = Shifts.findOne({"shiftDate": {$in: info.week}, "published": true});
       if(alreadyPublished) {
         doc.published = true;
-        doc.publishedOn = alreadyPublished.publishedOn;
+        doc.publishedOn = Date.now();
       }
     }
     // var yesterday = new Date();
