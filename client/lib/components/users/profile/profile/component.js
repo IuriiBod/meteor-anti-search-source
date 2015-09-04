@@ -89,11 +89,7 @@ component.state.resignDate = function() {
   var id = Router.current().params._id;
   var user = Meteor.users.findOne({_id: id});
   var resignDate = user.profile.resignDate;
-
-  console.log("ID: ", id);
-  console.log("USER: ", user);
-  console.log(resignDate);
-
+  
   if (resignDate) {
     return moment(resignDate).format("MM/DD/YYYY");
   } else {
