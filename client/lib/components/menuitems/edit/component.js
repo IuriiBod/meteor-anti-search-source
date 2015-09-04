@@ -52,3 +52,13 @@ component.state.statusList = function() {
   }
   return list;
 }
+
+component.state.isArchived = function() {
+  var menu = MenuItems.findOne(this.id);
+  console.log(menu.status);
+  if(menu.status == "archived") {
+    return true;
+  } else {
+    return false;
+  }
+}
