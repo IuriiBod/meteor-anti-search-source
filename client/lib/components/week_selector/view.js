@@ -9,6 +9,14 @@ Template.weekSelector.events({
     event.preventDefault();
     var weekNo = Session.get("templateToWeek");
     var week = getDatesFromWeekNumber(weekNo);
+  
+    var dates = [];
+    week.forEach(function(day) {
+      if(day && day.date) {
+        dates.push(new Date(day.date).getTime())
+      }
+    });
+
     week.forEach(function(obj) {
       var index = week.indexOf(obj);
       var shifts = Shifts.find({"shiftDate": index, "type": "template"}).fetch();
@@ -26,6 +34,7 @@ Template.weekSelector.events({
             "shiftDate": moment(obj.date).format("YYYY-MM-DD"),
             "section": shift.section,
             "assignedTo": shift.assignedTo,
+            "week": dates
           }
           Meteor.call("createShift", info, function(err) {
             if(err) {
@@ -43,5 +52,6 @@ Template.weekSelector.events({
   'click .checklist-content': function(event) {
     var checked = $(event.target).is(":checked");
     Session.set("templateToWeek", $(event.target).val())
+    Session.set("templateToYear", $(event.target).attr("data-year"));
   }
 });
