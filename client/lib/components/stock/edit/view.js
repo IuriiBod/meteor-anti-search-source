@@ -69,5 +69,27 @@ Template.editIngredientItem.events({
         });
       }
     }
+  },
+
+  'click .archiveIngredient': function(e, tpl) {
+    e.preventDefault();
+    var id = $(e.target).attr("data-id");
+    Meteor.call("archiveIngredient", id, function(err) {
+      if(err) {
+        console.log(err);
+        alert(err.reason);
+      }
+    });
+    IngredientsListSearch.cleanHistory();
+    var selector = {
+      limit: 30
+    };
+    var params = {};
+    if(Router.current().params.type == "archive") {
+      selector.status = "archived";
+    } else {
+      selector.status = {$ne: "archived"};
+    }
+    IngredientsListSearch.search("", selector);
   }
 });

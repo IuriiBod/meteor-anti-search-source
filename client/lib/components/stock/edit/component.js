@@ -57,3 +57,15 @@ component.state.isDisabled = function() {
     return true;
   }
 }
+
+component.state.isArchive = function() {
+  var id = Session.get("thisIngredientId");
+  if(id != undefined) {
+    var ing = Ingredients.findOne({_id: id});
+    if(ing && ing.status == "archived") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}

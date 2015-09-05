@@ -32,20 +32,6 @@ Template.dailyShiftScheduling.events({
         $(event.target).val("");
       }
     });
-  },
-
-  'click .generateRecurring': function (event) {
-    event.preventDefault();
-    var date = Router.current().params.date;
-    console.log(date);
-    Meteor.call("generateRecurrings", date, function (err, result) {
-      if (err) {
-        console.log(err);
-        return alert(err.reason);
-      } else {
-        console.log(result);
-      }
-    });
   }
 });
 

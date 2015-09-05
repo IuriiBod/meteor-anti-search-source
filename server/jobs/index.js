@@ -201,5 +201,5 @@ Meteor.methods({
       logger.info("Inventory update ", {"jobId": jobId, "portions": job.portions});
       //add inventory update here (Not designed yet)
     }
-  }  
+  }
 });

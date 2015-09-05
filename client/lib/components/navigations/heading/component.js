@@ -7,7 +7,12 @@ var component = FlowComponents.define("pageHeading", function(props) {
 });
 
 component.state.title = function() {
-  return this.title;
+  var title = this.title;
+  if(Router.current().params.type == "archive" || Router.current().params.status == "archived") {
+    title = "Archived " + title;
+  }
+
+  return title;
 }
 
 component.state.type = function() {
@@ -269,6 +274,27 @@ component.state.date = function() {
 
 component.state.collapseIn = function() {
   if(Session.get("collapsed")) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+component.state.isArchiveMenu = function() {
+  var id = Router.current().params._id;
+  var menu = MenuItems.findOne({_id: id});
+  if(menu.status == "archived") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+component.state.isArchiveJob = function() {
+  var id = Router.current().params._id;
+  var job = JobItems.findOne({_id: id});
+  if(job.status == "archived") {
     return true;
   } else {
     return false;

@@ -72,3 +72,20 @@ component.state.cost = function() {
     return jobItem.prepCostPerPortion;
   }
 }
+
+component.state.isPermitted = function() {
+  var user = Meteor.user();
+  if(user && (user.isAdmin || user.isManager)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+component.state.isArchive = function() {
+  if(this.jobitem.status == "archived") {
+    return true;
+  } else {
+    return false;
+  }
+}

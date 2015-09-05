@@ -130,8 +130,8 @@ Meteor.methods({
       return;
     }
   },
-  
-  'updateSalesPrice': function(id, value) {    
+
+  'updateSalesPrice': function(id, value) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -150,11 +150,11 @@ Meteor.methods({
     var query = {
       $set: {}
     }
-    
+
     if (value || value >= 0) {
       updateDoc['salesPrice'] = value;
     }
-    
+
     if(Object.keys(updateDoc).length > 0) {
       updateDoc['editedBy'] = userId;
       updateDoc['editedOn'] = Date.now();
@@ -164,7 +164,7 @@ Meteor.methods({
       return;
     }
   },
-  
+
   'updateMenuItemName': function(id, value) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
@@ -184,11 +184,11 @@ Meteor.methods({
     var query = {
       $set: {}
     }
-    
+
     if (value || value >= 0) {
       updateDoc['name'] = value;
     }
-    
+
     if(Object.keys(updateDoc).length > 0) {
       updateDoc['editedBy'] = userId;
       updateDoc['editedOn'] = Date.now();
@@ -198,7 +198,7 @@ Meteor.methods({
       return;
     }
   },
-  
+
   'updateMenuItemCategory': function(id, value) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
@@ -218,11 +218,11 @@ Meteor.methods({
     var query = {
       $set: {}
     }
-    
+
     if (value || value >= 0) {
       updateDoc['category'] = value;
     }
-    
+
     if(Object.keys(updateDoc).length > 0) {
       updateDoc['editedBy'] = userId;
       updateDoc['editedOn'] = Date.now();
@@ -232,7 +232,7 @@ Meteor.methods({
       return;
     }
   },
-  
+
   'updateMenuItemStatus': function(id, value) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
@@ -252,11 +252,11 @@ Meteor.methods({
     var query = {
       $set: {}
     }
-    
+
     if (value || value >= 0) {
       updateDoc['status'] = value;
     }
-    
+
     if(Object.keys(updateDoc).length > 0) {
       updateDoc['editedBy'] = userId;
       updateDoc['editedOn'] = Date.now();
@@ -327,17 +327,17 @@ Meteor.methods({
 
     ingredients.forEach(function(ingredient) {
       var exist = MenuItems.findOne(
-        {"_id": id, "ingredients": {$elemMatch: {"_id": ingredient._id}}}, 
+        {"_id": id, "ingredients": {$elemMatch: {"_id": ingredient._id}}},
         {fields: {"ingredients.$._id": ingredient._id}});
 
       if(exist && (exist.ingredients[0]._id == ingredient._id)) {
         if(exist.ingredients[0].quantity != ingredient.quantity) {
-          MenuItems.update({'_id': id, "ingredients": {$elemMatch: {"_id": ingredient._id}}}, 
-            {$set: {'ingredients.$.quantity': ingredient.quantity}});   
+          MenuItems.update({'_id': id, "ingredients": {$elemMatch: {"_id": ingredient._id}}},
+            {$set: {'ingredients.$.quantity': ingredient.quantity}});
         }
       } else {
-        MenuItems.update({'_id': id}, 
-          {$push: {'ingredients': ingredient}});  
+        MenuItems.update({'_id': id},
+          {$push: {'ingredients': ingredient}});
       }
     });
     logger.info("Ingredients updated for menu item", id);
@@ -414,17 +414,17 @@ Meteor.methods({
 
     preps.forEach(function(prep) {
       var exist = MenuItems.findOne(
-        {"_id": id, "jobItems": {$elemMatch: {"_id": prep._id}}}, 
+        {"_id": id, "jobItems": {$elemMatch: {"_id": prep._id}}},
         {fields: {"jobItems.$._id": prep._id}});
 
       if(exist && (exist.jobItems[0]._id == prep._id)) {
         if(exist.jobItems[0].quantity != prep.quantity) {
-          MenuItems.update({'_id': id, "jobItems": {$elemMatch: {"_id": prep._id}}}, 
-            {$set: {'jobItems.$.quantity': prep.quantity}});   
+          MenuItems.update({'_id': id, "jobItems": {$elemMatch: {"_id": prep._id}}},
+            {$set: {'jobItems.$.quantity': prep.quantity}});
         }
       } else {
-        MenuItems.update({'_id': id}, 
-          {$push: {'jobItems': prep}});  
+        MenuItems.update({'_id': id},
+          {$push: {'jobItems': prep}});
       }
     });
     logger.info("Preps updated for menu item", id);
@@ -506,5 +506,16 @@ Meteor.methods({
       logger.info("Duplicate Menu items added ", {"original": id, "duplicate": newid});
       return newid;
     }
+  },
+
+  'archiveMenuItem': function(id) {
+    var doc = {};
+    var menu = MenuItems.findOne({_id: id});
+    if(menu && menu.status == "archived") {
+      doc.status = "active";
+    } else {
+      doc.status = "archived";
+    }
+    MenuItems.update({_id: id}, {$set: doc});
   }
 });

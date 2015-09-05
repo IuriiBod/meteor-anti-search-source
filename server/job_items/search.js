@@ -18,6 +18,9 @@ SearchSource.defineSource('jobItemsSearch', function(searchText, options) {
     if(options.type) {
       selector["type"] = options.type;
     }
+    if(options.status) {
+      selector['status'] = options.status;
+    }
   } else {
     optionFileds['limit'] = 10;
   }
@@ -25,7 +28,7 @@ SearchSource.defineSource('jobItemsSearch', function(searchText, options) {
   if(searchText) {
     var regExp = buildRegExp(searchText);
     selector['$or'] = [
-      {'name': regExp}    
+      {'name': regExp}
     ];
     docs = JobItems.find(selector, optionFileds).fetch();
   } else {

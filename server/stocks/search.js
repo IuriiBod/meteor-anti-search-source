@@ -15,6 +15,9 @@ SearchSource.defineSource('ingredients', function(searchText, options) {
     if(options.ids) {
       selector['_id'] = {$nin: options.ids}
     }
+    if(options.status) {
+      selector['status'] = options.status;
+    }
   } else {
     optionFileds['limit'] = 10;
   }
