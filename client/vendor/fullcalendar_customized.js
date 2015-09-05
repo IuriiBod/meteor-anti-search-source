@@ -3418,7 +3418,9 @@ var Grid = fc.Grid = RowRenderer.extend({
         var options = null;
         if(shift.assignedTo) {
           var assignedTo = Meteor.users.findOne(shift.assignedTo);
-          options += '<option selected="selected" value=' + assignedTo._id + '>' + assignedTo.username + '</option>'
+          if(assignedTo) {
+            options += '<option selected="selected" value=' + assignedTo._id + '>' + assignedTo.username + '</option>'
+          }
         } else {
           options = '<option selected="selected" value="">Select worker</option>';
         }
