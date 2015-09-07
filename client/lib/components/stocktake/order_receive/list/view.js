@@ -56,7 +56,6 @@ Template.orderReceive.events({
       {},
       function(InkBlobs){
         var data = (InkBlobs);
-        console.log("..................", data);
 
         if(data && data.length > 0) {
           data.forEach(function(doc) {
