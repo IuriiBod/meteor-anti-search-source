@@ -101,6 +101,7 @@
     "Email": false,
     "Assets": false,
     "Handlebars": false,      // https://github.com/meteor/meteor/wiki/Handlebars
+    "Spacebars": false,
     "Package": false,
     "App": false, //mobile-config.js
 
@@ -110,6 +111,7 @@
     "Log": false,
     "MongoInternals": false,
     "process": false,
+    "main": false,
     "WebApp": false,
     "WebAppInternals": false,
 
@@ -118,16 +120,40 @@
     "Tinytest": false,
 
     // Meteor packages
-    "Random": false,
-    "_": false,               // underscore
-    "$": false,               // jquery
-    "Router": false,          // iron:router
-    "FlowComponents": false,  // meteorhacks:flow-components
-    "describe": false,        // anti:gagarin
-    "it": false,              // anti:gagarin
-    "expect": false,          // anti:gagarin
-    "sweetAlert": false,      // kevohagan:sweetalert
-    "SubsManager": false,     // meteorhacks:subs-manager
+    "Random": false,                // random
+    "_": false,                     // underscore
+    "$": false,                     // jquery
+    "Router": false,                // iron:router
+    "Iron": false,                  // iron:router
+    "RouteController": false,       // iron:router
+    "FlowComponents": false,        // meteorhacks:flow-components
+    "Gagarin": false,               // anti:gagarin
+    "describe": false,              // anti:gagarin
+    "it": false,                    // anti:gagarin
+    "expect": false,                // anti:gagarin
+    "meteor": false,                // anti:gagarin
+    "ddp": false,                   // anti:gagarin
+    "browser": false,               // anti:gagarin
+    "sweetAlert": false,            // kevohagan:sweetalert
+    "SubsManager": false,           // meteorhacks:subs-manager
+    "moment": false,                // momentjs:moment
+    "SearchSource": false,          // meteorhacks:search-source
+    "FastRender": false,            // meteorhacks:fast-render
+    "ServiceConfiguration": false,  // service-configuration
+    "Autocomplete": false,          // mizzao:autocomplete
+    "Autolinker": false,            // konecty:autolinker
+    "IronRouterAutoscroll": false,  // okgrow:iron-router-autoscroll
+    "Kadira": false,                // meteorhacks:kadira
+    "IntercomSettings": false,      // percolate:intercom
+    "IntercomHash": false,          // percolate:intercom
+    "StaleSessionConfigs": false,   // hospohero:stale-session
+    "StaleSession": false,          // hospohero:stale-session
+    "MeteorSettings": false,        // ogourment:settings
+    "Async": false,                 // meteorhacks:async
+    "AccountsTemplates": false,     // useraccounts:core
+    "ActiveRoute": false,           // zimme:active-route
+    "HTML": false,                  // htmljs:HTML
+    "T9n": false,                   // softwarerero:accounts-t9n
 
     // Collections
     "Menus": true,
