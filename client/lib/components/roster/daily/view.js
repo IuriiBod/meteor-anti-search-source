@@ -63,16 +63,5 @@ Template.dailyShiftScheduling.onRendered(function () {
     businessStartsAt: 8,
     businessEndsAt: 5
   });
-  //Tracker.autorun(function () {
-  //  Meteor.defer(function () {
-  //    Meteor.call("generateRecurrings", routeDate, function (err) {
-  //      if (err) {
-  //        console.log(err);
-  //      } else {
-  //        calendar.update();
-  //      }
-  //    });
-  //  });
-  //});
   calendar.autoUpdate();
 });
