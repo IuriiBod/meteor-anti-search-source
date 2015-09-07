@@ -2,8 +2,13 @@ var component = FlowComponents.define("submitJob", function(props) {
   this.onRendered(this.onJobRendered);
 });
 
+component.state.selectedJobType = function() {
+  var jobType = this.get("type");
+  return JobTypes.findOne(jobType);
+}
+
 component.state.jobTypes = function() {
-  return JobTypes.find();
+  return JobTypes.find({"_id": {$nin: [this.get("type")]}});
 };
 
 component.state.jobs = function() {
@@ -22,14 +27,13 @@ component.action.onChangeJob = function(job) {
   this.set("jobRef", job);
 };
 
-component.state.portions = function() {
+component.state.job = function() {
   var jobId = this.get("jobRef");
   if(jobId) {
     var job = JobItems.findOne(jobId);
     if(job) {
-      var time = job.activeTime;
-      this.set("activeTime", time);
-      return job.portions;
+      this.set("activeTime", job.activeTime);
+      return job;
     }
   }
 };
