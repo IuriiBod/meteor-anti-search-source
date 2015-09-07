@@ -216,24 +216,23 @@ Calendar.prototype.init = function () {
         );
       }
     },
-    eventRender: function () {
+    viewRender: function () {
       var $cell = self.tpl.$('.fc-time').first();
       var cellHeight = $cell.outerHeight();
       _.each(self.options.shifts, function (shift, index) {
-        var $nonBussinessZones = $('.fc-bgevent-skeleton td')
+        var $nonBusinessZones = $('.fc-bgevent-skeleton td')
           .eq(index + 1)
           .find('.fc-bgevent');
 
         var start = Math.round(self.convertDate(shift.startTime) / 1800);
         var bottom = start * cellHeight * -1 + 'px';
-        var $beforeShift = $nonBussinessZones.eq(0);
+        var $beforeShift = $nonBusinessZones.eq(0);
         $beforeShift.css('bottom', bottom);
 
         var end = Math.round(self.convertDate(shift.endTime) / 1800);
         var top = end * cellHeight + 'px';
-        var $afterShift = $nonBussinessZones.eq(1);
+        var $afterShift = $nonBusinessZones.eq(1);
         $afterShift.css('top', top);
-
       });
     },
     events: self.options.events
