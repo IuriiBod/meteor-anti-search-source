@@ -120,7 +120,7 @@ Meteor.methods({
     }
   },
 
-  deleteIngredient: function(id) {
+  archiveIngredient: function(id, remove) {
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');
@@ -140,44 +140,61 @@ Meteor.methods({
       logger.error("Item not found");
       throw new Meteor.Error(404, "Item not found");
     }
-    var existInPreps = JobItems.findOne(
-      {"type": "Prep", "ingredients": {$elemMatch: {"_id": id}}},
-      {fields: {"ingredients": {$elemMatch: {"_id": id}}}}
-    );
-    if(existInPreps) {
-      if(existInPreps.ingredients.length > 0) {
-        logger.error("Item found in Prep jobs, can't delete. Archiving ingredient");
-        Ingredients.update({"_id": id}, {$set: {"status": "archive"}});
+    var status = null;
+    if(item.status) {
+      if(item.status == 'active') {
+        status = 'archived';
+      } else if(item.status == 'archived') {
+        if(remove) {
+          status = 'archived';
+        } else {
+          status = 'active';
+        }
+      }
+    } else {
+      status = 'archived';
+    }
+
+    if(status == 'archived') {
+      var existInPreps = JobItems.findOne(
+        {"type": "Prep", "ingredients": {$elemMatch: {"_id": id}}},
+        {fields: {"ingredients": {$elemMatch: {"_id": id}}}}
+      );
+      if(existInPreps) {
+        if(existInPreps.ingredients.length > 0) {
+          logger.error("Item found in Prep jobs, can't delete. Archiving ingredient");
+        }
+      }
+      var existInMenuItems = MenuItems.findOne(
+        {"ingredients": {$elemMatch: {"_id": id}}},
+        {fields: {"ingredients": {$elemMatch: {"_id": id}}}}
+      );
+      if(existInMenuItems) {
+        if(existInMenuItems.ingredients.length > 0) {
+          logger.error("Item found in Menu Items, can't delete. Archiving ingredient", id);
+        }
+      }
+
+      var existInStocktakes = Stocktakes.findOne({"stockId": id});
+      if(existInStocktakes) {
+        logger.error("Item found in stock counting, can't delete. Archiving ingredient");
+      }
+
+      if(existInPreps || existInMenuItems || existInStocktakes) {
+        Ingredients.update({"_id": id}, {$set: {"status": status}});
+      } else {
+        Ingredients.remove(id);
+        logger.info("Ingredient removed", id);
         return;
       }
+    } else {
+      Ingredients.update({"_id": id}, {$set: {"status": status}});
+      logger.error("Stock item restored ", id);
+      return;
     }
-    var existInMenuItems = MenuItems.findOne(
-      {"ingredients": {$elemMatch: {"_id": id}}},
-      {fields: {"ingredients": {$elemMatch: {"_id": id}}}}
-    );
-    if(existInMenuItems) {
-      if(existInMenuItems.ingredients.length > 0) {
-        logger.error("Item found in Menu Items, can't delete. Archiving ingredient", id);
-        Ingredients.update({"_id": id}, {$set: {"status": "archive"}});
-        return;
-      }
-    }
-    Ingredients.remove(id);
-    logger.info("Ingredient removed", id);
   },
 
   ingredientsCount: function() {
     return Ingredients.find().count();
   },
-
-  'archiveIngredient': function(id) {
-    var doc = {};
-    var ing = Ingredients.findOne({_id: id});
-    if(ing && ing.status == "active") {
-      doc.status = "archived";
-    } else {
-      doc.status = "active";
-    }
-    Ingredients.update({_id: id}, {$set: doc});
-  }
 });
