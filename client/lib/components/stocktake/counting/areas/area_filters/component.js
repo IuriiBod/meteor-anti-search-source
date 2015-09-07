@@ -6,9 +6,9 @@ component.state.generalAreas = function() {
   var main = StocktakeMain.findOne(Session.get("thisVersion"));
   if(main && main.orderReceipts && main.orderReceipts.length > 0) {
     var gareas = main.generalAreas;
-    return GeneralAreas.find({"_id": {$in: gareas}});
+    return GeneralAreas.find({"_id": {$in: gareas}}, {sort: {"createdAt": 1}});
   } else {
-    return GeneralAreas.find({"active": true});
+    return GeneralAreas.find({"active": true}, {sort: {"createdAt": 1}});
   }
 }
 
@@ -24,9 +24,9 @@ component.state.specialAreas = function(gareaId) {
   var main = StocktakeMain.findOne(Session.get("thisVersion"));
   if(main && main.orderReceipts && main.orderReceipts.length > 0) {
     var sareas = main.specialAreas;
-    return SpecialAreas.find({"_id": {$in: sareas}});
+    return SpecialAreas.find({"_id": {$in: sareas}, "generalArea": gareaId}, {sort: {"createdAt": 1}});
   } else {
-    return SpecialAreas.find({"generalArea": gareaId, "active": true});
+    return SpecialAreas.find({"generalArea": gareaId, "active": true}, {sort: {"name": 1}});
   }
 }
 

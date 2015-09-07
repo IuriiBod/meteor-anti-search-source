@@ -52,7 +52,6 @@ component.state.ingredientsList = function() {
   var gareaId = Session.get("activeGArea");
   var sareaId = Session.get("activeSArea");
   if(gareaId && sareaId) {
-    subs.subscribe("areaSpecificStockTakes", gareaId);
     subs.subscribe("areaSpecificStocks", gareaId);
     var ingredients = Ingredients.find({"generalAreas": gareaId, "specialAreas": sareaId});
     if(ingredients) {
