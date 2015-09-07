@@ -35,7 +35,7 @@ Template.orderReceive.events({
       var text = $(event.target).val();
       var info = {
         "receiveNote": text.trim()
-      }
+      };
       Meteor.call("updateReceipt", Session.get("thisReceipt"), info, function(err) {
         if(err) {
           console.log(err);
@@ -48,22 +48,52 @@ Template.orderReceive.events({
   'click .uploadInvoice': function(event) {
     event.preventDefault();
     filepicker.pickAndStore(
-      {mimetype:"image/*", services: ['COMPUTER']}, 
+      {
+        extensions:['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'], 
+        services: ['COMPUTER'],
+        multiple: true
+      }, 
       {},
       function(InkBlobs){
-        var doc = (InkBlobs);
-        if(doc) {
-          var url = doc[0].url;
-          Meteor.call("updateReceipt", Session.get("thisReceipt"), {"invoiceImage": url}, function(err) {
-            if(err) {
-              console.log(err);
-              return alert(err.reason);
-            } else {
+        var data = (InkBlobs);
+        console.log("..................", data);
+
+        if(data && data.length > 0) {
+          data.forEach(function(doc) {
+            var urls = null;
+            if(doc) {
+              var type = null;
+              var convertedUrl = null;
+              if(doc.mimetype == "application/pdf") {
+                type = "pdf";
+              } else if(doc.mimetype == "text/csv") {
+                type = "csv";
+              } else {
+                type = "image";
+              }
+              if(doc.mimetype != 'image/png') {
+                convertedUrl = doc.url + "/convert?format=png";
+              } else {
+                convertedUrl = doc.url;
+              }
+              urls = {
+                "originalUrl": doc.url,
+                "convertedUrl": convertedUrl,
+                "type": type
+              };
+              Meteor.call("uploadInvoice", Session.get("thisReceipt"), urls, function(err) {
+                if(err) {
+                  console.log(err);
+                  return alert(err.reason);
+                } else {
+                }
+              });
             }
           });
-          $(".uploadedInvoiceDiv").removeClass("hide");
-          $("#uploadedInvoiceUrl").attr("src", url);
-          blueimpImageFullScreen();
+          
+          // $(".uploadedInvoiceDiv").removeClass("hide");
+          // $("#uploadedInvoiceUrl").attr("src", url);
+          // blueimpImageFullScreen();
         }
     });
   },

@@ -1,7 +1,9 @@
 <template name="invoiceImage">
   <div id="links">
-    <a href="{{state$imageUrl}}" title="Invoice">
-      <img src="{{state$imageUrl}}" class="col-md-4 no-padding img-responsive">
+    {{#each state$imageUrl}}
+    <a href="{{this.convertedUrl}}" target='blank' title="Invoice">
+      <img src="{{this.convertedUrl}}" class="col-md-4 no-padding img-responsive">
     </a>
+    {{/each}}
   </div>
 </template>
