@@ -50,34 +50,18 @@ Template.editIngredientItem.events({
     FlowComponents.callAction('submit', id, info, event);
   },
 
-  'click .deleteIngredient': function(event) {
-    event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    var result = confirm("Are you sure, you want to delete this item ?");
-    if (result == true) {
-      if(id) {
-        Meteor.call("deleteIngredient", id, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          } else {
-            var text = $("#searchIngBox").val();
-            $("#editIngredientModal").modal("hide");
-            IngredientsListSearch.cleanHistory();
-            IngredientsListSearch.search(text, {"limit": 10});
-          }
-        });
-      }
-    }
-  },
-
   'click .archiveIngredient': function(e, tpl) {
     e.preventDefault();
     var id = $(e.target).attr("data-id");
-    Meteor.call("archiveIngredient", id, function(err) {
+    var status = $(e.target).attr("data-status");
+    var state = false;
+    if(status == "delete") {
+      state = true;
+    }
+    Meteor.call("archiveIngredient", id, state, function(err) {
       if(err) {
         console.log(err);
-        alert(err.reason);
+        return alert(err.reason);
       }
     });
     IngredientsListSearch.cleanHistory();

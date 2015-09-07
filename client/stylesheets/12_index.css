@@ -111,6 +111,6 @@ li > img {
   font-size: 20px !important;
 }
 
-a {
+.areaBox > a {
   white-space: inherit !important;
 }
