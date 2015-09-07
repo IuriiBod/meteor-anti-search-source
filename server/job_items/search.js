@@ -16,7 +16,10 @@ SearchSource.defineSource('jobItemsSearch', function(searchText, options) {
       selector['_id'] = {$nin: options.ids}
     }
     if(options.type) {
-      selector["type"] = options.type;
+      var type = JobTypes.findOne({"name": options.type});
+      if(type) {
+        selector["type"] = type._id;
+      }
     }
     if(options.status) {
       selector['status'] = options.status;

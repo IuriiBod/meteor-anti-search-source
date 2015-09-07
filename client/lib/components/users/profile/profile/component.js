@@ -53,7 +53,6 @@ component.state.isAdminAndManagerPermitted = function() {
   }
 };
 
-
 component.state.shiftsPerWeek = function() {
   var user = this.get("user");
   var shifts = [1, 2, 3, 4, 5, 6, 7];
@@ -75,13 +74,35 @@ component.state.shiftsPerWeek = function() {
   return formattedShifts;
 };
 
-component.state.resignDate = function() {
-  var id = this.get("id");
+component.state.hasResignDate = function() {
+  var id = Router.current().params._id;
   var user = Meteor.users.findOne(id);
   var resignDate = user.profile.resignDate;
-
   if (resignDate) {
-    resignDate = moment(resignDate).format("MM/DD/YYYY");
+    return true;
+  } else {
+    return false;
   }
-  return resignDate;
+}
+
+component.state.resignDate = function() {
+  var id = Router.current().params._id;
+  var user = Meteor.users.findOne({_id: id});
+  var resignDate = user.profile.resignDate;
+  
+  if (resignDate) {
+    return moment(resignDate).format("MM/DD/YYYY");
+  } else {
+    return null;
+  }
+}
+
+component.state.isMe = function() {
+  var userId = Meteor.userId();
+  var id = Router.current().params._id;
+  if(userId == id) {
+    return true;
+  } else {
+    return false;
+  }
 }

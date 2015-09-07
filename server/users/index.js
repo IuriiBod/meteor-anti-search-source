@@ -210,10 +210,19 @@ Meteor.methods({
     }
     val = new Date(val).getTime();
     if(type == "set" || type == "update") {
-      Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val}});
+      Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val, "isActive": false}});
       Shifts.update({assignedTo: id, shiftDate: {$gte: val}}, {$set: {assignedTo: "null"}}, {multi: true});
     } else if(type == "remove") {
-      Meteor.users.update({_id: id}, {$unset: {"profile.resignDate": ""}});
+      Meteor.users.update({_id: id}, {$unset: {"profile.resignDate": ""}, $set: {"isActive": true}});
+    } else {
+      val = new Date(val).getTime();
+      var nextShifts = Shifts.find({assignedTo: id, shiftDate: {$gte: val}}).fetch();
+      if (nextShifts && nextShifts.length > 0) {
+        return nextShifts;
+      }
+      if(type == "set" || type == "update") {
+        Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val, "isActive": false}});
+      }
     }
   }
 });

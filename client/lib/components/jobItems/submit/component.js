@@ -66,4 +66,4 @@ component.action.submit = function(info) {
 
 component.state.jobtypes = function() {
   return JobTypes.find();
-};
+}

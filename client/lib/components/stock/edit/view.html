@@ -118,7 +118,7 @@
                         Portions
                       </th>
                       <th>
-                        Self Life
+                        Shelf Life
                       </th>
                     </tr>
                   </thead>
@@ -151,10 +151,10 @@
         <div class="modal-footer">
           {{#if state$isManagerOrAdmin}}
             {{# if state$isArchive}}
-              <button type="button" class="btn btn-warning archiveIngredient" data-id="{{item._id}}">Restore</button>
-              <button type="button" class="btn btn-danger deleteIngredient" data-id="{{item._id}}">Delete</button>
+              <button type="button" class="btn btn-warning archiveIngredient" data-id="{{item._id}}" data-status="restore">Restore</button>
+              <button type="button" class="btn btn-danger archiveIngredient" data-id="{{item._id}}" data-status="delete">Delete</button>
             {{else}}
-              <button type="button" class="btn btn-warning archiveIngredient" data-id="{{item._id}}">Archive</button>
+              <button type="button" class="btn btn-warning archiveIngredient" data-id="{{item._id}}" data-status="archive">Archive</button>
             {{/ if}}
           {{/if}}
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

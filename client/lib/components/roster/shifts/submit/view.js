@@ -42,6 +42,17 @@ Template.submitShift.events({
         "endTime": dateObj_end,
         "section": section
       }
+      var weekNo = moment(dateOfShift).week();
+      var week = getDatesFromWeekNumber(parseInt(weekNo));
+      var dates = [];
+      week.forEach(function(day) {
+        if(day && day.date) {
+          dates.push(new Date(day.date).getTime())
+        }
+      });
+      if(dates.length > 0) {
+        info.week = dates;
+      }
       Meteor.call("createShift", info, function(err, id) {
         if(err) {
           return alert(err.reason);
