@@ -55,7 +55,7 @@
               <label class="col-sm-4 control-label">Active Time</label>
               <div class="col-sm-6">
                 <div class="input-group">
-                  <input type="text" name= "activeTime" class="form-control" placeholder="Add time in minutes">
+                  <input type="text" name= "activeTime" class="form-control" placeholder="Add time in minutes" value="{{#if state$job.activeTime}} {{secondsToMinutes state$job.activeTime}} {{/if}}">
                   <span class="input-group-addon">Mins</span>
                 </div>
               </div>
