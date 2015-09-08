@@ -103,6 +103,34 @@ component.prototype.onJobRendered = function() {
     this.set("type", prep._id);
     this.set("activeTime", 0);  
   }
+
+  $('#country').editable({
+    "mode": "inline",
+    "type": "select2",
+    "title": "Select country",
+    source: [
+      {id: 'gb', text: 'Great Britain'},
+      {id: 'us', text: 'United States'},
+      {id: 'ru', text: 'Russia'}
+     ],
+    select2: {
+     multiple: true
+    }
+  });
+  $('#username4').editable({  //to keep track of available values in single select
+    type: 'select2',  
+    mode: "inline",
+    autotext : 'always',
+    source : [{id: 'gb', text: 'Great Britain'},
+      {id: 'us', text: 'United States'},
+      {id: 'ru', text: 'Russia'}],
+    value : null,
+    emptytext: 'None',
+    select2: {
+      multiple : false
+    }
+  });
+
 };
 
 component.action.submit = function(info) {
