@@ -1,0 +1,23 @@
+<template name="generalFlyout">
+  <div class="theme-config flyout-container" id="{{state$component}}">
+    <div class="theme-config-box">
+      <div class="skin-setttings">
+        <div class="white-notify-bg">
+          <div class="title clearfix">
+            <a href="" class="theme-config-close-btn">
+              <i class="fa fa-angle-right"></i>
+            </a>
+            {{state$title}}
+          </div>
+          <div class="ibox float-e-margins" style="margin-bottom: 0;">
+            <div class="ibox-content" style="padding-bottom: 10px;">
+              <div class="feed-activity-list">
+                {{> render component=state$component}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
