@@ -3,7 +3,6 @@ Meteor.methods({
     jobIds = [];
     var maxTimePerDay = 5 * 60 * 60;
     if(menuInfo.length > 0) {
-      
       menuInfo.forEach(function(menu) {
         var menuItem = MenuItems.findOne(menu.id);
         if(!menuItem) {
@@ -12,9 +11,10 @@ Meteor.methods({
           if(menuItem.jobItems.length > 0) {
 
             menuItem.jobItems.forEach(function(job) {
-              var jobItem = JobItems.findOne({"_id": job._id, "type": "Prep"});
+              var prep = JobTypes.findOne({"name": "Prep"});
+              var jobItem = JobItems.findOne({"_id": job._id, "type": prep._id});
               if(!jobItem) {
-                logger.error("MenuItem not found", menu.id);
+                logger.error("Job item not found", job.id);
               } else {
                 var portionsRequired = menu.quantity * job.quantity;
                 var timeRequired = portionsRequired * (jobItem.activeTime/jobItem.portions);
@@ -174,10 +174,11 @@ function createNewJob(info, time, portions, maxTime, maxPortions) {
       "createdBy": Meteor.userId(),
       "ingredients": [],
     }
+    console.log(".........", doc);
     var id = Jobs.insert(doc);
     if(jobIds.indexOf(id) < 0) {
       jobIds.push(id);
-      logger.info("New recurring job inserted", id);
+      logger.info("New Prep job inserted", id);
       return id;
     }
   }
@@ -211,7 +212,11 @@ createNewRecurringJob = function(name, ref, type, time, section, startAt, date) 
       if(existingJob.length <= 0) {
         doc.createdBy = Meteor.userId();
         var id = Jobs.insert(doc);
+        logger.info("New Recurring job inserted", id);
+
         Shifts.update({"_id": shift._id}, {$addToSet: {"jobs": id}});
+        logger.info("Shift updated with recurring job", shift._id);
+
         return id;
       }
     });
