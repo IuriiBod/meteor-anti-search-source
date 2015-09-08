@@ -4,5 +4,14 @@ Template.organizationDetailsPage.events({
 
       // TODO: Delete organization
     }
+  },
+
+  'click .open-flyout': function(e) {
+    var span = e.target;
+    if(span.className.indexOf('fa') >= 0) {
+      span = span.parentNode;
+    }
+    var flyoutId = span.dataset.id;
+    document.getElementById(flyoutId).classList.add("show");
   }
 })
