@@ -55,3 +55,19 @@ component.state.status = function() {
     return "all";
   }
 }
+
+component.state.hasCompany = function() {
+  var id = Meteor.userId();
+
+  //Find an organization which have been created by current user
+  var organization = Relations.find({
+    collectionName: 'users',
+    entityId: id
+  });
+
+  if(organization.count()) {
+    return true;
+  } else {
+    return false;
+  }
+}
