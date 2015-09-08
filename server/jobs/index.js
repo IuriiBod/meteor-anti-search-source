@@ -39,6 +39,10 @@ Meteor.methods({
     doc.name = type.name + " " + job.name;
     if(type.name == "Prep") {
       doc.portions = info.portions;
+      if(job.portions <= 0) {
+        logger.error("No of portions recorded on job is 0. Fix it to create job with correct active time");
+        throw new Meteor.Error(404, "No of portions recorded on job is 0. Fix it to create job with correct active time");
+      }
       var time = parseInt((job.activeTime/job.portions) * info.portions);
       if(time == time) {
         doc.activeTime = time;
