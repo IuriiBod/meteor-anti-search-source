@@ -1,4 +1,4 @@
-var component = FlowComponents.define("pageHeading", function(props) {
+var component = FlowComponents.define("pageHeading", function (props) {
   this.title = props.title;
   this.category = props.category;
   this.subCategory = props.subCategory;
@@ -6,45 +6,45 @@ var component = FlowComponents.define("pageHeading", function(props) {
   this.id = props.id;
 });
 
-component.state.title = function() {
+component.state.title = function () {
   var title = this.title;
-  if(Router.current().params.type == "archive" || Router.current().params.status == "archived") {
+  if (Router.current().params.type == "archive" || Router.current().params.status == "archived") {
     title = "Archived " + title;
   }
 
   return title;
 }
 
-component.state.type = function() {
+component.state.type = function () {
   return this.type;
 }
 
-component.state.category = function() {
+component.state.category = function () {
   return this.category;
 }
 
-component.state.subCategory = function() {
+component.state.subCategory = function () {
   return this.subCategory;
 }
 
-component.state.publishedOn = function() {
-  if(this.type == "weeklyroster") {
+component.state.publishedOn = function () {
+  if (this.type == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     var dates = [];
-    week.forEach(function(day) {
-      if(day && day.date) {
+    week.forEach(function (day) {
+      if (day && day.date) {
         dates.push(new Date(day.date).getTime())
       }
     });
     var shift = Shifts.findOne({"shiftDate": {$in: dates}, "published": true, "publishedOn": {$exists: true}});
-    if(shift && shift.publishedOn) {
+    if (shift && shift.publishedOn) {
       return shift.publishedOn;
     }
   }
 }
 
-component.state.currentDate = function() {
+component.state.currentDate = function () {
   var week = Router.current().params.week;
   var year = Router.current().params.year;
   var weekStartEnd = getWeekStartEnd(week, year);
@@ -82,49 +82,54 @@ component.state.currentDate = function() {
   return currentDate;
 }
 
-component.state.id = function() {
-  if(this.id) {
+component.state.id = function () {
+  if (this.id) {
     return this.id;
-  } else if(Router.current().params._id) {
+  } else if (Router.current().params._id) {
     return Router.current().params._id;
   }
 }
 
-component.state.isMenuList = function() {
-  if(this.type == "menulist") {
+component.state.isMenuList = function () {
+  if (this.type == "menulist") {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.isActualSales = function() {
-  if(this.type == "actualsales") {
+component.state.isActualSales = function () {
+  if (this.type == "actualsales") {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.isDailyRoster = function() {
-  if(this.type == "dailyroster") {
+component.state.isDailyRoster = function () {
+  if (this.type == "dailyroster") {
     return true;
   } else {
     return false;
   }
-}
+};
 
-component.state.routeDate = function() {
+component.state.isSalesPrediction = function () {
+  return this.type === 'salesPrediction';
+};
+
+
+component.state.routeDate = function () {
   var date = Router.current().params.date;
-  if(date) {
+  if (date) {
     return date;
   }
 }
 
-component.state.isMenuListSubscribed = function() {
-  if(this.type == "menulist") {
+component.state.isMenuListSubscribed = function () {
+  if (this.type == "menulist") {
     var result = Subscriptions.findOne({"_id": "menulist", "subscribers": Meteor.userId()});
-    if(result) {
+    if (result) {
       return true;
     } else {
       return false;
@@ -132,26 +137,26 @@ component.state.isMenuListSubscribed = function() {
   }
 }
 
-component.state.isMenuDetailed = function() {
-  if(this.type == "menudetailed") {
+component.state.isMenuDetailed = function () {
+  if (this.type == "menudetailed") {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.isJobItemDetailed = function() {
-  if(this.type == "jobitemdetailed") {
+component.state.isJobItemDetailed = function () {
+  if (this.type == "jobitemdetailed") {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.isJobItemSubscribed = function() {
+component.state.isJobItemSubscribed = function () {
   var userId = Meteor.userId();
   var jobSubs = Subscriptions.findOne({"_id": Session.get("thisJobItem"), "subscribers": userId});
-  if(jobSubs) {
+  if (jobSubs) {
     return true;
   } else {
     return false;
@@ -159,19 +164,19 @@ component.state.isJobItemSubscribed = function() {
 }
 
 
-component.state.isJobsList = function() {
-  if(this.type == "jobslist") {
+component.state.isJobsList = function () {
+  if (this.type == "jobslist") {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.isMenuSubscribed = function() {
-  if(this.type == "menudetailed") {
+component.state.isMenuSubscribed = function () {
+  if (this.type == "menudetailed") {
     var userId = Meteor.userId();
     var menuSubs = Subscriptions.findOne({"_id": Session.get("thisMenuItem"), "subscribers": userId});
-    if(menuSubs) {
+    if (menuSubs) {
       return true;
     } else {
       return false;
@@ -179,10 +184,10 @@ component.state.isMenuSubscribed = function() {
   }
 }
 
-component.state.isJobListSubscribed = function() {
-  if(this.type == "jobslist") {
+component.state.isJobListSubscribed = function () {
+  if (this.type == "jobslist") {
     var result = Subscriptions.findOne({"_id": "joblist", "subscribers": Meteor.userId()});
-    if(result) {
+    if (result) {
       return true;
     } else {
       return false;
@@ -190,50 +195,50 @@ component.state.isJobListSubscribed = function() {
   }
 }
 
-component.state.isIngredientsList = function() {
-  if(this.type == "ingredientslist") {
+component.state.isIngredientsList = function () {
+  if (this.type == "ingredientslist") {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.weeklyNavigation = function() {
-  if(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport") {
+component.state.weeklyNavigation = function () {
+  if (this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport") {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.isManagerOrAdmin = function() {
-  if(isAdmin() || isManager()) {
+component.state.isManagerOrAdmin = function () {
+  if (isAdmin() || isManager()) {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.isWeeklyTemplate = function() {
-  if(this.type == "weeklyrostertemplate") {
+component.state.isWeeklyTemplate = function () {
+  if (this.type == "weeklyrostertemplate") {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.isWeeklyRosterCreated = function() {
-  if(this.type == "weeklyroster") {
+component.state.isWeeklyRosterCreated = function () {
+  if (this.type == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     var dates = [];
-    week.forEach(function(day) {
-      if(day && day.date) {
+    week.forEach(function (day) {
+      if (day && day.date) {
         dates.push(new Date(day.date).getTime())
       }
     });
     var shifts = Shifts.find({"shiftDate": {$in: dates}}).fetch();
-    if(shifts.length > 0) {
+    if (shifts.length > 0) {
       return true;
     } else {
       return false;
@@ -241,18 +246,18 @@ component.state.isWeeklyRosterCreated = function() {
   }
 }
 
-component.state.isWeeklyRosterPublished = function() {
-  if(this.type == "weeklyroster") {
+component.state.isWeeklyRosterPublished = function () {
+  if (this.type == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     var dates = [];
-    week.forEach(function(day) {
-      if(day && day.date) {
+    week.forEach(function (day) {
+      if (day && day.date) {
         dates.push(new Date(day.date).getTime())
       }
     });
     var shifts = Shifts.find({"shiftDate": {$in: dates}, "published": true}).fetch();
-    if(shifts.length > 0) {
+    if (shifts.length > 0) {
       return true;
     } else {
       return false;
@@ -260,30 +265,30 @@ component.state.isWeeklyRosterPublished = function() {
   }
 }
 
-component.state.isStockTakeList = function() {
-  if(this.type == "stocktakeList") {
+component.state.isStockTakeList = function () {
+  if (this.type == "stocktakeList") {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.date = function() {
+component.state.date = function () {
   return moment().format("YYYY-MM-DD");
 }
 
-component.state.collapseIn = function() {
-  if(Session.get("collapsed")) {
+component.state.collapseIn = function () {
+  if (Session.get("collapsed")) {
     return true;
   } else {
     return false;
   }
 }
 
-component.state.isArchiveMenu = function() {
+component.state.isArchiveMenu = function () {
   var id = Router.current().params._id;
   var menu = MenuItems.findOne({_id: id});
-  if(menu.status == "archived") {
+  if (menu.status == "archived") {
     return true;
   } else {
     return false;
@@ -291,10 +296,10 @@ component.state.isArchiveMenu = function() {
 }
 
 
-component.state.isArchiveJob = function() {
+component.state.isArchiveJob = function () {
   var id = Router.current().params._id;
   var job = JobItems.findOne({_id: id});
-  if(job.status == "archived") {
+  if (job.status == "archived") {
     return true;
   } else {
     return false;

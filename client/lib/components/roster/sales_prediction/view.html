@@ -1,0 +1,28 @@
+<template name="salesPrediction">
+  <div class="prediction-component">
+    <div class="prediction-panel">
+      <div class="sales-per-menu-item-section">
+        <table class="table table-striped table-condensed white-bg">
+          <thead>
+          <tr>
+            <th>Menu item</th>
+            <th>Predicted sell count</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each salesPerMenuItem}}
+            <tr>
+              <td>
+                {{name}}
+              </td>
+              <td>
+                {{predictedSellCount}}
+              </td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</template>

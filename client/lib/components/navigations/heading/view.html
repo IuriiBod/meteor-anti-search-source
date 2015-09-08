@@ -311,6 +311,12 @@
       </div>
       {{/if}}
 
+      {{#if state$isSalesPrediction}}
+        <div class="title-action prediction-header">
+          {{> render component="salesPredictionHeader"}}
+        </div>
+      {{/if}}
+
       {{#if state$isWeeklyTemplate}}
       <div class="title-action">
         <a href="#calendarModal" class="btn btn-primary" data-toggle="modal">
