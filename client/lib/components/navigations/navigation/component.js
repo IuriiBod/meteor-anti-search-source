@@ -56,16 +56,16 @@ component.state.status = function() {
   }
 }
 
-component.state.hasCompany = function() {
+component.state.hasOrganization = function() {
+  Meteor.subscribe("getUsersRelations");
   var id = Meteor.userId();
-
-  //Find an organization which have been created by current user
-  var organization = Relations.find({
-    collectionName: 'users',
+  var org = Relations.findOne({
+    collectionName: "users",
     entityId: id
   });
 
-  if(organization.count()) {
+  if(org) {
+    Session.set("organizationId", org._id);
     return true;
   } else {
     return false;

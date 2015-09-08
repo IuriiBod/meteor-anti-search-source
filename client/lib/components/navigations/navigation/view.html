@@ -46,7 +46,7 @@
 
           <!-- Show "Create Organization" or "Organization" item in navigation -->
           {{#if state$isAdmin}}
-            {{#if state$hasCompany}}
+            {{#if state$hasOrganization}}
               <li class="{{isActiveRoute regex='organizationSettings'}}">
                 <a href="/organization"><i class="fa fa-sitemap"></i> <span class="nav-label">Organization</span></a>
               </li>
