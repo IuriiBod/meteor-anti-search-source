@@ -47,8 +47,17 @@
           <!-- Show "Create Organization" or "Organization" item in navigation -->
           {{#if state$isAdmin}}
             {{#if state$hasOrganization}}
-              <li class="{{isActiveRoute regex='organizationSettings'}}">
+              <li class="{{isActiveRoute regex='organizationDetails|locationsList|locationDetails'}}">
                 <a href="/organization"><i class="fa fa-sitemap"></i> <span class="nav-label">Organization</span></a>
+
+                <ul class="nav nav-second-level {{isActiveRoute regex='organizationDetails|locationsList|locationDetails' className='in'}}">
+                  <li class="{{isActiveRoute regex='organizationDetails'}}">
+                    <a href="{{pathFor route="organizationDetails"}}">Settings</a>
+                  </li>
+                  <li class="{{isActiveRoute regex='locationsList'}}">
+                    <a href="{{pathFor route="locationsList"}}">Locations</a>
+                  </li>
+                </ul>
               </li>
             {{else}}
                 <li class="{{isActiveRoute regex='createOrganization'}}">
