@@ -5,7 +5,7 @@ var component = FlowComponents.define("submitJob", function(props) {
 component.state.selectedJobType = function() {
   var jobType = this.get("type");
   return JobTypes.findOne(jobType);
-}
+};
 
 component.state.jobTypes = function() {
   return JobTypes.find({"_id": {$nin: [this.get("type")]}});
@@ -43,7 +43,7 @@ component.state.activeTime = function() {
   } else {
     return 0;
   }
-}
+};
 
 component.state.job = function() {
   var jobId = this.get("jobRef");
@@ -100,15 +100,32 @@ component.prototype.onJobRendered = function() {
     this.set("activeTime", 0);  
   }
 
-  var config = {
-    '.chosen-select'           : {},
-    '.chosen-select-deselect'  : {allow_single_deselect:true},
-    '.chosen-select-no-single' : {disable_search_threshold:10},
-    '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'}
-  };
-  for (var selector in config) {
-    $(selector).chosen(config[selector]);
-  }
+  $('#country').editable({
+    "mode": "inline",
+    "type": "select2",
+    "title": "Select country",
+    source: [
+      {id: 'gb', text: 'Great Britain'},
+      {id: 'us', text: 'United States'},
+      {id: 'ru', text: 'Russia'}
+     ],
+    select2: {
+     multiple: true
+    }
+  });
+  $('#username4').editable({  //to keep track of available values in single select
+    type: 'select2',  
+    mode: "inline",
+    autotext : 'always',
+    source : [{id: 'gb', text: 'Great Britain'},
+      {id: 'us', text: 'United States'},
+      {id: 'ru', text: 'Russia'}],
+    value : null,
+    emptytext: 'None',
+    select2: {
+      multiple : false
+    }
+  });
 };
 
 component.action.submit = function(info) {
