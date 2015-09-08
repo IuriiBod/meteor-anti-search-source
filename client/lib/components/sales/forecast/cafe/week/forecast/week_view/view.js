@@ -19,7 +19,7 @@ Template.weekForecastView.events({
           });
         }
       });
-      Router.go("weeklySalesForecastMenusList", {"week": week});
+      Router.go("weeklySalesForecastMenusList", {"year": Router.current().params.year, "week": week});
     }
   } 
 });
