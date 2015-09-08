@@ -21,11 +21,29 @@ component.state.jobs = function() {
 
 component.action.onChangeType = function(type) {
   this.set("type", type);
+  this.set("jobRef", null);
+  this.set("activeTime", null);
 };
 
 component.action.onChangeJob = function(job) {
-  this.set("jobRef", job);
+  if(job) {
+    this.set("jobRef", job);
+  } else {
+    this.set("jobRef", null);
+  }
 };
+
+component.state.activeTime = function() {
+  var jobId = this.get("jobRef");
+  if(jobId) {
+    var job = JobItems.findOne(jobId);
+    if(job) {
+      return job.activeTime;
+    }
+  } else {
+    return 0;
+  }
+}
 
 component.state.job = function() {
   var jobId = this.get("jobRef");
