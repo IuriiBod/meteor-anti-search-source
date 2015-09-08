@@ -69,10 +69,10 @@ Meteor.methods({
       logger.error("Date should be defined");
       throw new Meteor.Error(404, "Date should be defined");
     }
-
+    var recurringType = JobTypes.findOne({"name": "Recurring"});
     //endsNever
     var endsNever = JobItems.find({
-      "type": "Recurring", 
+      "type": recurringType._id, 
       "endsOn.on": "endsNever",
       "startsOn": {$lte: new Date(date).getTime()}
     }).fetch();
@@ -81,7 +81,7 @@ Meteor.methods({
     }
     //endsOn date
     var endsOn = JobItems.find({
-      "type": "Recurring", 
+      "type": recurringType._id, 
       "startsOn": {$lte: new Date(date).getTime()},
       "endsOn.on": "endsOn", 
       "endsOn.lastDate": {$gte: new Date(date)}
@@ -91,7 +91,7 @@ Meteor.methods({
     }
     //endsAfter occurences
     var endsAfter = JobItems.find({
-      "type": "Recurring", 
+      "type": recurringType._id, 
       "endsOn.on": "endsAfter",
       "startsOn": {$lte: new Date(date).getTime()}
     }).fetch();
@@ -170,11 +170,10 @@ function createNewJob(info, time, portions, maxTime, maxPortions) {
       "portions": portions,
       "activeTime": time,
       "assignedTo": null,
-      "createdOn": new Date().toDateString(),
+      "createdOn": new Date().getTime(),
       "createdBy": Meteor.userId(),
       "ingredients": [],
     }
-    console.log(".........", doc);
     var id = Jobs.insert(doc);
     if(jobIds.indexOf(id) < 0) {
       jobIds.push(id);
@@ -204,7 +203,7 @@ createNewRecurringJob = function(name, ref, type, time, section, startAt, date) 
         "activeTime": time,
         "assignedTo": null,
         "section": section,
-        "createdOn": new Date(date).toDateString(),
+        "createdOn": new Date(date).getTime(),
         "startAt": new Date(starting).getTime()
       }
 
