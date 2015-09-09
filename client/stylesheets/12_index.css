@@ -114,3 +114,7 @@ li > img {
 .areaBox > a {
   white-space: inherit !important;
 }
+
+.chosen-select-width, .chosen-single, .chosen-drop {
+  min-width: 200px;
+}
