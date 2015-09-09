@@ -23,7 +23,7 @@ Template.stockCounting.events({
         mode: 'inline',
         success: function(response, newValue) {
           var self = this;
-          var id = $(self).parent().attr("data-id");
+          var id = $(self).attr("data-id");
           if(newValue) {
             Meteor.call("editSpecialArea", id, {"name": newValue}, function(err) {
               if(err) {
@@ -42,7 +42,7 @@ Template.stockCounting.events({
         mode: 'inline',
         success: function(response, newValue) {
           var self = this;
-          var id = $(self).parent().attr("data-id");
+          var id = $(self).attr("data-id");
           if(newValue) {
             Meteor.call("editGeneralArea", id, {"name": newValue}, function(err) {
               if(err) {
