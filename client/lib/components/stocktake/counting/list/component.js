@@ -40,7 +40,7 @@ component.state.stocktakeList = function() {
     var main = StocktakeMain.findOne(thisVersion);
     if(main && main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
       subs.subscribe("areaSpecificStockTakes", gareaId);
-      var stocktakes = Stocktakes.find({"version": thisVersion, "generalArea": gareaId, "specialArea": sareaId});
+      var stocktakes = Stocktakes.find({"version": thisVersion, "generalArea": gareaId, "specialArea": sareaId}, {sort: {"place": 1}});
       if(stocktakes) {
         return stocktakes;
       }
