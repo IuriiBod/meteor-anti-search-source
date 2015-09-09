@@ -2,6 +2,9 @@
   {{> render component="generalFlyout" title="Profile" renderComponent="profileFlyoutLinks"}}
   {{> render component="generalFlyout" title="My Profile" renderComponent="profileFlyout"}}
   {{> render component="generalFlyout" title="Create Organization" renderComponent="createOrganizationPage"}}
-  {{> render component="generalFlyout" title=state$organizationTitle renderComponent="organizationDetailsPage"}}
+  {{> render component="generalFlyout" title=state$organizationTitle renderComponent="organizationStructure"}}
+  {{> render component="generalFlyout" title="Organization Settings" renderComponent="organizationDetailsPage"}}
   {{> render component="generalFlyout" title="Change billing account" renderComponent="changeBillingAccount"}}
+  {{> render component="generalFlyout" title="Add Location" renderComponent="createLocation"}}
+  {{> render component="generalFlyout" title="Add Area" renderComponent="createArea"}}
 </template>

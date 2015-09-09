@@ -14,7 +14,7 @@ component.state.timezones = function() {
     }
   }
   return zones.join('');
-}
+};
 
 component.state.openingHours = function() {
   var selectedHour = 8;
@@ -27,7 +27,7 @@ component.state.openingHours = function() {
     }
   }
   return hours.join('');
-}
+};
 
 component.state.closingHours = function() {
   var selectedHour = 17;
@@ -40,7 +40,7 @@ component.state.closingHours = function() {
     }
   }
   return hours.join('');
-}
+};
 
 component.state.minutes = function() {
   var selectedHour = 8;
@@ -52,4 +52,9 @@ component.state.minutes = function() {
     minutes.push('<option value="'+i+'">'+i+'</option>');
   }
   return minutes.join('');
-}
+};
+
+component.state.locations = function() {
+  var orgId = Session.get('organizationId');
+  return Locations.find({organizationId: orgId}).fetch();
+};

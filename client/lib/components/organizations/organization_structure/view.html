@@ -1,0 +1,17 @@
+<template name="organizationStructure">
+  <h1>{{state$organization.name}}</h1>
+  {{#each state$locations}}
+    <ul class="list-group" style="display: block;">
+      <li class="list-group-item lead" style="display: block;">
+        {{name}}
+        <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
+      </li>
+      {{#each state$areas _id}}
+        <li class="list-group-item" style="display: block;">
+          {{name}}
+          <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
+        </li>
+      {{/each}}
+    </ul>
+  {{/each}}
+</template>

@@ -18,16 +18,12 @@ component.state.notifications = function() {
 };
 
 component.state.hasOrganization = function() {
-  Meteor.subscribe("getUsersRelations");
-  var id = Meteor.userId();
-  var org = Relations.findOne({
-    collectionName: "users",
-    entityId: id
-  });
+  var org = Relations.findOne();
   if(org) {
-    Session.set("organizationId", org.organizationId);
+    Session.set('organizationId', org.organizationId);
     return true;
   } else {
+    Session.set('organizationId', '');
     return false;
   }
 };
@@ -39,7 +35,6 @@ component.state.userAreasAccess = function() {
   var organization;
 
   if(entityId) {
-    subs.subscribe('getArea', entityId);
     area = Areas.findOne();
     if(area) {
       content.push('Area: <b>');
@@ -48,7 +43,6 @@ component.state.userAreasAccess = function() {
     }
   } else {
     entityId = Session.get("organizationId");
-    subs.subscribe('getOrganizationById', entityId);
     organization = Organizations.findOne();
     if(organization) {
       content.push('Organization: <b>');

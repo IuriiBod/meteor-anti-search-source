@@ -5,5 +5,14 @@ Template.generalFlyout.events({
       el = el.parent();
     }
     $("#"+el.attr('data-id')).removeClass("show");
+  },
+
+  'click .open-flyout': function(e) {
+    e.preventDefault();
+    var id = e.target.dataset.id;
+    if(!id) {
+      id = e.target.parentNode.dataset.id;
+    }
+    $("#"+id).addClass('show');
   }
 });
