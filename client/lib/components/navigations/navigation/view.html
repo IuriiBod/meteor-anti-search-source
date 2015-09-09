@@ -1,23 +1,24 @@
 <template name="navigation">
-{{#if currentUser}}
-  <nav class="navbar-default navbar-static-side hidden-print" role="navigation">
-  <div class="sidebar-collapse">
-    <!-- Close canvas menu used only on OffCanvas page -->
-    <!-- You can remove this tag if you dont use offCanvas menu -->
-    <a class="close-canvas-menu"><i class="fa fa-times"></i></a>
-    <!-- End offCanvas menu toggle -->
+  {{#if currentUser}}
+    <nav class="navbar-default navbar-static-side hidden-print" role="navigation">
+      <div class="sidebar-collapse">
+        <!-- Close canvas menu used only on OffCanvas page -->
+        <!-- You can remove this tag if you dont use offCanvas menu -->
+        <a class="close-canvas-menu"><i class="fa fa-times"></i></a>
+        <!-- End offCanvas menu toggle -->
+        <ul class="nav" id="side-menu">
+          <li class="special_link">
+            <a href="/"><span class="nav-label">Hospo Hero</span></a>
+          </li>
 
-  <ul class="nav" id="side-menu">
-    <li class="special_link">
-      <a href="/"><span class="nav-label">Hospo Hero</span></a>
-    </li>
-    <!-- USER PROFILE HEADER -->
-    <li class="nav-header">
-      <div class="dropdown profile-element">
+
+          <!-- USER PROFILE HEADER -->
+          <li class="nav-header">
+            <div class="dropdown profile-element">
               <span>
                 <img alt="image" class="img-circle profile-image" src="{{state$profileImage}}"/>
                </span>
-        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+              <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                 <span class="clear">
                   <span class="block m-t-xs">
                     <strong class="font-bold">{{currentUser.username}}</strong>
@@ -26,132 +27,138 @@
                     <b class="caret"></b>
                   </span>
                 </span>
-        </a>
-        <ul class="dropdown-menu animated m-t-xs">
-          <li><a href="/user/profile/{{state$id}}">Profile</a></li>
-          <!--  {{#if state$isAdmin}}
+              </a>
+              <ul class="dropdown-menu animated m-t-xs">
+                <li><a href="/user/profile/{{state$id}}">Profile</a></li>
+                <!--  {{#if state$isAdmin}}
                 <li><a href="/users">Users</a></li>
                 {{/if}} -->
-          <li class="divider"></li>
-          <li><a href="{{pathFor 'switchUser'}}">Switch user</a></li>
-          <li><a href="" id="signOutButton">Logout</a></li>
-        </ul>
-      </div>
-      <div class="logo-element">HC+</div>
-    </li>
-    <!-- USER PROFILE HEADER -->
-    <li class="{{isActiveRoute regex='home'}}">
-      <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboard</span></a>
-    </li>
-
-    <li class="{{isActiveRoute regex='weeklyRoster|dailyRoster|templateWeeklyRoster'}}">
-      <a href="#">
-        <i class="fa fa-calendar-o"></i>
-        <span class="nav-label">Roster</span>
-      </a>
-      <ul class="nav nav-second-level {{isActiveRoute regex='dailyRoster|weeklyRoster|templateWeeklyRoster' className='in'}}">
-        <li class="{{isActiveRoute regex='weeklyRoster'}}">
-          <a href="/roster/weekly/{{year}}/{{week}}">Weekly</a>
-        </li>
-        <li class="{{isActiveRoute regex='dailyRoster'}}">
-          <a href="/roster/daily/{{today}}">Daily</a>
-        </li>
-        {{#if state$isManagerOrAdmin}}
-          <li class="{{isActiveRoute regex='salesPrediction'}}">
-            <a href="{{pathFor "salesPrediction" year=year week=week}}">Forecast</a>
+                <li class="divider"></li>
+                <li><a href="{{pathFor 'switchUser'}}">Switch user</a></li>
+                <li><a href="" id="signOutButton">Logout</a></li>
+              </ul>
+            </div>
+            <div class="logo-element">HC+</div>
           </li>
-          <li class="{{isActiveRoute regex='templateWeeklyRoster'}}">
-            <a href="/roster/template/weekly">Template</a>
+          <!-- USER PROFILE HEADER -->
+
+          <li class="{{isActiveRoute regex='home'}}">
+            <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboard</span></a>
           </li>
-        {{/if}}
-      </ul>
-    </li>
 
-    <li class="{{isActiveRoute regex='menuItemsMaster'}}">
-      <a href="/menuItems/{{state$category}}/{{state$status}}"><i class="fa fa-cutlery"></i> <span class="nav-label">Menu</span></a>
-    </li>
+          {{#if state$isManagerOrAdmin}}
+            <li class="{{isActiveRoute regex='salesPrediction'}}">
+              <a href="{{pathFor "salesPrediction" year=year week=week}}">
+                <i class="fa fa-bar-chart"></i>
+                <span class="nav-label">Forecast</span>
+              </a>
+            </li>
+          {{/if}}
 
-    <li class="{{isActiveRoute regex='jobItemsMaster'}}">
-      <a href="/jobItems"><i class="fa fa-spoon"></i> <span class="nav-label">Jobs</span> </a>
-    </li>
+          <li class="{{isActiveRoute regex='weeklyRoster|dailyRoster|templateWeeklyRoster'}}">
+            <a href="#">
+              <i class="fa fa-calendar-o"></i>
+              <span class="nav-label">Roster</span>
+            </a>
+            <ul class="nav nav-second-level {{isActiveRoute regex='dailyRoster|weeklyRoster|templateWeeklyRoster' className='in'}}">
+              <li class="{{isActiveRoute regex='weeklyRoster'}}">
+                <a href="/roster/weekly/{{year}}/{{week}}">Weekly</a>
+              </li>
+              <li class="{{isActiveRoute regex='dailyRoster'}}">
+                <a href="/roster/daily/{{today}}">Daily</a>
+              </li>
+              {{#if state$isManagerOrAdmin}}
+                <li class="{{isActiveRoute regex='templateWeeklyRoster'}}">
+                  <a href="/roster/template/weekly">Template</a>
+                </li>
+              {{/if}}
+            </ul>
+          </li>
 
-    <!--  <li class="{{isActiveRoute regex='ingredientsList'}}">
+          <li class="{{isActiveRoute regex='menuItemsMaster'}}">
+            <a href="/menuItems/{{state$category}}/{{state$status}}"><i class="fa fa-cutlery"></i> <span
+                class="nav-label">Menu</span></a>
+          </li>
+
+          <li class="{{isActiveRoute regex='jobItemsMaster'}}">
+            <a href="/jobItems"><i class="fa fa-spoon"></i> <span class="nav-label">Jobs</span> </a>
+          </li>
+
+          <!--  <li class="{{isActiveRoute regex='ingredientsList'}}">
             <a href="/stocks"><i class="fa fa-list"></i> <span class="nav-label">Stocks</span></a>
           </li> -->
 
-    <li class="{{isActiveRoute name='ingredientsList|stocktake|supplierOrdering'}}">
-      <a href="#">
-        <i class="fa fa-list"></i>
-        <span class="nav-label">Stock</span>
-      </a>
-      <ul class="nav nav-second-level {{isActiveRoute name='ingredientsList|stocktake|supplierOrdering' className='in'}}">
-        <li class="{{isActiveRoute name='ingredientsList'}}">
-          <a href="/stocklist">List</a>
-        </li>
-        {{#if state$isManagerOrAdmin}}
-          <li class="{{isActiveRoute name='stocktake'}}">
-            <a href="/stocktake">Stocktake</a>
-          </li>
-          <li class="{{isActiveRoute name='supplierOrdering'}}">
-            <a href="/stocktake/order/receipts">Receive Orders</a>
-          </li>
-          <li class="{{isActiveRoute name='suppliersList'}}">
-            <a href="/suppliers">Suppliers</a>
-          </li>
-        {{/if}}
-      </ul>
-    </li>
-
-  {{#if state$isManagerOrAdmin}}
-      <li class="{{isActiveRoute regex='salesCalibration|actualSales|cafeSalesForecast|weeklySalesForecastMenusList'}}">
-        <a href="#">
-          <i class="glyphicon glyphicon-usd"></i>
-          <span class="nav-label">Sales</span>
-        </a>
-        <ul class="nav nav-second-level {{isActiveRoute regex='salesCalibration|actualSales|cafeSalesForecast|weeklySalesForecastMenusList' className='in'}}">
-          <li class="{{isActiveRoute regex='salesCalibration'}}">
-            <a href="/sales/calibration/all/all">Calibration</a>
-          </li>
-          <li class="{{isActiveRoute regex='actualSales'}}">
-            <a href="/sales/{{today}}">Actual Sales</a>
-          </li>
-          <li class="{{isActiveRoute regex='cafeSalesForecast'}}">
+          <li class="{{isActiveRoute name='ingredientsList|stocktake|supplierOrdering'}}">
             <a href="#">
-              <span class="nav-label">Forecasting</span>
+              <i class="fa fa-list"></i>
+              <span class="nav-label">Stock</span>
             </a>
-            <ul class="nav nav-third-level {{isActiveRoute regex='cafeSalesForecast|weeklySalesForecastMenusList' className='in'}}">
-              <li class="{{isActiveRoute regex='cafeSalesForecast|weeklySalesForecastMenusList'}}">
-                <a href="/sales/forecast/cafe/{{year}}/{{week}}">Cafe</a>
+            <ul class="nav nav-second-level {{isActiveRoute name='ingredientsList|stocktake|supplierOrdering' className='in'}}">
+              <li class="{{isActiveRoute name='ingredientsList'}}">
+                <a href="/stocklist">List</a>
               </li>
+              {{#if state$isManagerOrAdmin}}
+                <li class="{{isActiveRoute name='stocktake'}}">
+                  <a href="/stocktake">Stocktake</a>
+                </li>
+                <li class="{{isActiveRoute name='supplierOrdering'}}">
+                  <a href="/stocktake/order/receipts">Receive Orders</a>
+                </li>
+                <li class="{{isActiveRoute name='suppliersList'}}">
+                  <a href="/suppliers">Suppliers</a>
+                </li>
+              {{/if}}
             </ul>
           </li>
-        </ul>
-      </li>
 
-      <li class="{{isActiveRoute name='teamHours|currentStocks'}}">
-        <a href="#">
-          <i class="fa fa-line-chart"></i>
-          <span class="nav-label">Reports</span>
-        </a>
-        <ul class="nav nav-second-level {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
-          <li class="{{isActiveRoute name='teamHours'}}">
-            <a href="/reports/{{year}}/{{week}}#shifts">Team Hours</a>
-          </li>
-          <li class="{{isActiveRoute name='currentStocks'}}">
-            <a href="/reports/stocktake/currentStocks/{{year}}/{{week}}">Daily stock</a>
-          </li>
-        </ul>
-      </li>
-  {{/if}}
+          {{#if state$isManagerOrAdmin}}
+            <li class="{{isActiveRoute regex='salesCalibration|actualSales|cafeSalesForecast|weeklySalesForecastMenusList'}}">
+              <a href="#">
+                <i class="glyphicon glyphicon-usd"></i>
+                <span class="nav-label">Sales</span>
+              </a>
+              <ul class="nav nav-second-level {{isActiveRoute regex='salesCalibration|actualSales|cafeSalesForecast|weeklySalesForecastMenusList' className='in'}}">
+                <li class="{{isActiveRoute regex='salesCalibration'}}">
+                  <a href="/sales/calibration/all/all">Calibration</a>
+                </li>
+                <li class="{{isActiveRoute regex='actualSales'}}">
+                  <a href="/sales/{{today}}">Actual Sales</a>
+                </li>
+                <li class="{{isActiveRoute regex='cafeSalesForecast'}}">
+                  <a href="#">
+                    <span class="nav-label">Forecasting</span>
+                  </a>
+                  <ul class="nav nav-third-level {{isActiveRoute regex='cafeSalesForecast|weeklySalesForecastMenusList' className='in'}}">
+                    <li class="{{isActiveRoute regex='cafeSalesForecast|weeklySalesForecastMenusList'}}">
+                      <a href="/sales/forecast/cafe/{{year}}/{{week}}">Cafe</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
 
-  {{#if state$isManagerOrAdmin}}
-      <li class="{{isActiveRoute regex='admin'}}">
-        <a href="/admin"><i class="fa -o fa-cog"></i> <span class="nav-label">Settings</span> </a>
-      </li>
-  {{/if}}
-      <!-- {{/if}} -->
+            <li class="{{isActiveRoute name='teamHours|currentStocks'}}">
+              <a href="#">
+                <i class="fa fa-line-chart"></i>
+                <span class="nav-label">Reports</span>
+              </a>
+              <ul class="nav nav-second-level {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
+                <li class="{{isActiveRoute name='teamHours'}}">
+                  <a href="/reports/{{year}}/{{week}}#shifts">Team Hours</a>
+                </li>
+                <li class="{{isActiveRoute name='currentStocks'}}">
+                  <a href="/reports/stocktake/currentStocks/{{year}}/{{week}}">Daily stock</a>
+                </li>
+              </ul>
+            </li>
+          {{/if}}
 
-  <!-- <li class="{{isActiveRoute regex='cafeSalesForecast'}}">
+          {{#if state$isManagerOrAdmin}}
+            <li class="{{isActiveRoute regex='admin'}}">
+              <a href="/admin"><i class="fa -o fa-cog"></i> <span class="nav-label">Settings</span> </a>
+            </li>
+          {{/if}}
+          <!-- <li class="{{isActiveRoute regex='cafeSalesForecast'}}">
             <a href="#">
               <i class="fa fa-bar-chart-o"></i>
               <span class="nav-label">Sales Forecast</span>
@@ -163,8 +170,8 @@
               </li>
             </ul>
           </li> -->
-</ul>
-</div>
-</nav>
-{{/if}}
+        </ul>
+      </div>
+    </nav>
+  {{/if}}
 </template>
