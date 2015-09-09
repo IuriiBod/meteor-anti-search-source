@@ -27,14 +27,15 @@ component.action.getCurrentDate = function () {
 
 component.state.currentDate = function () {
   var date = moment(this.get('date'));
-
-  var firstDay = component.getDateByYearAndWeek(date.year(), date.week());
-  console.log('fristday', firstDay);
-  var lastDay = moment(firstDay).add(6, 'day').toDate();
   var week = date.week();
 
   //todo: it should be refactored
   //todo: (use "moment" instead of huge amount of code below with external dependencies)
+  var weekStartEnd = getWeekStartEnd(week, date.year());
+  var firstDay = weekStartEnd.monday;
+  var lastDay = weekStartEnd.sunday;
+
+
   var firstDayDate = firstDay.getDate();
   var lastDayDate = lastDay.getDate();
 

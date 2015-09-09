@@ -6,7 +6,6 @@ Template.weekPicker.onRendered(function () {
       weekStart: 1,
       toggleActive: true
     }).datepicker("setDate", initialDate)
-      .datepicker("fill");
   }).bind(this);
 
   FlowComponents.callAction('getCurrentDate').then(onGetCurrentDate);
@@ -47,5 +46,10 @@ Template.weekPicker.events({
 
   'changeDate .datepicker': function (event, tmpl) {
     tmpl.updatePickedMoment(0);
+  },
+
+  'show .datepicker': function (event, tmpl) {
+    //mark all selected week before showing
+    $(".day.active").siblings(".day").addClass("week");
   }
 });
