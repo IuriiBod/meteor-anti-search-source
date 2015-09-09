@@ -224,6 +224,7 @@ Meteor.methods({
 
       var newPosition = (parseFloat(nextPosition) + parseFloat(prevPosition))/2;
       Stocktakes.update({"_id": stocktakeId}, {$set: {"place": newPosition}});
+      logger.info("Stocktake position updated");
     }
 
     //update special area original places
@@ -240,7 +241,9 @@ Meteor.methods({
 
       SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": []}});
       array.splice(newPosition, 0, array.splice(oldPosition, 1)[0]);
+
       SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": array}});
+      logger.info("Stock item position update at special area");
       return;
     }
   }
