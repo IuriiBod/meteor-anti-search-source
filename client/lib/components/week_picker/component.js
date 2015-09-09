@@ -1,37 +1,38 @@
 var component = FlowComponents.define('weekPicker', function (props) {
   this.onDateChangedCallback = props.onDateChanged;
-  this.set('date', new Date());
+  this.set('weekDate', {week: props.week, year: props.year});
 });
 
-component.getDateByYearAndWeek = function (year, week) {
-  return moment(year, 'YYYY').week(week).toDate()
+
+component.prototype.isWeekDatesEqual = function (dateA, dateB) {
+  return dateA.year === dateB.year && dateA.week === dateB.week;
 };
 
 
-component.action.onDateChanged = function (year, week) {
-  var newDate = component.getDateByYearAndWeek(year, week);
-  if (newDate.valueOf() !== this.get('date').valueOf()) {
-    this.set('date', newDate);
+component.action.onDateChanged = function (newWeekDate) {
+  var currentWeekDate = this.get('weekDate');
+  if (!this.isWeekDatesEqual(newWeekDate, currentWeekDate)) {
+    this.set('weekDate', newWeekDate);
     if (this.onDateChangedCallback) {
-      this.onDateChangedCallback(newDate);
+      this.onDateChangedCallback(newWeekDate);
     }
-    console.log('date changed', newDate);
-    return newDate;
+    return newWeekDate;
   }
   return false;
 };
 
-component.action.getCurrentDate = function () {
-  return this.get('date');
+
+component.action.getCurrentWeekDate = function () {
+  return this.get('weekDate');
 };
 
-component.state.currentDate = function () {
-  var date = moment(this.get('date'));
-  var week = date.week();
+
+component.state.currentWeekStr = function () {
+  var weekDate = this.get('weekDate');
 
   //todo: it should be refactored
   //todo: (use "moment" instead of huge amount of code below with external dependencies)
-  var weekStartEnd = getWeekStartEnd(week, date.year());
+  var weekStartEnd = getWeekStartEnd(weekDate.week, weekDate.year);
   var firstDay = weekStartEnd.monday;
   var lastDay = weekStartEnd.sunday;
 
@@ -62,7 +63,7 @@ component.state.currentDate = function () {
     }
   }
 
-  currentDate += "WEEK " + week;
+  currentDate += "WEEK " + weekDate.week;
 
   return currentDate;
 };

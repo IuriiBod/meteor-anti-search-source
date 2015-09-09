@@ -1,5 +1,10 @@
+getDateByWeekDate = function (weekDate) {
+  return moment(weekDate.year, 'YYYY').week(weekDate.week).toDate()
+};
+
 Template.weekPicker.onRendered(function () {
-  var onGetCurrentDate = (function (initialDate) {
+  var onGetCurrentDate = (function (weekDate) {
+    var initialDate = getDateByWeekDate(weekDate);
     this.$(".datepicker").datepicker({
       todayHighlight: true,
       calendarWeeks: true,
@@ -8,7 +13,7 @@ Template.weekPicker.onRendered(function () {
     }).datepicker("setDate", initialDate)
   }).bind(this);
 
-  FlowComponents.callAction('getCurrentDate').then(onGetCurrentDate);
+  FlowComponents.callAction('getCurrentWeekDate').then(onGetCurrentDate);
 
   this.getPickedMoment = (function () {
     return moment(this.$(".datepicker").datepicker('getDate'));
@@ -24,9 +29,12 @@ Template.weekPicker.onRendered(function () {
 
     var year = currentMoment.year();
 
-    FlowComponents.callAction('onDateChanged', year, weekNumber).then(function (savedDate) {
-      if (savedDate) {
-        this.$(".datepicker").datepicker('setDate', savedDate)
+    FlowComponents.callAction('onDateChanged', {
+      year: year,
+      week: weekNumber
+    }).then(function (savedWeekDate) {
+      if (savedWeekDate) {
+        this.$(".datepicker").datepicker('setDate', getDateByWeekDate(savedWeekDate))
       }
     });
   }).bind(this);

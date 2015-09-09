@@ -1,3 +1,3 @@
 <template name="salesPredictionHeader">
-  {{> render component="weekPicker"}}
+  {{> render component="weekPicker" year=state$year week=state$week onDateChanged=state$onDateChanged}}
 </template>

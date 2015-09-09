@@ -58,7 +58,7 @@
         </li>
         {{#if state$isManagerOrAdmin}}
           <li class="{{isActiveRoute regex='salesPrediction'}}">
-            <a href="{{pathFor "salesPrediction" date=today}}">Forecast</a>
+            <a href="{{pathFor "salesPrediction" year=year week=week}}">Forecast</a>
           </li>
           <li class="{{isActiveRoute regex='templateWeeklyRoster'}}">
             <a href="/roster/template/weekly">Template</a>
