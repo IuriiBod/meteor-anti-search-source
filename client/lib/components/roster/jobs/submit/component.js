@@ -47,11 +47,7 @@ component.action.keyup = function(portions) {
 
 component.state.isPrep = function() {
   var type = JobTypes.findOne(this.get("type"));
-  if(type && type.name == "Prep") {
-    return true;
-  } else {
-    return false;
-  }
+  return !!(type && type.name == "Prep");
 };
 
 component.state.activeTimes = function() {
@@ -80,6 +76,16 @@ component.prototype.onJobRendered = function() {
   if(prep) {
     this.set("type", prep._id);
     this.set("activeTime", 0);  
+  }
+
+  var config = {
+    '.chosen-select'           : {},
+    '.chosen-select-deselect'  : {allow_single_deselect:true},
+    '.chosen-select-no-single' : {disable_search_threshold:10},
+    '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'}
+  };
+  for (var selector in config) {
+    $(selector).chosen(config[selector]);
   }
 };
 
