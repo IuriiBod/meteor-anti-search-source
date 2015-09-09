@@ -55,10 +55,7 @@ component.state.ingredientsList = function() {
       var ids = sarea.stocks;
       ids.forEach(function(id) {
         if(id) {
-          var item = Ingredients.findOne({"_id": id, "status": "active"});
-          if(item) {
-            ings.push(item);
-          }
+          ings.push(Ingredients.findOne(id));
         }
       });
       return ings;
