@@ -1,17 +1,14 @@
 Meteor.methods({
   'createOrganization': function(org) {
     var user = Meteor.user();
-
     if(!user) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
     }
-
     if(!isManagerOrAdmin(user)) {
       logger.error("User not permitted to create menu items");
-      throw new Meteor.Error(403, "User not permitted to create menu");
+      throw new Meteor.Error(403, "User not permitted to create organization");
     }
-
     if(!org.name) {
       logger.error("Organization should have a name");
       throw new Meteor.Error(404, "Organization should have a name");
@@ -23,10 +20,8 @@ Meteor.methods({
       name: org.name,
       createdAt: Date.now()
     };
-
     // Create organization
     var orgID = Organizations.insert(doc);
-
     // Create relations between user and organization
     Relations.insert({
       organizationId: orgID,
@@ -35,7 +30,24 @@ Meteor.methods({
       entityId: user._id,
       collectionName: "users"
     });
-
     return orgID;
+  },
+
+  'deleteOrganization': function(id) {
+    var user = Meteor.user();
+    if(!user) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    if(!isManagerOrAdmin(user)) {
+      logger.error("User not permitted to create menu items");
+      throw new Meteor.Error(403, "User not permitted to delete organization");
+    }
+    Areas.remove({organizationId: id});
+    Locations.remove({organizationId: id});
+    Organizations.remove({_id: id});
+    Relations.remove({organizationId: id});
+
+    // TODO: Write the code to delete remainder documents
   }
 });

@@ -1,26 +1,20 @@
 <template name="profileFlyoutLinks">
   <ul class="list-group" style="display: block;">
-    <li class="list-group-item" style="display: block;">My Profile
+    <li class="list-group-item open-flyout" style="display: block; cursor: pointer;" data-id="profileFlyout">My Profile
       <span class="badge">
-        <a class="open-flyout text-default" data-id="profileFlyout">
-          <i class="fa fa-fw fa-chevron-right" style="display: inline-block;"></i>
-        </a>
+        <i class="fa fa-fw fa-chevron-right" style="display: inline-block;"></i>
       </span>
     </li>
-    <li class="list-group-item" style="display: block;">
+    <a class="list-group-item" style="display: block; background-color: #fff;" href="{{pathFor 'switchUser'}}">
       Switch User
       <span class="badge">
-        <a href="{{pathFor 'switchUser'}}">
-          <i class="fa fa-fw fa-refresh" style="display: inline-block;"></i>
-        </a>
+        <i class="fa fa-fw fa-refresh" style="display: inline-block;"></i>
       </span>
-    </li>
-    <li class="list-group-item" style="display: block; margin-right: 0px;">Logout
+    </a>
+    <a class="list-group-item" style="display: block; background-color: #fff;" id="signOutButton" href="#">Logout
       <span class="badge">
-        <a href="" id="signOutButton">
-          <i class="fa fa-fw fa-power-off" style="display: inline-block;"></i>
-        </a>
+        <i class="fa fa-fw fa-power-off" style="display: inline-block;"></i>
       </span>
-    </li>
+    </a>
   </ul>
 </template>

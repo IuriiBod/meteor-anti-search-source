@@ -12,19 +12,23 @@ Template.createOrganizationPage.events({
       alert("The organization with name "+orgName+" already exists!");
       return false;
     }
-
     // TODO: Add billing account info to the doc variable
     var doc = {
       name: orgName
     };
+    var orgId;
 
     // Create new organization
-    Meteor.call("createOrganization", doc, function(err) {
+    Meteor.call("createOrganization", doc, function(err, id) {
       if(err) {
         console.log(err);
         alert(err.reason);
       }
+      orgId = id;
     });
+
+    // TODO: The problem with setting the session variable
+
     e.target.reset();
     $("#createOrganizationPage").removeClass("show");
   }

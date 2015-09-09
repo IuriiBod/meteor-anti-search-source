@@ -18,13 +18,19 @@ component.state.notifications = function() {
 };
 
 component.state.hasOrganization = function() {
-  var org = Relations.findOne();
-  if(org) {
-    Session.set('organizationId', org.organizationId);
-    return true;
+  var orgId = Session.get('organizationId');
+
+  if(!orgId) {
+    var org = Relations.findOne();
+    if(org) {
+      Session.set('organizationId', org.organizationId);
+      return true;
+    } else {
+      Session.set('organizationId', '');
+      return false;
+    }
   } else {
-    Session.set('organizationId', '');
-    return false;
+    return true;
   }
 };
 

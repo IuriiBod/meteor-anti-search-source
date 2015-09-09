@@ -26,3 +26,11 @@ component.state.organizationTitle = function() {
   content.push('</div>');
   return content.join('');
 };
+
+component.state.organizationId = function() {
+  if(Session.get('organizationId')) {
+    return true;
+  } else {
+    return false;
+  }
+}
