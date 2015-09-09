@@ -4,6 +4,9 @@ Template.profileFlyoutLinks.events({
     if(!id) {
       id = e.target.parentNode.dataset.id;
     }
+    if(!id) {
+      id = e.target.children.dataset.id;
+    }
     $("#"+id).addClass("show");
   }
 });

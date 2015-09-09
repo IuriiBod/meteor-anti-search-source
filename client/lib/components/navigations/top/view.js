@@ -81,6 +81,8 @@ Template.topNavbar.events({
     var id = e.target.dataset.id;
     if(!id) {
       id = e.target.parentNode.dataset.id;
+    }if(!id) {
+      id = e.target.parentNode.parentNode.dataset.id;
     }
     $("#"+id).addClass("show");
   }

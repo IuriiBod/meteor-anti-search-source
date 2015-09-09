@@ -6,9 +6,17 @@
       </div>
       <ul class="nav navbar-top-links navbar-right">
         <li>
-          <span class="m-r-sm text-muted welcome-message">
-            Current Area Name
-          </span>
+          {{#if state$hasOrganization}}
+            <a class="count-info open-flyout visible-sm visible-xs" data-id="organizationDetailsPage"><i class="fa fa-sitemap"></i></a>
+            <span class="open-flyout welcome-message" data-id="organizationDetailsPage">
+              {{{state$userAreasAccess}}}
+            </span>
+          {{else}}
+            <span class="open-flyout" data-id="createOrganizationPage">
+              <i class="fa fa-plus"></i>
+              Create Organization
+            </span>
+          {{/if}}
         </li>
         <li>
           <a class="count-info open-flyout" href="#" data-id="profileFlyoutLinks">
@@ -30,6 +38,5 @@
       </ul>
     </nav>
   </div>
-  {{> render component="generalFlyout" title="Profile" renderComponent="profileFlyoutLinks"}}
-  {{> render component="generalFlyout" title="My Profile" renderComponent="profileFlyout"}}
+  {{> render component="flyouts"}}
 </template>

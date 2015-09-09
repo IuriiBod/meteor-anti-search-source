@@ -13,3 +13,7 @@ Meteor.publish("getOrganizationByUserId", function(id) {
     return Organizations.find({_id: organization.organizationId});
   }
 });
+
+Meteor.publish('getOrganizationById', function(id) {
+  return Organizations.find({_id: id});
+});

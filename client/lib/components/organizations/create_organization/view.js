@@ -23,9 +23,9 @@ Template.createOrganizationPage.events({
       if(err) {
         console.log(err);
         alert(err.reason);
-      } else {
-        Router.go('/organization');
       }
     });
+    e.target.reset();
+    $("#createOrganizationPage").removeClass("show");
   }
 });

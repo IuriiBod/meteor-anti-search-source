@@ -55,19 +55,3 @@ component.state.status = function() {
     return "all";
   }
 }
-
-component.state.hasOrganization = function() {
-  Meteor.subscribe("getUsersRelations");
-  var id = Meteor.userId();
-  var org = Relations.findOne({
-    collectionName: "users",
-    entityId: id
-  });
-
-  if(org) {
-    Session.set("organizationId", org._id);
-    return true;
-  } else {
-    return false;
-  }
-}
