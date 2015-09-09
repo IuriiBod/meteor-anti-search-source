@@ -28,5 +28,5 @@ if (Meteor.isClient) {
       info['created_at'] = new Date(user.createdAt).getTime();
       info['user_type'] = type;
     }
-  }
+  };
 }

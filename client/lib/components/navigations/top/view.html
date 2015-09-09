@@ -5,7 +5,17 @@
         <a id="navbar-minimalize" class="minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
       </div>
       <ul class="nav navbar-top-links navbar-right">
-          <li>
+        <li>
+          <span class="m-r-sm text-muted welcome-message">
+            Current Area Name
+          </span>
+        </li>
+        <li>
+          <a class="count-info open-flyout" href="#" data-id="profileFlyoutLinks">
+            <i class="fa fa-user"></i>
+          </a>
+        </li>
+        <li>
           <a class="count-info notifi-toggler" href="#">
             <i class="fa fa-bell"></i>
             {{#if state$count}}
@@ -20,4 +30,6 @@
       </ul>
     </nav>
   </div>
+  {{> render component="generalFlyout" title="Profile" renderComponent="profileFlyoutLinks"}}
+  {{> render component="generalFlyout" title="My Profile" renderComponent="profileFlyout"}}
 </template>

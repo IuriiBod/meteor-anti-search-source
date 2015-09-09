@@ -1,4 +1,4 @@
-var component = FlowComponents.define('profile', function(props) {
+var component = FlowComponents.define('profileFlyout', function(props) {
   if(props.id) {
     this.set("id", props.id);
   } else {
@@ -87,7 +87,7 @@ component.state.hasResignDate = function() {
   } else {
     return false;
   }
-}
+};
 
 component.state.resignDate = function() {
   var id = this.get("id");
@@ -99,7 +99,7 @@ component.state.resignDate = function() {
   } else {
     return null;
   }
-}
+};
 
 component.state.isMe = function() {
   var userId = Meteor.userId();
@@ -109,4 +109,4 @@ component.state.isMe = function() {
   } else {
     return false;
   }
-}
+};

@@ -1,0 +1,26 @@
+<template name="profileFlyoutLinks">
+  <ul class="list-group" style="display: block;">
+    <li class="list-group-item" style="display: block;">My Profile
+      <span class="badge">
+        <a class="open-flyout text-default" data-id="profileFlyout">
+          <i class="fa fa-fw fa-chevron-right" style="display: inline-block;"></i>
+        </a>
+      </span>
+    </li>
+    <li class="list-group-item" style="display: block;">
+      Switch User
+      <span class="badge">
+        <a href="{{pathFor 'switchUser'}}">
+          <i class="fa fa-fw fa-refresh" style="display: inline-block;"></i>
+        </a>
+      </span>
+    </li>
+    <li class="list-group-item" style="display: block; margin-right: 0px;">Logout
+      <span class="badge">
+        <a href="" id="signOutButton">
+          <i class="fa fa-fw fa-power-off" style="display: inline-block;"></i>
+        </a>
+      </span>
+    </li>
+  </ul>
+</template>
