@@ -53,7 +53,7 @@ component.state.ingredientsList = function() {
   var sareaId = Session.get("activeSArea");
   if(gareaId && sareaId) {
     subs.subscribe("areaSpecificStocks", gareaId);
-    var ingredients = Ingredients.find({"generalAreas": gareaId, "specialAreas": sareaId});
+    var ingredients = Ingredients.find({"generalAreas": gareaId, "specialAreas": sareaId, "status": "active"});
     if(ingredients) {
       return ingredients;
     }
