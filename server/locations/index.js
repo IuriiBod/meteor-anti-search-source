@@ -39,11 +39,6 @@ Meteor.methods({
       logger.error("User not permitted to edit location name");
       throw new Meteor.Error(403, "User not permitted to edit location name");
     }
-    var count = Locations.find({name: val}).count();
-    if(count == 0) {
-      Locations.update({_id: id}, {$set: {name: val}});
-    } else {
-      throw new Meteor.Error("The location with name "+val+" already exists!");
-    }
+    Locations.update({_id: id}, {$set: {name: val}});
   }
 });

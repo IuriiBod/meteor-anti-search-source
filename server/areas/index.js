@@ -38,11 +38,6 @@ Meteor.methods({
       logger.error("User not permitted to edit area name");
       throw new Meteor.Error(403, "User not permitted to edit area name");
     }
-    var count = Areas.find({name: val}).count();
-    if(count == 0) {
-      Areas.update({_id: id}, {$set: {name: val}});
-    } else {
-      throw new Meteor.Error("The area with name "+val+" already exists!");
-    }
+    Areas.update({_id: id}, {$set: {name: val}});
   }
 });

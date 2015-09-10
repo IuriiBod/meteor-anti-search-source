@@ -14,8 +14,13 @@ Template.locationSettings.events({
   },
 
   'click .open-flyout': function(e) {
-    var id = e.target.dataset.id;
+    var id;
+    var locId;
+    id = e.target.dataset.id;
     $("#"+id).css('z-index', 10000).addClass("show");
+
+    locId = e.target.dataset.locationId;
+    $('select[name="locationId"]>option[value='+locId+']').prop("selected", true);
   }
 });
 
@@ -29,12 +34,18 @@ Template.locationSettings.onRendered(function() {
     success: function(response, newValue) {
       var id = Session.get('locationId');
       if(id) {
-        Meteor.call("updateLocationName", id, newValue, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.error);
-          }
-        });
+        var orgId = Session.get('organizationId');
+        var count = Locations.find({organizationId: orgId, name: newValue}).count();
+        if(count == 0) {
+          Meteor.call("updateLocationName", id, newValue, function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.error);
+            }
+          });
+        } else {
+          return alert("The location with name "+newValue+" already exists!");
+        }
       }
     }
   });

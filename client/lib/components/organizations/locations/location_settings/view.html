@@ -1,5 +1,5 @@
 <template name="locationSettings">
   <h1 class="location-name" style="display: inline-block">{{state$location.name}}</h1>
-  <button class="btn btn-primary col-xs-12 open-flyout" data-id="createArea">Create Area</button>
+  <button class="btn btn-primary col-xs-12 open-flyout" data-id="createArea" data-location-id="{{state$location._id}}">Create Area</button>
   <button class="btn btn-danger col-xs-12 delete-location" data-id="{{state$location._id}}">Delete Location</button>
 </template>

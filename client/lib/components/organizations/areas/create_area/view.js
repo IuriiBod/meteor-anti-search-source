@@ -23,7 +23,7 @@ Template.createArea.events({
       status: status,
       locationId: locationId,
       organizationId: Session.get('organizationId')
-    }
+    };
     Meteor.call("createArea", doc, function (err) {
       if(err) {
         console.log(err);

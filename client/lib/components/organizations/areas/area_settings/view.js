@@ -28,12 +28,18 @@ Template.areaSettings.onRendered(function() {
     success: function(response, newValue) {
       var id = Session.get('areaId');
       if(id) {
-        Meteor.call("updateAreaName", id, newValue, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.error);
-          }
-        });
+        var locId = Session.get('locationId');
+        var count = Areas.find({locationId: locId, name: newValue}).count();
+        if(count == 0) {
+          Meteor.call("updateAreaName", id, newValue, function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.error);
+            }
+          });
+        } else {
+          return alert("The area with name "+newValue+" already exists!");
+        }
       }
     }
   });
