@@ -113,7 +113,9 @@ var helpers = {
   supplierName: function (id) {
     if (id) {
       var supplier = Suppliers.findOne(id);
-      return !supplier ? "Not assigned" : supplier.name;
+      return supplier ? supplier.name : "Not assigned";
+    } else {
+      return "Not assigned";
     }
   },
 
