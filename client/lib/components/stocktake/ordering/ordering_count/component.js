@@ -10,15 +10,15 @@ component.state.orderingCount = function() {
   if(order) {
     return order.countOrdered;
   }
-}
+};
 
 component.state.unit = function() {
   return this.unit;
-}
+};
 
 component.prototype.onCountRendered = function() {
   $(".orderingCount").editable({
-    ttitle: 'Edit count',
+    title: 'Edit count',
     showbuttons: false,
     mode: 'inline',
     defaultValue: 0,
@@ -28,12 +28,7 @@ component.prototype.onCountRendered = function() {
       var elem = $(this).closest("tr");
       var id = $(this).closest("tr").attr("data-id");
       if(newValue) {
-        var count = parseFloat(newValue);
-        if(count == count) {
-          count = count;
-        } else {
-          count = 0;
-        }
+        var count = parseFloat(newValue) ? parseFloat(newValue) : 0;
         Meteor.call("editOrderingCount", id, count, function(err) {
           if(err) {
             HospoHero.alert(err);
@@ -46,4 +41,4 @@ component.prototype.onCountRendered = function() {
       }
     }
   });
-}
+};
