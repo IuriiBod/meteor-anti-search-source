@@ -40,7 +40,7 @@ component.state.stocktakeList = function() {
     var main = StocktakeMain.findOne(thisVersion);
     if(main && main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
       subs.subscribe("areaSpecificStockTakes", gareaId);
-      var stocktakes = Stocktakes.find({"version": thisVersion, "generalArea": gareaId, "specialArea": sareaId});
+      var stocktakes = Stocktakes.find({"version": thisVersion, "generalArea": gareaId, "specialArea": sareaId}, {sort: {"place": 1}});
       if(stocktakes) {
         return stocktakes;
       }
@@ -49,13 +49,21 @@ component.state.stocktakeList = function() {
 }
 
 component.state.ingredientsList = function() {
+  var thisVersion = Session.get("thisVersion");
   var gareaId = Session.get("activeGArea");
   var sareaId = Session.get("activeSArea");
   if(gareaId && sareaId) {
     subs.subscribe("areaSpecificStocks", gareaId);
-    var ingredients = Ingredients.find({"generalAreas": gareaId, "specialAreas": sareaId, "status": "active"});
-    if(ingredients) {
-      return ingredients;
+    var sarea = SpecialAreas.findOne(sareaId);
+    var ings = [];
+    if(sarea && sarea.stocks.length > 0) {
+      var ids = sarea.stocks;
+      ids.forEach(function(id) {
+        if(id) {
+          ings.push(Ingredients.findOne({"_id": id, "status": "active"}));
+        }
+      });
+      return ings;
     }
   }
 }
