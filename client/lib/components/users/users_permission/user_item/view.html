@@ -1,0 +1,30 @@
+<template name="userItem">
+  <tr data-id="{{state$user._id}}">
+    {{#if state$permittedManagerAndAdmin}}
+    <td style="{{state$userStyle}}"><a href="/user/profile/{{state$user._id}}">{{state$user.username}}</a></td>
+    {{else}}
+    <td style="{{state$userStyle}}">{{state$user.username}}</td>
+    {{/if}}
+    <td>{{state$email}}</td>
+    <td>
+      {{#if state$user.isActive}}
+        {{#if state$isAdmin}}
+          {{#if state$ifMe}}
+          <button class="btn btn-xs changeUserPermission btn-warning" data-type="manager">Manager</button>
+          <button class="btn btn-xs changeUserPermission" data-type="worker">Worker</button>
+          {{/if}}
+        {{/if}}
+        {{#if state$isManager}}
+          <button class="btn btn-xs changeUserPermission btn-danger" data-type="admin">Admin</button>
+          <button class="btn btn-xs changeUserPermission" data-type="worker">Worker</button>
+        {{/if}}
+        {{#if state$isWorker}}
+          <button class="btn btn-xs changeUserPermission btn-danger" data-type="admin">Admin</button>
+          <button class="btn btn-xs changeUserPermission btn-warning" data-type="manager">Manager</button>
+        {{/if}}
+      {{/if}}
+    </td>
+    <td>
+    </td>
+  </tr>
+</template>
