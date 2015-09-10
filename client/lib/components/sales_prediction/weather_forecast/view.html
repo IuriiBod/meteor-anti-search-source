@@ -1,0 +1,14 @@
+<template name="weatherForecast">
+  <td colspan="2" style="text-align: center;">
+    {{#if state$hasForecast}}
+      {{#with state$forecast}}
+        <div class="weather-icon-wrapper">
+          <img src="http://openweathermap.org/img/w/{{icon}}.png">
+        </div>
+        {{main}}, {{temp}}&deg;C
+      {{/with}}
+    {{else}}
+      <i>No weather data</i>
+    {{/if}}
+  </td>
+</template>

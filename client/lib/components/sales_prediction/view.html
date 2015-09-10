@@ -3,18 +3,23 @@
     <div class="prediction-panel">
       <div class="sales-per-menu-item-section">
         <table class="table table-striped table-condensed white-bg">
-          <thead data-pg-collapsed>
+          <thead>
           <tr>
             <th></th>
             {{#each state$week}}
-              <th colspan="2">
-                {{this.day}}
-                <h5>{{this.date}}</h5>
+              <th colspan="2" style="text-align: center;">
+                {{day}}
+                <h5>{{date}}</h5>
               </th>
             {{/each}}
           </tr>
-          </thead>
-          <thead data-pg-collapsed>
+          <tr>
+            <!--Weather-->
+            <td></td>
+            {{#each state$week}}
+              {{> render component="weatherForecast" date=date}}
+            {{/each}}
+          </tr>
           <tr>
             <th></th>
             {{#each state$week}}

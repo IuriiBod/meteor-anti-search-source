@@ -1,9 +1,5 @@
 var component = FlowComponents.define("salesPrediction", function (props) {
-  var currentWeekDate = {
-    year: Router.current().params.year,
-    week: parseInt(Router.current().params.week)
-  };
-  this.set('currentWeekDate', currentWeekDate);
+  this.set('currentWeekDate', props.date);
 });
 
 
