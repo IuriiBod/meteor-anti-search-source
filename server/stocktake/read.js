@@ -17,7 +17,7 @@ Meteor.methods({
           totalStockValue: {$sum: {$multiply: ["$counting", "$unitCost"]}},
         }
       },
-      {$sort: {date: -1}},
+      {$sort: {"date": -1}},
       {$limit: 20}
     ]
     var data = Stocktakes.aggregate(pipe, {cursor: {batchSize: 0}});
