@@ -114,3 +114,11 @@ li > img {
 .areaBox > a {
   white-space: inherit !important;
 }
+
+.ordering_count {
+  max-width: 120px !important;
+}
+
+.ordering_count .editable-input input {
+  max-width: 100px;
+}
