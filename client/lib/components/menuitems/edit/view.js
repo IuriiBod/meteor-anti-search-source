@@ -129,14 +129,16 @@ Template.editMenuItem.events({
       {},
       function (InkBlobs) {
         var doc = (InkBlobs);
-        if (doc) {
-          $(".uploadedNewImageDiv").removeClass("hide");
-          $("#uploadedImageUrl").attr("src", doc[0].url);
-          Meteor.call('editMenuItem', menuId, {image: doc[0].url}, function(err) {
+        if(doc) {
+          var url = doc[0].url;
+          var id = $(event.target).closest("form").attr("data-id");
+          Meteor.call("editMenuItem", id, {"image": url}, function(err) {
             if(err) {
               HospoHero.alert(err);
             }
           });
+          $(".uploadedNewImageDiv").removeClass("hide");
+          $("#uploadedImageUrl").attr("src", url);
         }
       });
   },
