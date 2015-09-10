@@ -6,3 +6,7 @@ var component = FlowComponents.define('weatherForecast', function (props) {
 component.state.hasForecast = function () {
   return !!this.get('forecast');
 };
+
+component.state.roundedTemperature = function () {
+  return Math.round(this.get('forecast').temp);
+};

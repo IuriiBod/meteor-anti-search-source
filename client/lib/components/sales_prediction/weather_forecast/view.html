@@ -5,7 +5,7 @@
         <div class="weather-icon-wrapper">
           <img src="http://openweathermap.org/img/w/{{icon}}.png">
         </div>
-        {{main}}, {{temp}}&deg;C
+        {{main}}, {{state$roundedTemperature}}&deg;C
       {{/with}}
     {{else}}
       <i>No weather data</i>
