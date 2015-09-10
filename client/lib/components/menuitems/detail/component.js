@@ -10,16 +10,6 @@ component.state.menu = function() {
   }
 }
 
-component.state.initialHTML = function() {
-  if(this.menu) {
-    if(this.menu.instructions.trim()) {
-      return this.menu.instructions;
-    } else {
-      return "Add instructions here"
-    }
-  }
-};
-
 component.prototype.onViewRendered = function() {
   this.menu = MenuItems.findOne(this.id);
   Session.set("goBackMenu", null);
