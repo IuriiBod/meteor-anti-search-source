@@ -6,7 +6,7 @@ var component = FlowComponents.define('topNavbar', function(props) {
 
 component.state.count = function() {
   var notifications = Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).fetch();
-  var count = notifications.length
+  var count = notifications.length;
   if(count) {
     return count;
   }
@@ -17,44 +17,44 @@ component.state.notifications = function() {
   return notifications;
 };
 
-component.state.hasOrganization = function() {
-  var orgId = Session.get('organizationId');
+component.state.userAreasAccess = function() {
+  var user;
+  var relation;
+  var organization;
+  user = Meteor.user();
+  relation = Relations.findOne({collectionName: 'users', entityId: user._id});
+  organization = Organizations.findOne(relation.organizationId);
+  return 'Organization: <b>'+organization.name+'</b>';
+};
 
-  if(!orgId) {
-    var org = Relations.findOne();
-    if(org) {
-      Session.set('organizationId', org.organizationId);
-      return true;
-    } else {
-      Session.set('organizationId', '');
-      return false;
-    }
-  } else {
+component.state.isAdmin = function() {
+  var user = Meteor.user();
+  if(user.isAdmin) {
     return true;
+  } else {
+    return false;
   }
 };
 
-component.state.userAreasAccess = function() {
-  var content = [];
-  var entityId = Session.get("areaId");
-  var area;
-  var organization;
+component.state.belongToOrganization = function() {
+  var userId = Meteor.userId();
+  var relations = Relations.find({collectionName: "users", entityId: userId}).fetch();
 
-  if(entityId) {
-    area = Areas.findOne();
-    if(area) {
-      content.push('Area: <b>');
-      content.push(area.name);
-      content.push('</b>');
-    }
+  if(relations.length > 0) {
+    return true;
   } else {
-    entityId = Session.get("organizationId");
-    organization = Organizations.findOne();
-    if(organization) {
-      content.push('Organization: <b>');
-      content.push(organization.name);
-      content.push('</b>');
-    }
+    return false;
   }
-  return content.join('');
+};
+
+component.state.organizationId = function() {
+  var userId = Meteor.userId();
+  var relation = Relations.findOne({collectionName: 'users', entityId: userId});
+  if(relation) {
+    Session.set('organizationId', relation.organizationId);
+    return relation.organizationId;
+  } else {
+    Session.set('organizationId', '');
+    return false;
+  }
 };

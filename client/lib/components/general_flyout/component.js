@@ -5,8 +5,8 @@ var component = FlowComponents.define("generalFlyout", function(props) {
 
 component.state.title = function() {
   return this.title;
-}
+};
 
 component.state.component = function() {
   return this.component;
-}
+};

@@ -1,18 +1,18 @@
 Meteor.publish(null, function(){
   var id = this.userId;
   if(id) {
-    var org;
-    org = Relations.findOne({
-      collectionName: "users",
-      entityId: id
-    });
-    if(org) {
+    //var org;
+    //org = Relations.findOne({
+    //  collectionName: "users",
+    //  entityId: id
+    //});
+    //if(org) {
       var cursors = [];
-      cursors.push(Relations.find({collectionName: "users", entityId: id}));
-      cursors.push(Organizations.find({_id: org.organizationId}));
-      cursors.push(Locations.find({organizationId: org.organizationId}));
-      cursors.push(Areas.find({organizationId: org.organizationId}));
+      cursors.push(Relations.find());
+      cursors.push(Organizations.find());
+      cursors.push(Locations.find());
+      cursors.push(Areas.find());
       return cursors;
-    }
+    //}
   }
 });

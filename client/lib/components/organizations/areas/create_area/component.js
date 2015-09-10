@@ -43,7 +43,6 @@ component.state.closingHours = function() {
 };
 
 component.state.minutes = function() {
-  var selectedHour = 8;
   var minutes = [];
   for(var i=0; i<60; i++) {
     if(i<10) {
@@ -57,4 +56,13 @@ component.state.minutes = function() {
 component.state.locations = function() {
   var orgId = Session.get('organizationId');
   return Locations.find({organizationId: orgId}).fetch();
+};
+
+component.state.activeLocation = function(id) {
+  var locationId = Session.get('locationId');
+  if(locationId && id == locationId) {
+    return true;
+  } else {
+    return false;
+  }
 };

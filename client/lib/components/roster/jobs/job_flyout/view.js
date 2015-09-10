@@ -21,11 +21,10 @@ Template.jobFlyout.events({
 });
 
 Template.jobFlyout.rendered = function() {
-
   $('html').click(function (event) {
     var flyout = $(".flyout-container");
     if (!flyout.is(event.target) && flyout.has(event.target).length === 0){
       flyout.removeClass('show');
     }
   });
-}
+};

@@ -6,8 +6,8 @@ Meteor.methods({
       throw new Meteor.Error(401, "User not logged in");
     }
     if(!isManagerOrAdmin(user)) {
-      logger.error("User not permitted to create menu items");
-      throw new Meteor.Error(403, "User not permitted to create location");
+      logger.error("User not permitted to create locations");
+      throw new Meteor.Error(403, "User not permitted to create locations");
     }
     loc.createdAt = Date.now();
     // Create location
@@ -20,12 +20,30 @@ Meteor.methods({
       throw new Meteor.Error(401, "User not logged in");
     }
     if(!isManagerOrAdmin(user)) {
-      logger.error("User not permitted to create menu items");
-      throw new Meteor.Error(403, "User not permitted to delete location");
+      logger.error("User not permitted to delete locations");
+      throw new Meteor.Error(403, "User not permitted to delete locations");
     }
     Areas.remove({locationId: id});
     Locations.remove({_id: id});
 
     // TODO: Write the code to delete users which is related to location
+  },
+
+  'updateLocationName': function(id, val) {
+    var user = Meteor.user();
+    if(!user) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    if(!isManagerOrAdmin(user)) {
+      logger.error("User not permitted to edit location name");
+      throw new Meteor.Error(403, "User not permitted to edit location name");
+    }
+    var count = Locations.find({name: val}).count();
+    if(count == 0) {
+      Locations.update({_id: id}, {$set: {name: val}});
+    } else {
+      throw new Meteor.Error("The location with name "+val+" already exists!");
+    }
   }
 });

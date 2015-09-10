@@ -3,10 +3,10 @@ Template.createLocation.events({
     tpl.$("#disabled").parent().toggleClass("btn-danger").toggleClass("btn-default");
     tpl.$("#enabled").parent().toggleClass("btn-default").toggleClass("btn-info");
   },
-  'submit form': function(e, tpl) {
+  'submit form': function(e) {
     e.preventDefault();
     var name = e.target.name.value;
-    var orgId = Session.get("organizationId");
+    var orgId = e.target.dataset.id;
 
     // Find locations with the same name
     var count = Locations.find({organizationId: orgId, name: name}).count();
@@ -30,7 +30,7 @@ Template.createLocation.events({
       closingTime: closingTime,
       status: status,
       organizationId: orgId
-    }
+    };
     Meteor.call("createLocation", doc, function (err) {
       if(err) {
         console.log(err);
@@ -44,4 +44,4 @@ Template.createLocation.events({
   'click .close-flyout': function() {
     $("#createLocation").removeClass("show");
   }
-})
+});

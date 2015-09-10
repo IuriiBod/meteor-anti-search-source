@@ -1,6 +1,7 @@
 if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault("counter", 0);
+  Session.set('organizationId', '');
   Meteor.subscribe('profileUser', Meteor.userId());
 
   IntercomSettings.userInfo = function(user, info) {

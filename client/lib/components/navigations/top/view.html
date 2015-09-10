@@ -5,19 +5,23 @@
         <a id="navbar-minimalize" class="minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
       </div>
       <ul class="nav navbar-top-links navbar-right">
-        <li>
-          {{#if state$hasOrganization}}
+        {{#if state$belongToOrganization}}
+          <li>
             <a class="count-info open-flyout visible-sm visible-xs" data-id="organizationStructure"><i class="fa fa-sitemap"></i></a>
             <span class="open-flyout welcome-message" data-id="organizationStructure">
               {{{state$userAreasAccess}}}
             </span>
-          {{else}}
-            <span class="open-flyout" data-id="createOrganizationPage">
-              <i class="fa fa-plus"></i>
-              Create Organization
-            </span>
+          </li>
+        {{else}}
+          {{#if isAdmin}}
+            <li>
+              <span class="open-flyout" data-id="createOrganizationPage">
+                <i class="fa fa-plus"></i>
+                Create Organization
+              </span>
+            </li>
           {{/if}}
-        </li>
+        {{/if}}
         <li>
           <a class="count-info open-flyout" href="#" data-id="profileFlyoutLinks">
             <i class="fa fa-user"></i>
@@ -38,5 +42,5 @@
       </ul>
     </nav>
   </div>
-  {{> render component="flyouts"}}
+  {{> render component="flyouts" organizationId=state$organizationId}}
 </template>

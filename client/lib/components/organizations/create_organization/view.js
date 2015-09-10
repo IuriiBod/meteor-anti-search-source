@@ -1,6 +1,7 @@
 Template.createOrganizationPage.events({
   'submit form': function(e) {
     e.preventDefault();
+    var userId = Meteor.userId();
     var orgName = e.target.name.value;
 
     // TODO: Process billing account here
@@ -14,21 +15,16 @@ Template.createOrganizationPage.events({
     }
     // TODO: Add billing account info to the doc variable
     var doc = {
-      name: orgName
+      name: orgName,
+      owner: userId
     };
-    var orgId;
-
     // Create new organization
-    Meteor.call("createOrganization", doc, function(err, id) {
+    Meteor.call("createOrganization", doc, function(err) {
       if(err) {
         console.log(err);
         alert(err.reason);
       }
-      orgId = id;
     });
-
-    // TODO: The problem with setting the session variable
-
     e.target.reset();
     $("#createOrganizationPage").removeClass("show");
   }

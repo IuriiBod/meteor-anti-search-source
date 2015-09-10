@@ -8,8 +8,8 @@
       </li>
       {{#each state$areas _id}}
         <li class="list-group-item" style="display: block;">
-          {{name}}
-          <span class="badge open-flyout" data-id="areaDetails" data-params="id='{{_id}}'"><i class="fa fa-fw fa-cog"></i></span>
+          <a href="#" class="change-current-area {{state$currentArea _id}}">{{name}}</a>
+          <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i class="fa fa-fw fa-cog"></i></span>
         </li>
       {{/each}}
     </ul>

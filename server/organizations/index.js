@@ -1,25 +1,19 @@
 Meteor.methods({
-  'createOrganization': function(org) {
+  'createOrganization': function(doc) {
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
     }
     if(!isManagerOrAdmin(user)) {
-      logger.error("User not permitted to create menu items");
+      logger.error("User not permitted to create organizations");
       throw new Meteor.Error(403, "User not permitted to create organization");
-    }
-    if(!org.name) {
-      logger.error("Organization should have a name");
-      throw new Meteor.Error(404, "Organization should have a name");
     }
 
     // TODO: Check billing account here
 
-    var doc = {
-      name: org.name,
-      createdAt: Date.now()
-    };
+    doc.createdAt = Date.now();
+
     // Create organization
     var orgID = Organizations.insert(doc);
     // Create relations between user and organization
@@ -34,19 +28,22 @@ Meteor.methods({
   },
 
   'deleteOrganization': function(id) {
+
+    console.log("ORG ID: ", id);
+
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
     }
     if(!isManagerOrAdmin(user)) {
-      logger.error("User not permitted to create menu items");
+      logger.error("User not permitted to delete organization");
       throw new Meteor.Error(403, "User not permitted to delete organization");
     }
     Areas.remove({organizationId: id});
     Locations.remove({organizationId: id});
-    Organizations.remove({_id: id});
     Relations.remove({organizationId: id});
+    Organizations.remove({_id: id});
 
     // TODO: Write the code to delete remainder documents
   }
