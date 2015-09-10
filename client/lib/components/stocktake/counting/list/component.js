@@ -49,11 +49,16 @@ component.state.ingredientsList = function() {
   var sareaId = Session.get("activeSArea");
   if(gareaId && sareaId) {
     subs.subscribe("areaSpecificStocks", gareaId);
-    var ingredients = Ingredients.find({"generalAreas": gareaId, "specialAreas": sareaId, "status": "active"});
-    if(ingredients) {
-      return ingredients;
-    } else {
-      return [];
+    var sarea = SpecialAreas.findOne(sareaId);
+    var ings = [];
+    if(sarea && sarea.stocks.length > 0) {
+      var ids = sarea.stocks;
+      ids.forEach(function(id) {
+        if(id) {
+          ings.push(Ingredients.findOne({"_id": id, "status": "active"}));
+        }
+      });
+      return ings;
     }
   }
 };
