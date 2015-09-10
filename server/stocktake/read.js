@@ -12,7 +12,7 @@ Meteor.methods({
       $group: {
         _id: "$version",
         date: {$first: "$date"},
-        totalStockValue: {$sum: {$multiply: ["$counting", "$unitCost"]}},
+        totalStockValue: {$sum: {$multiply: ["$counting", "$unitCost"]}}
       }
     }, {
       $sort: {"date": -1}
