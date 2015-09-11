@@ -6,9 +6,7 @@
     {{/if}}
     {{state$item.description}} <small>({{SupplierName state$item.suppliers}})</small>
     {{#if state$editable}}
-      {{#if state$deletable state$item.stockRef}}
-        <i class="fa fa-trash pull-right removeFromList"></i>
-      {{/if}}
+      <i class="fa fa-trash pull-right removeFromList"></i>
     {{/if}}
     <span class="pull-right">
       {{#if state$countEditable state$item.stockRef}}
