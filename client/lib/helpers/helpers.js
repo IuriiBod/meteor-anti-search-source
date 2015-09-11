@@ -77,15 +77,14 @@ var helpers = {
       return "-"
     }
   },
-  username: function (id) {
-    var user;
-    if (!id) {
-      user = Meteor.user();
-    } else {
-      user = Meteor.users.findOne(id);
-    }
-    if (user) {
-      return user.username;
+  username: function (userId) {
+    var user = Meteor.users.findOne(userId);
+    if(user) {
+      if(user.profile.firstname && user.profile.lastname) {
+        return user.profile.firstname + " " + user.profile.lastname;
+      } else {
+        return user.username;
+      }
     }
   },
   jobTypeById: function (id) {
@@ -95,9 +94,13 @@ var helpers = {
     }
   },
   sectionById: function (id) {
-    var section = Sections.findOne(id);
-    if (section) {
-      return section.name;
+    if(id) {
+      var section = Sections.findOne(id);
+      if(section) {
+        return section.name;
+      }
+    } else {
+      return "Open";
     }
   },
   roundCount: function (count) {

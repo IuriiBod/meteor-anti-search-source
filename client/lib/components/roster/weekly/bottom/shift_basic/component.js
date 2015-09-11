@@ -14,16 +14,11 @@ component.state.thisorigin = function() {
 };
 
 component.state.section = function() {
-  if(this.shift && this.shift.section) {
-    return Sections.findOne(this.shift.section);
-  } 
+  return Sections.findOne(this.shift.section);
 };
 
 component.state.assignedTo = function() {
-  var worker = this.shift.assignedTo;
-  if(worker) {
-    return Meteor.users.findOne(worker);
-  } 
+  return this.shift.assignedTo;
 };
 
 component.action.deleteShift = function(id) {
@@ -95,7 +90,15 @@ component.prototype.itemRendered = function() {
         var workers = Meteor.users.find(query, {sort: {"username": 1}}).fetch();
 
         workers.forEach(function(worker) {
-          workersObj.push({value: worker._id, text: worker.username});
+          var doc = {
+            "value": worker._id
+          };
+          if(worker.profile.firstname && worker.profile.lastname) {
+            doc['text'] = worker.profile.firstname + " " + worker.profile.lastname;
+          } else {
+            doc['text'] = worker.username;
+          }
+          workersObj.push(doc);
         });
         return workersObj;
       },

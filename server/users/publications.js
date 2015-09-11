@@ -37,6 +37,24 @@ Meteor.publish("usersList", function () {
   } else {
     this.ready();
   }
+<<<<<<< HEAD
+=======
+  var options = {
+    "isAdmin": 1,
+    "isWorker": 1,
+    "isManager": 1,
+    "username": 1,
+    "emails": 1,
+    "isActive": 1,
+    "profile.payrates": 1,
+    "profile.resignDate": 1,
+    "profile.firstname": 1,
+    "profile.lastname": 1
+  };
+  var users = Meteor.users.find({}, {fields: options}, {limit: 10});
+  logger.info("Userlist published");
+  return users;
+>>>>>>> fc38e43... fixing user name with first and last name
 });
 
 Meteor.publish("selectedUsersList", function (usersIds) {
@@ -62,6 +80,7 @@ Meteor.publish("selectedUsersList", function (usersIds) {
 });
 
 //managers and workers that should be assigned to shifts
+<<<<<<< HEAD
 Meteor.publish("workers", function () {
   if (this.userId) {
     var query = {
@@ -87,6 +106,15 @@ Meteor.publish("workers", function () {
           return role._id;
         });
       }
+=======
+Meteor.publish("workers", function() {
+  if(!this.userId) {
+    logger.error('User not found : ' + this.userId);
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+  var cursors = [];
+  cursors.push(Meteor.users.find({"isActive": true}));
+>>>>>>> fc38e43... fixing user name with first and last name
 
       if (user.currentAreaId) {
         query["relations.areaIds"] = user.currentAreaId;

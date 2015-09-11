@@ -14,9 +14,13 @@ component.state.commentprofileimg = function () {
   }
 };
 
-component.state.commentname = function () {
-  var user = Meteor.users.findOne(this.commentp.createdBy);
-  return user.username;
+component.state.userId = function(){
+    var user = Meteor.users.findOne(this.commentp.createdBy);
+    return user._id;
+};
+
+component.state.commenttext = function(){
+    return this.commentp.text;
 };
 
 component.state.commenttext = function () {

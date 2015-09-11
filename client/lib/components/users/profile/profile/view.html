@@ -12,9 +12,9 @@
           <h4>
             <strong>
               {{#if state$isEditPermitted}}
-                <a href="#" id="username" data-id="{{state$basic._id}}" class="editable">{{state$basic.username}}</a>
+                <a href="#" id="username" data-id="{{state$basic._id}}" class="editable">{{username state$basic._id}}</a>
               {{else}}
-                {{state$basic.username}}
+                {{username state$basic._id}}
               {{/if}}
             </strong>
           </h4>

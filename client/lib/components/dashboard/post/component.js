@@ -10,6 +10,11 @@ component.state.checkifnotcomment = function () {
   return ref == createdby;
 };
 
+component.state.userId = function() {
+    var user = Meteor.users.findOne({"_id":this.post.createdBy});
+    return user ? user._id : '';
+};
+
 component.state.name = function () {
   var user = Meteor.users.findOne({"_id": this.post.createdBy});
   return user ? user.username : false;

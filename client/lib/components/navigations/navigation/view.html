@@ -11,6 +11,7 @@
           <li class="special_link">
             <a href="/"><span class="nav-label">Hospo Hero</span></a>
           </li>
+
           <!-- USER PROFILE HEADER -->
           <li class="{{isActiveRoute regex='home'}}">
             <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboard</span></a>
@@ -33,8 +34,7 @@
                     <i class="fa fa-calendar-o"></i>
                     <span class="nav-label">Roster</span>
                   </a>
-                  <ul
-                      class="nav nav-second-level {{isActiveRoute regex='dailyRoster|weeklyRoster|templateWeeklyRoster' className='in'}}">
+                  <ul class="nav nav-second-level {{isActiveRoute regex='dailyRoster|weeklyRoster|templateWeeklyRoster' className='in'}}">
                     <li class="{{isActiveRoute regex='weeklyRoster'}}">
                       <a href="/roster/weekly/{{year}}/{{week}}">Weekly</a>
                     </li>
@@ -53,8 +53,7 @@
 
               {{#if canViewMenu}}
                 <li class="{{isActiveRoute regex='menuItemsMaster'}}">
-                  <a href="/menuItems/{{state$category}}/{{state$status}}"><i class="fa fa-cutlery"></i> <span
-                      class="nav-label">Menu</span></a>
+                  <a href="/menuItems/{{state$category}}/{{state$status}}"><i class="fa fa-cutlery"></i> <span class="nav-label">Menu</span></a>
                 </li>
               {{/if}}
 
