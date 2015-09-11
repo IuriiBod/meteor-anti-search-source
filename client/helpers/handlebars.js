@@ -156,6 +156,8 @@ UI.registerHelper("SupplierName", function(id) {
     var supplier = Suppliers.findOne(id);
     if(supplier) {
       return supplier.name;
+    } else {
+      return "Not assigned";
     }
   } else {
     return "Not assigned";

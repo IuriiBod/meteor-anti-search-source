@@ -1,7 +1,7 @@
 var component = FlowComponents.define("orderReceive", function(props) {});
 
 component.state.list = function() {
-  var data = StockOrders.find({"orderReceipt": Session.get("thisReceipt")});
+  var data = StockOrders.find({"orderReceipt": Session.get("thisReceipt"), "countOrdered": {$gt: 0}});
   var stockIds = [];
   if(data) {
     data.forEach(function(doc) {
