@@ -30,6 +30,38 @@ Template.dailyShiftScheduling.events({
         console.log(err);
         alert(err.reason);
         $(event.target).val("");
+        return;
+      }
+    });
+
+    var shift = Shifts.find({_id: shiftId});
+    if(shift) {
+      var shiftUpdateDoc = {
+        to: workerId,
+        userId: Meteor.userId(),
+        shiftId: shiftId,
+        text: "You have been assigned to shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b>",
+        type: "update"
+      };
+      Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
+        if(err) {
+          console.log(err);
+          return alert(err.reason);
+        }
+      });
+    }
+  },
+
+  'click .generateRecurring': function(event) {
+    event.preventDefault();
+    var date = Router.current().params.date;
+    console.log(date);
+    Meteor.call("generateRecurrings", date, function(err, result) {
+      if(err) {
+        console.log(err);
+        return alert(err.reason);
+      } else {
+        console.log(result);
       }
     });
   }
@@ -51,3 +83,4 @@ Template.dailyShiftScheduling.onRendered(function () {
   });
   calendar.autoUpdate();
 });
+
