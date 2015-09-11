@@ -3,7 +3,7 @@ Template.areaBox.events({
     event.preventDefault();
     var id = $(event.target).parent().attr("data-id");
     Session.set("activeGArea", id);
-    $(".collapse").removeClass("in");
+    $(".areaFilering .collapse").removeClass("in");
     var sarea = $(event.target).parent().next().find(".areaBox")[0];
     if(sarea) {
       var sId = $(sarea).attr("data-id");

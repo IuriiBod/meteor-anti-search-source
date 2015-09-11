@@ -29,7 +29,7 @@
             {{/each}}
           </ul>
         {{else}}
-          <ul class="list-group">
+          <ul class="list-group sortableStockItems">
             {{#each state$ingredientsList}}
               {{> render component="stockCountingListItem" id=this._id version=state$version garea=state$generalArea sarea=state$specialArea}}
             {{else}}

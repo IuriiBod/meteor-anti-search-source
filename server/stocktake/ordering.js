@@ -61,7 +61,7 @@ Meteor.methods({
             "countNeeded": 0,
             "unit": stockItem.portionOrdered,
             "unitPrice": stockItem.costPerPortion,
-            "countOrdered": 0,
+            "countOrdered": null,
             "orderReceipt": null,
             "received": false
           }
@@ -100,7 +100,13 @@ Meteor.methods({
       logger.error('Stock order not found');
       throw new Meteor.Error(401, "Stock order not found");
     }
-    StockOrders.update({"_id": orderId}, {$set: {"countOrdered": parseFloat(count)}});
+    var countToOrder = parseFloat(count);
+    if(countToOrder == countToOrder) {
+      countToOrder = countToOrder;
+    } else {
+      countToOrder = 0;
+    }
+    StockOrders.update({"_id": orderId}, {$set: {"countOrdered": countToOrder}});
     logger.info("Stock order count updated", orderId);
     return;
   },

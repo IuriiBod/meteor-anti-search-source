@@ -115,6 +115,21 @@ component.prototype.itemRendered = function() {
             var title =  "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
             var text = "You have been removed from this assigned shift";
             sendNotification(shiftId, shift.assignedTo, title, text);
+
+            var shiftUpdateDoc = {
+              to: shift.assignedTo,
+              userId: Meteor.userId(),
+              shiftId: shift._id,
+              text: "You have been removed from shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b>",
+              type: "remove"
+            };
+
+            Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
+              if(err) {
+                console.log(err);
+                return alert(err.reason);
+              }
+            });
           }
         }
       }
@@ -217,16 +232,31 @@ function editShift(obj) {
         //notify new user
         var title = "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
         var text = null;
+        var shiftUpdateDoc = {
+          to: shift.assignedTo,
+          userId: Meteor.userId(),
+          shiftId: shift._id,
+          type: "update"
+        };
         if(obj.hasOwnProperty("endTime")) {
           text = "Shift end time has been updated";
+          shiftUpdateDoc.text = "Shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b> end time has been updated";
         }
         if(obj.hasOwnProperty("startTime")) {
           text = "Shift start time has been updated";
+          shiftUpdateDoc.text = "Shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b> start time has been updated";
         }
         if(obj.hasOwnProperty("section")) {
           text = "Shift section has been updated";
+          shiftUpdateDoc.text = "Shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b> section has been updated";
         }
         sendNotification(obj._id, shift.assignedTo, title, text);
+        Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
+          if(err) {
+            console.log(err);
+            return alert(err.reason);
+          }
+        });
       }
     }
   });
@@ -242,11 +272,25 @@ assignWorkerToShift = function(worker, shiftId, target) {
         $(target).editable("setValue", shift.assignedTo);
         return;
       } else {
-        if(shift.published) {
+        if(shift.published && worker !== null) {
           //notify new user
           var title = "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
           var text = "You have been assigned to this shift";
           sendNotification(shiftId, worker, title, text);
+          var shiftUpdateDoc = {
+            to: worker,
+            userId: Meteor.userId(),
+            shiftId: shift._id,
+            text: "You have been assigned to shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b>",
+            type: "update"
+          };
+
+          Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.reason);
+            }
+          });
         }
       }
     });

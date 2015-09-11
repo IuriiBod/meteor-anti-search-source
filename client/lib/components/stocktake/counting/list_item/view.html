@@ -1,4 +1,5 @@
 <template name="stockCountingListItem">
+  {{#if state$item}}
   <li class="list-group-item" data-id="{{state$item._id}}" data-stockRef="{{state$item.stockRef}}" data-place="{{state$item.place}}">
     {{#if state$editable}}
       <i class="fa fa-fw fa-reorder"></i>
@@ -17,4 +18,5 @@
       {{/if}}
     </span>
   </li>
+  {{/if}}
 </template>

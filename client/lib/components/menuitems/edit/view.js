@@ -148,47 +148,18 @@ Template.editMenuItem.events({
       function(InkBlobs){
         var doc = (InkBlobs);
         if(doc) {
+          var url = doc[0].url;
+          var id = $(event.target).closest("form").attr("data-id");;
+          Meteor.call("editMenuItem", id, {"image": url}, function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.reason);
+            }
+          });
           $(".uploadedNewImageDiv").removeClass("hide");
-          $("#uploadedImageUrl").attr("src", doc[0].url);
+          $("#uploadedImageUrl").attr("src", url);
         }
     });
-  },
-
-  'click .deleteMenuItemBtn': function(e) {
-    e.preventDefault();
-    var result = confirm("Are you sure, you want to delete this menu ?");
-    if(result) {
-      var id = $(event.target).attr("data-id");
-      var item = MenuItems.findOne(id);
-      
-      if(id) {
-        Meteor.call("deleteMenuItem", id, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          } else {
-             var options = {
-              "type": "delete",
-              "title": "Menu " + item.name + " has been deleted",
-              "time": Date.now()
-            }
-            Meteor.call("sendNotifications", id, "menu", options, function(err) {
-              if(err) {
-                console.log(err);
-                return alert(err.reason);
-              }
-            });
-            Router.go("menuItemsMaster", {"category": "all", "status": "all"});
-          }
-        });
-      }
-    }
-  },
-
-  'click .cancelBtn': function(event) {
-    event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    Router.go("menuItemDetail", {"_id": id});
   },
   
   'change select[name="category"]': function(e) {

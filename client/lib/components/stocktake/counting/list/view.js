@@ -23,7 +23,7 @@ Template.stockCounting.events({
         mode: 'inline',
         success: function(response, newValue) {
           var self = this;
-          var id = $(self).parent().attr("data-id");
+          var id = $(self).attr("data-id");
           if(newValue) {
             Meteor.call("editSpecialArea", id, {"name": newValue}, function(err) {
               if(err) {
@@ -42,7 +42,7 @@ Template.stockCounting.events({
         mode: 'inline',
         success: function(response, newValue) {
           var self = this;
-          var id = $(self).parent().attr("data-id");
+          var id = $(self).attr("data-id");
           if(newValue) {
             Meteor.call("editGeneralArea", id, {"name": newValue}, function(err) {
               if(err) {
@@ -53,43 +53,44 @@ Template.stockCounting.events({
           }
         }
       });
+
+      $(".sortableStockItems").sortable({
+        stop: function(event, ui) {
+          var stocktakeId = $(ui.item).attr("data-stockRef");
+          var stockId = $(ui.item).attr("data-id");
+          var itemPosition = $(ui.item).attr("data-place");
+
+          var nextItemId = $($($(ui.item)[0]).next()).attr("data-id");
+          var nextItemPosition = $($($(ui.item)[0]).next()).attr("data-place");
+          var prevItemId = $($($(ui.item)[0]).prev()).attr("data-id");
+          var prevItemPosition = $($($(ui.item)[0]).prev()).attr("data-place");
+          
+          var sareaId = Session.get("activeSArea");
+          if(!prevItemPosition) {
+            prevItemPosition = 0;
+          } 
+
+          var info = {
+            "nextItemId": nextItemId,
+            "prevItemId": prevItemId
+          }
+          if(nextItemPosition) {
+            info['nextItemPosition'] = nextItemPosition
+          }
+
+          if(prevItemPosition) {
+            info['prevItemPosition'] = prevItemPosition
+          }
+          Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, function(err) {
+            if(err) {
+              console.log(err);
+              return alert(err.reason);
+            } 
+          });
+        }
+      });
     }, 10);
 
-    $(".sortableStockItems").sortable({
-      stop: function(event, ui) {
-        var stocktakeId = $(ui.item).attr("data-stockRef");
-        var stockId = $(ui.item).attr("data-id");
-        var itemPosition = $(ui.item).attr("data-place");
-
-        var nextItemId = $($($(ui.item)[0]).next()).attr("data-id");
-        var nextItemPosition = $($($(ui.item)[0]).next()).attr("data-place");
-        var prevItemId = $($($(ui.item)[0]).prev()).attr("data-id");
-        var prevItemPosition = $($($(ui.item)[0]).prev()).attr("data-place");
-
-        var sareaId = Session.get("activeSArea");
-        if(!prevItemPosition) {
-          prevItemPosition = 0;
-        } 
-
-        var info = {
-          "nextItemId": nextItemId,
-          "prevItemId": prevItemId
-        }
-        if(nextItemPosition) {
-          info['nextItemPosition'] = nextItemPosition
-        }
-
-        if(prevItemPosition) {
-          info['prevItemPosition'] = prevItemPosition
-        }
-        Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          } 
-        });
-      }
-    });
   },
 
   'click .generateOrders': function(event) {

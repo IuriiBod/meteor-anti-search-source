@@ -10,7 +10,7 @@
     data-toggle="collapse" href="#{{state$item._id}}" 
     aria-expanded="false" aria-controls="{{state$item._id}}">
     {{#if state$editable}}
-      <a href="#" class="{{state$item.type}}">{{state$item.name}}</a>
+      <a href="#" class="{{state$item.type}}" data-id="{{state$item._id}}">{{state$item.name}}</a>
     {{else}}
       {{state$item.name}}
     {{/if}}

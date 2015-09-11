@@ -41,5 +41,9 @@ mrt:jquery-ui-sortable
 hospohero:stale-session
 reactive-var
 ogourment:settings
+underscore
+random
+u2622:persistent-session
 deepwell:bootstrap-datepicker2
 momentjs:moment
+percolate:synced-cron
