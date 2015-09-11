@@ -47,11 +47,14 @@ component.state.totaltime = function () {
       time = totalhours;
     }
 
-    if (totalmins < 10) {
-      time += ".0" + totalmins;
-    } else {
+    if(totalmins > 0) {
+      totalmins = (totalmins/60) * 100;
+      totalmins = Math.floor(totalmins);
       time += "." + totalmins;
+    } else {
+      time += ".00";
     }
+
     return time;
   }
 };
