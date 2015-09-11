@@ -41,7 +41,8 @@ mrt:jquery-ui-sortable
 hospohero:stale-session
 reactive-var
 ogourment:settings
-deepwell:bootstrap-datepicker2
-momentjs:moment
 underscore
 random
+u2622:persistent-session
+deepwell:bootstrap-datepicker2
+momentjs:moment
