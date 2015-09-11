@@ -24,7 +24,10 @@ component.state.widthofBar = function() {
     var stocktakes = Stocktakes.find({"version": Session.get("thisVersion"), "specialArea": id, 'generalArea': Session.get("activeGArea")}).fetch();
     if(specialArea && specialArea.stocks) {
       if(specialArea.stocks.length > 0 && stocktakes.length > 0) {
-        sProgress = (stocktakes.length/specialArea.stocks.length) * 100;
+        var stocks = Ingredients.find({"_id": {$in: specialArea.stocks}, "status": "active"}).fetch();
+        if(stocks && stocks.length > 0) {
+          sProgress = (stocktakes.length/stocks.length) * 100;
+        }
       }
     }
     return (sProgress + "%");
@@ -37,7 +40,10 @@ component.state.widthofBar = function() {
       if(specialAreas && specialAreas.length > 0) {
         specialAreas.forEach(function(doc) {
           if(doc.stocks && doc.stocks.length > 0) {
-            totalCount += doc.stocks.length;
+            var stocks = Ingredients.find({"_id": {$in: doc.stocks}, "status": "active"}).fetch();
+            if(stocks && stocks.length > 0) {
+              totalCount += stocks.length;
+            }
           }
         });
       }
