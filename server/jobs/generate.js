@@ -53,7 +53,7 @@ Meteor.methods({
   generateRecurrings: function(date) {
     var ids = [];
     var allJobItems = [];
-    var d = new Date(date);
+    var d = _.isDate(date) ? date : new Date(date);
     var weekday = new Array(7);
     weekday[0]=  "Sun";
     weekday[1] = "Mon";

@@ -6,10 +6,12 @@ var Calendar = function (tpl, options) {
 
 
 Calendar.prototype.convertDate = function (date) {
-  date = moment(date);
-  var hours = date.get('hour');
-  var minutes = date.get('minute');
-  var seconds = date.get('second');
+  if (!moment.isMoment(date)) {
+    date = moment(date);
+  }
+  var hours = date.hours();
+  var minutes = date.minutes();
+  var seconds = date.second();
   date = [seconds, minutes, hours];
   date = _.map(date, function (val, key) {
     return val * Math.pow(60, key);
@@ -39,15 +41,56 @@ Calendar.prototype.destroy = function () {
 };
 
 
-Calendar.prototype.getShifts = function () {
+Calendar.prototype._getShifts = function () {
   var shifts = Shifts.find({
-    shiftDate: new Date(this.options.shiftDate).getTime()
+    shiftDate: this.options.shiftDate.getTime()
   }, {
     sort: {
       startTime: 1
     }
   });
+  return shifts;
+};
+
+
+
+Calendar.prototype.getShifts = function () {
+  var shifts = this._getShifts();
   this.options.shifts = shifts.fetch();
+};
+
+
+Calendar.prototype._autoUpdateCB = function () {
+  var self = this;
+  var hasDate = _.isDate(self.options.shiftDate);
+  if (!hasDate) {
+    return;
+  }
+  Meteor.call("generateRecurrings", self.options.shiftDate, function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      self.update();
+    }
+  });
+};
+
+Calendar.prototype.autoUpdate = function () {
+  var self = this;
+  Meteor.defer(function () {
+    var shifts = self._getShifts();
+    shifts.observe({
+      added: function () {
+        self._autoUpdateCB();
+      },
+      changed: function () {
+        self._autoUpdateCB();
+      },
+      removed: function () {
+        self._autoUpdateCB();
+      }
+    });
+  });
 };
 
 
@@ -173,24 +216,23 @@ Calendar.prototype.init = function () {
         );
       }
     },
-    eventRender: function () {
+    viewRender: function () {
       var $cell = self.tpl.$('.fc-time').first();
       var cellHeight = $cell.outerHeight();
       _.each(self.options.shifts, function (shift, index) {
-        var $nonBussinessZones = $('.fc-bgevent-skeleton td')
+        var $nonBusinessZones = $('.fc-bgevent-skeleton td')
           .eq(index + 1)
           .find('.fc-bgevent');
 
         var start = Math.round(self.convertDate(shift.startTime) / 1800);
         var bottom = start * cellHeight * -1 + 'px';
-        var $beforeShift = $nonBussinessZones.eq(0);
+        var $beforeShift = $nonBusinessZones.eq(0);
         $beforeShift.css('bottom', bottom);
 
         var end = Math.round(self.convertDate(shift.endTime) / 1800);
         var top = end * cellHeight + 'px';
-        var $afterShift = $nonBussinessZones.eq(1);
+        var $afterShift = $nonBusinessZones.eq(1);
         $afterShift.css('top', top);
-
       });
     },
     events: self.options.events
