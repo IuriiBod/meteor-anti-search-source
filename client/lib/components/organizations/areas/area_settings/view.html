@@ -1,4 +1,16 @@
 <template name="areaSettings">
   <h1 class="area-name" style="display: inline-block;" data-id="{{state$area._id}}" data-display="false">{{state$area.name}}</h1>
+
+  <div class="area-users">
+    {{#each state$areaUsers}}
+      <img src="{{state$getProfilePhoto _id}}" alt="Profile photo of {{username}}" class="user-photo-min" title="{{username}}" />
+    {{/each}}
+  </div>
+
+  <button class="btn btn-white col-xs-12 add-user" data-id="{{state$area._id}}">
+    <i class="fa fa-user-plus"></i>  Add User
+  </button>
+  <br />
+  {{> addUserPopup}}
   <button class="btn btn-danger col-xs-12 delete-area" data-id="{{state$area._id}}">Delete Area</button>
 </template>

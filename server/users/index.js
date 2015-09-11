@@ -224,6 +224,41 @@ Meteor.methods({
         Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val, "isActive": false}});
       }
     }
+  },
+
+  'areaUsers': function(areaId) {
+    var area = Areas.find({_id: areaId});
+    var userIds = Relations.find({
+      $and: [
+        {
+          entityId: {
+            $ne: Meteor.userId()
+          }
+        },
+        {
+          $or: [
+            { areaIds: areaId },
+            { $and: [
+              { locationIds: area.locationId },
+              { areaIds: null }
+            ]},
+            { $and: [
+              { organizationId: area.organizationId },
+              { locationIds: null },
+              { areaIds: null }
+            ]}
+          ]
+        }
+      ]
+    }, {fields: { entityId: 1 } }).fetch();
+
+    if(userIds.length) {
+      var ids = [];
+      _.map(userIds, function(user) {
+        ids.push(user.entityId);
+      });
+      return Meteor.users.find({_id: {$in: ids}}).fetch();
+    }
   }
 });
 

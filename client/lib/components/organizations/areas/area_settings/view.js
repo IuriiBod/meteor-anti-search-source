@@ -16,6 +16,13 @@ Template.areaSettings.events({
         Session.set('currentAreaId', '');
       }
     }
+  },
+
+  'click .add-user': function() {
+    $('.add-user-popup').toggleClass('show').toggleClass('hide');
+    $('input[name="add-user-name"]').val('').focus();
+    $('.add-user-info').show();
+    $('.users-search-results').hide();
   }
 });
 

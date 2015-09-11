@@ -286,11 +286,11 @@ span {
 
 
 // media queries for tablet
-@media (min-width: 768px) and (max-width: 991px){
-  .flyout-container, .flyout-notifi-container{
-    width: 50%;
-  }
-}
+//@media (min-width: 768px) and (max-width: 991px){
+//  .flyout-container, .flyout-notifi-container{
+//    width: 50%;
+//  }
+//}
 
 
 @media (max-width: 768px){
@@ -343,4 +343,50 @@ span {
 .change-current-area.active {
   font-weight: bold;
   text-decoration: underline;
+}
+
+.add-user-popup {
+  margin-top: 45px;
+  margin-bottom: -35px;
+  z-index: 100;
+  position: relative;
+
+  .no-results {
+    padding: 10px 0;
+  }
+
+  .search-result {
+    hr {
+      margin: 5px 0 0;
+    }
+
+    .search-user-info-content {
+      padding: 5px;
+      margin-top: 5px;
+      cursor: pointer;
+      &:hover {
+        color: #fff;
+        background-color: #1AB394;
+      }
+
+      .search-user-info-name {
+        margin-left: 5px;
+      }
+
+      .search-user-info-plus {
+        color: #fff;
+        margin: 9px 5px 0 0;
+      }
+    }
+  }
+}
+
+.user-photo-min {
+  max-height: 30px;
+  max-width: 30px;
+  border-radius: 5px;
+}
+
+.area-users {
+  padding: 10px;
 }

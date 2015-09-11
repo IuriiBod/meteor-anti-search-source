@@ -1,0 +1,30 @@
+<template name="addUserPopup">
+  <div class="panel panel-default add-user-popup hide">
+    <div class="panel-heading text-center">
+      <b>Users</b>
+    </div>
+    <div class="panel-body">
+      <form>
+        <input type="text" class="form-control" placeholder="e.g. john@gmail.com" name="add-user-name" />
+      </form>
+      <br />
+      <p class="text-muted add-user-info">
+        Search for a person in organization by name or email address, or enter an email address to invite someone new.
+      </p>
+      <div class="users-search-results">
+        <div class="text-muted text-center no-results">
+          <b>No results</b>
+        </div>
+        <div class="search-result">
+          <b>Select to add</b>
+          <hr />
+          <div class="search-users-container">
+            {{# each searchUsers}}
+              {{> searchUserInfo}}
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

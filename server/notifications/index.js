@@ -135,6 +135,10 @@ Meteor.methods({
           allSubscribers.push(options.to);
         }
       }
+    } else if(type == 'organization') {
+      info.to = options.to;
+      var id = Notifications.insert(info);
+      console.log("Notification "+id+" send");
     }
 
 
@@ -164,7 +168,7 @@ Meteor.methods({
           logger.info("Notification send to userId", subscriber._id, id);
         }
       });
-    }  
+    }
   },
 
   notifyRoster: function(to, info) {
@@ -254,5 +258,22 @@ Meteor.methods({
     }
     Notifications.update({'_id': id, 'to': userId}, {$set: {"read": true}});
     logger.info("Notification read", {"user": userId, "notification": id});
+  },
+
+  'notifyAddToArea': function(type, userInfo, areaName, sender) {
+    if(type == 'id') {
+      var user = Meteor.users.findOne({_id: userInfo});
+      var text = 'Hi ' + user.username + ',<br><br>';
+      text += 'You\'ve been added to the ' + areaName + ' area. You\'ll see this in your area list when you next log in.<br><br>';
+      text += 'If you have any questions let me know.<br>';
+      text += sender.username;
+
+      Email.send({
+        "to": user.emails[0].address,
+        "from": sender.emails[0].address,
+        "subject": "[Hero Chef] Added to the "+ areaName + "area",
+        "html": text
+      });
+    }
   }
 });
