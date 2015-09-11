@@ -39,6 +39,7 @@ component.state.publishedOn = function () {
     var shift = Shifts.findOne({
       "shiftDate": {$in: dates},
       "published": true,
+      "publishedOn": {$exists: true},
       "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if (shift && shift.publishedOn) {
