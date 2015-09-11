@@ -45,7 +45,7 @@ component.prototype.renderShowIngList = function() {
     if(ids.length > 0) {
       self.IngredientsSearch.cleanHistory();
     }
-    self.IngredientsSearch.search(self.get("text"), {"ids": ids, "limit": 10});
+    self.IngredientsSearch.search(self.get("text"), {"ids": ids, "limit": 10, "status": "active"});
   });
 }
 
@@ -61,5 +61,5 @@ component.state.getIngredients = function() {
 component.action.keyup = function(text) {
   var ids = this.setIds();
   this.set("text", text);
-  this.IngredientsSearch.search(text, {"ids": ids, "limit": 10});
+  this.IngredientsSearch.search(text, {"ids": ids, "limit": 10, "status": "active"});
 }
