@@ -3,7 +3,6 @@ Meteor.methods({
     jobIds = [];
     var maxTimePerDay = 5 * 60 * 60;
     if(menuInfo.length > 0) {
-      
       menuInfo.forEach(function(menu) {
         var menuItem = MenuItems.findOne(menu.id);
         if(!menuItem) {
@@ -12,9 +11,10 @@ Meteor.methods({
           if(menuItem.jobItems.length > 0) {
 
             menuItem.jobItems.forEach(function(job) {
-              var jobItem = JobItems.findOne({"_id": job._id, "type": "Prep"});
+              var prep = JobTypes.findOne({"name": "Prep"});
+              var jobItem = JobItems.findOne({"_id": job._id, "type": prep._id});
               if(!jobItem) {
-                logger.error("MenuItem not found", menu.id);
+                logger.error("Job item not found", job.id);
               } else {
                 var portionsRequired = menu.quantity * job.quantity;
                 var timeRequired = portionsRequired * (jobItem.activeTime/jobItem.portions);
@@ -69,10 +69,10 @@ Meteor.methods({
       logger.error("Date should be defined");
       throw new Meteor.Error(404, "Date should be defined");
     }
-
+    var recurringType = JobTypes.findOne({"name": "Recurring"});
     //endsNever
     var endsNever = JobItems.find({
-      "type": "Recurring", 
+      "type": recurringType._id, 
       "endsOn.on": "endsNever",
       "startsOn": {$lte: new Date(date).getTime()}
     }).fetch();
@@ -81,7 +81,7 @@ Meteor.methods({
     }
     //endsOn date
     var endsOn = JobItems.find({
-      "type": "Recurring", 
+      "type": recurringType._id, 
       "startsOn": {$lte: new Date(date).getTime()},
       "endsOn.on": "endsOn", 
       "endsOn.lastDate": {$gte: new Date(date)}
@@ -91,7 +91,7 @@ Meteor.methods({
     }
     //endsAfter occurences
     var endsAfter = JobItems.find({
-      "type": "Recurring", 
+      "type": recurringType._id, 
       "endsOn.on": "endsAfter",
       "startsOn": {$lte: new Date(date).getTime()}
     }).fetch();
@@ -170,14 +170,14 @@ function createNewJob(info, time, portions, maxTime, maxPortions) {
       "portions": portions,
       "activeTime": time,
       "assignedTo": null,
-      "createdOn": new Date().toDateString(),
+      "createdOn": new Date().getTime(),
       "createdBy": Meteor.userId(),
       "ingredients": [],
     }
     var id = Jobs.insert(doc);
     if(jobIds.indexOf(id) < 0) {
       jobIds.push(id);
-      logger.info("New recurring job inserted", id);
+      logger.info("New Prep job inserted", id);
       return id;
     }
   }
@@ -203,7 +203,7 @@ createNewRecurringJob = function(name, ref, type, time, section, startAt, date) 
         "activeTime": time,
         "assignedTo": null,
         "section": section,
-        "createdOn": new Date(date).toDateString(),
+        "createdOn": new Date(date).getTime(),
         "startAt": new Date(starting).getTime()
       }
 
@@ -211,7 +211,11 @@ createNewRecurringJob = function(name, ref, type, time, section, startAt, date) 
       if(existingJob.length <= 0) {
         doc.createdBy = Meteor.userId();
         var id = Jobs.insert(doc);
+        logger.info("New Recurring job inserted", id);
+
         Shifts.update({"_id": shift._id}, {$addToSet: {"jobs": id}});
+        logger.info("Shift updated with recurring job", shift._id);
+
         return id;
       }
     });
