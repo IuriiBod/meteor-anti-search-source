@@ -39,12 +39,9 @@ mrt:jquery-ui-sortable
 hospohero:stale-session
 reactive-var
 ogourment:settings
-deepwell:bootstrap-datepicker2
-momentjs:moment
 
 http
 micah:google-cloud
-percolate:synced-cron
 
 votercircle:winston
 jss:through
@@ -64,3 +61,6 @@ jss:meteor-google-prediction
 underscore
 random
 u2622:persistent-session
+deepwell:bootstrap-datepicker2
+momentjs:moment
+percolate:synced-cron
