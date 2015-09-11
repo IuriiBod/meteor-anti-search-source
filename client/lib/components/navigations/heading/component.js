@@ -37,7 +37,7 @@ component.state.publishedOn = function() {
         dates.push(new Date(day.date).getTime())
       }
     });
-    var shift = Shifts.findOne({"shiftDate": {$in: dates}, "published": true});
+    var shift = Shifts.findOne({"shiftDate": {$in: dates}, "published": true, "publishedOn": {$exists: true}});
     if(shift && shift.publishedOn) {
       return shift.publishedOn;
     }
