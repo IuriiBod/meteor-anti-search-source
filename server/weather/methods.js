@@ -1,5 +1,5 @@
 WEATHER_URL = 'http://api.openweathermap.org/data/2.5/forecast/daily';
-API_KEY = Meteor.settings.private.WEATHER_API_KEY;
+API_KEY = Meteor.settings.private.OpenWeatherMap.KEY;
 
 //todo: SHOULD BE MOVED TO CLIENT SETTINGS
 LOCATION = Meteor.settings.private.LOCATION;
@@ -12,6 +12,11 @@ convertDtToDate = function (dt) {
 
 Meteor.publish('weatherForecast', function () {
   var self = this;
+
+  var haveAccess = isManagerOrAdmin(this.userId);
+  if (!haveAccess) {
+    self.error(new Meteor.Error(403, 'Access Denied'));
+  }
 
   var res = HTTP.get(WEATHER_URL, {
     params: {
