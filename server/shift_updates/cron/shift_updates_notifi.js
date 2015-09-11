@@ -22,9 +22,9 @@ SyncedCron.add({
       if(err) {
         HospoHero.alert(err);
       } else {
-        HospoHero.alert(err);
+        console.log("Shift updates have been successfully sended");
+        return "Shift updates have been successfully sended";
       }
     });
   }
 });
-SyncedCron.start();

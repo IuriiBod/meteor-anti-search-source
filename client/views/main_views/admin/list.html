@@ -22,6 +22,9 @@
               <a href="#timeout" data-toggle="tab">Timeout</a>
             </li>
             <li class="">
+              <a href="#cron-config" data-toggle="tab">Cron Config</a>
+            </li>
+            <li class="">
               <a href="#revel-link" data-toggle="tab">POS/ Menu Linking</a>
             </li>
           </ul>
@@ -38,6 +41,9 @@
             </div>
             <div class="tab-pane" id="timeout">
               {{> render component='inactivityTimeoutField'}}
+            </div>
+            <div class="tab-pane" id="cron-config">
+              {{> render component="cronConfig"}}
             </div>
             <div class="tab-pane" id="roles">
               {{> render component='rolesSettings'}}
