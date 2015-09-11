@@ -31,7 +31,9 @@ Meteor.publish("usersList", function() {
     "emails": 1,
     "isActive": 1,
     "profile.payrates": 1,
-    "profile.resignDate": 1
+    "profile.resignDate": 1,
+    "profile.firstname": 1,
+    "profile.lastname": 1
   };
   var users = Meteor.users.find({}, {fields: options}, {limit: 10});
   logger.info("Userlist published");
@@ -66,7 +68,7 @@ Meteor.publish("workers", function() {
     this.error(new Meteor.Error(404, "User not found"));
   }
   var cursors = [];
-  cursors.push(Meteor.users.find({"isActive": true, $or: [{"isWorker": true}, {"isManager": true}]}));
+  cursors.push(Meteor.users.find({"isActive": true}));
 
   return cursors;
 });

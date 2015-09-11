@@ -1,7 +1,7 @@
 <template name="teamHoursItem">
   {{#if state$activeWage}}
   <tr class="gradeX">
-    <td>{{state$user.username}}</td>
+    <td>{{username state$user._id}}</td>
     <td>{{state$totaltime}}</td>
     <td>${{state$wage}}</td>
     {{#if state$activeShifts}}

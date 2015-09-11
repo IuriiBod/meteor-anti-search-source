@@ -1,7 +1,9 @@
 if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault("counter", 0);
-  Meteor.subscribe('profileUser', Meteor.userId());
+  if(Meteor.userId()) {
+    Meteor.subscribe('profileUser', Meteor.userId());
+  }
 
   IntercomSettings.userInfo = function(user, info) {
     if(!user.intercomHash) {

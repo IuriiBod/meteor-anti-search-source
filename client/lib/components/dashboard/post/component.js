@@ -14,10 +14,10 @@ component.state.checkifnotcomment = function(){
         return false;
 };
 
-component.state.name = function() {
+component.state.userId = function() {
     var user = Meteor.users.findOne({"_id":this.post.createdBy});
     if(user) {
-        return user.username;
+        return user._id;
     } else return;
 };
 
