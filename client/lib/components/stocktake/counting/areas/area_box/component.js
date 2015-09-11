@@ -10,11 +10,11 @@ component.state.item = function() {
   area.class = this.class;
   area.type = this.name;
   return area;
-}
+};
 
 component.state.editable = function() {
   return Session.get("editStockTake");
-}
+};
 
 component.state.widthofBar = function() {
   var id = this.item._id;
@@ -22,15 +22,7 @@ component.state.widthofBar = function() {
     var sProgress = 0;
     var specialArea = SpecialAreas.findOne(id);
     if(specialArea && specialArea.stocks) {
-      if(specialArea.stocks.length > 0) {
-        var stocktakes = Stocktakes.find({
-          $and: [
-            {"stockId": {$in: specialArea.stocks}},
-            {"version": Session.get("thisVersion")},
-            {"specialArea": id},
-            {'generalArea': Session.get("activeGArea")}        
-          ]
-        }).fetch();
+      if(specialArea.stocks.length > 0 && stocktakes.length > 0) {
         var stocks = Ingredients.find({"_id": {$in: specialArea.stocks}, "status": "active"}).fetch();
         if(stocks && stocks.length > 0) {
           sProgress = (stocktakes.length/stocks.length) * 100;
@@ -62,11 +54,11 @@ component.state.widthofBar = function() {
     }
     return (gProgress + "%");
   }
-}
+};
 
 component.state.editable = function() {
   return Session.get("editStockTake");
-}
+};
 
 component.prototype.onItemRendered = function() {
 };
