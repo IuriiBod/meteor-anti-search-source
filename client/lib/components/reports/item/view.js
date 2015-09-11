@@ -4,8 +4,11 @@ function shiftWorkTimeUpdate(id, newValue) {
     var time = shift.shiftDate;
     var newHours = moment(newValue).format("HH");
     var newMins = moment(newValue).format("mm");
-
+    if(newMins <= 0) {
+      newMins = 0;
+    }
     var newTime = moment(time).set("hour", newHours).set("minute", newMins);
+    console.log(newTime);
     return newTime;
     
   }
@@ -27,6 +30,7 @@ Template.teamHoursItem.events({
         var self = this;
         var id = $(self).data("shift");
         var time = $(self).data("time");
+        console.log(".....", newValue);
         var newTime = shiftWorkTimeUpdate(id, newValue);
         newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
         Meteor.call("editClock", id, {"startedAt": new Date(newTime).getTime()}, function(err) { 
@@ -50,6 +54,9 @@ Template.teamHoursItem.events({
       url: '/post',
       display: false,
       showbuttons: true,
+      combodate: {
+        minuteStep: 5
+      },
       mode: 'inline',
       success: function(response, newValue) {
         var self = this;
