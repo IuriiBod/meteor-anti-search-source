@@ -123,16 +123,8 @@ li > img {
   max-width: 100px;
 }
 
-.caret-pulled-right {
+.caret {
   position: relative;
   bottom: 17px;
   right: 10px;
-}
-
-.label-success a {
-  color: #FFFFFF;
-}
-
-.chosen-select-width, .chosen-single, .chosen-drop {
-  min-width: 200px;
 }
