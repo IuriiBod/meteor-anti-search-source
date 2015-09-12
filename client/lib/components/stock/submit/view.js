@@ -4,9 +4,9 @@ Template.submitIngredient.events({
     var code = $(event.target).find('[name=code]').val().trim();
     var desc = $(event.target).find('[name=desc]').val().trim();
     var supplier = $(event.target).find('[name=supplier]').val().trim();
-    var portionOrdered = $(event.target).find('[name=portionOrdered]').val().trim();
+    var portionOrdered = $(event.target).find('[name=portionOrdered]').val();
     var costPerPortion = $(event.target).find('[name=costPerPortion]').val();
-    var portionUsed = $(event.target).find('[name=portionUsed]').val().trim();
+    var portionUsed = $(event.target).find('[name=portionUsed]').val();
     var unitSize = $(event.target).find('[name=unitSize]').val().trim();
 
     if(!code) {

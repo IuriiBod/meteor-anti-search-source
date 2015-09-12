@@ -18,3 +18,11 @@ component.action.submit = function(event, info) {
 component.state.suppliers = function() {
   return Suppliers.find({}, {sort: {"name": 1}});
 }
+
+component.state.unitsOrdered = function() {
+  return OrderingUnits.find();
+}
+
+component.state.unitsUsed = function() {
+  return UsingUnits.find();
+}
