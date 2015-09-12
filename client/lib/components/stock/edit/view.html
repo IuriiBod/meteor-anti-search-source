@@ -46,16 +46,15 @@
             <label class="col-sm-4 control-label">Portion Ordered (b)</label>
             <div class="col-sm-6">
               {{#if state$isManagerOrAdmin}}
-              <input type="text" name="portionOrdered" class="form-control" placeholder="Add unit ordered" value="{{item.portionOrdered}}">
+              <select name="portionOrdered" class="form-control">
+                <option selected="selected">{{item.portionOrdered}}</option>
+                {{#each state$unitsOrdered}}
+                  <option>{{unit}}</option>
+                {{/each}}
+              </select>
               {{else}}
               <div class="form-control">{{item.portionOrdered}}</div>
               {{/if}}
-              <!-- <select name="unitOrdered" class="form-control">
-                <option selected="selected">packets</option>
-                <option>boxes</option>
-                <option>bottles</option>
-                <option>etc...</option>
-              </select> -->
             </div>
           </div>
           <div class="form-group">
@@ -75,17 +74,15 @@
             <label class="col-sm-4 control-label">Portion Used</label>
             <div class="col-sm-6 ">
               {{#if state$isManagerOrAdmin}}
-              <input type="text" name="portionUsed" class="form-control" placeholder="Portion used" value="{{item.portionUsed}}">
+              <select name="portionUsed" class="form-control">
+                <option selected="selected">{{item.portionUsed}}</option>
+                {{#each state$unitsUsed}}
+                  <option>{{unit}}</option>
+                {{/each}}
+              </select>
               {{else}}
               <div class="form-control">{{item.portionUsed}}</div>
               {{/if}}
-              <!-- <select name="portionUsed" class="form-control">
-                <option>kg (kilo grams)</option>
-                <option selected="selected">g (grams)</option>
-                <option>mg (mili grams)</option>
-                <option>ml (mili liters)</option>
-                <option>l (liters)</option>
-              </select> -->
             </div>
           </div>
           <div class="form-group">
@@ -108,18 +105,10 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>
-                        Name
-                      </th>
-                      <th>
-                        Active Time (mins)
-                      </th>
-                      <th>
-                        Portions
-                      </th>
-                      <th>
-                        Shelf Life
-                      </th>
+                      <th>Name</th>
+                      <th>Active Time (mins)</th>
+                      <th>Portions</th>
+                      <th>Shelf Life</th>
                     </tr>
                   </thead>
                   {{# each state$relatedJobs}}
@@ -130,15 +119,9 @@
                             {{name}}
                           </a>
                         </td>
-                        <td>
-                          {{state$convertTime activeTime}}
-                        </td>
-                        <td>
-                          {{portions}}
-                        </td>
-                        <td>
-                          {{shelfLife}}
-                        </td>
+                        <td>{{state$convertTime activeTime}}</td>
+                        <td>{{portions}}</td>
+                        <td>{{shelfLife}}</td>
                       </tr>
                     </tbody>
                   {{/ each}}

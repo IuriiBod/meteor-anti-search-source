@@ -122,3 +122,9 @@ li > img {
 .ordering_count .editable-input input {
   max-width: 100px;
 }
+
+.caret-pulled-right {
+  position: relative;
+  bottom: 17px;
+  right: 10px;
+}

@@ -69,3 +69,23 @@ component.state.isArchive = function() {
     }
   }
 }
+
+component.state.unitsOrdered = function() {
+  var id = Session.get("thisIngredientId");
+  var ing = Ingredients.findOne(id);
+  var thisIngId = null;
+  if(ing) {
+    thisIngId = ing.portionOrdered;
+  }
+  return OrderingUnits.find({"_id": {$nin: [thisIngId]}});
+}
+
+component.state.unitsUsed = function() {
+  var id = Session.get("thisIngredientId");
+  var ing = Ingredients.findOne(id);
+  var thisIngId = null;
+  if(ing) {
+    thisIngId = ing.portionUsed;
+  }
+  return UsingUnits.find({"_id": {$nin: [thisIngId]}});
+}

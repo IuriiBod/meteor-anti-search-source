@@ -16,10 +16,7 @@ component.state.name = function() {
 
 component.state.assignedWorker = function() {
   if(this.shift) {
-    var user = Meteor.users.findOne(this.shift.assignedTo);
-    if(user) {
-      return user.username;
-    }
+    return this.shift.assignedTo
   }
 }
 

@@ -1,9 +1,9 @@
 <template name="userDetailed">
   <tr data-id="{{state$user._id}}">
     {{#if state$permittedManagerAndAdmin}}
-    <td style="{{state$userStyle}}"><a href="/user/profile/{{state$user._id}}">{{state$user.username}}</a></td>
+    <td style="{{state$userStyle}}"><a href="/user/profile/{{state$user._id}}">{{username state$user._id}}</a></td>
     {{else}}
-    <td style="{{state$userStyle}}">{{state$user.username}}</td>
+    <td style="{{state$userStyle}}">{{username state$user._id}}</td>
     {{/if}}
     <td>{{{state$type}}}</td>
     <td>{{state$email}}</td>

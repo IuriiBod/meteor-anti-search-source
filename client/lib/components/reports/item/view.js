@@ -4,8 +4,11 @@ function shiftWorkTimeUpdate(id, newValue) {
     var time = shift.shiftDate;
     var newHours = moment(newValue).format("HH");
     var newMins = moment(newValue).format("mm");
-
+    if(newMins <= 0) {
+      newMins = 0;
+    }
     var newTime = moment(time).set("hour", newHours).set("minute", newMins);
+    console.log(newTime);
     return newTime;
     
   }
@@ -17,10 +20,12 @@ Template.teamHoursItem.events({
     $('.editShiftStart').editable({
       type: 'combodate',
       title: 'Select time',
+      defaultValue: new Date().getTime(),
       template: "HH:mm",
       viewformat: "HH:mm",
       format: "YYYY-MM-DD HH:mm",
-      display: false,
+      display: true,
+      autotext: 'auto',
       showbuttons: true,
       mode: 'inline',
       success: function(response, newValue) {
@@ -47,9 +52,13 @@ Template.teamHoursItem.events({
       template: "HH:mm",
       viewformat: "HH:mm",
       format: "YYYY-MM-DD HH:mm",
-      url: '/post',
       display: false,
+      autotext: 'auto',
+      defaultValue: new Date(),
       showbuttons: true,
+      combodate: {
+        minuteStep: 5
+      },
       mode: 'inline',
       success: function(response, newValue) {
         var self = this;

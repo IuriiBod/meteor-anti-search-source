@@ -14,7 +14,7 @@
       {{/if}}
     </td>
     <td>{{dateFormat state$receipt.date}}</td>
-    <td>{{Username state$receipt.orderPlacedBy}}</td>
+    <td>{{username state$receipt.orderPlacedBy}}</td>
     <td>{{dateFormat state$receipt.expectedDeliveryDate}}</td>
     <td>
       {{#if state$received}}
@@ -25,7 +25,7 @@
     </td>
     <td>
       {{#if state$received}}
-        {{Username state$receipt.receivedBy}}
+        {{username state$receipt.receivedBy}}
       {{else}}
         -NA-
       {{/if}}
