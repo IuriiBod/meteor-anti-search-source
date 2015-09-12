@@ -2,8 +2,7 @@ Template.editIngredientItem.helpers({
   'item': function() {
     var id = Session.get("thisIngredientId");
     if(id) {
-      var ing = Ingredients.findOne(id);
-      return ing;
+      return Ingredients.findOne(id);
     }
   }
 });
@@ -14,8 +13,10 @@ Template.editIngredientItem.events({
     var id = $(event.target).attr("data-id");
     var code = $(event.target).find('[name=code]').val().trim();
     var desc = $(event.target).find('[name=desc]').val().trim();
+    var supplier = $(event.target).find('[name=supplier]').val().trim();
+    var portionOrdered = $(event.target).find('[name=portionOrdered]').val();
     var costPerPortion = $(event.target).find('[name=costPerPortion]').val().trim();
-    var unitSize = $(event.target).find('[name=unitSize]').val().trim();
+    var portionUsed = $(event.target).find('[name=portionUsed]').val();
 
     if(!code) {
       return alert("Code must have a value");
@@ -64,7 +65,6 @@ Template.editIngredientItem.events({
     var selector = {
       limit: 30
     };
-    var params = {};
     if(Router.current().params.type == "archive") {
       selector.status = "archived";
     } else {

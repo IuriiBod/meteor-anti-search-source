@@ -46,7 +46,12 @@
             <label class="col-sm-4 control-label">Portion Ordered (b)</label>
             <div class="col-sm-6">
               {{#if canEditStock}}
-                <input type="text" name="portionOrdered" class="form-control" placeholder="Add unit ordered" value="{{item.portionOrdered}}">
+              <select name="portionOrdered" class="form-control">
+                <option selected="selected">{{item.portionOrdered}}</option>
+                {{#each state$unitsOrdered}}
+                  <option>{{unit}}</option>
+                {{/each}}
+              </select>
               {{else}}
                 <div class="form-control">{{item.portionOrdered}}</div>
               {{/if}}
@@ -69,7 +74,12 @@
             <label class="col-sm-4 control-label">Portion Used</label>
             <div class="col-sm-6 ">
               {{#if canEditStock}}
-                <input type="text" name="portionUsed" class="form-control" placeholder="Portion used" value="{{item.portionUsed}}">
+              <select name="portionUsed" class="form-control">
+                <option selected="selected">{{item.portionUsed}}</option>
+                {{#each state$unitsUsed}}
+                  <option>{{unit}}</option>
+                {{/each}}
+              </select>
               {{else}}
                 <div class="form-control">{{item.portionUsed}}</div>
               {{/if}}
