@@ -1,15 +1,21 @@
 var component = FlowComponents.define('ingredientItemEdit', function(props) {
-  this.id = props.ingredient._id;
-  var item = getIngredientItem(this.id);
-  if(item) {
-    this.ingredient = item;
-    this.quantity = props.ingredient.quantity;
-  }
+  this.id = props.id;
+  this.quantity = 1;
 });
 
 component.state.item = function() {
-  return this.ingredient;
-}
+  var item = Ingredients.findOne(this.id);
+  if(item) {
+    return item;
+  }
+};
+
+component.state.unitPrice = function() {
+  var item = getIngredientItem(this.id);
+  if(item) {
+    return item.costPerPortionUsed;
+  }
+};
 
 component.state.quantity = function() {
   if(this.quantity) {
@@ -17,4 +23,4 @@ component.state.quantity = function() {
   } else {
     return 1;
   }
-}
+};
