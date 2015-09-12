@@ -14,7 +14,7 @@ component.state.thisorigin = function() {
 };
 
 component.state.section = function() {
-  return Sections.findOne(this.shift.section);
+  return this.shift.section;
 };
 
 component.state.assignedTo = function() {
