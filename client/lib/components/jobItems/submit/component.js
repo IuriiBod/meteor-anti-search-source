@@ -1,4 +1,7 @@
+LocalJobItem =  new Mongo.Collection(null);
+
 var component = FlowComponents.define('submitJobItem', function(props) {
+  this.onRendered(this.onFormRendered);
 });
 
 component.state.initialHTML = function() {
@@ -66,4 +69,25 @@ component.action.submit = function(info) {
 
 component.state.jobtypes = function() {
   return JobTypes.find();
+}
+
+component.prototype.onFormRendered = function() {
+  var prep = JobTypes.findOne({"name": "Prep"});
+  if(prep) {
+    Session.set("jobType", prep._id);
+  }
+  Session.set("frequency", "Daily");
+  Session.set("checklist", []);
+  Session.set("localId", insertLocalJobItem());
+}
+
+insertLocalJobItem = function() {
+  var typeId = Session.get("jobType");
+  LocalJobItem.remove({});
+  if(typeId) {
+    var type = JobTypes.findOne(typeId);
+    if(type && type.name == "Prep") {
+      return LocalJobItem.insert({"type": typeId, "ings": []});
+    }
+  }
 }

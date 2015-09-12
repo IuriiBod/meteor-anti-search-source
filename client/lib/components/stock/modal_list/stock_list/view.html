@@ -22,7 +22,7 @@
               </thead>
              <tbody>
                 {{#each state$getIngredients}}
-                  {{> render component='stockModalItem' stock=this}}
+                  {{> render component='stockModalItem' stock=this name=state$name}}
                 {{/each}}
               </tbody>
 
