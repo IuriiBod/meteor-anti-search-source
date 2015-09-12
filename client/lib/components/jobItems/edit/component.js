@@ -10,6 +10,7 @@ var component = FlowComponents.define('editJobItem', function (props) {
   var typeId = this.item.type;
   var type = JobTypes.findOne({_id: typeId});
   this.set('type', type.name);
+  this.onRendered(this.onFormRendered);
 });
 
 component.state.initialHTML = function () {
@@ -67,10 +68,6 @@ component.state.item = function () {
 
 component.state.step = function () {
   return this.item.step || 2;
-};
-
-component.state.ingredients = function () {
-  return this.item.ingredients;
 };
 
 component.state.jobTypes = function () {
@@ -285,3 +282,31 @@ component.state.isArchive = function() {
     }
   }
 }
+
+component.prototype.onFormRendered = function() {
+  Session.set("localId", updateLocalJobItem());
+}
+
+updateLocalJobItem = function() {
+  var jobItemId = Session.get("thisJobItem");
+  LocalJobItem.remove({});
+  if(jobItemId) {
+    var jobItem = JobItems.findOne(jobItemId);
+    if(jobItem) {
+      var ings = [];
+      if(jobItem.ingredients.length > 0) {
+        jobItem.ingredients.forEach(function(item) {
+          if(ings.indexOf(item._id) < 0) {
+            ings.push(item._id);
+          }
+        });
+      }
+      var type = jobItem.type;
+      var itemType = JobTypes.findOne(type);
+      if(itemType && itemType.name == "Prep") {
+        return LocalJobItem.insert({"_id": jobItemId, "type": type, "ings": ings});
+      }
+    }
+  }
+}
+
