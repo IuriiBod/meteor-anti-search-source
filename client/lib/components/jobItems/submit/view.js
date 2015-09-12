@@ -1,15 +1,4 @@
 Template.submitJobItem.helpers({
-  ingredientsList: function() {
-    var ing = Session.get("selectedIngredients");
-    if(ing) {
-      if(ing.length > 0) {
-        Meteor.subscribe("ingredients", ing);
-        var ingredientsList = Ingredients.find({'_id': {$in: ing}});
-        return ingredientsList;
-      }
-    }
-  },
-
   isPrep: function() {
     var id = Session.get("jobType");
     var type = JobTypes.findOne(id);
@@ -84,6 +73,7 @@ Template.submitJobItem.events({
 
   'submit form': function(event) {
     event.preventDefault();
+    var local
     var name = $(event.target).find('[name=name]').val().trim();
     var typeId = $(event.target).find('[name=type]').val();
     var typeDoc = JobTypes.findOne(typeId);
@@ -286,6 +276,7 @@ Template.submitJobItem.events({
     var type = $(event.target).val();
     Session.set("jobType", type);
     Session.set("frequency", "Daily");
+    Session.set("localId", insertLocalJobItem());
   },
 
   'change .changeFrequency': function(event) {
@@ -346,13 +337,4 @@ Template.submitJobItem.events({
     Session.set("checklist", listItems);
     var item = $(event.target).closest("li").remove();
   }
-});
-
-Template.submitJobItem.onRendered(function() {
-  var prep = JobTypes.findOne({"name": "Prep"});
-  if(prep) {
-    Session.set("jobType", prep._id);
-  }
-  Session.set("frequency", "Daily");
-  Session.set("checklist", []);
 });

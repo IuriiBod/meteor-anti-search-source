@@ -12,15 +12,27 @@ var component = FlowComponents.define('stocksModalList', function(props) {
   this.IngredientsSearch = new SearchSource('ingredients', fields, options);
 });
 
+component.state.name = function() {
+  return this.name;
+}
+
 component.prototype.setIds = function() {
   var ids = [];
-  if(this.item) {
-    if(this.item.ingredients && this.item.ingredients.length > 0) {
-      this.item.ingredients.forEach(function(doc) {
-        ids.push(doc._id);
-      });
-    } else if(this.item.stocks && this.item.stocks.length > 0) {
-      ids = this.item.stocks;
+  if(this.name == "stockModal") {
+    if(this.item) {
+      if(this.item.ingredients && this.item.ingredients.length > 0) {
+        this.item.ingredients.forEach(function(doc) {
+          ids.push(doc._id);
+        });
+      } else if(this.item.stocks && this.item.stocks.length > 0) {
+        ids = this.item.stocks;
+      }
+    }
+  } else if(this.name == "editJob") {
+    var localJobItemId = Session.get("localId");
+    var localJobItem = LocalJobItem.findOne(localJobItemId);
+    if(localJobItem && localJobItem.ings.length > 0) {
+      ids = localJobItem.ings;
     }
   }
   this.set("ids", ids);
@@ -33,7 +45,7 @@ component.prototype.renderShowIngList = function() {
 
     if(self.name) {
       if(self.name == "editJob") {
-        self.item = JobItems.findOne(id);
+        self.item = JobItems.findOne(Session.get("localId"));
       } else if(self.name == "editMenu") {
         self.item = MenuItems.findOne(id);
       } else if(self.name == "stockModal") {
