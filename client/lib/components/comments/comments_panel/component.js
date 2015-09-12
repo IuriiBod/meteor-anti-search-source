@@ -1,11 +1,12 @@
 var component = FlowComponents.define('commentsPanel', function(props) {
   this.referenceId = props.id;
   this.refType = props.type;
+  subs.subscribe("usersList");
 });
 
 component.state.commentsExist = function() {
   var item = this.referenceId;
-  var count = Comments.find({"reference": item}, {sort: {"createdOn": 1}}).count();
+  var count = Comments.find({"reference": item}).count();
   if(count > 0) {
     return true;
   } else {
@@ -23,6 +24,6 @@ component.state.type = function() {
 
 component.state.commentsList = function() {
   var item = this.referenceId;
-  var comments = Comments.find({"reference": item}).fetch();
+  var comments = Comments.find({"reference": item}, {sort: {"createdOn": 1}}).fetch();
   return comments;
 };
