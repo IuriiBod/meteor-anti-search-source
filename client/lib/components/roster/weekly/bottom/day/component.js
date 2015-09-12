@@ -64,6 +64,7 @@ component.state.isTemplate = function() {
 };
 
 component.prototype.onListRendered = function() {
+  var self = this;
   var user = Meteor.user();
   $(".col-lg-13:first").css("margin-left", "0px");
   if(user.isAdmin || Meteor.isManager) {
@@ -102,13 +103,10 @@ component.prototype.onListRendered = function() {
       });
     });
 
-
     $(".sortable-list").on("sortreceive", function(event, ui) {
-
-      var self = this;
       var id = $(ui.item[0]).find("li").attr("data-id");//shiftid
       var newDate = $(this).attr("data-date")//date of moved list
-      if(origin == "weeklyrostertemplate") {
+      if(self.origin == "weeklyrostertemplate") {
         var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         newDate = parseInt(daysOfWeek.indexOf(newDate));
       }

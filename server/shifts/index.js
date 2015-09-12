@@ -141,7 +141,7 @@ Meteor.methods({
     }
 
     if(info.order) {
-      updateDoc['order'] = parseFloat(info.order);
+      updateDoc.order = parseFloat(info.order);
     }
 
     if(info.assignedTo) {
@@ -164,13 +164,10 @@ Meteor.methods({
       updateDoc.assignedTo = info.assignedTo;
     }
 
-    if(Object.keys(updateDoc).length <= 0) {
-      logger.error("Shift has nothing to be updated");
-      throw new Meteor.Error(401, "Shift has nothing to be updated");
+    if(Object.keys(updateDoc).length > 0) {
+      Shifts.update({'_id': id}, {$set: updateDoc});
+      logger.info("Shift details updated", {"shiftId": id});
     }
-
-    Shifts.update({'_id': id}, {$set: updateDoc});
-    logger.info("Shift details updated", {"shiftId": id});
   },
 
   'deleteShift': function(id) {
