@@ -39,6 +39,13 @@ Meteor.methods({
       type = info.type;
     }
 
+    var order = 0;
+    var shifts = Shifts.find({"shiftDate": new Date(info.shiftDate).getTime()}).fetch();
+    if(shifts) {
+      order = shifts.length;
+    }
+
+
     var doc = {
       "startTime": new Date(info.startTime).getTime(),
       "endTime": new Date(info.endTime).getTime(),
@@ -50,7 +57,8 @@ Meteor.methods({
       "jobs": [],
       "status": "draft",
       "type": type,
-      "published": false
+      "published": false,
+      "order": order
     }
     if(info.hasOwnProperty("week") && info.week.length > 0) {
       var alreadyPublished = Shifts.findOne({"shiftDate": {$in: info.week}, "published": true});
@@ -170,6 +178,11 @@ Meteor.methods({
         updateDoc.shiftDate = new Date(info.shiftDate).getTime();
       }
     }
+
+    if(info.order) {
+      updateDoc['order'] = parseFloat(info.order);
+    }
+
     if(info.assignedTo) {
       var date = null;
       if(updateDoc.shiftDate) {
