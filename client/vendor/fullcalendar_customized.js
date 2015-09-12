@@ -3419,13 +3419,21 @@ var Grid = fc.Grid = RowRenderer.extend({
         if(shift.assignedTo) {
           var assignedTo = Meteor.users.findOne(shift.assignedTo);
           if(assignedTo) {
-            options += '<option selected="selected" value=' + assignedTo._id + '>' + assignedTo.username + '</option>'
+            var assignedUsersname = assignedTo.username;
+            if(assignedTo.profile.firstname && assignedTo.profile.lastname) {
+              assignedUsersname = assignedTo.profile.firstname + " " + assignedTo.profile.lastname;
+            }
+            options += '<option selected="selected" value=' + assignedTo._id + '>' + assignedUsersname + '</option>'
           }
         } else {
           options = '<option selected="selected" value="">Select worker</option>';
         }
         workers.forEach(function(worker) {
-          options += '<option value=' + worker._id + '>' + worker.username + '</option>'
+          var workername = worker.username;
+          if(worker.profile.firstname && worker.profile.lastname) {
+            workername = worker.profile.firstname + " " + worker.profile.lastname;
+          }
+          options += '<option value=' + worker._id + '>' + workername + '</option>'
         });
         if(shift.assignedTo) {
           options += '<option value="">Remove</option>'

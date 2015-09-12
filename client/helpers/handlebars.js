@@ -113,9 +113,13 @@ UI.registerHelper("jobTypeById", function(id) {
 });
 
 UI.registerHelper("sectionById", function(id) {
-  var section = Sections.findOne(id);
-  if(section) {
-    return section.name;
+  if(id) {
+    var section = Sections.findOne(id);
+    if(section) {
+      return section.name;
+    }
+  } else {
+    return "Open";
   }
 });
 
@@ -144,10 +148,14 @@ UI.registerHelper("formatCurrency", function(amount) {
   }
 });
 
-UI.registerHelper("Username", function(userId) {
+UI.registerHelper("username", function(userId) {
   var user = Meteor.users.findOne(userId);
   if(user) {
-    return user.username;
+    if(user.profile.firstname && user.profile.lastname) {
+      return user.profile.firstname + " " + user.profile.lastname;
+    } else {
+      return user.username;
+    }
   }
 });
 

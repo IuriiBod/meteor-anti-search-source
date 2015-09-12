@@ -3,10 +3,10 @@ var component = FlowComponents.define("userBio", function (props) {
   this.onClick = props.onClick;
 });
 
-component.state.username = function () {
+component.state.userId = function () {
   var user = this.get("user");
   if (user) {
-    return user.username;
+    return user._id;
   }
 };
 

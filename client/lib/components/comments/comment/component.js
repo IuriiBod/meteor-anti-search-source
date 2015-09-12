@@ -6,7 +6,6 @@ var component = FlowComponents.define("comment", function(props) {
 component.prototype.userDetails = function() {
   var user = Meteor.users.findOne(this.comment.createdBy);
   if(user) {
-    this.set("username", user.username);
     var image = "/images/user-image.jpeg";
     if(user.services && user.services.google) {
       image = user.services.google.picture;
@@ -15,10 +14,8 @@ component.prototype.userDetails = function() {
   }
 }
 
-component.state.name = function() {
-  if(this.get("username")) {
-    return this.get("username");
-  }
+component.state.createdBy = function() {
+  return this.comment.createdBy;
 }
 
 component.state.profilePicture = function() {

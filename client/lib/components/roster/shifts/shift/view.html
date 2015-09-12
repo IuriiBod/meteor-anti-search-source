@@ -12,12 +12,12 @@
             <div class="shiftedWorkers dropdown">
               <select name="workers" class="shiftAssign" data-id="{{state$id}}">
                 {{#if state$assignedWorker}}
-                <option selected="selected" value="{{state$assignedWorker}}">{{state$assignedWorker}}</option>
+                <option selected="selected" value="{{state$assignedWorker}}">{{username state$assignedWorker}}</option>
                 {{else}}
                 <option selected="selected">Select a worker to assign</option>  
                 {{/if}}
                 {{#each state$workers}}
-                <option value="{{_id}}">{{username}}</option>  
+                <option value="{{_id}}">{{username _id}}</option>  
                 {{/each}}
                 {{#if state$assignedWorker}}
                   <option value="null">Remove</option>  
