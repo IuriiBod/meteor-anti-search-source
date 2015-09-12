@@ -20,17 +20,18 @@ Template.teamHoursItem.events({
     $('.editShiftStart').editable({
       type: 'combodate',
       title: 'Select time',
+      defaultValue: new Date().getTime(),
       template: "HH:mm",
       viewformat: "HH:mm",
       format: "YYYY-MM-DD HH:mm",
-      display: false,
+      display: true,
+      autotext: 'auto',
       showbuttons: true,
       mode: 'inline',
       success: function(response, newValue) {
         var self = this;
         var id = $(self).data("shift");
         var time = $(self).data("time");
-        console.log(".....", newValue);
         var newTime = shiftWorkTimeUpdate(id, newValue);
         newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
         Meteor.call("editClock", id, {"startedAt": new Date(newTime).getTime()}, function(err) { 
@@ -51,8 +52,9 @@ Template.teamHoursItem.events({
       template: "HH:mm",
       viewformat: "HH:mm",
       format: "YYYY-MM-DD HH:mm",
-      url: '/post',
       display: false,
+      autotext: 'auto',
+      defaultValue: new Date(),
       showbuttons: true,
       combodate: {
         minuteStep: 5
