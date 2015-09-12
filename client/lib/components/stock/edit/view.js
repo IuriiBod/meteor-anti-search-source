@@ -17,6 +17,7 @@ Template.editIngredientItem.events({
     var portionOrdered = $(event.target).find('[name=portionOrdered]').val();
     var costPerPortion = $(event.target).find('[name=costPerPortion]').val().trim();
     var portionUsed = $(event.target).find('[name=portionUsed]').val();
+    var unitSize = $(event.target).find('[name=unitSize]').val().trim();
 
     if(!code) {
       return alert("Code must have a value");
