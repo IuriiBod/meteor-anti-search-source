@@ -1,5 +1,7 @@
 var component = FlowComponents.define('ingredientItemEdit', function(props) {
   this.id = props.id;
+  this.name = props.name;
+  this.itemId = props.itemId;
   this.quantity = 1;
 });
 
@@ -18,9 +20,19 @@ component.state.unitPrice = function() {
 };
 
 component.state.quantity = function() {
-  if(this.quantity) {
-    return this.quantity;
-  } else {
-    return 1;
+  var id = this.id;
+  var quantity = 1;
+  if(this.name == "editJobItem") {
+    var jobItem = JobItems.findOne({"_id": Session.get("thisJobItem")});
+    if(jobItem) {
+      if(jobItem.ingredients && jobItem.ingredients.length > 0) {
+        $.grep(jobItem.ingredients, function(e) {
+          if(e._id == id) {
+            quantity = e.quantity;
+          }
+        });
+      }
+    } 
   }
+  return quantity;
 };
