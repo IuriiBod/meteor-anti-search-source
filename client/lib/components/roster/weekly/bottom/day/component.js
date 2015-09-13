@@ -1,3 +1,5 @@
+var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
 var component = FlowComponents.define("weeklyRosterDay", function(props) {
   this.name = props.name;
   this.origin = props.origin;
@@ -24,7 +26,6 @@ component.state.shifts = function() {
       sort: { "order": 1 }
     });
   } else if(origin == "weeklyrostertemplate") {
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     return Shifts.find({
       "shiftDate": daysOfWeek.indexOf(this.name),
       "type": "template",
@@ -45,7 +46,6 @@ component.action.addShift = function(day, dates) {
     doc.section = null;
     doc.type = null;
   } else if(this.origin == "weeklyrostertemplate") {
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     doc.startTime = new Date().setHours(8, 0);
     doc.endTime = new Date().setHours(17, 0);
     doc.shiftDate = new Date(daysOfWeek.indexOf(day));
@@ -107,7 +107,6 @@ component.prototype.onListRendered = function() {
       var id = $(ui.item[0]).find("li").attr("data-id");//shiftid
       var newDate = $(this).attr("data-date")//date of moved list
       if(self.origin == "weeklyrostertemplate") {
-        var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         newDate = parseInt(daysOfWeek.indexOf(newDate));
       }
 
@@ -185,7 +184,6 @@ component.prototype.onListRendered = function() {
       var id = $(ui.item[0]).find("li").attr("data-id");//shiftid
       var newDate = $(this).attr("data-date")//date of moved list
       if(self.origin == "weeklyrostertemplate") {
-        var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         newDate = parseInt(daysOfWeek.indexOf(newDate));
       }
 
@@ -218,4 +216,4 @@ component.prototype.onListRendered = function() {
   } else {
     $(".sortable-list > div > li").css("cursor", "default");
   }
-}
+};
