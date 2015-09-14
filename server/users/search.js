@@ -1,5 +1,5 @@
 SearchSource.defineSource('usersSearch', function(searchText, options) {
-  var searchOptions = {};
+  var searchOptions = {sort: {username: 1}};
   var selector = {};
 
   if(options) {
@@ -19,10 +19,12 @@ SearchSource.defineSource('usersSearch', function(searchText, options) {
   }
   if(searchText) {
     var regExp = buildRegExp(searchText);
-    selector.username = regExp;
-    return Meteor.users.find(selector, options).fetch();
+    selector.$or = [];
+    selector.$or.push({username: regExp});
+    selector.$or.push({'emails.0.address': regExp});
+    return Meteor.users.find(selector, searchOptions).fetch();
   } else {
-    return Meteor.users.find({}, options).fetch();
+    return Meteor.users.find({}, searchOptions).fetch();
   }
 });
 

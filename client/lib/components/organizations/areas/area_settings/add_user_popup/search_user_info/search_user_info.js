@@ -1,8 +1,4 @@
 Template.searchUserInfo.helpers({
-  'getUsername': function() {
-    return this.username;
-  },
-
   'getProfilePhoto': function() {
     if(this.services && this.services.google && this.services.google.picture) {
       return this.services.google.picture;

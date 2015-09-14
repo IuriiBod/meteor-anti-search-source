@@ -2,7 +2,8 @@
   <div class="search-user-info-content">
     <img src="{{getProfilePhoto}}" alt="Profile image" class="user-photo-min" />
     <span class="search-user-info-name">
-      {{getUsername}}
+      <b>{{this.username}}</b>
+      ({{this.emails.[0].address}})
     </span>
 
     <i class="fa fa-plus pull-right search-user-info-plus"></i>

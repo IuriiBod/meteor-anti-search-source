@@ -21,7 +21,7 @@ Template.areaSettings.events({
   'click .add-user': function() {
     $('.add-user-popup').toggleClass('show').toggleClass('hide');
     $('input[name="addUserName"]').val('').focus();
-    $('input[name="newUserName"]').val('').addClass('hide');
+    $('input[name="newUserName"]').val('');
     $('.add-user-info').show();
     $('.users-search-results').hide();
   },
@@ -61,8 +61,11 @@ Template.areaSettings.events({
 
   'click .back-to-select-user': function() {
     $('.user-permissions').addClass('hide');
+    $('.add-user-by-email-success').addClass('hide');
     $('.add-user-to-area-form').removeClass('hide');
-    $('.search-result').removeClass('hide');
+    $('[name="addUserName"]').val('').focus().removeClass('hide');
+    $('.add-user-info').removeClass('hide');
+    $('.search-result').addClass('hide');
   },
 
   'mouseenter .user-profile-image-container': function(e) {
