@@ -29,7 +29,7 @@ component.state.shifts = function() {
     return Shifts.find({"shiftDate": new Date(date).getTime(), "type": null}, {sort: {"order": 1}});
   } else if(origin == "weeklyrostertemplate") {
     var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    return Shifts.find({"shiftDate": daysOfWeek.indexOf(this.name), "type": "template"});
+    return Shifts.find({"shiftDate": daysOfWeek.indexOf(this.name), "type": "template"}, {sort: {"order": 1}});
   }
 }
 
