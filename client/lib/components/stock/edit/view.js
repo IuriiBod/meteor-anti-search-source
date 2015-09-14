@@ -63,6 +63,16 @@ Template.editIngredientItem.events({
         console.log(err);
         return alert(err.reason);
       }
+      var stock = Ingredients.findOne(id);
+      var text = "Stock item " + stock.description;
+      if(stock) {
+        if(stock.status == "active") {
+          text += " restored";
+        } else if(stock.status == "archived") {
+          text += " archived";
+        }
+        notification(text);
+      }
     });
     IngredientsListSearch.cleanHistory();
     var selector = {
