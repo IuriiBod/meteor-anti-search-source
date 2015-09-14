@@ -16,15 +16,6 @@ component.state.email = function() {
   }
 };
 
-component.state.image = function() {
-  var user = this.get("user");
-  if(user && user.services && user.services.google) {
-    return user.services.google.picture;
-  } else {
-    return "/images/user-image.jpeg";
-  }
-};
-
 //permitted for profile owner and admins
 component.state.isEditPermitted = function() {
   return HospoHero.isManager() || isMe(this.get('id'));

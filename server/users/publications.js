@@ -1,5 +1,5 @@
 Meteor.publish('profileUser', function (id) {
-  if (this.userId) {
+  if (this.userId && id) {
     var options = {
       "services.google": 1,
       roles: 1,
