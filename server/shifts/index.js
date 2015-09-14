@@ -88,7 +88,6 @@ Meteor.methods({
       }
     }
 
-    console.log("------", doc)
     var id = Shifts.insert(doc);
     logger.info("Shift inserted", {"shiftId": id, "date": info.shiftDate, "type": type});
     return id;
