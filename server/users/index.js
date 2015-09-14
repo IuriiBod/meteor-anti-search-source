@@ -6,6 +6,10 @@ Accounts.onCreateUser(function(options, user){
       user.emails[0].address = user.services.google.email;
       user.emails[0].verified = user.services.google.verified_email;
       user.username = options.profile.name;
+      if(options.profile.picture) {
+        user.profile.image = options.profile.picture;
+      }
+
   }     
   if(!user.profile.name) {
     user.profile.name = user.username;
@@ -160,6 +164,9 @@ Meteor.methods({
     }
     if(editDetails.shiftsPerWeek) {
       query['profile.shiftsPerWeek'] = editDetails.shiftsPerWeek;
+    }
+    if(editDetails.profileImage) {
+      query['profile.image'] = editDetails.profileImage;
     }
     if(Object.keys(query).length > 0) {
       Meteor.users.update({"_id": id}, {$set: query});
