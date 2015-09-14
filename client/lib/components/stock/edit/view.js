@@ -61,6 +61,16 @@ Template.editIngredientItem.events({
       if(err) {
         HospoHero.alert(err);
       }
+      var stock = Ingredients.findOne(id);
+      var text = "Stock item " + stock.description;
+      if(stock) {
+        if(stock.status == "active") {
+          text += " restored";
+        } else if(stock.status == "archived") {
+          text += " archived";
+        }
+        notification(text);
+      }
     });
     IngredientsListSearch.cleanHistory();
     var selector = {

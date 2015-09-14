@@ -317,6 +317,17 @@ Template.pageHeading.events({
       if (err) {
         console.log(err);
         alert(err.reason);
+      } else {
+        var menuItem = MenuItems.findOne(id);
+        if(menuItem) {
+          var text = "Menu item " + menuItem.name;
+          if(menuItem.status == "active") {
+            text += " restored";
+          } else if(menuItem.status == "archived") {
+            text += " archived";
+          }
+          return notification(text);
+        }
       }
     });
   },
@@ -327,6 +338,17 @@ Template.pageHeading.events({
       if (err) {
         console.log(err);
         alert(err.reason);
+      } else {
+        var jobItem = JobItems.findOne(id);
+        if(jobItem) {
+          var text = "Job item " + jobItem.name;
+          if(jobItem.status == "active") {
+            text += " restored";
+          } else if(jobItem.status == "archived") {
+            text += " archived";
+          }
+          return notification(text);
+        }
       }
     });
   },
