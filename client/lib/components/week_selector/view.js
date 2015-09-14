@@ -38,7 +38,6 @@ Template.weekSelector.events({
             "order": shift.order
           }
 
-          console.log(".....info", info);
           Meteor.call("createShift", info, function(err) {
             if(err) {
               console.log(err);
