@@ -1,21 +1,23 @@
 Meteor.publish('profileUser', function(id) {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
+  if(id) {
+    if(!this.userId) {
+      logger.error('User not found : ' + this.userId);
+      this.error(new Meteor.Error(404, "User not found"));
+    }
+    var options = {
+      "services.google": 1,
+      "isAdmin": 1,
+      "isWorker": 1,
+      "isManager": 1,
+      "isActive": 1,
+      "profile": 1,
+      "username": 1,
+      "createdAt": 1
+    }
+    var user = Meteor.users.find({"_id": id}, {fields: options});
+    logger.info("User published ", id);
+    return user;
   }
-  var options = {
-    "services.google": 1,
-    "isAdmin": 1,
-    "isWorker": 1,
-    "isManager": 1,
-    "isActive": 1,
-    "profile": 1,
-    "username": 1,
-    "createdAt": 1
-  }
-  var user = Meteor.users.find({"_id": id}, {fields: options});
-  logger.info("User published ", id);
-  return user;
 });
 
 Meteor.publish("usersList", function() {
