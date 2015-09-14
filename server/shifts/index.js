@@ -19,9 +19,13 @@ Meteor.methods({
     }
 
     var order = 0;
-    var shifts = Shifts.find({"shiftDate": new Date(info.shiftDate).getTime()}).fetch();
-    if(shifts) {
-      order = shifts.length;
+    if(info.hasOwnProperty(order)) {
+      order = parseFloat(info.order);
+    } else {
+      var shifts = Shifts.find({"shiftDate": new Date(info.shiftDate).getTime()}).fetch();
+      if(shifts) {
+        order = shifts.length;
+      }
     }
 
 

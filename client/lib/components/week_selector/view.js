@@ -18,7 +18,7 @@ Template.weekSelector.events({
 
     week.forEach(function(obj) {
       var index = week.indexOf(obj);
-      var shifts = Shifts.find({"shiftDate": index, "type": "template"}).fetch();
+      var shifts = Shifts.find({"shiftDate": index, "type": "template"}, {sort: {"order": 1}}).fetch();
       if(shifts.length > 0) {
         shifts.forEach(function(shift) {
           var startHour = moment(shift.startTime).hour();
@@ -33,8 +33,10 @@ Template.weekSelector.events({
             "shiftDate": moment(obj.date).format("YYYY-MM-DD"),
             "section": shift.section,
             "assignedTo": shift.assignedTo,
-            "week": dates
+            "week": dates,
+            "order": shift.order
           };
+
           Meteor.call("createShift", info, function(err) {
             if(err) {
               HospoHero.alert(err);
