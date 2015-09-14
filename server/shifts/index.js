@@ -40,9 +40,13 @@ Meteor.methods({
     }
 
     var order = 0;
-    var shifts = Shifts.find({"shiftDate": new Date(info.shiftDate).getTime()}).fetch();
-    if(shifts) {
-      order = shifts.length;
+    if(info.hasOwnProperty(order)) {
+      order = parseFloat(info.order);
+    } else {
+      var shifts = Shifts.find({"shiftDate": new Date(info.shiftDate).getTime()}).fetch();
+      if(shifts) {
+        order = shifts.length;
+      }
     }
 
 
@@ -83,6 +87,8 @@ Meteor.methods({
         throw new Meteor.Error(404, "Duplicating shift");
       }
     }
+
+    console.log("------", doc)
     var id = Shifts.insert(doc);
     logger.info("Shift inserted", {"shiftId": id, "date": info.shiftDate, "type": type});
     return id;
