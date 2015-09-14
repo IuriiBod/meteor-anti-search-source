@@ -9,6 +9,24 @@ component.state.basic = function() {
   return user;
 };
 
+component.state.firstName = function() {
+  var user = Meteor.users.findOne(this.get("id"));
+  if(user && user.profile && user.profile.firstname) {
+    return user.profile.firstname;
+  } else {
+    return user.username;
+  }
+}
+
+ component.state.lastName = function() {
+  var user = Meteor.users.findOne(this.get("id"));
+  if(user && user.profile && user.profile.lastname) {
+    return user.profile.lastname;
+  } else {
+    return "";
+  }
+ }
+
 component.state.email = function() {
   var user = this.get("user");
   if(user && user.emails) {
