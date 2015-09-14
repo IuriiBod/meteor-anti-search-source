@@ -1,3 +1,4 @@
+var subs = new SubsManager();
 var component = FlowComponents.define('areaSettings', function(props) {});
 
 component.state.area = function() {
@@ -17,8 +18,32 @@ component.state.getAreaUsers = function() {
 };
 
 component.state.areaUsers = function() {
-  this.get('getAreaUsers');
-  return Session.get('areaUser');
+  subs.subscribe('usersPhoto');
+  var areaId = Session.get('areaId');
+  var area = Areas.find({_id: areaId});
+  var userIds = Relations.find({
+    $or: [
+      { areaIds: areaId },
+      { $and: [
+        { locationIds: area.locationId },
+        { areaIds: null }
+      ]},
+      { $and: [
+        { organizationId: area.organizationId },
+        { locationIds: null },
+        { areaIds: null }
+      ]}
+    ]
+  }, {fields: { entityId: 1 } }).fetch();
+
+  if(userIds.length) {
+    var ids = [];
+    _.map(userIds, function(user) {
+      ids.push(user.entityId);
+    });
+    var users = Meteor.users.find({_id: {$in: ids}}, {fields: { username: 1 }}).fetch();
+    return users;
+  }
 };
 
 component.state.getProfilePhoto = function(id) {
@@ -27,5 +52,28 @@ component.state.getProfilePhoto = function(id) {
     return user.services.google.picture;
   } else {
     return '/images/user-image.jpeg';
+  }
+};
+
+component.state.isOwner = function() {
+  var orgId = Session.get('organizationId');
+  var userId = Meteor.userId();
+  var count = Organizations.find({
+    _id: orgId,
+    owner: userId
+  }).count();
+  if(count > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+component.state.isMe = function (id) {
+  var userId = Meteor.userId();
+  if(id == userId) {
+    return true;
+  } else {
+    return false;
   }
 };

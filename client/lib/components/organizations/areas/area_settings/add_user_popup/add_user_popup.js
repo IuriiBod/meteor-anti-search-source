@@ -11,37 +11,66 @@ Template.addUserPopup.helpers({
       sort: {'name': 1}
     });
     if(data.length == 0) {
-      $('.no-results').show();
-      $('.search-result').hide();
+      $('.no-results').removeClass('hide');
+      $('.search-result').addClass('hide');
     } else {
-      $('.no-results').hide();
-      $('.search-result').show();
+      $('.no-results').addClass('hide');
+      $('.search-result').removeClass('hide');
     }
     return data;
+  },
+
+  'userPermissions': function() {
+    return [
+      {
+        name: 'createEditMenu',
+        title: 'Create/edit menu',
+        description: 'Can create and edit menus'
+      },
+      {
+        name: 'createEditJobs',
+        title: 'Create/edit jobs',
+        description: 'Can create and edit jobs'
+      },
+      {
+        name: 'createEditStocks',
+        title: 'Create/edit stocks',
+        description: 'Can create and edit stocks'
+      }
+    ];
   }
 });
 
 Template.addUserPopup.events({
-  'keyup input[name="add-user-name"]': _.throttle(function(e) {
+  'keyup input[name="addUserName"]': _.throttle(function(e, tpl) {
     var searchVal = $(e.target).val();
     if(searchVal.length == 0) {
-      $('.add-user-info').show();
-      $('.users-search-results').hide();
-    } else if(searchVal.indexOf('@') != -1) {
-      $('.add-user-info').show();
-      $('.users-search-results').hide();
-    } else if(searchVal.length < 3) {
-      $('.add-user-info').hide();
-      $('.users-search-results').show();
-      $('.no-results').show();
-      $('.search-result').hide();
+      tpl.$('.add-user-info').removeClass('hide');
+
+      tpl.$('.no-results').addClass('hide');
     } else {
-      var options = {};
-      options.isActive = true;
-      options.areaId = Session.get('areaId');
-      UsersSearch.search(searchVal, options);
+      tpl.$('.add-user-info').addClass('hide');
+
+      if(searchVal.length < 3) {
+        tpl.$('.no-results').removeClass('hide');
+        tpl.$('.search-result').addClass('hide');
+      } else {
+        tpl.$('.no-results').addClass('hide');
+        tpl.$('.search-result').removeClass('hide');
+
+        var options = {};
+        options.isActive = true;
+        options.areaId = Session.get('areaId');
+        UsersSearch.cleanHistory();
+        UsersSearch.search(searchVal, options);
+      }
     }
-  }, 200)
+  }, 200),
+
+  'submit form': function(e) {
+    e.preventDefault();
+    var email = e.target.addUserName.value;
+  }
 });
 
 Template.addUserPopup.onRendered(function() {

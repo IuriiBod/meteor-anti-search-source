@@ -268,12 +268,12 @@ Meteor.methods({
       text += 'If you have any questions let me know.<br>';
       text += sender.username;
 
-      Email.send({
-        "to": user.emails[0].address,
-        "from": sender.emails[0].address,
-        "subject": "[Hero Chef] Added to the "+ areaName + "area",
-        "html": text
-      });
+      //Email.send({
+      //  "to": user.emails[0].address,
+      //  "from": sender.emails[0].address,
+      //  "subject": "[Hero Chef] Added to the "+ areaName + "area",
+      //  "html": text
+      //});
     }
   }
 });

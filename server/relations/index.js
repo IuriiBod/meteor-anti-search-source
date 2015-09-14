@@ -1,5 +1,5 @@
 Meteor.methods({
-  'addUserToRelation': function (userId, areaId) {
+  'addUserToArea': function (userId, areaId) {
     var area = Areas.findOne({_id: areaId});
     var orgId = area.organizationId;
     var locId = area.locationId;
@@ -28,5 +28,29 @@ Meteor.methods({
       });
     }
     return area;
+  },
+
+  'removeUserFromArea': function(userId, areaId) {
+    var relation = Relations.findOne({
+      collectionName: 'users',
+      entityId: userId
+    });
+
+    if(!relation) {
+      throw new Meteor.Error('User is not in this area!');
+    }
+
+    var areaIds = relation.areaIds;
+    var index = areaIds.indexOf(areaId);
+    areaIds.splice(index, 1);
+    if(areaIds.length == 0) {
+      Relations.remove({_id: relation._id});
+    } else {
+      Relations.update({_id: relation._id}, {
+        $set: {
+          areaIds: areaIds
+        }
+      });
+    }
   }
 });

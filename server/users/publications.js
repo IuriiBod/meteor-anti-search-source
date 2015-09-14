@@ -81,3 +81,7 @@ Meteor.publish("selectedUsers", function(ids) {
   logger.info("Selected users published", ids);
   return cursors;
 });
+
+Meteor.publish('usersPhoto', function() {
+  return Meteor.users.find({}, {fields: {username: 1, services: 1}});
+});

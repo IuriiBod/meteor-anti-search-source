@@ -351,15 +351,15 @@ span {
   z-index: 100;
   position: relative;
 
+  hr {
+    margin: 5px 0 0;
+  }
+
   .no-results {
     padding: 10px 0;
   }
 
   .search-result {
-    hr {
-      margin: 5px 0 0;
-    }
-
     .search-user-info-content {
       padding: 5px;
       margin-top: 5px;
@@ -389,4 +389,20 @@ span {
 
 .area-users {
   padding: 10px;
+}
+
+.user-profile-image-container {
+  display: inline-block;
+  position: relative;
+
+  .remove-user-from-area {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: rgba(0,0,0,0.3);
+    color: #fff;
+    padding: 1px 3px;
+    cursor: pointer;
+    opacity: 0;
+  }
 }
