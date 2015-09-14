@@ -10,7 +10,8 @@
           <h4>
             <strong>
               {{#if state$isEditPermitted}}
-                <a href="#" id="username" data-id="{{state$basic._id}}" class="editable">{{username state$basic._id}}</a>
+                <a href="" id="firstname">{{state$firstName}}</a>
+                <a href="" id="lastname">{{state$lastName}}</a>
               {{else}}
                 {{username state$basic._id}}
               {{/if}}
