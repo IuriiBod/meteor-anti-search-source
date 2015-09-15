@@ -1,6 +1,7 @@
 Template.editIngredientItem.helpers({
   'item': function() {
     var id = Session.get("thisIngredientId");
+    subs.subscribe("ingredients", [id]);
     if(id) {
       var ing = Ingredients.findOne(id);
       return ing;
@@ -54,36 +55,6 @@ Template.editIngredientItem.events({
     e.preventDefault();
     var id = $(e.target).attr("data-id");
     var status = $(e.target).attr("data-status");
-    var state = false;
-    if(status == "delete") {
-      state = true;
-    }
-    Meteor.call("archiveIngredient", id, state, function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
-      }
-      var stock = Ingredients.findOne(id);
-      var text = "Stock item " + stock.description;
-      if(stock) {
-        if(stock.status == "active") {
-          text += " restored";
-        } else if(stock.status == "archived") {
-          text += " archived";
-        }
-        notification(text);
-      }
-    });
-    IngredientsListSearch.cleanHistory();
-    var selector = {
-      limit: 30
-    };
-    var params = {};
-    if(Router.current().params.type == "archive") {
-      selector.status = "archived";
-    } else {
-      selector.status = {$ne: "archived"};
-    }
-    IngredientsListSearch.search("", selector);
+    FlowComponents.callAction("archiveIng", id, status);
   }
 });
