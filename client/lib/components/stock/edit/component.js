@@ -1,12 +1,11 @@
-var subs = new SubsManager();
-
 var component = FlowComponents.define('editIngredientItem', function(props) {});
 
 component.state.id = function() {
-  subs.clear();
   var id = Session.get("thisIngredientId");
-  subs.subscribe("ingredients", [id]);
-  //var ing = Ingredients.findOne(id);
+  var ing = Ingredients.findOne(id);
+  if(ing) {
+    this.set("description", ing.description)
+  }
   return id;
 };
 
@@ -14,7 +13,7 @@ component.state.relatedJobs = function() {
   var id = Session.get("thisIngredientId");
   subs.reset();
   subs.subscribe("ingredientsRelatedJobs", id);
-  return JobItems.find().fetch();
+  return JobItems.find({ "ingredients._id": id }).fetch();
 };
 
 component.state.convertTime = function(time) {
@@ -66,4 +65,40 @@ component.state.unitsUsed = function() {
     thisIngId = ing.portionUsed;
   }
   return UsingUnits.find({"_id": {$nin: [thisIngId]}});
+};
+
+component.action.archiveIng = function(id, state) {
+  subs.subscribe("ingredients", [id]);
+  var self = this;
+  Meteor.call("archiveIngredient", id, state, function(err) {
+    if(err) {
+      HospoHero.alert(err);
+    } else {
+      $("#editIngredientModal").modal("hide");
+      
+      var stock = Ingredients.findOne(id);
+      if(stock) {
+        var text = "Stock item " + stock.description;
+        if(stock.status == "active") {
+          text += " restored";
+        } else if(stock.status == "archived") {
+          text += " archived";
+        }
+        notification(text);
+      } else {
+        notification("Stock item " + self.get("description") + " removed");
+      }
+      
+      IngredientsListSearch.cleanHistory();
+      var selector = {
+        limit: 30
+      };
+      if(Router.current().params.type == "archive") {
+        selector.status = "archived";
+      } else {
+        selector.status = {$ne: "archived"};
+      }
+      IngredientsListSearch.search("", selector);
+    }
+  });
 };
