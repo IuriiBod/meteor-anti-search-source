@@ -50,7 +50,7 @@ Template.areaSettings.events({
             console.log(err);
             return alert(err);
           }
-        })
+        });
       });
     });
     $('.user-permissions').addClass('hide');

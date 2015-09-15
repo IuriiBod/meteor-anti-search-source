@@ -81,10 +81,11 @@ Template.addUserPopup.events({
     var areaId = Session.get('areaId');
     var sender = Meteor.user();
     var senderInfo = {
+      _id: sender._id,
       name: sender.username,
       email: sender.emails[0].address
     };
-    if (!name.trim()) {
+    if (!name.trim() || name.length < 3) {
       tpl.$('.input-group').addClass('has-error');
       tpl.$('input[name="newUserName"]').val('').focus();
     } else {

@@ -41,8 +41,10 @@ component.state.isInOrganization = function() {
 };
 
 component.state.profileName = function() {
-  var user = Meteor.user();
-  return user.username;
+  if(Meteor.userId()) {
+    var user = Meteor.user();
+    return user.username;
+  }
 };
 
 component.state.isOrganizationOwner = function() {

@@ -1,9 +1,10 @@
 Meteor.methods({
-  'createInvitation': function (email, name, senderInfo, areaId) {
+  createInvitation: function (email, name, senderInfo, areaId) {
     var area = Areas.findOne({_id: areaId});
     var invitation = {
       name: name,
       email: email,
+      invitedBy: senderInfo._id,
       areaId: areaId,
       accepted: false,
       createdAt: Date.now()
@@ -27,7 +28,41 @@ Meteor.methods({
     });
   },
 
-  'deleteInvitation': function(id) {
+  deleteInvitation: function(id) {
     Invitations.remove({_id: id});
+  },
+
+  acceptInvitation: function(id, userId) {
+    Invitations.update({_id: id}, {
+      $set: { accepted: true }
+    });
+
+    var invitation = Invitations.findOne({_id: id});
+    var options = {
+      type: 'organization',
+      read: false,
+      title: 'User ' + invitation.name + ' has accept your invitation',
+      createdBy: null,
+      text: null,
+      actionType: 'update',
+      to: invitation.invitedBy
+    };
+    Notifications.insert(options);
+
+    var area = Areas.findOne({_id: invitation.areaId});
+    if(area) {
+      Relations.insert({
+        organizationId: area.organizationId,
+        locationIds: [area.locationId],
+        areaIds: [area._id],
+        entityId: userId,
+        collectionName: "users"
+      });
+    }
+  },
+
+  createInvitedUser: function(user) {
+    var id = Accounts.createUser(user);
+    return id;
   }
 });

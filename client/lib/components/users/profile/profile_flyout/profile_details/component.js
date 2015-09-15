@@ -49,11 +49,13 @@ component.state.isEditPermitted = function() {
 
 //permitted for admin only
 component.state.isAdminAndManagerPermitted = function() {
-  var user = Meteor.user();
-  if(user.isAdmin || user.isManager) {
-    return true;
-  } else {
-    return false;
+  if(Meteor.userId()) {
+    var user = Meteor.user();
+    if(user.isAdmin || user.isManager) {
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
@@ -79,13 +81,15 @@ component.state.shiftsPerWeek = function() {
 };
 
 component.state.hasResignDate = function() {
-  var id = this.get("id");
-  var user = Meteor.users.findOne(id);
-  var resignDate = user.profile.resignDate;
-  if (resignDate) {
-    return true;
-  } else {
-    return false;
+  if(Meteor.userId()) {
+    var id = this.get("id");
+    var user = Meteor.users.findOne(id);
+    var resignDate = user.profile.resignDate;
+    if (resignDate) {
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
