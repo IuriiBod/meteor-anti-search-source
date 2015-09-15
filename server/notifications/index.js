@@ -20,8 +20,8 @@ Meteor.methods({
       return console.log("Notification " + id + " send");
     }
 
-    if (type != "comment" || type != "roster") {
-      if (!itemId) {
+    if(type != "comment" || type != "roster" || type != "newsfeed") {
+      if(!itemId) {
         logger.error('ItemId should have a value');
         throw new Meteor.Error(404, "ItemId should have a value");
       }
@@ -141,7 +141,19 @@ Meteor.methods({
           allSubscribers.push(options.to);
         }
       }
-    }
+    } else if(type == "newsfeed") {
+      if(!options.newsfeedId) {
+        logger.error('Newsfeed Id needed');
+        throw new Meteor.Error(404, "Newsfeed Id needed");
+      }
+      info.refType = options.type;
+      var newsfeed = Newsfeeds.findOne(options.newsfeedId);
+      if(newsfeed) {
+        info.text = [newsfeed.text];
+        info.createdOn = newsfeed.createdOn;
+        info.ref = newsfeed.reference;
+      }
+    } 
 
 
     if (type == "job" || type == "menu" || type == "roster") {
@@ -212,7 +224,7 @@ Meteor.methods({
       "createdBy": user._id,
       "ref": info.week,
       "actionType": "publish"
-    }
+    };
     Notifications.insert(notifi);
     logger.info("Notification sent for weekly roster", to._id);
 
@@ -226,10 +238,9 @@ Meteor.methods({
       "createdBy": user._id,
       "ref": info.week,
       "actionType": "publish"
-    }
+    };
     Notifications.insert(notifiOpen);
     logger.info("Notification sent for open shifts on weekly roster", to._id);
-    return;
   },
 
   'readNotifications': function (id) {

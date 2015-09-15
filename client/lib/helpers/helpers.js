@@ -126,6 +126,7 @@ var helpers = {
     return (a === b);
   },
 
+  // TODO: Merge these two methods and replace it in the project
   getProfileImage: function (userId) {
     userId = userId ? userId : Meteor.userId();
     var user = Meteor.users.findOne(userId);
@@ -136,6 +137,19 @@ var helpers = {
       image = user.services.google.picture;
     }
     return image;
+  },
+
+  profilePicture: function(userId) {
+    var user = Meteor.users.findOne(userId);
+    if (user) {
+      if (user.profile.image) {
+        return user.profile.image;
+      } else if (user.services && user.services.google) {
+        return user.services.google.picture;
+      } else {
+        return "/images/user-image.jpeg";
+      }
+    }
   },
 
   formatCurrency: function (amount) {

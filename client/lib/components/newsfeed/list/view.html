@@ -1,0 +1,18 @@
+<template name="newsFeed">
+  <div class="feed-activity-list">
+    <div class="feed-element">
+      <div class="chat-message-form">
+        <div class="form-group">
+          {{> render component="textArea" placeholder="Share something. Use @ to mention individuals." type="newsFeedMainTextBox" referenceId=""}}
+        </div>
+      </div>
+    </div>
+    {{#if state$newsFeedsExist}}
+      {{#each state$newsFeedsList}}
+        {{> render component="newsFeedPost" post=this}}
+      {{/each}}
+    {{else}}
+      No NewsFeed
+    {{/if}}
+  </div>
+</template>
