@@ -20,9 +20,9 @@ Meteor.methods({
     var Client = Meteor.npmRequire('node-google-prediction');
 
     var client = new Client({
-      claimSetISS: PREDICTION_SETTINGS.serviceEmail,
+      claimSetISS: PREDICTION_SETTINGS.SERVICE_EMAIL,
       //pem should be located in private directory
-      path: assetsFolderAbsolutePath(PREDICTION_SETTINGS.pem)
+      path: assetsFolderAbsolutePath(PREDICTION_SETTINGS.PEM_FILE)
     });
 
     var syncToken = Meteor.wrapAsync(client.accessTokenRequest, client);
