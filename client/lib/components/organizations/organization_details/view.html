@@ -9,8 +9,8 @@
     <div class="row" style="display: block;">
       <div class="col-md-12" style="display: block;">
         <ul class="list-group" style="display: block;">
-          <li class="list-group-item">
-            <span class="badge open-flyout" data-id="changeBillingAccount">
+          <li class="list-group-item open-flyout" data-id="changeBillingAccount">
+            <span class="badge">
               <i class="fa fa-fw fa-angle-right"></i>
             </span>
             Add/edit billing account
@@ -22,4 +22,28 @@
     <hr />
     <button type="button" class="btn btn-danger btn-block delete-organization" data-id="{{state$organizationId}}">Delete Organisation</button>
   </div>
+
+  <!-- Flyout changeBillingAccount -->
+  <div class="theme-config flyout-container" id="changeBillingAccount">
+    <div class="theme-config-box">
+      <div class="skin-setttings">
+        <div class="white-notify-bg">
+          <div class="title clearfix">
+            <a href="#" class="theme-config-close-btn" data-id="changeBillingAccount">
+              <i class="fa fa-angle-right"></i>
+            </a>
+            Change billing account
+          </div>
+          <div class="ibox float-e-margins" style="margin-bottom: 0;">
+            <div class="ibox-content" style="padding-bottom: 10px;">
+              <div class="feed-activity-list">
+                {{> render component="changeBillingAccount"}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Flyout changeBillingAccount -->
 </template>

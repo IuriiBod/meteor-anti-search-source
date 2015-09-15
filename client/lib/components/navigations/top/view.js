@@ -10,6 +10,13 @@ Template.topNavbar.rendered = function(){
       flyout.removeClass('show');
     }
   });
+
+  $('html').click(function (event) {
+    var flyout = $(".flyout-container");
+    if (!flyout.is(event.target) && flyout.has(event.target).length === 0){
+      flyout.removeClass('show');
+    }
+  });
 };
 
 Template.topNavbar.events({
@@ -77,7 +84,7 @@ Template.topNavbar.events({
   },
 
   'click .open-flyout': function(e) {
-    e.preventDefault();
+    e.stopPropagation();
     var id = e.target.dataset.id;
     if(!id) {
       id = e.target.parentNode.dataset.id;
@@ -85,6 +92,14 @@ Template.topNavbar.events({
       id = e.target.parentNode.parentNode.dataset.id;
     }
     $("#"+id).addClass("show");
+  },
+
+  'click .theme-config-close-btn': function(event) {
+    var el = $(event.target);
+    if(el.hasClass('fa')) {
+      el = el.parent();
+    }
+    $("#"+el.attr('data-id')).removeClass("show");
   }
 });
 

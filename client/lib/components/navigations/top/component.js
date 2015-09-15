@@ -17,14 +17,8 @@ component.state.notifications = function() {
   return notifications;
 };
 
-component.state.userAreasAccess = function() {
-  var user;
-  var relation;
-  var organization;
-  user = Meteor.user();
-  relation = Relations.findOne({collectionName: 'users', entityId: user._id});
-  organization = Organizations.findOne(relation.organizationId);
-  return 'Organization: <b>'+organization.name+'</b>';
+component.state.currentArea = function() {
+  return Session.get('currentArea');
 };
 
 component.state.isAdmin = function() {
@@ -36,25 +30,51 @@ component.state.isAdmin = function() {
   }
 };
 
-component.state.belongToOrganization = function() {
-  var userId = Meteor.userId();
-  var relations = Relations.find({collectionName: "users", entityId: userId}).fetch();
+component.state.username = function() {
+  if(Meteor.userId()) {
+    var user = Meteor.user();
+    return user.username;
+  }
+};
 
-  if(relations.length > 0) {
+component.state.relation = function() {
+  var userId = Meteor.userId();
+  var relation = Relations.findOne({collectionName: 'users', entityId: userId});
+  if(relation) {
+    return relation;
+  }
+};
+
+component.state.organization = function() {
+  var relation = this.get('relation');
+  if(relation) {
+    var organization = Organizations.findOne({_id: relation.organizationId});
+    return organization;
+  }
+};
+
+component.state.isOrganizationOwner = function() {
+  var organization = this.get('organization');
+  var userId = Meteor.userId();
+  if(organization && userId) {
+    return (organization.owner == userId);
+  }
+};
+
+component.state.belongToOrganization = function() {
+  var relation = this.get('relation');
+  if(relation) {
     return true;
   } else {
     return false;
   }
 };
 
-component.state.organizationId = function() {
-  var userId = Meteor.userId();
-  var relation = Relations.findOne({collectionName: 'users', entityId: userId});
-  if(relation) {
-    Session.set('organizationId', relation.organizationId);
-    return relation.organizationId;
-  } else {
-    Session.set('organizationId', '');
-    return false;
+component.state.hasLocations = function() {
+  var organization = this.get('organization');
+  if(organization) {
+    var orgId = organization._id;
+    var count = Locations.find({organizationId: orgId}).count();
+    return (count > 0);
   }
 };

@@ -28,9 +28,6 @@ Meteor.methods({
   },
 
   'deleteOrganization': function(id) {
-
-    console.log("ORG ID: ", id);
-
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');

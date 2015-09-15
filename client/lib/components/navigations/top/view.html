@@ -7,10 +7,10 @@
       <ul class="nav navbar-top-links navbar-right">
         {{#if state$belongToOrganization}}
           <li>
-            <a class="count-info open-flyout visible-sm visible-xs" data-id="organizationStructure"><i class="fa fa-sitemap"></i></a>
             <span class="open-flyout welcome-message" data-id="organizationStructure">
-              {{{state$userAreasAccess}}}
+              {{state$currentArea}}
             </span>
+            <a class="count-info open-flyout" data-id="organizationStructure"><i class="fa fa-sitemap"></i></a>
           </li>
         {{else}}
           {{#if isAdmin}}
@@ -42,5 +42,78 @@
       </ul>
     </nav>
   </div>
-  {{> render component="flyouts" organizationId=state$organizationId}}
+
+  <!-- Flyout profileFlyoutLinks -->
+  <div class="theme-config flyout-container" id="profileFlyoutLinks">
+    <div class="theme-config-box">
+      <div class="skin-setttings">
+        <div class="white-notify-bg">
+          <div class="title clearfix">
+            <a href="#" class="theme-config-close-btn" data-id="profileFlyoutLinks">
+              <i class="fa fa-angle-right"></i>
+            </a>
+            {{state$username}}
+          </div>
+          <div class="ibox float-e-margins" style="margin-bottom: 0;">
+            <div class="ibox-content" style="padding-bottom: 10px;">
+              <div class="feed-activity-list">
+                {{>render component='profileFlyoutLinks'}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Flyout profileFlyoutLinks -->
+
+  <!-- Flyout createOrganizationPage -->
+  <div class="theme-config flyout-container" id="createOrganizationPage">
+    <div class="theme-config-box">
+      <div class="skin-setttings">
+        <div class="white-notify-bg">
+          <div class="title clearfix">
+            <a href="#" class="theme-config-close-btn" data-id="createOrganizationPage">
+              <i class="fa fa-angle-right"></i>
+            </a>
+            Create Organization
+          </div>
+          <div class="ibox float-e-margins" style="margin-bottom: 0;">
+            <div class="ibox-content" style="padding-bottom: 10px;">
+              <div class="feed-activity-list">
+                {{>render component='createOrganizationPage'}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Flyout createOrganizationPage -->
+
+  {{#if state$belongToOrganization}}
+    <!-- Flyout organizationStructure -->
+    <div class="theme-config flyout-container" id="organizationStructure">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="organizationStructure">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              {{>organizationButtons isOwner=state$isOrganizationOwner hasLocations=state$hasLocations}}
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{>render component='organizationStructure' organization=state$organization isOrganizationOwner=state$isOrganizationOwner relation=state$relation}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flyout organizationStructure -->
+  {{/if}}
 </template>

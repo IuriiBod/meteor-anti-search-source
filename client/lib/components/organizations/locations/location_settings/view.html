@@ -1,5 +1,29 @@
 <template name="locationSettings">
-  <h1 class="location-name" style="display: inline-block">{{state$location.name}}</h1>
+  <h1 class="location-name" style="display: inline-block" data-id="{{state$location._id}}">{{state$location.name}}</h1>
   <button class="btn btn-primary col-xs-12 open-flyout" data-id="createArea" data-location-id="{{state$location._id}}">Create Area</button>
   <button class="btn btn-danger col-xs-12 delete-location" data-id="{{state$location._id}}">Delete Location</button>
+
+  <!-- Flyout createArea -->
+  <div class="theme-config flyout-container" id="createArea">
+    <div class="theme-config-box">
+      <div class="skin-setttings">
+        <div class="white-notify-bg">
+          <div class="title clearfix">
+            <a href="#" class="theme-config-close-btn" data-id="createArea">
+              <i class="fa fa-angle-right"></i>
+            </a>
+            Add Area
+          </div>
+          <div class="ibox float-e-margins" style="margin-bottom: 0;">
+            <div class="ibox-content" style="padding-bottom: 10px;">
+              <div class="feed-activity-list">
+                {{>render component='createArea' organizationId=state$organizationId locationId=state$location._id}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Flyout createArea -->
 </template>

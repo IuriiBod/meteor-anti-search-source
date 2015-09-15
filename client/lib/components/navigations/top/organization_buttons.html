@@ -1,0 +1,24 @@
+<template name="organizationButtons">
+  <span style="margin-left: 150px;">Organization</span>
+  <span class="pull-right btn btn-sm btn-link open-flyout" data-id="organizationDetailsPage"><i class="fa fa-fw fa-cog"></i></span>
+
+  {{#if isOwner}}
+    <span class="pull-right btn btn-sm btn-link open-flyout" data-id="invitationsList"><i class="fa fa-fw fa-user"></i></span>
+  {{/if}}
+
+  <div class="btn-group pull-right">
+    <button type="button" class="btn dropdown-toggle btn-link" data-toggle="dropdown" aria-expanded="false">
+      <i class="fa fa-fw fa-plus"></i>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li>
+        <a href="#" class="open-flyout" data-id="createLocation">Add Location</a>
+      </li>
+      {{#if hasLocations}}
+        <li>
+          <a href="#" class="open-flyout" data-id="createArea">Add Area</a>
+        </li>
+      {{/if}}
+    </ul>
+  </div>
+</template>
