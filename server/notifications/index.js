@@ -14,7 +14,7 @@ Meteor.methods({
     info.createdBy = userId;
     var allSubscribers = [];
 
-    if(type != "comment" || type != "roster") {
+    if(type != "comment" || type != "roster" || type != "newsfeed") {
       if(!itemId) {
         logger.error('ItemId should have a value');
         throw new Meteor.Error(404, "ItemId should have a value");
@@ -135,7 +135,19 @@ Meteor.methods({
           allSubscribers.push(options.to);
         }
       }
-    }
+    } else if(type == "newsfeed") {
+      if(!options.newsfeedId) {
+        logger.error('Newsfeed Id needed');
+        throw new Meteor.Error(404, "Newsfeed Id needed");
+      }
+      info.refType = options.type;
+      var newsfeed = Newsfeeds.findOne(options.newsfeedId);
+      if(newsfeed) {
+        info.text = [newsfeed.text];
+        info.createdOn = newsfeed.createdOn;
+        info.ref = newsfeed.reference;
+      }
+    } 
 
 
     if(type == "job" || type == "menu" || type == "roster") {

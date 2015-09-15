@@ -14,7 +14,7 @@ Template.submitComment.helpers({
   settings: function() {
     var data = {
       position: "top",
-      limit: 10,
+      // limit: 10,
       rules: [
         {
           token: '@',
