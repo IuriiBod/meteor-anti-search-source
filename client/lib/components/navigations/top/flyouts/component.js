@@ -10,7 +10,7 @@ component.state.organizationTitle = function() {
   content.push('<span class="pull-right btn btn-sm btn-link open-flyout" data-id="organizationDetailsPage"><i class="fa fa-fw fa-cog"></i></span>');
 
   if(this.get('isOrganizationOwner')) {
-    content.push('<span class="pull-right btn btn-sm btn-link open-flyout" data-id="usersPermission"><i class="fa fa-fw fa-user"></i></span>');
+    content.push('<span class="pull-right btn btn-sm btn-link open-flyout" data-id="invitationsList"><i class="fa fa-fw fa-user"></i></span>');
   }
 
   content.push('<div class="btn-group pull-right open">');

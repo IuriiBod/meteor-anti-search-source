@@ -7,12 +7,13 @@ Meteor.publish(null, function(){
     //  entityId: id
     //});
     //if(org) {
-      var cursors = [];
-      cursors.push(Relations.find());
-      cursors.push(Organizations.find());
-      cursors.push(Locations.find());
-      cursors.push(Areas.find());
-      return cursors;
+      return [
+        Relations.find(),
+        Organizations.find(),
+        Locations.find(),
+        Areas.find(),
+        Invitations.find()
+      ];
     //}
   }
 });

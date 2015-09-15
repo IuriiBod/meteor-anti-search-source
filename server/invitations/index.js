@@ -10,7 +10,7 @@ Meteor.methods({
     };
 
     var id = Invitations.insert(invitation);
-    var url = process.env.ROOT_URL + "/invitations/" + id;
+    var url = process.env.ROOT_URL + "invitations/" + id;
 
     var text = "Hi " + name + ",<br><br>";
     text += "You've been added to the " + area.name + " area.<br>";
@@ -25,5 +25,9 @@ Meteor.methods({
       "subject": "[Hero Chef] Added to the "+ area.name + " area",
       "html": text
     });
+  },
+
+  'deleteInvitation': function(id) {
+    Invitations.remove({_id: id});
   }
 });

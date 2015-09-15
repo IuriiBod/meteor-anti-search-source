@@ -3,7 +3,8 @@
   {{#each state$locations}}
     <ul class="list-group" style="display: block;">
       {{#if state$isOwner}}
-        <li class="list-group-item lead open-flyout location-settings" style="display: block; cursor: pointer; " data-id="locationSettings">
+        <li class="list-group-item lead open-flyout location-settings" style="display: block; cursor: pointer; "
+            data-id="locationSettings">
           {{name}}
           <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
         </li>
@@ -15,9 +16,34 @@
       {{#each state$areas _id}}
         <li class="list-group-item" style="display: block;">
           <a href="#" class="change-current-area {{state$currentArea _id}}">{{name}}</a>
-          <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i class="fa fa-fw fa-cog"></i></span>
+          <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i
+            class="fa fa-fw fa-cog"></i></span>
         </li>
       {{/each}}
     </ul>
   {{/each}}
+
+  <!-- Flyout -->
+  <div class="theme-config flyout-container" id="invitationsList">
+    <div class="theme-config-box">
+      <div class="skin-setttings">
+        <div class="white-notify-bg">
+          <div class="title clearfix">
+            <a href="#" class="theme-config-close-btn" data-id="invitationsList">
+              <i class="fa fa-angle-right"></i>
+            </a>
+            Invitations List
+          </div>
+          <div class="ibox float-e-margins" style="margin-bottom: 0;">
+            <div class="ibox-content" style="padding-bottom: 10px;">
+              <div class="feed-activity-list">
+                {{> render component="invitationsList"}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Flyout -->
 </template>
