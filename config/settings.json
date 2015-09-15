@@ -7,6 +7,10 @@
     "Revel": {
       "KEY": "a903d4c06d424a07ad3de99d3eec673c",
       "SECRET": "a3f4b1f2b3a04d8fb7a277267b33086f0e0cbf2dafa444c7a387bf84cf63f034"
+    },
+    "Prediction": {
+      "serviceEmail": "135160182081-plkk2djriqo90v2l41461a9b03qb0tmt@developer.gserviceaccount.com",
+      "pem": "hero-chef-secret.pem"
     }
   }
 }
