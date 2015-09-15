@@ -2,6 +2,7 @@
   "private": {
     "LOCATION": "Ternopil,UA",
     "OpenWeatherMap": {
+      "HOST": "http://api.openweathermap.org",
       "KEY": "a0ddb6e5e4b1de866a439e811195fd11"
     },
     "Revel": {
