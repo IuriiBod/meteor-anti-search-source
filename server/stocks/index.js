@@ -120,7 +120,7 @@ Meteor.methods({
     }
   },
 
-  archiveIngredient: function(id, remove) {
+  archiveIngredient: function(id, status) {
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');
@@ -140,22 +140,9 @@ Meteor.methods({
       logger.error("Item not found");
       throw new Meteor.Error(404, "Item not found");
     }
-    var status = null;
-    if(item.status) {
-      if(item.status == 'active') {
-        status = 'archived';
-      } else if(item.status == 'archived') {
-        if(remove) {
-          status = 'archived';
-        } else {
-          status = 'active';
-        }
-      }
-    } else {
-      status = 'archived';
-    }
 
-    if(status == 'archived') {
+
+    if(status == 'delete') {
       var existInPreps = JobItems.findOne(
         {"type": "Prep", "ingredients": {$elemMatch: {"_id": id}}},
         {fields: {"ingredients": {$elemMatch: {"_id": id}}}}
@@ -181,17 +168,19 @@ Meteor.methods({
       }
 
       if(existInPreps || existInMenuItems || existInStocktakes) {
-        Ingredients.update({"_id": id}, {$set: {"status": status}});
+        throw  new Meteor.Error(404, "Stock item cannot be deleted, archived");
       } else {
         Ingredients.remove(id);
-        logger.info("Ingredient removed", id);
-        return;
+        logger.info("Ingredient deleted", id);
       }
-    } else {
-      Ingredients.update({"_id": id}, {$set: {"status": status}});
+    } else if(status == "archive") {
+      Ingredients.update({"_id": id}, {$set: {"status": "archived"}});
+      logger.error("Stock item archived ", id);
+    } else if(status == "restore") {
+      Ingredients.update({"_id": id}, {$set: {"status": "active"}});
       logger.error("Stock item restored ", id);
-      return;
     }
+    return;
   },
 
   ingredientsCount: function() {
