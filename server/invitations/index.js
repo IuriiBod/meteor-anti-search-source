@@ -19,7 +19,6 @@ Meteor.methods({
     text += "If you have any questions let me know.<br>";
     text += senderInfo.name;
 
-    // TODO: Uncoment later
     Email.send({
       "to": email,
       "from": senderInfo.email,
