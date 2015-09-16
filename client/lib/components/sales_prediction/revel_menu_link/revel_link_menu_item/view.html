@@ -1,12 +1,14 @@
 <template name="revelLinkMenuItem">
-  <div class="row revel-link-menu-item-component">
+  <div class="row list-group-item revel-link-menu-item-component">
     {{#with state$menuItem}}
       <div class="col-md-6">
         {{name}}
       </div>
 
       <div class="col-md-6">
-        <input type="text" class="form-control revel-name-input" value="{{revelName}}">
+        <a href="#" class="edit-revel-name">
+          {{state$revelName}}
+        </a>
       </div>
     {{/with}}
   </div>

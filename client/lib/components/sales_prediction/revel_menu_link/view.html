@@ -1,7 +1,9 @@
 <template name="revelMenuLink">
   <div class="container-fluid revel-menu-link-component">
-    {{#each state$menuItems}}
-      {{> render component='revelLinkMenuItem' menuItem=this}}
-    {{/each}}
+    <div class="list-group">
+      {{#each state$menuItems}}
+        {{> render component='revelLinkMenuItem' menuItem=this}}
+      {{/each}}
+    </div>
   </div>
 </template>
