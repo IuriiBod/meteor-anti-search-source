@@ -1,19 +1,19 @@
-Meteor.publish("menuList", function(categoryId, status) {
-  if(!this.userId) {
+Meteor.publish("menuList", function (categoryId, status) {
+  if (!this.userId) {
     logger.error('User not found : ' + this.userId);
     this.error(new Meteor.Error(404, "User not found"));
   }
   var menuCursor = [];
   var query = {};
-  if(categoryId && categoryId != "all") {
+  if (categoryId && categoryId != "all") {
     var doc = Categories.findOne(categoryId);
-    if(doc) {
+    if (doc) {
       query.category = categoryId;
     }
   }
-  if(status && status != "all" ) {
+  if (status && status != "all") {
     query.status = status;
-  } else if(status && status == "all") {
+  } else if (status && status == "all") {
     query.status = {$ne: "archived"};
   }
   menuCursor = MenuItems.find(query,
@@ -22,9 +22,9 @@ Meteor.publish("menuList", function(categoryId, status) {
   return menuCursor;
 });
 
-Meteor.publish("menuItem", function(id) {
+Meteor.publish("menuItem", function (id) {
   var cursor = [];
-  if(!this.userId) {
+  if (!this.userId) {
     logger.error('User not found : ' + this.userId);
     this.error(new Meteor.Error(404, "User not found"));
   }
@@ -33,8 +33,8 @@ Meteor.publish("menuItem", function(id) {
 
   var menuFetched = menu.fetch()[0];
   var ingIds = [];
-  if(menuFetched.ingredients && menuFetched.ingredients.length > 0) {
-    menuFetched.ingredients.forEach(function(ing) {
+  if (menuFetched.ingredients && menuFetched.ingredients.length > 0) {
+    menuFetched.ingredients.forEach(function (ing) {
       ingIds.push(ing._id);
     });
     var ingCursor = Ingredients.find({"_id": {$in: ingIds}});
@@ -42,8 +42,8 @@ Meteor.publish("menuItem", function(id) {
   }
 
   var prepIds = [];
-  if(menuFetched.jobItems && menuFetched.jobItems.length > 0) {
-    menuFetched.jobItems.forEach(function(prep) {
+  if (menuFetched.jobItems && menuFetched.jobItems.length > 0) {
+    menuFetched.jobItems.forEach(function (prep) {
       prepIds.push(prep._id);
     });
     var prepCursor = JobItems.find({"_id": {$in: prepIds}});
@@ -53,8 +53,8 @@ Meteor.publish("menuItem", function(id) {
   return cursor;
 });
 
-Meteor.publish("menuItems", function(ids) {
-  if(!this.userId) {
+Meteor.publish("menuItems", function (ids) {
+  if (!this.userId) {
     logger.error('User not found : ' + this.userId);
     this.error(new Meteor.Error(404, "User not found"));
   }
@@ -63,4 +63,14 @@ Meteor.publish("menuItems", function(ids) {
   logger.info("Menu items published", ids);
   cursor.push(items);
   return cursor;
+});
+
+Meteor.publish("menuItemsShort", function () {
+  if (isManagerOrAdmin(this.userId)) {
+    //todo: update it according to organization
+    return MenuItems.find({}, {fields: {name: 1, revelName: 1}});
+  } else {
+    this.error(new Meteor.Error(403, 'Access deined!'));
+    logger.error('Access denied for user: ' + this.userId);
+  }
 });
