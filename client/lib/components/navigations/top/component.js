@@ -13,34 +13,23 @@ component.state.count = function() {
 };
 
 component.state.notifications = function() {
-  var notifications = Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
-  return notifications;
+  return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
 };
 
 component.state.currentArea = function() {
-  return Session.get('currentArea');
-};
-
-component.state.isAdmin = function() {
-  var user = Meteor.user();
-  if(user.isAdmin) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-component.state.username = function() {
-  if(Meteor.userId()) {
-    var user = Meteor.user();
-    return user.username;
+  var areaId = Session.get('currentAreaId');
+  if(areaId) {
+    var area = Areas.findOne({_id: areaId}, {fields: {name: 1}});
+    if(area) {
+      return area.name;
+    }
   }
 };
 
 component.state.relation = function() {
   var userId = Meteor.userId();
-  var relation = Relations.findOne({collectionName: 'users', entityId: userId});
-  if(relation) {
+  if(userId) {
+    var relation = Relations.findOne({collectionName: 'users', entityId: userId});
     return relation;
   }
 };

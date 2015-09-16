@@ -1,5 +1,8 @@
 Meteor.methods({
   'sendNotifications': function(itemId, type, options) {
+
+    console.log(itemId);
+
     var userId = Meteor.userId();
     if(!userId) {
       logger.error('No user has logged in');
@@ -13,6 +16,8 @@ Meteor.methods({
     info.title = options.title;
     info.createdBy = userId;
     var allSubscribers = [];
+
+    console.log(itemId);
 
     if(type != "comment" || type != "roster") {
       if(!itemId) {

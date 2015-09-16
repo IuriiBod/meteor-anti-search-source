@@ -5,9 +5,5 @@ Template.userPermissions.events({
 
   'click .back-to-select-user': function() {
     FlowComponents.callAction('backToSelectUser');
-  },
-
-  'click .back-to-select-permissions': function() {
-    FlowComponents.callAction('backToSelectPermissions');
   }
 });

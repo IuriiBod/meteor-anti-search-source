@@ -15,48 +15,6 @@ Template.areaSettings.events({
     FlowComponents.callAction('toggleAddUser');
   },
 
-  'click .add-existing-user': function(e) {
-    var userId = e.target.dataset.id;
-    var areaId = Session.get('areaId');
-    var area = Areas.find({_id: areaId});
-    Meteor.call('addUserToArea', userId, areaId, function(err, area) {
-      if(err) {
-        console.log(err);
-        return err.reason;
-      }
-      var options = {
-        type: 'update',
-        title: 'You\'ve been added to the '+area.name+' area.',
-        to: userId
-      };
-      Meteor.call('sendNotifications', areaId, 'organization', options, function(err) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        }
-        Meteor.call('notifyAddToArea', 'id', userId, area.name, Meteor.user(), function (err) {
-          if(err) {
-            console.log(err);
-            return alert(err);
-          }
-        });
-      });
-    });
-    $('.user-permissions').addClass('hide');
-    $('.search-result').addClass('hide');
-    $('.add-user-to-area-form').removeClass('hide');
-    $('input[name="addUserName"]').val('').focus();
-  },
-
-  'click .back-to-select-user': function() {
-    $('.user-permissions').addClass('hide');
-    $('.add-user-by-email-success').addClass('hide');
-    $('.add-user-to-area-form').removeClass('hide');
-    $('[name="addUserName"]').val('').focus().removeClass('hide');
-    $('.add-user-info').removeClass('hide');
-    $('.search-result').addClass('hide');
-  },
-
   'mouseenter .user-profile-image-container': function(e) {
     $(e.target).find('.remove-user-from-area').css('opacity', 1);
   },

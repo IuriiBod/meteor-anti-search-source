@@ -6,7 +6,7 @@ isManagerOrAdmin = function(user) {
       return false;
     }
   }
-}
+};
 
 isAdmin = function(id) {
   if(id) {
@@ -15,4 +15,4 @@ isAdmin = function(id) {
       return user.isAdmin;
     }
   }
-}
+};

@@ -21,7 +21,7 @@
           {{> render component='searchMasterList' searchText=state$searchText areaId=state$areaId}}
         {{/if}}
       {{else}}
-        {{> render component='userPermissions' selectedUser=state$selectedUser}}
+        {{> render component='userPermissions' selectedUser=state$selectedUser areaId=state$areaId selectPermissions=state$selectPermissions}}
       {{/if}}
     </div>
   </div>

@@ -8,10 +8,7 @@ Template.locationSettings.events({
   },
 
   'click .open-flyout': function(e) {
-    var id;
     var locId;
-    id = e.target.dataset.id;
-    $("#"+id).css('z-index', 10000).addClass("show");
     locId = e.target.dataset.locationId;
     $('select[name="locationId"]>option[value='+locId+']').prop("selected", true);
   }

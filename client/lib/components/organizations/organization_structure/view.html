@@ -6,7 +6,9 @@
         <li class="list-group-item lead open-flyout location-settings" style="display: block; cursor: pointer; "
             data-id="locationSettings">
           {{name}}
-          <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
+          {{#if state$isOrganizationOwner}}
+            <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
+          {{/if}}
         </li>
       {{else}}
         <li class="list-group-item lead" style="display: block;">
@@ -16,8 +18,11 @@
       {{#each state$areas _id}}
         <li class="list-group-item" style="display: block;">
           <a href="#" class="change-current-area{{#if state$currentArea _id}} active{{/if}}">{{name}}</a>
-          <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i
+
+          {{#if state$isOrganizationOwner}}
+            <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i
             class="fa fa-fw fa-cog"></i></span>
+          {{/if}}
         </li>
       {{/each}}
     </ul>
@@ -121,7 +126,7 @@
     <!-- Flyout locationSettings -->
 
     <!-- Flyout areaSettings -->
-    <div class="theme-config flyout-container" id="areaSettings">
+    <div class="theme-config flyout-container" id="areaSettings" style="z-index: 10000;">
       <div class="theme-config-box">
         <div class="skin-setttings">
           <div class="white-notify-bg">
@@ -143,5 +148,29 @@
       </div>
     </div>
     <!-- Flyout areaSettings -->
+
+    <!-- Flyout createArea -->
+    <div class="theme-config flyout-container" id="createArea">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="createArea">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Add Area
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{>render component='createArea' organizationId=state$organization._id locationId=state$location._id}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flyout createArea -->
   {{/if}}
 </template>

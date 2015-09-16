@@ -1,4 +1,4 @@
-Template.topNavbar.rendered = function(){
+Template.topNavbar.rendered = function () {
   // FIXED TOP NAVBAR OPTION
   // Uncomment this if you want to have fixed top navbar
   // $('body').addClass('fixed-nav');
@@ -6,14 +6,17 @@ Template.topNavbar.rendered = function(){
 
   $('html').click(function (event) {
     var flyout = $(".flyout-notifi-container");
-    if (!flyout.is(event.target) && flyout.has(event.target).length === 0){
+    if (!flyout.is(event.target) && flyout.has(event.target).length === 0) {
       flyout.removeClass('show');
     }
   });
 
   $('html').click(function (event) {
     var flyout = $(".flyout-container");
-    if (!flyout.is(event.target) && flyout.has(event.target).length === 0){
+    var sweetAlert = $(".sweet-alert");
+    var sweetOverlay = $(".sweet-overlay");
+
+    if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!sweetAlert.is(event.target) && sweetAlert.has(event.target).length === 0) && (!sweetOverlay.is(event.target) && sweetOverlay.has(event.target).length === 0)) {
       flyout.removeClass('show');
     }
   });
@@ -21,7 +24,7 @@ Template.topNavbar.rendered = function(){
 
 Template.topNavbar.events({
   // Toggle left navigation
-  'click #navbar-minimalize': function(event){
+  'click #navbar-minimalize': function (event) {
     event.preventDefault();
     // Toggle special class
     $("body").toggleClass("mini-navbar");
@@ -46,26 +49,26 @@ Template.topNavbar.events({
   },
 
   // Toggle right sidebar
-  'click .right-sidebar-toggle': function(){
+  'click .right-sidebar-toggle': function () {
     $('#right-sidebar').toggleClass('sidebar-open');
   },
 
-  'click #signInButton': function(event) {
+  'click #signInButton': function (event) {
     event.preventDefault();
     Router.go("signIn");
   },
 
-  'click #signOutButton': function(event) {
+  'click #signOutButton': function (event) {
     event.preventDefault();
     Meteor.logout();
   },
 
-  'click .markAllAsRead': function(event) {
+  'click .markAllAsRead': function (event) {
     event.preventDefault();
     var notifi = Notifications.find({"read": false, "to": Meteor.userId()}).fetch();
-    notifi.forEach(function(not) {
-      Meteor.call("readNotifications", not._id, function(err) {
-        if(err) {
+    notifi.forEach(function (not) {
+      Meteor.call("readNotifications", not._id, function (err) {
+        if (err) {
           console.log(err);
           return alert(err.reason);
         }
@@ -73,9 +76,9 @@ Template.topNavbar.events({
     });
   },
 
-  'click .notifi-toggler': function(event) {
+  'click .notifi-toggler': function (event) {
     event.stopPropagation();
-    if($(".flyout-notifi-container").hasClass("show")) {
+    if ($(".flyout-notifi-container").hasClass("show")) {
       $(".flyout-notifi-container").removeClass("show");
     } else {
       $(".flyout-notifi-container").addClass("show");
@@ -83,52 +86,46 @@ Template.topNavbar.events({
     return false;
   },
 
-  'click .open-flyout': function(e) {
+  'click .open-flyout': function (e) {
     e.stopPropagation();
+    e.preventDefault();
     var id = e.target.dataset.id;
-    if(!id) {
+    if (!id) {
       id = e.target.parentNode.dataset.id;
-    }if(!id) {
+    }
+    if (!id) {
       id = e.target.parentNode.parentNode.dataset.id;
     }
-    $("#"+id).addClass("show");
+    $("#" + id).addClass("show");
   },
 
-  'click .theme-config-close-btn': function(event) {
+  'click .theme-config-close-btn': function (event) {
     var el = $(event.target);
-    if(el.hasClass('fa')) {
+    if (el.hasClass('fa')) {
       el = el.parent();
     }
-    $("#"+el.attr('data-id')).removeClass("show");
+    $("#" + el.attr('data-id')).removeClass("show");
   }
 });
 
 Template.topNavbar.helpers({
-  'isAdmin': function() {
-    return isAdmin();
-  },
-
-  'isPermitted': function() {
-    return isManagerOrAdmin(Meteor.userId());
-  },
-
-  'profileImage': function() {
+  'profileImage': function () {
     var user = Meteor.user();
     var image = '/images/user-image.jpeg';
-    if(user && user.services) {
-      if(user.services.google) {
+    if (user && user.services) {
+      if (user.services.google) {
         image = user.services.google.picture;
       }
-    } 
+    }
     return image;
   },
 
-  today: function() {
+  today: function () {
     var date = moment(new Date()).format("YYYY-MM-DD");
     return date;
   },
 
-  week: function() {
+  week: function () {
     var week = moment().format("w");
     return week;
   }
