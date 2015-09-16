@@ -11,9 +11,6 @@ Accounts.onCreateUser(function(options, user){
         user.profile.image = options.profile.picture;
       }
 
-  }     
-  if(!user.profile.name) {
-    user.profile.name = user.username;
   }
   if(user.profile.pinCode) {
     user.pinCode = user.profile.pinCode;

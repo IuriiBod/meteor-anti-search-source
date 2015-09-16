@@ -1,0 +1,17 @@
+<template name="subNewsFeedPost">
+  <div class="social-comment">
+    <a class="pull-left" href="#">
+      <img src="{{profilePicture state$subNewsFeedPost.createdBy}}" alt="image" />
+    </a>
+    <div class="media-body" data-id="{{state$subNewsFeedPost._id}}" id="{{state$subNewsFeedPost.createdBy}}">
+      <span>
+        <a href="#" class="pull-left">{{username state$userId}} &nbsp;&nbsp;</a>  {{{state$subNewsFeedPost.text}}}
+      </span>
+      <a href="#" class="small like-post">
+        <i class="fa fa-thumbs-up"></i> 
+        {{state$likesCount}} Like this!
+      </a> -
+      <small class="text-muted">{{timeFormattedWithDate state$subNewsFeedPost.createdOn}}</small>
+    </div>
+  </div>
+</template>

@@ -159,6 +159,19 @@ UI.registerHelper("username", function(userId) {
   }
 });
 
+UI.registerHelper("profilePicture", function(userId) {
+  var user = Meteor.users.findOne(userId);
+  if(user) {
+    if(user.profile.image) {
+      return user.profile.image;
+    } else if(user.services && user.services.google){
+      return user.services.google.picture;
+    } else {
+      return "/images/user-image.jpeg";
+    }
+  }
+});
+
 UI.registerHelper("SupplierName", function(id) {
   if(id) {
     var supplier = Suppliers.findOne(id);
