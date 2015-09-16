@@ -5,14 +5,13 @@
         <h5>Profile Detail</h5>
       </div>
       <div>
-        <div class="ibox-content no-padding border-left-right">
-          <img alt="image" class="img-responsive" src="{{state$image}}">
-        </div>
+        {{> render component = "profileImage" id=state$basic._id}}
         <div class="ibox-content profile-content">
           <h4>
             <strong>
               {{#if state$isEditPermitted}}
-                <a href="#" id="username" data-id="{{state$basic._id}}" class="editable">{{username state$basic._id}}</a>
+                <a href="" id="firstname">{{state$firstName}}</a>
+                <a href="" id="lastname">{{state$lastName}}</a>
               {{else}}
                 {{username state$basic._id}}
               {{/if}}

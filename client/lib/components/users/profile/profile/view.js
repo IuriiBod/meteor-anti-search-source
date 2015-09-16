@@ -91,18 +91,36 @@ Template.profile.rendered = function(){
     todayHighlight: true
   });
 
-  $('#username').editable({
+  $('#firstname').editable({
     type: 'text',
-    title: 'Edit username',
-    display: false,
+    title: 'Edit first name',
+    display: function() {},
     showbuttons: true,
     mode: 'inline',
+    placeholder: "Enter first name here",
     success: function(response, newValue) {
       var self = this;
       if(newValue) {
-        var id = $(self).attr("data-id");
-        var editDetail = {"username": newValue.trim()};
-        updateBasicDetails(id, editDetail, "username");
+        var id = Session.get("profileUser");
+        var editDetail = {"firstname": newValue.trim()};
+        updateBasicDetails(id, editDetail);
+      }
+    }
+  });
+
+  $('#lastname').editable({
+    type: 'text',
+    title: 'Edit last name',
+    display: function() {},
+    showbuttons: true,
+    mode: 'inline',
+    placeholder: "Enter last name here",
+    success: function(response, newValue) {
+      var self = this;
+      if(newValue) {
+        var id = Session.get("profileUser");
+        var editDetail = {"lastname": newValue.trim()};
+        updateBasicDetails(id, editDetail);
       }
     }
   });
@@ -118,7 +136,7 @@ Template.profile.rendered = function(){
       if(newValue) {
         var id = $(self).attr("data-id");
         var editDetail = {"phone": newValue};
-        updateBasicDetails(id, editDetail, "profile.phone");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -136,7 +154,7 @@ Template.profile.rendered = function(){
       if(newValue) {
         var id = $(self).attr("data-id");
         var editDetail = {"email": newValue};
-        updateBasicDetails(id, editDetail, "profile.emails.address");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -160,7 +178,7 @@ Template.profile.rendered = function(){
           newRate = 0;
         }
         var editDetail = {"weekdaysrate": newRate};
-        updateBasicDetails(id, editDetail, "profile.payrates.weekdays");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -184,7 +202,7 @@ Template.profile.rendered = function(){
           newRate = 0;
         }
         var editDetail = {"saturdayrate": newRate};
-        updateBasicDetails(id, editDetail, "profile.payrates.saturday");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -208,7 +226,7 @@ Template.profile.rendered = function(){
           newRate = 0;
         }
         var editDetail = {"sundayrate": newRate};
-        updateBasicDetails(id, editDetail, "profile.payrates.sunday");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -217,7 +235,7 @@ Template.profile.rendered = function(){
 
 };
 
-function updateBasicDetails(id, updateDetails, type) {
+function updateBasicDetails(id, updateDetails) {
   Meteor.call("editBasicDetails", id, updateDetails, function(err) {
     if(err) {
       console.log(err);
