@@ -13,16 +13,16 @@ assetsFolderAbsolutePath = function (fileName) {
   return assetsFolder
 };
 
-var PREDICTION_SETTINGS = Meteor.settings.private.Prediction;
+var CloudSettings = Meteor.settings.private.GoogleCloud;
 
 Meteor.methods({
   getAuthToken: function () {
     var Client = Meteor.npmRequire('node-google-prediction');
 
     var client = new Client({
-      claimSetISS: PREDICTION_SETTINGS.SERVICE_EMAIL,
+      claimSetISS: CloudSettings.SERVICE_EMAIL,
       //pem should be located in private directory
-      path: assetsFolderAbsolutePath(PREDICTION_SETTINGS.PEM_FILE)
+      path: assetsFolderAbsolutePath(CloudSettings.PEM_FILE)
     });
 
     var syncToken = Meteor.wrapAsync(client.accessTokenRequest, client);

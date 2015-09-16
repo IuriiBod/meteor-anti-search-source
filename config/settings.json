@@ -10,9 +10,10 @@
       "KEY": "a903d4c06d424a07ad3de99d3eec673c",
       "SECRET": "a3f4b1f2b3a04d8fb7a277267b33086f0e0cbf2dafa444c7a387bf84cf63f034"
     },
-    "Prediction": {
+    "GoogleCloud": {
+      "PROJECT_ID": "hospohero",
       "SERVICE_EMAIL": "24418709828-35oaus6ckd1fr24i0jdprhcprpapitfn@developer.gserviceaccount.com",
-      "PEM_FILE": "hero-chef-secret.pem"
+      "PEM_FILE": "google-cloud.pem"
     }
   }
 }
