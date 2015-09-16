@@ -12,7 +12,8 @@ Meteor.publish(null, function(){
         Organizations.find(),
         Locations.find(),
         Areas.find(),
-        Invitations.find()
+        Invitations.find(),
+        Meteor.users.find({}, {fields: {username: 1, services: 1}})
       ];
     //}
   }

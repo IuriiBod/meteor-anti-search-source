@@ -4,6 +4,7 @@ Template.organizationStructure.events({
     $('.location-name').editable('setValue', this.name);
   },
   'click .area-settings': function() {
+    FlowComponents.callAction('changeArea', this._id);
     $('.area-name').editable('setValue', this.name);
   },
   'click .change-current-area': function(e) {

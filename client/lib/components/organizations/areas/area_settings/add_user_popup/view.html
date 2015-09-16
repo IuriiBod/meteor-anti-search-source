@@ -1,0 +1,28 @@
+<template name="addUserPopup">
+  <div class="panel panel-default add-user-popup">
+    <div class="panel-heading text-center">
+      <b>Users</b>
+    </div>
+    <div class="panel-body">
+      {{#if state$inSearchMode}}
+        <form class="add-user-to-area-form">
+          <input type="text" class="form-control" placeholder="e.g. john@gmail.com" name="addUserName">
+
+          {{#if state$inviteNewUser}}
+            {{> render component='inviteNewUser'}}
+          {{/if}}
+        </form>
+
+        {{#if state$isSearchEmpty}}
+          <p class="text-muted add-user-info">
+            Search for a person in organization by name or email address, or enter an email address to invite someone new.
+          </p>
+        {{else}}
+          {{> render component='searchMasterList' searchText=state$searchText areaId=state$areaId}}
+        {{/if}}
+      {{else}}
+        {{> render component='userPermissions' selectedUser=state$selectedUser}}
+      {{/if}}
+    </div>
+  </div>
+</template>

@@ -1,5 +1,5 @@
 <template name="areaSettings">
-  {{#if state$isOwner}}
+  {{#if state$isOrganizationOwner}}
     <h1 class="area-name" style="display: inline-block;" data-id="{{state$area._id}}" data-display="false">{{state$area.name}}</h1>
   {{else}}
     <h1 style="display: inline-block;" data-id="{{state$area._id}}">{{state$area.name}}</h1>
@@ -8,8 +8,8 @@
   <div class="area-users">
     {{#each state$areaUsers}}
       <div class="user-profile-image-container">
-        {{#if state$isOwner}}
-          {{#unless state$isMe _id}}
+        {{#if state$isOrganizationOwner}}
+          {{#unless isMe _id}}
             <i class="fa fa-times remove-user-from-area"></i>
           {{/unless}}
         {{/if}}
@@ -20,12 +20,14 @@
     {{/each}}
   </div>
 
-  {{#if state$isOwner}}
+  {{#if state$isOrganizationOwner}}
     <button class="btn btn-white col-xs-12 add-user" data-id="{{state$area._id}}">
       <i class="fa fa-user-plus"></i>  Add User
     </button>
     <br />
-    {{> addUserPopup}}
+    {{#if state$addUser}}
+      {{> render component='addUserPopup' areaId=state$area._id}}
+    {{/if}}
     <button class="btn btn-danger col-xs-12 delete-area" data-id="{{state$area._id}}">Delete Area</button>
   {{/if}}
 </template>

@@ -1,0 +1,17 @@
+<template name="searchMasterList">
+  {{#if state$hasResults}}
+    <div class="search-results">
+      <b>Select to add</b>
+      <hr/>
+      <div class="search-users-container">
+        {{# each state$searchUsers}}
+          {{> searchUserInfo}}
+        {{/each}}
+      </div>
+    </div>
+  {{else}}
+    <div class="text-muted text-center no-results">
+      <b>No results</b>
+    </div>
+  {{/if}}
+</template>

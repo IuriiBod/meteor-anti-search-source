@@ -128,6 +128,13 @@ var helpers = {
     } else {
       return "Not assigned";
     }
+  },
+
+  isMe: function(id) {
+    var userId = Meteor.userId();
+    if(userId) {
+      return (userId == id);
+    }
   }
 };
 _.extend(App.helpers, helpers);

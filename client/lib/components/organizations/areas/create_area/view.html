@@ -24,11 +24,11 @@
       <label class="col-sm-2 control-label">Status</label>
       <div class="col-sm-10 col-xs-12">
         <div class="btn-group col-xs-12" data-toggle="buttons">
-          <label class="btn btn-primary active col-xs-6">
+          <label class="btn col-xs-6{{#if state$enabled}} btn-primary active{{else}} btn-default{{/if}}">
             <input type="radio" name="status" id="enabled" autocomplete="off" value="Enabled" checked>
             Enabled
           </label>
-          <label class="btn btn-default col-xs-6">
+          <label class="btn col-xs-6{{#unless state$enabled}} btn-primary active{{else}} btn-default{{/unless}}">
             <input type="radio" name="status" id="disabled" autocomplete="off" value="Disabled">
             Disabled
           </label>

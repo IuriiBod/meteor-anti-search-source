@@ -110,7 +110,7 @@
             <div class="ibox float-e-margins" style="margin-bottom: 0;">
               <div class="ibox-content" style="padding-bottom: 10px;">
                 <div class="feed-activity-list">
-                  {{>render component='locationSettings' organizationId=state$organization._id locationId=state$location}}
+                  {{>render component='locationSettings' organizationId=state$organization._id locationId=state$location isOrganizationOwner=state$isOrganizationOwner}}
                 </div>
               </div>
             </div>
@@ -119,5 +119,29 @@
       </div>
     </div>
     <!-- Flyout locationSettings -->
+
+    <!-- Flyout areaSettings -->
+    <div class="theme-config flyout-container" id="areaSettings">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="areaSettings">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Area Settings
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{>render component='areaSettings' organizationId=state$organization._id locationId=state$location areaId=state$area isOrganizationOwner=state$isOrganizationOwner}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flyout areaSettings -->
   {{/if}}
 </template>

@@ -1,35 +1,28 @@
-var subs = new SubsManager();
-var component = FlowComponents.define('areaSettings', function(props) {});
+var component = FlowComponents.define('areaSettings', function(props) {
+  this.set('organizationId', props.organizationId);
+  this.set('isOrganizationOwner', props.isOrganizationOwner);
+  this.set('locationId', props.locationId);
+  this.areaId = props.areaId;
+  this.set('addUser', false);
+});
 
 component.state.area = function() {
-  var areaId = Session.get('areaId');
-  return Areas.findOne(areaId);
-};
-
-component.state.getAreaUsers = function() {
-  var areaId = Session.get('areaId');
-  var areaUsers;
-  Meteor.call('areaUsers', areaId, function(err, users) {
-    if(err) {
-      return alert(err.reason);
-    }
-    Session.set('areaUser', users);
-  });
+  var areaId = this.areaId;
+  return Areas.findOne({_id: areaId});
 };
 
 component.state.areaUsers = function() {
-  subs.subscribe('usersPhoto');
-  var areaId = Session.get('areaId');
-  var area = Areas.find({_id: areaId});
+  var areaId = this.areaId;
   var userIds = Relations.find({
     $or: [
       { areaIds: areaId },
       { $and: [
-        { locationIds: area.locationId },
+        { organizationId: this.get('organizationId') },
+        { locationIds: this.get('locationId') },
         { areaIds: null }
       ]},
       { $and: [
-        { organizationId: area.organizationId },
+        { organizationId: this.get('organizationId') },
         { locationIds: null },
         { areaIds: null }
       ]}
@@ -55,25 +48,23 @@ component.state.getProfilePhoto = function(id) {
   }
 };
 
-component.state.isOwner = function() {
-  var orgId = Session.get('organizationId');
+component.state.isMe = function(id) {
   var userId = Meteor.userId();
-  var count = Organizations.find({
-    _id: orgId,
-    owner: userId
-  }).count();
-  if(count > 0) {
-    return true;
-  } else {
-    return false;
+  if(userId) {
+    return (Meteor.userId == id);
   }
 };
 
-component.state.isMe = function (id) {
-  var userId = Meteor.userId();
-  if(id == userId) {
-    return true;
-  } else {
-    return false;
-  }
+
+component.action.deleteArea = function(id) {
+  Meteor.call('deleteArea', id, function(err) {
+    if(err) {
+      console.log(err);
+      alert(err.reason);
+    }
+  });
+};
+
+component.action.toggleAddUser = function() {
+  this.set('addUser', !this.get('addUser'));
 };

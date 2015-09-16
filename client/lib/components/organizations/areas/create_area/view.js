@@ -1,7 +1,6 @@
 Template.createArea.events({
   'change input[type="radio"]': function(e, tpl) {
-    tpl.$("#disabled").parent().toggleClass("btn-danger").toggleClass("btn-default");
-    tpl.$("#enabled").parent().toggleClass("btn-default").toggleClass("btn-info");
+    FlowComponents.callAction('changeEnabled');
   },
   'submit form': function(e, tpl) {
     e.preventDefault();

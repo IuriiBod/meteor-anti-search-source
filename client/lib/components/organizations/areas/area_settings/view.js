@@ -2,15 +2,8 @@ Template.areaSettings.events({
   'click .delete-area': function(e) {
     if(confirm("Are you sure, you want to delete this area?")) {
       var id = e.target.dataset.id;
-      Meteor.call('deleteArea', id, function(err) {
-        if(err) {
-          console.log(err);
-          alert(err.reason);
-        }
-      });
+      FlowComponents.callAction('deleteArea', id);
       $("#areaSettings").removeClass('show');
-      Session.set('areaId', '');
-
       var currentAreaId = Session.get('currentAreaId');
       if(currentAreaId == id) {
         Session.set('currentAreaId', '');
@@ -19,11 +12,7 @@ Template.areaSettings.events({
   },
 
   'click .add-user': function() {
-    $('.add-user-popup').toggleClass('show').toggleClass('hide');
-    $('input[name="addUserName"]').val('').focus();
-    $('input[name="newUserName"]').val('');
-    $('.add-user-info').show();
-    $('.users-search-results').hide();
+    FlowComponents.callAction('toggleAddUser');
   },
 
   'click .add-existing-user': function(e) {
