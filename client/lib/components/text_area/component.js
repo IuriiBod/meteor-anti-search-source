@@ -42,9 +42,10 @@ component.state.placeholder = function() {
 }
 
 component.action.submit = function(text) {
+  var self = this;
   //find tagged users
-  var ref = this.ref;
-  var refType = this.refType;
+  var ref = self.ref;
+  var refType = self.refType;
 
 
   var matched = /(?:^|\W)@(\w+)(?!\w)/g, match, matches = [];
@@ -70,8 +71,6 @@ component.action.submit = function(text) {
     }
   });
 
-
-  var classes = ['info', 'success', 'danger', 'primary', 'warning'];
   var textHtml = "<div class='non'>" + text + "</div>"
   taggedUsers.forEach(function(user) {
     var name = null;
@@ -84,25 +83,13 @@ component.action.submit = function(text) {
   });
   var linkedText = autolinker.link(textHtml);
 
-
-  if(this.type == "newsFeedMainTextBox" || this.type == "newsFeedSubTextBox") {
+  if(self.type == "newsFeedMainTextBox" || self.type == "newsFeedSubTextBox") {
     Meteor.call("createNewsfeed", linkedText, ref, function(err, id) {
       if(err) {
         console.log(err);
         return alert(err.reason);
       } else {
-        // var options = {
-        //   "title": "New newsfeed created by " + Meteor.user().username,
-        //   "users": matches,
-        //   "commentId": id,
-        //   "type": "post"
-        // }
-        // Meteor.call("sendNotifications", Meteor.userId(), "comment", options, function(err) {
-        //   if(err) {
-        //     console.log(err);
-        //     return alert(err.reason);
-        //   }
-        // });
+        notify(self.type);
       }
       $('.message-input-post').val("");
     });
@@ -133,14 +120,63 @@ component.action.submit = function(text) {
           "commentId": id,
           "type": ref_type
         }
-        Meteor.call("sendNotifications", ref, "comment", options, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          }
-        });  
+        sendNotifi(ref, "comment", options);
       }
       $('.message-input-post').val("");
     });
   }
+}
+
+function notify(type) {
+  if(type == "newsFeedMainTextBox") {
+    console.log(".........matches", matches);
+
+    if(matches.length > 0) {
+      var options = {
+        "title": "You've been mentions in new newsfeed created by " + Meteor.user().username,
+        "users": matches,
+        "newsfeedId": id,
+        "type": "new"
+      }
+      sendNotifi(id, "newsfeed", options);
+    }
+  } else if(type == "newsFeedSubTextBox") {
+    var mainNewsFeed = NewsFeeds.findOne(ref);
+    var createdBy = Meteor.users.findOne(mainNewsFeed.createdBy);
+    if(mainNewsFeed) {
+      var name = Meteor.user().profile.firstname + " " + Meteor.user().profile.lastname;
+      if(createdBy._id != Meteor.userId()) {
+        if(matches.indexOf(createdBy.username) >= 0) {
+          console.log(".........matches", matches);
+          var options = {
+            "title": name + " mentioned you on newsfeed",
+            "users": matches,
+            "newsfeedId": id,
+            "type": "newsfeedComment"
+          }
+          return sendNotifi(ref, "newsfeed", options);
+        } else {
+          var options = {
+            "title": name + " commented on newsfeed",
+            "users": [createdBy.username],
+            "newsfeedId": id,
+            "type": "newsfeedComment"
+          }
+          return sendNotifi(ref, "newsfeed", options);
+        }
+      }
+    }
+  }
+}
+
+
+function sendNotifi(ref, type, options) {
+  console.log("..............sendNotifi", arguments);
+  Meteor.call("sendNotifications", ref, type, options, function(err) {
+    if(err) {
+      console.log(err);
+      return alert(err.reason);
+    }
+    return;
+  });  
 }
