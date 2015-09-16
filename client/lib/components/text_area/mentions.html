@@ -1,8 +1,20 @@
 <!-- Used for users list view at comment-->
-<template name="lastname">
-  <td>{{this.profile.lastname}}</td>
+<template name="username">
+  <td data-id="{{this._id}}">
+    {{this.username}} 
+    <small>
+      {{#if this.profile.firstname}}
+        {{this.profile.firstname}}
+      {{/if}}
+      {{#if this.profile.lastname}}
+        {{this.profile.lastname}}
+      {{/if}}
+      {{#if this.username}}
+      {{/if}}
+    </small>
+  </td>
 </template>
 
-<template name="username">
-  <td>{{this.username}}</td>
+<template name="noMatchTemplate">
+  <td>No user found</td>
 </template>

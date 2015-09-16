@@ -1,6 +1,6 @@
 <template name="textArea">
   {{#textareaAutocomplete 
-    settings=settings 
+    settings=state$settings 
     id="msg" 
     name="message" 
     class="form-control message-input-post" placeholder=state$placeholder}}

@@ -128,3 +128,7 @@ li > img {
   bottom: 17px;
   right: 10px;
 }
+
+.label-success a {
+  color: #FFFFFF;
+}
