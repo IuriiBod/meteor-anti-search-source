@@ -10,17 +10,6 @@ component.state.userId = function () {
   }
 };
 
-component.state.image = function () {
-  var user = this.get("user");
-  if (user) {
-    if (user.services && user.services.google) {
-      return user.services.google.picture;
-    } else {
-      return "/images/user-image.jpeg";
-    }
-  }
-};
-
 component.action.onClick = function () {
   if (_.isFunction(this.onClick)) {
     var user = this.get("user");
