@@ -20,17 +20,19 @@ Meteor.methods({
       return console.log("Notification " + id + " send");
     }
 
-    if(type != "comment" || type != "roster" || type != "newsfeed") {
-      if(!itemId) {
-        logger.error('ItemId should have a value');
-        throw new Meteor.Error(404, "ItemId should have a value");
-      }
-      info.ref = itemId;
-      info.text = options.text;
-      info.actionType = options.type;
-      var itemSubsbcribers = Subscriptions.findOne(itemId);
-      if (itemSubsbcribers && itemSubsbcribers.subscribers.length > 0) {
-        allSubscribers = itemSubsbcribers.subscribers;
+    if(type != "comment" || type != "roster") {
+      if (type != "newsfeed") {
+        if (!itemId) {
+          logger.error('ItemId should have a value');
+          throw new Meteor.Error(404, "ItemId should have a value");
+        }
+        info.ref = itemId;
+        info.text = options.text;
+        info.actionType = options.type;
+        var itemSubsbcribers = Subscriptions.findOne(itemId);
+        if (itemSubsbcribers && itemSubsbcribers.subscribers.length > 0) {
+          allSubscribers = itemSubsbcribers.subscribers;
+        }
       }
     }
 
@@ -147,18 +149,17 @@ Meteor.methods({
         throw new Meteor.Error(404, "Newsfeed Id needed");
       }
       info.refType = options.type;
-      var newsfeed = Newsfeeds.findOne(options.newsfeedId);
+      var newsfeed = NewsFeeds.findOne(options.newsfeedId);
       if(newsfeed) {
         info.text = [newsfeed.text];
         info.createdOn = newsfeed.createdOn;
-        info.ref = newsfeed.reference;
+        info.ref = options.newsfeedId;
       }
     } 
 
-
-    if (type == "job" || type == "menu" || type == "roster") {
-      allSubscribers.forEach(function (subscriber) {
-        if (subscriber != userId) {
+    if(type == "job" || type == "menu" || type == "roster") {
+      allSubscribers.forEach(function(subscriber) {
+        if(subscriber != userId) {
           var doc = info;
           doc.to = subscriber;
 
@@ -166,15 +167,15 @@ Meteor.methods({
           logger.info("Notification send to userId", subscriber, id);
         }
       });
-    } else if (type == "comment") {
-      if (!options.users) {
+    } else if(type == "comment" || type == "newsfeed") {
+      if(!options.users) {
         logger.error('User ids not found');
         throw new Meteor.Error(404, "User ids not found");
       }
-      options.users.forEach(function (username) {
-        var filter = new RegExp(username, 'i');
+      options.users.forEach(function(username) {
+        var filter = new RegExp(username);
         var subscriber = Meteor.users.findOne({"username": filter});
-        if (subscriber && (subscriber._id != userId)) {
+        if(subscriber && (subscriber._id != userId)) {
           var doc = info;
           doc.to = subscriber._id;
 
