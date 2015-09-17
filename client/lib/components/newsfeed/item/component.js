@@ -48,11 +48,11 @@ component.action.likePost = function(id) {
         }
 
         var ref = null;
-        var type = "newsFeedMainTextBox";
+        var type = "newsfeed";
 
         if(newsFeedPost.ref) {
           ref = newsFeedPost.ref;
-          type = "newsFeedSubTextBox";
+          type = "newsfeed";
         }
 
         //notify created user
