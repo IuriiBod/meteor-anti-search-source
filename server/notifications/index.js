@@ -192,15 +192,19 @@ Meteor.methods({
       logger.error('User ids not found');
       throw new Meteor.Error(404, "User ids not found");
     }
+    var userIds = [];
     options.users.forEach(function(username) {
       var filter = new RegExp(username);
       var subscriber = Meteor.users.findOne({"username": filter});
       if(subscriber && (subscriber._id != userId)) {
-        var doc = info;
-        doc.to = subscriber._id;
+        if(userIds.indexOf(subscriber._id) < 0) {
+          var doc = info;
+          doc.to = subscriber._id;
+          userIds.push(subscriber._id);
 
-        var id = Notifications.insert(doc);
-        logger.info("Notification send to userId", subscriber._id, id);
+          var id = Notifications.insert(doc);
+          logger.info("Notification send to userId", subscriber._id, id);
+        }
       }
     });
   },

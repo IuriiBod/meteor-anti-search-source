@@ -128,7 +128,7 @@ component.action.submit = function(text) {
   }
 }
 
-function notify(type, id, matches, ref) {
+notify = function(type, id, matches, ref) {
   if(type == "newsFeedMainTextBox") {
 
     if(matches.length > 0) {
@@ -146,7 +146,10 @@ function notify(type, id, matches, ref) {
     var createdBy = Meteor.users.findOne(mainNewsFeed.createdBy);
     
     if(mainNewsFeed) {
-      var name = thisUser.profile.firstname + " " + thisUser.profile.lastname;
+      var name = thisUser.username;
+      if(thisUser.profile.firstname && thisUser.profile.lastname) {
+        name = thisUser.profile.firstname + " " + thisUser.profile.lastname;
+      }
       
       if(createdBy._id != Meteor.userId()) {
         //created user
@@ -181,7 +184,7 @@ function notify(type, id, matches, ref) {
 }
 
 
-function sendNotifi(ref, type, options) {
+sendNotifi = function(ref, type, options) {
   Meteor.call("sendNewsfeedNotifications", ref, type, options, function(err) {
     if(err) {
       console.log(err);
