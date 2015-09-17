@@ -45,14 +45,14 @@ Revel = {
       maxDaysCount = 365; // get data for last year by default
     }
     var daysCount = 0;
-    var limit = 10;
+    var limit = 1000;
     var offset = 0;
     var totalCount = limit;
 
     var bucket = new RevelSalesDataBucket();
 
     while (offset <= totalCount) {
-      console.log('request to revel offset=', offset);
+      logger.info('Request to Revel server', {offset: offset, total: totalCount});
       var result = this.queryRevelOrderItems(limit, offset);
 
       if (totalCount === limit) {

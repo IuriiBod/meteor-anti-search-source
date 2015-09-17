@@ -34,7 +34,10 @@ GoogleCloud = {
     trainingDataWriteStream.pipe(bucket.file('sales-data.csv').createWriteStream());
 
     logger.info('Starting uploading from POS');
+
+    //upload sales training data for the last year
     Revel.uploadAndReduceOrderItems(function (salesData) {
+      logger.info('Received daly sales', {date: salesData.createdDate});
 
       //todo replace location with "Location's" location
       //todo replace historyMock with history method
@@ -47,7 +50,7 @@ GoogleCloud = {
     }, function (uploadedDaysCount) {
       logger.info('Sales data uploading finished', {uploadedDaysCount: uploadedDaysCount});
       trainingDataWriteStream.end();
-    }, 1);
+    }, 20);
 
   }
 };
