@@ -1,58 +1,26 @@
-var component = FlowComponents.define("createLocation", function(props) {});
+var component = FlowComponents.define("createLocation", function(props) {
+  this.set('organizationId', props.organizationId);
+  this.set('enabled', true);
+});
 
-component.state.timezones = function() {
-  var zones = [];
-  var selectedZone = 0;
-  for(var i=-12; i<=12; i++) {
-    if(i>0) {
-      i = "+"+i;
-    }
-    if(i == selectedZone) {
-      zones.push('<option value="'+i+'" selected="selected">UTC '+i+'</option>');
-    } else {
-      zones.push('<option value="'+i+'">UTC '+i+'</option>');
-    }
-  }
-  return zones.join('');
+component.action.changeEnable = function() {
+  this.set('enabled', !this.get('enabled'));
 };
 
-component.state.openingHours = function() {
-  var selectedHour = 8;
-  var hours = [];
-  for(var i=0; i<24; i++) {
-    if(i == selectedHour) {
-      hours.push('<option value="'+i+'" selected="selected">'+i+'</option>');
-    } else {
-      hours.push('<option value="'+i+'">'+i+'</option>');
-    }
+component.action.checkExists = function(orgId, name) {
+  var count = Locations.find({organizationId: orgId, name: name}).count();
+  if(count > 0) {
+    alert("The location with name " + name + " already exists!");
+    return false;
   }
-  return hours.join('');
+  return true;
 };
 
-component.state.closingHours = function() {
-  var selectedHour = 17;
-  var hours = [];
-  for(var i=0; i<24; i++) {
-    if(i == selectedHour) {
-      hours.push('<option value="'+i+'" selected="selected">'+i+'</option>');
-    } else {
-      hours.push('<option value="'+i+'">'+i+'</option>');
+component.action.submit = function(doc) {
+  Meteor.call("createLocation", doc, function (err) {
+    if(err) {
+      console.log(err);
+      return alert(err.reason);
     }
-  }
-  return hours.join('');
-};
-
-component.state.minutes = function() {
-  var minutes = [];
-  for(var i=0; i<60; i++) {
-    if(i<10) {
-      i = "0"+i;
-    }
-    minutes.push('<option value="'+i+'">'+i+'</option>');
-  }
-  return minutes.join('');
-};
-
-component.state.organizationId = function() {
-  return Session.get('organizationId');
+  });
 };

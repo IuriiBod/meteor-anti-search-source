@@ -2,23 +2,13 @@ Template.locationSettings.events({
   'click .delete-location': function(e) {
     if(confirm("Are you sure, you want to delete this location?")) {
       var id = e.target.dataset.id;
-      Meteor.call('deleteLocation', id, function(err) {
-        if(err) {
-          console.log(err);
-          alert(err.reason);
-        }
-      });
+      FlowComponents.callAction('deleteLocation', id);
       $("#locationSettings").removeClass('show');
-      Session.set('locationId', '');
     }
   },
 
   'click .open-flyout': function(e) {
-    var id;
     var locId;
-    id = e.target.dataset.id;
-    $("#"+id).css('z-index', 10000).addClass("show");
-
     locId = e.target.dataset.locationId;
     $('select[name="locationId"]>option[value='+locId+']').prop("selected", true);
   }
@@ -32,7 +22,7 @@ Template.locationSettings.onRendered(function() {
     display: false,
     mode: 'inline',
     success: function(response, newValue) {
-      var id = Session.get('locationId');
+      var id = this.dataset.id;
       if(id) {
         var orgId = Session.get('organizationId');
         var count = Locations.find({organizationId: orgId, name: newValue}).count();
@@ -44,7 +34,7 @@ Template.locationSettings.onRendered(function() {
             }
           });
         } else {
-          return alert("The location with name "+newValue+" already exists!");
+          return alert("The location with name " + newValue + " already exists!");
         }
       }
     }

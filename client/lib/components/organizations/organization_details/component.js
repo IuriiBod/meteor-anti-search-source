@@ -1,5 +1,7 @@
-var component = FlowComponents.define("organizationDetailsPage", function(props) {});
+var component = FlowComponents.define("organizationDetailsPage", function(props) {
+  this.organizationId = props.organizationId;
+});
 
 component.state.organizationId = function() {
-  return Session.get('organizationId');
+  return this.organizationId;
 };

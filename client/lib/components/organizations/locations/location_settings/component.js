@@ -1,6 +1,20 @@
-var component = FlowComponents.define('locationSettings', function(props) {});
+var component = FlowComponents.define('locationSettings', function(props) {
+  this.set('organizationId', props.organizationId);
+  this.set('isOrganizationOwner', props.isOrganizationOwner);
+  this.locationId = props.locationId;
+});
 
 component.state.location = function() {
-  var locId = Session.get('locationId');
-  return Locations.findOne(locId);
-}
+  if(this.locationId) {
+    return Locations.findOne({_id: this.locationId});
+  }
+};
+
+component.action.deleteLocation = function(id) {
+  Meteor.call('deleteLocation', id, function(err) {
+    if(err) {
+      console.log(err);
+      return alert(err.reason);
+    }
+  });
+};

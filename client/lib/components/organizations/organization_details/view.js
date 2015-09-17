@@ -9,9 +9,7 @@ Template.organizationDetailsPage.events({
           alert(err.reason);
         }
       });
-      Session.set('organizationId', '');
-      $('#organizationDetailsPage').removeClass('show');
-      $('#organizationStructure').removeClass('show');
+      $('.flyout-container').removeClass('show');
     }
   }
-})
+});

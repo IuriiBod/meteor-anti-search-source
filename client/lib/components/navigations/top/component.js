@@ -13,48 +13,57 @@ component.state.count = function() {
 };
 
 component.state.notifications = function() {
-  var notifications = Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
-  return notifications;
+  return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
 };
 
-component.state.userAreasAccess = function() {
-  var user;
-  var relation;
-  var organization;
-  user = Meteor.user();
-  relation = Relations.findOne({collectionName: 'users', entityId: user._id});
-  organization = Organizations.findOne(relation.organizationId);
-  return 'Organization: <b>'+organization.name+'</b>';
+component.state.currentArea = function() {
+  var areaId = Session.get('currentAreaId');
+  if(areaId) {
+    var area = Areas.findOne({_id: areaId}, {fields: {name: 1}});
+    if(area) {
+      return area.name;
+    }
+  }
 };
 
-component.state.isAdmin = function() {
-  var user = Meteor.user();
-  if(user.isAdmin) {
-    return true;
-  } else {
-    return false;
+component.state.relation = function() {
+  var userId = Meteor.userId();
+  if(userId) {
+    var relation = Relations.findOne({collectionName: 'users', entityId: userId});
+    return relation;
+  }
+};
+
+component.state.organization = function() {
+  var relation = this.get('relation');
+  if(relation) {
+    var organization = Organizations.findOne({_id: relation.organizationId});
+    return organization;
+  }
+};
+
+component.state.isOrganizationOwner = function() {
+  var organization = this.get('organization');
+  var userId = Meteor.userId();
+  if(organization && userId) {
+    return (organization.owner == userId);
   }
 };
 
 component.state.belongToOrganization = function() {
-  var userId = Meteor.userId();
-  var relations = Relations.find({collectionName: "users", entityId: userId}).fetch();
-
-  if(relations.length > 0) {
+  var relation = this.get('relation');
+  if(relation) {
     return true;
   } else {
     return false;
   }
 };
 
-component.state.organizationId = function() {
-  var userId = Meteor.userId();
-  var relation = Relations.findOne({collectionName: 'users', entityId: userId});
-  if(relation) {
-    Session.set('organizationId', relation.organizationId);
-    return relation.organizationId;
-  } else {
-    Session.set('organizationId', '');
-    return false;
+component.state.hasLocations = function() {
+  var organization = this.get('organization');
+  if(organization) {
+    var orgId = organization._id;
+    var count = Locations.find({organizationId: orgId}).count();
+    return (count > 0);
   }
 };

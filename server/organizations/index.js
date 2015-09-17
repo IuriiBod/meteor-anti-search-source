@@ -15,22 +15,20 @@ Meteor.methods({
     doc.createdAt = Date.now();
 
     // Create organization
-    var orgID = Organizations.insert(doc);
+    var orgId = Organizations.insert(doc);
+
     // Create relations between user and organization
     Relations.insert({
-      organizationId: orgID,
+      organizationId: orgId,
       locationIds: null,
       areaIds: null,
       entityId: user._id,
       collectionName: "users"
     });
-    return orgID;
+    return orgId;
   },
 
   'deleteOrganization': function(id) {
-
-    console.log("ORG ID: ", id);
-
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');

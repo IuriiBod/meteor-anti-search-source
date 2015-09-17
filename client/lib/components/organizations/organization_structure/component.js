@@ -1,11 +1,10 @@
 var component = FlowComponents.define('organizationStructure', function(props) {
-  var userId = Meteor.userId();
-  var rel = Relations.findOne({collectionName: "users", entityId: userId});
-  var orgId = rel.organizationId;
-  var org = Organizations.findOne(orgId);
-  this.organization = org;
-  this.locations = rel.locationIds;
-  this.areas = rel.areaIds;
+  this.organization = props.organization;
+  this.isOrganizationOwner = props.isOrganizationOwner;
+  this.relation = props.relation;
+
+  this.set('location', null);
+  this.set('area', null);
 });
 
 component.state.organization = function() {
@@ -13,36 +12,39 @@ component.state.organization = function() {
 };
 
 component.state.locations = function() {
-  var selector = { organizationId: this.organization._id };
-  if(this.locations !== null) {
-    selector._id = { $in: this.locations };
+  if(this.organization) {
+    var selector = { organizationId: this.organization._id };
+    if(this.relation.locationIds !== null) {
+      selector._id = { $in: this.relation.locationIds };
+    }
+    return Locations.find(selector).fetch();
   }
-  return Locations.find(selector).fetch();
 };
 
 component.state.areas = function(locationId) {
-  var selector = { locationId: locationId };
-  if(this.areas !== null) {
-    selector._id = { $in: this.areas };
+  if(this.organization) {
+    var selector = { locationId: locationId };
+    if(this.relation.areaIds !== null) {
+      selector._id = { $in: this.relation.areaIds };
+    }
+    return Areas.find(selector).fetch();
   }
-  return Areas.find(selector).fetch();
 };
 
 component.state.currentArea = function(id) {
   var currentArea = Session.get('currentAreaId');
-  return (currentArea == id) ? 'active' : '';
+  return (currentArea == id) ? true : false;
 };
 
-component.state.isOwner = function() {
-  var orgId = Session.get('organizationId');
-  var userId = Meteor.userId();
-  var count = Organizations.find({
-    _id: orgId,
-    owner: userId
-  }).count();
-  if(count > 0) {
-    return true;
-  } else {
-    return false;
-  }
+component.state.isOrganizationOwner = function() {
+  return this.isOrganizationOwner;
+};
+
+
+component.action.changeLocation = function(id) {
+  this.set('location', id);
+};
+
+component.action.changeArea = function(id) {
+  this.set('area', id);
 };

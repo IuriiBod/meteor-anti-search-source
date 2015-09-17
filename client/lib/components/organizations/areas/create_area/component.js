@@ -1,68 +1,46 @@
-var component = FlowComponents.define("createArea", function(props) {});
-
-component.state.timezones = function() {
-  var zones = [];
-  var selectedZone = 0;
-  for(var i=-12; i<=12; i++) {
-    if(i>0) {
-      i = "+"+i;
-    }
-    if(i == selectedZone) {
-      zones.push('<option value="'+i+'" selected="selected">UTC '+i+'</option>');
-    } else {
-      zones.push('<option value="'+i+'">UTC '+i+'</option>');
-    }
-  }
-  return zones.join('');
-};
-
-component.state.openingHours = function() {
-  var selectedHour = 8;
-  var hours = [];
-  for(var i=0; i<24; i++) {
-    if(i == selectedHour) {
-      hours.push('<option value="'+i+'" selected="selected">'+i+'</option>');
-    } else {
-      hours.push('<option value="'+i+'">'+i+'</option>');
-    }
-  }
-  return hours.join('');
-};
-
-component.state.closingHours = function() {
-  var selectedHour = 17;
-  var hours = [];
-  for(var i=0; i<24; i++) {
-    if(i == selectedHour) {
-      hours.push('<option value="'+i+'" selected="selected">'+i+'</option>');
-    } else {
-      hours.push('<option value="'+i+'">'+i+'</option>');
-    }
-  }
-  return hours.join('');
-};
-
-component.state.minutes = function() {
-  var minutes = [];
-  for(var i=0; i<60; i++) {
-    if(i<10) {
-      i = "0"+i;
-    }
-    minutes.push('<option value="'+i+'">'+i+'</option>');
-  }
-  return minutes.join('');
-};
+var component = FlowComponents.define("createArea", function(props) {
+  this.organizationId = props.organizationId;
+  this.locationId = props.locationId;
+  this.set('enabled', true);
+});
 
 component.state.locations = function() {
-  var orgId = Session.get('organizationId');
-  return Locations.find({organizationId: orgId}).fetch();
+  return Locations.find({organizationId: this.organizationId}).fetch();
 };
 
 component.state.activeLocation = function(id) {
-  var locationId = Session.get('locationId');
-  if(locationId && id == locationId) {
+  if(this.locationId == id) {
     return true;
   } else {
     return false;
   }
+};
+
+component.action.changeEnabled = function() {
+  this.set('enabled', !this.get('enabled'));
+};
+
+component.action.createArea = function (name, locationId, status) {
+  // Find locations with the same name
+  var count = Areas.find({locationId: locationId, name: name}).count();
+  if(count > 0) {
+    alert("The area with name " + name + " already exists!");
+    return false;
+  }
+
+  var doc = {
+    name: name,
+    status: status,
+    locationId: locationId,
+    organizationId: this.organizationId
+  };
+
+  Meteor.call("createArea", doc, function (err) {
+    if(err) {
+      console.log(err);
+      alert(err.reason);
+    }
+  });
+
+  return true;
 };

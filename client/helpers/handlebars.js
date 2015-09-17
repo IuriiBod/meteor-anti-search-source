@@ -80,7 +80,12 @@ var helpers = {
     }
   },
   username: function(id) {
-    var user = Meteor.users.findOne(id);
+    var user;
+    if(!id) {
+      user = Meteor.user();
+    } else {
+      user = Meteor.users.findOne(id);
+    }
     if(user) {
       return user.username;
     }
@@ -127,6 +132,27 @@ var helpers = {
       }
     } else {
       return "Not assigned";
+    }
+  },
+
+  isMe: function(id) {
+    var userId = Meteor.userId();
+    if(userId) {
+      return (userId == id);
+    }
+  },
+
+  isAdmin: function() {
+    var user = Meteor.user();
+    if(user) {
+      return user.isAdmin;
+    }
+  },
+
+  isManagerOrAdmin: function() {
+    var user = Meteor.user();
+    if(user) {
+      return (user.isAdmin || user.isManager);
     }
   }
 };
