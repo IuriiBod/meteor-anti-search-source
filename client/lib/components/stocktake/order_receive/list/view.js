@@ -82,8 +82,7 @@ Template.orderReceive.events({
               };
               Meteor.call("uploadInvoice", Session.get("thisReceipt"), urls, function(err) {
                 if(err) {
-                  console.log(err);
-                  return alert(err.reason);
+                  HospoHero.alert(err);
                 } else {
                 }
               });
