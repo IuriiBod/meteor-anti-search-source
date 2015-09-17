@@ -203,21 +203,17 @@ Meteor.methods({
   },
 
   uploadInvoice: function(id, info) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
+    if(!HospoHero.perms.canUser('editStock')()) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(404, "User not permitted to generate receipts");
     }
 
+    HospoHero.checkMongoId(id);
+
     var receipt = OrderReceipts.findOne(id);
     if(!receipt) {
       logger.error('Receipt not found');
-      throw new Meteor.Error(404, "Receipt not found");
+      throw new Meteor.Error("Receipt not found");
     }
     OrderReceipts.update({"_id": id}, {$addToSet: {"invoiceImage": info}});
     logger.info("Invoice uploaded", id);
