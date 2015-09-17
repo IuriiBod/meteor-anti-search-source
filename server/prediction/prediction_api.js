@@ -1,29 +1,10 @@
-assetsFolderAbsolutePath = function (fileName) {
-  var fs = Npm.require('fs');
-  var path = Npm.require('path');
-
-  var meteorRoot = fs.realpathSync(process.cwd() + '/../');
-
-  var assetsFolder = meteorRoot + '/server/assets/app';
-
-  if (fileName) {
-    assetsFolder += '/' + fileName
-  }
-
-  return assetsFolder
-};
-
-var CloudSettings = Meteor.settings.private.GoogleCloud;
-
 Meteor.methods({
-  getAuthToken: function () {
+  "getAuthToken": function () {
     var Client = Meteor.npmRequire('node-google-prediction');
-
-    var client = new Client({
-      claimSetISS: CloudSettings.SERVICE_EMAIL,
-      //pem should be located in private directory
-      path: assetsFolderAbsolutePath(CloudSettings.PEM_FILE)
-    });
+    var path = process.env.PWD;
+    var client = new Client({claimSetISS: "135160182081-plkk2djriqo90v2l41461a9b03qb0tmt@developer.gserviceaccount.com",
+                             path: path + "/private/hero-chef-secret.pem"
+                            });
 
     var syncToken = Meteor.wrapAsync(client.accessTokenRequest, client);
     return syncToken()

@@ -8,9 +8,12 @@ GoogleCloud = new gcloud({
 });
 
 
-uploadFileTest = function () {
-  var bucket = GoogleCloud.storage().bucket('hospohero');
-  bucket.upload(process.env.PWD + '/smart.json', function (err, f) {
-    console.log(err, f);
-  });
+uploadFileTest = function (data) {
+  var through = Meteor.npmRequire('through');
+  var bucket = GoogleCloud.storage().bucket(CloudSettings.BUCKET);
+  str = new through();
+
+  str.pipe(bucket.file('test.txt').createWriteStream());
+  str.push(data);
+  str.end();
 };

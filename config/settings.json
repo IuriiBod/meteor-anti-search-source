@@ -13,7 +13,8 @@
     "GoogleCloud": {
       "PROJECT_ID": "hospohero",
       "SERVICE_EMAIL": "24418709828-35oaus6ckd1fr24i0jdprhcprpapitfn@developer.gserviceaccount.com",
-      "PEM_FILE": "google-cloud.pem"
+      "PEM_FILE": "google-cloud.pem",
+      "BUCKET": "hospohero"
     }
   }
 }
