@@ -1,6 +1,6 @@
 <template name="comment">
   <div class="chat-message">
-    <img class="message-avatar" src="{{state$profilePicture}}" alt="">
+    <img class="message-avatar" src="{{profilePicture state$createdBy}}" alt="">
     <div class="message">
       <a class="message-author" href="#">{{username state$createdBy}}</a>
       <span class="message-date">{{timeFormattedWithDate state$createdOn}}</span>

@@ -29,17 +29,50 @@ component.action.likePost = function(id) {
       console.log(err);
       return alert(err.reason);
     } else {
-      // var options = {
-      //   "title": "update NewsFeeds on by " + Meteor.user().username,
-      //   "postId": id,
-      //   "type": "post update"
-      // }
-      // Meteor.call("sendNotifications", ref, "post", options, function(err) {
-      //   if(err) {
-      //       console.log(err);
-      //       return alert(err.reason);
-      //   }
-      // });
+      var newsFeedPost = NewsFeeds.findOne(id);
+      if(newsFeedPost) {
+        var thisUser = Meteor.user();
+        var name = thisUser.username;
+        if(thisUser.profile.firstname && thisUser.profile.lastname) {
+          name = thisUser.profile.firstname + " " + thisUser.profile.lastname;
+        }
+        
+        var createdUser = Meteor.users.findOne(newsFeedPost.createdBy);
+
+        var text = newsFeedPost.text;
+        text = $(text).text();
+
+        var matched = /(?:^|\W)@(\w+)(?!\w)/g, match, matches = [];
+        while (match = matched.exec(text)) {
+          matches.push(match[1]);
+        }
+
+        var ref = null;
+        var type = "newsFeedMainTextBox";
+
+        if(newsFeedPost.ref) {
+          ref = newsFeedPost.ref;
+          type = "newsFeedSubTextBox";
+        }
+
+        //notify created user
+        var options = {
+          "title": name + " liked your newsfeed post",
+          "users": [createdUser.username],
+          "newsfeedId": id,
+          "type": "like"
+        }
+        sendNotifi(ref, type, options);
+
+        //notify tagged users
+        var options = {
+          "title": name + " liked the newsfeed post you are tagged in",
+          "users": [matches],
+          "newsfeedId": id,
+          "type": "like"
+        }
+        sendNotifi(ref, type, options);
+      }
     }
   });
 };
