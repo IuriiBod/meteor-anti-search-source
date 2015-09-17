@@ -23,9 +23,13 @@ Template.submitJob.events({
     var info = {
       type: type,
       ref: job,
-      portions: portions,
-      activeTime: activeTime
     };
+    if(activeTime && activeTime.trim()) {
+      info.activeTime = parseInt(activeTime.trim());
+    }
+    if(portions && portions.trim()) {
+      info.portions = parseInt(portions.trim());
+    }
     FlowComponents.callAction("submit", info);
   }
 });

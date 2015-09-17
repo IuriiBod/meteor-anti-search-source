@@ -2,8 +2,13 @@ var component = FlowComponents.define("submitJob", function(props) {
   this.onRendered(this.onJobRendered);
 });
 
+component.state.selectedJobType = function() {
+  var jobType = this.get("type");
+  return JobTypes.findOne(jobType);
+}
+
 component.state.jobTypes = function() {
-  return JobTypes.find();
+  return JobTypes.find({"_id": {$nin: [this.get("type")]}});
 };
 
 component.state.jobs = function() {
@@ -16,20 +21,37 @@ component.state.jobs = function() {
 
 component.action.onChangeType = function(type) {
   this.set("type", type);
+  this.set("jobRef", null);
+  this.set("activeTime", null);
 };
 
 component.action.onChangeJob = function(job) {
-  this.set("jobRef", job);
+  if(job) {
+    this.set("jobRef", job);
+  } else {
+    this.set("jobRef", null);
+  }
 };
 
-component.state.portions = function() {
+component.state.activeTime = function() {
   var jobId = this.get("jobRef");
   if(jobId) {
     var job = JobItems.findOne(jobId);
     if(job) {
-      var time = job.activeTime;
-      this.set("activeTime", time);
-      return job.portions;
+      return job.activeTime;
+    }
+  } else {
+    return 0;
+  }
+}
+
+component.state.job = function() {
+  var jobId = this.get("jobRef");
+  if(jobId) {
+    var job = JobItems.findOne(jobId);
+    if(job) {
+      this.set("activeTime", job.activeTime);
+      return job;
     }
   }
 };
@@ -80,6 +102,16 @@ component.prototype.onJobRendered = function() {
   if(prep) {
     this.set("type", prep._id);
     this.set("activeTime", 0);  
+  }
+
+  var config = {
+    '.chosen-select'           : {},
+    '.chosen-select-deselect'  : {allow_single_deselect:true},
+    '.chosen-select-no-single' : {disable_search_threshold:10},
+    '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'}
+  }
+  for (var selector in config) {
+    $(selector).chosen(config[selector]);
   }
 };
 

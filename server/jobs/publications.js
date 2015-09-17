@@ -16,7 +16,11 @@ Meteor.publish("unAssignedJobs", function() {
 
 Meteor.publish("jobs", function(ids) {
   var cursors = [];
-  var jobs = Jobs.find({"_id": {$in: ids}}, {limit: 10});
+  if(ids.length > 0) {
+    var jobs = Jobs.find({"_id": {$in: ids}}, {limit: 10});
+  } else {
+    var jobs = Jobs.find({}, {limit: 10});
+  }
   cursors.push(jobs);
   logger.info("Jobs publication");
   return cursors;
