@@ -39,6 +39,8 @@ Template.notifiButtons.events({
         } else if(notifi.actionType == "confirm" || notifi.actionType == "claim" || notifi.actionType == "update") {
           Router.go("shift", {"_id": ref});
         }
+      } else if(type == "newsfeed") {
+        Router.go("/");
       }
     }
   }
