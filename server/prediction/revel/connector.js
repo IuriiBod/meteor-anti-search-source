@@ -2,7 +2,6 @@ var HOST = Meteor.settings.private.Revel.HOST;
 var KEY = Meteor.settings.private.Revel.KEY;
 var SECRET = Meteor.settings.private.Revel.SECRET;
 
-
 Revel = {
   queryRevelResource: function (resource, orderBy, isAscending, fields, limit, offset) {
     var orderByStr;
@@ -41,36 +40,92 @@ Revel = {
     ], limit, offset);
   },
 
-  reduceOrderItems: function () {
+  uploadAndReduceOrderItems: function (onDateReceived, onUploadFinish, maxDaysCount) {
+    if (!maxDaysCount) {
+      maxDaysCount = 365; // get data for last year by default
+    }
+    var daysCount = 0;
     var limit = 10;
     var offset = 0;
     var totalCount = limit;
 
-    var bucket = {};
-    var putIntoBucket = function (entity) {
-      var dayOfYear = moment(entity.created_date).dayOfYear();
-      var productName = entity.product_name_override;
+    var bucket = new RevelSalesDataBucket();
 
-      if (!bucket[productName]) {
-        bucket[productName] = {};
-      }
-
-      if (!bucket[productName][dayOfYear]) {
-        bucket[productName][dayOfYear] = 0;
-      }
-
-      bucket[productName][dayOfYear] += entity.quantity;
-    };
-
-    while (offset <= 20) {
+    while (offset <= totalCount) {
+      console.log('request to revel offset=', offset);
       var result = this.queryRevelOrderItems(limit, offset);
-      totalCount = result.total_count;
 
-      result.objects.forEach(putIntoBucket);
+      if (totalCount === limit) {
+        totalCount = result.total_count;
+      }
+
+      result.objects.forEach(function (entry) {
+        if (!bucket.put(entry)) {
+          onDateReceived(bucket.getDataAndReset());
+          daysCount++;
+        }
+      });
+
+      if (daysCount >= maxDaysCount) {
+        break;
+      }
 
       offset += limit;
     }
 
-    return bucket;
+    if (!bucket.isEmpty()) {
+      //get everything else
+      onDateReceived(bucket.getDataAndReset())
+    }
+
+    onUploadFinish(daysCount);
   }
 };
+
+
+//==== RevelSalesDataBucket ===
+
+var RevelSalesDataBucket = function () {
+  this._data = {};
+  this._dayNumber = false;
+};
+
+//if entity related to other date returns false
+RevelSalesDataBucket.prototype.put = function (entry) {
+  var dayOfYear = moment(entry.created_date).dayOfYear();
+  var productName = entry.product_name_override;
+
+  if (this.isEmpty()) {
+    this._dayNumber = dayOfYear;
+    this._createdDate = entry.created_date;
+  }
+
+  if (dayOfYear === this._dayNumber) {
+    if (!isFinite(this._data[productName])) {
+      this._data[productName] = 0;
+    }
+
+    this._data[productName] += entry.quantity;
+    return true;
+  }
+
+  return false;
+};
+
+RevelSalesDataBucket.prototype.getDataAndReset = function () {
+  var result = {
+    menuItems: this._data,
+    createdDate: this._createdDate
+  };
+
+//reset project
+  this._data = {};
+  this._dayNumber = false;
+
+  return result;
+};
+
+RevelSalesDataBucket.prototype.isEmpty = function () {
+  return this._dayNumber === false
+};
+
