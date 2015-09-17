@@ -115,15 +115,24 @@ li > img {
   white-space: inherit !important;
 }
 
-<<<<<<< HEAD
 .ordering_count {
   max-width: 120px !important;
 }
 
 .ordering_count .editable-input input {
   max-width: 100px;
-=======
+}
+
+.caret-pulled-right {
+  position: relative;
+  bottom: 17px;
+  right: 10px;
+}
+
+.label-success a {
+  color: #FFFFFF;
+}
+
 .chosen-select-width, .chosen-single, .chosen-drop {
   min-width: 200px;
->>>>>>> b1c33ff... added chosen
 }
