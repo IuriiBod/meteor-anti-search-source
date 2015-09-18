@@ -1,5 +1,5 @@
 Template.editIngredientItem.helpers({
-  'item': function() {
+  item: function() {
     var id = Session.get("thisIngredientId");
     subs.subscribe("ingredients", [id]);
     if(id) {

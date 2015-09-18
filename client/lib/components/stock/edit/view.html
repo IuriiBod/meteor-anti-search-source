@@ -38,7 +38,11 @@
                   {{/each}}
                 </select>
               {{else}}
-                <div class="form-control">{{supplierName item.suppliers}}</div>
+                {{#if item.suppliers}}
+                  <div class="form-control">{{supplierName item.suppliers}}</div>
+                {{else}}
+                  <div class="form-control">Not assigned</div>
+                {{/if}}
               {{/if}}
             </div>
           </div>
@@ -47,13 +51,21 @@
             <div class="col-sm-6">
               {{#if canEditStock}}
               <select name="portionOrdered" class="form-control">
-                <option selected="selected">{{item.portionOrdered}}</option>
+                {{#if item.portionOrdered}}
+                  <option selected="selected">{{item.portionOrdered}}</option>
+                {{else}}
+                  <option selected="selected">Select</option>
+                {{/if}}
                 {{#each state$unitsOrdered}}
                   <option>{{unit}}</option>
                 {{/each}}
               </select>
               {{else}}
-                <div class="form-control">{{item.portionOrdered}}</div>
+                {{#if item.portionOrdered}}
+                  <div class="form-control">{{item.portionOrdered}}</div>
+                {{else}}
+                  <div class="form-control">-</div>
+                {{/if}}
               {{/if}}
             </div>
           </div>
@@ -75,13 +87,21 @@
             <div class="col-sm-6 ">
               {{#if canEditStock}}
               <select name="portionUsed" class="form-control">
-                <option selected="selected">{{item.portionUsed}}</option>
+                {{#if item.portionUsed}}
+                  <option selected="selected">{{item.portionUsed}}</option>
+                {{else}}
+                  <option selected="selected">Select a unit</option>
+                {{/if}}
                 {{#each state$unitsUsed}}
                   <option>{{unit}}</option>
                 {{/each}}
               </select>
               {{else}}
-                <div class="form-control">{{item.portionUsed}}</div>
+                {{#if item.portionUsed}}
+                  <div class="form-control">{{item.portionUsed}}</div>
+                {{else}}
+                  <div class="form-control">-</div>
+                {{/if}}
               {{/if}}
             </div>
           </div>
