@@ -7,5 +7,9 @@ component.state.subNewsFeedPost = function() {
 } ;
 
 component.state.likesCount = function(){
-  return this.post && this.post.likes ? this.post.likes.length : 0;
+  return this.get('liked') ? (this.post.likes.length-1) : this.post.likes.length;
+};
+
+component.state.liked = function() {
+  return this.post.likes.indexOf(Meteor.userId()) >= 0;
 };

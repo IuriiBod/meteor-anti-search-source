@@ -10,10 +10,23 @@ component.state.likesCount = function() {
   var id = this.post._id;
   var post = NewsFeeds.findOne(id);
   if(post) {
-    return post.likes.length;
-    
+    var count = post.likes.length;
+    if(post.likes.indexOf(Meteor.userId()) >= 0) {
+      count = count - 1;  
+    }
+    if(count > 0) {
+      return count;
+    }
   }
 };
+
+component.state.liked = function() {
+  if(this.post.likes.indexOf(Meteor.userId()) >= 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 component.state.comments = function(){
   return NewsFeeds.find({"reference": this.post._id}, {sort: {"createdOn": 1}});
