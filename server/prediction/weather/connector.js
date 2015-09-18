@@ -20,14 +20,15 @@ OpenWeatherMap = {
 
     var allParams = _.extend(defaultParams, params);
 
-    var res = HTTP.get(WEATHER_URL + route, {
-      params: allParams
-    });
+    try {
+      var res = HTTP.get(WEATHER_URL + route, {
+        params: allParams
+      });
 
-    if (res.statusCode === 200) {
       return res.data;
-    } else {
-      throw new Meteor.Error(res.statusCode, 'OpenWeatherMap Access Error');
+    } catch (err) {
+      logger.error('OpenWeatherMap Access Error', {params: params, error: err});
+      return false;
     }
   },
 
@@ -38,14 +39,14 @@ OpenWeatherMap = {
     });
 
     var self = this;
-    return data.list.map(function (weatherEntry) {
-      return {
-        date: self._convertDtToDate(weatherEntry.dt),
-        temp: weatherEntry.temp.eve,
-        main: weatherEntry.weather[0].main,
-        icon: weatherEntry.weather[0].icon
-      }
-    });
+    return data && data.list.map(function (weatherEntry) {
+        return {
+          date: self._convertDtToDate(weatherEntry.dt),
+          temp: weatherEntry.temp.eve,
+          main: weatherEntry.weather[0].main,
+          icon: weatherEntry.weather[0].icon
+        }
+      });
   },
 
   history: function (date, location) {
