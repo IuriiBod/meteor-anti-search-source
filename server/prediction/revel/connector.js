@@ -12,23 +12,27 @@ Revel = {
       orderByStr = '-' + orderBy;
     }
 
-    var response = HTTP.get(HOST + '/resources/' + resource, {
-      headers: {
-        'API-AUTHENTICATION': KEY + ':' + SECRET
-      },
-      params: {
-        limit: limit,
-        offset: offset,
-        order_by: orderByStr,
-        fields: fields.join(','),
-        format: 'json'
+    try {
+      var response = HTTP.get(HOST + '/resources/' + resource, {
+        headers: {
+          'API-AUTHENTICATION': KEY + ':' + SECRET
+        },
+        params: {
+          limit: limit,
+          offset: offset,
+          order_by: orderByStr,
+          fields: fields.join(','),
+          format: 'json'
+        }
+      });
+      if (response.statusCode === 200) {
+        return response.data;
+      } else {
+        throw new Meteor.Error(response.statusCode, 'Error while connecting to Revel');
       }
-    });
-
-    if (response.statusCode === 200) {
-      return response.data;
-    } else {
-      throw new Meteor.Error(response.statusCode, 'Error while connecting to Revel');
+    } catch (err) {
+      logger.info('Error while connecting to Revel', {response: err});
+      return false;
     }
   },
 
@@ -45,18 +49,24 @@ Revel = {
       maxDaysCount = 365; // get data for last year by default
     }
     var daysCount = 0;
-    var limit = 1000;
+    var limit = 5000;
     var offset = 0;
     var totalCount = limit;
 
     var bucket = new RevelSalesDataBucket();
 
-    while (offset <= totalCount) {
+    while (offset <= totalCount && daysCount < maxDaysCount) {
       logger.info('Request to Revel server', {offset: offset, total: totalCount});
       var result = this.queryRevelOrderItems(limit, offset);
 
+      //handle Revel API error
+      if (result === false) {
+        onUploadFinish(-1);
+        return;
+      }
+
       if (totalCount === limit) {
-        totalCount = result.total_count;
+        totalCount = result.meta.total_count;
       }
 
       result.objects.forEach(function (entry) {
@@ -66,16 +76,13 @@ Revel = {
         }
       });
 
-      if (daysCount >= maxDaysCount) {
-        break;
-      }
-
       offset += limit;
     }
 
     if (!bucket.isEmpty()) {
       //get everything else
-      onDateReceived(bucket.getDataAndReset())
+      onDateReceived(bucket.getDataAndReset());
+      daysCount++;
     }
 
     onUploadFinish(daysCount);

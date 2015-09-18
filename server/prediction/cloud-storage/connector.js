@@ -24,8 +24,8 @@ GoogleCloud = {
     }
   }),
 
-  //todo update this code for multiple locations: open multiple streams
-  //todo make unique files for differnt locations like: "sales-data-#{locationId}"
+  //todo update this code for one location
+  //todo make unique files for different locations like: "sales-data-#{locationId}"
   uploadTrainingData: function (/*location*/) {
     var through = Meteor.npmRequire('through');
     var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
@@ -50,7 +50,6 @@ GoogleCloud = {
     }, function (uploadedDaysCount) {
       logger.info('Sales data uploading finished', {uploadedDaysCount: uploadedDaysCount});
       trainingDataWriteStream.end();
-    }, 20);
-
+    }, 30);
   }
 };
