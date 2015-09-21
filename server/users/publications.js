@@ -5,9 +5,8 @@ Meteor.publish('profileUser', function(id) {
   }
   var options = {
     "services.google": 1,
-    "isAdmin": 1,
-    "isWorker": 1,
-    "isManager": 1,
+    "roles": 1,
+    "relations": 1,
     "isActive": 1,
     "profile": 1,
     "username": 1,
@@ -24,9 +23,8 @@ Meteor.publish("usersList", function() {
     this.error(new Meteor.Error(404, "User not found"));
   }
   var options = {
-    "isAdmin": 1,
-    "isWorker": 1,
-    "isManager": 1,
+    "roles": 1,
+    "relations": 1,
     "username": 1,
     "emails": 1,
     "isActive": 1,
@@ -40,9 +38,8 @@ Meteor.publish("usersList", function() {
 
 Meteor.publish("selectedUsersList", function(usersIds) {
   var options = {
-    "isAdmin": 1,
-    "isWorker": 1,
-    "isManager": 1,
+    "roles": 1,
+    "relations": 1,
     "username": 1,
     "emails": 1,
     "isActive": 1,

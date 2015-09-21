@@ -88,7 +88,7 @@ Migrations.add({
       userUpdateQuery.$set.relationIds = relationInsertQuery;
       users.forEach(function(user) {
         if(user._id == admin._id) {
-          userUpdateQuery.$set.roles = adminRole._id;
+          userUpdateQuery.$set.roles[areaId] = adminRole._id;
         } else if(user.isAdmin || user.isManager) {
           userUpdateQuery.$set.roles[areaId] = managerRole._id;
         } else {

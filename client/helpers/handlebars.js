@@ -156,7 +156,7 @@ var helpers = {
     }
   }
 };
-_.extend(App.helpers, helpers);
+_.extend(Namespace('HeroApp.helpers'), helpers);
 
 Object.keys(helpers).forEach(function (helperName) {
   Template.registerHelper(helperName,helpers[helperName]);

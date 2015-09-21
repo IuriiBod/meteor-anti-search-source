@@ -55,6 +55,10 @@ Roles.getRoleById = function (roleId) {
   return Meteor.roles.findOne({_id: roleId});
 };
 
+Roles.getRoleByName = function(roleName) {
+  return Meteor.roles.findOne({name: roleName});
+};
+
 /**
  * Returns role permissions
  * @param roleId
@@ -108,8 +112,29 @@ Roles.deleteRole = function(id) {
 //  setUserOnRole: function() {},
 //
 //  removeUserFromRole: function() {},
-//
-//  isUserInRole: function(role) {},
-//
+
+Roles.userIsInRole = function(roleName, userId, areaId) {
+  var role = this.getRoleByName(roleName);
+  var user;
+  var searchObject = {
+    _id: userId,
+    roles: {}
+  };
+
+  if(areaId) {
+    searchObject.roles[areaId] = role._id;
+  } else {
+    searchObject.roles.defaultRole = role._id;
+  }
+
+  if(Meteor.users.findOne(searchObject)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+//c7km3fztaazbJ4sWg
+
 //  canUser: function(perms) {}
 //};
