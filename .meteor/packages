@@ -45,3 +45,4 @@ deepwell:bootstrap-datepicker2
 momentjs:moment
 http
 micah:google-cloud
+percolate:synced-cron
