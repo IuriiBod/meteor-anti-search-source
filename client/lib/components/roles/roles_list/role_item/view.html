@@ -1,0 +1,23 @@
+<template name="roleItem">
+  <tr>
+    <td>
+      {{#unless state$role.default}}
+        <a href="#" class="editable-role-name" data-id="{{state$role._id}}">
+          {{state$roleName}}
+        </a>
+      {{else}}
+        {{state$roleName}}
+      {{/unless}}
+    </td>
+    <td>
+      {{> render component="permissionsList" role=state$role}}
+    </td>
+    <td>
+      {{#unless state$role.default}}
+        <a href="#" class="text-danger delete-role" data-id="{{state$role._id}}">
+          <i class="fa fa-trash" data-id="{{state$role._id}}"></i>
+        </a>
+      {{/unless}}
+    </td>
+  </tr>
+</template>

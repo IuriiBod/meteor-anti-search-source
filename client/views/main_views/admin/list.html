@@ -18,6 +18,9 @@
                         <li class="">
                             <a href="#timeout" data-toggle="tab">Timeout</a>
                         </li>
+                        <li class="">
+                          <a href="#roles" data-toggle="tab">Roles</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="usersList">
@@ -31,6 +34,9 @@
                         </div>
                         <div class="tab-pane" id="timeout">
                             {{> render component='inactivityTimeoutField'}}
+                        </div>
+                        <div class="tab-pane" id="roles">
+                            {{> render component='rolesSettings'}}
                         </div>
                     </div>
 
