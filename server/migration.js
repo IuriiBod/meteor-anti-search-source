@@ -82,14 +82,17 @@ Migrations.add({
     // Find all users
     users = Meteor.users.find().fetch();
     if(users.length) {
+      var adminRole = Meteor.roles.findOne({name: 'Admin'});
+      var managerRole = Meteor.roles.findOne({name: 'Manager'});
+      var workerRole = Meteor.roles.findOne({name: 'Worker'});
       userUpdateQuery.$set.relationIds = relationInsertQuery;
       users.forEach(function(user) {
         if(user._id == admin._id) {
-          userUpdateQuery.$set.roles = 'owner';
+          userUpdateQuery.$set.roles = adminRole._id;
         } else if(user.isAdmin || user.isManager) {
-          userUpdateQuery.$set.roles[areaId] = 'manager';
+          userUpdateQuery.$set.roles[areaId] = managerRole._id;
         } else {
-          userUpdateQuery.$set.roles[areaId] = 'worker';
+          userUpdateQuery.$set.roles[areaId] = workerRole._id;
         }
         // Update users collection
         Meteor.users.update({_id: user._id}, userUpdateQuery);
