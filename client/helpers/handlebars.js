@@ -161,3 +161,5 @@ _.extend(Namespace('HospoHero.helpers'), helpers);
 Object.keys(helpers).forEach(function (helperName) {
   Template.registerHelper(helperName,helpers[helperName]);
 });
+
+Template.registerHelper('isInOrganization', HospoHero.isInOrganization);
