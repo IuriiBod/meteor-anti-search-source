@@ -17,20 +17,13 @@ component.state.notifications = function() {
 };
 
 component.state.currentArea = function() {
-  var areaId = Session.get('currentAreaId');
-  if(areaId) {
-    var area = Areas.findOne({_id: areaId}, {fields: {name: 1}});
-    if(area) {
-      return area.name;
-    }
-  }
+  return HospoHero.getCurrentArea();
 };
 
 component.state.relation = function() {
-  var userId = Meteor.userId();
-  if(userId) {
-    var relation = Relations.findOne({collectionName: 'users', entityId: userId});
-    return relation;
+  var user = Meteor.user();
+  if(user && user.relations) {
+    return user.relations;
   }
 };
 
@@ -43,20 +36,11 @@ component.state.organization = function() {
 };
 
 component.state.isOrganizationOwner = function() {
-  var organization = this.get('organization');
-  var userId = Meteor.userId();
-  if(organization && userId) {
-    return (organization.owner == userId);
-  }
+  return HospoHero.isOrganizationOwner();
 };
 
 component.state.belongToOrganization = function() {
-  var relation = this.get('relation');
-  if(relation) {
-    return true;
-  } else {
-    return false;
-  }
+  return HospoHero.isInOrganization();
 };
 
 component.state.hasLocations = function() {

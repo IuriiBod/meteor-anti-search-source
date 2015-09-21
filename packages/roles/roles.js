@@ -133,7 +133,25 @@ Roles.userIsInRole = function(roleName, userId, areaId) {
   }
 };
 
-//c7km3fztaazbJ4sWg
+Roles.hasPermission = function(permissions, areaId) {
+  var user = Meteor.user();
+  if(!user) {
+    return false;
+  }
 
-//  canUser: function(perms) {}
-//};
+  if(!user.roles || !user.roles[areaId]) {
+    return false;
+  }
+
+  var role = Meteor.roles.findOne({_id: user.roles[areaId]});
+
+  var isPermitted = false;
+  if(Array.isArray(permissions)) {
+    isPermitted = _.reduce(permissions, function(memo, perm) {
+      return role.permissions.indexOf(perm) > -1;
+    }, false);
+  } else {
+    isPermitted = role.permissions.indexOf(permissions) > -1;
+  }
+  return isPermitted;
+};
