@@ -1,5 +1,6 @@
 var component = FlowComponents.define("listOfIngredients", function(props) {
   this.name = props.name;
+  subs.subscribe("allSuppliers");
 });
 
 component.state.ingredientsList = function() {
