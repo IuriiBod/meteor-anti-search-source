@@ -38,7 +38,6 @@ component.prototype.onItemRendered = function() {
       });
     } else if(self.name == "editJob") {
       var localId = Session.get("localId");
-      subs.subscribe("ingredients", [id]);
 
       var localJobItem = LocalJobItem.findOne(localId);
       if(localJobItem) {

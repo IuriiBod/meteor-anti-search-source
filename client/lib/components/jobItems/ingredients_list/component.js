@@ -6,19 +6,22 @@ var component = FlowComponents.define("listOfIngredients", function(props) {
 
 component.state.ingredientsList = function() {
   var localId = Session.get("localId");
+  var ids = [];
   if(localId) {
     if(this.id == "menuSubmit") {
       var localMenuItem = LocalMenuItem.findOne(localId);
       if(localMenuItem && localMenuItem.ings.length > 0) {
-        return localMenuItem.ings;
+        ids = localMenuItem.ings;
       }
     } else {
       var localJobItem = LocalJobItem.findOne(localId);
       if(localJobItem && localJobItem.ings.length > 0) {
-        return localJobItem.ings;
+        ids = localJobItem.ings;
       }
     }
   }
+  Meteor.subscribe("ingredients", ids);
+  return ids;
 }
 
 component.state.isMenu = function() {
