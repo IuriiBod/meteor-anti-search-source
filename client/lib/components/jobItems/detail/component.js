@@ -132,12 +132,11 @@ component.state.prepCostPerPortion = function() {
 component.state.relatedMenus = function() {
   var id = this.id;
   subs.subscribe("jobsRelatedMenus", id);
-  return MenuItems.find().fetch();
+  return MenuItems.find({"jobItems._id": id}).fetch();
 };
 
 component.state.getCategory = function(id) {
   subs.subscribe("allCategories");
   var category = Categories.findOne({_id: id});
-
   return category ? category.name : '';
 };
