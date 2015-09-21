@@ -1,6 +1,7 @@
 Meteor.methods({
-  createInvitation: function (email, name, senderInfo, areaId, roleId) {
+  createInvitation: function (email, name, areaId, roleId) {
     var area = Areas.findOne({_id: areaId});
+    var senderInfo = Meteor.user();
     var invitation = {
       name: name,
       email: email,
@@ -18,11 +19,11 @@ Meteor.methods({
     text += "You've been added to the " + area.name + " area.<br>";
     text += "To complete registration go on this link: <a href='" + url + "'>" + url + "</a><br><br>";
     text += "If you have any questions let me know.<br>";
-    text += senderInfo.name;
+    text += senderInfo.username;
 
     Email.send({
       "to": email,
-      "from": senderInfo.email,
+      "from": senderInfo.emails[0].address,
       "subject": "[Hero Chef] Added to the "+ area.name + " area",
       "html": text
     });

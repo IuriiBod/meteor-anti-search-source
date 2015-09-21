@@ -44,7 +44,7 @@ component.action.inviteNewUser = function(email, name, roleId) {
     tpl.$('.input-group').addClass('has-error');
     tpl.$('input[name="newUserName"]').val('').focus();
   }
-  Meteor.call('createInvitation', email, name, senderInfo, areaId, roleId, function (err) {
+  Meteor.call('createInvitation', email, name, areaId, roleId, function (err) {
     if (err) {
       console.log(err);
       return alert(err.reason);
