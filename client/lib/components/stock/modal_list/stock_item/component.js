@@ -37,12 +37,17 @@ component.prototype.onItemRendered = function() {
         }
       });
     } else if(self.name == "editJob") {
-      var localJobItemId = Session.get("localId");
+      var localId = Session.get("localId");
       subs.subscribe("ingredients", [id]);
 
-      var localJobItem = LocalJobItem.findOne(localJobItemId);
+      var localJobItem = LocalJobItem.findOne(localId);
       if(localJobItem) {
-        LocalJobItem.update({"_id": localJobItemId}, {$addToSet: {"ings": id}});
+        LocalJobItem.update({"_id": localId}, {$addToSet: {"ings": id}});
+      } else {
+        var localMenuItem = LocalMenuItem.findOne(localId);
+        if(localMenuItem) {
+          LocalMenuItem.update({"_id": localId}, {$addToSet: {"ings": id}});
+        }
       }
     }
   });

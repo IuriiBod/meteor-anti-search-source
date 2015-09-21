@@ -1,5 +1,3 @@
-LocalJobItem =  new Mongo.Collection(null);
-
 var component = FlowComponents.define('submitJobItem', function(props) {
   this.onRendered(this.onFormRendered);
 });

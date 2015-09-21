@@ -29,10 +29,14 @@ component.prototype.setIds = function() {
       }
     }
   } else if(this.name == "editJob") {
-    var localJobItemId = Session.get("localId");
-    var localJobItem = LocalJobItem.findOne(localJobItemId);
+    var localId = Session.get("localId");
+    var localJobItem = LocalJobItem.findOne(localId);
+    var localMenuItem = LocalMenuItem.findOne(localId);
+
     if(localJobItem && localJobItem.ings.length > 0) {
       ids = localJobItem.ings;
+    } else if(localMenuItem && localMenuItem.ings.length > 0) {
+      ids = localMenuItem.ings;
     }
   }
   this.set("ids", ids);
