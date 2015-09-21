@@ -216,25 +216,28 @@ component.action.submit = function (id, info) {
       HospoHero.alert(err);
     } else {
       var jobBefore = Session.get("updatingJob");
-      var desc = createNotificationText(id, jobBefore, info);
+      var jobtype = JobTypes.findOne(jobBefore.type);
+      if(jobtype) {
+        var desc = createNotificationText(id, jobBefore, info);
 
-      var options = {
-        "type": "edit",
-        "title": jobBefore.name + " " + jobBefore.type + " job has been updated",
-        "text": desc
-      };
-      Meteor.call("sendNotifications", id, "job", options, function (err) {
-        if (err) {
-          HospoHero.alert(err);
-        } else {
-          var goback = Session.get("goBackMenu");
-          if (goback) {
-            Router.go("menuItemDetail", {"_id": goback});
+        var options = {
+          "type": "edit",
+          "title": jobBefore.name + " " + jobtype.name + " job has been updated",
+          "text": desc
+        };
+        Meteor.call("sendNotifications", id, "job", options, function (err) {
+          if (err) {
+            HospoHero.alert(err);
+          } else {
+            var goback = Session.get("goBackMenu");
+            if (goback) {
+              Router.go("menuItemDetail", {"_id": goback});
+            }
           }
-        }
-      });
+        });
 
-      Router.go("jobItemDetailed", {"_id": id});
+        Router.go("jobItemDetailed", {"_id": id});
+      }
     }
   });
 };
