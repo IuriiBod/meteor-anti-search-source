@@ -40,10 +40,6 @@ component.action.inviteNewUser = function(email, name, roleId) {
     name: sender.username,
     email: sender.emails[0].address
   };
-  if (!name.trim() || name.length < 3) {
-    tpl.$('.input-group').addClass('has-error');
-    tpl.$('input[name="newUserName"]').val('').focus();
-  }
   Meteor.call('createInvitation', email, name, areaId, roleId, function (err) {
     if (err) {
       console.log(err);

@@ -143,20 +143,20 @@ var helpers = {
   },
 
   isAdmin: function() {
-    var user = Meteor.user();
-    if(user) {
-      return user.isAdmin;
+    var userId = Meteor.userId();
+    if(userId) {
+      return HospoHero.isAdmin(userId);
     }
   },
 
   isManagerOrAdmin: function() {
-    var user = Meteor.user();
+    var userId = Meteor.userId();
     if(user) {
-      return (user.isAdmin || user.isManager);
+      return (HospoHero.isAdmin(userId) || HospoHero.isManager(userId));
     }
   }
 };
-_.extend(Namespace('HeroApp.helpers'), helpers);
+_.extend(Namespace('HospoHero.helpers'), helpers);
 
 Object.keys(helpers).forEach(function (helperName) {
   Template.registerHelper(helperName,helpers[helperName]);

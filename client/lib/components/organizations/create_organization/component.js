@@ -13,7 +13,8 @@ component.action.createOrganization = function(orgName) {
   // TODO: Add billing account info to the doc variable
   var doc = {
     name: orgName,
-    owner: userId
+    owner: userId,
+    createdAt: Date.now()
   };
   // Create new organization
   Meteor.call("createOrganization", doc, function(err) {

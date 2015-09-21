@@ -115,7 +115,6 @@ Roles.deleteRole = function(id) {
 
 Roles.userIsInRole = function(roleName, userId, areaId) {
   var role = this.getRoleByName(roleName);
-  var user;
   var searchObject = {
     _id: userId,
     roles: {}
