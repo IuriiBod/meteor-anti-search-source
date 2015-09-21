@@ -61,6 +61,6 @@ GoogleCloud = {
     }, function (uploadedDaysCount) {
       logger.info('Sales data uploading finished', {uploadedDaysCount: uploadedDaysCount});
       trainingDataWriteStream.end();
-    }, 30);
+    }, 365);
   }
 };
