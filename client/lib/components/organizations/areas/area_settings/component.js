@@ -16,16 +16,16 @@ component.state.areaUsers = function() {
   var userIds = Relations.find({
     $or: [
       { areaIds: areaId },
-      { $and: [
-        { organizationId: this.get('organizationId') },
-        { locationIds: this.get('locationId') },
-        { areaIds: null }
-      ]},
-      { $and: [
-        { organizationId: this.get('organizationId') },
-        { locationIds: null },
-        { areaIds: null }
-      ]}
+      {
+        organizationId: this.get('organizationId'),
+        locationIds: this.get('locationId'),
+        areaIds: null
+      },
+      {
+        organizationId: this.get('organizationId'),
+        locationIds: null,
+        areaIds: null
+      }
     ]
   }, {fields: { entityId: 1 } }).fetch();
 
