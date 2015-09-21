@@ -8,12 +8,12 @@ GoogleCloud = new gcloud({
 });
 
 
-uploadFileTest = function (data) {
+uploadFileTest = function (data1) {
   var through = Meteor.npmRequire('through');
   var bucket = GoogleCloud.storage().bucket(CloudSettings.BUCKET);
   str = new through();
 
-  str.pipe(bucket.file('test.txt').createWriteStream());
-  str.push(data);
-  str.end();
+  // str.pipe(bucket.file('test.csv').createWriteStream());
+  // str.push(data1);
+  // str.end();
 };
