@@ -17,13 +17,14 @@ Template.addUserPopup.events({
     e.preventDefault();
     var email = $('[name="addUserName"]').val();
     var name = $('[name="newUserName"]').val();
+    var role = $('select[name="userRole"]').val();
 
     if (!name.trim() || name.length < 3) {
       tpl.$('.input-group').addClass('has-error');
       tpl.$('input[name="newUserName"]').val('').focus();
     } else {
       tpl.$('.input-group').removeClass('has-error');
-      FlowComponents.callAction('inviteNewUser', email, name);
+      FlowComponents.callAction('inviteNewUser', email, name, role);
     }
   }
 });

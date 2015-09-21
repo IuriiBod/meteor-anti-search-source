@@ -39,6 +39,14 @@ Roles.getPermissions = function() {
 };
 
 /**
+ * Return roles array
+ * @returns {Array}
+ */
+Roles.getRoles = function() {
+  return Meteor.roles.find({}, {sort: {name: 1}}).fetch();
+};
+
+/**
  * Returns role by ID
  * @param id
  * @returns {any}

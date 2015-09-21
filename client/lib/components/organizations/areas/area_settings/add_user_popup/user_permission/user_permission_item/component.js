@@ -1,1 +1,0 @@
-var component = FlowComponents.define('userPermissionItem', function(props) {});

@@ -32,7 +32,7 @@ component.action.clearSearchText = function() {
   this.set('searchText', '');
 };
 
-component.action.inviteNewUser = function(email, name) {
+component.action.inviteNewUser = function(email, name, roleId) {
   var areaId = this.get('areaId');
   var sender = Meteor.user();
   var senderInfo = {
@@ -44,7 +44,7 @@ component.action.inviteNewUser = function(email, name) {
     tpl.$('.input-group').addClass('has-error');
     tpl.$('input[name="newUserName"]').val('').focus();
   }
-  Meteor.call('createInvitation', email, name, senderInfo, areaId, function (err) {
+  Meteor.call('createInvitation', email, name, senderInfo, areaId, roleId, function (err) {
     if (err) {
       console.log(err);
       return alert(err.reason);

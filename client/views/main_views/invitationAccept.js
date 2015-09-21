@@ -70,13 +70,11 @@ Template.invitationAccept.events({
       $(password).siblings('.help-block').text('').addClass('hide').parent().removeClass('has-error').addClass('has-success');
       user.password = password.value;
     }
-    Meteor.call('createInvitedUser', user, invitationId, function(err, id) {
+    Meteor.call('createInvitedUser', user, function(err, id) {
       if(err) {
         console.log(err);
         return alert(err.reason);
       }
-
-      Meteor.loginWithPassword(id, user.password);
 
       Meteor.call('acceptInvitation', invitationId, id, function(err) {
         if(err) {

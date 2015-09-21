@@ -20,6 +20,12 @@ if(Meteor.isClient) {
     }
   });
 
+  Tracker.autorun(function () {
+    if (Meteor.userId()) {
+      Meteor.subscribe('roles');
+    }
+  });
+
   Template.registerHelper('canUser', function (perms) {
     return Roles.canUser(perms);
   });

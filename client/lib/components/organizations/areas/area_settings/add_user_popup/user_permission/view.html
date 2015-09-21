@@ -2,15 +2,13 @@
   {{#if state$selectPermissions}}
     <div class="user-permissions">
       <div class="permission-title">
-        Permission for <b class="permission-for"></b>
+        Permission
       </div>
       <hr />
-      {{#each state$userPermissions}}
-        {{> userPermissionItem}}
-      {{/each}}
+      {{> render component='userRolesSelect'}}
       <br />
       <div class="btn-group col-xs-12">
-        <button class="btn btn-primary col-xs-6 add-existing-user">Add</button>
+        <button class="btn btn-primary col-xs-6 add-existing-user">Invite</button>
         <button class="btn btn-default col-xs-6 back-to-select-user">Back</button>
       </div>
     </div>

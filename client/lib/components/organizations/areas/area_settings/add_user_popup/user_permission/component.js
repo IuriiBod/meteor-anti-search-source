@@ -4,31 +4,10 @@ var component = FlowComponents.define('userPermissions', function(props) {
   this.areaId = props.areaId;
 });
 
-// TODO: Change respectively to new permissions
-component.state.userPermissions = function() {
-  return [
-    {
-      name: 'createEditMenu',
-      title: 'Create/edit menu',
-      description: 'Can create and edit menus'
-    },
-    {
-      name: 'createEditJobs',
-      title: 'Create/edit jobs',
-      description: 'Can create and edit jobs'
-    },
-    {
-      name: 'createEditStocks',
-      title: 'Create/edit stocks',
-      description: 'Can create and edit stocks'
-    }
-  ];
-};
-
-component.action.addUser = function() {
+component.action.addUser = function(roleId) {
   var userId = this.selectedUser;
   var areaId = this.areaId;
-  Meteor.call('addUserToArea', userId, areaId, function(err, area) {
+  Meteor.call('addUserToArea', userId, areaId, roleId, function(err, area) {
     if(err) {
       console.log(err);
       return err.reason;
