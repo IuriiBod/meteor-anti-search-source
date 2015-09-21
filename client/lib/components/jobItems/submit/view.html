@@ -48,12 +48,14 @@
           initialHtml=state$initialHTML}}
         </div>
       </div>
+      
       {{#if isPrep}}
       <div class="form-group">
         <label class="col-sm-2 control-label">Ingredients used</label>
         {{> render component="listOfIngredients"}}
       </div>
       {{/if}} 
+      
       {{#if isPrep}}
       <div class="form-group">
         <label class="col-sm-2 control-label">Portions</label>
@@ -100,7 +102,7 @@
             <div class="form-group">
               <label class="col-sm-2 control-label"></label>
               <div class="col-sm-10">
-                  <p>Repeat every <input type="number" name="step" class="" value="{{state$step}}" min="2"> weeks.</p>
+                  <p>Repeat every <input type="number" name="step" class="" value="2" min="2"> weeks.</p>
               </div>
             </div>
           {{/if}}

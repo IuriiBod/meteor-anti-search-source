@@ -16,10 +16,6 @@ component.state.initialHTML = function() {
   }
 };
 
-component.state.step = function() {
-  return 2;
-};
-
 component.state.repeatAt = function() {
   return "8:00 AM";
 };
