@@ -170,7 +170,7 @@ component.state.isManagerOrAdmin = function() {
 component.state.relatedMenus = function() {
   var id = this.id;
   subs.subscribe("jobsRelatedMenus", id);
-  var relatedMenus = MenuItems.find().fetch();
+  var relatedMenus = MenuItems.find({"jobItems._id": id}).fetch();
   return relatedMenus;
 };
 
