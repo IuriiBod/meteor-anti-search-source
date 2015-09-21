@@ -17,9 +17,6 @@ component.state.initialHTML = function () {
   var id = Session.get("thisJobItem");
   var item = JobItems.findOne(id);
   var type = item.type;
-  if(Session.get("jobType")) {
-    type = Session.get("jobType");
-  }
   var jobtype = JobTypes.findOne(type);
   if(jobtype && jobtype.name === "Prep") {
     if(item.recipe) {
@@ -293,17 +290,17 @@ updateLocalJobItem = function() {
   if(jobItemId) {
     var jobItem = JobItems.findOne(jobItemId);
     if(jobItem) {
-      var ings = [];
-      if(jobItem.ingredients.length > 0) {
-        jobItem.ingredients.forEach(function(item) {
-          if(ings.indexOf(item._id) < 0) {
-            ings.push(item._id);
-          }
-        });
-      }
       var type = jobItem.type;
       var itemType = JobTypes.findOne(type);
       if(itemType && itemType.name == "Prep") {
+        var ings = [];
+        if(jobItem.ingredients && jobItem.ingredients.length > 0) {
+          jobItem.ingredients.forEach(function(item) {
+            if(ings.indexOf(item._id) < 0) {
+              ings.push(item._id);
+            }
+          });
+        }
         return LocalJobItem.insert({"_id": jobItemId, "type": type, "ings": ings});
       }
     }
