@@ -24,7 +24,11 @@ component.prototype.renderTextEditor = function() {
       // Button events
       $('#uploadImage').click(function(event) {
         filepicker.pickAndStore(
-          {mimetype:"image/*", services: ['COMPUTER']}, 
+          {
+            extensions:['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'], 
+            services: ['COMPUTER'],
+            multiple: true
+          }, 
           {},
           function(InkBlobs){
             var doc = (InkBlobs);
