@@ -109,7 +109,7 @@ component.action.submit = function(info) {
     } else {
       var prep = JobTypes.findOne({"name": "Prep"});
       self.set("type", prep._id);
-      $("input").val(0);
+      $("input").val("");
       $('select').prop('selectedIndex', 0);
       self.set("activeTime", 0);
       $("#submitJobModal").modal("hide");
@@ -118,14 +118,14 @@ component.action.submit = function(info) {
 };
 
 component.state.settings = function() {
+  var self = this;
   var data = {};
   data['position'] = "bottom";
   data['limit'] = 10;
   data['rules'] = [{
-    token: '',
     collection: JobItems,
     field: "name",
-    filter: {"status": "active"},
+    filter: {"status": "active", "type": self.get("type")},
     sort: true,
     template: Template.description,
     noMatchTemplate: Template.noMatchJobTemplate
