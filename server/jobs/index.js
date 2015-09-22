@@ -25,7 +25,7 @@ Meteor.methods({
       logger.error("Active time not found for recurring type job");
       throw new Meteor.Error(404, "Active time not found for recurring type job");
     }
-    var job = JobItems.findOne(info.ref);
+    var job = JobItems.findOne({"name": info.ref});
     if(!job) {
       logger.error("Job not found");
       throw new Meteor.Error(404, "Job not found");

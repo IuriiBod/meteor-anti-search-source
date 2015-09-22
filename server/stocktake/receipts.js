@@ -41,16 +41,30 @@ Meteor.methods({
       "supplier": supplier,
       "version": version
     });
-
-    if(info.through == "emailed") {
-      //send email to supplier
-      if(!info.hasOwnProperty("to")) {
-        logger.error("Email address does not exist");
-        throw new Meteor.Error("Email address does not exist");
-      }
-      if(!info.hasOwnProperty("title")) {
-        logger.error("Title does not exist");
-        throw new Meteor.Error("Title does not exist");
+    if(info.hasOwnProperty("through")) {
+      if(info.through == "emailed") {
+        //send email to supplier
+        if(!info.hasOwnProperty("to")) {
+          logger.error("Email address does not exist");
+          throw new Meteor.Error(404, "Email address does not exist");
+        }
+        if(!info.hasOwnProperty("title")) {
+          logger.error("Title does not exist");
+          throw new Meteor.Error(404, "Title does not exist");
+        }
+        if(!info.hasOwnProperty("emailText")) {
+          logger.error("Email text does not exist");
+          throw new Meteor.Error(404, "Email text does not exist");
+        }
+        Meteor.defer(function() {
+          Email.send({
+            "to": info.to,
+            "from": Meteor.user().emails[0].address,
+            "subject": "Order from [Hospo Hero]",
+            "html": info.emailText
+          });
+        });
+        logger.info("Email sent to supplier", supplier);
       }
       if(!info.hasOwnProperty("emailText")) {
         logger.error("Email text does not exist");
