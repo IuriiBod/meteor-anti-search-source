@@ -13,11 +13,10 @@ Template.topNavbar.rendered = function () {
 
   $('html').click(function (event) {
     var flyout = $(".flyout-container");
-    var sweetAlert = $(".sweet-alert");
-    var sweetOverlay = $(".sweet-overlay");
-
-    if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!sweetAlert.is(event.target) && sweetAlert.has(event.target).length === 0) && (!sweetOverlay.is(event.target) && sweetOverlay.has(event.target).length === 0)) {
+    var createOrganization = $('.create-organization');
+    if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!createOrganization.is(event.target) && createOrganization.has(event.target).length === 0)) {
       flyout.removeClass('show');
+      HospoHero.getBlazeTemplate('#createOrganizationPage').showCreateOrgFlyout.set(false);
     }
   });
 };
@@ -96,7 +95,11 @@ Template.topNavbar.events({
     if (!id) {
       id = e.target.parentNode.parentNode.dataset.id;
     }
-    $("#" + id).addClass("show");
+    if(id == 'createOrganizationPage') {
+      Template.instance().showCreateOrgFlyout.set(true);
+    } else {
+      $("#" + id).addClass("show");
+    }
   },
 
   'click .theme-config-close-btn': function (event) {
@@ -105,6 +108,7 @@ Template.topNavbar.events({
       el = el.parent();
     }
     $("#" + el.attr('data-id')).removeClass("show");
+    Template.instance().showCreateOrgFlyout.set(false);
   }
 });
 
@@ -121,12 +125,21 @@ Template.topNavbar.helpers({
   },
 
   today: function () {
-    var date = moment(new Date()).format("YYYY-MM-DD");
-    return date;
+    return moment(new Date()).format("YYYY-MM-DD");
   },
 
   week: function () {
-    var week = moment().format("w");
-    return week;
+    return moment().format("w");
+  },
+
+  showCreateOrgFlyout: function() {
+    return Template.instance().showCreateOrgFlyout.get();
   }
-})
+});
+
+Template.topNavbar.created = function() {
+  this.showCreateOrgFlyout = new ReactiveVar();
+  this.autorun(_.bind(function() {
+    this.showCreateOrgFlyout.set(false);
+  }, this));
+};

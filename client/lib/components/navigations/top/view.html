@@ -5,24 +5,22 @@
         <a id="navbar-minimalize" class="minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
       </div>
       <ul class="nav navbar-top-links navbar-right">
-        {{#if state$belongToOrganization}}
+        {{#if isInOrganization}}
           <li>
             <span class="open-flyout welcome-message" data-id="organizationStructure">
-              {{state$currentArea}}
+              {{currentArea.name}}
             </span>
           </li>
           <li>
             <a class="count-info open-flyout" data-id="organizationStructure"><i class="fa fa-sitemap"></i></a>
           </li>
         {{else}}
-          {{#if isAdmin}}
-            <li>
-              <span class="open-flyout" data-id="createOrganizationPage">
-                <i class="fa fa-plus"></i>
-                Create Organization
-              </span>
-            </li>
-          {{/if}}
+          <li>
+            <span class="open-flyout" data-id="createOrganizationPage">
+              <i class="fa fa-plus"></i>
+              Create Organization
+            </span>
+          </li>
         {{/if}}
         <li>
           <a class="count-info open-flyout" href="#" data-id="profileFlyoutLinks">
@@ -70,7 +68,7 @@
   <!-- Flyout profileFlyoutLinks -->
 
   <!-- Flyout createOrganizationPage -->
-  <div class="theme-config flyout-container" id="createOrganizationPage">
+  <div class="theme-config flyout-container{{#if showCreateOrgFlyout}} show{{/if}}" id="createOrganizationPage">
     <div class="theme-config-box">
       <div class="skin-setttings">
         <div class="white-notify-bg">
@@ -93,7 +91,7 @@
   </div>
   <!-- Flyout createOrganizationPage -->
 
-  {{#if state$belongToOrganization}}
+  {{#if isInOrganization}}
     <!-- Flyout organizationStructure -->
     <div class="theme-config flyout-container" id="organizationStructure">
       <div class="theme-config-box">
@@ -103,12 +101,12 @@
               <a href="#" class="theme-config-close-btn" data-id="organizationStructure">
                 <i class="fa fa-angle-right"></i>
               </a>
-              {{>organizationButtons isOwner=state$isOrganizationOwner hasLocations=state$hasLocations}}
+              {{>organizationButtons isOwner=isOrganizationOwner hasLocations=state$hasLocations}}
             </div>
             <div class="ibox float-e-margins" style="margin-bottom: 0;">
               <div class="ibox-content" style="padding-bottom: 10px;">
                 <div class="feed-activity-list">
-                  {{>render component='organizationStructure' organization=state$organization isOrganizationOwner=state$isOrganizationOwner relation=state$relation}}
+                  {{>render component='organizationStructure' organization=getOrganization isOrganizationOwner=isOrganizationOwner relation=state$relation}}
                 </div>
               </div>
             </div>
