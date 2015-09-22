@@ -1,41 +1,13 @@
 Template.submitMenuItem.helpers({
-  ingredientsList: function() {
-    var ing = Session.get("selectedIngredients");
-    if(ing) {
-      if(ing.length > 0) {
-        subs.subscribe("ingredients", ing);
-        return Ingredients.find({'_id': {$in: ing}});
-      }
-    }
-  },
-
-  jobItemsList: function() {
-    var jobItems = Session.get("selectedJobItems");
-    if(jobItems) {
-      if(jobItems.length > 0) {
-        subs.subscribe("jobItems", jobItems);
-        return JobItems.find({'_id': {$in: jobItems}}).fetch()
-      }
-    }
-  },
-
   categoriesList: function() {
-    return Categories.find().fetch();
+    return Categories.find({
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    }).fetch();
   }
 });
 
 Template.submitMenuItem.events({
-  'click #showIngredientsList': function(event) {
-    event.preventDefault();
-    $("#ingredientsListModal").modal("show");
-  },
-
-  'click #showJobItemsList': function(event) {
-    event.preventDefault();
-    $("#jobItemListModal").modal("show");
-  },
-
-  'submit form': function(event, instance) {
+  'submit form': function(event) {
     event.preventDefault();
     var name = $(event.target).find('[name=name]').val().trim(); 
     var category = $(event.target).find('[name=category]').val();
@@ -109,12 +81,3 @@ Template.submitMenuItem.events({
     });
   }
 });
-
-Template.submitMenuItem.rendered = function() {
-  Session.set("localId", insertLocalMenuItem());
-};
-
-insertLocalMenuItem = function() {
-  LocalMenuItem.remove({});
-  return LocalMenuItem.insert({"ings": [], "preps": []});
-};

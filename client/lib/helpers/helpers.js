@@ -88,9 +88,13 @@ var helpers = {
     }
   },
   jobTypeById: function (id) {
-    var type = JobTypes.findOne(id);
-    if (type) {
-      return type.name;
+    if(id) {
+      var type = JobTypes.findOne(id);
+      if(type) {
+        return type.name;
+      }
+    } else {
+      return "Not assigned";
     }
   },
   sectionById: function (id) {

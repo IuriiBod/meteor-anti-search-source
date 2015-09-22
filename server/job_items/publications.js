@@ -14,23 +14,21 @@ Meteor.publish('allJobItems', function() {
 
 Meteor.publish("jobItems", function(ids) {
   if(this.userId) {
-    var query = {
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
-    };
-    var options = {
-      sort: {
-        'name': 1
-      }
-    };
-
     if (ids.length > 0) {
-      query._id = {$in: ids};
+      logger.info("Job items published", ids);
+      return JobItems.find({
+        _id: {
+          $in: ids
+        },
+        "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      }, {
+        sort: {
+          name: 1
+        }
+      });
     } else {
-      options.limit = 10;
+      this.ready();
     }
-
-    logger.info("Job items published", ids);
-    return JobItems.find(query, options);
   } else {
     this.ready();
   }

@@ -26,7 +26,7 @@ component.prototype.onItemRendered = function() {
     checkboxClass: 'icheckbox_square-green'
   });
 
-  $('input').on('ifChecked', function(event){
+  $('input.selectedIng').on('ifChecked', function(event){
     var id = $(this).attr("data-id");
     if(self.name == "stockModal") {
       var sareaId = Session.get("activeSArea");

@@ -1,4 +1,4 @@
-<template name="showJobItemsList">
+<template name="jobItemsModalList">
   <div class="modal-dialog">
     <div class="modal-content" style="width: 130%">
       <div class="modal-header">
@@ -20,7 +20,7 @@
               </thead>
              <tbody>
                 {{#each state$getJobItems}}
-                  {{> render component='jobItemListed' jobitem=this}}
+                  {{> render component='jobItemListed' jobitem=this name="addPrep"}}
                 {{/each}}
               </tbody>
             </table>
