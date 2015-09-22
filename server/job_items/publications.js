@@ -21,7 +21,7 @@ Meteor.publish("jobItems", function(ids) {
     jobsItems = JobItems.find({}, {sort: {'name': 1}, limit: 10});
   }
   cursors.push(jobsItems);
-  logger.info("Job items published", ids);
+  logger.info("Job items published", {"ids": ids});
   return cursors;
 });
 

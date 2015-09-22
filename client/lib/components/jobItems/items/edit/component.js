@@ -5,7 +5,7 @@ var component = FlowComponents.define('jobItemEdit', function(props) {
 
 component.state.item = function() {
   if(this.id) {
-    var job = JobItems.findOne(this.id);
+    var job = getPrepItem(this.id);
     return job;
   }
 }
