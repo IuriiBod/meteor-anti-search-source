@@ -10,8 +10,6 @@ var component = FlowComponents.define("ingsAndPreps", function(props) {
 component.prototype.onItemRendered = function() {
   if(this.type == "prep") {
     subs.subscribe("jobItems", [this.id]);
-  } else if(this.type == "ings") {
-    subs.subscribe("ingredients", [this.id]);
   }
 };
 

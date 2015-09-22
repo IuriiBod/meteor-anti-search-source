@@ -1,11 +1,11 @@
-Template.editMenuItem.helpers({
-  'equal': function (a, b) {
+Template.settingsMenuItem.helpers({
+  'equal': function(a, b) {
     return (a === b);
   }
 });
 
-Template.editMenuItem.events({
-  'click #showIngredientsList': function (event) {
+Template.settingsMenuItem.events({
+  'click #showIngredientsList': function(event) {
     event.preventDefault();
     $("#ingredientsListModal").modal("show");
   },
@@ -219,14 +219,23 @@ Template.editMenuItem.events({
     e.preventDefault();
     var name = e.target.dataset.name;
     $(e.target).addClass("hide");
-    $('[name="' + name + '"]').removeClass("hide");
+    $('[name="'+name+'"]').removeClass("hide");
+  },
+
+  'mouseenter .menuImageDiv': function(event) {
+    event.preventDefault();
+    $(event.target).find('.box-wrapper').show();
+  },
+
+  'mouseleave .menuImageDiv': function(event) {
+    event.preventDefault();
+    $(event.target).find('.box-wrapper').hide();
   }
 });
 
-Template.editMenuItem.rendered = function () {
-  $("body").on("click", function (e) {
+Template.settingsMenuItem.rendered = function() {
+  $("body").on("click", function(e) {
     var el = $(e.target);
-
     if (!el.hasClass("my-editable-link") && !el.hasClass("my-editable-select")) {
       $(".my-editable-select").addClass("hide");
       $(".my-editable-link").removeClass("hide");

@@ -1,4 +1,6 @@
-var component = FlowComponents.define('editMenuItem', function(props) {
+var subs = new SubsManager();
+
+var component = FlowComponents.define('settingsMenuItem', function(props) {
   this.id = Router.current().params._id;
   this.onRendered(this.onMenuRendered);
 });
