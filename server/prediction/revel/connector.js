@@ -56,7 +56,7 @@ Revel = {
     var bucket = new RevelSalesDataBucket();
 
     while (offset <= totalCount && daysCount < maxDaysCount) {
-      logger.info('Request to Revel server', {offset: offset, total: totalCount});
+      logger.info('Request to Revel server', {offset: offset, total: totalCount,daysCount: daysCount});
       var result = this.queryRevelOrderItems(limit, offset);
 
       //handle Revel API error

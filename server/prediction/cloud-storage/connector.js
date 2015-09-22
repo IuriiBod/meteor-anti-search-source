@@ -6,9 +6,20 @@ CsvEntryGenerator = {
     var dayOfYear = moment(salesData.createdDate).dayOfYear();
 
     _.each(salesData.menuItems, function (selledCount, menuItemName) {
-      //todo replace menu item name with it's ID
       //todo update code for organization
-      csvString += selledCount + ', "' + menuItemName + '", ' + weather.temp + ', "' + weather.main + '", ' + dayOfYear + '\n';
+      var menuItem = MenuItems.findOne({revelName: menuItemName});
+      if (!menuItem) {
+        //try find by name
+        //todo update code for organization
+        menuItem = MenuItems.findOne({name: menuItemName});
+      }
+
+      if (menuItem) {
+        csvString += selledCount + ', "' + menuItem._id + '", ' + weather.temp + ', "' + weather.main + '", ' + dayOfYear + '\n';
+      } else {
+        //otherwise ignore this data (we don't know which menu is it)
+        logger.info('Appropriate menu item not found', {name: menuItemName});
+      }
     });
 
     return csvString;
@@ -50,6 +61,6 @@ GoogleCloud = {
     }, function (uploadedDaysCount) {
       logger.info('Sales data uploading finished', {uploadedDaysCount: uploadedDaysCount});
       trainingDataWriteStream.end();
-    }, 30);
+    }, 365);
   }
 };
