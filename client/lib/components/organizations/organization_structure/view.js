@@ -9,6 +9,6 @@ Template.organizationStructure.events({
   },
   'click .change-current-area': function(e) {
     e.preventDefault();
-    Session.set('currentAreaId', this._id);
+    FlowComponents.callAction('changeDefaultArea', this._id);
   }
 });

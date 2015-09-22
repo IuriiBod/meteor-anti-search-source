@@ -1,31 +1,32 @@
 Meteor.methods({
-  'createOrganization': function(doc) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    if(!isManagerOrAdmin(user)) {
+  'createOrganization': function(orgName) {
+    if(!HospoHero.isAdmin()) {
       logger.error("User not permitted to create organizations");
       throw new Meteor.Error(403, "User not permitted to create organization");
     }
 
-    // TODO: Check billing account here
-
-    doc.createdAt = Date.now();
+    if(Organizations.find({name: orgName}).count() > 0) {
+      throw new Meteor.Error("Organization with the same name already exists!");
+    }
 
     // Create organization
-    var orgId = Organizations.insert(doc);
+    var orgId = Organizations.insert({
+      name: orgName,
+      owner: Meteor.userId(),
+      createdAt: Date.now()
+    });
 
     // Create relations between user and organization
-    Relations.insert({
-      organizationId: orgId,
-      locationIds: null,
-      areaIds: null,
-      entityId: user._id,
-      collectionName: "users"
+    Meteor.users.update({_id: Meteor.userId()}, {
+      $set: {
+        relations: {
+          organizationId: orgId,
+          locationIds: null,
+          areaIds: null
+        }
+      }
     });
-    return orgId;
+    return true;
   },
 
   'deleteOrganization': function(id) {

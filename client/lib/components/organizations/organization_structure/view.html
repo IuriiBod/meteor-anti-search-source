@@ -1,14 +1,12 @@
 <template name="organizationStructure">
-  <h1>{{state$organization.name}}</h1>
+  <h1>{{getOrganization.name}}</h1>
   {{#each state$locations}}
     <ul class="list-group" style="display: block;">
-      {{#if state$isOrganizationOwner}}
+      {{#if isOrganizationOwner}}
         <li class="list-group-item lead open-flyout location-settings" style="display: block; cursor: pointer; "
             data-id="locationSettings">
           {{name}}
-          {{#if state$isOrganizationOwner}}
-            <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
-          {{/if}}
+          <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
         </li>
       {{else}}
         <li class="list-group-item lead" style="display: block;">
@@ -19,7 +17,7 @@
         <li class="list-group-item" style="display: block;">
           <a href="#" class="change-current-area{{#if state$currentArea _id}} active{{/if}}">{{name}}</a>
 
-          {{#if state$isOrganizationOwner}}
+          {{#if isOrganizationOwner}}
             <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i
             class="fa fa-fw fa-cog"></i></span>
           {{/if}}
@@ -28,30 +26,33 @@
     </ul>
   {{/each}}
 
-  <!-- Flyout invitationsList -->
-  <div class="theme-config flyout-container" id="invitationsList">
-    <div class="theme-config-box">
-      <div class="skin-setttings">
-        <div class="white-notify-bg">
-          <div class="title clearfix">
-            <a href="#" class="theme-config-close-btn" data-id="invitationsList">
-              <i class="fa fa-angle-right"></i>
-            </a>
-            Invitations List
-          </div>
-          <div class="ibox float-e-margins" style="margin-bottom: 0;">
-            <div class="ibox-content" style="padding-bottom: 10px;">
-              <div class="feed-activity-list">
-                {{> render component="invitationsList"}}
+  {{#if canInvite}}
+    <!-- Flyout invitationsList -->
+    <div class="theme-config flyout-container" id="invitationsList">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="invitationsList">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Invitations List
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{> render component="invitationsList"}}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Flyout invitationsList -->
+    <!-- Flyout invitationsList -->
+  {{/if}}
 
+  {{#if isOrganizationOwner}}
   <!-- Flyout organizationDetailsPage -->
   <div class="theme-config flyout-container" id="organizationDetailsPage">
     <div class="theme-config-box">
@@ -76,7 +77,6 @@
   </div>
   <!-- Flyout organizationDetailsPage -->
 
-  {{#if state$isOrganizationOwner}}
     <!-- Flyout createLocation -->
     <div class="theme-config flyout-container" id="createLocation">
       <div class="theme-config-box">
