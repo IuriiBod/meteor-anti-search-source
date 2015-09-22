@@ -1,7 +1,8 @@
 Namespace('HospoHero', {
   getBlazeTemplate: function(selector) {
     if(selector) {
-      return Blaze.getView($(selector)[0])._templateInstance;
+      var tmpl = Blaze.getView($(selector)[0]);
+      return tmpl ? tmpl._templateInstance : null;
     }
   },
 

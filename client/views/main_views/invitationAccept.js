@@ -9,11 +9,11 @@ Template.invitationAccept.helpers({
   }
 });
 
+// TODO: !!!CHANGE THIS!!!
 Template.invitationAccept.events({
   'submit form': function (e) {
     e.preventDefault();
     var invitationId = Router.current().params._id;
-    var invitation = Invitations.findOne();
     var user = {
       profile: {}
     };
@@ -70,18 +70,15 @@ Template.invitationAccept.events({
       $(password).siblings('.help-block').text('').addClass('hide').parent().removeClass('has-error').addClass('has-success');
       user.password = password.value;
     }
-    Meteor.call('createInvitedUser', user, function(err, id) {
+
+    console.log('ACCEPT! IID: ', invitationId, " USER: ", user);
+
+
+    Meteor.call('acceptInvitation', invitationId, user, function(err) {
       if(err) {
         console.log(err);
         return alert(err.reason);
       }
-
-      Meteor.call('acceptInvitation', invitationId, id, function(err) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        }
-      });
     });
   }
 });

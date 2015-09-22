@@ -1,5 +1,6 @@
 var component = FlowComponents.define('invitationsList', function(props) {
   this.set('accepted', false);
+  this.organizationId = props.organizationId;
 });
 
 component.state.isAccepted = function() {
@@ -7,8 +8,10 @@ component.state.isAccepted = function() {
 };
 
 component.state.invitations = function() {
-  var accepted = this.get('accepted');
-  return Invitations.find({ accepted: accepted }).fetch();
+  return Invitations.find({
+    organizationId: this.organizationId,
+    accepted: this.get('accepted')
+  }).fetch();
 };
 
 component.action.changeAccepted = function(val) {

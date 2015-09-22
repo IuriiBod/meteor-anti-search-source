@@ -51,5 +51,26 @@ Meteor.methods({
     });
 
     return Areas.findOne({_id: areaId});
+  },
+
+  removeUserFromArea: function(userId, areaId) {
+    if(!HospoHero.isOrganizationOwner()) {
+      throw new Meteor.Error(403, "User not permitted to remove users from area");
+    }
+
+    if(!userId || !areaId) {
+      throw new Meteor.Error("User ID or Area ID is empty!");
+    }
+
+    var updateObject = {
+      $pull: {
+        'relations.areaIds': areaId
+      },
+      $unset: {
+        roles: {}
+      }
+    };
+    updateObject.$unset.roles[areaId] = '';
+    Meteor.users.update({_id: userId}, updateObject);
   }
 });

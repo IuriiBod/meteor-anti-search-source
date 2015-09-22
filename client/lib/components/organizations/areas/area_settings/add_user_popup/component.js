@@ -34,12 +34,6 @@ component.action.clearSearchText = function() {
 
 component.action.inviteNewUser = function(email, name, roleId) {
   var areaId = this.get('areaId');
-  var sender = Meteor.user();
-  var senderInfo = {
-    _id: sender._id,
-    name: sender.username,
-    email: sender.emails[0].address
-  };
   Meteor.call('createInvitation', email, name, areaId, roleId, function (err) {
     if (err) {
       console.log(err);

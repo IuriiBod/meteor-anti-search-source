@@ -7,6 +7,7 @@ Meteor.methods({
       email: email,
       invitedBy: senderInfo._id,
       areaId: areaId,
+      organizationId: area.organizationId,
       roleId: roleId,
       accepted: false,
       createdAt: Date.now()
@@ -33,7 +34,9 @@ Meteor.methods({
     Invitations.remove({_id: id});
   },
 
-  acceptInvitation: function(id, userId) {
+  acceptInvitation: function(id, user) {
+    var userId = Accounts.createUser(user);
+
     Invitations.update({_id: id}, {
       $set: { accepted: true }
     });
@@ -51,15 +54,16 @@ Meteor.methods({
     Notifications.insert(options);
 
     var areaId = invitation.areaId;
+    var area = Areas.findOne({_id: areaId});
     var updateObject = {
-      roles: {}
+      roles: {},
+      relations: {
+        organizationId: area.organizationId,
+        locaitonIds: [area.locationId],
+        areaIds: [areaId]
+      }
     };
     updateObject.roles[areaId] = invitation.roleId;
     Meteor.users.update({_id: userId}, {$set: updateObject});
-  },
-
-  createInvitedUser: function(user) {
-    var id = Accounts.createUser(user);
-    return id;
   }
 });

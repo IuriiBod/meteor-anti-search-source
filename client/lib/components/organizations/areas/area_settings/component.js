@@ -1,42 +1,31 @@
 var component = FlowComponents.define('areaSettings', function(props) {
   this.set('organizationId', props.organizationId);
-  this.set('isOrganizationOwner', props.isOrganizationOwner);
   this.set('locationId', props.locationId);
   this.areaId = props.areaId;
   this.set('addUser', false);
 });
 
 component.state.area = function() {
-  var areaId = this.areaId;
-  return Areas.findOne({_id: areaId});
+  return Areas.findOne({_id: this.areaId});
 };
 
 component.state.areaUsers = function() {
   var areaId = this.areaId;
-  var userIds = Relations.find({
+  return Meteor.users.find({
     $or: [
-      { areaIds: areaId },
+      { 'relations.areaIds': areaId },
       {
-        organizationId: this.get('organizationId'),
-        locationIds: this.get('locationId'),
-        areaIds: null
-      },
-      {
-        organizationId: this.get('organizationId'),
-        locationIds: null,
-        areaIds: null
+        $and: [
+          { 'relations.organizationId': this.get('organizationId') },
+          { 'relations.areaIds': null }
+        ]
       }
     ]
-  }, {fields: { entityId: 1 } }).fetch();
-
-  if(userIds.length) {
-    var ids = [];
-    _.map(userIds, function(user) {
-      ids.push(user.entityId);
-    });
-    var users = Meteor.users.find({_id: {$in: ids}}, {fields: { username: 1 }}).fetch();
-    return users;
-  }
+  }, {
+    sort: {
+      username: 1
+    }
+  }).fetch();
 };
 
 component.state.getProfilePhoto = function(id) {
@@ -67,4 +56,13 @@ component.action.deleteArea = function(id) {
 
 component.action.toggleAddUser = function() {
   this.set('addUser', !this.get('addUser'));
+};
+
+component.action.removeUserFromArea = function (userId) {
+  Meteor.call('removeUserFromArea', userId, this.areaId, function(err) {
+    if(err) {
+      console.log(err);
+      return alert(err.reason);
+    }
+  });
 };

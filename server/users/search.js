@@ -8,32 +8,19 @@ SearchSource.defineSource('usersSearch', function(searchText, options) {
     }
     if(options.areaId) {
       var area = Areas.findOne({_id: options.areaId});
-      var relations = Relations.find({organizationId: area.organizationId, areaIds: {$ne: options.areaId}, collectionName: 'users'}).fetch();
-      if(relations) {
-        var users = [];
-        relations.forEach(function(relation) {
-          users.push(relation.entityId);
-        });
-        selector._id = {$in: users};
-      }
+      selector['relations.organizationId'] = area.organizationId;
+      selector['relations.locationIds'] = area.locationId;
+      selector['relations.areaIds'] = { $ne: area._id };
     }
   }
   if(searchText) {
     var regExp = buildRegExp(searchText);
-    return Meteor.users.find({
-      $and: [
-        { isAdmin: {$ne: true} },
-        {
-          $or: [
-            { username: regExp },
-            { 'emails.0.address': regExp }
-          ]
-        }
-      ]
-    }, searchOptions).fetch();
-  } else {
-    return Meteor.users.find({}, searchOptions).fetch();
+    selector.$or = [
+      { username: regExp },
+      { 'emails.0.address': regExp }
+    ];
   }
+  return Meteor.users.find(selector, searchOptions).fetch();
 });
 
 function buildRegExp(searchText) {

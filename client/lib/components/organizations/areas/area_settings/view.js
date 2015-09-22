@@ -4,10 +4,6 @@ Template.areaSettings.events({
       var id = e.target.dataset.id;
       FlowComponents.callAction('deleteArea', id);
       $("#areaSettings").removeClass('show');
-      var currentAreaId = Session.get('currentAreaId');
-      if(currentAreaId == id) {
-        Session.set('currentAreaId', '');
-      }
     }
   },
 
@@ -25,13 +21,7 @@ Template.areaSettings.events({
 
   'click .remove-user-from-area': function(e) {
     var userId = this._id;
-    var areaId = Session.get('areaId');
-    Meteor.call('removeUserFromArea', userId, areaId, function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
-      }
-    })
+    FlowComponents.callAction('removeUserFromArea', userId);
   }
 });
 
@@ -42,20 +32,14 @@ Template.areaSettings.onRendered(function() {
     showbuttons: true,
     mode: 'inline',
     success: function(response, newValue) {
-      var id = Session.get('areaId');
+      var id = this.dataset.id;
       if(id) {
-        var locId = Session.get('locationId');
-        var count = Areas.find({locationId: locId, name: newValue}).count();
-        if(count == 0) {
-          Meteor.call("updateAreaName", id, newValue, function(err) {
-            if(err) {
-              console.log(err);
-              return alert(err.error);
-            }
-          });
-        } else {
-          return alert("The area with name "+newValue+" already exists!");
-        }
+        Meteor.call("updateAreaName", id, newValue, function(err) {
+          if(err) {
+            console.log(err);
+            return alert(err.error);
+          }
+        });
       }
     }
   });
