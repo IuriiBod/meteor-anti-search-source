@@ -12,7 +12,50 @@ GooglePrediction = function GooglePrediction(options) {
 
 
 GooglePrediction.prototype.list = function () {
-  return this._makeRequest(this._baseUrl('list'));
+  return this._makeRequest('GET', this._baseUrl('list'));
+};
+
+
+GooglePrediction.prototype.insert = function (modelName, bucketName, fileName) {
+  return this._makeRequest('POST', this._baseUrl(), {
+    id: modelName,
+    storageDataLocation: bucketName + "/" + fileName
+  });
+};
+
+
+GooglePrediction.prototype.get = function (modelName) {
+  return this._makeRequest('GET', this._baseUrl(modelName));
+};
+
+
+GooglePrediction.prototype.predict = function (modelName, inputDataVector) {
+  return this._makeRequest('POST', this._baseUrl(modelName, 'predict'), {
+    "input": {
+      "csvInstance": inputDataVector
+    }
+  });
+};
+
+
+GooglePrediction.prototype.analyze = function (modelName) {
+  return this._makeRequest('GET', this._baseUrl(modelName, 'analyze'));
+};
+
+
+GooglePrediction.prototype.remove = function (modelName) {
+  return this._makeRequest('DELETE', this._baseUrl(modelName));
+};
+
+
+//alias to remove
+GooglePrediction.prototype['delete'] = function (modelName) {
+  return this.remove(modelName);
+};
+
+
+GooglePrediction.prototype.update = function (modelName) {
+  return this._makeRequest('PUT', this._baseUrl(modelName));
 };
 
 
@@ -23,10 +66,10 @@ GooglePrediction.prototype._auth = function () {
 };
 
 
-GooglePrediction.prototype._makeRequest = function (url, data) {
+GooglePrediction.prototype._makeRequest = function (method, url, data) {
   var authCredentials = this._auth();
   try {
-    var result = HTTP.get(url, {
+    var result = HTTP.call(method, url, {
       headers: {
         "Content-Type": "application/json",
         "Authorization": authCredentials.token_type + ' ' + authCredentials.access_token
@@ -40,12 +83,14 @@ GooglePrediction.prototype._makeRequest = function (url, data) {
 };
 
 
-GooglePrediction.prototype._baseUrl = function (method, modelId) {
-  var suffix = method;
-  if (modelId) {
-    suffix = modelId + '/' + suffix;
-  }
-  return 'https://www.googleapis.com/prediction/v1.6/projects/' + this.projectName + '/trainedmodels/' + suffix;
+GooglePrediction.prototype._baseUrl = function (/* arguments */) {
+  var suffix = '';
+  Array.prototype.forEach.call(arguments, function (argument) {
+    if (argument) {
+      suffix += '/' + argument;
+    }
+  });
+  return 'https://www.googleapis.com/prediction/v1.6/projects/' + this.projectName + '/trainedmodels' + suffix;
 };
 
 
