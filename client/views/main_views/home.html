@@ -1,6 +1,6 @@
 <template name="home">
   <div class="wrapper wrapper-content">
-    {{#if currentUser}}
+    {{#if isInOrganization}}
       <div class="row">
           <div class="col-md-7">
             <div class="ibox float-e-margins">
@@ -34,8 +34,10 @@
             how much to prep, rostering and much more.
           </p>
           <p>All ideas are welcome! -Tom</p>
-          <a href="/signIn" class="btn btn-primary btn-rounded">Sign In</a> Or 
-          <a href="/register" class="btn btn-primary btn-rounded">Register</a>
+          <button class="btn btn-primary create-organization">
+            <i class="fa fa-plus"></i>
+            Create Organization
+          </button>
         </div>
       </div>
     {{/if}}

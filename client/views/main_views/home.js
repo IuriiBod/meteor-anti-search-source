@@ -9,3 +9,10 @@ Template.home.helpers({
     }
   }
 });
+
+Template.home.events({
+  'click .create-organization': function() {
+    var topNavigationTemplate = HospoHero.getBlazeTemplate('#createOrganizationPage');
+    topNavigationTemplate.showCreateOrgFlyout.set(true);
+  }
+});
