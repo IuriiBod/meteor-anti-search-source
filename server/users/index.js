@@ -221,6 +221,16 @@ Meteor.methods({
         Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val, "isActive": false}});
       }
     }
+  },
+
+  changeDefaultArea: function(areaId) {
+    if(Meteor.userId() && areaId) {
+      Meteor.users.update({_id: Meteor.userId()}, {
+        $set: {
+          defaultArea: areaId
+        }
+      });
+    }
   }
 });
 
