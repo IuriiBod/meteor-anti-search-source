@@ -12,6 +12,9 @@ Namespace('HospoHero', {
 
   isInRole: function(roleName, userId, areaId) {
     userId = userId ? userId : Meteor.userId();
+    if(!userId) {
+      return false;
+    }
 
     if(!areaId) {
       var user = Meteor.users.findOne({_id: userId});
@@ -38,6 +41,10 @@ Namespace('HospoHero', {
 
   isInOrganization: function(userId) {
     userId = userId ? userId : Meteor.userId();
+    if(!userId) {
+      return false;
+    }
+
     var user = Meteor.users.findOne({_id: userId});
     if(user && user.relations && user.relations.organizationId) {
       return user.relations.organizationId;

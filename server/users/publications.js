@@ -10,7 +10,8 @@ Meteor.publish('profileUser', function(id) {
     "isActive": 1,
     "profile": 1,
     "username": 1,
-    "createdAt": 1
+    "createdAt": 1,
+    defaultArea: 1
   };
   var user = Meteor.users.find({"_id": id}, {fields: options});
   logger.info("User published ", id);
@@ -29,7 +30,8 @@ Meteor.publish("usersList", function() {
     "emails": 1,
     "isActive": 1,
     "profile.payrates": 1,
-    "profile.resignDate": 1
+    "profile.resignDate": 1,
+    defaultArea: 1
   };
   var users = Meteor.users.find({}, {fields: options}, {limit: 10});
   logger.info("Userlist published");
@@ -43,7 +45,8 @@ Meteor.publish("selectedUsersList", function(usersIds) {
     "username": 1,
     "emails": 1,
     "isActive": 1,
-    "profile": 1
+    "profile": 1,
+    defaultArea: 1
   };
   var users = Meteor.users.find({
     _id: {
