@@ -4,17 +4,19 @@ Template.createArea.events({
   },
   'submit form': function(e) {
     e.preventDefault();
-    var name = e.target.name.value;
-    var locationId = e.target.locationId.value;
-    var status = e.target.status.value;
 
-    var creatingResult = FlowComponents.callAction('createArea', name, locationId, status);
-    if(creatingResult._result) {
-      e.target.reset();
-      $("#createArea").removeClass("show");
-      $("#locationSettings").removeClass("show");
-    }
+    var areaInfo = {
+      name: e.target.name.value,
+      locationId: e.target.locationId.value,
+      status: e.target.status.value
+    };
+
+    FlowComponents.callAction('createArea', areaInfo);
+    e.target.reset();
+    $("#createArea").removeClass("show");
+    $("#locationSettings").removeClass("show");
   },
+
   'click .close-flyout': function() {
     $("#createArea").removeClass("show");
   }

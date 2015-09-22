@@ -5,37 +5,26 @@ var component = FlowComponents.define("createArea", function(props) {
 });
 
 component.state.locations = function() {
-  return Locations.find({organizationId: this.organizationId}).fetch();
+  var locations = Locations.find({organizationId: this.organizationId}).fetch();
+  if(locations) {
+    return _.map(locations, function(location) {
+      return {value: location._id, title: location.name}
+    });
+  }
 };
 
 component.state.activeLocation = function(id) {
-  if(this.locationId == id) {
-    return true;
-  } else {
-    return false;
-  }
+  return this.locationId == id;
 };
 
 component.action.changeEnabled = function() {
   this.set('enabled', !this.get('enabled'));
 };
 
-component.action.createArea = function (name, locationId, status) {
-  // Find locations with the same name
-  var count = Areas.find({locationId: locationId, name: name}).count();
-  if(count > 0) {
-    alert("The area with name " + name + " already exists!");
-    return false;
-  }
+component.action.createArea = function (areaInfo) {
+  areaInfo.organizationId = this.organizationId;
 
-  var doc = {
-    name: name,
-    status: status,
-    locationId: locationId,
-    organizationId: this.organizationId
-  };
-
-  Meteor.call("createArea", doc, function (err) {
+  Meteor.call("createArea", areaInfo, function (err) {
     if(err) {
       console.log(err);
       alert(err.reason);
