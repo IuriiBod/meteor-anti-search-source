@@ -1,6 +1,5 @@
 {
   "winston": "0.7.2",
   "request": "2.36.0",
-  "node-google-prediction": "0.0.4",
   "through": "2.3.8"
 }
