@@ -1,7 +1,6 @@
 <template name="jobItemEdit">
   <tr>
     <td>{{state$item.name}}</td>
-    <td>{{jobTypeById state$item.type}}</td>
     <td>$ {{state$item.prepCostPerPortion}}</td>
     <td><input type="text" name="prep_qty" class="prepQty" data-id="{{state$item._id}}" value="1"/></td>
     <td>

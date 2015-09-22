@@ -40,6 +40,18 @@
   {{/if}}
   <!-- /INGREDIENTS LIST -->
 
+  <!-- JOB ITEMS LIST-->
+  <div class="modal fade" id="jobItemListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component='jobItemsModalList' name="submitMenuItem"}}
+  </div>
+  <!-- /JOB ITEMS LIST -->  
+
+  <!-- SHOW MENUS LIST -->
+  <div class="modal fade" id="showMenusList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component = 'showMenusList'}}
+  </div>
+  <!-- /SHOW MENUS LIST  -->
+
   <!-- SUBMIT SHIFT -->
   {{#if canEditRoster}}
   <div class="modal fade" id="submitShiftModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
