@@ -42,13 +42,17 @@ Roles.getPermissions = function() {
  * Return roles array
  * @returns {Array}
  */
-Roles.getRoles = function() {
-  return Meteor.roles.find({}, {sort: {name: 1}}).fetch();
+Roles.getRoles = function(organizationId) {
+  if(organizationId) {
+    return Meteor.roles.find({organizationId: organizationId}, {sort: {name: 1}}).fetch();
+  } else {
+    return Meteor.roles.find({}, {sort: {name: 1}}).fetch();
+  }
 };
 
 /**
  * Returns role by ID
- * @param id
+ * @param roleId
  * @returns {any}
  */
 Roles.getRoleById = function (roleId) {
@@ -125,12 +129,7 @@ Roles.userIsInRole = function(roleName, userId, areaId) {
   } else {
     searchObject.roles.defaultRole = role._id;
   }
-
-  if(Meteor.users.findOne(searchObject)) {
-    return true;
-  } else {
-    return false;
-  }
+  return !!Meteor.users.findOne(searchObject);
 };
 
 Roles.hasPermission = function(permissions, areaId) {

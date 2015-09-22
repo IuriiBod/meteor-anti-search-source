@@ -1,13 +1,19 @@
 <template name="organizationButtons">
-  {{#if isOwner}}
+  {{#if isOrganizationOwner}}
     <span style="margin-left: 150px;">Organization</span>
   {{else}}
     <span>Organization</span>
   {{/if}}
 
-  {{#if isOwner}}
+  {{#if isOrganizationOwner}}
     <span class="pull-right btn btn-sm btn-link open-flyout" data-id="organizationDetailsPage"><i class="fa fa-fw fa-cog"></i></span>
+  {{/if}}
+
+  {{#if canInvite}}
     <span class="pull-right btn btn-sm btn-link open-flyout" data-id="invitationsList"><i class="fa fa-fw fa-user"></i></span>
+  {{/if}}
+
+  {{#if isOrganizationOwner}}
     <div class="btn-group pull-right">
       <button type="button" class="btn dropdown-toggle btn-link" data-toggle="dropdown" aria-expanded="false">
         <i class="fa fa-fw fa-plus"></i>

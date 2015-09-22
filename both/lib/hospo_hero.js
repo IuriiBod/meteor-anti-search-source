@@ -1,10 +1,17 @@
 Namespace('HospoHero', {
-  isInRole: function(roleName, userId, areaId) {
-    if(userId === null && Meteor.userId()) {
-      userId = Meteor.userId();
-    } else if(userId === null && !Meteor.userId()) {
-      return false;
+  getBlazeTemplate: function(selector) {
+    if(selector) {
+      return Blaze.getView($(selector)[0])._templateInstance;
     }
+  },
+
+  checkMongoId: Match.Where(function(id) {
+    check(id, String);
+    return /[0-9a-zA-Z]{17}/.test(id);
+  }),
+
+  isInRole: function(roleName, userId, areaId) {
+    userId = userId ? userId : Meteor.userId();
 
     if(!areaId) {
       var user = Meteor.users.findOne({_id: userId});
@@ -41,21 +48,22 @@ Namespace('HospoHero', {
 
   isOrganizationOwner: function(orgId, userId) {
     userId = userId ? userId : Meteor.userId();
-    orgId = !orgId ? this.isInOrganization(userId) : orgId;
+    orgId = !orgId ? HospoHero.isInOrganization(userId) : orgId;
     if(!orgId) {
       return false;
     }
-    if(Organizations.find({_id: orgId, owner: userId}).count() > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return Organizations.find({_id: orgId, owner: userId}).count() > 0;
+  },
+
+  getOrganization: function(organizationId) {
+    organizationId = organizationId ? organizationId : HospoHero.isInOrganization();
+    return Organizations.findOne({_id: organizationId});
   },
 
   getCurrentArea: function() {
     var user = Meteor.user();
     if(user && user.defaultArea) {
-      return user.defaultArea;
+      return Areas.findOne({_id: user.defaultArea});
     }
   }
 });
