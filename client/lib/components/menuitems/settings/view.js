@@ -1,10 +1,10 @@
-Template.editMenuItem.helpers({
+Template.settingsMenuItem.helpers({
   'equal': function(a, b) {
     return (a === b);
   }
 });
 
-Template.editMenuItem.events({
+Template.settingsMenuItem.events({
   'click #showIngredientsList': function(event) {
     event.preventDefault();
     $("#ingredientsListModal").modal("show");
@@ -198,10 +198,20 @@ Template.editMenuItem.events({
 
     $(e.target).addClass("hide");
     $('[name="'+name+'"]').removeClass("hide");
+  },
+
+  'mouseenter .menuImageDiv': function(event) {
+    event.preventDefault();
+    $(event.target).find('.box-wrapper').show();
+  },
+
+  'mouseleave .menuImageDiv': function(event) {
+    event.preventDefault();
+    $(event.target).find('.box-wrapper').hide();
   }
 });
 
-Template.editMenuItem.rendered = function() {
+Template.settingsMenuItem.rendered = function() {
   $("body").on("click", function(e) {
     var el = $(e.target);
 

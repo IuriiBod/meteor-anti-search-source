@@ -41,7 +41,7 @@ Template.ingsAndPreps.events({
   },
 
   'click .view-ings': function(event) {
-    event.preventDefault();
+    // event.preventDefault();
     var id = $(event.target).attr("data-id");
     Session.set("thisIngredientId", id);
     $("#editIngredientModal").modal("show");
