@@ -1,5 +1,5 @@
 <template name="organizationStructure">
-  <h1>{{getOrganization.name}}</h1>
+  <h1>{{state$organization.name}}</h1>
   {{#each state$locations}}
     <ul class="list-group" style="display: block;">
       {{#if isOrganizationOwner}}
@@ -115,7 +115,7 @@
             <div class="ibox float-e-margins" style="margin-bottom: 0;">
               <div class="ibox-content" style="padding-bottom: 10px;">
                 <div class="feed-activity-list">
-                  {{>render component='locationSettings' organizationId=state$organization._id locationId=state$location isOrganizationOwner=state$isOrganizationOwner}}
+                  {{>render component='locationSettings' organizationId=state$organization._id locationId=state$location}}
                 </div>
               </div>
             </div>
@@ -139,7 +139,7 @@
             <div class="ibox float-e-margins" style="margin-bottom: 0;">
               <div class="ibox-content" style="padding-bottom: 10px;">
                 <div class="feed-activity-list">
-                  {{>render component='areaSettings' organizationId=state$organization._id locationId=state$location areaId=state$area isOrganizationOwner=state$isOrganizationOwner}}
+                  {{>render component='areaSettings' organizationId=state$organization._id locationId=state$location areaId=state$area}}
                 </div>
               </div>
             </div>
@@ -163,7 +163,7 @@
             <div class="ibox float-e-margins" style="margin-bottom: 0;">
               <div class="ibox-content" style="padding-bottom: 10px;">
                 <div class="feed-activity-list">
-                  {{>render component='createArea' organizationId=state$organization._id locationId=state$location._id}}
+                  {{>render component='createArea' organizationId=state$organization._id locationId=state$location}}
                 </div>
               </div>
             </div>
