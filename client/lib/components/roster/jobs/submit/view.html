@@ -12,7 +12,7 @@
               <label class="col-sm-4 control-label">Type</label>
               <div class="col-sm-6">
                 <div class="dropdown">
-                  <select name="type" class="form-control m-b jobType">
+                  <select name="type" class="form-control jobType">
                     <option value="{{state$selectedJobType._id}}">{{state$selectedJobType.name}}</option>
                     {{#each state$jobTypes}}
                     <option value="{{this._id}}">{{this.name}}</option>
@@ -23,13 +23,13 @@
             </div>
             <div class="form-group">
               <label class="col-sm-4 control-label">Job</label>
-              <div class="form-group">
-                <div class="input-group">
-                  <select data-placeholder="Choose a Country..." class="chosen-select" style="width:350px;" tabindex="2">
-                    <option value="">Select</option>
-                    <option value="United States">United States</option>                  
-                  </select>
-                </div>
+              <div class="col-sm-6">
+                {{#inputAutocomplete 
+                  settings=state$settings 
+                  id="msg" 
+                  name="name" 
+                  class="form-control message-input-post" placeholder="Start with typing name..."}}
+                {{/inputAutocomplete}}
               </div>
             </div>
             {{#if state$isPrep}}

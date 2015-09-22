@@ -61,11 +61,13 @@ Meteor.methods({
           logger.error("Email text does not exist");
           throw new Meteor.Error(404, "Email text does not exist");
         }
-        Email.send({
-          "to": info.to,
-          "from": Meteor.user().emails[0].address,
-          "subject": "Order from [Hospo Hero]",
-          "html": info.emailText
+        Meteor.defer(function() {
+          Email.send({
+            "to": info.to,
+            "from": Meteor.user().emails[0].address,
+            "subject": "Order from [Hospo Hero]",
+            "html": info.emailText
+          });
         });
         logger.info("Email sent to supplier", supplier);
       }

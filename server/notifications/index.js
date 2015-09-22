@@ -227,13 +227,15 @@ Meteor.methods({
     emailText += "<br>Thanks.<br>";
     emailText += user.username;
     //email
-    Email.send({
-      "to": to.email,
-      "from": user.emails[0].address,
-      "subject": "[Hero Chef] " + info.title,
-      "html": emailText
+    Meteor.defer(function() {
+      Email.send({
+        "to": to.email,
+        "from": user.emails[0].address,
+        "subject": "[Hero Chef] " + info.title,
+        "html": emailText
+      });
+      logger.info("Email sent for weekly roster", to._id);
     });
-    logger.info("Email sent for weekly roster", to._id);
     
     //notification
     var notifi = {

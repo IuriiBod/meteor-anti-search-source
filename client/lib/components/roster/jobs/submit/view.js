@@ -2,7 +2,7 @@ Template.submitJob.events({
   'submit form': function(event, instance) {
     event.preventDefault();
     var type = $(event.target).find('[name=type]').val();
-    var job = $(event.target).find('[name=job]').val();
+    var job = $(event.target).find('[name=name]').val();
     var portions = $(event.target).find('[name=portions]').val();
     var activeTime = $(event.target).find('[name=activeTime]').val();
     
@@ -11,7 +11,7 @@ Template.submitJob.events({
       return alert("Please select a job from list");
     }
     var jobType = JobTypes.findOne(type);
-    if(jobType && jobType,name == "Prep") {
+    if(jobType && jobType.name == "Prep") {
       if(!portions || portions <= 0) {
         return alert("Please add no of portions you need");
       }

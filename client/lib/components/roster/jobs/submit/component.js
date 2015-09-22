@@ -103,16 +103,6 @@ component.prototype.onJobRendered = function() {
     this.set("type", prep._id);
     this.set("activeTime", 0);  
   }
-
-  var config = {
-    '.chosen-select'           : {},
-    '.chosen-select-deselect'  : {allow_single_deselect:true},
-    '.chosen-select-no-single' : {disable_search_threshold:10},
-    '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'}
-  }
-  for (var selector in config) {
-    $(selector).chosen(config[selector]);
-  }
 };
 
 component.action.submit = function(info) {
@@ -130,3 +120,19 @@ component.action.submit = function(info) {
     }
   });
 };
+
+component.state.settings = function() {
+  var data = {};
+  data['position'] = "bottom";
+  data['limit'] = 10;
+  data['rules'] = [{
+    token: '',
+    collection: JobItems,
+    field: "name",
+    filter: {"status": "active"},
+    sort: true,
+    template: Template.description,
+    noMatchTemplate: Template.noMatchJobTemplate
+  }];
+  return data;  
+}
