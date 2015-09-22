@@ -1,27 +1,26 @@
 Meteor.methods({
   'createLocation': function(loc) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.isOrganizationOwner()) {
+      throw new Meteor.Error(403, 'User not permitted to create location');
     }
-    if(!isManagerOrAdmin(user)) {
-      logger.error("User not permitted to create locations");
-      throw new Meteor.Error(403, "User not permitted to create locations");
+    if(Locations.find({organizationId: loc.organizationId, name: loc.name}).count() > 0) {
+      throw new Meteor.Error("The location with the same name already exists!");
     }
-    loc.createdAt = Date.now();
     // Create location
-    return Locations.insert(loc);
+    return Locations.insert({
+      name: loc.name,
+      address: loc.address,
+      timezone: loc.timezone,
+      openingTime: loc.openingTime,
+      closingTime: loc.closingTime,
+      status: loc.status,
+      organizationId: loc.organizationId,
+      createdAt: Date.now()
+    });
   },
   'deleteLocation': function(id) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    if(!isManagerOrAdmin(user)) {
-      logger.error("User not permitted to delete locations");
-      throw new Meteor.Error(403, "User not permitted to delete locations");
+    if(!HospoHero.isOrganizationOwner()) {
+      throw new Meteor.Error(403, 'User not permitted to delete location');
     }
     Areas.remove({locationId: id});
     Locations.remove({_id: id});
@@ -30,14 +29,12 @@ Meteor.methods({
   },
 
   'updateLocationName': function(id, val) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.isOrganizationOwner()) {
+      throw new Meteor.Error(403, 'User not permitted to update location');
     }
-    if(!isManagerOrAdmin(user)) {
-      logger.error("User not permitted to edit location name");
-      throw new Meteor.Error(403, "User not permitted to edit location name");
+    var location = Locations.findOne({_id: id});
+    if(Locations.find({organizationId: location.organizationId, name: val}).count() > 0) {
+      throw new Meteor.Error("The location with the same name already exists!");
     }
     Locations.update({_id: id}, {$set: {name: val}});
   }

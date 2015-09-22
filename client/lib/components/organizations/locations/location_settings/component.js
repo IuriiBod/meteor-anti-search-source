@@ -1,6 +1,5 @@
 var component = FlowComponents.define('locationSettings', function(props) {
   this.set('organizationId', props.organizationId);
-  this.set('isOrganizationOwner', props.isOrganizationOwner);
   this.locationId = props.locationId;
 });
 

@@ -24,18 +24,12 @@ Template.locationSettings.onRendered(function() {
     success: function(response, newValue) {
       var id = this.dataset.id;
       if(id) {
-        var orgId = Session.get('organizationId');
-        var count = Locations.find({organizationId: orgId, name: newValue}).count();
-        if(count == 0) {
-          Meteor.call("updateLocationName", id, newValue, function(err) {
-            if(err) {
-              console.log(err);
-              return alert(err.error);
-            }
-          });
-        } else {
-          return alert("The location with name " + newValue + " already exists!");
-        }
+        Meteor.call("updateLocationName", id, newValue, function(err) {
+          if(err) {
+            console.log(err);
+            return alert(err.error);
+          }
+        });
       }
     }
   });

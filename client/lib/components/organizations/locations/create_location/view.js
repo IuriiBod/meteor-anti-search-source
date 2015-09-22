@@ -1,30 +1,27 @@
 Template.createLocation.helpers({
   timezones: function() {
     var zones = [];
-    var selectedZone = 0;
     for(var i=-12; i<=12; i++) {
       if(i>0) {
         i = "+"+i;
       }
-      if(i == selectedZone) {
-        zones.push('<option value="'+i+'" selected="selected">UTC '+i+'</option>');
-      } else {
-        zones.push('<option value="'+i+'">UTC '+i+'</option>');
-      }
+      zones.push({
+        value: 'UTC '+i,
+        title: 'UTC '+i
+      });
     }
-    return zones.join('');
+    return zones;
   },
 
   hours: function(selectedHour) {
     var hours = [];
     for (var i = 0; i < 24; i++) {
-      if (i == selectedHour) {
-        hours.push('<option value="' + i + '" selected="selected">' + i + '</option>');
-      } else {
-        hours.push('<option value="' + i + '">' + i + '</option>');
-      }
+      hours.push({
+        value: i,
+        title: i
+      });
     }
-    return hours.join('');
+    return hours;
   },
 
   minutes: function() {
@@ -33,9 +30,12 @@ Template.createLocation.helpers({
       if(i<10) {
         i = "0"+i;
       }
-      minutes.push('<option value="'+i+'">'+i+'</option>');
+      minutes.push({
+        value: i,
+        title: i
+      });
     }
-    return minutes.join('');
+    return minutes;
   }
 });
 
@@ -46,30 +46,19 @@ Template.createLocation.events({
 
   'submit form': function(e) {
     e.preventDefault();
-    var name = e.target.name.value;
-    var orgId = e.target.dataset.id;
 
-    var notExists = FlowComponents.callAction('checkExists', orgId, name);
+    var doc = {
+      name: e.target.name.value,
+      address: e.target.address.value,
+      timezone: e.target.timezone.value,
+      openingTime: e.target.openingHour.value+":"+e.target.openingMinutes.value,
+      closingTime: e.target.closingHour.value+":"+e.target.closingMinutes.value,
+      status: e.target.status.value,
+      organizationId: e.target.dataset.id
+    };
+    FlowComponents.callAction('submit', doc);
 
-    if(notExists._result) {
-      var status = e.target.status.value;
-      var address = e.target.address.value;
-      var timezone = e.target.timezone.value;
-      var openingTime = e.target.openingHour.value+":"+e.target.openingMinutes.value;
-      var closingTime = e.target.closingHour.value+":"+e.target.closingMinutes.value;
-      var doc = {
-        name: name,
-        address: address,
-        timezone: timezone,
-        openingTime: openingTime,
-        closingTime: closingTime,
-        status: status,
-        organizationId: orgId
-      };
-      FlowComponents.callAction('submit', doc);
-
-      e.target.reset();
-      $("#createLocation").removeClass("show");
-    }
+    e.target.reset();
+    $("#createLocation").removeClass("show");
   }
 });

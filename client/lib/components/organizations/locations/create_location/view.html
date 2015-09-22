@@ -15,35 +15,25 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Timezone</label>
       <div class="col-sm-10">
-        <select class="form-control" name="timezone">
-          {{{timezones}}}
-        </select>
+        {{> render component='selectComponent' values=timezones selected='UTC 0' name='timezone'}}
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Opening Time</label>
       <div class="col-sm-4">
-        <select name="openingHour" class="form-control">
-          {{{hours 8}}}
-        </select>
+        {{> render component='selectComponent' values=hours selected='8' name='openingHour'}}
       </div>
       <div class="col-sm-4">
-        <select name="openingMinutes" class="form-control">
-          {{{minutes}}}
-        </select>
+        {{> render component='selectComponent' values=minutes selected=null name='openingMinutes'}}
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Closing Time</label>
       <div class="col-sm-4">
-        <select name="closingHour" class="form-control">
-          {{{hours 17}}}
-        </select>
+        {{> render component='selectComponent' values=hours selected='17' name='closingHour'}}
       </div>
       <div class="col-sm-4">
-        <select name="closingMinutes" class="form-control">
-          {{{minutes}}}
-        </select>
+        {{> render component='selectComponent' values=minutes selected=null name='closingMinutes'}}
       </div>
     </div>
     <div class="form-group">
