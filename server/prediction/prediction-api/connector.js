@@ -1,5 +1,11 @@
 var CloudSettings = Meteor.settings.private.GoogleCloud;
 
+var TRAINING_DATA_FILE_NAME = "sales-data.csv";
+var modelName = "trainingModel";
+var project = 'HospoHero';
+var inputVector = ["6GnZhJRYfH7G9Licg", 25, "Sun", 33];
+
+
 PredictionApi = {
   test: function () {
     var authOptions = {
@@ -9,7 +15,8 @@ PredictionApi = {
     };
 
     var googlePrediction = new GooglePrediction(authOptions);
-    console.log(googlePrediction.list())
+
+    return googlePrediction.predict(modelName, inputVector);
   }
 };
 
