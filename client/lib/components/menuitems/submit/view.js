@@ -1,5 +1,3 @@
-var subs = new SubsManager();
-
 Template.submitMenuItem.helpers({
   ingredientsList: function() {
     var ing = Session.get("selectedIngredients");
@@ -57,7 +55,6 @@ Template.submitMenuItem.events({
         instructions = ""
       }
     }
-    console.log(instructions);
 
     var ing_doc = [];
     ings.forEach(function(item) {
@@ -139,8 +136,6 @@ Template.submitMenuItem.events({
 });
 
 Template.submitMenuItem.rendered = function() {
-  Session.set("selectedIngredients", null);
-  Session.set("selectedJobItems", null);
   Session.set("localId", insertLocalMenuItem());
 }
 
