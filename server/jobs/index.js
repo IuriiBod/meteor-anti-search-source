@@ -51,7 +51,7 @@ Meteor.methods({
         throw new Meteor.Error(404, "Active time not valid");
       }
     } else {
-      doc.activeTime = parseInt(info.activeTime);
+      doc.activeTime = parseInt(info.activeTime) * 60;
       doc.section = job.section;
       doc.startAt = job.repeatAt;
     }
