@@ -1,18 +1,15 @@
 var component = FlowComponents.define('jobItemEdit', function(props) {
   this.jobitem = props.jobitem;
-  var item = getPrepItem(this.jobitem._id);
-  this.jobitem = item;
-  this.jobitem.quantity = props.jobitem.quantity;
+  this.id = props.id;
 });
 
 component.state.item = function() {
-  return this.jobitem;
+  if(this.id) {
+    var job = JobItems.findOne(this.id);
+    return job;
+  }
 }
 
 component.state.quantity = function() {
-  if(this.jobitem.quantity) {
-    return this.jobitem.quantity;
-  } else {
-    return 1;
-  }
+  return 1;
 }

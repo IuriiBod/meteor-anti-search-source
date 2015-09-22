@@ -1,4 +1,5 @@
 var component = FlowComponents.define('submitMenuItem', function(props) {
+  this.onRendered(this.onFormRendered);
 });
 
 component.state.initialHTML = function() {
@@ -11,8 +12,6 @@ component.action.submit = function(info) {
       console.log(err);
       return alert(err.reason);
     }
-    Session.set("selectedIngredients", null);
-    Session.set("selectedJobItems", null);
     var options = {
       "type": "create",
       "title": "New Menu created"
@@ -29,4 +28,13 @@ component.action.submit = function(info) {
 
 component.state.statuses = function() {
   return Statuses.find();
+}
+
+component.prototype.onFormRendered = function() {
+  Session.set("localId", insertLocalMenuItem());
+}
+
+insertLocalMenuItem = function() {
+  LocalMenuItem.remove({});
+  return LocalMenuItem.insert({"ings": [], "preps": []});
 }

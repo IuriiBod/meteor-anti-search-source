@@ -106,9 +106,13 @@ UI.registerHelper("username", function(id) {
 });
 
 UI.registerHelper("jobTypeById", function(id) {
-  var type = JobTypes.findOne(id);
-  if(type) {
-    return type.name;
+  if(id) {
+    var type = JobTypes.findOne(id);
+    if(type) {
+      return type.name;
+    } 
+  } else {
+    return "Not assigned";
   }
 });
 
