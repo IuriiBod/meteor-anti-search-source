@@ -10,10 +10,6 @@ Migrations.add({
     var area;
     var areaId;
     var users;
-    var shifts;
-    var menus;
-    var jobs;
-    var stocks;
     var relationInsertQuery;
     var userUpdateQuery = {
       $unset: {
@@ -26,8 +22,20 @@ Migrations.add({
       }
     };
 
+    var id = Accounts.createUser({
+      username: 'admin',
+      email: 'admin@admin.com',
+      password: 'qweqweqwe'
+    });
+
+    Meteor.users.update({_id: id}, {
+      $set: {
+        pinCode: '1111'
+      }
+    });
+
     // Find the admin user and make him an admin
-    admin = Meteor.users.findOne({username: "Tom"});
+    admin = Meteor.users.findOne({username: "admin"});
 
     if(!admin) {
       console.log('Can\'t find an administrate user');
@@ -128,8 +136,8 @@ Migrations.add({
 
     relationInsertQuery = {
       organizationId: organizationId,
-      locationIds: locationId,
-      areaIds: areaId
+      locationId: locationId,
+      areaId: areaId
     };
 
     collections.forEach(function(collection) {
