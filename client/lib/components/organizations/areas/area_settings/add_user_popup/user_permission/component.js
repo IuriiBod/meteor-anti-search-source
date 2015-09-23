@@ -12,23 +12,6 @@ component.action.addUser = function(roleId) {
       console.log(err);
       return err.reason;
     }
-    var options = {
-      type: 'update',
-      title: 'You\'ve been added to the ' + area.name + ' area.',
-      to: userId
-    };
-    Meteor.call('sendNotifications', areaId, 'organization', options, function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
-      }
-      Meteor.call('notifyAddToArea', 'id', userId, area.name, Meteor.user(), function (err) {
-        if(err) {
-          console.log(err);
-          return alert(err);
-        }
-      });
-    });
   });
   this.set('selectPermissions', false);
 };

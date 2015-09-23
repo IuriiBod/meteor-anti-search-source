@@ -13,6 +13,7 @@ var fields = ['username'];
 UsersSearch = new SearchSource('usersSearch', fields, options);
 
 component.state.searchUsers = function () {
+  UsersSearch.cleanHistory();
   return UsersSearch.getData({
     sort: {'name': 1}
   });

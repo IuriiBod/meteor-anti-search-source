@@ -59,7 +59,7 @@ Meteor.methods({
       roles: {},
       relations: {
         organizationId: area.organizationId,
-        locaitonIds: [area.locationId],
+        locationIds: [area.locationId],
         areaIds: [areaId]
       }
     };

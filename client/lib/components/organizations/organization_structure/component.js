@@ -6,19 +6,17 @@ var component = FlowComponents.define('organizationStructure', function(props) {
 
 component.state.locations = function() {
   var selector = {};
-  selector.organizationId = HospoHero.isInOrganization();
+  selector.organizationId = this.get('organization')._id;
   var user = Meteor.user();
   if(user.relations && user.relations.locationIds) {
-    if(user.relations.locationIds != null) {
-      selector._id = { $in: user.relations.locationIds };
-    }
+    selector._id = { $in: user.relations.locationIds };
   }
   return Locations.find(selector).fetch();
 };
 
 component.state.areas = function(locationId) {
   var selector = {};
-  selector.organizationId = HospoHero.isInOrganization();
+  selector.organizationId = this.get('organization')._id;
   selector.locationId = locationId;
   var user = Meteor.user();
   if(user.relations && user.relations.areaIds) {

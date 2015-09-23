@@ -40,17 +40,76 @@ Meteor.methods({
     Areas.update({_id: id}, {$set: {name: val}});
   },
 
+  /**
+   * Add the existing user to the area and notify him
+   * @param userId
+   * @param areaId
+   * @param roleId
+   */
   addUserToArea: function (userId, areaId, roleId) {
-    var updateObject = {
+    if(!HospoHero.isOrganizationOwner()) {
+      throw new Meteor.Error(403, "User not permitted to remove users from area");
+    }
+
+    // Add user to the area
+    var area = Areas.findOne({_id: areaId});
+    var $set = {
       roles: {}
     };
-    updateObject.roles[areaId] = roleId;
 
-    Meteor.users.update({_id: userId}, {
-      $set: updateObject
+    var $addToSet = {};
+
+    $set.roles[areaId] = roleId;
+    $set["relations.organizationId"] = area.organizationId;
+
+    var user = Meteor.users.findOne({_id: userId});
+    if(!user.relations.locationIds || user.relations.locationIds.length == 0) {
+      $set.relations.locationIds = [area.locationId];
+    } else {
+      $addToSet["relations.locationIds"] = area.locationId;
+    }
+
+    if(!user.relations.areaIds || user.relations.areaIds.length == 0) {
+      $set.relations.areaIds = [areaId];
+    } else {
+      $addToSet["relations.areaIds"] = areaId;
+    }
+
+    console.log('SET', $set);
+
+    console.log('ADD', $addToSet);
+
+    Meteor.users.update({_id: userId}, {$set: $set});
+
+    if(Object.keys($addToSet).length > 0) {
+      Meteor.users.update({_id: userId}, {$addToSet: $addToSet});
+    }
+
+    // Send notification to the invited user
+    var options = {
+      type: 'update',
+      read: false,
+      title: 'You\'ve been added to the ' + area.name + ' area.',
+      createdBy: Meteor.userId(),
+      text: null,
+      actionType: 'update',
+      to: userId
+    };
+    Notifications.insert(options);
+
+    // Send an email to the invited user
+    var sender = Meteor.user();
+    var text = 'Hi ' + user.username + ',<br><br>';
+    text += 'You\'ve been added to the ' + area.name + ' area. You\'ll see this in your area list when you next log in.<br><br>';
+    text += 'If you have any questions let me know.<br>';
+    text += sender.username;
+
+    Email.send({
+      "to": user.emails[0].address,
+      "from": sender.emails[0].address,
+      "subject": "[Hero Chef] Added to the " + area.name + " area",
+      "html": text
     });
-
-    return Areas.findOne({_id: areaId});
   },
 
   removeUserFromArea: function(userId, areaId) {
@@ -71,6 +130,11 @@ Meteor.methods({
       }
     };
     updateObject.$unset.roles[areaId] = '';
+
+    if(Meteor.users.find({_id: userId, defaultArea: areaId}).count() > 0) {
+      updateObject.$unset.defaultArea = '';
+    }
+
     Meteor.users.update({_id: userId}, updateObject);
   }
 });
