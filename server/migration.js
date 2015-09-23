@@ -26,7 +26,6 @@ Migrations.add({
       }
     };
 
-
     // Find the admin user and make him an admin
     admin = Meteor.users.findOne({username: "Tom"});
 
@@ -85,7 +84,9 @@ Migrations.add({
       var adminRole = Meteor.roles.findOne({name: 'Admin'});
       var managerRole = Meteor.roles.findOne({name: 'Manager'});
       var workerRole = Meteor.roles.findOne({name: 'Worker'});
-      userUpdateQuery.$set.relationIds = relationInsertQuery;
+
+      userUpdateQuery.$set.relations = relationInsertQuery;
+
       users.forEach(function(user) {
         if(user._id == admin._id) {
           userUpdateQuery.$set.roles[areaId] = adminRole._id;
@@ -125,13 +126,19 @@ Migrations.add({
       Suppliers
     ];
 
+    relationInsertQuery = {
+      organizationId: organizationId,
+      locationIds: locationId,
+      areaIds: areaId
+    };
+
     collections.forEach(function(collection) {
       // Find all shifts
       var docs = collection.find().fetch();
       if(docs) {
         docs.forEach(function(doc) {
           // Create new relations
-          collection.update({ _id: doc._id }, {$set: {relationIds: relationInsertQuery}});
+          collection.update({ _id: doc._id }, {$set: {relations: relationInsertQuery}});
         });
       }
     });
