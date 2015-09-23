@@ -46,3 +46,4 @@ momentjs:moment
 http
 micah:google-cloud
 jss:meteor-google-prediction
+percolate:synced-cron

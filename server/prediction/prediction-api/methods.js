@@ -1,8 +1,8 @@
 var CloudSettings = Meteor.settings.private.GoogleCloud;
 
-var TRAINING_DATA_FILE_NAME = "sales-data.csv";
+//todo: extract this all stuff into config or update for locations functionality
+var fileName = "sales-data.csv";
 var modelName = "trainingModel";
-var project = 'HospoHero';
 var inputVector = ["6GnZhJRYfH7G9Licg", 25, "Sun", 33];
 
 
