@@ -21,12 +21,13 @@ Meteor.methods({
     }
     Areas.remove({_id: id});
 
+    Meteor.users.update({"relations.areaIds": id}, {$pull: {"relations.areaIds": id}});
+
     Meteor.users.update({defaultArea: id}, {
       $unset: {
         defaultValue: ''
       }
     });
-    // TODO: Write the code to delete users which is related to area
   },
 
   updateAreaName: function (id, val) {
@@ -64,20 +65,16 @@ Meteor.methods({
 
     var user = Meteor.users.findOne({_id: userId});
     if(!user.relations.locationIds || user.relations.locationIds.length == 0) {
-      $set.relations.locationIds = [area.locationId];
+      $set["relations.locationIds"] = [area.locationId];
     } else {
       $addToSet["relations.locationIds"] = area.locationId;
     }
 
     if(!user.relations.areaIds || user.relations.areaIds.length == 0) {
-      $set.relations.areaIds = [areaId];
+      $set["relations.areaIds"] = [areaId];
     } else {
       $addToSet["relations.areaIds"] = areaId;
     }
-
-    console.log('SET', $set);
-
-    console.log('ADD', $addToSet);
 
     Meteor.users.update({_id: userId}, {$set: $set});
 
