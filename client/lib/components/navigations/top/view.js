@@ -16,7 +16,10 @@ Template.topNavbar.rendered = function () {
     var createOrganization = $('.create-organization');
     if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!createOrganization.is(event.target) && createOrganization.has(event.target).length === 0)) {
       flyout.removeClass('show');
-      HospoHero.getBlazeTemplate('#createOrganizationPage').showCreateOrgFlyout.set(false);
+      var fly = HospoHero.getBlazeTemplate('#createOrganizationPage');
+      if(fly) {
+        fly.showCreateOrgFlyout.set(false);
+      }
     }
   });
 };
