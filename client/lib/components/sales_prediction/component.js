@@ -10,11 +10,11 @@ component.state.week = function () {
 
 
 //MOCK DATA
+//['Brisket Special', 'Caramel Banana bread', 'Cupcakes Platter', 'Eton Mess', 'Fudge Brownie - Vegan', 'Muesli'];
 
 component.state.menuItems = function () {
-  return [
-    'Brisket Special', 'Caramel Banana bread', 'Cupcakes Platter', 'Eton Mess', 'Fudge Brownie - Vegan', 'Muesli'
-  ];
+  //todo: return items for specified location
+  return MenuItems.find({});
 };
 
 component.state.random = function (zeros) {
