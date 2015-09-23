@@ -42,7 +42,7 @@ GoogleCloud = {
     var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
     var trainingDataWriteStream = new through();
 
-    trainingDataWriteStream.pipe(bucket.file('sales-data.csv').createWriteStream());
+    trainingDataWriteStream.pipe(bucket.file(GooglePredictionApi.getTrainingFileName()).createWriteStream());
 
     logger.info('Starting uploading from POS');
 
