@@ -2,16 +2,16 @@ Meteor.startup(function(){
   SyncedCron.add({
     name: 'Forecast refresh',
     schedule: function(parser) {
-    return parser.text('every 1 min');
+    return parser.text('at 5:00 am');
     },
     job: function() {
       var date = new Date();
+
       if(!ForecastDates.findOne()) {
-        
-        ForecastDates.insert({LastThree: date, LastSixWeeks: date, ID: 1});
         predict(1);
         predict(3);
         predict(42);
+        ForecastDates.insert({LastThree: date, LastSixWeeks: date, ID: 1});
       }
       else {
         predict(1);
@@ -41,21 +41,20 @@ function predict (days){
 
   for(var i = 1; i<=days; i++ ) {
     var weather = OpenWeatherMap.historyMock();                             //here will be weather for day we need
+    var dayOfYear = parseInt(moment(updateDay).format("DDD"));
     updateDay = moment(updateDay).add(1, "d").format();
-    var dayOfYear = parseInt(moment(updateDay).format("DDD"))
 
     _.each(Items, function(item){                                        
       var dataVector = [item._id, weather.temp, weather.main, dayOfYear];
       var quantity = prediction.predict("trainingModel", dataVector);
+
       var predictItem ={
         date: updateDay,
         quantity: parseInt(quantity.outputValue),
         updateAt: date,
         menuItemId: item._id
       }
-      // SalesPrediction.insert(predictItem);
-      result.push(predictItem);                                              //later just delete result array and push item in collection
+      SalesPrediction.insert(predictItem);
     });
   }
-  console.log(result);
 }
