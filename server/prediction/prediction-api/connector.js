@@ -7,7 +7,7 @@ var inputVector = ["6GnZhJRYfH7G9Licg", 25, "Sun", 33];
 
 
 PredictionApi = {
-  test: function () {
+  auth: function () {
     var authOptions = {
       serviceEmail: CloudSettings.SERVICE_EMAIL,
       pemFile: CloudSettings.PEM_FILE,
@@ -15,7 +15,7 @@ PredictionApi = {
     };
 
     var googlePrediction = new GooglePrediction(authOptions);
-
-    return googlePrediction.predict(modelName, inputVector);
+    return googlePrediction
+    //return googlePrediction.predict(modelName, inputVector);
   }
 };
