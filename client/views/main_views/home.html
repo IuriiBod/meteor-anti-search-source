@@ -1,24 +1,36 @@
 <template name="home">
   <div class="wrapper wrapper-content">
     {{#if isInOrganization}}
-      <div class="row">
-          <div class="col-md-7">
+      {{#if getCurrentArea}}
+        <div class="row">
+            <div class="col-md-7">
+              <div class="ibox float-e-margins">
+              {{> render component="clock"}}
+              {{> render component="newsFeed" user=currentUser}}
+              </div>
+            </div>
+          <div class="col-md-5">
             <div class="ibox float-e-margins">
-            {{> render component="clock"}}
-            {{> render component="newsFeed" user=currentUser}}
+              {{> render component="shiftsSummary"}}
             </div>
           </div>
-        <div class="col-md-5">
-          <div class="ibox float-e-margins">
-            {{> render component="shiftsSummary"}}
+        </div>
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="ibox float-e-margins"></div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="ibox float-e-margins"></div>
+      {{else}}
+        <div class="col-lg-12">
+          <hr>
+          <div class="jumbotron">
+            <h1>Welcome to Hospo Hero.</h1>
+            <p>
+              Thanks for coming. Please, choose your area in the top menu first.
+            </p>
+          </div>
         </div>
-      </div>
+      {{/if}}
     {{else}}
       <div class="col-lg-12">
         <hr>

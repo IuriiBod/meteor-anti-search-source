@@ -1,5 +1,6 @@
 var component = FlowComponents.define("shiftItem", function(props) {
   this.shift = props.shift;
+  this.shiftState = props.shiftState;
 });
 
 component.state.shift = function() {
@@ -56,19 +57,13 @@ component.state.timeRecorded = function() {
 };
 
 component.state.activeShift = function() {
-  return !!(this.shift && this.shift.status == "started");
+  return !!(this.shift && this.shift.status == 'started');
 };
 
 component.state.open = function() {
-  var state = Session.get("shiftState");
-  return state == "open";
+  return this.shiftState == 'open';
 };
 
 component.state.past = function() {
-  var state = Session.get("shiftState");
-  if(state == "past") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.shiftState == 'past';
+};
