@@ -14,18 +14,19 @@ Meteor.startup(function(){
         ForecastDates.insert({LastThree: date, LastSixWeeks: date, ID: 1});
       }
       else {
-        predict(1);
         var lastUpdates = ForecastDates.findOne();
-        if(Math.abs(date - lastUpdates.LastThree) >= 1000*60*60*24*3 ) {
+
+        if (Math.abs(date - lastUpdates.LastSixWeeks) >= 1000*60*60*24*42) {
+          predict(42);
+          ForecastDates.update({ID: 1}, {$set:{LastThree: date, LastSixWeeks: date}});
+        }else if(Math.abs(date - lastUpdates.LastThree) >= 1000*60*60*24*3 ) {
           predict(3);
           ForecastDates.update({ID: 1}, {$set:{LastThree: date}});
         }
-        if (Math.abs(date - lastUpdates.LastSixWeeks) >= 1000*60*60*24*42) {
-          predict(42);
-          ForecastDates.update({ID: 1}, {$set:{LastSixWeeks: date}});
+        else{
+          predict(1);
         }
       }
-      
     }
   });
 
