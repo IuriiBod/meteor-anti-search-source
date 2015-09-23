@@ -8,8 +8,6 @@ Meteor.startup(function(){
       var date = new Date();
 
       if(!ForecastDates.findOne()) {
-        predict(1);
-        predict(3);
         predict(42);
         ForecastDates.insert({LastThree: date, LastSixWeeks: date, ID: 1});
       }
