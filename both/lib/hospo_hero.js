@@ -1,15 +1,16 @@
 Namespace('HospoHero', {
   getBlazeTemplate: function(selector) {
-    if(selector) {
-      var tmpl = Blaze.getView($(selector)[0]);
-      return tmpl ? tmpl._templateInstance : null;
+    if(selector && $(selector).length > 0) {
+      return Blaze.getView($(selector)[0])._templateInstance;
     }
   },
 
-  checkMongoId: Match.Where(function(id) {
+  checkMongoId: function(id) {
     check(id, String);
-    return /[0-9a-zA-Z]{17}/.test(id);
-  }),
+    if(!/[0-9a-zA-Z]{17}/.test(id)) {
+      throw new Meteor.Error("Expected MongoID");
+    }
+  },
 
   isInRole: function(roleName, userId, areaId) {
     userId = userId ? userId : Meteor.userId();
@@ -73,5 +74,14 @@ Namespace('HospoHero', {
     if(user && user.defaultArea) {
       return Areas.findOne({_id: user.defaultArea});
     }
+  },
+
+  getRelationsObject: function(areaId) {
+    var area = areaId ? Areas.findOne({_id: areaId}) : HospoHero.getCurrentArea();
+    return {
+      organizationId: area.organizationId,
+      locationId: area.locationId,
+      areaId: area._id
+    };
   }
 });

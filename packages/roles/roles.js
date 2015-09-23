@@ -59,6 +59,11 @@ Roles.getRoleById = function (roleId) {
   return Meteor.roles.findOne({_id: roleId});
 };
 
+/**
+ * Returns role by its name
+ * @param roleName
+ * @returns {any}
+ */
 Roles.getRoleByName = function(roleName) {
   return Meteor.roles.findOne({name: roleName});
 };
