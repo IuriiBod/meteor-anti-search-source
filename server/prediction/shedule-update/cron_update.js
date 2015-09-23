@@ -5,24 +5,26 @@ Meteor.startup(function(){
     return parser.text('at 5:00 am');
     },
     job: function() {
-      var date = new Date();
+      var date = moment();
 
-      if(!ForecastDates.findOne()) {
-        predict(42);
-        ForecastDates.insert({LastThree: date, LastSixWeeks: date, ID: 1});
+      if(!ForecastDates.findOne({locationId: 1})) {
+        predict(84);
+        ForecastDates.insert({locationId: 1, lastThree: date.format(), lastSixWeeks: date.format()});
       }
       else {
-        var lastUpdates = ForecastDates.findOne();
+        var lastUpdates = ForecastDates.findOne({locationId:1});
 
-        if (Math.abs(date - lastUpdates.LastSixWeeks) >= 1000*60*60*24*42) {
-          predict(42);
-          ForecastDates.update({ID: 1}, {$set:{LastThree: date, LastSixWeeks: date}});
-        }else if(Math.abs(date - lastUpdates.LastThree) >= 1000*60*60*24*3 ) {
-          predict(3);
-          ForecastDates.update({ID: 1}, {$set:{LastThree: date}});
+        if (date.diff(lastUpdates.lastSixWeeks) >= 1000*60*60*24*42) {
+          predict(84);
+          console.log(date.diff(lastUpdates.lastSixWeeks));
+          console.log("6 weeks prediction");
+          ForecastDates.update({locationId: 1}, {$set:{lastSixWeeks: date.format(), lastThree: date.format() }});
+        }else if(date.diff(lastUpdates.lastThree) >= 1000*60*60*24*3) {
+          predict(7);
+          ForecastDates.update({locationId: 1}, {$set:{lastThree: date.format()}});
         }
         else{
-          predict(1);
+          predict(2);
         }
       }
     }
@@ -32,9 +34,8 @@ Meteor.startup(function(){
 });
 
 function predict (days){
-  var result = [];                                                          
-  var date = new Date();
-  var updateDay = new Date();
+  var date = moment().format();
+  var updateDay = moment().format();
   var prediction = PredictionApi.auth();
   var Items = MenuItems.find({},{fields:{_id: 1}});
 
@@ -52,7 +53,7 @@ function predict (days){
         quantity: parseInt(quantity.outputValue),
         updateAt: date,
         menuItemId: item._id
-      }
+      };
       SalesPrediction.insert(predictItem);
     });
   }
