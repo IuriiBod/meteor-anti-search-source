@@ -69,10 +69,19 @@ Namespace('HospoHero', {
     return Organizations.findOne({_id: organizationId});
   },
 
-  getCurrentArea: function() {
+  getDefaultArea: function() {
     var user = Meteor.user();
     if(user && user.defaultArea) {
-      return Areas.findOne({_id: user.defaultArea});
+      return user.defaultArea;
+    } else {
+      return false;
+    }
+  },
+
+  getCurrentArea: function() {
+    var defaultArea = HospoHero.getDefaultArea();
+    if(defaultArea) {
+      return Areas.findOne({_id: defaultArea});
     }
   },
 

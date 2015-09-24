@@ -1,9 +1,8 @@
 if(Meteor.isClient) {
   Meteor.role = function () {
     var user = Meteor.user();
-    if (user && user.currentArea) {
-      var roleId = user.relationIds[user.currentArea];
-      var role = Meteor.roles.findOne(user.roleId);
+    if (user && user.defaultArea) {
+      var role = Meteor.roles.findOne({_id: user.roles[user.defaultArea]});
       return role !== undefined ? role : null;
     }
     return null;

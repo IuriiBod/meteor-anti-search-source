@@ -137,17 +137,11 @@ Roles.userIsInRole = function(roleName, userId, areaId) {
   return !!Meteor.users.findOne(searchObject);
 };
 
-Roles.hasPermission = function(permissions, areaId) {
-  var user = Meteor.user();
-  if(!user) {
+Roles.hasPermission = function(permissions) {
+  var role = Meteor.role();
+  if(!role) {
     return false;
   }
-
-  if(!user.roles || !user.roles[areaId]) {
-    return false;
-  }
-
-  var role = Meteor.roles.findOne({_id: user.roles[areaId]});
 
   var isPermitted = false;
   if(Array.isArray(permissions)) {

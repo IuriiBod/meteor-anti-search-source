@@ -15,6 +15,10 @@ Namespace('HospoHero.perms', {
     return HospoHero.perms.isAdmin() || Roles.hasPermission(Roles.permissions.Roster.edit.code);
   },
 
+  canBeRosted: function() {
+    return Roles.hasPermission(Roles.permissions.Roster.canBeRosted.code);
+  },
+
   canViewMenu: function() {
     return HospoHero.perms.isAdmin() || Roles.hasPermission(Roles.permissions.Menu.view.code);
   },
