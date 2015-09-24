@@ -11,21 +11,20 @@ component.state.title = function() {
   if(Router.current().params.type == "archive" || Router.current().params.status == "archived") {
     title = "Archived " + title;
   }
-
   return title;
-}
+};
 
 component.state.type = function() {
   return this.type;
-}
+};
 
 component.state.category = function() {
   return this.category;
-}
+};
 
 component.state.subCategory = function() {
   return this.subCategory;
-}
+};
 
 component.state.publishedOn = function() {
   if(this.type == "weeklyroster") {
@@ -42,7 +41,7 @@ component.state.publishedOn = function() {
       return shift.publishedOn;
     }
   }
-}
+};
 
 component.state.currentDate = function() {
   var week = Router.current().params.week;
@@ -78,9 +77,8 @@ component.state.currentDate = function() {
   }
 
   currentDate += "WEEK " + week;
-
   return currentDate;
-}
+};
 
 component.state.id = function() {
   if(this.id) {
@@ -88,139 +86,77 @@ component.state.id = function() {
   } else if(Router.current().params._id) {
     return Router.current().params._id;
   }
-}
+};
 
 component.state.isMenuList = function() {
-  if(this.type == "menulist") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.type == "menulist";
+};
 
 component.state.isActualSales = function() {
-  if(this.type == "actualsales") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.type == "actualsales";
+};
 
 component.state.isDailyRoster = function() {
-  if(this.type == "dailyroster") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.type == "dailyroster";
+};
 
 component.state.routeDate = function() {
   var date = Router.current().params.date;
   if(date) {
     return date;
   }
-}
+};
 
 component.state.isMenuListSubscribed = function() {
   if(this.type == "menulist") {
-    var result = Subscriptions.findOne({"_id": "menulist", "subscribers": Meteor.userId()});
-    if(result) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!Subscriptions.findOne({"_id": "menulist", "subscribers": Meteor.userId()});
   }
-}
+};
 
 component.state.isMenuDetailed = function() {
-  if(this.type == "menudetailed") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.type == "menudetailed";
+};
 
 component.state.isJobItemDetailed = function() {
-  if(this.type == "jobitemdetailed") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.type == "jobitemdetailed";
+};
 
 component.state.isJobItemSubscribed = function() {
   var userId = Meteor.userId();
   var jobSubs = Subscriptions.findOne({"_id": Session.get("thisJobItem"), "subscribers": userId});
-  if(jobSubs) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!jobSubs;
+};
 
 
 component.state.isJobsList = function() {
-  if(this.type == "jobslist") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.type == "jobslist";
+};
 
 component.state.isMenuSubscribed = function() {
   if(this.type == "menudetailed") {
     var userId = Meteor.userId();
     var menuSubs = Subscriptions.findOne({"_id": Session.get("thisMenuItem"), "subscribers": userId});
-    if(menuSubs) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!menuSubs;
   }
-}
+};
 
 component.state.isJobListSubscribed = function() {
   if(this.type == "jobslist") {
-    var result = Subscriptions.findOne({"_id": "joblist", "subscribers": Meteor.userId()});
-    if(result) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!Subscriptions.findOne({"_id": "joblist", "subscribers": Meteor.userId()});
   }
-}
+};
 
 component.state.isIngredientsList = function() {
-  if(this.type == "ingredientslist") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.type == "ingredientslist";
+};
 
 component.state.weeklyNavigation = function() {
-  if(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport") {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-component.state.isManagerOrAdmin = function() {
-  if(isAdmin() || isManager()) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport");
+};
 
 component.state.isWeeklyTemplate = function() {
-  if(this.type == "weeklyrostertemplate") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.type == "weeklyrostertemplate";
+};
 
 component.state.isWeeklyRosterCreated = function() {
   if(this.type == "weeklyroster") {
@@ -233,13 +169,9 @@ component.state.isWeeklyRosterCreated = function() {
       }
     });
     var shifts = Shifts.find({"shiftDate": {$in: dates}}).fetch();
-    if(shifts.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return shifts.length > 0;
   }
-}
+};
 
 component.state.isWeeklyRosterPublished = function() {
   if(this.type == "weeklyroster") {
@@ -252,51 +184,31 @@ component.state.isWeeklyRosterPublished = function() {
       }
     });
     var shifts = Shifts.find({"shiftDate": {$in: dates}, "published": true}).fetch();
-    if(shifts.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return shifts.length > 0;
   }
-}
+};
 
 component.state.isStockTakeList = function() {
-  if(this.type == "stocktakeList") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.type == "stocktakeList";
+};
 
 component.state.date = function() {
   return moment().format("YYYY-MM-DD");
-}
+};
 
 component.state.collapseIn = function() {
-  if(Session.get("collapsed")) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!Session.get("collapsed");
+};
 
 component.state.isArchiveMenu = function() {
   var id = Router.current().params._id;
   var menu = MenuItems.findOne({_id: id});
-  if(menu.status == "archived") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return menu.status == "archived";
+};
 
 
 component.state.isArchiveJob = function() {
   var id = Router.current().params._id;
   var job = JobItems.findOne({_id: id});
-  if(job.status == "archived") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return job.status == "archived";
+};
