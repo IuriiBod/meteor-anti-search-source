@@ -1,8 +1,8 @@
 Template.notifiText.events({
   'click .confirmClaim': function(event) {
     event.preventDefault();
-    var user = $(event.target).attr("data-id");
-    var shiftId = $(event.target).attr("data-shift");
+    var user = $(event.target).closest("a").attr("data-id");
+    var shiftId = $(event.target).closest("a").attr("data-shift");
     var shift = Shifts.findOne(shiftId);
     if(shift) {
       Meteor.call("confirmClaim", shiftId, user, function(err) {
@@ -10,6 +10,7 @@ Template.notifiText.events({
           console.log(err);
           return alert(err.reason);
         } else {
+          notification("Shift claim confirmed");
           var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been confirmed";
           var options = {
             "title": text,
@@ -28,8 +29,8 @@ Template.notifiText.events({
 
   'click .rejectClaim': function(event) {
     event.preventDefault();
-    var user = $(event.target).attr("data-id");
-    var shiftId = $(event.target).attr("data-shift");
+    var user = $(event.target).closest("a").attr("data-id");
+    var shiftId = $(event.target).closest("a").attr("data-shift");
     var shift = Shifts.findOne(shiftId);
     if(shift) {
       Meteor.call("rejectClaim", shiftId, user, function(err) {
@@ -37,6 +38,7 @@ Template.notifiText.events({
           console.log(err);
           return alert(err.reason);
         } else {
+          notification("Shift claim rejected");
           var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been rejected";
           var options = {
             "title": text,
