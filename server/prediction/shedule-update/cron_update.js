@@ -2,14 +2,15 @@ Meteor.startup(function(){
   SyncedCron.add({
     name: 'Forecast refresh',
     schedule: function(parser) {
-    return parser.text('at 5:00 am');
+    return parser.text('at 11:31 am');
     },
     job: function() {
       var date = moment();
 
       if(!ForecastDates.findOne({locationId: 1})) {
-        predict(84);
         ForecastDates.insert({locationId: 1, lastThree: date.format(), lastSixWeeks: date.format()});
+        predict(31);
+
       }
       else {
         var lastUpdates = ForecastDates.findOne({locationId:1});
@@ -37,7 +38,7 @@ function predict (days){
   var date = moment().format();
   var updateDay = moment().format();
   var prediction = PredictionApi.auth();
-  var Items = MenuItems.find({},{fields:{_id: 1}});
+  var Items = MenuItems.find({},{fields:{_id: 1}}).fetch();
 
   for(var i = 1; i<=days; i++ ) {
     var weather = OpenWeatherMap.historyMock();                             //here will be weather for day we need
@@ -49,7 +50,7 @@ function predict (days){
       var quantity = prediction.predict("trainingModel", dataVector);
 
       var predictItem ={
-        date: updateDay,
+        date: moment(updateDay).format("YYYY-MM-DD"),
         quantity: parseInt(quantity.outputValue),
         updateAt: date,
         menuItemId: item._id

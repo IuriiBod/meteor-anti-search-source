@@ -30,17 +30,17 @@
           </thead>
           <tbody>
           <tr>
-            <td>Sales</td>
+            <td><b>Sales</b></td>
             {{#each state$week}}
-              <td>${{state$random 3}}</td>
+              <td>${{state$getSale date}}</td>
               <td>${{state$random 3}}</td>
             {{/each}}
           </tr>
           {{#each state$menuItems}}
             <tr>
-              <td>{{this}}</td>
-              {{#each state$week}}
-                <td>{{state$random 2}}</td>
+              <td>{{this.name}}</td>
+              {{#each state$week this._id}}
+                <td>{{state$getQuantity date}}</td>
                 <td>{{state$random 2}}</td>
               {{/each}}
             </tr>
