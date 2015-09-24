@@ -1,7 +1,7 @@
 Meteor.publish("newNotifications", function() {
   var userId = this.userId;
   if(!userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var cursors = [];
@@ -18,7 +18,7 @@ Meteor.publish("newNotifications", function() {
 Meteor.publish("readNotifications", function() {
   var userId = this.userId;
   if(!userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var cursors = [];
