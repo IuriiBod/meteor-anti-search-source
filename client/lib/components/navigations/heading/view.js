@@ -336,7 +336,13 @@ Template.pageHeading.events({
         dates.push(new Date(day.date).getTime())
       }
     });
-    var shifts = Shifts.find({"shiftDate": {$in: dates}, "published": false, "type": null}).fetch();
+    var shifts = Shifts.find({
+      "shiftDate": {$in: dates},
+      "published": false,
+      "type": null,
+      "relations.areaId": HospoHero.getDefaultArea()
+    }).fetch();
+
     var tobePublished = [];
     var users = [];
     if(shifts.length > 0) {
@@ -347,6 +353,7 @@ Template.pageHeading.events({
         }
       });
     }
+
     if(tobePublished.length > 0) {
       Meteor.call("publishRoster", weekNo, tobePublished, function(err) {
         if(err) {
@@ -383,7 +390,7 @@ Template.pageHeading.events({
               "text": text,
               "startDate": weekStart,
               "week": weekNo
-            }
+            };
             if(openShifts.length > 0) {
               openShifts.forEach(function(shift) {
                 var start =  moment(shift.startTime).format("hh:mm A");

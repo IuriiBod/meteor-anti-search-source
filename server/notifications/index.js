@@ -174,16 +174,12 @@ Meteor.methods({
   },
 
   notifyRoster: function (to, info) {
+    if (!HospoHero.perms.canEditRoster()) {
+      logger.error("User not permitted to notify about roster changes");
+      throw new Meteor.Error(403, "User not permitted to notify about roster changes");
+    }
+
     var user = Meteor.user();
-    if (!user) {
-      logger.error("User not found");
-      throw new Meteor.Error(404, "User not found");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if (!permitted) {
-      logger.error("User not permitted to delete shifts");
-      throw new Meteor.Error(403, "User not permitted to delete shifts ");
-    }
 
     var emailText = "Hi " + to.name + ", <br>";
     emailText += "I've just published the roster for the week starting " + info.startDate + ".<br><br>";

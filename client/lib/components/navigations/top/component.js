@@ -1,7 +1,4 @@
-var subs = new SubsManager();
-var component = FlowComponents.define('topNavbar', function(props) {
-  return subs.subscribe("newNotifications");
-});
+var component = FlowComponents.define('topNavbar', function(props) {});
 
 component.state.count = function() {
   var notifications = Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).fetch();
