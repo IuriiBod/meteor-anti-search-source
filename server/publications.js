@@ -8,11 +8,22 @@ Meteor.publish(null, function(){
           { default: true },
           { organizationId: orgId }
         ]}),
+
         Organizations.find({_id: orgId}),
+
         Locations.find({organizationId: orgId}),
+
         Areas.find({organizationId: orgId}),
+
         Invitations.find({organizationId: orgId}),
+
         Meteor.users.find({
+          "relations.organizationId": orgId
+        }),
+
+        Notifications.find({
+          ref: Meteor.userId(),
+          read: false,
           "relations.organizationId": orgId
         })
       ];

@@ -38,4 +38,4 @@ Template.schedulingJob.rendered = function() {
       revertDuration: 0  //  original position after the drag
     });
   });
-}
+};

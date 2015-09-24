@@ -3,9 +3,6 @@ Meteor.methods({
     if(!HospoHero.perms.canEditRoster()) {
       logger.error(403, "User not permitted to create shifts");
     }
-    check(info.startTime, Number);
-    check(info.endTime, Number);
-    check(info.shiftDate, String);
 
     var shiftDate = new Date(info.shiftDate).getTime();
     var startTime = new Date(info.startTime).getTime();
@@ -36,7 +33,11 @@ Meteor.methods({
       relations: HospoHero.getRelationsObject()
     };
     if(info.hasOwnProperty("week") && info.week.length > 0) {
-      var alreadyPublished = Shifts.findOne({"shiftDate": {$in: info.week}, "published": true});
+      var alreadyPublished = Shifts.findOne({
+        "shiftDate": {$in: info.week},
+        "published": true,
+        "relations.areaId": HospoHero.getDefaultArea()
+      });
       if(alreadyPublished) {
         doc.published = true;
         doc.publishedOn = Date.now();
@@ -52,6 +53,7 @@ Meteor.methods({
         throw new Meteor.Error(404, "Duplicating shift");
       }
     }
+
     var id = Shifts.insert(doc);
     logger.info("Shift inserted", {"shiftId": id, "date": info.shiftDate, "type": type});
     return id;

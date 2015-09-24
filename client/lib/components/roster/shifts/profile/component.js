@@ -8,20 +8,20 @@ component.state.date = function() {
     this.set("shift", shift);
     return moment(shift.shiftDate).format("YYYY-MM-DD");
   }
-}
+};
 
 component.state.id = function() {
   var id = Session.get("thisShift");
   this.set("id", id);
   return id;
-}
+};
 
 component.state.startTime = function() {
   var shift = this.get("shift");
   if(shift) {
     return moment(shift.startTime).format("h:mm A");
   }
-}
+};
 
 component.state.mySection = function() {
   var shift = this.get("shift");
@@ -31,14 +31,14 @@ component.state.mySection = function() {
       return section;
     }
   } 
-}
+};
 
 component.state.endTime = function() {
   var shift = this.get("shift");
   if(shift) {
     return moment(shift.endTime).format("h:mm A");
   }
-}
+};
 
 component.state.sections = function() {
   var shift = this.get("shift");
@@ -50,7 +50,7 @@ component.state.sections = function() {
       return Sections.find();
     }
   }
-}
+};
 
 component.action.submit = function(info) {
   var self = this;
@@ -60,8 +60,8 @@ component.action.submit = function(info) {
       return alert(err.reason);
     } else {
       var shift = Shifts.findOne(id);
-      self.set("shift", shift)
+      self.set("shift", shift);
       $("#shiftProfile").modal("hide");
     }
   });
-}
+};

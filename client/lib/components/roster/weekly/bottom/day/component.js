@@ -16,10 +16,18 @@ component.state.shifts = function() {
   if(origin == "weeklyroster") {
     var week = Session.get("thisWeek");
     var date = this.name.date;
-    return Shifts.find({"shiftDate": new Date(date).getTime(), "type": null});
+    return Shifts.find({
+      "shiftDate": new Date(date).getTime(),
+      "type": null,
+      "relations.areaId": HospoHero.getDefaultArea()
+    });
   } else if(origin == "weeklyrostertemplate") {
     var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    return Shifts.find({"shiftDate": daysOfWeek.indexOf(this.name), "type": "template"});
+    return Shifts.find({
+      "shiftDate": daysOfWeek.indexOf(this.name),
+      "type": "template",
+      "relations.areaId": HospoHero.getDefaultArea()
+    });
   }
 };
 

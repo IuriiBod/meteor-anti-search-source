@@ -18,7 +18,6 @@ Template.dailyShiftScheduling.events({
     } else {
       $flyoutContainer.addClass("show");
     }
-
     return false;
   },
 
@@ -36,11 +35,9 @@ Template.dailyShiftScheduling.events({
 });
 
 Template.dailyShiftScheduling.onRendered(function () {
-  new SubsManager();
-
   var routeDate = Router.current().params.date;
   if (!routeDate) {
-    return;
+    return false;
   }
 
   var calendar = new Template.dailyShiftScheduling.Calendar(this, {
