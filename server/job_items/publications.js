@@ -43,4 +43,36 @@ Meteor.publish("jobsRelatedMenus", function(id) {
   } else {
     this.ready();
   }
+  logger.info("Related menus published", {"id": id});
+  return MenuItems.find({"jobItems._id": id});
+});
+
+Meteor.publish("autocomplete-jobItems", function(selector, options) {
+  if(!this.userId) {
+    logger.error('User not found : ' + this.userId);
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var sub = this;
+  var search;
+
+  if (selector.name) {
+    search = selector.name.$regex;
+    options = selector.name.$options;
+  } else {
+    // Match all since no selector given
+    search = "";
+    options = "i";
+  }
+   var regex = new RegExp(search, options);
+   var limit = options.limit || 10;
+
+  // Push this into our own collection on the client so they don't interfere with other publications of the named collection.
+  JobItems.find({"name": regex}, {"limit": limit}).observeChanges({
+    added: function(id, fields) {
+      sub.added("autocompleteRecords", id, fields)
+    }
+  });
+  logger.info("Autocomplete search text", selector.name);
+  sub.ready();
 });
