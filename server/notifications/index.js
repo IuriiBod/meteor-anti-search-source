@@ -104,15 +104,16 @@ Meteor.methods({
       info.createdOn = Date.now();
       var text = "";
       var shift = Shifts.findOne(itemId);
-      if (shift) {
-        if (options.type == "claim") {
-          if (shift.claimedBy && shift.claimedBy.length > 0) {
+      if(shift) {
+        if(options.type == "claim") {
+          if(shift.claimedBy && shift.claimedBy.length > 0) {
             var claimedUsers = Meteor.users.find({"_id": {$in: shift.claimedBy}}).fetch();
-            claimedUsers.forEach(function (user) {
-              var index = claimedUsers.indexOf(user);
-              text += "<br>" + (index + 1) + "). " + user.username + " <a href='#' class='confirmClaim' data-id='" + user._id + "' data-shift='" + itemId + "'>Confirm</a>";
-              text += " <a href='#' class='rejectClaim' data-id='" + user._id + "' data-shift='" + itemId + "'>Reject</a>";
+            text += "<ol>";
+            claimedUsers.forEach(function(user) {
+              text += "<li>" + user.username + " <a href='#' class='confirmClaim' data-id='" + user._id + "' data-shift='" + itemId + "'><small class='text-success'>Confirm</small></a>";
+              text += " <a href='#' class='rejectClaim' data-id='" + user._id + "' data-shift='" + itemId + "'><small class='text-danger'>Reject</small></a></li>";
             });
+            text += "</ol>";
           }
           var users = Meteor.users.find({$or: [{"isManager": true}, {"isAdmin": true}]}).fetch();
           if (users && users.length > 0) {
