@@ -8,34 +8,30 @@ component.state.week = function() {
     var weekNo = Session.get("thisWeek");
     var year = Router.current().params.year;
     var currentDate = new Date(year);
-    var week = getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
-    return week;
+    return getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
   } else if(this.name == "weeklyrostertemplate") {
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    return daysOfWeek;
+    return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   }
-}
+};
 
 component.state.origin = function() {
   return this.name;
-}
+};
 
 component.prototype.onListRendered = function() {
-  var user = Meteor.user();
   $(".col-lg-13:first").css("margin-left", "0px");
-  if(user.isAdmin || Meteor.isManager) {
+  if(HospoHero.perms.canEditRoster()) {
     $(".sortable-list > div > li").css("cursor", "move");
     var origin = this.name;
-    $(".sortable-list").sortable({
+    $(".sortable-list")
+    .sortable({
       "connectWith": ".sortable-list",
       "revert": true
-    });
-
-
-    $(".sortable-list").on("sortreceive", function(event, ui) {
+    })
+    .on("sortreceive", function(event, ui) {
       var self = this;
-      var id = $(ui.item[0]).attr("data-id");//shiftid
-      var  newDate = $(this).attr("data-date")//date of moved list
+      var id = $(ui.item[0]).attr("data-id");   //shiftid
+      var  newDate = $(this).attr("data-date"); //date of moved list
       if(origin == "weeklyrostertemplate") {
         var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         newDate = parseInt(daysOfWeek.indexOf(newDate));
@@ -44,7 +40,7 @@ component.prototype.onListRendered = function() {
         Meteor.call("editShift", id, {"shiftDate": newDate}, function(err) {
           if(err) {
             console.log(err);
-            $(ui.sender[0]).sortable('cancel');;
+            $(ui.sender[0]).sortable('cancel');
             return alert(err.reason);
           }
         });
@@ -53,4 +49,4 @@ component.prototype.onListRendered = function() {
   } else {
     $(".sortable-list > div > li").css("cursor", "default");
   }
-}
+};

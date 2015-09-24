@@ -5,20 +5,11 @@ var component = FlowComponents.define("weeklyRosterDay", function(props) {
 
 component.state.name = function() {
   return this.name;
-}
+};
 
 component.state.origin = function() {
   return this.origin;
-}
-
-component.state.isUserPermitted = function() {
-  var user = Meteor.user();
-  if(user.isAdmin || user.isManager) {
-    return true;
-  } else {
-    return false;
-  }
-}
+};
 
 component.state.shifts = function() {
   var origin = this.origin;
@@ -30,13 +21,13 @@ component.state.shifts = function() {
     var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     return Shifts.find({"shiftDate": daysOfWeek.indexOf(this.name), "type": "template"});
   }
-}
+};
 
 component.action.addShift = function(day, dates) {
   var doc = {
     "assignedTo": null,
     "week": dates
-  }
+  };
   if(this.origin == "weeklyroster") {
     doc.startTime = new Date(day).setHours(8, 0);
     doc.endTime = new Date(day).setHours(17, 0);
@@ -57,12 +48,8 @@ component.action.addShift = function(day, dates) {
       return alert(err.reason);
     }
   });
-}
+};
 
 component.state.isTemplate = function() {
-  if(this.origin == "weeklyrostertemplate") {
-    return true; 
-  } else {
-    return false;
-  }
-}
+  return this.origin == "weeklyrostertemplate";
+};
