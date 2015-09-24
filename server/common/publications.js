@@ -16,7 +16,7 @@ Meteor.publish("section", function(id) {
 
 Meteor.publish("allCategories", function() {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   logger.info("Categories published");

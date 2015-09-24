@@ -1,6 +1,6 @@
 Meteor.publish('allJobItems', function() {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var cursors = JobItems.find({"status": "active"}, {sort: {'name': 1}});
@@ -10,7 +10,7 @@ Meteor.publish('allJobItems', function() {
 
 Meteor.publish("jobItems", function(ids) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var cursors = [];
@@ -27,7 +27,7 @@ Meteor.publish("jobItems", function(ids) {
 
 Meteor.publish("jobsRelatedMenus", function(id) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   logger.info("Related menus published", {"id": id});

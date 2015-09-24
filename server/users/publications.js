@@ -1,6 +1,6 @@
 Meteor.publish('profileUser', function(id) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var options = {
@@ -20,7 +20,7 @@ Meteor.publish('profileUser', function(id) {
 
 Meteor.publish("usersList", function() {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var options = {
@@ -62,7 +62,7 @@ Meteor.publish("selectedUsersList", function(usersIds) {
 //managers and workers that should be assigned to shifts
 Meteor.publish("workers", function() {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var cursors = [];
@@ -73,7 +73,7 @@ Meteor.publish("workers", function() {
 
 Meteor.publish("selectedUsers", function(ids) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var cursors = [];

@@ -1,6 +1,6 @@
 Meteor.publish("actualSalesForWeek", function(start, end, department) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var query = {
@@ -19,7 +19,7 @@ Meteor.publish("actualSalesForWeek", function(start, end, department) {
 
 Meteor.publish("salesForecastForWeek", function(start, end, department) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var query = {

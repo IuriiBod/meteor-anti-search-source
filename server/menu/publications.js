@@ -22,7 +22,7 @@ Meteor.publish("menu", function(id) {
 
 Meteor.publish("menuCategories", function() {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   logger.info("Menu categories published");

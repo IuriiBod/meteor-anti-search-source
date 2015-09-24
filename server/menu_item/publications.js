@@ -1,6 +1,6 @@
 Meteor.publish("menuList", function(categoryId, status) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var menuCursor = [];
@@ -25,7 +25,7 @@ Meteor.publish("menuList", function(categoryId, status) {
 Meteor.publish("menuItem", function(id) {
   var cursor = [];
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var menu = MenuItems.find(id);
@@ -55,7 +55,7 @@ Meteor.publish("menuItem", function(id) {
 
 Meteor.publish("menuItems", function(ids) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   var cursor = [];
