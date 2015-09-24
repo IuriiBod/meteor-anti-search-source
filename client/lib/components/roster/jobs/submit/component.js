@@ -127,11 +127,12 @@ component.state.settings = function() {
   data['position'] = "bottom";
   data['limit'] = 10;
   data['rules'] = [{
-    collection: JobItems,
+    collection: "JobItems",
     field: "name",
     filter: {"status": "active", "type": self.get("type")},
     sort: true,
     template: Template.description,
+    subscription: "autocomplete-jobItems",
     noMatchTemplate: Template.noMatchJobTemplate
   }];
   return data;  
