@@ -4,10 +4,16 @@
     <div class="col-sm-7">
       <h2>
         {{#if state$isMenuDetailed}}
-          <a href="#"
-             class="editMenuItemName"
-             data-id="{{state$id}}"
-             style="color: #676a6c; border-color: #676a6c;">{{state$title}}</a>
+          {{#if canEditMenu}}
+            <a href="#"
+               class="editMenuItemName"
+               data-id="{{state$id}}"
+               style="color: #676a6c; border-color: #676a6c;">
+              {{state$title}}
+            </a>
+          {{else}}
+            {{state$title}}
+          {{/if}}
         {{else}}
           {{state$title}} {{#if state$isActualSales}} on {{state$routeDate}}{{/if}}
         {{/if}}

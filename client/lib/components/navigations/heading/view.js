@@ -586,7 +586,7 @@ Template.pageHeading.rendered = function() {
     success: function(response, newValue) {
       var id = $(this).attr("data-id");
       if(id) {
-        Meteor.call("updateMenuItemName", id, newValue, function(err) {
+        Meteor.call("editMenuItem", id, {name: newValue}, function(err) {
           if(err) {
             console.log(err);
             return alert(err.reason);

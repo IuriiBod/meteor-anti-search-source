@@ -30,7 +30,7 @@ component.state.areaUsers = function() {
 
 component.state.getProfilePhoto = function(id) {
   var user = Meteor.users.findOne({_id: id});
-  if(user.services && user.services.google && user.services.google.picture) {
+  if(user && user.services && user.services.google && user.services.google.picture) {
     return user.services.google.picture;
   } else {
     return '/images/user-image.jpeg';
@@ -39,6 +39,7 @@ component.state.getProfilePhoto = function(id) {
 
 component.state.isMe = function(id) {
   var userId = Meteor.userId();
+
   if(userId) {
     return (Meteor.userId == id);
   }

@@ -5,14 +5,9 @@ var component = FlowComponents.define("notifiFlyout", function(props) {
 });
 
 component.state.count = function() {
-  var notifications = Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).fetch();
-  var count = notifications.length
-  if(count) {
-    return count;
-  }
-}
+  return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).count();
+};
 
 component.state.notifications = function() {
-  var notifications = Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
-  return notifications;
-}
+  return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
+};
