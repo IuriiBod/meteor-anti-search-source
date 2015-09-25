@@ -1,23 +1,23 @@
 Meteor.methods({
-  createMenuItem: function(info) {
-    if(!HospoHero.perms.canEditMenu()) {
+  createMenuItem: function (info) {
+    if (!HospoHero.perms.canEditMenu()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
     check(info, Object);
 
-    if(!info.name) {
+    if (!info.name) {
       logger.error("Menu item should have a name");
       throw new Meteor.Error("Menu item should have a name");
     }
-    if(!info.category) {
+    if (!info.category) {
       logger.error("Menu item should have a category");
       throw new Meteor.Error("Menu item should have a category");
     }
 
     var exist = MenuItems.findOne({"name": info.name});
-    if(exist) {
+    if (exist) {
       logger.error("Duplicate entry");
       throw new Meteor.Error("Duplicate entry, change name and try again");
     }
@@ -34,17 +34,26 @@ Meteor.methods({
       "createdBy": Meteor.userId(),
       relations: HospoHero.getRelationsObject()
     };
-    if(info.status) {
+    if (info.status) {
       doc.status = info.status
     } else {
       doc.status = "active"
     }
-    logger.info("Menu items added ", id);
-    return MenuItems.insert(doc);
+
+    var menuId = MenuItems.insert(doc);
+    logger.info("Menu items added ", menuId);
+
+    var options = {
+      "type": "create",
+      "title": "New Menu created"
+    };
+    Meteor.call("sendNotifications", menuId, "menu", options);
+
+    return menuId;
   },
 
-  editMenuItem: function(id, info) {
-    if(!HospoHero.perms.canEditMenu()) {
+  editMenuItem: function (id, info) {
+    if (!HospoHero.perms.canEditMenu()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -52,72 +61,79 @@ Meteor.methods({
     HospoHero.checkMongoId(id);
 
     var item = MenuItems.findOne(id);
-    if(!item) {
+    if (!item) {
       logger.error("Menu item should exist");
       throw new Meteor.Error(404, "Menu item should exist");
     }
 
     var updateDoc = {};
-    if(info.name) {
-      if(info.name != item.name) {
+    if (info.name) {
+      if (info.name != item.name) {
         updateDoc.name = info.name;
       }
     }
-    if(info.category) {
-      if(info.category != item.category) {
+    if (info.category) {
+      if (info.category != item.category) {
         updateDoc.category = info.category;
       }
     }
-    if(info.status) {
-      if(info.status != item.status) {
+    if (info.status) {
+      if (info.status != item.status) {
         updateDoc.status = info.status;
       }
     }
-    if(info.salesPrice || (info.salesPrice >= 0)) {
-      if(info.salesPrice != item.salesPrice) {
+    if (info.salesPrice || (info.salesPrice >= 0)) {
+      if (info.salesPrice != item.salesPrice) {
         updateDoc.salesPrice = info.salesPrice;
       }
     }
-    if(info.instructions) {
-      if(info.instructions != item.instructions) {
+    if (info.instructions) {
+      if (info.instructions != item.instructions) {
         updateDoc.instructions = info.instructions;
       }
     }
-    if(info.ingredients) {
+
+    if (info.ingredients) {
       updateDoc.ingredients = [];
-      if(info.ingredients.length > 0) {
-        info.ingredients.forEach(function(item) {
-          if(ingIds.indexOf(item._id) < 0) {
+      if (info.ingredients.length > 0) {
+        var ingIds = [];
+        info.ingredients.forEach(function (item) {
+          if (ingIds.indexOf(item._id) < 0) {
+            ingIds.push(item._id);
             updateDoc.ingredients.push(item);
           }
         });
       }
     }
-    if(info.jobItems) {
+    if (info.jobItems) {
       updateDoc.jobItems = [];
-      if(info.jobItems.length > 0) {
-        info.jobItems.forEach(function(item) {
-          if(jobIds.indexOf(item._id) < 0) {
+      if (info.jobItems.length > 0) {
+        var jobIds = [];
+        info.jobItems.forEach(function (item) {
+          if (jobIds.indexOf(item._id) < 0) {
+            jobIds.push(item._id);
             updateDoc.jobItems.push(item);
           }
         });
       }
     }
-    if(info.image) {
+
+    if (info.image || info.image == '') {
       updateDoc.image = info.image;
     }
-    if(Object.keys(updateDoc).length > 0) {
+    if (Object.keys(updateDoc).length > 0) {
       updateDoc['editedBy'] = Meteor.userId();
       updateDoc['editedOn'] = Date.now();
 
-      MenuItems.update({"_id": id}, {$set: updateDoc});
+      console.log('UPDATE OBJ', updateDoc);
+
       logger.info("Menu item updated ", id);
-      return true;
+      return MenuItems.update({"_id": id}, {$set: updateDoc});
     }
   },
 
-  deleteMenuItem: function(id) {
-    if(!HospoHero.perms.canEditMenu()) {
+  deleteMenuItem: function (id) {
+    if (!HospoHero.perms.canEditMenu()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -125,13 +141,13 @@ Meteor.methods({
     HospoHero.checkMongoId(id);
 
     var item = MenuItems.findOne(id);
-    if(!item) {
+    if (!item) {
       logger.error("Menu item does not exist");
       throw new Meteor.Error(404, "Menu item does not exist");
     }
     //should not remove in case if menu item is used in a menu
     var existOnSales = Sales.findOne({"menuItem": id});
-    if(existOnSales) {
+    if (existOnSales) {
       logger.error("Can't delete. Exist on sales. Archiving Menu");
       return MenuItems.update({'_id': id}, {$set: {"status": "archive"}});
     }
@@ -140,12 +156,8 @@ Meteor.methods({
     return MenuItems.remove(id);
   },
 
-  removeItemFromMenu: function(menuId, itemObject) {
-
-    console.log('io', itemObject);
-    console.log('mi', menuId);
-
-    if(!HospoHero.perms.canEditMenu()) {
+  addItemToMenu: function(menuId, itemObject) {
+    if (!HospoHero.perms.canEditMenu()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -154,7 +166,28 @@ Meteor.methods({
     check(itemObject, Object);
 
     var menuItem = MenuItems.findOne(menuId);
-    if(!menuItem) {
+    if (!menuItem) {
+      logger.error("Menu item does not exist");
+      throw new Meteor.Error(404, "Menu item does not exist");
+    }
+
+    MenuItems.update({_id: menuId}, {$addToSet: itemObject});
+
+    logger.info("Items updated for menu item", menuId);
+    return true;
+  },
+
+  removeItemFromMenu: function (menuId, itemObject) {
+    if (!HospoHero.perms.canEditMenu()) {
+      logger.error("User not permitted to create menu items");
+      throw new Meteor.Error(403, "User not permitted to create menu");
+    }
+
+    HospoHero.checkMongoId(menuId);
+    check(itemObject, Object);
+
+    var menuItem = MenuItems.findOne(menuId);
+    if (!menuItem) {
       logger.error("Menu item does not exist");
       throw new Meteor.Error(404, "Menu item does not exist");
     }
@@ -163,13 +196,13 @@ Meteor.methods({
     return MenuItems.update({'_id': menuId}, {$pull: itemObject});
   },
 
-  menuItemsCount: function() {
+  menuItemsCount: function () {
     return MenuItems.find().count();
   },
 
   // TODO: Copy menu item to another area
-  duplicateMenuItem: function(id) {
-    if(!HospoHero.perms.canEditMenu()) {
+  duplicateMenuItem: function (id) {
+    if (!HospoHero.perms.canEditMenu()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -177,7 +210,7 @@ Meteor.methods({
     HospoHero.checkMongoId(id);
 
     var exist = MenuItems.findOne(id);
-    if(!exist) {
+    if (!exist) {
       logger.error('Menu should exist to be duplicated');
       throw new Meteor.Error(404, "Menu should exist to be duplicated");
     }
@@ -185,7 +218,7 @@ Meteor.methods({
     var count = MenuItems.find({"name": filter}).count();
     var result = delete exist['_id'];
 
-    if(result) {
+    if (result) {
       var duplicate = exist;
       duplicate.name = exist.name + " - copy " + count;
       duplicate.createdBy = user._id;
@@ -197,8 +230,8 @@ Meteor.methods({
     }
   },
 
-  'archiveMenuItem': function(id) {
-    if(!HospoHero.perms.canEditMenu()) {
+  'archiveMenuItem': function (id) {
+    if (!HospoHero.perms.canEditMenu()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -206,7 +239,7 @@ Meteor.methods({
     HospoHero.checkMongoId(id);
 
     var menu = MenuItems.findOne({_id: id});
-    if(menu) {
+    if (menu) {
       var status = menu.status == 'archived' ? 'active' : 'archived';
       return MenuItems.update({_id: id}, {$set: {status: status}});
     }

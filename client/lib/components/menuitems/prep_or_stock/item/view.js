@@ -3,7 +3,7 @@ Template.ingsAndPreps.events({
     event.preventDefault();
     var menu = Session.get("thisMenuItem");
     var id = $(event.target).attr("data-id");
-    var confirmRemove = confirm("Are you sure you want to remove this item ?");
+    var confirmRemove = confirm("Are you sure you want to remove this item?");
     if(confirmRemove) {
       Meteor.call("removeItemFromMenu", menu, {ingredients: {_id: id}}, function(err) {
         if(err) {

@@ -3,7 +3,7 @@
     <tr>
       {{#if canEditMenu}}
         <td>
-          <a class="btn btn-primary btn-xs view-{{state$type}}" data-id="{{state$item._id}}" href="#"><i class="fa fa-edit fa-fw"></i>Edit </a>
+          <a class="btn btn-primary btn-xs view-{{state$type}}" data-id="{{state$item._id}}" href="#"><i class="fa fa-edit fa-fw"></i> Edit</a>
         </td>
       {{/if}}
       <td>{{state$name}}</td>
@@ -18,7 +18,7 @@
       <td>{{#if state$measure}} {{state$measure}} {{else}} -NA- {{/if}}</td>
       {{#if canEditMenu}}
         <td>
-          <span class="remove-{{state$type}}" data-id="{{state$item._id}}" data-type="{{state$type}}">remove</span>
+          <i class="fa fa-trash remove-{{state$type}} text-danger" style="cursor: pointer;" data-id="{{state$item._id}}" data-type="{{state$type}}"></i>
         </td>
       {{/if}}
     </tr>

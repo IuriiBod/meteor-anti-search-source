@@ -3,9 +3,8 @@ Meteor.publish('allJobItems', function() {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var cursors = JobItems.find({"status": "active"}, {sort: {'name': 1}});
   logger.info("All job items published");
-  return cursors;
+  return JobItems.find({"status": "active"}, {sort: {'name': 1}});
 });
 
 Meteor.publish("jobItems", function(ids) {
@@ -13,16 +12,15 @@ Meteor.publish("jobItems", function(ids) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var cursors = [];
   var jobsItems = null;
   if(ids.length > 0) {
     jobsItems = JobItems.find({"_id": {$in: ids}}, {sort: {'name': 1}});
   } else {
     jobsItems = JobItems.find({}, {sort: {'name': 1}, limit: 10});
   }
-  cursors.push(jobsItems);
+
   logger.info("Job items published", ids);
-  return cursors;
+  return jobsItems;
 });
 
 Meteor.publish("jobsRelatedMenus", function(id) {

@@ -26,6 +26,9 @@ Template.editMenuItem.events({
   },
 
   'submit form': function (event) {
+
+    alert("SUBMIT EDIT MENU FORM");
+
     event.preventDefault();
     var id = Session.get("thisMenuItem");
     var name = $(event.target).find('[name=name]').val().trim();
@@ -122,6 +125,8 @@ Template.editMenuItem.events({
 
   'click #uploadMenuItem': function (event) {
     event.preventDefault();
+    var menuId = Router.current().params._id;
+
     filepicker.pickAndStore(
       {mimetype: "image/*", services: ['COMPUTER']},
       {},
@@ -130,8 +135,22 @@ Template.editMenuItem.events({
         if (doc) {
           $(".uploadedNewImageDiv").removeClass("hide");
           $("#uploadedImageUrl").attr("src", doc[0].url);
+          Meteor.call('editMenuItem', menuId, {image: doc[0].url}, function(err) {
+            if(err) {
+              HospoHero.alert(err);
+            }
+          });
         }
       });
+  },
+
+  'click .remove-image': function() {
+    var menuId = Router.current().params._id;
+    Meteor.call('editMenuItem', menuId, {image: ''}, function(err) {
+      if(err) {
+        HospoHero.alert(err);
+      }
+    });
   },
 
   'click .deleteMenuItemBtn': function (e) {
