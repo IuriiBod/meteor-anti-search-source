@@ -12,12 +12,26 @@ Namespace('HospoHero', {
     }
   },
 
+  alert: function(err) {
+    if(err) {
+      console.log(err);
+      if(err.reason) {
+        return alert(err.reason);
+      } else if(err.error) {
+        return alert(err.error);
+      } else if(err.message) {
+        return alert(err.message);
+      } else {
+        return alert('');
+      }
+    }
+  },
+
   isInRole: function(roleName, userId, areaId) {
     userId = userId ? userId : Meteor.userId();
     if(!userId) {
       return false;
     }
-
     if(!areaId) {
       var user = Meteor.users.findOne({_id: userId});
       if(user && user.defaultArea) {

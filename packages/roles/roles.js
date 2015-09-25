@@ -123,16 +123,15 @@ Roles.deleteRole = function(id) {
 //  removeUserFromRole: function() {},
 
 Roles.userIsInRole = function(roleName, userId, areaId) {
-  var role = this.getRoleByName(roleName);
+  var role = Roles.getRoleByName(roleName);
   var searchObject = {
-    _id: userId,
-    roles: {}
+    _id: userId
   };
 
   if(areaId) {
-    searchObject.roles[areaId] = role._id;
+    searchObject["roles." + areaId] = role._id;
   } else {
-    searchObject.roles.defaultRole = role._id;
+    searchObject["roles.defaultRole"] = role._id;
   }
   return !!Meteor.users.findOne(searchObject);
 };

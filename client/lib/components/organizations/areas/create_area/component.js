@@ -26,8 +26,7 @@ component.action.createArea = function (areaInfo) {
 
   Meteor.call("createArea", areaInfo, function (err) {
     if(err) {
-      console.log(err);
-      alert(err.reason);
+      HospoHero.alert(err);
     }
   });
 
