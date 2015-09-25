@@ -9,9 +9,9 @@
         {{#each state$categories}}
           <li><a href="/menuItems/{{this._id}}/{{state$selectedStatus.name}}" class="">{{this.name}}</a></li>
         {{/each}}
-        {{#if state$isAdminOrManager}}
-        <li class="divider"></li>
-        <li><a data-toggle="modal" data-target="#addCategoryModal">Add new category</a></li>
+        {{#if canEditMenu}}
+          <li class="divider"></li>
+          <li><a data-toggle="modal" data-target="#addCategoryModal">Add new category</a></li>
         {{/if}}
       </ul>
     </div>

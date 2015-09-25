@@ -1,16 +1,20 @@
-var component = FlowComponents.define('menuFilters', function(props) {
-});
+var component = FlowComponents.define('menuFilters', function(props) {});
 
 component.state.categories = function() {
   var selected = Session.get("category");
   if(selected != "all") {
-    var categories = Categories.find({"_id": {$nin: [selected]}}).fetch();
+    var categories = Categories.find({
+      "_id": {$nin: [selected]},
+      "relations.areaId": HospoHero.getDefaultArea()
+    }).fetch();
     categories.push({"name": "All", "_id": "all"});
     return categories;
   } else {
-    return Categories.find().fetch();
+    return Categories.find({
+      "relations.areaId": HospoHero.getDefaultArea()
+    }).fetch();
   }
-}
+};
 
 component.state.statuses = function() {
   var selected = Session.get("status");
@@ -21,17 +25,7 @@ component.state.statuses = function() {
   } else {
     return Statuses.find({"name": {$ne: "archived"}}).fetch();
   }
-}
-
-component.state.isAdminOrManager = function() {
-  if(isAdmin()) {
-    return true;
-  } else if(isManager()) {
-    return true;
-  } else {
-    return false;
-  }
-}
+};
 
 component.state.selectedCategory = function() {
   var selected = Session.get("category");
@@ -40,7 +34,7 @@ component.state.selectedCategory = function() {
   } else {
     return {"name": "All", "_id": "all"};
   }
-}
+};
 
 component.state.selectedStatus = function() {
   var selected = Session.get("status");
@@ -49,4 +43,4 @@ component.state.selectedStatus = function() {
   } else {
     return {"name": "All", "_id": "all"};
   }
-}
+};
