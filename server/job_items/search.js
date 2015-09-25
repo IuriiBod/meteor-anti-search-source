@@ -1,7 +1,9 @@
 SearchSource.defineSource('jobItemsSearch', function(searchText, options) {
   var optionFileds = {sort: {'name': 1}};
   var docs = [];
-  var selector = {};
+  var selector = {
+    "relations.areaId": HospoHero.getDefaultArea()
+  };
   if(options) {
     if(options.endingAt) {
       selector['$or'] = [

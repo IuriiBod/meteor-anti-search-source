@@ -1,19 +1,14 @@
 Meteor.methods({
   'createJobItem': function(info) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditJob()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
-    if(!info.name) {
-      logger.error("Name field not found");
-      throw new Meteor.Error(404, "Name field not found");
-    }
+
+    check(info, Object);
+    check(info.name, String);
+
+
     if(!info.type) {
       logger.error("Type field not found");
       throw new Meteor.Error(404, "Type field not found");

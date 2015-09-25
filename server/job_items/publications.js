@@ -3,8 +3,16 @@ Meteor.publish('allJobItems', function() {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
+
+  var query = {"status": "active"};
+
+  var user = Meteor.users.findOne({ _id: this.userId });
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
   logger.info("All job items published");
-  return JobItems.find({"status": "active"}, {sort: {'name': 1}});
+  return JobItems.find(query, {sort: {'name': 1}});
 });
 
 Meteor.publish("jobItems", function(ids) {
@@ -12,15 +20,27 @@ Meteor.publish("jobItems", function(ids) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var jobsItems = null;
+
+  var query = {};
+  var options = {
+    sort: {
+      'name': 1
+    }
+  };
+
   if(ids.length > 0) {
-    jobsItems = JobItems.find({"_id": {$in: ids}}, {sort: {'name': 1}});
+    query._id = { $in: ids };
   } else {
-    jobsItems = JobItems.find({}, {sort: {'name': 1}, limit: 10});
+    options.limit = 10;
+  }
+
+  var user = Meteor.users.findOne({ _id: this.userId });
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
   }
 
   logger.info("Job items published", ids);
-  return jobsItems;
+  return JobItems.find(query, options);;
 });
 
 Meteor.publish("jobsRelatedMenus", function(id) {

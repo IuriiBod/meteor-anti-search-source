@@ -1,20 +1,14 @@
-var component = FlowComponents.define('jobItemDetail', function(props) {
-  var id = Router.current().params._id;
-  this.id = id;
+component = FlowComponents.define('jobItemDetail', function(props) {
+  this.id = Router.current().params._id;
 });
 
 component.state.job = function() {
-  var id = this.id;
-  var item = getPrepItem(id);
-  this.set("job", item);
-  return item;
+  return this.set("job", getPrepItem(this.id));
 };
 
 component.state.section = function() {
   var item = this.get("job");
-  if(item && item.section) {
-    return Sections.findOne(item.section).name;
-  }
+  return item && item.section ? Sections.findOne(item.section).name : false;
 };
 
 component.state.isPrep = function() {
@@ -22,11 +16,7 @@ component.state.isPrep = function() {
   if(item) {
     if(item.type) {
       var type = JobTypes.findOne(item.type);
-      if(type && type.name == "Prep") {
-        return true; 
-      } else {
-        return false;
-      }
+      return !!(type && type.name == "Prep");
     }
   }
 };
@@ -36,37 +26,25 @@ component.state.isRecurring = function() {
   if(item) {
     if(item.type) {
       var type = JobTypes.findOne(item.type);
-      if(type && type.name == "Recurring") {
-        return true; 
-      } else {
-        return false;
-      }
+      return !!(type && type.name == "Recurring");
     }
   }
 };
 
 component.state.ingExists = function() {
   var item = this.get("job");
-  if(item.ingredients && item.ingredients.length > 0) {
-    return true;
-  } else {
-    return false;
-  }
+  return !!(item.ingredients && item.ingredients.length > 0);
 };
 
 
 component.state.isChecklist = function() {
   var item = this.get("job");
-  if(item && item.checklist && item.checklist.length > 0) {
-    return true;
-  }
+  return item && item.checklist && item.checklist.length > 0;
 };
 
 component.state.checklist = function() {
   var item = this.get("job");
-  if(item && item.checklist) {
-    return item.checklist;
-  }
+  return item && item.checklist ? item.checklist : '';
 };
 
 component.state.startsOn = function() {
@@ -78,9 +56,7 @@ component.state.startsOn = function() {
 
 component.state.repeatAt = function() {
   var item = this.get("job");
-  if(item && item.repeatAt) {
-    return moment(item.repeatAt).format("hh:mm A");
-  }
+  return item && item.repeatAt ? moment(item.repeatAt).format("hh:mm A") : false;
 };
 
 component.state.endsOn = function() {
@@ -102,16 +78,12 @@ component.state.endsOn = function() {
 
 component.state.isWeekly = function() {
   var item = this.get("job");
-  if(item) {
-    return item.frequency === "Weekly";
-  }
+  return item ? item.frequency === "Weekly" : false;
 };
 
 component.state.isDaily = function() {
   var item = this.get("job");
-  if(item) {
-    return item.frequency === "Daily";
-  }
+  return item ? item.frequency === "Daily" : false;
 };
 
 component.state.frequency = function() {
@@ -143,23 +115,17 @@ component.state.repeatOnDays = function() {
 
 component.state.description = function() {
   var item = this.get("job");
-  if(item) {
-    return item.description;
-  }
+  return item ? item.description : '';
 };
 
 component.state.labourCost = function() {
   var item = this.get("job");
-  if(item) {
-    return item.labourCost;
-  }
+  return item ? item.labourCost : 0;
 };
 
 component.state.prepCostPerPortion = function() {
   var item = this.get("job");
-  if(item) {
-    return item.prepCostPerPortion;
-  }
+  return item ? item.prepCostPerPortion : 0;
 };
 
 component.state.isManagerOrAdmin = function() {
@@ -170,17 +136,12 @@ component.state.isManagerOrAdmin = function() {
 component.state.relatedMenus = function() {
   var id = this.id;
   subs.subscribe("jobsRelatedMenus", id);
-  var relatedMenus = MenuItems.find().fetch();
-  return relatedMenus;
+  return MenuItems.find().fetch();
 };
 
 component.state.getCategory = function(id) {
   subs.subscribe("menuCategories");
   var category = Categories.findOne({_id: id});
-  
-  if (category) {
-    return category.name;
-  } else {
-    return '';
-  }
+
+  return category ? category.name : '';
 };

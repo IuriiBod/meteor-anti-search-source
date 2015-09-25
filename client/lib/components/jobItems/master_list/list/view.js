@@ -8,13 +8,12 @@ JobItemsSearch = new SearchSource('jobItemsSearch', fields, options);
 
 Template.jobItemsList.helpers({
   getJobItems: function() {
-    var data = JobItemsSearch.getData({
-      transform: function(matchText, regExp) {
+    return JobItemsSearch.getData({
+      transform: function (matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>")
       },
       sort: {'name': 1}
     });
-    return data;
   },
 
   isLoading: function() {
@@ -87,4 +86,4 @@ Template.jobItemsList.rendered = function() {
     selector.status = {$ne: 'archived'};
   }
   JobItemsSearch.search("", selector);
-}
+};
