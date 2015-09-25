@@ -3,54 +3,64 @@ Meteor.publish("menuList", function(categoryId, status) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var menuCursor = [];
+
   var query = {};
+
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
   if(categoryId && categoryId != "all") {
-    var doc = Categories.findOne(categoryId);
-    if(doc) {
-      query.category = categoryId;
-    }
+    query.category = categoryId;
   }
-  if(status && status != "all" ) {
-    query.status = status;
-  } else if(status && status == "all") {
-    query.status = {$ne: "archived"};
+
+  if(status) {
+    query.status = (status && status != 'all') ? status : { $ne: 'archived' };
   }
-  menuCursor = MenuItems.find(query,
-    {sort: {"name": 1}, limit: 30});
+
   logger.info("Menu Items list published", categoryId, status);
-  return menuCursor;
+
+  return MenuItems.find(query, {sort: {"name": 1}, limit: 30});
 });
 
 Meteor.publish("menuItem", function(id) {
-  var cursor = [];
   if(!this.userId) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var menu = MenuItems.find(id);
+  var cursor = [];
+  var query = {
+    _id: id
+  };
+
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
+  var menu = MenuItems.find(query);
   cursor.push(menu);
 
-  var menuFetched = menu.fetch()[0];
-  var ingIds = [];
-  if(menuFetched.ingredients && menuFetched.ingredients.length > 0) {
-    menuFetched.ingredients.forEach(function(ing) {
-      ingIds.push(ing._id);
-    });
-    var ingCursor = Ingredients.find({"_id": {$in: ingIds}});
-    cursor.push(ingCursor);
-  }
+  if(menu.length) {
+    var menuFetched = menu.fetch()[0];
+    var ingIds = [];
+    if(menuFetched.ingredients && menuFetched.ingredients.length > 0) {
+      menuFetched.ingredients.forEach(function(ing) {
+        ingIds.push(ing._id);
+      });
+      cursor.push(Ingredients.find({"_id": {$in: ingIds}}));
+    }
 
-  var prepIds = [];
-  if(menuFetched.jobItems && menuFetched.jobItems.length > 0) {
-    menuFetched.jobItems.forEach(function(prep) {
-      prepIds.push(prep._id);
-    });
-    var prepCursor = JobItems.find({"_id": {$in: prepIds}});
-    cursor.push(prepCursor);
+    var prepIds = [];
+    if(menuFetched.jobItems && menuFetched.jobItems.length > 0) {
+      menuFetched.jobItems.forEach(function(prep) {
+        prepIds.push(prep._id);
+      });
+      cursor.push(JobItems.find({"_id": {$in: prepIds}}));
+    }
+    return cursor;
   }
-
-  return cursor;
 });
 
 Meteor.publish("menuItems", function(ids) {
@@ -58,9 +68,18 @@ Meteor.publish("menuItems", function(ids) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var cursor = [];
-  var items = MenuItems.find({"_id": {$in: ids}}, {limit: 10});
-  logger.info("Menu items published", ids);
-  cursor.push(items);
-  return cursor;
+
+  if(Array.isArray(ids)) {
+    var query = {
+      _id: { $in: ids }
+    };
+
+    var user = Meteor.users.findOne({_id: this.userId});
+    if(user.defaultArea) {
+      query["relations.areaId"] = user.defaultArea;
+    }
+
+    logger.info("Menu items published", ids);
+    return MenuItems.find(query, {limit: 10});
+  }
 });

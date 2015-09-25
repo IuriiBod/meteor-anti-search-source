@@ -12,9 +12,9 @@ Template.itemListed.rendered = function() {
       var doc = {
         "_id": id,
         "quantity": 1
-      }
+      };
       if(type == "prep") {
-        Meteor.call("addMenuPrepItems", menuId, [doc], function(err) {
+        Meteor.call("editMenuItems", menuId, {jobItems: [doc]}, function(err) {
           if(err) {
             console.log(err);
             return alert(err.reason);
@@ -23,7 +23,7 @@ Template.itemListed.rendered = function() {
           }
         });
       } else if(type == "ing") {
-        Meteor.call("addMenuIngredients", menuId, [doc], function(err) {
+        Meteor.call("editMenuItem", menuId, {ingredients: [doc]}, function(err) {
           if(err) {
             console.log(err);
             return alert(err.reason);
@@ -34,4 +34,4 @@ Template.itemListed.rendered = function() {
       }
     }
   });
-}
+};

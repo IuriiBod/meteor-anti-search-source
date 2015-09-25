@@ -81,7 +81,7 @@ Template.menuItemsList.rendered = function() {
     selector.filter = filter;
   }
   MenuItemsSearch.search("", selector);
-}
+};
 
 Template.menuItemsList.onRendered(function() {
   var tpl = this;

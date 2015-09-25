@@ -9,7 +9,7 @@ Template.menuDetailWidgets.rendered = function() {
       var id = $(this).attr("data-id");
       
       if(id) {
-        Meteor.call("updateSalesPrice", id, newValue, function(err) {
+        Meteor.call("editMenuItem", id, {salesPrice: newValue}, function(err) {
           if(err) {
             console.log(err);
             return alert(err.reason);
@@ -18,4 +18,4 @@ Template.menuDetailWidgets.rendered = function() {
       }
     }
   });
-}
+};

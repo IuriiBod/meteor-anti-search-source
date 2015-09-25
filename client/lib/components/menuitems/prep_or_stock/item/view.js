@@ -5,7 +5,7 @@ Template.ingsAndPreps.events({
     var id = $(event.target).attr("data-id");
     var confirmRemove = confirm("Are you sure you want to remove this item ?");
     if(confirmRemove) {
-      Meteor.call("removeMenuIngredient", menu, id, function(err) {
+      Meteor.call("removeItemFromMenu", menu, {ingredients: {_id: id}}, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);
@@ -22,7 +22,7 @@ Template.ingsAndPreps.events({
     var id = $(event.target).attr("data-id");
     var confirmRemove = confirm("Are you sure you want to remove this item ?");
     if(confirmRemove) {
-      Meteor.call("removeMenuJobItem", menu, id, function(err) {
+      Meteor.call("removeItemFromMenu", menu, {jobItems: {_id: id}}, function(err) {
         if(err) {
           console.log(err);
           return alert(err.reason);
@@ -33,6 +33,7 @@ Template.ingsAndPreps.events({
     }
   },
 
+  // TODO: Check it later
   'click .view-prep': function(event) {
     event.preventDefault();
     var id = $(event.target).attr("data-id");
@@ -53,7 +54,7 @@ Template.ingsAndPreps.rendered = function() {
   $.fn.editable.defaults.showbuttons = true;
 
   var menu = Session.get("thisMenuItem");
-  if(managerPlusAdminPermission()) {
+  if(HospoHero.perms.canEditMenu()) {
     $('.quantity').editable({
       success: function(response, newValue) {
         if(newValue) {
@@ -65,7 +66,7 @@ Template.ingsAndPreps.rendered = function() {
                 console.log(err);
                 return alert(err.reason);
               }
-              return;
+              return true;
             });
           } else if(type == "prep") {
             Meteor.call("addMenuPrepItems", menu, [{"_id": ing, "quantity": newValue}], function(err) {
@@ -73,11 +74,11 @@ Template.ingsAndPreps.rendered = function() {
                 console.log(err);
                 return alert(err.reason);
               }
-              return;
+              return true;
             });
           }
         }
       }
     });
   }
-}
+};
