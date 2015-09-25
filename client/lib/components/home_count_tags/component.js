@@ -14,11 +14,7 @@ component.prototype.ingCountMethod = function() {
       self.set("ingCount", result)
     }
   });
-}
-
-component.state.ingredientCount = function() {
-  return this.get("ingCount")
-}
+};
 
 component.prototype.jobItemsCountMethod = function() {
   var self = this;
@@ -30,12 +26,7 @@ component.prototype.jobItemsCountMethod = function() {
       self.set("jobsCount", result)
     }
   });
-  
-}
-
-component.state.jobItemsCount = function() {
-  return this.get("jobsCount")
-}
+};
 
 component.prototype.menuItemsCountMethod = function() {
   var self = this;
@@ -47,8 +38,4 @@ component.prototype.menuItemsCountMethod = function() {
       self.set("menusCount", result);
     }
   });
-}
-
-component.state.menuItemsCount = function() {
-  return this.get("menusCount");
-}
+};
