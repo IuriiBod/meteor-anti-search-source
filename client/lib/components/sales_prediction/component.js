@@ -1,5 +1,6 @@
 var component = FlowComponents.define("salesPrediction", function (props) {
   this.set('currentWeekDate', props.date);
+  this.set("limit", 15);
 });
 
 
@@ -9,11 +10,37 @@ component.state.week = function (id) {
   return getDatesFromWeekNumberWithYear(currentWeekDate.week, new Date(currentWeekDate.year));
 };
 
+component.state.weekPrediction = function(id){
+  var currentWeekDate = this.get('currentWeekDate');
+  //var week = getDatesFromWeekNumberWithYear(currentWeekDate.week, new Date(currentWeekDate.year));
+  var dates = _.map(getDatesFromWeekNumberWithYear(currentWeekDate.week, new Date(currentWeekDate.year)), function(item){
+    return item.date;
+  });
+  var prediction = _.map(SalesPrediction.find({date:{$in:dates}, menuItemId: id }, {sort: {date: 1}}).fetch(), function(item){
+    return {date: item.date, quantity: item.quantity};
+  });
+  //console.log(dates, prediction);
+
+  for (var i = 0; i< dates.length; i++){
+    push = true;
+    for (var j =0; j< prediction.length; j++){
+      if (dates[i] === prediction[j].date){
+        push = false;
+      }
+    }
+    if (push)
+    {
+      prediction.push({date: dates[i], quantity: "ND"});
+    }
+  }
+  return _.sortBy(prediction, "date");
+
+};
 
 //MOCK DATA
 
 component.state.menuItems = function () {
-  return MenuItems.find().fetch();
+  return MenuItems.find({},{limit: this.get("limit")}).fetch();
 };
 
 component.state.random = function (zeros) {
@@ -32,8 +59,13 @@ component.state.getSale = function (date) {
 };
 
 component.state.getQuantity = function(date) {
-  var predictionItem = SalesPrediction.findOne({date: date, menuItemId: this.get("menuItemId")})
+  var predictionItem = SalesPrediction.findOne({date: date, menuItemId: this.get("menuItemId")});
   return predictionItem ? predictionItem.quantity : "ND";
 };
 
 
+component.action.increaseLimit = function () {
+  if (this.get("limit")<MenuItems.find().count()) {
+    this.set("limit", this.get("limit") + 10);
+  }
+};

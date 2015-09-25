@@ -72,6 +72,7 @@ Meteor.publish("allMenuItems", function () {
   }
   logger.info(" All menu items published");
   return MenuItems.find();
+
 });
 
 Meteor.publish("menuItemsShort", function () {

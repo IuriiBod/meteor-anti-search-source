@@ -39,14 +39,18 @@
           {{#each state$menuItems}}
             <tr>
               <td>{{this.name}}</td>
-              {{#each state$week this._id}}
-                <td>{{state$getQuantity date}}</td>
+              {{#each state$weekPrediction this._id}}
+                <td>{{this.quantity}}</td>
                 <td>{{state$random 2}}</td>
               {{/each}}
             </tr>
           {{/each}}
           </tbody>
         </table>
+        <br>
+        <div class="buttonWrapper">
+            <button class="btn btn-primary col-xs-12" id="loadItems">Load more items</button>
+        </div>
       </div>
     </div>
   </div>
