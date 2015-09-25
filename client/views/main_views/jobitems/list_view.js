@@ -31,11 +31,7 @@ Template.jobItemsListMainView.events({
       "type": Session.get("type"),
       limit: 30
     };
-    if(Router.current().params.type) {
-      selector.status = 'archived';
-    } else {
-      selector.status = {$ne: 'archived'};
-    }
+    selector.status = Router.current().params.type ? 'archived' : {$ne: 'archived'};
     var text = $("#searchJobItemsBox").val().trim();
     JobItemsSearch.search(text, selector);
   }
@@ -44,11 +40,7 @@ Template.jobItemsListMainView.events({
 Template.jobItemsListMainView.helpers({
   'isSubscribed': function() {
     var result = Subscriptions.findOne({"_id": "joblist", "subscribers": Meteor.userId()});
-    if(result) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!result;
   },
 
   jobTypes: function() {
@@ -63,4 +55,4 @@ Template.jobItemsListMainView.rendered = function() {
     $(elem).addClass("active");
     Session.set("type", $(elem).attr("id"));
   }
-}
+};
