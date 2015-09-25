@@ -54,8 +54,7 @@ var helpers = {
     return text;
   },
   secondsToMinutes: function(secs) {
-    var mins = secs/60;
-    return mins;
+    return secs / 60;
   },
   timeFormattedWithDate: function(time) {
     if(time) {
@@ -73,8 +72,7 @@ var helpers = {
   },
   dateFormat: function(date) {
     if(date) {
-      var dateFormatted = moment(date).format('YYYY-MM-DD');
-      return dateFormatted;
+      return moment(date).format('YYYY-MM-DD');
     } else {
       return "-"
     }
@@ -124,6 +122,9 @@ var helpers = {
       return 0;
     }
   },
+  /**
+   * @return {string}
+   */
   SupplierName: function(id) {
     if(id) {
       var supplier = Suppliers.findOne(id);
@@ -142,7 +143,6 @@ var helpers = {
     }
   }
 };
-_.extend(Namespace('HospoHero.helpers'), helpers);
 
 Object.keys(helpers).forEach(function (helperName) {
   Template.registerHelper(helperName,helpers[helperName]);
