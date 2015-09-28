@@ -79,9 +79,10 @@ function predict (days){
       text: notificationText.join(''),
       actionType: 'update'
     };
-    for (i=0; i<receivers.length; i++){
-      options.to = receivers[i]._id;
+    _.each(receivers, function (item){
+      options.to = item._id;
       Notifications.insert(options);
-    }
+    });
+
   }
 }

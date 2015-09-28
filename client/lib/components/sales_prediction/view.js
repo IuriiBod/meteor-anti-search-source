@@ -5,12 +5,9 @@ Template.salesPrediction.events({
    }
 });
 
-
-
-
 Template.salesPrediction.rendered = function() {
-    tmpl = this;
-    $(window).scroll(function(e){
+    var tmpl = this;
+    $(window).scroll(function(){
         $('#loadItems').addClass("hidden");
         var docHeight = $(document).height();
         var winHeight = $(window).height();
