@@ -35,6 +35,7 @@ component.state.weekPrediction = function(id){
 };
 
 //MOCK DATA
+//['Brisket Special', 'Caramel Banana bread', 'Cupcakes Platter', 'Eton Mess', 'Fudge Brownie - Vegan', 'Muesli'];
 
 component.state.menuItems = function () {
   return MenuItems.find({},{limit: this.get("limit")}).fetch();
