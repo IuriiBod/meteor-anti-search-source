@@ -600,18 +600,11 @@ Template.pageHeading.rendered = function() {
 Template.pageHeading.helpers({
   'isArchive': function() {
     var archive = Router.current().params.status;
-    if(archive && archive == "archived") {
-      return true;
-    } else {
-      return false;
-    }
+    return !!(archive && archive == "archived");
   },
+
   'isArchiveJob': function() {
     var archive = Router.current().params.type;
-    if(archive && archive == "archive") {
-      return true;
-    } else {
-      return false;
-    }
+    return !!(archive && archive == "archive");
   }
 });

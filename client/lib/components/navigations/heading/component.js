@@ -211,12 +211,12 @@ component.state.collapseIn = function () {
 component.state.isArchiveMenu = function () {
   var id = Router.current().params._id;
   var menu = MenuItems.findOne({_id: id});
-  return menu.status == "archived";
+  return menu ? menu.status == "archived" : false;
 };
 
 
 component.state.isArchiveJob = function () {
   var id = Router.current().params._id;
   var job = JobItems.findOne({_id: id});
-  return job.status == "archived";
+  return job ? job.status == "archived" : false;
 };
