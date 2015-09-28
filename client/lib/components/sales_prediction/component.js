@@ -27,7 +27,7 @@ component.state.weekPrediction = function(id){
     });
     if (push)
     {
-      prediction.push({date: dates[i], quantity: "ND"});
+      prediction.push({date: dateItem, quantity: "ND"});
     }
   });
   return _.sortBy(prediction, "date");

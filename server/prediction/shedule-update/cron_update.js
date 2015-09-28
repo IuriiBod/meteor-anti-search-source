@@ -29,7 +29,7 @@ Meteor.startup(function(){
     }
   });
 
-  SyncedCron.start();
+  //SyncedCron.start();    MOVED TO MAIN.JS
 });
 
 function predict (days){

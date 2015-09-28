@@ -6,7 +6,6 @@ Template.salesPrediction.events({
 });
 
 Template.salesPrediction.rendered = function() {
-    var tmpl = this;
     $(window).scroll(function(){
         $('#loadItems').addClass("hidden");
         var docHeight = $(document).height();
@@ -14,7 +13,7 @@ Template.salesPrediction.rendered = function() {
         var scrollTop = $(window).scrollTop();
 
         if ((docHeight - winHeight) == scrollTop) {
-            tmpl.$('#loadItems').click();
+            $('#loadItems').click();
         }
     });
 };
