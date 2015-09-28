@@ -31,5 +31,9 @@ GooglePredictionApi.prototype.updatePredictionModel = function () {
 
 
 GooglePredictionApi.prototype.makePrediction = function (inputData) {
-  return this._client.predict(this._getModelName(), inputData);
+  if (HospoHero.isDevelopmentMode()) {
+    return Math.floor(Math.random() * 100);
+  } else {
+    return this._client.predict(this._getModelName(), inputData).outputValue;
+  }
 };

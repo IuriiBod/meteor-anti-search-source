@@ -49,6 +49,10 @@ OpenWeatherMap = {
   },
 
   history: function (date, location) {
+    if (HospoHero.isDevelopmentMode()) {
+      return this.historyMock();
+    }
+
     date.setHours(13); // get weather after 13 PM
 
     var data = this._httpGetRequest('/history/city', {

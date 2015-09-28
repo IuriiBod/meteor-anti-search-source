@@ -4,6 +4,8 @@ Namespace('HospoHero', {
   }
 });
 
+
+//todo: remove methods below in future
 isManagerOrAdmin = function (user) {
   if (user) {
     if (user.isAdmin || user.isManager) {
