@@ -65,6 +65,16 @@ Meteor.publish("menuItems", function (ids) {
   return cursor;
 });
 
+Meteor.publish("allMenuItems", function () {
+  if (!this.userId){
+    logger.error('User not found : ' + this.userId);
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+  logger.info(" All menu items published");
+  return MenuItems.find();
+
+});
+
 Meteor.publish("menuItemsShort", function () {
   if (isManagerOrAdmin(this.userId)) {
     //todo: update it according to organization
