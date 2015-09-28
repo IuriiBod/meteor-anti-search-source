@@ -47,3 +47,4 @@ http
 micah:google-cloud
 percolate:synced-cron
 jss:meteor-google-prediction
+zephraph:namespace

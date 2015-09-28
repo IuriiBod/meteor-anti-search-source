@@ -31,5 +31,5 @@ GooglePredictionApi.prototype.updatePredictionModel = function () {
 
 
 GooglePredictionApi.prototype.makePrediction = function (inputData) {
-  this._client.predict(this._getModelName(), inputData);
+  return this._client.predict(this._getModelName(), inputData);
 };
