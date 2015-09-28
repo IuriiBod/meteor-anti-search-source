@@ -49,10 +49,7 @@ Template.jobItemsListMainView.helpers({
 });
 
 Template.jobItemsListMainView.rendered = function() {
-  $(".jobtypesPanel").find("li").first().addClass("active");
-  if($(".jobtypepanes") && $(".jobtypepanes").length > 0) {
-    var elem = $(".jobtypepanes")[0];
-    $(elem).addClass("active");
-    Session.set("type", $(elem).attr("id"));
-  }
+  var type = Session.get('type');
+  $("li[data-id="+type+"]").addClass('active');
+  $("#"+type).addClass('active');
 };
