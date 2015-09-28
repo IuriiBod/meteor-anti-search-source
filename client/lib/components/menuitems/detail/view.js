@@ -14,8 +14,7 @@ Template.menuItemDetail.events({
     info.instructions = text;
     Meteor.call("editMenuItem", menuId, info, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       } else {
         var menu = MenuItems.findOne(menuId);
         var options = {
@@ -25,8 +24,7 @@ Template.menuItemDetail.events({
         }
         Meteor.call("sendNotifications", menuId, "menu", options, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           }
         });   
          

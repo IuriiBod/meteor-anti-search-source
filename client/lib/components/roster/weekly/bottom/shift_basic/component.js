@@ -29,8 +29,7 @@ component.state.assignedTo = function() {
 component.action.deleteShift = function(id) {
   Meteor.call("deleteShift", id, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     }
   });
 };
@@ -212,8 +211,7 @@ component.prototype.itemRendered = function() {
 function editShift(obj) {
   Meteor.call("editShift", obj._id, obj, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       var shift = Shifts.findOne(obj._id);
       if(shift.published && shift.assignedTo) {
@@ -266,8 +264,7 @@ function sendNotification(itemId, to, title, text) {
   };
   Meteor.call("sendNotifications", itemId, type, options, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     }
   });
 }

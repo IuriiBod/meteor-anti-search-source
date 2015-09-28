@@ -51,8 +51,7 @@ component.action.submit = function (text) {
 
   Meteor.call("createPost", linkedText, ref, function (err, id) {
     if (err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       var options = {
         "title": "New Posts on by " + Meteor.user().username,
@@ -62,8 +61,7 @@ component.action.submit = function (text) {
       };
       Meteor.call("sendNotifications", ref, "comment", options, function (err) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }

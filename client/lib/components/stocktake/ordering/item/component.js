@@ -44,8 +44,7 @@ component.prototype.onItemRendered = function() {
       $(this).closest("tr").next().find("a").click();
       Meteor.call("editOrderingCount", id, parseFloat(newValue), function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }

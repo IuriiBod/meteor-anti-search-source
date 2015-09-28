@@ -13,7 +13,7 @@ Template.weekForecastView.events({
                 alert(err.reason);
                 Router.go("salesCalibration");
               } else {
-                return alert(err.reason);
+                HospoHero.alert(err);
               }
             }
           });

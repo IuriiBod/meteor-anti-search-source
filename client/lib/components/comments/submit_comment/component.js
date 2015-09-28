@@ -39,8 +39,7 @@ component.action.submit = function(text) {
   
   Meteor.call("createComment", linkedText, ref, function(err, id) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       var reference = null;
       var ref_name = null;
@@ -65,8 +64,7 @@ component.action.submit = function(text) {
       }
       Meteor.call("sendNotifications", ref, "comment", options, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });  
     }

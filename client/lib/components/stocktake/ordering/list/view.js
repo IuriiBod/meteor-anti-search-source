@@ -24,8 +24,7 @@ Template.ordersList.events({
       
       Meteor.call("updateReceipt", id, info, function(err, id) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } 
       });
     }

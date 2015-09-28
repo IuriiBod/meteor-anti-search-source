@@ -38,8 +38,7 @@ component.action.submit = function(date, menuItemId, qty) {
           alert("Menu item has already been added");
           $(".custom-combobox-input").focus();
         } else {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       } else {
         $('.custom-combobox-input').val("");
@@ -54,8 +53,7 @@ component.action.submit = function(date, menuItemId, qty) {
           alert("Menu item already added");
           $(".custom-combobox-input").focus();
         } else {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       } else {
         $('.custom-combobox-input').val("");

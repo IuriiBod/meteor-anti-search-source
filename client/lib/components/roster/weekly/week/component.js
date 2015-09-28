@@ -39,9 +39,8 @@ component.prototype.onListRendered = function() {
       if(id && newDate) {
         Meteor.call("editShift", id, {"shiftDate": newDate}, function(err) {
           if(err) {
-            console.log(err);
             $(ui.sender[0]).sortable('cancel');
-            return alert(err.reason);
+            HospoHero.alert(err);
           }
         });
       }

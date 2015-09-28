@@ -29,8 +29,7 @@ component.prototype.onItemRendered = function() {
     var sareaId = Session.get("activeSArea");
     Meteor.call("assignStocksToAreas", id, sareaId, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   });

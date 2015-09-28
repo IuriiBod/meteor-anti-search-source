@@ -6,8 +6,7 @@ Template.salesItemsListed.events({
     if(result) {
       Meteor.call("deleteSalesMenu", id, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }

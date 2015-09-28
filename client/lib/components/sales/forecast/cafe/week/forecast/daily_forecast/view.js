@@ -8,8 +8,7 @@ Template.dailyForecast.events({
       if(forecast) {
         Meteor.call("updateForecast", id, revenue, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           }
         });
       }

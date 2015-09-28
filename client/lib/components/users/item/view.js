@@ -5,8 +5,7 @@ Template.userDetailed.events({
     var id = $(event.target).closest("tr").attr("data-id");
     Meteor.call("changeUserPermission", id, type, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   },
@@ -26,8 +25,7 @@ Template.userDetailed.events({
       if(confirmChange) {
         Meteor.call("changeStatus", userId, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           }
         });
       }

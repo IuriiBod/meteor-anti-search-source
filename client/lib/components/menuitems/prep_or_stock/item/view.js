@@ -7,8 +7,7 @@ Template.ingsAndPreps.events({
     if(confirmRemove) {
       Meteor.call("removeItemFromMenu", menu, {ingredients: {_id: id}}, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           $(event.target).closest("tr").remove()
         }
@@ -24,8 +23,7 @@ Template.ingsAndPreps.events({
     if(confirmRemove) {
       Meteor.call("removeItemFromMenu", menu, {jobItems: {_id: id}}, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           $(event.target).closest("tr").remove()
         }
@@ -63,16 +61,14 @@ Template.ingsAndPreps.rendered = function() {
           if(type == "ings") {
             Meteor.call("addMenuIngredients", menu, [{"_id": ing, "quantity": newValue}], function(err) {
               if(err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.alert(err);
               }
               return true;
             });
           } else if(type == "prep") {
             Meteor.call("addMenuPrepItems", menu, [{"_id": ing, "quantity": newValue}], function(err) {
               if(err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.alert(err);
               }
               return true;
             });

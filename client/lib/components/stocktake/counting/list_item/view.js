@@ -7,15 +7,13 @@ Template.stockCountingListItem.events({
       var sareaId = Session.get("activeSArea");
       Meteor.call("removeStocksFromAreas", id, sareaId, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           var stockRefId = $(event.target).closest("li").attr("data-stockRef");
           if(stockRefId) {
             Meteor.call("removeStocktake", stockRefId, function(err) {
               if(err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.alert(err);
               }
             });
           }

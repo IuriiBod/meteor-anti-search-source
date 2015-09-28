@@ -4,8 +4,7 @@ Template.orderReceive.events({
     var receiptId = Session.get("thisReceipt");
     Meteor.call("receiveDelivery", receiptId, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       } else {
         var orders = StockOrders.find({"orderReceipt": receiptId}).fetch();
         if(orders && orders.length > 0) {
@@ -18,8 +17,7 @@ Template.orderReceive.events({
             var date = moment(date).format("YYYY-MM-DD");
             Meteor.call("updateCurrentStock", order.stockId, note, quantity, date, function(err) {
               if(err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.alert(err);
               }
             });
 
@@ -38,8 +36,7 @@ Template.orderReceive.events({
       }
       Meteor.call("updateReceipt", Session.get("thisReceipt"), info, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }
@@ -56,8 +53,7 @@ Template.orderReceive.events({
           var url = doc[0].url;
           Meteor.call("updateReceipt", Session.get("thisReceipt"), {"invoiceImage": url}, function(err) {
             if(err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.alert(err);
             } else {
             }
           });

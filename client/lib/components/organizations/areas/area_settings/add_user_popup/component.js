@@ -36,8 +36,7 @@ component.action.inviteNewUser = function(email, name, roleId) {
   var areaId = this.get('areaId');
   Meteor.call('createInvitation', email, name, areaId, roleId, function (err) {
     if (err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     }
   });
   this.set('selectedUser', '1');

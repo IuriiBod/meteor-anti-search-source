@@ -163,8 +163,7 @@ Template.editMenuItem.events({
       if (id) {
         Meteor.call("deleteMenuItem", id, function (err) {
           if (err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           } else {
             var options = {
               "type": "delete",
@@ -173,8 +172,7 @@ Template.editMenuItem.events({
             };
             Meteor.call("sendNotifications", id, "menu", options, function (err) {
               if (err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.alert(err);
               }
             });
             Router.go("menuItemsMaster", {"category": "all", "status": "all"});
@@ -198,8 +196,7 @@ Template.editMenuItem.events({
     if (id && value) {
       Meteor.call("editMenuItem", id, {category: value}, function (err) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }
@@ -213,8 +210,7 @@ Template.editMenuItem.events({
     if (id && value) {
       Meteor.call("editMenuItem", id, {status: value}, function (err) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }

@@ -57,7 +57,7 @@ component.action.submit = function(info) {
   var id = self.get("id");
   Meteor.call("editShift", id, info, function(err, id) {
     if(err) {
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       var shift = Shifts.findOne(id);
       self.set("shift", shift);

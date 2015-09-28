@@ -8,8 +8,7 @@ Template.menuItemsListMainView.events({
     event.preventDefault();
     Meteor.call("subscribe", "menulist", function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   },
@@ -18,8 +17,7 @@ Template.menuItemsListMainView.events({
     event.preventDefault();
     Meteor.call("unSubscribe", "menulist", function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   }

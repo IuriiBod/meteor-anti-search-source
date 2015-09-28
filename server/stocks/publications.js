@@ -3,9 +3,19 @@ Meteor.publish("allIngredients", function() {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var cursors = Ingredients.find({"status": "active"}, {sort: {'code': 1}, limit: 10});
+
+  var query = {
+    "status": "active"
+  };
+
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
   logger.info("All ingredients published");
-  return cursors;
+
+  return  Ingredients.find(query, {sort: {'code': 1}, limit: 10});
 });
 
 Meteor.publish("ingredients", function(ids) {
@@ -13,16 +23,26 @@ Meteor.publish("ingredients", function(ids) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var cursors = [];
-  var ings = null;
-  if(ids.length > 0) {
-    ings = Ingredients.find({"_id": {$in: ids}}, {sort: {'code': 1}});
-  } else {
-    ings = Ingredients.find({}, {sort: {'code': 1}, limit: 10});
+
+  var query = {};
+  var options = {
+    sort: {'code': 1}
+  };
+
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
   }
-  cursors.push(ings);
+
+  if(ids.length > 0) {
+    query._id = {$in: ids};
+  } else {
+    options.limit = 10;
+  }
+
   logger.info("Ingredients published", {"ids": ids});
-  return cursors;
+
+  return Ingredients.find(query, options);
 });
 
 Meteor.publish("ingredientsRelatedJobs", function(id) {

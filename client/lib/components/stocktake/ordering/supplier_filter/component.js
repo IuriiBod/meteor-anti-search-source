@@ -120,8 +120,7 @@ component.prototype.onListRendered = function() {
     }
     Meteor.call("updateReceipt", id, info, function(err, id) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       } 
     });
       // $("#my_hidden_input").val(

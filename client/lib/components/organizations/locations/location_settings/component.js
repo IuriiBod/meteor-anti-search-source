@@ -12,8 +12,7 @@ component.state.location = function() {
 component.action.deleteLocation = function(id) {
   Meteor.call('deleteLocation', id, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     }
   });
 };

@@ -8,8 +8,7 @@ Template.jobItemsListMainView.events({
     event.preventDefault();
     Meteor.call("subscribe", "joblist", function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   },
@@ -18,8 +17,7 @@ Template.jobItemsListMainView.events({
     event.preventDefault();
     Meteor.call("unSubscribe", "joblist", function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   },

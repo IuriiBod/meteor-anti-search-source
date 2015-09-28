@@ -12,8 +12,7 @@ Template.basics.events({
         $("#uploadedImageUrl").attr("src", url);
         Meteor.call("updateSupplier", Session.get("thisSupplier"), {"priceList": url}, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           }
         });
       }
@@ -25,8 +24,7 @@ Template.basics.events({
     var id = Session.get("thisSupplier");
     Meteor.call("activateReactivateSuppliers", id, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
  }

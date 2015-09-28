@@ -13,8 +13,7 @@ component.prototype.onListRender = function() {
   var self = this;
   Meteor.call("stockTakeHistory", function(err, list) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       self.set("historyList", list);
     }

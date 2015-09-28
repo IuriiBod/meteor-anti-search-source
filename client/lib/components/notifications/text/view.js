@@ -7,8 +7,7 @@ Template.notifiText.events({
     if(shift) {
       Meteor.call("confirmClaim", shiftId, user, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been confirmed";
           var options = {
@@ -17,8 +16,7 @@ Template.notifiText.events({
           };
           Meteor.call("sendNotifications", shiftId, "roster", options, function(err) {
             if(err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.alert(err);
             } 
           });
         }
@@ -34,8 +32,7 @@ Template.notifiText.events({
     if(shift) {
       Meteor.call("rejectClaim", shiftId, user, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been rejected";
           var options = {
@@ -45,8 +42,7 @@ Template.notifiText.events({
           };
           Meteor.call("sendNotifications", shiftId, "roster", options, function(err) {
             if(err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.alert(err);
             } 
           });
         }

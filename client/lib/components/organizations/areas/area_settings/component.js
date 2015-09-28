@@ -62,8 +62,7 @@ component.action.toggleAddUser = function() {
 component.action.removeUserFromArea = function (userId) {
   Meteor.call('removeUserFromArea', userId, this.areaId, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     }
   });
 };

@@ -76,8 +76,7 @@ Template.invitationAccept.events({
 
     Meteor.call('acceptInvitation', invitationId, user, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   }

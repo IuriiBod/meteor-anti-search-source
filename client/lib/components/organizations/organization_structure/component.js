@@ -49,8 +49,7 @@ component.action.changeArea = function(id) {
 component.action.changeDefaultArea = function (areaId) {
   Meteor.call('changeDefaultArea', areaId, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     }
   });
 };

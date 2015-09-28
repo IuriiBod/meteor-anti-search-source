@@ -10,8 +10,7 @@ component.action.changeEnable = function() {
 component.action.submit = function(doc) {
   Meteor.call("createLocation", doc, function (err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     }
   });
 };

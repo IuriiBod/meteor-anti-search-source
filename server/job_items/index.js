@@ -75,7 +75,8 @@ Meteor.methods({
     }
 
     doc.createdOn = Date.now();
-    doc.createdBy = user._id;
+    doc.createdBy = Meteor.userId();
+    doc.relations = HospoHero.getRelationsObject();
     var id = JobItems.insert(doc);
     logger.info("Job Item inserted", {"jobId": id, 'type': type.name});
     return id;

@@ -6,8 +6,7 @@ Template.shiftItem.events({
     if(shiftId && shift) {
       Meteor.call("claimShift", shiftId, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           var text = "Shift on " + moment(shift.shiftDate).format("ddd, Do MMMM");
           var options = {
@@ -16,8 +15,7 @@ Template.shiftItem.events({
           };
           Meteor.call("sendNotifications", shiftId, "roster", options, function(err) {
             if(err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.alert(err);
             } 
           });
         }

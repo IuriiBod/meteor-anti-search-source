@@ -5,8 +5,7 @@ Template.sections.events({
     if(name) {
       Meteor.call("createSection", name.trim(), function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           $(event.target).find('[name=sectionName]').val("");
         }
@@ -43,8 +42,7 @@ Template.sections.rendered = function() {
       if(id) {
         Meteor.call("editSection", id, newValue, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           }
         });
       }

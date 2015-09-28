@@ -27,8 +27,7 @@ Template.weeklyForecastedMenus.events({
     });
     Meteor.call("generatePreps", menus, new Date(), function(err, result) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       } else {
         Router.go("/jobs")
       }

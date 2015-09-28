@@ -52,8 +52,7 @@ component.action.addShift = function(day, dates) {
   }
   Meteor.call("createShift", doc, function(err, id) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     }
   });
 };

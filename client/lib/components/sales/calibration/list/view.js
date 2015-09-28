@@ -44,8 +44,7 @@ Template.salesCalibratedList.events({
       
       Meteor.call("updateSalesCalibration", exist._id, dateRange, totalRevenue, exist.menus, function(err, id) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           successfullyCalibratedMessage();
         }
@@ -53,8 +52,7 @@ Template.salesCalibratedList.events({
     } else {
       Meteor.call("createSalesCalibration", dateRange, totalRevenue, items, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           successfullyCalibratedMessage();
         }

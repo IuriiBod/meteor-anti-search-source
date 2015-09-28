@@ -89,8 +89,7 @@ component.action.submitcommenttopost = function (text) {
 
   Meteor.call("createPost", linkedText, ref, function (err, id) {
     if (err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       var options = {
         "title": "New Posts on by " + Meteor.user().username,
@@ -100,8 +99,7 @@ component.action.submitcommenttopost = function (text) {
       };
       Meteor.call("sendNotifications", ref, "comment", options, function (err) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }
@@ -112,8 +110,7 @@ component.action.submitlikepost = function (likelist) {
   var ref = Session.get("post-like-id");
   Meteor.call("updatePost", likelist, ref, function (err, id) {
     if (err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       var options = {
         "title": "update Posts on by " + Meteor.user().username,
@@ -122,8 +119,7 @@ component.action.submitlikepost = function (likelist) {
       };
       Meteor.call("sendNotifications", ref, "post", options, function (err) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }

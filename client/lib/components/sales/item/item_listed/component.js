@@ -32,8 +32,7 @@ component.action.keyup = function(id, menuId, qty, event) {
   var self = this;
   Meteor.call("editSalesMenuQuantity", id, menuId, qty, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       // self.find(event.target).focus();
       $(event.target).parent().parent().next().find("input").focus();
