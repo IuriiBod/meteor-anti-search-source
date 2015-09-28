@@ -2,15 +2,10 @@ Template.jobItemEdit.events({
   'click .removePrep': function(event) {
     event.preventDefault();
     var id = $(event.target).attr("data-id");
-    var jobItemsList = Session.get("selectedJobItems");
-    if(jobItemsList) {
-      if(jobItemsList.length > 0) {
-        var index = jobItemsList.indexOf(id);
-        if(index >= 0) {
-          jobItemsList.splice(index, 1);
-          Session.set("selectedJobItems", jobItemsList);
-        }
-      }
+    var localMenuId = Session.get("localId");
+    var localMenu = LocalMenuItem.findOne(localMenuId);
+    if(localMenu && localMenu.ings.length > 0) {
+      LocalMenuItem.update({"_id": localMenuId}, {$pull: {"preps": id}});
     }
     var item = $(event.target).closest("tr");
     $(item).remove();

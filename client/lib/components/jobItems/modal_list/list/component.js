@@ -22,7 +22,7 @@ component.action.keyup = function(text) {
 component.prototype.setIds = function() {
   var ids = [];
   if(this.name == "editMenu") {
-    var menu =  MenuItems.findOne(Session.get("thisMenuItem"));
+    var menu = MenuItems.findOne(Session.get("thisMenuItem"));
     if(menu.jobItems.length > 0) {
       menu.jobItems.forEach(function(doc) {
         if(ids.indexOf(doc._id) < 0) {
@@ -32,7 +32,7 @@ component.prototype.setIds = function() {
     }
   } else if(this.name == "submitMenuItem") {
     var menu = LocalMenuItem.findOne(Session.get("localId"));
-    if(menu.preps.length > 0) {
+    if(menu && menu.preps.length > 0) {
       menu.preps.forEach(function(id) {
         if(ids.indexOf(id) < 0) {
           ids.push(id);
@@ -45,7 +45,7 @@ component.prototype.setIds = function() {
 };
 
 component.state.getJobItems = function() {
-  return this.JobItemsSearch.getData({
+  var data = this.JobItemsSearch.getData({
     transform: function(matchText, regExp) {
       return matchText.replace(regExp, "<b>$&</b>")
     },

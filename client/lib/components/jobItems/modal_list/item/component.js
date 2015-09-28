@@ -9,11 +9,9 @@ component.state.item = function() {
 };
 
 component.state.costPerPortion = function() {  
-  if(this.jobitem) {
-    var item = getPrepItem(this.jobitem._id);
-    if(item) {
-      return item.prepCostPerPortion;
-    }
+  var prep = getPrepCost(this.jobitem._id);
+  if(prep) {
+    return prep.prepCostPerPortion;
   }
 };
 
