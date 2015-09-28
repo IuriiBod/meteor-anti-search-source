@@ -1,6 +1,5 @@
 var component = FlowComponents.define("salesPrediction", function (props) {
   this.set('currentWeekDate', props.date);
-  this.set("limit", 15);
 });
 
 component.state.week = function (id) {
@@ -38,7 +37,7 @@ component.state.weekPrediction = function(id){
 //['Brisket Special', 'Caramel Banana bread', 'Cupcakes Platter', 'Eton Mess', 'Fudge Brownie - Vegan', 'Muesli'];
 
 component.state.menuItems = function () {
-  return MenuItems.find({},{limit: this.get("limit")}).fetch();
+  return MenuItems.find().fetch();
 };
 
 component.state.random = function (zeros) {
@@ -57,8 +56,4 @@ component.state.getSale = function (date) {
 };
 
 
-component.action.increaseLimit = function () {
-  if (this.get("limit")<MenuItems.find().count()) {
-    this.set("limit", this.get("limit") + 10);
-  }
-};
+
