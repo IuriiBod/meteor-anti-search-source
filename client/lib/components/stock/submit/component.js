@@ -1,4 +1,6 @@
 var component = FlowComponents.define('submitIngredient', function(props) {
+  subs.subscribe("orderingUnits");
+  subs.subscribe("usingUnits");
 });
 
 component.action.submit = function(event, info) {
