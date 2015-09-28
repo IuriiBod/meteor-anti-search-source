@@ -14,5 +14,13 @@ Template.jobItemEdit.events({
     }
     var item = $(event.target).closest("tr");
     $(item).remove();
+  },
+
+  'keypress .prep-qty': function(event) {
+    if(event.keyCode == 10 || event.keyCode == 13) {
+      event.preventDefault();
+      var elem = $(event.target);
+      $(elem).closest("tr").next().find("input").focus();
+    }
   }
 });

@@ -19,8 +19,8 @@ component.state.costPerPortion = function() {
 
 component.prototype.onItemRendered = function() {
   var self = this;
-  $('.i-checks').iCheck({
-    checkboxClass: 'icheckbox_square-green',
+  $('.i-checks.selected-Prep').iCheck({
+    checkboxClass: 'icheckbox_square-green'
   });
 
   if(self.jobitem) {
