@@ -1,5 +1,6 @@
 var component = FlowComponents.define('menuItemDetail', function(props) {
-  this.id = Router.current().params._id;
+  this.id = Session.get("thisMenuItem");
+  subs.subscribe("menuItem", this.id);
   this.onRendered(this.onViewRendered);
 });
 

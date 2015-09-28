@@ -1,25 +1,6 @@
-var subs = new SubsManager();
-
 var component = FlowComponents.define('settingsMenuItem', function(props) {
-  this.id = Router.current().params._id;
-  this.onRendered(this.onMenuRendered);
+  this.id = Session.get("thisMenuItem");
 });
-
-component.state.initialHTML = function() {
-  var id = Session.get("thisMenuItem");
-  var item = MenuItems.findOne(id);
-  if(item) {
-    if(item.instructions) {
-      return item.instructions;
-    } else {
-      return "Add instructions here"
-    }
-  }
-};
-
-component.prototype.onMenuRendered = function() {
-  this.item = MenuItems.findOne(this.id);
-};
 
 component.state.menu = function() {
   this.item = MenuItems.findOne(this.id);
@@ -40,16 +21,25 @@ component.state.myCategory = function() {
 
 
 component.state.categoriesList = function() {
-  var myCategory = this.item.category;
-  if(myCategory) {
-    return Categories.find().fetch();
+  if(this.item) {
+    var myCategory = this.item.category;
+    if(myCategory) {
+      return Categories.find().fetch();
+    }
   }
 };
 
 component.state.statusList = function() {
-  return Statuses.find({
-    name: { $ne: 'archived' }
-  }).fetch();
+  if(this.item) {
+    var myStatus = this.item.status;
+    var list = null;
+    if(myStatus) {
+      return Statuses.find({
+        name: { $ne: 'archived' }
+      }).fetch();
+    }
+    return list;
+  }
 };
 
 component.state.isArchived = function() {
