@@ -2,6 +2,7 @@ var component = FlowComponents.define('jobItemsModalList', function(props) {
   this.onRendered(this.onJobLitsRendered);
   var id = Router.current().params._id;
   subs.subscribe("allJobTypes");
+  this.name = props.name;
 
   var options = {
     keepHistory: 1000 * 60 * 5,
@@ -11,22 +12,6 @@ var component = FlowComponents.define('jobItemsModalList', function(props) {
 
   this.JobItemsSearch = new SearchSource('jobItemsSearch', fields, options);
 });
-
-component.prototype.onJobLitsRendered = function() {
-  var self = this;
-  Tracker.autorun(function() {
-    var ids = self.setIds();
-    if(ids.length > 0) {
-      self.JobItemsSearch.cleanHistory();
-    }
-    var prep = JobTypes.findOne({"name": "Prep"});
-    if(prep) {
-      self.set("prep", prep._id);
-      var text = self.get("text");
-      self.JobItemsSearch.search(text,{"ids": ids, "limit": 10, "type": prep._id});
-    }
-  });
-};
 
 component.action.keyup = function(text) {
   var ids = this.setIds();
@@ -65,5 +50,22 @@ component.state.getJobItems = function() {
       return matchText.replace(regExp, "<b>$&</b>")
     },
     sort: {'name': 1}
+  });
+};
+
+component.prototype.onJobLitsRendered = function() {
+  var self = this;
+
+  Tracker.autorun(function() {
+    var ids = self.setIds();
+    if(ids.length > 0) {
+      self.JobItemsSearch.cleanHistory();
+    }
+    var prep = JobTypes.findOne({"name": "Prep"});
+    if(prep) {
+      self.set("prep", prep._id);
+      var text = self.get("text");
+      self.JobItemsSearch.search(text,{"ids": ids, "limit": 10, "type": prep._id});
+    }
   });
 };

@@ -8,3 +8,7 @@ component.state.item = function() {
     return getPrepItem(this.id);
   }
 };
+
+component.state.quantity = function () {
+  return 1;
+};
