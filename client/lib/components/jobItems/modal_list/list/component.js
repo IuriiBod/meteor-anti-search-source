@@ -32,7 +32,7 @@ component.prototype.setIds = function() {
     }
   } else if(this.name == "submitMenuItem") {
     var menu = LocalMenuItem.findOne(Session.get("localId"));
-    if(menu.preps.length > 0) {
+    if(menu && menu.preps.length > 0) {
       menu.preps.forEach(function(id) {
         if(ids.indexOf(id) < 0) {
           ids.push(id);
@@ -45,12 +45,13 @@ component.prototype.setIds = function() {
 }
 
 component.state.getJobItems = function() {
-  return this.JobItemsSearch.getData({
+  var data = this.JobItemsSearch.getData({
     transform: function(matchText, regExp) {
       return matchText.replace(regExp, "<b>$&</b>")
     },
     sort: {'name': 1}
   });
+  return data;
 }
 
 component.prototype.onJobLitsRendered = function() {
