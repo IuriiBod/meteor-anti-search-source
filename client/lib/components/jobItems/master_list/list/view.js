@@ -32,6 +32,7 @@ Template.jobItemsList.events({
     } else {
       selector.status = {$ne: 'archived'};
     }
+
     var text = $(e.target).val().trim();
     JobItemsSearch.search(text, selector);
   }, 200),

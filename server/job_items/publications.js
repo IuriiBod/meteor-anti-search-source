@@ -40,7 +40,7 @@ Meteor.publish("jobItems", function(ids) {
   }
 
   logger.info("Job items published", ids);
-  return JobItems.find(query, options);;
+  return JobItems.find(query, options);
 });
 
 Meteor.publish("jobsRelatedMenus", function(id) {
