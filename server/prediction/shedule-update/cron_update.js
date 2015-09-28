@@ -55,6 +55,7 @@ function predict (days){
         menuItemId: item._id
       };
 
+      //checking need for notification push
       var currentData = SalesPrediction.findOne({date: predictItem.date, menuItemId: predictItem.menuItemId});
       if (i<14 && currentData){
         if (currentData.quantity != predictItem.quantity)
@@ -63,26 +64,31 @@ function predict (days){
           notificationText.push("<li>" + predictItem.date + ":" + itemName + ": from " + currentData.quantity + " to " + predictItem.quantity + "</li>");
         }
       }
+
       SalesPrediction.update({date: predictItem.date, menuItemId: predictItem.menuItemId},predictItem, {upsert:true});
     });
   }
   if (notificationText.length != 0)
   {
-    notificationText.push("</ul>");
-    notificationText.unshift("<ul>");
-    var receivers = Meteor.users.find({isManager: true}).fetch();
-    var options = {
-      type: 'prediction',
-      read: false,
-      title: 'Some predictions have been changed',
-      createdBy: null,
-      text: notificationText.join(''),
-      actionType: 'update'
-    };
-    _.each(receivers, function (item){
-      options.to = item._id;
-      Notifications.insert(options);
-    });
-
+    sendNotification(notificationText);
   }
+}
+
+
+function sendNotification (notificationText){
+  notificationText.push("</ul>");
+  notificationText.unshift("<ul>");
+  var receivers = Meteor.users.find({isManager: true}).fetch();
+  var options = {
+    type: 'prediction',
+    read: false,
+    title: 'Some predictions have been changed',
+    createdBy: null,
+    text: notificationText.join(''),
+    actionType: 'update'
+  };
+  _.each(receivers, function (item){
+    options.to = item._id;
+    Notifications.insert(options);
+  });
 }
