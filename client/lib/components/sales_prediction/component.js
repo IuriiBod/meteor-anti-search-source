@@ -55,10 +55,6 @@ component.state.getSale = function (date) {
   return total;
 };
 
-component.state.getQuantity = function(date) {
-  var predictionItem = SalesPrediction.findOne({date: date, menuItemId: this.get("menuItemId")});
-  return predictionItem ? predictionItem.quantity : "ND";
-};
 
 component.action.increaseLimit = function () {
   if (this.get("limit")<MenuItems.find().count()) {
