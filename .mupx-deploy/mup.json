@@ -4,7 +4,7 @@
     {
       "host": "162.243.202.130",
       "username": "root",
-      "pem": "../.deploy/key.pem"
+      "pem": "key.pem"
       // or pem file (ssh based authentication)
       //"pem": "~/.ssh/id_rsa"
     }
@@ -21,7 +21,7 @@
 
   // Configure environment
   "env": {
-    "ROOT_URL": "http://herochef.com.au/",
+    "ROOT_URL": "http://app.hospohero.com/",
     "MONGO_URL": "mongodb://cloudninja:Bertaroo1@c144.capital.3.mongolayer.com:10144,c144.capital.2.mongolayer.com:10144/herochef"
     // "MONGO_OPLOG_URL": ""
   },

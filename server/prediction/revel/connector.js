@@ -1,6 +1,6 @@
-var HOST = Meteor.settings.private.Revel.HOST;
-var KEY = Meteor.settings.private.Revel.KEY;
-var SECRET = Meteor.settings.private.Revel.SECRET;
+var HOST = Meteor.settings.Revel.HOST;
+var KEY = Meteor.settings.Revel.KEY;
+var SECRET = Meteor.settings.Revel.SECRET;
 
 Revel = {
   queryRevelResource: function (resource, orderBy, isAscending, fields, limit, offset) {
@@ -56,7 +56,7 @@ Revel = {
     var bucket = new RevelSalesDataBucket();
 
     while (offset <= totalCount && daysCount < maxDaysCount) {
-      logger.info('Request to Revel server', {offset: offset, total: totalCount,daysCount: daysCount});
+      logger.info('Request to Revel server', {offset: offset, total: totalCount, daysCount: daysCount});
       var result = this.queryRevelOrderItems(limit, offset);
 
       //handle Revel API error

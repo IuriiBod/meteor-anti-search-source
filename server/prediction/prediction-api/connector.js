@@ -1,4 +1,4 @@
-var CloudSettings = Meteor.settings.private.GoogleCloud;
+var CloudSettings = Meteor.settings.GoogleCloud;
 
 var TRAINING_DATA_FILE_NAME = "sales-data.csv";
 var modelName = "trainingModel";

@@ -1,4 +1,4 @@
-var CloudSettings = Meteor.settings.private.GoogleCloud;
+var CloudSettings = Meteor.settings.GoogleCloud;
 
 
 //todo: update for locations functionality
