@@ -1,6 +1,5 @@
-//http://api.openweathermap.org/data/2.5/history/city?q=Ternopil,UA&start=1413331200&cnt=1&units=metric
-var WEATHER_URL = Meteor.settings.private.OpenWeatherMap.HOST + '/data/2.5';
-var API_KEY = Meteor.settings.private.OpenWeatherMap.KEY;
+var WEATHER_URL = Meteor.settings.OpenWeatherMap.HOST + '/data/2.5';
+var API_KEY = Meteor.settings.OpenWeatherMap.KEY;
 
 OpenWeatherMap = {
   _convertDtToDate: function (dt) {
@@ -50,6 +49,10 @@ OpenWeatherMap = {
   },
 
   history: function (date, location) {
+    if (HospoHero.isDevelopmentMode()) {
+      return this.historyMock();
+    }
+
     date.setHours(13); // get weather after 13 PM
 
     var data = this._httpGetRequest('/history/city', {

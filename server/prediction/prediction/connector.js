@@ -1,4 +1,4 @@
-var CloudSettings = Meteor.settings.private.GoogleCloud;
+var CloudSettings = Meteor.settings.GoogleCloud;
 
 
 //todo: update for locations functionality
@@ -31,5 +31,9 @@ GooglePredictionApi.prototype.updatePredictionModel = function () {
 
 
 GooglePredictionApi.prototype.makePrediction = function (inputData) {
-  return this._client.predict(this._getModelName(), inputData).outputValue;
+  if (HospoHero.isDevelopmentMode()) {
+    return Math.floor(Math.random() * 100);
+  } else {
+    return this._client.predict(this._getModelName(), inputData).outputValue;
+  }
 };

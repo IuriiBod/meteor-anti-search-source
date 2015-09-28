@@ -1,4 +1,4 @@
-var CloudSettings = Meteor.settings.private.GoogleCloud;
+var CloudSettings = Meteor.settings.GoogleCloud;
 
 CsvEntryGenerator = {
   generate: function (salesData, weather) {
@@ -52,7 +52,7 @@ GoogleCloud = {
 
       //todo replace location with "Location's" location
       //todo replace historyMock with history method
-      var weather = OpenWeatherMap.historyMock(new Date(salesData.createdDate), Meteor.settings.private.LOCATION);
+      var weather = OpenWeatherMap.historyMock(new Date(salesData.createdDate), Meteor.settings.Location);
 
       var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather);
 

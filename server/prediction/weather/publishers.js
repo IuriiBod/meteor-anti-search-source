@@ -1,5 +1,5 @@
 //todo: SHOULD BE MOVED TO CLIENT SETTINGS
-LOCATION = Meteor.settings.private.LOCATION;
+LOCATION = Meteor.settings.LOCATION;
 
 
 Meteor.publish('weatherForecast', function () {
