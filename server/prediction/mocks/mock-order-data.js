@@ -24,7 +24,7 @@ MockOrderItemDataSource.prototype.load = function () {
     };
     result.objects.push(pushObject);
   });
-  this.currentDate.substract(1, "d");
+  this.currentDate.subtract(1, "d");
   return result
 };
 
