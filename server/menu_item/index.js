@@ -16,7 +16,10 @@ Meteor.methods({
       throw new Meteor.Error("Menu item should have a category");
     }
 
-    var exist = MenuItems.findOne({"name": info.name});
+    var exist = MenuItems.findOne({
+      "name": info.name,
+      "relations.areaId": HospoHero.getDefaultArea()
+    });
     if (exist) {
       logger.error("Duplicate entry");
       throw new Meteor.Error("Duplicate entry, change name and try again");

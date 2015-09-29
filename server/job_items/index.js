@@ -13,7 +13,10 @@ Meteor.methods({
       logger.error("Type field not found");
       throw new Meteor.Error(404, "Type field not found");
     }
-    var exist = JobItems.findOne({"name": info.name});
+    var exist = JobItems.findOne({
+      "name": info.name,
+      "relations.areaId": HospoHero.getDefaultArea()
+    });
     if(exist) {
       logger.error("Duplicate entry");
       throw new Meteor.Error(404, "Duplicate entry, change name and try again");
@@ -345,7 +348,10 @@ Meteor.methods({
     }
 
     var filter = new RegExp(exist.name, 'i');
-    var count = JobItems.find({"name": filter}).count();
+    var count = JobItems.find({
+      "name": filter,
+      "relations.areaId": HospoHero.getDefaultArea()
+    }).count();
 
     var result = delete exist['_id'];
     if(result) {

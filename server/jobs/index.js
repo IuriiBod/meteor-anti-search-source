@@ -136,7 +136,10 @@ Meteor.methods({
       logger.error("Job type field not found");
       throw new Meteor.Error("Job type field not found");
     }
-    var existingtype = JobTypes.findOne({'type': type});
+    var existingtype = JobTypes.findOne({
+      'type': type,
+      "relations.areaId": HospoHero.getDefaultArea()
+    });
     if(existingtype) {
       logger.error("Existing job type");
       throw new Meteor.Error("Exsiting job type");

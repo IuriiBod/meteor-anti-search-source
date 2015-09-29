@@ -3,7 +3,7 @@ Template.pageHeading.events({
     event.preventDefault();
     IngredientsListSearch.cleanHistory();
     var selector = {
-      limit: 30,
+      limit: 30
     };
     var params = {};
     if(event.target.dataset.type == "archive") {
@@ -23,7 +23,7 @@ Template.pageHeading.events({
     JobItemsSearch.cleanHistory();
     var selector = {
       type: Session.get("type"),
-      limit: 30,
+      limit: 30
     };
     var params = {};
     if(event.target.dataset.type == "archive") {
@@ -134,7 +134,7 @@ Template.pageHeading.events({
               "type": "delete",
               "title": "Menu " + item.name + " has been deleted",
               "time": Date.now()
-            }
+            };
             Meteor.call("sendNotifications", id, "menu", options, function(err) {
               if(err) {
                 HospoHero.alert(err);
@@ -395,7 +395,7 @@ Template.pageHeading.events({
               "_id": to._id,
               "email": to.emails[0].address,
               "name": to.username
-            }
+            };
 
             Meteor.call("notifyRoster", to, info, function(err) {
               if(err) {
@@ -411,7 +411,11 @@ Template.pageHeading.events({
   'click #startNewStocktake': function(event) {
     event.preventDefault();
     var date = moment().format("YYYY-MM-DD");
-    var stocktake = StocktakeMain.findOne({"stocktakeDate": new Date(date).getTime()});
+    var stocktake = StocktakeMain.findOne({
+      "stocktakeDate": new Date(date).getTime(),
+      "relations.areaId": HospoHero.getDefaultArea()
+    });
+
     if(stocktake) {
       $("#newStocktakeModal").modal();
     } else {
