@@ -12,6 +12,12 @@ Namespace('HospoHero', {
     }
   },
 
+  checkDate: function(date) {
+    if(!moment(date).isValid()) {
+      throw new Meteor.Error("Expected date");
+    }
+  },
+
   alert: function(err) {
     if(err) {
       console.log(err);
