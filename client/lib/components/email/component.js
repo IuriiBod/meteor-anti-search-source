@@ -1,18 +1,13 @@
 var component = FlowComponents.define("composeMail", function(props) {});
 
 component.state.subject = function() {
-  var date = moment().format("YYYY-MM-DD");
-  var title = "Order from Hospo Hero";
-  return title;
-}
+  return "Order from Hospo Hero";
+};
 
 component.state.supplier = function() {
   var supplierId = Session.get("activeSupplier");
-  var supplier = Suppliers.findOne(supplierId);
-  if(supplier) {
-    return supplier;
-  }
-}
+  return Suppliers.findOne(supplierId);
+};
 
 component.state.initialHTML = function() {
   var supplierId = Session.get("activeSupplier");
@@ -20,7 +15,8 @@ component.state.initialHTML = function() {
   var total = 0;
   var data = StockOrders.find({
     "version": Session.get("thisVersion"),
-    "supplier": supplierId
+    "supplier": supplierId,
+    "relations.areaId": HospoHero.getDefaultArea()
   }).fetch();
   var supplier = Suppliers.findOne(supplierId);
   if(supplier) {
@@ -75,19 +71,13 @@ component.state.initialHTML = function() {
     }
   }
   return text;
-}
+};
 
 component.state.replyToEmail = function() {
   var user = Meteor.user();
   if(user && user.emails) {
     this.set("username", user.username);
-    if(user.isAdmin) {
-      this.set("userType", "Admin");
-    } else if(user.isManager) {
-      this.set("userType", "Manager");
-    } else if(user.isWorker) {
-      this.set("userType", "Worker");
-    }
+    this.set("userType", Meteor.role().name);
     return user.emails[0].address;
   }
-}
+};
