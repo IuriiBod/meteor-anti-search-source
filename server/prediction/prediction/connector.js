@@ -23,13 +23,15 @@ GooglePredictionApi.prototype._getTrainingFileName = function (locationId) {
 
 
 GooglePredictionApi.prototype.getUpdatePredictionModelSession = function () {
-  var onFinished = (function () {
+  var self = this;
+  var onFinished = function () {
     //start learning
-    this._client.insert(this._getModelName(), CloudSettings.BUCKET, this._getTrainingFileName());
-  }).bind(this);
+    self._client.insert(self._getModelName(), CloudSettings.BUCKET, self._getTrainingFileName());
+  };
 
   //uplaod data to google cloud storage
-  return GoogleCloud.createTrainingDataUploadingSession(onFinished);
+  //todo update this code for one location
+  return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(), onFinished);
 };
 
 
