@@ -49,11 +49,11 @@ Template.ingsAndPreps.events({
 });
 
 Template.ingsAndPreps.rendered = function() {
-  $.fn.editable.defaults.mode = 'popup';
+  $.fn.editable.defaults.mode = 'inline';
   $.fn.editable.defaults.showbuttons = true;
 
   var menu = Session.get("thisMenuItem");
-  if(managerPlusAdminPermission()) {
+  // if(managerPlusAdminPermission()) {
     $('.quantity').editable({
       success: function(response, newValue) {
         if(newValue) {
@@ -79,5 +79,5 @@ Template.ingsAndPreps.rendered = function() {
         }
       }
     });
-  }
+  // }
 }

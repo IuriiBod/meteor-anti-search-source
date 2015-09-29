@@ -9,7 +9,10 @@ var component = FlowComponents.define('jobItemsModalList', function(props) {
     localSearch: true
   };
   var fields = ['name'];
-
+  var prep = JobTypes.findOne({"name": "Prep"});
+  if(prep) {
+    this.set("prep", prep._id);
+  }
   this.JobItemsSearch = new SearchSource('jobItemsSearch', fields, options);
 });
 
@@ -44,16 +47,6 @@ component.prototype.setIds = function() {
   return ids;
 }
 
-component.state.getJobItems = function() {
-  var data = this.JobItemsSearch.getData({
-    transform: function(matchText, regExp) {
-      return matchText.replace(regExp, "<b>$&</b>")
-    },
-    sort: {'name': 1}
-  });
-  return data;
-}
-
 component.prototype.onJobLitsRendered = function() {
   var self = this;
 
@@ -62,11 +55,17 @@ component.prototype.onJobLitsRendered = function() {
     if(ids.length > 0) {
       self.JobItemsSearch.cleanHistory();
     }
-    var prep = JobTypes.findOne({"name": "Prep"});
-    if(prep) {
-      self.set("prep", prep._id);
-      var text = self.get("text");
-      self.JobItemsSearch.search(text,{"ids": ids, "limit": 10, "type": prep._id});
-    }
+    var text = self.get("text");
+    self.JobItemsSearch.search(text,{"ids": ids, "limit": 10, "type": self.get("prep")});
   });
+}
+
+component.state.getJobItems = function() {
+  var data = this.JobItemsSearch.getData({
+    transform: function(matchText, regExp) {
+      return matchText.replace(regExp, "<b>$&</b>")
+    },
+    sort: {'name': 1}
+  });
+  return data;
 }

@@ -46,7 +46,6 @@ component.prototype.setIds = function() {
 component.prototype.renderShowIngList = function() {
   var self = this;
   Tracker.autorun(function() {
-
     if(self.name) {
       if(self.name == "editJob") {
         self.item = JobItems.findOne(Session.get("localId"));
