@@ -3,6 +3,7 @@ var KEY = Meteor.settings.Revel.KEY;
 var SECRET = Meteor.settings.Revel.SECRET;
 
 Revel = {
+  DATA_LIMIT: 5000,
   queryRevelResource: function (resource, orderBy, isAscending, fields, limit, offset) {
     var orderByStr;
 
@@ -44,48 +45,41 @@ Revel = {
     ], limit, offset);
   },
 
-  uploadAndReduceOrderItems: function (onDateReceived, onUploadFinish, maxDaysCount) {
-    if (!maxDaysCount) {
-      maxDaysCount = 365; // get data for last year by default
-    }
-    var daysCount = 0;
-    var limit = 5000;
+  /**
+   *Iterates through order items in Revel
+   * @param onDateReceived - callback receives sales data for one day, should return false to stop iteration
+   */
+  uploadAndReduceOrderItems: function (onDateReceived) {
     var offset = 0;
-    var totalCount = limit;
+    var totalCount = this.DATA_LIMIT;
+    var toContinue = true;
 
     var bucket = new RevelSalesDataBucket();
 
-    while (offset <= totalCount && daysCount < maxDaysCount) {
+    while (offset <= totalCount && toContinue) {
       logger.info('Request to Revel server', {offset: offset, total: totalCount, daysCount: daysCount});
-      var result = this.queryRevelOrderItems(limit, offset);
+      var result = this.queryRevelOrderItems(this.DATA_LIMIT, offset);
 
       //handle Revel API error
       if (result === false) {
-        onUploadFinish(-1);
         return;
       }
 
-      if (totalCount === limit) {
+      if (totalCount === this.DATA_LIMIT) {
         totalCount = result.meta.total_count;
       }
 
-      result.objects.forEach(function (entry) {
+      result.objects.every(function (entry) {
         if (!bucket.put(entry)) {
-          onDateReceived(bucket.getDataAndReset());
-          daysCount++;
+          toContinue = onDateReceived(bucket.getDataAndReset());
+          bucket.put(entry); //put next day entry
+          return toContinue;
         }
+        return true;
       });
 
-      offset += limit;
+      offset += this.DATA_LIMIT;
     }
-
-    if (!bucket.isEmpty()) {
-      //get everything else
-      onDateReceived(bucket.getDataAndReset());
-      daysCount++;
-    }
-
-    onUploadFinish(daysCount);
   }
 };
 
