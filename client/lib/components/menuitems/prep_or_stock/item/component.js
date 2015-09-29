@@ -7,12 +7,6 @@ var component = FlowComponents.define("ingsAndPreps", function(props) {
   this.onRendered(this.onItemRendered);
 });
 
-component.prototype.onItemRendered = function() {
-  if(this.type == "prep") {
-    subs.subscribe("jobItems", [this.id]);
-  }
-};
-
 component.state.item = function() {
   if(this.type == "prep") {
     this.item = JobItems.findOne(this.id);
@@ -40,12 +34,6 @@ component.state.quantity = function() {
   }
 };
 
-component.state.id = function() {
-  if(this.item) {
-    return this.item._id;
-  }
-};
-
 component.state.type = function() {
   return this.type;
 };
@@ -57,5 +45,11 @@ component.state.measure = function() {
     } else if(this.type == "ings") {
       return this.item.portionUsed;
     }
+  }
+};
+
+component.prototype.onItemRendered = function() {
+  if(this.type == "prep") {
+    subs.subscribe("jobItems", [this.id]);
   }
 };

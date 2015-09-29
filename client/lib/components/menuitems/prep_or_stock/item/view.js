@@ -46,34 +46,3 @@ Template.ingsAndPreps.events({
     $("#editIngredientModal").modal("show");
   }
 });
-
-Template.ingsAndPreps.rendered = function() {
-  $.fn.editable.defaults.mode = 'inline';
-  $.fn.editable.defaults.showbuttons = true;
-
-  var menu = Session.get("thisMenuItem");
-  //if(HospoHero.perms.canUser('editMenu')()) {
-    $('.quantity').editable({
-      success: function (response, newValue) {
-        if (newValue) {
-          var ing = $(this).data("pk");
-          var type = $(this).data("itemtype");
-          if (type == "ings") {
-            Meteor.call("addMenuIngredients", menu, [{"_id": ing, "quantity": newValue}], function (err) {
-              if (err) {
-                HospoHero.alert(err);
-              }
-              return true;
-            });
-          } else if (type == "prep") {
-            Meteor.call("addMenuPrepItems", menu, [{"_id": ing, "quantity": newValue}], function (err) {
-              if (err) {
-                HospoHero.alert(err);
-              }
-              return true;
-            });
-          }
-        }
-      }
-    });
-  };
