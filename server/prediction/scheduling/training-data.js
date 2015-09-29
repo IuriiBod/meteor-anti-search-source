@@ -10,6 +10,7 @@ var updateLastTaskRunDateForLocation = function (locationId) {
   }, {upsert: true});
 };
 
+
 var createUpdateActualSalesFunction = function () {
   //updates sales data for previous day
   var isHandledFirstDay = false;
@@ -17,8 +18,18 @@ var createUpdateActualSalesFunction = function () {
 
   return function (salesData) {
     if (!isHandledFirstDay && previousDayMoment.isSame(salesData.createdDate, 'day')) {
-      //todo save sales data here
-      console.log('data to update ', salesData);
+      Object.keys(salesData.menuItems).forEach(function (menuItemName) {
+        var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName);
+        if (menuItem) {
+          ImpotedActualSales.insert({
+            quantity: salesData[menuItemName],
+            menuItemId: menuItem._id,
+            date: salesData.createdDate,
+            locationId: currentLocationId
+          });
+        }
+      });
+
       isHandledFirstDay = false;
       return false;
     }
@@ -36,9 +47,10 @@ SyncedCron.add({
     //todo: update it for all locations
     var forecastData = ForecastDates.findOne({locationId: currentLocationId});
 
-    var needToUpdateModel = !forecastData || !forecastData.lastUploadDate || forecastData.lastUploadDate >= getMillisecondsFromDays(182);
+    var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
+      || forecastData.lastUploadDate >= getMillisecondsFromDays(182);
 
-    var updateActualSalesFn = createUpdateActualSalesFunction()
+    var updateActualSalesFn = createUpdateActualSalesFunction();
 
     if (needToUpdateModel) {
       if (!HospoHero.isDevelopmentMode()) {
@@ -54,7 +66,7 @@ SyncedCron.add({
 
         updateSession.onUploadingFinished();
 
-        updateLastTaskRunDateForLocation(currentLocationId)
+        updateLastTaskRunDateForLocation(currentLocationId);
       }
 
 
