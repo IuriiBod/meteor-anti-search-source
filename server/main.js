@@ -31,6 +31,6 @@ Meteor.startup(function () {
   SyncedCron.start();
 
   if(SalesPrediction.find().count() === 0){                           //add search by location id later
-    Meteor.timeout(SyncedCron._entries['Forecast refresh'].job(), 0);
+    Meteor.setTimeout(SyncedCron._entries['Forecast refresh'].job(), 0);
   }
 });

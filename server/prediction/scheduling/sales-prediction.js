@@ -4,7 +4,7 @@ var currentLocationId = 1;
 SyncedCron.add({
     name: 'Forecast refresh',
     schedule: function(parser) {
-        return parser.text('at 12:56 pm');
+        return parser.text('at 05:00 am');
     },
     job: function() {
         var date = moment();
