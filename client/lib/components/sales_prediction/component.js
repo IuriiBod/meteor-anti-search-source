@@ -10,13 +10,16 @@ component.state.week = function (id) {
 
 component.state.weekPrediction = function(id){
   var currentWeekDate = this.get('currentWeekDate');
+  var monday = moment(getFirstDateOfISOWeek(currentWeekDate.week, currentWeekDate.year));
+  var sunday = moment(monday).add(6, "d");
+
   var dates = _.map(getDatesFromWeekNumberWithYear(currentWeekDate.week, new Date(currentWeekDate.year)), function(item){
     return item.date;
   });
-  var prediction = _.map(SalesPrediction.find({date:{$in:dates}, menuItemId: id }, {sort: {date: 1}}).fetch(), function(item){
-    return {date: item.date, quantity: item.quantity};
-  });
 
+  var prediction = _.map(SalesPrediction.find({date:{$gte:monday.toDate(), $lte: sunday.endOf("d").toDate()}, menuItemId: id }, {sort: {date: 1}}).fetch(), function(item){
+    return {date: moment(item.date).format('YYYY-MM-DD'), quantity: item.quantity};
+  });
   _.each(dates, function(dateItem){
     var push = true;
     _.each(prediction, function(predictionItem){
@@ -26,7 +29,7 @@ component.state.weekPrediction = function(id){
     });
     if (push)
     {
-      prediction.push({date: dateItem, quantity: "ND"});
+      prediction.push({date: dateItem, quantity: 0});
     }
   });
   return _.sortBy(prediction, "date");
@@ -45,7 +48,9 @@ component.state.random = function (zeros) {
 };
 
 component.state.getSale = function (date) {
-  var predictions = SalesPrediction.find({date: date}).fetch();
+  var startTime = moment(date).startOf("d").toDate();
+  var endTime = moment(date).endOf("d").toDate();
+  var predictions = SalesPrediction.find({date: {$gte: startTime, $lte: endTime}}).fetch();
   var total = 0;
   _.each(predictions, function(item){
     var quantity = item.quantity;
