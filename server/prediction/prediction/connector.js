@@ -22,11 +22,11 @@ GooglePredictionApi.prototype._getTrainingFileName = function (locationId) {
 };
 
 
-GooglePredictionApi.prototype.updatePredictionModel = function () {
+GooglePredictionApi.prototype.updatePredictionModel = function (onFirstDayReceived) {
   //uplaod data to google cloud storage
-  GoogleCloud.uploadTrainingData();
+  GoogleCloud.uploadTrainingData(onFirstDayReceived);
   //start learning
-  this._client.insert(this._getModelName(), CloudSettings.BUCKET, this._getTrainingFileName());
+  //this._client.insert(this._getModelName(), CloudSettings.BUCKET, this._getTrainingFileName());
 };
 
 

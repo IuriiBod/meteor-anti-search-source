@@ -35,32 +35,48 @@ GoogleCloud = {
     }
   }),
 
+  MAX_UPLOADED_DAYS_COUNT: 365,
+
   //todo update this code for one location
   //todo make unique files for different locations like: "sales-data-#{locationId}"
-  uploadTrainingData: function (/*location*/) {
-    var through = Meteor.npmRequire('through');
-    var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
-    var trainingDataWriteStream = new through();
-
-    trainingDataWriteStream.pipe(bucket.file(GooglePredictionApi.getTrainingFileName()).createWriteStream());
+  /**
+   *
+   * @param onFirstDayReceived callback used to import last day sales
+   */
+  uploadTrainingData: function (onFirstDayReceived /*location*/) {
+    //var through = Meteor.npmRequire('through');
+    //var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
+    //var trainingDataWriteStream = new through();
+    //
+    //trainingDataWriteStream.pipe(bucket.file(GooglePredictionApi.getTrainingFileName()).createWriteStream());
 
     logger.info('Starting uploading from POS');
 
+    var uploadedDaysCount = 0;
+    var isHandledFirstDay = false;
+    var self = this;
+
     //upload sales training data for the last year
     Revel.uploadAndReduceOrderItems(function (salesData) {
-      logger.info('Received daly sales', {date: salesData.createdDate});
+      if (!isHandledFirstDay) {
+        onFirstDayReceived(salesData);
+        isHandledFirstDay = false;
+      }
+
+      logger.info('Received daily sales', {date: salesData.createdDate});
 
       //todo replace location with "Location's" location
-      //todo replace historyMock with history method
-      var weather = OpenWeatherMap.historyMock(new Date(salesData.createdDate), Meteor.settings.Location);
+      var weather = OpenWeatherMap.history(new Date(salesData.createdDate), Meteor.settings.Location);
 
       var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather);
 
-      trainingDataWriteStream.push(csvEntriesForCurrentDay);
+      console.log('pushed csv', csvEntriesForCurrentDay);
 
-    }, function (uploadedDaysCount) {
-      logger.info('Sales data uploading finished', {uploadedDaysCount: uploadedDaysCount});
-      trainingDataWriteStream.end();
-    }, 365);
+      //trainingDataWriteStream.push(csvEntriesForCurrentDay);
+
+      uploadedDaysCount++;
+
+      return false;//uploadedDaysCount < self.MAX_UPLOADED_DAYS_COUNT;
+    });
   }
 };
