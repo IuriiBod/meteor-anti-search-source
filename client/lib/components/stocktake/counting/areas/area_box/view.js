@@ -3,7 +3,7 @@ Template.areaBox.events({
     event.preventDefault();
     var id = $(event.target).parent().attr("data-id");
     Session.set("activeGArea", id);
-    $(".collapse").removeClass("in");
+    $(".areaFilering .collapse").removeClass("in");
     var sarea = $(event.target).parent().next().find(".areaBox")[0];
     if(sarea) {
       var sId = $(sarea).attr("data-id");
@@ -36,13 +36,15 @@ Template.areaBox.events({
     if(type == "garea") {
       Meteor.call("deleteGeneralArea", id, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          console.log(err);
+          return alert(err.reason);
         }
       });
     } else if(type == "sarea") {
       Meteor.call("deleteSpecialArea", id, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          console.log(err);
+          return alert(err.reason);
         }
       });
     }
@@ -52,17 +54,30 @@ Template.areaBox.events({
 Template.areaBox.helpers({
   activeG: function(id) {
     var garea = Session.get("activeGArea");
-    return garea == id;
+    if(garea == id) {
+      return true;
+    } else {
+      return false;
+    }
   },
 
    activeS: function(id) {
     var sarea = Session.get("activeSArea");
-     return sarea == id;
+    if(sarea == id) {
+      return true;
+    } else {
+      return false;
+    }
   },
   
   inActive: function(id) {
     var sarea = Session.get("activeSArea");
     var garea = Session.get("activeGArea");
-    return !!((sarea != id) && (garea != id));
-  }
+    if((sarea != id) && (garea != id)) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
 });

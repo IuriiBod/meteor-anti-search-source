@@ -6,7 +6,8 @@ Template.ordersListItem.events({
     if(confirmDelete && id) {
       Meteor.call("removeOrder", id, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          console.log(err);
+          return alert(err.reason);
         }
       });
     }

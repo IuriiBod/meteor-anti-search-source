@@ -77,7 +77,14 @@ component.state.replyToEmail = function() {
   var user = Meteor.user();
   if(user && user.emails) {
     this.set("username", user.username);
-    this.set("userType", Meteor.role().name);
+
+    var role = "Worker";
+    if(HospoHero.isAdmin()) {
+      role = "Admin";
+    } else if(HospoHero.isManager()) {
+      role = "Manager";
+    }
+    this.set("userType", role);
     return user.emails[0].address;
   }
 };

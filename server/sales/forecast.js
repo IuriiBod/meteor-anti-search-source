@@ -1,14 +1,8 @@
 Meteor.methods({
   'generateForecastForDay': function(id, revenue) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
+    if(!HospoHero.perms.canViewForecast()) {
       logger.error("User not permitted to create ingredients");
-      throw new Meteor.Error(404, "User not permitted to create ingredients");
+      throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
     var calibratedSales = SalesCalibration.findOne();

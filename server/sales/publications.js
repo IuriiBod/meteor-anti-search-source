@@ -1,31 +1,49 @@
 Meteor.publish("salesOnDate", function(date) {
-  var cursors = [];
-  var salesCursor = Sales.find({"date": date}, {limit: 10});
-  cursors.push(salesCursor);
-  return cursors;
+  if(this.userId) {
+    var query = { "date": new Date(date).getTime() };
+    var user = Meteor.users.findOne({_id: this.userId});
+    if(user.defaultArea) {
+      query["relations.areaId"] = user.defaultArea;
+    }
+    return Sales.find(query, {limit: 10});
+  }
 });
 
 Meteor.publish("salesForecastOnDate", function(date) {
-  var cursors = [];
-  var salesCursor = SalesForecast.find({"date": date}, {limit: 10});
-  cursors.push(salesCursor);
-  return cursors;
+  if(this.userId) {
+    var query = { "date": new Date(date).getTime() };
+    var user = Meteor.users.findOne({_id: this.userId});
+    if(user.defaultArea) {
+      query["relations.areaId"] = user.defaultArea;
+    }
+    return SalesForecast.find(query, {limit: 10});
+  }
 });
 
-
-Meteor.publish("salesCalibration", function(date) {
-  var cursors = [];
-  cursors.push(SalesCalibration.find());
-  return cursors;
+Meteor.publish("salesCalibration", function() {
+  if(this.userId) {
+    var query = {};
+    var user = Meteor.users.findOne({_id: this.userId});
+    if (user.defaultArea) {
+      query["relations.areaId"] = user.defaultArea;
+    }
+    return SalesCalibration.find(query);
+  }
 });
 
 Meteor.publish("forecastPerWeek", function(firstDate, lastDate) {
-  var firstDate = firstDate;
-  var lastDate = lastDate;
-  var cursors = [];
-  var query = {"date": {$gte: firstDate, $lte: lastDate}};
-  var forecast = ForecastCafe.find(query, {sort: {"date": 1}});
-  cursors.push(forecast);
-  logger.info("Forecast per week publication");
-  return cursors;
+  if(this.userId) {
+    var query = {
+      "date": {
+        $gte: firstDate,
+        $lte: lastDate
+      }
+    };
+    var user = Meteor.users.findOne({_id: this.userId});
+    if (user.defaultArea) {
+      query["relations.areaId"] = user.defaultArea;
+    }
+    logger.info("Forecast per week publication");
+    return ForecastCafe.find(query, { sort: {"date": 1} });
+  }
 });

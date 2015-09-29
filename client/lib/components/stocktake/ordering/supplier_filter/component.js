@@ -120,40 +120,10 @@ component.prototype.onListRendered = function() {
     }
     Meteor.call("updateReceipt", id, info, function(err, id) {
       if(err) {
-        HospoHero.alert(err);
+        console.log(err);
+        return alert(err.reason);
       } 
     });
-      // $("#my_hidden_input").val(
-      //     $("#datepicker").datepicker('getFormattedDate')
-      //  )
   });
-  // $(".expectedDeliveryDate").editable({
-  //   type: 'combodate',
-  //   format: 'YYYY-MM-DD',    
-  //   viewformat: 'YYYY-MM-DD',    
-  //   title: 'Select time',
-  //   template: "YYYY-MM-DD",
-  //   mode: 'inline',
-  //   success: function(response, newValue) {
-  //     var supplier = Session.get("activeSupplier");
-  //     var version = Session.get("thisVersion");
-  //     var date = newValue.format("YYYY-MM-DD");
-  //     var id = null;
-  //     var receipt = OrderReceipts.findOne({"supplier": supplier, "version": version});
-  //     var info = {
-  //       "expectedDeliveryDate": new Date(date).getTime(),
-  //       "version": version,
-  //       "supplier": supplier
-  //     };
-  //     if(receipt) {
-  //       id = receipt._id;
-  //     }
-  //     Meteor.call("updateReceipt", id, info, function(err, id) {
-  //       if(err) {
-  //         console.log(err);
-  //         return alert(err.reason);
-  //       } 
-  //     });
-  //   }
-  // });
+ 
 }

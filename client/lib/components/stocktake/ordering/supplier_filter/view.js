@@ -26,7 +26,8 @@ Template.supplierFilter.events({
     } else {
       Meteor.call("generateReceipts", version, supplier, info, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          console.log(err);
+          return alert(err.reason);
         }
       });
     }
