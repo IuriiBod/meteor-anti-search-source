@@ -1,12 +1,6 @@
 Meteor.methods({
   generateReceipts: function(version, supplier, info) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditStock()) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(404, "User not permitted to generate receipts");
     }

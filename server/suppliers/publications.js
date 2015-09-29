@@ -1,21 +1,25 @@
 Meteor.publish("allSuppliers", function() {
-  var cursors = [];
-  cursors.push(Suppliers.find());  
-  logger.info("All suppliers have been published");
-  return cursors;
+  if(this.userId) {
+    var query = {};
+
+    var user = Meteor.users.findOne({_id: this.userId});
+    if(user.defaultArea) {
+      query["relations.areaId"] = user.defaultArea;
+    }
+    logger.info("All suppliers have been published");
+    return Suppliers.find(query);
+  }
 });
 
 Meteor.publish("suppliers", function(ids) {
-  var cursors = [];
-  cursors.push(Suppliers.find({"_id": {$in: ids}}));  
   logger.info("Suppliers have been published", ids);
-  return cursors;
+  return Suppliers.find({"_id": {$in: ids}});
 });
 
 Meteor.publish("supplierProfile", function(id) {
-  var cursors = [];
-  cursors.push(Suppliers.find(id));
-  cursors.push(Ingredients.find({"suppliers": id}));
-  cursors.push(OrderReceipts.find({"supplier": id}));
-  return cursors;
+  return [
+    Suppliers.find(id),
+    Ingredients.find({"suppliers": id}),
+    OrderReceipts.find({"supplier": id})
+  ];
 });

@@ -1,7 +1,3 @@
 var component = FlowComponents.define("stocktakeItem", function(props) {
-  this.item = props.item;
+  this.set('item', props.item);
 });
-
-component.state.item = function() {
-  return this.item;
-}

@@ -24,49 +24,29 @@ component.state.list = function() {
   } else {
     return OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1, "supplier": 1}});
   }
-}
+};
 
 component.state.toBeReceived = function() {
   var state = Session.get("thisState");
-  if(!state) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !state;
+};
 
 component.state.received = function() {
   var state = Session.get("thisState");
-  if(state) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!state;
+};
 
 component.state.week = function() {
   var time = Session.get("thisTime");
-  if(time && time == "week") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!(time && time == "week");
+};
 
 component.state.month = function() {
   var time = Session.get("thisTime");
-  if(time && time == "month") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!(time && time == "month");
+};
 
 component.state.allTime = function() {
   var time = Session.get("thisTime");
-  if(time && time == "all") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!(time && time == "all");
+};

@@ -5,14 +5,12 @@ var component = FlowComponents.define("invoiceImage", function(props) {
 
 component.state.imageUrl = function() {
   var receipt = OrderReceipts.findOne(this.id);
-  if(receipt && receipt.invoiceImage) {
-    return receipt.invoiceImage;
-  }
-}
+  return receipt && receipt.invoiceImage ? receipt.invoiceImage : false;
+};
 
 component.prototype.onImageRendered = function() {
   blueimpImageFullScreen();
-}
+};
 
 
 blueimpImageFullScreen = function() {
@@ -26,4 +24,4 @@ blueimpImageFullScreen = function() {
       blueimp.Gallery(links, options);
     };
   }
-}
+};

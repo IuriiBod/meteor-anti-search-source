@@ -5,11 +5,12 @@ Template.stockCountingListItem.events({
     if(confrimDelete) {
       var id = $(event.target).closest("li").attr("data-id");
       var sareaId = Session.get("activeSArea");
+      var stockRefId = $(event.target).closest("li").attr("data-stockRef");
+
       Meteor.call("removeStocksFromAreas", id, sareaId, function(err) {
         if(err) {
           HospoHero.alert(err);
         } else {
-          var stockRefId = $(event.target).closest("li").attr("data-stockRef");
           if(stockRefId) {
             Meteor.call("removeStocktake", stockRefId, function(err) {
               if(err) {

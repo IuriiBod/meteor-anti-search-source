@@ -5,15 +5,11 @@ var component = FlowComponents.define("orderReceiptItem", function(props) {
 
 component.state.receipt = function() {
   return this.item;
-}
+};
 
 component.state.isInvoiceUploaded = function() {
-  if(this.item.hasOwnProperty("invoiceImage")) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.item.hasOwnProperty("invoiceImage");
+};
 
 component.state.orderedValue = function() {
   var cost = 0;
@@ -25,12 +21,16 @@ component.state.orderedValue = function() {
     });
   }
   return cost;
-}
+};
 
 component.state.invoiceFaceValue = function() {
   var cost = 0;
   var id = this.item._id;
-  var orders = StockOrders.find({"orderReceipt": id}).fetch();
+  var orders = StockOrders.find({
+    "orderReceipt": id,
+    "relations.areaId": HospoHero.getDefaultArea()
+  }).fetch();
+
   if(orders.length > 0) {
     orders.forEach(function(order) {
       if(order.received) {
@@ -43,4 +43,4 @@ component.state.invoiceFaceValue = function() {
     });
   }
   return cost;
-}
+};

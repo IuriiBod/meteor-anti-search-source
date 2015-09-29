@@ -4,7 +4,7 @@ var component = FlowComponents.define("newAreaModal", function(props) {
 
 component.state.name = function() {
   return this.name;
-}
+};
 
 component.action.submit = function(name) {
   if(name) {
@@ -31,4 +31,4 @@ component.action.submit = function(name) {
       }
     }
   }
-}
+};

@@ -10,7 +10,7 @@ Template.newSupplier.events({
       } else {
         Router.go("supplierProfile", {"_id": id});
       }
-      $("#addNewSupplierModal").modal("hide");
     });
+    $("#addNewSupplierModal").modal("hide");
   }
 });

@@ -15,7 +15,10 @@ Meteor.methods({
       logger.error("Description field not found");
       throw new Meteor.Error(404, "Description field not found");
     }
-    var exist = Ingredients.findOne({"code": info.code});
+    var exist = Ingredients.findOne({
+      "code": info.code,
+      "relations.areaId": HospoHero.getDefaultArea()
+    });
     if(exist) {
       logger.error("Duplicate entry");
       throw new Meteor.Error(404, "Duplicate entry, change code and try again");

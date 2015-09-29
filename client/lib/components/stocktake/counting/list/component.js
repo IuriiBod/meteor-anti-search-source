@@ -4,32 +4,27 @@ var component = FlowComponents.define("stockCounting", function(props) {
 
 component.state.editable = function() {
   return Session.get("editStockTake");
-}
+};
 
 component.state.ordersExist = function() {
   var ordersExist = Stocktakes.findOne({
     "version": Session.get("thisVersion"),
     "status": true
   });
-  if(ordersExist) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!ordersExist;
+};
 
 component.state.version = function() {
   return this.version;
-}
+};
 
 component.state.specialArea = function() {
   return Session.get("activeSArea");
-}
-
+};
 
 component.state.generalArea = function() {
   return Session.get("activeGArea");
-}
+};
 
 component.state.stocktakeList = function() {
   var thisVersion = Session.get("thisVersion");
@@ -46,7 +41,7 @@ component.state.stocktakeList = function() {
       }
     }
   }
-}
+};
 
 component.state.ingredientsList = function() {
   var gareaId = Session.get("activeGArea");
@@ -58,15 +53,15 @@ component.state.ingredientsList = function() {
       return ingredients;
     }
   }
-}
+};
 
 component.state.stocktakeMain = function() {
   return StocktakeMain.findOne(this.version);
-}
+};
 
 component.state.filtered = function() {
   return Session.get("activeSArea");
-}
+};
 
 component.state.notTemplate = function() {
   var main = StocktakeMain.findOne(this.version);
@@ -77,4 +72,4 @@ component.state.notTemplate = function() {
     }
   }
   return permitted;
-}
+};

@@ -1,11 +1,13 @@
 Meteor.methods({
   receiveDelivery: function(receiptId) {
-    if(!receiptId) {
-      logger.error("Receipt id not found");
-      throw new Meteor.Error(401, "Receipt id not found");
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to view receive delivery");
+      throw new Meteor.Error(403, "User not permitted to view receive delivery");
     }
-    var receipt = OrderReceipts.findOne(receiptId);
-    if(!receipt) {
+
+    HospoHero.checkMongoId(receiptId);
+
+    if(!OrderReceipts.findOne(receiptId)) {
       logger.error("Receipt  not found");
       throw new Meteor.Error(404, "Receipt  not found");
     }
@@ -18,26 +20,26 @@ Meteor.methods({
       }}
     );
     logger.info("Order receipt marked as received", receiptId);
-    return;
   },
 
   updateOrderItems: function(id, receiptId, status, info) {
-    if(!id) {
-      logger.error("Id not found");
-      throw new Meteor.Error(401, "Id not found");
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to view receive delivery");
+      throw new Meteor.Error(403, "User not permitted to view receive delivery");
     }
-    if(!receiptId) {
-      logger.error("Receipt id not found");
-      throw new Meteor.Error(401, "Receipt id not found");
-    }
+
+    HospoHero.checkMongoId(id);
+    HospoHero.checkMongoId(receiptId);
+
     if(!status) {
       logger.error("Status not found");
-      throw new Meteor.Error(401, "Status not found");
+      throw new Meteor.Error("Status not found");
     }
+
     var order = StockOrders.findOne(id);
     if(!order) {
       logger.error("Order not found");
-      throw new Meteor.Error(401, "Order not found");
+      throw new Meteor.Error("Order not found");
     }
     if(order.deliveryStatus && order.deliveryStatus.indexOf("Delivered Correctly") >= 0) {
       StockOrders.update({"_id": id, "orderReceipt": receiptId}, {$pull: {"deliveryStatus": "Delivered Correctly"}});
@@ -74,18 +76,17 @@ Meteor.methods({
     }
     StockOrders.update({"_id": id, "orderReceipt": receiptId}, query);
     logger.info("Stock order updated", id, status);
-    return;
   },
 
   receiveOrderItems: function(id, receiptId, info) {
-     if(!id) {
-      logger.error("Id not found");
-      throw new Meteor.Error(401, "Id not found");
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to view receive delivery");
+      throw new Meteor.Error(403, "User not permitted to view receive delivery");
     }
-    if(!receiptId) {
-      logger.error("Receipt id not found");
-      throw new Meteor.Error(401, "Receipt id not found");
-    }
+
+    HospoHero.checkMongoId(id);
+    HospoHero.checkMongoId(receiptId);
+
     var order = StockOrders.findOne(id);
     if(!order) {
       logger.error("Order not found");
@@ -107,25 +108,5 @@ Meteor.methods({
       {$set: updateQuery}
     );
     logger.info("Stock order received", id);
-    return;
-  },
-
-  receiptUpdate: function(id, info) {
-    if(!id) {
-      logger.error("Id not found");
-      throw new Meteor.Error(401, "Id not found");
-    }
-    var receipt = OrderReceipts.findOne(id);
-    if(!receipt) {
-      logger.error("Receipt not found");
-      throw new Meteor.Error(401, "Receipt not found");
-    }
-    var updateQuery = {};
-    if(info.hasOwnProperty("invoiceFaceValue")) {
-      updateQuery['invoiceFaceValue'] = info.invoiceFaceValue;
-    }
-    OrderReceipts.update({"_id": id}, {$set: updateQuery});
-    logger.info("Update receipt", info);
-    return;
-  } 
+  }
 });

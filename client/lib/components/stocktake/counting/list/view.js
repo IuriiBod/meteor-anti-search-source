@@ -25,7 +25,7 @@ Template.stockCounting.events({
           var self = this;
           var id = $(self).parent().attr("data-id");
           if(newValue) {
-            Meteor.call("editSpecialArea", id, {"name": newValue}, function(err) {
+            Meteor.call("editSpecialArea", id, newValue, function(err) {
               if(err) {
                 HospoHero.alert(err);
               }
@@ -43,7 +43,7 @@ Template.stockCounting.events({
           var self = this;
           var id = $(self).parent().attr("data-id");
           if(newValue) {
-            Meteor.call("editGeneralArea", id, {"name": newValue}, function(err) {
+            Meteor.call("editGeneralArea", id, newValue, function(err) {
               if(err) {
                 HospoHero.alert(err);
               }
@@ -72,7 +72,7 @@ Template.stockCounting.events({
         var info = {
           "nextItemId": nextItemId,
           "prevItemId": prevItemId
-        }
+        };
         if(nextItemPosition) {
           info['nextItemPosition'] = nextItemPosition
         }

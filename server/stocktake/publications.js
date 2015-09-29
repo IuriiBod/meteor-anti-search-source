@@ -1,19 +1,34 @@
 Meteor.publish("allAreas", function() {
-  var cursors = [];
-  cursors.push(GeneralAreas.find());
-  cursors.push(SpecialAreas.find());
+  if(!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var query = {};
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
   logger.info("All areas published");
-  return cursors;
+
+  return [
+    GeneralAreas.find(query),
+    SpecialAreas.find(query)
+  ];
 });
 
 Meteor.publish("areaSpecificStocks", function(generalArea) {
-  var cursors = [];
-  cursors.push(Ingredients.find({"generalAreas": generalArea}));
   logger.info("Ingredients on general area published", generalArea);
-  return cursors;
+  return Ingredients.find({"generalAreas": generalArea});
 });
 
 Meteor.publish("areaSpecificStockTakes", function(generalArea) {
+  if(!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
   var cursors = [];
   var stocktakes = Stocktakes.find({"generalArea": generalArea});
   cursors.push(stocktakes);
@@ -31,52 +46,113 @@ Meteor.publish("areaSpecificStockTakes", function(generalArea) {
 });
 
 Meteor.publish("stocktakeMains", function(date) {
+  if(!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var query = {
+    "stocktakeDate": new Date(date).getTime()
+  };
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
   logger.info("Stocktake mains published for date", date);
-  var data = StocktakeMain.find({"stocktakeDate": new Date(date).getTime()});
-  return data;
+  return StocktakeMain.find(query);
 });
 
 Meteor.publish("stocktakes", function(version) {
-  var cursors = [];
-  cursors.push(Stocktakes.find({"version": version}));
-  cursors.push(StocktakeMain.find(version));
+  if(!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var query = {
+    $or: [
+      { _id: version },
+      { "version": version }
+    ]
+  };
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
   logger.info("Stocktakes published for version ", version);
-  return cursors;
+  return Stocktakes.find(query);
 });
 
 Meteor.publish("ordersPlaced", function(version) {
+  if(!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var query = { "version": version };
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
   logger.info("Stock orders published for version ", version);
-  var data = StockOrders.find({"version": version});
-  return data;
+  return StockOrders.find(query);
 });
 
 Meteor.publish("orderReceipts", function(ids) {
   logger.info("Stock order receipts published ", ids);
-  var data = OrderReceipts.find({"_id": {$in: ids}});
-  return data;
+  return OrderReceipts.find({"_id": {$in: ids}});
 });
 
 Meteor.publish("orderReceiptsByVersion", function(version) {
+  if(!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var query = { "version": version };
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
   logger.info("Stock order receipts published by version", version);
-  var data = OrderReceipts.find({"version": version});
-  return data;
+  return OrderReceipts.find(query);
 });
 
 Meteor.publish("allOrderReceipts", function() {
+  if(!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var query = {};
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
   logger.info("Stock order receipts published");
-  var data = OrderReceipts.find({}, {sort: {"date": -1}, limit: 10});
-  return data;
+  return OrderReceipts.find(query, {sort: {"date": -1}, limit: 10});
 });
 
 Meteor.publish("receiptOrders", function(receiptId) {
+  if(!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var query = { "orderReceipt": receiptId };
+  var user = Meteor.users.findOne({_id: this.userId});
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
   logger.info("Stock orders published for receipt ", receiptId);
-  var data = StockOrders.find({"orderReceipt": receiptId});
-  return data;
+  return StockOrders.find(query);
 });
 
 
 Meteor.publish("currentStocks", function(ids) {
   logger.info("Current stocks published ", ids);
-  var data = CurrentStocks.find({"_id": {$in: ids}});
-  return data;
+  return CurrentStocks.find({"_id": {$in: ids}});
 });

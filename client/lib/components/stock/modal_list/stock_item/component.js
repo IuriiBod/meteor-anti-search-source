@@ -5,7 +5,7 @@ var component = FlowComponents.define('stockModalItem', function(props) {
 
 component.state.item = function() {
   return this.stock;
-}
+};
 
 component.state.costPerPortionUsed = function() {
   var costPerPortionUsed = 0;
@@ -17,7 +17,7 @@ component.state.costPerPortionUsed = function() {
     }
   }
   return costPerPortionUsed;
-}
+};
 
 component.prototype.onItemRendered = function() {
   $('.i-checks').iCheck({

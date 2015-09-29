@@ -3,11 +3,8 @@ var component = FlowComponents.define("stockTakeMasterList", function() {
 });
 
 component.state.listOfDates = function() {
-  var list = this.get("historyList");
-  if(list) {
-    return list;
-  }
-}
+  return this.get("historyList") ? this.get("historyList") : false;
+};
 
 component.prototype.onListRender = function() {
   var self = this;
@@ -21,4 +18,4 @@ component.prototype.onListRender = function() {
 
   var date = moment().format("YYYY-MM-DD");
   subs.subscribe("stocktakeMains", new Date(date).getTime());
-}
+};

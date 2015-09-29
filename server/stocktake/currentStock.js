@@ -2,12 +2,14 @@ rawColl = CurrentStocks.rawCollection();
 
 Meteor.methods({
   updateCurrentStock: function(stockId, note, quantity, date) {
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error('User not permitted to update current stock');
+      throw new Meteor.Error(403, "User not permitted to update current stock");
+    }
+
     var query = {"stockId": stockId};
     var sort = {"version": -1};
-    var count = parseFloat(quantity);
-    if(count != count) {
-      count = 0;
-    }
+    var count = parseFloat(quantity) ? parseFloat(quantity) : 0;
     var update = {$inc: {"count": count, "version": 1}, $set: {"date": new Date(date), "note": note}};
     var options = {
       upsert: true,
@@ -21,22 +23,24 @@ Meteor.methods({
       CurrentStocks.insert(oldDoc);
     }
     logger.info("Current stock updated", {"stockId": stockId});
-    return;
   },
 
   resetCurrentStock: function(stockId, note, quantity, date) {
-    var query = {"stockId": stockId};
-    var latest = CurrentStocks.find({"stockId": stockId}, {sort: {"version": -1}}).fetch();
-    var count = parseFloat(quantity);
-    if(count != count) {
-      count = 0;
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error('User not permitted to reset current stock');
+      throw new Meteor.Error(403, "User not permitted to reset current stock");
     }
+
+    var latest = CurrentStocks.find({"stockId": stockId}, {sort: {"version": -1}}).fetch();
+    var count = parseFloat(quantity) ? parseFloat(quantity) : 0;
+
     var doc = {
       "stockId": stockId,
       "count": count,
       "note": note,
       "date": new Date(date)
-    }
+    };
+
     if(latest && latest.length > 0) {
       var old = latest[0];
       if(old) {
@@ -47,10 +51,14 @@ Meteor.methods({
     }
     var id = CurrentStocks.insert(doc);
     logger.info("New current stock entry added",{"_id": id, "stockId": stockId});
-    return;
   },
 
   readDaily: function(start, end) {
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error('User not permitted to read daily stock');
+      throw new Meteor.Error(403, "User not permitted to read daily stock");
+    }
+
     var pipe = [
       {$match: {"date": {$gte: new Date(start), $lte: new Date(end)}}},
       {$sort: {version: -1}},
@@ -59,10 +67,9 @@ Meteor.methods({
           count: {$first: "$count"}
         }
       }
-    ]
+    ];
     var data = CurrentStocks.aggregate(pipe, {cursor: {batchSize: 0}});
     logger.info("Current stock published");
     return data;
   }
-
 });

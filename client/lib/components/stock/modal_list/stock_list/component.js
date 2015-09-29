@@ -1,7 +1,6 @@
 var component = FlowComponents.define('stocksModalList', function(props) {
   this.name = props.name;
   this.onRendered(this.renderShowIngList);
-  var id = Router.current().params._id;
 
   var options = {
     keepHistory: 1000 * 60 * 5,
@@ -25,12 +24,11 @@ component.prototype.setIds = function() {
   }
   this.set("ids", ids);
   return ids;
-}
+};
 
 component.prototype.renderShowIngList = function() {
   var self = this;
   Tracker.autorun(function() {
-
     if(self.name) {
       if(self.name == "editJob") {
         self.item = JobItems.findOne(id);
@@ -47,7 +45,7 @@ component.prototype.renderShowIngList = function() {
     }
     self.IngredientsSearch.search(self.get("text"), {"ids": ids, "limit": 10});
   });
-}
+};
 
 component.state.getIngredients = function() {
   return this.IngredientsSearch.getData({
@@ -56,10 +54,10 @@ component.state.getIngredients = function() {
     },
     sort: {'code': 1}
   });
-}
+};
 
 component.action.keyup = function(text) {
   var ids = this.setIds();
   this.set("text", text);
   this.IngredientsSearch.search(text, {"ids": ids, "limit": 10});
-}
+};

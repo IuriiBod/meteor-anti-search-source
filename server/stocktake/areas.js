@@ -1,75 +1,56 @@
 Meteor.methods({
   'createGeneralArea': function(name) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditStock()) {
       logger.error("User not permitted to create general Areas");
       throw new Meteor.Error(404, "User not permitted to create general Areas");
     }
-    if(!name) {
-      logger.error("General area should have a name");
-      throw new Meteor.Error(404, "General area should have a name");
-    }
+
+    check(name, String);
+
     var exist = GeneralAreas.findOne({"name": name});
     if(exist) {
       logger.error('General area name should be unique', exist);
       throw new Meteor.Error(404, "General area name should be unique");
     }
-    var id = GeneralAreas.insert({"name": name, "specialAreas": [], "createdAt": Date.now(), "active": true});
-    logger.info("New General area created", id);
-    return id;
+    logger.info("New General area created");
+    return GeneralAreas.insert({
+      "name": name,
+      "specialAreas": [],
+      "createdAt": Date.now(),
+      "active": true,
+      relations: HospoHero.getRelationsObject()
+    });
   },
 
-  'editGeneralArea': function(id, info) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+  'editGeneralArea': function(id, newName) {
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to edit general Areas");
+      throw new Meteor.Error(404, "User not permitted to edit general Areas");
     }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
-      logger.error("User not permitted to edit general areas");
-      throw new Meteor.Error(404, "User not permitted to edit general areas");
-    }
-    if(!id) {
-      logger.error("General area should have a id");
-      throw new Meteor.Error(404, "General area should have a id");
-    }
+
+    HospoHero.checkMongoId(id);
+    check(newName, String);
+
     var exist = GeneralAreas.findOne(id);
     if(!exist) {
       logger.error('General area does not exist', id);
       throw new Meteor.Error(404, "General area does not exist");
     }
-    var updateDoc = {};
-    if(info.name != exist.name) {
-      updateDoc.name = info.name;
-    }
-    if(Object.keys(updateDoc).length > 0) {
-      GeneralAreas.update({"_id": id}, {$set: updateDoc});
+
+    if(newName) {
+      GeneralAreas.update({"_id": id}, {$set: {name: newName}});
       logger.info("General area updated", id);
-      return;
     }
   },
 
   deleteGeneralArea: function(id) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to delete general Areas");
+      throw new Meteor.Error(404, "User not permitted to delete general Areas");
     }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
-      logger.error("User not permitted to delete general areas");
-      throw new Meteor.Error(404, "User not permitted to delete general areas");
-    }
-    if(!id) {
-      logger.error("Id should have a value");
-      throw new Meteor.Error(404, "Id should have a value");
-    }
+
+    HospoHero.checkMongoId(id);
+
     var generalArea = GeneralAreas.findOne(id);
     if(!generalArea) {
       logger.error("General area does not exist");
@@ -85,24 +66,19 @@ Meteor.methods({
   },
 
   'createSpecialArea': function(name, gareaId) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to create special Areas");
+      throw new Meteor.Error(404, "User not permitted to create special Areas");
     }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
-      logger.error("User not permitted to create special areas");
-      throw new Meteor.Error(404, "User not permitted to create special areas");
-    }
+
+    check(name, String);
+    HospoHero.checkMongoId(gareaId);
+
     if(!name) {
       logger.error("Special area should have a name");
       throw new Meteor.Error(404, "Special area should have a name");
     }
-    if(!gareaId) {
-      logger.error("General area id not found");
-      throw new Meteor.Error(404, "General area id not found");
-    }
+
     var gAreaExist = GeneralAreas.findOne(gareaId);
     if(!gAreaExist) {
       logger.error('General area does not exist', gareaId);
@@ -113,54 +89,48 @@ Meteor.methods({
       logger.error('Special area name should be unique', exist);
       throw new Meteor.Error(404, "Special area name should be unique");
     }
-    var id = SpecialAreas.insert({"name": name, "generalArea": gareaId, "createdAt": Date.now(), "stocks": [], "active": true});
+    var id = SpecialAreas.insert({
+      "name": name,
+      "generalArea": gareaId,
+      "createdAt": Date.now(),
+      "stocks": [],
+      "active": true,
+      relations: HospoHero.getRelationsObject()
+    });
     GeneralAreas.update({"_id": gareaId}, {$addToSet: {"specialAreas": id}});
     logger.info("New Special area created", id);
     return id;
   },
 
-  'editSpecialArea': function(id, info) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+  'editSpecialArea': function(id, newName) {
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to special special Areas");
+      throw new Meteor.Error(404, "User not permitted to special special Areas");
     }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
-      logger.error("User not permitted to edit special areas");
-      throw new Meteor.Error(404, "User not permitted to edit special areas");
-    }
-    if(!id) {
-      logger.error("Special area should have a id");
-      throw new Meteor.Error(404, "Special area should have a id");
-    }
+
+    HospoHero.checkMongoId(id);
+    check(newName, String);
+
     var exist = SpecialAreas.findOne(id);
     if(!exist) {
       logger.error('Special area does not exist', id);
       throw new Meteor.Error(404, "Special area does not exist");
     }
-    var updateDoc = {};
-    if(info.name != exist.name) {
-      updateDoc.name = info.name;
-    }
-    if(Object.keys(updateDoc).length > 0) {
-      SpecialAreas.update({"_id": id}, {$set: updateDoc});
+    if(newName) {
+      SpecialAreas.update({"_id": id}, {$set: {name: newName}});
       logger.info("Special area updated", id);
-      return;
     }
   },
 
   assignStocksToAreas: function(stockId, sareaId) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to assign stocks to Areas");
+      throw new Meteor.Error(404, "User not permitted to assign stocks to Areas");
     }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
-      logger.error("User not permitted to assign stock to areas");
-      throw new Meteor.Error(404, "User not permitted to assign stock to areas");
-    }
+
+    HospoHero.checkMongoId(stockId);
+    HospoHero.checkMongoId(sareaId);
+
     var stock = Ingredients.findOne(stockId);
     if(!stock) {
       logger.error('Stock item does not exist', stockId);
@@ -177,22 +147,19 @@ Meteor.methods({
       throw new Meteor.Error(404, "General area does not exist");
     }
     SpecialAreas.update({"_id": sareaId}, {$addToSet: {"stocks": stockId}});
-    Ingredients.update({"_id": stockId}, {$addToSet: {"specialAreas": sareaId, "generalAreas": sAreaExist.generalArea}})
+    Ingredients.update({"_id": stockId}, {$addToSet: {"specialAreas": sareaId, "generalAreas": sAreaExist.generalArea}});
     logger.info('Stock item added to area', {"stock": stockId, "sarea": sareaId});
-    return;
   },
   
   removeStocksFromAreas: function(stockId, sareaId) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to remove stocks from Areas");
+      throw new Meteor.Error(404, "User not permitted to remove stocks from Areas");
     }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
-      logger.error("User not permitted to remove stocks from areas");
-      throw new Meteor.Error(404, "User not permitted to remove stocks from areas");
-    }
+
+    HospoHero.checkMongoId(stockId);
+    HospoHero.checkMongoId(sareaId);
+
     var stock = Ingredients.findOne(stockId);
     if(!stock) {
       logger.error('Stock item does not exist', stockId);
@@ -213,26 +180,23 @@ Meteor.methods({
       throw new Meteor.Error(404, "Stock item not in special area");
     }
     SpecialAreas.update({"_id": sareaId}, {$pull: {"stocks": stockId}});
-    Ingredients.update({"_id": stockId}, {$pull: {"specialAreas": sareaId, "generalAreas": sAreaExist.generalArea}})
+    Ingredients.update({"_id": stockId}, {
+      $pull: {
+        "specialAreas": sareaId,
+        "generalAreas": sAreaExist.generalArea
+      }
+    });
     logger.info('Stock item removed from area', {"stock": stockId, "sarea": sareaId});
-    return;
   },
 
   deleteSpecialArea: function(id) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var userId = Meteor.userId();
-    var permitted = isManagerOrAdmin(userId);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditStock()) {
       logger.error("User not permitted to delete special areas");
       throw new Meteor.Error(404, "User not permitted to delete special areas");
     }
-    if(!id) {
-      logger.error("Id should have a value");
-      throw new Meteor.Error(404, "Id should have a value");
-    }
+
+    HospoHero.checkMongoId(id);
+
     var specialArea = SpecialAreas.findOne(id);
     if(!specialArea) {
       logger.error("Special area does not exist");
@@ -246,5 +210,5 @@ Meteor.methods({
       GeneralAreas.update({"_id": specialArea.generalArea}, {$pull: {"specialAreas": id}});
       logger.error("Special area removed", id);
     }
-  },
+  }
 });
