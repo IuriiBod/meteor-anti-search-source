@@ -1,6 +1,7 @@
 //todo: add cron job for sales prediction updating
 var currentLocationId = 1;
 
+
 var predict = function (days) {
   var updatedAt = new Date();
   var dateMoment = moment();
