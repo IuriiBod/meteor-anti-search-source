@@ -1,4 +1,4 @@
-TEMP_LOCATION_ID = 1;
+currentLocationId = 1;
 
 SyncedCron.add({
   name: 'Prediction model refresh',
@@ -7,12 +7,12 @@ SyncedCron.add({
   },
   job: function () {
     var predictionApi = new GooglePredictionApi();
-    var forecastData = ForecastDates.findOne({locationId: TEMP_LOCATION_ID});
+    var forecastData = ForecastDates.findOne({locationId: currentLocationId});
     if (!forecastData){
-      ForecastDates.insert({locationId: TEMP_LOCATION_ID, lastUploadDate: moment().toDate()});
+      ForecastDates.insert({locationId: currentLocationId, lastUploadDate: moment().toDate()});
       predictionApi.updatePredictionModel();
     }else if(!forecastData.lastUploadDate || forecastData.lastUploadDate >= getMillisecondsFromDays(182)){
-      ForecastDates.update({locationId: TEMP_LOCATION_ID}, {$set:{lastUploadDate: moment().toDate()}});
+      ForecastDates.update({locationId: currentLocationId}, {$set:{lastUploadDate: moment().toDate()}});
       predictionApi.updatePredictionModel();
     }
 

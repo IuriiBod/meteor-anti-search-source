@@ -1,5 +1,5 @@
 //todo: add cron job for sales prediction updating
-var TEMP_LOCATION_ID = 1;
+var currentLocationId = 1;
 
 SyncedCron.add({
     name: 'Forecast refresh',
@@ -9,47 +9,52 @@ SyncedCron.add({
     job: function() {
         var date = moment();
 
-        if(!ForecastDates.findOne({locationId: TEMP_LOCATION_ID})) {
-            ForecastDates.insert({locationId: TEMP_LOCATION_ID, lastThree: date.toDate(), lastSixWeeks: date.toDate()});
+        if(!ForecastDates.findOne({locationId: currentLocationId})) {
+            ForecastDates.insert({locationId: currentLocationId, lastThree: date.toDate(), lastSixWeeks: date.toDate()});
             predict(84);
         }
         else {
-            var lastUpdates = ForecastDates.findOne({locationId:TEMP_LOCATION_ID});
-            if(!ForecastDates.findOne({locationId: TEMP_LOCATION_ID}).lastThree){
+            var lastUpdates = ForecastDates.findOne({locationId:currentLocationId});
+            if(!ForecastDates.findOne({locationId: currentLocationId}).lastThree){
                 predict(84);
             }
             else{
                 if (date.diff(lastUpdates.lastSixWeeks) >= getMillisecondsFromDays(42)) {
                     predict(84);
-                    ForecastDates.update({locationId: TEMP_LOCATION_ID}, {$set:{lastSixWeeks: date.toDate(), lastThree: date.toDate() }});
+                    ForecastDates.update({locationId: currentLocationId}, {
+                        $set:{
+                            lastSixWeeks: date.toDate(),
+                            lastThree: date.toDate()
+                        }
+                    });
                 }else if(date.diff(lastUpdates.lastThree) >= getMillisecondsFromDays(3)) {
                     predict(7);
-                    ForecastDates.update({locationId: TEMP_LOCATION_ID}, {$set:{lastThree: date.toDate()}});
+                    ForecastDates.update({locationId: currentLocationId}, {$set:{lastThree: date.toDate()}});
                 }
                 else{
                     predict(2);
                 }
             }
         }
+
     }
-});
+  });
 
-function predict (days){
-    var updatedAt = new Date();
-    var dateMoment = moment();
-    var prediction = new GooglePredictionApi();
-    var items = MenuItems.find({},{fields:{_id: 1}}).fetch();
-    var notification = new Notification();
+function predict(days) {
+  var updatedAt = new Date();
+  var dateMoment = moment();
+  var prediction = new GooglePredictionApi();
+  var items = MenuItems.find({}, {fields: {_id: 1}}).fetch();
+  var notification = new Notification();
 
-    for(var i = 1; i<=days; i++ ) {
-        var weather = OpenWeatherMap.historyMock();                             //here will be weather for day we need
-        var dayOfYear = dateMoment.dayOfYear();
-        dateMoment.add(1, "d");
+  for (var i = 1; i <= days; i++) {
+    var dayOfYear = dateMoment.dayOfYear();
+    dateMoment.add(1, "d");
+    var weather = OpenWeatherMap.history(dateMoment.toDate(), 'todo: specify location here like "Ternopil,UK"');                             //here will be weather for day we need
 
-        _.each(items, function(item){
-            var dataVector = [item._id, weather.temp, weather.main, dayOfYear];
-            var quantity = parseInt(prediction.makePrediction(dataVector));
-
+    _.each(items, function (item) {
+      var dataVector = [item._id, weather.temp, weather.main, dayOfYear];
+      var quantity = parseInt(prediction.makePrediction(dataVector));
             var predictItem = {
                 date: dateMoment.toDate(),
                 quantity: quantity,
@@ -70,9 +75,12 @@ function predict (days){
                     notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
                 }
             }
+      SalesPrediction.update({date: predictItem.date, menuItemId: predictItem.menuItemId}, predictItem, {upsert: true});
+    });
+  }
 
-            SalesPrediction.update({date: predictItem.date, menuItemId: predictItem.menuItemId},predictItem, {upsert:true});
-        });
-    }
-    notification.send();
+  var receiversIds = Meteor.users.find({isAdmin: true}).fetch().map(function (user) {
+    return user._id;
+  });
+  notification.send(receiversIds);
 }
