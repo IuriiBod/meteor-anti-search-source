@@ -1,6 +1,6 @@
 var CloudSettings = Meteor.settings.GoogleCloud;
 
-CsvEntryGenerator = {
+var CsvEntryGenerator = {
   generate: function (salesData, weather) {
     var csvString = '';
     var dayOfYear = moment(salesData.createdDate).dayOfYear();
@@ -39,44 +39,35 @@ GoogleCloud = {
 
   //todo update this code for one location
   //todo make unique files for different locations like: "sales-data-#{locationId}"
-  /**
-   *
-   * @param onFirstDayReceived callback used to import last day sales
-   */
-  uploadTrainingData: function (onFirstDayReceived /*location*/) {
-    //var through = Meteor.npmRequire('through');
-    //var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
-    //var trainingDataWriteStream = new through();
-    //
-    //trainingDataWriteStream.pipe(bucket.file(GooglePredictionApi.getTrainingFileName()).createWriteStream());
+  createTrainingDataUploadingSession: function (onUploadingFinishedCallback) {
+    var through = Meteor.npmRequire('through');
+    var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
+    var trainingDataWriteStream = new through();
+
+    trainingDataWriteStream.pipe(bucket.file(GooglePredictionApi.getTrainingFileName()).createWriteStream());
 
     logger.info('Starting uploading from POS');
 
     var uploadedDaysCount = 0;
-    var isHandledFirstDay = false;
     var self = this;
 
-    //upload sales training data for the last year
-    Revel.uploadAndReduceOrderItems(function (salesData) {
-      if (!isHandledFirstDay) {
-        onFirstDayReceived(salesData);
-        isHandledFirstDay = false;
+    return {
+      onDataReceived: function (salesData) {
+        logger.info('Received daily sales', {date: salesData.createdDate});
+
+        //todo replace location with "Location's" location
+        var weather = OpenWeatherMap.history(salesData.createdDate, Meteor.settings.Location);
+        var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather);
+        trainingDataWriteStream.push(csvEntriesForCurrentDay);
+
+        uploadedDaysCount++;
+
+        return uploadedDaysCount < self.MAX_UPLOADED_DAYS_COUNT;
+      },
+      onUploadingFinished: function () {
+        trainingDataWriteStream.end();
+        onUploadingFinishedCallback();
       }
-
-      logger.info('Received daily sales', {date: salesData.createdDate});
-
-      //todo replace location with "Location's" location
-      var weather = OpenWeatherMap.history(new Date(salesData.createdDate), Meteor.settings.Location);
-
-      var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather);
-
-      console.log('pushed csv', csvEntriesForCurrentDay);
-
-      //trainingDataWriteStream.push(csvEntriesForCurrentDay);
-
-      uploadedDaysCount++;
-
-      return false;//uploadedDaysCount < self.MAX_UPLOADED_DAYS_COUNT;
-    });
+    }
   }
 };

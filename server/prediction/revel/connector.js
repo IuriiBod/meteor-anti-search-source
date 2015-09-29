@@ -57,7 +57,7 @@ Revel = {
     var bucket = new RevelSalesDataBucket();
 
     while (offset <= totalCount && toContinue) {
-      logger.info('Request to Revel server', {offset: offset, total: totalCount, daysCount: daysCount});
+      logger.info('Request to Revel server', {offset: offset, total: totalCount});
       var result = this.queryRevelOrderItems(this.DATA_LIMIT, offset);
 
       //handle Revel API error
@@ -116,7 +116,7 @@ RevelSalesDataBucket.prototype.put = function (entry) {
 RevelSalesDataBucket.prototype.getDataAndReset = function () {
   var result = {
     menuItems: this._data,
-    createdDate: this._createdDate
+    createdDate: new Date(this._createdDate)
   };
 
 //reset project
