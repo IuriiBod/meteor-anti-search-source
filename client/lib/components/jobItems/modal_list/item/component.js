@@ -21,17 +21,15 @@ component.prototype.onItemRendered = function() {
     checkboxClass: 'icheckbox_square-green'
   });
 
-  if(self.jobitem) {
-    $('input.selectedPrep').on('ifChecked', function(){
-      var id = $(this).attr("data-id");
-      if(self.name == "addPrep") {
-        var localId = Session.get("localId");
+  $('input.selectedPrep').on('ifChecked', function(){
+    var id = $(this).attr("data-id");
+    if(self.name == "addPrep") {
+      var localId = Session.get("localId");
 
-        var localMenuItem = LocalMenuItem.findOne(localId);
-        if(localMenuItem) {
-          LocalMenuItem.update({"_id": localId}, {$addToSet: {"preps": id}});
-        } 
-      }
-    });
-  }
+      var localMenuItem = LocalMenuItem.findOne(localId);
+      if(localMenuItem) {
+        LocalMenuItem.update({"_id": localId}, {$addToSet: {"preps": id}});
+      } 
+    }
+  });
 };
