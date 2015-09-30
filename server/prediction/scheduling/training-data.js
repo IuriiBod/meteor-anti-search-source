@@ -21,7 +21,7 @@ var createUpdateActualSalesFunction = function () {
       Object.keys(salesData.menuItems).forEach(function (menuItemName) {
         var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName);
         if (menuItem) {
-          ImpotedActualSales.insert({
+          ImportedActualSales.insert({
             quantity: salesData[menuItemName],
             menuItemId: menuItem._id,
             date: salesData.createdDate,
