@@ -49,3 +49,4 @@ percolate:synced-cron
 jss:meteor-google-prediction
 zephraph:namespace
 votercircle:winston
+jss:through

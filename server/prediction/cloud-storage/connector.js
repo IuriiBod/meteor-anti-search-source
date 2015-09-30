@@ -34,7 +34,6 @@ GoogleCloud = {
   //todo update this code for one location
   //todo make unique files for different locations like: "sales-data-#{locationId}"
   createTrainingDataUploadingSession: function (trainingFileName, onUploadingFinishedCallback) {
-    var through = Meteor.npmRequire('through');
     var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
     var trainingDataWriteStream = new through();
 
