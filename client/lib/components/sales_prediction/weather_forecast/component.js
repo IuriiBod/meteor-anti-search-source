@@ -1,6 +1,6 @@
 var component = FlowComponents.define('weatherForecast', function (props) {
-  this.set('date', props.date);
-  this.set('forecast', WeatherForecast.findOne({date: props.date}));
+  var date = moment(props.date);
+  this.set('forecast', WeatherForecast.findOne({date: TimeRangeQueryBuilder.forDay(date)}));
 });
 
 component.state.hasForecast = function () {
