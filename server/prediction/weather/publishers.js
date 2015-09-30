@@ -1,5 +1,10 @@
-//todo: SHOULD BE MOVED TO CLIENT SETTINGS
-LOCATION = Meteor.settings.LOCATION;
+var locationId = 1;
+
+var updateWeatherForecastForLocation = function (locationId) {
+  //check if we need an update
+
+  //if true -> query open weather map
+};
 
 
 Meteor.publish('weatherForecast', function () {
@@ -11,7 +16,8 @@ Meteor.publish('weatherForecast', function () {
   }
 
   try {
-    var forecast = OpenWeatherMap.forecast(LOCATION);
+    //todo: use dynamic location
+    var forecast = OpenWeatherMap.forecast(Meteor.settings.Location);
 
     forecast.forEach(function (weatherEntry) {
       self.added('weatherForecast', Random.id(), weatherEntry);
