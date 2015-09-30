@@ -11,15 +11,14 @@ component.state.week = function (id) {
 component.state.weekPrediction = function(id){
   var currentWeekDate = this.get('currentWeekDate');
   var monday = moment(getFirstDateOfISOWeek(currentWeekDate.week, currentWeekDate.year));
-  var sunday = moment(monday).add(6, "d");
 
   var dates = _.map(getDatesFromWeekNumberWithYear(currentWeekDate.week, new Date(currentWeekDate.year)), function(item){
     return item.date;
   });
-  var prediction = _.map(SalesPrediction.find({date:{$gte:moment(monday).toDate(), $lte: moment(sunday).endOf("d").toDate()}, menuItemId: id }, {sort: {date: 1}}).fetch(), function(item){
+  var prediction = _.map(SalesPrediction.find({date:TimeRangeQueryBuilder.forWeek(monday), menuItemId: id }, {sort: {date: 1}}).fetch(), function(item){
     return {date: moment(item.date).format('YYYY-MM-DD'), predictionQuantity: item.quantity};
   });
-  var actual = _.map(ImportedActualSales.find({date:{$gte:moment(monday).toDate(), $lte: moment(sunday).endOf("d").toDate()}, menuItemId: id }, {sort: {date: 1}}).fetch(), function(item){
+  var actual = _.map(ImportedActualSales.find({date:TimeRangeQueryBuilder.forWeek(monday), menuItemId: id }, {sort: {date: 1}}).fetch(), function(item){
     return {date: moment(item.date).format('YYYY-MM-DD'), actualQuantity: item.quantity};
   });
 
@@ -44,10 +43,8 @@ component.state.random = function (zeros) {
 };
 
 component.state.getSale = function (date) {
-  var startTime = moment(date).startOf("d").toDate();
-  var endTime = moment(date).endOf("d").toDate();
-  var predictions = SalesPrediction.find({date: {$gte: startTime, $lte: endTime}}).fetch();
-  var actual = ImportedActualSales.find({date: {$gte: startTime, $lte: endTime}}).fetch();
+  var predictions = SalesPrediction.find({date: TimeRangeQueryBuilder.forDay(date)}).fetch();
+  var actual = ImportedActualSales.find({date: TimeRangeQueryBuilder.forDay(date)}).fetch();
   var actualTotal = getTotalPrice(actual);
   var predictionTotal = getTotalPrice(predictions);
   return [predictionTotal, actualTotal];

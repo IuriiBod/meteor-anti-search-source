@@ -39,11 +39,7 @@ var predict = function (days) {
       };
 
       //checking need for notification push
-      var currentData = SalesPrediction.findOne({
-        date: {$gt: moment(dateMoment).startOf('day').toDate(), $lt: moment(dateMoment).endOf('day').toDate()},
-        menuItemId: predictItem.menuItemId
-      });
-      //console.log(moment(dateMoment).startOf('day').toDate(), moment(dateMoment).endOf('day').toDate());
+      var currentData = SalesPrediction.findOne({date: TimeRangeQueryBuilder.forDay(dateMoment), menuItemId: predictItem.menuItemId});
       if (i < 14 && currentData) {
         if (currentData.quantity != predictItem.quantity) {
           var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
@@ -52,10 +48,7 @@ var predict = function (days) {
       }
       SalesPrediction.update(
         {
-          date: {
-            $gt: moment(predictItem.date).startOf('day').toDate(),
-            $lt: moment(predictItem.date).endOf('day').toDate()
-          },
+          date: TimeRangeQueryBuilder.forDay(predictItem.date),
           menuItemId: predictItem.menuItemId
         },
         predictItem,

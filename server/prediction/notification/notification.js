@@ -26,4 +26,4 @@ Notification.prototype.send = function (receiversIds) {
     });
     this.notificationText = [];
   }
-}
+};
