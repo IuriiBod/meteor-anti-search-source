@@ -18,7 +18,7 @@ var predict = function (days) {
       var dataVector = [item._id, weather.temp, weather.main, dayOfYear];
       var quantity = parseInt(prediction.makePrediction(dataVector));
       var predictItem = {
-        date: dateMoment.toDate(),
+        date: moment(dateMoment).toDate(),
         quantity: quantity,
         updateAt: updatedAt,
         menuItemId: item._id
@@ -26,18 +26,27 @@ var predict = function (days) {
 
       //checking need for notification push
       var currentData = SalesPrediction.findOne({
-        date: {$gt: dateMoment.startOf('day').toDate(), $lt: dateMoment.endOf('day').toDate()},
+        date: {$gt: moment(dateMoment).startOf('day').toDate(), $lt: moment(dateMoment).endOf('day').toDate()},
         menuItemId: predictItem.menuItemId
       });
       //console.log(moment(dateMoment).startOf('day').toDate(), moment(dateMoment).endOf('day').toDate());
       if (i < 14 && currentData) {
         if (currentData.quantity != predictItem.quantity) {
-          console.log("YES");
           var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
           notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
         }
       }
-      SalesPrediction.update({date: predictItem.date, menuItemId: predictItem.menuItemId}, predictItem, {upsert: true});
+      SalesPrediction.update(
+        {
+          date: {
+            $gt: moment(predictItem.date).startOf('day').toDate(),
+            $lt: moment(predictItem.date).endOf('day').toDate()
+          },
+          menuItemId: predictItem.menuItemId
+        },
+        predictItem,
+        {upsert: true}
+      );
     });
   }
 

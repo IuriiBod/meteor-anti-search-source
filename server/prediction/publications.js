@@ -3,3 +3,7 @@ Meteor.publish("salesPrediction", function(year, week) {
     var sunday = moment(monday).add(6, "d");
     return SalesPrediction.find({date:{$gte: monday.toDate(), $lte: sunday.endOf("d").toDate()}});
 });
+
+Meteor.publish("importedActualSales", function () {
+    return ImportedActualSales.find();
+})

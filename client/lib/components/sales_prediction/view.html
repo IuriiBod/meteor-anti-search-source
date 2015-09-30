@@ -32,16 +32,17 @@
           <tr>
             <td><b>Sales</b></td>
             {{#each state$week}}
-              <td>${{state$getSale date}}</td>
-              <td>${{state$random 3}}</td>
+              {{#each state$getSale date}}
+                  <td>${{this}}</td>
+              {{/each}}
             {{/each}}
           </tr>
           {{#each state$menuItems}}
             <tr>
               <td>{{this.name}}</td>
               {{#each state$weekPrediction this._id}}
-                <td>{{this.quantity}}</td>
-                <td>{{state$random 2}}</td>
+                <td>{{this.predictionQuantity}}</td>
+                <td>{{this.actualQuantity}}</td>
               {{/each}}
             </tr>
           {{/each}}
