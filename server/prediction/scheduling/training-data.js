@@ -37,46 +37,44 @@ var createUpdateActualSalesFunction = function () {
   };
 };
 
+predictionModelRefreshJob = function () {
+  //todo: update it for all locations
+  var forecastData = ForecastDates.findOne({locationId: currentLocationId});
+
+  var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
+    || forecastData.lastUploadDate >= getMillisecondsFromDays(182);
+
+  var updateActualSalesFn = createUpdateActualSalesFunction();
+
+  if (needToUpdateModel) {
+    //todo: update it for organizations
+    var predictionApi = new GooglePredictionApi();
+    var updateSession = predictionApi.getUpdatePredictionModelSession();
+
+    //upload sales training data for the last year
+    Revel.uploadAndReduceOrderItems(function (salesData) {
+      updateActualSalesFn(salesData);
+      return updateSession.onDataReceived(salesData);
+    });
+
+    updateSession.onUploadingFinished();
+
+    updateLastTaskRunDateForLocation(currentLocationId);
+  } else {
+    //update sales for last day only
+    Revel.uploadAndReduceOrderItems(function (salesData) {
+      return updateActualSalesFn(salesData);
+    });
+  }
+};
+
 
 SyncedCron.add({
   name: 'Prediction model refresh',
   schedule: function (parser) {
     return parser.text('at 03:00 am');
   },
-  job: function () {
-    //todo: update it for all locations
-    var forecastData = ForecastDates.findOne({locationId: currentLocationId});
-
-    var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
-      || forecastData.lastUploadDate >= getMillisecondsFromDays(182);
-
-    var updateActualSalesFn = createUpdateActualSalesFunction();
-
-    if (needToUpdateModel) {
-      if (!HospoHero.isDevelopmentMode()) {
-        //todo: update it for organizations
-        var predictionApi = new GooglePredictionApi();
-        var updateSession = predictionApi.getUpdatePredictionModelSession();
-
-        //upload sales training data for the last year
-        Revel.uploadAndReduceOrderItems(function (salesData) {
-          updateActualSalesFn(salesData);
-          return updateSession.onDataReceived(salesData);
-        });
-
-        updateSession.onUploadingFinished();
-
-        updateLastTaskRunDateForLocation(currentLocationId);
-      }
-
-
-    } else {
-      //update sales for last day only
-      Revel.uploadAndReduceOrderItems(function (salesData) {
-        return updateActualSalesFn(salesData);
-      });
-    }
-  }
+  job: predictionModelRefreshJob
 });
 
 
