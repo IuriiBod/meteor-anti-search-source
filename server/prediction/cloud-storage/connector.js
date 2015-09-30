@@ -1,13 +1,5 @@
 var CloudSettings = Meteor.settings.GoogleCloud;
 
-//todo move this method definition 1 level up
-Namespace('HospoHero.predictionUtils', {
-  getMenuItemByRevelName: function (menuItemName) {
-    //todo update code for organization
-    return MenuItems.findOne({$or: [{revelName: menuItemName}, {name: menuItemName}]})
-  }
-});
-
 var CsvEntryGenerator = {
   generate: function (salesData, weather) {
     var csvString = '';

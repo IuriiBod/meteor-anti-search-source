@@ -3,7 +3,7 @@ var API_KEY = Meteor.settings.OpenWeatherMap.KEY;
 
 OpenWeatherMap = {
   _convertDtToDate: function (dt) {
-    return moment(new Date(dt * 1000)).format('YYYY-MM-DD');
+    return new Date(dt * 1000);
   },
 
   _convertDateToDt: function (date) {
@@ -75,6 +75,26 @@ OpenWeatherMap = {
     return {
       temp: Math.floor(Math.random() * 100 % 60 - 30),
       main: ['Clear', 'Clouds', 'Rain', 'Snow'][Math.floor(Math.random() * 10 % 4)]
+    }
+  },
+
+  updateWeatherForecastForLocation: function (locationId) {
+    //check if we need an update forecast
+    var today = moment().startOf('day').toDate();//today is start of day
+
+    var lastForecast = WeatherForecast.findOne({locationId: locationId, date: {$gte: today}}, {sort: {date: 1}});
+    var needUpdate = !lastForecast || !moment(lastForecast.updatedAt).isSame(today, 'day');
+
+    if (needUpdate) {
+      console.log('need update');
+      var weatherForecastList = OpenWeatherMap.forecast(Meteor.settings.Location);
+      weatherForecastList.forEach(function (forecast) {
+        var forecastEntry = _.extend(forecast, {
+          updatedAt: today,
+          locationId: locationId
+        });
+        WeatherForecast.update({locationId: locationId, date: today}, {$set: forecastEntry}, {upsert: true});
+      });
     }
   }
 };
