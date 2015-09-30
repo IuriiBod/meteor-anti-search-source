@@ -29,9 +29,10 @@ var predict = function (days) {
         date: {$gt: dateMoment.startOf('day').toDate(), $lt: dateMoment.endOf('day').toDate()},
         menuItemId: predictItem.menuItemId
       });
-
+      //console.log(moment(dateMoment).startOf('day').toDate(), moment(dateMoment).endOf('day').toDate());
       if (i < 14 && currentData) {
         if (currentData.quantity != predictItem.quantity) {
+          console.log("YES");
           var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
           notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
         }
@@ -73,6 +74,7 @@ var salesPredictionUpdateJob = function () {
         ForecastDates.update({locationId: currentLocationId}, {$set: {lastThree: date.toDate()}});
       }
       else {
+
         predict(2);
       }
     }
@@ -83,7 +85,7 @@ var salesPredictionUpdateJob = function () {
 SyncedCron.add({
   name: 'Forecast refresh',
   schedule: function (parser) {
-    return parser.text('at 12:56 pm');
+    return parser.text('at 05:00 am');
   },
   job: salesPredictionUpdateJob
 });
