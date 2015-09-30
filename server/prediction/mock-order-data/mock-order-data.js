@@ -3,6 +3,7 @@ MockOrderData = function MockOrderData() {
 };
 
 MockOrderData.prototype.load = function () {
+    var data = this.data;
     var skip = Math.floor(Math.random() * (MenuItems.find().count()-15));
     var items = MenuItems.find({},{skip: skip, limit: 15}).fetch();
     var result = {
@@ -13,15 +14,15 @@ MockOrderData.prototype.load = function () {
         },
         objects:[]
     };
+
     _.each(items, function (item) {
         var pushObject ={
-            created_date: this.data.toDate().toString(),
+            created_date: moment(data).toString(),
             product_name_override: item.name,
             quantity: Math.floor(Math.random() * 10 +1)
-        }
+        };
         result.objects.push(pushObject);
     });
-    this.data.substract(1, "d");
+    this.data = data.subtract(1, "d");
     return result
 };
-
