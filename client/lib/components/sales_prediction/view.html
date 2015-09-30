@@ -39,13 +39,7 @@
             {{/each}}
           </tr>
           {{#each state$menuItems}}
-            <tr>
-              <td>{{this.name}}</td>
-              {{#each state$weekPrediction this._id}}
-                <td>{{this.predictionQuantity}}</td>
-                <td>{{this.actualQuantity}}</td>
-              {{/each}}
-            </tr>
+            {{> render component="predictionSalesRow" currentWeekDate=state$currentWeekDate menuItem=this}}
           {{/each}}
           </tbody>
         </table>
