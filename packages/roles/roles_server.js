@@ -11,15 +11,13 @@ if(Meteor.isServer) {
   Meteor.publish('userRole', function() {
     check(this.userId, String);
 
-    var user = Meteor.users.findOne(this.userId, {
-      fields: { currentArea: 1, relationIds: 1 }
-    });
+    var user = Meteor.users.findOne(this.userId);
 
-    if (user && user.currentArea) {
+    if (user && user.defaultArea) {
       return [
-        Meteor.roles.find({_id: user.relationIds[user.currentArea]}),
+        Meteor.roles.find({_id: user.roles[user.defaultArea]}),
         Meteor.users.find({_id: this.userId}, {
-          fields: { relationIds: 1 }
+          fields: { relations: 1, roles: 1 }
         })
       ];
     }

@@ -42,11 +42,15 @@ Roles.getPermissions = function() {
  * Return roles array
  * @returns {Array}
  */
-Roles.getRoles = function(organizationId) {
+Roles.getRoles = function() {
+  var organizationId = HospoHero.isInOrganization();
   if(organizationId) {
-    return Meteor.roles.find({organizationId: organizationId}, {sort: {name: 1}}).fetch();
-  } else {
-    return Meteor.roles.find({}, {sort: {name: 1}}).fetch();
+    return Meteor.roles.find({
+      $or: [
+        { default: true },
+        { "relations.organizationId": organizationId }
+      ]
+    }, {sort: {name: 1}}).fetch();
   }
 };
 
@@ -94,7 +98,8 @@ Roles.addRole = function(name, permissions) {
 
   Meteor.roles.insert({
     name: name,
-    permissions: permissions
+    permissions: permissions,
+    relations: HospoHero.getRelationsObject()
   });
   return true;
 };
@@ -124,16 +129,19 @@ Roles.deleteRole = function(id) {
 
 Roles.userIsInRole = function(roleName, userId, areaId) {
   var role = Roles.getRoleByName(roleName);
-  var searchObject = {
-    _id: userId
-  };
+  var orArray = [];
 
   if(areaId) {
-    searchObject["roles." + areaId] = role._id;
-  } else {
-    searchObject["roles.defaultRole"] = role._id;
+    var orObject = {};
+    orObject["roles." + areaId] = role._id;
+    orArray.push(orObject);
   }
-  return !!Meteor.users.findOne(searchObject);
+  orArray.push({"roles.defaultRole": role._id});
+
+  return !!Meteor.users.findOne({
+    _id: userId,
+    $or: orArray
+  });
 };
 
 Roles.hasPermission = function(permissions) {

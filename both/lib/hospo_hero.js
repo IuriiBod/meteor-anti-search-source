@@ -40,47 +40,32 @@ Namespace('HospoHero', {
     }
     if(!areaId) {
       var user = Meteor.users.findOne({_id: userId});
-      if(user && user.defaultArea) {
-        areaId = user.defaultArea;
-      } else {
-        areaId = 'defaultRole';
-      }
+      areaId = user && user.defaultArea ? user.defaultArea : 'defaultRole';
     }
     return Roles.userIsInRole(roleName, userId, areaId);
   },
 
   isAdmin: function(userId, areaId) {
-    return this.isInRole('Admin', userId, areaId)
+    return HospoHero.isInRole('Admin', userId, areaId)
   },
 
   isManager: function(userId, areaId) {
-    return this.isInRole('Manager', userId, areaId)
+    return HospoHero.isInRole('Manager', userId, areaId)
   },
 
   isWorker: function(userId, areaId) {
-    return this.isInRole('Worker', userId, areaId)
+    return HospoHero.isInRole('Worker', userId, areaId)
   },
 
   isInOrganization: function(userId) {
     userId = userId ? userId : Meteor.userId();
-    if(!userId) {
-      return false;
-    }
-
     var user = Meteor.users.findOne({_id: userId});
-    if(user && user.relations && user.relations.organizationId) {
-      return user.relations.organizationId;
-    } else {
-      return false;
-    }
+    return user && user.relations && user.relations.organizationId ? user.relations.organizationId : false;
   },
 
   isOrganizationOwner: function(orgId, userId) {
     userId = userId ? userId : Meteor.userId();
     orgId = !orgId ? HospoHero.isInOrganization(userId) : orgId;
-    if(!orgId) {
-      return false;
-    }
     return Organizations.find({_id: orgId, owner: userId}).count() > 0;
   },
 
@@ -91,18 +76,12 @@ Namespace('HospoHero', {
 
   getDefaultArea: function() {
     var user = Meteor.user();
-    if(user && user.defaultArea) {
-      return user.defaultArea;
-    } else {
-      return false;
-    }
+    return user && user.defaultArea ? user.defaultArea : false;
   },
 
   getCurrentArea: function() {
     var defaultArea = HospoHero.getDefaultArea();
-    if(defaultArea) {
-      return Areas.findOne({_id: defaultArea});
-    }
+    return defaultArea ? Areas.findOne({_id: defaultArea}) : false;
   },
 
   getRelationsObject: function(areaId) {
