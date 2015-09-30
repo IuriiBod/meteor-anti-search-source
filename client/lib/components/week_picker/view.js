@@ -1,10 +1,6 @@
-getDateByWeekDate = function (weekDate) {
-  return moment(weekDate.year, 'YYYY').week(weekDate.week).toDate()
-};
-
 Template.weekPicker.onRendered(function () {
   var onGetCurrentDate = (function (weekDate) {
-    var initialDate = getDateByWeekDate(weekDate);
+    var initialDate = HospoHero.dateUtils.getDateByWeekDate(weekDate);
     this.$(".datepicker").datepicker({
       todayHighlight: true,
       calendarWeeks: true,
@@ -34,7 +30,7 @@ Template.weekPicker.onRendered(function () {
       week: weekNumber
     }).then(function (savedWeekDate) {
       if (savedWeekDate) {
-        this.$(".datepicker").datepicker('setDate', getDateByWeekDate(savedWeekDate))
+        this.$(".datepicker").datepicker('setDate', HospoHero.dateUtils.getDateByWeekDate(savedWeekDate))
       }
     });
   }).bind(this);
