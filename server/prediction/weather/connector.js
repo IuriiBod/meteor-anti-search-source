@@ -23,7 +23,6 @@ OpenWeatherMap = {
       var res = HTTP.get(WEATHER_URL + route, {
         params: allParams
       });
-
       return res.data;
     } catch (err) {
       logger.error('OpenWeatherMap Access Error', {params: params, error: err});
