@@ -1,18 +1,20 @@
 var CloudSettings = Meteor.settings.GoogleCloud;
 
+//todo move this method definition 1 level up
+Namespace('HospoHero.predictionUtils', {
+  getMenuItemByRevelName: function (menuItemName) {
+    //todo update code for organization
+    return MenuItems.findOne({$or: [{revelName: menuItemName}, {name: menuItemName}]})
+  }
+});
+
 var CsvEntryGenerator = {
   generate: function (salesData, weather) {
     var csvString = '';
     var dayOfYear = moment(salesData.createdDate).dayOfYear();
 
     _.each(salesData.menuItems, function (selledCount, menuItemName) {
-      //todo update code for organization
-      var menuItem = MenuItems.findOne({revelName: menuItemName});
-      if (!menuItem) {
-        //try find by name
-        //todo update code for organization
-        menuItem = MenuItems.findOne({name: menuItemName});
-      }
+      var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName);
 
       if (menuItem) {
         csvString += selledCount + ', "' + menuItem._id + '", ' + weather.temp + ', "' + weather.main + '", ' + dayOfYear + '\n';
