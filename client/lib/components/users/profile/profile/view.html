@@ -54,7 +54,7 @@
 
           <h4>Pay rates</h4>  
           <p>Weekdays ($): 
-          {{#if state$isAdminAndManagerPermitted}}
+          {{#if isAdmin}}
             <a href="#" id="weekdaysrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.weekdays}}</a>
           {{else}}
             {{#if state$basic.profile.payrates.weekdays}}
@@ -65,7 +65,7 @@
           {{/if}}
           </p>
           <p>Saturday ($): 
-           {{#if state$isAdminAndManagerPermitted}}
+           {{#if isAdmin}}
             <a href="#" id="saturdayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.saturday}}</a>
             {{else}}
               {{#if state$basic.profile.payrates.saturday}}
@@ -76,7 +76,7 @@
             {{/if}}
           </p>
           <p>Sunday ($):  
-           {{#if state$isAdminAndManagerPermitted}}
+           {{#if isAdmin}}
             <a href="#" id="sundayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.sunday}}</a>
             {{else}} 
               {{#if state$basic.profile.payrates.sunday}}
@@ -87,47 +87,10 @@
             {{/if}}
           </p>
           <br>
-
-          <!-- <h4>Availability</h4>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Monday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Tuesday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Wednesday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Thursday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Friday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Saturday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Sunday 
-            </label>
-          </div> -->
           <br>
 
           <h4>No. of shifts per week</h4>             
-          {{#if state$isAdminAndManagerPermitted}}
+          {{#if isAdmin}}
             <select class="form-control shiftsPerWeek" data-id="{{state$basic._id}}">
             {{#each state$shiftsPerWeek}}
               <option selected="{{this.selected}}">{{this.shift}}</option>
@@ -141,8 +104,8 @@
             {{/if}}
           {{/if}}
 
-          {{#if state$isAdminAndManagerPermitted}}
-            {{#if state$isMe}}
+          {{#if isAdmin}}
+            {{#if isMe state$id}}
                 {{#if state$hasResignDate}}
                     <br />
                     <h4>Resigned date</h4>

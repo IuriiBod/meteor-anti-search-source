@@ -3,6 +3,5 @@ var component = FlowComponents.define('roleItem', function (props) {
 });
 
 component.state.roleName = function () {
-  var name = this.get('role').name;
-  return name;
+  return this.get('role').name;
 };

@@ -48,4 +48,4 @@ Template.sections.rendered = function() {
       }
     }
   });
-}
+};
