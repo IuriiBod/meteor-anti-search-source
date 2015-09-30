@@ -111,6 +111,7 @@ underscore@1.0.3
 url@1.0.4
 useraccounts:bootstrap@1.11.1
 useraccounts:core@1.11.1
+votercircle:winston@0.0.3
 webapp@1.2.0
 webapp-hashing@1.0.3
 zephraph:namespace@1.2.1

@@ -43,12 +43,8 @@ var predict = function (days, locationId) {
           notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
         }
       }
-      SalesPrediction.update(
-        {
-          date: TimeRangeQueryBuilder.forDay(predictItem.date),
-          menuItemId: predictItem.menuItemId
-        },
-        predictItem, {upsert: true});
+      SalesPrediction.update({date: TimeRangeQueryBuilder.forDay(predictItem.date), menuItemId: predictItem.menuItemId}, predictItem, {upsert: true});
+
     });
 
     dateMoment.add(1, "day");
