@@ -9,13 +9,27 @@ var predict = function (days) {
   var items = MenuItems.find({}, {fields: {_id: 1}}).fetch();
   var notification = new Notification();
 
+  //forecast for 15 days
+  //todo: put real location
+  var weatherForecast = OpenWeatherMap.forecast(Meteor.settings.Location);
+  var currentWeather;
   for (var i = 1; i <= days; i++) {
     var dayOfYear = dateMoment.dayOfYear();
-    dateMoment.add(1, "d");
-    var weather = OpenWeatherMap.history(dateMoment.toDate(), 'todo: specify location here like "Ternopil,UK"');                             //here will be weather for day we need
+
+    if (i < 16) {
+      currentWeather = _.find(weatherForecast, function (dailyForecast) {
+        return dailyForecast.date === dateMoment.format('YYYY-MM-DD');
+      });
+    } else {
+      //todo: temporal. figure out typical weather
+      currentWeather = {
+        main: "Clear",
+        temp: 20.0
+      }
+    }
 
     _.each(items, function (item) {
-      var dataVector = [item._id, weather.temp, weather.main, dayOfYear];
+      var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
       var quantity = parseInt(prediction.makePrediction(dataVector));
       var predictItem = {
         date: dateMoment.toDate(),
@@ -38,6 +52,8 @@ var predict = function (days) {
       }
       SalesPrediction.update({date: predictItem.date, menuItemId: predictItem.menuItemId}, predictItem, {upsert: true});
     });
+
+    dateMoment.add(1, "day");
   }
 
   var receiversIds = Meteor.users.find({isAdmin: true}).fetch().map(function (user) {
