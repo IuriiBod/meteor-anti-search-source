@@ -26,13 +26,10 @@ component.state.weekPrediction = function(id){
   actual = _.sortBy(importMissingData(dates, actual, "actualQuantity"), "date");
   var result = mergeArrays(prediction, actual);
   return result;
-
 };
 
 
-
 //MOCK DATA
-//['Brisket Special', 'Caramel Banana bread', 'Cupcakes Platter', 'Eton Mess', 'Fudge Brownie - Vegan', 'Muesli'];
 
 component.state.menuItems = function () {
   return MenuItems.find().fetch();
@@ -59,8 +56,7 @@ importMissingData = function(dates, importArray, keyName){
       }
     });
 
-    if (push)
-    {
+    if (push) {
       var toPush = {
         date: dateItem
       };
