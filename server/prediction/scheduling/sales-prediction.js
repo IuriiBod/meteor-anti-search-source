@@ -1,25 +1,19 @@
-//todo: add cron job for sales prediction updating
-var currentLocationId = 1;
-
-
-var predict = function (days) {
-  var updatedAt = new Date();
+var predict = function (days, locationId) {
+  var today = new Date();
   var dateMoment = moment();
   var prediction = new GooglePredictionApi();
   var items = MenuItems.find({}, {fields: {_id: 1}}).fetch();
   var notification = new Notification();
 
   //forecast for 15 days
-  //todo: put real location
-  var weatherForecast = OpenWeatherMap.forecast(Meteor.settings.Location);
+  OpenWeatherMap.updateWeatherForecastForLocation(locationId);
+
   var currentWeather;
   for (var i = 1; i <= days; i++) {
     var dayOfYear = dateMoment.dayOfYear();
 
     if (i < 16) {
-      currentWeather = _.find(weatherForecast, function (dailyForecast) {
-        return dailyForecast.date === dateMoment.format('YYYY-MM-DD');
-      });
+      currentWeather = WeatherForecast.findOne({locationId: locationId, date: TimeRangeQueryBuilder.forDay(today)});
     } else {
       //todo: temporal. figure out typical weather
       currentWeather = {
@@ -34,12 +28,15 @@ var predict = function (days) {
       var predictItem = {
         date: moment(dateMoment).toDate(),
         quantity: quantity,
-        updateAt: updatedAt,
+        updateAt: today,
         menuItemId: item._id
       };
 
       //checking need for notification push
-      var currentData = SalesPrediction.findOne({date: TimeRangeQueryBuilder.forDay(dateMoment), menuItemId: predictItem.menuItemId});
+      var currentData = SalesPrediction.findOne({
+        date: TimeRangeQueryBuilder.forDay(dateMoment),
+        menuItemId: predictItem.menuItemId
+      });
       if (i < 14 && currentData) {
         if (currentData.quantity != predictItem.quantity) {
           var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
@@ -51,9 +48,7 @@ var predict = function (days) {
           date: TimeRangeQueryBuilder.forDay(predictItem.date),
           menuItemId: predictItem.menuItemId
         },
-        predictItem,
-        {upsert: true}
-      );
+        predictItem, {upsert: true});
     });
 
     dateMoment.add(1, "day");
@@ -67,20 +62,23 @@ var predict = function (days) {
 
 
 var salesPredictionUpdateJob = function () {
+  //todo: put real location
+  var currentLocationId = 1;
+
   var date = moment();
 
   if (!ForecastDates.findOne({locationId: currentLocationId})) {
     ForecastDates.insert({locationId: currentLocationId, lastThree: date.toDate(), lastSixWeeks: date.toDate()});
-    predict(84);
+    predict(84, currentLocationId);
   }
   else {
     var lastUpdates = ForecastDates.findOne({locationId: currentLocationId});
     if (!ForecastDates.findOne({locationId: currentLocationId}).lastThree) {
-      predict(84);
+      predict(84, currentLocationId);
     }
     else {
       if (date.diff(lastUpdates.lastSixWeeks) >= getMillisecondsFromDays(42)) {
-        predict(84);
+        predict(84, currentLocationId);
         ForecastDates.update({locationId: currentLocationId}, {
           $set: {
             lastSixWeeks: date.toDate(),
@@ -88,12 +86,12 @@ var salesPredictionUpdateJob = function () {
           }
         });
       } else if (date.diff(lastUpdates.lastThree) >= getMillisecondsFromDays(3)) {
-        predict(7);
+        predict(7, currentLocationId);
         ForecastDates.update({locationId: currentLocationId}, {$set: {lastThree: date.toDate()}});
       }
       else {
 
-        predict(2);
+        predict(2, currentLocationId);
       }
     }
   }

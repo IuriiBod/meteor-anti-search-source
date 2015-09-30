@@ -86,7 +86,6 @@ OpenWeatherMap = {
     var needUpdate = !lastForecast || !moment(lastForecast.updatedAt).isSame(today, 'day');
 
     if (needUpdate) {
-      console.log('need update');
       var weatherForecastList = OpenWeatherMap.forecast(Meteor.settings.Location);
       weatherForecastList.forEach(function (forecast) {
         var forecastEntry = _.extend(forecast, {

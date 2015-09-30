@@ -11,8 +11,6 @@ Meteor.publish('weatherForecast', function (date) {
     self.error(new Meteor.Error(403, 'Access Denied'));
   }
 
-  console.log('subscribed');
-  
   OpenWeatherMap.updateWeatherForecastForLocation(locationId);
 
   return WeatherForecast.find({date: TimeRangeQueryBuilder.forWeek(date)});
