@@ -1,5 +1,7 @@
 var locationId = 1;
 
+
+
 var updateWeatherForecastForLocation = function (locationId) {
   //check if we need an update
 
