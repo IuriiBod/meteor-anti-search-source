@@ -1,14 +1,13 @@
+//todo introduce locations here (as subscription param)
 var locationId = 1;
 
 
 Meteor.publish('weatherForecast', function (date) {
   check(date, Date);
 
-  var self = this;
-
   var haveAccess = isManagerOrAdmin(this.userId);
   if (!haveAccess) {
-    self.error(new Meteor.Error(403, 'Access Denied'));
+    this.error(new Meteor.Error(403, 'Access Denied'));
   }
 
   OpenWeatherMap.updateWeatherForecastForLocation(locationId);

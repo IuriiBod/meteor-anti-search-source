@@ -8,8 +8,8 @@
             <th></th>
             {{#each state$week}}
               <th colspan="2" style="text-align: center;">
-                {{day}}
-                <h5>{{date}}</h5>
+                {{getDayOfWeek this}}
+                <h5>{{formatDate this}}</h5>
               </th>
             {{/each}}
           </tr>
@@ -17,7 +17,7 @@
             <!--Weather-->
             <td></td>
             {{#each state$week}}
-              {{> render component="weatherForecast" date=date}}
+              {{> render component="weatherForecast" date=this}}
             {{/each}}
           </tr>
           <tr>
@@ -32,9 +32,10 @@
           <tr>
             <td><b>Sales</b></td>
             {{#each state$week}}
-              {{#each state$getSale date}}
-                  <td>${{this}}</td>
-              {{/each}}
+              {{#with state$getTotalSales this}}
+                <td>${{predicted}}</td>
+                <td>${{actual}}</td>
+              {{/with}}
             {{/each}}
           </tr>
           {{#each state$menuItems}}

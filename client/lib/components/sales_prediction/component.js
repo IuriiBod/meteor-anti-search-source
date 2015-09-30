@@ -2,23 +2,29 @@ var component = FlowComponents.define("salesPrediction", function (props) {
   this.set('currentWeekDate', props.date);
 });
 
-component.state.week = function (id) {
+component.state.week = function () {
   var currentWeekDate = this.get('currentWeekDate');
-  this.set("menuItemId", id);
-  return getDatesFromWeekNumberWithYear(currentWeekDate.week, new Date(currentWeekDate.year));
+  return HospoHero.dateUtils.getWeekDays(currentWeekDate);
 };
 
-component.state.weekPrediction = function(id){
+component.state.weekPrediction = function (id) {
   var currentWeekDate = this.get('currentWeekDate');
-  var monday = moment(getFirstDateOfISOWeek(currentWeekDate.week, currentWeekDate.year));
+  var monday = moment(HospoHero.dateUtils.getDateByWeekDate(currentWeekDate));
 
-  var dates = _.map(getDatesFromWeekNumberWithYear(currentWeekDate.week, new Date(currentWeekDate.year)), function(item){
-    return item.date;
+  var dates = _.map(HospoHero.dateUtils.getWeekDays(currentWeekDate), function (date) {
+    return moment(date).format('YYYY-MM-DD');
   });
-  var prediction = _.map(SalesPrediction.find({date:TimeRangeQueryBuilder.forWeek(monday), menuItemId: id }, {sort: {date: 1}}).fetch(), function(item){
+  
+  var prediction = _.map(SalesPrediction.find({
+    date: TimeRangeQueryBuilder.forWeek(monday),
+    menuItemId: id
+  }, {sort: {date: 1}}).fetch(), function (item) {
     return {date: moment(item.date).format('YYYY-MM-DD'), predictionQuantity: item.quantity};
   });
-  var actual = _.map(ImportedActualSales.find({date:TimeRangeQueryBuilder.forWeek(monday), menuItemId: id }, {sort: {date: 1}}).fetch(), function(item){
+  var actual = _.map(ImportedActualSales.find({
+    date: TimeRangeQueryBuilder.forWeek(monday),
+    menuItemId: id
+  }, {sort: {date: 1}}).fetch(), function (item) {
     return {date: moment(item.date).format('YYYY-MM-DD'), actualQuantity: item.quantity};
   });
 
@@ -28,30 +34,23 @@ component.state.weekPrediction = function(id){
   return result;
 };
 
-
-//MOCK DATA
-
 component.state.menuItems = function () {
   return MenuItems.find().fetch();
 };
 
-component.state.random = function (zeros) {
-  return Math.floor(Math.random() * Math.pow(10, zeros));
-};
-
-component.state.getSale = function (date) {
+component.state.getTotalSales = function (date) {
   var predictions = SalesPrediction.find({date: TimeRangeQueryBuilder.forDay(date)}).fetch();
   var actual = ImportedActualSales.find({date: TimeRangeQueryBuilder.forDay(date)}).fetch();
   var actualTotal = getTotalPrice(actual);
   var predictionTotal = getTotalPrice(predictions);
-  return [predictionTotal, actualTotal];
+  return {predicted: predictionTotal, actual: actualTotal};
 };
 
-importMissingData = function(dates, importArray, keyName){
-  _.each(dates, function(dateItem){
+var importMissingData = function (dates, importArray, keyName) {
+  _.each(dates, function (dateItem) {
     var push = true;
-    _.each(importArray, function(item){
-      if (dateItem === item.date){
+    _.each(importArray, function (item) {
+      if (dateItem === item.date) {
         push = false;
       }
     });
@@ -67,19 +66,19 @@ importMissingData = function(dates, importArray, keyName){
   return importArray
 };
 
-mergeArrays = function (array1, array2) {
-  for (var i=0; i<array1.length; i++){
+var mergeArrays = function (array1, array2) {
+  for (var i = 0; i < array1.length; i++) {
     _.extend(array1[i], array2[i])
   }
   return array1
 };
 
-getTotalPrice = function (array) {
+var getTotalPrice = function (array) {
   var total = 0;
-  _.each(array, function(item){
+  _.each(array, function (item) {
     var quantity = item.quantity;
     var price = MenuItems.findOne({_id: item.menuItemId}).salesPrice;
-    total+=quantity*price;
+    total += quantity * price;
   });
   return total;
 };
