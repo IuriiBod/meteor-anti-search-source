@@ -3,7 +3,7 @@ Notification = function Notification() {
 };
 
 Notification.prototype.add = function (date, name, prevQuantity, newQuantity) {
-  this.notificationText.push("<li>" + date + ":" + name + ": from " + prevQuantity + " to " + newQuantity + "</li>");
+  this.notificationText.push("<li>" + moment(date).format("YYYY-MM-DD") + ":" + name + ": from " + prevQuantity + " to " + newQuantity + "</li>");
 };
 
 Notification.prototype.send = function (receiversIds) {
@@ -26,4 +26,4 @@ Notification.prototype.send = function (receiversIds) {
     });
     this.notificationText = [];
   }
-}
+};

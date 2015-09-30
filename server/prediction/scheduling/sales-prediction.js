@@ -32,25 +32,28 @@ var predict = function (days) {
       var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
       var quantity = parseInt(prediction.makePrediction(dataVector));
       var predictItem = {
-        date: dateMoment.toDate(),
+        date: moment(dateMoment).toDate(),
         quantity: quantity,
         updateAt: updatedAt,
         menuItemId: item._id
       };
 
       //checking need for notification push
-      var currentData = SalesPrediction.findOne({
-        date: {$gt: dateMoment.startOf('day').toDate(), $lt: dateMoment.endOf('day').toDate()},
-        menuItemId: predictItem.menuItemId
-      });
-
+      var currentData = SalesPrediction.findOne({date: TimeRangeQueryBuilder.forDay(dateMoment), menuItemId: predictItem.menuItemId});
       if (i < 14 && currentData) {
         if (currentData.quantity != predictItem.quantity) {
           var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
           notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
         }
       }
-      SalesPrediction.update({date: predictItem.date, menuItemId: predictItem.menuItemId}, predictItem, {upsert: true});
+      SalesPrediction.update(
+        {
+          date: TimeRangeQueryBuilder.forDay(predictItem.date),
+          menuItemId: predictItem.menuItemId
+        },
+        predictItem,
+        {upsert: true}
+      );
     });
 
     dateMoment.add(1, "day");
@@ -89,6 +92,7 @@ var salesPredictionUpdateJob = function () {
         ForecastDates.update({locationId: currentLocationId}, {$set: {lastThree: date.toDate()}});
       }
       else {
+
         predict(2);
       }
     }
@@ -99,7 +103,7 @@ var salesPredictionUpdateJob = function () {
 SyncedCron.add({
   name: 'Forecast refresh',
   schedule: function (parser) {
-    return parser.text('at 12:56 pm');
+    return parser.text('at 05:00 am');
   },
   job: salesPredictionUpdateJob
 });
