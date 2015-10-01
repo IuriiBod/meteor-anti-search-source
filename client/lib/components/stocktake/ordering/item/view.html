@@ -9,13 +9,11 @@
       {{else}}
         <td>{{state$order.countOrdered}} [{{state$order.unit}}]</td>
       {{/if}}
-      {{#if state$supplier}}
-      {{else}}
-        <td>
-          <a href="" class="removeStockOrder">Delete</a>
-          <!-- |<a>Add to supplier</a> -->
-        </td>
-      {{/if}}
+      <td>
+        {{#unless state$order.orderedOn}}
+        <a href="" class="removeStockOrder">Delete</a>
+        {{/unless}}
+      </td>
     </tr>
   {{/if}}
 </template>
