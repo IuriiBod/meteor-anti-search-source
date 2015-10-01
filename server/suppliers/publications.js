@@ -1,13 +1,7 @@
 Meteor.publish("allSuppliers", function() {
   if(this.userId) {
-    var query = {};
-
-    var user = Meteor.users.findOne({_id: this.userId});
-    if(user.defaultArea) {
-      query["relations.areaId"] = user.defaultArea;
-    }
     logger.info("All suppliers have been published");
-    return Suppliers.find(query);
+    return Suppliers.find({ "relations.areaId": HospoHero.currentArea() });
   }
 });
 

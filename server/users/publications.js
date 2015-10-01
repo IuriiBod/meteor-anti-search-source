@@ -32,14 +32,7 @@ Meteor.publish("usersList", function() {
     defaultArea: 1
   };
 
-  var query = {};
-  var user = Meteor.users.findOne({_id: this.userId});
-  if(user.defaultArea) {
-    options["roles." + user.defaultArea] = 1;
-    query["relations.organizationId"] = user.relations.organizationId;
-  }
-
-  var users = Meteor.users.find(query, {fields: options}, {limit: 10});
+  var users = Meteor.users.find({ "relations.areaId": HospoHero.currentArea() }, {fields: options}, {limit: 10});
   logger.info("Userlist published");
   return users;
 });
@@ -58,16 +51,10 @@ Meteor.publish("selectedUsersList", function(usersIds) {
     defaultArea: 1
   };
 
-  var user = Meteor.users.findOne({_id: this.userId});
-  if(user.defaultArea) {
-    options["roles." + user.defaultArea] = 1;
-  }
-
   logger.info("SelectedUserlist published");
   return Meteor.users.find({
-    _id: {
-      $in: usersIds
-    }
+    _id: { $in: usersIds },
+    "relations.areaId": HospoHero.currentArea()
   }, {
     fields: options
   });

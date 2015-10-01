@@ -4,12 +4,10 @@ Meteor.publish('allJobItems', function() {
     this.error(new Meteor.Error(404, "User not found"));
   }
 
-  var query = {"status": "active"};
-
-  var user = Meteor.users.findOne({ _id: this.userId });
-  if(user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
+  var query = {
+    status: 'active',
+    "relations.areaId": HospoHero.currentArea(this.userId)
+  };
 
   logger.info("All job items published");
   return JobItems.find(query, {sort: {'name': 1}});
@@ -21,7 +19,9 @@ Meteor.publish("jobItems", function(ids) {
     this.error(new Meteor.Error(404, "User not found"));
   }
 
-  var query = {};
+  var query = {
+    "relations.areaId": HospoHero.currentArea(this.userId)
+  };
   var options = {
     sort: {
       'name': 1
@@ -32,11 +32,6 @@ Meteor.publish("jobItems", function(ids) {
     query._id = { $in: ids };
   } else {
     options.limit = 10;
-  }
-
-  var user = Meteor.users.findOne({ _id: this.userId });
-  if(user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
   }
 
   logger.info("Job items published", ids);

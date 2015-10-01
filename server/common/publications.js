@@ -9,11 +9,9 @@ Meteor.publish("allSections", function() {
     this.error(new Meteor.Error(404, "User not found"));
   }
 
-  var query = {};
-  var user = Meteor.users.findOne({_id: this.userId});
-  if(user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
+  var query = {
+    "relations.areaId": HospoHero.currentArea(this.userId)
+  };
 
   logger.info("Sections published");
   return Sections.find(query);
@@ -30,11 +28,9 @@ Meteor.publish("allCategories", function() {
     this.error(new Meteor.Error(404, "User not found"));
   }
 
-  var query = {};
-  var user = Meteor.users.findOne({_id: this.userId});
-  if(user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
+  var query = {
+    "relations.areaId": HospoHero.currentArea(this.userId)
+  };
 
   logger.info("Categories published");
   return Categories.find(query);

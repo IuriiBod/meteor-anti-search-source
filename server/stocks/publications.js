@@ -5,13 +5,9 @@ Meteor.publish("allIngredients", function() {
   }
 
   var query = {
-    "status": "active"
+    "status": "active",
+    "relations.areaId": HospoHero.currentArea()
   };
-
-  var user = Meteor.users.findOne({_id: this.userId});
-  if(user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
 
   logger.info("All ingredients published");
 
@@ -24,15 +20,12 @@ Meteor.publish("ingredients", function(ids) {
     this.error(new Meteor.Error(404, "User not found"));
   }
 
-  var query = {};
-  var options = {
-    sort: {'code': 1}
+  var query = {
+    "relations.areaId": HospoHero.currentArea()
   };
-
-  var user = Meteor.users.findOne({_id: this.userId});
-  if(user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
+  var options = {
+    sort: {'code': 1},
+  };
 
   if(ids.length > 0) {
     query._id = {$in: ids};
