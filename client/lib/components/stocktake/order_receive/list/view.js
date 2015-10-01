@@ -67,7 +67,7 @@ Template.orderReceive.events({
                 type = "pdf";
               } else if(doc.mimetype == "text/csv") {
                 type = "csv";
-              } else if(doc.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+              } else if(doc.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || doc.mimetype == "application/msword") {
                 type = "doc";
               } else {
                 type = "image";
@@ -76,6 +76,11 @@ Template.orderReceive.events({
                 "originalUrl": doc.url,
                 "type": type
               }
+
+              if(type == "doc") {
+                urls['originalUrl'] = doc.url + "/convert?format=pdf";
+              }
+
               //converting url to image
               var blob = {
                 url: doc.url,
@@ -83,6 +88,7 @@ Template.orderReceive.events({
                 isWriteable: false,
                 size: 28683
               };
+
               filepicker.convert(
                 blob,
                 {
