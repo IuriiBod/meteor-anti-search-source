@@ -73,8 +73,8 @@ OpenWeatherMap = {
     //simulate request
     Meteor._sleepForMs(100);
     return {
-      temp: Math.floor(Math.random() * 100 % 60 - 30),
-      main: ['Clear', 'Clouds', 'Rain', 'Snow'][Math.floor(Math.random() * 10 % 4)]
+      temp: Math.floor(Math.random() * 100 % 30),
+      main: ['Clear', 'Clouds', 'Rain'][Math.floor(Math.random() * 10 % 3)]
     }
   },
 
