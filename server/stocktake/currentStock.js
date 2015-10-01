@@ -59,8 +59,7 @@ Meteor.methods({
           "date": {
             $gte: new Date(start),
             $lte: new Date(end)
-          },
-          "relations.areaId": HospoHero.getDefaultArea()
+          }
         }
       },
       {$sort: {version: -1}},
