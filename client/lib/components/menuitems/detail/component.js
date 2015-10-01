@@ -1,6 +1,28 @@
 var component = FlowComponents.define('menuItemDetail', function(props) {
-  this.id = Session.get("thisMenuItem");
+  LocalMenuIngsAndPreps.remove({});
+  var id = Session.get("thisMenuItem");
+  this.id = id;
   subs.subscribe("menuItem", this.id);
+  var menu = MenuItems.findOne(this.id);
+  if(menu) {
+    var prepIds = [];
+    if(menu.jobItems.length > 0) {
+      menu.jobItems.forEach(function(prep) {
+        var doc = prep;
+        doc['type'] = "prep";
+        doc['menu'] = id;
+        LocalMenuIngsAndPreps.insert(doc);
+      });
+    }
+    if(menu.ingredients.length > 0) {
+      menu.ingredients.forEach(function(ings) {
+        var doc = ings;
+        doc['type'] = "ings";
+        doc['menu'] = id;
+        LocalMenuIngsAndPreps.insert(doc);
+      });
+    }
+  }
   this.onRendered(this.onViewRendered);
 });
 
@@ -12,17 +34,11 @@ component.state.menu = function() {
 }
 
 component.state.jobItems = function() {
-  var menu = MenuItems.findOne(this.id);
-  if(menu && menu.jobItems.length > 0) {
-    return menu.jobItems;
-  }
+  return LocalMenuIngsAndPreps.find({"type": "prep", "menu": this.id});
 }
 
 component.state.ings = function() {
-  var menu = MenuItems.findOne(this.id);
-  if(menu && menu.ingredients.length > 0) {
-    return menu.ingredients;
-  }
+  return LocalMenuIngsAndPreps.find({"type": "ings", "menu": this.id});
 }
 
 component.prototype.onViewRendered = function() {
