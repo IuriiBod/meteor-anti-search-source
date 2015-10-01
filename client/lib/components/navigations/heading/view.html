@@ -49,15 +49,15 @@
               <i class="fa fa-long-arrow-left"></i> Active Items
             {{/linkTo}}
           {{else}}
-            {{#if canEditMenu}}
-              <div class="btn-group">
-                <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                  <i class="fa fa-cog"></i>
-                  Settings
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" style="margin-left: -56px;">
+            <div class="btn-group">
+              <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false">
+                <i class="fa fa-cog"></i>
+                Settings
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" style="margin-left: -56px;">
+                {{#if canEditMenu}}
                   <li>
                     {{#linkTo route="menuItemsMaster" category="all" status="archived"}}
                       Archive Items
@@ -66,16 +66,16 @@
                   <li>
                     <a href="/menuItems/submit">Add new menu</a>
                   </li>
-                  {{#if state$isMenuListSubscribed}}
-                    <li><a href="#" class="unSubscribeMenuList"><i class="fa fa-lg fa-rss text-info"></i>
-                      Unsubscribe</a></li>
-                  {{else}}
-                    <li><a href="#" class="subscribeMenuList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
-                    </li>
-                  {{/if}}
-                </ul>
-              </div>
-            {{/if}}
+                {{/if}}
+                {{#if state$isMenuListSubscribed}}
+                  <li><a href="#" class="unSubscribeMenuList"><i class="fa fa-lg fa-rss text-info"></i>
+                    Unsubscribe</a></li>
+                {{else}}
+                  <li><a href="#" class="subscribeMenuList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
+                  </li>
+                {{/if}}
+              </ul>
+            </div>
           {{/if}}
         </div>
       {{/if}}
@@ -225,13 +225,15 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" style="margin-left: -56px;">
-                <li>
-                  <a href="#" data-action="changeStatusJ" data-link="jobItemsMasterType" data-type="archive">Archived
-                    Items</a>
-                </li>
-                <li>
-                  <a href="/jobItem/submit">Add new job</a>
-                </li>
+                {{#if canEditJob}}
+                  <li>
+                    <a href="#" data-action="changeStatusJ" data-link="jobItemsMasterType" data-type="archive">Archived
+                      Items</a>
+                  </li>
+                  <li>
+                    <a href="/jobItem/submit">Add new job</a>
+                  </li>
+                {{/if}}
                 <li>
                   {{#if state$isJobListSubscribed}}
                     <a href="#" class="btn btn-white unSubscribeJobsList"><i class="fa fa-lg fa-rss text-info"></i>

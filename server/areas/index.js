@@ -7,16 +7,13 @@ Meteor.methods({
       throw new Meteor.Error("The area with the same name already exists!");
     }
     // Create area
-    var a = Areas.insert({
+    Areas.insert({
       name: area.name,
       locationId: area.locationId,
       organizationId: area.organizationId,
       status: area.status,
       createdAt: Date.now()
     });
-
-    console.log('A', a);
-    return a;
   },
   deleteArea: function (id) {
     if (!HospoHero.isOrganizationOwner()) {
@@ -26,11 +23,7 @@ Meteor.methods({
 
     Meteor.users.update({"relations.areaIds": id}, {$pull: {"relations.areaIds": id}});
 
-    Meteor.users.update({defaultArea: id}, {
-      $unset: {
-        defaultValue: ''
-      }
-    });
+    Meteor.users.update({defaultArea: id}, {$unset: {defaultArea: ''}});
   },
 
   updateAreaName: function (id, val) {
