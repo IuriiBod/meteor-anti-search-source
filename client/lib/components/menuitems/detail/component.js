@@ -11,6 +11,20 @@ component.state.menu = function() {
   }
 }
 
+component.state.jobItems = function() {
+  var menu = MenuItems.findOne(this.id);
+  if(menu && menu.jobItems.length > 0) {
+    return menu.jobItems;
+  }
+}
+
+component.state.ings = function() {
+  var menu = MenuItems.findOne(this.id);
+  if(menu && menu.ingredients.length > 0) {
+    return menu.ingredients;
+  }
+}
+
 component.prototype.onViewRendered = function() {
   this.menu = MenuItems.findOne(this.id);
   var ings = this.menu.ingredients;
