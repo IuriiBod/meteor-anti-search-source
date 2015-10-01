@@ -41,10 +41,10 @@
             </tr>
           </thead>
           <tbody>
-            {{#each state$menu.jobItems}}
+            {{#each state$jobItems}}
               {{> render component="ingsAndPreps" item=this type="prep"}}
             {{/each}}
-            {{#each state$menu.ingredients}}
+            {{#each state$ings}}
               {{> render component="ingsAndPreps" item=this type="ings"}}
             {{/each}}
           </tbody>
