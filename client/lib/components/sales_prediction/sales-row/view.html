@@ -3,7 +3,11 @@
     <td>{{state$menuItem.name}}</td>
     {{#each state$weekPrediction}}
       <td>{{this.predictionQuantity}}</td>
-      <td>{{this.actualQuantity}}</td>
+      <td>
+          <a href="#" class="actual-qty">
+              {{this.actualQuantity}}
+          </a>
+      </td>
     {{/each}}
   </tr>
 </template>
