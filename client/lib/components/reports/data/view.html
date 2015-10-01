@@ -3,7 +3,7 @@
     {{#if state$shift.startedAt}}
       <a href="#" class="editShiftStart" data-shift="{{state$shift._id}}" data-time="{{state$shift.startedAt}}">{{timeFormat state$shift.startedAt}}</a> - 
       {{#if state$shift.finishedAt}}
-        <a href="#" class="editShiftEnd" data-shift="{{state$shift._id}}" data-time="{{state$shift.finishedAt}}">{{timeFormat state$shift.finishedAt}}</a> - 
+        <a href="#" class="editShiftEnd" data-shift="{{state$shift._id}}" data-time="{{state$shift.finishedAt}}">{{timeFormat state$shift.finishedAt}}</a>
       {{else}}
         {{#if state$currentShift}}
           <a href="#" class="stopCurrentShift" data-shift="{{state$shift._id}}" data-value="{{state$nowTime}}">Now</a>
