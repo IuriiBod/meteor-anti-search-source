@@ -1,23 +1,29 @@
 Meteor.publish('jobTypes', function() {
-  var cursors = [];
-  cursors.push(JobTypes.find());
   logger.info("JobTypes publication");
-  return cursors;
+  return JobTypes.find();
 });
 
 Meteor.publish("unAssignedJobs", function() {
-  var cursors = [];
-  var jobs = Jobs.find({"status": "draft", 'onshift': null}, {limit: 10});
-  cursors.push(jobs);
+  if(!this.userId) {
+    return false;
+  }
+
+  var query = {
+    status: "draft",
+    onshift: null
+  };
+
+  var user = Meteor.users.find(this.userId);
+  if(user.defaultArea) {
+    query["relations.areaId"] = user.defaultArea;
+  }
+
   logger.info("Un-assigned jobs publication");
-  return cursors;
+  return Jobs.find(query, {limit: 10});
 });
 
 
 Meteor.publish("jobs", function(ids) {
-  var cursors = [];
-  var jobs = Jobs.find({"_id": {$in: ids}}, {limit: 10});
-  cursors.push(jobs);
   logger.info("Jobs publication");
-  return cursors;
+  return Jobs.find({"_id": {$in: ids}}, {limit: 10});
 });

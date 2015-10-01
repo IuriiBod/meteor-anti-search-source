@@ -84,14 +84,25 @@ Meteor.publish("workers", function() {
     "isActive": true
   };
 
-  var canBeRostedRoles = Meteor.roles.find({ permissions: Roles.permissions.Roster.canBeRosted.code }).fetch();
+  var user = Meteor.users.findOne({_id: this.userId});
+
+  var canBeRostedRoles = Meteor.roles.find({
+    permissions: Roles.permissions.Roster.canBeRosted.code,
+    $or: [
+      { organizationId: user.relations.organizationId },
+      { default: true }
+    ],
+    name: {
+      $ne: 'Admin'
+    }
+  }).fetch();
+
   if(canBeRostedRoles.length) {
     canBeRostedRoles = _.map(canBeRostedRoles, function(role) {
       return role._id;
     });
   }
 
-  var user = Meteor.users.findOne({_id: this.userId});
   if(user.defaultArea) {
     query["relations.areaIds"] = user.defaultArea;
     query["roles." + user.defaultArea] = {$in: canBeRostedRoles};

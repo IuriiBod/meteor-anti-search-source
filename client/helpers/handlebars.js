@@ -137,6 +137,10 @@ var helpers = {
     if(userId) {
       return (userId == id);
     }
+  },
+
+  equal: function (a, b) {
+    return (a === b);
   }
 };
 

@@ -5,14 +5,12 @@ var component = FlowComponents.define("schedulingShift", function(props) {
 component.state.name = function() {
   var name = null;
   if(this.shift) {
-    var startTime = this.shift.startTime;
-    var endTime = this.shift.endTime;
-    startTime = moment(startTime).format("hh:mm A");
-    endTime = moment(endTime).format("hh:mm A");
+    var startTime = moment(this.shift.startTime).format("hh:mm A");
+    var endTime = moment(this.shift.endTime).format("hh:mm A");
     name = startTime + " - " + endTime + " Shift";
   }
   return name;
-}
+};
 
 component.state.assignedWorker = function() {
   if(this.shift) {
@@ -21,42 +19,29 @@ component.state.assignedWorker = function() {
       return user.username;
     }
   }
-}
+};
 
 component.state.id = function() {
   if(this.shift) {
     return this.shift._id;
   }
-}
+};
 
 component.state.jobs = function() {
   if(this.shift) {
-    if(this.shift.jobs.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.shift.jobs.length > 0;
   }
-}
+};
 
 component.state.jobsList = function() {
   if(this.shift) {
-    var jobs = Jobs.find({"_id": {$in: this.shift.jobs}});
-    return jobs;
+    return Jobs.find({"_id": {$in: this.shift.jobs}}).fetch();
   }
-}
+};
 
 component.state.workers = function() {
-  var assigned = [];
-  assigned.push(this.shift.assignedTo);
-  var workers = null;
-  if(assigned) {
-    workers = Meteor.users.find({"_id": {$nin: assigned}, "isWorker": true});
-  } else {
-    workers = Meteor.users.find({"isWorker": true});
-  }
-  return workers;
-}
+  return Meteor.users.find({"_id": {$nin: this.shift.assignedTo}});
+};
 
 component.state.timeLine = function() {
   var line = [];
@@ -64,4 +49,4 @@ component.state.timeLine = function() {
     line.push(i + ":00");
   }
   return line;
-}
+};

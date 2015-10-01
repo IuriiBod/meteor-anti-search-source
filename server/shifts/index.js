@@ -72,6 +72,7 @@ Meteor.methods({
       logger.error("Shift not found");
       throw new Meteor.Error(404, "Shift not found");
     }
+
     var updateDoc = {};
     var startTime;
     var endTime;
@@ -153,10 +154,10 @@ Meteor.methods({
     if(Object.keys(updateDoc).length <= 0) {
       logger.error("Shift has nothing to be updated");
       throw new Meteor.Error(401, "Shift has nothing to be updated");
-    } 
+    }
+
     Shifts.update({'_id': id}, {$set: updateDoc});
     logger.info("Shift details updated", {"shiftId": id});
-    return true;
   },
 
   'deleteShift': function(id) {

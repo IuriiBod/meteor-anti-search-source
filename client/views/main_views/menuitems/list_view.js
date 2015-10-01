@@ -26,10 +26,6 @@ Template.menuItemsListMainView.events({
 Template.menuItemsListMainView.helpers({
   'isSubscribed': function() {
     var result = Subscriptions.findOne({"_id": "menulist", "subscribers": Meteor.userId()});
-    if(result) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!result;
   }
 });

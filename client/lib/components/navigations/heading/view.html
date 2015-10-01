@@ -45,7 +45,7 @@
         <div class="title-action">
 
           {{#if isArchive}}
-            {{#linkTo route="menuItemsMaster" category="all" status="all" class="btn btn-info"}}
+            {{#linkTo route="menuItemsMaster" category="all" status="all" class="btn btn-info menuItemsRefresh"}}
               <i class="fa fa-long-arrow-left"></i> Active Items
             {{/linkTo}}
           {{else}}
@@ -59,7 +59,7 @@
               <ul class="dropdown-menu" style="margin-left: -56px;">
                 {{#if canEditMenu}}
                   <li>
-                    {{#linkTo route="menuItemsMaster" category="all" status="archived"}}
+                    {{#linkTo route="menuItemsMaster" category="all" status="archived" class="menuItemsRefresh"}}
                       Archive Items
                     {{/linkTo}}
                   </li>

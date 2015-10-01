@@ -1,4 +1,11 @@
 Template.pageHeading.events({
+  'click .menuItemsRefresh': function() {
+    var options = { limit: 30 };
+    var status = Router.current().params.status;
+    options.filter = status == 'archived' ? [{"status": {$ne: "archived"}}] : [{"status": "archived"}];
+    MenuItemsSearch.cleanHistory();
+    MenuItemsSearch.search("", options);
+  },
   'click [data-action="changeStatus"]': function (event) {
     event.preventDefault();
     IngredientsListSearch.cleanHistory();
