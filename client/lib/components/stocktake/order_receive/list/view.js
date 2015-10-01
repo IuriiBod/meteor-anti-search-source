@@ -77,15 +77,35 @@ Template.orderReceive.events({
               }
               urls = {
                 "originalUrl": doc.url,
-                "convertedUrl": convertedUrl,
                 "type": type
+              }
+              //converting url to image
+              var blob = {
+                url: doc.url,
+                mimetype: 'image/png',
+                isWriteable: false,
+                size: 28683
               };
-              Meteor.call("uploadInvoice", Session.get("thisReceipt"), urls, function(err) {
-                if(err) {
-                  HospoHero.alert(err);
-                } else {
+              filepicker.convert(
+                blob,
+                {
+                  width: 200,
+                  height: 200,
+                  format: 'png',
+                  compress: true,
+                  quality: 100
+                },
+                function(new_Blob){
+                  urls['convertedUrl'] = new_Blob.url;
+                  Meteor.call("uploadInvoice", Session.get("thisReceipt"), urls, function(err) {
+                    if(err) {
+                      console.log(err);
+                      return alert(err.reason);
+                    } else {
+                    }
+                  });
                 }
-              });
+              );
             }
           });
           
@@ -94,10 +114,5 @@ Template.orderReceive.events({
           // blueimpImageFullScreen();
         }
     });
-  },
-
-  'click #viewReceipt': function(event) {
-    event.preventDefault();
-    $("#links").click();
   }
 });

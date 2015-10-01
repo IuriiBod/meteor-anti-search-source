@@ -1,7 +1,7 @@
 <template name="invoiceImage">
   <div id="links">
     {{#each state$imageUrl}}
-    <a href="{{this.convertedUrl}}" target='blank' title="Invoice">
+    <a href="{{this.originalUrl}}" target='blank' title="Invoice">
       <img src="{{this.convertedUrl}}" class="col-md-4 no-padding img-responsive">
     </a>
     {{/each}}
