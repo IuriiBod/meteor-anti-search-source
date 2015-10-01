@@ -82,17 +82,22 @@ OpenWeatherMap = {
     //check if we need an update forecast
     var today = moment().startOf('day').toDate();//today is start of day
 
-    var lastForecast = WeatherForecast.findOne({locationId: locationId, date: {$gte: today}}, {sort: {date: 1}});
+    var lastForecast = WeatherForecast.findOne({locationId: locationId, date: today});
     var needUpdate = !lastForecast || !moment(lastForecast.updatedAt).isSame(today, 'day');
 
     if (needUpdate) {
       var weatherForecastList = OpenWeatherMap.forecast(Meteor.settings.Location);
       weatherForecastList.forEach(function (forecast) {
+        var forecastDate = moment(forecast.date).startOf('day').toDate();
         var forecastEntry = _.extend(forecast, {
+          date: forecastDate,
           updatedAt: today,
           locationId: locationId
         });
-        WeatherForecast.update({locationId: locationId, date: today}, {$set: forecastEntry}, {upsert: true});
+        WeatherForecast.update({
+          locationId: locationId,
+          date: forecastDate
+        }, {$set: forecastEntry}, {upsert: true});
       });
     }
   }
