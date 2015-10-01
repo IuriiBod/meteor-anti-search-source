@@ -1,13 +1,8 @@
 Meteor.publish("allAreas", function() {
   if(this.userId) {
-    var query = {};
-    var user = Meteor.users.findOne({_id: this.userId});
-    if(user.defaultArea) {
-      query["relations.areaId"] = user.defaultArea;
-    }
     return [
-      GeneralAreas.find(query),
-      SpecialAreas.find(query)
+      GeneralAreas.find({ "relations.areaId": HospoHero.currentArea() }),
+      SpecialAreas.find({ "relations.areaId": HospoHero.currentArea() })
     ];
   }
 });
@@ -36,12 +31,9 @@ Meteor.publish("areaSpecificStockTakes", function(generalArea) {
 Meteor.publish("stocktakeMains", function(date) {
   if(this.userId) {
     var query = {
-      "stocktakeDate": new Date(date).getTime()
+      "stocktakeDate": new Date(date).getTime(),
+      "relations.areaId": HospoHero.currentArea()
     };
-    var user = Meteor.users.findOne({_id: this.userId});
-    if(user.defaultArea) {
-      query["relations.areaId"] = user.defaultArea;
-    }
     return StocktakeMain.find(query);
   }
 });
@@ -70,13 +62,7 @@ Meteor.publish("orderReceiptsByVersion", function(version) {
 
 Meteor.publish("allOrderReceipts", function() {
   if(this.userId) {
-    var query = {};
-    var user = Meteor.users.findOne({_id: this.userId});
-    if(user.defaultArea) {
-      query["relations.areaId"] = user.defaultArea;
-    }
-
-    return OrderReceipts.find(query, {sort: {"date": -1}, limit: 10});
+    return OrderReceipts.find({ "relations.areaId": HospoHero.currentArea() }, {sort: {"date": -1}, limit: 10});
   }
 });
 

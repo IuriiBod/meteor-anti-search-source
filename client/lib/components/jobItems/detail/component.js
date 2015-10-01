@@ -137,7 +137,7 @@ component.state.relatedMenus = function() {
 };
 
 component.state.getCategory = function(id) {
-  subs.subscribe("menuCategories");
+  subs.subscribe("allCategories");
   var category = Categories.findOne({_id: id});
 
   return category ? category.name : '';

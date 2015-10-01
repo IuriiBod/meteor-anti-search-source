@@ -31,13 +31,9 @@ Meteor.publish("menuItem", function(id) {
   }
   var cursor = [];
   var query = {
-    _id: id
+    _id: id,
+    "relations.areaId": HospoHero.currentArea(this.userId)
   };
-
-  var user = Meteor.users.findOne({_id: this.userId});
-  if(user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
 
   var menu = MenuItems.find(query);
   cursor.push(menu);
@@ -71,13 +67,9 @@ Meteor.publish("menuItems", function(ids) {
 
   if(Array.isArray(ids)) {
     var query = {
-      _id: { $in: ids }
+      _id: { $in: ids },
+      "relations.areaId": HospoHero.currentArea(this.userId)
     };
-
-    var user = Meteor.users.findOne({_id: this.userId});
-    if(user.defaultArea) {
-      query["relations.areaId"] = user.defaultArea;
-    }
 
     logger.info("Menu items published", ids);
     return MenuItems.find(query, {limit: 10});

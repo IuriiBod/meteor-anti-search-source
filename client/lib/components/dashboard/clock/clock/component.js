@@ -3,25 +3,35 @@ var component = FlowComponents.define("clock", function(props) {
 });
 
 component.state.clockInPermission = function() {
-  var query = {};
   var upplerLimit = new Date().getTime() + 2 * 3600 * 1000;
   var lowerLimit = new Date().getTime() - 2 * 3600 * 1000;
-  query['assignedTo'] = Meteor.userId();
+
+  var query = {
+    assignedTo: Meteor.userId(),
+    status: 'draft',
+    $and: [{
+      "startTime": {
+        $gte: lowerLimit
+      }
+    }, {
+      "startTime": {
+        $lte: upplerLimit
+      }
+    }]
+  };
+
   query["relations.areaId"] = HospoHero.getCurrentArea()._id;
-  query['status'] = 'draft';
-  query['$and'] = [];
-  query['$and'].push({"startTime": {$gte: lowerLimit}});
-  query['$and'].push({"startTime": {$lte: upplerLimit}});
+
   var shift = Shifts.findOne(query, {sort: {"startTime": 1}});
   this.set("inShift", shift);
   return !!shift;
 };
 
 component.state.clockOutPermission = function() {
-  var query = {};
-  query['assignedTo'] = Meteor.userId();
-  query["relations.areaId"] = HospoHero.getCurrentArea()._id;
-  query['status'] = 'started';
+  var query = {
+    assignedTo: Meteor.userId(),
+    status: 'started'
+  };
   var shift = Shifts.findOne(query);
   this.set("outShift", shift);
   return !!shift;

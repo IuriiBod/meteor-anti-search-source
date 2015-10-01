@@ -24,7 +24,7 @@ component.action.submit = function(text) {
       var doc = {
         "user": "@" + subscriber.username,
         "class": userClass
-      }
+      };
       taggedUsers.push(doc);  
     }
   });
@@ -61,7 +61,7 @@ component.action.submit = function(text) {
         "users": matches,
         "commentId": id,
         "type": ref_type
-      }
+      };
       Meteor.call("sendNotifications", ref, "comment", options, function(err) {
         if(err) {
           HospoHero.alert(err);
@@ -70,4 +70,4 @@ component.action.submit = function(text) {
     }
     $('.message-input').val("");
   });
-}
+};

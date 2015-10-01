@@ -4,13 +4,10 @@ Meteor.publish('comments', function (ref) {
     this.error(new Meteor.Error(404, "User not found"));
   }
   var query = {
-    "reference": ref
+    "reference": ref,
+    "relations.areaId": HospoHero.currentArea(this.userId)
   };
 
-  var user = Meteor.users.findOne({_id: this.userId});
-  if(user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
   logger.info("Comments published", ref);
   return Comments.find(query, {
     sort: {"createdOn": -1},

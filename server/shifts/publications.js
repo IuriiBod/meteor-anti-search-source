@@ -6,13 +6,9 @@ Meteor.publish("daily", function (date, worker) {
   var cursors = [];
   var query = {
     "shiftDate": new Date(date).getTime(),
-    "type": null
+    "type": null,
+    "relations.areaId": HospoHero.currentArea()
   };
-
-  var user = Meteor.users.findOne({_id: this.userId});
-  if (user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
 
   if (worker) {
     query.assignedTo = worker;
@@ -42,7 +38,9 @@ Meteor.publish("weekly", function (dates, worker, type) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var query = {};
+  var query = {
+    "relations.areaId": HospoHero.currentArea()
+  };
 
   if (dates && !type) {
     var firstDate = dates.monday;
@@ -55,11 +53,6 @@ Meteor.publish("weekly", function (dates, worker, type) {
 
   if(type) {
     query.type = type;
-  }
-
-  var user = Meteor.users.findOne({_id: this.userId});
-  if (user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
   }
 
   logger.info("Weekly shifts detailed publication");
@@ -94,13 +87,9 @@ Meteor.publish("rosteredFutureShifts", function (id) {
   var query = {
     "shiftDate": {$gte: new Date().getTime()},
     "assignedTo": id,
-    "type": null
+    "type": null,
+    "relations.areaId": HospoHero.currentArea()
   };
-
-  var user = Meteor.users.findOne({_id: this.userId});
-  if (user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
 
   logger.info("Rostered future shifts for user ", id);
 
@@ -124,13 +113,9 @@ Meteor.publish("rosteredPastShifts", function (id) {
     "shiftDate": {$lte: new Date().getTime()},
     "assignedTo": id,
     "type": null,
-    "endTime": {$lte: new Date().getTime()}
+    "endTime": {$lte: new Date().getTime()},
+    "relations.areaId": HospoHero.currentArea()
   };
-
-  var user = Meteor.users.findOne({_id: this.userId});
-  if (user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
 
   logger.info("Rostered past shifts for user ", id);
   return Shifts.find(query, {
@@ -148,13 +133,9 @@ Meteor.publish("openedShifts", function () {
     "shiftDate": {$gte: new Date().getTime()},
     "assignedTo": null,
     "published": true,
-    "type": null
+    "type": null,
+    "relations.areaId": HospoHero.currentArea()
   };
-
-  var user = Meteor.users.findOne({_id: this.userId});
-  if (user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
-  }
 
   logger.info("Opened shifts published");
   return Shifts.find(query,

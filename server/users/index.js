@@ -15,7 +15,7 @@ Accounts.onCreateUser(function(options, user){
     delete user.profile.pinCode;
   }
   
-  // if this is the first user ever, make them an admin
+  // if this is the first user ever, make him an admin
   var role = Roles.getRoleByName('Admin');
   user.roles = {defaultRole: role._id};
   return user;

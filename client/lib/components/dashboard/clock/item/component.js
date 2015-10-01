@@ -1,9 +1,9 @@
 var component = FlowComponents.define("clockItem", function(props) {
   this.item = props.item;
-  this.item["text"] = props.text;
-  this.item["class"] = props.class;
-  this.item["tag"] = props.tag;
-  this.item["subText"] = props.subText;
+  this.item.text = props.text;
+  this.item.class = props.class;
+  this.item.tag = props.tag;
+  this.item.subText = props.subText;
 
   this.onRendered(this.onClockRendered);
 });

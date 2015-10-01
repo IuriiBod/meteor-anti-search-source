@@ -1,9 +1,9 @@
-Meteor.publish("getAllLocations", function(id) {
-  logger.info("Locations of organization "+id+" published");
-  return Locations.find({organizationId: id});
+Meteor.publish("getAllLocations", function(organizationId) {
+  logger.info("Locations of organization " + organizationId + " published");
+  return Locations.find({organizationId: organizationId});
 });
 
-Meteor.publish("getLocation", function (id) {
-  logger.info("Location "+id+" published");
-  return Locations.find({_id: id});
-})
+Meteor.publish("getLocation", function (locationId) {
+  logger.info("Location " + locationId + " published");
+  return Locations.find({_id: locationId});
+});

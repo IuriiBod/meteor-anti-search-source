@@ -11,12 +11,12 @@ component.prototype.userDetails = function() {
     image = user.services.google.picture;
   }
   this.set("profileImage", image);
-}
+};
 
 component.state.name = function() {
   return this.get("username");
-}
+};
 
 component.state.profilePicture = function() {
   return this.get("profileImage");
-}
+};
