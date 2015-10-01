@@ -2,6 +2,10 @@ var component = FlowComponents.define("showListOfIngs", function(props) {
   this.onRendered(this.renderList);
   this.id = Router.current().params._id;
 
+  var prep = JobTypes.findOne({"name": "Prep"});
+  if(prep) {
+    this.set("prep", prep._id);
+  }
   var options = {
     keepHistory: 1000 * 60 * 5,
     localSearch: true
@@ -45,11 +49,7 @@ component.prototype.setIngIds = function() {
 
 component.prototype.renderList = function() {
   var jobids = this.setJobIds();
-  var prep = JobTypes.findOne({"name": "Prep"});
-  if(prep) {
-    this.set("prep", prep._id);
-    this.JobItemsSearch.search("",{"ids": jobids, "type": prep._id, "limit": 5});
-  }
+  this.JobItemsSearch.search("",{"ids": jobids, "type": this.get("prep"), "limit": 5});
 
   var ingids = this.setIngIds();
   this.IngredientsSearch.search("", {"ids": ingids, "limit": 5});
@@ -74,7 +74,7 @@ component.state.getJobItems = function() {
 };
 
 component.state.getIngredients = function() {
-  return this.IngredientsSearch.getData({
+  var data = this.IngredientsSearch.getData({
     transform: function(matchText, regExp) {
       return matchText.replace(regExp, "<b>$&</b>")
     },
