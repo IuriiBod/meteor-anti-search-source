@@ -72,9 +72,7 @@ Template.jobItemsList.onRendered(function() {
       }
     });
   });
-});
 
-Template.jobItemsList.rendered = function() {
   JobItemsSearch.cleanHistory();
   var selector = {
     "type": Session.get("type"),
@@ -87,4 +85,5 @@ Template.jobItemsList.rendered = function() {
     selector.status = {$ne: 'archived'};
   }
   JobItemsSearch.search("", selector);
-}
+});
+

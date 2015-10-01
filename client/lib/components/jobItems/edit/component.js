@@ -17,9 +17,6 @@ component.state.initialHTML = function () {
   var id = Session.get("thisJobItem");
   var item = JobItems.findOne(id);
   var type = item.type;
-  if(Session.get("jobType")) {
-    type = Session.get("jobType");
-  }
   var jobtype = JobTypes.findOne(type);
   if(jobtype && jobtype.name === "Prep") {
     if(item.recipe) {
@@ -245,26 +242,29 @@ component.action.submit = function (id, info) {
       return alert(err.reason);
     } else {
       var jobBefore = Session.get("updatingJob");
-      var desc = createNotificationText(id, jobBefore, info);
+      var jobtype = JobTypes.findOne(jobBefore.type);
+      if(jobtype) {
+        var desc = createNotificationText(id, jobBefore, info);
 
-      var options = {
-        "type": "edit",
-        "title": jobBefore.name + " " + jobBefore.type + " job has been updated",
-        "text": desc
-      };
-      Meteor.call("sendNotifications", id, "job", options, function (err) {
-        if (err) {
-          console.log(err);
-          return alert(err.reason);
-        } else {
-          var goback = Session.get("goBackMenu");
-          if (goback) {
-            Router.go("menuItemDetail", {"_id": goback});
+        var options = {
+          "type": "edit",
+          "title": jobBefore.name + " " + jobtype.name + " job has been updated",
+          "text": desc
+        };
+        Meteor.call("sendNotifications", id, "job", options, function (err) {
+          if (err) {
+            console.log(err);
+            return alert(err.reason);
+          } else {
+            var goback = Session.get("goBackMenu");
+            if (goback) {
+              Router.go("menuItemDetail", {"_id": goback});
+            }
           }
-        }
-      });
+        });
 
-      Router.go("jobItemDetailed", {"_id": id});
+        Router.go("jobItemDetailed", {"_id": id});
+      }
     }
   });
 };
@@ -293,17 +293,17 @@ updateLocalJobItem = function() {
   if(jobItemId) {
     var jobItem = JobItems.findOne(jobItemId);
     if(jobItem) {
-      var ings = [];
-      if(jobItem.ingredients.length > 0) {
-        jobItem.ingredients.forEach(function(item) {
-          if(ings.indexOf(item._id) < 0) {
-            ings.push(item._id);
-          }
-        });
-      }
       var type = jobItem.type;
       var itemType = JobTypes.findOne(type);
       if(itemType && itemType.name == "Prep") {
+        var ings = [];
+        if(jobItem.ingredients && jobItem.ingredients.length > 0) {
+          jobItem.ingredients.forEach(function(item) {
+            if(ings.indexOf(item._id) < 0) {
+              ings.push(item._id);
+            }
+          });
+        }
         return LocalJobItem.insert({"_id": jobItemId, "type": type, "ings": ings});
       }
     }

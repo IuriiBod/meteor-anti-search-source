@@ -20,6 +20,16 @@ Template.schedulingJob.events({
         }
       }); 
     }
+  },
+
+  'mouseenter .external-event.draft': function(event) {
+    event.preventDefault();
+    $(event.target).find('.box-wrapper').show();
+  },
+
+  'mouseleave .external-event.draft': function(event) {
+    event.preventDefault();
+    $(event.target).find('.box-wrapper').hide();
   }
 });
 

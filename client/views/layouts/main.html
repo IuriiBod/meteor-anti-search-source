@@ -39,6 +39,12 @@
   </div>
   <!-- /INGREDIENTS LIST -->
 
+  <!-- JOB ITEMS LIST-->
+  <div class="modal fade" id="jobItemListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component='jobItemsModalList' name="submitMenuItem"}}
+  </div>
+  <!-- /JOB ITEMS LIST -->  
+
   <!-- SHOW MENUS LIST -->
   <div class="modal fade" id="showMenusList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component = 'showMenusList'}}
@@ -50,12 +56,6 @@
     {{> render component='submitShift'}}
   </div>
   <!-- /SUBMIT SHIFT -->
-
-  <!-- SUBMIT JOB -->
-  <div class="modal fade" id="submitJobModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component='submitJob'}}
-  </div>
-  <!-- /SUBMIT JOB -->
 
   <!-- SHIFT PROFILE -->
   <div class="modal fade" id="shiftProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -93,4 +93,10 @@
     {{> render component = 'newSupplier'}}
   </div>
   <!-- /ADD NEW SUPPLIER-->
+
+   <!-- ADD INGREDIENT-->
+  <div class="modal fade" id="addIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component = 'submitIngredient'}}
+  </div>
+  <!-- /ADD INGREDIENT -->
 </template>

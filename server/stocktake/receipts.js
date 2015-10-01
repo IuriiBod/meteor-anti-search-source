@@ -61,11 +61,13 @@ Meteor.methods({
           logger.error("Email text does not exist");
           throw new Meteor.Error(404, "Email text does not exist");
         }
-        Email.send({
-          "to": info.to,
-          "from": Meteor.user().emails[0].address,
-          "subject": "Order from [Hospo Hero]",
-          "html": info.emailText
+        Meteor.defer(function() {
+          Email.send({
+            "to": info.to,
+            "from": Meteor.user().emails[0].address,
+            "subject": "Order from [Hospo Hero]",
+            "html": info.emailText
+          });
         });
         logger.info("Email sent to supplier", supplier);
       }
@@ -146,26 +148,31 @@ Meteor.methods({
 
     var receipt = OrderReceipts.findOne(id);
     if(receipt) {
-      var query = {};
+      var setQuery = {};
+      var pushQuery = {};
       if(info.hasOwnProperty("orderNote")) {
-        query['orderNote'] = info.orderNote;
+        setQuery['orderNote'] = info.orderNote;
       }
       if(info.hasOwnProperty("expectedDeliveryDate")) {
-        query['expectedDeliveryDate'] = info.expectedDeliveryDate;
+        setQuery['expectedDeliveryDate'] = info.expectedDeliveryDate;
       }
       if(info.hasOwnProperty("invoiceFaceValue")) {
-        query['invoiceFaceValue'] = info.invoiceFaceValue;
+        setQuery['invoiceFaceValue'] = info.invoiceFaceValue;
       }
       if(info.hasOwnProperty("receiveNote")) {
-        query['receiveNote'] = info.receiveNote;
-      }
-      if(info.hasOwnProperty("invoiceImage")) {
-        query['invoiceImage'] = info.invoiceImage;
+        setQuery['receiveNote'] = info.receiveNote;
       }
       if(info.hasOwnProperty("temperature")) {
-        query['temperature'] = info.temperature;
+        setQuery['temperature'] = info.temperature;
       }
-      OrderReceipts.update({"_id": id}, {$set: query});
+      var query = {};
+      if(setQuery.length > 0) {
+        query['$set'] = setQuery;
+      } 
+      if(pushQuery.length > 0) {
+        query['$push'] = pushQuery;
+      }
+      OrderReceipts.update({"_id": id}, query);
       logger.info("Order receipt updated", id);
 
     } else {
@@ -213,5 +220,27 @@ Meteor.methods({
         throw new Meteor.Error(404, "Receipt does not exist");
       }
     }
+  },
+
+  uploadInvoice: function(id, info) {
+    if(!Meteor.userId()) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    var userId = Meteor.userId();
+    var permitted = isManagerOrAdmin(userId);
+    if(!permitted) {
+      logger.error("User not permitted to generate receipts");
+      throw new Meteor.Error(404, "User not permitted to generate receipts");
+    }
+
+    var receipt = OrderReceipts.findOne(id);
+    if(!receipt) {
+      logger.error('Receipt not found');
+      throw new Meteor.Error(404, "Receipt not found");
+    }
+    OrderReceipts.update({"_id": id}, {$addToSet: {"invoiceImage": info}});
+    logger.info("Invoice uploaded", id);
+    return;
   }
 });

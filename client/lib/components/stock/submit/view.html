@@ -23,6 +23,7 @@
             <label class="col-sm-4 control-label">Supplier</label>
             <div class="col-sm-6 ">
               <select name="supplier" class="form-control">
+                <option value="">Select a supplier</option>
                 {{#each state$suppliers}}
                 <option value="{{_id}}">{{name}}</option>
                 {{/each}}        
@@ -33,6 +34,7 @@
             <label class="col-sm-4 control-label">Portion Ordered (b)</label>
             <div class="col-sm-6">
               <select name="portionOrdered" class="form-control">
+                <option value="">Select a unit</option>
                 {{#each state$unitsOrdered}}
                   <option>{{unit}}</option>
                 {{/each}}
@@ -52,6 +54,7 @@
             <label class="col-sm-4 control-label">Portion Used (a)</label>
             <div class="col-sm-6 ">
               <select name="portionUsed" class="form-control">
+                <option value="">Select a unit</option>
                 {{#each state$unitsUsed}}
                 <option>{{unit}}</option>
                 {{/each}}

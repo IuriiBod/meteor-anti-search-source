@@ -145,18 +145,10 @@
                         <table class="table">
                           <thead>
                             <tr>
-                              <th>
-                                Name
-                              </th>
-                              <th>
-                                Category
-                              </th>
-                              <th>
-                                Sale Price
-                              </th>
-                              <th>
-                                Status
-                              </th>
+                              <th>Name</th>
+                              <th>Category</th>
+                              <th>Sale Price</th>
+                              <th>Status</th>
                             </tr>
                           </thead>
                           {{# each state$relatedMenus}}
@@ -167,15 +159,9 @@
                                     {{name}}
                                   </a>
                                 </td>
-                                <td>
-                                  {{state$getCategory category}}
-                                </td>
-                                <td>
-                                  {{salesPrice}}
-                                </td>
-                                <td>
-                                  {{status}}
-                                </td>
+                                <td>{{state$getCategory category}}</td>
+                                <td>{{salesPrice}}</td>
+                                <td>{{status}}</td>
                               </tr>
                             </tbody>
                           {{/ each}}

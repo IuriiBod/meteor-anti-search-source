@@ -1,44 +1,10 @@
-var subs = new SubsManager();
-
 Template.submitMenuItem.helpers({
-  ingredientsList: function() {
-    var ing = Session.get("selectedIngredients");
-    if(ing) {
-      if(ing.length > 0) {
-        subs.subscribe("ingredients", ing);
-        var ingredientsList = Ingredients.find({'_id': {$in: ing}});
-        return ingredientsList;
-      }
-    }
-  },
-
-  jobItemsList: function() {
-    var jobItems = Session.get("selectedJobItems");
-    if(jobItems) {
-      if(jobItems.length > 0) {
-        subs.subscribe("jobItems", jobItems);
-        var jobItemsList = JobItems.find({'_id': {$in: jobItems}}).fetch();
-        return jobItemsList
-      }
-    }
-  },
-
   categoriesList: function() {
     return Categories.find().fetch();
   }
 });
 
 Template.submitMenuItem.events({
-  'click #showIngredientsList': function(event) {
-    event.preventDefault();
-    $("#ingredientsListModal").modal("show");
-  },
-
-  'click #showJobItemsList': function(event) {
-    event.preventDefault();
-    $("#jobItemListModal").modal("show");
-  },
-
   'submit form': function(event, instance) {
     event.preventDefault();
     var name = $(event.target).find('[name=name]').val().trim(); 
@@ -57,7 +23,6 @@ Template.submitMenuItem.events({
         instructions = ""
       }
     }
-    console.log(instructions);
 
     var ing_doc = [];
     ings.forEach(function(item) {
@@ -137,8 +102,3 @@ Template.submitMenuItem.events({
     });
   }
 });
-
-Template.submitMenuItem.rendered = function() {
-  Session.set("selectedIngredients", null);
-  Session.set("selectedJobItems", null);
-}

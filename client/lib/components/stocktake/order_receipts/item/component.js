@@ -1,6 +1,5 @@
 var component = FlowComponents.define("orderReceiptItem", function(props) {
   this.item = props.item;
-  subs.subscribe("receiptOrders", this.item._id);
 });
 
 component.state.receipt = function() {

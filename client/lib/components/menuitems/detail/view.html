@@ -13,7 +13,7 @@
                 <h3 class="panel-title">Settings</h3>
               </div>
               <div class="panel-body">
-                {{> render component="editMenuItem"}}
+                {{> render component="settingsMenuItem"}}
               </div>
             </div>
           </div>
@@ -41,10 +41,10 @@
             </tr>
           </thead>
           <tbody>
-            {{#each state$menu.jobItems}}
+            {{#each state$jobItems}}
               {{> render component="ingsAndPreps" item=this type="prep"}}
             {{/each}}
-            {{#each state$menu.ingredients}}
+            {{#each state$ings}}
               {{> render component="ingsAndPreps" item=this type="ings"}}
             {{/each}}
           </tbody>

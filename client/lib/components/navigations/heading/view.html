@@ -1,7 +1,7 @@
 <template name="pageHeading">
   <div class="row wrapper border-bottom white-bg page-heading">
     <!-- BREADCRUMBS -->
-    <div class="col-sm-7">
+    <div class="col-sm-5">
       <h2>
         {{#if state$isMenuDetailed}}
           <a href="#"
@@ -33,7 +33,7 @@
     </div>
     <!-- /BREADCRUMBS -->
 
-    <div class="col-sm-5">
+    <div class="col-sm-7">
       {{#if state$isMenuList}}
       <div class="title-action">
 
@@ -211,14 +211,16 @@
               <li>
                 <a href="#" data-action="changeStatusJ" data-link="jobItemsMasterType" data-type="archive">Archived Items</a>
               </li>
+              {{#if state$isManagerOrAdmin}}
               <li>
                 <a href="/jobItem/submit">Add new job</a>
               </li>
+              {{/if}}
               <li>
               {{#if state$isJobListSubscribed}}
-                <a href="#" class="btn btn-white unSubscribeJobsList"><i class="fa fa-lg fa-rss text-info"></i> Unsubscribe</a>
+                <a href="#" class="unSubscribeJobsList"><i class="fa fa-lg fa-rss text-info"></i> Unsubscribe</a>
               {{else}}
-                <a href="#" class="btn btn-white subscribeJobsList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
+                <a href="#" class="subscribeJobsList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
               {{/if}}
               </li>
             </ul>

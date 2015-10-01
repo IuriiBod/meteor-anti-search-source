@@ -22,12 +22,13 @@ component.state.costPerPortionUsed = function() {
 
 component.prototype.onItemRendered = function() {
   var self = this;
-  $('.i-checks').iCheck({
+  $('.i-checks.selected-Ing').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
 
-  $('input').on('ifChecked', function(event){
+  $('input.selectedIng').on('ifChecked', function(event){
     var id = $(this).attr("data-id");
+
     if(self.name == "stockModal") {
       var sareaId = Session.get("activeSArea");
       Meteor.call("assignStocksToAreas", id, sareaId, function(err) {
@@ -37,12 +38,16 @@ component.prototype.onItemRendered = function() {
         }
       });
     } else if(self.name == "editJob") {
-      var localJobItemId = Session.get("localId");
-      subs.subscribe("ingredients", [id]);
+      var localId = Session.get("localId");
 
-      var localJobItem = LocalJobItem.findOne(localJobItemId);
+      var localJobItem = LocalJobItem.findOne(localId);
       if(localJobItem) {
-        LocalJobItem.update({"_id": localJobItemId}, {$addToSet: {"ings": id}});
+        LocalJobItem.update({"_id": localId}, {$addToSet: {"ings": id}});
+      } else {
+        var localMenuItem = LocalMenuItem.findOne(localId);
+        if(localMenuItem) {
+          LocalMenuItem.update({"_id": localId}, {$addToSet: {"ings": id}});
+        }
       }
     }
   });

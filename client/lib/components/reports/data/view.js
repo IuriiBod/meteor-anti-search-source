@@ -7,7 +7,6 @@ Template.reportData.events({
       template: "HH:mm",
       viewformat: "HH:mm",
       format: "YYYY-MM-DD HH:mm",
-      defaultValue: new Date(),
       display: true,
       autotext: 'auto',
       showbuttons: true,
@@ -38,7 +37,6 @@ Template.reportData.events({
       format: "YYYY-MM-DD HH:mm",
       display: false,
       autotext: 'auto',
-      defaultValue: new Date(),
       showbuttons: true,
       combodate: {
         minuteStep: 5

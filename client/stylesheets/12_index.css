@@ -115,6 +115,7 @@ li > img {
   white-space: inherit !important;
 }
 
+<<<<<<< HEAD
 .ordering_count {
   max-width: 120px !important;
 }
@@ -132,4 +133,7 @@ li > img {
 .label-success a {
   color: #FFFFFF;
 
+}
+.chosen-select-width, .chosen-single, .chosen-drop {
+  min-width: 200px;
 }

@@ -38,6 +38,10 @@ Meteor.methods({
       logger.error("NewsFeed item not found");
       throw new Meteor.Error(404, "NewsFeed item not found");
     }
+    if(newsFeed.likes.indexOf(userId) >= 0) {
+      logger.error("You've already liked this", id);
+      throw new Meteor.Error(404, "You've already liked this");
+    }
 
     NewsFeeds.update({_id: id}, {$addToSet: {"likes": userId}});
     logger.info("NewsFeed updated", id);

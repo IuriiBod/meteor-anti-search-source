@@ -77,7 +77,7 @@ component.state.unitsOrdered = function() {
   if(ing) {
     thisIngId = ing.portionOrdered;
   }
-  return OrderingUnits.find({"_id": {$nin: [thisIngId]}});
+  return OrderingUnits.find({"unit": {$nin: [thisIngId]}});
 }
 
 component.state.unitsUsed = function() {
@@ -87,7 +87,7 @@ component.state.unitsUsed = function() {
   if(ing) {
     thisIngId = ing.portionUsed;
   }
-  return UsingUnits.find({"_id": {$nin: [thisIngId]}});
+  return UsingUnits.find({"unit": {$nin: [thisIngId]}});
 }
 
 component.action.archiveIng = function(id, state) {

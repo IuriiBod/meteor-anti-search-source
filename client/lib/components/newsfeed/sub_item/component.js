@@ -7,5 +7,19 @@ component.state.subNewsFeedPost = function() {
 } 
 
 component.state.likesCount = function(){
-  return this.post.likes.length;
+  var count = this.post.likes.length;
+  if(this.post.likes.indexOf(Meteor.userId()) >= 0) {
+    count = count - 1;  
+  }
+  if(count > 0) {
+    return count;
+  }
+}
+
+component.state.liked = function() {
+  if(this.post.likes.indexOf(Meteor.userId()) >= 0) {
+    return true;
+  } else {
+    return false;
+  }
 }
