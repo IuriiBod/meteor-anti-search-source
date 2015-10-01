@@ -111,27 +111,22 @@ Migrations.add({
 
     var collections = [
       Shifts,
-      MenuItems,
+      Sections,
+      Jobs,
+      Suppliers,
       Ingredients,
       JobItems,
-      Jobs,
-      SalesForecast,
-      ActualSales,
-      Sales,
-      SalesCalibration,
-      ForecastCafe,
+      MenuItems,
       Comments,
-      Notifications,
-      Categories,
-      Sections,
-      GeneralAreas,
       Posts,
+      Categories,
+      Notifications,
+      GeneralAreas,
+      SpecialAreas,
       StocktakeMain,
       Stocktakes,
-      CurrentStocks,
       StockOrders,
-      OrderReceipts,
-      Suppliers
+      OrderReceipts
     ];
 
     relationInsertQuery = {
