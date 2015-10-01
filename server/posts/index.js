@@ -1,11 +1,12 @@
 Meteor.methods({
-  createPost: function (text, ref) {
+  createPost: function (text, ref, options) {
     if (!HospoHero.isInOrganization()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(403, "User not permitted to create post");
     }
     check(text, String);
     HospoHero.checkMongoId(ref);
+
 
     var doc = {
       text: text,
@@ -18,6 +19,14 @@ Meteor.methods({
 
     var id = Posts.insert(doc);
     logger.info("Post inserted", id);
+
+    options.commentId = id;
+    Meteor.call("sendNotifications", ref, "comment", options, function (err) {
+      if (err) {
+        HospoHero.alert(err);
+      }
+    });
+
     return id;
   },
   updatePost: function (likelist, id) {
