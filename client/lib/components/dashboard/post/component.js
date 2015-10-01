@@ -12,11 +12,7 @@ component.state.checkifnotcomment = function () {
 
 component.state.name = function () {
   var user = Meteor.users.findOne({"_id": this.post.createdBy});
-  if (user) {
-    return user.username;
-  } else {
-    return false;
-  }
+  return user ? user.username : false;
 };
 
 component.state.profilePicture = function () {

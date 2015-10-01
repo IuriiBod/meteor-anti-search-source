@@ -100,24 +100,9 @@ var helpers = {
       return section.name;
     }
   },
-  stockById: function(id) {
-    var stock = Ingredients.findOne(id);
-    if(stock) {
-      return stock.description;
-    }
-  },
   roundCount: function(count) {
     if(count) {
       return Math.round(count * 100)/100;
-    } else {
-      return 0;
-    }
-  },
-  formatCurrency: function(amount) {
-    if(amount && amount > 0) {
-      amount = amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-      amount = amount.substring(0, amount.lastIndexOf('.'));
-      return amount;
     } else {
       return 0;
     }
@@ -141,6 +126,18 @@ var helpers = {
 
   equal: function (a, b) {
     return (a === b);
+  },
+
+  getProfileImage: function(userId) {
+    userId = userId ? userId : Meteor.userId();
+    var user = Meteor.users.findOne(userId);
+
+    var image = "/images/user-image.jpeg";
+
+    if (user && user.services && user.services.google) {
+      image = user.services.google.picture;
+    }
+    return image;
   }
 };
 
