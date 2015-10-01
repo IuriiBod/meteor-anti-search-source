@@ -6,7 +6,7 @@ Meteor.publish("allIngredients", function() {
 
   var query = {
     "status": "active",
-    "relations.areaId": HospoHero.currentArea()
+    "relations.areaId": HospoHero.currentArea(this.userId)
   };
 
   logger.info("All ingredients published");
@@ -21,7 +21,7 @@ Meteor.publish("ingredients", function(ids) {
   }
 
   var query = {
-    "relations.areaId": HospoHero.currentArea()
+    "relations.areaId": HospoHero.currentArea(this.userId)
   };
   var options = {
     sort: {'code': 1},
