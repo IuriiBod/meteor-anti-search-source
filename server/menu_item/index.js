@@ -131,6 +131,19 @@ Meteor.methods({
       console.log('UPDATE OBJ', updateDoc);
 
       logger.info("Menu item updated ", id);
+
+      var menu = MenuItems.findOne(id);
+      var options = {
+        "type": "edit",
+        "title": "Instructions on " + menu.name + " has been updated",
+        "text": ""
+      };
+      Meteor.call("sendNotifications", menuId, "menu", options, function(err) {
+        if(err) {
+          HospoHero.alert(err);
+        }
+      });
+
       return MenuItems.update({"_id": id}, {$set: updateDoc});
     }
   },

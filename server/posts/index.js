@@ -29,7 +29,7 @@ Meteor.methods({
 
     return id;
   },
-  updatePost: function (likelist, id) {
+  updatePost: function (likelist, id, options) {
     if (!HospoHero.isInOrganization()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(403, "User not permitted to update post");
@@ -39,6 +39,13 @@ Meteor.methods({
 
     Posts.update({_id: id}, {$set: {like: likelist}});
     logger.info("Post updated", id);
+
+    options.commentId = id;
+    Meteor.call("sendNotifications", ref, "post", options, function (err) {
+      if (err) {
+        HospoHero.alert(err);
+      }
+    });
     return id;
   }
 });

@@ -26,8 +26,7 @@ Template.locationSettings.onRendered(function() {
       if(id) {
         Meteor.call("updateLocationName", id, newValue, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.error);
+            HospoHero.alert(err);
           }
         });
       }
