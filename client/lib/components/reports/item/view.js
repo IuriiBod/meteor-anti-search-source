@@ -4,10 +4,7 @@ function shiftWorkTimeUpdate(id, newValue) {
     var time = shift.shiftDate;
     var newHours = moment(newValue).format("HH");
     var newMins = moment(newValue).format("mm");
-
-    var newTime = moment(time).set("hour", newHours).set("minute", newMins);
-    return newTime;
-    
+    return moment(time).set("hour", newHours).set("minute", newMins);
   }
 }
 
@@ -34,7 +31,6 @@ Template.teamHoursItem.events({
             HospoHero.alert(err);
           } else {
             $(self).removeClass('editable-unsaved');
-            return;
           }
         });
       }
@@ -61,7 +57,6 @@ Template.teamHoursItem.events({
             HospoHero.alert(err);
           } else {
             $(self).removeClass('editable-unsaved');
-            return;
           }
         });
       }

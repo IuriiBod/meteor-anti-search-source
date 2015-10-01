@@ -17,7 +17,7 @@ component.state.stockIds = function() {
     subs.subscribe("ingredients", stockIds);
   }
   return stockIds;
-}
+};
 
 component.state.countByDate = function(stockId) {
   var result = [];
@@ -30,10 +30,8 @@ component.state.countByDate = function(stockId) {
       result.push("-");
     }
   });
-  if(result && result.length > 0) {
-    return result;
-  }
-}
+  return result && result.length > 0 ? result : false;
+};
 
 component.prototype.onListRendered = function() {
   var self = this;
@@ -52,13 +50,12 @@ component.prototype.onListRendered = function() {
                 "stockId": doc._id.stockId,
                 "date": doc._id.date,
                 "count": doc.count
-              }
+              };
               CurrentStocksLocal.insert(item);
             });
           }
         }
       });
     });
-
   }
-}
+};
