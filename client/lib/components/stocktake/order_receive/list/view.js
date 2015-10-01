@@ -67,13 +67,10 @@ Template.orderReceive.events({
                 type = "pdf";
               } else if(doc.mimetype == "text/csv") {
                 type = "csv";
+              } else if(doc.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+                type = "doc";
               } else {
                 type = "image";
-              }
-              if(doc.mimetype != 'image/png') {
-                convertedUrl = doc.url + "/convert?format=png";
-              } else {
-                convertedUrl = doc.url;
               }
               urls = {
                 "originalUrl": doc.url,
@@ -106,15 +103,8 @@ Template.orderReceive.events({
                   });
                 }
               );
-
-
-              
             }
-          });
-          
-          // $(".uploadedInvoiceDiv").removeClass("hide");
-          // $("#uploadedInvoiceUrl").attr("src", url);
-          // blueimpImageFullScreen();
+          });          
         }
     });
   }
