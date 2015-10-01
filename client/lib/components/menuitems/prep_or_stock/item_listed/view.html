@@ -2,7 +2,13 @@
   <tr>
     <td>{{{state$name}}}</td>
     <td>{{state$type}}</td>
-    <td>{{state$activeTime}}</td>
+    <td>
+      {{#if state$isPrep}}
+        {{state$activeTime}}
+      {{else}}
+        -N/A-
+      {{/if}}
+    </td>
     <td>
       <div class="i-checks">
         <label>

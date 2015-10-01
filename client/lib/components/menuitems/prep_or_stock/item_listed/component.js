@@ -22,6 +22,12 @@ component.state.type = function() {
   return this.type;
 }
 
+component.state.isPrep = function() {
+  if(this.type == "prep") {
+    return true;
+  }
+}
+
 component.state.activeTime = function() {
   if(this.type == "prep") {
     return (this.item.activeTime/60);
