@@ -1,7 +1,7 @@
 Meteor.publish("allSuppliers", function() {
   if(this.userId) {
     logger.info("All suppliers have been published");
-    return Suppliers.find({ "relations.areaId": HospoHero.currentArea() });
+    return Suppliers.find({ "relations.areaId": HospoHero.currentArea(this.userId) });
   }
 });
 

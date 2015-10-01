@@ -8,7 +8,7 @@ Meteor.publish("newNotifications", function() {
     {
       "to": userId,
       "read": false,
-      "relations.areaId": HospoHero.currentArea()
+      "relations.areaId": HospoHero.currentArea(this.userId)
     },
     {fileds: {'_id': 1, "read": 1, "to": 1, "createdOn": -1}},
     {sort: {"createdOn": -1}}
@@ -26,7 +26,7 @@ Meteor.publish("readNotifications", function() {
   var notifi = Notifications.find({
       "to": userId,
       "read": true,
-      "relations.areaId": HospoHero.currentArea()
+      "relations.areaId": HospoHero.currentArea(this.userId)
     }, {
       fileds: {
         '_id': 1,
