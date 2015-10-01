@@ -18,3 +18,17 @@ component.state.currentShift = function() {
     return shift && shift.shiftDate == new Date(today).getTime();
   }
 };
+
+component.state.nowTime = function() {
+  return moment().format("YYYY-MM-DD hh:mm");
+};
+
+component.state.startTime = function() {
+  var time = moment().hours(8).minutes(0);
+  return time.format("YYYY-MM-DD HH:mm");
+};
+
+component.state.endTime = function() {
+   var time = moment().hours(17).minutes(0);
+  return time.format("YYYY-MM-DD HH:mm");
+};
