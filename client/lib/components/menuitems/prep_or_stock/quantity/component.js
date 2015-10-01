@@ -37,6 +37,7 @@ component.prototype.onItemRendered = function() {
         } else {
           newValue = 0;
         }
+        updateLocalData(ing, type, newValue, menu);
         if(type == "ings") {
           Meteor.call("addMenuIngredients", menu, [{"_id": ing, "quantity": newValue}], function(err) {
             if(err) {
@@ -61,4 +62,8 @@ component.prototype.onItemRendered = function() {
       }
     }
   });
+};
+
+function updateLocalData(_id, type, qty, menu) {
+  LocalMenuIngsAndPreps.update({"_id": _id, "menu": menu, "type": type}, {$set: {"quantity": qty}});
 };
