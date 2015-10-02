@@ -75,3 +75,15 @@ Meteor.publish("menuItems", function (ids) {
     return MenuItems.find(query, {limit: 10});
   }
 });
+
+
+Meteor.publish("areaMenuItems", function () {
+  if (!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+
+  return MenuItems.find({'relations.areaId': currentAreaId});
+});
