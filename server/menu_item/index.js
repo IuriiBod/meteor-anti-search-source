@@ -161,12 +161,6 @@ Meteor.methods({
       logger.error("Menu item does not exist");
       throw new Meteor.Error(404, "Menu item does not exist");
     }
-    //should not remove in case if menu item is used in a menu
-    var existOnSales = Sales.findOne({"menuItem": id});
-    if (existOnSales) {
-      logger.error("Can't delete. Exist on sales. Archiving Menu");
-      return MenuItems.update({'_id': id}, {$set: {"status": "archive"}});
-    }
 
     logger.info("Menu item deleted", id);
     return MenuItems.remove(id);
