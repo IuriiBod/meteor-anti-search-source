@@ -6,22 +6,13 @@ StaleSession = {
   },
 
   _setConfig: function (name, value) {
-    var conf = StaleSessionConfigs.findOne({name: name});
-    if (conf && conf.value !== value) {
-      StaleSessionConfigs.update({
-        _id: conf._id
-      }, {
+    if (this.configurationSelector) {
+      StaleSessionConfigs.update({}, {
         $set: {
           name: name,
           value: value
         }
-      });
-    }
-    else {
-      StaleSessionConfigs.insert({
-        name: name,
-        value: value
-      });
+      }, {upsert: true});
     }
   },
 
@@ -78,9 +69,11 @@ StaleSession = {
     return true;
   },
 
-  onSessionExpiration: function () { },
+  onSessionExpiration: function () {
+  },
 
-  onReset: function () { },
+  onReset: function () {
+  },
 
   configure: function (kwargs) {
     kwargs = kwargs || {};
