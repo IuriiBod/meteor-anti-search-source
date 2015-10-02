@@ -16,7 +16,7 @@ Template.predictionSalesRow.onRendered(function () {
                 var date = moment($(this).attr("data-date")).toDate();
                 var updItem ={
                     locationId: currentLocationId,
-                    quantity: newValue,
+                    quantity: parseInt(newValue),
                     date: date,
                     menuItemId: menuItemId
                 };

@@ -101,6 +101,7 @@ var RevelSalesDataBucket = function () {
 
 //if entity related to other date returns false
 RevelSalesDataBucket.prototype.put = function (entry) {
+  //console.log(entry.created_date);
   var dayOfYear = moment(entry.created_date).dayOfYear();
   var productName = entry.product_name_override;
 

@@ -18,7 +18,7 @@ MockOrderItemDataSource.prototype.load = function () {
 
   _.each(items, function (item) {
     var pushObject = {
-      created_date: self.currentDate.toDate().toString(),
+      created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
       product_name_override: item.name,
       quantity: Math.floor(Math.random() * 10 + 1)
     };
