@@ -135,8 +135,7 @@ Meteor.methods({
     HospoHero.checkMongoId(areaId);
     check(newTimeoutInMinutes, InactivityTimeout);
 
-    //todo: improve security check here (enable area's managers also edit this settings)
-    if (!HospoHero.isOrganizationOwner()) {
+    if (!HospoHero.isManager()) {
       throw new Meteor.Error(403, "User not permitted to remove users from area");
     }
 
