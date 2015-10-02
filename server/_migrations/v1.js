@@ -22,23 +22,23 @@ Migrations.add({
       }
     };
 
-    var id = Accounts.createUser({
-      username: 'admin',
-      email: 'admin@admin.com',
-      password: 'qweqweqwe'
-    });
-
-    Meteor.users.update({_id: id}, {
-      $set: {
-        pinCode: '1111'
-      }
-    });
-
-    // Find the admin user and make him an admin
-    admin = Meteor.users.findOne({username: "admin"});
+    admin = Meteor.users.findOne({username: 'Tom'});
 
     if(!admin) {
-      return false;
+      var id = Accounts.createUser({
+        username: 'admin',
+        email: 'admin@admin.com',
+        password: 'qweqweqwe'
+      });
+
+      Meteor.users.update({_id: id}, {
+        $set: {
+          pinCode: '1111'
+        }
+      });
+
+      // Find the admin user and make him an owner
+      admin = Meteor.users.findOne({username: "admin"});
     }
 
     // Create default organization
