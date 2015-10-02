@@ -80,50 +80,6 @@
         </li>
       {{/if}}
 
-      {{#if canViewForecast}}
-        <li class="{{isActiveRoute regex='salesCalibration|actualSales|cafeSalesForecast|weeklySalesForecastMenusList'}}">
-          <a href="#">
-            <i class="glyphicon glyphicon-usd"></i>
-            <span class="nav-label">Sales</span>
-          </a>
-          <ul
-            class="nav nav-second-level {{isActiveRoute regex='salesCalibration|actualSales|cafeSalesForecast|weeklySalesForecastMenusList' className='in'}}">
-            <li class="{{isActiveRoute regex='salesCalibration'}}">
-              <a href="/sales/calibration/all/all">Calibration</a>
-            </li>
-            <li class="{{isActiveRoute regex='actualSales'}}">
-              <a href="/sales/{{today}}">Actual Sales</a>
-            </li>
-            <li class="{{isActiveRoute regex='cafeSalesForecast'}}">
-              <a href="#">
-                <span class="nav-label">Forecasting</span>
-              </a>
-              <ul
-                class="nav nav-third-level {{isActiveRoute regex='cafeSalesForecast|weeklySalesForecastMenusList' className='in'}}">
-                <li class="{{isActiveRoute regex='cafeSalesForecast|weeklySalesForecastMenusList'}}">
-                  <a href="/sales/forecast/cafe/{{year}}/{{week}}">Cafe</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-
-        <li class="{{isActiveRoute name='teamHours|currentStocks'}}">
-          <a href="#">
-            <i class="fa fa-line-chart"></i>
-            <span class="nav-label">Reports</span>
-          </a>
-          <ul class="nav nav-second-level {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
-            <li class="{{isActiveRoute name='teamHours'}}">
-              <a href="/reports/{{year}}/{{week}}#shifts">Team Hours</a>
-            </li>
-            <li class="{{isActiveRoute name='currentStocks'}}">
-              <a href="/reports/stocktake/currentStocks/{{year}}/{{week}}">Daily stock</a>
-            </li>
-          </ul>
-        </li>
-      {{/if}}
-
       {{#if isOrganizationOwner}}
         <li class="{{isActiveRoute regex='admin'}}">
           <a href="/admin"><i class="fa -o fa-cog"></i> <span class="nav-label">Settings</span> </a>
