@@ -1,0 +1,9 @@
+<template name="predictionSalesRow">
+  <tr>
+    <td>{{state$menuItem.name}}</td>
+    {{#each state$weekPrediction}}
+      <td>{{this.predictionQuantity}}</td>
+      <td>{{this.actualQuantity}}</td>
+    {{/each}}
+  </tr>
+</template>

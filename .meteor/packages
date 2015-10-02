@@ -43,6 +43,20 @@ reactive-var
 ogourment:settings
 deepwell:bootstrap-datepicker2
 momentjs:moment
+
+http
+micah:google-cloud
+percolate:synced-cron
+jss:meteor-google-prediction
+
+votercircle:winston
+jss:through
+claudiojulio:blueimp-gallery
+summernote:standalone
+planettraining:jquery-fullcalendar
+thesabbir:jquery-nestable
+rochal:slimscroll
+
 natestrauser:x-editable-bootstrap
 
 percolate:migrations

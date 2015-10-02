@@ -144,11 +144,13 @@ component.state.isMenuSubscribed = function () {
   }
 };
 
+
 component.state.isJobListSubscribed = function () {
   if (this.type == "jobslist") {
     return !!Subscriptions.findOne({"_id": "joblist", "subscribers": Meteor.userId()});
   }
 };
+
 
 component.state.isIngredientsList = function () {
   return this.type == "ingredientslist";
@@ -173,6 +175,7 @@ component.state.isWeeklyRosterCreated = function () {
       }
     });
     var shifts = Shifts.find({"shiftDate": {$in: dates}}).fetch();
+
     return shifts.length > 0;
   }
 };
@@ -205,6 +208,7 @@ component.state.date = function () {
 };
 
 component.state.collapseIn = function () {
+
   return !!Session.get("collapsed");
 };
 
@@ -219,4 +223,8 @@ component.state.isArchiveJob = function () {
   var id = Router.current().params._id;
   var job = JobItems.findOne({_id: id});
   return job ? job.status == "archived" : false;
+};
+
+component.state.isSalesPrediction = function () {
+  return this.type === 'salesPrediction';
 };

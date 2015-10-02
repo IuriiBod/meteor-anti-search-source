@@ -1,0 +1,35 @@
+@import "../theme-globals.import.less";
+
+.prediction-header {
+  .datepicker {
+    min-width: 250px;
+  }
+}
+
+.prediction-component {
+
+  .panel {
+    border: 1px solid @border-color;
+    background: white;
+    color: @text-color;
+  }
+
+  .prediction-panel {
+    .panel;
+    table {
+      margin-bottom: 0;
+    }
+  }
+}
+
+//settings link functionality
+.revel-menu-link-component {
+  margin-top: 15px;
+  font-size: 16px;
+
+  .revel-link-menu-item-component {
+    &:hover {
+      background-color: @hover-gray-color;
+    }
+  }
+}

@@ -94,12 +94,12 @@
               {{#if state$isMenuSubscribed}}
                 <li class="text-info">
                   <a href="#" class="hidden-print unSubscribeMenuItemBtn" data-id="{{state$id}}"><i
-                    class="fa fa-lg fa-rss"></i> Unsubscribe</a>
+                      class="fa fa-lg fa-rss"></i> Unsubscribe</a>
                 </li>
               {{else}}
                 <li class="text-muted">
                   <a href="" class="hidden-print subscribeMenuItemBtn" data-id="{{state$id}}"><i
-                    class="fa fa-lg fa-rss"></i> Subscribe</a>
+                      class="fa fa-lg fa-rss"></i> Subscribe</a>
                 </li>
               {{/if}}
               {{#if canEditMenu}}
@@ -158,10 +158,10 @@
               <li>
                 {{#if state$isJobItemSubscribed}}
                   <a href="#" class="hidden-print unSubscribeJobItemBtn" data-id="{{state$id}}"><i
-                    class="fa fa-lg fa-rss text-info" data-id="{{state$id}}"></i> Unsubscribe</a>
+                      class="fa fa-lg fa-rss text-info" data-id="{{state$id}}"></i> Unsubscribe</a>
                 {{else}}
                   <a href="" class="hidden-print subscribeJobItemBtn" data-id="{{state$id}}"><i
-                    class="fa fa-lg fa-rss text-muted" data-id="{{state$id}}"></i> Subscribe</a>
+                      class="fa fa-lg fa-rss text-muted" data-id="{{state$id}}"></i> Subscribe</a>
                 {{/if}}
               </li>
               {{#if canEditJob}}
@@ -358,6 +358,12 @@
             </a>
           </div>
         {{/if}}
+      {{/if}}
+
+      {{#if state$isSalesPrediction}}
+        <div class="title-action prediction-header">
+          {{> render component="salesPredictionHeader"}}
+        </div>
       {{/if}}
     </div>
   </div>

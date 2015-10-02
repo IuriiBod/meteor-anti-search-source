@@ -1,5 +1,5 @@
-Meteor.publish("menuList", function(categoryId, status) {
-  if(!this.userId) {
+Meteor.publish("menuList", function (categoryId, status) {
+  if (!this.userId) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
@@ -7,16 +7,16 @@ Meteor.publish("menuList", function(categoryId, status) {
   var query = {};
 
   var user = Meteor.users.findOne({_id: this.userId});
-  if(user.currentAreaId) {
+  if (user.currentAreaId) {
     query["relations.areaId"] = user.currentAreaId;
   }
 
-  if(categoryId && categoryId != "all") {
+  if (categoryId && categoryId != "all") {
     query.category = categoryId;
   }
 
-  if(status) {
-    query.status = (status && status != 'all') ? status : { $ne: 'archived' };
+  if (status) {
+    query.status = (status && status != 'all') ? status : {$ne: 'archived'};
   }
 
   logger.info("Menu Items list published", categoryId, status);
@@ -24,8 +24,8 @@ Meteor.publish("menuList", function(categoryId, status) {
   return MenuItems.find(query, {sort: {"name": 1}, limit: 30});
 });
 
-Meteor.publish("menuItem", function(id) {
-  if(!this.userId) {
+Meteor.publish("menuItem", function (id) {
+  if (!this.userId) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
@@ -38,19 +38,19 @@ Meteor.publish("menuItem", function(id) {
   var menu = MenuItems.find(query);
   cursor.push(menu);
 
-  if(menu.length) {
+  if (menu.length) {
     var menuFetched = menu.fetch()[0];
     var ingIds = [];
-    if(menuFetched.ingredients && menuFetched.ingredients.length > 0) {
-      menuFetched.ingredients.forEach(function(ing) {
+    if (menuFetched.ingredients && menuFetched.ingredients.length > 0) {
+      menuFetched.ingredients.forEach(function (ing) {
         ingIds.push(ing._id);
       });
       cursor.push(Ingredients.find({"_id": {$in: ingIds}}));
     }
 
     var prepIds = [];
-    if(menuFetched.jobItems && menuFetched.jobItems.length > 0) {
-      menuFetched.jobItems.forEach(function(prep) {
+    if (menuFetched.jobItems && menuFetched.jobItems.length > 0) {
+      menuFetched.jobItems.forEach(function (prep) {
         prepIds.push(prep._id);
       });
       cursor.push(JobItems.find({"_id": {$in: prepIds}}));
@@ -59,19 +59,31 @@ Meteor.publish("menuItem", function(id) {
   }
 });
 
-Meteor.publish("menuItems", function(ids) {
-  if(!this.userId) {
+Meteor.publish("menuItems", function (ids) {
+  if (!this.userId) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
 
-  if(Array.isArray(ids)) {
+  if (Array.isArray(ids)) {
     var query = {
-      _id: { $in: ids },
+      _id: {$in: ids},
       "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
     };
 
     logger.info("Menu items published", ids);
     return MenuItems.find(query, {limit: 10});
   }
+});
+
+
+Meteor.publish("areaMenuItems", function () {
+  if (!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+
+  var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+
+  return MenuItems.find({'relations.areaId': currentAreaId});
 });
