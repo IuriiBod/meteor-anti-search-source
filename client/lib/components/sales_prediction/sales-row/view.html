@@ -2,12 +2,7 @@
   <tr>
     <td>{{state$menuItem.name}}</td>
     {{#each state$weekPrediction}}
-      <td>{{this.predictionQuantity}}</td>
-      <td>
-          <a href="#" class="actual-qty" data-date="{{this.date}}" data-menuId="{{state$menuItem._id}}">
-              {{this.actualQuantity}}
-          </a>
-      </td>
+      {{> render component="predictionSalesCell" displayItem=this itemId =state$menuItem._id }}
     {{/each}}
   </tr>
 </template>
