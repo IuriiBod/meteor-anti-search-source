@@ -21,12 +21,17 @@ var createUpdateActualSalesFunction = function () {
       Object.keys(salesData.menuItems).forEach(function (menuItemName) {
         var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName);
         if (menuItem) {
-          ImportedActualSales.insert({
-            quantity: salesData[menuItemName],
-            menuItemId: menuItem._id,
+          var item = {
+            locationId: currentLocationId,
+            quantity: salesData.menuItems[menuItemName],
             date: salesData.createdDate,
-            locationId: currentLocationId
-          });
+            menuItemId: menuItem._id
+          };
+          ImportedActualSales.update(
+              {date: TimeRangeQueryBuilder.forDay(item.date), menuItemId: item.menuItemId},
+              item,
+              {upsert:true}
+          );
         }
       });
 
