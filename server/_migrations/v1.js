@@ -38,10 +38,8 @@ Migrations.add({
     admin = Meteor.users.findOne({username: "admin"});
 
     if(!admin) {
-      console.log('Can\'t find an administrate user');
       return false;
     }
-    console.log('User found: ', admin);
 
     // Create default organization
     organization = {
@@ -51,7 +49,6 @@ Migrations.add({
     };
     // Add an organization
     organizationId = Organizations.insert(organization);
-    console.log('Organization created: ', organizationId);
 
     // Create default location
     location = {
@@ -66,7 +63,6 @@ Migrations.add({
     };
     // Add a location
     locationId = Locations.insert(location);
-    console.log('Location created: ', locationId);
 
     // Create default area
     area = {
@@ -78,7 +74,6 @@ Migrations.add({
     };
     // Add an area
     areaId = Areas.insert(area);
-    console.log('Area created: ', areaId);
 
     relationInsertQuery = {
       organizationId: organizationId,
@@ -107,7 +102,6 @@ Migrations.add({
         Meteor.users.update({_id: user._id}, userUpdateQuery);
       });
     }
-    console.log('Users have been updated');
 
     var collections = [
       Shifts,
@@ -145,7 +139,5 @@ Migrations.add({
         });
       }
     });
-
-    console.log('Migration successfully completed');
   }
 });

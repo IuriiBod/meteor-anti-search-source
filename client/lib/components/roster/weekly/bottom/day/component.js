@@ -19,14 +19,14 @@ component.state.shifts = function() {
     return Shifts.find({
       "shiftDate": new Date(date).getTime(),
       "type": null,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
   } else if(origin == "weeklyrostertemplate") {
     var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     return Shifts.find({
       "shiftDate": daysOfWeek.indexOf(this.name),
       "type": "template",
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
   }
 };

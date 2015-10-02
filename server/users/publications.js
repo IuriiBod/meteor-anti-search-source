@@ -10,7 +10,7 @@ Meteor.publish('profileUser', function(id) {
     profile: 1,
     username: 1,
     createdAt: 1,
-    defaultArea: 1,
+    currentAreaId: 1,
     relations: 1
   };
 
@@ -29,10 +29,10 @@ Meteor.publish("usersList", function() {
     isActive: 1,
     "profile.payrates": 1,
     "profile.resignDate": 1,
-    defaultArea: 1
+    currentAreaId: 1
   };
 
-  var users = Meteor.users.find({ "relations.areaId": HospoHero.currentArea(this.userId) }, {fields: options}, {limit: 10});
+  var users = Meteor.users.find({ "relations.areaId": HospoHero.getCurrentAreaId(this.userId) }, {fields: options}, {limit: 10});
   logger.info("Userlist published");
   return users;
 });
@@ -48,13 +48,13 @@ Meteor.publish("selectedUsersList", function(usersIds) {
     emails: 1,
     isActive: 1,
     profile: 1,
-    defaultArea: 1
+    currentAreaId: 1
   };
 
   logger.info("SelectedUserlist published");
   return Meteor.users.find({
     _id: { $in: usersIds },
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   }, {
     fields: options
   });
@@ -90,9 +90,9 @@ Meteor.publish("workers", function() {
     });
   }
 
-  if(user.defaultArea) {
-    query["relations.areaIds"] = user.defaultArea;
-    query["roles." + user.defaultArea] = {$in: canBeRostedRoles};
+  if(user.currentAreaId) {
+    query["relations.areaIds"] = user.currentAreaId;
+    query["roles." + user.currentAreaId] = {$in: canBeRostedRoles};
   }
 
   return Meteor.users.find(query);

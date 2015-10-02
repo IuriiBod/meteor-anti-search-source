@@ -17,7 +17,7 @@ var checkPermissions = function() {
 
       var tempObj = {};
       var user = Meteor.users.findOne(Meteor.userId());
-      tempObj["roles." + user.defaultArea] = { $in: roles };
+      tempObj["roles." + user.currentAreaId] = { $in: roles };
 
       return !!Meteor.users.findOne({
         _id: Meteor.userId(),

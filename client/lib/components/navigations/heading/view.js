@@ -339,7 +339,7 @@ Template.pageHeading.events({
       "shiftDate": {$in: dates},
       "published": false,
       "type": null,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     }).fetch();
 
     var tobePublished = [];
@@ -420,7 +420,7 @@ Template.pageHeading.events({
     var date = moment().format("YYYY-MM-DD");
     var stocktake = StocktakeMain.findOne({
       "stocktakeDate": new Date(date).getTime(),
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
 
     if(stocktake) {

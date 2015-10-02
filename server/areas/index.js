@@ -23,7 +23,7 @@ Meteor.methods({
 
     Meteor.users.update({"relations.areaIds": id}, {$pull: {"relations.areaIds": id}});
 
-    Meteor.users.update({defaultArea: id}, {$unset: {defaultArea: ''}});
+    Meteor.users.update({currentAreaId: id}, {$unset: {currentAreaId: ''}});
   },
 
   updateAreaName: function (id, val) {
@@ -124,8 +124,8 @@ Meteor.methods({
     };
     updateObject.$unset.roles[areaId] = '';
 
-    if (Meteor.users.find({_id: userId, defaultArea: areaId}).count() > 0) {
-      updateObject.$unset.defaultArea = '';
+    if (Meteor.users.find({_id: userId, currentAreaId: areaId}).count() > 0) {
+      updateObject.$unset.currentAreaId = '';
     }
 
     Meteor.users.update({_id: userId}, updateObject);

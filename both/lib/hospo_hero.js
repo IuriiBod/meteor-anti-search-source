@@ -52,7 +52,7 @@ Namespace('HospoHero', {
     }
     if (!areaId) {
       var user = Meteor.users.findOne({_id: userId});
-      areaId = user && user.defaultArea ? user.defaultArea : 'defaultRole';
+      areaId = user && user.currentAreaId ? user.currentAreaId : 'defaultRole';
     }
     return Roles.userIsInRole(roleName, userId, areaId);
   },
@@ -82,14 +82,14 @@ Namespace('HospoHero', {
     return Organizations.findOne({_id: organizationId});
   },
 
-  getDefaultArea: function (userId) {
+  getCurrentAreaId: function (userId) {
     var user = userId ? Meteor.users.findOne({_id: userId}) : Meteor.user();
-    return user && user.defaultArea ? user.defaultArea : false;
+    return user && user.currentAreaId ? user.currentAreaId : false;
   },
 
   getCurrentArea: function () {
-    var defaultArea = HospoHero.getDefaultArea();
-    return defaultArea ? Areas.findOne({_id: defaultArea}) : false;
+    var currentAreaId = HospoHero.getCurrentAreaId();
+    return currentAreaId ? Areas.findOne({_id: currentAreaId}) : false;
   },
 
   getRelationsObject: function (areaId) {

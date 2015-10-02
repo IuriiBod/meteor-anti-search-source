@@ -1,7 +1,7 @@
 SearchSource.defineSource('ingredients', function(searchText, options) {
   var optionFileds = {sort: {'code': 1}};
   var selector = {
-    "relations.areaId": HospoHero.getDefaultArea()
+    "relations.areaId": HospoHero.getCurrentAreaId()
   };
   if(options) {
     if(options.endingAt) {

@@ -11,7 +11,7 @@ Meteor.publish("unAssignedJobs", function() {
   var query = {
     status: "draft",
     onshift: null,
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   logger.info("Un-assigned jobs publication");

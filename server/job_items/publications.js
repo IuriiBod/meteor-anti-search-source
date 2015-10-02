@@ -6,7 +6,7 @@ Meteor.publish('allJobItems', function() {
 
   var query = {
     status: 'active',
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   logger.info("All job items published");
@@ -20,7 +20,7 @@ Meteor.publish("jobItems", function(ids) {
   }
 
   var query = {
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
   var options = {
     sort: {

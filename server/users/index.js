@@ -172,7 +172,7 @@ Meteor.methods({
         _id: Meteor.userId()
       }, {
         $set: {
-          defaultArea: areaId
+          currentAreaId: areaId
         }
       });
     }
@@ -195,7 +195,7 @@ Meteor.methods({
     }
 
     var updateQuery = {};
-    updateQuery["roles." + HospoHero.getDefaultArea()] = newRoleId;
+    updateQuery["roles." + HospoHero.getCurrentAreaId()] = newRoleId;
 
     Meteor.users.update({ _id: userId }, {$set: updateQuery});
   }

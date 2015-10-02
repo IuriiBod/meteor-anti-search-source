@@ -13,9 +13,9 @@ if(Meteor.isServer) {
 
     var user = Meteor.users.findOne(this.userId);
 
-    if (user && user.defaultArea) {
+    if (user && user.currentAreaId) {
       return [
-        Meteor.roles.find({_id: user.roles[user.defaultArea]}),
+        Meteor.roles.find({_id: user.roles[user.currentAreaId]}),
         Meteor.users.find({_id: this.userId}, {
           fields: { relations: 1, roles: 1 }
         })

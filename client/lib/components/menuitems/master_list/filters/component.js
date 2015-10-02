@@ -5,13 +5,13 @@ component.state.categories = function() {
   if(selected != "all") {
     var categories = Categories.find({
       "_id": {$nin: [selected]},
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     }).fetch();
     categories.push({"name": "All", "_id": "all"});
     return categories;
   } else {
     return Categories.find({
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     }).fetch();
   }
 };

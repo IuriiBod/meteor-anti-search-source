@@ -22,5 +22,5 @@ component.state.endTime = function() {
 };
 
 component.state.sections = function() {
-  return Sections.find({"relations.areaId": HospoHero.getDefaultArea()}).fetch();
+  return Sections.find({"relations.areaId": HospoHero.getCurrentAreaId()}).fetch();
 };

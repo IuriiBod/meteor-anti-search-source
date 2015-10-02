@@ -16,7 +16,7 @@ component.state.initialHTML = function() {
   var data = StockOrders.find({
     "version": Session.get("thisVersion"),
     "supplier": supplierId,
-    "relations.areaId": HospoHero.getDefaultArea()
+    "relations.areaId": HospoHero.getCurrentAreaId()
   }).fetch();
   var supplier = Suppliers.findOne(supplierId);
   if(supplier) {

@@ -7,7 +7,7 @@ Meteor.publish("daily", function (date, worker) {
   var query = {
     "shiftDate": new Date(date).getTime(),
     "type": null,
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   if (worker) {
@@ -39,7 +39,7 @@ Meteor.publish("weekly", function (dates, worker, type) {
     this.error(new Meteor.Error(404, "User not found"));
   }
   var query = {
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   if (dates && !type) {
@@ -88,7 +88,7 @@ Meteor.publish("rosteredFutureShifts", function (id) {
     "shiftDate": {$gte: new Date().getTime()},
     "assignedTo": id,
     "type": null,
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   logger.info("Rostered future shifts for user ", id);
@@ -114,7 +114,7 @@ Meteor.publish("rosteredPastShifts", function (id) {
     "assignedTo": id,
     "type": null,
     "endTime": {$lte: new Date().getTime()},
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   logger.info("Rostered past shifts for user ", id);
@@ -134,7 +134,7 @@ Meteor.publish("openedShifts", function () {
     "assignedTo": null,
     "published": true,
     "type": null,
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   logger.info("Opened shifts published");

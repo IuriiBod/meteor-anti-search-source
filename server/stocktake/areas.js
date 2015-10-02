@@ -10,7 +10,7 @@ Meteor.methods({
     }
     var exist = GeneralAreas.findOne({
       "name": name,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if(exist) {
       logger.error('General area name should be unique', exist);
@@ -105,7 +105,7 @@ Meteor.methods({
 
     var exist = SpecialAreas.findOne({
       "name": name,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if(exist) {
       logger.error('Special area name should be unique');

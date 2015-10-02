@@ -6,8 +6,8 @@ Meteor.role = function () {
   var user = Meteor.users.findOne(Meteor.userId());
   if (user && user.roles) {
     var roleId;
-    if (user.defaultArea) {
-      roleId = user.roles[user.defaultArea];
+    if (user.currentAreaId) {
+      roleId = user.roles[user.currentAreaId];
     } else if(user.roles.defaultRole) {
       roleId = user.roles.defaultRole;
     }

@@ -94,9 +94,9 @@ Roles.getRoleByUserId = function(userId) {
   userId = userId ? userId : Meteor.userId();
   var user = Meteor.users.findOne(userId);
 
-  if(user && user.defaultArea) {
-    if(user.roles[user.defaultArea]) {
-      return Roles.getRoleById(user.roles[user.defaultArea]);
+  if(user && user.currentAreaId) {
+    if(user.roles[user.currentAreaId]) {
+      return Roles.getRoleById(user.roles[user.currentAreaId]);
     } else if(user.roles.defaultRole) {
       return Roles.getRoleById(user.roles.defaultRole);
     } else {

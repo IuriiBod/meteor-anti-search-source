@@ -6,7 +6,7 @@ Meteor.methods({
     }
     var pipe = [{
       $match: {
-        "relations.areaId": HospoHero.getDefaultArea()
+        "relations.areaId": HospoHero.getCurrentAreaId()
       }
     }, {
       $group: {

@@ -10,7 +10,7 @@ Meteor.methods({
     }
     var existingMenuItems = MenuItems.find({
       "status": "active",
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     }).fetch();
     existingMenuItems.forEach(function(menuItem) {
       var exist = Sales.findOne({"menuItem": menuItem._id, "date": new Date(date)});
@@ -22,7 +22,7 @@ Meteor.methods({
           "soldAtPrice": menuItem.salesPrice,
           "createdOn": new Date(),
           "createdBy": this.userId,
-          relations: HospoHero.getDefaultArea()
+          relations: HospoHero.getCurrentAreaId()
         };
         var id = Sales.insert(doc);
         logger.info("New sales entry created", {"id": id});

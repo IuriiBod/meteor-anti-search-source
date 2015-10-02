@@ -43,7 +43,6 @@ Migrations.add({
           permissions: newPermissions
         }
       });
-      console.log('Migration successfully completed');
     }
   }
 });

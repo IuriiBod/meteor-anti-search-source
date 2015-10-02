@@ -15,7 +15,7 @@ Meteor.methods({
     }
     var exist = JobItems.findOne({
       "name": info.name,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if(exist) {
       logger.error("Duplicate entry");
@@ -350,7 +350,7 @@ Meteor.methods({
     var filter = new RegExp(exist.name, 'i');
     var count = JobItems.find({
       "name": filter,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     }).count();
 
     var result = delete exist['_id'];

@@ -13,7 +13,7 @@ component.state.email = function() {
 };
 
 component.state.roleId = function () {
-  var currentArea = HospoHero.getDefaultArea();
+  var currentArea = HospoHero.getCurrentAreaId();
   if(currentArea) {
     if(this.user.roles[currentArea]) {
       return this.user.roles[currentArea];

@@ -5,7 +5,7 @@ Meteor.publish('comments', function (ref) {
   }
   var query = {
     "reference": ref,
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   logger.info("Comments published", ref);

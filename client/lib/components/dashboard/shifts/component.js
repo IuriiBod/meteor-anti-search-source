@@ -15,13 +15,13 @@ component.state.shifts = function () {
       "assignedTo": Meteor.userId(),
       "published": true,
       "shiftDate": {$gte: Date.now()},
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     }, {sort: {'shiftDate': 1}}).fetch();
   } else if (state == "past") {
     shifts = Shifts.find({
       "assignedTo": Meteor.userId(),
       "shiftDate": {$lte: Date.now()},
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     }, {sort: {'shiftDate': -1}}).fetch();
   } else if (state == "open") {
     var user = Meteor.user();
@@ -33,14 +33,14 @@ component.state.shifts = function () {
           {"shiftDate": {$gte: Date.now()}},
           {"shiftDate": {$lt: user.profile.resignDate}}
         ],
-        "relations.areaId": HospoHero.getDefaultArea()
+        "relations.areaId": HospoHero.getCurrentAreaId()
       }, {sort: {'shiftDate': 1}}).fetch();
     } else {
       shifts = Shifts.find({
         "assignedTo": null,
         "published": true,
         "shiftDate": {$gte: Date.now()},
-        "relations.areaId": HospoHero.getDefaultArea()
+        "relations.areaId": HospoHero.getCurrentAreaId()
       }, {sort: {'shiftDate': 1}}).fetch();
     }
   }

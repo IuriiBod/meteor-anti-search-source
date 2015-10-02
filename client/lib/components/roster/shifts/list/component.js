@@ -2,7 +2,7 @@ var component = FlowComponents.define("schedulingShiftsList", function(props) {}
 
 component.state.shiftsList = function() {
   return Shifts.find({
-    "relations.areaId": HospoHero.getDefaultArea()
+    "relations.areaId": HospoHero.getCurrentAreaId()
   }).fetch();
 };
 
@@ -11,6 +11,6 @@ component.state.shiftsCount = function() {
   date = new Date(date).getTime();
   return Shifts.find({
     shiftDate: date,
-    "relations.areaId": HospoHero.getDefaultArea()
+    "relations.areaId": HospoHero.getCurrentAreaId()
   }).count() > 0;
 };
