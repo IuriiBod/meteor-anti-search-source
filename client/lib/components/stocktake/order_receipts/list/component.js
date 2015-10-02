@@ -10,7 +10,7 @@ component.state.list = function() {
         $gte: moment().startOf("week").unix() * 1000,
         $lte: moment().endOf("week").unix() * 1000
       }
-    }, {sort: {"receivedDate": -1, "supplier": 1}}).fetch();
+    }, {sort: {"receivedDate": -1, "supplier": 1}});
   } else if(time == "month") {
     return OrderReceipts.find({
       "received": state, 
@@ -18,9 +18,9 @@ component.state.list = function() {
         $gte: moment().startOf("month").unix() * 1000,
         $lte: moment().endOf("month").unix() * 1000
       }
-    }, {sort: {"receivedDate": -1, "supplier": 1}}).fetch();
+    }, {sort: {"receivedDate": -1, "supplier": 1}});
   } else {
-    return OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1, "supplier": 1}}).fetch();
+    return OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1, "supplier": 1}});
   }
 };
 

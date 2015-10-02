@@ -15,19 +15,6 @@ Template.menuItemDetail.events({
     Meteor.call("editMenuItem", menuId, info, function(err) {
       if(err) {
         HospoHero.alert(err);
-      } else {
-        var menu = MenuItems.findOne(menuId);
-        var options = {
-          "type": "edit",
-          "title": "Instructions on " + menu.name + " has been updated",
-          "text": ""
-        }
-        Meteor.call("sendNotifications", menuId, "menu", options, function(err) {
-          if(err) {
-            HospoHero.alert(err);
-          }
-        });   
-         
       }
       $(".editor").addClass("hide");
       $(".editorPanel").show().find("p").replaceWith(text);

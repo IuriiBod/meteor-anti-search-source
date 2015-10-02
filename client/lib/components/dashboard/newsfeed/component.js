@@ -48,21 +48,15 @@ component.action.submit = function (text) {
   });
   var linkedText = autolinker.link(textHtml);
 
-  Meteor.call("createPost", linkedText, ref, function (err, id) {
+
+  var options = {
+    "title": "New Posts on by " + Meteor.user().username,
+    "users": matches,
+    "type": "post"
+  };
+  Meteor.call("createPost", linkedText, ref, options, function (err, id) {
     if (err) {
       HospoHero.alert(err);
-    } else {
-      var options = {
-        "title": "New Posts on by " + Meteor.user().username,
-        "users": matches,
-        "commentId": id,
-        "type": "post"
-      };
-      Meteor.call("sendNotifications", ref, "comment", options, function (err) {
-        if (err) {
-          HospoHero.alert(err);
-        }
-      });
     }
     $('.message-input-post').val("");
   });

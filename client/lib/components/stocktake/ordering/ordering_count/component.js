@@ -36,8 +36,7 @@ component.prototype.onCountRendered = function() {
         }
         Meteor.call("editOrderingCount", id, count, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           } else {
             if($(elem).next().length > 0) {
               $(elem).next().find("a").click();

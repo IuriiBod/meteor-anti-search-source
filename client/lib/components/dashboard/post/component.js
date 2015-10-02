@@ -83,41 +83,32 @@ component.action.submitcommenttopost = function (text) {
   });
   var linkedText = autolinker.link(textHtml);
 
-  Meteor.call("createPost", linkedText, ref, function (err, id) {
+
+  var options = {
+    "title": "New Posts on by " + Meteor.user().username,
+    "users": matches,
+    "type": "post"
+  };
+  Meteor.call("createPost", linkedText, ref, options, function (err, id) {
     if (err) {
       HospoHero.alert(err);
-    } else {
-      var options = {
-        "title": "New Posts on by " + Meteor.user().username,
-        "users": matches,
-        "commentId": id,
-        "type": "post"
-      };
-      Meteor.call("sendNotifications", ref, "comment", options, function (err) {
-        if (err) {
-          HospoHero.alert(err);
-        }
-      });
     }
     $('.message-input-comment').val("");
   });
 };
 component.action.submitlikepost = function (likelist) {
   var ref = Session.get("post-like-id");
-  Meteor.call("updatePost", likelist, ref, function (err, id) {
+
+  var options = {
+    "title": "update Posts on by " + Meteor.user().username,
+    "type": "post update"
+  };
+  Meteor.call("updatePost", likelist, ref, options, function (err, id) {
     if (err) {
       HospoHero.alert(err);
     } else {
-      var options = {
-        "title": "update Posts on by " + Meteor.user().username,
-        "postId": id,
-        "type": "post update"
-      };
-      Meteor.call("sendNotifications", ref, "post", options, function (err) {
-        if (err) {
-          HospoHero.alert(err);
-        }
-      });
+
+
     }
   });
 };
