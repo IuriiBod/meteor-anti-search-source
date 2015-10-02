@@ -53,8 +53,7 @@ component.prototype.onItemRendered = function() {
       var date = $(this).attr("data-date");
       Meteor.call("upsertSalesForecast", date, parseFloat(newValue), "cafe", function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }
@@ -73,8 +72,7 @@ component.prototype.onItemRendered = function() {
       var date = $(this).attr("data-date");
       Meteor.call("upsertSalesActual", date, parseFloat(newValue), "cafe", function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }

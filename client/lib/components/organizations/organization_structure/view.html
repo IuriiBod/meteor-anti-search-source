@@ -1,0 +1,178 @@
+<template name="organizationStructure">
+  <h1>{{state$organization.name}}</h1>
+  {{#each state$locations}}
+    <ul class="list-group" style="display: block;">
+      {{#if isOrganizationOwner}}
+        <li class="list-group-item lead open-flyout location-settings" style="display: block; cursor: pointer; "
+            data-id="locationSettings">
+          {{name}}
+          <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
+        </li>
+      {{else}}
+        <li class="list-group-item lead" style="display: block;">
+          {{name}}
+        </li>
+      {{/if}}
+      {{#each state$areas _id}}
+        <li class="list-group-item" style="display: block;">
+          <a href="#" class="change-current-area{{#if state$currentArea _id}} active{{/if}}">{{name}}</a>
+
+          {{#if isManager}}
+            <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i
+              class="fa fa-fw fa-cog"></i></span>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+  {{/each}}
+
+  {{#if canInvite}}
+    <!-- Flyout invitationsList -->
+    <div class="theme-config flyout-container" id="invitationsList">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="invitationsList">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Invitations List
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{> render component="invitationsList" organizationId=state$organization._id}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flyout invitationsList -->
+  {{/if}}
+
+  {{#if isOrganizationOwner}}
+    <!-- Flyout organizationDetailsPage -->
+    <div class="theme-config flyout-container" id="organizationDetailsPage">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="organizationDetailsPage">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Organization Settings
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{> render component="organizationDetailsPage" organizationId=state$organization._id}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flyout organizationDetailsPage -->
+
+    <!-- Flyout createLocation -->
+    <div class="theme-config flyout-container" id="createLocation">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="createLocation">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Add Location
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{> render component="createLocation" organizationId=state$organization._id}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flyout createLocation -->
+  {{/if}}
+
+  {{#if isManager}}
+    <!-- Flyout locationSettings -->
+    <div class="theme-config flyout-container" id="locationSettings">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="locationSettings">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Location Settings
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{>render component='locationSettings' organizationId=state$organization._id locationId=state$location}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flyout locationSettings -->
+
+    <!-- Flyout areaSettings -->
+    <div class="theme-config flyout-container" id="areaSettings" style="z-index: 10000;">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="areaSettings">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Area Settings
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{>render component='areaSettings' organizationId=state$organization._id locationId=state$location areaId=state$area}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flyout areaSettings -->
+
+    <!-- Flyout createArea -->
+    <div class="theme-config flyout-container" id="createArea">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="createArea">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Add Area
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{>render component='createArea' organizationId=state$organization._id locationId=state$location}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flyout createArea -->
+  {{/if}}
+</template>

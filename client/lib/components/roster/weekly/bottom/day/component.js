@@ -5,38 +5,37 @@ var component = FlowComponents.define("weeklyRosterDay", function(props) {
 
 component.state.name = function() {
   return this.name;
-}
+};
 
 component.state.origin = function() {
   return this.origin;
-}
-
-component.state.isUserPermitted = function() {
-  var user = Meteor.user();
-  if(user.isAdmin || user.isManager) {
-    return true;
-  } else {
-    return false;
-  }
-}
+};
 
 component.state.shifts = function() {
   var origin = this.origin;
   if(origin == "weeklyroster") {
     var week = Session.get("thisWeek");
     var date = this.name.date;
-    return Shifts.find({"shiftDate": new Date(date).getTime(), "type": null});
+    return Shifts.find({
+      "shiftDate": new Date(date).getTime(),
+      "type": null,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
   } else if(origin == "weeklyrostertemplate") {
     var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    return Shifts.find({"shiftDate": daysOfWeek.indexOf(this.name), "type": "template"});
+    return Shifts.find({
+      "shiftDate": daysOfWeek.indexOf(this.name),
+      "type": "template",
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
   }
-}
+};
 
 component.action.addShift = function(day, dates) {
   var doc = {
     "assignedTo": null,
     "week": dates
-  }
+  };
   if(this.origin == "weeklyroster") {
     doc.startTime = new Date(day).setHours(8, 0);
     doc.endTime = new Date(day).setHours(17, 0);
@@ -53,16 +52,11 @@ component.action.addShift = function(day, dates) {
   }
   Meteor.call("createShift", doc, function(err, id) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     }
   });
-}
+};
 
 component.state.isTemplate = function() {
-  if(this.origin == "weeklyrostertemplate") {
-    return true; 
-  } else {
-    return false;
-  }
-}
+  return this.origin == "weeklyrostertemplate";
+};

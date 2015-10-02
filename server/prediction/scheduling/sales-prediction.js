@@ -43,17 +43,21 @@ var predict = function (days, locationId) {
           notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
         }
       }
-      SalesPrediction.update({date: TimeRangeQueryBuilder.forDay(predictItem.date), menuItemId: predictItem.menuItemId}, predictItem, {upsert: true});
+      SalesPrediction.update({
+        date: TimeRangeQueryBuilder.forDay(predictItem.date),
+        menuItemId: predictItem.menuItemId
+      }, predictItem, {upsert: true});
 
     });
 
     dateMoment.add(1, "day");
   }
 
-  var receiversIds = Meteor.users.find({isAdmin: true}).fetch().map(function (user) {
-    return user._id;
-  });
-  notification.send(receiversIds);
+  //todo: find managers of current area to send them it
+  //var receiversIds = Meteor.users.find({isAdmin: true}).fetch().map(function (user) {
+  //  return user._id;
+  //});
+  //notification.send(receiversIds);
 };
 
 

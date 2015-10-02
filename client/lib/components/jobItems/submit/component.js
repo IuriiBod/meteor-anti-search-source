@@ -42,8 +42,7 @@ component.state.sections = function() {
 component.action.submit = function(info) {
   Meteor.call("createJobItem", info, function(err, id) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       Session.set("selectedIngredients", null);
       Session.set("selectedJobItems", null);
@@ -53,8 +52,7 @@ component.action.submit = function(info) {
       };
       Meteor.call("sendNotifications", id, "job", options, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
       

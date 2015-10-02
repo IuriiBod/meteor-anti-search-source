@@ -14,10 +14,7 @@ Template.editIngredientItem.events({
     var id = $(event.target).attr("data-id");
     var code = $(event.target).find('[name=code]').val().trim();
     var desc = $(event.target).find('[name=desc]').val().trim();
-    var supplier = $(event.target).find('[name=supplier]').val().trim();
-    var portionOrdered = $(event.target).find('[name=portionOrdered]').val().trim();
     var costPerPortion = $(event.target).find('[name=costPerPortion]').val().trim();
-    var portionUsed = $(event.target).find('[name=portionUsed]').val().trim();
     var unitSize = $(event.target).find('[name=unitSize]').val().trim();
 
     if(!code) {
@@ -29,10 +26,10 @@ Template.editIngredientItem.events({
     var info = {
       "code": code,
       "description": desc,
-      "portionOrdered": portionOrdered,
-      "portionUsed": portionUsed,
-      "suppliers": supplier
-    }
+      "portionOrdered": $(event.target).find('[name=portionOrdered]').val().trim(),
+      "portionUsed": $(event.target).find('[name=portionUsed]').val().trim(),
+      "suppliers": $(event.target).find('[name=supplier]').val().trim()
+    };
 
     if(!costPerPortion || typeof(parseFloat(costPerPortion)) != "number") {
       info.costPerPortion =  0;
@@ -47,7 +44,7 @@ Template.editIngredientItem.events({
       info.unitSize = parseFloat(unitSize);
     }
 
-    FlowComponents.callAction('submit', id, info, event);
+    FlowComponents.callAction('submit', id, info);
   },
 
   'click .archiveIngredient': function(e, tpl) {
@@ -60,8 +57,7 @@ Template.editIngredientItem.events({
     }
     Meteor.call("archiveIngredient", id, state, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
     IngredientsListSearch.cleanHistory();

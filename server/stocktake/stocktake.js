@@ -1,12 +1,6 @@
 Meteor.methods({
   'createMainStocktake': function(date) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditStock()) {
       logger.error("User not permitted to generate stocktakes");
       throw new Meteor.Error(403, "User not permitted to generate stocktakes");
     }
@@ -14,8 +8,9 @@ Meteor.methods({
       "stocktakeDate": new Date(date).getTime(),
       "date": Date.now(),
       "generalAreas": [],
-      "specialAreas": []
-    }
+      "specialAreas": [],
+      relations: HospoHero.getRelationsObject()
+    };
     var generalAreas = GeneralAreas.find({"active": true}).fetch();
     if(generalAreas && generalAreas.length > 0) {
       generalAreas.forEach(function(area) {
@@ -38,29 +33,26 @@ Meteor.methods({
   },
 
   'generateStocktakes': function(stocktakeDate) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditStock()) {
       logger.error("User not permitted to generate stocktakes");
       throw new Meteor.Error(403, "User not permitted to generate stocktakes");
     }
-    var mainId = null;
+    var mainId;
     var stocktakeMain = StocktakeMain.find({"stocktakeDate": stocktakeDate}, {sort: {"date": -1}, limit: 1}).fetch();
 
     if(!stocktakeMain.length > 0) {
       var doc = {
-      "stocktakeDate": new Date(date).getTime(),
-        "date": Date.now()
-      }
+        "stocktakeDate": new Date(date).getTime(),
+        "date": Date.now(),
+        relations: HospoHero.getRelationsObject()
+      };
       mainId = StocktakeMain.insert(doc);
     } else {
       mainId = stocktakeMain[0]._id;
     }
-    var specialAreas = SpecialAreas.find().fetch();
+    var specialAreas = SpecialAreas.find({
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    }).fetch();
     
     if(specialAreas.length > 0) {
       specialAreas.forEach(function(area) {
@@ -90,34 +82,28 @@ Meteor.methods({
                   "unitCost": ingredient.costPerPortion,
                   "status": false,
                   "orderRef": null,
-                  "orderedCount": 0
-                }
+                  "orderedCount": 0,
+                  relations: HospoHero.getRelationsObject()
+                };
                 Stocktakes.insert(doc);
               }
             }
           });
         }
       });
-      logger.info("Stocktakes inserted for date", stocktakeDate)
-      return;
+      logger.info("Stocktakes inserted for date", stocktakeDate);
     }
   },
 
   'updateStocktake': function(id, info) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditStock()) {
       logger.error("User not permitted to update stocktakes");
       throw new Meteor.Error(403, "User not permitted to update stocktakes");
     }
     var mainStocktake = StocktakeMain.findOne(info.version);
     if(!mainStocktake) {
       logger.error('Stocktake main does not exist');
-      throw new Meteor.Error(401, 'Stocktake main does not exist');
+      throw new Meteor.Error('Stocktake main does not exist');
     }
 
     var stockTakeExists = Stocktakes.findOne(id);
@@ -172,48 +158,46 @@ Meteor.methods({
         "unitCost": stock.costPerPortion,
         "status": false,
         "orderRef": null,
-        "orderedCount": 0
-      }
-      var id = Stocktakes.insert(doc);
+        "orderedCount": 0,
+        relations: HospoHero.getRelationsObject()
+      };
+      id = Stocktakes.insert(doc);
       logger.info("New stocktake created", id, place);
 
       StocktakeMain.update({"_id": info.version}, {$addToSet: {"generalAreas": info.generalArea, "specialAreas": info.specialArea}});
       logger.info("Stocktake main updated with areas", info.version);
     }
-    return;
   },
 
   removeStocktake: function(stocktakeId) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditStock()) {
       logger.error("User not permitted to remove stocktakes");
       throw new Meteor.Error(403, "User not permitted to remove stocktakes");
     }
     var stockItemExists = Stocktakes.findOne(stocktakeId);
     if(!stockItemExists) {
       logger.error('Stock item does not exist in stocktake', {"stockId": stockId, "stocktakeId": stocktakeId});
-      throw new Meteor.Error(404, "Stock item does not exist in stocktake");
+      throw new Meteor.Error("Stock item does not exist in stocktake");
     }
     if(stockItemExists.status && stockItemExists.orderRef) {
       logger.error("Can't remove stocktake. Order has been placed already");
-      throw new Meteor.Error(403, "Can't remove stocktake. Order has been placed already");
+      throw new Meteor.Error("Can't remove stocktake. Order has been placed already");
     }
     Stocktakes.remove({"_id": stocktakeId});
     logger.info("Stocktake removed", stocktakeId);
   },
 
   stocktakePositionUpdate: function(stocktakeId, stockId, sAreaId, info) {
+    if(!HospoHero.perms.canEditStock()) {
+      logger.error("User not permitted to update stocktake position");
+      throw new Meteor.Error(403, "User not permitted to update stocktake position");
+    }
     var stocktake = Stocktakes.findOne(stocktakeId);
     //update stocktakes places
     if(stocktake) {
       var nextPosition = 0;
       var prevPosition = 0;
-      var count = Stocktakes.find({"specialArea": stocktake.specialArea}).fetch().length;
+      var newPosition;
 
       if(info.hasOwnProperty("nextItemPosition")) {
         nextPosition = info.nextItemPosition;
@@ -222,8 +206,9 @@ Meteor.methods({
         prevPosition = info.prevItemPosition;
       }
 
-      var newPosition = (parseFloat(nextPosition) + parseFloat(prevPosition))/2;
+      newPosition = (parseFloat(nextPosition) + parseFloat(prevPosition))/2;
       Stocktakes.update({"_id": stocktakeId}, {$set: {"place": newPosition}});
+      logger.info("Stocktake position updated");
     }
 
     //update special area original places
@@ -231,7 +216,7 @@ Meteor.methods({
     if(specialArea) {
       var array = specialArea.stocks;
       var oldPosition = array.indexOf(stockId);
-      var newPosition = null;
+      newPosition = null;
       if(info.hasOwnProperty("nextItemId")) {
         newPosition = (array.indexOf(info.nextItemId) - 1);
       } else if(info.hasOwnProperty("prevItemId")) {
@@ -240,8 +225,9 @@ Meteor.methods({
 
       SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": []}});
       array.splice(newPosition, 0, array.splice(oldPosition, 1)[0]);
+
       SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": array}});
-      return;
+      logger.info("Stock item position update at special area");
     }
   }
 });

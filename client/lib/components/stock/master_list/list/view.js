@@ -8,13 +8,12 @@ IngredientsListSearch = new SearchSource('ingredients', fields, options);
 
 Template.ingredientsList.helpers({
   getIngredients: function() {
-    var data = IngredientsListSearch.getData({
-      transform: function(matchText, regExp) {
+    return IngredientsListSearch.getData({
+      transform: function (matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>")
       },
       sort: {'code': 1}
     });
-    return data;
   },
 
   isLoading: function() {
@@ -72,7 +71,7 @@ Template.ingredientsList.rendered = function() {
     selector.status = {$ne: "archived"};
   }
   IngredientsListSearch.search("", selector);
-}
+};
 
 Template.ingredientsList.onRendered(function() {
   var tpl = this;

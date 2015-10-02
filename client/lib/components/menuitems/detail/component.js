@@ -8,7 +8,7 @@ component.state.menu = function() {
   if(this.menu) {
     return this.menu;
   }
-}
+};
 
 component.state.initialHTML = function() {
   if(this.menu) {
@@ -23,9 +23,5 @@ component.state.initialHTML = function() {
 component.prototype.onViewRendered = function() {
   this.menu = MenuItems.findOne(this.id);
   Session.set("goBackMenu", null);
-}
-
-component.state.isPermitted = function() {
-  return managerPlusAdminPermission();
-}
+};
 

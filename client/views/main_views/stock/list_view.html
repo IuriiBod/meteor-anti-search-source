@@ -8,9 +8,11 @@
     </div>
   </div>
 
+  {{#if canEditStock}}
   <!-- ADD INGREDIENT-->
   <div class="modal fade" id="addIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component = 'submitIngredient'}}
   </div>
   <!-- /ADD INGREDIENT -->
+  {{/if}}
 </template>

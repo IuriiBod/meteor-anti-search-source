@@ -18,10 +18,7 @@ Template.ingredientItemDetailed.events({
     }
     id = button.parent().parent().attr("data-id");
     Meteor.call("archiveIngredient", id, function(err) {
-      if(err) {
-        console.log(err);
-        alert(err.reason);
-      }
+      HospoHero.alert(err);
     });
     IngredientsListSearch.cleanHistory();
     var selector = {

@@ -1,13 +1,12 @@
 <template name="stockCountingListItem">
+  {{#if state$item}}
   <li class="list-group-item" data-id="{{state$item._id}}" data-stockRef="{{state$item.stockRef}}" data-place="{{state$item.place}}">
     {{#if state$editable}}
       <i class="fa fa-fw fa-reorder"></i>
     {{/if}}
-    {{state$item.description}} <small>({{SupplierName state$item.suppliers}})</small>
+    {{state$item.description}} <small>({{supplierName state$item.suppliers}})</small>
     {{#if state$editable}}
-      {{#if state$deletable state$item.stockRef}}
-        <i class="fa fa-trash pull-right removeFromList"></i>
-      {{/if}}
+      <i class="fa fa-trash pull-right removeFromList"></i>
     {{/if}}
     <span class="pull-right">
       {{#if state$countEditable state$item.stockRef}}
@@ -17,4 +16,5 @@
       {{/if}}
     </span>
   </li>
+  {{/if}}
 </template>

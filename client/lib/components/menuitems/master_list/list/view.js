@@ -8,13 +8,12 @@ MenuItemsSearch = new SearchSource('menuItemsSearch', fields, options);
 
 Template.menuItemsList.helpers({
   'getMenuItems': function() {
-    var data = MenuItemsSearch.getData({
-      transform: function(matchText, regExp) {
+    return MenuItemsSearch.getData({
+      transform: function (matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>")
       },
       sort: {'name': 1}
     });
-    return data;
   }
 });
 
@@ -82,7 +81,7 @@ Template.menuItemsList.rendered = function() {
     selector.filter = filter;
   }
   MenuItemsSearch.search("", selector);
-}
+};
 
 Template.menuItemsList.onRendered(function() {
   var tpl = this;

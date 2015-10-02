@@ -1,6 +1,16 @@
-Meteor.publish('comments', function(ref) {
-  var cursor = [];
-  cursor.push(Comments.find({"reference": ref}, {sort: {"createdOn": -1}, limit: 10}));
+Meteor.publish('comments', function (ref) {
+  if(!this.userId) {
+    logger.error('User not found');
+    this.error(new Meteor.Error(404, "User not found"));
+  }
+  var query = {
+    "reference": ref,
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+  };
+
   logger.info("Comments published", ref);
-  return cursor;
+  return Comments.find(query, {
+    sort: {"createdOn": -1},
+    limit: 10
+  });
 });

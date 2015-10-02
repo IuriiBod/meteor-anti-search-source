@@ -1,24 +1,22 @@
 Meteor.methods({
   'createJobItem': function(info) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditJob()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
-    if(!info.name) {
-      logger.error("Name field not found");
-      throw new Meteor.Error(404, "Name field not found");
-    }
+
+    check(info, Object);
+    check(info.name, String);
+
+
     if(!info.type) {
       logger.error("Type field not found");
       throw new Meteor.Error(404, "Type field not found");
     }
-    var exist = JobItems.findOne({"name": info.name});
+    var exist = JobItems.findOne({
+      "name": info.name,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
     if(exist) {
       logger.error("Duplicate entry");
       throw new Meteor.Error(404, "Duplicate entry, change name and try again");
@@ -29,8 +27,7 @@ Meteor.methods({
       logger.error("Time field not found");
       throw new Meteor.Error(404, "Time field not found");
     }
-    var activeTime = parseInt(info.activeTime) * 60; //seconds
-    doc.activeTime = activeTime;
+    doc.activeTime = parseInt(info.activeTime) * 60; //seconds
     doc.status = "active";
     var type = JobTypes.findOne(info.type);
     if(!type) {
@@ -45,8 +42,7 @@ Meteor.methods({
 
     if(type.name == "Prep") {
       if(info.shelfLife == info.shelfLife) {
-        var shelfLife = parseFloat(info.shelfLife); //days
-        doc.shelfLife = shelfLife;
+        doc.shelfLife = parseFloat(info.shelfLife); //days
       }
       doc.recipe = info.recipe;
       if(info.portions == info.portions) {
@@ -82,45 +78,39 @@ Meteor.methods({
     }
 
     doc.createdOn = Date.now();
-    doc.createdBy = user._id;
+    doc.createdBy = Meteor.userId();
+    doc.relations = HospoHero.getRelationsObject();
     var id = JobItems.insert(doc);
     logger.info("Job Item inserted", {"jobId": id, 'type': type.name});
     return id;
   },
 
   'editJobItem': function(id, info) {
-
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canEditJob()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
-    if(!id) {
-      logger.error("JobItem id field not found");
-      throw new Meteor.Error(404, "JobItem id field not found");
-    }
+
+    HospoHero.checkMongoId(id);
+    check(info, Object);
+
     var job = JobItems.findOne(id);
     if(!job) {
       logger.error("Job item does not exist", {"jobId": id});
       throw new Meteor.Error(404, "Job item does not exist");
     }
+
     if(Object.keys(info).length < 0) {
       logger.error("No editing fields found");
       throw new Meteor.Error(404, "No editing fields found");
     }
+
     var jobType = JobTypes.findOne({_id: info.type});
-    if (jobType) {
-      jobType = jobType.name;
-    }
-    else {
+    if (!jobType) {
       logger.error("Unknown job type");
       throw new Meteor.Error(404, "Unknown job type");
     }
+
     var query = {
       $set: {}
     };
@@ -246,7 +236,7 @@ Meteor.methods({
 
     if(Object.keys(updateDoc).length > 0) {
       updateDoc['editedOn'] = Date.now();
-      updateDoc['editedBy'] = user._id;
+      updateDoc['editedBy'] = Meteor.userId();
       query["$set"] = updateDoc;
       if(Object.keys(removeDoc).length > 0) {
         query["$unset"] = removeDoc;
@@ -257,59 +247,47 @@ Meteor.methods({
   },
 
   'deleteJobItem': function(id) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.perms.canEditJob()) {
+      logger.error("User not permitted to create job items");
+      throw new Meteor.Error(403, "User not permitted to create jobs");
     }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
-      logger.error("User not permitted to delete job item");
-      throw new Meteor.Error(403, "User not permitted to delete job");
-    }
-    if(!id) {
-      logger.error("JobItem id field not found");
-      throw new Meteor.Error(404, "JobItem id field not found");
-    }
+
+    HospoHero.checkMongoId(id);
+
     var job = JobItems.findOne(id);
     if(!job) {
       logger.error("Job Item not found", {"id": id});
       throw new Meteor.Error(404, "Job Item not found");
     }
+
     var existInMenuItems = MenuItems.findOne(
       {"jobItems": {$elemMatch: {"_id": id}}},
       {fields: {"jobItems": {$elemMatch: {"_id": id}}}}
     );
+
     if(existInMenuItems) {
       if(existInMenuItems.jobItems.length > 0) {
         logger.error("Item found in Menu Items, can't delete. Archiving job item");
         throw new Meteor.Error(404, "Delete not permitted");
-        // return JobItems.update({'_id': id}, {$set: {"status": 'archive'}})
       }
     }
     logger.info("Job Item removed", {"id": id});
     JobItems.remove({'_id': id});
-    return;
+    return true;
   },
 
   'addIngredientsToJob': function(id, ingredient, quantity) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.perms.canEditJob()) {
+      logger.error("User not permitted to create job items");
+      throw new Meteor.Error(403, "User not permitted to create jobs");
     }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
-      logger.error("User not permitted to update ingredients of job item");
-      throw new Meteor.Error(403, "User not permitted to update ingredients of job");
-    }
-    if(!id) {
-      logger.error("Job item should provide an id");
-      throw new Meteor.Error(404, "Job item should provide an id");
-    }
+
+    HospoHero.checkMongoId(id);
+
     var jobItem = JobItems.findOne(
       {"_id": id, "ingredients": {$elemMatch: {"_id": ingredient}}}
     );
+
     if(!jobItem) {
       logger.error("Job item or ingredient does not exist");
       throw new Meteor.Error(404, "Job item or ingredient does not exist");
@@ -324,20 +302,13 @@ Meteor.methods({
   },
 
   removeIngredientsFromJob: function(id, ingredient) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.perms.canEditJob()) {
+      logger.error("User not permitted to create job items");
+      throw new Meteor.Error(403, "User not permitted to create jobs");
     }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
-      logger.error("User not permitted to update ingredients of job item");
-      throw new Meteor.Error(403, "User not permitted to update ingredients of job");
-    }
-    if(!id) {
-      logger.error("Job item should provide an id");
-      throw new Meteor.Error(404, "Job item should provide an id");
-    }
+
+    HospoHero.checkMongoId(id);
+
     var jobItem = JobItems.findOne(
       {"_id": id, "ingredients": {$elemMatch: {"_id": ingredient}}},
       {fields: {"ingredients.$._id": ingredient}}
@@ -361,30 +332,32 @@ Meteor.methods({
     return JobItems.find().count();
   },
 
+  // TODO: Copy job item to another area
   duplicateJobItem: function(id) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.perms.canEditJob()) {
+      logger.error("User not permitted to create job items");
+      throw new Meteor.Error(403, "User not permitted to create jobs");
     }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
-      logger.error("User not permitted to add job items");
-      throw new Meteor.Error(403, "User not permitted to add jobs");
-    }
+
+    HospoHero.checkMongoId(id);
+
     var exist = JobItems.findOne(id);
     if(!exist) {
       logger.error('Job should exist to be duplicated');
       throw new Meteor.Error(404, "Job should exist to be duplicated");
     }
+
     var filter = new RegExp(exist.name, 'i');
-    var count = JobItems.find({"name": filter}).count();
+    var count = JobItems.find({
+      "name": filter,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    }).count();
 
     var result = delete exist['_id'];
     if(result) {
       var duplicate = exist;
       duplicate.name = exist.name + " - copy " + count;
-      duplicate.createdBy = user._id;
+      duplicate.createdBy = Meteor.userId();
       duplicate.createdOn = Date.now();
 
       var newId = JobItems.insert(duplicate);
@@ -394,13 +367,15 @@ Meteor.methods({
   },
 
   'archiveJobItem': function(id) {
-    var doc = {};
-    var job = JobItems.findOne({_id: id});
-    if(job && job.status == "archived") {
-      doc.status = "active";
-    } else {
-      doc.status = "archived";
+    if(!HospoHero.perms.canEditJob()) {
+      logger.error("User not permitted to create job items");
+      throw new Meteor.Error(403, "User not permitted to create jobs");
     }
-    JobItems.update({_id: id}, {$set: doc});
+
+    HospoHero.checkMongoId(id);
+
+    var job = JobItems.findOne({_id: id});
+    var status = (job && job.status == "archived") ? "active" : "archived";
+    JobItems.update({_id: id}, {$set: {status: status}});
   }
 });
