@@ -5,7 +5,7 @@
       <td>{{state$order.countOnHand}} [{{state$order.unit}}]</td>
       <td>{{state$order.countNeeded}} [{{state$order.unit}}]</td>
       {{#if state$editable}}
-        <td><a href="#" class="orderingCount">{{state$order.countOrdered}} </a>[{{state$order.unit}}]</td>
+        {{> render component="orderingCount" id=state$order._id unit=state$order.unit}}
       {{else}}
         <td>{{state$order.countOrdered}} [{{state$order.unit}}]</td>
       {{/if}}

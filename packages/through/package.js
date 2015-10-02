@@ -10,9 +10,9 @@ Package.describe({
   documentation: 'README.md'
 });
 
-Package.onUse(function(api) {
+Package.onUse(function (api) {
   api.versionsFrom('1.1.0.2');
-  api.addFiles('through.js');
+  api.addFiles('through.js', 'server');
   api.export('through', 'server');
 });
 

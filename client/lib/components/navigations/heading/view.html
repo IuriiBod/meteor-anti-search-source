@@ -4,10 +4,16 @@
     <div class="col-sm-7">
       <h2>
         {{#if state$isMenuDetailed}}
-          <a href="#"
-             class="editMenuItemName"
-             data-id="{{state$id}}"
-             style="color: #676a6c; border-color: #676a6c;">{{state$title}}</a>
+          {{#if canEditMenu}}
+            <a href="#"
+               class="editMenuItemName"
+               data-id="{{state$id}}"
+               style="color: #676a6c; border-color: #676a6c;">
+              {{state$title}}
+            </a>
+          {{else}}
+            {{state$title}}
+          {{/if}}
         {{else}}
           {{state$title}} {{#if state$isActualSales}} on {{state$routeDate}}{{/if}}
         {{/if}}
@@ -39,37 +45,37 @@
         <div class="title-action">
 
           {{#if isArchive}}
-            {{#linkTo route="menuItemsMaster" category="all" status="all" class="btn btn-info"}}
+            {{#linkTo route="menuItemsMaster" category="all" status="all" class="btn btn-info menuItemsRefresh"}}
               <i class="fa fa-long-arrow-left"></i> Active Items
             {{/linkTo}}
           {{else}}
-            {{#if state$isManagerOrAdmin}}
-              <div class="btn-group">
-                <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                  <i class="fa fa-cog"></i>
-                  Settings
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" style="margin-left: -56px;">
+            <div class="btn-group">
+              <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false">
+                <i class="fa fa-cog"></i>
+                Settings
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" style="margin-left: -56px;">
+                {{#if canEditMenu}}
                   <li>
-                    {{#linkTo route="menuItemsMaster" category="all" status="archived"}}
+                    {{#linkTo route="menuItemsMaster" category="all" status="archived" class="menuItemsRefresh"}}
                       Archive Items
                     {{/linkTo}}
                   </li>
                   <li>
                     <a href="/menuItems/submit">Add new menu</a>
                   </li>
-                  {{#if state$isMenuListSubscribed}}
-                    <li><a href="#" class="unSubscribeMenuList"><i class="fa fa-lg fa-rss text-info"></i>
-                      Unsubscribe</a></li>
-                  {{else}}
-                    <li><a href="#" class="subscribeMenuList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
-                    </li>
-                  {{/if}}
-                </ul>
-              </div>
-            {{/if}}
+                {{/if}}
+                {{#if state$isMenuListSubscribed}}
+                  <li><a href="#" class="unSubscribeMenuList"><i class="fa fa-lg fa-rss text-info"></i>
+                    Unsubscribe</a></li>
+                {{else}}
+                  <li><a href="#" class="subscribeMenuList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
+                  </li>
+                {{/if}}
+              </ul>
+            </div>
           {{/if}}
         </div>
       {{/if}}
@@ -96,7 +102,7 @@
                       class="fa fa-lg fa-rss"></i> Subscribe</a>
                 </li>
               {{/if}}
-              {{#if state$isManagerOrAdmin}}
+              {{#if canEditMenu}}
                 <li>
                   <a href="" class="hidden-print copyMenuItemBtn" data-id="{{state$id}}">
                     <i class="fa fa-copy" data-id="{{state$id}}"></i>
@@ -110,7 +116,7 @@
                   Print
                 </a>
               </li>
-              {{#if state$isManagerOrAdmin}}
+              {{#if canEditMenu}}
                 <li role="separator" class="divider"></li>
                 {{#if state$isArchiveMenu}}
                   <li>
@@ -158,7 +164,7 @@
                       class="fa fa-lg fa-rss text-muted" data-id="{{state$id}}"></i> Subscribe</a>
                 {{/if}}
               </li>
-              {{#if state$isManagerOrAdmin}}
+              {{#if canEditJob}}
                 <li>
                   <a href="" class="hidden-print editJobItemBtn" data-id="{{state$id}}">
                     <i class="fa fa-edit" data-id="{{state$id}}"></i>Edit
@@ -175,7 +181,7 @@
                   <i class="fa fa-print"></i> Print
                 </a>
               </li>
-              {{#if state$isManagerOrAdmin}}
+              {{#if canEditJob}}
                 <li role="separator" class="divider"></li>
                 {{#if state$isArchiveJob}}
                   <li>
@@ -219,13 +225,15 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" style="margin-left: -56px;">
-                <li>
-                  <a href="#" data-action="changeStatusJ" data-link="jobItemsMasterType" data-type="archive">Archived
-                    Items</a>
-                </li>
-                <li>
-                  <a href="/jobItem/submit">Add new job</a>
-                </li>
+                {{#if canEditJob}}
+                  <li>
+                    <a href="#" data-action="changeStatusJ" data-link="jobItemsMasterType" data-type="archive">Archived
+                      Items</a>
+                  </li>
+                  <li>
+                    <a href="/jobItem/submit">Add new job</a>
+                  </li>
+                {{/if}}
                 <li>
                   {{#if state$isJobListSubscribed}}
                     <a href="#" class="btn btn-white unSubscribeJobsList"><i class="fa fa-lg fa-rss text-info"></i>
@@ -248,7 +256,7 @@
               <i class="fa fa-long-arrow-left"></i> Active Items
             </a>
           {{else}}
-            {{#if state$isManagerOrAdmin}}
+            {{#if canEditStock}}
               <div class="btn-group">
                 <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
@@ -281,20 +289,22 @@
 
       {{#if state$weeklyNavigation}}
         <div class="title-action" data-type="{{state$type}}">
-          {{#if state$isWeeklyRosterCreated}}
-            <button class="btn btn-link showHideButton" type="button" data-target="#collapse" data-toggle="collapse">
-              {{#if state$collapseIn}}
-                Hide
+          {{#if canEditRoster}}
+            {{#if state$isWeeklyRosterCreated}}
+              <button class="btn btn-link showHideButton" type="button" data-target="#collapse" data-toggle="collapse">
+                {{#if state$collapseIn}}
+                  Hide
+                {{else}}
+                  Show
+                {{/if}}
+                Figures
+              </button>
+              {{#if state$isWeeklyRosterPublished}}
+                <button class="btn btn-primary" disabled="disabled">Published Roster
+                  on {{dayFormat state$publishedOn}}</button>
               {{else}}
-                Show
+                <button class="btn btn-primary" id="publishRoster">Publish Roster</button>
               {{/if}}
-              Figures
-            </button>
-            {{#if state$isWeeklyRosterPublished}}
-              <button class="btn btn-primary" disabled="disabled">Published Roster
-                on {{dayFormat state$publishedOn}}</button>
-            {{else}}
-              <button class="btn btn-primary" id="publishRoster">Publish Roster</button>
             {{/if}}
           {{/if}}
           {{>render component="weekPicker" year=state$getYear week=state$getWeek}}
@@ -302,35 +312,41 @@
       {{/if}}
 
       {{#if state$isDailyRoster}}
-        <div class="title-action">
-          <a href="#submitShiftModal" class="btn btn-primary" data-toggle="modal">
-            Create new shift
-          </a>
-          <button class="btn btn-white right prevDayRoster"><i class="fa fa-chevron-left"></i></button>
-          <button class="btn btn-white right todayRoster">Today</button>
-          <button class="btn btn-white right nextDayRoster"><i class="fa fa-chevron-right"></i></button>
-        </div>
+        {{#if canEditRoster}}
+          <div class="title-action">
+            <a href="#submitShiftModal" class="btn btn-primary" data-toggle="modal">
+              Create new shift
+            </a>
+            <button class="btn btn-white right prevDayRoster"><i class="fa fa-chevron-left"></i></button>
+            <button class="btn btn-white right todayRoster">Today</button>
+            <button class="btn btn-white right nextDayRoster"><i class="fa fa-chevron-right"></i></button>
+          </div>
+        {{/if}}
+      {{/if}}
+
+      {{#if state$isWeeklyTemplate}}
+        {{#if canEditRoster}}
+          <div class="title-action">
+            <a href="#calendarModal" class="btn btn-primary" data-toggle="modal">
+              Copy template shifts to week
+            </a>
+          </div>
+        {{/if}}
+      {{/if}}
+
+      {{#if state$isStockTakeList}}
+        {{#if canEditStock}}
+          <div class="title-action">
+            <a href="" class="btn btn-primary" id="startNewStocktake">
+              Start New Stocktake
+            </a>
+          </div>
+        {{/if}}
       {{/if}}
 
       {{#if state$isSalesPrediction}}
         <div class="title-action prediction-header">
           {{> render component="salesPredictionHeader"}}
-        </div>
-      {{/if}}
-
-      {{#if state$isWeeklyTemplate}}
-        <div class="title-action">
-          <a href="#calendarModal" class="btn btn-primary" data-toggle="modal">
-            Copy template shifts to week
-          </a>
-        </div>
-      {{/if}}
-
-      {{#if state$isStockTakeList}}
-        <div class="title-action">
-          <a href="" class="btn btn-primary" id="startNewStocktake">
-            Start New Stocktake
-          </a>
         </div>
       {{/if}}
     </div>

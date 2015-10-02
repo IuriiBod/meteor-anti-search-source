@@ -3,17 +3,14 @@ var component = FlowComponents.define("teamHours", function(props) {
 });
 
 component.state.week = function() {
-  var weekNo = Session.get("thisWeek");
-  var year = Session.get("thisYear");
-  var currentDate = new Date(year);
-  var week = getDatesFromWeekNumberWithYear(parseInt(weekNo), currentDate);
-  return week;
-}
+  var weekNo = parseInt(Router.current().params.week);
+  var year = parseInt(Router.current().params.year);
+  return getDatesFromWeekNumber(weekNo, year);
+};
 
 component.state.users = function() {
-  var users = Meteor.users.find();
-  return users;
-}
+  return Meteor.users.find().fetch();
+};
 
 component.prototype.onListRendered = function() {
   $.fn.editable.defaults.mode = 'inline';
@@ -26,6 +23,5 @@ component.prototype.onListRendered = function() {
       "sSwfPath": "/swf/copy_csv_xls_pdf.swf"
     }
   });
-}
-
+};
 

@@ -1,10 +1,10 @@
 <template name="ingsAndPreps">
   {{#if state$item}}
     <tr>
-      {{#if state$isPermitted}}
-      <td>
-        <a class="btn btn-primary btn-xs view-{{state$type}}" data-id="{{state$item._id}}" href="#"><i class="fa fa-edit fa-fw"></i>Edit </a>
-      </td>
+      {{#if canEditMenu}}
+        <td>
+          <a class="btn btn-primary btn-xs view-{{state$type}}" data-id="{{state$item._id}}" href="#"><i class="fa fa-edit fa-fw"></i> Edit</a>
+        </td>
       {{/if}}
       <td>{{state$name}}</td>
       <td>{{state$type}}</td>
@@ -16,8 +16,10 @@
         {{/if}}
       </td>
       <td>{{#if state$measure}} {{state$measure}} {{else}} -NA- {{/if}}</td>
-      {{#if state$isPermitted}}
-      <td><span class="remove-{{state$type}}" data-id="{{state$item._id}}" data-type="{{state$type}}">remove</span></td>
+      {{#if canEditMenu}}
+        <td>
+          <i class="fa fa-trash remove-{{state$type}} text-danger" style="cursor: pointer;" data-id="{{state$item._id}}" data-type="{{state$type}}"></i>
+        </td>
       {{/if}}
     </tr>
   {{/if}}

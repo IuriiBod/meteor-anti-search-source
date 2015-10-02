@@ -1,16 +1,14 @@
 Meteor.publish("allAreas", function() {
-  var cursors = [];
-  cursors.push(GeneralAreas.find());
-  cursors.push(SpecialAreas.find());
-  logger.info("All areas published");
-  return cursors;
+  if(this.userId) {
+    return [
+      GeneralAreas.find({ "relations.areaId": HospoHero.getCurrentAreaId(this.userId) }),
+      SpecialAreas.find({ "relations.areaId": HospoHero.getCurrentAreaId(this.userId) })
+    ];
+  }
 });
 
 Meteor.publish("areaSpecificStocks", function(generalArea) {
-  var cursors = [];
-  cursors.push(Ingredients.find({"generalAreas": generalArea}));
-  logger.info("Ingredients on general area published", generalArea);
-  return cursors;
+  return Ingredients.find({"generalAreas": generalArea});
 });
 
 Meteor.publish("areaSpecificStockTakes", function(generalArea) {
@@ -31,52 +29,50 @@ Meteor.publish("areaSpecificStockTakes", function(generalArea) {
 });
 
 Meteor.publish("stocktakeMains", function(date) {
-  logger.info("Stocktake mains published for date", date);
-  var data = StocktakeMain.find({"stocktakeDate": new Date(date).getTime()});
-  return data;
+  if(this.userId) {
+    var query = {
+      "stocktakeDate": new Date(date).getTime(),
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    };
+    return StocktakeMain.find(query);
+  }
 });
 
 Meteor.publish("stocktakes", function(version) {
-  var cursors = [];
-  cursors.push(Stocktakes.find({"version": version}));
-  cursors.push(StocktakeMain.find(version));
-  logger.info("Stocktakes published for version ", version);
-  return cursors;
+  return [
+    Stocktakes.find({"version": version}),
+    StocktakeMain.find(version)
+  ];
 });
 
 Meteor.publish("ordersPlaced", function(version) {
   logger.info("Stock orders published for version ", version);
-  var data = StockOrders.find({"version": version});
-  return data;
+  return StockOrders.find({"version": version});
 });
 
 Meteor.publish("orderReceipts", function(ids) {
   logger.info("Stock order receipts published ", ids);
-  var data = OrderReceipts.find({"_id": {$in: ids}});
-  return data;
+  return OrderReceipts.find({"_id": {$in: ids}});
 });
 
 Meteor.publish("orderReceiptsByVersion", function(version) {
   logger.info("Stock order receipts published by version", version);
-  var data = OrderReceipts.find({"version": version});
-  return data;
+  return OrderReceipts.find({"version": version});
 });
 
 Meteor.publish("allOrderReceipts", function() {
-  logger.info("Stock order receipts published");
-  var data = OrderReceipts.find({}, {sort: {"date": -1}, limit: 10});
-  return data;
+  if(this.userId) {
+    return OrderReceipts.find({ "relations.areaId": HospoHero.getCurrentAreaId(this.userId) }, {sort: {"date": -1}, limit: 10});
+  }
 });
 
 Meteor.publish("receiptOrders", function(receiptId) {
   logger.info("Stock orders published for receipt ", receiptId);
-  var data = StockOrders.find({"orderReceipt": receiptId});
-  return data;
+  return StockOrders.find({"orderReceipt": receiptId, "countOrdered": {$gt: 0}});
 });
 
 
 Meteor.publish("currentStocks", function(ids) {
   logger.info("Current stocks published ", ids);
-  var data = CurrentStocks.find({"_id": {$in: ids}});
-  return data;
+  return CurrentStocks.find({"_id": {$in: ids}});
 });

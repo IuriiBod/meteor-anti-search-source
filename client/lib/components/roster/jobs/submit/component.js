@@ -87,7 +87,7 @@ component.action.submit = function(info) {
   var self = this;
   Meteor.call("createNewJob", info, function(err, id) {
     if(err) {
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       var prep = JobTypes.findOne({"name": "Prep"});
       self.set("type", prep._id);

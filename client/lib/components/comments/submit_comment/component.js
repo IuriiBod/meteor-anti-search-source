@@ -24,7 +24,7 @@ component.action.submit = function(text) {
       var doc = {
         "user": "@" + subscriber.username,
         "class": userClass
-      }
+      };
       taggedUsers.push(doc);  
     }
   });
@@ -39,8 +39,7 @@ component.action.submit = function(text) {
   
   Meteor.call("createComment", linkedText, ref, function(err, id) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       var reference = null;
       var ref_name = null;
@@ -62,14 +61,13 @@ component.action.submit = function(text) {
         "users": matches,
         "commentId": id,
         "type": ref_type
-      }
+      };
       Meteor.call("sendNotifications", ref, "comment", options, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });  
     }
     $('.message-input').val("");
   });
-}
+};

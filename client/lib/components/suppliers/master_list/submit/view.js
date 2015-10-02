@@ -6,12 +6,11 @@ Template.newSupplier.events({
     var phone = $(event.target).find('[name=phone]').val();
     Meteor.call("createSupplier", name, email, phone, function(err, id) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       } else {
         Router.go("supplierProfile", {"_id": id});
       }
-      $("#addNewSupplierModal").modal("hide");
     });
+    $("#addNewSupplierModal").modal("hide");
   }
 });

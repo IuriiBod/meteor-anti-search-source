@@ -4,7 +4,7 @@ var component = FlowComponents.define('ingredientModalItem', function(props) {
 
 component.state.item = function() {
   return this.ingredient;
-}
+};
 
 component.state.costPerPortionUsed = function() {
   var costPerPortionUsed = 0;
@@ -16,4 +16,4 @@ component.state.costPerPortionUsed = function() {
     }
   }
   return costPerPortionUsed;
-}
+};

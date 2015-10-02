@@ -8,21 +8,20 @@
         <div class="tabs-container">
           <ul class="nav nav-tabs jobtypesPanel">
             {{#each jobTypes}}
-              <li class="" data-id="{{_id}}">
+              <li class="{{#if equal name "Prep"}}active{{/if}}" data-id="{{_id}}">
                 <a href="#{{_id}}" data-toggle="tab">{{name}}</a>
               </li>
             {{/each}}
           </ul>
 
-            <div class="tab-content">
-
-              {{#each jobTypes}}
-                <div class="tab-pane jobtypepanes" id="{{_id}}">
-                    <div class="panel-body">
+          <div class="tab-content">
+            {{#each jobTypes}}
+              <div class="tab-pane jobtypepanes {{#if equal name "Prep"}}active{{/if}}" id="{{_id}}">
+                <div class="panel-body">
                   {{> render component='jobItemsList' id=_id}}
-               </div></div>
-              {{/each}}
-
+                </div>
+              </div>
+            {{/each}}
           </div>
         </div>
       </div>

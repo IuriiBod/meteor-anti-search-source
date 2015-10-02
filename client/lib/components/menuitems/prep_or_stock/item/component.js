@@ -13,7 +13,7 @@ component.prototype.onItemRendered = function() {
   } else if(this.type == "ings") {
     subs.subscribe("ingredients", [this.id]);
   }
-}
+};
 
 component.state.item = function() {
   if(this.type == "prep") {
@@ -24,7 +24,7 @@ component.state.item = function() {
   if(this.item) {
     return this.item;
   }
-}
+};
 
 component.state.name = function() {
   if(this.item) {
@@ -34,23 +34,23 @@ component.state.name = function() {
       return this.item.description;
     }
   }
-}
+};
 
 component.state.quantity = function() {
   if(this.item) {
     return this.quantity;
   }
-}
+};
 
 component.state.id = function() {
   if(this.item) {
     return this.item._id;
   }
-}
+};
 
 component.state.type = function() {
   return this.type;
-}
+};
 
 component.state.measure = function() {
   if(this.item) {
@@ -60,8 +60,4 @@ component.state.measure = function() {
       return this.item.portionUsed;
     }
   }
-}
-
-component.state.isPermitted = function() {
-  return managerPlusAdminPermission();
-}
+};

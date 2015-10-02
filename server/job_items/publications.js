@@ -1,33 +1,49 @@
 Meteor.publish('allJobItems', function() {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var cursors = JobItems.find({"status": "active"}, {sort: {'name': 1}});
+
+  var query = {
+    status: 'active',
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+  };
+
   logger.info("All job items published");
-  return cursors;
+  return JobItems.find(query, {sort: {'name': 1}});
 });
 
 Meteor.publish("jobItems", function(ids) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var cursors = [];
-  var jobsItems = null;
+
+  var query = {
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+  };
+  var options = {
+    sort: {
+      'name': 1
+    }
+  };
+
   if(ids.length > 0) {
-    jobsItems = JobItems.find({"_id": {$in: ids}}, {sort: {'name': 1}});
+    query._id = { $in: ids };
   } else {
-    jobsItems = JobItems.find({}, {sort: {'name': 1}, limit: 10});
+    options.limit = 10;
   }
-  cursors.push(jobsItems);
+
   logger.info("Job items published", ids);
-  return cursors;
+
+  console.log('JI', JobItems.find(query, options).fetch());
+  
+  return JobItems.find(query, options);
 });
 
 Meteor.publish("jobsRelatedMenus", function(id) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   logger.info("Related menus published", {"id": id});

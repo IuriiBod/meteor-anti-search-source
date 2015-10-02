@@ -1,33 +1,46 @@
 Meteor.publish("allIngredients", function() {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var cursors = Ingredients.find({"status": "active"}, {sort: {'code': 1}, limit: 10});
+
+  var query = {
+    "status": "active",
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+  };
+
   logger.info("All ingredients published");
-  return cursors;
+
+  return  Ingredients.find(query, {sort: {'code': 1}, limit: 10});
 });
 
 Meteor.publish("ingredients", function(ids) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
-  var cursors = [];
-  var ings = null;
+
+  var query = {
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+  };
+  var options = {
+    sort: {'code': 1},
+  };
+
   if(ids.length > 0) {
-    ings = Ingredients.find({"_id": {$in: ids}}, {sort: {'code': 1}});
+    query._id = {$in: ids};
   } else {
-    ings = Ingredients.find({}, {sort: {'code': 1}, limit: 10});
+    options.limit = 10;
   }
-  cursors.push(ings);
+
   logger.info("Ingredients published", {"ids": ids});
-  return cursors;
+
+  return Ingredients.find(query, options);
 });
 
 Meteor.publish("ingredientsRelatedJobs", function(id) {
   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
+    logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
   logger.info("Related jobs published", {"id": id});

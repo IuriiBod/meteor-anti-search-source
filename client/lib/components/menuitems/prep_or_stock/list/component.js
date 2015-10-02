@@ -1,7 +1,6 @@
 var component = FlowComponents.define("showListOfIngs", function(props) {
   this.onRendered(this.renderList);
-  var id = Router.current().params._id;
-  this.id = id;
+  this.id = Router.current().params._id;
 
   var options = {
     keepHistory: 1000 * 60 * 5,
@@ -27,7 +26,7 @@ component.prototype.setJobIds = function() {
 
   this.set("jobids", ids);
   return ids;
-}
+};
 
 component.prototype.setIngIds = function() {
   var ids = [];
@@ -42,7 +41,7 @@ component.prototype.setIngIds = function() {
   }
   this.set("ingids", ids);
   return ids;
-}
+};
 
 component.prototype.renderList = function() {
   var jobids = this.setJobIds();
@@ -59,17 +58,16 @@ component.action.keyup = function(text) {
 
   var jobids = this.setJobIds();
   this.JobItemsSearch.search(text, {"ids": jobids, "type": "Prep", "limit": 5});
-}
+};
 
 component.state.getJobItems = function() {
-  var data = this.JobItemsSearch.getData({
-    transform: function(matchText, regExp) {
+  return this.JobItemsSearch.getData({
+    transform: function (matchText, regExp) {
       return matchText.replace(regExp, "<b>$&</b>")
     },
     sort: {'name': 1}
   });
-  return data;
-}
+};
 
 component.state.getIngredients = function() {
   return this.IngredientsSearch.getData({
@@ -78,5 +76,4 @@ component.state.getIngredients = function() {
     },
     sort: {'code': 1}
   });
-}
-
+};

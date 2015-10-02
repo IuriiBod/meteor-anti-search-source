@@ -1,9 +1,16 @@
 Template.pageHeading.events({
+  'click .menuItemsRefresh': function () {
+    var options = {limit: 30};
+    var status = Router.current().params.status;
+    options.filter = status == 'archived' ? [{"status": {$ne: "archived"}}] : [{"status": "archived"}];
+    MenuItemsSearch.cleanHistory();
+    MenuItemsSearch.search("", options);
+  },
   'click [data-action="changeStatus"]': function (event) {
     event.preventDefault();
     IngredientsListSearch.cleanHistory();
     var selector = {
-      limit: 30,
+      limit: 30
     };
     var params = {};
     if (event.target.dataset.type == "archive") {
@@ -23,7 +30,7 @@ Template.pageHeading.events({
     JobItemsSearch.cleanHistory();
     var selector = {
       type: Session.get("type"),
-      limit: 30,
+      limit: 30
     };
     var params = {};
     if (event.target.dataset.type == "archive") {
@@ -73,8 +80,7 @@ Template.pageHeading.events({
     var id = Session.get("thisMenuItem");
     Meteor.call("subscribe", id, function (err) {
       if (err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   },
@@ -83,8 +89,7 @@ Template.pageHeading.events({
     var id = Session.get("thisMenuItem");
     Meteor.call("unSubscribe", id, function (err) {
       if (err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   },
@@ -95,8 +100,7 @@ Template.pageHeading.events({
     if (id) {
       Meteor.call("duplicateMenuItem", id, function (err, id) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           Router.go("menuItemDetail", {"_id": id});
         }
@@ -110,8 +114,7 @@ Template.pageHeading.events({
     if (id) {
       Meteor.call("duplicateJobItem", id, function (err, id) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           Router.go("jobItemEdit", {"_id": id});
         }
@@ -132,18 +135,16 @@ Template.pageHeading.events({
       if (id) {
         Meteor.call("deleteMenuItem", id, function (err) {
           if (err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           } else {
             var options = {
               "type": "delete",
               "title": "Menu " + item.name + " has been deleted",
               "time": Date.now()
-            }
+            };
             Meteor.call("sendNotifications", id, "menu", options, function (err) {
               if (err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.alert(err);
               }
             });
             Router.go("menuItemsMaster", {"category": "all", "status": "all"});
@@ -167,8 +168,7 @@ Template.pageHeading.events({
     event.preventDefault();
     Meteor.call("subscribe", "joblist", function (err) {
       if (err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   },
@@ -177,8 +177,7 @@ Template.pageHeading.events({
     event.preventDefault();
     Meteor.call("unSubscribe", "joblist", function (err) {
       if (err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   },
@@ -213,7 +212,13 @@ Template.pageHeading.events({
         dates.push(new Date(day.date).getTime())
       }
     });
-    var shifts = Shifts.find({"shiftDate": {$in: dates}, "published": false, "type": null}).fetch();
+    var shifts = Shifts.find({
+      "shiftDate": {$in: dates},
+      "published": false,
+      "type": null,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    }).fetch();
+
     var tobePublished = [];
     var users = [];
     if (shifts.length > 0) {
@@ -224,11 +229,11 @@ Template.pageHeading.events({
         }
       });
     }
+
     if (tobePublished.length > 0) {
       Meteor.call("publishRoster", weekNo, tobePublished, function (err) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
       users.forEach(function (user) {
@@ -260,7 +265,7 @@ Template.pageHeading.events({
               "text": text,
               "startDate": weekStart,
               "week": weekNo
-            }
+            };
             if (openShifts.length > 0) {
               openShifts.forEach(function (shift) {
                 var start = moment(shift.startTime).format("hh:mm A");
@@ -274,12 +279,11 @@ Template.pageHeading.events({
               "_id": to._id,
               "email": to.emails[0].address,
               "name": to.username
-            }
+            };
 
             Meteor.call("notifyRoster", to, info, function (err) {
               if (err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.alert(err);
               }
             });
           }
@@ -291,14 +295,17 @@ Template.pageHeading.events({
   'click #startNewStocktake': function (event) {
     event.preventDefault();
     var date = moment().format("YYYY-MM-DD");
-    var stocktake = StocktakeMain.findOne({"stocktakeDate": new Date(date).getTime()});
+    var stocktake = StocktakeMain.findOne({
+      "stocktakeDate": new Date(date).getTime(),
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
+
     if (stocktake) {
       $("#newStocktakeModal").modal();
     } else {
       Meteor.call("createMainStocktake", date, function (err, id) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           Router.go("stocktakeCounting", {"_id": id});
         }
@@ -351,8 +358,7 @@ Template.pageHeading.events({
     if (result) {
       Meteor.call("deleteJobItem", id, function (err) {
         if (err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           var options = {
             type: "delete",
@@ -361,8 +367,7 @@ Template.pageHeading.events({
           };
           Meteor.call("sendNotifications", id, "job", options, function (err) {
             if (err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.alert(err);
             }
           });
           Router.go("jobItemsMaster");
@@ -388,14 +393,13 @@ Template.pageHeading.rendered = function () {
     showbuttons: true,
     display: false,
     mode: 'inline',
-    toggle: 'click mouseenter',
+    toggle: 'mouseenter',
     success: function (response, newValue) {
       var id = $(this).attr("data-id");
       if (id) {
-        Meteor.call("updateMenuItemName", id, newValue, function (err) {
+        Meteor.call("editMenuItem", id, {name: newValue}, function (err) {
           if (err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           }
         });
       }
@@ -406,18 +410,11 @@ Template.pageHeading.rendered = function () {
 Template.pageHeading.helpers({
   'isArchive': function () {
     var archive = Router.current().params.status;
-    if (archive && archive == "archived") {
-      return true;
-    } else {
-      return false;
-    }
+    return !!(archive && archive == "archived");
   },
+
   'isArchiveJob': function () {
     var archive = Router.current().params.type;
-    if (archive && archive == "archive") {
-      return true;
-    } else {
-      return false;
-    }
+    return !!(archive && archive == "archive");
   }
 });

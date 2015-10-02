@@ -5,7 +5,7 @@ var locationId = 1;
 Meteor.publish('weatherForecast', function (date) {
   check(date, Date);
 
-  var haveAccess = isManagerOrAdmin(this.userId);
+  var haveAccess = HospoHero.perms.canViewForecast(this.userId);
   if (!haveAccess) {
     this.error(new Meteor.Error(403, 'Access Denied'));
   }

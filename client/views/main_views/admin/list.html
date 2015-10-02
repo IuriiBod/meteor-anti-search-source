@@ -10,6 +10,9 @@
               <a href="#usersList" data-toggle="tab">Users</a>
             </li>
             <li class="">
+              <a href="#roles" data-toggle="tab">Roles</a>
+            </li>
+            <li class="">
               <a href="#sections" data-toggle="tab">Sections</a>
             </li>
             <li class="">
@@ -34,6 +37,9 @@
             </div>
             <div class="tab-pane" id="timeout">
               {{> render component='inactivityTimeoutField'}}
+            </div>
+            <div class="tab-pane" id="roles">
+              {{> render component='rolesSettings'}}
             </div>
             <div class="tab-pane" id="revel-link">
               {{> render component='revelMenuLink'}}

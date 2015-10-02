@@ -45,6 +45,8 @@ component.state.deletable = function(id) {
     } else {
       return true;
     }
+  } else {
+    return true;
   }
 }
 

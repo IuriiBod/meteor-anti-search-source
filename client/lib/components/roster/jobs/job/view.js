@@ -4,7 +4,7 @@ Template.schedulingJob.events({
     var id = $(event.target).attr("data-id");
     Meteor.call("setJobStatus", id, function(err) {
       if(err) {
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     }); 
   },
@@ -16,7 +16,7 @@ Template.schedulingJob.events({
     if(confirmDelete) {
       Meteor.call("deleteJob", id, null, function(err) {
         if(err) {
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       }); 
     }
@@ -38,4 +38,4 @@ Template.schedulingJob.rendered = function() {
       revertDuration: 0  //  original position after the drag
     });
   });
-}
+};

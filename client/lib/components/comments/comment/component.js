@@ -13,25 +13,24 @@ component.prototype.userDetails = function() {
     }
     this.set("profileImage", image);
   }
-}
+};
 
 component.state.name = function() {
   if(this.get("username")) {
     return this.get("username");
   }
-}
+};
 
 component.state.profilePicture = function() {
   if(this.get("profileImage")) {
     return this.get("profileImage");
   }
-}
+};
 
 component.state.text = function() {
-  var text = this.comment.text;
-  return text;
-}
+  return this.comment.text;
+};
 
 component.state.createdOn = function() {
   return this.comment.createdOn;
-}
+};

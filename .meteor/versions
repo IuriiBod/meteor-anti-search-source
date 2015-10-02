@@ -4,6 +4,7 @@ accounts-oauth@1.1.5
 accounts-password@1.1.1
 accounts-ui@1.1.5
 accounts-ui-unstyled@1.1.7
+alonoslav:roles@0.0.1
 amplify@1.0.0
 anti:gagarin@0.4.11
 autoupdate@1.2.1
@@ -29,7 +30,7 @@ fastclick@1.0.3
 fortawesome:fontawesome@4.3.0
 geojson-utils@1.0.3
 google@1.1.5
-hospohero:stale-session@0.0.6
+hospohero:stale-session@0.0.7
 html-tools@1.0.4
 htmljs@1.0.4
 http@1.1.0
@@ -78,6 +79,7 @@ momentjs:moment@2.10.6
 mongo@1.1.0
 mongo-livedata@1.0.8
 mrt:jquery-ui-sortable@1.10.3
+natestrauser:x-editable-bootstrap@1.5.2_2
 npm-bcrypt@0.7.8_2
 npm-container@1.0.0
 oauth@1.1.4
@@ -89,6 +91,7 @@ ordered-dict@1.0.3
 percolate:intercom@1.3.1
 percolate:synced-cron@1.3.0
 planettraining:jquery-fullcalendar@2.4.0
+percolate:migrations@0.8.6
 raix:eventemitter@0.1.2
 random@1.0.3
 reactive-dict@1.1.0

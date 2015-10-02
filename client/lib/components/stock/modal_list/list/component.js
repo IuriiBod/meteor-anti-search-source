@@ -30,12 +30,12 @@ component.prototype.setIds = function() {
   }
   this.set("ids", ids);
   return ids;
-}
+};
 
 component.prototype.renderShowIngList = function() {
   var ids = this.setIds();
   this.IngredientsSearch.search("", {"ids": ids, "limit": 10});
-}
+};
 
 component.state.getIngredients = function() {
   var data = this.IngredientsSearch.getData({
@@ -58,13 +58,13 @@ component.state.getIngredients = function() {
     subs.subscribe("suppliers", suppliers);
   }
   return data;
-}
+};
 
 component.action.keyup = function(text) {
   var ids = this.setIds();
   this.IngredientsSearch.search(text, {"ids": ids, "limit": 10});
-}
+};
 
 component.action.submit = function() {
   this.IngredientsSearch.search("", {limit: 10});
-}
+};

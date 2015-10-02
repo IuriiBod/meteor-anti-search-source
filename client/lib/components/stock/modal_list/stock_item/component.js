@@ -5,7 +5,7 @@ var component = FlowComponents.define('stockModalItem', function(props) {
 
 component.state.item = function() {
   return this.stock;
-}
+};
 
 component.state.costPerPortionUsed = function() {
   var costPerPortionUsed = 0;
@@ -17,7 +17,7 @@ component.state.costPerPortionUsed = function() {
     }
   }
   return costPerPortionUsed;
-}
+};
 
 component.prototype.onItemRendered = function() {
   $('.i-checks').iCheck({
@@ -29,8 +29,7 @@ component.prototype.onItemRendered = function() {
     var sareaId = Session.get("activeSArea");
     Meteor.call("assignStocksToAreas", id, sareaId, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
     });
   });

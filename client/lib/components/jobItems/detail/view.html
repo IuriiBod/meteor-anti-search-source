@@ -75,6 +75,9 @@
                 <li class="list-group-item">
                   <span class="pull-right">{{jobTypeById state$job.type}}</span>Type
                 </li>
+                <li class="list-group-item">
+                  <span class="pull-right">{{state$job.status}}</span>Status
+                </li>
                 {{#if state$isRecurring}}
                 <li class="list-group-item">
                   <span class="pull-right">

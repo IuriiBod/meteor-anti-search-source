@@ -13,30 +13,18 @@ Template.submitJobItem.helpers({
   isPrep: function() {
     var id = Session.get("jobType");
     var type = JobTypes.findOne(id);
-    if(type && type.name == "Prep") {
-      return true;
-    } else {
-      return false;
-    }
+    return !!(type && type.name == "Prep");
   },
 
   isRecurring: function() {
     var id = Session.get("jobType");
     var type = JobTypes.findOne(id);
-    if(type && type.name == "Recurring") {
-      return true;
-    } else {
-      return false;
-    }
+    return !!(type && type.name == "Recurring");
   },
 
   isRecurringDaily: function() {
     var type = Session.get("frequency");
-    if(type == "Daily") {
-      return true;
-    } else {
-      return false;
-    }
+    return type == "Daily";
   },
 
   isRecurringEveryXWeeks: function() {
