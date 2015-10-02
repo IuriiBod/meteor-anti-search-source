@@ -51,7 +51,7 @@ Meteor.methods({
       mainId = stocktakeMain[0]._id;
     }
     var specialAreas = SpecialAreas.find({
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     }).fetch();
     
     if(specialAreas.length > 0) {

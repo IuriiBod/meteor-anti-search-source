@@ -54,7 +54,7 @@ component.prototype.itemRendered = function() {
         var shifts;
         var query = {
           "shiftDate": thisShift.shiftDate,
-          "relations.areaId": HospoHero.getDefaultArea()
+          "relations.areaId": HospoHero.getCurrentAreaId()
         };
         if(origin == "weeklyrostertemplate") {
           query['type'] = "template";
@@ -86,12 +86,12 @@ component.prototype.itemRendered = function() {
         };
 
         // Get roles which can be rosted
-        var canBeRostedRoles = Meteor.roles.find({permissions: 'ROSTER_CAN_BE_ROSTED'}).fetch();
+        var canBeRostedRoles = Roles.getRolesByPermissions(Roles.permissions.Roster.canBeRosted.code);
         // Conver it to array of IDs
         var canBeRostedRolesIds = _.map(canBeRostedRoles, function(role) {
           return role._id;
         });
-        query["roles." + HospoHero.getDefaultArea()] = {$in: canBeRostedRolesIds};
+        query["roles." + HospoHero.getCurrentAreaId()] = {$in: canBeRostedRolesIds};
         var workers = Meteor.users.find(query, {sort: {"username": 1}}).fetch();
 
         workers.forEach(function(worker) {
@@ -129,7 +129,7 @@ component.prototype.itemRendered = function() {
       defaultValue: "Open",    
       source: function() {
         var sections = Sections.find({
-          "relations.areaId": HospoHero.getDefaultArea()
+          "relations.areaId": HospoHero.getCurrentAreaId()
         }).fetch();
         var sectionsObj = [];
         sectionsObj.push({value: "Open", text: "Open"});

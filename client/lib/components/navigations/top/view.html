@@ -43,30 +43,31 @@
     </nav>
   </div>
 
-  <!-- Flyout profileFlyoutLinks -->
-  <div class="theme-config flyout-container" id="profileFlyoutLinks">
-    <div class="theme-config-box">
-      <div class="skin-setttings">
-        <div class="white-notify-bg">
-          <div class="title clearfix">
-            <a href="#" class="theme-config-close-btn" data-id="profileFlyoutLinks">
-              <i class="fa fa-angle-right"></i>
-            </a>
-            {{username}}
-          </div>
-          <div class="ibox float-e-margins" style="margin-bottom: 0;">
-            <div class="ibox-content" style="padding-bottom: 10px;">
-              <div class="feed-activity-list">
-                {{>render component='profileFlyoutLinks'}}
+  {{#if currentUser}}
+    <!-- Flyout profileFlyoutLinks -->
+    <div class="theme-config flyout-container" id="profileFlyoutLinks">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="profileFlyoutLinks">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              {{username}}
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{>render component='profileFlyoutLinks'}}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Flyout profileFlyoutLinks -->
-
+    <!-- Flyout profileFlyoutLinks -->
+  {{/if}}
   {{#unless isInOrganization}}
     <!-- Flyout createOrganizationPage -->
     <div class="theme-config flyout-container{{#if showCreateOrgFlyout}} show{{/if}}" id="createOrganizationPage">

@@ -7,8 +7,8 @@ Meteor.publish("menuList", function(categoryId, status) {
   var query = {};
 
   var user = Meteor.users.findOne({_id: this.userId});
-  if(user.defaultArea) {
-    query["relations.areaId"] = user.defaultArea;
+  if(user.currentAreaId) {
+    query["relations.areaId"] = user.currentAreaId;
   }
 
   if(categoryId && categoryId != "all") {
@@ -32,7 +32,7 @@ Meteor.publish("menuItem", function(id) {
   var cursor = [];
   var query = {
     _id: id,
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   var menu = MenuItems.find(query);
@@ -68,7 +68,7 @@ Meteor.publish("menuItems", function(ids) {
   if(Array.isArray(ids)) {
     var query = {
       _id: { $in: ids },
-      "relations.areaId": HospoHero.currentArea(this.userId)
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
     };
 
     logger.info("Menu items published", ids);

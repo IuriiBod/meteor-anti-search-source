@@ -5,5 +5,5 @@ Meteor.publish('posts', function () {
   }
   
   logger.info("Posts published");
-  return Posts.find({ "relations.areaId": HospoHero.currentArea(this.userId) }, {sort: {"createdOn": -1}});
+  return Posts.find({ "relations.areaId": HospoHero.getCurrentAreaId(this.userId) }, {sort: {"createdOn": -1}});
 });

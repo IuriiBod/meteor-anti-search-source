@@ -117,13 +117,6 @@ var helpers = {
     }
   },
 
-  isMe: function (id) {
-    var userId = Meteor.userId();
-    if (userId) {
-      return (userId == id);
-    }
-  },
-
   equal: function (a, b) {
     return (a === b);
   },

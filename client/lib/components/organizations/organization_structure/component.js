@@ -9,7 +9,7 @@ component.state.locations = function() {
     organizationId: this.get('organization')._id
   };
 
-  if(!HospoHero.perms.isAdmin()) {
+  if(!HospoHero.isOrganizationOwner()) {
     var user = Meteor.user();
     if(user.relations && user.relations.locationIds) {
       selector._id = { $in: user.relations.locationIds };
@@ -24,7 +24,7 @@ component.state.areas = function(locationId) {
     locationId: locationId
   };
 
-  if(!HospoHero.perms.isAdmin()) {
+  if(!HospoHero.isOrganizationOwner()) {
     var user = Meteor.user();
     if (user.relations && user.relations.areaIds) {
       selector._id = {$in: user.relations.areaIds};

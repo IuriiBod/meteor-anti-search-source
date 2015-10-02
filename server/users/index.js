@@ -15,8 +15,8 @@ Accounts.onCreateUser(function(options, user){
     delete user.profile.pinCode;
   }
   
-  // if this is the first user ever, make him an admin
-  var role = Roles.getRoleByName('Admin');
+  // if this is the first user ever, make him an owner
+  var role = Roles.getRoleByName('Owner');
   user.roles = {defaultRole: role._id};
   return user;
 });
@@ -45,7 +45,7 @@ Meteor.methods({
   },
 
   editBasicDetails: function(id, editDetails) {
-    if(!HospoHero.isAdmin()) {
+    if(!HospoHero.isManager()) {
       logger.error("User not permitted to edit users details");
       throw new Meteor.Error(403, "User not permitted to edit users details");
     }
@@ -93,7 +93,7 @@ Meteor.methods({
   },
 
   changeStatus: function(id) {
-    if(!HospoHero.isAdmin()) {
+    if(!HospoHero.isManager()) {
       logger.error("User not permitted to change user status");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -113,7 +113,7 @@ Meteor.methods({
   },
 
   resignDate: function(type, id, val) {
-    if(!HospoHero.isAdmin()) {
+    if(!HospoHero.isManager()) {
       logger.error("User not permitted to resign workers");
       throw new Meteor.Error(403, "User not permitted to resign workers");
     }
@@ -172,14 +172,14 @@ Meteor.methods({
         _id: Meteor.userId()
       }, {
         $set: {
-          defaultArea: areaId
+          currentAreaId: areaId
         }
       });
     }
   },
 
   changeUserRole: function(userId, newRoleId) {
-    if(!HospoHero.isAdmin()) {
+    if(!HospoHero.isManager()) {
       logger.error("User not permitted to change roles");
       throw new Meteor.Error(403, "User not permitted to change roles");
     }
@@ -195,7 +195,7 @@ Meteor.methods({
     }
 
     var updateQuery = {};
-    updateQuery["roles." + HospoHero.getDefaultArea()] = newRoleId;
+    updateQuery["roles." + HospoHero.getCurrentAreaId()] = newRoleId;
 
     Meteor.users.update({ _id: userId }, {$set: updateQuery});
   }

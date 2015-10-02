@@ -9,7 +9,7 @@ Meteor.methods({
 
     var exist = Suppliers.findOne({
       "name": name,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
 
     if(exist) {

@@ -1,6 +1,6 @@
 Meteor.methods({
   createCategory: function(name) {
-    if(!HospoHero.isAdmin()) {
+    if(!HospoHero.isManager()) {
       logger.error("User not permitted to add categories");
       throw new Meteor.Error(403, "User not permitted to add categories");
     }
@@ -10,7 +10,7 @@ Meteor.methods({
     }
     var exist = Categories.findOne({
       name: name,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if(exist) {
       logger.error('Category name should be unique', exist);
@@ -35,7 +35,7 @@ Meteor.methods({
     }
     var exist = Statuses.findOne({
       name: name,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if(exist) {
       logger.error('Status name should be unique', exist);
@@ -60,7 +60,7 @@ Meteor.methods({
     }
     var exist = Sections.findOne({
       "name": name,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if(exist) {
       logger.error('Section name should be unique', exist);

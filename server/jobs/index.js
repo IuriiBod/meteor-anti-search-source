@@ -138,7 +138,7 @@ Meteor.methods({
     }
     var existingtype = JobTypes.findOne({
       'type': type,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if(existingtype) {
       logger.error("Existing job type");

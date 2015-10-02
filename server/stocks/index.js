@@ -17,7 +17,7 @@ Meteor.methods({
     }
     var exist = Ingredients.findOne({
       "code": info.code,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if(exist) {
       logger.error("Duplicate entry");
@@ -168,7 +168,7 @@ Meteor.methods({
 
   ingredientsCount: function() {
     return Ingredients.find({
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     }).count();
   }
 });

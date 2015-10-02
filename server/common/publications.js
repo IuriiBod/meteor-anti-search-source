@@ -10,7 +10,7 @@ Meteor.publish("allSections", function() {
   }
 
   var query = {
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   logger.info("Sections published");
@@ -29,7 +29,7 @@ Meteor.publish("allCategories", function() {
   }
 
   var query = {
-    "relations.areaId": HospoHero.currentArea(this.userId)
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   };
 
   logger.info("Categories published");

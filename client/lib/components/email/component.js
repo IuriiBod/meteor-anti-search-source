@@ -16,7 +16,7 @@ component.state.initialHTML = function() {
   var data = StockOrders.find({
     "version": Session.get("thisVersion"),
     "supplier": supplierId,
-    "relations.areaId": HospoHero.getDefaultArea()
+    "relations.areaId": HospoHero.getCurrentAreaId()
   }).fetch();
   var supplier = Suppliers.findOne(supplierId);
   if(supplier) {
@@ -79,9 +79,7 @@ component.state.replyToEmail = function() {
     this.set("username", user.username);
 
     var role = "Worker";
-    if(HospoHero.isAdmin()) {
-      role = "Admin";
-    } else if(HospoHero.isManager()) {
+    if(HospoHero.isManager()) {
       role = "Manager";
     }
     this.set("userType", role);

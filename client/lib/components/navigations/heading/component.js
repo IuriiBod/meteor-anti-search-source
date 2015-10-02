@@ -39,7 +39,7 @@ component.state.publishedOn = function () {
     var shift = Shifts.findOne({
       "shiftDate": {$in: dates},
       "published": true,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if (shift && shift.publishedOn) {
       return shift.publishedOn;
@@ -191,7 +191,7 @@ component.state.isWeeklyRosterPublished = function () {
     return Shifts.find({
         "shiftDate": {$in: dates},
         "published": true,
-        "relations.areaId": HospoHero.getDefaultArea()
+        "relations.areaId": HospoHero.getCurrentAreaId()
       }).count() > 0;
   }
 };

@@ -2,7 +2,7 @@ SearchSource.defineSource('jobItemsSearch', function(searchText, options) {
   var optionFileds = {sort: {'name': 1}};
   var docs = [];
   var selector = {
-    "relations.areaId": HospoHero.getDefaultArea()
+    "relations.areaId": HospoHero.getCurrentAreaId()
   };
   if(options) {
     if(options.endingAt) {

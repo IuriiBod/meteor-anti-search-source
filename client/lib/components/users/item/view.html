@@ -1,22 +1,28 @@
 <template name="userDetailed">
   <tr data-id="{{state$user._id}}">
-    {{#if isOrganizationOwner}}
+    {{#if isManager}}
       <td style="{{state$userStyle}}"><a href="/user/profile/{{state$user._id}}">{{state$user.username}}</a></td>
 
       <td>
-      {{#unless isMe state$user._id}}
-        {{#if state$user.isActive}}
-          <select name="roleSelector" class="form-control" data-id="{{state$user._id}}">
-            {{#each state$roles}}
-              {{#if state$selectedRole _id}}
-                <option value="{{_id}}" selected="selected">{{name}}</option>
-              {{else}}
-                <option value="{{_id}}">{{name}}</option>
-              {{/if}}
-            {{/each}}
-          </select>
-        {{/if}}
-      {{/unless}}
+        {{#unless isOrganizationOwner state$user._id}}
+          {{#unless isMe state$user._id}}
+            {{#if state$user.isActive}}
+              <select name="roleSelector" class="form-control" data-id="{{state$user._id}}">
+                {{#each state$roles}}
+                  {{#if state$selectedRole _id}}
+                    <option value="{{_id}}" selected="selected">{{name}}</option>
+                  {{else}}
+                    <option value="{{_id}}">{{name}}</option>
+                  {{/if}}
+                {{/each}}
+              </select>
+            {{/if}}
+          {{else}}
+            {{{state$role}}}
+          {{/unless}}
+        {{else}}
+          Owner
+        {{/unless}}
       </td>
     {{else}}
       <td style="{{state$userStyle}}">{{state$user.username}}</td>
@@ -27,14 +33,16 @@
 
     <td>{{state$email}}</td>
 
-    {{#if isOrganizationOwner}}
+    {{#if isManager}}
       <td>
-        {{#unless isMe state$user._id}}
-          {{#if state$user.isActive}}
-            <a href="#" class="archiveUser"><i class="fa fa-archive"></i></a>
-          {{else}}
-            <a href="#" class="archiveUser"><i class="fa fa-exclamation-circle"></i></a>
-          {{/if}}
+        {{#unless isOrganizationOwner state$user._id}}
+          {{#unless isMe state$user._id}}
+            {{#if state$user.isActive}}
+              <a href="#" class="archiveUser"><i class="fa fa-archive"></i></a>
+            {{else}}
+              <a href="#" class="archiveUser"><i class="fa fa-exclamation-circle"></i></a>
+            {{/if}}
+          {{/unless}}
         {{/unless}}
       </td>
     {{/if}}

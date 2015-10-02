@@ -13,7 +13,7 @@ component.state.email = function() {
 };
 
 component.state.roleId = function () {
-  var currentArea = HospoHero.getDefaultArea();
+  var currentArea = HospoHero.getCurrentAreaId();
   if(currentArea) {
     if(this.user.roles[currentArea]) {
       return this.user.roles[currentArea];
@@ -25,18 +25,12 @@ component.state.roleId = function () {
 
 component.state.role = function() {
   if(this.get('roleId')) {
-    return Meteor.roles.findOne({_id: this.get('roleId')}).name;
+    return Roles.getRoleById(this.get('roleId')).name;
   }
 };
 
 component.state.roles = function () {
-  var organizationId = Meteor.user().relations.organizationId;
-  return Meteor.roles.find({
-    $or: [
-      { "relations.organizationId": organizationId },
-      { default: true }
-    ]
-  }).fetch();
+  return Roles.getRoles();
 };
 
 component.state.selectedRole = function (roleId) {

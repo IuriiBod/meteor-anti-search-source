@@ -18,7 +18,7 @@ Meteor.methods({
 
     var exist = MenuItems.findOne({
       "name": info.name,
-      "relations.areaId": HospoHero.getDefaultArea()
+      "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if (exist) {
       logger.error("Duplicate entry");

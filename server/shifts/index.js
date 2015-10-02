@@ -36,7 +36,7 @@ Meteor.methods({
       var alreadyPublished = Shifts.findOne({
         "shiftDate": {$in: info.week},
         "published": true,
-        "relations.areaId": HospoHero.getDefaultArea()
+        "relations.areaId": HospoHero.getCurrentAreaId()
       });
       if(alreadyPublished) {
         doc.published = true;

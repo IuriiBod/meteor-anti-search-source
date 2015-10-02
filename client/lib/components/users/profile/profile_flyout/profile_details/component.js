@@ -1,18 +1,12 @@
 var component = FlowComponents.define('profileFlyout', function(props) {
-  if(props.id) {
-    this.set("id", props.id);
-  } else {
-    this.set("id", Meteor.userId());
-  }
+  props.id ? this.set("id", props.id) : this.set("id", Meteor.userId());
 });
 
 component.state.basic = function() {
   var id = this.get("id");
   var user = Meteor.users.findOne(id);
   this.set("user", user);
-  if(user) {
-    return user;
-  }
+  return user;
 };
 
 component.state.email = function() {
@@ -24,93 +18,41 @@ component.state.email = function() {
 
 component.state.image = function() {
   var user = this.get("user");
-  if(user) {
-    if(user.services && user.services.google) {
-      return user.services.google.picture;
-    } else {
-      return "/images/user-image.jpeg";
-    }
+  if(user && user.services && user.services.google) {
+    return user.services.google.picture;
+  } else {
+    return "/images/user-image.jpeg";
   }
 };
 
 //permitted for profile owner and admins
 component.state.isEditPermitted = function() {
-  var user = this.get("user");
-  if(user) {
-    if(isAdmin() || isManager()) {
-      return true;
-    } else if(user._id == Meteor.userId()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-};
-
-//permitted for admin only
-component.state.isAdminAndManagerPermitted = function() {
-  if(Meteor.userId()) {
-    var user = Meteor.user();
-    if(user.isAdmin || user.isManager) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  return HospoHero.isManager() || HospoHero.isMe(this.get('id'));
 };
 
 component.state.shiftsPerWeek = function() {
   var user = this.get("user");
   var shifts = [1, 2, 3, 4, 5, 6, 7];
   var formattedShifts = [];
+
   shifts.forEach(function(shift) {
-    if(user && user.profile.shiftsPerWeek == shift) {
-      var doc = {
-        "shift": shift,
-        "selected": true
-      }
-    } else {
-      var doc = {
-        "shift": shift,
-        "selected": false
-      }
-    }
+    var doc = {
+      "shift": shift
+    };
+    doc.selected = user && user.profile.shiftsPerWeek == shift;
     formattedShifts.push(doc);
   });
   return formattedShifts;
 };
 
 component.state.hasResignDate = function() {
-  if(Meteor.userId()) {
-    var id = this.get("id");
-    var user = Meteor.users.findOne(id);
-    var resignDate = user.profile.resignDate;
-    if (resignDate) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  var user = Meteor.users.findOne(this.get("id"));
+  return !!user.profile.resignDate;
 };
 
 component.state.resignDate = function() {
   var id = this.get("id");
   var user = Meteor.users.findOne({_id: id});
   var resignDate = user.profile.resignDate;
-  
-  if (resignDate) {
-    return moment(resignDate).format("MM/DD/YYYY");
-  } else {
-    return null;
-  }
-};
-
-component.state.isMe = function() {
-  var userId = Meteor.userId();
-  var id = this.get("id");
-  if(userId == id) {
-    return true;
-  } else {
-    return false;
-  }
+  return resignDate ? moment(resignDate).format("MM/DD/YYYY") : null;
 };

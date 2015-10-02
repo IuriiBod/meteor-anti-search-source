@@ -2,12 +2,30 @@ Meteor.roles = new Mongo.Collection('userRoles');
 
 var checkPermissions = function() {
   if(Meteor.userId()) {
-    var adminRole = Meteor.roles.findOne({name: 'Admin'});
-    if (adminRole) {
-      return Meteor.user.find({
-          _id: Meteor.userId(),
-          "roles.defaultRole": adminRole._id
-        }).count() > 0;
+    var roles = Meteor.roles.find({
+      $or: [
+        { name: 'Owner' },
+        { name: 'Manager' }
+      ]
+    }).fetch();
+
+
+    if(roles.length) {
+      roles = _.map(roles, function(role) {
+        return role._id;
+      });
+
+      var tempObj = {};
+      var user = Meteor.users.findOne(Meteor.userId());
+      tempObj["roles." + user.currentAreaId] = { $in: roles };
+
+      return !!Meteor.users.findOne({
+        _id: Meteor.userId(),
+        $or: [
+          { "roles.defaultRole": { $in: roles } },
+          tempObj
+        ]
+      });
     }
   }
   return false;
