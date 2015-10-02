@@ -21,7 +21,6 @@ Template.predictionSalesRow.onRendered(function () {
                     menuItemId: menuItemId
                 };
                 Meteor.call("updateActualSale", updItem);
-                //console.log(ImportedActualSales.find({date: TimeRangeQueryBuilder.forDay(date), menuItemId: menuItemId}).fetch());
             }
         }
     });

@@ -62,8 +62,11 @@ Revel = {
     while (offset <= totalCount && toContinue) {
       logger.info('Request to Revel server', {offset: offset, total: totalCount});
 
-      //var result = this.queryRevelOrderItems(this.DATA_LIMIT, offset);
-      var result = mockRevel.load(this.DATA_LIMIT, offset);
+      if (HospoHero.isDevelopmentMode()) {
+        var result = mockRevel.load(this.DATA_LIMIT, offset);
+      } else {
+        var result = this.queryRevelOrderItems(this.DATA_LIMIT, offset);
+      }
 
       //handle Revel API error
       if (result === false) {
