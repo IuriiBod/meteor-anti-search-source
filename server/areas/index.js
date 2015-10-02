@@ -44,7 +44,7 @@ Meteor.methods({
    * @param roleId
    */
   addUserToArea: function (userId, areaId, roleId) {
-    if(!HospoHero.isOrganizationOwner()) {
+    if (!HospoHero.isOrganizationOwner()) {
       throw new Meteor.Error(403, "User not permitted to remove users from area");
     }
 
@@ -60,13 +60,13 @@ Meteor.methods({
     $set["relations.organizationId"] = area.organizationId;
 
     var user = Meteor.users.findOne({_id: userId});
-    if(!user.relations.locationIds || user.relations.locationIds.length == 0) {
+    if (!user.relations.locationIds || user.relations.locationIds.length == 0) {
       $set["relations.locationIds"] = [area.locationId];
     } else {
       $addToSet["relations.locationIds"] = area.locationId;
     }
 
-    if(!user.relations.areaIds || user.relations.areaIds.length == 0) {
+    if (!user.relations.areaIds || user.relations.areaIds.length == 0) {
       $set["relations.areaIds"] = [areaId];
     } else {
       $addToSet["relations.areaIds"] = areaId;
@@ -74,7 +74,7 @@ Meteor.methods({
 
     Meteor.users.update({_id: userId}, {$set: $set});
 
-    if(Object.keys($addToSet).length > 0) {
+    if (Object.keys($addToSet).length > 0) {
       Meteor.users.update({_id: userId}, {$addToSet: $addToSet});
     }
 
@@ -105,12 +105,12 @@ Meteor.methods({
     });
   },
 
-  removeUserFromArea: function(userId, areaId) {
-    if(!HospoHero.isOrganizationOwner()) {
+  removeUserFromArea: function (userId, areaId) {
+    if (!HospoHero.isOrganizationOwner()) {
       throw new Meteor.Error(403, "User not permitted to remove users from area");
     }
 
-    if(!userId || !areaId) {
+    if (!userId || !areaId) {
       throw new Meteor.Error("User ID or Area ID is empty!");
     }
 
@@ -124,10 +124,31 @@ Meteor.methods({
     };
     updateObject.$unset.roles[areaId] = '';
 
-    if(Meteor.users.find({_id: userId, defaultArea: areaId}).count() > 0) {
+    if (Meteor.users.find({_id: userId, defaultArea: areaId}).count() > 0) {
       updateObject.$unset.defaultArea = '';
     }
 
     Meteor.users.update({_id: userId}, updateObject);
+  },
+
+  updateAreaInactivityTimeout: function (areaId, newTimeoutInMinutes) {
+    HospoHero.checkMongoId(areaId);
+    check(newTimeoutInMinutes, InactivityTimeout);
+
+    //todo: improve security check here (enable area's managers also edit this settings)
+    if (!HospoHero.isOrganizationOwner()) {
+      throw new Meteor.Error(403, "User not permitted to remove users from area");
+    }
+
+    Areas.update({_id: areaId}, {$set: {inactivityTimeout: minutesToMs(newTimeoutInMinutes)}});
   }
+});
+
+var minutesToMs = function (minutes) {
+  return minutes * 60000;
+};
+
+var InactivityTimeout = Match.Where(function (timeout) {
+  check(timeout, Number);
+  return timeout >= 1 && timeout <= 65536;
 });

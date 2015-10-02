@@ -1,44 +1,27 @@
 StaleSession = {
+  _onGetInactivityTimeoutCb: null,
 
-  _getConfig: function (name, defaultVal) {
-    var conf = StaleSessionConfigs.findOne({name: name});
-    return conf ? conf.value : defaultVal;
+  onGetInactivityTimeout: function (callback) {
+    this._onGetInactivityTimeoutCb = callback;
   },
 
-  _setConfig: function (name, value) {
-    if (this.configurationSelector) {
-      StaleSessionConfigs.update({}, {
-        $set: {
-          name: name,
-          value: value
-        }
-      }, {upsert: true});
-    }
+  get defaultInactivityTimeout() {
+    return 600000;
   },
 
   // inactivityTimeout
   get inactivityTimeout() {
-    return this._getConfig("inactivityTimeout", 600000)
-  },
-  set inactivityTimeout(val) {
-    this._setConfig("inactivityTimeout", val);
+    return this._onGetInactivityTimeoutCb && this._onGetInactivityTimeoutCb() || this.defaultInactivityTimeout;
   },
 
   // heartbeatInterval
   get heartbeatInterval() {
-    return this._getConfig("heartbeatInterval", 500);
-  },
-  set heartbeatInterval(val) {
-    this._setConfig("heartbeatInterval", val);
+    return 500;
   },
 
   // activityEvents
   get activityEvents() {
-    var defaultVal = "mousemove click keydown touchstart touchend";
-    return this._getConfig("activityEvents", defaultVal);
-  },
-  set activityEvents(val) {
-    this._setConfig("activityEvents", val);
+    return "mousemove click keydown touchstart touchend";
   },
 
   // sessionExpired
@@ -54,6 +37,7 @@ StaleSession = {
     var val = Session.get("StaleSession.lastActivity");
     return val || new Date();
   },
+
   set lastActivity(val) {
     if (_.isDate(val)) {
       val = val.getTime();
@@ -65,30 +49,10 @@ StaleSession = {
     return new Date() - this.lastActivity;
   },
 
-  allowChangeSettings: function () {
-    return true;
-  },
-
   onSessionExpiration: function () {
   },
 
   onReset: function () {
-  },
-
-  configure: function (kwargs) {
-    kwargs = kwargs || {};
-    kwargs = _.pick(
-      kwargs,
-      "inactivityTimeout",
-      "heartbeatInterval",
-      "activityEvents",
-      "onSessionExpiration",
-      "onReset"
-    );
-    var self = this;
-    _.each(kwargs, function (val, key) {
-      self[key] = val;
-    });
   },
 
   reset: function () {

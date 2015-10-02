@@ -29,7 +29,7 @@ fastclick@1.0.3
 fortawesome:fontawesome@4.3.0
 geojson-utils@1.0.3
 google@1.1.5
-hospohero:stale-session@0.0.6
+hospohero:stale-session@0.0.7
 html-tools@1.0.4
 htmljs@1.0.4
 http@1.1.0
