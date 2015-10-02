@@ -1,3 +1,5 @@
+var currentLocationId = 1;
+
 Template.predictionSalesRow.onRendered(function () {
     $('.actual-qty').editable({
         type: 'text',
@@ -5,9 +7,21 @@ Template.predictionSalesRow.onRendered(function () {
         display: false,
         showbuttons: true,
         success: function(response, newValue) {
-            console.log(parseInt(newValue));
-            if(isNaN(parseInt(newValue))){
-                alert("Please insert a number");
+            var pattern=/^[0-9]+$/;
+            if(!pattern.test(newValue)){
+                alert("Please insert an integer");
+            }
+            else{
+                var menuItemId = $(this).attr("data-menuId");
+                var date = moment($(this).attr("data-date")).toDate();
+                var updItem ={
+                    locationId: currentLocationId,
+                    quantity: newValue,
+                    date: date,
+                    menuItemId: menuItemId
+                };
+                Meteor.call("updateActualSale", updItem);
+                //console.log(ImportedActualSales.find({date: TimeRangeQueryBuilder.forDay(date), menuItemId: menuItemId}).fetch());
             }
         }
     });
