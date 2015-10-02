@@ -7,7 +7,9 @@ Migrations.add({
       Meteor.roles.update({
         _id: role._id
       }, {
-        name: 'Owner'
+        $set: {
+          name: 'Owner'
+        }
       });
 
       role = Meteor.roles.findOne({name: 'Manager'});
