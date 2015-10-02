@@ -1,31 +1,31 @@
 Namespace('HospoHero', {
-  getBlazeTemplate: function(selector) {
-    if(selector && $(selector).length > 0) {
+  getBlazeTemplate: function (selector) {
+    if (selector && $(selector).length > 0) {
       return Blaze.getView($(selector)[0])._templateInstance;
     }
   },
 
-  checkMongoId: function(id) {
+  checkMongoId: function (id) {
     check(id, String);
-    if(!/[0-9a-zA-Z]{17}/.test(id)) {
+    if (!/[0-9a-zA-Z]{17}/.test(id)) {
       throw new Meteor.Error("Expected MongoID");
     }
   },
 
-  checkDate: function(date) {
-    if(!moment(date).isValid()) {
+  checkDate: function (date) {
+    if (!moment(date).isValid()) {
       throw new Meteor.Error("Expected date");
     }
   },
 
-  alert: function(err) {
-    if(err) {
+  alert: function (err) {
+    if (err) {
       console.log(err);
-      if(err.reason) {
+      if (err.reason) {
         return alert(err.reason);
-      } else if(err.error) {
+      } else if (err.error) {
         return alert(err.error);
-      } else if(err.message) {
+      } else if (err.message) {
         return alert(err.message);
       } else {
         return alert('');
@@ -47,10 +47,10 @@ Namespace('HospoHero', {
 
   isInRole: function(roleName, userId, areaId) {
     userId = userId ? userId : Meteor.userId();
-    if(!userId) {
+    if (!userId) {
       return false;
     }
-    if(!areaId) {
+    if (!areaId) {
       var user = Meteor.users.findOne({_id: userId});
       areaId = user && user.defaultArea ? user.defaultArea : 'defaultRole';
     }
@@ -77,22 +77,22 @@ Namespace('HospoHero', {
     }
   },
 
-  getOrganization: function(organizationId) {
+  getOrganization: function (organizationId) {
     organizationId = organizationId ? organizationId : HospoHero.isInOrganization();
     return Organizations.findOne({_id: organizationId});
   },
 
-  getDefaultArea: function() {
-    var user = Meteor.user();
+  getDefaultArea: function (userId) {
+    var user = userId ? Meteor.users.findOne({_id: userId}) : Meteor.user();
     return user && user.defaultArea ? user.defaultArea : false;
   },
 
-  getCurrentArea: function() {
+  getCurrentArea: function () {
     var defaultArea = HospoHero.getDefaultArea();
     return defaultArea ? Areas.findOne({_id: defaultArea}) : false;
   },
 
-  getRelationsObject: function(areaId) {
+  getRelationsObject: function (areaId) {
     var area = areaId ? Areas.findOne({_id: areaId}) : HospoHero.getCurrentArea();
     return {
       organizationId: area.organizationId,

@@ -190,7 +190,7 @@ Meteor.methods({
     logger.info('Stock item added to area', {"stock": stockId, "sarea": sareaId});
   },
   
-  removeStocksFromAreas: function(stockId, sareaId) {
+  removeStocksFromAreas: function(stockId, sareaId, stockRefId) {
     if(!HospoHero.perms.canEditStock()) {
       logger.error("User not permitted to remove stocks from areas");
       throw new Meteor.Error(404, "User not permitted to remove stocks from areas");
@@ -219,6 +219,14 @@ Meteor.methods({
     SpecialAreas.update({"_id": sareaId}, {$pull: {"stocks": stockId}});
     Ingredients.update({"_id": stockId}, {$pull: {"specialAreas": sareaId, "generalAreas": sAreaExist.generalArea}})
     logger.info('Stock item removed from area', {"stock": stockId, "sarea": sareaId});
+
+    if(stockRefId) {
+      Meteor.call("removeStocktake", stockRefId, function(err) {
+        if(err) {
+          HospoHero.alert(err);
+        }
+      });
+    }
   },
 
   deleteSpecialArea: function(id) {
