@@ -35,6 +35,9 @@ Meteor.publish("jobItems", function(ids) {
   }
 
   logger.info("Job items published", ids);
+
+  console.log('JI', JobItems.find(query, options).fetch());
+  
   return JobItems.find(query, options);
 });
 

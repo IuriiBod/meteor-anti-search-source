@@ -86,7 +86,7 @@ component.prototype.itemRendered = function() {
         };
 
         // Get roles which can be rosted
-        var canBeRostedRoles = Meteor.roles.find({permissions: 'ROSTER_CAN_BE_ROSTED'}).fetch();
+        var canBeRostedRoles = Roles.getRolesByPermissions(Roles.permissions.Roster.canBeRosted.code);
         // Conver it to array of IDs
         var canBeRostedRolesIds = _.map(canBeRostedRoles, function(role) {
           return role._id;

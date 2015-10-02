@@ -1,6 +1,6 @@
 Meteor.methods({
   createCategory: function(name) {
-    if(!HospoHero.isAdmin()) {
+    if(!HospoHero.isManager()) {
       logger.error("User not permitted to add categories");
       throw new Meteor.Error(403, "User not permitted to add categories");
     }

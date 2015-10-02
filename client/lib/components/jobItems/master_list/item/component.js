@@ -18,29 +18,19 @@ var component = FlowComponents.define('jobItemDetailed', function(props) {
 component.state.showSection = function() {
   var id = this.type;
   var type = JobTypes.findOne(id);
-  if(type && type.name == "Recurring") {
-    return true;
-  } else {
-    return false;
-  }
-}
-
+  return !!(type && type.name == "Recurring");
+};
 
 component.state.job = function() {
   return this.jobitem;
-}
+};
 
 component.state.isPrep = function() {
-  if(this.jobitem.type == "Prep") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.jobitem.type == "Prep";
+};
 
 component.state.cost = function() {
   var jobItem = this.jobitem;
-  var id = this.jobitem._id;
   if(jobItem) {
     jobItem.totalIngCost = 0;
     jobItem.prepCostPerPortion = 0;
@@ -59,7 +49,6 @@ component.state.cost = function() {
             jobItem.totalIngCost += parseFloat(ingItem.totalCost);
           }
         });
-        jobItem.totalIngCost = jobItem.totalIngCost;
       }
     }
     var totalCost = (jobItem.labourCost + jobItem.totalIngCost);
@@ -71,7 +60,7 @@ component.state.cost = function() {
     jobItem.labourCost = Math.round(jobItem.labourCost * 100)/100;
     return jobItem.prepCostPerPortion;
   }
-}
+};
 
 component.state.isPermitted = function() {
   var user = Meteor.user();
@@ -80,12 +69,8 @@ component.state.isPermitted = function() {
   } else {
     return false;
   }
-}
+};
 
 component.state.isArchive = function() {
-  if(this.jobitem.status == "archived") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.jobitem.status == "archived";
+};

@@ -33,6 +33,18 @@ Namespace('HospoHero', {
     }
   },
 
+  isInOrganization: function(userId) {
+    userId = userId ? userId : Meteor.userId();
+    var user = Meteor.users.findOne({_id: userId});
+    return user && user.relations && user.relations.organizationId ? user.relations.organizationId : false;
+  },
+
+  isOrganizationOwner: function(userId) {
+    var orgId = HospoHero.isInOrganization(userId);
+    userId = userId ? userId : Meteor.userId();
+    return !!Organizations.findOne({_id: orgId, owner: userId});
+  },
+
   isInRole: function(roleName, userId, areaId) {
     userId = userId ? userId : Meteor.userId();
     if(!userId) {
@@ -46,27 +58,23 @@ Namespace('HospoHero', {
   },
 
   isAdmin: function(userId, areaId) {
-    return HospoHero.isInRole('Admin', userId, areaId)
+    return HospoHero.isInRole('Admin', userId, areaId);
   },
 
   isManager: function(userId, areaId) {
-    return HospoHero.isInRole('Manager', userId, areaId)
+    return HospoHero.isInRole('Manager', userId, areaId) ||
+      HospoHero.isOrganizationOwner();
   },
 
   isWorker: function(userId, areaId) {
-    return HospoHero.isInRole('Worker', userId, areaId)
+    return HospoHero.isInRole('Worker', userId, areaId);
   },
 
-  isInOrganization: function(userId) {
-    userId = userId ? userId : Meteor.userId();
-    var user = Meteor.users.findOne({_id: userId});
-    return user && user.relations && user.relations.organizationId ? user.relations.organizationId : false;
-  },
-
-  isOrganizationOwner: function(orgId, userId) {
-    userId = userId ? userId : Meteor.userId();
-    orgId = !orgId ? HospoHero.isInOrganization(userId) : orgId;
-    return Organizations.find({_id: orgId, owner: userId}).count() > 0;
+  isMe: function (userId) {
+    var currentUserId = Meteor.userId();
+    if (currentUserId) {
+      return (currentUserId == userId);
+    }
   },
 
   getOrganization: function(organizationId) {

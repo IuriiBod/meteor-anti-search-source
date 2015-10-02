@@ -79,9 +79,7 @@ component.state.replyToEmail = function() {
     this.set("username", user.username);
 
     var role = "Worker";
-    if(HospoHero.isAdmin()) {
-      role = "Admin";
-    } else if(HospoHero.isManager()) {
+    if(HospoHero.isManager()) {
       role = "Manager";
     }
     this.set("userType", role);

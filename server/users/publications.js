@@ -80,7 +80,7 @@ Meteor.publish("workers", function() {
       { default: true }
     ],
     name: {
-      $ne: 'Admin'
+      $ne: 'Owner'
     }
   }).fetch();
 

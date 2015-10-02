@@ -5,7 +5,11 @@ component = FlowComponents.define('jobItemDetail', function(props) {
 
 component.state.section = function() {
   var item = this.get("job");
-  return item && item.section ? Sections.findOne(item.section).name : false;
+  if(item && item.section) {
+    var section = Sections.findOne(item.section);
+    return section ? section.name : false;
+  }
+  return false;
 };
 
 component.state.isPrep = function() {
@@ -123,11 +127,6 @@ component.state.labourCost = function() {
 component.state.prepCostPerPortion = function() {
   var item = this.get("job");
   return item ? item.prepCostPerPortion : 0;
-};
-
-component.state.isManagerOrAdmin = function() {
-  var userId = Meteor.userId();
-  return isManagerOrAdmin(userId);
 };
 
 component.state.relatedMenus = function() {

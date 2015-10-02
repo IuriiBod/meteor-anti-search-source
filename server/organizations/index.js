@@ -1,6 +1,6 @@
 Meteor.methods({
   'createOrganization': function(orgName) {
-    if(!HospoHero.isAdmin()) {
+    if(!HospoHero.isManager()) {
       logger.error("User not permitted to create organizations");
       throw new Meteor.Error(403, "User not permitted to create organization");
     }
@@ -29,13 +29,14 @@ Meteor.methods({
     return true;
   },
 
+  // TODO: Rewrite it
   'deleteOrganization': function(id) {
     var user = Meteor.user();
     if(!user) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
     }
-    if(!isManagerOrAdmin(user)) {
+    if(!HospoHero.isOrganizationOwner()) {
       logger.error("User not permitted to delete organization");
       throw new Meteor.Error(403, "User not permitted to delete organization");
     }

@@ -48,7 +48,7 @@
 
         <h4>Pay rates</h4>
         <p>Weekdays ($):
-        {{#if state$isAdminAndManagerPermitted}}
+        {{#if isManager}}
           <a href="#" id="flyout-weekdaysrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.weekdays}}</a>
         {{else}}
           {{#if state$basic.profile.payrates.weekdays}}
@@ -59,7 +59,7 @@
         {{/if}}
         </p>
         <p>Saturday ($):
-         {{#if state$isAdminAndManagerPermitted}}
+         {{#if isManager}}
           <a href="#" id="flyout-saturdayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.saturday}}</a>
           {{else}}
             {{#if state$basic.profile.payrates.saturday}}
@@ -70,7 +70,7 @@
           {{/if}}
         </p>
         <p>Sunday ($):
-         {{#if state$isAdminAndManagerPermitted}}
+         {{#if isManager}}
           <a href="#" id="flyout-sundayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.sunday}}</a>
           {{else}}
             {{#if state$basic.profile.payrates.sunday}}
@@ -84,7 +84,7 @@
         <br>
 
         <h4>No. of shifts per week</h4>
-        {{#if state$isAdminAndManagerPermitted}}
+        {{#if isManager}}
           <select class="form-control shiftsPerWeek" data-id="{{state$basic._id}}">
           {{#each state$shiftsPerWeek}}
             <option selected="{{this.selected}}">{{this.shift}}</option>
@@ -102,7 +102,7 @@
             <br />
             <h4>Resigned date</h4>
             <div>
-                {{state$resignDate}}
+              {{state$resignDate}}
             </div>
         {{/if}}
       </div>

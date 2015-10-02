@@ -17,9 +17,9 @@
         <li class="list-group-item" style="display: block;">
           <a href="#" class="change-current-area{{#if state$currentArea _id}} active{{/if}}">{{name}}</a>
 
-          {{#if isOrganizationOwner}}
+          {{#if isManager}}
             <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i
-            class="fa fa-fw fa-cog"></i></span>
+              class="fa fa-fw fa-cog"></i></span>
           {{/if}}
         </li>
       {{/each}}
@@ -53,29 +53,29 @@
   {{/if}}
 
   {{#if isOrganizationOwner}}
-  <!-- Flyout organizationDetailsPage -->
-  <div class="theme-config flyout-container" id="organizationDetailsPage">
-    <div class="theme-config-box">
-      <div class="skin-setttings">
-        <div class="white-notify-bg">
-          <div class="title clearfix">
-            <a href="#" class="theme-config-close-btn" data-id="organizationDetailsPage">
-              <i class="fa fa-angle-right"></i>
-            </a>
-            Organization Settings
-          </div>
-          <div class="ibox float-e-margins" style="margin-bottom: 0;">
-            <div class="ibox-content" style="padding-bottom: 10px;">
-              <div class="feed-activity-list">
-                {{> render component="organizationDetailsPage" organizationId=state$organization._id}}
+    <!-- Flyout organizationDetailsPage -->
+    <div class="theme-config flyout-container" id="organizationDetailsPage">
+      <div class="theme-config-box">
+        <div class="skin-setttings">
+          <div class="white-notify-bg">
+            <div class="title clearfix">
+              <a href="#" class="theme-config-close-btn" data-id="organizationDetailsPage">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              Organization Settings
+            </div>
+            <div class="ibox float-e-margins" style="margin-bottom: 0;">
+              <div class="ibox-content" style="padding-bottom: 10px;">
+                <div class="feed-activity-list">
+                  {{> render component="organizationDetailsPage" organizationId=state$organization._id}}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Flyout organizationDetailsPage -->
+    <!-- Flyout organizationDetailsPage -->
 
     <!-- Flyout createLocation -->
     <div class="theme-config flyout-container" id="createLocation">
@@ -100,7 +100,9 @@
       </div>
     </div>
     <!-- Flyout createLocation -->
+  {{/if}}
 
+  {{#if isManager}}
     <!-- Flyout locationSettings -->
     <div class="theme-config flyout-container" id="locationSettings">
       <div class="theme-config-box">

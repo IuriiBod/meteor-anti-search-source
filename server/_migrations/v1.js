@@ -89,7 +89,7 @@ Migrations.add({
     // Find all users
     users = Meteor.users.find().fetch();
     if(users.length) {
-      var adminRole = Meteor.roles.findOne({name: 'Admin'});
+      var ownerRole = Meteor.roles.findOne({name: 'Owner'});
       var managerRole = Meteor.roles.findOne({name: 'Manager'});
       var workerRole = Meteor.roles.findOne({name: 'Worker'});
 
@@ -97,7 +97,7 @@ Migrations.add({
 
       users.forEach(function(user) {
         if(user._id == admin._id) {
-          userUpdateQuery.$set.roles[areaId] = adminRole._id;
+          userUpdateQuery.$set.roles[areaId] = ownerRole._id;
         } else if(user.isAdmin || user.isManager) {
           userUpdateQuery.$set.roles[areaId] = managerRole._id;
         } else {

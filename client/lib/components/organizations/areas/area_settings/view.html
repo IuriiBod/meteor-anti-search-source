@@ -1,5 +1,5 @@
 <template name="areaSettings">
-  {{#if isOrganizationOwner}}
+  {{#if isManager}}
     <h1 class="area-name" style="display: inline-block;" data-id="{{state$area._id}}" data-display="false">{{state$area.name}}</h1>
   {{else}}
     <h1 style="display: inline-block;">{{state$area.name}}</h1>
@@ -8,7 +8,7 @@
   <div class="area-users">
     {{#each state$areaUsers}}
       <div class="user-profile-image-container">
-        {{#if isOrganizationOwner}}
+        {{#if isManager}}
           {{#unless isMe _id}}
             <i class="fa fa-times remove-user-from-area"></i>
           {{/unless}}
@@ -20,7 +20,7 @@
     {{/each}}
   </div>
 
-  {{#if isOrganizationOwner}}
+  {{#if isManager}}
     <button class="btn btn-white col-xs-12 add-user" data-id="{{state$area._id}}">
       <i class="fa fa-user-plus"></i>  Add User
     </button>

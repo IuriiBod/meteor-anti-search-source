@@ -71,9 +71,6 @@ Template.invitationAccept.events({
       user.password = password.value;
     }
 
-    console.log('ACCEPT! IID: ', invitationId, " USER: ", user);
-
-
     Meteor.call('acceptInvitation', invitationId, user, function(err) {
       if(err) {
         HospoHero.alert(err);

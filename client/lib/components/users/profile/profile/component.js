@@ -27,7 +27,7 @@ component.state.image = function() {
 
 //permitted for profile owner and admins
 component.state.isEditPermitted = function() {
-  return HospoHero.isAdmin() || isMe(this.get('id'));
+  return HospoHero.isManager() || isMe(this.get('id'));
 };
 
 component.state.shiftsPerWeek = function() {

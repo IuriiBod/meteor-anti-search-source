@@ -5,7 +5,7 @@
 Roles.getPermissionByKey = function(key) {
   var permissionKey;
   var permissionValues;
-
+  
   key = key.toLowerCase();                                                            // job_view_items
   permissionKey = key.split('_', 1).toString();                                       // job
   permissionKey = permissionKey.slice(0,1).toUpperCase() + permissionKey.slice(1);    // Job
@@ -46,6 +46,9 @@ Roles.getRoles = function() {
   var organizationId = HospoHero.isInOrganization();
   if(organizationId) {
     return Meteor.roles.find({
+      name: {
+        $ne: 'Owner'
+      },
       $or: [
         { default: true },
         { "relations.organizationId": organizationId }
@@ -73,6 +76,36 @@ Roles.getRoleByName = function(roleName) {
 };
 
 /**
+ * Return roles by permission key or array of permission keys
+ * @param permissions
+ * @returns Array
+ */
+Roles.getRolesByPermissions = function(permissions) {
+  if(Array.isArray(permissions)) {
+    permissions = {$in: permissions};
+  }
+
+  return Meteor.roles.find({
+    permissions: permissions
+  }).fetch();
+};
+
+Roles.getRoleByUserId = function(userId) {
+  userId = userId ? userId : Meteor.userId();
+  var user = Meteor.users.findOne(userId);
+
+  if(user && user.defaultArea) {
+    if(user.roles[user.defaultArea]) {
+      return Roles.getRoleById(user.roles[user.defaultArea]);
+    } else if(user.roles.defaultRole) {
+      return Roles.getRoleById(user.roles.defaultRole);
+    } else {
+      return false;
+    }
+  }
+};
+
+/**
  * Returns role permissions
  * @param roleId
  * @returns {*|Roles.permissions|{}|Array}
@@ -92,7 +125,7 @@ Roles.getPermissionsById = function(roleId) {
  */
 Roles.addRole = function(name, permissions) {
   if(Meteor.roles.find({name: name}).count() > 0) {
-    alert('The role with name "' + name + '" already exists!');
+    alert("The role with name " + name + " already exists!");
     return false;
   }
 
