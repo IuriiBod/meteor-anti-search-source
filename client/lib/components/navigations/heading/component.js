@@ -13,19 +13,19 @@ component.state.title = function () {
   }
 
   return title;
-}
+};
 
 component.state.type = function () {
   return this.type;
-}
+};
 
 component.state.category = function () {
   return this.category;
-}
+};
 
 component.state.subCategory = function () {
   return this.subCategory;
-}
+};
 
 component.state.publishedOn = function () {
   if (this.type == "weeklyroster") {
@@ -42,45 +42,7 @@ component.state.publishedOn = function () {
       return shift.publishedOn;
     }
   }
-}
-
-component.state.currentDate = function () {
-  var week = Router.current().params.week;
-  var year = Router.current().params.year;
-  var weekStartEnd = getWeekStartEnd(week, year);
-  var firstDay = weekStartEnd.monday;
-  var lastDay = weekStartEnd.sunday;
-
-  var firstDayDate = firstDay.getDate();
-  var lastDayDate = lastDay.getDate();
-
-  var firstDayMonth = firstDay.getMonth();
-  var lastDayMonth = lastDay.getMonth();
-
-  var firstDayMonthName = getMonthName(firstDay.getMonth(), true);
-  firstDayMonthName = firstDayMonthName.toUpperCase();
-  var lastDayMonthName = getMonthName(lastDay.getMonth(), true);
-  lastDayMonthName = lastDayMonthName.toUpperCase();
-
-  var firstDayYear = firstDay.getFullYear();
-  var lastDayYear = lastDay.getFullYear();
-
-  var currentDate = "";
-
-  if (firstDayMonth == lastDayMonth) {
-    currentDate = firstDayDate + " - " + lastDayDate + " " + firstDayMonthName + ", " + firstDayYear + ", ";
-  } else if (firstDayMonth != lastDayMonth) {
-    if (firstDayYear == lastDayYear) {
-      currentDate = firstDayDate + " " + firstDayMonthName + " - " + lastDayDate + " " + lastDayMonthName + ", " + firstDayYear + ", ";
-    } else {
-      currentDate = firstDayDate + " " + firstDayMonthName + " " + firstDayYear + " - " + lastDayDate + " " + lastDayMonthName + " " + lastDayYear + ", ";
-    }
-  }
-
-  currentDate += "WEEK " + week;
-
-  return currentDate;
-}
+};
 
 component.state.id = function () {
   if (this.id) {
@@ -88,7 +50,7 @@ component.state.id = function () {
   } else if (Router.current().params._id) {
     return Router.current().params._id;
   }
-}
+};
 
 component.state.isMenuList = function () {
   if (this.type == "menulist") {
@@ -96,7 +58,7 @@ component.state.isMenuList = function () {
   } else {
     return false;
   }
-}
+};
 
 component.state.isActualSales = function () {
   if (this.type == "actualsales") {
@@ -104,7 +66,7 @@ component.state.isActualSales = function () {
   } else {
     return false;
   }
-}
+};
 
 component.state.isDailyRoster = function () {
   if (this.type == "dailyroster") {
@@ -124,7 +86,7 @@ component.state.routeDate = function () {
   if (date) {
     return date;
   }
-}
+};
 
 component.state.isMenuListSubscribed = function () {
   if (this.type == "menulist") {
@@ -135,7 +97,7 @@ component.state.isMenuListSubscribed = function () {
       return false;
     }
   }
-}
+};
 
 component.state.isMenuDetailed = function () {
   if (this.type == "menudetailed") {
@@ -143,7 +105,7 @@ component.state.isMenuDetailed = function () {
   } else {
     return false;
   }
-}
+};
 
 component.state.isJobItemDetailed = function () {
   if (this.type == "jobitemdetailed") {
@@ -151,7 +113,7 @@ component.state.isJobItemDetailed = function () {
   } else {
     return false;
   }
-}
+};
 
 component.state.isJobItemSubscribed = function () {
   var userId = Meteor.userId();
@@ -161,7 +123,7 @@ component.state.isJobItemSubscribed = function () {
   } else {
     return false;
   }
-}
+};
 
 
 component.state.isJobsList = function () {
@@ -170,7 +132,7 @@ component.state.isJobsList = function () {
   } else {
     return false;
   }
-}
+};
 
 component.state.isMenuSubscribed = function () {
   if (this.type == "menudetailed") {
@@ -182,7 +144,7 @@ component.state.isMenuSubscribed = function () {
       return false;
     }
   }
-}
+};
 
 component.state.isJobListSubscribed = function () {
   if (this.type == "jobslist") {
@@ -193,7 +155,7 @@ component.state.isJobListSubscribed = function () {
       return false;
     }
   }
-}
+};
 
 component.state.isIngredientsList = function () {
   if (this.type == "ingredientslist") {
@@ -201,7 +163,7 @@ component.state.isIngredientsList = function () {
   } else {
     return false;
   }
-}
+};
 
 component.state.weeklyNavigation = function () {
   if (this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport") {
@@ -305,3 +267,11 @@ component.state.isArchiveJob = function () {
     return false;
   }
 }
+
+component.state.getWeek = function () {
+  return Router.current().params.week;
+};
+
+component.state.getYear = function () {
+  return Router.current().params.year;
+};

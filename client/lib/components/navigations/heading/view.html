@@ -297,23 +297,7 @@
               <button class="btn btn-primary" id="publishRoster">Publish Roster</button>
             {{/if}}
           {{/if}}
-
-          <div class="btn-group" role="group">
-            <a href="" class="btn btn-white previousWeek"><i class="fa fa-chevron-left"></i></a>
-
-            <div class="btn-group" role="group">
-              <button type="button"
-                      style="padding: 6px"
-                      class="btn btn-white thisWeek datepicker dropdown-toggle calendar-toggle"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false">
-                {{state$currentDate}}
-                <span class="caret"></span>
-              </button>
-            </div>
-            <a href="" class="btn btn-white nextWeek"><i class="fa fa-chevron-right"></i></a>
-          </div>
+          {{>render component="weekPicker" year=state$getYear week=state$getWeek}}
         </div>
       {{/if}}
 
