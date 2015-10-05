@@ -5,6 +5,7 @@ var securityHelpers = {
   isManager: HospoHero.isManager,
   isWorker: HospoHero.isWorker,
   getCurrentArea: HospoHero.getCurrentArea,
+  getCurrentAreaId: HospoHero.getCurrentAreaId,
   isMe: HospoHero.isMe,
   canInvite: HospoHero.perms.canInvite,
   canViewRoster: HospoHero.perms.canViewRoster,

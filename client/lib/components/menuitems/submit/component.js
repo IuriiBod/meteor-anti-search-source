@@ -17,5 +17,9 @@ component.action.submit = function(info) {
 };
 
 component.state.statuses = function() {
-  return Statuses.find();
+  return Statuses.find({
+    name: {
+      $ne: 'archived'
+    }
+  });
 };
