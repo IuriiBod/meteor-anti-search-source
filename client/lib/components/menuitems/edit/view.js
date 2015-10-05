@@ -26,9 +26,6 @@ Template.editMenuItem.events({
   },
 
   'submit form': function (event) {
-
-    alert("SUBMIT EDIT MENU FORM");
-
     event.preventDefault();
     var id = Session.get("thisMenuItem");
     var name = $(event.target).find('[name=name]').val().trim();
