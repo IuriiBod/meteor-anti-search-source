@@ -4,22 +4,18 @@ Template.topNavbar.rendered = function () {
   // $('body').addClass('fixed-nav');
   // $(".navbar-static-top").removeClass('navbar-static-top').addClass('navbar-fixed-top');
 
-  $('html').click(function (event) {
+  $('html')
+  .click(function (event) {
     var flyout = $(".flyout-notifi-container");
     if (!flyout.is(event.target) && flyout.has(event.target).length === 0) {
       flyout.removeClass('show');
     }
-  });
-
-  $('html').click(function (event) {
+  })
+  .click(function (event) {
     var flyout = $(".flyout-container");
     var createOrganization = $('.create-organization');
     if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!createOrganization.is(event.target) && createOrganization.has(event.target).length === 0)) {
       flyout.removeClass('show');
-      var fly = HospoHero.getBlazeTemplate('#createOrganizationPage');
-      if(fly) {
-        fly.showCreateOrgFlyout.set(false);
-      }
     }
   });
 };
@@ -58,6 +54,7 @@ Template.topNavbar.events({
   'click #signOutButton': function (event) {
     event.preventDefault();
     Meteor.logout();
+    Router.go("signIn");
   },
 
   'click .markAllAsRead': function (event) {
@@ -92,11 +89,7 @@ Template.topNavbar.events({
     if (!id) {
       id = e.target.parentNode.parentNode.dataset.id;
     }
-    if(id == 'createOrganizationPage') {
-      Template.instance().showCreateOrgFlyout.set(true);
-    } else {
-      $("#" + id).addClass("show");
-    }
+    $("#" + id).addClass("show");
   },
 
   'click .theme-config-close-btn': function (event) {

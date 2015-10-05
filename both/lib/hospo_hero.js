@@ -40,8 +40,8 @@ Namespace('HospoHero', {
   },
 
   isOrganizationOwner: function(userId) {
-    var orgId = HospoHero.isInOrganization(userId);
     userId = userId ? userId : Meteor.userId();
+    var orgId = HospoHero.isInOrganization(userId);
     return !!Organizations.findOne({_id: orgId, owner: userId});
   },
 

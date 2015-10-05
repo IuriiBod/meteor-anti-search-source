@@ -96,16 +96,18 @@ Template.pageHeading.events({
 
   'click .copyMenuItemBtn': function (event) {
     event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    if (id) {
-      Meteor.call("duplicateMenuItem", id, function (err, id) {
-        if (err) {
-          HospoHero.alert(err);
-        } else {
-          Router.go("menuItemDetail", {"_id": id});
-        }
-      });
-    }
+
+    $("#areaChooser").modal("show");
+    //var id = $(event.target).attr("data-id");
+    //if (id) {
+    //  Meteor.call("duplicateMenuItem", id, function (err, id) {
+    //    if (err) {
+    //      HospoHero.alert(err);
+    //    } else {
+    //      Router.go("menuItemDetail", {"_id": id});
+    //    }
+    //  });
+    //}
   },
 
   'click .copyJobItemBtn': function (event) {

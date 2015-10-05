@@ -1,5 +1,3 @@
-
-
 Meteor.startup(function () {
   Comments._ensureIndex({"reference": 1, "createdOn": -1});
 
