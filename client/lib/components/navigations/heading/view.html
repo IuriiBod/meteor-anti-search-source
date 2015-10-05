@@ -307,7 +307,7 @@
               {{/if}}
             {{/if}}
           {{/if}}
-          {{>render component="weekPicker" year=state$getYear week=state$getWeek}}
+          {{>render component="weekPicker" year=state$getYear week=state$getWeek onDateChanged=state$onDateChanged}}
         </div>
       {{/if}}
 

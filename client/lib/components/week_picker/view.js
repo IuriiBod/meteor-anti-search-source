@@ -5,7 +5,8 @@ Template.weekPicker.onRendered(function () {
       todayHighlight: true,
       calendarWeeks: true,
       weekStart: 1,
-      toggleActive: true
+      toggleActive: true,
+      autoclose: true
     }).datepicker("setDate", initialDate)
   }).bind(this);
 

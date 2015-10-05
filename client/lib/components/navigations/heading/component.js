@@ -192,3 +192,18 @@ component.state.isArchiveJob = function () {
 component.state.isSalesPrediction = function () {
   return this.type === 'salesPrediction';
 };
+
+component.state.getYear = function () {
+  return Router.current().params.year;
+};
+
+component.state.getWeek = function () {
+  return Router.current().params.week;
+};
+
+component.state.onDateChanged = function () {
+  return function (weekDate) {
+
+    Router.go(Router.current().route.getName(), weekDate);
+  };
+};
