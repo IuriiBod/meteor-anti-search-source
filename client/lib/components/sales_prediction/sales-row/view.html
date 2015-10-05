@@ -2,8 +2,7 @@
   <tr>
     <td>{{state$menuItem.name}}</td>
     {{#each state$weekPrediction}}
-      <td>{{this.predictionQuantity}}</td>
-      <td>{{this.actualQuantity}}</td>
+      {{> render component="predictionSalesCell" displayItem=this itemId =state$menuItem._id }}
     {{/each}}
   </tr>
 </template>
