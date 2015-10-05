@@ -19,10 +19,6 @@ Meteor.publish(null, function () {
 
         Invitations.find({organizationId: orgId}),
 
-        Meteor.users.find({
-          "relations.organizationId": orgId
-        }),
-
         Notifications.find({
           ref: Meteor.userId(),
           read: false,
@@ -37,7 +33,7 @@ Meteor.publish(null, function () {
 
 Meteor.publish(null, function () {
   if (this.userId) {
-    return Meteor.users.find({"_id": id}, {
+    return Meteor.users.find({"_id": this.userId}, {
       fields: {
         "services.google": 1,
         roles: 1,

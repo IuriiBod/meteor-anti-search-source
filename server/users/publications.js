@@ -1,5 +1,5 @@
-Meteor.publish('profileUser', function(id) {
-  if(!this.userId) {
+Meteor.publish('profileUser', function (id) {
+  if (!this.userId) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
@@ -18,8 +18,8 @@ Meteor.publish('profileUser', function(id) {
   return Meteor.users.find({"_id": id}, {fields: options});
 });
 
-Meteor.publish("usersList", function() {
-  if(!this.userId) {
+Meteor.publish("usersList", function () {
+  if (!this.userId) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
@@ -32,13 +32,17 @@ Meteor.publish("usersList", function() {
     currentAreaId: 1
   };
 
-  var users = Meteor.users.find({ "relations.areaId": HospoHero.getCurrentAreaId(this.userId) }, {fields: options}, {limit: 10});
+  var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+  console.log(currentAreaId);
+
+  var users = Meteor.users.find({"relations.areaIds": currentAreaId}, {fields: options});
   logger.info("Userlist published");
+  console.log('test: ', users.count());
   return users;
 });
 
-Meteor.publish("selectedUsersList", function(usersIds) {
-  if(!this.userId) {
+Meteor.publish("selectedUsersList", function (usersIds) {
+  if (!this.userId) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
@@ -53,7 +57,7 @@ Meteor.publish("selectedUsersList", function(usersIds) {
 
   logger.info("SelectedUserlist published");
   return Meteor.users.find({
-    _id: { $in: usersIds },
+    _id: {$in: usersIds},
     "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
   }, {
     fields: options
@@ -61,8 +65,8 @@ Meteor.publish("selectedUsersList", function(usersIds) {
 });
 
 //managers and workers that should be assigned to shifts
-Meteor.publish("workers", function() {
-  if(!this.userId) {
+Meteor.publish("workers", function () {
+  if (!this.userId) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
@@ -76,21 +80,21 @@ Meteor.publish("workers", function() {
   var canBeRostedRoles = Meteor.roles.find({
     permissions: Roles.permissions.Roster.canBeRosted.code,
     $or: [
-      { organizationId: user.relations.organizationId },
-      { default: true }
+      {organizationId: user.relations.organizationId},
+      {default: true}
     ],
     name: {
       $ne: 'Owner'
     }
   }).fetch();
 
-  if(canBeRostedRoles.length) {
-    canBeRostedRoles = _.map(canBeRostedRoles, function(role) {
+  if (canBeRostedRoles.length) {
+    canBeRostedRoles = _.map(canBeRostedRoles, function (role) {
       return role._id;
     });
   }
 
-  if(user.currentAreaId) {
+  if (user.currentAreaId) {
     query["relations.areaIds"] = user.currentAreaId;
     query["roles." + user.currentAreaId] = {$in: canBeRostedRoles};
   }
@@ -98,8 +102,8 @@ Meteor.publish("workers", function() {
   return Meteor.users.find(query);
 });
 
-Meteor.publish("selectedUsers", function(ids) {
-  if(!this.userId) {
+Meteor.publish("selectedUsers", function (ids) {
+  if (!this.userId) {
     logger.error('User not found');
     this.error(new Meteor.Error(404, "User not found"));
   }
