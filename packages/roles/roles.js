@@ -90,6 +90,12 @@ Roles.getRolesByPermissions = function(permissions) {
   }).fetch();
 };
 
+Roles.getRolesByRoleName = function(roleName) {
+  return Meteor.roles.find({
+    name: roleName
+  }).fetch();
+};
+
 Roles.getRoleByUserId = function(userId) {
   userId = userId ? userId : Meteor.userId();
   var user = Meteor.users.findOne(userId);
@@ -103,6 +109,45 @@ Roles.getRoleByUserId = function(userId) {
       return false;
     }
   }
+};
+
+Roles.getUsersByRoles = function(roles, areaId) {
+  if(!areaId) {
+    throw new Meteor.Error("Roles.getUsersByRoles: There are no areaId!");
+  }
+
+  if(!roles || roles.length == 0) {
+    throw new Meteor.Error("Roles.getUsersByRoles: There are no roles!");
+  }
+
+  roles = _.map(roles, function(role) {
+    return role._id ? role._id : '';
+  });
+  var tempObj = {};
+  tempObj["roles." + areaId] = {$in: roles};
+
+  return Meteor.users.find({
+    $or: [
+      {"roles.defaultRole": {$in: roles}},
+      tempObj
+    ]
+  }).fetch();
+};
+
+Roles.getUsersByPermissions = function(permissions, areaId) {
+  if(!areaId) {
+    throw new Meteor.Error("Roles.getUsersByPermissions: There are no areaId!");
+  }
+  var roles = Roles.getRolesByPermissions(permissions);
+  return Roles.getUsersByRoles(roles, areaId);
+};
+
+Roles.getUsersByRoleName = function(roleName, areaId) {
+  if(!areaId) {
+    throw new Meteor.Error("Roles.getUsersByPermissions: There are no areaId!");
+  }
+  var roles = Roles.getRolesByRoleName(roleName);
+  return Roles.getUsersByRoles(roles, areaId);
 };
 
 /**
@@ -177,11 +222,17 @@ Roles.userIsInRole = function(roleName, userId, areaId) {
   });
 };
 
-Roles.hasPermission = function(permissions) {
-  var role = Meteor.role();
-  if(!role) {
+Roles.hasPermission = function(permissions, userId) {
+  userId = userId ? userId : Meteor.userId();
+
+  var user = Meteor.users.findOne(userId);
+
+  if(!user || !user.currentAreaId) {
     return false;
   }
+
+  var roleId = user.roles[user.currentAreaId];
+  var role = Meteor.roles.findOne(roleId);
 
   var isPermitted = false;
   if(Array.isArray(permissions)) {

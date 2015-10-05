@@ -28,9 +28,9 @@ var createUpdateActualSalesFunction = function () {
             menuItemId: menuItem._id
           };
           ImportedActualSales.update(
-              {date: TimeRangeQueryBuilder.forDay(item.date), menuItemId: item.menuItemId},
-              item,
-              {upsert:true}
+            {date: TimeRangeQueryBuilder.forDay(item.date), menuItemId: item.menuItemId},
+            item,
+            {upsert: true}
           );
         }
       });
@@ -47,7 +47,7 @@ predictionModelRefreshJob = function () {
   var forecastData = ForecastDates.findOne({locationId: currentLocationId});
 
   var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
-    || forecastData.lastUploadDate >= getMillisecondsFromDays(182);
+    || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
 
   var updateActualSalesFn = createUpdateActualSalesFunction();
 

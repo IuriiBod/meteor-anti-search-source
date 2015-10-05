@@ -1,45 +1,29 @@
 Namespace('HospoHero.perms', {
-  canInvite: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.User.invite.code);
+  canUser: function(permission) {
+    var permissions = {
+      invite: Roles.permissions.User.invite,
+      viewRoster: Roles.permissions.Roster.view,
+      editRoster: Roles.permissions.Roster.edit,
+      viewMenu: Roles.permissions.Menu.view,
+      editMenu: Roles.permissions.Menu.edit,
+      viewJob: Roles.permissions.Job.view,
+      editJob: Roles.permissions.Job.edit,
+      viewStock: Roles.permissions.Stock.view,
+      editStock: Roles.permissions.Stock.edit,
+      viewForecast: Roles.permissions.Forecast.view
+    };
+
+    if(!permissions[permission]) {
+      throw new Meteor.Error("Permission not found!");
+    }
+
+    return function(userId) {
+      return HospoHero.isOrganizationOwner(userId) ||
+        Roles.hasPermission(permissions[permission].code, userId);
+    };
   },
 
-  canViewRoster: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.Roster.view.code);
-  },
-
-  canEditRoster: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.Roster.edit.code);
-  },
-
-  canBeRosted: function () {
-    return Roles.hasPermission(Roles.permissions.Roster.canBeRosted.code);
-  },
-
-  canViewMenu: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.Menu.view.code);
-  },
-
-  canEditMenu: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.Menu.edit.code);
-  },
-
-  canViewJob: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.Job.view.code);
-  },
-
-  canEditJob: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.Job.edit.code);
-  },
-
-  canViewStock: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.Stock.view.code);
-  },
-
-  canEditStock: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.Stock.edit.code);
-  },
-
-  canViewForecast: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasPermission(Roles.permissions.Forecast.view.code);
+  canBeRosted: function (userId) {
+    return Roles.hasPermission(Roles.permissions.Roster.canBeRosted.code, userId);
   }
 });

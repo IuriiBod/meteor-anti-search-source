@@ -20,7 +20,7 @@ component.state.origin = function() {
 
 component.prototype.onListRendered = function() {
   $(".col-lg-13:first").css("margin-left", "0px");
-  if(HospoHero.perms.canEditRoster()) {
+  if(HospoHero.perms.canUser('editRoster')()) {
     $(".sortable-list > div > li").css("cursor", "move");
     var origin = this.name;
     $(".sortable-list")

@@ -1,6 +1,6 @@
 Meteor.methods({
   'createNewJob': function(info) {
-    if(!HospoHero.perms.canEditJob()) {
+    if(!HospoHero.perms.canUser('editJob')()) {
       logger.error("User is not permitted to create jobs");
       throw new Meteor.Error(403, "User is not permitted to create jobs");
     }
@@ -63,7 +63,7 @@ Meteor.methods({
   },
 
   'editJob': function(id, editFields) {
-    if(!HospoHero.perms.canEditJob()) {
+    if(!HospoHero.perms.canUser('editJob')()) {
       logger.error("User is not permitted to edit jobs");
       throw new Meteor.Error(403, "User is not permitted to edit jobs");
     }
@@ -93,7 +93,7 @@ Meteor.methods({
   },
 
   'deleteJob': function(id, shiftId) {
-    if(!HospoHero.perms.canEditJob()) {
+    if(!HospoHero.perms.canUser('editJob')()) {
       logger.error("User is not permitted to delete jobs");
       throw new Meteor.Error(403, "User is not permitted to delete jobs");
     }
@@ -128,7 +128,7 @@ Meteor.methods({
   },
 
   'addJobType': function(type) {
-    if(!HospoHero.perms.canEditJob()) {
+    if(!HospoHero.perms.canUser('editJob')()) {
       logger.error("User is not permitted to create job types");
       throw new Meteor.Error(403, "User is not permitted to create job types");
     }
@@ -149,7 +149,7 @@ Meteor.methods({
   },
 
   'changeJobStatus': function(jobId, state) {
-    if(!HospoHero.perms.canEditJob()) {
+    if(!HospoHero.perms.canUser('editJob')()) {
       logger.error("User is not permitted to change job status");
       throw new Meteor.Error(403, "User is not permitted to change job status");
     }
