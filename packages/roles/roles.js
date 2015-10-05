@@ -222,11 +222,17 @@ Roles.userIsInRole = function(roleName, userId, areaId) {
   });
 };
 
-Roles.hasPermission = function(permissions) {
-  var role = Meteor.role();
-  if(!role) {
+Roles.hasPermission = function(permissions, userId) {
+  userId = userId ? userId : Meteor.userId();
+
+  var user = Meteor.users.findOne(userId);
+
+  if(!user || !user.currentAreaId) {
     return false;
   }
+
+  var roleId = user.roles[user.currentAreaId];
+  var role = Meteor.roles.findOne(roleId);
 
   var isPermitted = false;
   if(Array.isArray(permissions)) {

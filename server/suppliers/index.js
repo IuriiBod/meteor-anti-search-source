@@ -1,6 +1,6 @@
 Meteor.methods({
   createSupplier: function(name, email, phone) {
-    if(!HospoHero.perms.canEditStock()) {
+    if(!HospoHero.perms.canUser('editStock')()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
@@ -31,7 +31,7 @@ Meteor.methods({
   },
 
   updateSupplier: function(id, info) {
-    if(!HospoHero.perms.canEditStock()) {
+    if(!HospoHero.perms.canUser('editStock')()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
@@ -68,7 +68,7 @@ Meteor.methods({
   },
 
   activateReactivateSuppliers: function(id) {
-    if(!HospoHero.perms.canEditStock()) {
+    if(!HospoHero.perms.canUser('editStock')()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }

@@ -1,6 +1,6 @@
 Meteor.methods({
   'createShift': function(info) {
-    if(!HospoHero.perms.canEditRoster()) {
+    if(!HospoHero.perms.canUser('editRoster')()) {
       logger.error(403, "User not permitted to create shifts");
     }
 
@@ -60,7 +60,7 @@ Meteor.methods({
   },
 
   'editShift': function(id, info) {
-    if(!HospoHero.perms.canEditRoster()) {
+    if(!HospoHero.perms.canUser('editRoster')()) {
       logger.error(403, "User not permitted to create shifts");
     }
 
@@ -161,7 +161,7 @@ Meteor.methods({
   },
 
   'deleteShift': function(id) {
-    if(!HospoHero.perms.canEditRoster()) {
+    if(!HospoHero.perms.canUser('editRoster')()) {
       logger.error(403, "User not permitted to create shifts");
     }
 
