@@ -4,4 +4,4 @@ var component = FlowComponents.define("weeklyFigures", function(props) {
 
 component.state.week = function() {
   return this.week;
-}
+};
