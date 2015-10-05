@@ -42,46 +42,27 @@ component.state.actualCost = function() {
   var week = getWeekStartEnd(Session.get("thisWeek"), Session.get("thisYear"));
   if(week.monday && week.sunday) {
     if(this.type == "sales") {
-      query = {
-        "department": "cafe"
-      };
 
       //for past weeks : actual sales only
       if(Session.get("thisWeek") < moment().week()) {
-        query["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
-        sales = ActualSales.find(query, {sort: {"date": 1}}).fetch();
-        total = calcActualSalesCost(sales);
+        sales = ImportedActualSales.find({date: TimeRangeQueryBuilder.forWeek(week.monday)}, {sort: {"date": 1}}).fetch();
+        total = calcSalesCost(sales);
         //for current week: past days actual sales and for fututre dates forecasted sales
       } else if(Session.get("thisWeek") == moment().week()) {
-        total = 0;
-        today = moment().format("YYYY-MM-DD");
-        query["date"] = {$gte: new Date(week.monday).getTime(), $lt: new Date(today).getTime()};
-        sales = ActualSales.find(query, {sort: {"date": 1}}).fetch();
-        total = calcActualSalesCost(sales);
-        
-        todaySalesActual = ActualSales.findOne({"date": new Date(today).getTime()});
-        if(todaySalesActual) {
-          total += calcActualSalesCost([todaySalesActual]);
+        var todayActualSale = !!ImportedActualSales.findOne({date:TimeRangeQueryBuilder.forDay(moment())});
+        if(todayActualSale){
+          var querySeparator = moment().endOf("d");
         } else {
-          todaySalesForecast = SalesForecast.findOne({"date": new Date(today).getTime()});
-          if(todaySalesForecast) {
-            total += calcForecastedSalesCost([todaySalesForecast]);
-          }
+          var querySeparator = moment().startOf("d");
         }
 
-        forecastQuery = {
-          "department": "cafe",
-          "date": {$gt: new Date(today).getTime(), $lte: new Date(week.sunday).getTime()}
-        };
-        forecatsedSales = SalesForecast.find(forecastQuery, {sort: {"date": 1}}).fetch();
-        total += calcForecastedSalesCost(forecatsedSales);
-
+        var actualSales = ImportedActualSales.find({date: {$gte: week.monday, $lte:querySeparator.toDate()}}, {sort: {"date": 1}}).fetch();
+        var predictSales = SalesPrediction.find({date: {$gte:querySeparator.toDate(), $lte: week.sunday}}, {sort:{date: 1}}).fetch();
+        total= calcSalesCost(actualSales) + calcSalesCost(predictSales);
         //for future weeks: all forecasted sales
       } else if(Session.get("thisWeek") > moment().week()) {
-        total = 0;
-        query["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
-        sales = SalesForecast.find(query, {sort: {"date": 1}}).fetch();
-        total = calcActualSalesCost(sales);
+        sales = SalesPrediction.find({date: TimeRangeQueryBuilder.forWeek(week.monday)}, {sort: {"date": 1}}).fetch();
+        total = calcSalesCost(sales);
       }
 
 
@@ -151,7 +132,7 @@ component.state.actualCost = function() {
       if(Session.get("thisWeek") < moment().week()) {
         salesQuery["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
         sales = ActualSales.find(salesQuery, {sort: {"date": 1}}).fetch();
-        totalSalesOfWeek = calcActualSalesCost(sales);
+        totalSalesOfWeek = 0;//calcActualSalesCost(sales);
 
         shiftsQuery["status"] = {$ne: "draft"};
         shiftsQuery["shiftDate"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
@@ -165,15 +146,15 @@ component.state.actualCost = function() {
         today = moment().format("YYYY-MM-DD");
         salesQuery["date"] = {$gte: new Date(week.monday).getTime(), $lt: new Date(today).getTime()};
         sales = ActualSales.find(salesQuery, {sort: {"date": 1}}).fetch();
-        totalSalesOfWeek = calcActualSalesCost(sales);
+        totalSalesOfWeek = 0;//calcActualSalesCost(sales);
         
         todaySalesActual = ActualSales.findOne({"date": new Date(today).getTime()});
         if(todaySalesActual) {
-          totalSalesOfWeek += calcActualSalesCost([todaySalesActual]);
+          totalSalesOfWeek += 0;//calcActualSalesCost([todaySalesActual]);
         } else {
           todaySalesForecast = SalesForecast.findOne({"date": new Date(today).getTime()});
           if(todaySalesForecast) {
-            totalSalesOfWeek += calcForecastedSalesCost([todaySalesForecast]);
+            totalSalesOfWeek += 0;//calcForecastedSalesCost([todaySalesForecast]);
           }
         }
 
@@ -182,7 +163,7 @@ component.state.actualCost = function() {
           "date": {$gt: new Date(today).getTime(), $lte: new Date(week.sunday).getTime()}
         };
         forecatsedSales = SalesForecast.find(forecastQuery, {sort: {"date": 1}}).fetch();
-        totalSalesOfWeek += calcForecastedSalesCost(forecatsedSales);
+        totalSalesOfWeek += 0;//calcForecastedSalesCost(forecatsedSales);
 
         //Wages
         allShifts = [];
@@ -213,7 +194,7 @@ component.state.actualCost = function() {
       } else if (Session.get("thisWeek") > moment().week()) {
         salesQuery["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
         sales = SalesForecast.find(salesQuery, {sort: {"date": 1}}).fetch();
-        totalSalesOfWeek = calcForecastedSalesCost(sales);
+        totalSalesOfWeek = 0;//calcForecastedSalesCost(sales);
 
         shiftsQuery["status"] = "draft";
         shiftsQuery["shiftDate"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
@@ -241,13 +222,8 @@ component.state.forecastedCost = function() {
 
   var week = getWeekStartEnd(Session.get("thisWeek"), Session.get("thisYear"));
   if(this.type == "sales") {
-    query = {
-      "department": "cafe",
-      "date": {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()}
-    };
-  
-    sales = SalesForecast.find(query, {sort: {"date": 1}}).fetch();
-    total = calcForecastedSalesCost(sales);
+    sales = SalesPrediction.find({date: TimeRangeQueryBuilder.forWeek(week.monday)}, {sort: {"date": 1}}).fetch();
+    total = calcSalesCost(sales);
 
   } else if(this.type == "staffCost") {
     query = {
@@ -268,7 +244,7 @@ component.state.forecastedCost = function() {
     var cursors = [];
     salesQuery["date"] = {$gte: new Date(week.monday).getTime(), $lte: new Date(week.sunday).getTime()};
     sales = SalesForecast.find(salesQuery, {sort: {"date": 1}}).fetch();
-    totalSalesOfWeek = calcForecastedSalesCost(sales);
+    totalSalesOfWeek = 0;//calcForecastedSalesCost(sales);
 
     query = {
       "type": null
@@ -372,21 +348,13 @@ function calcStaffCost(shifts) {
   return totalCost;
 }
 
-function calcActualSalesCost(sales) {
+function calcSalesCost(sales) {
   var totalCost = 0;
   if(sales && sales.length > 0) {
-    sales.forEach(function(doc) {
-      totalCost += doc.revenue;
-    });
-  }
-  return totalCost;
-}
-
-function calcForecastedSalesCost(forecatsedSales) {
-  var totalCost = 0;
-  if(forecatsedSales && forecatsedSales.length > 0) {
-    forecatsedSales.forEach(function(doc) {
-      totalCost += doc.forecastedRevenue;
+    _.each(sales, function (item) {
+      var quantity = item.quantity;
+      var price = MenuItems.findOne({_id: item.menuItemId}).salesPrice;
+      totalCost += quantity * price;
     });
   }
   return totalCost;
