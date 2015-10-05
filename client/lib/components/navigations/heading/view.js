@@ -182,129 +182,6 @@ Template.pageHeading.events({
     });
   },
 
-  'click .today': function (event) {
-    event.preventDefault();
-    var date = moment().format("YYYY-MM-DD");
-    Router.go("actualSales", {"date": date});
-  },
-
-  'click .previousDay': function (event) {
-    event.preventDefault();
-    var date = Router.current().params.date;
-    var yesterday = moment(date).subtract(1, "days").format("YYYY-MM-DD");
-    Router.go("actualSales", {"date": yesterday});
-  },
-
-  'click .nextDay': function (event) {
-    event.preventDefault();
-    var date = Router.current().params.date;
-    var tomorrow = moment(date).add(1, "days").format("YYYY-MM-DD")
-    Router.go("actualSales", {"date": tomorrow});
-  },
-
-  'click .thisWeek': function (event) {
-    event.preventDefault();
-    var week = moment().format("w");
-    var type = $(event.target).closest("div").attr("data-type");
-    if (type == "teamHoursReport") {
-      var sessionHash = Session.get("reportHash");
-      var hash = "shifts";
-      if (sessionHash) {
-        hash = sessionHash;
-      }
-      Router.go("teamHours", {"week": week}, {"hash": hash});
-    } else if (type == "cafeforecasting") {
-      Router.go("cafeSalesForecast", {"week": week});
-    } else if (type == "weeklyroster") {
-      Router.go("weeklyRoster", {"week": week});
-    } else if (type == "currentStocksReport") {
-      Router.go("currentStocks", {"week": week});
-    }
-  },
-
-  'click .nextWeek': function (event, tpl) {
-    event.preventDefault();
-    var type = $(event.target).closest("div.title-action").attr("data-type");
-    var year = parseInt(Router.current().params.year);
-    var weeksNum = moment(year + "-12-31").format("w");
-    weeksNum = (weeksNum == 1) ? moment(year + "-12-24").format("w") : weeksNum;
-    var week = parseInt(Router.current().params.week) + 1;
-    if (week > weeksNum) {
-      week = week % weeksNum;
-      year++;
-    }
-    Session.set("thisWeek", week);
-
-    var checkedDate = moment(new Date(year.toString())).week(week).toDate();
-    tpl.$(".datepicker").datepicker("remove");
-    tpl.$(".datepicker").datepicker({
-      calendarWeeks: true,
-      todayHighlight: true,
-      weekStart: 1,
-      toggleActive: true
-    });
-    tpl.$(".datepicker")
-      .datepicker("setDate", checkedDate)
-      .datepicker("fill");
-    $(".day.active").siblings(".day").addClass("week");
-    if (type == "teamHoursReport") {
-      var sessionHash = Session.get("reportHash");
-      var hash = "shifts";
-      if (sessionHash) {
-        hash = sessionHash;
-      }
-      Router.go("teamHours", {"year": year, "week": week}, {"hash": hash});
-    } else if (type == "cafeforecasting") {
-      Router.go("cafeSalesForecast", {"year": year, "week": week});
-    } else if (type == "weeklyroster") {
-      Router.go("weeklyRoster", {"year": year, "week": week});
-    } else if (type == "currentStocksReport") {
-      Router.go("currentStocks", {"year": year, "week": week});
-    }
-  },
-
-  'click .previousWeek': function (event, tpl) {
-    event.preventDefault();
-    var type = $(event.target).closest("div.title-action").attr("data-type");
-    var year = parseInt(Router.current().params.year);
-    var weeksNum = moment(year + "-12-31").format("w");
-    weeksNum = (weeksNum == 1) ? moment(year + "-12-24").format("w") : weeksNum;
-    var week = parseInt(Router.current().params.week) - 1;
-
-    if (week < 1) {
-      week = weeksNum;
-      year--;
-    }
-    Session.set("thisWeek", week);
-
-    var checkedDate = moment(new Date(year.toString())).week(week).toDate();
-    tpl.$(".datepicker").datepicker("remove");
-    tpl.$(".datepicker").datepicker({
-      calendarWeeks: true,
-      todayHighlight: true,
-      weekStart: 1,
-      toggleActive: true
-    });
-    tpl.$(".datepicker")
-      .datepicker("setDate", checkedDate)
-      .datepicker("fill");
-    $(".day.active").siblings(".day").addClass("week");
-    if (type == "teamHoursReport") {
-      var sessionHash = Session.get("reportHash");
-      var hash = "shifts";
-      if (sessionHash) {
-        hash = sessionHash;
-      }
-      Router.go("teamHours", {"year": year, "week": week}, {"hash": hash});
-    } else if (type == "cafeforecasting") {
-      Router.go("cafeSalesForecast", {"year": year, "week": week});
-    } else if (type == "weeklyroster") {
-      Router.go("weeklyRoster", {"year": year, "week": week});
-    } else if (type == "currentStocksReport") {
-      Router.go("currentStocks", {"year": year, "week": week});
-    }
-  },
-
   'click .todayRoster': function (event) {
     event.preventDefault();
     var date = moment().format("YYYY-MM-DD");
@@ -435,58 +312,6 @@ Template.pageHeading.events({
       });
     }
   },
-  'changeDate .datepicker': function (e, tpl) {
-    var date = e.date;
-    if (date) {
-      var week = moment(date).week();
-      var year = moment(date).format("YYYY");
-      Session.set("week", week);
-      tpl.$(".datepicker").datepicker("remove");
-
-      tpl.$(".datepicker").datepicker({
-        calendarWeeks: true,
-        todayHighlight: true,
-        weekStart: 1,
-        toggleActive: true
-      });
-
-      var checkedDate = new Date(year, date.getMonth(), date.getDate());
-      checkedDate = moment(checkedDate).week(week).toDate();
-      tpl.$(".datepicker").datepicker("update", checkedDate);
-
-      var type = $(e.target).closest("div.title-action").attr("data-type");
-      if (type == "teamHoursReport") {
-        var sessionHash = Session.get("reportHash");
-        var hash = "shifts";
-        if (sessionHash) {
-          hash = sessionHash;
-        }
-        Router.go("teamHours", {"year": year, "week": week}, {"hash": hash});
-      } else if (type == "cafeforecasting") {
-        Router.go("cafeSalesForecast", {"year": year, "week": week});
-      } else if (type == "weeklyroster") {
-        Router.go("weeklyRoster", {"year": year, "week": week});
-      } else if (type == "currentStocksReport") {
-        Router.go("currentStocks", {"year": year, "week": week});
-      }
-    }
-  },
-  'changeMonth .datepicker': function () {
-    $(".day.active").siblings(".day").addClass("week");
-  },
-  'changeYear .datepicker': function () {
-    $(".day.active").siblings(".day").addClass("week");
-  },
-
-  'click .calendar-toggle': function (e, tpl) {
-    if ($(e.target).parent().hasClass("open")) {
-      $(".day.active").removeClass("week");
-      tpl.$(".datepicker").datepicker("hide");
-    } else {
-      $(".day.active").siblings(".day").addClass("week");
-      tpl.$(".datepicker").datepicker("show");
-    }
-  },
 
   'click .showHideButton': function (event) {
     if (Session.get("collapsed")) {
@@ -557,20 +382,8 @@ Template.pageHeading.rendered = function () {
   var checkedDate = Router.current().params.year;
 
   if (checkedDate) {
-    checkedDate = checkedDate + "-01-01";
-    checkedDate = new Date(checkedDate);
     var week = Router.current().params.week;
-    checkedDate = moment(checkedDate).week(week).toDate();
     Session.set("thisWeek", week);
-    this.$(".datepicker")
-      .datepicker({
-        todayHighlight: true,
-        calendarWeeks: true,
-        weekStart: 1,
-        toggleActive: true
-      })
-      .datepicker("setDate", checkedDate)
-      .datepicker("fill");
     $(".day.active").siblings(".day").addClass("week");
   }
 

@@ -12,6 +12,7 @@ component.prototype.isWeekDatesEqual = function (dateA, dateB) {
 component.action.onDateChanged = function (newWeekDate) {
   var currentWeekDate = this.get('weekDate');
   if (!this.isWeekDatesEqual(newWeekDate, currentWeekDate)) {
+    //console.log("NOT EQUAL");
     this.set('weekDate', newWeekDate);
     if (this.onDateChangedCallback) {
       this.onDateChangedCallback(newWeekDate);
