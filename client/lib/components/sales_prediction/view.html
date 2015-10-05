@@ -29,15 +29,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td><b>Sales</b></td>
-            {{#each state$week}}
-              {{#with state$getTotalSales this}}
-                <td>${{predicted}}</td>
-                <td>${{actual}}</td>
-              {{/with}}
-            {{/each}}
-          </tr>
+          {{>render component="totalSalesRow"}}
           {{#each state$menuItems}}
             {{> render component="predictionSalesRow" currentWeekDate=state$currentWeekDate menuItem=this}}
           {{/each}}

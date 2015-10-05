@@ -32,12 +32,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Sales</td>
-              {{#each state$week}}
-                {{> render component="salesTr" day=this}}
-              {{/each}}
-            </tr>
+            <!--<tr>-->
+              <!--<td>Sales</td>-->
+              <!--{{#each state$week}}-->
+                <!--{{> render component="salesTr" day=this}}-->
+              <!--{{/each}}-->
+            <!--</tr>-->
+            {{>render component="totalSalesRow"}}
             <tr>
               <td>Staff Cost ($)</td>
               {{#each state$week}}
