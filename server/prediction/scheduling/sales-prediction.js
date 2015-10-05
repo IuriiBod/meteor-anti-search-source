@@ -77,7 +77,7 @@ var salesPredictionUpdateJob = function () {
       predict(84, currentLocationId);
     }
     else {
-      if (date.diff(lastUpdates.lastSixWeeks) >= getMillisecondsFromDays(42)) {
+      if (date.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42)) {
         predict(84, currentLocationId);
         ForecastDates.update({locationId: currentLocationId}, {
           $set: {
@@ -85,7 +85,7 @@ var salesPredictionUpdateJob = function () {
             lastThree: date.toDate()
           }
         });
-      } else if (date.diff(lastUpdates.lastThree) >= getMillisecondsFromDays(3)) {
+      } else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
         predict(7, currentLocationId);
         ForecastDates.update({locationId: currentLocationId}, {$set: {lastThree: date.toDate()}});
       }
@@ -96,11 +96,6 @@ var salesPredictionUpdateJob = function () {
     }
   }
 };
-
-var getMillisecondsFromDays = function (days) {
-  return days * 24 * 60 * 60 * 1000;
-};
-
 
 SyncedCron.add({
   name: 'Forecast refresh',

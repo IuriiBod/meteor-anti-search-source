@@ -47,42 +47,6 @@ component.state.publishedOn = function () {
   }
 };
 
-component.state.currentDate = function () {
-  var week = Router.current().params.week;
-  var year = Router.current().params.year;
-  var weekStartEnd = getWeekStartEnd(week, year);
-  var firstDay = weekStartEnd.monday;
-  var lastDay = weekStartEnd.sunday;
-
-  var firstDayDate = firstDay.getDate();
-  var lastDayDate = lastDay.getDate();
-
-  var firstDayMonth = firstDay.getMonth();
-  var lastDayMonth = lastDay.getMonth();
-
-  var firstDayMonthName = getMonthName(firstDay.getMonth(), true);
-  firstDayMonthName = firstDayMonthName.toUpperCase();
-  var lastDayMonthName = getMonthName(lastDay.getMonth(), true);
-  lastDayMonthName = lastDayMonthName.toUpperCase();
-
-  var firstDayYear = firstDay.getFullYear();
-  var lastDayYear = lastDay.getFullYear();
-
-  var currentDate = "";
-
-  if (firstDayMonth == lastDayMonth) {
-    currentDate = firstDayDate + " - " + lastDayDate + " " + firstDayMonthName + ", " + firstDayYear + ", ";
-  } else if (firstDayMonth != lastDayMonth) {
-    if (firstDayYear == lastDayYear) {
-      currentDate = firstDayDate + " " + firstDayMonthName + " - " + lastDayDate + " " + lastDayMonthName + ", " + firstDayYear + ", ";
-    } else {
-      currentDate = firstDayDate + " " + firstDayMonthName + " " + firstDayYear + " - " + lastDayDate + " " + lastDayMonthName + " " + lastDayYear + ", ";
-    }
-  }
-
-  currentDate += "WEEK " + week;
-  return currentDate;
-};
 
 component.state.id = function () {
   if (this.id) {
@@ -227,4 +191,19 @@ component.state.isArchiveJob = function () {
 
 component.state.isSalesPrediction = function () {
   return this.type === 'salesPrediction';
+};
+
+component.state.getYear = function () {
+  return Router.current().params.year;
+};
+
+component.state.getWeek = function () {
+  return Router.current().params.week;
+};
+
+component.state.onDateChanged = function () {
+  return function (weekDate) {
+
+    Router.go(Router.current().route.getName(), weekDate);
+  };
 };

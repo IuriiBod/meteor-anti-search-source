@@ -9,6 +9,7 @@ Template.predictionSalesCell.onRendered(function () {
         title: 'Enter actual sale for this item and date',
         display: false,
         showbuttons: true,
+        mode: "popup",
         success: function(response, newValue) {
             var pattern=/^[0-9]+$/;
             if(!pattern.test(newValue)){
