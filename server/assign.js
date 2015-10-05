@@ -74,7 +74,7 @@ Meteor.methods({
   },
 
   'assignWorker': function(workerId, shiftId) {
-    if(!HospoHero.perms.canEditRoster()) {
+    if(!HospoHero.perms.canUser('editRoster')()) {
       throw new Meteor.Error(403, "User not permitted to assign workers");
     }
     HospoHero.checkMongoId(shiftId);

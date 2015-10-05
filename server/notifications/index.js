@@ -174,7 +174,7 @@ Meteor.methods({
   },
 
   notifyRoster: function (to, info) {
-    if (!HospoHero.perms.canEditRoster()) {
+    if (!HospoHero.perms.canUser('editRoster')()) {
       logger.error("User not permitted to notify about roster changes");
       throw new Meteor.Error(403, "User not permitted to notify about roster changes");
     }

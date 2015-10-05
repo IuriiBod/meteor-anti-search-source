@@ -1,0 +1,11 @@
+<template name="areaChooser">
+  <select id="areaChooser">
+    {{#each state$areas}}
+      {{#if equal _id getCurrentAreaId}}
+        <option value="{{_id}}" selected="selected">{{name}}</option>
+      {{else}}
+        <option value="{{_id}}">{{name}}</option>
+      {{/if}}
+    {{/each}}
+  </select>
+</template>

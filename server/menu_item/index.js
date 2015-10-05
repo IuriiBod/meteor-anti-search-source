@@ -1,6 +1,6 @@
 Meteor.methods({
   createMenuItem: function (info) {
-    if (!HospoHero.perms.canEditMenu()) {
+    if (!HospoHero.perms.canUser('editMenu')()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -56,7 +56,7 @@ Meteor.methods({
   },
 
   editMenuItem: function (id, info) {
-    if (!HospoHero.perms.canEditMenu()) {
+    if (!HospoHero.perms.canUser('editMenu')()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -128,8 +128,6 @@ Meteor.methods({
       updateDoc['editedBy'] = Meteor.userId();
       updateDoc['editedOn'] = Date.now();
 
-      console.log('UPDATE OBJ', updateDoc);
-
       logger.info("Menu item updated ", id);
 
       var menu = MenuItems.findOne(id);
@@ -138,7 +136,7 @@ Meteor.methods({
         "title": "Instructions on " + menu.name + " has been updated",
         "text": ""
       };
-      Meteor.call("sendNotifications", menuId, "menu", options, function(err) {
+      Meteor.call("sendNotifications", id, "menu", options, function(err) {
         if(err) {
           HospoHero.alert(err);
         }
@@ -149,7 +147,7 @@ Meteor.methods({
   },
 
   deleteMenuItem: function (id) {
-    if (!HospoHero.perms.canEditMenu()) {
+    if (!HospoHero.perms.canUser('editMenu')()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -167,7 +165,7 @@ Meteor.methods({
   },
 
   addItemToMenu: function(menuId, itemObject) {
-    if (!HospoHero.perms.canEditMenu()) {
+    if (!HospoHero.perms.canUser('editMenu')()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -188,7 +186,7 @@ Meteor.methods({
   },
 
   removeItemFromMenu: function (menuId, itemObject) {
-    if (!HospoHero.perms.canEditMenu()) {
+    if (!HospoHero.perms.canUser('editMenu')()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -212,7 +210,7 @@ Meteor.methods({
 
   // TODO: Copy menu item to another area
   duplicateMenuItem: function (id) {
-    if (!HospoHero.perms.canEditMenu()) {
+    if (!HospoHero.perms.canUser('editMenu')()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -241,7 +239,7 @@ Meteor.methods({
   },
 
   'archiveMenuItem': function (id) {
-    if (!HospoHero.perms.canEditMenu()) {
+    if (!HospoHero.perms.canUser('editMenu')()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }

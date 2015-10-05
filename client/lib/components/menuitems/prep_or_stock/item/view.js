@@ -52,7 +52,7 @@ Template.ingsAndPreps.rendered = function() {
   $.fn.editable.defaults.showbuttons = true;
 
   var menu = Session.get("thisMenuItem");
-  if(HospoHero.perms.canEditMenu()) {
+  if(HospoHero.perms.canUser('editMenu')()) {
     $('.quantity').editable({
       success: function(response, newValue) {
         if(newValue) {

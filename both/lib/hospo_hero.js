@@ -57,13 +57,14 @@ Namespace('HospoHero', {
     return Roles.userIsInRole(roleName, userId, areaId);
   },
 
-  isAdmin: function(userId, areaId) {
-    return HospoHero.isInRole('Admin', userId, areaId);
+  isOwner: function(userId, areaId) {
+    return HospoHero.isInRole('Owner', userId, areaId);
   },
 
   isManager: function(userId, areaId) {
     return HospoHero.isInRole('Manager', userId, areaId) ||
-      HospoHero.isOrganizationOwner();
+        HospoHero.isOrganizationOwner(userId) ||
+        HospoHero.isOwner(userId, areaId);
   },
 
   isWorker: function(userId, areaId) {
