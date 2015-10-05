@@ -28,7 +28,10 @@ Meteor.publish(null, function(){
         })
       ];
     } else {
-      return Meteor.roles.find({ default: true });
+      return [
+        Meteor.users.find({_id: this.userId}),
+        Meteor.roles.find({ default: true })
+      ];
     }
   }
 });
