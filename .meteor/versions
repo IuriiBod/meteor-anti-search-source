@@ -45,7 +45,7 @@ iron:router@1.0.9
 iron:url@1.0.9
 jquery@1.11.3_2
 json@1.0.3
-jss:meteor-google-prediction@0.0.1
+jss:meteor-google-prediction@0.1.0
 jss:through@0.0.1
 kevohagan:sweetalert@1.0.0
 konecty:autolinker@1.0.2
