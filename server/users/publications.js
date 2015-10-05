@@ -33,11 +33,9 @@ Meteor.publish("usersList", function () {
   };
 
   var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
-  console.log(currentAreaId);
 
   var users = Meteor.users.find({"relations.areaIds": currentAreaId}, {fields: options});
   logger.info("Userlist published");
-  console.log('test: ', users.count());
   return users;
 });
 
