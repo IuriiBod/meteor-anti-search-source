@@ -20,10 +20,14 @@ component.state.getTotalSales = function (date) {
 
 var getTotalPrice = function (array) {
     var total = 0;
-    _.each(array, function (item) {
-        var quantity = item.quantity;
-        var price = MenuItems.findOne({_id: item.menuItemId}).salesPrice;
-        total += quantity * price;
-    });
+    if (array.length > 0 && !!MenuItems.findOne()){
+        _.each(array, function (item) {
+            console.log(item.menuItemId);
+            var quantity = item.quantity;
+            var price = MenuItems.findOne({_id: item.menuItemId}).salesPrice;
+            total += quantity * price;
+        });
+    }
+
     return total;
 };

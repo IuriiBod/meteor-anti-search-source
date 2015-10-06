@@ -1,38 +1,5 @@
 Meteor.publish(null, function () {
   if (this.userId) {
-    var user = Meteor.users.findOne({_id: this.userId});
-    if (user && user.relations && user.relations.organizationId) {
-      var orgId = user.relations.organizationId;
-      return [
-        Meteor.roles.find({
-          $or: [
-            {default: true},
-            {organizationId: orgId}
-          ]
-        }),
-
-        Organizations.find({_id: orgId}),
-
-        Locations.find({organizationId: orgId}),
-
-        Areas.find({organizationId: orgId}),
-
-        Invitations.find({organizationId: orgId}),
-
-        Notifications.find({
-          ref: Meteor.userId(),
-          read: false,
-          "relations.organizationId": orgId
-        })
-      ];
-    } else {
-      return Meteor.roles.find({default: true});
-    }
-  }
-});
-
-Meteor.publish(null, function () {
-  if (this.userId) {
     return Meteor.users.find({"_id": this.userId}, {
       fields: {
         "services.google": 1,
@@ -47,5 +14,39 @@ Meteor.publish(null, function () {
     });
   } else {
     this.stop();
+  }
+});
+
+// Organization publishing
+Meteor.publish(null, function() {
+  if(this.userId) {
+    var user = Meteor.users.findOne(this.userId);
+    if(user.relations && user.relations.organizationId) {
+      var orgId = user.relations.organizationId;
+
+      var cursors = [
+        Organizations.find({_id: orgId}),
+        Locations.find({organizationId: orgId}),
+        Areas.find({organizationId: orgId}),
+        Invitations.find({organizationId: orgId}),
+        Notifications.find({
+          ref: this.userId,
+          read: false,
+          "relations.organizationId": orgId
+        })
+      ];
+
+      if(user.currentAreaId) {
+        cursors.push(Meteor.users.find({"relations.areaIds": user.currentAreaId}));
+      }
+
+      console.log('CUR', cursors);
+
+      return cursors;
+    } else {
+      this.ready();
+    }
+  } else {
+    this.ready();
   }
 });

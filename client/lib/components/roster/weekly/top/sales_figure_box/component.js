@@ -61,14 +61,14 @@ component.state.percent = function () {
 
 component.prototype.itemRendered = function() {
     $('[data-toggle="popover"]').popover({
-        content: "The figure shows the actual sales result from the days in the past plus the forecast sales" +
+        content: "The figure shows torhe actual sales result from the days in the past plus the forecast sales" +
                  " for the rest of the week. So you can see if you're on track."
     });
 };
 
 function calcSalesCost(sales) {
     var totalCost = 0;
-    if(sales && sales.length > 0) {
+    if(sales && sales.length > 0 && !!MenuItems.findOne()) {
         _.each(sales, function (item) {
             var quantity = item.quantity;
             var price = MenuItems.findOne({_id: item.menuItemId}).salesPrice;
