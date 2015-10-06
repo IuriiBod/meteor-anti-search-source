@@ -156,7 +156,7 @@ Roles.getUsersByRoleName = function(roleName, areaId) {
  * @returns {*|Roles.permissions|{}|Array}
  */
 Roles.getPermissionsById = function(roleId) {
-  var role = this.getRoleById(roleId);
+  var role = Roles.getRoleById(roleId);
   if(role) {
     return role.permissions;
   }
@@ -207,19 +207,23 @@ Roles.deleteRole = function(id) {
 
 Roles.userIsInRole = function(roleName, userId, areaId) {
   var role = Roles.getRoleByName(roleName);
-  var orArray = [];
+  if(role) {
+    var orArray = [];
 
-  if(areaId) {
-    var orObject = {};
-    orObject["roles." + areaId] = role._id;
-    orArray.push(orObject);
+    if(areaId) {
+      var orObject = {};
+      orObject["roles." + areaId] = role._id;
+      orArray.push(orObject);
+    }
+    orArray.push({"roles.defaultRole": role._id});
+
+    return !!Meteor.users.findOne({
+      _id: userId,
+      $or: orArray
+    });
+  } else {
+    return false;
   }
-  orArray.push({"roles.defaultRole": role._id});
-
-  return !!Meteor.users.findOne({
-    _id: userId,
-    $or: orArray
-  });
 };
 
 Roles.hasPermission = function(permissions, userId) {
@@ -234,13 +238,17 @@ Roles.hasPermission = function(permissions, userId) {
   var roleId = user.roles[user.currentAreaId];
   var role = Meteor.roles.findOne(roleId);
 
-  var isPermitted = false;
-  if(Array.isArray(permissions)) {
-    isPermitted = _.reduce(permissions, function(memo, perm) {
-      return role.permissions.indexOf(perm) > -1;
-    }, false);
+  if(role && role.permissions) {
+    var isPermitted = false;
+    if(Array.isArray(permissions)) {
+      isPermitted = _.reduce(permissions, function(memo, perm) {
+        return role.permissions.indexOf(perm) > -1;
+      }, false);
+    } else {
+      isPermitted = role.permissions.indexOf(permissions) > -1;
+    }
+    return isPermitted;
   } else {
-    isPermitted = role.permissions.indexOf(permissions) > -1;
+    return false;
   }
-  return isPermitted;
 };
