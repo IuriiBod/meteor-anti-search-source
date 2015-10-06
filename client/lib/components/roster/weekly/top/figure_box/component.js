@@ -363,7 +363,13 @@ function calcSalesCost(sales) {
   if (sales && sales.length > 0 && !!MenuItems.findOne()) {
     _.each(sales, function (item) {
       var quantity = item.quantity;
-      var price = MenuItems.findOne({_id: item.menuItemId}).salesPrice;
+      var price = 0;
+
+      var menuItem = MenuItems.findOne({_id: item.menuItemId});
+      if(menuItem && menuItem.salesPrice) {
+        price = menuItem.salesPrice;
+      }
+
       totalCost += quantity * price;
     });
   }
