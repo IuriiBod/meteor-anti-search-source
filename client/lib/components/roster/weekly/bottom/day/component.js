@@ -22,7 +22,7 @@ component.state.shifts = function() {
       "relations.areaId": HospoHero.getCurrentAreaId()
     });
   } else if(origin == "weeklyrostertemplate") {
-    var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     return Shifts.find({
       "shiftDate": daysOfWeek.indexOf(this.name),
       "type": "template",
@@ -43,7 +43,7 @@ component.action.addShift = function(day, dates) {
     doc.section = null;
     doc.type = null;
   } else if(this.origin == "weeklyrostertemplate") {
-    var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     doc.startTime = new Date().setHours(8, 0);
     doc.endTime = new Date().setHours(17, 0);
     doc.shiftDate = new Date(daysOfWeek.indexOf(day));

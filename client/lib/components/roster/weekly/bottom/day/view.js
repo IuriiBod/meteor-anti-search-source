@@ -2,7 +2,7 @@ Template.weeklyRosterDay.events({
   'click .addShiftBox': function(event) {
     event.preventDefault();
     var day = $(event.target).attr("data-day");
-    var weekNo = Session.get("thisWeek");
+    var weekNo = Router.current().params.week ? Router.current().params.week : moment().week();
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     var dates = [];
     week.forEach(function(day) {
