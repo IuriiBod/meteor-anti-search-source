@@ -1,11 +1,10 @@
 Meteor.publish("userSubs", function(ids) {
-  var userId = this.userId;
-  if(!userId) {
-    logger.error('User not found');
-    this.error(new Meteor.Error(404, "User not found"));
-  }
-  if(ids.length > 0) {
-    logger.info("Subscriptions published ",  {"id": ids});
-    return Subscriptions.find({"_id": {$in: ids}});
+  if(this.userId) {
+    if (ids.length > 0) {
+      logger.info("Subscriptions published ", {"id": ids});
+      return Subscriptions.find({"_id": {$in: ids}});
+    }
+  } else {
+    this.ready();
   }
 });

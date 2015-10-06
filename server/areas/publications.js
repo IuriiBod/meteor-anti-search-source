@@ -1,11 +1,12 @@
-Meteor.publish('getAreasByLocId', function(id) {
-  return Areas.find({locationId: id});
-});
-
-Meteor.publish('getAreasByOrgId', function(id) {
-  return Areas.find({organizationId: id});
-});
-
-Meteor.publish('getArea', function(id) {
-  return Areas.find({_id: id});
+Meteor.publish('areasOfOrganization', function() {
+  if(this.userId) {
+    var user = Meteor.users.findOne(this.userId);
+    if(user && user.relations && user.relations.organizationId) {
+      return Areas.find({organizationId: user.relations.organizationId});
+    } else {
+      this.ready();
+    }
+  } else {
+    this.ready();
+  }
 });

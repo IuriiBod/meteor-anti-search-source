@@ -45,7 +45,6 @@ momentjs:moment
 http
 micah:google-cloud
 percolate:synced-cron
-jss:meteor-google-prediction
 
 votercircle:winston
 jss:through
@@ -61,3 +60,4 @@ percolate:migrations
 alonoslav:roles
 
 zephraph:namespace
+jss:meteor-google-prediction

@@ -13,7 +13,7 @@ Meteor.publish(null, function () {
       }
     });
   } else {
-    this.stop();
+    this.ready();
   }
 });
 
@@ -46,7 +46,6 @@ Meteor.publish(null, function() {
 
         cursors.push(Invitations.find({organizationId: orgId}));
       }
-
       return cursors;
     } else {
       this.ready();
