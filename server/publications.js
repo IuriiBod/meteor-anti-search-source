@@ -1,4 +1,3 @@
-// User profile publishing
 Meteor.publish(null, function () {
   if (this.userId) {
     return Meteor.users.find({"_id": this.userId}, {
