@@ -28,6 +28,7 @@ Meteor.methods({
     };
     var id = Suppliers.insert(doc);
     logger.info("New supplier inserted ", id);
+    return id;
   },
 
   updateSupplier: function(id, info) {

@@ -1,4 +1,6 @@
-var component = FlowComponents.define('areaChooser', function (props) {});
+var component = FlowComponents.define('areaChooser', function (props) {
+  this.onAreaSelected = props.onAreaSelected;
+});
 
 component.state.areas = function () {
   var user = Meteor.user();
@@ -20,4 +22,8 @@ component.state.areas = function () {
   } else {
     return [];
   }
+};
+
+component.action.selectAreaId = function (areaId) {
+  this.onAreaSelected(areaId);
 };

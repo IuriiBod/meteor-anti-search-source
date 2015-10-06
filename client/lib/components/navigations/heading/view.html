@@ -82,7 +82,6 @@
 
       {{#if state$isMenuDetailed}}
         <div class="title-action">
-
           <div class="btn-group">
             <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
@@ -143,6 +142,14 @@
             </ul>
           </div>
         </div>
+
+        {{#if canEditMenu}}
+          <!--AREA CHOOSER-->
+          <div class="modal fade" id="areaChooser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            {{> render component = 'areaChooser' onAreaSelected=state$onAreaSelected}}
+          </div>
+          <!--AREA CHOOSER-->
+        {{/if}}
       {{/if}}
 
       {{#if state$isJobItemDetailed}}
@@ -208,6 +215,14 @@
             </ul>
           </div>
         </div>
+
+        {{#if canEditJob}}
+          <!--AREA CHOOSER-->
+          <div class="modal fade" id="areaChooser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            {{> render component = 'areaChooser' onAreaSelected=state$onAreaSelected}}
+          </div>
+          <!--AREA CHOOSER-->
+        {{/if}}
       {{/if}}
 
       {{#if state$isJobsList}}

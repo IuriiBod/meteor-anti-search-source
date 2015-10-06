@@ -332,38 +332,54 @@ Meteor.methods({
     return JobItems.find().count();
   },
 
-  // TODO: Copy job item to another area
-  duplicateJobItem: function(id) {
+  duplicateJobItem: function(jobId, areaId) {
     if(!HospoHero.perms.canUser('editJob')()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
 
-    HospoHero.checkMongoId(id);
+    HospoHero.checkMongoId(jobId);
+    HospoHero.checkMongoId(areaId);
 
-    var exist = JobItems.findOne(id);
+    var area = Areas.findOne(areaId);
+    if(!area) {
+      logger.error("Area not found!");
+      throw new Meteor.Error("Area not found!");
+    }
+
+    var exist = JobItems.findOne({
+      _id: jobId,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
     if(!exist) {
       logger.error('Job should exist to be duplicated');
-      throw new Meteor.Error(404, "Job should exist to be duplicated");
+      throw new Meteor.Error("Job should exist to be duplicated");
     }
 
-    var filter = new RegExp(exist.name, 'i');
+    // Add slashes before special characters (+, ., \)
+    var jobName = exist.name.replace(/([\+\\\.\?])/g, '\\$1');
+    var filter = new RegExp(jobName, 'i');
     var count = JobItems.find({
       "name": filter,
-      "relations.areaId": HospoHero.getCurrentAreaId()
+      "relations.areaId": areaId
     }).count();
 
-    var result = delete exist['_id'];
-    if(result) {
-      var duplicate = exist;
-      duplicate.name = exist.name + " - copy " + count;
-      duplicate.createdBy = Meteor.userId();
-      duplicate.createdOn = Date.now();
+    delete exist._id;
+    delete exist.relations;
 
-      var newId = JobItems.insert(duplicate);
-      logger.info("Duplicate job item added ", {"original": id, "duplicate": newId});
-      return newId;
+    if(count > 0) {
+      exist.name = exist.name + " - copy " + count;
     }
+    exist.createdBy = Meteor.userId();
+    exist.createdOn = Date.now();
+    exist.relations = {
+      organizationId: area.organizationId,
+      locationId: area.locationId,
+      areaId: areaId
+    };
+
+    var newId = JobItems.insert(exist);
+    logger.info("Duplicate job item added ", {"original": jobId, "duplicate": newId});
   },
 
   'archiveJobItem': function(id) {

@@ -130,7 +130,7 @@ component.state.isWeeklyTemplate = function () {
 
 component.state.isWeeklyRosterCreated = function () {
   if (this.type == "weeklyroster") {
-    var weekNo = Session.get("thisWeek");
+    var weekNo = Router.current().params.week;
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     var dates = [];
     week.forEach(function (day) {
@@ -205,5 +205,32 @@ component.state.onDateChanged = function () {
   return function (weekDate) {
 
     Router.go(Router.current().route.getName(), weekDate);
+  };
+};
+
+component.state.onAreaSelected = function () {
+  var type = this.type;
+  var itemId = Router.current().params._id;
+
+  return function(areaId) {
+    if(type == 'menudetailed') {
+      Meteor.call("duplicateMenuItem", itemId, areaId, function (err) {
+        if (err) {
+          HospoHero.alert(err);
+        } else {
+          alertSuccess("Menu item has successfully copied!");
+          $('#areaChooser').modal('hide');
+        }
+      });
+    } else if(type == 'jobitemdetailed') {
+      Meteor.call("duplicateJobItem", itemId, areaId, function (err) {
+        if (err) {
+          HospoHero.alert(err);
+        } else {
+          alertSuccess("Job item has successfully copied!");
+          $('#areaChooser').modal('hide');
+        }
+      });
+    }
   };
 };

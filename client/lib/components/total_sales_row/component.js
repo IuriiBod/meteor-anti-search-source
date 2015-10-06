@@ -13,6 +13,7 @@ component.state.week = function () {
 component.state.getTotalSales = function (date) {
   var predictions = SalesPrediction.find({date: TimeRangeQueryBuilder.forDay(date)}).fetch();
   var actual = ImportedActualSales.find({date: TimeRangeQueryBuilder.forDay(date)}).fetch();
+
   var actualTotal = getTotalPrice(actual);
   var predictionTotal = getTotalPrice(predictions);
   return {predicted: predictionTotal, actual: actualTotal};
@@ -24,7 +25,13 @@ var getTotalPrice = function (array) {
   if (array && array.length > 0 && !!MenuItems.findOne()) {
     _.each(array, function (item) {
       var quantity = item.quantity;
-      var price = MenuItems.findOne({_id: item.menuItemId}).salesPrice;
+
+      var price = 0;
+      var menuItem = MenuItems.findOne({_id: item.menuItemId});
+      if(menuItem && menuItem.salesPrice) {
+        price = menuItem.salesPrice;
+      }
+
       total += quantity * price;
     });
   }
