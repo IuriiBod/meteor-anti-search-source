@@ -22,7 +22,6 @@ var getTotalPrice = function (array) {
     var total = 0;
     if (array.length > 0 && !!MenuItems.findOne()){
         _.each(array, function (item) {
-            console.log(item.menuItemId);
             var quantity = item.quantity;
             var price = MenuItems.findOne({_id: item.menuItemId}).salesPrice;
             total += quantity * price;
