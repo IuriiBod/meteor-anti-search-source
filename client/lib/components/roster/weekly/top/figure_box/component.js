@@ -305,6 +305,7 @@ component.prototype.itemRendered = function () {
 };
 
 function calcStaffCost(shifts) {
+
   var totalCost = 0;
   if (shifts && shifts.length > 0) {
     shifts.forEach(function (shift) {

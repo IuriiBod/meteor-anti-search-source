@@ -2,8 +2,7 @@
   <div class="collapse" id="collapse">
     <div class="row">
       {{>render component="salesFigureBox"}}
-
-      {{> render component="figureBox" name="Staff Cost" type="staffCost" subtext="Rostered" dataContent="The figure shows the actual staff cost result from the days in the past plus the forecast staff cost for the rest of the week. So you can see if you're on track."}}
+      {{>render component="staffCostFigureBox"}}
 
       {{> render component="figureBox" name="Staff Cost" type="staffCostPercentage" subtext="Rostered" dataContent="The figure shows the % of wages compared to sales. It take the actual results from past days and forecasts from future days."}}
     </div>

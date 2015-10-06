@@ -70,7 +70,7 @@ component.state.percent = function () {
 };
 
 component.prototype.itemRendered = function () {
-  $('[data-toggle="popover"]').popover({
+  this.$('[data-toggle="popover"]').popover({
     content: "The figure shows the actual sales result from the days in the past plus the forecast sales" +
     " for the rest of the week. So you can see if you're on track."
   });
