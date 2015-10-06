@@ -229,11 +229,11 @@ Meteor.methods({
     });
     if (!exist) {
       logger.error('Menu should exist to be duplicated');
-      throw new Meteor.Error(404, "Menu should exist to be duplicated");
+      throw new Meteor.Error("Menu should exist to be duplicated");
     }
 
+    // Add slashes before special characters (+, ., \)
     var menuName = exist.name.replace(/([\+\\\.\?])/g, '\\$1');
-
     var filter = new RegExp(menuName, 'i');
     var count = MenuItems.find({ "name": filter, "relations.areaId": areaId }).count();
 

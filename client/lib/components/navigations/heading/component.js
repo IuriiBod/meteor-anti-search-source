@@ -209,16 +209,28 @@ component.state.onDateChanged = function () {
 };
 
 component.state.onAreaSelected = function () {
-  return function(areaId) {
-    var menuId = Router.current().params._id;
+  var type = this.type;
+  var itemId = Router.current().params._id;
 
-    Meteor.call("duplicateMenuItem", menuId, areaId, function (err) {
-      if (err) {
-        HospoHero.alert(err);
-      } else {
-        alertSuccess("Menu item successfully copied!");
-        $('#areaChooser').modal('hide');
-      }
-    });
+  return function(areaId) {
+    if(type == 'menudetailed') {
+      Meteor.call("duplicateMenuItem", itemId, areaId, function (err) {
+        if (err) {
+          HospoHero.alert(err);
+        } else {
+          alertSuccess("Menu item has successfully copied!");
+          $('#areaChooser').modal('hide');
+        }
+      });
+    } else if(type == 'jobitemdetailed') {
+      Meteor.call("duplicateJobItem", itemId, areaId, function (err) {
+        if (err) {
+          HospoHero.alert(err);
+        } else {
+          alertSuccess("Job item has successfully copied!");
+          $('#areaChooser').modal('hide');
+        }
+      });
+    }
   };
 };
