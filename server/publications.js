@@ -17,7 +17,6 @@ Meteor.publish(null, function () {
   }
 });
 
-// Organization publishing
 Meteor.publish(null, function() {
   if(this.userId) {
     var user = Meteor.users.findOne(this.userId);
@@ -28,19 +27,25 @@ Meteor.publish(null, function() {
         Organizations.find({_id: orgId}),
         Locations.find({organizationId: orgId}),
         Areas.find({organizationId: orgId}),
-        Invitations.find({organizationId: orgId}),
-        Notifications.find({
-          ref: this.userId,
-          read: false,
-          "relations.organizationId": orgId
+        Meteor.roles.find({
+          $or: [
+            { default: true },
+            { "relations.organizationId": orgId }
+          ]
         })
       ];
 
       if(user.currentAreaId) {
         cursors.push(Meteor.users.find({"relations.areaIds": user.currentAreaId}));
-      }
 
-      console.log('CUR', cursors);
+        cursors.push(Notifications.find({
+          ref: this.userId,
+          read: false,
+          "relations.areaId": user.currentAreaId
+        }));
+
+        cursors.push(Invitations.find({organizationId: orgId}));
+      }
 
       return cursors;
     } else {
