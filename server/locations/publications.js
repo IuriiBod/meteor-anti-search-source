@@ -1,9 +1,12 @@
-Meteor.publish("getAllLocations", function(organizationId) {
-  logger.info("Locations of organization " + organizationId + " published");
-  return Locations.find({organizationId: organizationId});
-});
-
-Meteor.publish("getLocation", function (locationId) {
-  logger.info("Location " + locationId + " published");
-  return Locations.find({_id: locationId});
+Meteor.publish('locationsOfOrganization', function() {
+  if(this.userId) {
+    var user = Meteor.users.findOne(this.userId);
+    if(user && user.relations && user.relations.organizationId) {
+      return Locations.find({organizationId: user.relations.organizationId});
+    } else {
+      this.ready();
+    }
+  } else {
+    this.ready();
+  }
 });
