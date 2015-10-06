@@ -207,3 +207,18 @@ component.state.onDateChanged = function () {
     Router.go(Router.current().route.getName(), weekDate);
   };
 };
+
+component.state.onAreaSelected = function () {
+  return function(areaId) {
+    var menuId = Router.current().params._id;
+
+    Meteor.call("duplicateMenuItem", menuId, areaId, function (err) {
+      if (err) {
+        HospoHero.alert(err);
+      } else {
+        alertSuccess("Menu item successfully copied!");
+        $('#areaChooser').modal('hide');
+      }
+    });
+  };
+};

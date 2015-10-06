@@ -208,34 +208,51 @@ Meteor.methods({
     return MenuItems.find().count();
   },
 
-  // TODO: Copy menu item to another area
-  duplicateMenuItem: function (id) {
+  duplicateMenuItem: function (menuId, areaId) {
     if (!HospoHero.perms.canUser('editMenu')()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    HospoHero.checkMongoId(id);
+    HospoHero.checkMongoId(menuId);
+    HospoHero.checkMongoId(areaId);
 
-    var exist = MenuItems.findOne(id);
+    var area = Areas.findOne(areaId);
+    if(!area) {
+      logger.error("Area not found!");
+      throw new Meteor.Error("Area not found!");
+    }
+
+    var exist = MenuItems.findOne({
+      _id: menuId,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
     if (!exist) {
       logger.error('Menu should exist to be duplicated');
       throw new Meteor.Error(404, "Menu should exist to be duplicated");
     }
-    var filter = new RegExp(exist.name, 'i');
-    var count = MenuItems.find({"name": filter}).count();
-    var result = delete exist['_id'];
 
-    if (result) {
-      var duplicate = exist;
-      duplicate.name = exist.name + " - copy " + count;
-      duplicate.createdBy = user._id;
-      duplicate.createdOn = Date.now();
+    var menuName = exist.name.replace(/([\+\\\.\?])/g, '\\$1');
 
-      var newid = MenuItems.insert(duplicate);
-      logger.info("Duplicate Menu items added ", {"original": id, "duplicate": newid});
-      return newid;
+    var filter = new RegExp(menuName, 'i');
+    var count = MenuItems.find({ "name": filter, "relations.areaId": areaId }).count();
+
+    delete exist._id;
+    delete exist.relations;
+
+    if(count > 0) {
+      exist.name = exist.name + " - copy " + count;
     }
+    exist.createdBy = Meteor.userId();
+    exist.createdOn = Date.now();
+    exist.relations = {
+      organizationId: area.organizationId,
+      locationId: area.locationId,
+      areaId: areaId
+    };
+
+    var newid = MenuItems.insert(exist);
+    logger.info("Duplicate Menu items added ", {"original": menuId, "duplicate": newid});
   },
 
   'archiveMenuItem': function (id) {
