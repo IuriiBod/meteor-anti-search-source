@@ -22,7 +22,8 @@ Migrations.add({
       }
     };
 
-    admin = Meteor.users.findOne({username: 'Tom'});
+    //admin = Meteor.users.findOne({username: 'Tom'});
+    admin = false;
 
     if(!admin) {
       var id = Accounts.createUser({
