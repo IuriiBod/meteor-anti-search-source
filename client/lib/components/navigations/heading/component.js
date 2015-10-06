@@ -130,7 +130,7 @@ component.state.isWeeklyTemplate = function () {
 
 component.state.isWeeklyRosterCreated = function () {
   if (this.type == "weeklyroster") {
-    var weekNo = Session.get("thisWeek");
+    var weekNo = Router.current().params.week;
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     var dates = [];
     week.forEach(function (day) {
