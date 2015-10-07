@@ -22,7 +22,7 @@ Template.menuInstructions.events({
           "type": "edit",
           "title": "Instructions on " + menu.name + " has been updated",
           "text": ""
-        }
+        };
         Meteor.call("sendNotifications", menuId, "menu", options, function(err) {
           if(err) {
             console.log(err);
