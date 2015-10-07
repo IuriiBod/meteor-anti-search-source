@@ -3419,11 +3419,11 @@ var Grid = fc.Grid = RowRenderer.extend({
         if(shift.assignedTo) {
           var assignedTo = Meteor.users.findOne(shift.assignedTo);
           if(assignedTo) {
-            var name = assignedTo.username;
+            var assignedUsersname = assignedTo.username;
             if(assignedTo.profile.firstname && assignedTo.profile.lastname) {
-              name = assignedTo.profile.firstname + " " + assignedTo.profile.lastname;
+              assignedUsersname = assignedTo.profile.firstname + " " + assignedTo.profile.lastname;
             }
-            options += '<option selected="selected" value=' + assignedTo._id + '>' + name + '</option>'
+            options += '<option selected="selected" value=' + assignedTo._id + '>' + assignedUsersname + '</option>'
           }
         } else {
           options = '<option selected="selected" value="">Select worker</option>';

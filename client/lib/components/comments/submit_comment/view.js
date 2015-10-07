@@ -12,7 +12,7 @@ Template.submitComment.events({
 
 Template.submitComment.helpers({
   settings: function() {
-    return {
+    var data = {
       position: "top",
       limit: 10,
       rules: [
@@ -21,10 +21,18 @@ Template.submitComment.helpers({
           collection: Meteor.users,
           field: "username",
           filter: { "_id": {$nin: [Meteor.userId()]}, "isActive": true},
-          template: Template.user
+          template: Template.username
+        },
+        {
+          token: '@',
+          collection: Meteor.users,
+          field: "profile.lastname",
+          filter: { "_id": {$nin: [Meteor.userId()]}, "isActive": true},
+          template: Template.lastname
         }
       ]
     };
+    return data;
   }
 });
 
