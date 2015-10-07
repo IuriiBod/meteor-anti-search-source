@@ -1,11 +1,6 @@
 <template name="weeklyFigures">
   <div class="collapse" id="collapse">
-    <div class="row">
-      {{>render component="salesFigureBox"}}
-      {{>render component="staffCostFigureBox"}}
-
-      {{> render component="figureBox" name="Staff Cost" type="staffCostPercentage" subtext="Rostered" dataContent="The figure shows the % of wages compared to sales. It take the actual results from past days and forecasts from future days."}}
-    </div>
+    {{>render component="figureBoxes"}}
 
     <div class="row">
       <div class="col-lg-12">
