@@ -88,8 +88,8 @@ Namespace('HospoHero', {
     return user && user.currentAreaId ? user.currentAreaId : false;
   },
 
-  getCurrentArea: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId();
+  getCurrentArea: function (userId) {
+    var currentAreaId = HospoHero.getCurrentAreaId(userId);
     return currentAreaId ? Areas.findOne({_id: currentAreaId}) : false;
   },
 
