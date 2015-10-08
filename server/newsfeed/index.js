@@ -4,8 +4,6 @@ Meteor.methods({
       logger.error('No user has logged in');
       throw new Meteor.Error(403, "User not permitted to create post");
     }
-    check(text, String);
-    HospoHero.checkMongoId(ref);
 
     var doc = {
       "text": text,
@@ -29,8 +27,8 @@ Meteor.methods({
       logger.error('No user has logged in');
       throw new Meteor.Error(403, "User not permitted to update post");
     }
-    check(likelist, String);
     HospoHero.checkMongoId(id);
+    HospoHero.checkMongoId(userId);
 
     var newsFeed = NewsFeeds.findOne(id);
     if(!newsFeed) {

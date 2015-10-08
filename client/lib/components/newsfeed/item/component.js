@@ -21,12 +21,8 @@ component.state.likesCount = function() {
 };
 
 component.state.liked = function() {
-  if(this.post.likes.indexOf(Meteor.userId()) >= 0) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.post.likes.indexOf(Meteor.userId()) >= 0;
+};
 
 component.state.comments = function(){
   return NewsFeeds.find({"reference": this.post._id}, {sort: {"createdOn": 1}});
