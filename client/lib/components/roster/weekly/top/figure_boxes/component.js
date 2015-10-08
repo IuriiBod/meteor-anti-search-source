@@ -50,13 +50,13 @@ component.state.forecastedSale = function () {
 
 
 component.state.weeklyStaffCost = function () {
-    var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilderShifts.forWeek(this.weekRange.monday)}).fetch();
+    var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekRange.monday, true)}).fetch();
     var total = this.figureBox.calcStaffCost(shifts);
     return total
 };
 
 component.state.rosteredStaffCost = function () {
-    var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilderShifts.forWeek(this.weekRange.monday)}).fetch();
+    var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekRange.monday, true)}).fetch();
     shifts = _.map(shifts, function (item) {
         item.status = "draft";
         return item;
