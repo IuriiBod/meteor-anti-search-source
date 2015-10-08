@@ -1,8 +1,6 @@
 var component = FlowComponents.define("salesFigureBox", function (props) {
   this.actual = props.actual;
   this.forecasted = props.forecasted;
-
-  this.onRendered(this.itemRendered);
 });
 
 component.state.weeklySale = function () {
@@ -30,11 +28,4 @@ component.state.percent = function () {
     doc.icon = "fa-angle-down";
   }
   return doc;
-};
-
-component.prototype.itemRendered = function () {
-  this.$('[data-toggle="popover"]').popover({
-    content: "The figure shows the actual sales result from the days in the past plus the forecast sales" +
-    " for the rest of the week. So you can see if you're on track."
-  });
 };
