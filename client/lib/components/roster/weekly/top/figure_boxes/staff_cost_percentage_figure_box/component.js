@@ -3,8 +3,6 @@ var component = FlowComponents.define("staffCostPercentageFigureBox", function (
     this.forecastedSales = props.forecastedSales;
     this.actualStaff = props.actualStaff;
     this.forecastedStaff = props.forecastedStaff;
-
-    this.onRendered(this.itemRendered);
 });
 
 component.state.weeklyStaffWage = function () {
@@ -36,11 +34,4 @@ component.state.percent = function () {
         doc.icon = "fa-angle-down";
     }
     return doc;
-};
-
-component.prototype.itemRendered = function () {
-    this.$('[data-toggle="popover"]').popover({
-        content: "The figure shows the % of wages compared to sales. It take the actual results " +
-                 "from past days and forecasts from future days."
-    });
 };
