@@ -1,6 +1,7 @@
 var component = FlowComponents.define("salesFigureBox", function (props) {
   this.actual = props.actual;
   this.forecasted = props.forecasted;
+  this.figureBox = new FigureBox();
 });
 
 component.state.weeklySale = function () {
@@ -12,20 +13,6 @@ component.state.forecastedSale = function () {
 };
 
 component.state.percent = function () {
-  var actual = this.actual;
-  var forecasted = this.forecasted;
-  var diff = 0;
-  var doc = {
-    "value": 0,
-    "textColor": "text-navy",
-    "icon": "fa-angle-up"
-  };
+  return this.figureBox.percent(this.actual,this.forecasted);
 
-  diff = parseFloat(actual) - parseFloat(forecasted);
-  doc.value = ((diff / parseFloat(forecasted)) * 100).toFixed(2);
-  if (diff < 0) {
-    doc.textColor = "text-danger";
-    doc.icon = "fa-angle-down";
-  }
-  return doc;
 };

@@ -11,7 +11,7 @@ component.state.weeklySale = function () {
         var sales = ImportedActualSales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch();
         var total = this.figureBox.calcSalesCost(sales);
 
-        //for current week: past days actual sales and for fututre dates forecasted sales
+        //for current week: past days actual sales and for future dates forecasted sales
     } else if (this.week == moment().week()) {
         var todayActualSale = !!ImportedActualSales.findOne({date: TimeRangeQueryBuilder.forDay(moment())});
         if (todayActualSale) {

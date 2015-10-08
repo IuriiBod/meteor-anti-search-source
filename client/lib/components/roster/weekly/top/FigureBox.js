@@ -57,3 +57,19 @@ FigureBox.prototype.calcStaffCost = function(shifts){
     return totalCost;
 };
 
+FigureBox.prototype.percent = function (declining, subtrahend) {
+    var doc = {
+        "value": 0,
+        "textColor": "text-navy",
+        "icon": "fa-angle-up"
+    };
+
+    var diff = parseFloat(declining) - parseFloat(subtrahend);
+    doc.value = ((diff / parseFloat(declining)) * 100).toFixed(2);
+    if (diff < 0) {
+        doc.textColor = "text-danger";
+        doc.icon = "fa-angle-down";
+    }
+    return doc;
+};
+

@@ -1,6 +1,7 @@
 var component = FlowComponents.define("staffCostFigureBox", function (props) {
     this.actual = props.actual;
     this.forecasted = props.forecasted;
+    this.figureBox = new FigureBox();
 });
 
 component.state.weeklyStaffCost = function () {
@@ -8,24 +9,7 @@ component.state.weeklyStaffCost = function () {
 };
 
 component.state.percent = function () {
-    var actual = this.actual;
-    var forecast = this.forecasted;
-
-    var diff = 0;
-    var doc = {
-        "value": 0,
-        "textColor": "text-navy",
-        "icon": "fa-angle-up"
-    };
-
-    diff = parseFloat(forecast) - parseFloat(actual);
-    doc.value = ((diff / parseFloat(forecast)) * 100).toFixed(2);
-
-    if (diff < 0) {
-        doc.textColor = "text-danger";
-        doc.icon = "fa-angle-down";
-    }
-    return doc;
+    return this.figureBox.percent(this.forecasted,this.actual);
 };
 
 component.state.rosteredStaffCost = function () {
