@@ -23,7 +23,7 @@ var predict = function (days, locationId) {
 
     _.each(items, function (item) {
       var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
-      var quantity = parseInt(prediction.makePrediction(dataVector));
+      var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
       var predictItem = {
         date: moment(dateMoment).toDate(),
         quantity: quantity,
@@ -61,7 +61,6 @@ var predict = function (days, locationId) {
 
 
 var salesPredictionUpdateJob = function () {
-  //todo: put real location
   var locations = Locations.find({},{_id: 1}).fetch();
 
   var date = moment();
@@ -108,7 +107,6 @@ SyncedCron.add({
 
 Meteor.startup(function () {
   //if we run first time -> make predictions immediately (in other thread)
-  //todo: add search by location id later
 
   Meteor.setTimeout(salesPredictionUpdateJob, 0);
 

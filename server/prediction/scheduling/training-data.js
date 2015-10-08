@@ -41,7 +41,6 @@ var createUpdateActualSalesFunction = function (locationId) {
 };
 
 predictionModelRefreshJob = function () {
-  //todo: update it for all locations
 
   var locations = Locations.find({},{_id: 1}).fetch();
 
@@ -56,7 +55,7 @@ predictionModelRefreshJob = function () {
     if (needToUpdateModel) {
       //todo: update it for organizations
       var predictionApi = new GooglePredictionApi();
-      var updateSession = predictionApi.getUpdatePredictionModelSession();
+      var updateSession = predictionApi.getUpdatePredictionModelSession(location._id);
 
       //upload sales training data for the last year
       Revel.uploadAndReduceOrderItems(function (salesData) {
