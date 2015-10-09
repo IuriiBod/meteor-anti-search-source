@@ -58,8 +58,8 @@ Template.createLocation.events({
       address: e.target.address.value,
       pos: {key: e.target.posKey.value, secret: e.target.posSecret.value, host: e.target.posHost.value},
       timezone: e.target.timezone.value,
-      openingTime: e.target.openingHour.value+":"+e.target.openingMinutes.value,
-      closingTime: e.target.closingHour.value+":"+e.target.closingMinutes.value,
+      openingTime: {"hour":e.target.openingHour.value, "minute":e.target.openingMinutes.value},
+      closingTime: {"hour":e.target.closingHour.value, "minute":e.target.closingMinutes.value},
       organizationId: e.target.dataset.id
     };
     FlowComponents.callAction('submit', doc);

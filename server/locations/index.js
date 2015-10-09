@@ -14,6 +14,7 @@ Meteor.methods({
       throw new Meteor.Error("Bad city name or no that city in this country");
     }
     // Create location
+    console.log(loc.openingTime);
     return Locations.insert({
       name: loc.name,
       country: loc.country,
@@ -21,8 +22,8 @@ Meteor.methods({
       address: loc.address,
       pos: loc.pos,
       timezone: loc.timezone,
-      openingTime: loc.openingTime,
-      closingTime: loc.closingTime,
+      openingTime: moment(loc.openingTime).toDate(),
+      closingTime: moment(loc.closingTime).toDate(),
       organizationId: loc.organizationId,
       createdAt: Date.now()
     });
