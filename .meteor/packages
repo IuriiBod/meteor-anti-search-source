@@ -63,3 +63,4 @@ deepwell:bootstrap-datepicker2
 momentjs:moment
 percolate:synced-cron
 dbernhard:jquery-ui-draggable
+reywood:publish-composite
