@@ -8,7 +8,7 @@ component.state.list = function() {
   var ids = [];
 
   if(time == "week") {
-    date = OrderReceipts.find({
+    data = OrderReceipts.find({
       "received": state,
       "expectedDeliveryDate": {
         $gte: moment().startOf("week").unix() * 1000,
