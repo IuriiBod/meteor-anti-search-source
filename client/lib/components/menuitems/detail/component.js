@@ -2,7 +2,7 @@ var component = FlowComponents.define('menuItemDetail', function(props) {
   LocalMenuIngsAndPreps.remove({});
   var id = Session.get("thisMenuItem");
   this.id = id;
-  subs.subscribe("menuItem", this.id);
+  Meteor.subscribe("menuItem", this.id);
   var menu = MenuItems.findOne(this.id);
   if(menu) {
     var prepIds = [];
@@ -53,7 +53,7 @@ component.prototype.onViewRendered = function() {
     });
   }
   if(ids.length > 0) {
-    subs.subscribe("ingredients", ids);
+    Meteor.subscribe("ingredients", ids);
   }
   Session.set("goBackMenu", null);
 };

@@ -28,7 +28,7 @@ component.state.suppliers = function() {
       Session.set("activeSupplier", activeSupplier)
     }
     if(supplierslist && supplierslist.length > 0) {
-      subs.subscribe("suppliers", supplierslist);
+      Meteor.subscribe("suppliers", supplierslist);
     }
     return supplierslist;
   }

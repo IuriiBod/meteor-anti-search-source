@@ -1,5 +1,3 @@
-var subs = new SubsManager();
-
 var component = FlowComponents.define("ingsAndPreps", function(props) {
   this.type = props.type;
   this.id = props.item._id;
@@ -50,6 +48,6 @@ component.state.measure = function() {
 
 component.prototype.onItemRendered = function() {
   if(this.type == "prep") {
-    subs.subscribe("jobItems", [this.id]);
+    Meteor.subscribe("jobItems", [this.id]);
   }
 };

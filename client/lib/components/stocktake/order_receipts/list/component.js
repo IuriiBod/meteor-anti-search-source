@@ -46,13 +46,13 @@ component.state.list = function() {
       });
     }
     if(users.length > 0) {
-      subs.subscribe("selectedUsers", users);
+      Meteor.subscribe("selectedUsers", users);
     }
     if(suppliers.length > 0) {
-      subs.subscribe("suppliers", suppliers);
+      Meteor.subscribe("suppliers", suppliers);
     }
     if(ids.length > 0) {
-      subs.subscribe("receiptOrders", ids);
+      Meteor.subscribe("receiptOrders", ids);
     }
     return data;
   }

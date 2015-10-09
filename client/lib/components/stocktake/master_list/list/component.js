@@ -16,5 +16,5 @@ component.prototype.onListRender = function() {
     }
   });
 
-  subs.subscribe("stocktakeMains", new Date().getTime());
+  Meteor.subscribe("stocktakeMains", new Date().getTime());
 };

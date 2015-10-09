@@ -1,6 +1,6 @@
 var component = FlowComponents.define("listOfIngredients", function(props) {
   this.name = props.name;
-  subs.subscribe("allSuppliers");
+  Meteor.subscribe("allSuppliers");
   this.id = props.id;
 });
 

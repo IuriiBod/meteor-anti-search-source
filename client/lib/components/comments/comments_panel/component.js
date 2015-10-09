@@ -1,7 +1,7 @@
 var component = FlowComponents.define('commentsPanel', function(props) {
   this.referenceId = props.id;
   this.refType = props.type;
-  subs.subscribe("usersList");
+  Meteor.subscribe("usersList");
 });
 
 component.state.commentsExist = function() {

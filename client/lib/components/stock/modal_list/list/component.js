@@ -55,7 +55,7 @@ component.state.getIngredients = function() {
     });
   }
   if(suppliers && suppliers.length > 0) {
-    subs.subscribe("suppliers", suppliers);
+    Meteor.subscribe("suppliers", suppliers);
   }
   return data;
 };

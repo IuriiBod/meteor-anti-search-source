@@ -10,7 +10,7 @@ component.state.list = function() {
       }
     });
     if(stockIds.length > 0) {
-      subs.subscribe("ingredients", stockIds);
+      Meteor.subscribe("ingredients", stockIds);
     }
     return data;
   }

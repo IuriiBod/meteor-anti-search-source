@@ -34,7 +34,7 @@ component.state.stocktakeList = function() {
   if(gareaId && sareaId) {
     var main = StocktakeMain.findOne(thisVersion);
     if(main && main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
-      subs.subscribe("areaSpecificStockTakes", gareaId);
+      Meteor.subscribe("areaSpecificStockTakes", gareaId);
       var stocktakes = Stocktakes.find({"version": thisVersion, "generalArea": gareaId, "specialArea": sareaId}, {sort: {"place": 1}});
       if(stocktakes) {
         return stocktakes;
@@ -48,7 +48,7 @@ component.state.ingredientsList = function() {
   var gareaId = Session.get("activeGArea");
   var sareaId = Session.get("activeSArea");
   if(gareaId && sareaId) {
-    subs.subscribe("areaSpecificStocks", gareaId);
+    Meteor.subscribe("areaSpecificStocks", gareaId);
     var sarea = SpecialAreas.findOne(sareaId);
     var ings = [];
     if(sarea && sarea.stocks.length > 0) {

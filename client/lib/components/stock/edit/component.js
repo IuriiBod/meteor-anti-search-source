@@ -11,8 +11,7 @@ component.state.id = function() {
 
 component.state.relatedJobs = function() {
   var id = Session.get("thisIngredientId");
-  subs.reset();
-  subs.subscribe("ingredientsRelatedJobs", id);
+  Meteor.subscribe("ingredientsRelatedJobs", id);
   return JobItems.find({ "ingredients._id": id }).fetch();
 };
 
@@ -68,7 +67,7 @@ component.state.unitsUsed = function() {
 };
 
 component.action.archiveIng = function(id, state) {
-  subs.subscribe("ingredients", [id]);
+  Meteor.subscribe("ingredients", [id]);
   var self = this;
   Meteor.call("archiveIngredient", id, state, function(err) {
     if(err) {
