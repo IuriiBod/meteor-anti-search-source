@@ -11,7 +11,6 @@ Meteor.methods({
       name: area.name,
       locationId: area.locationId,
       organizationId: area.organizationId,
-      status: area.status,
       createdAt: Date.now()
     });
   },

@@ -60,7 +60,6 @@ Template.createLocation.events({
       timezone: e.target.timezone.value,
       openingTime: e.target.openingHour.value+":"+e.target.openingMinutes.value,
       closingTime: e.target.closingHour.value+":"+e.target.closingMinutes.value,
-      status: e.target.status.value,
       organizationId: e.target.dataset.id
     };
     FlowComponents.callAction('submit', doc);

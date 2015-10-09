@@ -23,7 +23,6 @@ Meteor.methods({
       timezone: loc.timezone,
       openingTime: loc.openingTime,
       closingTime: loc.closingTime,
-      status: loc.status,
       organizationId: loc.organizationId,
       createdAt: Date.now()
     });
