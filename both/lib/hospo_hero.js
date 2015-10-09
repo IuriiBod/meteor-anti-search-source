@@ -84,12 +84,14 @@ Namespace('HospoHero', {
   },
 
   getCurrentAreaId: function (userId) {
+    userId = userId ? userId : Meteor.userId();
     var user = userId ? Meteor.users.findOne({_id: userId}) : Meteor.user();
-    return user && user.currentAreaId ? user.currentAreaId : false;
+    var result = user && user.currentAreaId ? user.currentAreaId : false;
+    return result;
   },
 
-  getCurrentArea: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId();
+  getCurrentArea: function (userId) {
+    var currentAreaId = HospoHero.getCurrentAreaId(userId);
     return currentAreaId ? Areas.findOne({_id: currentAreaId}) : false;
   },
 

@@ -2,9 +2,8 @@ var predict = function (days, locationId) {
   var today = new Date();
   var dateMoment = moment();
   var prediction = new GooglePredictionApi();
-  var items = MenuItems.find({}, {fields: {_id: 1}}).fetch();
+  var items = MenuItems.find({"relations.locationId":locationId}, {}).fetch();
   var notification = new Notification();
-
   //forecast for 15 days
   OpenWeatherMap.updateWeatherForecastForLocation(locationId);
 
@@ -24,12 +23,14 @@ var predict = function (days, locationId) {
 
     _.each(items, function (item) {
       var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
-      var quantity = parseInt(prediction.makePrediction(dataVector));
+      var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
+      console.log(item);
       var predictItem = {
         date: moment(dateMoment).toDate(),
         quantity: quantity,
         updateAt: today,
-        menuItemId: item._id
+        menuItemId: item._id,
+        relations:  item.relations
       };
 
       //checking need for notification push
@@ -62,39 +63,39 @@ var predict = function (days, locationId) {
 
 
 var salesPredictionUpdateJob = function () {
-  //todo: put real location
-  var currentLocationId = 1;
+  var locations = Locations.find({},{_id: 1}).fetch();
 
   var date = moment();
-
-  if (!ForecastDates.findOne({locationId: currentLocationId})) {
-    ForecastDates.insert({locationId: currentLocationId, lastThree: date.toDate(), lastSixWeeks: date.toDate()});
-    predict(84, currentLocationId);
-  }
-  else {
-    var lastUpdates = ForecastDates.findOne({locationId: currentLocationId});
-    if (!ForecastDates.findOne({locationId: currentLocationId}).lastThree) {
-      predict(84, currentLocationId);
+  _.each(locations, function (location) {
+    if (!ForecastDates.findOne({locationId: location._id})) {
+      ForecastDates.insert({locationId: location._id, lastOne:date.toDate(), lastThree: date.toDate(), lastSixWeeks: date.toDate()});
+      predict(84, location._id);
     }
     else {
-      if (date.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42)) {
-        predict(84, currentLocationId);
-        ForecastDates.update({locationId: currentLocationId}, {
-          $set: {
-            lastSixWeeks: date.toDate(),
-            lastThree: date.toDate()
-          }
-        });
-      } else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
-        predict(7, currentLocationId);
-        ForecastDates.update({locationId: currentLocationId}, {$set: {lastThree: date.toDate()}});
+      var lastUpdates = ForecastDates.findOne({locationId: location._id});
+      if (!ForecastDates.findOne({locationId: location._id}).lastThree) {
+        predict(84, location._id);
       }
       else {
-
-        predict(2, currentLocationId);
+        if (date.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42)) {
+          predict(84, location._id);
+          ForecastDates.update({locationId: location._id}, {
+            $set: {
+              lastSixWeeks: date.toDate(),
+              lastThree: date.toDate()
+            }
+          });
+        } else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
+          predict(7, location._id);
+          ForecastDates.update({locationId: location._id}, {$set: {lastThree: date.toDate()}});
+        }
+        else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
+          predict(2, location._id);
+          ForecastDates.update({locationId: location._id}, {$set: {lastOne: date.toDate()}});
+        }
       }
     }
-  }
+  });
 };
 
 SyncedCron.add({
@@ -108,10 +109,9 @@ SyncedCron.add({
 
 Meteor.startup(function () {
   //if we run first time -> make predictions immediately (in other thread)
-  //todo: add search by location id later
-  if (SalesPrediction.find().count() === 0) {
-    Meteor.setTimeout(salesPredictionUpdateJob, 0);
-  }
+
+  Meteor.setTimeout(salesPredictionUpdateJob, 0);
+
 });
 
 

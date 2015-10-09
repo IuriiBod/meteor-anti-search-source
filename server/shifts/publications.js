@@ -40,9 +40,7 @@ Meteor.publish("weekly", function (dates, worker, type) {
     };
 
     if (dates && !type) {
-      var firstDate = dates.monday;
-      var lastDate = dates.sunday;
-      query.shiftDate = {$gte: new Date(firstDate).getTime(), $lte: new Date(lastDate).getTime()};
+      query.shiftDate = TimeRangeQueryBuilder.forWeek(dates.monday, true);
     }
     if (worker) {
       query.assignedTo = worker;

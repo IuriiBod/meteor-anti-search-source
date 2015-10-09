@@ -1,8 +1,9 @@
-Meteor.publish("salesPrediction", function(year, week) {
-    var monday = moment(getFirstDateOfISOWeek(week, year));
-    return SalesPrediction.find({date:TimeRangeQueryBuilder.forWeek(monday)});
+Meteor.publish("salesPrediction", function() {
+    var areaId = HospoHero.getCurrentAreaId(this.userId);
+    return SalesPrediction.find({"relations.areaId": areaId});
 });
 
 Meteor.publish("importedActualSales", function () {
-    return ImportedActualSales.find();
-})
+    var areaId = HospoHero.getCurrentAreaId(this.userId);
+    return ImportedActualSales.find({"relations.areaId": areaId});
+});

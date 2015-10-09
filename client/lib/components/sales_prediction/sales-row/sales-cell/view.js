@@ -1,4 +1,3 @@
-var currentLocationId = 1;
 
 Template.predictionSalesCell.onRendered(function () {
     var menuItemId = FlowComponents.callAction("getItemId")._result;
@@ -16,11 +15,16 @@ Template.predictionSalesCell.onRendered(function () {
                 alert("Please insert an integer");
             }
             else{
+                var area = HospoHero.getCurrentArea();
                 var updItem ={
-                    locationId: currentLocationId,
                     quantity: parseInt(newValue),
                     date: date,
-                    menuItemId: menuItemId
+                    menuItemId: menuItemId,
+                    relations: {
+                        organizationId: area.organizationId,
+                        locationId: area.locationId,
+                        areaId: area._id
+                    }
                 };
                 Meteor.call("updateActualSale", updItem);
             }

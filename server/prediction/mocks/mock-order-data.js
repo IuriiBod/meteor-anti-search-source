@@ -3,8 +3,7 @@ MockOrderItemDataSource = function MockOrderItemDataSource() {
 };
 
 MockOrderItemDataSource.prototype.load = function () {
-  var skip = Math.floor(Math.random() * (MenuItems.find().count() - 15));
-  var items = MenuItems.find({}, {skip: skip, limit: 15}).fetch();
+  var items = MenuItems.find({}).fetch();
   var result = {
     meta: {
       "limit": 5000,
