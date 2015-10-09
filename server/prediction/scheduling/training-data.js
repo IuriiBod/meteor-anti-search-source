@@ -52,25 +52,27 @@ predictionModelRefreshJob = function () {
 
     var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
 
-    if (needToUpdateModel) {
-      //todo: update it for organizations
-      var predictionApi = new GooglePredictionApi();
-      var updateSession = predictionApi.getUpdatePredictionModelSession(location._id);
+    if (location.pos && location.pos.host != "" && location.pos.key != "" && location.pos.secret != "") {
+      if (needToUpdateModel) {
+        //todo: update it for organizations
+        var predictionApi = new GooglePredictionApi();
+        var updateSession = predictionApi.getUpdatePredictionModelSession(location._id);
 
-      //upload sales training data for the last year
-      Revel.uploadAndReduceOrderItems(function (salesData) {
-        updateActualSalesFn(salesData);
-        return updateSession.onDataReceived(salesData);
-      });
+        //upload sales training data for the last year
+        Revel.uploadAndReduceOrderItems(function (salesData) {
+          updateActualSalesFn(salesData);
+          return updateSession.onDataReceived(salesData);
+        }, location.pos);
 
-      updateSession.onUploadingFinished();
+        updateSession.onUploadingFinished();
 
-      updateLastTaskRunDateForLocation(location._id);
-    } else {
-      //update sales for last day only
-      Revel.uploadAndReduceOrderItems(function (salesData) {
-        return updateActualSalesFn(salesData);
-      });
+        updateLastTaskRunDateForLocation(location._id);
+      } else {
+        //update sales for last day only
+        Revel.uploadAndReduceOrderItems(function (salesData) {
+          return updateActualSalesFn(salesData);
+        }, location.pos);
+      }
     }
   });
 };

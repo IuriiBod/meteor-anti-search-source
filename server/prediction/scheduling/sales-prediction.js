@@ -24,7 +24,6 @@ var predict = function (days, locationId) {
     _.each(items, function (item) {
       var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
       var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
-      console.log(item);
       var predictItem = {
         date: moment(dateMoment).toDate(),
         quantity: quantity,
