@@ -20,10 +20,10 @@ var createUpdateActualSalesFunction = function (locationId) {
         var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName);
         if (menuItem) {
           var item = {
-            locationId: locationId,
             quantity: salesData.menuItems[menuItemName],
             date: salesData.createdDate,
-            menuItemId: menuItem._id
+            menuItemId: menuItem._id,
+            relations: menuItem.relations
           };
           ImportedActualSales.update(
             {date: TimeRangeQueryBuilder.forDay(item.date), menuItemId: item.menuItemId},

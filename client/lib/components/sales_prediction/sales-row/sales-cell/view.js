@@ -15,11 +15,16 @@ Template.predictionSalesCell.onRendered(function () {
                 alert("Please insert an integer");
             }
             else{
+                var area = HospoHero.getCurrentArea();
                 var updItem ={
-                    locationId: HospoHero.getCurrentArea(Meteor.userId()).locationId,
                     quantity: parseInt(newValue),
                     date: date,
-                    menuItemId: menuItemId
+                    menuItemId: menuItemId,
+                    relations: {
+                        organizationId: area.organizationId,
+                        locationId: area.locationId,
+                        areaId: area._id
+                    }
                 };
                 Meteor.call("updateActualSale", updItem);
             }

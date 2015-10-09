@@ -2,7 +2,7 @@ var predict = function (days, locationId) {
   var today = new Date();
   var dateMoment = moment();
   var prediction = new GooglePredictionApi();
-  var items = MenuItems.find({"relations.locationId":locationId}, {fields: {_id: 1}}).fetch();
+  var items = MenuItems.find({"relations.locationId":locationId}, {}).fetch();
   var notification = new Notification();
   //forecast for 15 days
   OpenWeatherMap.updateWeatherForecastForLocation(locationId);
@@ -24,11 +24,13 @@ var predict = function (days, locationId) {
     _.each(items, function (item) {
       var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
       var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
+      console.log(item);
       var predictItem = {
         date: moment(dateMoment).toDate(),
         quantity: quantity,
         updateAt: today,
-        menuItemId: item._id
+        menuItemId: item._id,
+        relations:  item.relations
       };
 
       //checking need for notification push

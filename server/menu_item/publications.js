@@ -75,10 +75,10 @@ Meteor.publish("menuItems", function (ids) {
 });
 
 
-Meteor.publish("locationMenuItems", function () {
+Meteor.publish("areaMenuItems", function () {
   if (this.userId) {
-    var currentLocationId = HospoHero.getCurrentArea(this.userId).locationId;
-    return MenuItems.find({'relations.locationId': currentLocationId});
+    var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+    return MenuItems.find({'relations.areaId': currentAreaId});
   } else {
     this.ready();
   }
