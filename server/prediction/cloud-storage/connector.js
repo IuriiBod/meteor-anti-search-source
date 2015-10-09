@@ -31,8 +31,6 @@ GoogleCloud = {
 
   MAX_UPLOADED_DAYS_COUNT: 365,
 
-  //todo update this code for one location
-  //todo make unique files for different locations like: "sales-data-#{locationId}"
   createTrainingDataUploadingSession: function (trainingFileName, onUploadingFinishedCallback) {
     var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
     var trainingDataWriteStream = new through();

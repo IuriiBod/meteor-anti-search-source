@@ -28,9 +28,11 @@ component.state.menu = function() {
 
 component.state.myCategory = function() {
   this.item = MenuItems.findOne(this.id);
-  var myCategory = this.item.category;
-  if(myCategory) {
-    return Categories.findOne(myCategory);
+  if(this.item) {
+    var myCategory = this.item.category;
+    if(myCategory) {
+      return Categories.findOne(myCategory);
+    }
   }
 };
 

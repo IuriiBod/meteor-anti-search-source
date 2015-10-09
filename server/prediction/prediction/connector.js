@@ -1,7 +1,6 @@
 var CloudSettings = Meteor.settings.GoogleCloud;
 
 
-//todo: update for locations functionality
 GooglePredictionApi = function GooglePredictionApi() {
   var authOptions = {
     serviceEmail: CloudSettings.SERVICE_EMAIL,
@@ -13,32 +12,31 @@ GooglePredictionApi = function GooglePredictionApi() {
 
 
 GooglePredictionApi.prototype._getModelName = function (locationId) {
-  return "trainingModel";
+  return "trainingModel-#{locationId}";
 };
 
 
 GooglePredictionApi.prototype._getTrainingFileName = function (locationId) {
-  return "sales-data.csv";
+  return "sales-data-#{locationId}.csv";
 };
 
 
-GooglePredictionApi.prototype.getUpdatePredictionModelSession = function () {
+GooglePredictionApi.prototype.getUpdatePredictionModelSession = function (locationId) {
   var self = this;
   var onFinished = function () {
     //start learning
-    self._client.insert(self._getModelName(), CloudSettings.BUCKET, self._getTrainingFileName());
+    self._client.insert(self._getModelName(locationId), CloudSettings.BUCKET, self._getTrainingFileName(locationId));
   };
 
   //uplaod data to google cloud storage
-  //todo update this code for one location
-  return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(), onFinished);
+  return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(locationId), onFinished);
 };
 
 
-GooglePredictionApi.prototype.makePrediction = function (inputData) {
+GooglePredictionApi.prototype.makePrediction = function (inputData, locationId) {
   if (HospoHero.isDevelopmentMode()) {
     return Math.floor(Math.random() * 100);
   } else {
-    return this._client.predict(this._getModelName(), inputData).outputValue;
+    return this._client.predict(this._getModelName(locationId), inputData).outputValue;
   }
 };

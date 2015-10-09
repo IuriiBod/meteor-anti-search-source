@@ -1,4 +1,3 @@
-var currentLocationId = 1;
 
 Template.predictionSalesCell.onRendered(function () {
     var menuItemId = FlowComponents.callAction("getItemId")._result;
@@ -17,7 +16,7 @@ Template.predictionSalesCell.onRendered(function () {
             }
             else{
                 var updItem ={
-                    locationId: currentLocationId,
+                    locationId: HospoHero.getCurrentArea(Meteor.userId()).locationId,
                     quantity: parseInt(newValue),
                     date: date,
                     menuItemId: menuItemId

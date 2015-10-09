@@ -94,34 +94,14 @@ Template.pageHeading.events({
     });
   },
 
-  'click .copyMenuItemBtn': function (event) {
+  'click .copyMenuItemBtn': function (event, tpl) {
     event.preventDefault();
-
-    $("#areaChooser").modal("show");
-    //var id = $(event.target).attr("data-id");
-    //if (id) {
-    //  Meteor.call("duplicateMenuItem", id, function (err, id) {
-    //    if (err) {
-    //      HospoHero.alert(err);
-    //    } else {
-    //      Router.go("menuItemDetail", {"_id": id});
-    //    }
-    //  });
-    //}
+    tpl.$("#areaChooser").modal("show");
   },
 
-  'click .copyJobItemBtn': function (event) {
+  'click .copyJobItemBtn': function (event, tpl) {
     event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    if (id) {
-      Meteor.call("duplicateJobItem", id, function (err, id) {
-        if (err) {
-          HospoHero.alert(err);
-        } else {
-          Router.go("jobItemEdit", {"_id": id});
-        }
-      });
-    }
+    tpl.$("#areaChooser").modal("show");
   },
 
   'click .editMenuItemBtn': function (e) {

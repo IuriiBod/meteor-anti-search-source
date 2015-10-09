@@ -1,5 +1,3 @@
-var currentLocationId = 1;
-
 var updateLastTaskRunDateForLocation = function (locationId) {
   //update task run date
   ForecastDates.update({locationId: locationId}, {
@@ -11,7 +9,7 @@ var updateLastTaskRunDateForLocation = function (locationId) {
 };
 
 
-var createUpdateActualSalesFunction = function () {
+var createUpdateActualSalesFunction = function (locationId) {
   //updates sales data for previous day
   var isHandledFirstDay = false;
   var previousDayMoment = moment().subtract(1, 'day');
@@ -22,7 +20,7 @@ var createUpdateActualSalesFunction = function () {
         var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName);
         if (menuItem) {
           var item = {
-            locationId: currentLocationId,
+            locationId: locationId,
             quantity: salesData.menuItems[menuItemName],
             date: salesData.createdDate,
             menuItemId: menuItem._id
@@ -43,36 +41,39 @@ var createUpdateActualSalesFunction = function () {
 };
 
 predictionModelRefreshJob = function () {
-  //todo: update it for all locations
-  var forecastData = ForecastDates.findOne({locationId: currentLocationId});
 
-  var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
-    || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
+  var locations = Locations.find({},{_id: 1}).fetch();
 
-  var updateActualSalesFn = createUpdateActualSalesFunction();
+  _.each(locations, function (location) {
 
-  if (needToUpdateModel) {
-    //todo: update it for organizations
-    var predictionApi = new GooglePredictionApi();
-    var updateSession = predictionApi.getUpdatePredictionModelSession();
+    var forecastData = ForecastDates.findOne({locationId: location._id});
+    var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
+      || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
 
-    //upload sales training data for the last year
-    Revel.uploadAndReduceOrderItems(function (salesData) {
-      updateActualSalesFn(salesData);
-      return updateSession.onDataReceived(salesData);
-    });
+    var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
 
-    updateSession.onUploadingFinished();
+    if (needToUpdateModel) {
+      //todo: update it for organizations
+      var predictionApi = new GooglePredictionApi();
+      var updateSession = predictionApi.getUpdatePredictionModelSession(location._id);
 
-    updateLastTaskRunDateForLocation(currentLocationId);
-  } else {
-    //update sales for last day only
-    Revel.uploadAndReduceOrderItems(function (salesData) {
-      return updateActualSalesFn(salesData);
-    });
-  }
+      //upload sales training data for the last year
+      Revel.uploadAndReduceOrderItems(function (salesData) {
+        updateActualSalesFn(salesData);
+        return updateSession.onDataReceived(salesData);
+      });
+
+      updateSession.onUploadingFinished();
+
+      updateLastTaskRunDateForLocation(location._id);
+    } else {
+      //update sales for last day only
+      Revel.uploadAndReduceOrderItems(function (salesData) {
+        return updateActualSalesFn(salesData);
+      });
+    }
+  });
 };
-
 
 SyncedCron.add({
   name: 'Prediction model refresh',
