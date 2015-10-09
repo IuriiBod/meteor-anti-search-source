@@ -42,17 +42,16 @@ var createUpdateActualSalesFunction = function (locationId) {
 
 predictionModelRefreshJob = function () {
 
-  var locations = Locations.find({},{_id: 1}).fetch();
+  var locations = Locations.find({}).fetch();
 
   _.each(locations, function (location) {
+    if(HospoHero.predictionUtils.havePos(location)){
+      var forecastData = ForecastDates.findOne({locationId: location._id});
+      var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
+        || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
 
-    var forecastData = ForecastDates.findOne({locationId: location._id});
-    var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
-      || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
+      var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
 
-    var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
-
-    if (location.pos && location.pos.host != "" && location.pos.key != "" && location.pos.secret != "") {
       if (needToUpdateModel) {
         //todo: update it for organizations
         var predictionApi = new GooglePredictionApi();

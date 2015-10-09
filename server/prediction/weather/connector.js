@@ -100,5 +100,16 @@ OpenWeatherMap = {
         }, {$set: forecastEntry}, {upsert: true});
       });
     }
+  },
+
+  isValid: function(city, country){
+    var data = this._httpGetRequest("/weather",{q:city+","+country});
+    if (parseInt(data.cod) >= 400){
+      return false
+    }
+    if (data.sys.country != country || data.name != city){
+      return false
+    }
+    return true
   }
 };
