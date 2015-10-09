@@ -5,8 +5,7 @@ Template.clockItem.events({
     if(id) {
       Meteor.call("clockIn", id, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }
@@ -18,8 +17,7 @@ Template.clockItem.events({
     if(id) {
       Meteor.call("clockOut", id, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           $(".tip").show();
           Session.set("newlyEndedShift", id);

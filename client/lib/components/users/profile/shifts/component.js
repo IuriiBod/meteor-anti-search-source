@@ -8,7 +8,7 @@ component.state.rosteredForShifts = function() {
   if(user) {
     return Shifts.find({"assignedTo": id, "shiftDate": {$gte: new Date().getTime()}}, {sort: {"shiftDate": 1}});
   }
-}
+};
 
 component.state.openedShifts = function() {
   var id = this.get("id");
@@ -29,4 +29,4 @@ component.state.openedShifts = function() {
   } else {
     return Shifts.find({"assignedTo": null, "shiftDate": {$gte: new Date().getTime()}}, {sort: {"shiftDate": 1}});
   }
-}
+};

@@ -1,2 +1,1 @@
-var component = FlowComponents.define('ingredientsList', function(props) {
-});
+var component = FlowComponents.define('ingredientsList', function(props) {});

@@ -21,22 +21,23 @@
 
     </div>
     <!-- End page wrapper-->
-
-    <!-- Right Sidebar -->
-    {{> render component="rightSidebar" }}
   </div>
   <!-- End wrapper-->
 
   <!-- EDIT INGREDIENT-->
+  {{#if canViewStock}}
   <div class="modal fade" id="editIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component = 'editIngredientItem'}}
   </div>
+  {{/if}}
   <!-- /EDIT INGREDIENT -->
 
   <!-- INGREDIENTS LIST-->
+  {{#if canViewStock}}
   <div class="modal fade" id="ingredientsListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component = 'stocksModalList' name="editJob"}}
   </div>
+  {{/if}}
   <!-- /INGREDIENTS LIST -->
 
   <!-- JOB ITEMS LIST-->
@@ -46,28 +47,42 @@
   <!-- /JOB ITEMS LIST -->  
 
   <!-- SHOW MENUS LIST -->
-  <div class="modal fade" id="showMenusList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component = 'showMenusList'}}
-  </div>
+  <!--<div class="modal fade" id="showMenusList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
+    <!--{{> render component = 'showMenusList'}}-->
+  <!--</div>-->
   <!-- /SHOW MENUS LIST  -->
 
   <!-- SUBMIT SHIFT -->
+  {{#if canEditRoster}}
   <div class="modal fade" id="submitShiftModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component='submitShift'}}
   </div>
+  {{/if}}
   <!-- /SUBMIT SHIFT -->
 
+  <!-- SUBMIT JOB -->
+  {{#if canEditJob}}
+  <div class="modal fade" id="submitJobModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component='submitJob'}}
+  </div>
+  {{/if}}
+  <!-- /SUBMIT JOB -->
+
   <!-- SHIFT PROFILE -->
+  {{#if canEditRoster}}
   <div class="modal fade" id="shiftProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <!-- {{> shiftProfile}} -->
     {{> render component='shiftProfile'}}
   </div>
+  {{/if}}
   <!-- /SHIFT PROFILE -->
 
    <!-- JOB PROFILE -->
+  {{#if canViewJob}}
   <div class="modal fade" id="jobProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component='jobProfile'}}
   </div>
+  {{/if}}
   <!-- /JOB PROFILE -->
 
   <!-- CALENDAR -->
@@ -77,21 +92,25 @@
   <!-- /CALENDAR -->
 
   <!-- NOTIFICATION MODAL -->
-  <div id="notifiModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component='notifiModal'}}
-  </div>
+  <!--<div id="notifiModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
+    <!--{{> render component='notifiModal'}}-->
+  <!--</div>-->
   <!-- /NOTIFICATION MODAL -->
 
   <!-- NEW STOCKTAKE MODAL-->
+  {{#if canEditStock}}
   <div class="modal fade" id="newStocktakeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component = 'newStocktakeModal' name="stockModal"}}
   </div>
+  {{/if}}
   <!-- /NEW STOCKTAKE MODAL -->
 
   <!-- ADD NEW SUPPLIER-->
+  {{#if canEditStock}}
   <div class="modal fade" id="addNewSupplierModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component = 'newSupplier'}}
   </div>
+  {{/if}}
   <!-- /ADD NEW SUPPLIER-->
 
    <!-- ADD INGREDIENT-->

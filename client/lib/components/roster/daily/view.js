@@ -18,7 +18,6 @@ Template.dailyShiftScheduling.events({
     } else {
       $flyoutContainer.addClass("show");
     }
-
     return false;
   },
 
@@ -27,10 +26,8 @@ Template.dailyShiftScheduling.events({
     var shiftId = $(event.target).attr("data-id");
     Meteor.call("assignWorker", workerId, shiftId, function (err) {
       if (err) {
-        console.log(err);
-        alert(err.reason);
         $(event.target).val("");
-        return;
+        HospoHero.alert(err);
       }
     });
 
@@ -45,8 +42,7 @@ Template.dailyShiftScheduling.events({
       };
       Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
     }
@@ -58,21 +54,43 @@ Template.dailyShiftScheduling.events({
     console.log(date);
     Meteor.call("generateRecurrings", date, function(err, result) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
-      } else {
-        console.log(result);
+        HospoHero.alert(err);
+      }
+    });
+
+    var shift = Shifts.find({_id: shiftId});
+    if(shift) {
+      var shiftUpdateDoc = {
+        to: workerId,
+        userId: Meteor.userId(),
+        shiftId: shiftId,
+        text: "You have been assigned to shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b>",
+        type: "update"
+      };
+      Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
+        if(err) {
+          HospoHero.alert(err);
+        }
+      });
+    }
+  },
+
+  'click .generateRecurring': function(event) {
+    event.preventDefault();
+    var date = Router.current().params.date;
+    console.log(date);
+    Meteor.call("generateRecurrings", date, function(err, result) {
+      if(err) {
+        HospoHero.alert(err);
       }
     });
   }
 });
 
 Template.dailyShiftScheduling.onRendered(function () {
-  new SubsManager();
-
   var routeDate = Router.current().params.date;
   if (!routeDate) {
-    return;
+    return false;
   }
 
   var calendar = new Template.dailyShiftScheduling.Calendar(this, {
@@ -83,4 +101,3 @@ Template.dailyShiftScheduling.onRendered(function () {
   });
   calendar.autoUpdate();
 });
-

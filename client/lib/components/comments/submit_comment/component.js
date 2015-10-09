@@ -5,4 +5,4 @@ var component = FlowComponents.define("submitComment", function(props) {
 
 component.state.doc = function() {
   return this;
-}
+};

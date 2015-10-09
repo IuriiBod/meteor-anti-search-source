@@ -28,15 +28,15 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              {{#if state$isPermitted}}
-              <th></th>
+              {{#if canEditMenu}}
+                <th></th>
               {{/if}}
               <th>Name</th>
               <th>Type</th>
               <th>Quantity</th>
               <th>Measure</th>
-              {{#if state$isPermitted}}
-              <th></th>
+              {{#if canEditMenu}}
+                <th></th>
               {{/if}}
             </tr>
           </thead>
@@ -49,8 +49,8 @@
             {{/each}}
           </tbody>
         </table>
-        {{#if state$isPermitted}}
-        <a class="btn btn-primary" href="#showListOfIngs" data-toggle="modal">Add prep or stock</a>
+        {{#if canEditMenu}}
+          <a class="btn btn-primary" href="#showListOfIngs" data-toggle="modal">Add prep or stock</a>
         {{/if}}
       </div>
       {{> render component='menuDetailWidgets' item=state$menu}}

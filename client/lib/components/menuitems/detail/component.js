@@ -31,15 +31,15 @@ component.state.menu = function() {
   if(this.menu) {
     return this.menu;
   }
-}
+};
 
 component.state.jobItems = function() {
   return LocalMenuIngsAndPreps.find({"type": "prep", "menu": this.id});
-}
+};
 
 component.state.ings = function() {
   return LocalMenuIngsAndPreps.find({"type": "ings", "menu": this.id});
-}
+};
 
 component.prototype.onViewRendered = function() {
   this.menu = MenuItems.findOne(this.id);
@@ -56,9 +56,4 @@ component.prototype.onViewRendered = function() {
     subs.subscribe("ingredients", ids);
   }
   Session.set("goBackMenu", null);
-}
-
-component.state.isPermitted = function() {
-  return managerPlusAdminPermission();
-}
-
+};

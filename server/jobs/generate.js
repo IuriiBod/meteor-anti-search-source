@@ -24,7 +24,7 @@ Meteor.methods({
                   "name": jobItem.name,
                   "type": jobItem.type,
                   "ref": jobItem._id
-                }
+                };
                 if(timeRequired > maxTimePerDay) {
                   if(count > 0) {
                     for(var i=1; count>=i; i++) {
@@ -172,8 +172,8 @@ function createNewJob(info, time, portions, maxTime, maxPortions) {
       "assignedTo": null,
       "createdOn": new Date().getTime(),
       "createdBy": Meteor.userId(),
-      "ingredients": [],
-    }
+      "ingredients": []
+    };
     var id = Jobs.insert(doc);
     if(jobIds.indexOf(id) < 0) {
       jobIds.push(id);
@@ -205,7 +205,7 @@ createNewRecurringJob = function(name, ref, type, time, section, startAt, date) 
         "section": section,
         "createdOn": new Date(date).getTime(),
         "startAt": new Date(starting).getTime()
-      }
+      };
 
       var existingJob = Jobs.find(doc).fetch();
       if(existingJob.length <= 0) {
@@ -221,4 +221,4 @@ createNewRecurringJob = function(name, ref, type, time, section, startAt, date) 
     });
   }
 
-}
+};

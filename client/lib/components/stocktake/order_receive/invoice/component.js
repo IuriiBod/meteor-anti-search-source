@@ -8,7 +8,7 @@ component.state.imageUrl = function() {
   if(receipt && receipt.invoiceImage) {
     return receipt.invoiceImage;
   }
-}
+};
 
 // component.prototype.onImageRendered = function() {
 //   blueimpImageFullScreen();

@@ -16,16 +16,12 @@ component.state.jobItemsList = function() {
   }
   Meteor.subscribe("jobItems", ids);
   return ids;
-}
+};
 
 component.state.isMenu = function() {
-  if(this.id == "menuSubmit") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.id == "menuSubmit";
+};
 
 component.state.name = function() {
   return this.name;
-}
+};

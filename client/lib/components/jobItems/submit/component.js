@@ -1,3 +1,5 @@
+LocalJobItem =  new Mongo.Collection(null);
+
 var component = FlowComponents.define('submitJobItem', function(props) {
   this.onRendered(this.onFormRendered);
 });
@@ -14,10 +16,6 @@ component.state.initialHTML = function() {
   }
 };
 
-component.state.step = function() {
-  return 2;
-};
-
 component.state.repeatAt = function() {
   return "8:00 AM";
 };
@@ -28,13 +26,11 @@ component.state.startsOn = function() {
 };
 
 component.state.endsOn = function() {
-  var endDate = moment().add(7, 'days').format("YYYY-MM-DD");
-  return endDate;
+  return moment().add(7, 'days').format("YYYY-MM-DD");
 };
 
 component.state.week = function() {
-  var week = ["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat", "Sun"];
-  return week;
+  return ["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat", "Sun"];
 };
 
 component.state.sections = function() {
@@ -44,8 +40,7 @@ component.state.sections = function() {
 component.action.submit = function(info) {
   Meteor.call("createJobItem", info, function(err, id) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       Session.set("selectedIngredients", null);
       Session.set("selectedJobItems", null);
@@ -55,8 +50,7 @@ component.action.submit = function(info) {
       };
       Meteor.call("sendNotifications", id, "job", options, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         }
       });
       
@@ -68,13 +62,13 @@ component.action.submit = function(info) {
 
 component.state.jobtypes = function() {
   return JobTypes.find();
-}
+};
 
 component.prototype.onFormRendered = function() {
   Session.set("frequency", "Daily");
   Session.set("checklist", []);
   Session.set("localId", insertLocalJobItem());
-}
+};
 
 insertLocalJobItem = function() {
   var typeId = Session.get("jobType");
@@ -85,4 +79,4 @@ insertLocalJobItem = function() {
       return LocalJobItem.insert({"type": typeId, "ings": []});
     }
   }
-}
+};

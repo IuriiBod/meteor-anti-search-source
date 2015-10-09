@@ -1,34 +1,47 @@
 Meteor.publish('allJobItems', function() {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
+  if(this.userId) {
+    var query = {
+      status: 'active',
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    };
+
+    logger.info("All job items published");
+    return JobItems.find(query, {sort: {'name': 1}});
+  } else {
+    this.ready();
   }
-  var cursors = JobItems.find({"status": "active"}, {sort: {'name': 1}});
-  logger.info("All job items published");
-  return cursors;
 });
 
 Meteor.publish("jobItems", function(ids) {
-   if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
-  }
-  var cursors = [];
-  var jobsItems = null;
-  if(ids.length > 0) {
-    jobsItems = JobItems.find({"_id": {$in: ids}}, {sort: {'name': 1}});
+  if(this.userId) {
+    var query = {
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    };
+    var options = {
+      sort: {
+        'name': 1
+      }
+    };
+
+    if (ids.length > 0) {
+      query._id = {$in: ids};
+    } else {
+      options.limit = 10;
+    }
+
+    logger.info("Job items published", ids);
+    return JobItems.find(query, options);
   } else {
-    jobsItems = JobItems.find({}, {sort: {'name': 1}, limit: 10});
+    this.ready();
   }
-  cursors.push(jobsItems);
-  logger.info("Job items published", {"ids": ids});
-  return cursors;
 });
 
 Meteor.publish("jobsRelatedMenus", function(id) {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
+  if(this.userId) {
+    logger.info("Related menus published", {"id": id});
+    return MenuItems.find({"jobItems._id": id});
+  } else {
+    this.ready();
   }
   logger.info("Related menus published", {"id": id});
   return MenuItems.find({"jobItems._id": id});
@@ -40,7 +53,9 @@ Meteor.publish("autocomplete-jobItems", function(selector, options) {
     this.error(new Meteor.Error(404, "User not found"));
   }
 
-  sub = this
+  var sub = this;
+  var search;
+
   if (selector.name) {
     search = selector.name.$regex;
     options = selector.name.$options;
@@ -53,12 +68,11 @@ Meteor.publish("autocomplete-jobItems", function(selector, options) {
    var limit = options.limit || 10;
 
   // Push this into our own collection on the client so they don't interfere with other publications of the named collection.
-  handle = JobItems.find({"name": regex}, {"limit": limit}).observeChanges({
+  JobItems.find({"name": regex}, {"limit": limit}).observeChanges({
     added: function(id, fields) {
       sub.added("autocompleteRecords", id, fields)
     }
-  })
+  });
   logger.info("Autocomplete search text", selector.name);
   sub.ready();
 });
-

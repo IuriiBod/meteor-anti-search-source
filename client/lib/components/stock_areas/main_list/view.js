@@ -5,8 +5,7 @@ Template.stockAreas.events({
     if(name) {
       Meteor.call("createGeneralArea", name.trim(), function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           $(event.target).find('[name=gareaName]').val("");
         }

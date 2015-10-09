@@ -1,6 +1,6 @@
 Package.describe({
   name: 'hospohero:stale-session',
-  version: '0.0.6',
+  version: '0.0.7',
   summary: 'Session timeout handling',
   git: 'https://github.com/tomhay/herochef',
   documentation: 'README.md'
@@ -14,8 +14,5 @@ Package.onUse(function(api) {
     'jquery'
   ], 'client');
   api.addFiles('lib/stale-session/client.js', 'client');
-  api.addFiles('lib/stale-session/server.js', 'server');
-  api.addFiles('lib/collections.js');
-  api.addFiles('lib/publications.js', 'server');
-  api.export(['StaleSessionConfigs', 'StaleSession']);
+  api.export(['StaleSession']);
 });

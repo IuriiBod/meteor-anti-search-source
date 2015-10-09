@@ -1,5 +1,5 @@
 Template.menuInstructions.events({
-    'click .textEdit': function(event) {
+  'click .textEdit': function(event) {
     event.preventDefault();
     $(".editorPanel").hide();
     $(".editor").removeClass("hide");
@@ -22,14 +22,13 @@ Template.menuInstructions.events({
           "type": "edit",
           "title": "Instructions on " + menu.name + " has been updated",
           "text": ""
-        }
+        };
         Meteor.call("sendNotifications", menuId, "menu", options, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.alert(err);
           }
-        });   
-         
+        });
+
       }
       $(".editor").addClass("hide");
       $(".editorPanel").show().find("p").replaceWith(text);

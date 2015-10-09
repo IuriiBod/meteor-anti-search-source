@@ -1,0 +1,59 @@
+<template name="createLocation">
+  <form method="get" class="form-horizontal" data-id="{{state$organizationId}}">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Location Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="name" required="required">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Address</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="address" required="required">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Timezone</label>
+      <div class="col-sm-10">
+        {{> render component='selectComponent' values=timezones selected='UTC 0' name='timezone'}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Opening Time</label>
+      <div class="col-sm-4">
+        {{> render component='selectComponent' values=hours selected='8' name='openingHour'}}
+      </div>
+      <div class="col-sm-4">
+        {{> render component='selectComponent' values=minutes selected=null name='openingMinutes'}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Closing Time</label>
+      <div class="col-sm-4">
+        {{> render component='selectComponent' values=hours selected='17' name='closingHour'}}
+      </div>
+      <div class="col-sm-4">
+        {{> render component='selectComponent' values=minutes selected=null name='closingMinutes'}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Status</label>
+      <div class="col-sm-10 col-xs-12">
+        <div class="btn-group col-xs-12" data-toggle="buttons">
+          <label class="btn col-xs-6{{#if state$enabled}} btn-primary{{else}} btn-default{{/if}}">
+            <input type="radio" name="status" id="enabled" autocomplete="off" value="Enabled" checked="checked">
+            Enabled
+          </label>
+          <label class="btn col-xs-6{{#unless state$enabled}} btn-primary{{else}} btn-default{{/unless}}">
+            <input type="radio" name="status" id="disabled" autocomplete="off" value="Disabled">
+            Disabled
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group col-xs-12">
+      <button type="submit" class="btn btn-primary col-xs-6">Create</button>
+      <button type="button" class="btn btn-default col-xs-6 close-flyout">Close</button>
+    </div>
+  </form>
+</template>

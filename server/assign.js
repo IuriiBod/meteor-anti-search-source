@@ -74,10 +74,11 @@ Meteor.methods({
   },
 
   'assignWorker': function(workerId, shiftId) {
-    if(!shiftId) {
-      logger.error("Shift Id not found");
-      throw new Meteor.Error(404, "Shift Id not found");
+    if(!HospoHero.perms.canUser('editRoster')()) {
+      throw new Meteor.Error(403, "User not permitted to assign workers");
     }
+    HospoHero.checkMongoId(shiftId);
+
     var shift = Shifts.findOne(shiftId);
     if(!shift) {
       logger.error("Shift not found");
@@ -87,12 +88,6 @@ Meteor.methods({
       logger.error("Can't change shift parameters, as shift is active");
       throw new Meteor.Error(404, "Can't change shift parameters, as shift is active");
     }
-    // var yesterday = new Date();
-    // yesterday.setDate(yesterday.getDate() - 1);
-    // if(new Date(shift.shiftDate) <= yesterday) {
-    //   logger.error("Shift date passed");
-    //   throw new Meteor.Error(404, "Shift cannot be assigned, date is passed");
-    // }
     var updateDoc = {
       "assignedTo": null
     };
@@ -108,12 +103,11 @@ Meteor.methods({
         throw new Meteor.Error(404, "Worker not found");
       }
       updateDoc.assignedTo = workerId;
-      Shifts.update({_id: shiftId}, {$set: updateDoc});
       logger.info("Worker assigned to shift", {"shiftId": shiftId, "workerId": workerId});
     } else {
-      Shifts.update({_id: shiftId}, {$set: {"assignedTo": null}});
       logger.info("Worker removed from shift", {"shiftId": shiftId, "workerId": shift.assignedTo});
     }
-    return;
+    Shifts.update({_id: shiftId}, {$set: updateDoc});
+    return true;
   } 
 });

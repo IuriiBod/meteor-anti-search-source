@@ -3,43 +3,43 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">{{#if state$isManagerOrAdmin}} Edit {{/if}} Stocks</h4>
+        <h4 class="modal-title" id="myModalLabel">{{#if canEditStock}} Edit {{/if}} Stocks</h4>
       </div>
       <form class="form-horizontal" role="form" data-id="{{state$id}}">
         <div class="modal-body">
           <div class="form-group">
             <label class="col-sm-4 control-label">Supplier's Code</label>
             <div class="col-sm-6 ">
-              {{#if state$isManagerOrAdmin}}
-              <input type="text" name="code" class="form-control" placeholder="Add Name" value="{{item.code}}">
+              {{#if canEditStock}}
+                <input type="text" name="code" class="form-control" placeholder="Add Name" value="{{item.code}}">
               {{else}}
-              <div class="form-control">{{item.code}}</div>
+                <div class="form-control">{{item.code}}</div>
               {{/if}}
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-4 control-label">Description</label>
             <div class="col-sm-6 ">
-              {{#if state$isManagerOrAdmin}}
-              <input type="text" name="desc" class="form-control" placeholder="Add Name" value="{{item.description}}">
+              {{#if canEditStock}}
+                <input type="text" name="desc" class="form-control" placeholder="Add Description" value="{{item.description}}">
               {{else}}
-              <div class="form-control">{{item.description}}</div>
+                <div class="form-control">{{item.description}}</div>
               {{/if}}
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-4 control-label">Supplier</label>
             <div class="col-sm-6 ">
-              {{#if state$isManagerOrAdmin}}
-              <select name="supplier" class="form-control">
-                <option value="{{item.suppliers}}">{{SupplierName item.suppliers}}</option>
-                {{#each state$suppliers}}
-                <option value="{{_id}}">{{name}}</option>
-                {{/each}}
-              </select>
+              {{#if canEditStock}}
+                <select name="supplier" class="form-control">
+                  <option value="{{item.suppliers}}">{{supplierName item.suppliers}}</option>
+                  {{#each state$suppliers}}
+                  <option value="{{_id}}">{{name}}</option>
+                  {{/each}}
+                </select>
               {{else}}
                 {{#if item.suppliers}}
-                  <div class="form-control">{{SupplierName item.suppliers}}</div>
+                  <div class="form-control">{{supplierName item.suppliers}}</div>
                 {{else}}
                   <div class="form-control">Not assigned</div>
                 {{/if}}
@@ -49,7 +49,7 @@
           <div class="form-group">
             <label class="col-sm-4 control-label">Portion Ordered (b)</label>
             <div class="col-sm-6">
-              {{#if state$isManagerOrAdmin}}
+              {{#if canEditStock}}
               <select name="portionOrdered" class="form-control">
                 {{#if item.portionOrdered}}
                   <option selected="selected">{{item.portionOrdered}}</option>
@@ -74,10 +74,10 @@
             <div class="col-sm-6">
               <div class="input-group">
                 <span class="input-group-addon">$</span>
-                {{#if state$isManagerOrAdmin}}
-                <input type="text" name="costPerPortion" class="form-control" placeholder="Cost of a unit" value="{{item.costPerPortion}}">
+                {{#if canEditStock}}
+                  <input type="text" name="costPerPortion" class="form-control" placeholder="Cost of a unit" value="{{item.costPerPortion}}">
                 {{else}}
-                <div class="form-control">{{item.costPerPortion}}</div>
+                  <div class="form-control">{{item.costPerPortion}}</div>
                 {{/if}}
               </div>
             </div>
@@ -85,7 +85,7 @@
           <div class="form-group">
             <label class="col-sm-4 control-label">Portion Used</label>
             <div class="col-sm-6 ">
-              {{#if state$isManagerOrAdmin}}
+              {{#if canEditStock}}
               <select name="portionUsed" class="form-control">
                 {{#if item.portionUsed}}
                   <option selected="selected">{{item.portionUsed}}</option>
@@ -108,10 +108,10 @@
           <div class="form-group">
             <label class="col-sm-4 control-label">How many (a)'s in a (b)</label>
             <div class="col-sm-6">
-              {{#if state$isManagerOrAdmin}}
-              <input type="text" name="unitSize" class="form-control" placeholder="Unit Size" value="{{item.unitSize}}">
+              {{#if canEditStock}}
+                <input type="text" name="unitSize" class="form-control" placeholder="Unit Size" value="{{item.unitSize}}">
               {{else}}
-              <div class="form-control">{{item.unitSize}}</div>
+                <div class="form-control">{{item.unitSize}}</div>
               {{/if}}
             </div>
           </div>
@@ -152,7 +152,7 @@
 
         </div>
         <div class="modal-footer">
-          {{#if state$isManagerOrAdmin}}
+          {{#if canEditStock}}
             {{# if state$isArchive}}
               <button type="button" class="btn btn-warning archiveIngredient" data-id="{{item._id}}" data-status="restore">Restore</button>
               <button type="button" class="btn btn-danger archiveIngredient" data-id="{{item._id}}" data-status="delete">Delete</button>
@@ -161,8 +161,8 @@
             {{/ if}}
           {{/if}}
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          {{#if state$isManagerOrAdmin}}
-          <button type="submit" class="btn btn-primary">Save changes</button>
+          {{#if canEditStock}}
+            <button type="submit" class="btn btn-primary">Save changes</button>
           {{/if}}
         </div>
       </form>

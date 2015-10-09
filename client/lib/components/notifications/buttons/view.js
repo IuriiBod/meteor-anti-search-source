@@ -5,8 +5,7 @@ Template.notifiButtons.events({
     $(".dropdown-notifi").addClass("open");
     Meteor.call("readNotifications", id, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       }
       $(".dropdown-notifi").addClass("open");
     });

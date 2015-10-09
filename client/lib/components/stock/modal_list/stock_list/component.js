@@ -1,7 +1,6 @@
 var component = FlowComponents.define('stocksModalList', function(props) {
   this.name = props.name;
   this.onRendered(this.renderShowIngList);
-  var id = Router.current().params._id;
 
   var options = {
     keepHistory: 1000 * 60 * 5,
@@ -14,7 +13,7 @@ var component = FlowComponents.define('stocksModalList', function(props) {
 
 component.state.name = function() {
   return this.name;
-}
+};
 
 component.prototype.setIds = function() {
   var ids = [];
@@ -41,7 +40,7 @@ component.prototype.setIds = function() {
   }
   this.set("ids", ids);
   return ids;
-}
+};
 
 component.prototype.renderShowIngList = function() {
   var self = this;
@@ -62,7 +61,7 @@ component.prototype.renderShowIngList = function() {
     }
     self.IngredientsSearch.search(self.get("text"), {"ids": ids, "limit": 10, "status": "active"});
   });
-}
+};
 
 component.state.getIngredients = function() {
   return this.IngredientsSearch.getData({
@@ -71,10 +70,10 @@ component.state.getIngredients = function() {
     },
     sort: {'code': 1}
   });
-}
+};
 
 component.action.keyup = function(text) {
   var ids = this.setIds();
   this.set("text", text);
   this.IngredientsSearch.search(text, {"ids": ids, "limit": 10, "status": "active"});
-}
+};

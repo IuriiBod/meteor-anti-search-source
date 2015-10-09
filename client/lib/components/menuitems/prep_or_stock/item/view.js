@@ -3,12 +3,11 @@ Template.ingsAndPreps.events({
     event.preventDefault();
     var menu = Session.get("thisMenuItem");
     var id = $(event.target).attr("data-id");
-    var confirmRemove = confirm("Are you sure you want to remove this item ?");
+    var confirmRemove = confirm("Are you sure you want to remove this item?");
     if(confirmRemove) {
-      Meteor.call("removeMenuIngredient", menu, id, function(err) {
+      Meteor.call("removeItemFromMenu", menu, {ingredients: {_id: id}}, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           $(event.target).closest("tr").remove()
         }
@@ -22,10 +21,9 @@ Template.ingsAndPreps.events({
     var id = $(event.target).attr("data-id");
     var confirmRemove = confirm("Are you sure you want to remove this item ?");
     if(confirmRemove) {
-      Meteor.call("removeMenuJobItem", menu, id, function(err) {
+      Meteor.call("removeItemFromMenu", menu, {jobItems: {_id: id}}, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.alert(err);
         } else {
           $(event.target).closest("tr").remove()
         }
@@ -33,6 +31,7 @@ Template.ingsAndPreps.events({
     }
   },
 
+  // TODO: Check it later
   'click .view-prep': function(event) {
     event.preventDefault();
     var id = $(event.target).attr("data-id");

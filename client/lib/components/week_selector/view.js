@@ -1,15 +1,14 @@
 Template.weekSelector.rendered = function() {
   $('.i-checks').iCheck({
-    radioClass: 'iradio_square-green',
+    radioClass: 'iradio_square-green'
   });
-}
+};
 
 Template.weekSelector.events({
   'click .saveShifts': function(event) {
     event.preventDefault();
     var weekNo = Session.get("templateToWeek");
     var week = getDatesFromWeekNumber(weekNo);
-  
     var dates = [];
     week.forEach(function(day) {
       if(day && day.date) {
@@ -36,12 +35,11 @@ Template.weekSelector.events({
             "assignedTo": shift.assignedTo,
             "week": dates,
             "order": shift.order
-          }
+          };
 
           Meteor.call("createShift", info, function(err) {
             if(err) {
-              console.log(err);
-              return;
+              HospoHero.alert(err);
             } else {
               $("#notifiModal").modal("show");
             }

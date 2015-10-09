@@ -7,12 +7,11 @@ var component = FlowComponents.define("quantity", function(props) {
 
 component.state.item = function() {
   return this;
-}
+};
 
 component.state.quantity = function() {
   return this.quantity;
-}
-
+};
 
 component.prototype.onItemRendered = function() {
   var menu = Session.get("thisMenuItem");
@@ -41,8 +40,7 @@ component.prototype.onItemRendered = function() {
         if(type == "ings") {
           Meteor.call("addMenuIngredients", menu, [{"_id": ing, "quantity": newValue}], function(err) {
             if(err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.alert(err);
             } else {
               if($(elem).next().length > 0) {
                 $(elem).next().find("a.quantity").click();
@@ -52,8 +50,7 @@ component.prototype.onItemRendered = function() {
         } else if(type == "prep") {
           Meteor.call("addMenuPrepItems", menu, [{"_id": ing, "quantity": newValue}], function(err) {
             if(err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.alert(err);
             } else {
               if($(elem).next().length > 0) {
                 $(elem).next().find("a.quantity").click();
@@ -64,8 +61,8 @@ component.prototype.onItemRendered = function() {
       }
     }
   });
-}
+};
 
 function updateLocalData(_id, type, qty, menu) {
   LocalMenuIngsAndPreps.update({"_id": _id, "menu": menu, "type": type}, {$set: {"quantity": qty}});
-}
+};

@@ -5,7 +5,7 @@ var component = FlowComponents.define("submitJob", function(props) {
 component.state.selectedJobType = function() {
   var jobType = this.get("type");
   return JobTypes.findOne(jobType);
-}
+};
 
 component.state.jobTypes = function() {
   return JobTypes.find({"_id": {$nin: [this.get("type")]}});
@@ -43,7 +43,7 @@ component.state.activeTime = function() {
   } else {
     return 0;
   }
-}
+};
 
 component.state.job = function() {
   var jobId = this.get("jobRef");
@@ -69,11 +69,7 @@ component.action.keyup = function(portions) {
 
 component.state.isPrep = function() {
   var type = JobTypes.findOne(this.get("type"));
-  if(type && type.name == "Prep") {
-    return true;
-  } else {
-    return false;
-  }
+  return !!(type && type.name == "Prep");
 };
 
 component.state.activeTimes = function() {
@@ -109,7 +105,7 @@ component.action.submit = function(info) {
   var self = this;
   Meteor.call("createNewJob", info, function(err, id) {
     if(err) {
-      return alert(err.reason);
+      HospoHero.alert(err);
     } else {
       var prep = JobTypes.findOne({"name": "Prep"});
       self.set("type", prep._id);
@@ -136,4 +132,4 @@ component.state.settings = function() {
     noMatchTemplate: Template.noMatchJobTemplate
   }];
   return data;  
-}
+};

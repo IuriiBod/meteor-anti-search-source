@@ -7,11 +7,6 @@ var component = FlowComponents.define("ingsAndPreps", function(props) {
   this.onRendered(this.onItemRendered);
 });
 
-component.state.isPermitted = function() {
-  return managerPlusAdminPermission();
-}
-
-
 component.state.item = function() {
   if(this.type == "prep") {
     this.item = JobItems.findOne(this.id);
@@ -21,7 +16,7 @@ component.state.item = function() {
   if(this.item) {
     return this.item;
   }
-}
+};
 
 component.state.name = function() {
   if(this.item) {
@@ -31,17 +26,17 @@ component.state.name = function() {
       return this.item.description;
     }
   }
-}
+};
 
 component.state.quantity = function() {
   if(this.item) {
     return this.quantity;
   }
-}
+};
 
 component.state.type = function() {
   return this.type;
-}
+};
 
 component.state.measure = function() {
   if(this.item) {
@@ -51,10 +46,10 @@ component.state.measure = function() {
       return this.item.portionUsed;
     }
   }
-}
+};
 
 component.prototype.onItemRendered = function() {
   if(this.type == "prep") {
     subs.subscribe("jobItems", [this.id]);
   }
-}
+};

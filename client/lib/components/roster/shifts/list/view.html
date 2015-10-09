@@ -1,9 +1,8 @@
 <template name="schedulingShiftsList">
   <div id="calendar"></div>
-  {{#if state$shiftsCount}}
-  {{else}} 
+  {{#unless state$shiftsCount}}
   <div>
     Create new shift to continue scheduling
   </div>
-  {{/if}}
+  {{/unless}}
 </template>

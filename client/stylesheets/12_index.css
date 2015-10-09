@@ -32,7 +32,7 @@
 }
 
 .chat-discussion .chat-message:nth-child(2n) .message {
-  text-align: none !important;
+  text-align: inherit !important;
   margin-right: 0px !important;
 }
 
@@ -47,7 +47,7 @@
 
 .chat-discussion .chat-message .message-avatar {
   float: left !important;
-  margin-right: !important;
+  margin-right:0px !important;
 }
 /*CHATS ALIGN FIX ON LEFT*/
 
@@ -115,7 +115,6 @@ li > img {
   white-space: inherit !important;
 }
 
-<<<<<<< HEAD
 .ordering_count {
   max-width: 120px !important;
 }
@@ -132,8 +131,4 @@ li > img {
 
 .label-success a {
   color: #FFFFFF;
-
-}
-.chosen-select-width, .chosen-single, .chosen-drop {
-  min-width: 200px;
 }

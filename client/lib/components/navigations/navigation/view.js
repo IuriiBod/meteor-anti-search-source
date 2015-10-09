@@ -1,8 +1,8 @@
 Template.navigation.rendered = function(){
-  setTimeout(function() {
+  //setTimeout(function() {
     // Initialize metisMenu
     $('#side-menu').metisMenu();
-  }, 5000);
+  //}, 5000);
 };
 
 // Used only on OffCanvas layout
@@ -29,8 +29,7 @@ Template.navigation.events({
 
 Template.navigation.helpers({
   today: function() {
-    var date = moment(new Date()).format("YYYY-MM-DD");
-    return date;
+    return moment(new Date()).format("YYYY-MM-DD");
   },
 
   week: function() {
@@ -44,7 +43,6 @@ Template.navigation.helpers({
   },
   
   year: function() {
-    var year = moment().format("YYYY");
-    return year;
+    return moment().format("YYYY");
   }
 });

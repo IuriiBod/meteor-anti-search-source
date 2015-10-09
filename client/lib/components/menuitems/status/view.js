@@ -7,8 +7,7 @@ Template.addNewStatus.events({
     }
     Meteor.call('createStatus', name, function(err, id) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.alert(err);
       } else {
         $(event.target).find('input').val("");
         $("#addStatusModal").modal('hide');

@@ -1,19 +1,17 @@
 Meteor.methods({
   'createNewsfeed': function(text, ref) {
-    if(!Meteor.userId()) {
+    if (!HospoHero.isInOrganization()) {
       logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+      throw new Meteor.Error(403, "User not permitted to create post");
     }
-    if(!text) {
-      logger.error("Text field not found");
-      throw new Meteor.Error(404, "Text field not found");
-    }
+
     var doc = {
       "text": text,
       "createdOn": Date.now(),
       "createdBy": Meteor.userId(),
-      "likes": []
-    }
+      "likes": [],
+      relations: HospoHero.getRelationsObject()
+    };
     if(ref) {
       doc["reference"] = ref;
     } else {
@@ -25,16 +23,15 @@ Meteor.methods({
   },
 
   'updateNewsfeed': function(id, userId) {
-    if(!Meteor.userId()) {
+    if (!HospoHero.isInOrganization()) {
       logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+      throw new Meteor.Error(403, "User not permitted to update post");
     }
-    if(!id) {
-      logger.error("Reference field not found");
-      throw new Meteor.Error(404, "Reference field not found");
-    }
+    HospoHero.checkMongoId(id);
+    HospoHero.checkMongoId(userId);
+
     var newsFeed = NewsFeeds.findOne(id);
-    if(!id) {
+    if(!newsFeed) {
       logger.error("NewsFeed item not found");
       throw new Meteor.Error(404, "NewsFeed item not found");
     }

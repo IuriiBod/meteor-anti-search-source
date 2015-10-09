@@ -5,11 +5,10 @@ var component = FlowComponents.define('jobItemEdit', function(props) {
 
 component.state.item = function() {
   if(this.id) {
-    var job = getPrepItem(this.id);
-    return job;
+    return getPrepItem(this.id);
   }
-}
+};
 
-component.state.quantity = function() {
+component.state.quantity = function () {
   return 1;
-}
+};

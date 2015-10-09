@@ -1,4 +1,4 @@
-var component = FlowComponents.define("pageHeading", function(props) {
+var component = FlowComponents.define("pageHeading", function (props) {
   this.title = props.title;
   this.category = props.category;
   this.subCategory = props.subCategory;
@@ -6,297 +6,232 @@ var component = FlowComponents.define("pageHeading", function(props) {
   this.id = props.id;
 });
 
-component.state.title = function() {
+component.state.title = function () {
   var title = this.title;
-  if(Router.current().params.type == "archive" || Router.current().params.status == "archived") {
+  if (Router.current().params.type == "archive" || Router.current().params.status == "archived") {
     title = "Archived " + title;
   }
-
   return title;
-}
+};
 
-component.state.type = function() {
+component.state.type = function () {
   return this.type;
-}
+};
 
-component.state.category = function() {
+component.state.category = function () {
   return this.category;
-}
+};
 
-component.state.subCategory = function() {
+component.state.subCategory = function () {
   return this.subCategory;
-}
+};
 
-component.state.publishedOn = function() {
-  if(this.type == "weeklyroster") {
+component.state.publishedOn = function () {
+  if (this.type == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     var dates = [];
-    week.forEach(function(day) {
-      if(day && day.date) {
+    week.forEach(function (day) {
+      if (day && day.date) {
         dates.push(new Date(day.date).getTime())
       }
     });
-    var shift = Shifts.findOne({"shiftDate": {$in: dates}, "published": true, "publishedOn": {$exists: true}});
-    if(shift && shift.publishedOn) {
+    var shift = Shifts.findOne({
+      "shiftDate": {$in: dates},
+      "published": true,
+      "publishedOn": {$exists: true},
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
+    if (shift && shift.publishedOn) {
       return shift.publishedOn;
     }
   }
-}
+};
 
-component.state.currentDate = function() {
-  var week = Router.current().params.week;
-  var year = Router.current().params.year;
-  var weekStartEnd = getWeekStartEnd(week, year);
-  var firstDay = weekStartEnd.monday;
-  var lastDay = weekStartEnd.sunday;
 
-  var firstDayDate = firstDay.getDate();
-  var lastDayDate = lastDay.getDate();
-
-  var firstDayMonth = firstDay.getMonth();
-  var lastDayMonth = lastDay.getMonth();
-
-  var firstDayMonthName = getMonthName(firstDay.getMonth(), true);
-  firstDayMonthName = firstDayMonthName.toUpperCase();
-  var lastDayMonthName = getMonthName(lastDay.getMonth(), true);
-  lastDayMonthName = lastDayMonthName.toUpperCase();
-
-  var firstDayYear = firstDay.getFullYear();
-  var lastDayYear = lastDay.getFullYear();
-
-  var currentDate = "";
-
-  if (firstDayMonth == lastDayMonth) {
-    currentDate = firstDayDate + " - " + lastDayDate + " " + firstDayMonthName + ", " + firstDayYear + ", ";
-  } else if (firstDayMonth != lastDayMonth) {
-    if (firstDayYear == lastDayYear) {
-      currentDate = firstDayDate + " " + firstDayMonthName + " - " + lastDayDate + " " + lastDayMonthName + ", " + firstDayYear + ", ";
-    } else {
-      currentDate = firstDayDate + " " + firstDayMonthName + " " + firstDayYear + " - " + lastDayDate + " " + lastDayMonthName + " " + lastDayYear + ", ";
-    }
-  }
-
-  currentDate += "WEEK " + week;
-
-  return currentDate;
-}
-
-component.state.id = function() {
-  if(this.id) {
+component.state.id = function () {
+  if (this.id) {
     return this.id;
-  } else if(Router.current().params._id) {
+  } else if (Router.current().params._id) {
     return Router.current().params._id;
   }
-}
+};
 
-component.state.isMenuList = function() {
-  if(this.type == "menulist") {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.isMenuList = function () {
+  return this.type == "menulist";
+};
 
-component.state.isActualSales = function() {
-  if(this.type == "actualsales") {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.isActualSales = function () {
+  return this.type == "actualsales";
+};
 
-component.state.isDailyRoster = function() {
-  if(this.type == "dailyroster") {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.isDailyRoster = function () {
+  return this.type == "dailyroster";
+};
 
-component.state.routeDate = function() {
+component.state.routeDate = function () {
   var date = Router.current().params.date;
-  if(date) {
+  if (date) {
     return date;
   }
-}
+};
 
-component.state.isMenuListSubscribed = function() {
-  if(this.type == "menulist") {
-    var result = Subscriptions.findOne({"_id": "menulist", "subscribers": Meteor.userId()});
-    if(result) {
-      return true;
-    } else {
-      return false;
-    }
+component.state.isMenuListSubscribed = function () {
+  if (this.type == "menulist") {
+    return !!Subscriptions.findOne({"_id": "menulist", "subscribers": Meteor.userId()});
   }
-}
+};
 
-component.state.isMenuDetailed = function() {
-  if(this.type == "menudetailed") {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.isMenuDetailed = function () {
+  return this.type == "menudetailed";
+};
 
-component.state.isJobItemDetailed = function() {
-  if(this.type == "jobitemdetailed") {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.isJobItemDetailed = function () {
+  return this.type == "jobitemdetailed";
+};
 
-component.state.isJobItemSubscribed = function() {
+component.state.isJobItemSubscribed = function () {
   var userId = Meteor.userId();
   var jobSubs = Subscriptions.findOne({"_id": Session.get("thisJobItem"), "subscribers": userId});
-  if(jobSubs) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!jobSubs;
+};
 
 
-component.state.isJobsList = function() {
-  if(this.type == "jobslist") {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.isJobsList = function () {
+  return this.type == "jobslist";
+};
 
-component.state.isMenuSubscribed = function() {
-  if(this.type == "menudetailed") {
+component.state.isMenuSubscribed = function () {
+  if (this.type == "menudetailed") {
     var userId = Meteor.userId();
     var menuSubs = Subscriptions.findOne({"_id": Session.get("thisMenuItem"), "subscribers": userId});
-    if(menuSubs) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!menuSubs;
   }
-}
+};
 
-component.state.isJobListSubscribed = function() {
-  if(this.type == "jobslist") {
-    var result = Subscriptions.findOne({"_id": "joblist", "subscribers": Meteor.userId()});
-    if(result) {
-      return true;
-    } else {
-      return false;
-    }
+
+component.state.isJobListSubscribed = function () {
+  if (this.type == "jobslist") {
+    return !!Subscriptions.findOne({"_id": "joblist", "subscribers": Meteor.userId()});
   }
-}
+};
 
-component.state.isIngredientsList = function() {
-  if(this.type == "ingredientslist") {
-    return true;
-  } else {
-    return false;
-  }
-}
 
-component.state.weeklyNavigation = function() {
-  if(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport") {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.isIngredientsList = function () {
+  return this.type == "ingredientslist";
+};
 
-component.state.isManagerOrAdmin = function() {
-  if(isAdmin() || isManager()) {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.weeklyNavigation = function () {
+  return !!(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport");
+};
 
-component.state.isWeeklyTemplate = function() {
-  if(this.type == "weeklyrostertemplate") {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.isWeeklyTemplate = function () {
+  return this.type == "weeklyrostertemplate";
+};
 
-component.state.isWeeklyRosterCreated = function() {
-  if(this.type == "weeklyroster") {
-    var weekNo = Session.get("thisWeek");
+component.state.isWeeklyRosterCreated = function () {
+  if (this.type == "weeklyroster") {
+    var weekNo = Router.current().params.week;
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     var dates = [];
-    week.forEach(function(day) {
-      if(day && day.date) {
+    week.forEach(function (day) {
+      if (day && day.date) {
         dates.push(new Date(day.date).getTime())
       }
     });
     var shifts = Shifts.find({"shiftDate": {$in: dates}}).fetch();
-    if(shifts.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
 
-component.state.isWeeklyRosterPublished = function() {
-  if(this.type == "weeklyroster") {
+    return shifts.length > 0;
+  }
+};
+
+component.state.isWeeklyRosterPublished = function () {
+  if (this.type == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
     var week = getDatesFromWeekNumber(parseInt(weekNo));
     var dates = [];
-    week.forEach(function(day) {
-      if(day && day.date) {
+    week.forEach(function (day) {
+      if (day && day.date) {
         dates.push(new Date(day.date).getTime())
       }
     });
-    var shifts = Shifts.find({"shiftDate": {$in: dates}, "published": true}).fetch();
-    if(shifts.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
 
-component.state.isStockTakeList = function() {
-  if(this.type == "stocktakeList") {
-    return true;
-  } else {
-    return false;
+    return Shifts.find({
+        "shiftDate": {$in: dates},
+        "published": true,
+        "relations.areaId": HospoHero.getCurrentAreaId()
+      }).count() > 0;
   }
-}
+};
 
-component.state.date = function() {
+component.state.isStockTakeList = function () {
+  return this.type == "stocktakeList";
+};
+
+component.state.date = function () {
   return moment().format("YYYY-MM-DD");
-}
+};
 
-component.state.collapseIn = function() {
-  if(Session.get("collapsed")) {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.collapseIn = function () {
 
-component.state.isArchiveMenu = function() {
+  return !!Session.get("collapsed");
+};
+
+component.state.isArchiveMenu = function () {
   var id = Router.current().params._id;
   var menu = MenuItems.findOne({_id: id});
-  if(menu.status == "archived") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return menu ? menu.status == "archived" : false;
+};
 
 
-component.state.isArchiveJob = function() {
+component.state.isArchiveJob = function () {
   var id = Router.current().params._id;
   var job = JobItems.findOne({_id: id});
-  if(job.status == "archived") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return job ? job.status == "archived" : false;
+};
+
+component.state.isSalesPrediction = function () {
+  return this.type === 'salesPrediction';
+};
+
+component.state.getYear = function () {
+  return Router.current().params.year;
+};
+
+component.state.getWeek = function () {
+  return Router.current().params.week;
+};
+
+component.state.onDateChanged = function () {
+  return function (weekDate) {
+
+    Router.go(Router.current().route.getName(), weekDate);
+  };
+};
+
+component.state.onAreaSelected = function () {
+  var type = this.type;
+  var itemId = Router.current().params._id;
+
+  return function(areaId) {
+    if(type == 'menudetailed') {
+      Meteor.call("duplicateMenuItem", itemId, areaId, function (err) {
+        if (err) {
+          HospoHero.alert(err);
+        } else {
+          alertSuccess("Menu item has successfully copied!");
+          $('#areaChooser').modal('hide');
+        }
+      });
+    } else if(type == 'jobitemdetailed') {
+      Meteor.call("duplicateJobItem", itemId, areaId, function (err) {
+        if (err) {
+          HospoHero.alert(err);
+        } else {
+          alertSuccess("Job item has successfully copied!");
+          $('#areaChooser').modal('hide');
+        }
+      });
+    }
+  };
+};

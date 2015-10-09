@@ -22,7 +22,7 @@ Template.submitJob.events({
     
     var info = {
       type: type,
-      ref: job,
+      ref: job
     };
     if(activeTime && activeTime.trim()) {
       info.activeTime = parseInt(activeTime.trim());

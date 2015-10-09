@@ -114,19 +114,13 @@ Meteor.methods({
   },
 
   publishRoster: function(week, shifts) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error("User not found");
-      throw new Meteor.Error(404, "User not found");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canUser('editRoster')()) {
       logger.error("User not permitted to publish shifts");
       throw new Meteor.Error(403, "User not permitted to publish shifts ");
     }
     if(shifts.length < 0) {
       logger.error("No shifts to be published");
-      throw new Meteor.Error(404, "No shifts to be published");
+      throw new Meteor.Error("No shifts to be published");
     }
     Shifts.update({"_id": {$in: shifts}}, {$set: {"published": true, "publishedOn": Date.now()}}, {multi: true});
     logger.info("Weekly roster published", week);
@@ -153,7 +147,7 @@ Meteor.methods({
       Shifts.update({'_id': shiftId}, {$set: {"claimedBy": [userId]}});
     }
     logger.info("Shift has been claimed ", {"user": userId, "shiftId": shiftId})
-    return;
+    return true;
   },
 
   confirmClaim: function(shiftId, userId) {

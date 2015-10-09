@@ -1,0 +1,15 @@
+<template name="selectComponent">
+  <select name="{{state$name}}" class="form-control">
+    {{#each state$values}}
+      {{#if state$isSelected value}}
+        <option value="{{key}}" selected="selected">
+          {{title}}
+        </option>
+      {{else}}
+        <option value="{{value}}">
+          {{title}}
+        </option>
+      {{/if}}
+    {{/each}}
+  </select>
+</template>

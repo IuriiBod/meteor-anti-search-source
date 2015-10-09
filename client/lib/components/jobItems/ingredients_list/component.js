@@ -22,20 +22,16 @@ component.state.ingredientsList = function() {
   }
   Meteor.subscribe("ingredients", ids);
   return ids;
-}
+};
 
 component.state.isMenu = function() {
-  if(this.id == "menuSubmit") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return this.id == "menuSubmit";
+};
 
 component.state.name = function() {
   return this.name;
-}
+};
 
 component.state.id = function() {
   return Session.get("thisJobItem");
-}
+};

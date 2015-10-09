@@ -6,14 +6,14 @@ var component = FlowComponents.define('jobItemListed', function(props) {
 
 component.state.item = function() {
   return this.jobitem;
-}
+};
 
 component.state.costPerPortion = function() {  
   var prep = getPrepCost(this.jobitem._id);
   if(prep) {
     return prep.prepCostPerPortion;
   }
-}
+};
 
 component.prototype.onItemRendered = function() {
   var self = this;
@@ -21,7 +21,7 @@ component.prototype.onItemRendered = function() {
     checkboxClass: 'icheckbox_square-green'
   });
 
-  $('input.selectedPrep').on('ifChecked', function(event){
+  $('input.selectedPrep').on('ifChecked', function(){
     var id = $(this).attr("data-id");
     if(self.name == "addPrep") {
       var localId = Session.get("localId");
@@ -32,4 +32,4 @@ component.prototype.onItemRendered = function() {
       } 
     }
   });
-}
+};

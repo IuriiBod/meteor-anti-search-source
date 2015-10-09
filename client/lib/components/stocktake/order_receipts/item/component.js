@@ -4,15 +4,11 @@ var component = FlowComponents.define("orderReceiptItem", function(props) {
 
 component.state.receipt = function() {
   return this.item;
-}
+};
 
 component.state.isInvoiceUploaded = function() {
-  if(this.item.hasOwnProperty("invoiceImage")) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!this.item.hasOwnProperty("invoiceImage");
+};
 
 component.state.orderedValue = function() {
   var cost = 0;
@@ -24,7 +20,7 @@ component.state.orderedValue = function() {
     });
   }
   return cost;
-}
+};
 
 component.state.invoiceFaceValue = function() {
   var cost = 0;
@@ -42,4 +38,4 @@ component.state.invoiceFaceValue = function() {
     });
   }
   return cost;
-}
+};
