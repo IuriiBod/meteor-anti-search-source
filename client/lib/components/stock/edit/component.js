@@ -23,7 +23,7 @@ component.state.convertTime = function(time) {
 component.action.submit = function(id, info) {
    Meteor.call("editIngredient", id, info, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       IngredientsListSearch.cleanHistory();
       IngredientsListSearch.search("", {"limit": 10});
@@ -72,7 +72,7 @@ component.action.archiveIng = function(id, state) {
   var self = this;
   Meteor.call("archiveIngredient", id, state, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       $("#editIngredientModal").modal("hide");
       
@@ -84,9 +84,9 @@ component.action.archiveIng = function(id, state) {
         } else if(stock.status == "archived") {
           text += " archived";
         }
-        notification(text);
+        HospoHero.info(text);
       } else {
-        notification("Stock item " + self.get("description") + " removed");
+        HospoHero.info("Stock item " + self.get("description") + " removed");
       }
       
       IngredientsListSearch.cleanHistory();

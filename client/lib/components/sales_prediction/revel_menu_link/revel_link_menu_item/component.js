@@ -14,7 +14,7 @@ component.action.updateRevelName = function (newRevelName) {
 
   Meteor.call('updateMenuItemRevelName', menuItem._id, newRevelName, function (err, res) {
     if (err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 };

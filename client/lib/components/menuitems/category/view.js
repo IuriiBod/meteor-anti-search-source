@@ -7,7 +7,7 @@ Template.addNewCategory.events({
     }
     Meteor.call('createCategory', name, function(err, id) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       } else {
         $(event.target).find('input').val("");
         $("#addCategoryModal").modal('hide');

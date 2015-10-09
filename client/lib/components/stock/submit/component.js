@@ -6,7 +6,7 @@ var component = FlowComponents.define('submitIngredient', function(props) {
 component.action.submit = function(event, info) {
   Meteor.call("createIngredients", info, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       IngredientsListSearch.cleanHistory(); 
       IngredientsListSearch.search("", {"limit": 10});

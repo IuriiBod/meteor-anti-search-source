@@ -26,7 +26,7 @@ Calendar.prototype.convertDate = function (date) {
 Calendar.prototype.assignJob = function (job, shift, startAt) {
   Meteor.call("assignJob", job, shift, startAt, function (err) {
     if (err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       $(this).remove();
     }
@@ -68,7 +68,7 @@ Calendar.prototype._autoUpdateCB = function () {
   }
   Meteor.call("generateRecurrings", self.options.shiftDate, function (err) {
     if (err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       self.update();
     }

@@ -35,7 +35,7 @@ component.state.currentUser = function() {
 component.action.likePost = function(id) {
   Meteor.call("updateNewsfeed", id, Meteor.userId(), function(err, id) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       var newsFeedPost = NewsFeeds.findOne(id);
       if(newsFeedPost) {

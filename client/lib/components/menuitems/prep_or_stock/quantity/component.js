@@ -40,7 +40,7 @@ component.prototype.onItemRendered = function() {
         if(type == "ings") {
           Meteor.call("addMenuIngredients", menu, [{"_id": ing, "quantity": newValue}], function(err) {
             if(err) {
-              HospoHero.alert(err);
+              HospoHero.error(err);
             } else {
               if($(elem).next().length > 0) {
                 $(elem).next().find("a.quantity").click();
@@ -50,7 +50,7 @@ component.prototype.onItemRendered = function() {
         } else if(type == "prep") {
           Meteor.call("addMenuPrepItems", menu, [{"_id": ing, "quantity": newValue}], function(err) {
             if(err) {
-              HospoHero.alert(err);
+              HospoHero.error(err);
             } else {
               if($(elem).next().length > 0) {
                 $(elem).next().find("a.quantity").click();

@@ -7,7 +7,7 @@ Template.ingsAndPreps.events({
     if(confirmRemove) {
       Meteor.call("removeItemFromMenu", menu, {ingredients: {_id: id}}, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
           $(event.target).closest("tr").remove()
         }
@@ -23,7 +23,7 @@ Template.ingsAndPreps.events({
     if(confirmRemove) {
       Meteor.call("removeItemFromMenu", menu, {jobItems: {_id: id}}, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
           $(event.target).closest("tr").remove()
         }

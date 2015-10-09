@@ -76,7 +76,7 @@ component.prototype.onSupplierRendered = function() {
 function updateSupplierDetails(id, info) {
   Meteor.call("updateSupplier", id, info, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 }

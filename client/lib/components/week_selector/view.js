@@ -39,7 +39,7 @@ Template.weekSelector.events({
 
           Meteor.call("createShift", info, function(err) {
             if(err) {
-              HospoHero.alert(err);
+              HospoHero.error(err);
             } else {
               $("#notifiModal").modal("show");
             }

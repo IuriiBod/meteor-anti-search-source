@@ -24,7 +24,7 @@ component.state.assignedTo = function() {
 component.action.deleteShift = function(id) {
   Meteor.call("deleteShift", id, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 };
@@ -129,7 +129,7 @@ component.prototype.itemRendered = function() {
 
             Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
               if(err) {
-                HospoHero.alert(err);
+                HospoHero.error(err);
               }
             });
           }
@@ -228,7 +228,7 @@ component.prototype.itemRendered = function() {
 function editShift(obj) {
   Meteor.call("editShift", obj._id, obj, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       var shift = Shifts.findOne(obj._id);
       if(shift.published && shift.assignedTo) {
@@ -256,7 +256,7 @@ function editShift(obj) {
         sendNotification(obj._id, shift.assignedTo, title, text);
         Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
       }
@@ -270,7 +270,7 @@ assignWorkerToShift = function(worker, shiftId, target) {
     Meteor.call("assignWorker", worker, shiftId, function(err) {
       if(err) {
         $(target).editable("setValue", shift.assignedTo);
-        HospoHero.alert(err);
+        HospoHero.error(err);
       } else {
         if(shift.published && worker !== null) {
           //notify new user
@@ -287,7 +287,7 @@ assignWorkerToShift = function(worker, shiftId, target) {
 
           Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
             if(err) {
-              HospoHero.alert(err);
+              HospoHero.error(err);
             }
           });
         }
@@ -307,7 +307,7 @@ function sendNotification(itemId, to, title, text) {
   };
   Meteor.call("sendNotifications", itemId, type, options, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 }

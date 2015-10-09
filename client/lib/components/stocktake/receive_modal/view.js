@@ -12,7 +12,7 @@ Template.receiveModal.events({
     if(price && price > 0.00) {
       Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Price", info, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }
@@ -29,7 +29,7 @@ Template.receiveModal.events({
       if(price && price > 0.00) {
         Meteor.call("editIngredient", stockId, info, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
       }
@@ -52,7 +52,7 @@ Template.receiveModal.events({
     if(invoiceQuantity && receiptId && orderId) {
       Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Quantity", info, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } 
       });
     }

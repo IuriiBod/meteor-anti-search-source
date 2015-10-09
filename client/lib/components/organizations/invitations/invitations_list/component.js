@@ -21,7 +21,7 @@ component.action.changeAccepted = function(val) {
 component.action.deleteInvitation = function(id) {
   Meteor.call('deleteInvitation', id, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 };

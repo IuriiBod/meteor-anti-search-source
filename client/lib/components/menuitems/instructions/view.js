@@ -25,7 +25,7 @@ Template.menuInstructions.events({
         };
         Meteor.call("sendNotifications", menuId, "menu", options, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
 

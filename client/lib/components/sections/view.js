@@ -5,7 +5,7 @@ Template.sections.events({
     if(name) {
       Meteor.call("createSection", name.trim(), function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
           $(event.target).find('[name=sectionName]').val("");
         }
@@ -21,7 +21,7 @@ Template.sections.events({
       if(id) {
         Meteor.call("deleteSection", id, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
       }
@@ -41,7 +41,7 @@ Template.sections.rendered = function() {
       if(id) {
         Meteor.call("editSection", id, newValue, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
       }

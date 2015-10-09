@@ -213,7 +213,7 @@ component.state.sectionsWithOutSelected = function() {
 component.action.submit = function (id, info) {
   Meteor.call("editJobItem", id, info, function (err) {
     if (err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       var jobBefore = Session.get("updatingJob");
       var jobtype = JobTypes.findOne(jobBefore.type);
@@ -227,7 +227,7 @@ component.action.submit = function (id, info) {
         };
         Meteor.call("sendNotifications", id, "job", options, function (err) {
           if (err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           } else {
             var goback = Session.get("goBackMenu");
             if (goback) {

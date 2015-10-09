@@ -84,14 +84,14 @@ component.prototype.onItemRendered = function() {
         if(main) {
           Meteor.call("updateStocktake", id, info, function(err) {
             if(err) {
-              HospoHero.alert(err);
+              HospoHero.error(err);
             } else {
               if($(elem).next().length > 0) {
                 $(elem).next().find("a").click();
               }
               Meteor.call("resetCurrentStock", stockId, "New stock count", newValue, main.stocktakeDate, function(err) {
                 if(err) {
-                  HospoHero.alert(err);
+                  HospoHero.error(err);
                 }
               });
             }

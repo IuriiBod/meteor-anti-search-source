@@ -54,7 +54,7 @@ component.action.addShift = function(day, dates) {
   }
   Meteor.call("createShift", doc, function(err, id) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 };
@@ -97,7 +97,7 @@ component.prototype.onListRendered = function() {
       Meteor.call("editShift", id, {"order": order}, function(err) {
         if(err) {
           $(ui.sender[0]).sortable('cancel');
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     });
@@ -129,7 +129,7 @@ component.prototype.onListRendered = function() {
         Meteor.call("editShift", id, {"shiftDate": newDate, "order": order}, function(err) {
           if(err) {
             $(ui.sender[0]).sortable('cancel');
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
       }

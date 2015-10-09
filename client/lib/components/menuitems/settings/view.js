@@ -134,7 +134,7 @@ Template.settingsMenuItem.events({
           var id = $(event.target).closest("form").attr("data-id");
           Meteor.call("editMenuItem", id, {"image": url}, function(err) {
             if(err) {
-              HospoHero.alert(err);
+              HospoHero.error(err);
             }
           });
           $(".uploadedNewImageDiv").removeClass("hide");
@@ -147,7 +147,7 @@ Template.settingsMenuItem.events({
     var menuId = Router.current().params._id;
     Meteor.call('editMenuItem', menuId, {image: ''}, function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   },
@@ -162,7 +162,7 @@ Template.settingsMenuItem.events({
       if (id) {
         Meteor.call("deleteMenuItem", id, function (err) {
           if (err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           } else {
             var options = {
               "type": "delete",
@@ -171,7 +171,7 @@ Template.settingsMenuItem.events({
             };
             Meteor.call("sendNotifications", id, "menu", options, function (err) {
               if (err) {
-                HospoHero.alert(err);
+                HospoHero.error(err);
               }
             });
             Router.go("menuItemsMaster", {"category": "all", "status": "all"});
@@ -195,7 +195,7 @@ Template.settingsMenuItem.events({
     if (id && value) {
       Meteor.call("editMenuItem", id, {category: value}, function (err) {
         if (err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }
@@ -209,7 +209,7 @@ Template.settingsMenuItem.events({
     if (id && value) {
       Meteor.call("editMenuItem", id, {status: value}, function (err) {
         if (err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }

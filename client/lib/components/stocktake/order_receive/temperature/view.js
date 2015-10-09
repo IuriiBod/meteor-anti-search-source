@@ -7,7 +7,7 @@ Template.temperatureModal.events({
       var info = {"temperature": temp};
       Meteor.call("updateReceipt", receiptId, info, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
           $("#temperatureModal").modal("hide");
         }

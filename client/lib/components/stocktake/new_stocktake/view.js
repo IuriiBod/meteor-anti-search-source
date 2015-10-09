@@ -5,7 +5,7 @@ Template.newStocktakeModal.events({
     var date = moment().format("YYYY-MM-DD");
     Meteor.call("createMainStocktake", date, function(err, id) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       } else {
         Router.go("stocktakeCounting", {"_id": id});
       }

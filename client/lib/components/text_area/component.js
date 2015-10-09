@@ -86,7 +86,7 @@ component.action.submit = function(text) {
   if(self.type == "newsFeedMainTextBox" || self.type == "newsFeedSubTextBox") {
     Meteor.call("createNewsfeed", linkedText, ref, function(err, id) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       } else {
         notify(self.type, id, matches, ref);
       }
@@ -96,7 +96,7 @@ component.action.submit = function(text) {
   } else if(this.type == "submitComment") {
     Meteor.call("createComment", linkedText, ref, function(err, id) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       } else {
         var reference = null;
         var ref_name = null;
@@ -185,7 +185,7 @@ notify = function(type, id, matches, ref) {
 sendNotifi = function(ref, type, options) {
   Meteor.call("sendNewsfeedNotifications", ref, type, options, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
     return;
   });  

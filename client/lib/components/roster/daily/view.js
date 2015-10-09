@@ -27,7 +27,7 @@ Template.dailyShiftScheduling.events({
     Meteor.call("assignWorker", workerId, shiftId, function (err) {
       if (err) {
         $(event.target).val("");
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
 
@@ -42,7 +42,7 @@ Template.dailyShiftScheduling.events({
       };
       Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }
@@ -54,7 +54,7 @@ Template.dailyShiftScheduling.events({
     console.log(date);
     Meteor.call("generateRecurrings", date, function(err, result) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
 
@@ -69,7 +69,7 @@ Template.dailyShiftScheduling.events({
       };
       Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }
@@ -81,7 +81,7 @@ Template.dailyShiftScheduling.events({
     console.log(date);
     Meteor.call("generateRecurrings", date, function(err, result) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   }

@@ -36,7 +36,7 @@ Template.areaSettings.onRendered(function() {
       if(id) {
         Meteor.call("updateAreaName", id, newValue, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
       }

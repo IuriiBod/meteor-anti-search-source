@@ -43,7 +43,7 @@ component.prototype.onListRendered = function () {
       var week = getWeekStartEnd(weekNo);
       Meteor.call("readDaily", week.monday, week.sunday, function (err, data) {
         if (err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
           self.set("data", data);
           if (data && data.length > 0) {

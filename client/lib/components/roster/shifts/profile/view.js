@@ -56,7 +56,7 @@ Template.shiftProfile.events({
         if(shift) {
           Meteor.call("deleteShift", shiftId, function(err) {
             if(err) {
-              HospoHero.alert(err);
+              HospoHero.error(err);
             } else {
               $("#shiftProfile").modal("hide");
             }

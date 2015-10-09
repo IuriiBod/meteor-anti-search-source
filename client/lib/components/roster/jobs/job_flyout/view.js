@@ -4,7 +4,7 @@ Template.jobFlyout.events({
     var id = $(event.target).attr("data-id");
     Meteor.call("assignJob", id, null, null, function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
       $(".flyout-container").toggleClass("show");
     });

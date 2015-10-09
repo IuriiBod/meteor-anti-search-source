@@ -36,13 +36,13 @@ Template.areaBox.events({
     if(type == "garea") {
       Meteor.call("deleteGeneralArea", id, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     } else if(type == "sarea") {
       Meteor.call("deleteSpecialArea", id, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }

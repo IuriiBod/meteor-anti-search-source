@@ -9,7 +9,7 @@ component.action.addUser = function(roleId) {
   var areaId = this.areaId;
   Meteor.call('addUserToArea', userId, areaId, roleId, function(err, area) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
   this.set('selectPermissions', false);

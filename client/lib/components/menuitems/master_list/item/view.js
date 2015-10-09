@@ -7,7 +7,7 @@ Template.menuItem.events({
       if(id) {
         Meteor.call("deleteMenuItem", id, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
       }
@@ -26,7 +26,7 @@ Template.menuItem.events({
 
     Meteor.call("archiveMenuItem", id, function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
     i.parent().parent().remove();

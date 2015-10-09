@@ -32,7 +32,7 @@ Template.schedulingShift.events({
     var shiftId = $(event.target).attr("data-id")
     Meteor.call("assignWorker", workerId, shiftId, function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   },

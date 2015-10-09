@@ -4,7 +4,7 @@ SyncedCron.add({
     var t;
     Meteor.call("getCronTime", function(err, time) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
       if(time) {
         t = "at " + time.toLowerCase();
@@ -20,7 +20,7 @@ SyncedCron.add({
   job: function() {
      Meteor.call("sendShiftUpdates", function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       } else {
         console.log("Shift updates have been successfully sended");
         return "Shift updates have been successfully sended";

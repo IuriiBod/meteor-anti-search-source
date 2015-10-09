@@ -33,7 +33,7 @@ component.action.switchUser = function(userId) {
   var token = loggedUsers[userId];
   Meteor.loginWithToken(token, function (err) {
     if (err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
     Router.go("pinLock");
   });

@@ -49,7 +49,7 @@ component.state.isMe = function(id) {
 component.action.deleteArea = function(id) {
   Meteor.call('deleteArea', id, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 };
@@ -61,7 +61,7 @@ component.action.toggleAddUser = function() {
 component.action.removeUserFromArea = function (userId) {
   Meteor.call('removeUserFromArea', userId, this.areaId, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 };

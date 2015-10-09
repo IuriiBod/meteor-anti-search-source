@@ -19,7 +19,7 @@ Template.reportData.events({
         newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
         Meteor.call("editClock", id, {"startedAt": new Date(newTime).getTime()}, function(err) { 
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           } else {
             $(self).removeClass('editable-unsaved');
           }
@@ -48,7 +48,7 @@ Template.reportData.events({
         newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
         Meteor.call("editClock", id, {"finishedAt": new Date(newTime).getTime()}, function(err) { 
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           } else {
             $(self).removeClass('editable-unsaved');
           }

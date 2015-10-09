@@ -9,7 +9,7 @@ component.state.initialHTML = function() {
 component.action.submit = function(info) {
   Meteor.call("createMenuItem", info, function(err, id) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
     Router.go("menuItemDetail", {"_id": id});
   });

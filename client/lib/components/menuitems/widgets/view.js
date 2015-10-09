@@ -11,7 +11,7 @@ Template.menuDetailWidgets.rendered = function() {
       if(id) {
         Meteor.call("editMenuItem", id, {salesPrice: newValue}, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
       }

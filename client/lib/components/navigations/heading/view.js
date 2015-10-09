@@ -80,7 +80,7 @@ Template.pageHeading.events({
     var id = Session.get("thisMenuItem");
     Meteor.call("subscribe", id, function (err) {
       if (err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   },
@@ -89,7 +89,7 @@ Template.pageHeading.events({
     var id = Session.get("thisMenuItem");
     Meteor.call("unSubscribe", id, function (err) {
       if (err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   },
@@ -117,7 +117,7 @@ Template.pageHeading.events({
       if (id) {
         Meteor.call("deleteMenuItem", id, function (err) {
           if (err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           } else {
             var options = {
               "type": "delete",
@@ -126,7 +126,7 @@ Template.pageHeading.events({
             };
             Meteor.call("sendNotifications", id, "menu", options, function (err) {
               if (err) {
-                HospoHero.alert(err);
+                HospoHero.error(err);
               }
             });
             Router.go("menuItemsMaster", {"category": "all", "status": "all"});
@@ -150,7 +150,7 @@ Template.pageHeading.events({
     event.preventDefault();
     Meteor.call("subscribe", "joblist", function (err) {
       if (err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   },
@@ -159,7 +159,7 @@ Template.pageHeading.events({
     event.preventDefault();
     Meteor.call("unSubscribe", "joblist", function (err) {
       if (err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   },
@@ -215,7 +215,7 @@ Template.pageHeading.events({
     if (tobePublished.length > 0) {
       Meteor.call("publishRoster", weekNo, tobePublished, function (err) {
         if (err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
       users.forEach(function (user) {
@@ -265,7 +265,7 @@ Template.pageHeading.events({
 
             Meteor.call("notifyRoster", to, info, function (err) {
               if (err) {
-                HospoHero.alert(err);
+                HospoHero.error(err);
               }
             });
           }
@@ -287,7 +287,7 @@ Template.pageHeading.events({
     } else {
       Meteor.call("createMainStocktake", date, function (err, id) {
         if (err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
           Router.go("stocktakeCounting", {"_id": id});
         }
@@ -315,7 +315,7 @@ Template.pageHeading.events({
 
     Meteor.call("archiveMenuItem", id, function (err) {
       if (err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       } else {
         var menuItem = MenuItems.findOne(id);
         if(menuItem) {
@@ -325,7 +325,7 @@ Template.pageHeading.events({
           } else if(menuItem.status == "archived") {
             text += " archived";
           }
-          return notification(text);
+          return HospoHero.info(text);
         }
       }
     });
@@ -335,7 +335,7 @@ Template.pageHeading.events({
     var id = tpl.$(e.target).attr("data-id");
     Meteor.call("archiveJobItem", id, function (err) {
       if (err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       } else {
         var jobItem = JobItems.findOne(id);
         if(jobItem) {
@@ -345,7 +345,7 @@ Template.pageHeading.events({
           } else if(jobItem.status == "archived") {
             text += " archived";
           }
-          return notification(text);
+          return HospoHero.info(text);
         }
       }
     });
@@ -360,7 +360,7 @@ Template.pageHeading.events({
     if (result) {
       Meteor.call("deleteJobItem", id, function (err) {
         if (err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
           var options = {
             type: "delete",
@@ -369,7 +369,7 @@ Template.pageHeading.events({
           };
           Meteor.call("sendNotifications", id, "job", options, function (err) {
             if (err) {
-              HospoHero.alert(err);
+              HospoHero.error(err);
             }
           });
           Router.go("jobItemsMaster");
@@ -401,7 +401,7 @@ Template.pageHeading.rendered = function () {
       if (id) {
         Meteor.call("editMenuItem", id, {name: newValue}, function (err) {
           if (err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           }
         });
       }

@@ -63,7 +63,7 @@ Template.topNavbar.events({
     notifi.forEach(function (not) {
       Meteor.call("readNotifications", not._id, function (err) {
         if (err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     });
