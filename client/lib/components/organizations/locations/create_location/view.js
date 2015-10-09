@@ -36,6 +36,30 @@ Template.createLocation.helpers({
       });
     }
     return minutes;
+  },
+
+  countries: function(){
+    return {
+      "Australia": "AU",
+      "Austria": "AT",
+      "Canada": "CA",
+      "Central African Republic": "CF",
+      "China": "CN",
+      "Egypt": "EG",
+      "France": "FR",
+      "Germany": "DE",
+      "Greece": "GR",
+      "India": "IN",
+      "Italy": "IT",
+      "Japan": "JP",
+      "Netherlands": "NL",
+      "New Zealand": "NZ",
+      "Portugal": "PT",
+      "Sweden": "SE",
+      "Switzerland": "CH",
+      "United Kingdom of Great Britain and Northern Ireland": "GB",
+      "United States of America": "US"
+    }
   }
 });
 
