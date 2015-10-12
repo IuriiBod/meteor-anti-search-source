@@ -30,7 +30,7 @@ component.state.list = function() {
       }
     });
     if(ings.length > 0) {
-      subs.subscribe("ingredients", ings);
+      Meteor.subscribe("ingredients", ings);
     }
   }
   return orderIds;

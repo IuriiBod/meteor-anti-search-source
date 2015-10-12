@@ -1,9 +1,9 @@
 Template.editIngredientItem.helpers({
-  'item': function() {
+  item: function() {
     var id = Session.get("thisIngredientId");
+    Meteor.subscribe("ingredients", [id]);
     if(id) {
-      var ing = Ingredients.findOne(id);
-      return ing;
+      return Ingredients.findOne(id);
     }
   }
 });
@@ -14,7 +14,10 @@ Template.editIngredientItem.events({
     var id = $(event.target).attr("data-id");
     var code = $(event.target).find('[name=code]').val().trim();
     var desc = $(event.target).find('[name=desc]').val().trim();
+    var supplier = $(event.target).find('[name=supplier]').val().trim();
+    var portionOrdered = $(event.target).find('[name=portionOrdered]').val();
     var costPerPortion = $(event.target).find('[name=costPerPortion]').val().trim();
+    var portionUsed = $(event.target).find('[name=portionUsed]').val();
     var unitSize = $(event.target).find('[name=unitSize]').val().trim();
 
     if(!code) {
@@ -47,29 +50,10 @@ Template.editIngredientItem.events({
     FlowComponents.callAction('submit', id, info);
   },
 
-  'click .archiveIngredient': function(e, tpl) {
+  'click .archiveIngredient': function(e) {
     e.preventDefault();
     var id = $(e.target).attr("data-id");
     var status = $(e.target).attr("data-status");
-    var state = false;
-    if(status == "delete") {
-      state = true;
-    }
-    Meteor.call("archiveIngredient", id, state, function(err) {
-      if(err) {
-        HospoHero.alert(err);
-      }
-    });
-    IngredientsListSearch.cleanHistory();
-    var selector = {
-      limit: 30
-    };
-    var params = {};
-    if(Router.current().params.type == "archive") {
-      selector.status = "archived";
-    } else {
-      selector.status = {$ne: "archived"};
-    }
-    IngredientsListSearch.search("", selector);
+    FlowComponents.callAction("archiveIng", id, status);
   }
 });

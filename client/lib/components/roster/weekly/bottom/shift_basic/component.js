@@ -14,22 +14,17 @@ component.state.thisorigin = function() {
 };
 
 component.state.section = function() {
-  if(this.shift && this.shift.section) {
-    return Sections.findOne(this.shift.section);
-  } 
+  return this.shift.section;
 };
 
 component.state.assignedTo = function() {
-  var worker = this.shift.assignedTo;
-  if(worker) {
-    return Meteor.users.findOne(worker);
-  } 
+  return this.shift.assignedTo;
 };
 
 component.action.deleteShift = function(id) {
   Meteor.call("deleteShift", id, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 };
@@ -95,7 +90,15 @@ component.prototype.itemRendered = function() {
         var workers = Meteor.users.find(query, {sort: {"username": 1}}).fetch();
 
         workers.forEach(function(worker) {
-          workersObj.push({value: worker._id, text: worker.username});
+          var doc = {
+            "value": worker._id
+          };
+          if(worker.profile.firstname && worker.profile.lastname) {
+            doc['text'] = worker.profile.firstname + " " + worker.profile.lastname;
+          } else {
+            doc['text'] = worker.username;
+          }
+          workersObj.push(doc);
         });
         return workersObj;
       },
@@ -115,6 +118,20 @@ component.prototype.itemRendered = function() {
             var title =  "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
             var text = "You have been removed from this assigned shift";
             sendNotification(shiftId, shift.assignedTo, title, text);
+
+            var shiftUpdateDoc = {
+              to: shift.assignedTo,
+              userId: Meteor.userId(),
+              shiftId: shift._id,
+              text: "You have been removed from shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b>",
+              type: "remove"
+            };
+
+            Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
+              if(err) {
+                HospoHero.error(err);
+              }
+            });
           }
         }
       }
@@ -163,7 +180,7 @@ component.prototype.itemRendered = function() {
       mode: 'inline',
       success: function(response, newValue) {
         var shiftId = $(this).closest("li").attr("data-id");
-        var obj = {"_id": shiftId}
+        var obj = {"_id": shiftId};
         var shift = Shifts.findOne(shiftId);
         if(shift) {
           if(origin == "weeklyrostertemplate") {
@@ -211,23 +228,37 @@ component.prototype.itemRendered = function() {
 function editShift(obj) {
   Meteor.call("editShift", obj._id, obj, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       var shift = Shifts.findOne(obj._id);
       if(shift.published && shift.assignedTo) {
         //notify new user
         var title = "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
         var text = null;
+        var shiftUpdateDoc = {
+          to: shift.assignedTo,
+          userId: Meteor.userId(),
+          shiftId: shift._id,
+          type: "update"
+        };
         if(obj.hasOwnProperty("endTime")) {
           text = "Shift end time has been updated";
+          shiftUpdateDoc.text = "Shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b> end time has been updated";
         }
         if(obj.hasOwnProperty("startTime")) {
           text = "Shift start time has been updated";
+          shiftUpdateDoc.text = "Shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b> start time has been updated";
         }
         if(obj.hasOwnProperty("section")) {
           text = "Shift section has been updated";
+          shiftUpdateDoc.text = "Shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b> section has been updated";
         }
         sendNotification(obj._id, shift.assignedTo, title, text);
+        Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
+          if(err) {
+            HospoHero.error(err);
+          }
+        });
       }
     }
   });
@@ -238,15 +269,27 @@ assignWorkerToShift = function(worker, shiftId, target) {
   if(shift) {
     Meteor.call("assignWorker", worker, shiftId, function(err) {
       if(err) {
-        console.log(err);
-        alert(err.reason);
         $(target).editable("setValue", shift.assignedTo);
+        HospoHero.error(err);
       } else {
-        if(shift.published) {
+        if(shift.published && worker !== null) {
           //notify new user
           var title = "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
           var text = "You have been assigned to this shift";
           sendNotification(shiftId, worker, title, text);
+          var shiftUpdateDoc = {
+            to: worker,
+            userId: Meteor.userId(),
+            shiftId: shift._id,
+            text: "You have been assigned to shift dated <b>" + moment(shift.shiftDate).format("YYYY-MM-DD") + " " + moment(shift.startTime).format("H:mm A") + "-" + moment(shift.endTime).format("H:mm A") + "</b>",
+            type: "update"
+          };
+
+          Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
+            if(err) {
+              HospoHero.error(err);
+            }
+          });
         }
       }
     });
@@ -264,7 +307,7 @@ function sendNotification(itemId, to, title, text) {
   };
   Meteor.call("sendNotifications", itemId, type, options, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 }

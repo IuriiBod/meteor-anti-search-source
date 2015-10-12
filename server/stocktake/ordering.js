@@ -88,8 +88,9 @@ Meteor.methods({
       logger.error('Stock order not found');
       throw new Meteor.Error(401, "Stock order not found");
     }
-    var countToOrder = parseFloat(count) ? parseFloat(count) : 0;
 
+    var countToOrder = parseFloat(count);
+    countToOrder = !isNaN(countToOrder) ? countToOrder : 0;
     StockOrders.update({"_id": orderId}, {$set: {"countOrdered": countToOrder}});
     logger.info("Stock order count updated", orderId);
   },

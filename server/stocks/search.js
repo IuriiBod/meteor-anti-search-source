@@ -26,7 +26,6 @@ SearchSource.defineSource('ingredients', function(searchText, options) {
     var regExp = buildRegExp(searchText);
     selector['$or'] = [
       {'code': regExp},
-      {'suppliers': regExp},
       {'description': regExp}
     ];
   }

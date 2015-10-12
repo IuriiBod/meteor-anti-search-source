@@ -4,7 +4,7 @@ Template.profileFlyout.events({
     var value = $(event.target).val();
     Meteor.call("editBasicDetails", id, {"shiftsPerWeek": value}, function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   },
@@ -14,7 +14,7 @@ Template.profileFlyout.events({
     var newPin = Template.instance().find("#flyout-new-pin").value;
     Meteor.call("changePinCode", newPin, function (err) {
       if (err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
       else {
         alert("PIN has been changed.");
@@ -165,7 +165,7 @@ Template.profileFlyout.rendered = function(){
 function updateBasicDetails(id, updateDetails, type) {
   Meteor.call("editBasicDetails", id, updateDetails, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 }

@@ -15,7 +15,7 @@ Template.stockCountingListItem.events({
 
       Meteor.call("removeStocksFromAreas", id, sareaId, stockRefId, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }

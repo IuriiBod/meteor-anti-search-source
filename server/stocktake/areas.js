@@ -223,7 +223,7 @@ Meteor.methods({
     if(stockRefId) {
       Meteor.call("removeStocktake", stockRefId, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }

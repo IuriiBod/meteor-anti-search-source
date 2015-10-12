@@ -5,17 +5,20 @@ var component = FlowComponents.define('organizationStructure', function(props) {
 });
 
 component.state.locations = function() {
-  var selector = {
-    organizationId: this.get('organization')._id
-  };
+  if(this.get('organization')) {
+    var selector = {
+      organizationId: this.get('organization')._id
+    };
 
-  if(!HospoHero.isOrganizationOwner()) {
-    var user = Meteor.user();
-    if(user.relations && user.relations.locationIds) {
-      selector._id = { $in: user.relations.locationIds };
+    if(!HospoHero.isOrganizationOwner()) {
+      var user = Meteor.user();
+      if(user.relations && user.relations.locationIds) {
+        selector._id = { $in: user.relations.locationIds };
+      }
     }
+
+    return Locations.find(selector).fetch();
   }
-  return Locations.find(selector).fetch();
 };
 
 component.state.areas = function(locationId) {
@@ -49,7 +52,7 @@ component.action.changeArea = function(id) {
 component.action.changeDefaultArea = function (areaId) {
   Meteor.call('changeDefaultArea', areaId, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 };

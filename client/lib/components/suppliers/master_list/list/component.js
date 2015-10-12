@@ -1,5 +1,5 @@
 var component = FlowComponents.define("suppliersList", function(props) {
-  subs.subscribe("allSuppliers");
+  Meteor.subscribe("allSuppliers");
 });
 
 component.state.list = function() {

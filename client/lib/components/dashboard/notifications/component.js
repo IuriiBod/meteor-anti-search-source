@@ -1,8 +1,6 @@
-var subs = new SubsManager();
-
 var component = FlowComponents.define("notificationsList", function(props) {
   this.onRendered(this.onListRendered);
-  subs.subscribe("readNotifications");
+  Meteor.subscribe("readNotifications");
 });
 
 component.state.notifications = function() {

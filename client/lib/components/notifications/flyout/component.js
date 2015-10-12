@@ -1,7 +1,5 @@
-var subs = new SubsManager();
-
 var component = FlowComponents.define("notifiFlyout", function (props) {
-  return subs.subscribe("newNotifications");
+  return Meteor.subscribe("newNotifications");
 });
 
 component.state.count = function () {

@@ -9,7 +9,7 @@ Template.userDetailed.events({
     if(confirmChange) {
       Meteor.call("changeStatus", userId, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }
@@ -22,7 +22,7 @@ Template.userDetailed.events({
       var newRoleId = e.target.value;
       Meteor.call('changeUserRole', userId, newRoleId, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         }
       });
     }

@@ -21,5 +21,5 @@ Meteor.publish("unAssignedJobs", function() {
 
 Meteor.publish("jobs", function(ids) {
   logger.info("Jobs publication");
-  return Jobs.find({"_id": {$in: ids}}, {limit: 10});
+  return ids.length > 0 ? Jobs.find({"_id": {$in: ids}}, {limit: 10}) : Jobs.find({}, {limit: 10});
 });

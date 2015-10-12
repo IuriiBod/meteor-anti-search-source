@@ -10,11 +10,11 @@ component.prototype.onListRender = function() {
   var self = this;
   Meteor.call("stockTakeHistory", function(err, list) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       self.set("historyList", list);
     }
   });
 
-  subs.subscribe("stocktakeMains", new Date().getTime());
+  Meteor.subscribe("stocktakeMains", new Date().getTime());
 };

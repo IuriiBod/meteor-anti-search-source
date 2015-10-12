@@ -16,7 +16,7 @@ component.state.stockIds = function () {
     });
   }
   if (stockIds && stockIds.length > 0) {
-    subs.subscribe("ingredients", stockIds);
+    Meteor.subscribe("ingredients", stockIds);
   }
   return stockIds;
 };
@@ -43,7 +43,7 @@ component.prototype.onListRendered = function () {
       var week = getWeekStartEnd(weekNo);
       Meteor.call("readDaily", week.monday, week.sunday, function (err, data) {
         if (err) {
-          console.log(err);
+          HospoHero.error(err);
         } else {
           self.set("data", data);
           if (data && data.length > 0) {

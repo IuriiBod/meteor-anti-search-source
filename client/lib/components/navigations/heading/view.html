@@ -1,7 +1,7 @@
 <template name="pageHeading">
   <div class="row wrapper border-bottom white-bg page-heading">
     <!-- BREADCRUMBS -->
-    <div class="col-sm-7">
+    <div class="col-sm-5">
       <h2>
         {{#if state$isMenuDetailed}}
           {{#if canEditMenu}}
@@ -40,7 +40,7 @@
     </div>
     <!-- /BREADCRUMBS -->
 
-    <div class="col-sm-5">
+    <div class="col-sm-7">
       {{#if state$isMenuList}}
         <div class="title-action">
 
@@ -233,8 +233,7 @@
             </a>
           {{else}}
             <div class="btn-group">
-              <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                      aria-expanded="false">
+              <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-cog"></i>
                 Settings
                 <span class="caret"></span>
@@ -251,11 +250,9 @@
                 {{/if}}
                 <li>
                   {{#if state$isJobListSubscribed}}
-                    <a href="#" class="btn btn-white unSubscribeJobsList"><i class="fa fa-lg fa-rss text-info"></i>
-                      Unsubscribe</a>
+                    <a href="#" class="unSubscribeJobsList"><i class="fa fa-lg fa-rss text-info"></i> Unsubscribe</a>
                   {{else}}
-                    <a href="#" class="btn btn-white subscribeJobsList"><i class="fa fa-lg fa-rss text-muted"></i>
-                      Subscribe</a>
+                    <a href="#" class="subscribeJobsList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
                   {{/if}}
                 </li>
               </ul>

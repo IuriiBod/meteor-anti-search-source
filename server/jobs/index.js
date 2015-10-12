@@ -25,7 +25,7 @@ Meteor.methods({
       logger.error("Active time not found for recurring type job");
       throw new Meteor.Error(404, "Active time not found for recurring type job");
     }
-    var job = JobItems.findOne(info.ref);
+    var job = JobItems.findOne({"name": info.ref});
     if(!job) {
       logger.error("Job not found");
       throw new Meteor.Error(404, "Job not found");
@@ -45,6 +45,10 @@ Meteor.methods({
     doc.name = type.name + " " + job.name;
     if(type.name == "Prep") {
       doc.portions = info.portions;
+      if(job.portions <= 0) {
+        logger.error("No of portions recorded on job is 0. Fix it to create job with correct active time");
+        throw new Meteor.Error(404, "No of portions recorded on job is 0. Fix it to create job with correct active time");
+      }
       var time = parseInt((job.activeTime/job.portions) * info.portions);
       if(time == time) {
         doc.activeTime = time;
@@ -53,7 +57,7 @@ Meteor.methods({
         throw new Meteor.Error(404, "Active time not valid");
       }
     } else {
-      doc.activeTime = info.activeTime;
+      doc.activeTime = parseInt(info.activeTime);
       doc.section = job.section;
       doc.startAt = job.repeatAt;
     }

@@ -1,26 +1,60 @@
-var component = FlowComponents.define("ordersReceiptsList", function(props) {});
+var component = FlowComponents.define("ordersReceiptsList", function(props) {  
+});
 
 component.state.list = function() {
   var state = Session.get("thisState");
   var time = Session.get("thisTime");
+  var data = null;
+  var ids = [];
+
   if(time == "week") {
-    return OrderReceipts.find({
-      "received": state, 
+    data = OrderReceipts.find({
+      "received": state,
       "expectedDeliveryDate": {
         $gte: moment().startOf("week").unix() * 1000,
         $lte: moment().endOf("week").unix() * 1000
       }
     }, {sort: {"receivedDate": -1, "supplier": 1}});
+
   } else if(time == "month") {
-    return OrderReceipts.find({
-      "received": state, 
+    data =  OrderReceipts.find({
+      "received": state,
       "expectedDeliveryDate": {
         $gte: moment().startOf("month").unix() * 1000,
         $lte: moment().endOf("month").unix() * 1000
       }
     }, {sort: {"receivedDate": -1, "supplier": 1}});
-  } else {
-    return OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1, "supplier": 1}});
+
+  } else if(time == "all") {
+    data = OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1, "supplier": 1}});
+  }
+  data = data.fetch();
+  if(data && data.length > 0) {
+    var users = [];
+    var suppliers = [];
+    if(data && data.length > 0) {
+      data.forEach(function(receipt) {
+        if(ids && ids.indexOf(receipt._id) < 0) {
+          ids.push(receipt._id);
+        }
+        if(receipt.receivedBy && users.indexOf(receipt.receivedBy) < 0) {
+          users.push(receipt.receivedBy);
+        }
+        if(suppliers.indexOf(receipt.supplier) < 0) {
+          suppliers.push(receipt.supplier);
+        }
+      });
+    }
+    if(users.length > 0) {
+      Meteor.subscribe("selectedUsers", users);
+    }
+    if(suppliers.length > 0) {
+      Meteor.subscribe("suppliers", suppliers);
+    }
+    if(ids.length > 0) {
+      Meteor.subscribe("receiptOrders", ids);
+    }
+    return data;
   }
 };
 

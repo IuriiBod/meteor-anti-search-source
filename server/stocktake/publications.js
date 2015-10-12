@@ -67,7 +67,7 @@ Meteor.publish("allOrderReceipts", function() {
 });
 
 Meteor.publish("receiptOrders", function(receiptId) {
-  logger.info("Stock orders published for receipt ", receiptId);
+  logger.info("Stock orders published for receipt ", {"ids": receiptId});
   return StockOrders.find({"orderReceipt": receiptId, "countOrdered": {$gt: 0}});
 });
 

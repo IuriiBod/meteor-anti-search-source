@@ -3,6 +3,7 @@ Template.ingredientItemDetailed.events({
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
     Session.set("thisIngredientId", id);
+    Meteor.subscribe("ingredients", [id]);
     $("#editIngredientModal").modal("show");
   },
 
@@ -18,7 +19,7 @@ Template.ingredientItemDetailed.events({
     }
     id = button.parent().parent().attr("data-id");
     Meteor.call("archiveIngredient", id, function(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     });
     IngredientsListSearch.cleanHistory();
     var selector = {

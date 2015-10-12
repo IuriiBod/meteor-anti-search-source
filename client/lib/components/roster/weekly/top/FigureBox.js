@@ -65,7 +65,8 @@ FigureBox.prototype.percent = function (declining, subtrahend) {
     };
 
     var diff = parseFloat(declining) - parseFloat(subtrahend);
-    doc.value = ((diff / parseFloat(declining)) * 100).toFixed(2);
+    doc.value = ((diff / parseFloat(declining)) * 100);
+    doc.value = !isNaN(doc.value) ? doc.value.toFixed(2) : 0;
     if (diff < 0) {
         doc.textColor = "text-danger";
         doc.icon = "fa-angle-down";

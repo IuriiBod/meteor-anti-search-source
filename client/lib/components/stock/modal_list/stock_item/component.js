@@ -1,5 +1,6 @@
 var component = FlowComponents.define('stockModalItem', function(props) {
   this.stock = props.stock;
+  this.name = props.name;
   this.onRendered(this.onItemRendered);
 });
 
@@ -20,17 +21,33 @@ component.state.costPerPortionUsed = function() {
 };
 
 component.prototype.onItemRendered = function() {
-  $('.i-checks').iCheck({
+  var self = this;
+  $('.i-checks.selected-Ing').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
 
-  $('input').on('ifChecked', function(event){
+  $('input.selectedIng').on('ifChecked', function(event){
     var id = $(this).attr("data-id");
-    var sareaId = Session.get("activeSArea");
-    Meteor.call("assignStocksToAreas", id, sareaId, function(err) {
-      if(err) {
-        HospoHero.alert(err);
+
+    if(self.name == "stockModal") {
+      var sareaId = Session.get("activeSArea");
+      Meteor.call("assignStocksToAreas", id, sareaId, function(err) {
+        if(err) {
+          HospoHero.error(err);
+        }
+      });
+    } else if(self.name == "editJob") {
+      var localId = Session.get("localId");
+
+      var localJobItem = LocalJobItem.findOne(localId);
+      if(localJobItem) {
+        LocalJobItem.update({"_id": localId}, {$addToSet: {"ings": id}});
+      } else {
+        var localMenuItem = LocalMenuItem.findOne(localId);
+        if(localMenuItem) {
+          LocalMenuItem.update({"_id": localId}, {$addToSet: {"ings": id}});
+        }
       }
-    });
+    }
   });
 };

@@ -72,59 +72,39 @@ Meteor.publish("shift", function (id) {
   }
 });
 
-Meteor.publish("rosteredFutureShifts", function (id) {
-  if (this.userId && id) {
+// New publisher for shifts
+Meteor.publish('shifts', function(type, userId) {
+  if(this.userId) {
     var query = {
-      "shiftDate": {$gte: new Date().getTime()},
-      "assignedTo": id,
-      "type": null,
+      assignedTo: userId,
+      type: null,
       "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
     };
-
-    logger.info("Rostered future shifts for user ", id);
-
-    return Shifts.find(query, {
-      sort: {"shiftDate": 1},
+    var options = {
+      sort: {
+        shiftDate: 1
+      },
       limit: 10
-    });
-  } else {
-    this.ready();
-  }
-});
-
-Meteor.publish("rosteredPastShifts", function (id) {
-  if (this.userId && id) {
-    var query = {
-      "shiftDate": {$lte: new Date().getTime()},
-      "assignedTo": id,
-      "type": null,
-      "endTime": {$lte: new Date().getTime()},
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
     };
+    var currentDate = Date.now();
 
-    logger.info("Rostered past shifts for user ", id);
-    return Shifts.find(query, {
-      sort: {"shiftDate": -1},
-      limit: 10
-    });
-  } else {
-    this.ready();
-  }
-});
+    if(type == 'future' || type == 'opened') {
+      query.shiftDate = { $gte: currentDate };
 
-Meteor.publish("openedShifts", function () {
-  if (this.userId) {
-    var query = {
-      "shiftDate": {$gte: new Date().getTime()},
-      "assignedTo": null,
-      "published": true,
-      "type": null,
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
-    };
+      if(type == 'opened') {
+        query.assignedTo = null;
+        query.published = true;
+      }
+    } else if(type == 'past') {
+      query.shiftDate = { $lte: currentDate };
+      query.endTime = { $lte: currentDate };
+      options.sort.shiftDate = -1;
+    } else {
+      this.ready();
+    }
 
-    logger.info("Opened shifts published");
-    return Shifts.find(query,
-      {sort: {"shiftDate": 1}, limit: 10});
+    logger.info("Rostered ", type, " shifts for user ", userId, " have been published");
+    return Shifts.find(query, options);
   } else {
     this.ready();
   }
