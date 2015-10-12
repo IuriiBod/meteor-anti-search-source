@@ -17,7 +17,7 @@
           </li>
 
           {{#if isInOrganization}}
-            {{#if getCurrentArea}}
+            {{#if getCurrentAreaId}}
               {{#if canViewForecast}}
                 <li class="{{isActiveRoute regex='salesPrediction'}}">
                   <a href="{{pathFor "salesPrediction" year=year week=week}}">
