@@ -1,18 +1,30 @@
-Meteor.publish('profileUser', function (id) {
-  if (this.userId && id) {
-    var options = {
-      "services.google": 1,
-      roles: 1,
-      isActive: 1,
-      profile: 1,
-      username: 1,
-      createdAt: 1,
-      currentAreaId: 1,
-      relations: 1
-    };
+Meteor.publish('profileUser', function(userId) {
+  if(userId) {
+    var user = Meteor.users.findOne(userId);
 
-    logger.info("User published ", id);
-    return Meteor.users.find({"_id": id}, {fields: options});
+    if(user) {
+      var fields = {
+        "services.google": 1,
+        profile: 1,
+        username: 1,
+        emails: 1,
+        isActive: 1,
+        relations: 1,
+        createdAt: 1,
+        currentAreaId: 1,
+        "roles.defaultRole": 1
+      };
+
+      if(user.currentAreaId) {
+        fields["roles." + user.currentAreaId] = 1;
+      }
+
+      return Meteor.users.find({
+        _id: userId
+      }, {
+        fields: fields
+      });
+    }
   } else {
     this.ready();
   }
