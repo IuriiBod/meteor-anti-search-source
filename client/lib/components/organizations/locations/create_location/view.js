@@ -36,6 +36,10 @@ Template.createLocation.helpers({
       });
     }
     return minutes;
+  },
+
+  countries: function(){
+    return getCountries();
   }
 });
 
@@ -46,10 +50,13 @@ Template.createLocation.events({
 
   'submit form': function(e) {
     e.preventDefault();
-
+    var countries = getCountries();
     var doc = {
       name: e.target.name.value,
+      country: countries[e.target.country.value],
+      city: e.target.city.value,
       address: e.target.address.value,
+      pos: {key: e.target.posKey.value, secret: e.target.posSecret.value, host: e.target.posHost.value},
       timezone: e.target.timezone.value,
       openingTime: e.target.openingHour.value+":"+e.target.openingMinutes.value,
       closingTime: e.target.closingHour.value+":"+e.target.closingMinutes.value,
@@ -62,3 +69,27 @@ Template.createLocation.events({
     $("#createLocation").removeClass("show");
   }
 });
+
+function getCountries(){
+  return {
+    "Australia": "AU",
+    "Austria": "AT",
+    "Canada": "CA",
+    "Central African Republic": "CF",
+    "China": "CN",
+    "Egypt": "EG",
+    "France": "FR",
+    "Germany": "DE",
+    "Greece": "GR",
+    "India": "IN",
+    "Italy": "IT",
+    "Japan": "JP",
+    "Netherlands": "NL",
+    "New Zealand": "NZ",
+    "Portugal": "PT",
+    "Sweden": "SE",
+    "Switzerland": "CH",
+    "United Kingdom of Great Britain and Northern Ireland": "GB",
+    "United States of America": "US"
+  }
+}
