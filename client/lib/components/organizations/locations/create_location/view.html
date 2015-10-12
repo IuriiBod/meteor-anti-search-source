@@ -6,12 +6,25 @@
         <input type="text" class="form-control" name="name" required="required">
       </div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Address</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" name="address" required="required">
+      <div class="form-group">
+          <label class="col-sm-2 control-label">Country</label>
+          <div class="col-sm-10">
+              {{> render component='selectComponent' values=countries selected='Australia' name='country'}}
+          </div>
       </div>
-    </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">City</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" name="city" required="required">
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">Address</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" name="address" required="required">
+          </div>
+      </div>
+
     <div class="form-group">
       <label class="col-sm-2 control-label">Timezone</label>
       <div class="col-sm-10">
@@ -36,21 +49,29 @@
         {{> render component='selectComponent' values=minutes selected=null name='closingMinutes'}}
       </div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Status</label>
-      <div class="col-sm-10 col-xs-12">
-        <div class="btn-group col-xs-12" data-toggle="buttons">
-          <label class="btn col-xs-6{{#if state$enabled}} btn-primary{{else}} btn-default{{/if}}">
-            <input type="radio" name="status" id="enabled" autocomplete="off" value="Enabled" checked="checked">
-            Enabled
-          </label>
-          <label class="btn col-xs-6{{#unless state$enabled}} btn-primary{{else}} btn-default{{/unless}}">
-            <input type="radio" name="status" id="disabled" autocomplete="off" value="Disabled">
-            Disabled
-          </label>
-        </div>
+      <div class="panel panel-default">
+          <div class="panel-heading text-center"><b>POS Settings (optional)</b></div>
+          <div class="panel-body">
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">Host</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" name="posHost">
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">Key</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" name="posKey">
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">Secret</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" name="posSecret">
+                  </div>
+              </div>
+          </div>
       </div>
-    </div>
     <div class="btn-group col-xs-12">
       <button type="submit" class="btn btn-primary col-xs-6">Create</button>
       <button type="button" class="btn btn-default col-xs-6 close-flyout">Close</button>

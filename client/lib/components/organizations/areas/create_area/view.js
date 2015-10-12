@@ -7,8 +7,7 @@ Template.createArea.events({
 
     var areaInfo = {
       name: e.target.name.value,
-      locationId: e.target.locationId.value,
-      status: e.target.status.value
+      locationId: e.target.locationId.value
     };
 
     FlowComponents.callAction('createArea', areaInfo);

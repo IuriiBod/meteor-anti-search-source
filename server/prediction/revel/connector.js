@@ -4,7 +4,7 @@ var SECRET = Meteor.settings.Revel.SECRET;
 
 Revel = {
   DATA_LIMIT: 5000,
-  queryRevelResource: function (resource, orderBy, isAscending, fields, limit, offset) {
+  queryRevelResource: function (resource, orderBy, isAscending, fields, limit, offset, pos) {
     var orderByStr;
 
     if (isAscending) {
@@ -14,9 +14,9 @@ Revel = {
     }
 
     try {
-      var response = HTTP.get(HOST + '/resources/' + resource, {
+      var response = HTTP.get(pos.host + '/resources/' + resource, {
         headers: {
-          'API-AUTHENTICATION': KEY + ':' + SECRET
+          'API-AUTHENTICATION': pos.key + ':' + pos.secret
         },
         params: {
           limit: limit,
@@ -37,19 +37,19 @@ Revel = {
     }
   },
 
-  queryRevelOrderItems: function (limit, offset) {
+  queryRevelOrderItems: function (limit, offset, pos) {
     return this.queryRevelResource('OrderItem', 'created_date', false, [
       'product_name_override',
       'created_date',
       'quantity'
-    ], limit, offset);
+    ], limit, offset, pos);
   },
 
   /**
    *Iterates through order items in Revel
    * @param onDateReceived - callback receives sales data for one day, should return false to stop iteration
    */
-  uploadAndReduceOrderItems: function (onDateReceived) {
+  uploadAndReduceOrderItems: function (onDateReceived, pos) {
     var offset = 0;
     var totalCount = this.DATA_LIMIT;
     var toContinue = true;
@@ -65,7 +65,7 @@ Revel = {
       if (HospoHero.isDevelopmentMode()) {
         var result = mockRevel.load(this.DATA_LIMIT, offset);
       } else {
-        var result = this.queryRevelOrderItems(this.DATA_LIMIT, offset);
+        var result = this.queryRevelOrderItems(this.DATA_LIMIT, offset, pos);
       }
 
       //handle Revel API error
