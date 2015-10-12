@@ -3,7 +3,9 @@ Router.route('/reports/stocktake/currentStocks/:year/:week', {
   name: "currentStocks",
   path: '/reports/stocktake/currentStocks/:year/:week',
   template: "currentStocksReportView",
-  waitOn: function() {},
+  waitOn: function() {
+    return Meteor.subscribe('organizationInfo');
+  },
   data: function() {
     if(!Meteor.userId() || !HospoHero.perms.canUser('editRoster')()) {
       Router.go("/");
@@ -21,6 +23,7 @@ Router.route('/reports/:year/:week', {
   waitOn: function() {
     var dates = getWeekStartEnd(this.params.week);
     return [
+      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("usersList"),
       Meteor.subscribe("weekly", dates, null, null)
     ];
