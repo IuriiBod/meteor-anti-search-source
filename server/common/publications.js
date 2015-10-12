@@ -15,7 +15,7 @@ Meteor.publish('sections', function(id) {
   }
 });
 
-Meteor.publish("allCategories", function() {
+Meteor.publish('allCategories', function() {
   if(this.userId) {
     var query = {
       "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
@@ -28,7 +28,7 @@ Meteor.publish("allCategories", function() {
   }
 });
 
-Meteor.publish("allStatuses", function() {
+Meteor.publish('allStatuses', function() {
   logger.info("Statuses published");
   return Statuses.find();
 });

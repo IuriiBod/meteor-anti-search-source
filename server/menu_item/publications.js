@@ -1,11 +1,8 @@
 Meteor.publish("menuList", function (categoryId, status) {
   if (this.userId) {
-    var query = {};
-
-    var user = Meteor.users.findOne({_id: this.userId});
-    if (user.currentAreaId) {
-      query["relations.areaId"] = user.currentAreaId;
-    }
+    var query = {
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    };
 
     if (categoryId && categoryId != "all") {
       query.category = categoryId;
@@ -23,39 +20,45 @@ Meteor.publish("menuList", function (categoryId, status) {
   }
 });
 
-Meteor.publish("menuItem", function (id) {
-  if (this.userId) {
-    var cursor = [];
-    var query = {
-      _id: id,
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
-    };
-
-    var menu = MenuItems.find(query);
-    cursor.push(menu);
-
-    if (menu.length) {
-      var menuFetched = menu.fetch()[0];
-      var ingIds = [];
-      if (menuFetched.ingredients && menuFetched.ingredients.length > 0) {
-        menuFetched.ingredients.forEach(function (ing) {
-          ingIds.push(ing._id);
+Meteor.publishComposite('menuItem', function(id) {
+  return {
+    find: function() {
+      if(this.userId) {
+        return MenuItems.find({
+          _id: id,
+          "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
         });
-        cursor.push(Ingredients.find({"_id": {$in: ingIds}}));
+      } else {
+        this.ready();
       }
-
-      var prepIds = [];
-      if (menuFetched.jobItems && menuFetched.jobItems.length > 0) {
-        menuFetched.jobItems.forEach(function (prep) {
-          prepIds.push(prep._id);
-        });
-        cursor.push(JobItems.find({"_id": {$in: prepIds}}));
+    },
+    children: [
+      {
+        find: function(menuItem) {
+          if(menuItem && menuItem.ingredients && menuItem.ingredients.length) {
+            var ings = _.map(menuItem.ingredients, function(ingredient) {
+              return ingredient._id;
+            });
+            return Ingredients.find({_id: {$in: ings}});
+          } else {
+            this.ready();
+          }
+        }
+      },
+      {
+        find: function(menuItem) {
+          if(menuItem && menuItem.jobItems && menuItem.jobItems.length) {
+            var jobs = _.map(menuItem.jobItems, function(jobItem) {
+              return jobItem._id;
+            });
+            return JobItems.find({_id: {$in: jobs}});
+          } else {
+            this.ready();
+          }
+        }
       }
-      return cursor;
-    }
-  } else {
-    this.ready();
-  }
+    ]
+  };
 });
 
 Meteor.publish("menuItems", function (ids) {

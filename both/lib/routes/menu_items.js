@@ -5,10 +5,11 @@ Router.route('/menuItems/:category/:status', {
   template: "menuItemsListMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe("allCategories"),
-      Meteor.subscribe("allStatuses"),
-      Meteor.subscribe("menuList", this.params.category, this.params.status.toLowerCase()),
-      Meteor.subscribe("userSubs", ['menulist'])
+      Meteor.subscribe('organizationInfo'),
+      Meteor.subscribe('allCategories'),
+      Meteor.subscribe('allStatuses'),
+      Meteor.subscribe('menuList', this.params.category, this.params.status.toLowerCase()),
+      Meteor.subscribe('userSubs', ['menulist'])
     ];
   },
   data: function() {
@@ -28,8 +29,9 @@ Router.route('/menuItems/submit', {
   template: "menuItemSubmitMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe("allCategories"),
-      Meteor.subscribe("allStatuses")
+      Meteor.subscribe('organizationInfo'),
+      Meteor.subscribe('allCategories'),
+      Meteor.subscribe('allStatuses')
     ];
   },
   data: function() {
@@ -47,7 +49,8 @@ Router.route('/menuItems/:type', {
   template: "menuItemsListMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe("allCategories"),
+      Meteor.subscribe('organizationInfo'),
+      Meteor.subscribe('allCategories'),
       Meteor.subscribe("allStatuses"),
       Meteor.subscribe("menuList", "all", "all"),
       Meteor.subscribe("userSubs", ['menulist'])
@@ -70,11 +73,11 @@ Router.route('/menuItem/:_id', {
   template: "menuItemDetailedMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe("menuItems", [this.params._id]),
+      Meteor.subscribe('organizationInfo'),
+      Meteor.subscribe("menuItem", this.params._id),
       Meteor.subscribe("comments", this.params._id),
       Meteor.subscribe("allCategories"),
       Meteor.subscribe("allStatuses"),
-      Meteor.subscribe("usersList"),
       Meteor.subscribe("userSubs", ['menulist', this.params._id])
     ];
   },
