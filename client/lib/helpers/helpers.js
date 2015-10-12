@@ -79,7 +79,7 @@ var helpers = {
   },
   username: function (userId) {
     var user = Meteor.users.findOne(userId);
-    if(user) {
+    if(user && user.profile) {
       if(user.profile.firstname && user.profile.lastname) {
         return user.profile.firstname + " " + user.profile.lastname;
       } else {
@@ -130,25 +130,12 @@ var helpers = {
     return (a === b);
   },
 
-  // TODO: Merge these two methods and replace it in the project
-  getProfileImage: function (userId) {
-    userId = userId ? userId : Meteor.userId();
-    var user = Meteor.users.findOne(userId);
-
-    var image = "/images/user-image.jpeg";
-
-    if (user && user.services && user.services.google) {
-      image = user.services.google.picture;
-    }
-    return image;
-  },
-
   profilePicture: function(userId) {
     var user = Meteor.users.findOne(userId);
     if (user) {
-      if (user.profile.image) {
+      if (user.profile && user.profile.image) {
         return user.profile.image;
-      } else if (user.services && user.services.google) {
+      } else if (user.services && user.services.google && user.services.google.picture) {
         return user.services.google.picture;
       } else {
         return "/images/user-image.jpeg";

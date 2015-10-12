@@ -36,7 +36,7 @@ component.state.email = function() {
 
 //permitted for profile owner and admins
 component.state.isEditPermitted = function() {
-  return HospoHero.isManager() || isMe(this.get('id'));
+  return HospoHero.isManager() || HospoHero.isMe(this.get('id'));
 };
 
 component.state.shiftsPerWeek = function() {
