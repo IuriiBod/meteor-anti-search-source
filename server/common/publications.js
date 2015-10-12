@@ -1,27 +1,21 @@
-Meteor.publish("allJobTypes", function() {
-  logger.info("Job types published");
+Meteor.publish('jobTypes', function() {
+  logger.info("JobTypes publication");
   return JobTypes.find();
 });
 
-Meteor.publish("allSections", function() {
+Meteor.publish('sections', function(id) {
   if(this.userId) {
     var query = {
       "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
     };
-
-    logger.info("Sections published");
+    if(id) {
+      query._id = id;
+    }
     return Sections.find(query);
-  } else {
-    this.ready();
   }
 });
 
-Meteor.publish("section", function(id) {
-  logger.info("Sections published");
-  return Sections.find({"_id": id});
-});
-
-Meteor.publish("allCategories", function() {
+Meteor.publish('allCategories', function() {
   if(this.userId) {
     var query = {
       "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
@@ -34,7 +28,7 @@ Meteor.publish("allCategories", function() {
   }
 });
 
-Meteor.publish("allStatuses", function() {
+Meteor.publish('allStatuses', function() {
   logger.info("Statuses published");
   return Statuses.find();
 });

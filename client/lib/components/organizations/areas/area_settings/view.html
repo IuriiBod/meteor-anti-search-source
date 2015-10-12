@@ -14,7 +14,7 @@
           {{/unless}}
         {{/if}}
         <a href="/user/profile/{{_id}}">
-          <img src="{{state$getProfilePhoto _id}}" alt="Profile photo of {{this.username}}" class="user-photo-min" title="{{this.username}}" />
+          <img src="{{profilePicture _id}}" alt="Profile photo of {{username _id}}" class="user-photo-min" title="{{username _id}}" />
         </a>
       </div>
     {{/each}}

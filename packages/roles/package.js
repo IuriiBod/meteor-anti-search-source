@@ -14,7 +14,7 @@ Package.onUse(function (api) {
   api.versionsFrom('1.1.0.2');
   api.use(['accounts-password', 'underscore', 'minimongo', 'mongo-livedata', 'templating', 'tracker'], 'client');
   api.use(['mongo', 'underscore'], 'server');
-  api.addFiles(['collection.js', 'permissions.js', 'roles.js', 'roles_server.js', 'default_roles.js', 'roles_client.js']);
+  api.addFiles(['collection.js', 'permissions.js', 'roles.js', 'roles_server.js', 'default_roles.js']);
   api.export('Roles');
 });
 

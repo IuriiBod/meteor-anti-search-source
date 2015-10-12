@@ -1,6 +1,6 @@
 <template name="shiftBasic">
   <div class="hidden-success-box">
-    <li class="success-element" data-id="{{state$shift._id}}" data-origin="{{state$thisorigin}}">
+    <li class="success-element" data-id="{{state$shift._id}}" data-origin="{{state$thisorigin}}" data-order="{{state$shift.order}}">
       {{#if canEditRoster}}
       <div class="box-wrapper pull-right" style="display: none;">
         <span class="box-remove glyphicon glyphicon-remove removeRosterBox"></span>
@@ -9,10 +9,10 @@
       <div class="agile-detail">
         <i class="fa fa-user"></i>
         {{#if canEditRoster}}
-          <a href="#" class="select-worker" data-pk="{{state$assignedTo._id}}" data-value="{{state$assignedTo._id}}">{{state$assignedTo.username}}</a>
+          <a href="#" class="select-worker" data-pk="{{state$assignedTo}}" data-value="{{state$assignedTo}}">{{username state$assignedTo}}</a>
         {{else}}
-          {{#if state$assignedTo.username}}
-            {{state$assignedTo.username}}
+          {{#if state$assignedTo}}
+            {{username state$assignedTo}}
           {{else}}
             Open
           {{/if}}
@@ -29,9 +29,9 @@
       <div class="agile-detail">
         <i class="fa fa-angle-double-right"></i>
         {{#if canEditRoster}}
-          <a href="#" class="section" data-pk="{{state$section._id}}" data-value="{{state$section._id}}">{{state$section.name}}</a>
+          <a href="#" class="section" data-pk="{{state$section}}" data-value="{{state$section}}">{{sectionById state$section}}</a>
         {{else}}
-          {{state$section.name}}
+          {{sectionById state$section}}
         {{/if}}
       </div>
     </li>

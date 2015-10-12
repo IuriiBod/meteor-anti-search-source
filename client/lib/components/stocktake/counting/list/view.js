@@ -27,8 +27,7 @@ Template.stockCounting.events({
           if(newValue) {
             Meteor.call("editSpecialArea", id, newValue, function(err) {
               if(err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.error(err);
               }
             });
           }
@@ -46,8 +45,7 @@ Template.stockCounting.events({
           if(newValue) {
             Meteor.call("editGeneralArea", id, newValue, function(err) {
               if(err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.error(err);
               }
             });
           }
@@ -83,8 +81,7 @@ Template.stockCounting.events({
           }
           Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, function(err) {
             if(err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.error(err);
             } 
           });
         }
@@ -100,8 +97,7 @@ Template.stockCounting.events({
     if(version) {
       Meteor.call("generateOrders", version, function(err, result) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.error(err);
         } else {
           Router.go("stocktakeOrdering", {"_id": version})
         }

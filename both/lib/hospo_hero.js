@@ -18,19 +18,32 @@ Namespace('HospoHero', {
     }
   },
 
-  alert: function (err) {
+  // Alert error message
+  error: function (err) {
     if (err) {
       console.log(err);
       if (err.reason) {
-        return alert(err.reason);
+        return sweetAlert("Error!", err.reason, "error");
       } else if (err.error) {
-        return alert(err.error);
+        return sweetAlert("Error!", err.error, "error");
       } else if (err.message) {
-        return alert(err.message);
+        return sweetAlert("Error!", err.message, "error");
       } else {
-        return alert('');
+        return sweetAlert("Error!", err, "error");
       }
+    } else {
+      return sweetAlert("Error!", "", "error");
     }
+  },
+
+  // Alert success message
+  success: function(message) {
+    sweetAlert("Success!", message, "success");
+  },
+
+  // Alert info message
+  info: function(message) {
+    sweetAlert("Info!", message, "info");
   },
 
   isInOrganization: function(userId) {

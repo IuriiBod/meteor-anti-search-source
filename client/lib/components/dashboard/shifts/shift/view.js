@@ -6,16 +6,16 @@ Template.shiftItem.events({
     if(shiftId && shift) {
       Meteor.call("claimShift", shiftId, function(err) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
           var text = "Shift on " + moment(shift.shiftDate).format("ddd, Do MMMM");
           var options = {
-            "title": text + " has been claimed by workers",
+            "title": text + " has been claimed by following workers",
             "type": "claim"
           };
           Meteor.call("sendNotifications", shiftId, "roster", options, function(err) {
             if(err) {
-              HospoHero.alert(err);
+              HospoHero.error(err);
             } 
           });
         }

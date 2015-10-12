@@ -5,8 +5,7 @@ Template.organizationDetailsPage.events({
       var id = e.target.dataset.id;
       Meteor.call('deleteOrganization', id, function(err) {
         if(err) {
-          console.log(err);
-          alert(err.reason);
+          HospoHero.error(err);
         }
       });
       $('.flyout-container').removeClass('show');

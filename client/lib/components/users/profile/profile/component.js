@@ -9,6 +9,24 @@ component.state.basic = function() {
   return user;
 };
 
+component.state.firstName = function() {
+  var user = Meteor.users.findOne(this.get("id"));
+  if(user && user.profile && user.profile.firstname) {
+    return user.profile.firstname;
+  } else {
+    return user.username;
+  }
+}
+
+ component.state.lastName = function() {
+  var user = Meteor.users.findOne(this.get("id"));
+  if(user && user.profile && user.profile.lastname) {
+    return user.profile.lastname;
+  } else {
+    return "";
+  }
+ }
+
 component.state.email = function() {
   var user = this.get("user");
   if(user && user.emails) {
@@ -16,18 +34,9 @@ component.state.email = function() {
   }
 };
 
-component.state.image = function() {
-  var user = this.get("user");
-  if(user && user.services && user.services.google) {
-    return user.services.google.picture;
-  } else {
-    return "/images/user-image.jpeg";
-  }
-};
-
 //permitted for profile owner and admins
 component.state.isEditPermitted = function() {
-  return HospoHero.isManager() || isMe(this.get('id'));
+  return HospoHero.isManager() || HospoHero.isMe(this.get('id'));
 };
 
 component.state.shiftsPerWeek = function() {

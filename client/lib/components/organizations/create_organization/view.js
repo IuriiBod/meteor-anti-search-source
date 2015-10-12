@@ -12,7 +12,7 @@ Template.createOrganizationPage.events({
     // Create new organization
     Meteor.call("createOrganization", orgName, function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       } else {
         Router.go('home');
       }

@@ -1,20 +1,18 @@
-var subs = new SubsManager();
-
 var component = FlowComponents.define('editIngredientItem', function(props) {});
 
 component.state.id = function() {
-  subs.clear();
   var id = Session.get("thisIngredientId");
-  subs.subscribe("ingredients", [id]);
-  //var ing = Ingredients.findOne(id);
+  var ing = Ingredients.findOne(id);
+  if(ing) {
+    this.set("description", ing.description)
+  }
   return id;
 };
 
 component.state.relatedJobs = function() {
   var id = Session.get("thisIngredientId");
-  subs.reset();
-  subs.subscribe("ingredientsRelatedJobs", id);
-  return JobItems.find().fetch();
+  Meteor.subscribe("ingredientsRelatedJobs", id);
+  return JobItems.find({ "ingredients._id": id }).fetch();
 };
 
 component.state.convertTime = function(time) {
@@ -24,7 +22,7 @@ component.state.convertTime = function(time) {
 component.action.submit = function(id, info) {
    Meteor.call("editIngredient", id, info, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     } else {
       IngredientsListSearch.cleanHistory();
       IngredientsListSearch.search("", {"limit": 10});
@@ -46,4 +44,60 @@ component.state.isArchive = function() {
   if(id != undefined) {
     return !!Ingredients.findOne({_id: id, status: 'archived'});
   }
+};
+
+component.state.unitsOrdered = function() {
+  var id = Session.get("thisIngredientId");
+  var ing = Ingredients.findOne(id);
+  var thisIngId = null;
+  if(ing) {
+    thisIngId = ing.portionOrdered;
+  }
+  return OrderingUnits.find({"unit": {$nin: [thisIngId]}});
+};
+
+component.state.unitsUsed = function() {
+  var id = Session.get("thisIngredientId");
+  var ing = Ingredients.findOne(id);
+  var thisIngId = null;
+  if(ing) {
+    thisIngId = ing.portionUsed;
+  }
+  return UsingUnits.find({"unit": {$nin: [thisIngId]}});
+};
+
+component.action.archiveIng = function(id, state) {
+  Meteor.subscribe("ingredients", [id]);
+  var self = this;
+  Meteor.call("archiveIngredient", id, state, function(err) {
+    if(err) {
+      HospoHero.error(err);
+    } else {
+      $("#editIngredientModal").modal("hide");
+      
+      var stock = Ingredients.findOne(id);
+      if(stock) {
+        var text = "Stock item " + stock.description;
+        if(stock.status == "active") {
+          text += " restored";
+        } else if(stock.status == "archived") {
+          text += " archived";
+        }
+        HospoHero.info(text);
+      } else {
+        HospoHero.info("Stock item " + self.get("description") + " removed");
+      }
+      
+      IngredientsListSearch.cleanHistory();
+      var selector = {
+        limit: 30
+      };
+      if(Router.current().params.type == "archive") {
+        selector.status = "archived";
+      } else {
+        selector.status = {$ne: "archived"};
+      }
+      IngredientsListSearch.search("", selector);
+    }
+  });
 };

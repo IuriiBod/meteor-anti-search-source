@@ -5,7 +5,7 @@ Template.notifiButtons.events({
     $(".dropdown-notifi").addClass("open");
     Meteor.call("readNotifications", id, function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
       $(".dropdown-notifi").addClass("open");
     });
@@ -39,6 +39,8 @@ Template.notifiButtons.events({
         } else if(notifi.actionType == "confirm" || notifi.actionType == "claim" || notifi.actionType == "update") {
           Router.go("shift", {"_id": ref});
         }
+      } else if(type == "newsfeed") {
+        Router.go("/");
       }
     }
   }

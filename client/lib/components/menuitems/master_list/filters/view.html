@@ -3,8 +3,8 @@
   <div class="row m-b">
     <div class="col-md-3">
       <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize" style="text-align: left">{{state$selectedCategory.name}}
-        <span class="caret pull-right m-t-sm" ></span>
       </button>
+      <span class="caret caret-pulled-right pull-right" ></span>
       <ul class="dropdown-menu text-capitalize filter-menus">
         {{#each state$categories}}
           <li><a href="/menuItems/{{this._id}}/{{state$selectedStatus.name}}" class="">{{this.name}}</a></li>
@@ -20,8 +20,8 @@
     <div class="col-md-3">
       {{# if notArchive}}
       <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize" style="text-align: left">{{state$selectedStatus.name}}
-        <span class="caret pull-right m-t-sm" ></span>
       </button>
+      <span class="caret caret-pulled-right pull-right" ></span>
       <ul class="dropdown-menu text-capitalize filter-menus">
         {{#each state$statuses}}
           <li><a href="/menuItems/{{state$selectedCategory._id}}/{{this.name}}" class="">{{this.name}}</a></li>

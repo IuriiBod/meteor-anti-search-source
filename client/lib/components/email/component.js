@@ -16,7 +16,8 @@ component.state.initialHTML = function() {
   var data = StockOrders.find({
     "version": Session.get("thisVersion"),
     "supplier": supplierId,
-    "relations.areaId": HospoHero.getCurrentAreaId()
+    "relations.areaId": HospoHero.getCurrentAreaId(),
+    "countOrdered": {$gt: 0}
   }).fetch();
   var supplier = Suppliers.findOne(supplierId);
   if(supplier) {
@@ -32,11 +33,11 @@ component.state.initialHTML = function() {
     if(receipt && receipt.orderNote) {
       text += "<p>Note: " + receipt.orderNote + "</p>";
     }
-    text += "<br><table class='table table-condensed table-hover table-striped'>";
-    text += "<thead><tr><th>Code</th><th>Stock Item</th><th>Amount</th><th>Price ($)</th></tr></thead><tbody>";
-
 
     if(data && data.length > 0) {
+      text += "<br><table class='table table-condensed table-hover table-striped'>";
+      text += "<thead><tr><th>Code</th><th>Stock Item</th><th>Amount</th><th>Price ($)</th></tr></thead><tbody>";
+
       data.forEach(function(item) {
         var stockItem = Ingredients.findOne(item.stockId);
         if(stockItem) {
@@ -48,9 +49,9 @@ component.state.initialHTML = function() {
           text += "<td>$ " + Math.round(cost * 100)/100 + "</td></tr>"
         }
       });
+      text += "<tr><td><b>Total</b></td><td></td><td></td><td><b>$ " + Math.round(total * 100)/100 + "</b></td></tr>"
+      text += "</tbody></table>";
     }
-    text += "<tr><td><b>Total</b></td><td></td><td></td><td><b>$ " + Math.round(total * 100)/100 + "</b></td></tr>"
-    text += "</tbody></table>";
     text += "<br><br><p>" + this.get("username") + ",</p>"
     text += "<p>" + this.get("userType") + "</p>";
     return text;

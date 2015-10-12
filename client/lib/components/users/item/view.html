@@ -1,7 +1,7 @@
 <template name="userDetailed">
   <tr data-id="{{state$user._id}}">
     {{#if isManager}}
-      <td style="{{state$userStyle}}"><a href="/user/profile/{{state$user._id}}">{{state$user.username}}</a></td>
+      <td style="{{state$userStyle}}"><a href="/user/profile/{{state$user._id}}">{{username state$user._id}}</a></td>
 
       <td>
         {{#unless isOrganizationOwner state$user._id}}
@@ -25,7 +25,7 @@
         {{/unless}}
       </td>
     {{else}}
-      <td style="{{state$userStyle}}">{{state$user.username}}</td>
+      <td style="{{state$userStyle}}">{{username state$user._id}}</td>
       {{#if state$user.isActive}}
         <td>{{{state$role}}}</td>
       {{/if}}

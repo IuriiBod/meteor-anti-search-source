@@ -8,7 +8,7 @@ Template.menuItemsListMainView.events({
     event.preventDefault();
     Meteor.call("subscribe", "menulist", function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   },
@@ -17,7 +17,7 @@ Template.menuItemsListMainView.events({
     event.preventDefault();
     Meteor.call("unSubscribe", "menulist", function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   }

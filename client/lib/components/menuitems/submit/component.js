@@ -1,4 +1,5 @@
 var component = FlowComponents.define('submitMenuItem', function(props) {
+  this.onRendered(this.onFormRendered);
 });
 
 component.state.initialHTML = function() {
@@ -8,10 +9,8 @@ component.state.initialHTML = function() {
 component.action.submit = function(info) {
   Meteor.call("createMenuItem", info, function(err, id) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
-    Session.set("selectedIngredients", null);
-    Session.set("selectedJobItems", null);
     Router.go("menuItemDetail", {"_id": id});
   });
 };
@@ -22,4 +21,13 @@ component.state.statuses = function() {
       $ne: 'archived'
     }
   });
+};
+
+component.prototype.onFormRendered = function() {
+  Session.set("localId", insertLocalMenuItem());
+};
+
+insertLocalMenuItem = function() {
+  LocalMenuItem.remove({});
+  return LocalMenuItem.insert({"ings": [], "preps": []});
 };

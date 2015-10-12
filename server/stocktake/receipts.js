@@ -41,16 +41,30 @@ Meteor.methods({
       "supplier": supplier,
       "version": version
     });
-
-    if(info.through == "emailed") {
-      //send email to supplier
-      if(!info.hasOwnProperty("to")) {
-        logger.error("Email address does not exist");
-        throw new Meteor.Error("Email address does not exist");
-      }
-      if(!info.hasOwnProperty("title")) {
-        logger.error("Title does not exist");
-        throw new Meteor.Error("Title does not exist");
+    if(info.hasOwnProperty("through")) {
+      if(info.through == "emailed") {
+        //send email to supplier
+        if(!info.hasOwnProperty("to")) {
+          logger.error("Email address does not exist");
+          throw new Meteor.Error(404, "Email address does not exist");
+        }
+        if(!info.hasOwnProperty("title")) {
+          logger.error("Title does not exist");
+          throw new Meteor.Error(404, "Title does not exist");
+        }
+        if(!info.hasOwnProperty("emailText")) {
+          logger.error("Email text does not exist");
+          throw new Meteor.Error(404, "Email text does not exist");
+        }
+        Meteor.defer(function() {
+          Email.send({
+            "to": info.to,
+            "from": Meteor.user().emails[0].address,
+            "subject": "Order from [Hospo Hero]",
+            "html": info.emailText
+          });
+        });
+        logger.info("Email sent to supplier", supplier);
       }
       if(!info.hasOwnProperty("emailText")) {
         logger.error("Email text does not exist");
@@ -200,5 +214,22 @@ Meteor.methods({
         throw new Meteor.Error("Receipt does not exist");
       }
     }
+  },
+
+  uploadInvoice: function(id, info) {
+    if(!HospoHero.perms.canUser('editStock')()) {
+      logger.error("User not permitted to generate receipts");
+      throw new Meteor.Error(404, "User not permitted to generate receipts");
+    }
+
+    HospoHero.checkMongoId(id);
+
+    var receipt = OrderReceipts.findOne(id);
+    if(!receipt) {
+      logger.error('Receipt not found');
+      throw new Meteor.Error("Receipt not found");
+    }
+    OrderReceipts.update({"_id": id}, {$addToSet: {"invoiceImage": info}});
+    logger.info("Invoice uploaded", id);
   }
 });

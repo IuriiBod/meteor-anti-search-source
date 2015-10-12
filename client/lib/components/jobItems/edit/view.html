@@ -56,30 +56,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">Ingredients used
                 </label>
-                <div class="col-sm-10">
-                  <table class="table table-hover thumbnail">
-                    <thead>
-                      <tr>
-                        <th>Supplier's Code</th>
-                        <th>Description</th>
-                        <th>Unit used</th>
-                        <th>Unit Price</th>
-                        <th>Quantity</th>
-                        <!-- <th>Action</th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{#each state$ingredients}}
-                        {{> render component='ingredientItemEdit' ingredient=this}}
-                      {{/each}}
-                      {{#each ingredientsList}}
-                        {{> render component='ingredientItemEdit' ingredient=this}}
-                      {{/each}}
-                    </tbody>
-                    <br>
-                    <button id="showIngredientsList"  class="btn btn-block btn-outline btn-primary" type="button"><i class="fa fa-plus"></i> Add ingredients to prep item</button>
-                  </table>
-                </div>
+                {{> render component="listOfIngredients" name="editJobItem"}}
               </div> 
               {{/if}}
               {{#if state$isPrep}} 

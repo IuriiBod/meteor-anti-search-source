@@ -1,18 +1,30 @@
-Meteor.publish('profileUser', function (id) {
-  if (this.userId) {
-    var options = {
-      "services.google": 1,
-      roles: 1,
-      isActive: 1,
-      profile: 1,
-      username: 1,
-      createdAt: 1,
-      currentAreaId: 1,
-      relations: 1
-    };
+Meteor.publish('profileUser', function(userId) {
+  if(userId) {
+    var user = Meteor.users.findOne(userId);
 
-    logger.info("User published ", id);
-    return Meteor.users.find({"_id": id}, {fields: options});
+    if(user) {
+      var fields = {
+        "services.google": 1,
+        profile: 1,
+        username: 1,
+        emails: 1,
+        isActive: 1,
+        relations: 1,
+        createdAt: 1,
+        currentAreaId: 1,
+        "roles.defaultRole": 1
+      };
+
+      if(user.currentAreaId) {
+        fields["roles." + user.currentAreaId] = 1;
+      }
+
+      return Meteor.users.find({
+        _id: userId
+      }, {
+        fields: fields
+      });
+    }
   } else {
     this.ready();
   }
@@ -62,44 +74,50 @@ Meteor.publish("selectedUsersList", function (usersIds) {
 });
 
 //managers and workers that should be assigned to shifts
-Meteor.publish("workers", function () {
-  if (this.userId) {
-    var query = {
-      "isActive": true
-    };
+var currentAreaId;
+Meteor.publishComposite('workers', {
+  find: function() {
+    if(this.userId) {
+      var user = Meteor.users.findOne(this.userId);
 
-    var user = Meteor.users.findOne({_id: this.userId});
+      currentAreaId = user.currentAreaId ? user.currentAreaId : null;
 
-    if (user.relations.organizationId) {
-      var canBeRostedRoles = Meteor.roles.find({
-        permissions: Roles.permissions.Roster.canBeRosted.code,
-        $or: [
-          {organizationId: user.relations.organizationId},
-          {default: true}
-        ],
-        name: {
-          $ne: 'Owner'
-        }
-      }).fetch();
-
-      if (canBeRostedRoles.length) {
-        canBeRostedRoles = _.map(canBeRostedRoles, function (role) {
-          return role._id;
+      if(user && user.relations && user.relations.organizationId) {
+        return Meteor.roles.find({
+          permissions: Roles.permissions.Roster.canBeRosted.code,
+          $or: [
+            { default: true },
+            { organizationId: user.relations.organizationId }
+          ],
+          name: {
+            $ne: 'Owner'
+          }
         });
+      } else {
+        this.ready();
       }
-
-      if (user.currentAreaId) {
-        query["relations.areaIds"] = user.currentAreaId;
-        query["roles." + user.currentAreaId] = {$in: canBeRostedRoles};
-      }
-
-      return Meteor.users.find(query);
     } else {
       this.ready();
     }
-  } else {
-    this.ready();
-  }
+  },
+  children: [
+    {
+      find: function (role) {
+        if(role) {
+          if(currentAreaId) {
+            var query = {};
+            query["relations.areaIds"] = currentAreaId;
+            query["roles." + currentAreaId] = role._id;
+            return Meteor.users.find(query);
+          } else {
+            this.ready();
+          }
+        } else {
+          this.ready();
+        }
+      }
+    }
+  ]
 });
 
 Meteor.publish("selectedUsers", function (ids) {

@@ -1,5 +1,3 @@
-var subs = new SubsManager();
-
 var component = FlowComponents.define('jobItemDetailed', function(props) {
   this.jobitem = props.jobitem;
   this.type = props.type;
@@ -10,7 +8,7 @@ var component = FlowComponents.define('jobItemDetailed', function(props) {
       ids.push(ing._id);
     });
     if(ids.length > 0) {
-      subs.subscribe("ingredients", ids);
+      Meteor.subscribe("ingredients", ids);
     }
   }
 });

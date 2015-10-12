@@ -19,7 +19,7 @@ component.action.inputPinCode = function(pinCode) {
   var backwardUrl = this.get("backwardUrl") || '/';
   Meteor.call("inputPinCode", pinCode, function (err, res) {
     if (err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
     else if (res) {
       StaleSession.reset();

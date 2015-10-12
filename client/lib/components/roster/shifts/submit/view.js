@@ -55,7 +55,7 @@ Template.submitShift.events({
       }
       Meteor.call("createShift", info, function(err, id) {
         if(err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
           $("#submitShiftModal").modal("hide");
           var recurringJobs = Jobs.find({
@@ -67,7 +67,7 @@ Template.submitShift.events({
             recurringJobs.forEach(function(job) {
               Meteor.call("assignJob", job._id, id, job.startAt, function(err) {
                 if(err) {
-                  HospoHero.alert(err);
+                  HospoHero.error(err);
                 } 
               });
             });

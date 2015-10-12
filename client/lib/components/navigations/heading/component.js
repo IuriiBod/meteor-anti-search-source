@@ -39,6 +39,7 @@ component.state.publishedOn = function () {
     var shift = Shifts.findOne({
       "shiftDate": {$in: dates},
       "published": true,
+      "publishedOn": {$exists: true},
       "relations.areaId": HospoHero.getCurrentAreaId()
     });
     if (shift && shift.publishedOn) {
@@ -216,18 +217,18 @@ component.state.onAreaSelected = function () {
     if(type == 'menudetailed') {
       Meteor.call("duplicateMenuItem", itemId, areaId, function (err) {
         if (err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
-          alertSuccess("Menu item has successfully copied!");
+          HospoHero.success("Menu item has successfully copied!");
           $('#areaChooser').modal('hide');
         }
       });
     } else if(type == 'jobitemdetailed') {
       Meteor.call("duplicateJobItem", itemId, areaId, function (err) {
         if (err) {
-          HospoHero.alert(err);
+          HospoHero.error(err);
         } else {
-          alertSuccess("Job item has successfully copied!");
+          HospoHero.success("Job item has successfully copied!");
           $('#areaChooser').modal('hide');
         }
       });

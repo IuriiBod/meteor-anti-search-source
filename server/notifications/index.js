@@ -20,8 +20,8 @@ Meteor.methods({
       return console.log("Notification " + id + " send");
     }
 
-    if (type != "comment" || type != "roster") {
-      if (!itemId) {
+    if(type != "comment" || type != "roster") {
+      if(!itemId) {
         logger.error('ItemId should have a value');
         throw new Meteor.Error(404, "ItemId should have a value");
       }
@@ -29,7 +29,7 @@ Meteor.methods({
       info.text = options.text;
       info.actionType = options.type;
       var itemSubsbcribers = Subscriptions.findOne(itemId);
-      if (itemSubsbcribers && itemSubsbcribers.subscribers.length > 0) {
+      if(itemSubsbcribers && itemSubsbcribers.subscribers.length > 0) {
         allSubscribers = itemSubsbcribers.subscribers;
       }
     }
@@ -104,15 +104,17 @@ Meteor.methods({
       info.createdOn = Date.now();
       var text = "";
       var shift = Shifts.findOne(itemId);
-      if (shift) {
-        if (options.type == "claim") {
-          if (shift.claimedBy && shift.claimedBy.length > 0) {
+      
+      if(shift) {
+        if(options.type == "claim") {
+          if(shift.claimedBy && shift.claimedBy.length > 0) {
             var claimedUsers = Meteor.users.find({"_id": {$in: shift.claimedBy}}).fetch();
-            claimedUsers.forEach(function (user) {
-              var index = claimedUsers.indexOf(user);
-              text += "<br>" + (index + 1) + "). " + user.username + " <a href='#' class='confirmClaim' data-id='" + user._id + "' data-shift='" + itemId + "'>Confirm</a>";
-              text += " <a href='#' class='rejectClaim' data-id='" + user._id + "' data-shift='" + itemId + "'>Reject</a>";
+            text += "<ol>";
+            claimedUsers.forEach(function(user) {
+              text += "<li>" + user.username + " <a href='#' class='confirmClaim' data-id='" + user._id + "' data-shift='" + itemId + "'><small class='text-success'>Confirm</small></a>";
+              text += " <a href='#' class='rejectClaim' data-id='" + user._id + "' data-shift='" + itemId + "'><small class='text-danger'>Reject</small></a></li>";
             });
+            text += "</ol>";
           }
           var users = Meteor.users.find({$or: [{"isManager": true}, {"isAdmin": true}]}).fetch();
           if (users && users.length > 0) {
@@ -143,10 +145,9 @@ Meteor.methods({
       }
     }
 
-
-    if (type == "job" || type == "menu" || type == "roster") {
-      allSubscribers.forEach(function (subscriber) {
-        if (subscriber != userId) {
+    if(type == "job" || type == "menu" || type == "roster") {
+      allSubscribers.forEach(function(subscriber) {
+        if(subscriber != userId) {
           var doc = info;
           doc.to = subscriber;
 
@@ -154,15 +155,15 @@ Meteor.methods({
           logger.info("Notification send to userId", subscriber, id);
         }
       });
-    } else if (type == "comment") {
-      if (!options.users) {
+    } else if(type == "comment") {
+      if(!options.users) {
         logger.error('User ids not found');
         throw new Meteor.Error(404, "User ids not found");
       }
-      options.users.forEach(function (username) {
-        var filter = new RegExp(username, 'i');
+      options.users.forEach(function(username) {
+        var filter = new RegExp(username);
         var subscriber = Meteor.users.findOne({"username": filter});
-        if (subscriber && (subscriber._id != userId)) {
+        if(subscriber && (subscriber._id != userId)) {
           var doc = info;
           doc.to = subscriber._id;
 
@@ -171,6 +172,43 @@ Meteor.methods({
         }
       });
     }
+  },
+
+  sendNewsfeedNotifications: function(itemId, type, options) {
+    //tagging users
+    //commenting on newsfeed items that as been created by someone
+    //liking newsfeed items
+
+    var userId = Meteor.userId();
+    if(!HospoHero.isInOrganization(userId)) {
+      logger.error(403, "User not permitted to send notifications");
+      throw new Meteor.Error(403, "User not permitted to send notifications");
+    }
+
+    var info = {};
+    info.type = type;
+    info.read = false;
+    info.title = options.title;
+    info.createdBy = userId;
+    if(!options.users) {
+      logger.error('User ids not found');
+      throw new Meteor.Error(404, "User ids not found");
+    }
+    var userIds = [];
+    options.users.forEach(function(username) {
+      var filter = new RegExp(username);
+      var subscriber = Meteor.users.findOne({"username": filter});
+      if(subscriber && (subscriber._id != userId)) {
+        if(userIds.indexOf(subscriber._id) < 0) {
+          var doc = info;
+          doc.to = subscriber._id;
+          userIds.push(subscriber._id);
+
+          var id = Notifications.insert(doc);
+          logger.info("Notification send to userId", subscriber._id, id);
+        }
+      }
+    });
   },
 
   notifyRoster: function (to, info) {
@@ -193,13 +231,15 @@ Meteor.methods({
     emailText += "<br>Thanks.<br>";
     emailText += user.username;
     //email
-    Email.send({
-      "to": to.email,
-      "from": user.emails[0].address,
-      "subject": "[Hero Chef] " + info.title,
-      "html": emailText
+    Meteor.defer(function() {
+      Email.send({
+        "to": to.email,
+        "from": user.emails[0].address,
+        "subject": "[Hero Chef] " + info.title,
+        "html": emailText
+      });
+      logger.info("Email sent for weekly roster", to._id);
     });
-    logger.info("Email sent for weekly roster", to._id);
 
     //notification
     var notifi = {
@@ -212,7 +252,7 @@ Meteor.methods({
       "createdBy": user._id,
       "ref": info.week,
       "actionType": "publish"
-    }
+    };
     Notifications.insert(notifi);
     logger.info("Notification sent for weekly roster", to._id);
 
@@ -226,10 +266,9 @@ Meteor.methods({
       "createdBy": user._id,
       "ref": info.week,
       "actionType": "publish"
-    }
+    };
     Notifications.insert(notifiOpen);
     logger.info("Notification sent for open shifts on weekly roster", to._id);
-    return;
   },
 
   'readNotifications': function (id) {

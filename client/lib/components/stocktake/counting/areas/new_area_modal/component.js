@@ -11,8 +11,7 @@ component.action.submit = function(name) {
     if(this.name == "general") {
       Meteor.call("createGeneralArea", name.trim(), function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.error(err);
         } else {
           $("#generalareaName").val("");
           $("#addNewGeneralAreaModal").modal("hide");
@@ -23,8 +22,7 @@ component.action.submit = function(name) {
       if(gareaId) {
         Meteor.call("createSpecialArea", name, gareaId, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.error(err);
           } else {
             $("#specialareaName").val("");
             $("#addNewSpecialAreaModal").modal("hide")
@@ -33,4 +31,4 @@ component.action.submit = function(name) {
       }
     }
   }
-}
+};

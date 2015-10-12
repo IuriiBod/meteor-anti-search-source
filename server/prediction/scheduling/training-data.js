@@ -17,7 +17,7 @@ var createUpdateActualSalesFunction = function (locationId) {
   return function (salesData) {
     if (!isHandledFirstDay && previousDayMoment.isSame(salesData.createdDate, 'day')) {
       Object.keys(salesData.menuItems).forEach(function (menuItemName) {
-        var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName);
+        var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName, locationId);
         if (menuItem) {
           var item = {
             quantity: salesData.menuItems[menuItemName],
@@ -45,7 +45,7 @@ predictionModelRefreshJob = function () {
   var locations = Locations.find({}).fetch();
 
   _.each(locations, function (location) {
-    if(HospoHero.predictionUtils.havePos(location)){
+    if (HospoHero.predictionUtils.havePos(location)) {
       var forecastData = ForecastDates.findOne({locationId: location._id});
       var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
         || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
@@ -53,7 +53,6 @@ predictionModelRefreshJob = function () {
       var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
 
       if (needToUpdateModel) {
-        //todo: update it for organizations
         var predictionApi = new GooglePredictionApi();
         var updateSession = predictionApi.getUpdatePredictionModelSession(location._id);
 

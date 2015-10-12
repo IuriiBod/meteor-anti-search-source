@@ -6,7 +6,7 @@ Template.areaItem.events({
       if(name) {
         Meteor.call("createSpecialArea", name, id, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           } else {
             $(event.target).focus();
           }

@@ -4,7 +4,7 @@ Template.profile.events({
     var value = $(event.target).val();
     Meteor.call("editBasicDetails", id, {"shiftsPerWeek": value}, function(err) {
       if(err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
     });
   },
@@ -23,8 +23,7 @@ Template.profile.events({
 
     Meteor.call("resignDate", "set", id, val, function(err) {
       if(err) {
-        console.log(err);
-        alert(err.reason);
+        HospoHero.error(err);
       }
     });
   },
@@ -43,8 +42,7 @@ Template.profile.events({
 
     Meteor.call("resignDate", "update", id, val, function(err) {
       if(err) {
-        console.log(err);
-        alert(err.reason);
+        HospoHero.error(err);
       } else {
         tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
       }
@@ -56,8 +54,7 @@ Template.profile.events({
     var id = Router.current().params._id;
     Meteor.call("resignDate", "remove", id, '', function(err) {
       if(err) {
-        console.log(err);
-        alert(err.reason);
+        HospoHero.error(err);
       }
     });
   },
@@ -67,7 +64,7 @@ Template.profile.events({
     var newPin = Template.instance().find("#new-pin").value;
     Meteor.call("changePinCode", newPin, function (err) {
       if (err) {
-        HospoHero.alert(err);
+        HospoHero.error(err);
       }
       else {
         alert("PIN has been changed.");
@@ -89,18 +86,36 @@ Template.profile.rendered = function(){
     todayHighlight: true
   });
 
-  $('#username').editable({
+  $('#firstname').editable({
     type: 'text',
-    title: 'Edit username',
-    display: false,
+    title: 'Edit first name',
+    display: function() {},
     showbuttons: true,
     mode: 'inline',
+    placeholder: "Enter first name here",
     success: function(response, newValue) {
       var self = this;
       if(newValue) {
-        var id = $(self).attr("data-id");
-        var editDetail = {"username": newValue.trim()};
-        updateBasicDetails(id, editDetail, "username");
+        var id = Session.get("profileUser");
+        var editDetail = {"firstname": newValue.trim()};
+        updateBasicDetails(id, editDetail);
+      }
+    }
+  });
+
+  $('#lastname').editable({
+    type: 'text',
+    title: 'Edit last name',
+    display: function() {},
+    showbuttons: true,
+    mode: 'inline',
+    placeholder: "Enter last name here",
+    success: function(response, newValue) {
+      var self = this;
+      if(newValue) {
+        var id = Session.get("profileUser");
+        var editDetail = {"lastname": newValue.trim()};
+        updateBasicDetails(id, editDetail);
       }
     }
   });
@@ -116,7 +131,7 @@ Template.profile.rendered = function(){
       if(newValue) {
         var id = $(self).attr("data-id");
         var editDetail = {"phone": newValue};
-        updateBasicDetails(id, editDetail, "profile.phone");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -134,7 +149,7 @@ Template.profile.rendered = function(){
       if(newValue) {
         var id = $(self).attr("data-id");
         var editDetail = {"email": newValue};
-        updateBasicDetails(id, editDetail, "profile.emails.address");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -158,7 +173,7 @@ Template.profile.rendered = function(){
           newRate = 0;
         }
         var editDetail = {"weekdaysrate": newRate};
-        updateBasicDetails(id, editDetail, "profile.payrates.weekdays");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -182,7 +197,7 @@ Template.profile.rendered = function(){
           newRate = 0;
         }
         var editDetail = {"saturdayrate": newRate};
-        updateBasicDetails(id, editDetail, "profile.payrates.saturday");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -206,7 +221,7 @@ Template.profile.rendered = function(){
           newRate = 0;
         }
         var editDetail = {"sundayrate": newRate};
-        updateBasicDetails(id, editDetail, "profile.payrates.sunday");
+        updateBasicDetails(id, editDetail);
       }
     },
     display: function(value, sourceData) {
@@ -215,10 +230,10 @@ Template.profile.rendered = function(){
 
 };
 
-function updateBasicDetails(id, updateDetails, type) {
+function updateBasicDetails(id, updateDetails) {
   Meteor.call("editBasicDetails", id, updateDetails, function(err) {
     if(err) {
-      HospoHero.alert(err);
+      HospoHero.error(err);
     }
   });
 }

@@ -9,13 +9,13 @@ var component = FlowComponents.define("staffCostPercentageFigureBox", function (
 component.state.weeklyStaffWage = function () {
     var actual = ((this.actualStaff/this.actualSales) * 100);
     this.set("actualWage", actual);
-    return actual.toFixed(2);
+    return !isNaN(actual) ? actual.toFixed(2) : 0;
 };
 
 component.state.rosteredStaffWage = function () {
     var forecasted = ((this.forecastedStaff/this.forecastedSales) * 100);
     this.set("forecastedWage", forecasted);
-    return forecasted.toFixed(2);
+    return !isNaN(forecasted) ? forecasted.toFixed(2) : 0;
 };
 
 component.state.percent = function () {

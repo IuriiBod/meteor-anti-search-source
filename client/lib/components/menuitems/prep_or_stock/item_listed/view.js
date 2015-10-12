@@ -17,7 +17,7 @@ Template.itemListed.rendered = function() {
       if(type == "prep") {
         Meteor.call("addItemToMenu", menuId, {jobItems: doc}, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           } else {
             $(self).closest("tr").remove();
           }
@@ -25,7 +25,7 @@ Template.itemListed.rendered = function() {
       } else if(type == "ing") {
         Meteor.call("addItemToMenu", menuId, {ingredients: doc}, function(err) {
           if(err) {
-            HospoHero.alert(err);
+            HospoHero.error(err);
           } else {
             $(self).closest("tr").remove();
           }
