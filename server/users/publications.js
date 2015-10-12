@@ -74,43 +74,50 @@ Meteor.publish("selectedUsersList", function (usersIds) {
 });
 
 //managers and workers that should be assigned to shifts
-Meteor.publish("workers", function () {
-  if (this.userId) {
-    var query = {
-      "isActive": true
-    };
+var currentAreaId;
+Meteor.publishComposite('workers', {
+  find: function() {
+    if(this.userId) {
+      var user = Meteor.users.findOne(this.userId);
 
-    var user = Meteor.users.findOne({_id: this.userId});
+      currentAreaId = user.currentAreaId ? user.currentAreaId : null;
 
-    if (user.relations.organizationId) {
-      var canBeRostedRoles = Meteor.roles.find({
-        permissions: Roles.permissions.Roster.canBeRosted.code,
-        $or: [
-          {organizationId: user.relations.organizationId},
-          {default: true}
-        ],
-        name: {
-          $ne: 'Owner'
-        }
-      }).fetch();
-
-      if (canBeRostedRoles.length) {
-        canBeRostedRoles = _.map(canBeRostedRoles, function (role) {
-          return role._id;
+      if(user && user.relations && user.relations.organizationId) {
+        return Meteor.roles.find({
+          permissions: Roles.permissions.Roster.canBeRosted.code,
+          $or: [
+            { default: true },
+            { organizationId: user.relations.organizationId }
+          ],
+          name: {
+            $ne: 'Owner'
+          }
         });
+      } else {
+        this.ready();
       }
-
-      if (user.currentAreaId) {
-        query["relations.areaIds"] = user.currentAreaId;
-        query["roles." + user.currentAreaId] = {$in: canBeRostedRoles};
-      }
-      return Meteor.users.find(query);
     } else {
       this.ready();
     }
-  } else {
-    this.ready();
-  }
+  },
+  children: [
+    {
+      find: function (role) {
+        if(role) {
+          if(currentAreaId) {
+            var query = {};
+            query["relations.areaIds"] = currentAreaId;
+            query["roles." + currentAreaId] = role._id;
+            return Meteor.users.find(query);
+          } else {
+            this.ready();
+          }
+        } else {
+          this.ready();
+        }
+      }
+    }
+  ]
 });
 
 Meteor.publish("selectedUsers", function (ids) {

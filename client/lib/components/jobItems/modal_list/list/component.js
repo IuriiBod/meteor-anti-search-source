@@ -1,6 +1,6 @@
 var component = FlowComponents.define('jobItemsModalList', function(props) {
   this.onRendered(this.onJobLitsRendered);
-  Meteor.subscribe("allJobTypes");
+  Meteor.subscribe('jobTypes');
   this.name = props.name;
 
   var options = {

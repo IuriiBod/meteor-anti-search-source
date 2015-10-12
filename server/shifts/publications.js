@@ -1,39 +1,4 @@
-Meteor.publish("daily", function (date, worker) {
-  if (this.userId) {
-    var cursors = [];
-    var query = {
-      "shiftDate": new Date(date).getTime(),
-      "type": null,
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
-    };
-
-    if (worker) {
-      query.assignedTo = worker;
-    }
-
-    var shiftsCursor = Shifts.find(query, {sort: {createdOn: 1}});
-    cursors.push(shiftsCursor);
-
-    var shifts = shiftsCursor.fetch();
-    var shiftsList = [];
-    shifts.forEach(function (shift) {
-      if (shiftsList.indexOf(shift._id) < 0) {
-        shiftsList.push(shift._id);
-      }
-    });
-
-    if (shiftsList.length > 0) {
-      var jobsCursor = Jobs.find({"onshift": {$in: shiftsList}});
-      cursors.push(jobsCursor);
-    }
-    logger.info("Daily shift detailed publication");
-    return cursors;
-  } else {
-    this.ready();
-  }
-});
-
-Meteor.publish("weekly", function (dates, worker, type) {
+Meteor.publish('weekly', function (dates, worker, type) {
   if (this.userId) {
     var query = {
       "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
@@ -56,6 +21,39 @@ Meteor.publish("weekly", function (dates, worker, type) {
     return Shifts.find(query, {sort: {"shiftDate": 1}});
   } else {
     this.ready();
+  }
+});
+
+Meteor.publishComposite('daily', function(date, worker) {
+  return {
+    find: function () {
+      if (this.userId) {
+        var query = {
+          shiftDate: new Date(date).getTime(),
+          type: null,
+          "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+        };
+
+        if (worker) {
+          query.assignedTo = worker;
+        }
+
+        return Shifts.find(query, {sort: {createdOn: 1}});
+      } else {
+        this.ready();
+      }
+    },
+    children: [
+      {
+        find: function (shift) {
+          if (shift) {
+            return Jobs.find({onshift: shift});
+          } else {
+            this.ready();
+          }
+        }
+      }
+    ]
   }
 });
 
