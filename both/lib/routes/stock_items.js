@@ -5,6 +5,7 @@ Router.route('/stocklist', {
   template: "listOfStocksMasterMainView",
   waitOn: function() {
     return [
+      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("orderingUnits"),
       Meteor.subscribe("usingUnits"),
       Meteor.subscribe("allSuppliers")
@@ -24,7 +25,10 @@ Router.route('/stocklist/:type', {
   path: '/stocklist/:type',
   template: "listOfStocksMasterMainView",
   waitOn: function() {
-    return Meteor.subscribe("allSuppliers");
+    return [
+      Meteor.subscribe('organizationInfo'),
+      Meteor.subscribe("allSuppliers")
+    ]
   },
   data: function() {
     if(!Meteor.userId()) {
