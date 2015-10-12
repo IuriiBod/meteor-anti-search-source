@@ -19,7 +19,6 @@ if(Meteor.isServer) {
           Roles.permissions.Roster.view.code,
           Roles.permissions.Roster.edit.code,
           Roles.permissions.Roster.canBeRosted.code,
-          Roles.permissions.Roster.canBeRosted.code,
           Roles.permissions.Stock.view.code,
           Roles.permissions.Stock.edit.code,
           Roles.permissions.User.edit.code,
