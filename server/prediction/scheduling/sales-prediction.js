@@ -62,35 +62,42 @@ var predict = function (days, locationId) {
 
 
 var salesPredictionUpdateJob = function () {
-  var locations = Locations.find({},{_id: 1}).fetch();
+  var locations = Locations.find({}).fetch();
 
   var date = moment();
   _.each(locations, function (location) {
-    if (!ForecastDates.findOne({locationId: location._id})) {
-      ForecastDates.insert({locationId: location._id, lastOne:date.toDate(), lastThree: date.toDate(), lastSixWeeks: date.toDate()});
-      predict(84, location._id);
-    }
-    else {
-      var lastUpdates = ForecastDates.findOne({locationId: location._id});
-      if (!ForecastDates.findOne({locationId: location._id}).lastThree) {
+    if (HospoHero.predictionUtils.havePos(location)) {
+      if (!ForecastDates.findOne({locationId: location._id})) {
+        ForecastDates.insert({
+          locationId: location._id,
+          lastOne: date.toDate(),
+          lastThree: date.toDate(),
+          lastSixWeeks: date.toDate()
+        });
         predict(84, location._id);
       }
       else {
-        if (date.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42)) {
+        var lastUpdates = ForecastDates.findOne({locationId: location._id});
+        if (!ForecastDates.findOne({locationId: location._id}).lastThree) {
           predict(84, location._id);
-          ForecastDates.update({locationId: location._id}, {
-            $set: {
-              lastSixWeeks: date.toDate(),
-              lastThree: date.toDate()
-            }
-          });
-        } else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
-          predict(7, location._id);
-          ForecastDates.update({locationId: location._id}, {$set: {lastThree: date.toDate()}});
         }
-        else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
-          predict(2, location._id);
-          ForecastDates.update({locationId: location._id}, {$set: {lastOne: date.toDate()}});
+        else {
+          if (date.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42)) {
+            predict(84, location._id);
+            ForecastDates.update({locationId: location._id}, {
+              $set: {
+                lastSixWeeks: date.toDate(),
+                lastThree: date.toDate()
+              }
+            });
+          } else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
+            predict(7, location._id);
+            ForecastDates.update({locationId: location._id}, {$set: {lastThree: date.toDate()}});
+          }
+          else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
+            predict(2, location._id);
+            ForecastDates.update({locationId: location._id}, {$set: {lastOne: date.toDate()}});
+          }
         }
       }
     }

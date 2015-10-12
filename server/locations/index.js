@@ -6,12 +6,8 @@ Meteor.methods({
     if(Locations.find({organizationId: loc.organizationId, name: loc.name}).count() > 0) {
       throw new Meteor.Error("The location with the same name already exists!");
     }
-    var data = OpenWeatherMap._httpGetRequest("/weather",{q:loc.city+","+loc.country});
-    if (parseInt(data.cod) >= 400){
-      throw new Meteor.Error(data.cod+" "+data.message);
-    }
-    if (data.sys.country != loc.country || data.name != loc.city){
-      throw new Meteor.Error("Bad city name or no that city in this country");
+    if(!OpenWeatherMap.isValid(loc.city, loc.country)){
+      throw new Meteor.Error("Make sure you inserted right country and city");
     }
     // Create location
     console.log(loc.openingTime);

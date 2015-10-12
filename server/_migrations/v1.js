@@ -21,7 +21,7 @@ Migrations.add({
         roles: {}
       }
     };
-
+    //todo: uncomment on production
     //admin = Meteor.users.findOne({username: 'Tom'});
     admin = false;
 
