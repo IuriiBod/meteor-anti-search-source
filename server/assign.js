@@ -14,33 +14,16 @@ Meteor.methods({
       throw new Meteor.Error(404, "Cannot assign a job in this status");
     }
     var updateDoc = {};
-    // var yesterday = new Date();
-    // yesterday.setDate(yesterday.getDate() - 1);
-    if(job.onshift) {
-      var job_on_shift = Shifts.findOne(job.onshift);
-      if(!job_on_shift) {
-        logger.error("Shift not found");
-        throw new Meteor.Error(404, "Shift not found");
-      }
-      // if(new Date(job_on_shift.shiftDate) <= yesterday) {
-      //   logger.error("Shift cannot accept new jobs", {"shiftId": job.onshift});
-      //   throw new Meteor.Error(404, "This shift cannot accept new jobs");
-      // }
-      // if(job.onshift != sh)
-      // //removing from current onshift
-      // Shifts.update({"_id": job.onshift}, {$pull: {"jobs": jobId}});
-      // logger.info("Removed job from current shift");
-    } 
+    if(job.onshift && !Shifts.findOne(job.onshift)) {
+      logger.error("Shift not found");
+      throw new Meteor.Error(404, "Shift not found");
+    }
     if(shiftId) { //assign job
       var new_shift = Shifts.findOne(shiftId);
       if(!new_shift) {
         logger.error("Shift not found");
         throw new Meteor.Error(404, "Shift not found");
       }
-      // if(new Date(new_shift.shiftDate) <= yesterday) {
-      //   logger.error("Shift cannot accept new jobs", {"shiftId": shiftId});
-      //   throw new Meteor.Error(404, "This shift cannot accept new jobs");
-      // }
       if(shiftId != job.onshift) {
         updateDoc.onshift = shiftId;
       }

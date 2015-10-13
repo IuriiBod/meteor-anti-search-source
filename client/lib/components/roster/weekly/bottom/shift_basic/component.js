@@ -29,6 +29,7 @@ component.action.deleteShift = function(id) {
   });
 };
 
+// TODO: Check it later
 component.prototype.itemRendered = function() {
   $.fn.editable.defaults.mode = 'inline';
   var origin = this.get("origin");
