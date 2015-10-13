@@ -119,17 +119,23 @@ component.action.submit = function(info) {
 
 component.state.settings = function() {
   var self = this;
-  var data = {};
-  data['position'] = "bottom";
-  data['limit'] = 10;
-  data['rules'] = [{
-    collection: "JobItems",
-    field: "name",
-    filter: {"status": "active", "type": self.get("type")},
-    sort: true,
-    template: Template.description,
-    subscription: "autocomplete-jobItems",
-    noMatchTemplate: Template.noMatchJobTemplate
-  }];
-  return data;  
+  var data = {
+    position: 'bottom',
+    limit: 10
+  };
+
+  data['rules'] = [
+    {
+      collection: 'JobItems',
+      field: 'name',
+      filter: {
+        type: self.get("type")
+      },
+      sort: true,
+      template: Template.description,
+      subscription: "autocomplete-jobItems",
+      noMatchTemplate: Template.noMatchJobTemplate
+    }
+  ];
+  return data;
 };
