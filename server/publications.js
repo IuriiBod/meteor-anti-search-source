@@ -90,7 +90,8 @@ Meteor.publishComposite('organizationInfo', {
         if(user && user.relations && user.relations.locationIds) {
           var fields = {};
           var query = {
-            organizationId: organization._id
+            organizationId: organization._id,
+            status: { $ne: 'archived' }
           };
 
           if(role == 'manager' || role == 'worker') {
@@ -112,7 +113,8 @@ Meteor.publishComposite('organizationInfo', {
             if(user && user.relations && user.relations.areaIds) {
               var fields = {};
               var query = {
-                locationId: location._id
+                locationId: location._id,
+                status: { $ne: 'archived' }
               };
 
               if(role == 'worker') {
@@ -135,6 +137,7 @@ Meteor.publishComposite('organizationInfo', {
       find: function(organization) {
         if(user && user.currentAreaId) {
           return Meteor.users.find({
+            isActive: true,
             $or: [
               { "relations.areaIds": user.currentAreaId },
               {
