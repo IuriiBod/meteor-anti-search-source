@@ -1,18 +1,3 @@
-Meteor.publish("allIngredients", function() {
-  if(this.userId) {
-    var query = {
-      "status": "active",
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
-    };
-
-    logger.info("All ingredients published");
-
-    return Ingredients.find(query, {sort: {'code': 1}, limit: 10});
-  } else {
-    this.ready();
-  }
-});
-
 Meteor.publish("ingredients", function(ids) {
   if(this.userId) {
     var query = {

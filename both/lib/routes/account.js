@@ -58,10 +58,12 @@ Router.route('/admin', {
   template: "adminMainView",
   waitOn: function() {
     return [
+      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('sections'),
       Meteor.subscribe("allAreas"),
       Meteor.subscribe('roles'),
-      Meteor.subscribe("cronConfig")
+      Meteor.subscribe("cronConfig"),
+      Meteor.subscribe('usersList')
     ];
   },
   data: function() {
@@ -80,6 +82,7 @@ Router.route('/user/profile/:_id', {
   template: "profileMainView",
   waitOn: function() {
     return [
+      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("profileUser", this.params._id),
       Meteor.subscribe('shifts', 'future', this.params._id),
       Meteor.subscribe('shifts', 'opened'),

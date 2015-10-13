@@ -43,6 +43,7 @@ Meteor.publish("usersList", function () {
 
     var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
 
+    options["roles." + currentAreaId] = 1;
     var users = Meteor.users.find({"relations.areaIds": currentAreaId}, {fields: options});
     logger.info("Userlist published");
     return users;

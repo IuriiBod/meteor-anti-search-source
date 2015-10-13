@@ -57,12 +57,19 @@ Meteor.publish("orderReceipts", function(ids) {
 
 Meteor.publish("orderReceiptsByVersion", function(version) {
   logger.info("Stock order receipts published by version", version);
-  return OrderReceipts.find({"version": version});
+  return OrderReceipts.find({
+    "version": version,
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+  });
 });
 
 Meteor.publish("allOrderReceipts", function() {
   if(this.userId) {
-    return OrderReceipts.find({ "relations.areaId": HospoHero.getCurrentAreaId(this.userId) }, {sort: {"date": -1}, limit: 10});
+    return OrderReceipts.find({
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    }, {
+      sort: {"date": -1}, limit: 10
+    });
   }
 });
 
@@ -70,7 +77,6 @@ Meteor.publish("receiptOrders", function(receiptId) {
   logger.info("Stock orders published for receipt ", {"ids": receiptId});
   return StockOrders.find({"orderReceipt": receiptId, "countOrdered": {$gt: 0}});
 });
-
 
 Meteor.publish("currentStocks", function(ids) {
   logger.info("Current stocks published ", ids);

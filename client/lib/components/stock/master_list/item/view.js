@@ -12,7 +12,6 @@ Template.ingredientItemDetailed.events({
     var button, i, id;
     if($(e.target).hasClass('archiveIngredient')) {
       button = $(e.target);
-      i = button.find('.fa');
     } else {
       i = $(e.target);
       button = i.parent();
