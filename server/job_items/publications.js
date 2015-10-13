@@ -15,6 +15,41 @@ Meteor.publish('jobItems', function(ids) {
   }
 });
 
+Meteor.publishComposite('jobItem', function(id) {
+  return {
+    find: function() {
+      if(this.userId && id) {
+        return JobItems.find({_id: id});
+      } else {
+        this.ready();
+      }
+    },
+    children: [
+      {
+        find: function(jobItem) {
+          if(jobItem && jobItem.ingredients && jobItem.ingredients.length) {
+            var ingredients = _.map(jobItem.ingredients, function(ingredient) {
+              return ingredient._id;
+            });
+            return Ingredients.find({ _id: { $in: ingredients } });
+          } else {
+            this.ready();
+          }
+        }
+      },
+      {
+        find: function(jobItem) {
+          if(jobItem && jobItem.section) {
+            return Sections.find({ _id: jobItem.section });
+          } else {
+            this.ready();
+          }
+        }
+      }
+    ]
+  };
+});
+
 Meteor.publish("jobsRelatedMenus", function(id) {
   if(this.userId) {
     logger.info("Related menus published", {"id": id});
