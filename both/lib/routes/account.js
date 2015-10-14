@@ -1,13 +1,13 @@
 //--------------------SIGN IN
 
-Router.route('/signIn', function() {
+Router.route('/signIn', function () {
   this.render('signIn');
   this.layout('blankLayout');
 }, {
   name: "signIn",
   path: "/signIn",
-  data: function() {
-    if(Meteor.userId()) {
+  data: function () {
+    if (Meteor.userId()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);
@@ -30,7 +30,7 @@ Router.route("/pinLock", {
   layoutTemplate: "blankLayout",
   name: "pinLock",
   path: "/pinLock",
-  data: function() {
+  data: function () {
     return {
       backwardUrl: this.params.query.backwardUrl
     };
@@ -44,7 +44,7 @@ Router.route("/switchUser", {
   name: "switchUser",
   template: "switchUserView",
   path: "/switchUser",
-  waitOn: function() {
+  waitOn: function () {
     var usersIds = Session.get("loggedUsers") || {};
     usersIds = _.keys(usersIds);
     return Meteor.subscribe("selectedUsersList", usersIds);
@@ -56,18 +56,20 @@ Router.route('/admin', {
   name: "admin",
   path: '/admin',
   template: "adminMainView",
-  waitOn: function() {
+  waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('sections'),
       Meteor.subscribe("allAreas"),
       Meteor.subscribe('roles'),
       Meteor.subscribe("cronConfig"),
-      Meteor.subscribe('usersList')
+      Meteor.subscribe('usersList'),
+      Meteor.subscribe('locationsOfOrganization'),
+      Meteor.subscribe("areasOfOrganization")
     ];
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.isManager()) {
+  data: function () {
+    if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);
@@ -80,7 +82,7 @@ Router.route('/user/profile/:_id', {
   name: "profile",
   path: "/user/profile/:_id",
   template: "profileMainView",
-  waitOn: function() {
+  waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("profileUser", this.params._id),
@@ -89,8 +91,8 @@ Router.route('/user/profile/:_id', {
       Meteor.subscribe('sections')
     ];
   },
-  data: function() {
-    if(!Meteor.userId()) {
+  data: function () {
+    if (!Meteor.userId()) {
       Router.go("/");
     }
     Session.set("profileUser", this.params._id);
@@ -105,11 +107,11 @@ Router.route('/invitations/:_id', function () {
   this.layout('blankLayout');
 }, {
   name: "invitationAccept",
-  waitOn: function() {
+  waitOn: function () {
     return Meteor.subscribe('invitationById', this.params._id);
   },
-  data: function() {
-    if(Meteor.userId()) {
+  data: function () {
+    if (Meteor.userId()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);

@@ -91,7 +91,7 @@ Meteor.publishComposite('organizationInfo', {
           var fields = {};
           var query = {
             organizationId: organization._id,
-            status: { $ne: 'archived' }
+            archived: { $ne: true }
           };
 
           if(role == 'manager' || role == 'worker') {
@@ -114,7 +114,7 @@ Meteor.publishComposite('organizationInfo', {
               var fields = {};
               var query = {
                 locationId: location._id,
-                status: { $ne: 'archived' }
+                archived: { $ne: true }
               };
 
               if(role == 'worker') {

@@ -3,7 +3,13 @@ var requireLogIn = function () {
     var user = Meteor.user();
 
     if (user.relations && user.relations.organizationId) {
-      return this.next();
+      if(user.currentAreaId && Areas.findOne({_id: user.currentAreaId, archived:{$ne:"true"}})){
+        return this.next();
+      }else{
+        Router.go("home");
+        return this.next();
+      }
+
     } else {
       if (Organizations.findOne({owner: Meteor.userId()})) {
         return this.next();

@@ -1,0 +1,7 @@
+<template name="areaList">
+  <div class="list-group">
+    {{#each state$areas}}
+      {{>render component="areaArchiveItem" area=this}}
+    {{/each}}
+  </div>
+</template>

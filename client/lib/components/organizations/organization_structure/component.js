@@ -7,7 +7,8 @@ var component = FlowComponents.define('organizationStructure', function(props) {
 component.state.locations = function() {
   if(this.get('organization')) {
     var selector = {
-      organizationId: this.get('organization')._id
+      organizationId: this.get('organization')._id,
+      archived: {$ne:true}
     };
 
     if(!HospoHero.isOrganizationOwner()) {
