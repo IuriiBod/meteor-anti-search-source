@@ -38,7 +38,6 @@ Suppliers = new Mongo.Collection("suppliers");
 Organizations = new Mongo.Collection("organizations");
 Locations = new Mongo.Collection("locations");
 Areas = new Mongo.Collection("areas");
-Relations = new Mongo.Collection("relations");
 Invitations = new Mongo.Collection("invitations");
 
 //new forecast functionality
@@ -48,9 +47,7 @@ SalesPrediction = new Mongo.Collection("salesPrediction");
 ImportedActualSales = new Mongo.Collection("importedActualSales");
 
 ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
-CronConfig = new Mongo.Collection("cronConfig");
 
 // null collections
 LocalMenuItem =  new Mongo.Collection(null);
-LocalMenuIngsAndPreps = new Mongo.Collection(null);
 LocalJobItem =  new Mongo.Collection(null);

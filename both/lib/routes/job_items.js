@@ -75,7 +75,7 @@ Router.route('/jobItem/:_id', {
   waitOn: function() {
     return [
       Meteor.subscribe('organizationInfo'),
-      jobItemSubs(this.params._id),
+      Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe("comments", this.params._id),
       Meteor.subscribe("usersList"),
@@ -100,7 +100,7 @@ Router.route('/jobItem/:_id/edit', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
-      jobItemSubs(this.params._id),
+      Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('sections')
     ];
   },
@@ -113,27 +113,3 @@ Router.route('/jobItem/:_id/edit', {
   },
   fastRender: true
 });
-
-function jobItemSubs(id) {
-  var cursors = [];
-  var jobItemCursor = Meteor.subscribe("jobItems", [id]);
-  cursors.push(jobItemCursor);
-  if(jobItemCursor) {
-    var jobItem = JobItems.findOne(id);
-    if(jobItem) {
-      if(jobItem.ingredients) {
-        var ids = [];
-        jobItem.ingredients.forEach(function(doc) {
-          ids.push(doc._id);
-        });
-        if(ids.length > 0) {
-          cursors.push(Meteor.subscribe("ingredients", ids))
-        }
-      }
-      if(jobItem.section) {
-        cursors.push(Meteor.subscribe('sections', jobItem.section));
-      }
-    }
-  }
-  return cursors;
-}

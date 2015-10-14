@@ -65,7 +65,8 @@ Router.route('/admin', {
       Meteor.subscribe("cronConfig"),
       Meteor.subscribe('usersList'),
       Meteor.subscribe('locationsOfOrganization'),
-      Meteor.subscribe("areasOfOrganization")
+      Meteor.subscribe("areasOfOrganization"),
+      Meteor.subscribe('menuList')
     ];
   },
   data: function () {

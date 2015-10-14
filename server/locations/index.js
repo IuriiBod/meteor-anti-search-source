@@ -43,5 +43,19 @@ Meteor.methods({
       throw new Meteor.Error("The location with the same name already exists!");
     }
     Locations.update({_id: id}, {$set: {name: val}});
+  },
+
+  updateShiftUpdateHour: function(newHoursValue) {
+    if(!HospoHero.isManager()) {
+      throw new Meteor.Error(403, 'User not permitted to change time');
+    }
+
+    return Locations.update({
+      _id: HospoHero.getCurrentArea().locationId
+    }, {
+      $set: {
+        shiftUpdateHour: newHoursValue
+      }
+    });
   }
 });
