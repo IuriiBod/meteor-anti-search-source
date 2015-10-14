@@ -68,7 +68,6 @@ Meteor.publish("menuItems", function (ids) {
         _id: {$in: ids},
         "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
       };
-
       logger.info("Menu items published", ids);
       return MenuItems.find(query, {limit: 10});
     }
