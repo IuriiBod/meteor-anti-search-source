@@ -62,7 +62,8 @@ Router.route('/admin', {
       Meteor.subscribe('sections'),
       Meteor.subscribe("allAreas"),
       Meteor.subscribe('roles'),
-      Meteor.subscribe('usersList')
+      Meteor.subscribe('usersList'),
+      Meteor.subscribe('menuList')
     ];
   },
   data: function() {
@@ -108,9 +109,9 @@ Router.route('/invitations/:_id', function () {
     return Meteor.subscribe('invitationById', this.params._id);
   },
   data: function() {
-    if(Meteor.userId()) {
-      Router.go("/");
-    }
+    //if(Meteor.userId()) {
+    //  Router.go("/");
+    //}
     Session.set("editStockTake", false);
   }
 });
