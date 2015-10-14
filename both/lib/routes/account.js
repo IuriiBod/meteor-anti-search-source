@@ -63,7 +63,8 @@ Router.route('/admin', {
       Meteor.subscribe("allAreas"),
       Meteor.subscribe('roles'),
       Meteor.subscribe("cronConfig"),
-      Meteor.subscribe('usersList')
+      Meteor.subscribe('usersList'),
+      Meteor.subscribe('menuList')
     ];
   },
   data: function() {
