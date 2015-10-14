@@ -26,7 +26,6 @@ GooglePredictionApi.prototype._getTrainingFileName = function (locationId) {
   }else{
     return "sales-data-" + locationId + ".csv";
   }
-
 };
 
 
@@ -48,4 +47,18 @@ GooglePredictionApi.prototype.makePrediction = function (inputData, locationId) 
   } else {
     return this._client.predict(this._getModelName(locationId), inputData).outputValue;
   }
+};
+
+GooglePredictionApi.prototype.removePredictionModel = function(locationId) {
+    var modelName = this._getModelName(locationId);
+    var modelIsPresent = false;
+    var modelsList = this._client.list().items;
+    for (var i=0; i<modelsList.length; i++) {
+        if (modelsList[i].id === modelName) {
+            modelIsPresent = true;
+            break;
+        }
+    }
+    if (modelIsPresent)
+        this._client.remove(modelName);
 };
