@@ -1,10 +1,11 @@
 Meteor.methods({
   'addShiftUpdate': function(doc) {
     if(!HospoHero.perms.canUser('editRoster')()) {
-      logger.error(403, "User not permitted to create shifts");
+      logger.error(403, "User not permitted to add shift update");
     }
-    var id = ShiftsUpdates.insert(doc);
+    doc.locationId = HospoHero.getCurrentArea().locationId;
+
     logger.info("Shift update insert");
-    return id;
+    return ShiftsUpdates.insert(doc);
   }
 });

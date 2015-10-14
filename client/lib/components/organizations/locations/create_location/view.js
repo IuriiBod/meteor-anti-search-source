@@ -13,7 +13,7 @@ Template.createLocation.helpers({
     return zones;
   },
 
-  hours: function(selectedHour) {
+  hours: function() {
     var hours = [];
     for (var i = 0; i < 24; i++) {
       hours.push({

@@ -47,9 +47,7 @@ SalesPrediction = new Mongo.Collection("salesPrediction");
 ImportedActualSales = new Mongo.Collection("importedActualSales");
 
 ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
-CronConfig = new Mongo.Collection("cronConfig");
 
 // null collections
 LocalMenuItem =  new Mongo.Collection(null);
-//LocalMenuIngsAndPreps = new Mongo.Collection(null);
 LocalJobItem =  new Mongo.Collection(null);

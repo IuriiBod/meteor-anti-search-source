@@ -6,20 +6,10 @@
           <div class="col-lg-5 alert-area"></div>
         </div>
         <label for="cron-time">Set cron time for Shift Updates Email Sending</label>
-        <form class="form-inline" id="shift-updates-cron">
-          <div class="form-group">
-            <div class="input-group datetimepicker">
-              <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-              <input class="set-cron-time form-control"
-                     type="text" name="cron-time"
-                     value="{{state$cronInfo.time}}"
-                     data-id="{{state$cronInfo._id}}" />
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary" id="shift-updates-cron-submit">
-            <i class="fa fa-check"></i>
-          </button>
-        </form>
+        <div class="col-xs-12">
+          <span class="editable" style="font-size: 20px;">{{state$shiftUpdateHour}}</span>
+          <span style="font-size: 15px;">:00</span>
+        </div>
       </div>
     </div>
   </div>
