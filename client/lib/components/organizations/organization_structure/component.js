@@ -25,7 +25,8 @@ component.state.locations = function() {
 component.state.areas = function(locationId) {
   var selector = {
     organizationId: this.get('organization')._id,
-    locationId: locationId
+    locationId: locationId,
+    archived: {$ne:true}
   };
 
   if(!HospoHero.isOrganizationOwner()) {

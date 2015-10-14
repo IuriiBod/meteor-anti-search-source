@@ -5,7 +5,7 @@ var component = FlowComponents.define("createArea", function(props) {
 });
 
 component.state.locations = function() {
-  var locations = Locations.find({organizationId: this.organizationId}).fetch();
+  var locations = Locations.find({organizationId: this.organizationId, archived:{$ne:true}}).fetch();
   if(locations) {
     return _.map(locations, function(location) {
       return {value: location._id, title: location.name}

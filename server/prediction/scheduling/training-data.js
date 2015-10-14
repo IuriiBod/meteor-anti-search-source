@@ -42,7 +42,7 @@ var createUpdateActualSalesFunction = function (locationId) {
 
 predictionModelRefreshJob = function () {
 
-  var locations = Locations.find({}).fetch();
+  var locations = Locations.find({archived:{$ne:true}}).fetch();
 
   _.each(locations, function (location) {
     if (HospoHero.predictionUtils.havePos(location)) {

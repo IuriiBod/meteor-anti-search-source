@@ -62,7 +62,7 @@ var predict = function (days, locationId) {
 
 
 var salesPredictionUpdateJob = function () {
-  var locations = Locations.find({}).fetch();
+  var locations = Locations.find({archived:{$ne:true}}).fetch();
 
   var date = moment();
   _.each(locations, function (location) {
