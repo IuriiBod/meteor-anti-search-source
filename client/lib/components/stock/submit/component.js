@@ -1,11 +1,12 @@
 var component = FlowComponents.define('submitIngredient', function(props) {
+  Meteor.subscribe("orderingUnits");
+  Meteor.subscribe("usingUnits");
 });
 
 component.action.submit = function(event, info) {
   Meteor.call("createIngredients", info, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.error(err);
     } else {
       IngredientsListSearch.cleanHistory(); 
       IngredientsListSearch.search("", {"limit": 10});

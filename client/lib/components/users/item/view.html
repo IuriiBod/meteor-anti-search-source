@@ -1,44 +1,51 @@
 <template name="userDetailed">
   <tr data-id="{{state$user._id}}">
-    {{#if state$permittedManagerAndAdmin}}
-    <td style="{{state$userStyle}}"><a href="/user/profile/{{state$user._id}}">{{username state$user._id}}</a></td>
-    {{else}}
-    <td style="{{state$userStyle}}">{{username state$user._id}}</td>
-    {{/if}}
-    <td>{{{state$type}}}</td>
-    <td>{{state$email}}</td>
-    {{#if state$permittedAdmin}}
+    {{#if isManager}}
+      <td style="{{state$userStyle}}"><a href="/user/profile/{{state$user._id}}">{{username state$user._id}}</a></td>
+
       <td>
-        {{#if state$user.isActive}}
-          {{#if state$isAdmin}}
-            {{#if state$ifMe}}
-            <button class="btn btn-xs changeUserPermission btn-warning" data-type="manager">Manager</button>
-            <button class="btn btn-xs changeUserPermission" data-type="worker">Worker</button>
+        {{#unless isOrganizationOwner state$user._id}}
+          {{#unless isMe state$user._id}}
+            {{#if state$user.isActive}}
+              <select name="roleSelector" class="form-control" data-id="{{state$user._id}}">
+                {{#each state$roles}}
+                  {{#if state$selectedRole _id}}
+                    <option value="{{_id}}" selected="selected">{{name}}</option>
+                  {{else}}
+                    <option value="{{_id}}">{{name}}</option>
+                  {{/if}}
+                {{/each}}
+              </select>
             {{/if}}
-          {{/if}}
-          {{#if state$isManager}}
-            <button class="btn btn-xs changeUserPermission btn-danger" data-type="admin">Admin</button>
-            <button class="btn btn-xs changeUserPermission" data-type="worker">Worker</button>
-          {{/if}}
-          {{#if state$isWorker}}
-            <button class="btn btn-xs changeUserPermission btn-danger" data-type="admin">Admin</button>
-            <button class="btn btn-xs changeUserPermission btn-warning" data-type="manager">Manager</button>
-          {{/if}}
-        {{/if}}
-      </td>
-    {{/if}}
-    <td>
-<!--
-    {{#if state$permittedManagerAndAdmin}}
-      {{#if state$ifMe}}
-        {{#if state$user.isActive}} 
-          <a href="" class="archiveUser"><i class="fa fa-archive"></i></a>
+          {{else}}
+            {{{state$role}}}
+          {{/unless}}
         {{else}}
-          <a href="" class="archiveUser"><i class="fa fa-exclamation-circle"></i></a>
-        {{/if}}
+          Owner
+        {{/unless}}
+      </td>
+    {{else}}
+      <td style="{{state$userStyle}}">{{username state$user._id}}</td>
+      {{#if state$user.isActive}}
+        <td>{{{state$role}}}</td>
       {{/if}}
     {{/if}}
--->
-    </td>
+
+    <td>{{state$email}}</td>
+
+    {{#if isManager}}
+      <td>
+        {{#unless isOrganizationOwner state$user._id}}
+          {{#unless isMe state$user._id}}
+            {{#if state$user.isActive}}
+              <a href="#" class="archiveUser"><i class="fa fa-archive"></i></a>
+            {{else}}
+              <a href="#" class="archiveUser"><i class="fa fa-exclamation-circle"></i></a>
+            {{/if}}
+          {{/unless}}
+        {{/unless}}
+      </td>
+    {{/if}}
+
   </tr>
 </template>

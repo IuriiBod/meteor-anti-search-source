@@ -10,7 +10,7 @@ Template.jobProfile.events({
       if(confirmDelete) {
         Meteor.call("deleteJob", id, shiftId, function(err) {
           if(err) {
-            return alert(err.reason);
+            HospoHero.error(err);
           } else {
             $("#jobProfile").modal("hide");
           }

@@ -1,0 +1,11 @@
+<template name="permissionsList">
+  {{# unless state$role.default}}
+    <a href="#" id="{{state$role._id}}-editable" data-id="{{state$role._id}}">edit permissions</a>
+  {{/ unless}}
+
+  <ul style="padding-left: 16px;">
+    {{#each state$role.permissions}}
+      {{>render component="permissionItem" permission=this}}
+    {{/each}}
+  </ul>
+</template>

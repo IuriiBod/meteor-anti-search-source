@@ -1,7 +1,6 @@
 var component = FlowComponents.define('stocksModalList', function(props) {
   this.name = props.name;
   this.onRendered(this.renderShowIngList);
-  var id = Router.current().params._id;
 
   var options = {
     keepHistory: 1000 * 60 * 5,
@@ -14,7 +13,7 @@ var component = FlowComponents.define('stocksModalList', function(props) {
 
 component.state.name = function() {
   return this.name;
-}
+};
 
 component.prototype.setIds = function() {
   var ids = [];
@@ -29,20 +28,23 @@ component.prototype.setIds = function() {
       }
     }
   } else if(this.name == "editJob") {
-    var localJobItemId = Session.get("localId");
-    var localJobItem = LocalJobItem.findOne(localJobItemId);
+    var localId = Session.get("localId");
+    var localJobItem = LocalJobItem.findOne(localId);
+    var localMenuItem = LocalMenuItem.findOne(localId);
+
     if(localJobItem && localJobItem.ings.length > 0) {
       ids = localJobItem.ings;
+    } else if(localMenuItem && localMenuItem.ings.length > 0) {
+      ids = localMenuItem.ings;
     }
   }
   this.set("ids", ids);
   return ids;
-}
+};
 
 component.prototype.renderShowIngList = function() {
   var self = this;
   Tracker.autorun(function() {
-
     if(self.name) {
       if(self.name == "editJob") {
         self.item = JobItems.findOne(Session.get("localId"));
@@ -59,7 +61,7 @@ component.prototype.renderShowIngList = function() {
     }
     self.IngredientsSearch.search(self.get("text"), {"ids": ids, "limit": 10, "status": "active"});
   });
-}
+};
 
 component.state.getIngredients = function() {
   return this.IngredientsSearch.getData({
@@ -68,10 +70,10 @@ component.state.getIngredients = function() {
     },
     sort: {'code': 1}
   });
-}
+};
 
 component.action.keyup = function(text) {
   var ids = this.setIds();
   this.set("text", text);
   this.IngredientsSearch.search(text, {"ids": ids, "limit": 10, "status": "active"});
-}
+};

@@ -10,14 +10,14 @@ component.state.item = function() {
   if(item) {
     return item;
   }
-}
+};
 
 component.state.unitPrice = function() {
   var item = getIngredientItem(this.id);
   if(item) {
     return item.costPerPortionUsed;
   }
-}
+};
 
 component.state.quantity = function() {
   var id = this.id;
@@ -26,7 +26,7 @@ component.state.quantity = function() {
     var jobItem = JobItems.findOne({"_id": Session.get("thisJobItem")});
     if(jobItem) {
       if(jobItem.ingredients && jobItem.ingredients.length > 0) {
-        var result = $.grep(jobItem.ingredients, function(e) { 
+        $.grep(jobItem.ingredients, function(e) {
           if(e._id == id) {
             quantity = e.quantity;
           }
@@ -35,4 +35,4 @@ component.state.quantity = function() {
     } 
   }
   return quantity;
-}
+};

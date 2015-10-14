@@ -10,8 +10,7 @@ Template.profileImage.events({
           var url = doc[0].url;
           Meteor.call("editBasicDetails", Session.get("profileUser"), {"profileImage": url}, function(err) {
             if(err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.error(err);
             }
           });
         }

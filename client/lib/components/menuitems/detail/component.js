@@ -1,6 +1,5 @@
 var component = FlowComponents.define('menuItemDetail', function(props) {
-  this.id = Router.current().params._id;
-  this.onRendered(this.onViewRendered);
+  this.id = Session.get("thisMenuItem");
 });
 
 component.state.menu = function() {
@@ -8,14 +7,28 @@ component.state.menu = function() {
   if(this.menu) {
     return this.menu;
   }
-}
+};
 
-component.prototype.onViewRendered = function() {
-  this.menu = MenuItems.findOne(this.id);
-  Session.set("goBackMenu", null);
-}
+component.state.jobItems = function() {
+  if(this.get('menu') && this.get('menu').jobItems) {
+    var jobItems = this.get('menu').jobItems;
+    jobItems = _.map(jobItems, function (jobItem) {
+      return jobItem._id;
+    });
+    return JobItems.find({_id: {$in: jobItems}});
+  } else {
+    return [];
+  }
+};
 
-component.state.isPermitted = function() {
-  return managerPlusAdminPermission();
-}
-
+component.state.ings = function() {
+  if(this.get('menu') && this.get('menu').ingredients) {
+    var ingredients = this.get('menu').ingredients;
+    ingredients = _.map(ingredients, function (ingredient) {
+      return ingredient._id;
+    });
+    return Ingredients.find({_id: {$in: ingredients}});
+  } else {
+    return [];
+  }
+};

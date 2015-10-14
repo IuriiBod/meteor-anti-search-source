@@ -6,26 +6,26 @@ component.state.name = function() {
   if(this.job) {
     return this.job.name;
   }
-}
+};
 
 component.state.id = function() {
   if(this.job) {
     return this.job._id;
   }
-}
+};
 
 component.state.status = function() {
   if(this.job) {
     return this.job.status;
   }
-}
+};
 
 component.state.timeRelHeight = function() {
   if(this.job) {
     var time = this.job.activeTime/60;
     return time * 0.68 + "px";
   }
-}
+};
 
 component.state.activeTime = function() {
   if(this.job) {
@@ -45,7 +45,7 @@ component.state.activeTime = function() {
     }
     return timeString;
   }
-}
+};
 
 
 component.state.setStatusPermission = function() {
@@ -56,4 +56,4 @@ component.state.setStatusPermission = function() {
     }
   }
   return permitted;
-}
+};

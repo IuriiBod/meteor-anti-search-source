@@ -1,10 +1,9 @@
 Template.editIngredientItem.helpers({
-  'item': function() {
+  item: function() {
     var id = Session.get("thisIngredientId");
-    subs.subscribe("ingredients", [id]);
+    Meteor.subscribe("ingredients", [id]);
     if(id) {
-      var ing = Ingredients.findOne(id);
-      return ing;
+      return Ingredients.findOne(id);
     }
   }
 });
@@ -30,10 +29,10 @@ Template.editIngredientItem.events({
     var info = {
       "code": code,
       "description": desc,
-      "portionOrdered": portionOrdered,
-      "portionUsed": portionUsed,
-      "suppliers": supplier
-    }
+      "portionOrdered": $(event.target).find('[name=portionOrdered]').val().trim(),
+      "portionUsed": $(event.target).find('[name=portionUsed]').val().trim(),
+      "suppliers": $(event.target).find('[name=supplier]').val().trim()
+    };
 
     if(!costPerPortion || typeof(parseFloat(costPerPortion)) != "number") {
       info.costPerPortion =  0;
@@ -48,10 +47,10 @@ Template.editIngredientItem.events({
       info.unitSize = parseFloat(unitSize);
     }
 
-    FlowComponents.callAction('submit', id, info, event);
+    FlowComponents.callAction('submit', id, info);
   },
 
-  'click .archiveIngredient': function(e, tpl) {
+  'click .archiveIngredient': function(e) {
     e.preventDefault();
     var id = $(e.target).attr("data-id");
     var status = $(e.target).attr("data-status");

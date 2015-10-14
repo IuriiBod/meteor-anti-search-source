@@ -7,7 +7,6 @@ Template.reportData.events({
       template: "HH:mm",
       viewformat: "HH:mm",
       format: "YYYY-MM-DD HH:mm",
-      defaultValue: new Date(),
       display: true,
       autotext: 'auto',
       showbuttons: true,
@@ -20,11 +19,9 @@ Template.reportData.events({
         newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
         Meteor.call("editClock", id, {"startedAt": new Date(newTime).getTime()}, function(err) { 
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.error(err);
           } else {
             $(self).removeClass('editable-unsaved');
-            return;
           }
         });
       }
@@ -38,7 +35,6 @@ Template.reportData.events({
       format: "YYYY-MM-DD HH:mm",
       display: false,
       autotext: 'auto',
-      defaultValue: new Date(),
       showbuttons: true,
       combodate: {
         minuteStep: 5
@@ -52,11 +48,9 @@ Template.reportData.events({
         newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
         Meteor.call("editClock", id, {"finishedAt": new Date(newTime).getTime()}, function(err) { 
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.error(err);
           } else {
             $(self).removeClass('editable-unsaved');
-            return;
           }
         });
       }
@@ -73,8 +67,6 @@ function shiftWorkTimeUpdate(id, newValue) {
     if(newMins <= 0) {
       newMins = 0;
     }
-    var newTime = moment(time).set("hour", newHours).set("minute", newMins);
-    return newTime;
-    
+    return moment(time).set("hour", newHours).set("minute", newMins);
   }
 }

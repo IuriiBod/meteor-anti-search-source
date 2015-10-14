@@ -1,18 +1,11 @@
-var subs = new SubsManager();
-
-var component = FlowComponents.define("notifiFlyout", function(props) {
-  return subs.subscribe("newNotifications");
+var component = FlowComponents.define("notifiFlyout", function (props) {
+  return Meteor.subscribe("newNotifications");
 });
 
-component.state.count = function() {
-  var notifications = Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).fetch();
-  var count = notifications.length
-  if(count) {
-    return count;
-  }
-}
+component.state.count = function () {
+  return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).count();
+};
 
-component.state.notifications = function() {
-  var notifications = Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
-  return notifications;
-}
+component.state.notifications = function () {
+  return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
+};

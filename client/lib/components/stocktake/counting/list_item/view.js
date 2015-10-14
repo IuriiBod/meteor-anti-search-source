@@ -13,19 +13,9 @@ Template.stockCountingListItem.events({
         }
       }
 
-      Meteor.call("removeStocksFromAreas", id, sareaId, function(err) {
+      Meteor.call("removeStocksFromAreas", id, sareaId, stockRefId, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
-        } else {
-          if(stockRefId) {
-            Meteor.call("removeStocktake", stockRefId, function(err) {
-              if(err) {
-                console.log(err);
-                return alert(err.reason);
-              }
-            });
-          }
+          HospoHero.error(err);
         }
       });
     }

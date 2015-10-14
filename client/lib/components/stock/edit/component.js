@@ -1,34 +1,28 @@
-var component = FlowComponents.define('editIngredientItem', function(props) {
-});
+var component = FlowComponents.define('editIngredientItem', function(props) {});
 
 component.state.id = function() {
-  // subs.clear();
-  var id = Session.get("thisIngredientId"); 
+  var id = Session.get("thisIngredientId");
   var ing = Ingredients.findOne(id);
   if(ing) {
     this.set("description", ing.description)
   }
   return id;
-}
+};
 
 component.state.relatedJobs = function() {
   var id = Session.get("thisIngredientId");
-  subs.reset();
-  subs.subscribe("ingredientsRelatedJobs", id);
-  var relatedJobs = [];
-  relatedJobs = JobItems.find({"ingredients._id": id}).fetch();
-  return relatedJobs;
-}
+  Meteor.subscribe("ingredientsRelatedJobs", id);
+  return JobItems.find({ "ingredients._id": id }).fetch();
+};
 
 component.state.convertTime = function(time) {
-  return time/60;
-}
+  return time / 60;
+};
 
-component.action.submit = function(id, info, event) {
+component.action.submit = function(id, info) {
    Meteor.call("editIngredient", id, info, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.error(err);
     } else {
       IngredientsListSearch.cleanHistory();
       IngredientsListSearch.search("", {"limit": 10});
@@ -43,32 +37,14 @@ component.state.suppliers = function() {
   if(ing) {
     return Suppliers.find({"_id": {$nin: [ing.suppliers]}}, {sort: {"name": 1}});
   }
-}
-
-component.state.isManagerOrAdmin = function() {
-  var userId = Meteor.userId();
-  return isManagerOrAdmin(userId);
-}
-
-component.state.isDisabled = function() {
-  if(isManagerOrAdmin(Meteor.userId())) {
-    return false;
-  } else {
-    return true;
-  }
-}
+};
 
 component.state.isArchive = function() {
   var id = Session.get("thisIngredientId");
   if(id != undefined) {
-    var ing = Ingredients.findOne({_id: id});
-    if(ing && ing.status == "archived") {
-      return true;
-    } else {
-      return false;
-    }
+    return !!Ingredients.findOne({_id: id, status: 'archived'});
   }
-}
+};
 
 component.state.unitsOrdered = function() {
   var id = Session.get("thisIngredientId");
@@ -77,8 +53,8 @@ component.state.unitsOrdered = function() {
   if(ing) {
     thisIngId = ing.portionOrdered;
   }
-  return OrderingUnits.find({"_id": {$nin: [thisIngId]}});
-}
+  return OrderingUnits.find({"unit": {$nin: [thisIngId]}});
+};
 
 component.state.unitsUsed = function() {
   var id = Session.get("thisIngredientId");
@@ -87,16 +63,15 @@ component.state.unitsUsed = function() {
   if(ing) {
     thisIngId = ing.portionUsed;
   }
-  return UsingUnits.find({"_id": {$nin: [thisIngId]}});
-}
+  return UsingUnits.find({"unit": {$nin: [thisIngId]}});
+};
 
 component.action.archiveIng = function(id, state) {
-  subs.subscribe("ingredients", [id]);
+  Meteor.subscribe("ingredients", [id]);
   var self = this;
   Meteor.call("archiveIngredient", id, state, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.error(err);
     } else {
       $("#editIngredientModal").modal("hide");
       
@@ -108,16 +83,15 @@ component.action.archiveIng = function(id, state) {
         } else if(stock.status == "archived") {
           text += " archived";
         }
-        notification(text);
+        HospoHero.info(text);
       } else {
-        notification("Stock item " + self.get("description") + " removed");
+        HospoHero.info("Stock item " + self.get("description") + " removed");
       }
       
       IngredientsListSearch.cleanHistory();
       var selector = {
         limit: 30
       };
-      var params = {};
       if(Router.current().params.type == "archive") {
         selector.status = "archived";
       } else {
@@ -126,4 +100,4 @@ component.action.archiveIng = function(id, state) {
       IngredientsListSearch.search("", selector);
     }
   });
-}
+};

@@ -1,7 +1,5 @@
-var subs = new SubsManager();
-
 var component = FlowComponents.define("jobFlyout", function(props) {
-  subs.subscribe("comments", Session.get("thisJob"));
+  Meteor.subscribe("comments", Session.get("thisJob"));
 });
 
 component.state.job = function() {
@@ -20,16 +18,12 @@ component.state.job = function() {
     this.set("job", job);
     return job;
   }
-}
+};
 
 component.state.isPrep = function() {
   var job = this.get("job");
-  if(job && job.type == "Prep") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!(job && job.type == "Prep");
+};
 
 component.state.name = function() {
   var id = this.get("id");
@@ -38,14 +32,14 @@ component.state.name = function() {
     this.set("job", job);
     return job.name;
   }
-}
+};
 
 component.state.type = function() {
   var job = this.get("job");
   if(job) {
     return job.type;
   }
-}
+};
 
 component.state.activeTime = function() {
   var job = this.get("job");
@@ -66,22 +60,21 @@ component.state.activeTime = function() {
     }
     return timeString;
   }
-}
+};
 
 component.state.repeatAt = function() {
   var job = this.get("job");
   if(job) {
     return moment(job.repeatAt).format("hh:mm A");
   }
-}
+};
 
 component.state.startsOn = function() {
   var job = this.get("job");
   if(job) {
     return moment(job.startsOn).format("YYYY-MM-DD");
   }
-}
-
+};
 
 component.state.instructions = function() {
   var job = this.get("job");
@@ -95,7 +88,7 @@ component.state.instructions = function() {
       }
     }
   }
-}
+};
 
 component.state.checklist = function() {
   var job = this.get("job");
@@ -107,4 +100,4 @@ component.state.checklist = function() {
       }
     }
   }
-}
+};

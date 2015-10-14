@@ -14,8 +14,7 @@ Template.jobItemDetail.events({
     var id = $(event.target).attr("data-id");
     Meteor.call("subscribe", id, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.error(err);
       }
     });
   },
@@ -25,8 +24,7 @@ Template.jobItemDetail.events({
     var id = $(event.target).attr("data-id");
     Meteor.call("unSubscribe", id, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.error(err);
       }
     });
   }

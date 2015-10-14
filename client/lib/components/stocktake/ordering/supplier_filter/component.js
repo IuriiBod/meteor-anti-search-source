@@ -28,11 +28,11 @@ component.state.suppliers = function() {
       Session.set("activeSupplier", activeSupplier)
     }
     if(supplierslist && supplierslist.length > 0) {
-      subs.subscribe("suppliers", supplierslist);
+      Meteor.subscribe("suppliers", supplierslist);
     }
     return supplierslist;
   }
-}
+};
 
 component.state.activeSupplier = function() {
   var supplier = Session.get("activeSupplier");
@@ -41,16 +41,15 @@ component.state.activeSupplier = function() {
   } else {
     return "Non-assigned";
   }
-}
+};
 
 component.state.receipt = function() {
-  var receipt = OrderReceipts.findOne({
+  return OrderReceipts.findOne({
     "version": Session.get("thisVersion"),
     "supplier": Session.get("activeSupplier"),
     "orderedThrough": {$ne: null}
   });
-  return receipt;
-}
+};
 
 component.state.deliveryDate = function() {
   var receipt = OrderReceipts.findOne({
@@ -60,10 +59,9 @@ component.state.deliveryDate = function() {
   if(receipt && receipt.expectedDeliveryDate) {
     return receipt.expectedDeliveryDate;
   } else {
-    var date = moment().add(1, 'day');
-    return date;
+    return moment().add(1, 'day');
   }
-}
+};
 
 component.state.orderSentDetails = function() {
   var receipt = OrderReceipts.findOne({
@@ -81,7 +79,7 @@ component.state.orderSentDetails = function() {
     text += moment(receipt.date).format("MMMM Do YYYY, h:mm:ss a");
   }
   return text;
-}
+};
 
 component.state.receiptExists = function(supplier) {
   var receipt = OrderReceipts.findOne({
@@ -89,12 +87,8 @@ component.state.receiptExists = function(supplier) {
     "supplier": supplier,
     "orderedThrough": {$ne: null}
   });
-  if(receipt && receipt.orderedThrough && receipt.orderedThrough.through) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!(receipt && receipt.orderedThrough && receipt.orderedThrough.through);
+};
 
 component.prototype.onListRendered = function() {
   $(".expectedDeliveryDate").datepicker({
@@ -120,10 +114,8 @@ component.prototype.onListRendered = function() {
     }
     Meteor.call("updateReceipt", id, info, function(err, id) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.error(err);
       } 
     });
   });
- 
-}
+};

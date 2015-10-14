@@ -4,26 +4,38 @@
       <thead class="">
         <tr class="center-text">
           <th colspan="2">
-            <a data-id="{{state$id}}" class="shift-profile" data-toggle="modal">{{state$name}}</a>
+            {{#if canEditRoster}}
+              <a data-id="{{state$id}}" class="shift-profile" data-toggle="modal">{{state$name}}</a>
+            {{else}}
+              {{state$name}}
+            {{/if}}
           </th>
         </tr>
         <tr>
           <th colspan="2">
-            <div class="shiftedWorkers dropdown">
-              <select name="workers" class="shiftAssign" data-id="{{state$id}}">
-                {{#if state$assignedWorker}}
-                <option selected="selected" value="{{state$assignedWorker}}">{{username state$assignedWorker}}</option>
-                {{else}}
-                <option selected="selected">Select a worker to assign</option>  
-                {{/if}}
-                {{#each state$workers}}
-                <option value="{{_id}}">{{username _id}}</option>  
-                {{/each}}
-                {{#if state$assignedWorker}}
-                  <option value="null">Remove</option>  
-                {{/if}}
-              </select>
-            </div>
+            {{#if canEditRoster}}
+              <div class="shiftedWorkers dropdown">
+                <select name="workers" class="shiftAssign" data-id="{{state$id}}">
+                  {{#if state$assignedWorker}}
+                  <option selected="selected" value="{{state$assignedWorker}}">{{username state$assignedWorker}}</option>
+                  {{else}}
+                  <option selected="selected">Select a worker to assign</option>
+                  {{/if}}
+                  {{#each state$workers}}
+                  <option value="{{_id}}">{{username _id}}</option>
+                  {{/each}}
+                  {{#if state$assignedWorker}}
+                    <option value="null">Remove</option>
+                  {{/if}}
+                </select>
+              </div>
+            {{else}}
+              {{#if state$assignedWorker}}
+                {{state$assignedWorker}}
+              {{else}}
+                No assigned worker
+              {{/if}}
+            {{/if}}
           </th>
         </tr>
       </thead>

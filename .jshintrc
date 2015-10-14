@@ -135,7 +135,6 @@
     "ddp": false,                   // anti:gagarin
     "browser": false,               // anti:gagarin
     "sweetAlert": false,            // kevohagan:sweetalert
-    "SubsManager": false,           // meteorhacks:subs-manager
     "moment": false,                // momentjs:moment
     "SearchSource": false,          // meteorhacks:search-source
     "FastRender": false,            // meteorhacks:fast-render

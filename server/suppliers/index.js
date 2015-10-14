@@ -1,54 +1,45 @@
 Meteor.methods({
   createSupplier: function(name, email, phone) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canUser('editStock')()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
-    if(!name) {
-      logger.error("Name field not found");
-      throw new Meteor.Error(404, "Name field not found");
-    }
-    var exist = Suppliers.findOne({"name": name});
+
+    check(name, String);
+
+    var exist = Suppliers.findOne({
+      "name": name,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
+
     if(exist) {
       logger.error("Supplier's name should be unique");
       throw new Meteor.Error(404, "Supplier's name should be unique");
     }
+
     var doc = {
       "name": name,
       "email": email,
       "phone": phone,
-      "createdBy": user._id,
+      "createdBy": this.userId,
       "createdOn": Date.now(),
-      "active": true
-    }
+      "active": true,
+      relations: HospoHero.getRelationsObject()
+    };
     var id = Suppliers.insert(doc);
     logger.info("New supplier inserted ", id);
     return id;
   },
 
   updateSupplier: function(id, info) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canUser('editStock')()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
-    if(!id) {
-      logger.error("Id field not found");
-      throw new Meteor.Error(404, "Id field not found");
-    }
-    var supplier = Suppliers.findOne(id);
-    if(!supplier) {
+
+    HospoHero.checkMongoId(id);
+
+    if(!Suppliers.findOne(id)) {
       logger.error("Supplier does not exist", id);
       throw new Meteor.Error(404, "Supplier does not exist");
     }
@@ -75,24 +66,16 @@ Meteor.methods({
     }
     Suppliers.update({"_id": id}, {$set: updateQuery});
     logger.info("Supplier information updated", id);
-    return;
   },
 
   activateReactivateSuppliers: function(id) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.perms.canUser('editStock')()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
-    if(!id) {
-      logger.error("Id field not found");
-      throw new Meteor.Error(404, "Id field not found");
-    }
+
+    HospoHero.checkMongoId(id);
+
     var supplier = Suppliers.findOne(id);
     if(!supplier) {
       logger.error("Supplier does not exist", id);
@@ -105,14 +88,15 @@ Meteor.methods({
       var orders = StockOrders.findOne({"supplier": id});
       if(ingsExist || receipts || orders) {
         logger.error("Supplier has past records. Can't be deleted. Archiving...");
+        Suppliers.update({"_id": id}, {$set: {"active": !status}});
+        logger.info("Supplier status updated", id, !status);
       } else {
         Suppliers.remove({"_id": id});
         logger.info("Supplier removed", id);
-        return;
       }
+    } else {
+      logger.error("There are no status of supplier ", id);
+      throw new Meteor.Error("There are no status of supplier ");
     }
-    Suppliers.update({"_id": id}, {$set: {"active": !status}});
-    logger.info("Supplier status updated", id, !status);
-    return;
   }
 });

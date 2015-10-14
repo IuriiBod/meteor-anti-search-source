@@ -8,8 +8,7 @@ Template.menuItemsListMainView.events({
     event.preventDefault();
     Meteor.call("subscribe", "menulist", function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.error(err);
       }
     });
   },
@@ -18,8 +17,7 @@ Template.menuItemsListMainView.events({
     event.preventDefault();
     Meteor.call("unSubscribe", "menulist", function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.error(err);
       }
     });
   }
@@ -28,10 +26,6 @@ Template.menuItemsListMainView.events({
 Template.menuItemsListMainView.helpers({
   'isSubscribed': function() {
     var result = Subscriptions.findOne({"_id": "menulist", "subscribers": Meteor.userId()});
-    if(result) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!result;
   }
 });

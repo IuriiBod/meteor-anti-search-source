@@ -4,30 +4,38 @@ var component = FlowComponents.define("newsFeedPost", function(props) {
 
 component.state.newsfeedPost = function() {
   return this.post;
-}
+};
 
 component.state.likesCount = function() {
   var id = this.post._id;
   var post = NewsFeeds.findOne(id);
   if(post) {
-    return post.likes.length;
-    
+    var count = post.likes.length;
+    if(post.likes.indexOf(Meteor.userId()) >= 0) {
+      count = count - 1;  
+    }
+    if(count > 0) {
+      return count;
+    }
   }
+};
+
+component.state.liked = function() {
+  return this.post.likes.indexOf(Meteor.userId()) >= 0;
 };
 
 component.state.comments = function(){
   return NewsFeeds.find({"reference": this.post._id}, {sort: {"createdOn": 1}});
-}
+};
 
 component.state.currentUser = function() {
   return Meteor.userId();
-}
+};
 
 component.action.likePost = function(id) {
   Meteor.call("updateNewsfeed", id, Meteor.userId(), function(err, id) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.error(err);
     } else {
       var newsFeedPost = NewsFeeds.findOne(id);
       if(newsFeedPost) {
@@ -48,29 +56,26 @@ component.action.likePost = function(id) {
         }
 
         var ref = null;
-        var type = "newsFeedMainTextBox";
+        var type = "newsfeed";
 
         if(newsFeedPost.ref) {
           ref = newsFeedPost.ref;
-          type = "newsFeedSubTextBox";
+          type = "newsfeed";
         }
 
-        //notify created user
         var options = {
-          "title": name + " liked your newsfeed post",
-          "users": [createdUser.username],
-          "newsfeedId": id,
-          "type": "like"
-        }
+          newsfeedId: id,
+          type: "like"
+        };
+
+        //notify created user
+        options.title =  name + " liked your newsfeed post";
+        options.users = [createdUser.username];
         sendNotifi(ref, type, options);
 
         //notify tagged users
-        var options = {
-          "title": name + " liked the newsfeed post you are tagged in",
-          "users": [matches],
-          "newsfeedId": id,
-          "type": "like"
-        }
+        options.title = name + " liked the newsfeed post you are tagged in";
+        options.users = [matches];
         sendNotifi(ref, type, options);
       }
     }

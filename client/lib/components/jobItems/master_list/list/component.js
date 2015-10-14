@@ -3,13 +3,10 @@ var component = FlowComponents.define('jobItemsList', function(props) {
 });
 component.state.type = function() {
   return this.type;
-}
+};
+
 component.state.showSection = function() {
   var id = this.type;
   var type = JobTypes.findOne(id);
-  if(type && type.name == "Recurring") {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!(type && type.name == "Recurring");
+};

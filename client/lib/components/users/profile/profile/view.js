@@ -4,8 +4,7 @@ Template.profile.events({
     var value = $(event.target).val();
     Meteor.call("editBasicDetails", id, {"shiftsPerWeek": value}, function(err) {
       if(err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.error(err);
       }
     });
   },
@@ -24,8 +23,7 @@ Template.profile.events({
 
     Meteor.call("resignDate", "set", id, val, function(err) {
       if(err) {
-        console.log(err);
-        alert(err.reason);
+        HospoHero.error(err);
       }
     });
   },
@@ -44,8 +42,7 @@ Template.profile.events({
 
     Meteor.call("resignDate", "update", id, val, function(err) {
       if(err) {
-        console.log(err);
-        alert(err.reason);
+        HospoHero.error(err);
       } else {
         tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
       }
@@ -57,8 +54,7 @@ Template.profile.events({
     var id = Router.current().params._id;
     Meteor.call("resignDate", "remove", id, '', function(err) {
       if(err) {
-        console.log(err);
-        alert(err.reason);
+        HospoHero.error(err);
       }
     });
   },
@@ -68,8 +64,7 @@ Template.profile.events({
     var newPin = Template.instance().find("#new-pin").value;
     Meteor.call("changePinCode", newPin, function (err) {
       if (err) {
-        console.log(err);
-        return alert(err.reason);
+        HospoHero.error(err);
       }
       else {
         alert("PIN has been changed.");
@@ -238,8 +233,7 @@ Template.profile.rendered = function(){
 function updateBasicDetails(id, updateDetails) {
   Meteor.call("editBasicDetails", id, updateDetails, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.error(err);
     }
   });
 }

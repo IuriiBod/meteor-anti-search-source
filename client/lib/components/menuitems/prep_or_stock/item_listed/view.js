@@ -1,32 +1,31 @@
 Template.itemListed.rendered = function() {
   $('.i-checks').iCheck({
-    checkboxClass: 'icheckbox_square-green',
+    checkboxClass: 'icheckbox_square-green'
   });
 
-  $('input').on('ifChecked', function(event){
+  $('input').on('ifChecked', function(){
     var menuId = Session.get("thisMenuItem");
     var id = $(this).attr("data-id");
     var type = $(this).attr("data-type");
     var self = this;
+
     if(id && type) {
       var doc = {
         "_id": id,
         "quantity": 1
-      }
+      };
       if(type == "prep") {
-        Meteor.call("addMenuPrepItems", menuId, [doc], function(err) {
+        Meteor.call("addItemToMenu", menuId, {jobItems: doc}, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.error(err);
           } else {
             $(self).closest("tr").remove();
           }
         });
       } else if(type == "ing") {
-        Meteor.call("addMenuIngredients", menuId, [doc], function(err) {
+        Meteor.call("addItemToMenu", menuId, {ingredients: doc}, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.error(err);
           } else {
             $(self).closest("tr").remove();
           }
@@ -34,4 +33,4 @@ Template.itemListed.rendered = function() {
       }
     }
   });
-}
+};

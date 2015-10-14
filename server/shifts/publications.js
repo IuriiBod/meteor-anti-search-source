@@ -1,119 +1,109 @@
-Meteor.publish("daily", function(date, worker) {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
-  }
-  var cursors = [];
-  var query = {
-    "shiftDate": new Date(date).getTime(),
-    "type": null
-  }
-  if(worker) {
-    query.assignedTo = worker
-  }
-  var shiftsCursor = Shifts.find(query, {sort: {createdOn: 1}});
-  cursors.push(shiftsCursor);
-  
-  var shifts = shiftsCursor.fetch();
-  var shiftsList = [];
-  shifts.forEach(function(shift) {
-    if(shiftsList.indexOf(shift._id) < 0) {
-      shiftsList.push(shift._id);
+Meteor.publish('weekly', function (dates, worker, type) {
+  if (this.userId) {
+    var query = {
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    };
+
+    if (dates && !type) {
+      query.shiftDate = TimeRangeQueryBuilder.forWeek(dates.monday, true);
     }
-  });
+    if (worker) {
+      query.assignedTo = worker;
+    }
 
-  if(shiftsList.length > 0) {
-    var jobsCursor = Jobs.find({"onshift": {$in: shiftsList}});
-    cursors.push(jobsCursor);
+    if (type) {
+      query.type = type;
+    }
+
+    logger.info("Weekly shifts detailed publication");
+
+    //get shifts
+    return Shifts.find(query, {sort: {"shiftDate": 1}});
+  } else {
+    this.ready();
   }
-  logger.info("Daily shift detailed publication");;
-  return cursors;
 });
 
-Meteor.publish("weekly", function(dates, worker, type) {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
-  }
-  var query = {
-    "type": type
-  };
-  
-  var cursors = [];
-  if(dates && !type) {
-    var firstDate = dates.monday;
-    var lastDate = dates.sunday;
-    query = {"shiftDate": {$gte: new Date(firstDate).getTime(), $lte: new Date(lastDate).getTime()}};
-  }
-  if(worker) {
-    query["assignedTo"] = worker;
-  }
-  //get shifts
-  var shiftsCursor = Shifts.find(query, {sort: {"shiftDate": 1}});
+Meteor.publishComposite('daily', function(date, worker) {
+  return {
+    find: function () {
+      if (this.userId) {
+        var query = {
+          shiftDate: new Date(date).getTime(),
+          type: null,
+          "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+        };
 
-  cursors.push(shiftsCursor);
-  logger.info("Weekly shifts detailed publication", {"type": type});
-  return cursors;
+        if (worker) {
+          query.assignedTo = worker;
+        }
+
+        return Shifts.find(query, {sort: {createdOn: 1}});
+      } else {
+        this.ready();
+      }
+    },
+    children: [
+      {
+        find: function (shift) {
+          if (shift) {
+            return Jobs.find({onshift: shift});
+          } else {
+            this.ready();
+          }
+        }
+      }
+    ]
+  }
 });
 
-Meteor.publish("shift", function(id) {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
+Meteor.publish("shift", function (id) {
+  if (this.userId) {
+    if (!id) {
+      logger.error("Shift id is empty");
+    }
+    var shift = Shifts.find({_id: id});
+    logger.info("Shift published", id);
+    return shift;
+  } else {
+    this.ready();
   }
-  if(!id) {
-    logger.error('Shift id not found : ' + id);
-    this.error(new Meteor.Error(404, "Shift id not found"));
-  }
-  var shift = Shifts.find(id);
-  logger.info("Shift published", id);
-  return shift;
 });
 
-Meteor.publish("rosteredFutureShifts", function(id) {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
-  }
-  if(!id) {
-    logger.error('User id not found : ' + id);
-    this.error(new Meteor.Error(404, "User id not found"));
-  }
-  var shifts = Shifts.find(
-    {"shiftDate": {$gte: new Date().getTime()}, "assignedTo": id, "type": null}, 
-    {sort: {"shiftDate": 1}, limit: 10});
-  logger.info("Rostered future shifts for user ", id);
-  return shifts;
-});
+// New publisher for shifts
+Meteor.publish('shifts', function(type, userId) {
+  if(this.userId) {
+    var query = {
+      assignedTo: userId,
+      type: null,
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    };
+    var options = {
+      sort: {
+        shiftDate: 1
+      },
+      limit: 10
+    };
+    var currentDate = Date.now();
 
-Meteor.publish("rosteredPastShifts", function(id) {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
-  }
-  if(!id) {
-    logger.error('User id not found : ' + id);
-    this.error(new Meteor.Error(404, "User id not found"));
-  }
-  var shifts = Shifts.find({
-    "shiftDate": {$lte: new Date().getTime()}, 
-    "assignedTo": id, 
-    "type": null,
-    "endTime": {$lte: new Date().getTime()}
-  }, 
-    {sort: {"shiftDate": -1}, limit: 10});
-  logger.info("Rostered past shifts for user ", id);
-  return shifts;
-});
+    if(type == 'future' || type == 'opened') {
+      query.shiftDate = { $gte: currentDate };
 
-Meteor.publish("openedShifts", function() {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
+      if(type == 'opened') {
+        query.assignedTo = null;
+        query.published = true;
+      }
+    } else if(type == 'past') {
+      query.shiftDate = { $lte: currentDate };
+      query.endTime = { $lte: currentDate };
+      options.sort.shiftDate = -1;
+    } else {
+      this.ready();
+    }
+
+    logger.info("Rostered ", type, " shifts for user ", userId, " have been published");
+    return Shifts.find(query, options);
+  } else {
+    this.ready();
   }
-  var shifts = Shifts.find(
-    {"shiftDate": {$gte: new Date().getTime()}, "assignedTo": null, "published": true, "type": null}, 
-    {sort: {"shiftDate": 1}, limit: 10});
-  logger.info("Opened shifts published");
-  return shifts;
 });

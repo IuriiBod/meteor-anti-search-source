@@ -14,7 +14,7 @@ component.state.receipts = function() {
     });
 
     if(users && users.length > 0) {
-      subs.subscribe("selectedUsers", users);
+      Meteor.subscribe("selectedUsers", users);
     }
     return receipts;
   }

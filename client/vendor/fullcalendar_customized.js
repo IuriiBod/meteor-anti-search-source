@@ -3413,7 +3413,20 @@ var Grid = fc.Grid = RowRenderer.extend({
             alreadyAssigned.push(shift.assignedTo);
           }
         });
-        var workers = Meteor.users.find({"_id": {$nin: alreadyAssigned}, "isActive": true, $or: [{"isWorker": true}, {"isManager": true}], $or: [{"profile.resignDate": null}, {"profile.resignDate": {$gt: shift.shiftDate}}]}).fetch();
+        var workers = Meteor.users.find({
+          _id: {
+            $nin: alreadyAssigned
+          },
+          "isActive": true,
+          $or: [
+            { "profile.resignDate": null },
+            {
+              "profile.resignDate": {
+              $gt: shift.shiftDate
+              }
+            }
+          ]
+        }).fetch();
 
         var options = null;
         if(shift.assignedTo) {
@@ -3429,11 +3442,13 @@ var Grid = fc.Grid = RowRenderer.extend({
           options = '<option selected="selected" value="">Select worker</option>';
         }
         workers.forEach(function(worker) {
-          var workername = worker.username;
-          if(worker.profile.firstname && worker.profile.lastname) {
-            workername = worker.profile.firstname + " " + worker.profile.lastname;
+          if(!HospoHero.isOrganizationOwner(worker._id)) {
+            var workername = worker.username;
+            if(worker.profile.firstname && worker.profile.lastname) {
+              workername = worker.profile.firstname + " " + worker.profile.lastname;
+            }
+            options += '<option value=' + worker._id + '>' + workername + '</option>'
           }
-          options += '<option value=' + worker._id + '>' + workername + '</option>'
         });
         if(shift.assignedTo) {
           options += '<option value="">Remove</option>'
@@ -3504,8 +3519,6 @@ var Grid = fc.Grid = RowRenderer.extend({
   }
 
 });
-
-;;
 
 /* Event-rendering and event-interaction methods for the abstract Grid class
 ----------------------------------------------------------------------------------------------------------------------*/

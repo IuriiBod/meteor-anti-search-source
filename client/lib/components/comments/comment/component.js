@@ -4,13 +4,12 @@ var component = FlowComponents.define("comment", function(props) {
 
 component.state.createdBy = function() {
   return this.comment.createdBy;
-}
+};
 
 component.state.text = function() {
-  var text = this.comment.text;
-  return text;
-}
+  return this.comment.text;
+};
 
 component.state.createdOn = function() {
   return this.comment.createdOn;
-}
+};

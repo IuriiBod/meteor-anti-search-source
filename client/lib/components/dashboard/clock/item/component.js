@@ -1,9 +1,9 @@
 var component = FlowComponents.define("clockItem", function(props) {
   this.item = props.item;
-  this.item["text"] = props.text;
-  this.item["class"] = props.class;
-  this.item["tag"] = props.tag;
-  this.item["subText"] = props.subText;
+  this.item.text = props.text;
+  this.item.class = props.class;
+  this.item.tag = props.tag;
+  this.item.subText = props.subText;
 
   this.onRendered(this.onClockRendered);
 });
@@ -12,7 +12,7 @@ component.state.item = function() {
   if(this.item) {
     return this.item;
   }
-}
+};
 
 component.state.timeFromNow = function() {
   if(this.item.text == "Clock In") {
@@ -28,64 +28,51 @@ component.state.timeFromNow = function() {
       return time;
     }
   }
-}
+};
 
 component.state.clockIn = function() {
-  if(this.item.text == "Clock In") {
-    return true;
-  } else {
-    return false;
-  } 
-}
+  return this.item.text == "Clock In";
+};
 
 component.state.clockOut = function() {
-  if(this.item.text == "Clock Out") {
-    return true;
-  } else {
-    return false;
-  } 
-}
+  return this.item.text == "Clock Out";
+};
 
 
 component.state.clockEnded = function() {
-  if(this.item.text == "Clock Ended") {
-    return true;
-  } else {
-    return false;
-  } 
-}
+  return this.item.text == "Clock Ended";
+};
 
 component.prototype.onClockRendered = function() {
   var self = this;
+  var clock;
   if(this.item) {
     if(this.item.text == "Clock In") {
       var upplerLimit = new Date().getTime() + 5 * 3600 * 1000;
       var lowerLimit = new Date().getTime() - 2 * 3600 * 1000;
 
-      var clock = new Date(this.item.startTime).getTime();
+      clock = new Date(this.item.startTime).getTime();
       var timeLeft = function() {
         if(clock > lowerLimit && clock < upplerLimit) {
           clock--;
           self.set("timeLeft", clock);
-          return;
+          return false;
         } else {
           self.set("timeLeft", null);
         }
       };
       var intervalleft = Meteor.setInterval(timeLeft, 1000);
     } else if(this.item.text == "Clock Out") {
-
-      var clock = new Date(this.item.startedAt).getTime();
+      clock = new Date(this.item.startedAt).getTime();
       var timeSpent = function() {
         if(clock < new Date().getTime()) {
           clock--;
           var spent = new Date().getTime() - clock;
           self.set("timeSpent", spent);
-          return;
+          return false;
         }
       };
       var intervalspent = Meteor.setInterval(timeSpent, 1000);
     }
-    
   }
-}
+};

@@ -1,43 +1,44 @@
+var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
 var component = FlowComponents.define("weeklyRosterDay", function(props) {
   this.name = props.name;
   this.origin = props.origin;
-  this.onRendered(this.onListRendered); 
+  this.onRendered(this.onListRendered);
 });
 
 component.state.name = function() {
   return this.name;
-}
+};
 
 component.state.origin = function() {
   return this.origin;
-}
-
-component.state.isUserPermitted = function() {
-  var user = Meteor.user();
-  if(user.isAdmin || user.isManager) {
-    return true;
-  } else {
-    return false;
-  }
-}
+};
 
 component.state.shifts = function() {
   var origin = this.origin;
   if(origin == "weeklyroster") {
-    var week = Session.get("thisWeek");
     var date = this.name.date;
-    return Shifts.find({"shiftDate": new Date(date).getTime(), "type": null}, {sort: {"order": 1}});
+    return Shifts.find({
+      "shiftDate": new Date(date).getTime(),
+      "type": null,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    }, {
+      sort: { "order": 1 }
+    });
   } else if(origin == "weeklyrostertemplate") {
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    return Shifts.find({"shiftDate": daysOfWeek.indexOf(this.name), "type": "template"}, {sort: {"order": 1}});
+    return Shifts.find({
+      "shiftDate": daysOfWeek.indexOf(this.name),
+      "type": "template",
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
   }
-}
+};
 
 component.action.addShift = function(day, dates) {
   var doc = {
     "assignedTo": null,
     "week": dates
-  }
+  };
   if(this.origin == "weeklyroster") {
     doc.startTime = new Date(day).setHours(8, 0);
     doc.endTime = new Date(day).setHours(17, 0);
@@ -45,7 +46,6 @@ component.action.addShift = function(day, dates) {
     doc.section = null;
     doc.type = null;
   } else if(this.origin == "weeklyrostertemplate") {
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     doc.startTime = new Date().setHours(8, 0);
     doc.endTime = new Date().setHours(17, 0);
     doc.shiftDate = new Date(daysOfWeek.indexOf(day));
@@ -54,25 +54,20 @@ component.action.addShift = function(day, dates) {
   }
   Meteor.call("createShift", doc, function(err, id) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.error(err);
     }
   });
-}
+};
 
 component.state.isTemplate = function() {
-  if(this.origin == "weeklyrostertemplate") {
-    return true; 
-  } else {
-    return false;
-  }
-}
+  return this.origin == "weeklyrostertemplate";
+};
 
 component.prototype.onListRendered = function() {
   var self = this;
   var user = Meteor.user();
   $(".col-lg-13:first").css("margin-left", "0px");
-  if(user.isAdmin || Meteor.isManager) {
+  if(HospoHero.perms.canUser('editRoster')()) {
     $(".sortable-list > div > li").css("cursor", "move");
     var origin = this.name;
     $(".sortable-list").sortable({
@@ -101,9 +96,8 @@ component.prototype.onListRendered = function() {
 
       Meteor.call("editShift", id, {"order": order}, function(err) {
         if(err) {
-          console.log(err);
-          $(ui.sender[0]).sortable('cancel');;
-          return alert(err.reason);
+          $(ui.sender[0]).sortable('cancel');
+          HospoHero.error(err);
         }
       });
     });
@@ -112,7 +106,6 @@ component.prototype.onListRendered = function() {
       var id = $(ui.item[0]).find("li").attr("data-id");//shiftid
       var newDate = $(this).attr("data-date")//date of moved list
       if(self.origin == "weeklyrostertemplate") {
-        var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         newDate = parseInt(daysOfWeek.indexOf(newDate));
       }
 
@@ -135,9 +128,8 @@ component.prototype.onListRendered = function() {
       if(id && newDate) {
         Meteor.call("editShift", id, {"shiftDate": newDate, "order": order}, function(err) {
           if(err) {
-            console.log(err);
-            $(ui.sender[0]).sortable('cancel');;
-            return alert(err.reason);
+            $(ui.sender[0]).sortable('cancel');
+            HospoHero.error(err);
           }
         });
       }
@@ -145,4 +137,4 @@ component.prototype.onListRendered = function() {
   } else {
     $(".sortable-list > div > li").css("cursor", "default");
   }
-}
+};

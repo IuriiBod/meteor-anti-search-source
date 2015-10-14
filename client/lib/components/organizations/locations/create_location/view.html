@@ -1,0 +1,80 @@
+<template name="createLocation">
+  <form method="get" class="form-horizontal" data-id="{{state$organizationId}}">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Location Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="name" required="required">
+      </div>
+    </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">Country</label>
+          <div class="col-sm-10">
+              {{> render component='selectComponent' values=countries selected='Australia' name='country'}}
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">City</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" name="city" required="required">
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">Address</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" name="address" required="required">
+          </div>
+      </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Timezone</label>
+      <div class="col-sm-10">
+        {{> render component='selectComponent' values=timezones selected='UTC 0' name='timezone'}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Opening Time</label>
+      <div class="col-sm-4">
+        {{> render component='selectComponent' values=hours selected='8' name='openingHour'}}
+      </div>
+      <div class="col-sm-4">
+        {{> render component='selectComponent' values=minutes selected=null name='openingMinutes'}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Closing Time</label>
+      <div class="col-sm-4">
+        {{> render component='selectComponent' values=hours selected='17' name='closingHour'}}
+      </div>
+      <div class="col-sm-4">
+        {{> render component='selectComponent' values=minutes selected=null name='closingMinutes'}}
+      </div>
+    </div>
+      <div class="panel panel-default">
+          <div class="panel-heading text-center"><b>POS Settings (optional)</b></div>
+          <div class="panel-body">
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">Host</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" name="posHost">
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">Key</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" name="posKey">
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">Secret</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" name="posSecret">
+                  </div>
+              </div>
+          </div>
+      </div>
+    <div class="btn-group col-xs-12">
+      <button type="submit" class="btn btn-primary col-xs-6">Create</button>
+      <button type="button" class="btn btn-default col-xs-6 close-flyout">Close</button>
+    </div>
+  </form>
+</template>

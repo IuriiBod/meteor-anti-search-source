@@ -13,7 +13,7 @@
                 <h3 class="panel-title">Settings</h3>
               </div>
               <div class="panel-body">
-                {{> render component="editMenuItem"}}
+                {{> render component="settingsMenuItem"}}
               </div>
             </div>
           </div>
@@ -28,29 +28,29 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              {{#if state$isPermitted}}
-              <th></th>
+              {{#if canEditMenu}}
+                <th></th>
               {{/if}}
               <th>Name</th>
               <th>Type</th>
               <th>Quantity</th>
               <th>Measure</th>
-              {{#if state$isPermitted}}
-              <th></th>
+              {{#if canEditMenu}}
+                <th></th>
               {{/if}}
             </tr>
           </thead>
           <tbody>
-            {{#each state$menu.jobItems}}
+            {{#each state$jobItems}}
               {{> render component="ingsAndPreps" item=this type="prep"}}
             {{/each}}
-            {{#each state$menu.ingredients}}
+            {{#each state$ings}}
               {{> render component="ingsAndPreps" item=this type="ings"}}
             {{/each}}
           </tbody>
         </table>
-        {{#if state$isPermitted}}
-        <a class="btn btn-primary" href="#showListOfIngs" data-toggle="modal">Add prep or stock</a>
+        {{#if canEditMenu}}
+          <a class="btn btn-primary" href="#showListOfIngs" data-toggle="modal">Add prep or stock</a>
         {{/if}}
       </div>
       {{> render component='menuDetailWidgets' item=state$menu}}

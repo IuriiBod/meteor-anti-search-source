@@ -1,23 +1,15 @@
-Meteor.publish('jobTypes', function() {
-  var cursors = [];
-  cursors.push(JobTypes.find());
-  logger.info("JobTypes publication");
-  return cursors;
-});
+Meteor.publish('jobs', function(type, ids) {
+  var query = {
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+  };
 
-Meteor.publish("unAssignedJobs", function() {
-  var cursors = [];
-  var jobs = Jobs.find({"status": "draft", 'onshift': null}, {limit: 10});
-  cursors.push(jobs);
-  logger.info("Un-assigned jobs publication");
-  return cursors;
-});
+  if(type == 'unassigned') {
+    query.status = "draft";
+    query.onshift = null;
+  }
 
-
-Meteor.publish("jobs", function(ids) {
-  var cursors = [];
-  var jobs = Jobs.find({"_id": {$in: ids}}, {limit: 10});
-  cursors.push(jobs);
-  logger.info("Jobs publication");
-  return cursors;
+  if(ids && ids.length) {
+    query._id = { $in: ids };
+  }
+  return Jobs.find(query, {limit: 10});
 });

@@ -3,7 +3,7 @@ Template.ingredientItemDetailed.events({
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
     Session.set("thisIngredientId", id);
-    subs.subscribe("ingredients", [id]);
+    Meteor.subscribe("ingredients", [id]);
     $("#editIngredientModal").modal("show");
   },
 
@@ -12,17 +12,13 @@ Template.ingredientItemDetailed.events({
     var button, i, id;
     if($(e.target).hasClass('archiveIngredient')) {
       button = $(e.target);
-      i = button.find('.fa');
     } else {
       i = $(e.target);
       button = i.parent();
     }
     id = button.parent().parent().attr("data-id");
     Meteor.call("archiveIngredient", id, function(err) {
-      if(err) {
-        console.log(err);
-        alert(err.reason);
-      }
+      HospoHero.error(err);
     });
     IngredientsListSearch.cleanHistory();
     var selector = {

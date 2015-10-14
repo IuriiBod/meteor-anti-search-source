@@ -7,40 +7,29 @@ var component = FlowComponents.define("shiftBasic", function(props) {
 
 component.state.shift = function() {
   return this.shift;
-}
+};
 
 component.state.thisorigin = function() {
   return this.get("origin");
-}
+};
 
 component.state.section = function() {
   return this.shift.section;
-}
+};
 
 component.state.assignedTo = function() {
   return this.shift.assignedTo;
-}
-
-component.state.isUserPermitted = function() {
-  var user = Meteor.user();
-  var permitted = true;
-  if(user.isAdmin || user.isManager) {
-    permitted = true;
-  } else {
-    permitted = false;
-  }
-  return permitted;
-}
+};
 
 component.action.deleteShift = function(id) {
   Meteor.call("deleteShift", id, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.error(err);
     }
   });
-}
+};
 
+// TODO: Check it later
 component.prototype.itemRendered = function() {
   $.fn.editable.defaults.mode = 'inline';
   var origin = this.get("origin");
@@ -57,11 +46,12 @@ component.prototype.itemRendered = function() {
         var thisShift = Shifts.findOne(shiftId);
 
         var alreadyAssigned = [];
-        var workersObj = []
-        var shifts = null;
+        var workersObj = [];
+        var shifts;
         var query = {
-          "shiftDate": thisShift.shiftDate
-        }
+          "shiftDate": thisShift.shiftDate,
+          "relations.areaId": HospoHero.getCurrentAreaId()
+        };
         if(origin == "weeklyrostertemplate") {
           query['type'] = "template";
         } else if(origin == "weeklyroster") {
@@ -81,17 +71,29 @@ component.prototype.itemRendered = function() {
         }
 
         workersObj.push({value: "Open", text: "Open"});
-        var workers = Meteor.users.find({
-          "_id": {$nin: alreadyAssigned}, 
-          "isActive": true, 
-          $or: [{"isWorker": true}, {"isManager": true}],
-          $or: [{"profile.resignDate": null}, {"profile.resignDate": {$gt: thisShift.shiftDate}}]
-        }, {sort: {"username": 1}}).fetch();
+
+        query = {
+          "_id": {$nin: alreadyAssigned},
+          "isActive": true,
+          $or: [
+            {"profile.resignDate": null},
+            {"profile.resignDate": {$gt: thisShift.shiftDate}}
+          ]
+        };
+
+        // Get roles which can be rosted
+        var canBeRostedRoles = Roles.getRolesByPermissions(Roles.permissions.Roster.canBeRosted.code);
+        // Conver it to array of IDs
+        var canBeRostedRolesIds = _.map(canBeRostedRoles, function(role) {
+          return role._id;
+        });
+        query["roles." + HospoHero.getCurrentAreaId()] = {$in: canBeRostedRolesIds};
+        var workers = Meteor.users.find(query, {sort: {"username": 1}}).fetch();
 
         workers.forEach(function(worker) {
           var doc = {
             "value": worker._id
-          }
+          };
           if(worker.profile.firstname && worker.profile.lastname) {
             doc['text'] = worker.profile.firstname + " " + worker.profile.lastname;
           } else {
@@ -107,7 +109,6 @@ component.prototype.itemRendered = function() {
           newValue = null;
         }
 
-        var obj = {"_id": shiftId, "assignedTo": newValue}
         var shift = Shifts.findOne(shiftId);
         if(shift) {
           assignWorkerToShift(newValue, shiftId, $(this));
@@ -129,8 +130,7 @@ component.prototype.itemRendered = function() {
 
             Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
               if(err) {
-                console.log(err);
-                return alert(err.reason);
+                HospoHero.error(err);
               }
             });
           }
@@ -146,7 +146,9 @@ component.prototype.itemRendered = function() {
       emptytext: 'Open',
       defaultValue: "Open",    
       source: function() {
-        var sections = Sections.find().fetch();
+        var sections = Sections.find({
+          "relations.areaId": HospoHero.getCurrentAreaId()
+        }).fetch();
         var sectionsObj = [];
         sectionsObj.push({value: "Open", text: "Open"});
         sections.forEach(function(section) {
@@ -159,7 +161,7 @@ component.prototype.itemRendered = function() {
           newValue = null;
         }
         var shiftId = $(this).closest("li").attr("data-id");
-        var obj = {"_id": shiftId, "section": newValue}
+        var obj = {"_id": shiftId, "section": newValue};
         var shift = Shifts.findOne(shiftId);
         if(shift) {
           editShift(obj);
@@ -179,7 +181,7 @@ component.prototype.itemRendered = function() {
       mode: 'inline',
       success: function(response, newValue) {
         var shiftId = $(this).closest("li").attr("data-id");
-        var obj = {"_id": shiftId}
+        var obj = {"_id": shiftId};
         var shift = Shifts.findOne(shiftId);
         if(shift) {
           if(origin == "weeklyrostertemplate") {
@@ -222,13 +224,12 @@ component.prototype.itemRendered = function() {
       }
     });  
   }, 500);
-}
+};
 
 function editShift(obj) {
   Meteor.call("editShift", obj._id, obj, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.error(err);
     } else {
       var shift = Shifts.findOne(obj._id);
       if(shift.published && shift.assignedTo) {
@@ -256,8 +257,7 @@ function editShift(obj) {
         sendNotification(obj._id, shift.assignedTo, title, text);
         Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
           if(err) {
-            console.log(err);
-            return alert(err.reason);
+            HospoHero.error(err);
           }
         });
       }
@@ -270,10 +270,8 @@ assignWorkerToShift = function(worker, shiftId, target) {
   if(shift) {
     Meteor.call("assignWorker", worker, shiftId, function(err) {
       if(err) {
-        console.log(err);
-        alert(err.reason);
         $(target).editable("setValue", shift.assignedTo);
-        return;
+        HospoHero.error(err);
       } else {
         if(shift.published && worker !== null) {
           //notify new user
@@ -290,15 +288,14 @@ assignWorkerToShift = function(worker, shiftId, target) {
 
           Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
             if(err) {
-              console.log(err);
-              return alert(err.reason);
+              HospoHero.error(err);
             }
           });
         }
       }
     });
   }
-}
+};
 
 
 function sendNotification(itemId, to, title, text) {
@@ -308,11 +305,10 @@ function sendNotification(itemId, to, title, text) {
     "type": "update",
     "text": text,
     "to": to
-  }
+  };
   Meteor.call("sendNotifications", itemId, type, options, function(err) {
     if(err) {
-      console.log(err);
-      return alert(err.reason);
+      HospoHero.error(err);
     }
   });
 }

@@ -6,8 +6,7 @@ Template.jobListed.events({
     if(confirmDelete) {
       Meteor.call("deleteJob", id, function(err) {
         if(err) {
-          console.log(err);
-          return alert(err.reason);
+          HospoHero.error(err);
         }
       });
     }

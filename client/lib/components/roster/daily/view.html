@@ -1,10 +1,12 @@
 <template name="dailyShiftScheduling">
   <div class="col-md-12 draggable-jobs">
-    {{> render component="alertSuccess"}}
-    <a href="#submitJobModal" class="btn btn-primary pull-right" data-toggle="modal">
-      <i class="fa fa-plus"></i> Add job
-    </a>
-    <h3>Jobs list <small>Drag the jobs from here, into the shift that you'd like to do them. </small></h3>
+    {{#if canEditRoster}}
+      {{> render component="alertSuccess"}}
+      <a href="#submitJobModal" class="btn btn-primary pull-right" data-toggle="modal">
+        <i class="fa fa-plus"></i> Add job
+      </a>
+      <h3>Jobs list <small>Drag the jobs from here, into the shift that you'd like to do them. </small></h3>
+    {{/if}}
 
     <div id='external-events' class="clearfix">
       {{> render component='schedulingJobsList'}}
@@ -19,4 +21,10 @@
       </div>
     </div>
   </div>
+
+  <!-- SUBMIT JOB -->
+  <div class="modal fade" id="submitJobModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component='submitJob'}}
+  </div>
+  <!-- /SUBMIT JOB -->
 </template>

@@ -1,12 +1,6 @@
 <template name="weeklyFigures">
   <div class="collapse" id="collapse">
-    <div class="row">
-      {{> render component="figureBox" name="Sales" type="sales" subtext="Forecast" dataContent="The figure shows the actual sales result from the days in the past plus the forecast sales for the rest of the week. So you can see if you're on track."}}
-
-      {{> render component="figureBox" name="Staff Cost" type="staffCost" subtext="Rostered" dataContent="The figure shows the actual staff cost result from the days in the past plus the forecast staff cost for the rest of the week. So you can see if you're on track."}}
-
-      {{> render component="figureBox" name="Staff Cost" type="staffCostPercentage" subtext="Rostered" dataContent="The figure shows the % of wages compared to sales. It take the actual results from past days and forecasts from future days."}}
-    </div>
+    {{>render component="figureBoxes"}}
 
     <div class="row">
       <div class="col-lg-12">
@@ -32,12 +26,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Sales</td>
-              {{#each state$week}}
-                {{> render component="salesTr" day=this}}
-              {{/each}}
-            </tr>
+            {{>render component="totalSalesRow"}}
             <tr>
               <td>Staff Cost ($)</td>
               {{#each state$week}}

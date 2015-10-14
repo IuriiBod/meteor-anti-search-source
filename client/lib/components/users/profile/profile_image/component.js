@@ -13,23 +13,19 @@ component.state.image = function() {
       return "/images/user-image.jpeg";
     }
   }
-}
+};
 
 component.state.imageExists = function() {
   var doc = Meteor.users.findOne(this.id);
   if(doc) {
     if(doc.profile.image) {
       return true;
-    } else if(doc.services && doc.services.google) {
-      return true;
     } else {
-      return false;
+      return !!(doc.services && doc.services.google);
     }
   }
-}
+};
 
 component.state.ifMe = function() {
-  if(Session.get("profileUser") == Meteor.userId()) {
-    return true;
-  }
-}
+  return Session.get("profileUser") == Meteor.userId();
+};

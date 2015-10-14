@@ -10,11 +10,11 @@ component.state.item = function() {
   area.class = this.class;
   area.type = this.name;
   return area;
-}
+};
 
 component.state.editable = function() {
   return Session.get("editStockTake");
-}
+};
 
 component.state.widthofBar = function() {
   var id = this.item._id;
@@ -62,11 +62,11 @@ component.state.widthofBar = function() {
     }
     return (gProgress + "%");
   }
-}
+};
 
 component.state.editable = function() {
   return Session.get("editStockTake");
-}
+};
 
 component.prototype.onItemRendered = function() {
 };

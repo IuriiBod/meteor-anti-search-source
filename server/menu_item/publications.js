@@ -1,66 +1,88 @@
-Meteor.publish("menuList", function(categoryId, status) {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
-  }
-  var menuCursor = [];
-  var query = {};
-  if(categoryId && categoryId != "all") {
-    var doc = Categories.findOne(categoryId);
-    if(doc) {
+Meteor.publish("menuList", function (categoryId, status) {
+  if (this.userId) {
+    var query = {
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    };
+
+    if (categoryId && categoryId != "all") {
       query.category = categoryId;
     }
+
+    if (status) {
+      query.status = (status && status != 'all') ? status : {$ne: 'archived'};
+    }
+
+    logger.info("Menu Items list published", categoryId, status);
+
+    return MenuItems.find(query, {sort: {"name": 1}, limit: 30});
+  } else {
+    this.ready();
   }
-  if(status && status != "all" ) {
-    query.status = status;
-  } else if(status && status == "all") {
-    query.status = {$ne: "archived"};
-  }
-  menuCursor = MenuItems.find(query,
-    {sort: {"name": 1}, limit: 30});
-  logger.info("Menu Items list published", categoryId, status);
-  return menuCursor;
 });
 
-Meteor.publish("menuItem", function(id) {
-  var cursor = [];
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
-  }
-  var menu = MenuItems.find(id);
-  cursor.push(menu);
-
-  var menuFetched = menu.fetch()[0];
-  var ingIds = [];
-  if(menuFetched.ingredients && menuFetched.ingredients.length > 0) {
-    menuFetched.ingredients.forEach(function(ing) {
-      ingIds.push(ing._id);
-    });
-    var ingCursor = Ingredients.find({"_id": {$in: ingIds}});
-    cursor.push(ingCursor);
-  }
-
-  var prepIds = [];
-  if(menuFetched.jobItems && menuFetched.jobItems.length > 0) {
-    menuFetched.jobItems.forEach(function(prep) {
-      prepIds.push(prep._id);
-    });
-    var prepCursor = JobItems.find({"_id": {$in: prepIds}});
-    cursor.push(prepCursor);
-  }
-
-  return cursor;
+Meteor.publishComposite('menuItem', function(id) {
+  return {
+    find: function() {
+      if(this.userId) {
+        return MenuItems.find({
+          _id: id,
+          "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+        });
+      } else {
+        this.ready();
+      }
+    },
+    children: [
+      {
+        find: function(menuItem) {
+          if(menuItem && menuItem.ingredients && menuItem.ingredients.length) {
+            var ings = _.map(menuItem.ingredients, function(ingredient) {
+              return ingredient._id;
+            });
+            return Ingredients.find({_id: {$in: ings}});
+          } else {
+            this.ready();
+          }
+        }
+      },
+      {
+        find: function(menuItem) {
+          if(menuItem && menuItem.jobItems && menuItem.jobItems.length) {
+            var jobs = _.map(menuItem.jobItems, function(jobItem) {
+              return jobItem._id;
+            });
+            return JobItems.find({_id: {$in: jobs}});
+          } else {
+            this.ready();
+          }
+        }
+      }
+    ]
+  };
 });
 
-Meteor.publish("menuItems", function(ids) {
-  if(!this.userId) {
-    logger.error('User not found : ' + this.userId);
-    this.error(new Meteor.Error(404, "User not found"));
+Meteor.publish("menuItems", function (ids) {
+  if (this.userId) {
+    if (Array.isArray(ids)) {
+      var query = {
+        _id: {$in: ids},
+        "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      };
+
+      logger.info("Menu items published", ids);
+      return MenuItems.find(query, {limit: 10});
+    }
+  } else {
+    this.ready();
   }
-  var cursor = [];
-  var items = MenuItems.find({"_id": {$in: ids}}, {limit: 10});
-  logger.info("Menu items published", ids);
-  cursor.push(items);
-  return cursor;
+});
+
+
+Meteor.publish("areaMenuItems", function () {
+  if (this.userId) {
+    var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+    return MenuItems.find({'relations.areaId': currentAreaId});
+  } else {
+    this.ready();
+  }
 });

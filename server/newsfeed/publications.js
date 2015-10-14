@@ -1,11 +1,12 @@
-Meteor.publish('newsfeeds', function() {
-    var userId = this.userId;
-    if(!userId) {
-      logger.error('User not found : ' + this.userId);
-      this.error(new Meteor.Error(404, "User not found"));
-    }
-    var cursor = [];
-    cursor.push(NewsFeeds.find({}, {sort: {"createdOn": -1}}));
+Meteor.publish('newsfeeds', function () {
+  if (this.userId) {
     logger.info("NewsFeeds published");
-    return cursor;
+    return NewsFeeds.find({
+      "relations.organizationId": HospoHero.isInOrganization(this.userId)
+    }, {
+      sort: { "createdOn": -1 }
+    });
+  } else {
+    this.ready();
+  }
 });

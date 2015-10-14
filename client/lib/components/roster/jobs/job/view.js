@@ -4,7 +4,7 @@ Template.schedulingJob.events({
     var id = $(event.target).attr("data-id");
     Meteor.call("setJobStatus", id, function(err) {
       if(err) {
-        return alert(err.reason);
+        HospoHero.error(err);
       }
     }); 
   },
@@ -16,10 +16,20 @@ Template.schedulingJob.events({
     if(confirmDelete) {
       Meteor.call("deleteJob", id, null, function(err) {
         if(err) {
-          return alert(err.reason);
+          HospoHero.error(err);
         }
       }); 
     }
+  },
+
+  'mouseenter .external-event.draft': function(event) {
+    event.preventDefault();
+    $(event.target).find('.box-wrapper').show();
+  },
+
+  'mouseleave .external-event.draft': function(event) {
+    event.preventDefault();
+    $(event.target).find('.box-wrapper').hide();
   }
 });
 
@@ -38,4 +48,4 @@ Template.schedulingJob.rendered = function() {
       revertDuration: 0  //  original position after the drag
     });
   });
-}
+};
