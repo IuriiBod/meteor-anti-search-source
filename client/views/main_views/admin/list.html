@@ -19,13 +19,16 @@
               <a href="#areas" data-toggle="tab">Stock Areas</a>
             </li>
             <li class="">
-              <a href="#timeout" data-toggle="tab">Timeout</a>
+              <a href="#timeout" data-toggle="tab">Inactivity Timeout</a>
             </li>
             <li class="">
               <a href="#cron-config" data-toggle="tab">Cron Config</a>
             </li>
             <li class="">
               <a href="#revel-link" data-toggle="tab">POS/ Menu Linking</a>
+            </li>
+            <li class="">
+              <a href="#force-forecast" data-toggle="tab">[dev]Force-Forecast</a>
             </li>
           </ul>
 
@@ -50,6 +53,9 @@
             </div>
             <div class="tab-pane" id="revel-link">
               {{> render component='revelMenuLink'}}
+            </div>
+            <div class="tab-pane" id="force-forecast">
+              {{> render component='forceForecast'}}
             </div>
           </div>
         </div>
