@@ -1,32 +1,14 @@
 Template.createLocation.helpers({
   timezones: function() {
-    var zones = [];
-    for(var i=-12; i<=12; i++) {
-      if(i>0) {
-        i = "+"+i;
-      }
-      zones.push('UTC '+i);
-    }
-    return zones;
+    return HospoHero.dateUtils.timezones();
   },
 
   hours: function() {
-    var hours = [];
-    for (var i = 0; i < 24; i++) {
-      hours.push(i);
-    }
-    return hours;
+    return HospoHero.dateUtils.hours();
   },
 
   minutes: function() {
-    var minutes = [];
-    for(var i=0; i<60; i++) {
-      if(i<10) {
-        i = "0"+i;
-      }
-      minutes.push(i);
-    }
-    return minutes;
+    return HospoHero.dateUtils.minutes();
   },
 
   countries: function(){
