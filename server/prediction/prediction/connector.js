@@ -64,3 +64,8 @@ GooglePredictionApi.prototype.removePredictionModel = function(locationId) {
   if (modelIsPresent)
     this._client.remove(modelName);
 };
+
+GooglePredictionApi.prototype.removeTrainingDataFile = function(locationId) {
+  var trainingFileName = this._getTrainingFileName(locationId);
+  GoogleCloud.removeTrainingDataFile(trainingFileName);
+};

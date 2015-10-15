@@ -28,6 +28,7 @@ Meteor.methods({
     if(!HospoHero.isOrganizationOwner()) {
       throw new Meteor.Error(403, 'User not permitted to delete location');
     }
+
     Locations.remove({_id: id});
     Areas.remove({locationId: id});
     WeatherForecast.remove({locationId:id});
@@ -36,6 +37,8 @@ Meteor.methods({
 
     var googlePrediction = new GooglePredictionApi();
     googlePrediction.removePredictionModel(id);
+    googlePrediction.removeTrainingDataFile(id);
+    
     // TODO: Write the code to delete users which is related to location
   },
 
