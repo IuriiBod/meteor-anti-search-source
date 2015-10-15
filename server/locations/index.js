@@ -20,6 +20,7 @@ Meteor.methods({
       openingTime: moment(loc.openingTime).toDate(),
       closingTime: moment(loc.closingTime).toDate(),
       organizationId: loc.organizationId,
+      shiftUpdateHour: '7',
       createdAt: Date.now()
     });
   },
