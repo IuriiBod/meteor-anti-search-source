@@ -25,7 +25,7 @@ GooglePredictionApi.prototype._getTrainingFileName = function () {
   if (HospoHero.isDevelopmentMode()) {
     return "sales-data"
   } else {
-    return "sales-data-" + this._locationId+ ".csv";
+    return "sales-data-" + this._locationId + ".csv";
   }
 
 };
@@ -39,7 +39,7 @@ GooglePredictionApi.prototype.getUpdatePredictionModelSession = function () {
   };
 
   //uplaod data to google cloud storage
-  return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(),locationId, onFinished);
+  return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(), locationId, onFinished);
 };
 
 
@@ -49,4 +49,21 @@ GooglePredictionApi.prototype.makePrediction = function (inputData) {
   } else {
     return this._client.predict(this._getModelName(), inputData).outputValue;
   }
+};
+
+/**
+ * The current status of the training job. This can be one of following:
+ * RUNNING - Only returned when retraining a model; for a new model, a trainedmodels.get call will return HTTP 200 before training is complete.
+ * DONE
+ * ERROR
+ * ERROR: NO VALID DATA INSTANCES
+ * ERROR: TRAINING JOB NOT FOUND
+ * ERROR: TRAINING TIME LIMIT EXCEEDED
+ * ERROR: TRAINING SYSTEM CAPACITY EXCEEDED
+ * ERROR: TRAINING DATA FILE SIZE LIMIT ERROR
+ * ERROR: STORAGE LOCATION IS INVALID
+ * @returns {String} model status
+ */
+GooglePredictionApi.prototype.getModelStatus = function () {
+  return this._client.get(this._getModelName()).trainingStatus;
 };
