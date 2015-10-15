@@ -19,7 +19,6 @@ getPrepItem = function (id) {
       if (jobItem.ingredients) {
         if (jobItem.ingredients.length > 0) {
           jobItem.ingredients.forEach(function (ing) {
-            Meteor.subscribe("ingredients", [id]);
             var ingItem = getIngredientItem(ing._id);
             if (ingItem) {
               jobItem.totalIngCost += parseFloat(ingItem.costPerPortionUsed) * parseFloat(ing.quantity);
