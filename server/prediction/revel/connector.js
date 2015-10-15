@@ -1,99 +1,100 @@
-var HOST = Meteor.settings.Revel.HOST;
-var KEY = Meteor.settings.Revel.KEY;
-var SECRET = Meteor.settings.Revel.SECRET;
+Revel = function Revel(posCredentials) {
+  this._posCredentials = posCredentials;
+  this.DATA_LIMIT = 5000;
 
-Revel = {
-  DATA_LIMIT: 5000,
-  queryRevelResource: function (resource, orderBy, isAscending, fields, limit, offset, pos) {
-    var orderByStr;
-
-    if (isAscending) {
-      orderByStr = orderBy;
-    } else {
-      orderByStr = '-' + orderBy;
-    }
-
-    try {
-      var response = HTTP.get(pos.host + '/resources/' + resource, {
-        headers: {
-          'API-AUTHENTICATION': pos.key + ':' + pos.secret
-        },
-        params: {
-          limit: limit,
-          offset: offset,
-          order_by: orderByStr,
-          fields: fields.join(','),
-          format: 'json'
-        }
-      });
-      if (response.statusCode === 200) {
-        return response.data;
-      } else {
-        throw new Meteor.Error(response.statusCode, 'Error while connecting to Revel');
-      }
-    } catch (err) {
-      logger.info('Error while connecting to Revel', {response: err});
-      return false;
-    }
-  },
-
-  queryRevelOrderItems: function (limit, offset, pos) {
-    return this.queryRevelResource('OrderItem', 'created_date', false, [
-      'product_name_override',
-      'created_date',
-      'quantity'
-    ], limit, offset, pos);
-  },
-
-  /**
-   *Iterates through order items in Revel
-   * @param onDateReceived - callback receives sales data for one day, should return false to stop iteration
-   */
-  uploadAndReduceOrderItems: function (onDateReceived, pos) {
-    var offset = 0;
-    var totalCount = this.DATA_LIMIT;
-    var toContinue = true;
-
-    var bucket = new RevelSalesDataBucket();
-
-    //temporal mock datasource
-    var mockRevel = new MockOrderItemDataSource();
-
-    while (offset <= totalCount && toContinue) {
-      logger.info('Request to Revel server', {offset: offset, total: totalCount});
-
-      if (HospoHero.isDevelopmentMode()) {
-        var result = mockRevel.load(this.DATA_LIMIT, offset);
-      } else {
-        var result = this.queryRevelOrderItems(this.DATA_LIMIT, offset, pos);
-      }
-
-      //handle Revel API error
-      if (result === false) {
-        return;
-      }
-
-      if (totalCount === this.DATA_LIMIT) {
-        totalCount = result.meta.total_count;
-      }
-
-      result.objects.every(function (entry) {
-        if (!bucket.put(entry)) {
-          toContinue = onDateReceived(bucket.getDataAndReset());
-          bucket.put(entry); //put next day entry
-          return toContinue;
-        }
-        return true;
-      });
-
-      offset += this.DATA_LIMIT;
-    }
+  if (HospoHero.isDevelopmentMode()) {
+    //add mock data source
+    revelMockMixin(this);
   }
 };
 
 
-//==== RevelSalesDataBucket ===
+Revel.prototype.queryRevelResource = function (resource, orderBy, isAscending, fields, offset) {
+  var orderByStr;
 
+  if (isAscending) {
+    orderByStr = orderBy;
+  } else {
+    orderByStr = '-' + orderBy;
+  }
+
+  try {
+    var pos = this._posCredentials;
+
+    var response = HTTP.get(pos.host + '/resources/' + resource, {
+      headers: {
+        'API-AUTHENTICATION': pos.key + ':' + pos.secret
+      },
+      params: {
+        limit: this.DATA_LIMIT,
+        offset: offset,
+        order_by: orderByStr,
+        fields: fields.join(','),
+        format: 'json'
+      }
+    });
+    if (response.statusCode === 200) {
+      return response.data;
+    } else {
+      throw new Meteor.Error(response.statusCode, 'Error while connecting to Revel');
+    }
+  } catch (err) {
+    logger.info('Error while connecting to Revel', {response: err});
+    return false;
+  }
+};
+
+Revel.prototype.queryRevelOrderItems = function (offset) {
+  return this.queryRevelResource('OrderItem', 'created_date', false, [
+    'product_name_override',
+    'created_date',
+    'quantity'
+  ], offset);
+};
+
+/**
+ *Iterates through order items in Revel
+ * @param onDateReceived callback receives sales data for one day, should return false to stop iteration
+ */
+Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived) {
+  var offset = 0;
+  var totalCount = this.DATA_LIMIT;
+  var toContinue = true;
+
+  var bucket = new RevelSalesDataBucket();
+
+  while (offset <= totalCount && toContinue) {
+    logger.info('Request to Revel server', {offset: offset, total: totalCount});
+
+    var result = this.queryRevelOrderItems(offset);
+
+    //handle Revel API error
+    if (result === false) {
+      return;
+    }
+
+    if (totalCount === this.DATA_LIMIT) {
+      totalCount = result.meta.total_count;
+    }
+
+    result.objects.every(function (entry) {
+      if (!bucket.put(entry)) {
+        toContinue = onDateReceived(bucket.getDataAndReset());
+        bucket.put(entry); //put next day entry
+        return toContinue;
+      }
+      return true;
+    });
+
+    offset += this.DATA_LIMIT;
+  }
+};
+
+
+/**
+ * Used to collect and group by menu item loaded data
+ * @constructor
+ */
 var RevelSalesDataBucket = function () {
   this._data = {};
   this._dayNumber = false;
@@ -137,5 +138,47 @@ RevelSalesDataBucket.prototype.getDataAndReset = function () {
 
 RevelSalesDataBucket.prototype.isEmpty = function () {
   return this._dayNumber === false
+};
+
+
+/**
+ * Data source with mock data for development mode
+ */
+var MockOrderItemDataSource = function MockOrderItemDataSource() {
+  this.currentDate = moment();
+};
+
+MockOrderItemDataSource.prototype.load = function () {
+  var items = MenuItems.find({}).fetch();
+  var result = {
+    meta: {
+      "limit": 5000,
+      "offset": 0,
+      "total_count": 616142
+    },
+    objects: []
+  };
+
+  var self = this;
+
+  _.each(items, function (item) {
+    var pushObject = {
+      created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
+      product_name_override: item.name,
+      quantity: Math.floor(Math.random() * 10 + 1)
+    };
+    result.objects.push(pushObject);
+  });
+  this.currentDate.subtract(1, "d");
+  return result
+};
+
+var revelMockMixin = function (context) {
+  //temporal mock datasource
+  var mockRevel = new MockOrderItemDataSource();
+
+  context.queryRevelOrderItems = function (offset) {
+    return mockRevel.load(context.DATA_LIMIT, offset);
+  };
 };
 

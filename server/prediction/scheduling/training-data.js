@@ -8,6 +8,13 @@ var updateLastTaskRunDateForLocation = function (locationId) {
   }, {upsert: true});
 };
 
+var updateActualSales = function (item) {
+  ImportedActualSales.update({
+    date: TimeRangeQueryBuilder.forDay(item.date),
+    menuItemId: item.menuItemId
+  }, item, {upsert: true});
+};
+
 
 var createUpdateActualSalesFunction = function (locationId) {
   //updates sales data for previous day
@@ -18,18 +25,14 @@ var createUpdateActualSalesFunction = function (locationId) {
     if (!isHandledFirstDay && previousDayMoment.isSame(salesData.createdDate, 'day')) {
       Object.keys(salesData.menuItems).forEach(function (menuItemName) {
         var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName, locationId);
+
         if (menuItem) {
-          var item = {
+          updateActualSales({
             quantity: salesData.menuItems[menuItemName],
             date: salesData.createdDate,
             menuItemId: menuItem._id,
             relations: menuItem.relations
-          };
-          ImportedActualSales.update(
-            {date: TimeRangeQueryBuilder.forDay(item.date), menuItemId: item.menuItemId},
-            item,
-            {upsert: true}
-          );
+          });
         }
       });
 
@@ -40,11 +43,12 @@ var createUpdateActualSalesFunction = function (locationId) {
   };
 };
 
+
 predictionModelRefreshJob = function () {
 
-  var locations = Locations.find({}).fetch();
+  var locations = Locations.find({});
 
-  _.each(locations, function (location) {
+  locations.forEach(function (location) {
     if (HospoHero.predictionUtils.havePos(location)) {
       var forecastData = ForecastDates.findOne({locationId: location._id});
       var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
@@ -52,24 +56,26 @@ predictionModelRefreshJob = function () {
 
       var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
 
+      var revelClient = new Revel(location.pos);
+
       if (needToUpdateModel) {
         var predictionApi = new GooglePredictionApi();
         var updateSession = predictionApi.getUpdatePredictionModelSession(location._id);
 
         //upload sales training data for the last year
-        Revel.uploadAndReduceOrderItems(function (salesData) {
+        revelClient.uploadAndReduceOrderItems(function (salesData) {
           updateActualSalesFn(salesData);
           return updateSession.onDataReceived(salesData);
-        }, location.pos);
+        });
 
         updateSession.onUploadingFinished();
 
         updateLastTaskRunDateForLocation(location._id);
       } else {
         //update sales for last day only
-        Revel.uploadAndReduceOrderItems(function (salesData) {
+        revelClient.uploadAndReduceOrderItems(function (salesData) {
           return updateActualSalesFn(salesData);
-        }, location.pos);
+        });
       }
     }
   });

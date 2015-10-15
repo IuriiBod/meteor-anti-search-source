@@ -2,7 +2,7 @@ var predict = function (days, locationId) {
   var today = new Date();
   var dateMoment = moment();
   var prediction = new GooglePredictionApi();
-  var items = MenuItems.find({"relations.locationId":locationId}, {}).fetch();
+  var items = MenuItems.find({"relations.locationId": locationId}, {});
   var notification = new Notification();
   //forecast for 15 days
   OpenWeatherMap.updateWeatherForecastForLocation(locationId);
@@ -21,7 +21,7 @@ var predict = function (days, locationId) {
       }
     }
 
-    _.each(items, function (item) {
+    items.forEach(function (item) {
       var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
       var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
       var predictItem = {
@@ -29,20 +29,23 @@ var predict = function (days, locationId) {
         quantity: quantity,
         updateAt: today,
         menuItemId: item._id,
-        relations:  item.relations
+        relations: item.relations
       };
 
       //checking need for notification push
-      var currentData = SalesPrediction.findOne({
-        date: TimeRangeQueryBuilder.forDay(dateMoment),
-        menuItemId: predictItem.menuItemId
-      });
       if (i < 14 && currentData) {
-        if (currentData.quantity != predictItem.quantity) {
-          var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
-          notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
+        if (currentData) {
+          var currentData = SalesPrediction.findOne({
+            date: TimeRangeQueryBuilder.forDay(dateMoment),
+            menuItemId: predictItem.menuItemId
+          });
+          if (currentData.quantity != predictItem.quantity) {
+            var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
+            notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
+          }
         }
       }
+
       SalesPrediction.update({
         date: TimeRangeQueryBuilder.forDay(predictItem.date),
         menuItemId: predictItem.menuItemId
@@ -61,44 +64,40 @@ var predict = function (days, locationId) {
 };
 
 
-var salesPredictionUpdateJob = function () {
-  var locations = Locations.find({}).fetch();
+var updateForecastDate = function (locationId, property, dateValue) {
+  var properties = _.isArray(property) ? property : [property];
 
-  var date = moment();
-  _.each(locations, function (location) {
+  var updateQuery = _.reduce(properties, function (query, property) {
+    query[property] = dateValue;
+    return query;
+  }, {});
+
+  ForecastDates.update({locationId: locationId}, {$set: updateQuery}, {upsert: true});
+};
+
+
+salesPredictionUpdateJob = function () {
+  var locations = Locations.find({});
+
+  var todayMoment = moment();
+
+  locations.forEach(function (location) {
     if (HospoHero.predictionUtils.havePos(location)) {
-      if (!ForecastDates.findOne({locationId: location._id})) {
-        ForecastDates.insert({
-          locationId: location._id,
-          lastOne: date.toDate(),
-          lastThree: date.toDate(),
-          lastSixWeeks: date.toDate()
-        });
+      var lastUpdates = ForecastDates.findOne({locationId: location._id});
+
+      var needFullUpdate = !lastUpdates || !lastUpdates.lastThree
+        || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42);
+
+      if (needFullUpdate) {
         predict(84, location._id);
-      }
-      else {
-        var lastUpdates = ForecastDates.findOne({locationId: location._id});
-        if (!ForecastDates.findOne({locationId: location._id}).lastThree) {
-          predict(84, location._id);
-        }
-        else {
-          if (date.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42)) {
-            predict(84, location._id);
-            ForecastDates.update({locationId: location._id}, {
-              $set: {
-                lastSixWeeks: date.toDate(),
-                lastThree: date.toDate()
-              }
-            });
-          } else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
-            predict(7, location._id);
-            ForecastDates.update({locationId: location._id}, {$set: {lastThree: date.toDate()}});
-          }
-          else if (date.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
-            predict(2, location._id);
-            ForecastDates.update({locationId: location._id}, {$set: {lastOne: date.toDate()}});
-          }
-        }
+        updateForecastDate(location._id, ['lastSixWeeks', 'lastThree'], todayMoment.toDate());
+
+      } else if (todayMoment.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
+        predict(7, location._id);
+        updateForecastDate(location._id, 'lastThree', todayMoment.toDate());
+
+      } else if (todayMoment.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
+        predict(2, location._id);
       }
     }
   });
