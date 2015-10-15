@@ -1,7 +1,7 @@
 var predict = function (days, locationId) {
   var today = new Date();
   var dateMoment = moment();
-  var prediction = new GooglePredictionApi();
+  var prediction = new GooglePredictionApi(locationId);
   var items = MenuItems.find({"relations.locationId": locationId}, {});
   var notification = new Notification();
   //forecast for 15 days

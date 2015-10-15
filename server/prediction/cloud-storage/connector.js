@@ -31,7 +31,7 @@ GoogleCloud = {
 
   MAX_UPLOADED_DAYS_COUNT: 365,
 
-  createTrainingDataUploadingSession: function (trainingFileName, onUploadingFinishedCallback) {
+  createTrainingDataUploadingSession: function (trainingFileName, locationId, onUploadingFinishedCallback) {
     var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
     var trainingDataWriteStream = new through();
 
@@ -46,8 +46,8 @@ GoogleCloud = {
       onDataReceived: function (salesData) {
         logger.info('Received daily sales', {date: salesData.createdDate});
 
-        //todo replace location with "Location's" location
-        var weather = OpenWeatherMap.history(salesData.createdDate, Meteor.settings.Location);
+        var locationString = OpenWeatherMap.getLocationString(locationId);
+        var weather = OpenWeatherMap.history(salesData.createdDate, locationString);
         var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather);
         trainingDataWriteStream.push(csvEntriesForCurrentDay);
 

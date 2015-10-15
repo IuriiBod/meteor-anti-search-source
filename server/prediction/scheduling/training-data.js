@@ -59,7 +59,7 @@ predictionModelRefreshJob = function () {
       var revelClient = new Revel(location.pos);
 
       if (needToUpdateModel) {
-        var predictionApi = new GooglePredictionApi();
+        var predictionApi = new GooglePredictionApi(location._id);
         var updateSession = predictionApi.getUpdatePredictionModelSession(location._id);
 
         //upload sales training data for the last year

@@ -30,6 +30,11 @@ OpenWeatherMap = {
     }
   },
 
+  getLocationString: function (locationId) {
+    var location = Locations.findOne({_id: locationId});
+    return location.city + ',' + location.country;
+  },
+
   forecast: function (location) {
     var data = this._httpGetRequest('/forecast/daily', {
       q: location,
