@@ -4,7 +4,7 @@ var component = FlowComponents.define('locationSettings', function(props) {
 });
 
 component.state.location = function() {
-  if(this.locationId) {
+  if(this.get('locationId')) {
     return Locations.findOne({_id: this.get('locationId')});
   }
 };

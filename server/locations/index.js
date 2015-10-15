@@ -44,6 +44,42 @@ Meteor.methods({
     Locations.update({_id: id}, {$set: {name: val}});
   },
 
+  updateLocationMainInfo: function(locationId, doc) {
+    if(!HospoHero.isManager) {
+      throw new Meteor.Error(403, 'User not permitted to change location information');
+    }
+
+    HospoHero.checkMongoId(locationId);
+    check(doc, Object);
+
+    if(!OpenWeatherMap.isValid(doc.city, doc.country)){
+      throw new Meteor.Error("Make sure you inserted right country and city");
+    }
+
+    return Locations.update({
+      _id: locationId
+    }, {
+      $set: doc
+    });
+  },
+
+  updatePosSettings: function(locationId, doc) {
+    if(!HospoHero.isManager) {
+      throw new Meteor.Error(403, 'User not permitted to change location information');
+    }
+
+    HospoHero.checkMongoId(locationId);
+    check(doc, Object);
+
+    return Locations.update({
+      _id: locationId
+    }, {
+      $set: {
+        pos: doc
+      }
+    });
+  },
+
   updateShiftUpdateHour: function(newHoursValue) {
     if(!HospoHero.isManager()) {
       throw new Meteor.Error(403, 'User not permitted to change time');
