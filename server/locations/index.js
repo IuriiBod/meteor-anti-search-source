@@ -10,7 +10,6 @@ Meteor.methods({
       throw new Meteor.Error("Make sure you inserted right country and city");
     }
     // Create location
-    console.log(loc.openingTime);
     return Locations.insert({
       name: loc.name,
       country: loc.country,
