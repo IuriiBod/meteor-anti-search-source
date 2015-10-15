@@ -109,33 +109,29 @@ Template.invitationAccept.events({
   'submit form#invitationForm': function(e, tpl) {
     e.preventDefault();
     var invitationId = Router.current().params._id;
-    var user = {
-      profile: {}
-    };
-
     var validationResult = tpl._customForm.validate(tpl);
-    user.username = validationResult.username;
-    user.email = validationResult.email;
-    user.password = validationResult.password;
-    user.profile.firstname = validationResult.firstname;
-    user.profile.lastname = validationResult.lastname;
-    user.profile.gender = validationResult.gender;
-    user.profile.pinCode = validationResult.pinCode;
 
-    if(validationResult.address) {
-      user.profile.address = validationResult.address;
-    }
+    if(validationResult) {
+      var nonProfileItems = ['username', 'email', 'password'];
+      var user = {
+        profile: {}
+      };
 
-    if(validationResult.tel) {
-      user.profile.tel = validationResult.tel;
-    }
-
-    Meteor.call('acceptInvitation', invitationId, user, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        Router.go('home');
+      for(var key in validationResult) {
+        if(nonProfileItems.indexOf(key) == -1) {
+          user.profile[key] = validationResult[key];
+        } else {
+          user[key] = validationResult[key];
+        }
       }
-    });
+
+      Meteor.call('acceptInvitation', invitationId, user, function(err) {
+        if(err) {
+          HospoHero.error(err);
+        } else {
+          Router.go('home');
+        }
+      });
+    }
   }
 });
