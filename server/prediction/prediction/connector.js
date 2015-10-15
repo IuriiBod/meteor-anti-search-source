@@ -50,15 +50,17 @@ GooglePredictionApi.prototype.makePrediction = function (inputData, locationId) 
 };
 
 GooglePredictionApi.prototype.removePredictionModel = function(locationId) {
-    var modelName = this._getModelName(locationId);
-    var modelIsPresent = false;
-    var modelsList = this._client.list().items;
+  var modelName = this._getModelName(locationId);
+  var modelIsPresent = false;
+  var modelsList = this._client.list();
+  if(modelsList.items) {
     for (var i=0; i<modelsList.length; i++) {
-        if (modelsList[i].id === modelName) {
-            modelIsPresent = true;
-            break;
-        }
+      if (modelsList[i].id === modelName) {
+        modelIsPresent = true;
+        break;
+      }
     }
-    if (modelIsPresent)
-        this._client.remove(modelName);
+  }
+  if (modelIsPresent)
+    this._client.remove(modelName);
 };
