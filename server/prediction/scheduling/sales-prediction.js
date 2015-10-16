@@ -14,15 +14,15 @@ var predict = function (days, locationId) {
     if (i < 16) {
       currentWeather = WeatherForecast.findOne({locationId: locationId, date: TimeRangeQueryBuilder.forDay(today)});
     } else {
+        main: "Clear",
       //todo: temporal. figure out typical weather
       currentWeather = {
-        main: "Clear",
         temp: 20.0
       }
     }
 
     areas.forEach(function (area) {
-      var items = MenuItems.find({"relations.locationId": locationId, areaId:area._id}, {});
+      var items = MenuItems.find({'relations.locationId': locationId, 'relations.areaId':area._id}, {}); //get menu items for current area
       var notification = new Notification();
 
       items.forEach(function (item) {
