@@ -51,7 +51,6 @@ Template.dailyShiftScheduling.events({
   'click .generateRecurring': function(event) {
     event.preventDefault();
     var date = Router.current().params.date;
-    console.log(date);
     Meteor.call("generateRecurrings", date, function(err, result) {
       if(err) {
         HospoHero.error(err);
@@ -94,7 +93,7 @@ Template.dailyShiftScheduling.onRendered(function () {
   }
 
   var calendar = new Template.dailyShiftScheduling.Calendar(this, {
-    shiftDate: new Date(routeDate),
+    shiftDate: new Date(new Date(routeDate).setUTCHours(24)),
     oneDay: 1000 * 3600 * 24,
     businessStartsAt: 8,
     businessEndsAt: 5
