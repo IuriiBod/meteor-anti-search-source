@@ -82,7 +82,7 @@ salesPredictionUpdateJob = function () {
   var todayMoment = moment();
 
   locations.forEach(function (location) {
-    if (HospoHero.predictionUtils.havePos(location)) {
+    if (HospoHero.prediction.isAvailableForLocation(location)) {
       var lastUpdates = ForecastDates.findOne({locationId: location._id});
 
       var needFullUpdate = !lastUpdates || !lastUpdates.lastThree

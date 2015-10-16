@@ -38,7 +38,7 @@ GooglePredictionApi.prototype.getUpdatePredictionModelSession = function () {
   };
 
   //uplaod data to google cloud storage
-  return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(), locationId, onFinished);
+  return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(), this._locationId, onFinished);
 };
 
 

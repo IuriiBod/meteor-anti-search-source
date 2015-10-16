@@ -1,12 +1,12 @@
 var CloudSettings = Meteor.settings.GoogleCloud;
 
 var CsvEntryGenerator = {
-  generate: function (salesData, weather) {
+  generate: function (salesData, weather, locationId) {
     var csvString = '';
     var dayOfYear = moment(salesData.createdDate).dayOfYear();
 
     _.each(salesData.menuItems, function (selledCount, menuItemName) {
-      var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName);
+      var menuItem = HospoHero.prediction.getMenuItemByRevelName(menuItemName, locationId);
 
       if (menuItem) {
         csvString += selledCount + ', "' + menuItem._id + '", ' + weather.temp + ', "' + weather.main + '", ' + dayOfYear + '\n';
@@ -48,7 +48,7 @@ GoogleCloud = {
 
         var locationString = OpenWeatherMap.getLocationString(locationId);
         var weather = OpenWeatherMap.history(salesData.createdDate, locationString);
-        var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather);
+        var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather, locationId);
         trainingDataWriteStream.push(csvEntriesForCurrentDay);
 
         uploadedDaysCount++;

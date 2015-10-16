@@ -19,16 +19,29 @@ TimeRangeQueryBuilder = {
   }
 };
 
-Namespace('HospoHero.predictionUtils', {
+Namespace('HospoHero.prediction', {
   getMenuItemByRevelName: function (menuItemName, locationId) {
     return MenuItems.findOne({
       'relations.locationId': locationId,
       $or: [{revelName: menuItemName}, {name: menuItemName}]
     })
   },
-  havePos: function (locationId) {
-    var location = Locations.findOne({_id: locationId});
-    return !!(location && location.pos && location.pos.host.length > 0 && location.pos.key.length > 0 && location.pos.secret.length > 0);
+
+  /**
+   * Check whether location can use prediction functionality
+   * @param {String|Object} location to check
+   * @returns {boolean}
+   */
+  isAvailableForLocation: function (location) {
+    if (_.isString(location)) {
+      location = Locations.findOne({_id: location});
+    }
+
+    return location && location.pos &&
+      _.reduce(['host', 'key', 'secret'], function (isValid, property) {
+        var str = location.pos[property];
+        return str && str.length > 0 && isValid;
+      }, true);
   }
 });
 

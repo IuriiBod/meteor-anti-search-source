@@ -1,6 +1,6 @@
 var consoleOptions = {
   colorize: true,
-  level: 'warn',
+  level: 'info',
   levels: {debug: 0, info: 1, warn: 2, error: 3},
   colors: {debug: 'blue', info: 'green', warn: 'orange', error: 'red'},
   handleExeptions: true,

@@ -24,7 +24,7 @@ var createUpdateActualSalesFunction = function (locationId) {
   return function (salesData) {
     if (!isHandledFirstDay && previousDayMoment.isSame(salesData.createdDate, 'day')) {
       Object.keys(salesData.menuItems).forEach(function (menuItemName) {
-        var menuItem = HospoHero.predictionUtils.getMenuItemByRevelName(menuItemName, locationId);
+        var menuItem = HospoHero.prediction.getMenuItemByRevelName(menuItemName, locationId);
 
         if (menuItem) {
           updateActualSales({
@@ -49,14 +49,10 @@ predictionModelRefreshJob = function () {
   var locations = Locations.find({archived: {$ne: true}});
 
   locations.forEach(function (location) {
-    console.log(location);
-
-    var predictionEnabled = HospoHero.predictionUtils.havePos(location);
-
-    console.log('test ', predictionEnabled);
+    var predictionEnabled = HospoHero.prediction.isAvailableForLocation(location);
 
     if (predictionEnabled) {
-      var forecastData = ForecastDates.findOne({locationId: location._id});
+      var forecastData = ForecastDates.findOne({locationId: location});
       var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
         || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
 
