@@ -1,6 +1,3 @@
-var WEATHER_URL = Meteor.settings.OpenWeatherMap.HOST + '/data/2.5';
-var API_KEY = Meteor.settings.OpenWeatherMap.KEY;
-
 OpenWeatherMap = {
   _convertDtToDate: function (dt) {
     return new Date(dt * 1000);
@@ -14,13 +11,14 @@ OpenWeatherMap = {
     var defaultParams = {
       mode: 'json',
       units: 'metric',
-      APPID: API_KEY
+      APPID: Meteor.settings.OpenWeatherMap.KEY
     };
 
     var allParams = _.extend(defaultParams, params);
 
     try {
-      var res = HTTP.get(WEATHER_URL + route, {
+      var url = Meteor.settings.OpenWeatherMap.HOST + '/data/2.5';
+      var res = HTTP.get(url + route, {
         params: allParams
       });
       return res.data;
