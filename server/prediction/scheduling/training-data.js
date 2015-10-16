@@ -46,7 +46,7 @@ var createUpdateActualSalesFunction = function (locationId) {
 
 predictionModelRefreshJob = function () {
 
-  var locations = Locations.find({});
+  var locations = Locations.find({archived: {$ne: true}});
 
   locations.forEach(function (location) {
     console.log(location);

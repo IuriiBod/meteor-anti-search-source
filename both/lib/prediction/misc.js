@@ -8,7 +8,6 @@ TimeRangeQueryBuilder = {
     else {
       return {$gte: start.toDate(), $lte: end.toDate()};
     }
-
   },
 
   forWeek: function (date, inUnix) {
@@ -19,7 +18,6 @@ TimeRangeQueryBuilder = {
     return this._buildQueryFor('day', date, inUnix);
   }
 };
-
 
 Namespace('HospoHero.predictionUtils', {
   getMenuItemByRevelName: function (menuItemName, locationId) {

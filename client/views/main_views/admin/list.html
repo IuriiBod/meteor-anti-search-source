@@ -30,6 +30,9 @@
             <li class="">
               <a href="#force-forecast" data-toggle="tab">[dev]Force-Forecast</a>
             </li>
+            <li class="">
+              <a href="#archiving" data-toggle="tab">Locations/Areas archiving</a>
+            </li>
           </ul>
 
           <div class="tab-content">
@@ -56,6 +59,9 @@
             </div>
             <div class="tab-pane" id="force-forecast">
               {{> render component='forceForecast'}}
+            </div>
+            <div class="tab-pane" id="archiving">
+              {{> render component="locationAreaArchiving"}}
             </div>
           </div>
         </div>

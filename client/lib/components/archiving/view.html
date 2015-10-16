@@ -1,0 +1,15 @@
+<template name="locationAreaArchiving">
+  <div class="panel-body">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      {{#each state$locations}}
+        <div class="panel panel-{{settings.panel}}">
+          {{>render component="locationItem" location=this}}
+          <div id="body-{{_id}}" class="panel-collapse collapse" role="tabpanel"
+               aria-labelledby="heading-{{_id}}">
+            {{>render component="areaList" locationId=_id}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</template>

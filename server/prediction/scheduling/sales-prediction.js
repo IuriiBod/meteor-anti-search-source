@@ -77,7 +77,7 @@ var updateForecastDate = function (locationId, property, dateValue) {
 
 
 salesPredictionUpdateJob = function () {
-  var locations = Locations.find({});
+  var locations = Locations.find({archived:{$ne:true}});
 
   var todayMoment = moment();
 

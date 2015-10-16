@@ -27,4 +27,3 @@ Migrations.add({
     Areas.update({}, {$unset: {status: ""}}, {multi: true});
   }
 });
-
