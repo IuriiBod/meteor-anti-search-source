@@ -10,7 +10,6 @@ Meteor.methods({
       throw new Meteor.Error("Make sure you inserted right country and city");
     }
     // Create location
-    console.log(loc.openingTime);
     return Locations.insert({
       name: loc.name,
       country: loc.country,
@@ -21,6 +20,7 @@ Meteor.methods({
       openingTime: moment(loc.openingTime).toDate(),
       closingTime: moment(loc.closingTime).toDate(),
       organizationId: loc.organizationId,
+      shiftUpdateHour: '7',
       createdAt: Date.now()
     });
   },
@@ -43,6 +43,42 @@ Meteor.methods({
       throw new Meteor.Error("The location with the same name already exists!");
     }
     Locations.update({_id: id}, {$set: {name: val}});
+  },
+
+  updateLocationMainInfo: function(locationId, doc) {
+    if(!HospoHero.isManager) {
+      throw new Meteor.Error(403, 'User not permitted to change location information');
+    }
+
+    HospoHero.checkMongoId(locationId);
+    check(doc, Object);
+
+    if(!OpenWeatherMap.isValid(doc.city, doc.country)){
+      throw new Meteor.Error("Make sure you inserted right country and city");
+    }
+
+    return Locations.update({
+      _id: locationId
+    }, {
+      $set: doc
+    });
+  },
+
+  updatePosSettings: function(locationId, doc) {
+    if(!HospoHero.isManager) {
+      throw new Meteor.Error(403, 'User not permitted to change location information');
+    }
+
+    HospoHero.checkMongoId(locationId);
+    check(doc, Object);
+
+    return Locations.update({
+      _id: locationId
+    }, {
+      $set: {
+        pos: doc
+      }
+    });
   },
 
   updateShiftUpdateHour: function(newHoursValue) {

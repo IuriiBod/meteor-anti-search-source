@@ -1,7 +1,7 @@
 CustomForm = function CustomForm(options) {
   this.name = options.name;
   this.id = options.id;
-  this.fields = options.fields;
+  this.fields = options.fields || {} ;
 };
 
 // ====== RENDERING FORM ======
@@ -38,11 +38,10 @@ CustomForm.prototype._getInputText = function(name, params) {
 CustomForm.prototype._getInputSelect = function(name, params) {
   var field = [];
   field.push('<select class="form-control" id="' + name + '" name="' + name + '">');
-
   if(params.options && params.options.length) {
     _.map(params.options, function(option, key) {
       field.push('<option value="' + option.value + '"');
-      if(params.value && key == params.value) {
+      if(params.value && (key === params.value || option.value === params.value)) {
         field.push(' selected="selected"');
       }
       field.push('>' + option.text + '</option>');
@@ -64,7 +63,11 @@ CustomForm.prototype._getInput = function(name, params) {
 
 CustomForm.prototype._getSubmitButton = function(name, params) {
   var field = [];
-  field.push('<button type="submit" class="btn btn-block btn-default" id="' + name + '" name="' + name + '">');
+  field.push('<button type="submit" class="btn ');
+  if(!params.inline) {
+    field.push('btn-block ');
+  }
+  field.push('btn-default" id="' + name + '" name="' + name + '">');
   field.push(params.value);
   field.push('</button>');
   return field.join('');
@@ -73,7 +76,11 @@ CustomForm.prototype._getSubmitButton = function(name, params) {
 CustomForm.prototype._getFieldHTML = function(name, params) {
   if(params.type != 'submit') {
     var field = [];
-    field.push('<div class="form-group">');
+    field.push('<div class="form-group');
+    if(params.class) {
+      field.push(' ' + params.class);
+    }
+    field.push('">');
 
     if(params.label) {
       field.push('<label class="control-label" for="' + name + '">');
@@ -174,8 +181,6 @@ CustomForm.prototype.validate = function(template) {
   return hasErrors ? false : validationResults;
 };
 
-//CustomForm.prototype.addValue = function(name, value) {
-//  if(this.fields.hasOwnProperty(name)) {
-//    this.fields[name].value = value;
-//  }
-//};
+CustomForm.prototype.addField = function(name, options) {
+  this.fields[name] = options;
+};
