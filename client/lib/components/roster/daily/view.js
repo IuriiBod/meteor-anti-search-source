@@ -51,7 +51,6 @@ Template.dailyShiftScheduling.events({
   'click .generateRecurring': function(event) {
     event.preventDefault();
     var date = Router.current().params.date;
-    console.log(date);
     Meteor.call("generateRecurrings", date, function(err, result) {
       if(err) {
         HospoHero.error(err);

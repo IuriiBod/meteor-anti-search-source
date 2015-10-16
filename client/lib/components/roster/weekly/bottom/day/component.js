@@ -17,7 +17,7 @@ component.state.origin = function() {
 component.state.shifts = function() {
   var origin = this.origin;
   if(origin == "weeklyroster") {
-    var date = new Date(this.name.date).setUTCHours(0);
+    var date = new Date(this.name.date).setUTCHours(24);
     return Shifts.find({
       "shiftDate": date,
       "type": null,
