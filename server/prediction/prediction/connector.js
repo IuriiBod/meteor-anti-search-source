@@ -27,7 +27,6 @@ GooglePredictionApi.prototype._getTrainingFileName = function () {
   } else {
     return "sales-data-" + this._locationId + ".csv";
   }
-
 };
 
 
@@ -66,4 +65,25 @@ GooglePredictionApi.prototype.makePrediction = function (inputData) {
  */
 GooglePredictionApi.prototype.getModelStatus = function () {
   return this._client.get(this._getModelName()).trainingStatus;
+};
+
+
+/**
+ * Remove prediction model includes also removing related CSV file in cloud storage
+ */
+GooglePredictionApi.prototype.removePredictionModel = function () {
+  var modelName = this._getModelName();
+  var modelsList = this._client.list();
+
+  if (modelsList.items) {
+    var modelToRemove = _.find(modelsList, function (model) {
+      return model.id === modelName
+    });
+
+    if (modelToRemove) {
+      this._client.remove(modelName);
+      var trainingFileName = this._getTrainingFileName();
+      GoogleCloud.removeTrainingDataFile(trainingFileName);
+    }
+  }
 };

@@ -60,5 +60,15 @@ GoogleCloud = {
         onUploadingFinishedCallback();
       }
     }
+  },
+
+  removeTrainingDataFile: function (trainingFileName) {
+    var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
+    var file = bucket.file(trainingFileName);
+    file.delete(function (err, apiResponse) {
+      if (err) {
+        logger.error('error while removing training file', {error: err});
+      }
+    });
   }
 };
