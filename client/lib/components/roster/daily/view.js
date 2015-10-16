@@ -93,7 +93,7 @@ Template.dailyShiftScheduling.onRendered(function () {
   }
 
   var calendar = new Template.dailyShiftScheduling.Calendar(this, {
-    shiftDate: new Date(routeDate),
+    shiftDate: new Date(new Date(routeDate).setUTCHours(24)),
     oneDay: 1000 * 3600 * 24,
     businessStartsAt: 8,
     businessEndsAt: 5
