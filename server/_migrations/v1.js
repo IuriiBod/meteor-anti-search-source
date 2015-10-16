@@ -113,7 +113,6 @@ Migrations.add({
       JobItems,
       MenuItems,
       Comments,
-      Posts,
       Categories,
       Notifications,
       GeneralAreas,
