@@ -51,6 +51,30 @@ GooglePredictionApi.prototype.makePrediction = function (inputData) {
   }
 };
 
+
+GooglePredictionApi.prototype.removePredictionModel = function() {
+  var modelName = this._getModelName();
+  var modelIsPresent = false;
+  var modelsList = this._client.list();
+  if(modelsList.items) {
+    for (var i=0; i<modelsList.length; i++) {
+      if (modelsList[i].id === modelName) {
+        modelIsPresent = true;
+        break;
+      }
+    }
+  }
+  if (modelIsPresent)
+    this._client.remove(modelName);
+};
+
+
+GooglePredictionApi.prototype.removeTrainingDataFile = function() {
+  var trainingFileName = this._getTrainingFileName();
+  GoogleCloud.removeTrainingDataFile(trainingFileName);
+};
+
+
 /**
  * The current status of the training job. This can be one of following:
  * RUNNING - Only returned when retraining a model; for a new model, a trainedmodels.get call will return HTTP 200 before training is complete.
@@ -67,3 +91,4 @@ GooglePredictionApi.prototype.makePrediction = function (inputData) {
 GooglePredictionApi.prototype.getModelStatus = function () {
   return this._client.get(this._getModelName()).trainingStatus;
 };
+
