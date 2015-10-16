@@ -49,7 +49,13 @@ predictionModelRefreshJob = function () {
   var locations = Locations.find({});
 
   locations.forEach(function (location) {
-    if (HospoHero.predictionUtils.havePos(location)) {
+    console.log(location);
+
+    var predictionEnabled = HospoHero.predictionUtils.havePos(location);
+
+    console.log('test ', predictionEnabled);
+
+    if (predictionEnabled) {
       var forecastData = ForecastDates.findOne({locationId: location._id});
       var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
         || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
