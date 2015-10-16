@@ -17,12 +17,11 @@ Template.navigation.events({
   },
   
   'click #side-menu>li': function(e, tpl) {
-    var li = $(e.target).parent();
-    
+    var li = $(e.target).closest('li');
+
     if (li.closest("ul").attr("id") == "side-menu") {
-      tpl.$("ul.collapse").removeClass("in");
-      li.siblings().removeClass("active");
-      li.addClass("active");
+      li.addClass('active').children('ul').addClass('in');
+      li.siblings().removeClass('active').children('ul').removeClass('in');
     }
   }
 });
