@@ -82,6 +82,8 @@ OpenWeatherMap = {
   },
 
   updateWeatherForecastForLocation: function (locationId) {
+    logger.info('updating weather forecast for location', {_id: locationId});
+
     //check if we need an update forecast
     var today = moment().startOf('day').toDate();//today is start of day
 

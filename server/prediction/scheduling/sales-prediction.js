@@ -1,10 +1,13 @@
 var predict = function (days, locationId) {
+  logger.info('Make prediction', {days: days, locationId: locationId});
+
   var today = new Date();
   var dateMoment = moment();
   var prediction = new GooglePredictionApi(locationId);
   var items = MenuItems.find({"relations.locationId": locationId}, {});
   var notification = new Notification();
   //forecast for 15 days
+
   OpenWeatherMap.updateWeatherForecastForLocation(locationId);
 
   var currentWeather;
@@ -77,7 +80,9 @@ var updateForecastDate = function (locationId, property, dateValue) {
 
 
 salesPredictionUpdateJob = function () {
-  var locations = Locations.find({archived:{$ne:true}});
+  logger.info('started prediction update job');
+
+  var locations = Locations.find({archived: {$ne: true}});
 
   var todayMoment = moment();
 
