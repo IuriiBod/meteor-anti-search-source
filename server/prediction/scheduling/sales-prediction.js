@@ -2,8 +2,8 @@ var predict = function (days, locationId) {
   var today = new Date();
   var dateMoment = moment();
   var prediction = new GooglePredictionApi(locationId);
-  var items = MenuItems.find({"relations.locationId": locationId}, {});
-  var notification = new Notification();
+  var areas = Areas.find({locationId:locationId});
+  var roleManagerId = 'rnz28xNqXj645cHmm';
   //forecast for 15 days
   OpenWeatherMap.updateWeatherForecastForLocation(locationId);
 
@@ -21,35 +21,49 @@ var predict = function (days, locationId) {
       }
     }
 
-    items.forEach(function (item) {
-      var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
-      var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
-      var predictItem = {
-        date: moment(dateMoment).toDate(),
-        quantity: quantity,
-        updateAt: today,
-        menuItemId: item._id,
-        relations: item.relations
-      };
+    areas.forEach(function (area) {
+      var items = MenuItems.find({"relations.locationId": locationId, areaId:area._id}, {});
+      var notification = new Notification();
 
-      //checking need for notification push
-      if (i < 14 && currentData) {
-        if (currentData) {
-          var currentData = SalesPrediction.findOne({
-            date: TimeRangeQueryBuilder.forDay(dateMoment),
-            menuItemId: predictItem.menuItemId
-          });
-          if (currentData.quantity != predictItem.quantity) {
-            var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
-            notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
+      items.forEach(function (item) {
+        var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
+        var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
+        var predictItem = {
+          date: moment(dateMoment).toDate(),
+          quantity: quantity,
+          updateAt: today,
+          menuItemId: item._id,
+          relations: item.relations
+        };
+
+        //checking need for notification push
+        if (i < 14 && currentData) {
+          if (currentData) {
+            var currentData = SalesPrediction.findOne({
+              date: TimeRangeQueryBuilder.forDay(dateMoment),
+              menuItemId: predictItem.menuItemId
+            });
+            if (currentData.quantity != predictItem.quantity) {
+              var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
+              notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
+            }
           }
         }
-      }
 
-      SalesPrediction.update({
-        date: TimeRangeQueryBuilder.forDay(predictItem.date),
-        menuItemId: predictItem.menuItemId
-      }, predictItem, {upsert: true});
+        SalesPrediction.update({
+          date: TimeRangeQueryBuilder.forDay(predictItem.date),
+          menuItemId: predictItem.menuItemId
+        }, predictItem, {upsert: true});
+
+      });
+
+      var receiversIds = Meteor.users.find({'relations.areaIds': area._id}).fetch().map(function (user) {
+        if (user[area._id] === roleManagerId){
+          return user._id;
+        }
+      });
+
+      notification.send(receiversIds);
 
     });
 
@@ -62,7 +76,6 @@ var predict = function (days, locationId) {
   //});
   //notification.send(receiversIds);
 };
-
 
 var updateForecastDate = function (locationId, property, dateValue) {
   var properties = _.isArray(property) ? property : [property];
