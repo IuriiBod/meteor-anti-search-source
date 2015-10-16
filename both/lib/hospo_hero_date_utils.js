@@ -1,4 +1,22 @@
 Namespace('HospoHero.dateUtils', {
+  formatDate: function(date, format) {
+    return moment(date).format(format);
+  },
+
+  timezones: function() {
+    var zones = [];
+    for(var i=-12; i<=12; i++) {
+      if(i>0) {
+        i = "+"+i;
+      }
+      zones.push({
+        value: 'UTC '+i,
+        text: 'UTC '+i
+      });
+    }
+    return zones;
+  },
+
   hours: function() {
     var hours = [];
     for (var i = 0; i < 24; i++) {
@@ -10,8 +28,18 @@ Namespace('HospoHero.dateUtils', {
     return hours;
   },
 
-  formatDate: function(date, format) {
-    return moment(date).format(format);
+  minutes: function() {
+    var minutes = [];
+    for (var i = 0; i < 60; i++) {
+      if (i < 10) {
+        i = "0" + i;
+      }
+      minutes.push({
+        value: i,
+        text: i
+      });
+    }
+    return minutes;
   },
 
   intervalDateFormat: function(startDate, endDate) {
@@ -34,5 +62,9 @@ Namespace('HospoHero.dateUtils', {
     }
     resultDate.push(endTime);
     return resultDate.join('');
+  },
+
+  timeFormat: function(date) {
+    return HospoHero.dateUtils.formatDate(date, 'H:mm');
   }
 });

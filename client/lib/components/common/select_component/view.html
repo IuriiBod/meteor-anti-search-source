@@ -2,12 +2,12 @@
   <select name="{{state$name}}" class="form-control">
     {{#each state$values}}
       {{#if state$isSelected value}}
-        <option value="{{key}}" selected="selected">
-          {{title}}
+        <option value="{{value}}" selected="selected">
+          {{text}}
         </option>
       {{else}}
         <option value="{{value}}">
-          {{title}}
+          {{text}}
         </option>
       {{/if}}
     {{/each}}

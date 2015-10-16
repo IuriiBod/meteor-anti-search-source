@@ -33,7 +33,7 @@
                     <i class="fa fa-calendar-o"></i>
                     <span class="nav-label">Roster</span>
                   </a>
-                  <ul class="nav nav-second-level {{isActiveRoute regex='dailyRoster|weeklyRoster|templateWeeklyRoster' className='in'}}">
+                  <ul class="nav nav-second-level collapse {{isActiveRoute regex='dailyRoster|weeklyRoster|templateWeeklyRoster' className='in'}}">
                     <li class="{{isActiveRoute regex='weeklyRoster'}}">
                       <a href="/roster/weekly/{{year}}/{{week}}">Weekly</a>
                     </li>
@@ -68,7 +68,7 @@
                     <i class="fa fa-list"></i>
                     <span class="nav-label">Stock</span>
                   </a>
-                  <ul class="nav nav-second-level {{isActiveRoute name='ingredientsList|stocktake|supplierOrdering' className='in'}}">
+                  <ul class="nav nav-second-level collapse {{isActiveRoute name='ingredientsList|stocktake|supplierOrdering' className='in'}}">
                     <li class="{{isActiveRoute name='ingredientsList'}}">
                       <a href="/stocklist">List</a>
                     </li>
@@ -94,7 +94,7 @@
                     <i class="fa fa-line-chart"></i>
                     <span class="nav-label">Reports</span>
                   </a>
-                  <ul class="nav nav-second-level {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
+                  <ul class="nav nav-second-level collapse {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
                     <li class="{{isActiveRoute name='teamHours'}}">
                       <a href="/reports/{{year}}/{{week}}#shifts">Team Hours</a>
                     </li>
