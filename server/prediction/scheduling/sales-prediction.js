@@ -57,13 +57,15 @@ var predict = function (days, locationId) {
 
       });
 
-      var receiversIds = Meteor.users.find({'relations.areaIds': area._id}).fetch().map(function (user) {
-        if (user[area._id] === roleManagerId){
-          return user._id;
+      var receiversIds = [];
+
+      Meteor.users.find({'relations.areaIds': area._id}).map(function (user) {
+        if (user.roles[area._id] === roleManagerId){
+          receiversIds.push(user._id);
         }
       });
-
-      notification.send(receiversIds);
+      /*console.log(receiversIds.length);
+      notification.send(receiversIds);*/
 
     });
 
