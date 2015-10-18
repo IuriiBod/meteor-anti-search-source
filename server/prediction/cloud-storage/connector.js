@@ -62,12 +62,12 @@ GoogleCloud = {
     }
   },
 
-  removeTrainingDataFile: function(trainingFileName) {
+  removeTrainingDataFile: function (trainingFileName) {
     var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
     var file = bucket.file(trainingFileName);
-    file.delete(function(err, apiResponse) {
+    file.delete(function (err, apiResponse) {
       if (err) {
-        console.log(err);
+        logger.error('error while removing training file', {error: err});
       }
     });
   }
