@@ -30,6 +30,9 @@ Router.route("/pinLock", {
   layoutTemplate: "blankLayout",
   name: "pinLock",
   path: "/pinLock",
+  waitOn: function() {
+    return Meteor.subscribe('organizationInfo');
+  },
   data: function () {
     return {
       backwardUrl: this.params.query.backwardUrl

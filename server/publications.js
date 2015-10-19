@@ -28,12 +28,8 @@ Meteor.publish(null, function() {
         relations: 1,
         createdAt: 1,
         currentAreaId: 1,
-        "roles.defaultRole": 1
+        roles: 1
       };
-
-      if(user.currentAreaId) {
-        fields["roles." + user.currentAreaId] = 1;
-      }
 
       return Meteor.users.find({
       _id: this.userId
