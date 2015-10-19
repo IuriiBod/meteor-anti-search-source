@@ -117,12 +117,13 @@ SyncedCron.add({
 });
 
 
-Meteor.startup(function () {
-  //if we run first time -> make predictions immediately (in other thread)
-
-  Meteor.setTimeout(salesPredictionUpdateJob, 0);
-
-});
+//todo: uncomment for production
+//Meteor.startup(function () {
+//  //if we run first time -> make predictions immediately (in other thread)
+//
+//  Meteor.setTimeout(salesPredictionUpdateJob, 0);
+//
+//});
 
 
 
