@@ -3,6 +3,7 @@ Router.route('/roster/prediction/:year/:week', {
   template: "salesPredictionPage",
   waitOn: function () {
     var currentDate = HospoHero.dateUtils.getDateByWeekDate({year: this.params.year, week: this.params.week});
+    console.log('forecast date', currentDate);
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('weatherForecast', currentDate),
