@@ -31,7 +31,7 @@ Router.route("/pinLock", {
   name: "pinLock",
   path: "/pinLock",
   waitOn: function() {
-    Meteor.subscribe('organizationInfo');
+    return Meteor.subscribe('organizationInfo');
   },
   data: function () {
     return {
