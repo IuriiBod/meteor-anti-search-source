@@ -2,8 +2,8 @@
 
 /**
  * Api key should be stored in app's settings
- * @param country
- * @param city
+ * @param {String} country
+ * @param {String} city
  * @constructor
  */
 WorldWeather = function WorldWeather(country, city) {
@@ -14,6 +14,9 @@ WorldWeather = function WorldWeather(country, city) {
 /**
  * Base method used to access world weather API
  * @private
+ * @param {String} route API route for WorldWeather (weather, past-weather)
+ * @param {Object} params Parameters for request (location, dates)
+ * @return {Object|Boolean} Returns object with weather date. If request failed returns false
  */
 WorldWeather.prototype._httpQuery = function (route, params) {
   var defaultParams = {
@@ -36,8 +39,10 @@ WorldWeather.prototype._httpQuery = function (route, params) {
 };
 
 /**
- *
- * @param date
+ *Method used to get past weather for a given interval
+ * @param {Date|String} fromDate
+ * @param {Date|String} toDate
+ * @return {Array} Return an array of objects of formated weather data.
  */
 WorldWeather.prototype.getHistorical = function (fromDate, toDate) {
   var startDate = moment(fromDate).format("YYYY-MM-DD");
@@ -60,10 +65,10 @@ WorldWeather.prototype.getHistorical = function (fromDate, toDate) {
 
 
 /**
- *
+ *Method used to get weather forecast for 15 days
+ * @return {Array} Return an array of objects of formated weather data.
  */
 WorldWeather.prototype.getForecast = function () {
-  var today = moment().format("YYYY-MM-DD");
   var data = this._httpQuery("weather.ashx",{
     q:this._city+","+this._country
   });
