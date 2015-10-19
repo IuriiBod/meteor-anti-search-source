@@ -87,9 +87,6 @@ salesPredictionUpdateJob = function () {
   var locations = Locations.find({archived:{$ne:true}});
 
   var todayMoment = moment();
-  locations.forEach(function (location) {
-    predict(1, location._id);
-  });
 
   locations.forEach(function (location) {
     if (HospoHero.predictionUtils.havePos(location)) {
