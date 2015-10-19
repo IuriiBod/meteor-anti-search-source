@@ -90,18 +90,18 @@ salesPredictionUpdateJob = function () {
     if (HospoHero.prediction.isAvailableForLocation(location)) {
       var lastUpdates = ForecastDates.findOne({locationId: location._id});
 
-      var needFullUpdate = !lastUpdates || !lastUpdates.lastThree
+      var needFullUpdate = !lastUpdates || !lastUpdates.lastThreeDays
         || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42);
 
       if (needFullUpdate) {
         predict(84, location._id);
-        updateForecastDate(location._id, ['lastSixWeeks', 'lastThree'], todayMoment.toDate());
+        updateForecastDate(location._id, ['lastSixWeeks', 'lastThreeDays'], todayMoment.toDate());
 
-      } else if (todayMoment.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
+      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.getMillisecondsFromDays(3)) {
         predict(7, location._id);
-        updateForecastDate(location._id, 'lastThree', todayMoment.toDate());
+        updateForecastDate(location._id, 'lastThreeDays', todayMoment.toDate());
 
-      } else if (todayMoment.diff(lastUpdates.lastThree) >= HospoHero.getMillisecondsFromDays(3)) {
+      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.getMillisecondsFromDays(3)) {
         predict(2, location._id);
       }
     }
