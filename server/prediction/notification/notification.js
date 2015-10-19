@@ -6,7 +6,7 @@ Notification.prototype.add = function (date, name, prevQuantity, newQuantity) {
   this.notificationText.push("<li>" + moment(date).format("YYYY-MM-DD") + ":" + name + ": from " + prevQuantity + " to " + newQuantity + "</li>");
 };
 
-Notification.prototype.send = function (receiversIds) {
+Notification.prototype.send = function (receiversIds, areaId) {
   if (this.notificationText.length != 0) {
     this.notificationText.push("</ul>");
     this.notificationText.unshift("<ul>");
@@ -17,7 +17,8 @@ Notification.prototype.send = function (receiversIds) {
       title: 'Some predictions have been changed',
       createdBy: null,
       text: this.notificationText.join(''),
-      actionType: 'update'
+      actionType: 'update',
+      relations: { areaId: areaId }
     };
 
     _.each(receiversIds, function (id) {
