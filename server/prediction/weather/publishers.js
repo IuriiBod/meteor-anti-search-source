@@ -1,5 +1,8 @@
-Meteor.publish('weatherForecast', function (date) {
-  check(date, Date);
+Meteor.publish('weatherForecast', function (year, week) {
+  check(year, Number);
+  check(year, Number);
+
+  var date = HospoHero.dateUtils.getDateByWeekDate({year: year, week: week});
 
   var haveAccess = HospoHero.perms.canUser('viewForecast')(this.userId);
   if (!haveAccess) {
