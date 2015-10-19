@@ -4,7 +4,7 @@ var predict = function (days, locationId) {
   var today = new Date();
   var dateMoment = moment();
   var prediction = new GooglePredictionApi(locationId);
-  var areas = Areas.find({locationId:locationId});
+  var areas = Areas.find({locationId: locationId});
   var roleManagerId = Roles.getRoleByName('Manager')._id;
   //forecast for 15 days
 
@@ -25,7 +25,7 @@ var predict = function (days, locationId) {
     }
 
     areas.forEach(function (area) {
-      var items = MenuItems.find({'relations.locationId': locationId, 'relations.areaId':area._id}, {}); //get menu items for current area
+      var items = MenuItems.find({'relations.locationId': locationId, 'relations.areaId': area._id}, {}); //get menu items for current area
       var notification = new Notification();
 
       items.forEach(function (item) {
@@ -63,7 +63,7 @@ var predict = function (days, locationId) {
       var receiversIds = [];
       var query = {};
       query[area._id] = roleManagerId;
-      Meteor.users.find({roles:query}).forEach(function (user) {
+      Meteor.users.find({roles: query}).forEach(function (user) {
         receiversIds.push(user._id);
       });
       notification.send(receiversIds);
@@ -98,7 +98,7 @@ salesPredictionUpdateJob = function () {
       var lastUpdates = ForecastDates.findOne({locationId: location._id});
 
       var needFullUpdate = !lastUpdates || !lastUpdates.lastThreeDays
-        || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42);
+          || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42);
 
       if (needFullUpdate) {
         predict(84, location._id);
@@ -115,22 +115,21 @@ salesPredictionUpdateJob = function () {
   });
 };
 
-SyncedCron.add({
-  name: 'Forecast refresh',
-  schedule: function (parser) {
-    return parser.text('at 05:00 am');
-  },
-  job: salesPredictionUpdateJob
-});
+if (!HospoHero.isDevelopmentMode()) {
+  SyncedCron.add({
+    name: 'Forecast refresh',
+    schedule: function (parser) {
+      return parser.text('at 05:00 am');
+    },
+    job: salesPredictionUpdateJob
+  });
 
+  Meteor.startup(function () {
+    //if we run first time -> make predictions immediately (in other thread)
 
-//todo: uncomment for production
-//Meteor.startup(function () {
-//  //if we run first time -> make predictions immediately (in other thread)
-//
-//  Meteor.setTimeout(salesPredictionUpdateJob, 0);
-//
-//});
+    Meteor.setTimeout(salesPredictionUpdateJob, 0);
 
+  });
+}
 
 

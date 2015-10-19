@@ -1,6 +1,6 @@
 Meteor.publish('weatherForecast', function (year, week) {
   check(year, Number);
-  check(year, Number);
+  check(week, Number);
 
   var haveAccess = HospoHero.perms.canUser('viewForecast')(this.userId);
   if (!haveAccess) {
