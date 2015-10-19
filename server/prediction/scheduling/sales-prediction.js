@@ -36,13 +36,13 @@ var predict = function (days, locationId) {
           relations: item.relations
         };
 
+        var currentData = SalesPrediction.findOne({
+          date: TimeRangeQueryBuilder.forDay(dateMoment),
+          menuItemId: predictItem.menuItemId
+        });
         //checking need for notification push
         if (i < 14 && currentData) {
           if (currentData) {
-            var currentData = SalesPrediction.findOne({
-              date: TimeRangeQueryBuilder.forDay(dateMoment),
-              menuItemId: predictItem.menuItemId
-            });
             if (currentData.quantity != predictItem.quantity) {
               var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
               notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
@@ -58,25 +58,17 @@ var predict = function (days, locationId) {
       });
 
       var receiversIds = [];
-
       Meteor.users.find({'relations.areaIds': area._id}).map(function (user) {
         if (user.roles[area._id] === roleManagerId){
           receiversIds.push(user._id);
         }
       });
-      /*console.log(receiversIds.length);
-      notification.send(receiversIds);*/
+      notification.send(receiversIds, area._id);
 
     });
 
     dateMoment.add(1, "day");
   }
-
-  //todo: find managers of current area to send them it
-  //var receiversIds = Meteor.users.find({isAdmin: true}).fetch().map(function (user) {
-  //  return user._id;
-  //});
-  //notification.send(receiversIds);
 };
 
 var updateForecastDate = function (locationId, property, dateValue) {
@@ -95,6 +87,12 @@ salesPredictionUpdateJob = function () {
   var locations = Locations.find({archived:{$ne:true}});
 
   var todayMoment = moment();
+
+  /* testing send notification
+  locations.forEach(function (location) {
+    predict(1, location._id);
+  });
+  */
 
   locations.forEach(function (location) {
     if (HospoHero.predictionUtils.havePos(location)) {

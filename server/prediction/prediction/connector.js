@@ -78,7 +78,7 @@ GooglePredictionApi.prototype.removePredictionModel = function () {
 
   if (modelsList.items) {
     var modelToRemove = _.find(modelsList, function (model) {
-      return model.id === modelName
+      return model.id === modelName;
     });
 
     if (modelToRemove) {
