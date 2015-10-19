@@ -50,6 +50,8 @@ GooglePredictionApi.prototype.makePrediction = function (inputData) {
   }
 };
 
+
+
 /**
  * The current status of the training job. This can be one of following:
  * RUNNING - Only returned when retraining a model; for a new model, a trainedmodels.get call will return HTTP 200 before training is complete.
@@ -67,7 +69,6 @@ GooglePredictionApi.prototype.getModelStatus = function () {
   return this._client.get(this._getModelName()).trainingStatus;
 };
 
-
 /**
  * Remove prediction model includes also removing related CSV file in cloud storage
  */
@@ -77,7 +78,7 @@ GooglePredictionApi.prototype.removePredictionModel = function () {
 
   if (modelsList.items) {
     var modelToRemove = _.find(modelsList, function (model) {
-      return model.id === modelName
+      return model.id === modelName;
     });
 
     if (modelToRemove) {
