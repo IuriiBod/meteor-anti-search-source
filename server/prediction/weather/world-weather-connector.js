@@ -39,7 +39,7 @@ WorldWeather.prototype._httpQuery = function (route, params) {
 };
 
 /**
- *Method used to get past weather for a given interval
+ *Method used to get past weather for given interval
  * @param {Date|String} fromDate
  * @param {Date|String} toDate
  * @return {Array} Return an array of objects of formated weather data.
@@ -63,7 +63,6 @@ WorldWeather.prototype.getHistorical = function (fromDate, toDate) {
   return res;
 };
 
-
 /**
  *Method used to get weather forecast for 15 days
  * @return {Array} Return an array of objects of formated weather data.
@@ -82,4 +81,16 @@ WorldWeather.prototype.getForecast = function () {
     });
   });
   return res;
+};
+
+/**
+ *Method used to check locations existing
+ *
+ * @return {Boolean} Returns true if location is valid
+ */
+WorldWeather.prototype.checkLocation = function () {
+  var data = this._httpQuery("weather.ashx",{
+    q:this._city+","+this._country
+  });
+  return !!data.data.error
 };

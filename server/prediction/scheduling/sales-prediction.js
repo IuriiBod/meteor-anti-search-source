@@ -8,7 +8,7 @@ var predict = function (days, locationId) {
   var notification = new Notification();
   //forecast for 15 days
 
-  OpenWeatherMap.updateWeatherForecastForLocation(locationId);
+  Weather.updateWeatherForecastForLocation(locationId);
 
   var currentWeather;
   for (var i = 1; i <= days; i++) {
