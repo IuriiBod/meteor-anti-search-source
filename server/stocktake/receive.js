@@ -1,6 +1,6 @@
 Meteor.methods({
   receiveDelivery: function (receiptId) {
-    if (!HospoHero.perms.canUser('editStock')()) {
+    if (!HospoHero.canUser('edit stocks')()) {
       logger.error("User not permitted to receive delivery");
       throw new Meteor.Error(403, "User not permitted to receive delivery");
     }
@@ -27,7 +27,7 @@ Meteor.methods({
   },
 
   updateOrderItems: function (id, receiptId, status, info) {
-    if (!HospoHero.perms.canUser('editStock')()) {
+    if (!HospoHero.canUser('edit stocks')()) {
       logger.error("User not permitted to update oreder items");
       throw new Meteor.Error(403, "User not permitted to update oreder items");
     }
@@ -86,7 +86,7 @@ Meteor.methods({
   },
 
   receiveOrderItems: function (id, receiptId, info) {
-    if (!HospoHero.perms.canUser('editStock')()) {
+    if (!HospoHero.canUser('edit stocks')()) {
       logger.error("User not permitted to receive oreder items");
       throw new Meteor.Error(403, "User not permitted to receive oreder items");
     }

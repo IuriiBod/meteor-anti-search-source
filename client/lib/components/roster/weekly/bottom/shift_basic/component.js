@@ -82,24 +82,23 @@ component.prototype.itemRendered = function() {
         };
 
         // Get roles which can be rosted
-        var canBeRostedRoles = Roles.getRolesByPermissions(Roles.permissions.Roster.canBeRosted.code);
+        var canBeRostedRoles = Roles.getRolesByAction('be rosted').fetch();
+
         // Conver it to array of IDs
-        var canBeRostedRolesIds = _.map(canBeRostedRoles, function(role) {
+        var canBeRostedRolesIds = canBeRostedRoles.map(function(role) {
           return role._id;
         });
+
+        console.log('ID', canBeRostedRolesIds);
+        
         query["roles." + HospoHero.getCurrentAreaId()] = {$in: canBeRostedRolesIds};
         var workers = Meteor.users.find(query, {sort: {"username": 1}}).fetch();
 
         workers.forEach(function(worker) {
-          var doc = {
-            "value": worker._id
-          };
-          if(worker.profile.firstname && worker.profile.lastname) {
-            doc['text'] = worker.profile.firstname + " " + worker.profile.lastname;
-          } else {
-            doc['text'] = worker.username;
-          }
-          workersObj.push(doc);
+          workersObj.push({
+            value: worker._id,
+            text: HospoHero.username(worker)
+          });
         });
         return workersObj;
       },

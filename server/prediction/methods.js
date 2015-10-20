@@ -1,6 +1,6 @@
 Meteor.methods({
   "updateActualSale": function (updateObj) {
-    var haveAccess = HospoHero.perms.canUser('viewForecast')(this.userId);
+    var haveAccess = HospoHero.canUser('view forecast')(this.userId);
     if (!haveAccess) {
       throw new Meteor.Error(403, 'Access Denied');
     }

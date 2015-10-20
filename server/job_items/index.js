@@ -1,6 +1,6 @@
 Meteor.methods({
   'createJobItem': function(info) {
-    if(!HospoHero.perms.canUser('editJob')()) {
+    if(!HospoHero.canUser('edit job')()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -86,7 +86,7 @@ Meteor.methods({
   },
 
   'editJobItem': function(id, info) {
-    if(!HospoHero.perms.canUser('editJob')()) {
+    if(!HospoHero.canUser('edit job')()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -247,7 +247,7 @@ Meteor.methods({
   },
 
   'deleteJobItem': function(id) {
-    if(!HospoHero.perms.canUser('editJob')()) {
+    if(!HospoHero.canUser('edit job')()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -277,7 +277,7 @@ Meteor.methods({
   },
 
   'addIngredientsToJob': function(id, ingredient, quantity) {
-    if(!HospoHero.perms.canUser('editJob')()) {
+    if(!HospoHero.canUser('edit job')()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -302,7 +302,7 @@ Meteor.methods({
   },
 
   removeIngredientsFromJob: function(id, ingredient) {
-    if(!HospoHero.perms.canUser('editJob')()) {
+    if(!HospoHero.canUser('edit job')()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -333,7 +333,7 @@ Meteor.methods({
   },
 
   duplicateJobItem: function(jobId, areaId) {
-    if(!HospoHero.perms.canUser('editJob')()) {
+    if(!HospoHero.canUser('edit job')()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -383,7 +383,7 @@ Meteor.methods({
   },
 
   'archiveJobItem': function(id) {
-    if(!HospoHero.perms.canUser('editJob')()) {
+    if(!HospoHero.canUser('edit job')()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }

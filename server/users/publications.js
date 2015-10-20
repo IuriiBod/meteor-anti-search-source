@@ -84,16 +84,7 @@ Meteor.publishComposite('workers', {
       currentAreaId = user.currentAreaId ? user.currentAreaId : null;
 
       if(user && user.relations && user.relations.organizationId) {
-        return Meteor.roles.find({
-          permissions: Roles.permissions.Roster.canBeRosted.code,
-          $or: [
-            { default: true },
-            { organizationId: user.relations.organizationId }
-          ],
-          name: {
-            $ne: 'Owner'
-          }
-        });
+        return Roles.getRolesByAction('be rosted');
       } else {
         this.ready();
       }

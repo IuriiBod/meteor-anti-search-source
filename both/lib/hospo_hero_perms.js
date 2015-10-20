@@ -1,29 +1,30 @@
-Namespace('HospoHero.perms', {
-  canUser: function(permission) {
-    var permissions = {
-      invite: Roles.permissions.User.invite,
-      viewRoster: Roles.permissions.Roster.view,
-      editRoster: Roles.permissions.Roster.edit,
-      viewMenu: Roles.permissions.Menu.view,
-      editMenu: Roles.permissions.Menu.edit,
-      viewJob: Roles.permissions.Job.view,
-      editJob: Roles.permissions.Job.edit,
-      viewStock: Roles.permissions.Stock.view,
-      editStock: Roles.permissions.Stock.edit,
-      viewForecast: Roles.permissions.Forecast.view
+Namespace('HospoHero', {
+  /**
+   * Check whether user is able to perform specified action
+   * @param {String} action
+   * @param {String} [userId]
+   * @returns {Function|Boolean}
+   */
+  canUser: function() {
+    var action = arguments[0];
+
+    var hasPermission = function (action, userId) {
+      userId = userId ? userId : Meteor.userId();
+      var user = Meteor.users.findOne(userId);
+
+      if(!user || !user.currentAreaId) {
+        return false;
+      }
+      var roleId = user.roles[user.currentAreaId];
+      return Roles.hasAction(roleId, action);
     };
 
-    if(!permissions[permission]) {
-      throw new Meteor.Error("Permission not found!");
-    }
-
-    return function(userId) {
-      return HospoHero.isOrganizationOwner(userId) ||
-        Roles.hasPermission(permissions[permission].code, userId);
+    var checkPermission = function(userId) {
+      // Organization's owner can't be rosted
+      return (action !== 'can be rosted' && HospoHero.isOrganizationOwner(userId)) || hasPermission(action, userId);
     };
-  },
 
-  canBeRosted: function (userId) {
-    return Roles.hasPermission(Roles.permissions.Roster.canBeRosted.code, userId);
+    // arguments[1] - userId
+    return arguments.length > 2 ? checkPermission(arguments[1]) : checkPermission;
   }
 });

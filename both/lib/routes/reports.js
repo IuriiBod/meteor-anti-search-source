@@ -7,7 +7,7 @@ Router.route('/reports/stocktake/currentStocks/:year/:week', {
     return Meteor.subscribe('organizationInfo');
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.perms.canUser('editRoster')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit roster')()) {
       Router.go("/");
     }
     Session.set("thisWeek", this.params.week);
@@ -29,7 +29,7 @@ Router.route('/reports/:year/:week', {
     ];
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.perms.canUser('editRoster')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit roster')()) {
       Router.go("/");
     }
     Session.set("reportHash", this.params.hash);
