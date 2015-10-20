@@ -4,8 +4,8 @@ var predict = function (days, locationId) {
   var today = new Date();
   var dateMoment = moment();
   var prediction = new GooglePredictionApi(locationId);
-  var areas = Areas.find({locationId:locationId});
-  var roleManagerId = 'rnz28xNqXj645cHmm';
+  var areas = Areas.find({locationId: locationId});
+  var roleManagerId = Roles.getRoleByName('Manager')._id;
   //forecast for 15 days
 
   OpenWeatherMap.updateWeatherForecastForLocation(locationId);
@@ -17,15 +17,15 @@ var predict = function (days, locationId) {
     if (i < 16) {
       currentWeather = WeatherForecast.findOne({locationId: locationId, date: TimeRangeQueryBuilder.forDay(today)});
     } else {
-        main: "Clear",
       //todo: temporal. figure out typical weather
       currentWeather = {
-        temp: 20.0
+        temp: 20.0,
+        main: "Clear"
       }
     }
 
     areas.forEach(function (area) {
-      var items = MenuItems.find({'relations.locationId': locationId, 'relations.areaId':area._id}, {}); //get menu items for current area
+      var items = MenuItems.find({'relations.locationId': locationId, 'relations.areaId': area._id}, {}); //get menu items for current area
       var notification = new Notification();
 
       items.forEach(function (item) {
@@ -61,12 +61,12 @@ var predict = function (days, locationId) {
       });
 
       var receiversIds = [];
-      Meteor.users.find({'relations.areaIds': area._id}).map(function (user) {
-        if (user.roles[area._id] === roleManagerId){
-          receiversIds.push(user._id);
-        }
+      var query = {};
+      query[area._id] = roleManagerId;
+      Meteor.users.find({roles: query}).forEach(function (user) {
+        receiversIds.push(user._id);
       });
-      notification.send(receiversIds, area._id);
+      notification.send(receiversIds);
 
     });
 
@@ -92,12 +92,6 @@ salesPredictionUpdateJob = function () {
   var locations = Locations.find({archived: {$ne: true}});
 
   var todayMoment = moment();
-
-  /* testing send notification
-  locations.forEach(function (location) {
-    predict(1, location._id);
-  });
-  */
 
   locations.forEach(function (location) {
     if (HospoHero.prediction.isAvailableForLocation(location)) {
@@ -130,12 +124,13 @@ SyncedCron.add({
 });
 
 
-Meteor.startup(function () {
-  //if we run first time -> make predictions immediately (in other thread)
-
-  Meteor.setTimeout(salesPredictionUpdateJob, 0);
-
-});
+//todo: uncomment for production
+//Meteor.startup(function () {
+//  //if we run first time -> make predictions immediately (in other thread)
+//
+//  Meteor.setTimeout(salesPredictionUpdateJob, 0);
+//
+//});
 
 
 
