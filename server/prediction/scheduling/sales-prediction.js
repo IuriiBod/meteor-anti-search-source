@@ -8,7 +8,7 @@ var predict = function (days, locationId) {
   var roleManagerId = Roles.getRoleByName('Manager')._id;
   //forecast for 15 days
 
-  OpenWeatherMap.updateWeatherForecastForLocation(locationId);
+  Weather.updateWeatherForecastForLocation(locationId);
 
   var currentWeather;
   for (var i = 1; i <= days; i++) {
@@ -98,7 +98,7 @@ salesPredictionUpdateJob = function () {
       var lastUpdates = ForecastDates.findOne({locationId: location._id});
 
       var needFullUpdate = !lastUpdates || !lastUpdates.lastThreeDays
-        || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42);
+          || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42);
 
       if (needFullUpdate) {
         predict(84, location._id);
@@ -115,22 +115,21 @@ salesPredictionUpdateJob = function () {
   });
 };
 
-SyncedCron.add({
-  name: 'Forecast refresh',
-  schedule: function (parser) {
-    return parser.text('at 05:00 am');
-  },
-  job: salesPredictionUpdateJob
-});
+if (!HospoHero.isDevelopmentMode()) {
+  SyncedCron.add({
+    name: 'Forecast refresh',
+    schedule: function (parser) {
+      return parser.text('at 05:00 am');
+    },
+    job: salesPredictionUpdateJob
+  });
 
+  Meteor.startup(function () {
+    //if we run first time -> make predictions immediately (in other thread)
 
-//todo: uncomment for production
-//Meteor.startup(function () {
-//  //if we run first time -> make predictions immediately (in other thread)
-//
-//  Meteor.setTimeout(salesPredictionUpdateJob, 0);
-//
-//});
+    Meteor.setTimeout(salesPredictionUpdateJob, 0);
 
+  });
+}
 
 

@@ -9,7 +9,7 @@ Migrations.add({
     var query = {};
     _.each(locations, function (location) {
       if (!location.city || !location.country) {
-        query.country = "AU";
+        query.country = "Australia";
         query.city = "Sydney";
         query.address = "some address";
       }

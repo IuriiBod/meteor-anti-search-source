@@ -1,6 +1,6 @@
 Meteor.publish('weatherForecast', function (year, week) {
   check(year, Number);
-  check(year, Number);
+  check(week, Number);
 
   var haveAccess = HospoHero.perms.canUser('viewForecast')(this.userId);
   if (!haveAccess) {
@@ -10,7 +10,7 @@ Meteor.publish('weatherForecast', function (year, week) {
   var currentArea = HospoHero.getCurrentArea(this.userId);
   var locationId = currentArea.locationId;
 
-  OpenWeatherMap.updateWeatherForecastForLocation(locationId);
+  Weather.updateWeatherForecastForLocation(locationId);
 
   var date = HospoHero.dateUtils.getDateByWeekDate({year: year, week: week});
   var weekRange = TimeRangeQueryBuilder.forWeek(date);

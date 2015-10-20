@@ -23,6 +23,10 @@
     "PEM_FILE": "google-cloud.pem",
     "BUCKET": "hospohero"
   },
+  "WorldWeather":{
+    "KEY": "66d4c8235abd14ae392616606bf1d",
+    "HOST": "http://api.worldweatheronline.com/free/v2/"
+  },
   "services": [
     {
       "service": "google",
