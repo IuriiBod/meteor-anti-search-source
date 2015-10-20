@@ -3,79 +3,79 @@ Namespace('HospoHero.otherUtils', {
     return [
       {
         text: "Australia",
-        value: "AU"
+        value: "Australia"
       },
       {
         text: "Austria",
-        value: "AT"
+        value: "Austria"
       },
       {
         text: "Canada",
-        value: "CA"
+        value: "Canada"
       },
       {
         text: "Central African Republic",
-        value: "CF"
+        value: "Central African Republic"
       },
       {
         text: "China",
-        value: "CN"
+        value: "China"
       },
       {
         text: "Egypt",
-        value: "EG"
+        value: "Egypt"
       },
       {
         text: "France",
-        value: "FR"
+        value: "France"
       },
       {
         text: "Germany",
-        value: "DE"
+        value: "Germany"
       },
       {
         text: "Greece",
-        value: "GR"
+        value: "Greece"
       },
       {
         text: "India",
-        value: "IN"
+        value: "India"
       },
       {
         text: "Italy",
-        value: "IT"
+        value: "Italy"
       },
       {
         text: "Japan",
-        value: "JP"
+        value: "Japan"
       },
       {
         text: "Netherlands",
-        value: "NL"
+        value: "Netherlands"
       },
       {
         text: "New Zealand",
-        value: "NZ"
+        value: "New Zealand"
       },
       {
         text: "Portugal",
-        value: "PT"
+        value: "Portugal"
       },
       {
         text: "Sweden",
-        value: "SE"
+        value: "Sweden"
       },
       {
         text: "Switzerland",
-        value: "CH"
+        value: "Switzerland"
       },
       {
         text: "United Kingdom of Great Britain and Northern Ireland",
-        value: "GB"
+        value: "United Kingdom"
       },
       {
         text: "United States of America",
-        value: "US"
+        value: "United States of America"
       }
     ]
   },
