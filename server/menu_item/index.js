@@ -268,5 +268,19 @@ Meteor.methods({
       var status = menu.status == 'archived' ? 'active' : 'archived';
       return MenuItems.update({_id: id}, {$set: {status: status}});
     }
+  },
+
+  'editMenuIngredientsOrJobItems': function(menuItemId, itemProps, type){
+    var items = MenuItems.findOne({_id: menuItemId})[type];
+
+    _.each(items, function (item, index) {
+      if(item._id == itemProps._id){
+        items[index].quantity = itemProps.quantity;
+      }
+    });
+
+    var query ={};
+    query[type] = items;
+    MenuItems.update({_id: menuItemId}, {$set: query});
   }
 });
