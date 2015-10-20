@@ -6,7 +6,8 @@ Meteor.methods({
     if(Locations.find({organizationId: loc.organizationId, name: loc.name}).count() > 0) {
       throw new Meteor.Error("The location with the same name already exists!");
     }
-    if(!OpenWeatherMap.isValid(loc.city, loc.country)){
+    var worldWeather = new WorldWeather(loc.city, loc.country);
+    if(!worldWeather.checkLocation()){
       throw new Meteor.Error("Make sure you inserted right country and city");
     }
     // Create location
@@ -59,8 +60,8 @@ Meteor.methods({
 
     HospoHero.checkMongoId(locationId);
     check(doc, Object);
-
-    if(!OpenWeatherMap.isValid(doc.city, doc.country)){
+    var worldWeather = new WorldWeather(doc.city, doc.country)
+    if(!worldWeather.checkLocation()){
       throw new Meteor.Error("Make sure you inserted right country and city");
     }
 
