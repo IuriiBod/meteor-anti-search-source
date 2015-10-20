@@ -12,10 +12,11 @@ component.state.menu = function() {
 component.state.jobItems = function() {
   if(this.get('menu') && this.get('menu').jobItems) {
     var jobItems = this.get('menu').jobItems;
-    jobItems = _.map(jobItems, function (jobItem) {
-      return jobItem._id;
-    });
-    return JobItems.find({_id: {$in: jobItems}});
+    //jobItems = _.map(jobItems, function (jobItem) {
+    //  return jobItem._id;
+    //});
+    //return JobItems.find({_id: {$in: jobItems}});
+    return jobItems;
   } else {
     return [];
   }
@@ -24,10 +25,11 @@ component.state.jobItems = function() {
 component.state.ings = function() {
   if(this.get('menu') && this.get('menu').ingredients) {
     var ingredients = this.get('menu').ingredients;
-    ingredients = _.map(ingredients, function (ingredient) {
-      return ingredient._id;
-    });
-    return Ingredients.find({_id: {$in: ingredients}});
+    //ingredients = _.map(ingredients, function (ingredient) {
+    //  return ingredient._id;
+    //});
+    //return Ingredients.find({_id: {$in: ingredients}});
+    return ingredients;
   } else {
     return [];
   }
