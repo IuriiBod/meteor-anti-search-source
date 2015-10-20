@@ -81,6 +81,18 @@ Meteor.publishComposite('organizationInfo', {
       }
     },
     {
+      // Publishing notifications for current user
+      find: function() {
+        if(this.userId) {
+          return Notifications.find({
+            ref: this.userId
+          });
+        } else {
+          this.ready();
+        }
+      }
+    },
+    {
       // Publishing locations of organization
       find: function(organization) {
         if(user && user.relations && user.relations.locationIds) {
@@ -149,16 +161,6 @@ Meteor.publishComposite('organizationInfo', {
               profile: 1,
               relations: 1
             }
-          });
-        }
-      }
-    },
-    {
-      // Publishing notifications of current area
-      find: function() {
-        if(user && user.currentAreaId) {
-          return Notifications.find({
-            "relations.areaId": user.currentAreaId
           });
         }
       }
