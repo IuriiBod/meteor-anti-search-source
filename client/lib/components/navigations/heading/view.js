@@ -191,7 +191,7 @@ Template.pageHeading.events({
     var dates = [];
     week.forEach(function (day) {
       if (day && day.date) {
-        dates.push(new Date(day.date).getTime())
+        dates.push(HospoHero.dateUtils.shiftDate(day.date));
       }
     });
     var shifts = Shifts.find({

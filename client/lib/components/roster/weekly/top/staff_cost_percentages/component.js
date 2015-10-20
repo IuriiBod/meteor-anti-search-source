@@ -8,7 +8,7 @@ component.state.actual = function() {
   var wages = 0;
   var sales = 0;
 
-  var shifts = Shifts.find({"shiftDate": new Date(self.dayObj.date).getTime(), "status": {$ne: "draft"}, "type": null}).fetch();
+  var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(self.dayObj.date), "status": {$ne: "draft"}, "type": null}).fetch();
   wages = this.figureBox.calcStaffCost(shifts);
   
   var actualSales = ImportedActualSales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch();
@@ -28,7 +28,7 @@ component.state.forecast = function() {
   var wages = 0;
   var sales = 0;
 
-  var shifts = Shifts.find({"shiftDate": new Date(self.dayObj.date).getTime(), "status": {$ne: "finished"}, "type": null}).fetch();
+  var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(self.dayObj.date), "status": {$ne: "finished"}, "type": null}).fetch();
   wages = this.figureBox.calcStaffCost(shifts);
   
   var forecastesSales = SalesPrediction.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch();

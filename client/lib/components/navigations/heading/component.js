@@ -33,7 +33,7 @@ component.state.publishedOn = function () {
     var dates = [];
     week.forEach(function (day) {
       if (day && day.date) {
-        dates.push(new Date(day.date).getTime())
+        dates.push(HospoHero.dateUtils.shiftDate(day.date))
       }
     });
     var shift = Shifts.findOne({
@@ -136,7 +136,7 @@ component.state.isWeeklyRosterCreated = function () {
     var dates = [];
     week.forEach(function (day) {
       if (day && day.date) {
-        dates.push(new Date(day.date).getTime())
+        dates.push(HospoHero.dateUtils.shiftDate(day.date))
       }
     });
     var shifts = Shifts.find({"shiftDate": {$in: dates}}).fetch();
@@ -152,7 +152,7 @@ component.state.isWeeklyRosterPublished = function () {
     var dates = [];
     week.forEach(function (day) {
       if (day && day.date) {
-        dates.push(new Date(day.date).getTime())
+        dates.push(HospoHero.dateUtils.shiftDate(day.date))
       }
     });
 

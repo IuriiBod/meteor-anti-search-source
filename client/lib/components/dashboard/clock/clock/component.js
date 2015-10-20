@@ -3,8 +3,8 @@ var component = FlowComponents.define("clock", function(props) {
 });
 
 component.state.clockInPermission = function() {
-  var upplerLimit = new Date().getTime() + 2 * 3600 * 1000;
-  var lowerLimit = new Date().getTime() - 2 * 3600 * 1000;
+  var upplerLimit = moment().add(2, 'hours').toDate();
+  var lowerLimit = moment().subtract(2, 'hours').toDate();
 
   var query = {
     assignedTo: Meteor.userId(),
