@@ -2,7 +2,7 @@ Meteor.publish('weatherForecast', function (year, week) {
   check(year, Number);
   check(week, Number);
 
-  logger.warn('Weather subscribe ', {year: year, week: week});
+  logger.info('Weather subscribe ', {year: year, week: week});
 
   var haveAccess = HospoHero.perms.canUser('viewForecast')(this.userId);
   if (!haveAccess) {
