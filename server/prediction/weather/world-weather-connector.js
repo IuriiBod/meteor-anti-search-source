@@ -8,11 +8,13 @@ WorldWeather = function WorldWeather(country, city) {
   this._country = country;
   this._city = city;
   this._defaultParams = {
+    q: this._city + "," + this._country,
     format: "json",
     tp: 3,
     key: Meteor.settings.WorldWeather.KEY
   };
   this._url = Meteor.settings.WorldWeather.HOST;
+  this._targetTime = '1200';
 };
 
 /**
@@ -47,18 +49,11 @@ WorldWeather.prototype.getHistorical = function (fromDate, toDate) {
   var startDate = moment(fromDate).format("YYYY-MM-DD");
   var endDate = moment(toDate).format("YYYY-MM-DD");
   var data = this._httpQuery("past-weather.ashx", {
-    q: this._city + "," + this._country,
     date: startDate,
     endDate: endDate
   });
 
-  return data.data.weather.map(function (item) {
-    return {
-      date: item.date,
-      temp: item.hourly[5].tempC,
-      main: item.hourly[5].weatherDesc[0].value
-    };
-  });
+  return this._mapWeatherEntries(data);
 };
 
 /**
@@ -67,16 +62,34 @@ WorldWeather.prototype.getHistorical = function (fromDate, toDate) {
  * @return {Array} Return an array of objects of formated weather data.
  */
 WorldWeather.prototype.getForecast = function () {
-  var data = this._httpQuery("weather.ashx", {
-    q: this._city + "," + this._country
-  });
+  var data = this._httpQuery("weather.ashx", {});
+  return this._mapWeatherEntries(data);
+};
 
-  return data.data.weather.map(function (item) {
+/**
+ * Method for parsing weather response
+ * @param data
+ * @returns {any|*|Array}
+ * @private
+ */
+WorldWeather.prototype._mapWeatherEntries = function (data) {
+  var self = this;
+  return data.data.weather.map(function (weatherItem) {
+
+    console.log(weatherItem.date, weatherItem.hourly.length);
+
+    var hourly = _.find(weatherItem.hourly, function (hourlyItem) {
+      return hourlyItem.time === self._targetTime;
+    });
+
+    if (!hourly) {
+      throw new Meteor.Error('Weather parse error');
+    }
     return {
-      date: item.date,
-      temp: item.hourly[5].tempC,
-      main: item.hourly[5].weatherDesc[0].value,
-      icon: item.hourly[5].weatherIconUrl[0].value
+      date: new Date(weatherItem.date),
+      temp: parseInt(hourly.tempC),
+      main: hourly.weatherDesc[0].value,
+      icon: hourly.weatherIconUrl[0].value
     };
   });
 };
@@ -92,3 +105,37 @@ WorldWeather.prototype.checkLocation = function () {
   });
   return !!data.data.error
 };
+
+
+//DevelopmentModeworldWeatherMixin
+if (HospoHero.isDevelopmentMode()) {
+  var mockDataGenerator = function () {
+    var start, end;
+    if (arguments.length > 1) {//historical
+      start = moment(arguments[0]);
+      end = moment(arguments[1]).add(1, 'day');
+    } else {//forecast
+      start = moment();
+      end = moment().add(16, 'day');
+    }
+
+    var result = [];
+    while (!start.isSame(end, 'day')) {
+      result.push({
+        date: new Date(start.toDate()),
+        temp: Math.floor(Math.random() * 100 % 30),
+        main: ['Clear', 'Clouds', 'Rain'][Math.floor(Math.random() * 10 % 3)],
+        icon: 'http://openweathermap.org/img/w/'
+        + ['01d.png', '02d.png', '03d.png', '04d.png', '09d.png', '10d.png', '11d.png', '13d.png'][Math.floor(Math.random() * 100 % 8)]
+      });
+      start.add(1, 'day');
+    }
+
+    return result;
+  };
+
+  _.extend(WorldWeather.prototype, {
+    getHistorical: mockDataGenerator,
+    getForecast: mockDataGenerator
+  });
+}
