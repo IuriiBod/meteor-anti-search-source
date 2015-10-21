@@ -28,7 +28,6 @@ Meteor.methods({
     if(!HospoHero.isManager()) {
       throw new Meteor.Error(403, 'User has no permissions to delete roles');
     }
-    // TODO: if (confirm('Are you sure to delete this role? All users with this role will be changed on Worker role.')) {
     var roleToDelete = Roles.getRoleById(roleToDeleteId);
     var currentAreaId = roleToDelete.relations.areaId;
     var worker = Roles.getRoleByName('Worker');

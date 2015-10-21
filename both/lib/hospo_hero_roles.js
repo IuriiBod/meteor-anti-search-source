@@ -1,5 +1,6 @@
-var actions = {
-  "View Jobs": "view jobs",
+Namespace('HospoHero.roles', {
+  actions: {
+    "View Jobs": "view jobs",
     "Edit Jobs": "edit jobs",
     "View Menus": "view menus",
     "Edit Menus": "edit menus",
@@ -19,48 +20,14 @@ var actions = {
     "Edit Organization": "edit organization settings",
     "All Rights": "all rights",
     "Edit users payrate": "edit user's payrate"
-};
-
-var defaultRoles = [
-  {
-    name: 'Owner',
-    actions: [
-      "all rights"
-    ]
   },
 
-  {
-    name: 'Manager',
-    actions: [
-      "view jobs",
-      "edit jobs",
-      "view menus",
-      "edit menus",
-      "view roster",
-      "edit roster",
-      "approves roster requests",
-      "view stocks",
-      "edit stocks",
-      "invite users",
-      "edit users",
-      "view forecast",
-      "edit areas",
-      "edit locations",
-      "be rosted",
-      "edit user's payrate"
-    ]
-  },
-
-  {
-    name: 'Worker',
-    actions: [
-      "view jobs",
-      "view menus",
-      "view roster",
-      "view stocks",
-      "be rosted"
-    ]
+  getActions: function() {
+    return _.map(HospoHero.roles.actions, function(action, text) {
+      return {
+        value: action,
+        text: text
+      };
+    });
   }
-];
-
-Roles.configure({actions: actions, defaultRoles: defaultRoles});
+});

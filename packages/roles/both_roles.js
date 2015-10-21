@@ -28,9 +28,6 @@ Roles.getRolesByAction = function(actions) {
     actions = {$in: actions};
   }
 
-  console.log('AC', actions);
-  
-
   return Meteor.roles.find({
     actions: actions
   });

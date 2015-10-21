@@ -29,7 +29,6 @@ component.action.deleteShift = function(id) {
   });
 };
 
-// TODO: Check it later
 component.prototype.itemRendered = function() {
   $.fn.editable.defaults.mode = 'inline';
   var origin = this.get("origin");
@@ -45,30 +44,19 @@ component.prototype.itemRendered = function() {
         var shiftId = $(this).closest("li").attr("data-id");
         var thisShift = Shifts.findOne(shiftId);
 
-        var alreadyAssigned = [];
-        var workersObj = [];
-        var shifts;
         var query = {
-          "shiftDate": thisShift.shiftDate,
-          "relations.areaId": HospoHero.getCurrentAreaId()
+          shiftDate: thisShift.shiftDate,
+          'relations.areaId': HospoHero.getCurrentAreaId(),
+          assignedTo: {
+            $ne: null
+          }
         };
-        if(origin == "weeklyrostertemplate") {
-          query['type'] = "template";
-        } else if(origin == "weeklyroster") {
-          query['type'] = null;
-        }
-        shifts = Shifts.find(query).fetch();
-
-        shifts.forEach(function(shift) {
-          if(shift.assignedTo) {
-            alreadyAssigned.push(shift.assignedTo);
+        query.type = origin == "weeklyroster" ? null : 'template';
+        var alreadyAssigned = Shifts.find(query).map(function(shift) {
+          if(thisShift.assignedTo != shift.assignedTo) {
+            return shift.assignedTo;
           }
         });
-
-        var index = alreadyAssigned.indexOf(thisShift.assignedTo);
-        if(index >=0) {
-          alreadyAssigned.splice(index, 1);
-        }
 
         workersObj.push({value: "Open", text: "Open"});
 
@@ -82,25 +70,17 @@ component.prototype.itemRendered = function() {
         };
 
         // Get roles which can be rosted
-        var canBeRostedRoles = Roles.getRolesByAction('be rosted').fetch();
-
-        // Conver it to array of IDs
-        var canBeRostedRolesIds = canBeRostedRoles.map(function(role) {
+        var canBeRostedRolesIds = Roles.getRolesByAction('be rosted').map(function(role) {
           return role._id;
         });
 
-        console.log('ID', canBeRostedRolesIds);
-        
         query["roles." + HospoHero.getCurrentAreaId()] = {$in: canBeRostedRolesIds};
-        var workers = Meteor.users.find(query, {sort: {"username": 1}}).fetch();
-
-        workers.forEach(function(worker) {
-          workersObj.push({
+        return Meteor.users.find(query, {sort: {"username": 1}}).map(function(worker) {
+          return {
             value: worker._id,
             text: HospoHero.username(worker)
-          });
+          }
         });
-        return workersObj;
       },
       success: function(response, newValue) {
         var shiftId = $(this).closest("li").attr("data-id");
