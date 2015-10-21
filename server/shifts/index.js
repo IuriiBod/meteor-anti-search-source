@@ -45,8 +45,6 @@ Meteor.methods({
       relations: HospoHero.getRelationsObject()
     };
 
-    console.log('DOC', doc);
-
     if(info.hasOwnProperty("week") && info.week.length > 0) {
       var alreadyPublished = Shifts.findOne({
         "shiftDate": {$in: info.week},
