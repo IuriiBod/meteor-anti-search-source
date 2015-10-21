@@ -19,7 +19,7 @@ component.state.totaltime = function () {
       var date = day.date;
       var shift = Shifts.findOne({
         "assignedTo": userId,
-        "shiftDate": new Date(date).setUTCHours(24),
+        "shiftDate": HospoHero.dateUtils.shiftDate(date),
         $or: [{"status": "finished"}, {"status": "started"}]
       });
       if (shift) {
@@ -73,7 +73,7 @@ component.state.wage = function () {
       var shift = Shifts.findOne(
         {
           "assignedTo": user._id,
-          "shiftDate": new Date(date).setUTCHours(24),
+          "shiftDate": HospoHero.dateUtils.shiftDate(date),
           $or: [{"status": "finished"}, {"status": "started"}]
         });
       if (shift) {
@@ -125,7 +125,7 @@ component.state.dailyHours = function () {
       doc["date"] = date;
       var shift = Shifts.findOne({
         "assignedTo": userId,
-        "shiftDate": new Date(date).setUTCHours(24),
+        "shiftDate": HospoHero.dateUtils.shiftDate(date),
         $or: [{"status": "finished"}, {"status": "started"}]
       });
       if (shift) {
@@ -155,7 +155,7 @@ component.state.dailyShifts = function () {
       doc["date"] = date;
       var shift = Shifts.findOne({
         "assignedTo": userId,
-        "shiftDate": new Date(date).setUTCHours(24)
+        "shiftDate": HospoHero.dateUtils.shiftDate(date)
       });
       if (shift) {
         doc["shift"] = shift._id;
@@ -190,7 +190,7 @@ component.state.activeWage = function () {
       var shift = Shifts.findOne(
         {
           "assignedTo": user._id,
-          "shiftDate": new Date(date).setUTCHours(24),
+          "shiftDate": HospoHero.dateUtils.shiftDate(date),
           $or: [{"status": "finished"}, {"status": "started"}]
         });
       if (shift) {
