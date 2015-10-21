@@ -92,12 +92,12 @@ Namespace('HospoHero.otherUtils', {
       return trim ? value.trim() : value;
     };
     
-    if(typeof fields == 'string') {
+    if(_.isString(fields)) {
       return getValue(event.target[fields].value, trim);
-    } else if(Array.isArray(fields)) {
+    } else if(_.isArray(fields)) {
       var values = {};
       fields.forEach(function(field) {
-        if(typeof field == 'object') {
+        if(_.isObject(field)) {
           var value = getValue(event.target[field.name].value, trim);
           if(field.parse) {
             value = field.parse == 'int' ? parseInt(value) : parseFloat(value);

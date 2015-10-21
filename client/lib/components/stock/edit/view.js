@@ -45,9 +45,7 @@ Template.editIngredientItem.events({
       return alert("Description should have a value");
     }
 
-    var id = $(event.target).attr("data-id");
-
-    FlowComponents.callAction('submit', id, info);
+    FlowComponents.callAction('submit', info);
   },
 
   'click .archiveIngredient': function(e) {

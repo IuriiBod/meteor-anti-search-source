@@ -19,8 +19,8 @@ component.state.convertTime = function(time) {
   return time / 60;
 };
 
-component.action.submit = function(id, info) {
-   Meteor.call("editIngredient", id, info, function(err) {
+component.action.submit = function(info) {
+   Meteor.call("editIngredient", this.get('id'), info, function(err) {
     if(err) {
       HospoHero.error(err);
     } else {
