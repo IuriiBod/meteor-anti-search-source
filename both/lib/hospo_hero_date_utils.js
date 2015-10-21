@@ -66,5 +66,14 @@ Namespace('HospoHero.dateUtils', {
 
   timeFormat: function(date) {
     return HospoHero.dateUtils.formatDate(date, 'H:mm');
+  },
+
+  shiftDate: function(date) {
+    if(!date) {
+      date = moment();
+    } else if(!moment.isMoment(date)) {
+      date = moment(date);
+    }
+    return date.startOf('day').toDate();
   }
 });

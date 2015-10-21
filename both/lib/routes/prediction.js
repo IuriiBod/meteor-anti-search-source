@@ -2,13 +2,12 @@ Router.route('/roster/prediction/:year/:week', {
   name: "salesPrediction",
   template: "salesPredictionPage",
   waitOn: function () {
-    var currentDate = HospoHero.dateUtils.getDateByWeekDate({year: this.params.year, week: this.params.week});
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weatherForecast', currentDate),
-      Meteor.subscribe("salesPrediction"),
-      Meteor.subscribe('areaMenuItems'),
-      Meteor.subscribe('importedActualSales')
+      this.subscribe('organizationInfo'),
+      this.subscribe('weatherForecast', parseInt(this.params.year), parseInt(this.params.week)),
+      this.subscribe("salesPrediction"),
+      this.subscribe('areaMenuItems'),
+      this.subscribe('importedActualSales')
     ];
   },
   data: function () {
@@ -19,5 +18,4 @@ Router.route('/roster/prediction/:year/:week', {
       }
     };
   },
-  fastRender: true
 });

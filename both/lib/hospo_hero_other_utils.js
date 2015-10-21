@@ -3,94 +3,116 @@ Namespace('HospoHero.otherUtils', {
     return [
       {
         text: "Australia",
-        value: "AU"
+        value: "Australia"
       },
       {
         text: "Austria",
-        value: "AT"
+        value: "Austria"
       },
       {
         text: "Canada",
-        value: "CA"
+        value: "Canada"
       },
       {
         text: "Central African Republic",
-        value: "CF"
+        value: "Central African Republic"
       },
       {
         text: "China",
-        value: "CN"
+        value: "China"
       },
       {
         text: "Egypt",
-        value: "EG"
+        value: "Egypt"
       },
       {
         text: "France",
-        value: "FR"
+        value: "France"
       },
       {
         text: "Germany",
-        value: "DE"
+        value: "Germany"
       },
       {
         text: "Greece",
-        value: "GR"
+        value: "Greece"
       },
       {
         text: "India",
-        value: "IN"
+        value: "India"
       },
       {
         text: "Italy",
-        value: "IT"
+        value: "Italy"
       },
       {
         text: "Japan",
-        value: "JP"
+        value: "Japan"
       },
       {
         text: "Netherlands",
-        value: "NL"
+        value: "Netherlands"
       },
       {
         text: "New Zealand",
-        value: "NZ"
+        value: "New Zealand"
       },
       {
         text: "Portugal",
-        value: "PT"
+        value: "Portugal"
       },
       {
         text: "Sweden",
-        value: "SE"
+        value: "Sweden"
       },
       {
         text: "Switzerland",
-        value: "CH"
+        value: "Switzerland"
       },
       {
         text: "United Kingdom of Great Britain and Northern Ireland",
-        value: "GB"
+        value: "United Kingdom"
       },
       {
         text: "United States of America",
-        value: "US"
+        value: "United States of America"
       }
     ]
   },
 
+  /**
+   * Returns a string or an object with form field values
+   * @param {Object} event
+   * @param {String|Array} fields - the name of needed field or array of field names
+   * @param {Boolean} trim
+   * @returns {String|Object}
+   */
   getValuesFromEvent: function(event, fields, trim) {
     var getValue = function(value, trim) {
       return trim ? value.trim() : value;
     };
     
-    if(typeof fields == 'string') {
+    if(_.isString(fields)) {
       return getValue(event.target[fields].value, trim);
-    } else if(Array.isArray(fields)) {
+    } else if(_.isArray(fields)) {
       var values = {};
       fields.forEach(function(field) {
-        values[field] = getValue(event.target[field].value, trim);
+        if(_.isObject(field)) {
+          var value = getValue(event.target[field.name].value, trim);
+          if(field.parse) {
+            value = field.parse == 'int' ? parseInt(value) : parseFloat(value);
+          }
+
+          if(field.type && field.type == 'number') {
+            value = isNaN(value) ? 0 : value;
+          }
+
+          var name = field.newName || field.name;
+          values[name] = value;
+        } else {
+          values[field] = getValue(event.target[field].value, trim);
+        }
+
       });
       return values;
     }

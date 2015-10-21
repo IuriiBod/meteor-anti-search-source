@@ -6,7 +6,7 @@ component.state.rosteredForShifts = function() {
   var id = this.get("id");
   var user = Meteor.users.findOne(id);
   if(user) {
-    return Shifts.find({"assignedTo": id, "shiftDate": {$gte: new Date().getTime()}}, {sort: {"shiftDate": 1}});
+    return Shifts.find({"assignedTo": id, "shiftDate": {$gte: HospoHero.dateUtils.shiftDate()}}, {sort: {"shiftDate": 1}});
   }
 };
 
@@ -20,13 +20,13 @@ component.state.openedShifts = function() {
         "assignedTo": null,
         "published": true,
         $and: [
-          {"shiftDate": {$gte: Date.now()}},
-          {"shiftDate": {$lt: user.profile.resignDate}}
+          {"shiftDate": {$gte: HospoHero.dateUtils.shiftDate()}},
+          {"shiftDate": {$lt: HospoHero.dateUtils.shiftDate(user.profile.resignDate)}}
         ]}, {sort: {'shiftDate': 1}}).fetch();
     } else {
-      return Shifts.find({"assignedTo": null, "published": true, "shiftDate": {$gte: Date.now()}}, {sort: {'shiftDate': 1}}).fetch();
+      return Shifts.find({"assignedTo": null, "published": true, "shiftDate": {$gte: HospoHero.dateUtils.shiftDate()}}, {sort: {'shiftDate': 1}}).fetch();
     }
   } else {
-    return Shifts.find({"assignedTo": null, "shiftDate": {$gte: new Date().getTime()}}, {sort: {"shiftDate": 1}});
+    return Shifts.find({"assignedTo": null, "shiftDate": {$gte: HospoHero.dateUtils.shiftDate()}}, {sort: {"shiftDate": 1}});
   }
 };

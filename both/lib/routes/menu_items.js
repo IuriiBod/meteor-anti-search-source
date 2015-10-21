@@ -85,6 +85,7 @@ Router.route('/menuItem/:_id', {
     if(!Meteor.userId()) {
       Router.go("/");
     }
+    //todo: get rid of sessions later
     Session.set("thisMenuItem", this.params._id);
     Session.set("editStockTake", false);
   },

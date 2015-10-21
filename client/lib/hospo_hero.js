@@ -1,9 +1,8 @@
 Namespace('HospoHero', {
-  
   handleMethodResult: function (onSuccess) {
     return function (err, res) {
       if (err) {
-        HospoHero.handleError(err);
+        HospoHero.error(err);
       } else {
         if (_.isFunction(onSuccess)) {
           onSuccess(res);
@@ -12,7 +11,31 @@ Namespace('HospoHero', {
     };
   },
 
-  handleError: function (err) {
-    alert(err);
+  // Alert error message
+  error: function (err) {
+    if (err) {
+      console.log(err);
+      if (err.reason) {
+        return sweetAlert("Error!", err.reason, "error");
+      } else if (err.error) {
+        return sweetAlert("Error!", err.error, "error");
+      } else if (err.message) {
+        return sweetAlert("Error!", err.message, "error");
+      } else {
+        return sweetAlert("Error!", err, "error");
+      }
+    } else {
+      return sweetAlert("Error!", "", "error");
+    }
+  },
+
+  // Alert success message
+  success: function (message) {
+    sweetAlert("Success!", message, "success");
+  },
+
+  // Alert info message
+  info: function (message) {
+    sweetAlert("Info!", message, "info");
   }
 });

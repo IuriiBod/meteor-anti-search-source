@@ -7,10 +7,6 @@
   "intercom": {
     "secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"
   },
-  "OpenWeatherMap": {
-    "HOST": "http://api.openweathermap.org",
-    "KEY": "a0ddb6e5e4b1de866a439e811195fd11"
-  },
   "Revel": {
     "HOST": "https://farmcafe.revelup.com",
     "KEY": "a903d4c06d424a07ad3de99d3eec673c",
@@ -22,6 +18,10 @@
     "SERVICE_EMAIL": "24418709828-35oaus6ckd1fr24i0jdprhcprpapitfn@developer.gserviceaccount.com",
     "PEM_FILE": "google-cloud.pem",
     "BUCKET": "hospohero"
+  },
+  "WorldWeather": {
+    "KEY": "2cd3869cfeb201cb9db94722d5e98",
+    "HOST": "https://api.worldweatheronline.com/premium/v1/"
   },
   "services": [
     {

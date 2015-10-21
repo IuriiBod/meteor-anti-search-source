@@ -3,7 +3,7 @@
     {{#if state$hasForecast}}
       {{#with state$forecast}}
         <div class="weather-icon-wrapper">
-          <img src="http://openweathermap.org/img/w/{{icon}}.png">
+          <img src={{icon}}>
         </div>
         {{main}}, {{state$roundedTemperature}}&deg;C
       {{/with}}

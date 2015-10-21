@@ -93,7 +93,7 @@ Migrations.add({
 
       users.forEach(function(user) {
         if(user._id == admin._id) {
-          userUpdateQuery.$set.roles[areaId] = ownerRole._id;
+          userUpdateQuery.$set.roles['defaultRole'] = ownerRole._id;
         } else if(user.isAdmin || user.isManager) {
           userUpdateQuery.$set.roles[areaId] = managerRole._id;
         } else {

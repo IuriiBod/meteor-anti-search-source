@@ -1,5 +1,8 @@
-Meteor.publish('weatherForecast', function (date) {
-  check(date, Date);
+Meteor.publish('weatherForecast', function (year, week) {
+  check(year, Number);
+  check(week, Number);
+
+  logger.info('Weather subscribe ', {year: year, week: week});
 
   var haveAccess = HospoHero.canUser('view forecast')(this.userId);
   if (!haveAccess) {
@@ -9,11 +12,10 @@ Meteor.publish('weatherForecast', function (date) {
   var currentArea = HospoHero.getCurrentArea(this.userId);
   var locationId = currentArea.locationId;
 
-  OpenWeatherMap.updateWeatherForecastForLocation(locationId);
+  Weather.updateWeatherForecastForLocation(locationId);
 
+  var date = HospoHero.dateUtils.getDateByWeekDate({year: year, week: week});
   var weekRange = TimeRangeQueryBuilder.forWeek(date);
-
-  logger.warn('publish weather forecast for: ', date, ' date range: ', weekRange);
 
   return WeatherForecast.find({date: weekRange, locationId: locationId});
 });
