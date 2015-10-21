@@ -80,6 +80,13 @@ Namespace('HospoHero.otherUtils', {
     ]
   },
 
+  /**
+   * Returns a string or an object with form field values
+   * @param {Object} event
+   * @param {String|Array} fields - the name of needed field or array of field names
+   * @param {Boolean} trim
+   * @returns {String|Object}
+   */
   getValuesFromEvent: function(event, fields, trim) {
     var getValue = function(value, trim) {
       return trim ? value.trim() : value;
@@ -90,7 +97,22 @@ Namespace('HospoHero.otherUtils', {
     } else if(Array.isArray(fields)) {
       var values = {};
       fields.forEach(function(field) {
-        values[field] = getValue(event.target[field].value, trim);
+        if(typeof field == 'object') {
+          var value = getValue(event.target[field.name].value, trim);
+          if(field.parse) {
+            value = field.parse == 'int' ? parseInt(value) : parseFloat(value);
+          }
+
+          if(field.type && field.type == 'number') {
+            value = isNaN(value) ? 0 : value;
+          }
+
+          var name = field.newName || field.name;
+          values[name] = value;
+        } else {
+          values[field] = getValue(event.target[field].value, trim);
+        }
+
       });
       return values;
     }

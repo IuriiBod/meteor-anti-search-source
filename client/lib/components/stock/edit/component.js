@@ -46,26 +46,6 @@ component.state.isArchive = function() {
   }
 };
 
-component.state.unitsOrdered = function() {
-  var id = Session.get("thisIngredientId");
-  var ing = Ingredients.findOne(id);
-  var thisIngId = null;
-  if(ing) {
-    thisIngId = ing.portionOrdered;
-  }
-  return OrderingUnits.find({"unit": {$nin: [thisIngId]}});
-};
-
-component.state.unitsUsed = function() {
-  var id = Session.get("thisIngredientId");
-  var ing = Ingredients.findOne(id);
-  var thisIngId = null;
-  if(ing) {
-    thisIngId = ing.portionUsed;
-  }
-  return UsingUnits.find({"unit": {$nin: [thisIngId]}});
-};
-
 component.action.archiveIng = function(id, state) {
   Meteor.subscribe("ingredients", [id]);
   var self = this;
