@@ -84,7 +84,13 @@ Meteor.publishComposite('workers', {
       currentAreaId = user.currentAreaId ? user.currentAreaId : null;
 
       if(user && user.relations && user.relations.organizationId) {
-        return Roles.getRolesByAction('be rosted');
+        return Meteor.roles.find({
+          actions: 'be rosted',
+          $or: [
+            { 'relations.organizationId': user.relations.organizationId },
+            { default: true }
+          ]
+        });
       } else {
         this.ready();
       }

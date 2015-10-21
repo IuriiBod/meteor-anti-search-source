@@ -39,8 +39,12 @@ Namespace('HospoHero', {
     };
     var role = Roles.getRoleByName(roleName);
 
-    query['roles.' + areaId] = role._id;
-    return !!Meteor.users.findOne(query);
+    if(role) {
+      query['roles.' + areaId] = role._id;
+      return !!Meteor.users.findOne(query);
+    } else {
+      return false;
+    }
   },
 
   isOwner: function(userId, areaId) {
