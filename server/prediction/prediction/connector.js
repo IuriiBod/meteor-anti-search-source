@@ -1,6 +1,5 @@
 var CloudSettings = Meteor.settings.GoogleCloud;
 
-
 GooglePredictionApi = function GooglePredictionApi(locationId) {
   var authOptions = {
     serviceEmail: CloudSettings.SERVICE_EMAIL,
@@ -11,7 +10,6 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
   this._locationId = locationId;
 };
 
-
 GooglePredictionApi.prototype._getModelName = function () {
   if (HospoHero.isDevelopmentMode()) {
     return "trainingModel"
@@ -20,7 +18,6 @@ GooglePredictionApi.prototype._getModelName = function () {
   }
 };
 
-
 GooglePredictionApi.prototype._getTrainingFileName = function () {
   if (HospoHero.isDevelopmentMode()) {
     return "sales-data"
@@ -28,7 +25,6 @@ GooglePredictionApi.prototype._getTrainingFileName = function () {
     return "sales-data-" + this._locationId + ".csv";
   }
 };
-
 
 GooglePredictionApi.prototype.getUpdatePredictionModelSession = function () {
   var self = this;
@@ -41,7 +37,6 @@ GooglePredictionApi.prototype.getUpdatePredictionModelSession = function () {
   return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(), this._locationId, onFinished);
 };
 
-
 GooglePredictionApi.prototype.makePrediction = function (inputData) {
   if (HospoHero.isDevelopmentMode()) {
     return Math.floor(Math.random() * 100);
@@ -49,8 +44,6 @@ GooglePredictionApi.prototype.makePrediction = function (inputData) {
     return this._client.predict(this._getModelName(), inputData).outputValue;
   }
 };
-
-
 
 /**
  * The current status of the training job. This can be one of following:

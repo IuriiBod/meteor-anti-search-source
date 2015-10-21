@@ -74,7 +74,7 @@ component.state.getJobItems = function() {
 };
 
 component.state.getIngredients = function() {
-  var data = this.IngredientsSearch.getData({
+  return this.IngredientsSearch.getData({
     transform: function(matchText, regExp) {
       return matchText.replace(regExp, "<b>$&</b>")
     },
