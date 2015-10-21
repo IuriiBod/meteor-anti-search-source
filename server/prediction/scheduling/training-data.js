@@ -81,6 +81,7 @@ predictionModelRefreshJob = function () {
     }
   });
 };
+
 if (!HospoHero.isDevelopmentMode()) {
   SyncedCron.add({
     name: 'Prediction model refresh',
