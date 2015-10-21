@@ -187,7 +187,7 @@ function createNewJob(info, time, portions, maxTime, maxPortions) {
 createNewRecurringJob = function(name, ref, type, time, section, startAt, date) {
   var thisDate = new Date(date);
   var startAtDate = new Date(startAt);
-  var shifts = Shifts.find({"shiftDate": thisDate.getTime(), "section": section}).fetch();
+  var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(thisDate), "section": section}).fetch();
 
   var starting = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate(), startAtDate.getHours(), startAtDate.getMinutes());
 

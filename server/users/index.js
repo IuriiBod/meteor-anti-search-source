@@ -134,12 +134,12 @@ Meteor.methods({
       throw new Meteor.Error("User not found ", id);
     }
 
-    val = new Date(val).getTime();
+    val = HospoHero.dateUtils.shiftDate(val);
 
     if(type == "set" || type == "update") {
       Meteor.users.update({ _id: id }, {
         $set: {
-          "profile.resignDate": val,
+          "profile.resignDate": val.getTime(),
           isActive: false
         }
       });

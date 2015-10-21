@@ -17,7 +17,7 @@ Template.weekSelector.events({
     });
 
     week.forEach(function(obj) {
-      var index = week.indexOf(obj);
+      var index = HospoHero.dateUtils.shiftDate(moment().day(obj.day));
       var shifts = Shifts.find({"shiftDate": index, "type": "template"}, {sort: {"order": 1}}).fetch();
       if(shifts.length > 0) {
         shifts.forEach(function(shift) {

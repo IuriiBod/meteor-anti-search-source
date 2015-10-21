@@ -2,6 +2,8 @@ Meteor.publish('weatherForecast', function (year, week) {
   check(year, Number);
   check(week, Number);
 
+  logger.info('Weather subscribe ', {year: year, week: week});
+
   var haveAccess = HospoHero.perms.canUser('viewForecast')(this.userId);
   if (!haveAccess) {
     this.error(new Meteor.Error(403, 'Access Denied'));
