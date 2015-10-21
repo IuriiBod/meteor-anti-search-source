@@ -185,11 +185,11 @@ component.prototype.itemRendered = function() {
         var shift = Shifts.findOne(shiftId);
         if(shift) {
           if(origin == "weeklyrostertemplate") {
-            obj.startTime = new Date(newValue).getTime();
+            obj.startTime = newValue;
           } else if(origin == "weeklyroster") {
             var startHour = moment(newValue).hour();
             var startMin = moment(newValue).minute();
-            obj.startTime = new Date(moment(shift.shiftDate).set('hour', startHour).set("minute", startMin));
+            obj.startTime = moment(shift.shiftDate).set('hour', startHour).set("minute", startMin).toDate();
           }
           editShift(obj);
         }
@@ -213,11 +213,11 @@ component.prototype.itemRendered = function() {
         var shift = Shifts.findOne(shiftId);
         if(shift) {
           if(origin == "weeklyrostertemplate") {
-            obj.endTime = new Date(newValue).getTime();
+            obj.endTime = newValue;
           } else if(origin == "weeklyroster") {
             var endHour = moment(newValue).hour();
             var endMin = moment(newValue).minute();
-            obj.endTime = new Date(moment(shift.shiftDate).set('hour', endHour).set("minute", endMin));
+            obj.endTime = moment(shift.shiftDate).set('hour', endHour).set("minute", endMin).toDate();
           }
           editShift(obj);
         }

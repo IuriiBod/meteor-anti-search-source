@@ -19,8 +19,8 @@ component.state.convertTime = function(time) {
   return time / 60;
 };
 
-component.action.submit = function(id, info) {
-   Meteor.call("editIngredient", id, info, function(err) {
+component.action.submit = function(info) {
+   Meteor.call("editIngredient", this.get('id'), info, function(err) {
     if(err) {
       HospoHero.error(err);
     } else {
@@ -44,26 +44,6 @@ component.state.isArchive = function() {
   if(id != undefined) {
     return !!Ingredients.findOne({_id: id, status: 'archived'});
   }
-};
-
-component.state.unitsOrdered = function() {
-  var id = Session.get("thisIngredientId");
-  var ing = Ingredients.findOne(id);
-  var thisIngId = null;
-  if(ing) {
-    thisIngId = ing.portionOrdered;
-  }
-  return OrderingUnits.find({"unit": {$nin: [thisIngId]}});
-};
-
-component.state.unitsUsed = function() {
-  var id = Session.get("thisIngredientId");
-  var ing = Ingredients.findOne(id);
-  var thisIngId = null;
-  if(ing) {
-    thisIngId = ing.portionUsed;
-  }
-  return UsingUnits.find({"unit": {$nin: [thisIngId]}});
 };
 
 component.action.archiveIng = function(id, state) {

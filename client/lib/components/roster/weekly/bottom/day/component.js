@@ -17,7 +17,7 @@ component.state.origin = function() {
 component.state.shifts = function() {
   var origin = this.origin;
   if(origin == "weeklyroster") {
-    var date = new Date(this.name.date).setUTCHours(24);
+    var date = HospoHero.dateUtils.shiftDate(this.name.date);
     return Shifts.find({
       "shiftDate": date,
       "type": null,
@@ -27,7 +27,7 @@ component.state.shifts = function() {
     });
   } else if(origin == "weeklyrostertemplate") {
     return Shifts.find({
-      "shiftDate": daysOfWeek.indexOf(this.name),
+      "shiftDate": HospoHero.dateUtils.shiftDate(moment().day(this.name)),
       "type": "template",
       "relations.areaId": HospoHero.getCurrentAreaId()
     });
@@ -48,7 +48,7 @@ component.action.addShift = function(day, dates) {
   } else if(this.origin == "weeklyrostertemplate") {
     doc.startTime = new Date().setHours(8, 0);
     doc.endTime = new Date().setHours(17, 0);
-    doc.shiftDate = new Date(daysOfWeek.indexOf(day));
+    doc.shiftDate = HospoHero.dateUtils.shiftDate(moment().day(day));
     doc.section = null;
     doc.type = "template";
   }
