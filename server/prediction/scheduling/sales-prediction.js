@@ -6,7 +6,6 @@ var predict = function (days, locationId) {
   var prediction = new GooglePredictionApi(locationId);
   var areas = Areas.find({locationId: locationId});
   var roleManagerId = Roles.getRoleByName('Manager')._id;
-  //forecast for 15 days
 
   Weather.updateWeatherForecastForLocation(locationId);
 
@@ -14,7 +13,7 @@ var predict = function (days, locationId) {
   for (var i = 1; i <= days; i++) {
     var dayOfYear = dateMoment.dayOfYear();
 
-    if (i < 16) {
+    if (i < 15) {
       currentWeather = WeatherForecast.findOne({locationId: locationId, date: TimeRangeQueryBuilder.forDay(today)});
     } else {
       //todo: temporal. figure out typical weather
@@ -25,7 +24,7 @@ var predict = function (days, locationId) {
     }
 
     areas.forEach(function (area) {
-      var items = MenuItems.find({'relations.locationId': locationId, 'relations.areaId': area._id}, {}); //get menu items for current area
+      var items = MenuItems.find({'relations.areaId': area._id}, {}); //get menu items for current area
       var notification = new Notification();
 
       items.forEach(function (item) {
@@ -60,11 +59,10 @@ var predict = function (days, locationId) {
 
       });
 
-      var receiversIds = [];
       var query = {};
       query[area._id] = roleManagerId;
-      Meteor.users.find({roles: query}).forEach(function (user) {
-        receiversIds.push(user._id);
+      var receiversIds = Meteor.users.find({roles: query}).map(function (user) {
+        return user._id;
       });
       notification.send(receiversIds);
 
