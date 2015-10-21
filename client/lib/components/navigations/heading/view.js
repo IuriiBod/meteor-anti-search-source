@@ -257,13 +257,13 @@ Template.pageHeading.events({
               info.openShifts = open;
             }
 
-            var to = {
+            var sendTo = {
               "_id": to._id,
               "email": to.emails[0].address,
               "name": to.username
             };
 
-            Meteor.call("notifyRoster", to, info, function (err) {
+            Meteor.call("notifyRoster", sendTo, info, function (err) {
               if (err) {
                 HospoHero.error(err);
               }
