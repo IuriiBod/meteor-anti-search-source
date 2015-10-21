@@ -24,4 +24,4 @@ var requireLogIn = function () {
   }
 };
 
-Router.onBeforeAction(requireLogIn, {except: ['signIn', 'signUp', 'invitationAccept', 'switchUser', "pinLock"]});
+Router.onBeforeAction(requireLogIn, {except: ['signIn', 'signUp', 'invitationAccept', 'switchUser']});
