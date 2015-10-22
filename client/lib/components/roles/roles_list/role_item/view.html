@@ -2,11 +2,11 @@
   <tr>
     <td>
       {{#unless state$role.default}}
-        <a href="#" class="editable-role-name" data-id="{{state$role._id}}">
-          {{state$roleName}}
+        <a href="#" class="editable-role-name">
+          {{state$role.name}}
         </a>
       {{else}}
-        {{state$roleName}}
+        {{state$role.name}}
       {{/unless}}
     </td>
     <td>
@@ -14,8 +14,8 @@
     </td>
     <td>
       {{#unless state$role.default}}
-        <a href="#" class="text-danger delete-role" data-id="{{state$role._id}}">
-          <i class="fa fa-trash" data-id="{{state$role._id}}"></i>
+        <a href="#" class="text-danger delete-role">
+          <i class="fa fa-trash"></i>
         </a>
       {{/unless}}
     </td>

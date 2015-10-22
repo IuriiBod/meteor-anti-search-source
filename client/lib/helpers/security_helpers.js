@@ -8,17 +8,17 @@ Meteor.startup(function () {
     getCurrentArea: HospoHero.getCurrentArea,
     getCurrentAreaId: HospoHero.getCurrentAreaId,
     isMe: HospoHero.isMe,
-    canBeRosted: HospoHero.perms.canBeRosted,
-    canInvite: HospoHero.perms.canUser('invite'),
-    canViewRoster: HospoHero.perms.canUser('viewRoster'),
-    canEditRoster: HospoHero.perms.canUser('editRoster'),
-    canViewMenu: HospoHero.perms.canUser('viewMenu'),
-    canEditMenu: HospoHero.perms.canUser('editMenu'),
-    canViewJob: HospoHero.perms.canUser('viewJob'),
-    canEditJob: HospoHero.perms.canUser('editJob'),
-    canViewStock: HospoHero.perms.canUser('viewStock'),
-    canEditStock: HospoHero.perms.canUser('editStock'),
-    canViewForecast: HospoHero.perms.canUser('viewForecast')
+    canBeRosted: HospoHero.canUser('be rosted onto shifts'),
+    canInvite: HospoHero.canUser('invite users'),
+    canViewRoster: HospoHero.canUser('view roster'),
+    canEditRoster: HospoHero.canUser('edit roster'),
+    canViewMenu: HospoHero.canUser('view menu'),
+    canEditMenu: HospoHero.canUser('edit menu'),
+    canViewJob: HospoHero.canUser('view job'),
+    canEditJob: HospoHero.canUser('edit job'),
+    canViewStock: HospoHero.canUser('view stocks'),
+    canEditStock: HospoHero.canUser('edit stocks'),
+    canViewForecast: HospoHero.canUser('view forecast')
   };
 
   Object.keys(securityHelpers).forEach(function (helperName) {

@@ -30,7 +30,11 @@ component.state.role = function() {
 };
 
 component.state.roles = function () {
-  return Roles.getRoles();
+  return Meteor.roles.find({
+    name: {
+      $ne: 'Owner'
+    }
+  });
 };
 
 component.state.selectedRole = function (roleId) {

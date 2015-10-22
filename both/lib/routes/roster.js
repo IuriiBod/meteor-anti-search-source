@@ -18,7 +18,7 @@ Router.route('/roster/weekly/:year/:week', {
     }
   },
   data: function () {
-    if (!HospoHero.perms.canUser('viewRoster')()) {
+    if (!HospoHero.canUser('view roster')()) {
       Router.go("/");
     }
     Session.set("thisWeek", this.params.week);
@@ -46,7 +46,7 @@ Router.route('/roster/daily/:date', {
     }
   },
   data: function () {
-    if (!HospoHero.perms.canUser('viewRoster')()) {
+    if (!HospoHero.canUser('view roster')()) {
       Router.go("/");
     }
     Session.set("thisDate", this.params.date);
@@ -69,7 +69,7 @@ Router.route('/roster/template/weekly', {
     ];
   },
   data: function () {
-    if (!HospoHero.perms.canUser('viewRoster')()) {
+    if (!HospoHero.canUser('view roster')()) {
       Router.go('/');
     }
     Session.set("editStockTake", false);
@@ -98,7 +98,7 @@ Router.route('/roster/shift/:_id', {
     return cursors;
   },
   data: function () {
-    if (!HospoHero.perms.canUser('viewRoster')()) {
+    if (!HospoHero.canUser('view roster')()) {
       Router.go('/');
     }
     Session.set("editStockTake", false);

@@ -114,7 +114,7 @@ Meteor.methods({
   },
 
   publishRoster: function(week, shifts) {
-    if(!HospoHero.perms.canUser('editRoster')()) {
+    if(!HospoHero.canUser('edit roster')()) {
       logger.error("User not permitted to publish shifts");
       throw new Meteor.Error(403, "User not permitted to publish shifts ");
     }
