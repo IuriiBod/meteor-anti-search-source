@@ -77,10 +77,20 @@ Meteor.publish("menuItems", function (ids) {
 });
 
 
-Meteor.publish("areaMenuItems", function () {
+Meteor.publish("areaMenuItems", function (categoryId) {
   if (this.userId) {
-    var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
-    return MenuItems.find({'relations.areaId': currentAreaId});
+    var query = {
+      "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
+      status: "active"
+    };
+
+    if (categoryId && categoryId != "all") {
+      query.category = categoryId;
+    }
+
+    logger.info("Menu Items list published", categoryId);
+
+    return MenuItems.find(query, {sort:{name: 1}});
   } else {
     this.ready();
   }

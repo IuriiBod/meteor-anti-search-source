@@ -1,4 +1,4 @@
-Router.route('/roster/prediction/:year/:week', {
+Router.route('/roster/prediction/:year/:week/:category', {
   name: "salesPrediction",
   template: "salesPredictionPage",
   waitOn: function () {
@@ -6,7 +6,9 @@ Router.route('/roster/prediction/:year/:week', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('weatherForecast', parseInt(this.params.year), parseInt(this.params.week)),
       Meteor.subscribe("salesPrediction"),
-      Meteor.subscribe('areaMenuItems'),
+      //Meteor.subscribe('menuList', this.params.category),
+      Meteor.subscribe('areaMenuItems', this.params.category),
+      Meteor.subscribe('allCategories'),
       Meteor.subscribe('importedActualSales')
     ];
   },

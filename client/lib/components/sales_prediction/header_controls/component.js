@@ -11,6 +11,7 @@ component.state.week = function () {
 
 component.state.onDateChanged = function () {
   return function (weekDate) {
+    weekDate.category = Router.current().params.category;
     Router.go('salesPrediction', weekDate);
   };
 };

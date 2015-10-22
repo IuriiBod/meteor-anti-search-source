@@ -1,0 +1,19 @@
+<template name="FilterByCategory">
+  HERE WILL BE FILTER
+  <div class="row m-b">
+    <div class="col-xs-3">
+      <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize"
+              style="text-align: left">
+        {{state$currentCategory}}
+      </button>
+      <span class="caret caret-pulled-right pull-right"></span>
+      <ul class="dropdown-menu text-capitalize">
+        {{#each state$categories}}
+          <li>
+            <a href="/roster/prediction/{{state$year}}/{{state$week}}/{{this._id}}" class="">{{this.name}}</a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>
