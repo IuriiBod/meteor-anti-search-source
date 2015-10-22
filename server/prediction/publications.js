@@ -23,11 +23,9 @@ Meteor.publish("areaMenuItemsInfiniteScroll", function (limit) {
   if (!haveAccess) {
     this.error(new Meteor.Error(403, 'Access Denied'));
   }
+
   var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
-  var specialsCategory = Categories.findOne({name: 'Specials'});
-    var specialsCategoryId = null;
-  if (specialsCategory) {
-    specialsCategoryId = specialsCategory._id;
-  }
-  return MenuItems.find({'relations.areaId': currentAreaId, status: {$ne: "ideas"}, category: {$ne: specialsCategoryId}}, {limit: limit});
+  var query = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': currentAreaId});
+
+  return MenuItems.find(query, {limit: limit});
 });
