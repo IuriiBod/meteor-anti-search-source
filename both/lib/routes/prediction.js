@@ -3,13 +3,13 @@ Router.route('/roster/prediction/:year/:week/:category', {
   template: "salesPredictionPage",
   waitOn: function () {
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weatherForecast', parseInt(this.params.year), parseInt(this.params.week)),
-      Meteor.subscribe("salesPrediction"),
-      //Meteor.subscribe('menuList', this.params.category),
-      Meteor.subscribe('areaMenuItems', this.params.category),
-      Meteor.subscribe('allCategories'),
-      Meteor.subscribe('importedActualSales')
+
+      this.subscribe('organizationInfo'),
+      this.subscribe('weatherForecast', parseInt(this.params.year), parseInt(this.params.week)),
+      this.subscribe("salesPrediction"),
+      this.subscribe('importedActualSales'),
+      this.subscribe('areaMenuItems', this.params.category),
+      this.subscribe('allCategories')
     ];
   },
   data: function () {
@@ -20,5 +20,4 @@ Router.route('/roster/prediction/:year/:week/:category', {
       }
     };
   },
-  fastRender: true
 });

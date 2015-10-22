@@ -7,7 +7,7 @@ Template.weeklyRosterDay.events({
     var dates = [];
     week.forEach(function(day) {
       if(day && day.date) {
-        dates.push(new Date(day.date).getTime())
+        dates.push(new Date(day.date))
       }
     });
     if(day) {

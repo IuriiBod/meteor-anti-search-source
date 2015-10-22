@@ -4,11 +4,11 @@ Meteor.methods({
       logger.error(403, "User not permitted to create shifts");
     }
 
-    var shiftDate = new Date(info.shiftDate).getTime();
-    var startTime = new Date(info.startTime).getTime();
-    var endTime = new Date(info.endTime).getTime();
+    var shiftDate = HospoHero.dateUtils.shiftDate(info.shiftDate);
+    var startTime = new Date(info.startTime);
+    var endTime = new Date(info.endTime);
     if(startTime && endTime) {
-      if(startTime > endTime) {
+      if(startTime.getTime() > endTime.getTime()) {
         logger.error("Start and end times invalid");
         throw new Meteor.Error("Start and end times invalid");
       }
@@ -22,7 +22,7 @@ Meteor.methods({
     if(info.hasOwnProperty(order)) {
       order = parseFloat(info.order);
     } else {
-      var shifts = Shifts.find({"shiftDate": new Date(info.shiftDate).getTime()}).fetch();
+      var shifts = Shifts.find({"shiftDate": shiftDate}).fetch();
       if(shifts) {
         order = shifts.length;
       }
@@ -44,6 +44,7 @@ Meteor.methods({
       "order": order,
       relations: HospoHero.getRelationsObject()
     };
+
     if(info.hasOwnProperty("week") && info.week.length > 0) {
       var alreadyPublished = Shifts.findOne({
         "shiftDate": {$in: info.week},
@@ -86,61 +87,36 @@ Meteor.methods({
     }
 
     var updateDoc = {};
-    var startTime;
-    var endTime;
+    var startTime = info.hasOwnProperty("startTime") ? new Date(info.startTime) : new Date(shift.startTime);
+    var endTime = info.hasOwnProperty("endTime") ? new Date(info.endTime) : new Date(shift.endTime);
 
-    if(info.hasOwnProperty("startTime") && info.hasOwnProperty("endTime")) {
-      startTime = new Date(info.startTime).getTime();
-      endTime = new Date(info.endTime).getTime();
-      if(startTime && endTime) {
-        if(startTime >= endTime) {
-          logger.error("Start and end times invalid");
-          throw new Meteor.Error(404, "Start and end times invalid");
-        } else {
-          updateDoc.startTime = new Date(info.startTime).getTime();
-          updateDoc.endTime = new Date(info.endTime).getTime();
-        }
-      }  
-    } else if(info.hasOwnProperty("startTime")) {
-      startTime = new Date(info.startTime).getTime();
-      endTime = new Date(shift.endTime).getTime();
-
-      if(startTime && endTime) {
-        if(startTime > endTime) {
-          logger.error("Start time invalid");
-          throw new Meteor.Error(404, "Start time invalid");
-        } else {
-          updateDoc.startTime = new Date(info.startTime).getTime();
-        }
-      }  
-    } else if(info.hasOwnProperty("endTime")) {
-      startTime = new Date(shift.startTime).getTime();
-      endTime = new Date(info.endTime).getTime();
-
-      if(startTime && endTime) {
-        if(startTime > endTime) {
-          logger.error("End time invalid");
-          throw new Meteor.Error(404, "End time invalid");
-        } else {
-          updateDoc.endTime = new Date(info.endTime).getTime();
-        }
-      }  
+    if(startTime.getTime() >= endTime.getTime()) {
+      logger.error("Start or end time is invalid");
+      throw new Meteor.Error(404, "Start and end times invalid");
+    } else {
+      updateDoc.startTime = startTime;
+      updateDoc.endTime = endTime;
     }
+
+    console.log('UPDAte', updateDoc);
+
+
     if(info.hasOwnProperty("section")) {
       updateDoc.section = info.section;
     }
 
     if(info.shiftDate) {
-      if(shift.shiftDate != new Date(info.shiftDate).getTime()) {
+      if(shift.shiftDate.getTime() != new Date(info.shiftDate).getTime()) {
+        var shiftDate = moment(info.shiftDate).startOf('day').toDate();
         if(shift.assignedTo) {
-          var existingWorker = Shifts.findOne({"shiftDate": new Date(info.shiftDate).getTime(), "assignedTo": shift.assignedTo});
+          var existingWorker = Shifts.findOne({"shiftDate": shiftDate, "assignedTo": shift.assignedTo});
 
           if(existingWorker) {
             logger.error("The worker already has an assigned shift on this date ", {"id": info._id});
             throw new Meteor.Error(404, "The worker already has an assigned shift on this date");
           }
         } 
-        updateDoc.shiftDate = new Date(info.shiftDate).getTime();
+        updateDoc.shiftDate = shiftDate;
       }
     }
 

@@ -7,7 +7,7 @@ component.state.shiftsList = function() {
 };
 
 component.state.shiftsCount = function() {
-  var date = Session.get("thisDate");
+  var date = HospoHero.dateUtils.shiftDate(Session.get("thisDate"));
   date = new Date(date).getTime();
   return Shifts.find({
     shiftDate: date,

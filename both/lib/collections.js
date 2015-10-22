@@ -1,8 +1,6 @@
 MenuItems = new Mongo.Collection("menuItems");
 
 Ingredients = new Mongo.Collection("ingredients");
-OrderingUnits = new Mongo.Collection("orderingUnits");
-UsingUnits = new Mongo.Collection("usingUnits");
 
 JobItems = new Mongo.Collection("jobItems");
 

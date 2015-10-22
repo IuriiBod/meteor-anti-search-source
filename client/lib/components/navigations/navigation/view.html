@@ -51,13 +51,13 @@
               {{/if}}
 
               {{#if canViewMenu}}
-                <li class="{{isActiveRoute regex='menuItemsMaster'}}">
+                <li class="{{isActiveRoute regex='menuItemsMaster|submitMenuItem|menuItemsMasterType|menuItemDetail'}}">
                   <a href="/menuItems/{{state$category}}/{{state$status}}"><i class="fa fa-cutlery"></i> <span class="nav-label">Menu</span></a>
                 </li>
               {{/if}}
 
               {{#if canViewJob}}
-                <li class="{{isActiveRoute regex='jobItemsMaster'}}">
+                <li class="{{isActiveRoute regex='jobItemsMaster|jobItemsMasterType|submitJobItem|jobItemDetailed|jobItemEdit'}}">
                   <a href="/jobItems"><i class="fa fa-spoon"></i> <span class="nav-label">Jobs</span> </a>
                 </li>
               {{/if}}

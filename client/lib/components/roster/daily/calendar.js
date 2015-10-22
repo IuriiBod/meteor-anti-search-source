@@ -43,7 +43,7 @@ Calendar.prototype.destroy = function () {
 
 Calendar.prototype._getShifts = function () {
   var shifts = Shifts.find({
-    shiftDate: this.options.shiftDate.getTime()
+    shiftDate: HospoHero.dateUtils.shiftDate(this.options.shiftDate)
   }, {
     sort: {
       startTime: 1

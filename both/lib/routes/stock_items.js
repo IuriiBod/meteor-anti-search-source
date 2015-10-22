@@ -6,8 +6,6 @@ Router.route('/stocklist', {
   waitOn: function() {
     return [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe("orderingUnits"),
-      Meteor.subscribe("usingUnits"),
       Meteor.subscribe("allSuppliers")
     ];
   },

@@ -1,10 +1,4 @@
 Namespace('HospoHero', {
-  getBlazeTemplate: function (selector) {
-    if (selector && $(selector).length > 0) {
-      return Blaze.getView($(selector)[0])._templateInstance;
-    }
-  },
-
   checkMongoId: function (id) {
     check(id, String);
     if (!/[0-9a-zA-Z]{17}/.test(id)) {
@@ -16,34 +10,6 @@ Namespace('HospoHero', {
     if (!moment(date).isValid()) {
       throw new Meteor.Error("Expected date");
     }
-  },
-
-  // Alert error message
-  error: function (err) {
-    if (err) {
-      console.log(err);
-      if (err.reason) {
-        return sweetAlert("Error!", err.reason, "error");
-      } else if (err.error) {
-        return sweetAlert("Error!", err.error, "error");
-      } else if (err.message) {
-        return sweetAlert("Error!", err.message, "error");
-      } else {
-        return sweetAlert("Error!", err, "error");
-      }
-    } else {
-      return sweetAlert("Error!", "", "error");
-    }
-  },
-
-  // Alert success message
-  success: function(message) {
-    sweetAlert("Success!", message, "success");
-  },
-
-  // Alert info message
-  info: function(message) {
-    sweetAlert("Info!", message, "info");
   },
 
   isInOrganization: function(userId) {

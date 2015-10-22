@@ -5,7 +5,7 @@ Meteor.publish('weekly', function (dates, worker, type) {
     };
 
     if (dates && !type) {
-      query.shiftDate = TimeRangeQueryBuilder.forWeek(dates.monday, true);
+      query.shiftDate = TimeRangeQueryBuilder.forWeek(dates.monday, false);
     }
     if (worker) {
       query.assignedTo = worker;
@@ -29,7 +29,7 @@ Meteor.publishComposite('daily', function(date, worker) {
     find: function () {
       if (this.userId) {
         var query = {
-          shiftDate: new Date(date).getTime(),
+          shiftDate: moment(date).startOf('day'),
           type: null,
           "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
         };
@@ -84,18 +84,17 @@ Meteor.publish('shifts', function(type, userId) {
       },
       limit: 10
     };
-    var currentDate = Date.now();
 
     if(type == 'future' || type == 'opened') {
-      query.shiftDate = { $gte: currentDate };
+      query.shiftDate = { $gte: HospoHero.dateUtils.shiftDate() };
 
       if(type == 'opened') {
         query.assignedTo = null;
         query.published = true;
       }
     } else if(type == 'past') {
-      query.shiftDate = { $lte: currentDate };
-      query.endTime = { $lte: currentDate };
+      query.shiftDate = { $lte: new Date() };
+      query.endTime = { $lte: new Date() };
       options.sort.shiftDate = -1;
     } else {
       this.ready();
