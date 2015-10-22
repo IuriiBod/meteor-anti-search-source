@@ -25,6 +25,6 @@ Namespace('HospoHero', {
     };
 
     // arguments[1] - userId
-    return arguments.length > 2 ? checkPermission(arguments[1]) : checkPermission;
+    return arguments.length > 1 ? checkPermission(arguments[1]) : checkPermission;
   }
 });
