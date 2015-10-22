@@ -85,3 +85,17 @@ Meteor.publish("areaMenuItems", function () {
     this.ready();
   }
 });
+
+Meteor.publish("areaMenuItemsInfiniteScroll", function (limit) {
+  if (this.userId) {
+    var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+
+    var specialsCategory = Categories.findOne({name: 'Specials'});
+    var specialsCategoryId = null;
+    if (specialsCategory)
+      specialsCategoryId = specialsCategory._id;
+    return MenuItems.find({'relations.areaId': currentAreaId, status: {$ne: "ideas"}, category: {$ne: specialsCategoryId}}, {limit: limit});
+  } else {
+    this.ready();
+  }
+})

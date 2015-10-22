@@ -14,13 +14,7 @@ Package.onUse(function (api) {
   api.versionsFrom('1.1.0.2');
   api.use(['accounts-password', 'underscore', 'minimongo', 'mongo-livedata', 'templating', 'tracker'], 'client');
   api.use(['mongo', 'underscore'], 'server');
-  api.addFiles(['collection.js', 'permissions.js', 'roles.js', 'roles_server.js', 'default_roles.js']);
+  api.addFiles(['both_roles.js', 'collections.js']);
+  api.addFiles('roles_server.js', 'server');
   api.export('Roles');
-});
-
-Package.onTest(function (api) {
-  api.use(['accounts-password'], 'client');
-  api.use('tinytest');
-  api.use('alonoslav:roles');
-  api.addFiles('roles_tests.js');
 });

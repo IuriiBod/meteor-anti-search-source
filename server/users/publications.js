@@ -86,20 +86,15 @@ Meteor.publishComposite('workers', function () {
 
         if (user && user.relations && user.relations.organizationId) {
           return Meteor.roles.find({
-            permissions: Roles.permissions.Roster.canBeRosted.code,
+            actions: 'be rosted',
             $or: [
-              {default: true},
-              {organizationId: user.relations.organizationId}
-            ],
-            name: {
-              $ne: 'Owner'
-            }
+              {'relations.organizationId': user.relations.organizationId},
+              {default: true}
+            ]
           });
         } else {
           this.ready();
         }
-      } else {
-        this.ready();
       }
     },
     children: [

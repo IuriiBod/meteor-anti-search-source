@@ -67,7 +67,7 @@ component.prototype.onListRendered = function() {
   var self = this;
   var user = Meteor.user();
   $(".col-lg-13:first").css("margin-left", "0px");
-  if(HospoHero.perms.canUser('editRoster')()) {
+  if(HospoHero.canUser('edit roster')()) {
     $(".sortable-list > div > li").css("cursor", "move");
     var origin = this.name;
     $(".sortable-list").sortable({

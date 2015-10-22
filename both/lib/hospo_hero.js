@@ -33,7 +33,18 @@ Namespace('HospoHero', {
       var user = Meteor.users.findOne({_id: userId});
       areaId = user && user.currentAreaId ? user.currentAreaId : 'defaultRole';
     }
-    return Roles.userIsInRole(roleName, userId, areaId);
+
+    var query = {
+      _id: userId
+    };
+    var role = Roles.getRoleByName(roleName);
+
+    if(role) {
+      query['roles.' + areaId] = role._id;
+      return !!Meteor.users.findOne(query);
+    } else {
+      return false;
+    }
   },
 
   isOwner: function(userId, areaId) {
