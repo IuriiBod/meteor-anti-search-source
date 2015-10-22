@@ -2,8 +2,8 @@ Migrations.add({
   version: 5,
   name: "Location configuration in collections",
   up: function () {
-    ImportedActualSales.remove({});
-    SalesPrediction.remove({});
+    DailySales.remove({}); //ImportedActualSales
+    DailySales.remove({}); ///SalesPrediction
     ForecastDates.remove({});
     var locations = Locations.find().fetch();
     var query = {};

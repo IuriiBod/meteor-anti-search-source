@@ -9,7 +9,7 @@ var updateLastTaskRunDateForLocation = function (locationId) {
 };
 
 var updateActualSales = function (item) {
-  ImportedActualSales.update({
+  DailySales.update({ // ImportedActualSales
     date: TimeRangeQueryBuilder.forDay(item.date),
     menuItemId: item.menuItemId
   }, item, {upsert: true});

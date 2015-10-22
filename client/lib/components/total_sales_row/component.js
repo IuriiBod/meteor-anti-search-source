@@ -12,8 +12,8 @@ component.state.week = function () {
 
 component.state.getTotalSales = function (date) {
   var query = {date: TimeRangeQueryBuilder.forDay(date)};
-  var predictions = SalesPrediction.find(query).fetch();
-  var actual = ImportedActualSales.find(query).fetch();
+  var predictions = DailySales.find(query).fetch(); //SalesPrediction
+  var actual = DailySales.find(query).fetch(); //ImportedActualSales
 
   var actualTotal = getTotalPrice(actual);
   var predictionTotal = getTotalPrice(predictions);

@@ -12,13 +12,13 @@ component.state.weekPrediction = function () {
     return moment(date).format('YYYY-MM-DD');
   });
 
-  var prediction = _.map(SalesPrediction.find({
+  var prediction = _.map(DailySales.find({ //SalesPrediction
     date: TimeRangeQueryBuilder.forWeek(monday),
     menuItemId: id
   }, {sort: {date: 1}}).fetch(), function (item) {
     return {date: moment(item.date).format('YYYY-MM-DD'), predictionQuantity: item.quantity};
   });
-  var actual = _.map(ImportedActualSales.find({
+  var actual = _.map(DailySales.find({ // ImportedActualSales
     date: TimeRangeQueryBuilder.forWeek(monday),
     menuItemId: id
   }, {sort: {date: 1}}).fetch(), function (item) {

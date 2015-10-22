@@ -11,9 +11,8 @@ Router.route('/roster/weekly/:year/:week', {
         Meteor.subscribe('weekly', week, null, null),
         Meteor.subscribe('workers'),
         Meteor.subscribe('sections'),
-        Meteor.subscribe('salesPrediction'),
         Meteor.subscribe('areaMenuItems'),
-        Meteor.subscribe('importedActualSales')
+        Meteor.subscribe('dailySales')
       ];
     }
   },

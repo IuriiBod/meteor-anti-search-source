@@ -8,24 +8,24 @@ var component = FlowComponents.define("figureBoxes", function (props) {
 component.state.weeklySale = function () {
 
     if (this.week < moment().week()) {
-        var sales = ImportedActualSales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch();
+        var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch(); // ImportedActualSales
         var total = this.figureBox.calcSalesCost(sales);
 
         //for current week: past days actual sales and for future dates forecasted sales
     } else if (this.week == moment().week()) {
-        var todayActualSale = !!ImportedActualSales.findOne({date: TimeRangeQueryBuilder.forDay(moment())});
+        var todayActualSale = !!DailySales.findOne({date: TimeRangeQueryBuilder.forDay(moment())}); //ImportedActualSales
         if (todayActualSale) {
             var querySeparator = moment().endOf("d");
         } else {
             var querySeparator = moment().startOf("d");
         }
-        var actualSales = ImportedActualSales.find({
+        var actualSales = DailySales.find({ //ImportedActualSales
             date: {
                 $gte: this.weekRange.monday,
                 $lte: querySeparator.toDate()
             }
         }, {sort: {"date": 1}}).fetch();
-        var predictSales = SalesPrediction.find({
+        var predictSales = DailySales.find({ //SalesPrediction
             date: {
                 $gte: querySeparator.toDate(),
                 $lte: this.weekRange.sunday
@@ -35,14 +35,14 @@ component.state.weeklySale = function () {
 
         //for future weeks: all forecasted sales
     } else if (this.week > moment().week()) {
-        sales = SalesPrediction.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch();
+        sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch(); //SalesPrediction
         var total = this.figureBox.calcSalesCost(sales);
     }
     return total;
 };
 
 component.state.forecastedSale = function () {
-    var sales = SalesPrediction.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch();
+    var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch(); //SalesPrediction
     var total = this.figureBox.calcSalesCost(sales);
     return total;
 };

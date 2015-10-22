@@ -11,7 +11,7 @@ component.state.actual = function() {
   var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(self.dayObj.date), "status": {$ne: "draft"}, "type": null}).fetch();
   wages = this.figureBox.calcStaffCost(shifts);
   
-  var actualSales = ImportedActualSales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch();
+  var actualSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch(); //ImportedActualSales
   sales = this.figureBox.calcSalesCost(actualSales);
 
   var percentage = 0;
@@ -31,7 +31,7 @@ component.state.forecast = function() {
   var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(self.dayObj.date), "status": {$ne: "finished"}, "type": null}).fetch();
   wages = this.figureBox.calcStaffCost(shifts);
   
-  var forecastesSales = SalesPrediction.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch();
+  var forecastesSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch(); //SalesPrediction
   sales = this.figureBox.calcSalesCost(forecastesSales);
 
   var percentage = 0;

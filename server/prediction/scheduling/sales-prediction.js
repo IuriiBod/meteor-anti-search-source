@@ -40,7 +40,7 @@ var predict = function (days, locationId) {
           relations: item.relations
         };
 
-        var currentData = SalesPrediction.findOne({
+        var currentData = DailySales.findOne({ //SalesPrediction
           date: TimeRangeQueryBuilder.forDay(dateMoment),
           menuItemId: predictItem.menuItemId
         });
@@ -56,7 +56,7 @@ var predict = function (days, locationId) {
           }
         }
 
-        SalesPrediction.update({
+        DailySales.update({ //SalesPrediction
           date: TimeRangeQueryBuilder.forDay(predictItem.date),
           menuItemId: predictItem.menuItemId
         }, predictItem, {upsert: true});
