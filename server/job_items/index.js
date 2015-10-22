@@ -83,8 +83,7 @@ Meteor.methods({
     var id = JobItems.insert(doc);
     logger.info("Job Item inserted", {"jobId": id, 'type': type.name});
 
-    // TODO: Change to the new roles
-    var to = HospoHero.roles.getUserIdsByAction('JOB_EDIT');
+    var to = HospoHero.roles.getUserIdsByAction('edit jobs');
     var options = {
       type: 'job',
       title: doc.name + ' job has been created',

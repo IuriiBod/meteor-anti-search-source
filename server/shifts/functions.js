@@ -148,8 +148,7 @@ Meteor.methods({
     }
     logger.info("Shift has been claimed ", {"user": userId, "shiftId": shiftId});
 
-    // TODO: Change to new roles
-    var userIds = HospoHero.roles.getUserIdsByAction('ROSTER_APPROVER');
+    var userIds = HospoHero.roles.getUserIdsByAction('approves roster requests');
 
     var text = [];
     text.push("Shift on ");
@@ -245,7 +244,6 @@ Meteor.methods({
     var options = {
       "title": text,
       "actionType": "reject",
-      "rejected": user,
       type: 'roster',
       to: userId
     };
