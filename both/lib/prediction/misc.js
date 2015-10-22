@@ -42,6 +42,10 @@ Namespace('HospoHero.prediction', {
         var str = location.pos[property];
         return str && str.length > 0 && isValid;
       }, true);
+  },
+
+  getMenuItemsForPredictionQuery: function () {
+
   }
 });
 
