@@ -19,5 +19,5 @@ Router.route('/roster/prediction/:year/:week/:category', {
         week: this.params.week
       }
     };
-  },
+  }
 });
