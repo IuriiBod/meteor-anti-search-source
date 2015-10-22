@@ -112,7 +112,6 @@ Meteor.publishAuthorized('shifts', function (type, userId) {
   } else if (type == 'past') {
     query.shiftDate = {$lte: new Date()};
     query.endTime = {$lte: new Date()};
-    options.sort.shiftDate = -1;
   } else {
     this.ready();
   }

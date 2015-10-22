@@ -114,7 +114,7 @@ Meteor.methods({
   },
 
   publishRoster: function(week, shifts) {
-    if(!HospoHero.canUser('edit roster')()) {
+    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User not permitted to publish shifts");
       throw new Meteor.Error(403, "User not permitted to publish shifts ");
     }
@@ -184,7 +184,6 @@ Meteor.methods({
   },
 
   confirmClaim: function(shiftId, userId) {
-    // TODO: Change with new roles
     if(!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User does not have permission to confirm a shift claim");
       throw new Meteor.Error(403, "User does not have permission to confirm a shift claim");
@@ -222,8 +221,7 @@ Meteor.methods({
   },
 
   rejectClaim: function(shiftId, userId) {
-    // TODO: Change with new roles
-    if(!HospoHero.perms.canUser('editRoster')) {
+    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User does not have permission to confirm a shift claim");
       throw new Meteor.Error(403, "User does not have permission to confirm a shift claim");
     }
