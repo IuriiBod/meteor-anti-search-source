@@ -1,4 +1,43 @@
 Meteor.methods({
+  sendNotification: function(itemId, notification) {
+    if(itemId) {
+      HospoHero.checkMongoId(itemId);
+    }
+    check(notification, Object);
+
+    var sendNotificationToId = [];
+
+    if(notification.to) {
+      sendNotificationToId = sendNotificationToId.concat(notification.to);
+    }
+
+    if(notification.type == 'menu' || notification.type == 'job') {
+      var type = notification.type + 'list';
+      var subscription = Subscriptions.findOne({_id: type});
+      sendNotificationToId = sendNotificationToId.concat(subscription.subscribers);
+    }
+
+    if(sendNotificationToId.length) {
+      var userId = Meteor.userId() || null;
+      var notificationObj = {
+        read: false,
+        createdBy: userId,
+        ref: itemId,
+        createdOn: new Date()
+      };
+
+      notificationObj.type = notification.type;
+      notificationObj.title = notification.title;
+      notificationObj.text = notification.text || '';
+      notificationObj.actionType = notification.actionType || 'update';
+
+      sendNotificationToId.forEach(function(to) {
+        notificationObj.to = to;
+        Notifications.insert(notificationObj);
+      });
+    }
+  },
+
   'sendNotifications': function (itemId, type, options) {
     var userId = Meteor.userId();
     if (!userId) {
@@ -16,8 +55,7 @@ Meteor.methods({
 
     if (type == 'organization') {
       info.to = options.to;
-      var id = Notifications.insert(info);
-      return console.log("Notification " + id + " send");
+      return Notifications.insert(info);
     }
 
     if(type != "comment" || type != "roster") {
@@ -104,7 +142,7 @@ Meteor.methods({
       info.createdOn = Date.now();
       var text = "";
       var shift = Shifts.findOne(itemId);
-      
+
       if(shift) {
         if(options.type == "claim") {
           if(shift.claimedBy && shift.claimedBy.length > 0) {
