@@ -38,4 +38,11 @@
       </div>
     </div>
   </div>
+    {{#unless state$areAllItemsLoaded}}
+        <div>
+            <button id="loadMoreBtn" class="btn btn-white center-block" type="button">
+                Load more
+            </button>
+        </div>
+    {{/unless}}
 </template>

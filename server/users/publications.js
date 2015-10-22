@@ -1,8 +1,8 @@
-Meteor.publish('profileUser', function(userId) {
-  if(userId) {
+Meteor.publish('profileUser', function (userId) {
+  if (userId) {
     var user = Meteor.users.findOne(userId);
 
-    if(user) {
+    if (user) {
       var fields = {
         "services.google": 1,
         profile: 1,
@@ -15,7 +15,7 @@ Meteor.publish('profileUser', function(userId) {
         "roles.defaultRole": 1
       };
 
-      if(user.currentAreaId) {
+      if (user.currentAreaId) {
         fields["roles." + user.currentAreaId] = 1;
       }
 
@@ -75,47 +75,42 @@ Meteor.publish("selectedUsersList", function (usersIds) {
 });
 
 //managers and workers that should be assigned to shifts
-var currentAreaId;
-Meteor.publishComposite('workers', {
-  find: function() {
-    if(this.userId) {
-      var user = Meteor.users.findOne(this.userId);
+Meteor.publishComposite('workers', function () {
+  var currentAreaId;
+  return {
+    find: function () {
+      if (this.userId) {
+        var user = Meteor.users.findOne(this.userId);
 
-      currentAreaId = user.currentAreaId ? user.currentAreaId : null;
+        currentAreaId = user.currentAreaId ? user.currentAreaId : null;
 
-      if(user && user.relations && user.relations.organizationId) {
-        return Meteor.roles.find({
-          actions: 'be rosted',
-          $or: [
-            { 'relations.organizationId': user.relations.organizationId },
-            { default: true }
-          ]
-        });
-      } else {
-        this.ready();
+        if (user && user.relations && user.relations.organizationId) {
+          return Meteor.roles.find({
+            actions: 'be rosted',
+            $or: [
+              {'relations.organizationId': user.relations.organizationId},
+              {default: true}
+            ]
+          });
+        } else {
+          this.ready();
+        }
       }
-    } else {
-      this.ready();
-    }
-  },
-  children: [
-    {
-      find: function (role) {
-        if(role) {
-          if(currentAreaId) {
-            var query = {};
-            query["relations.areaIds"] = currentAreaId;
+    },
+    children: [
+      {
+        find: function (role) {
+          if (currentAreaId) {
+            var query = {"relations.areaIds": currentAreaId};
             query["roles." + currentAreaId] = role._id;
             return Meteor.users.find(query);
           } else {
             this.ready();
           }
-        } else {
-          this.ready();
         }
       }
-    }
-  ]
+    ]
+  };
 });
 
 Meteor.publish("selectedUsers", function (ids) {
