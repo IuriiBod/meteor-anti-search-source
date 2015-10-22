@@ -48,7 +48,7 @@ Meteor.methods({
       actionType: 'update',
       to: invitation.invitedBy
     };
-    Meteor.call('sendNotification', options);
+    Meteor.call('sendNotification', null, options);
 
     var areaId = invitation.areaId;
     var area = Areas.findOne({_id: areaId});
