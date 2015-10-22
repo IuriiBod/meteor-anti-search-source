@@ -94,7 +94,7 @@ component.prototype.onListRendered = function() {
       }
 
       Meteor.call("editShift", id, {"order": order}, function(err) {
-        if(err) {
+        if(err && ui.sender) {
           $(ui.sender[0]).sortable('cancel');
           HospoHero.error(err);
         }
