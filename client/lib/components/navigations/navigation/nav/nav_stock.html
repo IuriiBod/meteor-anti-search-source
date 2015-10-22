@@ -1,0 +1,27 @@
+<template name="navStock">
+  {{#if canViewStock}}
+    <li class="{{isActiveRoute name='ingredientsList|stocktake|supplierOrdering'}}">
+      <a href="#">
+        <i class="fa fa-list"></i>
+        <span class="nav-label">Stock</span>
+      </a>
+      <ul class="nav nav-second-level collapse {{isActiveRoute name='ingredientsList|stocktake|supplierOrdering' className='in'}}">
+        <li class="{{isActiveRoute name='ingredientsList'}}">
+          <a href="{{pathFor route='ingredientsList'}}">List</a>
+        </li>
+
+        {{#if canEditStock}}
+          <li class="{{isActiveRoute name='stocktakeList'}}">
+            <a href="{{pathFor route='stocktakeList'}}">Stocktake</a>
+          </li>
+          <li class="{{isActiveRoute name='orderReceiptsList'}}">
+            <a href="{{pathFor route='orderReceiptsList'}}">Receive Orders</a>
+          </li>
+          <li class="{{isActiveRoute name='suppliersList'}}">
+            <a href="{{pathFor route='suppliersList'}}">Suppliers</a>
+          </li>
+        {{/if}}
+      </ul>
+    </li>
+  {{/if}}
+</template>
