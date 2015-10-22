@@ -82,9 +82,20 @@ Meteor.methods({
     doc.relations = HospoHero.getRelationsObject();
     var id = JobItems.insert(doc);
     logger.info("Job Item inserted", {"jobId": id, 'type': type.name});
+
+    // TODO: Change to the new roles
+    var to = HospoHero.roles.getUserIdsByAction('JOB_EDIT');
+    var options = {
+      type: 'job',
+      title: doc.name + ' job has been created',
+      actionType: 'create',
+      to: to
+    };
+    Meteor.call("sendNotification", id, options);
     return id;
   },
 
+  // TODO: I am crying...;(
   'editJobItem': function(id, info) {
     if(!HospoHero.perms.canUser('editJob')()) {
       logger.error("User not permitted to create job items");
@@ -242,7 +253,16 @@ Meteor.methods({
         query["$unset"] = removeDoc;
       }
       logger.info("Job Item updated", {"JobItemId": id});
-      return JobItems.update({'_id': id}, query);
+      var editJobId = JobItems.update({'_id': id}, query);
+
+      var to = HospoHero.roles.getUserIdsByAction('JOB_EDIT');
+      var options = {
+        type: 'job',
+        title: job.name + ' job has been updated',
+        to: to
+      };
+      Meteor.call("sendNotification", id, options);
+      return editJobId;
     }
   },
 
@@ -273,7 +293,15 @@ Meteor.methods({
     }
     logger.info("Job Item removed", {"id": id});
     JobItems.remove({'_id': id});
-    return true;
+
+    var to = HospoHero.roles.getUserIdsByAction('JOB_EDIT');
+    var options = {
+      actionType: 'delete',
+      type: 'job',
+      title: job.name + ' job has been deleted',
+      to: to
+    };
+    Meteor.call("sendNotification", id, options);
   },
 
   'addIngredientsToJob': function(id, ingredient, quantity) {

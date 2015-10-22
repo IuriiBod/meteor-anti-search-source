@@ -47,11 +47,12 @@ Meteor.methods({
     logger.info("Menu items added ", menuId);
 
     var options = {
-      "type": "create",
-      "title": "New Menu created"
+      type: 'menu',
+      actionType: 'create',
+      title: doc.name + ' menu created',
+      to: HospoHero.roles.getUserIdsByAction('MENU_EDIT') // TODO: Change to the new roles
     };
-    Meteor.call("sendNotifications", menuId, "menu", options);
-
+    Meteor.call('sendNotification', menuId, options);
     return menuId;
   },
 
@@ -132,15 +133,12 @@ Meteor.methods({
 
       var menu = MenuItems.findOne(id);
       var options = {
-        "type": "edit",
-        "title": "Instructions on " + menu.name + " has been updated",
-        "text": ""
+        type: 'menu',
+        title: 'Instructions on ' + menu.name + ' has been updated',
+        type: 'menu',
+        to: HospoHero.roles.getUserIdsByAction('MENU_EDIT') // TODO: Change to the new roles
       };
-      Meteor.call("sendNotifications", id, "menu", options, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call('sendNotification', id, options);
 
       return MenuItems.update({"_id": id}, {$set: updateDoc});
     }
@@ -161,7 +159,15 @@ Meteor.methods({
     }
 
     logger.info("Menu item deleted", id);
-    return MenuItems.remove(id);
+    MenuItems.remove(id);
+
+    var options = {
+      type: 'menu',
+      actionType: 'delete',
+      title: 'Menu ' + item.name + ' has been deleted',
+      to: HospoHero.roles.getUserIdsByAction('MENU_EDIT') // TODO: Change to the new roles
+    };
+    Meteor.call('sendNotification', id, options);
   },
 
   addItemToMenu: function(menuId, itemObject) {

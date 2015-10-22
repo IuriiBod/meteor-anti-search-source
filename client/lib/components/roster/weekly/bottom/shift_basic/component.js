@@ -300,16 +300,12 @@ assignWorkerToShift = function(worker, shiftId, target) {
 
 
 function sendNotification(itemId, to, title, text) {
-  var type = "roster";
   var options = {
-    "title": title,
-    "type": "update",
-    "text": text,
-    "to": to
+    type: 'roster',
+    title: title,
+    actionType: 'update',
+    text: text,
+    to: to
   };
-  Meteor.call("sendNotifications", itemId, type, options, function(err) {
-    if(err) {
-      HospoHero.error(err);
-    }
-  });
+  Meteor.call('sendNotification', itemId, options, HospoHero.handleMethodResult());
 }

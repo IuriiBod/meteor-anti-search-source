@@ -17,8 +17,13 @@ Meteor.methods({
       sendNotificationToId = sendNotificationToId.concat(subscription.subscribers);
     }
 
+    var userId = Meteor.userId() || null;
+
+    // removing userId from notifications list
+    //var userIdIndex = sendNotificationToId.indexOf(userId);
+    //sendNotificationToId.splice(userIdIndex, 1);
+
     if(sendNotificationToId.length) {
-      var userId = Meteor.userId() || null;
       var notificationObj = {
         read: false,
         createdBy: userId,
@@ -33,6 +38,9 @@ Meteor.methods({
 
       sendNotificationToId.forEach(function(to) {
         notificationObj.to = to;
+
+        console.log('NOTY', notificationObj);
+
         Notifications.insert(notificationObj);
       });
     }

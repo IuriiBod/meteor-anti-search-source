@@ -1,18 +1,17 @@
 Namespace('HospoHero.roles', {
-  getRosterApprovers: function(currentAreaId) {
+  getUserIdsByAction: function(action) {
     // TODO: Change to the new permissions
     var roleIds = Meteor.roles.find({
       $or: [
-        { permissions: 'ROSTER_APPROVER' },
+        { permissions: action },
         { permissions: 'SITE_ALL_RIGHTS' }
       ]
     }).map(function(role) {
       return role._id;
     });
 
-    currentAreaId = currentAreaId || HospoHero.getCurrentAreaId();
     var temp = {};
-    temp['roles.' + currentAreaId] = {$in: roleIds};
+    temp['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
 
     var query = {
       $or: [

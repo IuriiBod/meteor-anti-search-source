@@ -148,7 +148,8 @@ Meteor.methods({
     }
     logger.info("Shift has been claimed ", {"user": userId, "shiftId": shiftId});
 
-    var userIds = HospoHero.roles.getRosterApprovers(HospoHero.getCurrentAreaId());
+    // TODO: Change to new roles
+    var userIds = HospoHero.roles.getUserIdsByAction('ROSTER_APPROVER');
 
     var text = [];
     text.push("Shift on ");
