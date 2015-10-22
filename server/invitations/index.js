@@ -43,15 +43,12 @@ Meteor.methods({
 
     var invitation = Invitations.findOne({_id: id});
     var options = {
-      type: 'organization',
-      read: false,
+      type: 'invitation',
       title: 'User ' + invitation.name + ' has accept your invitation',
-      createdBy: null,
-      text: null,
       actionType: 'update',
       to: invitation.invitedBy
     };
-    Notifications.insert(options);
+    Meteor.call('sendNotification', options);
 
     var areaId = invitation.areaId;
     var area = Areas.findOne({_id: areaId});

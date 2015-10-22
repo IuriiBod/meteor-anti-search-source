@@ -180,16 +180,12 @@ Meteor.methods({
       to: userIds
     };
 
-    Meteor.call("sendNotification", shiftId, options, function(err) {
-      if(err) {
-        console.log(err);
-      }
-    });
+    Meteor.call("sendNotification", shiftId, options);
   },
 
   confirmClaim: function(shiftId, userId) {
     // TODO: Change with new roles
-    if(!HospoHero.perms.canUser('editRoster')) {
+    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User does not have permission to confirm a shift claim");
       throw new Meteor.Error(403, "User does not have permission to confirm a shift claim");
     }
@@ -214,6 +210,15 @@ Meteor.methods({
     }
     Shifts.update({"_id": shiftId}, {$set: {"assignedTo": userId}, $unset: {claimedBy: 1}});
     logger.info("Shift claim confirmed ", {"shiftId": shiftId, "user": userId});
+
+    var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been confirmed";
+    var options = {
+      title: text,
+      actionType: 'confirm',
+      type: 'roster',
+      to: userId
+    };
+    Meteor.call("sendNotification", shiftId, options);
   },
 
   rejectClaim: function(shiftId, userId) {
@@ -237,5 +242,15 @@ Meteor.methods({
     }
     Shifts.update({"_id": shiftId}, {$pull: {"claimedBy": userId}, $push: {"rejectedFor": userId}});
     logger.info("Shift claim rejected ", {"shiftId": shiftId, "user": userId});
+
+    var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been rejected";
+    var options = {
+      "title": text,
+      "actionType": "reject",
+      "rejected": user,
+      type: 'roster',
+      to: userId
+    };
+    Meteor.call("sendNotification", shiftId, options);
   }
 });
