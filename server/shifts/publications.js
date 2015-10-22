@@ -1,30 +1,26 @@
-Meteor.publish('weekly', function (dates, worker, type) {
-  if (this.userId) {
-    var query = {
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
-    };
+Meteor.publishAuthorized('weekly', function (dates, worker, type) {
+  var query = {
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+  };
 
-    if (dates && !type) {
-      query.shiftDate = TimeRangeQueryBuilder.forWeek(dates.monday, false);
-    }
-    if (worker) {
-      query.assignedTo = worker;
-    }
-
-    if (type) {
-      query.type = type;
-    }
-
-    logger.info("Weekly shifts detailed publication");
-
-    //get shifts
-    return Shifts.find(query, {sort: {"shiftDate": 1}});
-  } else {
-    this.ready();
+  if (dates && !type) {
+    query.shiftDate = TimeRangeQueryBuilder.forWeek(dates.monday, false);
   }
+  if (worker) {
+    query.assignedTo = worker;
+  }
+
+  if (type) {
+    query.type = type;
+  }
+
+  logger.info("Weekly shifts detailed publication");
+
+  //get shifts
+  return Shifts.find(query, {sort: {"shiftDate": 1}});
 });
 
-Meteor.publishComposite('daily', function(date, worker) {
+Meteor.publishComposite('daily', function (date, worker) {
   return {
     find: function () {
       if (this.userId) {
@@ -57,52 +53,42 @@ Meteor.publishComposite('daily', function(date, worker) {
   }
 });
 
-Meteor.publish("shift", function (id) {
-  if (this.userId) {
-    if (!id) {
-      logger.error("Shift id is empty");
-    }
-    var shift = Shifts.find({_id: id});
-    logger.info("Shift published", id);
-    return shift;
-  } else {
-    this.ready();
-  }
+Meteor.publishAuthorized("shift", function (id) {
+  check(id, HospoHero.checkers.MongoId);
+  logger.info("Shift published", id);
+  return Shifts.find({_id: id});
 });
 
 // New publisher for shifts
-Meteor.publish('shifts', function(type, userId) {
-  if(this.userId) {
-    var query = {
-      assignedTo: userId,
-      type: null,
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
-    };
-    var options = {
-      sort: {
-        shiftDate: 1
-      },
-      limit: 10
-    };
+Meteor.publishAuthorized('shifts', function (type, userId) {
+  var query = {
+    assignedTo: userId,
+    type: null,
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+  };
 
-    if(type == 'future' || type == 'opened') {
-      query.shiftDate = { $gte: HospoHero.dateUtils.shiftDate() };
+  var options = {
+    sort: {
+      shiftDate: 1
+    },
+    limit: 10
+  };
 
-      if(type == 'opened') {
-        query.assignedTo = null;
-        query.published = true;
-      }
-    } else if(type == 'past') {
-      query.shiftDate = { $lte: new Date() };
-      query.endTime = { $lte: new Date() };
-      options.sort.shiftDate = -1;
-    } else {
-      this.ready();
+  if (type == 'future' || type == 'opened') {
+    query.shiftDate = {$gte: HospoHero.dateUtils.shiftDate()};
+
+    if (type == 'opened') {
+      query.assignedTo = null;
+      query.published = true;
     }
-
-    logger.info("Rostered ", type, " shifts for user ", userId, " have been published");
-    return Shifts.find(query, options);
+  } else if (type == 'past') {
+    query.shiftDate = {$lte: new Date()};
+    query.endTime = {$lte: new Date()};
+    options.sort.shiftDate = -1;
   } else {
     this.ready();
   }
+
+  logger.info("Rostered ", type, " shifts for user ", userId, " have been published");
+  return Shifts.find(query, options);
 });
