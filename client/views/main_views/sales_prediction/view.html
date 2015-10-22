@@ -2,7 +2,10 @@
   <!-- Page heading -->
   {{> render component="pageHeading" title="Forecast" name="salesPrediction"}}
   <div class="wrapper wrapper-content animated sales-prediction-content">
-    {{> render component="FilterByCategory"}}
+    <div class="row">
+      {{> render component="FilterByCategory"}}
+      {{> render component="menuItemsSearch"}}
+    </div>
     {{> render component="salesPrediction" date=date}}
     <div class="weather-source-wrapper">
       <!--link to openweathermap is required by their license-->

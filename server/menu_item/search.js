@@ -36,6 +36,7 @@ SearchSource.defineSource('menuItemsSearch', function(searchText, options) {
   } else {
     docs = MenuItems.find(selector, optionFileds).fetch();
   }
+  console.log(docs);
   return docs;
 });
 

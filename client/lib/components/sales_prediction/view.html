@@ -30,7 +30,7 @@
           </thead>
           <tbody>
           {{>render component="totalSalesRow"}}
-          {{#each state$menuItems}}
+          {{#each getMenuItems}}
             {{> render component="predictionSalesRow" currentWeekDate=state$currentWeekDate menuItem=this}}
           {{/each}}
           </tbody>
