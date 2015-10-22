@@ -1,24 +1,55 @@
-Meteor.publishAuthorized('weekly', function (dates, worker, type) {
-  var query = {
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
-  };
-
-  if (dates && !type) {
-    query.shiftDate = TimeRangeQueryBuilder.forWeek(dates.monday, false);
-  }
-  if (worker) {
-    query.assignedTo = worker;
-  }
-
-  if (type) {
-    query.type = type;
-  }
+Meteor.publishAuthorized('weeklyRoster', function (date) {
+  check(date, Date);
 
   logger.info("Weekly shifts detailed publication");
 
   //get shifts
-  return Shifts.find(query, {sort: {"shiftDate": 1}});
+  return Shifts.find({
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
+    shiftDate: TimeRangeQueryBuilder.forWeek(date, false)
+  });
 });
+
+Meteor.publishAuthorized('weeklyRosterTemplate', function () {
+  logger.info("Weekly shifts template");
+
+  //get shifts
+  return Shifts.find({
+    "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
+    type: 'template'
+  });
+});
+
+
+Meteor.publishComposite('shiftDetails', function (shiftId) {
+  check(shiftId, HospoHero.checkers.MongoId);
+
+  return {
+    find: function () {
+      return Shifts.find({_id: shiftId});
+    },
+    children: [
+      {
+        find: function (shift) {
+          return Jobs.find({
+            "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
+            _id: {$in: shift.jobs}
+          }, {limit: 10});
+        }
+      },
+      {
+        find: function (shift) {
+          //small hack
+          //use existing subscription to prevent code duplications
+          //analog of Meteor.subscribe('profileUser',shift.assignedTo)
+          //todo: this hack should be extracted as separate method
+          return Meteor.server.publish_handlers['profileUser'].call(this, shift.assignedTo);
+        }
+      }
+    ]
+  }
+});
+
 
 Meteor.publishComposite('daily', function (date, worker) {
   return {
@@ -34,7 +65,7 @@ Meteor.publishComposite('daily', function (date, worker) {
           query.assignedTo = worker;
         }
 
-        return Shifts.find(query, {sort: {createdOn: 1}});
+        return Shifts.find(query);
       } else {
         this.ready();
       }
@@ -68,9 +99,6 @@ Meteor.publishAuthorized('shifts', function (type, userId) {
   };
 
   var options = {
-    sort: {
-      shiftDate: 1
-    },
     limit: 10
   };
 
