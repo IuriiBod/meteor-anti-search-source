@@ -19,12 +19,14 @@ var predict = function (days, locationId) {
       //todo: temporal. figure out typical weather
       currentWeather = {
         temp: 20.0,
-        main: "Clear"
+        main: 'Clear'
       }
     }
 
     areas.forEach(function (area) {
-      var items = MenuItems.find({'relations.areaId': area._id}, {}); //get menu items for current area
+      var query = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});
+      var items = MenuItems.find(query, {}); //get menu items for current area
+
       var notification = new Notification();
 
       items.forEach(function (item) {
@@ -46,7 +48,9 @@ var predict = function (days, locationId) {
         if (i < 14 && currentData) {
           if (currentData) {
             if (currentData.quantity != predictItem.quantity) {
-              var itemName = MenuItems.findOne({_id: predictItem.menuItemId}).name;
+              var query = HospoHero.prediction.getMenuItemsForPredictionQuery({_id: predictItem.menuItemId});
+              var itemName = MenuItems.findOne(query).name;
+
               notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
             }
           }
@@ -68,7 +72,7 @@ var predict = function (days, locationId) {
 
     });
 
-    dateMoment.add(1, "day");
+    dateMoment.add(1, 'day');
   }
 };
 
