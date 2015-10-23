@@ -1,23 +1,23 @@
 Namespace('HospoHero.dateUtils', {
-  formatDate: function(date, format) {
+  formatDate: function (date, format) {
     return moment(date).format(format);
   },
 
-  timezones: function() {
+  timezones: function () {
     var zones = [];
-    for(var i=-12; i<=12; i++) {
-      if(i>0) {
-        i = "+"+i;
+    for (var i = -12; i <= 12; i++) {
+      if (i > 0) {
+        i = "+" + i;
       }
       zones.push({
-        value: 'UTC '+i,
-        text: 'UTC '+i
+        value: 'UTC ' + i,
+        text: 'UTC ' + i
       });
     }
     return zones;
   },
 
-  hours: function() {
+  hours: function () {
     var hours = [];
     for (var i = 0; i < 24; i++) {
       hours.push({
@@ -28,7 +28,7 @@ Namespace('HospoHero.dateUtils', {
     return hours;
   },
 
-  minutes: function() {
+  minutes: function () {
     var minutes = [];
     for (var i = 0; i < 60; i++) {
       if (i < 10) {
@@ -42,7 +42,7 @@ Namespace('HospoHero.dateUtils', {
     return minutes;
   },
 
-  intervalDateFormat: function(startDate, endDate) {
+  intervalDateFormat: function (startDate, endDate) {
     var dayFormat = 'YYYY-MM-DD';
     var timeFormat = 'H:mm';
     var resultDate = [];
@@ -57,23 +57,28 @@ Namespace('HospoHero.dateUtils', {
     var endTime = HospoHero.dateUtils.formatDate(endDate, timeFormat);
 
     resultDate.push(startDay + ' ' + startTime + ' - ');
-    if(startDay != endDay) {
+    if (startDay != endDay) {
       resultDate.push(endDay);
     }
     resultDate.push(endTime);
     return resultDate.join('');
   },
 
-  timeFormat: function(date) {
+  timeFormat: function (date) {
     return HospoHero.dateUtils.formatDate(date, 'H:mm');
   },
 
-  shiftDate: function(date) {
-    if(!date) {
-      date = moment();
-    } else if(!moment.isMoment(date)) {
-      date = moment(date);
+  shiftDate: function (date, isTemplate) {
+    date = date ? date : new Date();
+
+    var dateMoment;
+    if (isTemplate) {
+      dateMoment = moment(0).week(2).startOf('isoweek').day(moment(date).day()); //1970 year
+    } else {
+      dateMoment = moment(date);
     }
-    return date.startOf('day').toDate();
+
+    //be careful, because this method may bring bug with time
+    return dateMoment.toDate();
   }
 });
