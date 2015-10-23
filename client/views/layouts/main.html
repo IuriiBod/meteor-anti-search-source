@@ -44,58 +44,21 @@
   <div class="modal fade" id="jobItemListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component='jobItemsModalList' name="submitMenuItem"}}
   </div>
-  <!-- /JOB ITEMS LIST -->  
-
-  <!-- SHOW MENUS LIST -->
-  <!--<div class="modal fade" id="showMenusList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
-    <!--{{> render component = 'showMenusList'}}-->
-  <!--</div>-->
-  <!-- /SHOW MENUS LIST  -->
-
-  <!-- SUBMIT SHIFT -->
-  {{#if canEditRoster}}
-  <div class="modal fade" id="submitShiftModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component='submitShift'}}
-  </div>
-  {{/if}}
-  <!-- /SUBMIT SHIFT -->
-
-  <!-- SUBMIT JOB -->
-  {{#if canEditJob}}
-  <div class="modal fade" id="submitJobModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component='submitJob'}}
-  </div>
-  {{/if}}
-  <!-- /SUBMIT JOB -->
+  <!-- /JOB ITEMS LIST -->
 
   <!-- SHIFT PROFILE -->
   {{#if canEditRoster}}
   <div class="modal fade" id="shiftProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <!-- {{> shiftProfile}} -->
     {{> render component='shiftProfile'}}
   </div>
   {{/if}}
   <!-- /SHIFT PROFILE -->
-
-   <!-- JOB PROFILE -->
-  {{#if canViewJob}}
-  <div class="modal fade" id="jobProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component='jobProfile'}}
-  </div>
-  {{/if}}
-  <!-- /JOB PROFILE -->
 
   <!-- CALENDAR -->
   <div id="calendarModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     {{> render component='weekSelector'}}
   </div>
   <!-- /CALENDAR -->
-
-  <!-- NOTIFICATION MODAL -->
-  <!--<div id="notifiModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
-    <!--{{> render component='notifiModal'}}-->
-  <!--</div>-->
-  <!-- /NOTIFICATION MODAL -->
 
   <!-- NEW STOCKTAKE MODAL-->
   {{#if canEditStock}}
