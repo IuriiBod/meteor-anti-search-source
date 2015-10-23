@@ -17,13 +17,21 @@ var ShiftDocument = Match.Where(function (shift) {
     throw new Meteor.Error("Start and end times invalid");
   }
 
-  var existInShift = !!Shifts.findOne({
-    shiftDate: TimeRangeQueryBuilder.forDay(shift.shiftDate),
-    assignedTo: shift.assignedTo
-  });
-  if (existInShift) {
-    logger.error("User already exist in a shift", {"date": date});
-    throw new Meteor.Error(404, "Worker has already been assigned to a shift");
+  if (shift.assignedTo) {
+    var assignedWorker = Meteor.users.findOne({_id: info.assignedTo});
+    if (!assignedWorker) {
+      logger.error("Worker not found");
+      throw new Meteor.Error(404, "Worker not found");
+    }
+
+    var existInShift = !!Shifts.findOne({
+      shiftDate: TimeRangeQueryBuilder.forDay(shift.shiftDate),
+      assignedTo: shift.assignedTo
+    });
+    if (existInShift) {
+      logger.error("User already exist in a shift", {"date": date});
+      throw new Meteor.Error(404, "Worker has already been assigned to a shift");
+    }
   }
 
   //specific checks for existing doc
@@ -84,53 +92,34 @@ Meteor.methods({
     return createdShiftId;
   },
 
-  'editShift': function (updatedShift) {
+  editShift: function (updatedShift) {
     check(updatedShift, ShiftDocument);
 
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error(403, "User not permitted to create shifts");
     }
 
-    if (info.assignedTo) {
-      var date = null;
-      if (updateDoc.shiftDate) {
-        date = updateDoc.shiftDate;
-      } else {
-        date = shift.shiftDate;
-      }
-
-      var worker = Meteor.users.findOne(info.assignedTo);
-      if (!worker) {
-        logger.error("Worker not found");
-        throw new Meteor.Error(404, "Worker not found");
-      }
-      updateDoc.assignedTo = info.assignedTo;
-    }
-
-    if (Object.keys(updateDoc).length > 0) {
-      Shifts.update({'_id': id}, {$set: updateDoc});
-      logger.info("Shift details updated", {"shiftId": id});
-    }
+    Shifts.update({'_id': updatedShift._id}, {$set: updatedShift});
+    logger.info("Shift details updated", {"shiftId": updatedShift._id});
   },
 
-  'deleteShift': function (id) {
+  deleteShift: function (shiftToDeleteId) {
+    check(shiftToDeleteId, HospoHero.checkers.MongoId);
+
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error(403, "User not permitted to delete shifts");
     }
 
-    HospoHero.checkMongoId(id);
+    var shift = Shifts.findOne(shiftToDeleteId);
 
-    var shift = Shifts.findOne(id);
-    if (!shift) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
+    if (shift) {
+      if (shift.assignedTo || shift.jobs.length > 0) {
+        logger.error("Can't delete a shift with assigned worker or jobs", {"id": shiftToDeleteId});
+        throw new Meteor.Error(404, "Can't delete a shift with assigned worker or jobs");
+      }
+
+      Shifts.remove({_id: shiftToDeleteId});
+      logger.info("Shift deleted", {"shiftId": shiftToDeleteId});
     }
-    if (shift.assignedTo || shift.jobs.length > 0) {
-      logger.error("Can't delete a shift with assigned worker or jobs", {"id": id});
-      throw new Meteor.Error(404, "Can't delete a shift with assigned worker or jobs");
-    }
-    Shifts.remove({'_id': id});
-    logger.info("Shift deleted", {"shiftId": id});
-    return true;
   }
 });
