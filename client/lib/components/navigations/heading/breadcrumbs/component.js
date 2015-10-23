@@ -1,10 +1,8 @@
 var component = FlowComponents.define('breadcrumbs', function (props) {
-  this.type = props.type;
+  this.set('heading', props.heading);
   this.set('id', props.id);
-
-  console.log('PROP', props);
-
-  this.set('test', props.test);
+  this.set('title', props.title);
+  this.type = props.type;
 });
 
 component.state.isMenuDetailed = function () {

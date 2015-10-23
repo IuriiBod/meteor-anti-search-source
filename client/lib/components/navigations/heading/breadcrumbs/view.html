@@ -1,8 +1,6 @@
 <template name="breadcrumbs">
   <!-- BREADCRUMBS -->
   <div class="col-sm-5">
-    <h1>{{state$test.category}}</h1>
-    <h3>{{state$test.subCategory}}</h3>
     <h2>
       {{#if state$isMenuDetailed}}
         {{#if canEditMenu}}
@@ -23,15 +21,15 @@
       <li>
         <a href="/">Home</a>
       </li>
-      {{#if state$category}}
+      {{#if state$heading.category}}
         <li>
-          <a href="#" class="breadcrumbCategory" data-category="{{state$category}}">{{state$category}}</a>
+          <a href="#" class="breadcrumbCategory" data-category="{{state$heading.category}}">{{state$heading.category}}</a>
         </li>
       {{/if}}
-      {{#if state$subCategory}}
+      {{#if state$heading.subCategory}}
         <li>
-          <a href="#" class="breadcrumbSubCategory" data-category="{{state$category}}"
-             data-id="{{state$id}}">{{state$subCategory}}</a>
+          <a href="#" class="breadcrumbSubCategory" data-category="{{state$heading.category}}"
+             data-id="{{state$id}}">{{state$heading.subCategory}}</a>
         </li>
       {{/if}}
       <li class="active">

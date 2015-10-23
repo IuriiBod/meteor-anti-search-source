@@ -1,6 +1,6 @@
 <template name="pageHeading">
   <div class="row wrapper border-bottom white-bg page-heading">
-    {{> render component='breadcrumbs' heading=state$heading}}
+    {{> render component='breadcrumbs' heading=state$heading id=state$id type=state$type title=state$title}}
 
     <div class="col-sm-7">
       {{#if state$isMenuList}}
