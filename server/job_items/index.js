@@ -420,5 +420,6 @@ Meteor.methods({
     var job = JobItems.findOne({_id: id});
     var status = (job && job.status == "archived") ? "active" : "archived";
     JobItems.update({_id: id}, {$set: {status: status}});
+    return status;
   }
 });

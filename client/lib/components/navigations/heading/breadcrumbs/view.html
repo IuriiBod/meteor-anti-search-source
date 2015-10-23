@@ -6,7 +6,6 @@
         {{#if canEditMenu}}
           <a href="#"
              class="editMenuItemName"
-             data-id="{{state$id}}"
              style="color: #676a6c; border-color: #676a6c;">
             {{state$title}}
           </a>
@@ -19,7 +18,7 @@
     </h2>
     <ol class="breadcrumb">
       <li>
-        <a href="/">Home</a>
+        <a href="{{pathFor route='home'}}">Home</a>
       </li>
       {{#if state$heading.category}}
         <li>
