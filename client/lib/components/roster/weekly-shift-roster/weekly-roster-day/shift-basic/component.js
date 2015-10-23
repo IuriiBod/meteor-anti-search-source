@@ -1,29 +1,5 @@
 var component = FlowComponents.define("shiftBasic", function(props) {
-  this.shift = props.shift;
-  origin = props.origin;
-  this.set("origin", origin);
-  this.onRendered(this.itemRendered);
 });
-
-component.state.shift = function() {
-  return this.shift;
-};
-
-component.state.thisorigin = function() {
-  return this.get("origin");
-};
-
-component.state.section = function() {
-  return this.shift.section;
-};
-
-component.state.assignedTo = function() {
-  return this.shift.assignedTo;
-};
-
-component.action.deleteShift = function(id) {
-  Meteor.call("deleteShift", id, HospoHero.handleMethodResult());
-};
 
 component.prototype.itemRendered = function() {
   $.fn.editable.defaults.mode = 'inline';
