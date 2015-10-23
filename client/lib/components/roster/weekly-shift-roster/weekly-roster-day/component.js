@@ -8,7 +8,7 @@ component.state.hasTemplateType = function () {
 };
 
 component.state.shifts = function () {
-  var shiftDate = HospoHero.dateUtils.shiftDate(null, this.get('hasTemplateType'));
+  var shiftDate = HospoHero.dateUtils.shiftDate(this.get('currentDate'), this.get('hasTemplateType'));
 
   return Shifts.find({
     "shiftDate": TimeRangeQueryBuilder.forDay(shiftDate),
