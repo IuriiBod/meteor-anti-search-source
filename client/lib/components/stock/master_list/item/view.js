@@ -17,9 +17,7 @@ Template.ingredientItemDetailed.events({
       button = i.parent();
     }
     id = button.parent().parent().attr("data-id");
-    Meteor.call("archiveIngredient", id, function(err) {
-      HospoHero.error(err);
-    });
+    Meteor.call("archiveIngredient", id, HospoHero.handleMethodResult());
     IngredientsListSearch.cleanHistory();
     var selector = {
       limit: 30

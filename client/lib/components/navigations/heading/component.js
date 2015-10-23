@@ -26,6 +26,7 @@ component.state.subCategory = function () {
   return this.subCategory;
 };
 
+//todo get rid of this
 component.state.publishedOn = function () {
   if (this.type == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
@@ -215,23 +216,15 @@ component.state.onAreaSelected = function () {
 
   return function(areaId) {
     if(type == 'menudetailed') {
-      Meteor.call("duplicateMenuItem", itemId, areaId, function (err) {
-        if (err) {
-          HospoHero.error(err);
-        } else {
-          HospoHero.success("Menu item has successfully copied!");
-          $('#areaChooser').modal('hide');
-        }
-      });
+      Meteor.call("duplicateMenuItem", itemId, areaId, HospoHero.handleMethodResult(function () {
+        HospoHero.success("Menu item has successfully copied!");
+        $('#areaChooser').modal('hide');
+      }));
     } else if(type == 'jobitemdetailed') {
-      Meteor.call("duplicateJobItem", itemId, areaId, function (err) {
-        if (err) {
-          HospoHero.error(err);
-        } else {
-          HospoHero.success("Job item has successfully copied!");
-          $('#areaChooser').modal('hide');
-        }
-      });
+      Meteor.call("duplicateJobItem", itemId, areaId, HospoHero.handleMethodResult(function () {
+        HospoHero.success("Job item has successfully copied!");
+        $('#areaChooser').modal('hide');
+      }));
     }
   };
 };

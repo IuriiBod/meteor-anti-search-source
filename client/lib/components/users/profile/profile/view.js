@@ -2,11 +2,7 @@ Template.profile.events({
   'change .shiftsPerWeek': function(event) {
     var id = $(event.target).attr("data-id");
     var value = $(event.target).val();
-    Meteor.call("editBasicDetails", id, {"shiftsPerWeek": value}, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("editBasicDetails", id, {"shiftsPerWeek": value}, HospoHero.handleMethodResult());
   },
 
   'click #set-resign-date': function(e, tpl) {
@@ -21,11 +17,7 @@ Template.profile.events({
       tpl.$(".open-resigned-date-picker").parent().addClass("has-success");
     }
 
-    Meteor.call("resignDate", "set", id, val, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("resignDate", "set", id, val, HospoHero.handleMethodResult());
   },
 
   'click #update-resign-date': function(e, tpl) {
@@ -40,36 +32,23 @@ Template.profile.events({
       tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
     }
 
-    Meteor.call("resignDate", "update", id, val, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
-      }
-    });
+    Meteor.call("resignDate", "update", id, val, HospoHero.handleMethodResult(function() {
+      tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
+    }));
   },
 
   'click #remove-resign-date': function(e, tpl) {
     e.preventDefault();
     var id = Router.current().params._id;
-    Meteor.call("resignDate", "remove", id, '', function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("resignDate", "remove", id, '', HospoHero.handleMethodResult());
   },
 
   "submit form#change-pin": function(event) {
     event.preventDefault();
     var newPin = Template.instance().find("#new-pin").value;
-    Meteor.call("changePinCode", newPin, function (err) {
-      if (err) {
-        HospoHero.error(err);
-      }
-      else {
-        alert("PIN has been changed.");
-      }
-    });
+    Meteor.call("changePinCode", newPin, HospoHero.handleMethodResult(function () {
+      HospoHero.info("PIN has been changed");
+    }));
   }
 });
 
@@ -231,9 +210,5 @@ Template.profile.rendered = function(){
 };
 
 function updateBasicDetails(id, updateDetails) {
-  Meteor.call("editBasicDetails", id, updateDetails, function(err) {
-    if(err) {
-      HospoHero.error(err);
-    }
-  });
+  Meteor.call("editBasicDetails", id, updateDetails, HospoHero.handleMethodResult());
 }

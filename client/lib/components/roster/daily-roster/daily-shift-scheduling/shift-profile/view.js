@@ -1,6 +1,7 @@
-Template.submitShift.events({
+Template.shiftProfile.events({
   'submit form': function(event, instance) {
     event.preventDefault();
+    var shiftId = $(event.target).attr("data-id");
     var dateOfShift = $(event.target).find('[name=dateOfShift]').val();
     var startTime = $(event.target).find('[name=startTime]').val().trim();
     var endTime = $(event.target).find('[name=endTime]').val().trim();
@@ -42,46 +43,28 @@ Template.submitShift.events({
         "endTime": dateObj_end,
         "section": section
       }
-      var weekNo = moment(dateOfShift).week();
-      var week = getDatesFromWeekNumber(parseInt(weekNo));
-      var dates = [];
-      week.forEach(function(day) {
-        if(day && day.date) {
-          dates.push(new Date(day.date).getTime())
-        }
-      });
-      if(dates.length > 0) {
-        info.week = dates;
-      }
-      Meteor.call("createShift", info, function(err, id) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          $("#submitShiftModal").modal("hide");
-          var recurringJobs = Jobs.find({
-            "type": "Recurring", 
-            "createdOn": new Date(dateOfShift).toDateString(), 
-            "section": section,
-            "status": "draft"}).fetch();
-          if(recurringJobs.length > 0) {
-            recurringJobs.forEach(function(job) {
-              Meteor.call("assignJob", job._id, id, job.startAt, function(err) {
-                if(err) {
-                  HospoHero.error(err);
-                } 
-              });
-            });
-          }
-          $('#calendar').fullCalendar('rerenderEvents')
-          Blaze.render(Template.dailyShiftScheduling, document.getElementById("dailyShiftSchedulingMainView"))
-        }
-      });
+      FlowComponents.callAction("submit", info);
     }
   },
 
-  'focus #shiftDate': function(event) {
+  'click .deleteShift': function(event) {
+    var shiftId = $(event.target).attr("data-id");
+    var confirmDelete = confirm("Are you sure you want to delete this shift ?");
+    if(confirmDelete) {
+      if(shiftId) {
+        var shift = Shifts.findOne(shiftId);
+        if(shift) {
+          Meteor.call("deleteShift", shiftId, HospoHero.handleMethodResult(function() {
+            $("#shiftProfile").modal("hide");
+          }));
+        }
+      }
+    }
+  },
+
+  'focus .editShiftDate': function(event) {
     event.preventDefault();
-    $('#shiftDate').datetimepicker({
+    $('.editShiftDate').datetimepicker({
       format: "YYYY-MM-DD"
     });
   },

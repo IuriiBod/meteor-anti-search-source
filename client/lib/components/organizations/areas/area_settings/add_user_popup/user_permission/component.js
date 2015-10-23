@@ -7,11 +7,7 @@ var component = FlowComponents.define('userPermissions', function(props) {
 component.action.addUser = function(roleId) {
   var userId = this.selectedUser;
   var areaId = this.areaId;
-  Meteor.call('addUserToArea', userId, areaId, roleId, function(err, area) {
-    if(err) {
-      HospoHero.error(err);
-    }
-  });
+  Meteor.call('addUserToArea', userId, areaId, roleId, HospoHero.handleMethodResult());
   this.set('selectPermissions', false);
 };
 

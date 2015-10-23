@@ -52,11 +52,7 @@ component.action.addShift = function(day, dates) {
     doc.section = null;
     doc.type = "template";
   }
-  Meteor.call("createShift", doc, function(err, id) {
-    if(err) {
-      HospoHero.error(err);
-    }
-  });
+  Meteor.call("createShift", doc, HospoHero.handleMethodResult());
 };
 
 component.state.isTemplate = function() {
@@ -93,12 +89,7 @@ component.prototype.onListRendered = function() {
         }
       }
 
-      Meteor.call("editShift", id, {"order": order}, function(err) {
-        if(err && ui.sender) {
-          $(ui.sender[0]).sortable('cancel');
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("editShift", id, {"order": order}, HospoHero.handleMethodResult());
     });
 
     $(".sortable-list").on("sortreceive", function(event, ui) {
@@ -125,12 +116,7 @@ component.prototype.onListRendered = function() {
       }
 
       if(id && newDate) {
-        Meteor.call("editShift", id, {"shiftDate": newDate, "order": order}, function(err) {
-          if(err) {
-            $(ui.sender[0]).sortable('cancel');
-            HospoHero.error(err);
-          }
-        });
+        Meteor.call("editShift", id, {"shiftDate": newDate, "order": order}, HospoHero.handleMethodResult());
       }
     });
   } else {

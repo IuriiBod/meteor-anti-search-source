@@ -17,13 +17,9 @@ Template.reportData.events({
         var time = $(self).data("time");
         var newTime = shiftWorkTimeUpdate(id, newValue);
         newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
-        Meteor.call("editClock", id, {"startedAt": new Date(newTime).getTime()}, function(err) { 
-          if(err) {
-            HospoHero.error(err);
-          } else {
-            $(self).removeClass('editable-unsaved');
-          }
-        });
+        Meteor.call("editClock", id, {"startedAt": new Date(newTime).getTime()}, HospoHero.handleMethodResult(function() {
+          $(self).removeClass('editable-unsaved');
+        }));
       }
     });
 
@@ -46,13 +42,9 @@ Template.reportData.events({
         var time = $(self).data("time");
         var newTime = shiftWorkTimeUpdate(id, newValue);
         newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
-        Meteor.call("editClock", id, {"finishedAt": new Date(newTime).getTime()}, function(err) { 
-          if(err) {
-            HospoHero.error(err);
-          } else {
-            $(self).removeClass('editable-unsaved');
-          }
-        });
+        Meteor.call("editClock", id, {"finishedAt": new Date(newTime).getTime()}, HospoHero.handleMethodResult(function() {
+          $(self).removeClass('editable-unsaved');
+        }));
       }
     });
   }

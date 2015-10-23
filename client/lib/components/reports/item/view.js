@@ -1,77 +1,10 @@
 Template.teamHoursItem.events({
-  // "mouseenter .activeTime": function(event) {
-  //   console.log("")
-  //   event.preventDefault();
-  //   $('.editShiftStart').editable({
-  //     type: 'combodate',
-  //     title: 'Select time',
-  //     template: "HH:mm",
-  //     viewformat: "HH:mm",
-  //     format: "YYYY-MM-DD HH:mm",
-  //     defaultValue: moment(),
-  //     display: true,
-  //     autotext: 'auto',
-  //     showbuttons: true,
-  //     mode: 'inline',
-  //     success: function(response, newValue) {
-  //       var self = this;
-  //       var id = $(self).data("shift");
-  //       var time = $(self).data("time");
-  //       var newTime = shiftWorkTimeUpdate(id, newValue);
-  //       newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
-  //       Meteor.call("editClock", id, {"startedAt": new Date(newTime).getTime()}, function(err) { 
-  //         if(err) {
-  //           HospoHero.error(err);
-  //         } else {
-  //           $(self).removeClass('editable-unsaved');
-  //           return;
-  //         }
-  //       });
-  //     }
-  //   });
-
-  //   $('.editShiftEnd').editable({
-  //     type: 'combodate',
-  //     title: 'Select time',
-  //     template: "HH:mm",
-  //     viewformat: "HH:mm",
-  //     format: "YYYY-MM-DD HH:mm",
-  //     display: false,
-  //     autotext: 'auto',
-  //     defaultValue: new Date(),
-  //     showbuttons: true,
-  //     combodate: {
-  //       minuteStep: 5
-  //     },
-  //     mode: 'inline',
-  //     success: function(response, newValue) {
-  //       var self = this;
-  //       var id = $(self).data("shift");
-  //       var time = $(self).data("time");
-  //       var newTime = shiftWorkTimeUpdate(id, newValue);
-  //       newTime = moment(newTime).format("YYYY-MM-DD HH:mm");
-  //       Meteor.call("editClock", id, {"finishedAt": new Date(newTime).getTime()}, function(err) { 
-  //         if(err) {
-  //           HospoHero.error(err);
-  //         } else {
-  //           $(self).removeClass('editable-unsaved');
-  //           return;
-  //         }
-  //       });
-  //     }
-  //   });
-  // }, 
-
   'click .stopCurrentShift': function(event) {
     event.preventDefault();
     var id = $(event.target).attr("data-shift");
     var confirmClockout = confirm("Are you sure you want to clockout this shift ?");
     if(confirmClockout && id) {
-      Meteor.call("clockOut", id, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("clockOut", id, HospoHero.handleMethodResult());
     }
   }
 });

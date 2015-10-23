@@ -66,21 +66,3 @@ Router.route('/roster/template/weekly', {
   },
   fastRender: true
 });
-
-Router.route('/roster/shift/:shiftId', {
-  name: "shift",
-  path: '/roster/shift/:shiftId',
-  template: "shiftMainView",
-  waitOn: function () {
-    return [
-      Meteor.subscribe('shiftDetails', this.params.shiftId),
-      Meteor.subscribe('organizationInfo')
-    ]
-  },
-  data: function () {
-    if (!HospoHero.canUser('view roster')()) {
-      Router.go('/');
-    }
-  },
-  fastRender: true
-});

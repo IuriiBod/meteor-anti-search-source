@@ -27,28 +27,24 @@ component.state.item = function() {
     }
     return stock;
   }
-}
+};
 
 component.state.editable = function() {
   return Session.get("editStockTake");
-}
+};
 
 component.state.deletable = function(id) {
   if(id) {
     var stocktake = Stocktakes.findOne(id);
     if(stocktake) {
-      if(!stocktake.status && !stocktake.orderRef) {
-        return true;
-      } else {
-        return false;
-      }
+      return !!(!stocktake.status && !stocktake.orderRef);
     } else {
       return true;
     }
   } else {
     return true;
   }
-}
+};
 
 component.prototype.onItemRendered = function() {
   $('[data-toggle="tooltip"]').tooltip();
@@ -68,11 +64,7 @@ component.prototype.onItemRendered = function() {
       var id = $(elem).closest("li").attr("data-stockRef");
       if(newValue) {
         var count = parseFloat(newValue);
-        if(count == count) {
-          count = count;
-        } else {
-          count = 0;
-        }
+        count = isNaN(count) ? 0 : count;
         var info = {
           "version": Session.get("thisVersion"),
           "generalArea": Session.get("activeGArea"),
@@ -82,25 +74,17 @@ component.prototype.onItemRendered = function() {
         };
         var main = StocktakeMain.findOne(Session.get("thisVersion"));
         if(main) {
-          Meteor.call("updateStocktake", id, info, function(err) {
-            if(err) {
-              HospoHero.error(err);
-            } else {
-              if($(elem).next().length > 0) {
-                $(elem).next().find("a").click();
-              }
-              Meteor.call("resetCurrentStock", stockId, "New stock count", newValue, main.stocktakeDate, function(err) {
-                if(err) {
-                  HospoHero.error(err);
-                }
-              });
+          Meteor.call("updateStocktake", id, info, HospoHero.handleMethodResult(function() {
+            if($(elem).next().length > 0) {
+              $(elem).next().find("a").click();
             }
-          });
+            Meteor.call("resetCurrentStock", stockId, "New stock count", newValue, main.stocktakeDate, HospoHero.handleMethodResult());
+          }));
         }
       }
     }
   });
-}
+};
 
 component.state.countEditable = function(id) {
   var permitted = true;
@@ -118,4 +102,4 @@ component.state.countEditable = function(id) {
     }
   }
   return permitted;
-}
+};

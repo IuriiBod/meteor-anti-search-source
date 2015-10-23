@@ -22,11 +22,7 @@ Template.ordersList.events({
         id = receipt._id;
       }
       
-      Meteor.call("updateReceipt", id, info, function(err, id) {
-        if(err) {
-          HospoHero.error(err);
-        } 
-      });
+      Meteor.call("updateReceipt", id, info, HospoHero.handleMethodResult());
     }
   }
 });

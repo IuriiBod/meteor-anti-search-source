@@ -34,11 +34,7 @@ component.action.clearSearchText = function() {
 
 component.action.inviteNewUser = function(email, name, roleId) {
   var areaId = this.get('areaId');
-  Meteor.call('createInvitation', email, name, areaId, roleId, function (err) {
-    if (err) {
-      HospoHero.error(err);
-    }
-  });
+  Meteor.call('createInvitation', email, name, areaId, roleId, HospoHero.handleMethodResult());
   this.set('selectedUser', '1');
   this.set('selectPermissions', false);
 };
