@@ -78,7 +78,7 @@ var helpers = {
     }
   },
   weekDateName: function (date) {
-    return moment(date).format('ddd');
+    return moment(date).format('dddd');
   },
   username: function (userId) {
     var user = Meteor.users.findOne(userId);

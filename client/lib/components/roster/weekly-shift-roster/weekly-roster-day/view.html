@@ -1,22 +1,22 @@
 <template name="weeklyRosterDay">
   <div class="col-lg-13">
-    <h3>{{weekDateName state$currentDate}}</h3>
-    {{#unless state$onlyDayNames}}
-      <h3>{{dateFormat state$currentDate}}</h3>
+    <!--head with date-->
+    <h4>{{weekDateName state$currentDate}}</h4>
+    {{#unless state$hasTemplateType}}
+      <h4>{{dateFormat state$currentDate}}</h4>
     {{/unless}}
+
     {{#if canEditRoster}}
       <div class="input-group">
           <span class="input-group-btn">
-            <button type="button"
-                    class="btn btn-sm btn-white btn-block addShiftBox"
-                    data-day="{{#if state$isTemplate}}{{state$name}}{{else}}{{state$name.date}}{{/if}}">
-              <i class="fa fa-plus"></i>Add Shift
+            <button type="button" class="btn btn-sm btn-white btn-block add-shift-button">
+              <i class="fa fa-plus"></i> Add Shift
             </button>
           </span>
       </div>
     {{/if}}
-    <ul class="sortable-list connectList agile-list"
-        data-date="{{#if state$isTemplate}}{{state$name}}{{else}}{{state$name.date}}{{/if}}">
+
+    <ul class="sortable-list connectList agile-list">
       {{#each state$shifts}}
         {{> render component="shiftBasic" shift=this origin=state$origin}}
       {{/each}}
