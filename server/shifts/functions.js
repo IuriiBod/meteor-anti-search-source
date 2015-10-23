@@ -114,7 +114,7 @@ Meteor.methods({
   },
 
   publishRoster: function(week, shifts) {
-    if(!HospoHero.perms.canUser('editRoster')()) {
+    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User not permitted to publish shifts");
       throw new Meteor.Error(403, "User not permitted to publish shifts ");
     }
@@ -146,18 +146,44 @@ Meteor.methods({
     } else {
       Shifts.update({'_id': shiftId}, {$set: {"claimedBy": [userId]}});
     }
-    logger.info("Shift has been claimed ", {"user": userId, "shiftId": shiftId})
-    return true;
+    logger.info("Shift has been claimed ", {"user": userId, "shiftId": shiftId});
+
+    var userIds = HospoHero.roles.getUserIdsByAction('approves roster requests');
+
+    var text = [];
+    text.push("Shift on ");
+    text.push(moment(shift.shiftDate).format("ddd, Do MMMM"));
+    text.push(" has been claimed by following workers");
+    text.push('<ul>');
+
+    shift = Shifts.findOne({ _id: shiftId });
+    shift.claimedBy.forEach(function(userId) {
+      text.push('<li>');
+      text.push(HospoHero.username(userId));
+      text.push(' <a href="#" class="confirmClaim" data-id="');
+      text.push(userId);
+      text.push('" data-shift="');
+      text.push(shiftId);
+      text.push('"><small class="text-success">Confirm</small></a>');
+      text.push(' <a href="#" class="rejectClaim" data-id="');
+      text.push(userId);
+      text.push('" data-shift="');
+      text.push(shiftId);
+      text.push('"><small class="text-danger">Reject</small></a></li>');
+    });
+    text.push('</ul>');
+
+    var options = {
+      title: text.join(''),
+      type: "claim",
+      to: userIds
+    };
+
+    Meteor.call("sendNotification", shiftId, options);
   },
 
   confirmClaim: function(shiftId, userId) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error("User not found");
-      throw new Meteor.Error(404, "User not found");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User does not have permission to confirm a shift claim");
       throw new Meteor.Error(403, "User does not have permission to confirm a shift claim");
     }
@@ -175,24 +201,26 @@ Meteor.methods({
       logger.error("Shift has already been assigned");
       throw new Meteor.Error(404, "Shift has already been assigned");
     }
-    var hasBeenAssigned = Shifts.findOne({"shiftDate": shift.shiftDate, "assignedTo": userId});
+    var hasBeenAssigned = Shifts.findOne({"shiftDate": TimeRangeQueryBuilder.forDay(shift.shiftDate), "assignedTo": userId});
     if(hasBeenAssigned) {
       logger.error("User already has a shift on this day");
       throw new Meteor.Error(404, "User already has a shift on this day"); 
     }
-    Shifts.update({"_id": shiftId}, {$set: {"assignedTo": userId}, $pull: {"claimedBy": userId}});
+    Shifts.update({"_id": shiftId}, {$set: {"assignedTo": userId}, $unset: {claimedBy: 1}});
     logger.info("Shift claim confirmed ", {"shiftId": shiftId, "user": userId});
-    return;
+
+    var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been confirmed";
+    var options = {
+      title: text,
+      actionType: 'confirm',
+      type: 'roster',
+      to: userId
+    };
+    Meteor.call("sendNotification", shiftId, options);
   },
 
   rejectClaim: function(shiftId, userId) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error("User not found");
-      throw new Meteor.Error(404, "User not found");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
+    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User does not have permission to confirm a shift claim");
       throw new Meteor.Error(403, "User does not have permission to confirm a shift claim");
     }
@@ -211,6 +239,14 @@ Meteor.methods({
     }
     Shifts.update({"_id": shiftId}, {$pull: {"claimedBy": userId}, $push: {"rejectedFor": userId}});
     logger.info("Shift claim rejected ", {"shiftId": shiftId, "user": userId});
-    return;
+
+    var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been rejected";
+    var options = {
+      "title": text,
+      "actionType": "reject",
+      type: 'roster',
+      to: userId
+    };
+    Meteor.call("sendNotification", shiftId, options);
   }
 });

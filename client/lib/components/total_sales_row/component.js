@@ -39,10 +39,6 @@ var getTotalPrice = function (array, actualOrPrediction) {
         price = menuItem.salesPrice;
       };
 
-      console.log('actualOrPre', actualOrPrediction);
-      console.log('quantity: ', quantity);
-      console.log('menuItem: ', menuItem);
-
       total += quantity * price;
     });
   }

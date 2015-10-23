@@ -38,26 +38,12 @@ component.state.sections = function() {
 };
 
 component.action.submit = function(info) {
-  Meteor.call("createJobItem", info, function(err, id) {
-    if(err) {
-      HospoHero.error(err);
-    } else {
-      Session.set("selectedIngredients", null);
-      Session.set("selectedJobItems", null);
-      var options = {
-        type: "create",
-        title: "New Job created"
-      };
-      Meteor.call("sendNotifications", id, "job", options, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
-      
-      Session.set("checklist", []);
-      Router.go("jobItemDetailed", {"_id": id});
-    }
-  });
+  Meteor.call("createJobItem", info, HospoHero.handleMethodResult(function(id) {
+    Session.set("selectedIngredients", null);
+    Session.set("selectedJobItems", null);
+    Session.set("checklist", []);
+    Router.go("jobItemDetailed", {"_id": id});
+  }));
 };
 
 component.state.jobtypes = function() {

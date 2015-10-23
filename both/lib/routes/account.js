@@ -64,7 +64,6 @@ Router.route('/admin', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('sections'),
       Meteor.subscribe("allAreas"),
-      Meteor.subscribe('roles'),
       Meteor.subscribe('usersList'),
       Meteor.subscribe('locationsOfOrganization'),
       Meteor.subscribe("areasOfOrganization"),

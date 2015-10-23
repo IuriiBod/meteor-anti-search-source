@@ -4,15 +4,13 @@ var component = FlowComponents.define("notifiButtons", function(props) {
 
 component.state.notifi = function() {
   return this.notification;
-}
+};
 
 component.state.permittedActionType = function() {
   if(this.notification) {
-    var type = this.notification.actionType;
-    if(type && (type == "delete")) {
-      return false;
-    } else {
-      return true;
-    }
+    var actionType = this.notification.actionType;
+    var type = this.notification.type;
+
+    return !(actionType == "delete" || type == 'organizations' || type == 'invitation');
   }
-}
+};
