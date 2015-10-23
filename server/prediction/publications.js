@@ -1,5 +1,5 @@
 Meteor.publish("salesPrediction", function (year, week) {
-  var haveAccess = HospoHero.canUser('viewForecast')(this.userId);
+  var haveAccess = HospoHero.canUser('view forecast', this.userId);
   if (!haveAccess) {
     this.error(new Meteor.Error(403, 'Access Denied'));
   }
@@ -10,7 +10,7 @@ Meteor.publish("salesPrediction", function (year, week) {
 
 
 Meteor.publish("importedActualSales", function (year, week) {
-  var haveAccess = HospoHero.canUser('viewForecast')(this.userId);
+  var haveAccess = HospoHero.canUser('view forecast', this.userId);
   if (!haveAccess) {
     this.error(new Meteor.Error(403, 'Access Denied'));
   }
