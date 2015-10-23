@@ -37,13 +37,9 @@ Template.weekSelector.events({
             "order": shift.order
           };
 
-          Meteor.call("createShift", info, function(err) {
-            if(err) {
-              HospoHero.error(err);
-            } else {
-              $("#notifiModal").modal("show");
-            }
-          });
+          Meteor.call("createShift", info, HospoHero.handleMethodResult(function() {
+            $("#notifiModal").modal("show");
+          }));
         });
       }
     });
@@ -51,7 +47,7 @@ Template.weekSelector.events({
 
   'click .checklist-content': function(event) {
     var checked = $(event.target).is(":checked");
-    Session.set("templateToWeek", $(event.target).val())
+    Session.set("templateToWeek", $(event.target).val());
     Session.set("templateToYear", $(event.target).attr("data-year"));
   }
 });

@@ -78,20 +78,12 @@ Template.pageHeading.events({
   'click .subscribeMenuItemBtn': function (event) {
     event.preventDefault();
     var id = Session.get("thisMenuItem");
-    Meteor.call("subscribe", id, function (err) {
-      if (err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("subscribe", id, HospoHero.handleMethodResult());
   },
   'click .unSubscribeMenuItemBtn': function (event) {
     event.preventDefault();
     var id = Session.get("thisMenuItem");
-    Meteor.call("unSubscribe", id, function (err) {
-      if (err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("unSubscribe", id, HospoHero.handleMethodResult());
   },
 
   'click .copyMenuItemBtn': function (event, tpl) {
@@ -115,23 +107,9 @@ Template.pageHeading.events({
       var id = $(event.target).attr("data-id");
       var item = MenuItems.findOne(id);
       if (id) {
-        Meteor.call("deleteMenuItem", id, function (err) {
-          if (err) {
-            HospoHero.error(err);
-          } else {
-            var options = {
-              "type": "delete",
-              "title": "Menu " + item.name + " has been deleted",
-              "time": Date.now()
-            };
-            Meteor.call("sendNotifications", id, "menu", options, function (err) {
-              if (err) {
-                HospoHero.error(err);
-              }
-            });
-            Router.go("menuItemsMaster", {"category": "all", "status": "all"});
-          }
-        });
+        Meteor.call("deleteMenuItem", id, HospoHero.handleMethodResult(function () {
+          Router.go("menuItemsMaster", {"category": "all", "status": "all"});
+        }));
       }
     }
   },
@@ -148,20 +126,12 @@ Template.pageHeading.events({
 
   'click .subscribeJobsList': function (event) {
     event.preventDefault();
-    Meteor.call("subscribe", "joblist", function (err) {
-      if (err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("subscribe", "joblist", HospoHero.handleMethodResult());
   },
 
   'click .unSubscribeJobsList': function (event) {
     event.preventDefault();
-    Meteor.call("unSubscribe", "joblist", function (err) {
-      if (err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("unSubscribe", "joblist", HospoHero.handleMethodResult());
   },
 
   'click .todayRoster': function (event) {
@@ -213,11 +183,7 @@ Template.pageHeading.events({
     }
 
     if (tobePublished.length > 0) {
-      Meteor.call("publishRoster", weekNo, tobePublished, function (err) {
-        if (err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("publishRoster", weekNo, tobePublished, HospoHero.handleMethodResult());
       users.forEach(function (user) {
         var to = Meteor.users.findOne(user);
         if (to) {
@@ -263,11 +229,7 @@ Template.pageHeading.events({
               "name": to.username
             };
 
-            Meteor.call("notifyRoster", sendTo, info, function (err) {
-              if (err) {
-                HospoHero.error(err);
-              }
-            });
+            Meteor.call("notifyRoster", sendTo, info, HospoHero.handleMethodResult());
           }
         }
       });
@@ -285,13 +247,9 @@ Template.pageHeading.events({
     if (stocktake) {
       $("#newStocktakeModal").modal();
     } else {
-      Meteor.call("createMainStocktake", date, function (err, id) {
-        if (err) {
-          HospoHero.error(err);
-        } else {
-          Router.go("stocktakeCounting", {"_id": id});
-        }
-      });
+      Meteor.call("createMainStocktake", date, HospoHero.handleMethodResult(function (id) {
+        Router.go("stocktakeCounting", {"_id": id});
+      }));
     }
   },
 
@@ -313,42 +271,34 @@ Template.pageHeading.events({
     }
     id = i.parent().attr("data-id");
 
-    Meteor.call("archiveMenuItem", id, function (err) {
-      if (err) {
-        HospoHero.error(err);
-      } else {
-        var menuItem = MenuItems.findOne(id);
-        if(menuItem) {
-          var text = "Menu item " + menuItem.name;
-          if(menuItem.status == "active") {
-            text += " restored";
-          } else if(menuItem.status == "archived") {
-            text += " archived";
-          }
-          return HospoHero.info(text);
+    Meteor.call("archiveMenuItem", id, HospoHero.handleMethodResult(function () {
+      var menuItem = MenuItems.findOne(id);
+      if(menuItem) {
+        var text = "Menu item " + menuItem.name;
+        if (menuItem.status == "active") {
+          text += " restored";
+        } else if (menuItem.status == "archived") {
+          text += " archived";
         }
+        return HospoHero.info(text);
       }
-    });
+    }));
   },
   'click .archiveJobItem': function (e, tpl) {
     e.preventDefault();
     var id = tpl.$(e.target).attr("data-id");
-    Meteor.call("archiveJobItem", id, function (err) {
-      if (err) {
-        HospoHero.error(err);
-      } else {
-        var jobItem = JobItems.findOne(id);
-        if(jobItem) {
-          var text = "Job item " + jobItem.name;
-          if(jobItem.status == "active") {
-            text += " restored";
-          } else if(jobItem.status == "archived") {
-            text += " archived";
-          }
-          return HospoHero.info(text);
+    Meteor.call("archiveJobItem", id, HospoHero.handleMethodResult(function () {
+      var jobItem = JobItems.findOne(id);
+      if(jobItem) {
+        var text = "Job item " + jobItem.name;
+        if (jobItem.status == "active") {
+          text += " restored";
+        } else if (jobItem.status == "archived") {
+          text += " archived";
         }
+        return HospoHero.info(text);
       }
-    });
+    }));
   },
 
   'click .deleteJobItem': function (event) {
@@ -358,23 +308,9 @@ Template.pageHeading.events({
 
     var result = confirm("Are you sure you want to delete this job ?");
     if (result) {
-      Meteor.call("deleteJobItem", id, function (err) {
-        if (err) {
-          HospoHero.error(err);
-        } else {
-          var options = {
-            type: "delete",
-            title: "Job " + item.name + " has been deleted",
-            time: Date.now()
-          };
-          Meteor.call("sendNotifications", id, "job", options, function (err) {
-            if (err) {
-              HospoHero.error(err);
-            }
-          });
-          Router.go("jobItemsMaster");
-        }
-      });
+      Meteor.call("deleteJobItem", id, HospoHero.handleMethodResult(function () {
+        Router.go("jobItemsMaster");
+      }));
     }
   }
 });
@@ -399,11 +335,7 @@ Template.pageHeading.rendered = function () {
     success: function (response, newValue) {
       var id = $(this).attr("data-id");
       if (id) {
-        Meteor.call("editMenuItem", id, {name: newValue}, function (err) {
-          if (err) {
-            HospoHero.error(err);
-          }
-        });
+        Meteor.call("editMenuItem", id, {name: newValue}, HospoHero.handleMethodResult());
       }
     }
   });

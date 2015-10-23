@@ -10,12 +10,8 @@ Template.createOrganizationPage.events({
     // TODO: Process billing account here
 
     // Create new organization
-    Meteor.call("createOrganization", orgName, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        Router.go('home');
-      }
-    });
+    Meteor.call("createOrganization", orgName, HospoHero.handleMethodResult(function() {
+      Router.go('home');
+    }));
   }
 });

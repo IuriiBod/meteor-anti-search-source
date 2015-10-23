@@ -98,9 +98,6 @@ Meteor.methods({
       updateDoc.endTime = endTime;
     }
 
-    console.log('UPDAte', updateDoc);
-
-
     if(info.hasOwnProperty("section")) {
       updateDoc.section = info.section;
     }

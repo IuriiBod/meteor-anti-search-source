@@ -5,13 +5,9 @@ Template.addNewStatus.events({
     if(!name) {
       alert("Status name should have a value");
     }
-    Meteor.call('createStatus', name, function(err, id) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        $(event.target).find('input').val("");
-        $("#addStatusModal").modal('hide');
-      }
-    });
+    Meteor.call('createStatus', name, HospoHero.handleMethodResult(function() {
+      $(event.target).find('input').val("");
+      $("#addStatusModal").modal('hide');
+    }));
   }
 });

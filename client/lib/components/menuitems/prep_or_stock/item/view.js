@@ -5,13 +5,9 @@ Template.ingsAndPreps.events({
     var id = $(event.target).attr("data-id");
     var confirmRemove = confirm("Are you sure you want to remove this item?");
     if(confirmRemove) {
-      Meteor.call("removeItemFromMenu", menu, {ingredients: {_id: id}}, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          $(event.target).closest("tr").remove()
-        }
-      });
+      Meteor.call("removeItemFromMenu", menu, {ingredients: {_id: id}}, HospoHero.handleMethodResult(function() {
+        $(event.target).closest("tr").remove()
+      }));
     }
   },
 
@@ -21,13 +17,9 @@ Template.ingsAndPreps.events({
     var id = $(event.target).attr("data-id");
     var confirmRemove = confirm("Are you sure you want to remove this item ?");
     if(confirmRemove) {
-      Meteor.call("removeItemFromMenu", menu, {jobItems: {_id: id}}, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          $(event.target).closest("tr").remove()
-        }
-      });
+      Meteor.call("removeItemFromMenu", menu, {jobItems: {_id: id}}, HospoHero.handleMethodResult(function() {
+        $(event.target).closest("tr").remove()
+      }));
     }
   },
 

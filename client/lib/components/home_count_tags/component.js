@@ -6,33 +6,21 @@ var component = FlowComponents.define('homeCountTags', function(props) {
 
 component.prototype.ingCountMethod = function() {
   var self = this;
-  Meteor.call("ingredientsCount", function(err, result) {
-    if(err) {
-      HospoHero.error(err);
-    } else {
-      self.set("ingCount", result)
-    }
-  });
+  Meteor.call("ingredientsCount", HospoHero.handleMethodResult(function(result) {
+    self.set("ingCount", result)
+  }));
 };
 
 component.prototype.jobItemsCountMethod = function() {
   var self = this;
-  Meteor.call("jobItemsCount", function(err, result) {
-    if(err) {
-      HospoHero.error(err);
-    } else {
-      self.set("jobsCount", result)
-    }
-  });
+  Meteor.call("jobItemsCount", HospoHero.handleMethodResult(function(result) {
+    self.set("jobsCount", result)
+  }));
 };
 
 component.prototype.menuItemsCountMethod = function() {
   var self = this;
-  Meteor.call("menuItemsCount", function(err, result) {
-    if(err) {
-      HospoHero.error(err);
-    } else {
-      self.set("menusCount", result);
-    }
-  });
+  Meteor.call("menuItemsCount", HospoHero.handleMethodResult(function(result) {
+    self.set("menusCount", result);
+  }));
 };

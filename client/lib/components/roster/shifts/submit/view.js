@@ -53,29 +53,21 @@ Template.submitShift.events({
       if(dates.length > 0) {
         info.week = dates;
       }
-      Meteor.call("createShift", info, function(err, id) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          $("#submitShiftModal").modal("hide");
-          var recurringJobs = Jobs.find({
-            "type": "Recurring", 
-            "createdOn": new Date(dateOfShift).toDateString(), 
-            "section": section,
-            "status": "draft"}).fetch();
-          if(recurringJobs.length > 0) {
-            recurringJobs.forEach(function(job) {
-              Meteor.call("assignJob", job._id, id, job.startAt, function(err) {
-                if(err) {
-                  HospoHero.error(err);
-                } 
-              });
-            });
-          }
-          $('#calendar').fullCalendar('rerenderEvents')
-          Blaze.render(Template.dailyShiftScheduling, document.getElementById("dailyShiftSchedulingMainView"))
+      Meteor.call("createShift", info, HospoHero.handleMethodResult(function(id) {
+        $("#submitShiftModal").modal("hide");
+        var recurringJobs = Jobs.find({
+          "type": "Recurring",
+          "createdOn": new Date(dateOfShift).toDateString(),
+          "section": section,
+          "status": "draft"}).fetch();
+        if(recurringJobs.length > 0) {
+          recurringJobs.forEach(function(job) {
+            Meteor.call("assignJob", job._id, id, job.startAt, HospoHero.handleMethodResult());
+          });
         }
-      });
+        $('#calendar').fullCalendar('rerenderEvents');
+        Blaze.render(Template.dailyShiftScheduling, document.getElementById("dailyShiftSchedulingMainView"))
+      }));
     }
   },
 

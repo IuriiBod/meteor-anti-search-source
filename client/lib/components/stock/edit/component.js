@@ -20,15 +20,10 @@ component.state.convertTime = function(time) {
 };
 
 component.action.submit = function(info) {
-   Meteor.call("editIngredient", this.get('id'), info, function(err) {
-    if(err) {
-      HospoHero.error(err);
-    } else {
-      IngredientsListSearch.cleanHistory();
-      IngredientsListSearch.search("", {"limit": 10});
-    }
+   Meteor.call("editIngredient", this.get('id'), info, HospoHero.handleMethodResult(function() {
+    IngredientsListSearch.cleanHistory();
     $("#editIngredientModal").modal("hide");
-  });
+  }));
 };
 
 component.state.suppliers = function() {
@@ -46,38 +41,35 @@ component.state.isArchive = function() {
   }
 };
 
+// TODO: Check this method
 component.action.archiveIng = function(id, state) {
   Meteor.subscribe("ingredients", [id]);
   var self = this;
-  Meteor.call("archiveIngredient", id, state, function(err) {
-    if(err) {
-      HospoHero.error(err);
+  Meteor.call("archiveIngredient", id, state, HospoHero.handleMethodResult(function() {
+    $("#editIngredientModal").modal("hide");
+
+    var stock = Ingredients.findOne(id);
+    if(stock) {
+      var text = "Stock item " + stock.description;
+      if(stock.status == "active") {
+        text += " restored";
+      } else if(stock.status == "archived") {
+        text += " archived";
+      }
+      HospoHero.info(text);
     } else {
-      $("#editIngredientModal").modal("hide");
-      
-      var stock = Ingredients.findOne(id);
-      if(stock) {
-        var text = "Stock item " + stock.description;
-        if(stock.status == "active") {
-          text += " restored";
-        } else if(stock.status == "archived") {
-          text += " archived";
-        }
-        HospoHero.info(text);
-      } else {
-        HospoHero.info("Stock item " + self.get("description") + " removed");
-      }
-      
-      IngredientsListSearch.cleanHistory();
-      var selector = {
-        limit: 30
-      };
-      if(Router.current().params.type == "archive") {
-        selector.status = "archived";
-      } else {
-        selector.status = {$ne: "archived"};
-      }
-      IngredientsListSearch.search("", selector);
+      HospoHero.info("Stock item " + self.get("description") + " removed");
     }
-  });
+
+    IngredientsListSearch.cleanHistory();
+    var selector = {
+      limit: 30
+    };
+    if(Router.current().params.type == "archive") {
+      selector.status = "archived";
+    } else {
+      selector.status = {$ne: "archived"};
+    }
+    IngredientsListSearch.search("", selector);
+  }));
 };

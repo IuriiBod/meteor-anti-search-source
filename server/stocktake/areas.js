@@ -221,11 +221,7 @@ Meteor.methods({
     logger.info('Stock item removed from area', {"stock": stockId, "sarea": sareaId});
 
     if(stockRefId) {
-      Meteor.call("removeStocktake", stockRefId, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("removeStocktake", stockRefId, HospoHero.handleMethodResult());
     }
   },
 

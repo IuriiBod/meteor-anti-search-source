@@ -8,11 +8,7 @@ Template.profileImage.events({
         var doc = (InkBlobs);
         if(doc) {
           var url = doc[0].url;
-          Meteor.call("editBasicDetails", Session.get("profileUser"), {"profileImage": url}, function(err) {
-            if(err) {
-              HospoHero.error(err);
-            }
-          });
+          Meteor.call("editBasicDetails", Session.get("profileUser"), {"profileImage": url}, HospoHero.handleMethodResult());
         }
       }
     );

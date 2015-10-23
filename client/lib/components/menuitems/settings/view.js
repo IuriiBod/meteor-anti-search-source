@@ -132,11 +132,7 @@ Template.settingsMenuItem.events({
         if(doc) {
           var url = doc[0].url;
           var id = $(event.target).closest("form").attr("data-id");
-          Meteor.call("editMenuItem", id, {"image": url}, function(err) {
-            if(err) {
-              HospoHero.error(err);
-            }
-          });
+          Meteor.call("editMenuItem", id, {"image": url}, HospoHero.handleMethodResult());
           $(".uploadedNewImageDiv").removeClass("hide");
           $("#uploadedImageUrl").attr("src", url);
         }
@@ -145,11 +141,7 @@ Template.settingsMenuItem.events({
 
   'click .remove-image': function() {
     var menuId = Router.current().params._id;
-    Meteor.call('editMenuItem', menuId, {image: ''}, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call('editMenuItem', menuId, {image: ''}, HospoHero.handleMethodResult());
   },
 
   'click .deleteMenuItemBtn': function (e) {
@@ -160,23 +152,9 @@ Template.settingsMenuItem.events({
       var item = MenuItems.findOne(id);
 
       if (id) {
-        Meteor.call("deleteMenuItem", id, function (err) {
-          if (err) {
-            HospoHero.error(err);
-          } else {
-            var options = {
-              "type": "delete",
-              "title": "Menu " + item.name + " has been deleted",
-              "time": Date.now()
-            };
-            Meteor.call("sendNotifications", id, "menu", options, function (err) {
-              if (err) {
-                HospoHero.error(err);
-              }
-            });
-            Router.go("menuItemsMaster", {"category": "all", "status": "all"});
-          }
-        });
+        Meteor.call("deleteMenuItem", id, HospoHero.handleMethodResult(function () {
+          Router.go("menuItemsMaster", {"category": "all", "status": "all"});
+        }));
       }
     }
   },
@@ -193,11 +171,7 @@ Template.settingsMenuItem.events({
     $(e.target).addClass("hide");
     $('.my-editable-link[data-name="category"]').removeClass("hide");
     if (id && value) {
-      Meteor.call("editMenuItem", id, {category: value}, function (err) {
-        if (err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("editMenuItem", id, {category: value}, HospoHero.handleMethodResult());
     }
   },
 
@@ -207,11 +181,7 @@ Template.settingsMenuItem.events({
     $(e.target).addClass("hide");
     $('.my-editable-link[data-name="status"]').removeClass("hide");
     if (id && value) {
-      Meteor.call("editMenuItem", id, {status: value}, function (err) {
-        if (err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("editMenuItem", id, {status: value}, HospoHero.handleMethodResult());
     }
   },
 

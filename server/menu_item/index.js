@@ -136,11 +136,7 @@ Meteor.methods({
         "title": "Instructions on " + menu.name + " has been updated",
         "text": ""
       };
-      Meteor.call("sendNotifications", id, "menu", options, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("sendNotifications", id, "menu", options, HospoHero.handleMethodResult());
 
       return MenuItems.update({"_id": id}, {$set: updateDoc});
     }
