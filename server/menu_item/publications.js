@@ -95,3 +95,4 @@ Meteor.publish("areaMenuItems", function (categoryId) {
     this.ready();
   }
 });
+

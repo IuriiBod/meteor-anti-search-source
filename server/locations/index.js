@@ -33,8 +33,7 @@ Meteor.methods({
     Locations.remove({_id: id});
     Areas.remove({locationId: id});
     WeatherForecast.remove({locationId:id});
-    SalesPrediction.remove({'relations.locationId': id});
-    ImportedActualSales.remove({'relations.locationId': id});
+    DailySales.remove({'relations.locationId': id});//SalesPrediction
 
     var googlePrediction = new GooglePredictionApi(id);
     googlePrediction.removePredictionModel();
