@@ -108,7 +108,7 @@ WorldWeather.prototype.checkLocation = function () {
 if (HospoHero.isDevelopmentMode()) {
   var mockDataGenerator = function () {
     var start, end;
-    if (arguments.length > 1) {//historical
+    if (arguments.length > 0) {//historical
       start = moment(arguments[0]);
       end = moment(arguments[1]).add(1, 'day');
     } else {//forecast
