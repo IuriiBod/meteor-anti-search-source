@@ -14,8 +14,8 @@ Meteor.startup(function () {
     canEditRoster: HospoHero.canUser('edit roster'),
     canViewMenu: HospoHero.canUser('view menu'),
     canEditMenu: HospoHero.canUser('edit menu'),
-    canViewJob: HospoHero.canUser('view job'),
-    canEditJob: HospoHero.canUser('edit job'),
+    canViewJob: HospoHero.canUser('view jobs'),
+    canEditJob: HospoHero.canUser('edit jobs'),
     canViewStock: HospoHero.canUser('view stocks'),
     canEditStock: HospoHero.canUser('edit stocks'),
     canViewForecast: HospoHero.canUser('view forecast')

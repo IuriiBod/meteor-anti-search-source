@@ -21,20 +21,5 @@ Template.ingsAndPreps.events({
         $(event.target).closest("tr").remove()
       }));
     }
-  },
-
-  // TODO: Check it later
-  'click .view-prep': function(event) {
-    event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    Session.set("goBackMenu", Session.get("thisMenuItem"));
-    Router.go("jobItemEdit", {"_id": id});
-  },
-
-  'click .view-ings': function(event) {
-    // event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    Session.set("thisIngredientId", id);
-    $("#editIngredientModal").modal("show");
   }
 });

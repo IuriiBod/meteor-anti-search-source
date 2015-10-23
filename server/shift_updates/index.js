@@ -1,6 +1,6 @@
 Meteor.methods({
   'addShiftUpdate': function(doc) {
-    if(!HospoHero.canUser('edit roster')()) {
+    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error(403, "User not permitted to add shift update");
     }
     doc.locationId = HospoHero.getCurrentArea().locationId;

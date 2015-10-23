@@ -1,4 +1,29 @@
 Namespace('HospoHero.roles', {
+  getUserIdsByAction: function(action) {
+    var roleIds = Meteor.roles.find({
+      $or: [
+        { actions: action },
+        { actions: 'all rights' }
+      ]
+    }).map(function(role) {
+      return role._id;
+    });
+
+    var temp = {};
+    temp['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
+
+    var query = {
+      $or: [
+        { 'roles.defaultRole': {$in: roleIds} },
+        temp
+      ]
+    };
+
+    return Meteor.users.find(query).map(function(user) {
+      return user._id;
+    });
+  },
+
   actions: {
     "View Jobs": "view jobs",
     "Edit Jobs": "edit jobs",
@@ -18,8 +43,8 @@ Namespace('HospoHero.roles', {
     "Edit Locations": "edit locations",
     "Billing Account": "edit billing account",
     "Edit Organization": "edit organization settings",
-    "All Rights": "all rights",
-    "Edit users payrate": "edit user's payrate"
+    "Edit users payrate": "edit user's payrate",
+    "All Rights": "all rights"
   },
 
   getActions: function() {

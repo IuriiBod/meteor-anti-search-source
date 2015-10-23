@@ -1,6 +1,6 @@
 Meteor.methods({
   stockTakeHistory: function () {
-    if (!HospoHero.canUser('edit stocks')()) {
+    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to view stock take history");
       throw new Meteor.Error(403, "User not permitted to view stock take history");
     }

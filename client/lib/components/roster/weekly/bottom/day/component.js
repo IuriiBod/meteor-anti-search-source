@@ -61,9 +61,8 @@ component.state.isTemplate = function() {
 
 component.prototype.onListRendered = function() {
   var self = this;
-  var user = Meteor.user();
   $(".col-lg-13:first").css("margin-left", "0px");
-  if(HospoHero.canUser('edit roster')()) {
+  if(HospoHero.canUser('edit roster', Meteor.userId())) {
     $(".sortable-list > div > li").css("cursor", "move");
     var origin = this.name;
     $(".sortable-list").sortable({
