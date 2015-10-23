@@ -2,88 +2,7 @@ var component = FlowComponents.define("shiftBasic", function(props) {
 });
 
 component.prototype.itemRendered = function() {
-  $.fn.editable.defaults.mode = 'inline';
-  var origin = this.get("origin");
-  setTimeout(function() {
-    $('.select-worker').editable({
-      type: "select",
-      title: 'Select worker to assign',
-      inputclass: "editableWidth",
-      showbuttons: false,
-      emptytext: 'Open',
-      defaultValue: "Open",
-      source: function() {
-        var shiftId = $(this).closest("li").attr("data-id");
-        var thisShift = Shifts.findOne(shiftId);
 
-        var query = {
-          shiftDate: thisShift.shiftDate,
-          'relations.areaId': HospoHero.getCurrentAreaId(),
-          assignedTo: {
-            $ne: null
-          }
-        };
-        query.type = origin == "weeklyroster" ? null : 'template';
-        var alreadyAssigned = Shifts.find(query).map(function(shift) {
-          if(thisShift.assignedTo != shift.assignedTo) {
-            return shift.assignedTo;
-          }
-        });
-
-        workersObj.push({value: "Open", text: "Open"});
-
-        query = {
-          "_id": {$nin: alreadyAssigned},
-          "isActive": true,
-          $or: [
-            {"profile.resignDate": null},
-            {"profile.resignDate": {$gt: thisShift.shiftDate}}
-          ]
-        };
-
-        // Get roles which can be rosted
-        var canBeRostedRolesIds = Roles.getRolesByAction('be rosted').map(function(role) {
-          return role._id;
-        });
-
-        query["roles." + HospoHero.getCurrentAreaId()] = {$in: canBeRostedRolesIds};
-        return Meteor.users.find(query, {sort: {"username": 1}}).map(function(worker) {
-          return {
-            value: worker._id,
-            text: HospoHero.username(worker)
-          }
-        });
-      },
-      success: function(response, newValue) {
-        var shiftId = $(this).closest("li").attr("data-id");
-        if(newValue == "Open") {
-          newValue = null;
-        }
-
-        var shift = Shifts.findOne(shiftId);
-        if(shift) {
-          assignWorkerToShift(newValue, shiftId, $(this));
-        }
-        if(origin == "weeklyroster") {
-          if(shift.assignedTo && shift.published) {
-            //notify old user
-            var title =  "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
-            var text = "You have been removed from this assigned shift";
-            sendNotification(shiftId, shift.assignedTo, title, text);
-
-            var shiftUpdateDoc = {
-              to: shift.assignedTo,
-              userId: Meteor.userId(),
-              shiftId: shift._id,
-              text: "You have been removed from shift dated <b>" + HospoHero.dateUtils.intervalDateFormat(shift.startTime, shift.endTime) + "</b>",
-              type: "remove"
-            };
-
-            Meteor.call("addShiftUpdate", shiftUpdateDoc, HospoHero.handleMethodResult());
-          }
-        }
-      }
-    });   
 
     $('.section').editable({
       type: "select",
@@ -170,7 +89,7 @@ component.prototype.itemRendered = function() {
         }
       }
     });  
-  }, 500);
+
 };
 
 // TODO: Check this function
@@ -206,38 +125,3 @@ function editShift(obj) {
   }));
 }
 
-// TODO: Check this function
-assignWorkerToShift = function(worker, shiftId, target) {
-  var shift = Shifts.findOne(shiftId);
-  if(shift) {
-    Meteor.call("assignWorker", worker, shiftId, HospoHero.handleMethodResult(function() {
-      if(shift.published && worker !== null) {
-        //notify new user
-        var title = "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
-        var text = "You have been assigned to this shift";
-        sendNotification(shiftId, worker, title, text);
-        var shiftUpdateDoc = {
-          to: worker,
-          userId: Meteor.userId(),
-          shiftId: shift._id,
-          text: "You have been assigned to shift dated <b>" + HospoHero.dateUtils.intervalDateFormat(shift.startTime, shift.endTime) + "</b>",
-          type: "update"
-        };
-
-        Meteor.call("addShiftUpdate", shiftUpdateDoc, HospoHero.handleMethodResult());
-      }
-    }));
-  }
-};
-
-
-function sendNotification(itemId, to, title, text) {
-  var options = {
-    type: 'roster',
-    title: title,
-    actionType: 'update',
-    text: text,
-    to: to
-  };
-  Meteor.call('sendNotification', itemId, options, HospoHero.handleMethodResult());
-}

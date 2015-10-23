@@ -57,6 +57,31 @@ var ShiftDocument = Match.Where(function (shift) {
 });
 
 
+var logShiftUpdate = function (newShift, userId) {
+  if (newShift.assignedTo) {
+    var oldShift = Shifts.findOne({_id: newShift._id});
+
+    if (oldShift.assignedTo != newShift.assignedTo && newShift.published) {
+      //add shift update
+      var updateText = "You have been assigned to shift dated <b>" +
+        HospoHero.dateUtils.intervalDateFormat(newShift.startTime, newShift.endTime) + "</b>";
+
+      var updateDocument = {
+        to: newShift.assignedTo,
+        userId: userId,
+        shiftId: oldShift._id,
+        text: updateText,
+        locationId: HospoHero.getCurrentArea(userId).locationId,
+        type: "update"
+      };
+
+      logger.info("Shift update insert");
+      ShiftsUpdates.insert(updateDocument);
+    }
+  }
+};
+
+
 Meteor.methods({
   createShift: function (newShiftInfo) {
     check(ShiftDocument, newShiftInfo);
@@ -101,16 +126,21 @@ Meteor.methods({
     return createdShiftId;
   },
 
+
   editShift: function (updatedShift) {
     check(updatedShift, ShiftDocument);
 
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    var userId = Meteor.userId();
+    if (!HospoHero.canUser('edit roster', userId)) {
       logger.error(403, "User not permitted to create shifts");
     }
+
+    logShiftUpdate(updatedShift, userId);
 
     Shifts.update({'_id': updatedShift._id}, {$set: updatedShift});
     logger.info("Shift details updated", {"shiftId": updatedShift._id});
   },
+
 
   deleteShift: function (shiftToDeleteId) {
     check(shiftToDeleteId, HospoHero.checkers.MongoId);
