@@ -1,5 +1,3 @@
-var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
 var component = FlowComponents.define("weeklyRosterDay", function (props) {
   this.type = props.type;
   this.set('currentDate', props.currentDate);
@@ -10,8 +8,10 @@ component.state.hasTemplateType = function () {
 };
 
 component.state.shifts = function () {
+  var shiftDate = HospoHero.dateUtils.shiftDate(null, this.get('hasTemplateType'));
+
   return Shifts.find({
-    "shiftDate": HospoHero.dateUtils.shiftDate(),
+    "shiftDate": TimeRangeQueryBuilder.forDay(shiftDate),
     "type": this.type,
     "relations.areaId": HospoHero.getCurrentAreaId()
   }, {
