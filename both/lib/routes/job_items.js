@@ -79,7 +79,8 @@ Router.route('/jobItem/:_id', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe("comments", this.params._id),
       Meteor.subscribe("usersList"),
-      Meteor.subscribe("userSubs", [this.params._id, 'joblist'])
+      Meteor.subscribe("userSubs", [this.params._id, 'joblist']),
+      Meteor.subscribe("usersList")
     ];
   },
   data: function() {

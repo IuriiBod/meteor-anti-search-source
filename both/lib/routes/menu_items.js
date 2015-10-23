@@ -78,7 +78,8 @@ Router.route('/menuItem/:_id', {
       Meteor.subscribe("comments", this.params._id),
       Meteor.subscribe("allCategories"),
       Meteor.subscribe("allStatuses"),
-      Meteor.subscribe("userSubs", ['menulist', this.params._id])
+      Meteor.subscribe("userSubs", ['menulist', this.params._id]),
+      Meteor.subscribe("usersList")
     ];
   },
   data: function() {

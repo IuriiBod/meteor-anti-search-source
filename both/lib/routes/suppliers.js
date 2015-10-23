@@ -24,7 +24,8 @@ Router.route('/supplier/profile/:_id', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("supplierProfile", this.params._id),
       Meteor.subscribe("comments", this.params._id),
-      Meteor.subscribe("allSuppliers")
+      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe("usersList")
     ];
   },
   data: function() {
