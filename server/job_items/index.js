@@ -254,7 +254,7 @@ Meteor.methods({
       logger.info("Job Item updated", {"JobItemId": id});
       var editJobId = JobItems.update({'_id': id}, query);
 
-      var to = HospoHero.roles.getUserIdsByAction('JOB_EDIT');
+      var to = HospoHero.roles.getUserIdsByAction('edit jobs');
       var options = {
         type: 'job',
         title: job.name + ' job has been updated',
@@ -293,7 +293,7 @@ Meteor.methods({
     logger.info("Job Item removed", {"id": id});
     JobItems.remove({'_id': id});
 
-    var to = HospoHero.roles.getUserIdsByAction('JOB_EDIT');
+    var to = HospoHero.roles.getUserIdsByAction('edit jobs');
     var options = {
       actionType: 'delete',
       type: 'job',
