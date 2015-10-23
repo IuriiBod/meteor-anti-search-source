@@ -1,13 +1,22 @@
 var ShiftDocument = Match.Where(function (shift) {
   check(shift, {
-    _id: Match.Optinal(HospoHero.checkers.MongoId),
     startTime: Date,
     endTime: Date,
     shiftDate: Date,
     type: Match.OneOf(String, null),
-    assignedTo: Match.Optinal(HospoHero.checkers.MongoId),
-    order: Match.Optinal(Number)
-    //todo: add optianl props
+
+    //optional properties
+    _id: Match.Optional(HospoHero.checkers.MongoId),
+    section: HospoHero.checkers.OptionalMongoId,
+    createdBy: HospoHero.checkers.OptionalMongoId,
+    assignedTo: HospoHero.checkers.OptionalMongoId,
+    assignedBy: HospoHero.checkers.OptionalMongoId,
+    jobs: Match.Optional([HospoHero.checkers.MongoId]),
+    status: Match.Optional(String),
+    published: Match.Optional(Boolean),
+    publishedOn: Match.Optional(Number),
+    order: Match.Optional(Number),
+    relations: Match.Optional(HospoHero.checkers.Relations)
   });
 
 
