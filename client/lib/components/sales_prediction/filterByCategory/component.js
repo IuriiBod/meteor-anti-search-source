@@ -18,5 +18,5 @@ component.state.year = function () {
 
 component.state.currentCategory = function () {
   var category = Router.current().params.category;
-  return category==="all"?"Select Category":Categories.findOne({_id:category}).name;
+  return category==="all"?"All":Categories.findOne({_id:category}).name;
 };

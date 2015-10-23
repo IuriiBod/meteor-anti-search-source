@@ -6,8 +6,8 @@ Router.route('/roster/prediction/:year/:week/:category', {
 
       this.subscribe('organizationInfo'),
       this.subscribe('weatherForecast', parseInt(this.params.year), parseInt(this.params.week)),
-      this.subscribe("salesPrediction"),
-      this.subscribe('importedActualSales'),
+      this.subscribe("salesPrediction", parseInt(this.params.year), parseInt(this.params.week)),
+      this.subscribe('importedActualSales', parseInt(this.params.year), parseInt(this.params.week)),
       this.subscribe('areaMenuItems', this.params.category),
       this.subscribe('allCategories')
     ];
