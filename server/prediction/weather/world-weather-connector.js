@@ -8,7 +8,7 @@ WorldWeather = function WorldWeather(country, city) {
   this._country = country;
   this._city = city;
   this._defaultParams = {
-    q: this._city + "," + this._country,
+    q: this._city,
     format: "json",
     tp: 3,
     key: Meteor.settings.WorldWeather.KEY
@@ -26,7 +26,6 @@ WorldWeather = function WorldWeather(country, city) {
  */
 WorldWeather.prototype._httpQuery = function (route, params) {
   var defaultParams = _.extend({}, this._defaultParams);
-
   var allParams = _.extend(defaultParams, params);
   try {
     var res = HTTP.get(this._url + route, {
@@ -75,9 +74,6 @@ WorldWeather.prototype.getForecast = function () {
 WorldWeather.prototype._mapWeatherEntries = function (data) {
   var self = this;
   return data.data.weather.map(function (weatherItem) {
-
-    console.log(weatherItem.date, weatherItem.hourly.length);
-
     var hourly = _.find(weatherItem.hourly, function (hourlyItem) {
       return hourlyItem.time === self._targetTime;
     });
@@ -101,9 +97,10 @@ WorldWeather.prototype._mapWeatherEntries = function (data) {
  */
 WorldWeather.prototype.checkLocation = function () {
   var data = this._httpQuery("weather.ashx", {
-    q: this._city + "," + this._country
+    q: this._city
   });
-  return !!data.data.error
+  console.log(this._city);
+  return !data.data.error
 };
 
 
