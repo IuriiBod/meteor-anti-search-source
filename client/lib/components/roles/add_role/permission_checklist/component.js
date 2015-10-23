@@ -1,5 +1,5 @@
 var component = FlowComponents.define('permissionsChecklist', function (props) {});
 
-component.state.permissions = function () {
-  return Roles.getPermissions();
+component.state.actions = function () {
+  return HospoHero.roles.getActions();
 };

@@ -157,26 +157,10 @@ Template.settingsMenuItem.events({
     var result = confirm("Are you sure, you want to delete this menu ?");
     if (result) {
       var id = $(event.target).attr("data-id");
-      var item = MenuItems.findOne(id);
-
       if (id) {
-        Meteor.call("deleteMenuItem", id, function (err) {
-          if (err) {
-            HospoHero.error(err);
-          } else {
-            var options = {
-              "type": "delete",
-              "title": "Menu " + item.name + " has been deleted",
-              "time": Date.now()
-            };
-            Meteor.call("sendNotifications", id, "menu", options, function (err) {
-              if (err) {
-                HospoHero.error(err);
-              }
-            });
-            Router.go("menuItemsMaster", {"category": "all", "status": "all"});
-          }
-        });
+        Meteor.call("deleteMenuItem", id, HospoHero.handleMethodResult(function () {
+          Router.go("menuItemsMaster", {"category": "all", "status": "all"});
+        }));
       }
     }
   },

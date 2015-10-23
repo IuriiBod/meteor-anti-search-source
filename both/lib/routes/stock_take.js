@@ -7,7 +7,7 @@ Router.route('/stocktake', {
     return Meteor.subscribe('organizationInfo');
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.perms.canUser('editStock')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);
@@ -29,7 +29,7 @@ Router.route('/stocktake/:_id', {
     ];
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.perms.canUser('editStock')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
       Router.go("/");
     }
     Session.set("activeSArea", null);
@@ -52,7 +52,7 @@ Router.route('/stocktake/order/receive/:_id', {
     ];
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.perms.canUser('editStock')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);
@@ -75,7 +75,7 @@ Router.route('/stocktake/orders/:_id', {
     ];
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.perms.canUser('editStock')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
       Router.go("/");
     }
     Session.set("thisVersion", this.params._id);
@@ -95,7 +95,7 @@ Router.route('/stocktake/order/receipts/list', {
     ];
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.perms.canUser('editStock')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
       Router.go("/");
     }
     Session.set("thisState", false);

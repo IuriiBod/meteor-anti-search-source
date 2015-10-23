@@ -85,7 +85,7 @@ Meteor.publishComposite('organizationInfo', {
       find: function() {
         if(this.userId) {
           return Notifications.find({
-            ref: this.userId
+            to: this.userId
           });
         } else {
           this.ready();

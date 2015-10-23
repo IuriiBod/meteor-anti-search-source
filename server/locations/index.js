@@ -38,8 +38,6 @@ Meteor.methods({
 
     var googlePrediction = new GooglePredictionApi(id);
     googlePrediction.removePredictionModel();
-    
-    // TODO: Write the code to delete users which is related to location
   },
 
   'updateLocationName': function(id, val) {

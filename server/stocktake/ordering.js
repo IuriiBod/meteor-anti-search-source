@@ -1,6 +1,6 @@
 Meteor.methods({
   generateOrders: function (stocktakeVersion) {
-    if (!HospoHero.perms.canUser('editStock')()) {
+    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to generate orders");
       throw new Meteor.Error(403, "User not permitted to generate orders");
     }
@@ -79,7 +79,7 @@ Meteor.methods({
   },
 
   editOrderingCount: function (orderId, count) {
-    if (!HospoHero.perms.canUser('editStock')()) {
+    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to edit ordering count");
       throw new Meteor.Error(404, "User not permitted to edit ordering count");
     }
@@ -96,7 +96,7 @@ Meteor.methods({
   },
 
   'removeOrder': function (id) {
-    if (!HospoHero.perms.canUser('editStock')()) {
+    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to remove placed orders");
       throw new Meteor.Error(403, "User not permitted to remove placed orders");
     }

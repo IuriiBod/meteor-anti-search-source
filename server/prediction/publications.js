@@ -1,5 +1,5 @@
 Meteor.publish("salesPrediction", function (year, week) {
-  var haveAccess = HospoHero.perms.canUser('viewForecast')(this.userId);
+  var haveAccess = HospoHero.canUser('viewForecast')(this.userId);
   if (!haveAccess) {
     this.error(new Meteor.Error(403, 'Access Denied'));
   }
@@ -8,8 +8,9 @@ Meteor.publish("salesPrediction", function (year, week) {
   return SalesPrediction.find({"relations.areaId": areaId, date:TimeRangeQueryBuilder.forWeek(weekDate)});
 });
 
+
 Meteor.publish("importedActualSales", function (year, week) {
-  var haveAccess = HospoHero.perms.canUser('viewForecast')(this.userId);
+  var haveAccess = HospoHero.canUser('viewForecast')(this.userId);
   if (!haveAccess) {
     this.error(new Meteor.Error(403, 'Access Denied'));
   }

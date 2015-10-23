@@ -3,11 +3,11 @@ Router.route('/reports/stocktake/currentStocks/:year/:week', {
   name: "currentStocks",
   path: '/reports/stocktake/currentStocks/:year/:week',
   template: "currentStocksReportView",
-  waitOn: function() {
+  waitOn: function () {
     return Meteor.subscribe('organizationInfo');
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.perms.canUser('editRoster')()) {
+  data: function () {
+    if (!Meteor.userId() || !HospoHero.canUser('edit roster')()) {
       Router.go("/");
     }
     Session.set("thisWeek", this.params.week);
@@ -20,16 +20,16 @@ Router.route('/reports/:year/:week', {
   name: "teamHours",
   path: "/reports/:year/:week",
   template: "teamHoursMainView",
-  waitOn: function() {
-    var dates = getWeekStartEnd(this.params.week);
+  waitOn: function () {
+    var date = HospoHero.dateUtils.getDateByWeekDate({week: this.params.week, year: this.params.year});
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("usersList"),
-      Meteor.subscribe("weekly", dates, null, null)
+      Meteor.subscribe('weeklyRoster', date)
     ];
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.perms.canUser('editRoster')()) {
+  data: function () {
+    if (!Meteor.userId() || !HospoHero.canUser('edit roster')()) {
       Router.go("/");
     }
     Session.set("reportHash", this.params.hash);
