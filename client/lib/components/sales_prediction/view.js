@@ -1,4 +1,4 @@
-Template.salesPrediction.onCreated(function () {
+Template.salesPrediction.onRendered(function () {
 });
 
 Template.salesPrediction.helpers({

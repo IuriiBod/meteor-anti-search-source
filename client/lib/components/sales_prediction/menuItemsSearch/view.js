@@ -92,7 +92,4 @@ Template.menuItemsSearch.rendered = function () {
     selector.filter = filter;
   }
   MenuItemsSearch.search("", selector);
-  if(MenuItems.find().count()<11){
-    $("#loadMoreBtn").addClass("hide");
-  }
 };
