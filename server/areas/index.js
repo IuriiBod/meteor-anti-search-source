@@ -79,15 +79,12 @@ Meteor.methods({
 
     // Send notification to the invited user
     var options = {
-      type: 'update',
-      read: false,
+      type: 'invitation',
       title: 'You\'ve been added to the ' + area.name + ' area.',
-      createdBy: Meteor.userId(),
-      text: null,
       actionType: 'update',
       to: userId
     };
-    Notifications.insert(options);
+    Meteor.call('sendNotification', options);
 
     // Send an email to the invited user
     var sender = Meteor.user();

@@ -7,12 +7,9 @@ component.state.initialHTML = function() {
 };
 
 component.action.submit = function(info) {
-  Meteor.call("createMenuItem", info, function(err, id) {
-    if(err) {
-      HospoHero.error(err);
-    }
+  Meteor.call("createMenuItem", info, HospoHero.handleMethodResult(function(id) {
     Router.go("menuItemDetail", {"_id": id});
-  });
+  }));
 };
 
 component.state.statuses = function() {
