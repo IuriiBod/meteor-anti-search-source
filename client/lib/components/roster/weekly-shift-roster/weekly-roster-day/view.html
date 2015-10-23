@@ -1,11 +1,9 @@
 <template name="weeklyRosterDay">
   <div class="col-lg-13">
-    {{#if state$isTemplate}}
-      <h3>{{state$name}}</h3>
-    {{else}}
-      <h3>{{state$name.day}}</h3>
-      <h5>{{state$name.date}}</h5>
-    {{/if}}
+    <h3>{{weekDateName state$currentDate}}</h3>
+    {{#unless state$onlyDayNames}}
+      <h3>{{dateFormat state$currentDate}}</h3>
+    {{/unless}}
     {{#if canEditRoster}}
       <div class="input-group">
           <span class="input-group-btn">

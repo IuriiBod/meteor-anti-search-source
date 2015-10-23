@@ -21,11 +21,10 @@ Router.route('/reports/:year/:week', {
   path: "/reports/:year/:week",
   template: "teamHoursMainView",
   waitOn: function () {
-    var date = HospoHero.dateUtils.getDateByWeekDate({week: this.params.week, year: this.params.year});
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("usersList"),
-      Meteor.subscribe('weeklyRoster', date)
+      Meteor.subscribe('weeklyRoster', {week: this.params.week, year: this.params.year})
     ];
   },
   data: function () {

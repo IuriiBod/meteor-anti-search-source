@@ -1,17 +1,13 @@
 var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 var component = FlowComponents.define("weeklyRosterDay", function(props) {
-  this.name = props.name;
-  this.origin = props.origin;
+  this.type = props.type;
+  this.set('currentDate',props.currentDate);
   this.onRendered(this.onListRendered);
 });
 
-component.state.name = function() {
-  return this.name;
-};
-
-component.state.origin = function() {
-  return this.origin;
+component.state.onlyDayNames = function () {
+  return this.type === 'template';
 };
 
 component.state.shifts = function() {

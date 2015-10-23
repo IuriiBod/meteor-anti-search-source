@@ -26,7 +26,6 @@ component.state.subCategory = function () {
   return this.subCategory;
 };
 
-//todo get rid of this
 component.state.publishedOn = function () {
   if (this.type == "weeklyroster") {
     var weekNo = Session.get("thisWeek");
@@ -123,7 +122,7 @@ component.state.isIngredientsList = function () {
 };
 
 component.state.weeklyNavigation = function () {
-  return !!(this.type == "cafeforecasting" || this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport");
+  return !!(this.type == "teamHoursReport" || this.type == "weeklyroster" || this.type == "currentStocksReport");
 };
 
 component.state.isWeeklyTemplate = function () {
@@ -205,7 +204,6 @@ component.state.getWeek = function () {
 
 component.state.onDateChanged = function () {
   return function (weekDate) {
-
     Router.go(Router.current().route.getName(), weekDate);
   };
 };
