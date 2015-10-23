@@ -5,7 +5,7 @@ var component = FlowComponents.define("staffCostFigureBox", function (props) {
 });
 
 component.state.weeklyStaffCost = function () {
-    return this.actual.toFixed(2)
+    return !isNaN(this.actual)?this.actual.toFixed(2):0;
 };
 
 component.state.percent = function () {
@@ -13,5 +13,5 @@ component.state.percent = function () {
 };
 
 component.state.rosteredStaffCost = function () {
-    return this.forecasted.toFixed(2)
+    return !isNaN(this.forecasted)?this.forecasted.toFixed(2):0;
 };

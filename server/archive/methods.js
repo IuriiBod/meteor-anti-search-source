@@ -15,7 +15,6 @@ Meteor.methods({
     if(HospoHero.isOrganizationOwner()){
       var canArchive = !Locations.findOne({_id: area.locationId}).archived;
       if(typeof(toSet)==="undefined" && canArchive){
-        console.log(canArchive);
         var res = !area.archived;
         Areas.update({_id: area._id}, {$set:{archived: res}});
       }else if(typeof(toSet) === "boolean"){
