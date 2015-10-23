@@ -26,6 +26,7 @@ component.state.subCategory = function () {
   return this.subCategory;
 };
 
+//todo get rid of this
 component.state.publishedOn = function () {
   if (this.type == "weeklyroster") {
     var weekNo = Session.get("thisWeek");

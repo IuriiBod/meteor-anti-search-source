@@ -75,33 +75,3 @@ Router.route('/roster/template/weekly', {
   },
   fastRender: true
 });
-
-Router.route('/roster/shift/:_id', {
-  name: "shift",
-  path: '/roster/shift/:_id',
-  template: "shiftMainView",
-  waitOn: function () {
-    var cursors = [
-      Meteor.subscribe('organizationInfo')
-    ];
-    cursors.push(Meteor.subscribe("shift", this.params._id));
-    var shift = Shifts.findOne(this.params._id);
-    var jobs = [];
-    if (shift && shift.jobs.length > 0) {
-      jobs = shift.jobs;
-      cursors.push(Meteor.subscribe("jobs", jobs));
-    }
-    if (shift && shift.assignedTo) {
-      cursors.push(Meteor.subscribe("profileUser", shift.assignedTo))
-    }
-    return cursors;
-  },
-  data: function () {
-    if (!HospoHero.perms.canUser('viewRoster')()) {
-      Router.go('/');
-    }
-    Session.set("editStockTake", false);
-    Session.set("thisDate", this.params.date);
-  },
-  fastRender: true
-});
