@@ -4,10 +4,9 @@ Router.route('/roster/weekly/:year/:week', {
   path: '/roster/weekly/:year/:week',
   template: "weeklyRosterMainView",
   waitOn: function () {
-    var date = HospoHero.dateUtils.getDateByWeekDate({week: this.params.week, year: this.params.year});
     return [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weeklyRoster', date),
+      Meteor.subscribe('weeklyRoster', {week: this.params.week, year: this.params.year}),
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections'),
       Meteor.subscribe('salesPrediction'),
@@ -18,6 +17,10 @@ Router.route('/roster/weekly/:year/:week', {
   data: function () {
     if (!HospoHero.canUser('view roster')()) {
       Router.go("/");
+    }
+    return {
+      week: this.params.week,
+      year: this.params.year
     }
   },
   fastRender: true
