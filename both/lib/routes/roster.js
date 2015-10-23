@@ -10,9 +10,9 @@ Router.route('/roster/weekly/:year/:week', {
       Meteor.subscribe('weeklyRoster', date),
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections'),
-      Meteor.subscribe('salesPrediction'),
-      Meteor.subscribe('areaMenuItems'),
-      Meteor.subscribe('importedActualSales')
+      Meteor.subscribe("salesPrediction", parseInt(this.params.year), parseInt(this.params.week)),
+      Meteor.subscribe('importedActualSales', parseInt(this.params.year), parseInt(this.params.week)),
+      Meteor.subscribe('areaMenuItems')
     ];
   },
   data: function () {
