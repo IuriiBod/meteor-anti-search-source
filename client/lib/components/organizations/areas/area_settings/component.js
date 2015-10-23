@@ -26,11 +26,7 @@ component.state.areaUsers = function() {
 };
 
 component.action.deleteArea = function(id) {
-  Meteor.call('deleteArea', id, function(err) {
-    if(err) {
-      HospoHero.error(err);
-    }
-  });
+  Meteor.call('deleteArea', id, HospoHero.handleMethodResult());
 };
 
 component.action.toggleAddUser = function() {
@@ -38,9 +34,5 @@ component.action.toggleAddUser = function() {
 };
 
 component.action.removeUserFromArea = function (userId) {
-  Meteor.call('removeUserFromArea', userId, this.areaId, function(err) {
-    if(err) {
-      HospoHero.error(err);
-    }
-  });
+  Meteor.call('removeUserFromArea', userId, this.areaId, HospoHero.handleMethodResult());
 };

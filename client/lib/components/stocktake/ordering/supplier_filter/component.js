@@ -91,13 +91,13 @@ component.state.receiptExists = function(supplier) {
 };
 
 component.prototype.onListRendered = function() {
-  $(".expectedDeliveryDate").datepicker({
+  $(".expectedDeliveryDate")
+  .datepicker({
     'todayBtn': true,
     'todayHighlight': true,
     'weekStart': 1
-  });
-
-  $(".expectedDeliveryDate").on("changeDate", function(event) {
+  })
+  .on("changeDate", function(event) {
     var supplier = Session.get("activeSupplier");
     var version = Session.get("thisVersion");
     var date = event.date;
@@ -112,10 +112,6 @@ component.prototype.onListRendered = function() {
     if(receipt) {
       id = receipt._id;
     }
-    Meteor.call("updateReceipt", id, info, function(err, id) {
-      if(err) {
-        HospoHero.error(err);
-      } 
-    });
+    Meteor.call("updateReceipt", id, info, HospoHero.handleMethodResult());
   });
 };

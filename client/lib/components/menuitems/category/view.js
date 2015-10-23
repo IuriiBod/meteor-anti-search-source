@@ -5,13 +5,9 @@ Template.addNewCategory.events({
     if(!name) {
       alert("Category name should have a value");
     }
-    Meteor.call('createCategory', name, function(err, id) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        $(event.target).find('input').val("");
-        $("#addCategoryModal").modal('hide');
-      }
-    });
+    Meteor.call('createCategory', name, HospoHero.handleMethodResult(function() {
+      $(event.target).find('input').val("");
+      $("#addCategoryModal").modal('hide');
+    }));
   }
 });

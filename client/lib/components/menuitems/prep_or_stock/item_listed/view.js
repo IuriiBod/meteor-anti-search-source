@@ -15,21 +15,13 @@ Template.itemListed.rendered = function() {
         "quantity": 1
       };
       if(type == "prep") {
-        Meteor.call("addItemToMenu", menuId, {jobItems: doc}, function(err) {
-          if(err) {
-            HospoHero.error(err);
-          } else {
-            $(self).closest("tr").remove();
-          }
-        });
+        Meteor.call("addItemToMenu", menuId, {jobItems: doc}, HospoHero.handleMethodResult(function() {
+          $(self).closest("tr").remove();
+        }));
       } else if(type == "ing") {
-        Meteor.call("addItemToMenu", menuId, {ingredients: doc}, function(err) {
-          if(err) {
-            HospoHero.error(err);
-          } else {
-            $(self).closest("tr").remove();
-          }
-        });
+        Meteor.call("addItemToMenu", menuId, {ingredients: doc}, HospoHero.handleMethodResult(function() {
+          $(self).closest("tr").remove();
+        }));
       }
     }
   });

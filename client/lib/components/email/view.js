@@ -18,12 +18,8 @@ Template.composeMail.events({
       "to": to,
       "title": title,
       "emailText": mailBody
-    }
-    Meteor.call("generateReceipts", version, supplier, info, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    };
+    Meteor.call("generateReceipts", version, supplier, info, HospoHero.handleMethodResult());
     $("#composeMailModal").modal("hide");
   }
 });

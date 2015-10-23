@@ -8,9 +8,5 @@ component.action.changeEnable = function() {
 };
 
 component.action.submit = function(doc) {
-  Meteor.call("createLocation", doc, function (err) {
-    if(err) {
-      HospoHero.error(err);
-    }
-  });
+  Meteor.call("createLocation", doc, HospoHero.handleMethodResult());
 };

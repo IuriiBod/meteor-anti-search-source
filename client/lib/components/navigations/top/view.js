@@ -61,11 +61,7 @@ Template.topNavbar.events({
     event.preventDefault();
     var notifi = Notifications.find({"read": false, "to": Meteor.userId()}).fetch();
     notifi.forEach(function (not) {
-      Meteor.call("readNotifications", not._id, function (err) {
-        if (err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("readNotifications", not._id, HospoHero.handleMethodResult());
     });
   },
 

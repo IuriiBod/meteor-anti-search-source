@@ -6,20 +6,12 @@ Template.menuItemsListMainView.events({
 
   'click .subscribeMenuList': function(event) {
     event.preventDefault();
-    Meteor.call("subscribe", "menulist", function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("subscribe", "menulist", HospoHero.handleMethodResult());
   },
 
   'click .unSubscribeMenuList': function(event) {
     event.preventDefault();
-    Meteor.call("unSubscribe", "menulist", function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("unSubscribe", "menulist", HospoHero.handleMethodResult());
   }
 });
 

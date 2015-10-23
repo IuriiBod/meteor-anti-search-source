@@ -13,11 +13,7 @@ Template.stockCountingListItem.events({
         }
       }
 
-      Meteor.call("removeStocksFromAreas", id, sareaId, stockRefId, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("removeStocksFromAreas", id, sareaId, stockRefId, HospoHero.handleMethodResult());
     }
   }
 });

@@ -55,13 +55,9 @@ component.state.sections = function() {
 component.action.submit = function(info) {
   var self = this;
   var id = self.get("id");
-  Meteor.call("editShift", id, info, function(err, id) {
-    if(err) {
-      HospoHero.error(err);
-    } else {
-      var shift = Shifts.findOne(id);
-      self.set("shift", shift);
-      $("#shiftProfile").modal("hide");
-    }
-  });
+  Meteor.call("editShift", id, info, HospoHero.handleMethodResult(function(id) {
+    var shift = Shifts.findOne(id);
+    self.set("shift", shift);
+    $("#shiftProfile").modal("hide");
+  }));
 };

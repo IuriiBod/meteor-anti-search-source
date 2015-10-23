@@ -3,11 +3,7 @@ Template.organizationDetailsPage.events({
     e.preventDefault();
     if(confirm("Are you sure, you want to delete this organization?")) {
       var id = e.target.dataset.id;
-      Meteor.call('deleteOrganization', id, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call('deleteOrganization', id, HospoHero.handleMethodResult());
       $('.flyout-container').removeClass('show');
     }
   }

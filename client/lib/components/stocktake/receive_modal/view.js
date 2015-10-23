@@ -8,13 +8,9 @@ Template.receiveModal.events({
     var info = {
       "price": parseFloat(price),
       "stockPriceUpdated": doUpdate
-    }
+    };
     if(price && price > 0.00) {
-      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Price", info, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Price", info, HospoHero.handleMethodResult());
     }
 
     var stockId = null;
@@ -23,15 +19,11 @@ Template.receiveModal.events({
       stockId = order.stockId;
     }
     if(doUpdate) {
-      var info = {
+      info = {
         "costPerPortion": parseFloat(price)
-      }
+      };
       if(price && price > 0.00) {
-        Meteor.call("editIngredient", stockId, info, function(err) {
-          if(err) {
-            HospoHero.error(err);
-          }
-        });
+        Meteor.call("editIngredient", stockId, info, HospoHero.handleMethodResult());
       }
       
     }
@@ -48,15 +40,11 @@ Template.receiveModal.events({
     var orderId = Session.get("thisOrder");
     var info = {
       "quantity": parseFloat(invoiceQuantity)
-    }
+    };
     if(invoiceQuantity && receiptId && orderId) {
-      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Quantity", info, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        } 
-      });
+      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Quantity", info, HospoHero.handleMethodResult());
     }
     $(event.target).find('[name=invoiceQuantity]').val("");
     $("#wrongQuantityModal").modal("hide");
-  },
+  }
 });
