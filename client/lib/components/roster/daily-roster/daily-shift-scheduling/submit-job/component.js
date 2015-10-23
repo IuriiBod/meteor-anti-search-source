@@ -103,18 +103,14 @@ component.prototype.onJobRendered = function() {
 
 component.action.submit = function(info) {
   var self = this;
-  Meteor.call("createNewJob", info, function(err, id) {
-    if(err) {
-      HospoHero.error(err);
-    } else {
-      var prep = JobTypes.findOne({"name": "Prep"});
-      self.set("type", prep._id);
-      $("input").val("");
-      $('select').prop('selectedIndex', 0);
-      self.set("activeTime", 0);
-      $("#submitJobModal").modal("hide");
-    }
-  });
+  Meteor.call("createNewJob", info, HospoHero.handleMethodResult(function() {
+    var prep = JobTypes.findOne({"name": "Prep"});
+    self.set("type", prep._id);
+    $("input").val("");
+    $('select').prop('selectedIndex', 0);
+    self.set("activeTime", 0);
+    $("#submitJobModal").modal("hide");
+  }));
 };
 
 component.state.settings = function() {

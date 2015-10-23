@@ -47,20 +47,16 @@ Template.shiftProfile.events({
     }
   },
 
-  'click .deleteShift': function(event, instance) {
+  'click .deleteShift': function(event) {
     var shiftId = $(event.target).attr("data-id");
     var confirmDelete = confirm("Are you sure you want to delete this shift ?");
     if(confirmDelete) {
       if(shiftId) {
         var shift = Shifts.findOne(shiftId);
         if(shift) {
-          Meteor.call("deleteShift", shiftId, function(err) {
-            if(err) {
-              HospoHero.error(err);
-            } else {
-              $("#shiftProfile").modal("hide");
-            }
-          });
+          Meteor.call("deleteShift", shiftId, HospoHero.handleMethodResult(function() {
+            $("#shiftProfile").modal("hide");
+          }));
         }
       }
     }

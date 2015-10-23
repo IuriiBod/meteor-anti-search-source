@@ -24,11 +24,7 @@ Template.locationSettings.onRendered(function() {
     success: function(response, newValue) {
       var id = this.dataset.id;
       if(id) {
-        Meteor.call("updateLocationName", id, newValue, function(err) {
-          if(err) {
-            HospoHero.error(err);
-          }
-        });
+        Meteor.call("updateLocationName", id, newValue, HospoHero.handleMethodResult());
       }
     }
   });

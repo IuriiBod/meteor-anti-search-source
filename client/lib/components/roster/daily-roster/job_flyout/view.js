@@ -2,12 +2,9 @@ Template.jobFlyout.events({
   'click .removeAssignedJob': function(event) {
     event.preventDefault();
     var id = $(event.target).attr("data-id");
-    Meteor.call("assignJob", id, null, null, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
+    Meteor.call("assignJob", id, null, null, HospoHero.handleMethodResult(function() {
       $(".flyout-container").toggleClass("show");
-    });
+    }));
   },
 
   'click .theme-config-close-btn': function(event) {

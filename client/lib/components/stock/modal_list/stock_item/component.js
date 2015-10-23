@@ -31,11 +31,7 @@ component.prototype.onItemRendered = function() {
 
     if(self.name == "stockModal") {
       var sareaId = Session.get("activeSArea");
-      Meteor.call("assignStocksToAreas", id, sareaId, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("assignStocksToAreas", id, sareaId, HospoHero.handleMethodResult());
     } else if(self.name == "editJob") {
       var localId = Session.get("localId");
 
