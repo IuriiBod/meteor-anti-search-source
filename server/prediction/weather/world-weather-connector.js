@@ -99,7 +99,6 @@ WorldWeather.prototype.checkLocation = function () {
   var data = this._httpQuery("weather.ashx", {
     q: this._city
   });
-  console.log(this._city);
   return !data.data.error
 };
 
