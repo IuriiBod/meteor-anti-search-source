@@ -11,27 +11,37 @@ component.state.week = function () {
 };
 
 component.state.getTotalSales = function (date) {
-  var query = {date: TimeRangeQueryBuilder.forDay(date)};
-  var predictions = DailySales.find(query).fetch(); //SalesPrediction
-  var actual = DailySales.find(query).fetch(); //ImportedActualSales
+  var query = {date: TimeRangeQueryBuilder.forDay(date), 'relations.areaId': HospoHero.getCurrentAreaId()};
+  var dailySales = DailySales.find(query).fetch();
 
-  var actualTotal = getTotalPrice(actual);
-  var predictionTotal = getTotalPrice(predictions);
+  console.log('dailySales: ', dailySales);
+
+  var actualTotal = getTotalPrice(dailySales, 'actual');
+  var predictionTotal = getTotalPrice(dailySales, 'prediction');
   return {predicted: predictionTotal, actual: actualTotal};
 };
 
-var getTotalPrice = function (array) {
+var getTotalPrice = function (array, actualOrPrediction) {
 
   var total = 0;
   if (array && array.length > 0 && !!MenuItems.findOne()) {
     _.each(array, function (item) {
-      var quantity = item.quantity;
+
+      var quantity = 0;
+      switch (actualOrPrediction) {
+        case 'actual': quantity = item.actualQuantity || 0; break;
+        case 'prediction': quantity = item.predictionQuantity || 0; break;
+      };
 
       var price = 0;
       var menuItem = MenuItems.findOne({_id: item.menuItemId});
       if(menuItem && menuItem.salesPrice) {
         price = menuItem.salesPrice;
-      }
+      };
+
+      console.log('actualOrPre', actualOrPrediction);
+      console.log('quantity: ', quantity);
+      console.log('menuItem: ', menuItem);
 
       total += quantity * price;
     });

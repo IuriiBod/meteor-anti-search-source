@@ -12,7 +12,7 @@ component.state.actual = function() {
   wages = this.figureBox.calcStaffCost(shifts);
   
   var actualSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch(); //ImportedActualSales
-  sales = this.figureBox.calcSalesCost(actualSales);
+  sales = this.figureBox.calcSalesCost(actualSales, 'actual');
 
   var percentage = 0;
   if(sales > 0) {
@@ -32,7 +32,7 @@ component.state.forecast = function() {
   wages = this.figureBox.calcStaffCost(shifts);
   
   var forecastesSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch(); //SalesPrediction
-  sales = this.figureBox.calcSalesCost(forecastesSales);
+  sales = this.figureBox.calcSalesCost(forecastesSales, 'prediction');
 
   var percentage = 0;
   if(sales > 0) {

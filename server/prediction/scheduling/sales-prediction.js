@@ -34,8 +34,8 @@ var predict = function (days, locationId) {
         var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
         var predictItem = {
           date: moment(dateMoment).toDate(),
-          quantity: quantity,
-          updateAt: today,
+          predictionQuantity: quantity,
+          predictionUpdatedAt: today,
           menuItemId: item._id,
           relations: item.relations
         };
@@ -47,7 +47,7 @@ var predict = function (days, locationId) {
         //checking need for notification push
         if (i < 14 && currentData) {
           if (currentData) {
-            if (currentData.quantity != predictItem.quantity) {
+            if (currentData.quantity != predictItem.predictionQuantity) {
               var query = HospoHero.prediction.getMenuItemsForPredictionQuery({_id: predictItem.menuItemId});
               var itemName = MenuItems.findOne(query).name;
 

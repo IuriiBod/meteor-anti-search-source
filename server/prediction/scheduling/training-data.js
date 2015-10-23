@@ -27,12 +27,13 @@ var createUpdateActualSalesFunction = function (locationId) {
         var menuItem = HospoHero.prediction.getMenuItemByRevelName(menuItemName, locationId);
 
         if (menuItem) {
-          updateActualSales({
-            quantity: salesData.menuItems[menuItemName],
+          var item = {
+            actualQuantity: salesData.menuItems[menuItemName],
             date: salesData.createdDate,
             menuItemId: menuItem._id,
             relations: menuItem.relations
-          });
+          };
+          updateActualSales(item);
         }
       });
 
