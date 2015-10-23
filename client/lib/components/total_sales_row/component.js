@@ -14,26 +14,20 @@ component.state.getTotalSales = function (date) {
   var query = {date: TimeRangeQueryBuilder.forDay(date), 'relations.areaId': HospoHero.getCurrentAreaId()};
   var dailySales = DailySales.find(query).fetch();
 
-  console.log('dailySales: ', dailySales);
-
-  var actualTotal = getTotalPrice(dailySales, 'actual');
-  var predictionTotal = getTotalPrice(dailySales, 'prediction');
+  var actualTotal = getTotalPrice(dailySales, 'actualQuantity');
+  var predictionTotal = getTotalPrice(dailySales, 'predictionQuantity');
   return {predicted: predictionTotal, actual: actualTotal};
 };
 
-var getTotalPrice = function (array, actualOrPrediction) {
+var getTotalPrice = function (array, propertyName) {
 
   var total = 0;
   if (array && array.length > 0 && !!MenuItems.findOne()) {
     _.each(array, function (item) {
 
-      var quantity = 0;
-      switch (actualOrPrediction) {
-        case 'actual': quantity = item.actualQuantity || 0; break;
-        case 'prediction': quantity = item.predictionQuantity || 0; break;
-      };
-
+      var quantity = item[propertyName] || 0;
       var price = 0;
+
       var menuItem = MenuItems.findOne({_id: item.menuItemId});
       if(menuItem && menuItem.salesPrice) {
         price = menuItem.salesPrice;

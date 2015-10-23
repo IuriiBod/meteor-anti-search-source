@@ -1,16 +1,10 @@
 FigureBox  = function FigureBox() {};
 
-FigureBox.prototype.calcSalesCost = function(sales, actualOrPrediction) {
+FigureBox.prototype.calcSalesCost = function(sales, propertyName) {
     var totalCost = 0;
     if(sales && sales.length > 0 && !!MenuItems.findOne()) {
         _.each(sales, function (item) {
-            var quantity = 0;
-
-            switch (actualOrPrediction) {
-                case 'actual': quantity = item.actualQuantity; break;
-                case 'prediction': quantity = item.predictionQuantity; break;
-            }
-
+            var quantity = item[propertyName];
             var price = 0;
 
             var menuItem = MenuItems.findOne({_id: item.menuItemId});

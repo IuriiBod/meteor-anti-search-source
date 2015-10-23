@@ -9,7 +9,7 @@ component.state.weeklySale = function () {
 
     if (this.week < moment().week()) {
         var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch(); // ImportedActualSales
-        var total = this.figureBox.calcSalesCost(sales, 'actual');
+        var total = this.figureBox.calcSalesCost(sales, 'actualQuantity');
 
         //for current week: past days actual sales and for future dates forecasted sales
     } else if (this.week == moment().week()) {
@@ -31,19 +31,19 @@ component.state.weeklySale = function () {
                 $lte: this.weekRange.sunday
             }
         }, {sort: {date: 1}}).fetch();
-        var total = this.figureBox.calcSalesCost(actualSales, 'actual') + this.figureBox.calcSalesCost(predictSales, 'prediction');
+        var total = this.figureBox.calcSalesCost(actualSales, 'actualQuantity') + this.figureBox.calcSalesCost(predictSales, 'predictionQuantity');
 
         //for future weeks: all forecasted sales
     } else if (this.week > moment().week()) {
         sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch(); //SalesPrediction
-        var total = this.figureBox.calcSalesCost(sales, 'prediction');
+        var total = this.figureBox.calcSalesCost(sales, 'predictionQuantity');
     }
     return total;
 };
 
 component.state.forecastedSale = function () {
     var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch(); //SalesPrediction
-    var total = this.figureBox.calcSalesCost(sales, 'prediction');
+    var total = this.figureBox.calcSalesCost(sales, 'predictionQuantity');
     return total;
 };
 
