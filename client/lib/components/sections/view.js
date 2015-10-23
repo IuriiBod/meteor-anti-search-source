@@ -3,13 +3,9 @@ Template.sections.events({
     event.preventDefault();
     var name = $(event.target).find('[name=sectionName]').val();
     if(name) {
-      Meteor.call("createSection", name.trim(), function(err) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          $(event.target).find('[name=sectionName]').val("");
-        }
-      });
+      Meteor.call("createSection", name.trim(), HospoHero.handleMethodResult(function() {
+        $(event.target).find('[name=sectionName]').val("");
+      }));
     }
   },
 
@@ -19,11 +15,7 @@ Template.sections.events({
     var confirmDelete = confirm("Are you sure you want to delete this section?");
     if(confirmDelete) {
       if(id) {
-        Meteor.call("deleteSection", id, function(err) {
-          if(err) {
-            HospoHero.error(err);
-          }
-        });
+        Meteor.call("deleteSection", id, HospoHero.handleMethodResult());
       }
     }
   }
@@ -39,11 +31,7 @@ Template.sections.rendered = function() {
     success: function(response, newValue) {
       var id = $(this).closest("tr").attr("data-id");
       if(id) {
-        Meteor.call("editSection", id, newValue, function(err) {
-          if(err) {
-            HospoHero.error(err);
-          }
-        });
+        Meteor.call("editSection", id, newValue, HospoHero.handleMethodResult());
       }
     }
   });

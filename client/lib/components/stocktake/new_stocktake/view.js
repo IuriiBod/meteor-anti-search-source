@@ -1,15 +1,11 @@
 Template.newStocktakeModal.events({
   'click .createNewStocktake': function(event) {
     event.preventDefault();
-    $("#newStocktakeModal").modal("hide")
+    $("#newStocktakeModal").modal("hide");
     var date = moment().format("YYYY-MM-DD");
-    Meteor.call("createMainStocktake", date, function(err, id) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        Router.go("stocktakeCounting", {"_id": id});
-      }
-    });
+    Meteor.call("createMainStocktake", date, HospoHero.handleMethodResult(function(id) {
+      Router.go("stocktakeCounting", {"_id": id});
+    }));
   },
 
   'click .gotoExistingStocktake': function(event) {

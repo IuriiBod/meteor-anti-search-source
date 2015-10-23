@@ -13,11 +13,7 @@ Template.quantity.onRendered(function () {
         newValue = !isNaN(newValue) ? newValue : 0;
 
         item.type = item.type=="ings"?"ingredients":"jobItems";
-        Meteor.call('editMenuIngredientsOrJobItems', menuItemId, {"_id": item.id, "quantity": newValue}, item.type, function (err) {
-          if (err) {
-            HospoHero.error(err);
-          }
-        });
+        Meteor.call('editMenuIngredientsOrJobItems', menuItemId, {"_id": item.id, "quantity": newValue}, item.type, HospoHero.handleMethodResult());
       }
     }
   });

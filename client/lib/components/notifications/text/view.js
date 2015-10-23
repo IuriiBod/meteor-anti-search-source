@@ -5,13 +5,9 @@ Template.notifiText.events({
     var shiftId = $(event.target).closest("a").attr("data-shift");
     var shift = Shifts.findOne(shiftId);
     if(shift) {
-      Meteor.call("confirmClaim", shiftId, user, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          HospoHero.info("Shift claim confirmed");
-        }
-      });
+      Meteor.call("confirmClaim", shiftId, user, HospoHero.handleMethodResult(function() {
+        HospoHero.info("Shift claim confirmed");
+      }));
     }
   },
 
@@ -21,13 +17,9 @@ Template.notifiText.events({
     var shiftId = $(event.target).closest("a").attr("data-shift");
     var shift = Shifts.findOne(shiftId);
     if(shift) {
-      Meteor.call("rejectClaim", shiftId, user, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          HospoHero.info("Shift claim rejected");
-        }
-      });
+      Meteor.call("rejectClaim", shiftId, user, HospoHero.handleMethodResult(function() {
+        HospoHero.info("Shift claim rejected");
+      }));
     }
   }
 });

@@ -6,23 +6,15 @@ Template.jobItemsListMainView.events({
 
   'click .subscribeJobsList': function(event) {
     event.preventDefault();
-    Meteor.call("subscribe", "joblist", function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("subscribe", "joblist", HospoHero.handleMethodResult());
   },
 
   'click .unSubscribeJobsList': function(event) {
     event.preventDefault();
-    Meteor.call("unSubscribe", "joblist", function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("unSubscribe", "joblist", HospoHero.handleMethodResult());
   },
 
-  'click .jobtypesPanel>li': function(e, tpl) {
+  'click .jobtypesPanel>li': function(e) {
     Session.set("type", $(e.target).parent().attr("data-id"));
     JobItemsSearch.cleanHistory();
     var selector = {

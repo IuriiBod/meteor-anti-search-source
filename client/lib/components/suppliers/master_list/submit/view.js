@@ -4,13 +4,9 @@ Template.newSupplier.events({
     var name = $(event.target).find('[name=name]').val();
     var email = $(event.target).find('[name=email]').val();
     var phone = $(event.target).find('[name=phone]').val();
-    Meteor.call("createSupplier", name, email, phone, function(err, id) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        Router.go("supplierProfile", {"_id": id});
-      }
-    });
+    Meteor.call("createSupplier", name, email, phone, HospoHero.handleMethodResult(function(id) {
+      Router.go("supplierProfile", {"_id": id});
+    }));
     $("#addNewSupplierModal").modal("hide");
   }
 });

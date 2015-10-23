@@ -118,20 +118,18 @@ Template.invitationAccept.events({
       };
 
       for(var key in validationResult) {
-        if(nonProfileItems.indexOf(key) == -1) {
-          user.profile[key] = validationResult[key];
-        } else {
-          user[key] = validationResult[key];
+        if(validationResult.hasOwnProperty(key)) {
+          if(nonProfileItems.indexOf(key) == -1) {
+            user.profile[key] = validationResult[key];
+          } else {
+            user[key] = validationResult[key];
+          }
         }
       }
 
-      Meteor.call('acceptInvitation', invitationId, user, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          Router.go('home');
-        }
-      });
+      Meteor.call('acceptInvitation', invitationId, user, HospoHero.handleMethodResult(function() {
+        Router.go('home');
+      }));
     }
   }
 });

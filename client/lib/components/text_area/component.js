@@ -84,58 +84,51 @@ component.action.submit = function(text) {
   var linkedText = autolinker.link(textHtml);
 
   if(self.type == "newsFeedMainTextBox" || self.type == "newsFeedSubTextBox") {
-    Meteor.call("createNewsfeed", linkedText, ref, function(err, id) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        notify(self.type, id, matches, ref);
-      }
+    Meteor.call("createNewsfeed", linkedText, ref, HospoHero.handleMethodResult(function(id) {
+      notify(self.type, id, matches, ref);
       $('.message-input-post').val("");
-    });
+    }));
 
   } else if(this.type == "submitComment") {
-    Meteor.call("createComment", linkedText, ref, function(err, id) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        var reference = null;
-        var ref_name = null;
-        var ref_type = refType;
-        
-        if(refType == "menu") {
-          reference = MenuItems.findOne(ref);
-        } else if(refType == "job") {
-          reference = JobItems.findOne(ref);
-        } else if(refType == "workerJob") {
-          reference = Jobs.findOne(ref) ;
-        }
+    Meteor.call("createComment", linkedText, ref, HospoHero.handleMethodResult(function(id) {
+      var reference = null;
+      var ref_name = null;
+      var ref_type = refType;
 
-        if(reference) {
-          ref_name = reference.name;
-        }
-        var options = {
-          "title": "New comment on " + ref_name + " by " + Meteor.user().username,
-          "users": matches,
-          "commentId": id,
-          "type": ref_type
-        }
-        sendNotifi(ref, "comment", options);
+      if(refType == "menu") {
+        reference = MenuItems.findOne(ref);
+      } else if(refType == "job") {
+        reference = JobItems.findOne(ref);
+      } else if(refType == "workerJob") {
+        reference = Jobs.findOne(ref) ;
       }
+
+      if(reference) {
+        ref_name = reference.name;
+      }
+      var options = {
+        "title": "New comment on " + ref_name + " by " + Meteor.user().username,
+        "users": matches,
+        "commentId": id,
+        "type": ref_type
+      };
+      sendNotifi(ref, "comment", options);
       $('.message-input-post').val("");
-    });
+    }));
   }
-}
+};
 
 notify = function(type, id, matches, ref) {
-  if(type == "newsFeedMainTextBox") {
+  var options;
 
+  if(type == "newsFeedMainTextBox") {
     if(matches.length > 0) {
-      var options = {
+      options = {
         "title": "You've been mentioned in new newsfeed created by " + Meteor.user().username,
         "users": matches,
         "newsfeedId": id,
         "type": "new"
-      }
+      };
       sendNotifi(id, "newsfeed", options);
     }
   } else if(type == "newsFeedSubTextBox") {
@@ -151,12 +144,12 @@ notify = function(type, id, matches, ref) {
       
       if(createdBy._id != Meteor.userId()) {
         //created user
-        var options = {
+        options = {
           "title": name + " commented on your newsfeed post",
           "users": [createdBy.username],
           "newsfeedId": id,
           "type": "newsfeedComment"
-        }
+        };
         sendNotifi(ref, "newsfeed", options);
       }
 
@@ -168,25 +161,20 @@ notify = function(type, id, matches, ref) {
 
         //tagged users 
         if(matches.length > 0) {
-          var options = {
+          options = {
             "title": "You've been mentioned in newsfeed by " + name,
             "users": matches,
             "newsfeedId": id,
             "type": "newsfeedComment"
-          }
+          };
           sendNotifi(ref, "newsfeed", options);
         }
       }
     }
   }
-}
+};
 
 
 sendNotifi = function(ref, type, options) {
-  Meteor.call("sendNewsfeedNotifications", ref, type, options, function(err) {
-    if(err) {
-      HospoHero.error(err);
-    }
-    return;
-  });  
-}
+  Meteor.call("sendNewsfeedNotifications", ref, type, options, HospoHero.handleMethodResult());
+};

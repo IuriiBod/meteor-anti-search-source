@@ -29,7 +29,6 @@ Meteor.methods({
   //  return true;
   //},
 
-  // TODO: Rewrite it
   'deleteOrganization': function(id) {
     var user = Meteor.user();
     if(!user) {

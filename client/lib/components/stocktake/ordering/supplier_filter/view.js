@@ -20,15 +20,11 @@ Template.supplierFilter.events({
       "through": orderType,
       "details": address,
       "deliveryDate": new Date(deliveryDate).getTime()
-    }
+    };
     if(orderType == "emailed") {
       $("#composeMailModal").modal();
     } else {
-      Meteor.call("generateReceipts", version, supplier, info, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("generateReceipts", version, supplier, info, HospoHero.handleMethodResult());
     }
   }
 });

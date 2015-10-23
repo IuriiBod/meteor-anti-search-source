@@ -2,11 +2,7 @@ Template.schedulingJob.events({
   'click .set-job-status': function(event) {
     event.preventDefault();
     var id = $(event.target).attr("data-id");
-    Meteor.call("setJobStatus", id, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    }); 
+    Meteor.call("setJobStatus", id, HospoHero.handleMethodResult());
   },
 
   'click .removeUnassignedJob': function(event) {
@@ -14,11 +10,7 @@ Template.schedulingJob.events({
     var id = $(event.target).attr("data-id");
     var confirmDelete = confirm("Are you sure you want to permanently delete this item ?");
     if(confirmDelete) {
-      Meteor.call("deleteJob", id, null, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      }); 
+      Meteor.call("deleteJob", id, null, HospoHero.handleMethodResult());
     }
   },
 
