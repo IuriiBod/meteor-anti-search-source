@@ -2,28 +2,26 @@ var component = FlowComponents.define("pageHeading", function (props) {
   this.title = props.title;
   this.category = props.category;
   this.subCategory = props.subCategory;
-  this.type = props.name;
+  this.set('type', props.name);
   this.id = props.id;
 });
 
+component.state.heading = function () {
+  return {
+    category: this.category,
+    subCategory: this.subCategory
+  };
+};
+
 component.state.title = function () {
   var title = this.title;
-  if (Router.current().params.type == "archive" || Router.current().params.status == "archived") {
+
+  if(this.get('isActualSales')) {
+    title += ' on ' + Router.current().params.date;
+  } else if (Router.current().params.type == "archive" || Router.current().params.status == "archived") {
     title = "Archived " + title;
   }
   return title;
-};
-
-component.state.type = function () {
-  return this.type;
-};
-
-component.state.category = function () {
-  return this.category;
-};
-
-component.state.subCategory = function () {
-  return this.subCategory;
 };
 
 //todo get rid of this
@@ -68,13 +66,6 @@ component.state.isActualSales = function () {
 
 component.state.isDailyRoster = function () {
   return this.type == "dailyroster";
-};
-
-component.state.routeDate = function () {
-  var date = Router.current().params.date;
-  if (date) {
-    return date;
-  }
 };
 
 component.state.isMenuListSubscribed = function () {

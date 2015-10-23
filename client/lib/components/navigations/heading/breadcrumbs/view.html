@@ -1,0 +1,43 @@
+<template name="breadcrumbs">
+  <!-- BREADCRUMBS -->
+  <div class="col-sm-5">
+    <h1>{{state$test.category}}</h1>
+    <h3>{{state$test.subCategory}}</h3>
+    <h2>
+      {{#if state$isMenuDetailed}}
+        {{#if canEditMenu}}
+          <a href="#"
+             class="editMenuItemName"
+             data-id="{{state$id}}"
+             style="color: #676a6c; border-color: #676a6c;">
+            {{state$title}}
+          </a>
+        {{else}}
+          {{state$title}}
+        {{/if}}
+      {{else}}
+        {{state$title}}
+      {{/if}}
+    </h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="/">Home</a>
+      </li>
+      {{#if state$category}}
+        <li>
+          <a href="#" class="breadcrumbCategory" data-category="{{state$category}}">{{state$category}}</a>
+        </li>
+      {{/if}}
+      {{#if state$subCategory}}
+        <li>
+          <a href="#" class="breadcrumbSubCategory" data-category="{{state$category}}"
+             data-id="{{state$id}}">{{state$subCategory}}</a>
+        </li>
+      {{/if}}
+      <li class="active">
+        <strong>{{state$title}}</strong>
+      </li>
+    </ol>
+  </div>
+  <!-- /BREADCRUMBS -->
+</template>

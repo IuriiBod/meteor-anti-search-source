@@ -1,49 +1,10 @@
 <template name="pageHeading">
   <div class="row wrapper border-bottom white-bg page-heading">
-    <!-- BREADCRUMBS -->
-    <div class="col-sm-5">
-      <h2>
-        {{#if state$isMenuDetailed}}
-          {{#if canEditMenu}}
-            <a href="#"
-               class="editMenuItemName"
-               data-id="{{state$id}}"
-               style="color: #676a6c; border-color: #676a6c;">
-              {{state$title}}
-            </a>
-          {{else}}
-            {{state$title}}
-          {{/if}}
-        {{else}}
-          {{state$title}} {{#if state$isActualSales}} on {{state$routeDate}}{{/if}}
-        {{/if}}
-      </h2>
-      <ol class="breadcrumb">
-        <li>
-          <a href="/">Home</a>
-        </li>
-        {{#if state$category}}
-          <li>
-            <a href="#" class="breadcrumbCategory" data-category="{{state$category}}">{{state$category}}</a>
-          </li>
-        {{/if}}
-        {{#if state$subCategory}}
-          <li>
-            <a href="#" class="breadcrumbSubCategory" data-category="{{state$category}}"
-               data-id="{{state$id}}">{{state$subCategory}}</a>
-          </li>
-        {{/if}}
-        <li class="active">
-          <strong>{{state$title}}</strong>
-        </li>
-      </ol>
-    </div>
-    <!-- /BREADCRUMBS -->
+    {{> render component='breadcrumbs' heading=state$heading}}
 
     <div class="col-sm-7">
       {{#if state$isMenuList}}
         <div class="title-action">
-
           {{#if isArchive}}
             {{#linkTo route="menuItemsMaster" category="all" status="all" class="btn btn-info menuItemsRefresh"}}
               <i class="fa fa-long-arrow-left"></i> Active Items
