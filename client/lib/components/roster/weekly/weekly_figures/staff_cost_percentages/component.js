@@ -5,14 +5,14 @@ var component = FlowComponents.define("staffCostPercentagesTr", function(props) 
 
 component.state.actual = function() {
   var self = this;
-  var wages = 0;
-  var sales = 0;
+  var wages;
+  var sales;
 
   var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(self.dayObj.date), "status": {$ne: "draft"}, "type": null}).fetch();
   wages = this.figureBox.calcStaffCost(shifts);
   
-  var actualSales = ImportedActualSales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch();
-  sales = this.figureBox.calcSalesCost(actualSales);
+  var actualSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch(); //ImportedActualSales
+  sales = this.figureBox.calcSalesCost(actualSales, 'actualQuantity');
 
   var percentage = 0;
   if(sales > 0) {
@@ -25,14 +25,14 @@ component.state.actual = function() {
 
 component.state.forecast = function() {
   var self = this;
-  var wages = 0;
-  var sales = 0;
+  var wages;
+  var sales;
 
   var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(self.dayObj.date), "status": {$ne: "finished"}, "type": null}).fetch();
   wages = this.figureBox.calcStaffCost(shifts);
   
-  var forecastesSales = SalesPrediction.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch();
-  sales = this.figureBox.calcSalesCost(forecastesSales);
+  var forecastesSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch(); //SalesPrediction
+  sales = this.figureBox.calcSalesCost(forecastesSales, 'predictionQuantity');
 
   var percentage = 0;
   if(sales > 0) {

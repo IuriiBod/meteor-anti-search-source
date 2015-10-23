@@ -12,48 +12,40 @@ component.state.weekPrediction = function () {
     return moment(date).format('YYYY-MM-DD');
   });
 
-  var prediction = _.map(SalesPrediction.find({
+  var dailySales = _.map(DailySales.find({
     date: TimeRangeQueryBuilder.forWeek(monday),
     menuItemId: id
   }, {sort: {date: 1}}).fetch(), function (item) {
-    return {date: moment(item.date).format('YYYY-MM-DD'), predictionQuantity: item.quantity};
+    return {date: moment(item.date).format('YYYY-MM-DD'), actualQuantity: item.actualQuantity, predictionQuantity: item.predictionQuantity};
   });
-  var actual = _.map(ImportedActualSales.find({
-    date: TimeRangeQueryBuilder.forWeek(monday),
-    menuItemId: id
-  }, {sort: {date: 1}}).fetch(), function (item) {
-    return {date: moment(item.date).format('YYYY-MM-DD'), actualQuantity: item.quantity};
-  });
+  dailySales = _.sortBy(importMissingData(dates, dailySales), 'date');
+  return dailySales;
 
-  prediction = _.sortBy(importMissingData(dates, prediction, "predictionQuantity"), "date");
-  actual = _.sortBy(importMissingData(dates, actual, "actualQuantity"), "date");
-  var result = mergeArrays(prediction, actual);
-  return result;
 };
 
-var importMissingData = function (dates, importArray, keyName) {
+var importMissingData = function (dates, importArray) {
+
+  var executedArray = importArray.slice(0);
+
   _.each(dates, function (dateItem) {
-    var push = true;
-    _.each(importArray, function (item) {
-      if (dateItem === item.date) {
-        push = false;
+    var toPushMissingItem = true;
+    _.each(importArray, function (item, index) {
+      if (item.date === dateItem) {
+        item.actualQuantity = item.actualQuantity || 0;
+        item.predictionQuantity = item.predictionQuantity || 0;
+        executedArray[index] = item;
+        toPushMissingItem = false;
       }
     });
 
-    if (push) {
-      var toPush = {
-        date: dateItem
-      };
-      toPush[keyName] = 0;
-      importArray.push(toPush);
-    }
+    if (toPushMissingItem) {
+      executedArray.push({
+        date: dateItem,
+        actualQuantity: 0,
+        predictionQuantity: 0
+      });
+    };
   });
-  return importArray
-};
 
-var mergeArrays = function (array1, array2) {
-  for (var i = 0; i < array1.length; i++) {
-    _.extend(array1[i], array2[i])
-  }
-  return array1
+  return executedArray;
 };

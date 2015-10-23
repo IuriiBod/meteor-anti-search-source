@@ -149,12 +149,14 @@ var MockOrderItemDataSource = function MockOrderItemDataSource() {
 };
 
 MockOrderItemDataSource.prototype.load = function () {
-  var items = MenuItems.find({}).fetch();
+  var query = HospoHero.prediction.getMenuItemsForPredictionQuery();
+  var items = MenuItems.find(query).fetch();
+
   var result = {
     meta: {
-      "limit": 5000,
-      "offset": 0,
-      "total_count": 616142
+      'limit': 5000,
+      'offset': 0,
+      'total_count': 616142
     },
     objects: []
   };
@@ -169,7 +171,7 @@ MockOrderItemDataSource.prototype.load = function () {
     };
     result.objects.push(pushObject);
   });
-  this.currentDate.subtract(1, "d");
+  this.currentDate.subtract(1, 'd');
   return result
 };
 
