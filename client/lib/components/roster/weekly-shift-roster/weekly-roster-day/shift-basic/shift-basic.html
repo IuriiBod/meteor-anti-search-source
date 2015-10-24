@@ -9,8 +9,7 @@
     <div class="agile-detail">
       <i class="fa fa-user"></i>
       {{#if canEditRoster}}
-        <a href="#" class="select-worker" data-pk="{{assignedTo}}"
-           data-value="{{assignedTo}}">{{username assignedTo}}</a>
+        {{> shiftBasicWorkerEditable}}
       {{else}}
         {{#if assignedTo}}
           {{username assignedTo}}
@@ -23,8 +22,8 @@
     <div class="agile-detail">
       <i class="fa fa-clock-o"></i>
       {{#if canEditRoster}}
-        <a href="#" class="shiftStartTime" data-pk="1">{{timeFormat startTime}}</a> -
-        <a href="#" class="shiftEndTime" data-pk="1">{{timeFormat endTime}}</a>
+        {{> shiftBasicTimeEditable shift=this propety="shiftStartTime"}} -
+        {{> shiftBasicTimeEditable shift=this propety="shiftEndTime"}}
       {{else}}
         {{timeFormat startTime}} - {{timeFormat endTime}}
       {{/if}}
@@ -33,8 +32,7 @@
     <div class="agile-detail">
       <i class="fa fa-angle-double-right"></i>
       {{#if canEditRoster}}
-        <a href="#" class="section" data-pk="{{section}}"
-           data-value="{{section}}">{{sectionById section}}</a>
+        {{> shiftBasicSectionEditable}}
       {{else}}
         {{sectionById section}}
       {{/if}}

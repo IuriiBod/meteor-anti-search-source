@@ -1,3 +1,6 @@
+/**
+ * Shift document checker
+ */
 var ShiftDocument = Match.Where(function (shift) {
   check(shift, {
     startTime: Date,
@@ -56,27 +59,78 @@ var ShiftDocument = Match.Where(function (shift) {
   return true;
 });
 
+/**
+ * This object provides intelligent user notification about shift changes
+ */
+var ShiftPropertyChangeLogger = {
+  trackedProperties: {
+    startTime: 'start time',
+    endTime: 'end time',
+    shiftDate: 'shift date',
+    assignedTo: 'assignment'
+  },
 
-var logShiftUpdate = function (newShift, userId) {
-  if (newShift.assignedTo) {
-    var oldShift = Shifts.findOne({_id: newShift._id});
+  propertiesFormatters: {
+    startTime: HospoHero.dateUtils.timeFormat,
+    endTime: HospoHero.dateUtils.timeFormat,
+    shiftDate: HospoHero.dateUtils.shortDateFormat,
+    assignedTo: HospoHero.username
+  },
 
-    if (oldShift.assignedTo != newShift.assignedTo && newShift.published) {
-      //add shift update
-      var updateText = "You have been assigned to shift dated <b>" +
-        HospoHero.dateUtils.intervalDateFormat(newShift.startTime, newShift.endTime) + "</b>";
+  _formatProperty: function (shift, property) {
+    return this.propertiesFormatters[property](shift[property]);
+  },
 
-      var updateDocument = {
-        to: newShift.assignedTo,
-        userId: userId,
-        shiftId: oldShift._id,
-        text: updateText,
-        locationId: HospoHero.getCurrentArea(userId).locationId,
-        type: "update"
+  _notificationTitle: function (shift) {
+    return 'Update on shift dated ' + HospoHero.dateUtils.intervalDateFormat(shift.startTime, shift.endTime);
+  },
+
+  _notificationChangeMessage: function (oldShift, newShift, propertyName) {
+    return this.trackedProperties[propertyName] + ' has been updated to ' + this._formatProperty(newShift, propertyName);
+  },
+
+  _sendNotification: function (message, shift, fromUserId) {
+    var text = this._notificationTitle(shift) + ': ' + message;
+
+    var updateDocument = {
+      to: shift.assignedTo,
+      userId: fromUserId,
+      shiftId: shift._id,
+      text: text,
+      locationId: HospoHero.getCurrentArea(userId).locationId,
+      type: "update"
+    };
+
+    logger.info("Shift update insert");
+    ShiftsUpdates.insert(updateDocument);
+  },
+
+  _trackUserRemovedFromShift: function (oldShift, newShift, userId) {
+    if (oldShift.assignedTo && oldShift.assignedTo !== newShift.assignedTo) {
+      var message = 'You have been removed from the shift';
+      this._sendNotification(message, oldShift, userId);
+    }
+  },
+
+  trackChanges: function (newShift, userId) {
+    if (newShift.published) {
+      var oldShift = Shifts.findOne({_id: newShift._id});
+
+      var isPropertyChanged = function (propertyName) {
+        return oldShift[propertyName] !== newShift[propertyName];
       };
 
-      logger.info("Shift update insert");
-      ShiftsUpdates.insert(updateDocument);
+      var self = this;
+      var shiftChangesMessages = Object.keys(this.trackedProperties).filter(function (propertyName) {
+        return isPropertyChanged(propertyName);
+      }).map(function (propertyName) {
+        return self._notificationChangeMessage(oldShift, newShift, propertyName);
+      });
+
+      var fullMessage = shiftChangesMessages.join(', ');
+      this._sendNotification(fullMessage, oldShift, userId);
+
+      this._trackUserRemovedFromShift(oldShift, newShift, userId);
     }
   }
 };
@@ -135,7 +189,7 @@ Meteor.methods({
       logger.error(403, "User not permitted to create shifts");
     }
 
-    logShiftUpdate(updatedShift, userId);
+    ShiftPropertyChangeLogger.trackChanges(updatedShift, userId);
 
     Shifts.update({'_id': updatedShift._id}, {$set: updatedShift});
     logger.info("Shift details updated", {"shiftId": updatedShift._id});
