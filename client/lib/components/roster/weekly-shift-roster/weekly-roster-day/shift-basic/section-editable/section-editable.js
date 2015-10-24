@@ -1,8 +1,8 @@
 Template.shiftBasicSectionEditable.onRendered(function () {
-  this.$('.section').editable(createSectionToAssignEditableConfig(this.data));
+  this.$('.section').editable(createSectionToAssignEditableConfig(this));
 });
 
-var sectionSourceAssignMixin = function (editableConfig, shift) {
+var sectionSourceAssignMixin = function (editableConfig, templateInstance) {
   var sourceFn = function () {
     var sections = Sections.find({
       "relations.areaId": HospoHero.getCurrentAreaId()
@@ -19,14 +19,16 @@ var sectionSourceAssignMixin = function (editableConfig, shift) {
 };
 
 
-var createSectionToAssignEditableConfig = function (shift) {
+var createSectionToAssignEditableConfig = function (templateInstance) {
   var onSuccess = function (response, newSection) {
+    var shift = templateInstance.data;
     newSection = newSection === "Open" ? null : newSection;
 
-    var obj = {"_id": shift._id, "section": newSection};
-    var shift = Shifts.findOne(shiftId);
+    shift.section = newSection;
+    Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
 
+  var shift = templateInstance.data;
   var editableConfig = {
     type: "select",
     title: "Select section to assign",
@@ -34,10 +36,11 @@ var createSectionToAssignEditableConfig = function (shift) {
     showbuttons: false,
     emptytext: 'Open',
     defaultValue: "Open",
+    value: shift.section,
     success: onSuccess
   };
 
-  sectionSourceAssignMixin(editableConfig, shift);
+  sectionSourceAssignMixin(editableConfig, templateInstance);
 
   return editableConfig;
 };

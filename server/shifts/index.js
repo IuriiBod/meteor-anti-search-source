@@ -39,11 +39,12 @@ var ShiftDocument = Match.Where(function (shift) {
     }
 
     var existInShift = !!Shifts.findOne({
+      _id: {$ne: shift._id},
       shiftDate: TimeRangeQueryBuilder.forDay(shift.shiftDate),
       assignedTo: shift.assignedTo
     });
     if (existInShift) {
-      logger.error("User already exist in a shift", {"date": date});
+      logger.error("User already exist in a shift", {"date": shift.shiftDate});
       throw new Meteor.Error(404, "Worker has already been assigned to a shift");
     }
   }
