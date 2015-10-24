@@ -22,8 +22,8 @@
     <div class="agile-detail">
       <i class="fa fa-clock-o"></i>
       {{#if canEditRoster}}
-        {{> shiftBasicTimeEditable shift=this propety="shiftStartTime"}} -
-        {{> shiftBasicTimeEditable shift=this propety="shiftEndTime"}}
+        {{> shiftBasicTimeEditable shift=this property="startTime" caption="start time"}} -
+        {{> shiftBasicTimeEditable shift=this property="endTime" caption="end time"}}
       {{else}}
         {{timeFormat startTime}} - {{timeFormat endTime}}
       {{/if}}

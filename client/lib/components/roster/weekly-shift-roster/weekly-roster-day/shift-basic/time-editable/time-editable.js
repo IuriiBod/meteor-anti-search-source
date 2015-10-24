@@ -1,64 +1,30 @@
+console.log('test');
+
 Template.shiftBasicTimeEditable.onRendered(function () {
-  this.$(".time").editable(createShiftStartTimeEditableConfig(this.data));
+  //var editableSelector = '.' + this.data.property + '-picker';
+  this.$('.time').editable(createShiftEndTimeEditableConfig(this));
 });
 
-var createShiftStartTimeEditableConfig = function (shift) {
-  return {
-    type: 'combodate',
-    title: 'Select start time',
-    template: "HH:mm",
-    viewformat: "HH:mm",
-    format: "YYYY-MM-DD HH:mm",
-    display: false,
-    showbuttons: true,
-    inputclass: "editableTime",
-    mode: 'inline',
-    success: function (response, newValue) {
-      var shiftId = $(this).closest("li").attr("data-id");
-      var obj = {"_id": shiftId};
-      var shift = Shifts.findOne(shiftId);
-      if (shift) {
-        if (origin == "weeklyrostertemplate") {
-          obj.startTime = newValue;
-        } else if (origin == "weeklyroster") {
-          var startHour = moment(newValue).hour();
-          var startMin = moment(newValue).minute();
-          obj.startTime = moment(shift.shiftDate).set('hour', startHour).set("minute", startMin).toDate();
-        }
-        editShift(obj);
-      }
-    }
-  };
-};
+var createShiftEndTimeEditableConfig = function (templateInstance) {
+  var onSuccess = function (response, newTime) {
+    console.log('success', newTime);
 
-var createShiftEndTimeEditableConfig = function (shift) {
-  var onSuccess = function (response, newValue) {
-    var shiftId = $(this).closest("li").attr("data-id");
-    var obj = {"_id": shiftId};
-    var shift = Shifts.findOne(shiftId);
-    if (shift) {
-      if (origin == "weeklyrostertemplate") {
-        obj.endTime = newValue;
-      } else if (origin == "weeklyroster") {
-        var endHour = moment(newValue).hour();
-        var endMin = moment(newValue).minute();
-        obj.endTime = moment(shift.shiftDate).set('hour', endHour).set("minute", endMin).toDate();
-      }
-      editShift(obj);
-    }
+    var shift = templateInstance.data.shift;
+
+    shift[templateInstance.data.property] = HospoHero.dateUtils.shiftDate(newTime, shift.type === 'template');
+    Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
 
+  var shift = templateInstance.data.shift;
   return {
     type: 'combodate',
-    title: 'Select end time',
-    template: "HH:mm",
-    viewformat: "HH:mm",
-    format: "YYYY-MM-DD HH:mm",
-    url: '/post',
-    display: false,
+    title: 'Select ' + templateInstance.data.caption,
+    template: 'HH:mm',
+    viewformat: 'HH:mm',
     showbuttons: true,
-    inputclass: "editableTime",
+    inputclass: 'editableTime',
     mode: 'inline',
+    value: moment(shift[templateInstance.data.property]),
     success: onSuccess
   };
 };

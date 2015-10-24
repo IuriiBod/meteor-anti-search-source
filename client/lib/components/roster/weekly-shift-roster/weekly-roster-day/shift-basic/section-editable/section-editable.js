@@ -2,17 +2,19 @@ Template.shiftBasicSectionEditable.onRendered(function () {
   this.$('.section').editable(createSectionToAssignEditableConfig(this));
 });
 
-var sectionSourceAssignMixin = function (editableConfig, templateInstance) {
+var sectionSourceAssignMixin = function (editableConfig) {
   var sourceFn = function () {
     var sections = Sections.find({
       "relations.areaId": HospoHero.getCurrentAreaId()
     }).fetch();
-    var sectionsObj = [];
-    sectionsObj.push({value: "Open", text: "Open"});
-    sections.forEach(function (section) {
-      sectionsObj.push({"value": section._id, "text": section.name});
+
+    var sectionOptions = sections.map(function (section) {
+      return {"value": section._id, "text": section.name};
     });
-    return sectionsObj;
+
+    sectionOptions.push({value: "Open", text: "Open"});
+    
+    return sectionOptions;
   };
 
   return _.extend(editableConfig, {source: sourceFn});
@@ -40,7 +42,7 @@ var createSectionToAssignEditableConfig = function (templateInstance) {
     success: onSuccess
   };
 
-  sectionSourceAssignMixin(editableConfig, templateInstance);
+  sectionSourceAssignMixin(editableConfig);
 
   return editableConfig;
 };
