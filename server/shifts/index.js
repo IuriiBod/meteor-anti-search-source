@@ -18,6 +18,8 @@ var ShiftDocument = Match.Where(function (shift) {
     status: Match.Optional(String),
     published: Match.Optional(Boolean),
     publishedOn: Match.Optional(Number),
+    startedAt: Match.Optional(Number),
+    finishedAt: Match.Optional(Number),
     order: Match.Optional(Number),
     relations: Match.Optional(HospoHero.checkers.Relations)
   });
@@ -30,7 +32,7 @@ var ShiftDocument = Match.Where(function (shift) {
   }
 
   if (shift.assignedTo) {
-    var assignedWorker = Meteor.users.findOne({_id: info.assignedTo});
+    var assignedWorker = Meteor.users.findOne({_id: shift.assignedTo});
     if (!assignedWorker) {
       logger.error("Worker not found");
       throw new Meteor.Error(404, "Worker not found");
@@ -60,7 +62,7 @@ var ShiftDocument = Match.Where(function (shift) {
 });
 
 /**
- * This object provides intelligent user notification about shift changes
+ * Provides intelligent user notification about shift changes
  */
 var ShiftPropertyChangeLogger = {
   trackedProperties: {
@@ -97,7 +99,7 @@ var ShiftPropertyChangeLogger = {
       userId: fromUserId,
       shiftId: shift._id,
       text: text,
-      locationId: HospoHero.getCurrentArea(userId).locationId,
+      locationId: shift.relations.locationId,
       type: "update"
     };
 
@@ -107,7 +109,7 @@ var ShiftPropertyChangeLogger = {
 
   _trackUserRemovedFromShift: function (oldShift, newShift, userId) {
     if (oldShift.assignedTo && oldShift.assignedTo !== newShift.assignedTo) {
-      var message = 'You have been removed from the shift';
+      var message = 'You have been removed from this assigned shift';
       this._sendNotification(message, oldShift, userId);
     }
   },
@@ -136,6 +138,9 @@ var ShiftPropertyChangeLogger = {
 };
 
 
+/*
+ * Shift modification methods
+ */
 Meteor.methods({
   createShift: function (newShiftInfo) {
     check(ShiftDocument, newShiftInfo);

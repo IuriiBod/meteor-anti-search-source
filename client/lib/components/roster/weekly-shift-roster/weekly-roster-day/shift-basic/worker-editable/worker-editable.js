@@ -1,27 +1,11 @@
 Template.shiftBasicWorkerEditable.onRendered(function () {
-  this.$('.select-worker').editable(createSelectWorkerEditableConfig(this.data));
+  this.$('.select-worker').editable(createSelectWorkerEditableConfig(this));
 });
 
-var NotificationSender = {
-  aboutRemovalFormShift: function (shift, oldWorkerId) {
-    var title = "Update on shift dated " + moment(shift.shiftDate).format("YYYY-MM-DD");
-    var text = "You have been removed from this assigned shift";
-    this._send(shift._id, oldWorkerId, title, text);
-  },
-  _send: function (itemId, to, title, text) {
-    var options = {
-      type: 'roster',
-      title: title,
-      actionType: 'update',
-      text: text,
-      to: to
-    };
-    Meteor.call('sendNotification', itemId, options, HospoHero.handleMethodResult());
-  }
-};
+var workersSourceMixin = function (editableConfig, templateInstance) {
 
-var workersSourceMixin = function (editableConfig, shift) {
   var getAlreadyAssignedWorkersIds = function () {
+    var shift = templateInstance.data;
     return Shifts.find({
       _id: {$ne: shift._id},
       shiftDate: TimeRangeQueryBuilder.forDay(shift.shiftDate),
@@ -41,6 +25,7 @@ var workersSourceMixin = function (editableConfig, shift) {
   };
 
   var sourceFn = function () {
+    var shift = templateInstance.data;
     var workersQuery = {
       "_id": {$nin: getAlreadyAssignedWorkersIds()},
       "isActive": true,
@@ -67,17 +52,12 @@ var workersSourceMixin = function (editableConfig, shift) {
   return _.extend(editableConfig, {source: sourceFn});
 };
 
-var createSelectWorkerEditableConfig = function (shift) {
+
+var createSelectWorkerEditableConfig = function (templateInstance) {
   var assignWorkerToShift = function (workerId) {
-    var oldWorkerId = shift.assignedTo;
+    var shift = templateInstance.data;
     shift.assignedTo = workerId;
-    Meteor.call('updateShift', shift, HospoHero.handleMethodResult(function () {
-      //todo: get rid of this code, it should be done on server side
-      if (oldWorkerId && shift.published) {
-        //notify old user
-        NotificationSender.aboutRemovalFormShift(shift, oldWorkerId);
-      }
-    }));
+    Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
 
   var onEditSuccess = function (response, workerId) {
@@ -85,6 +65,7 @@ var createSelectWorkerEditableConfig = function (shift) {
     assignWorkerToShift(workerId);
   };
 
+  var shift = templateInstance.data;
   var editableOptions = {
     type: "select",
     title: 'Select worker to assign',
@@ -92,11 +73,12 @@ var createSelectWorkerEditableConfig = function (shift) {
     showbuttons: false,
     emptytext: 'Open',
     defaultValue: "Open",
+    value: shift.assignedTo,
     success: onEditSuccess
   };
 
   //apply data source
-  workersSourceMixin(editableOptions, shift);
+  workersSourceMixin(editableOptions, templateInstance);
 
   return editableOptions;
 };

@@ -7,21 +7,8 @@ Namespace('HospoHero.checkers', {
    * Mongo ID checker
    */
   MongoId: Match.Where(function (id) {
-    var notifyAboutIncorrectId = function () {
-      checkError('Incorrect ID');
-    };
-
-    try {
-      check(id, String);
-      //check mongo id using regexp
-    } catch (err) {
-      notifyAboutIncorrectId()
-    }
-
-    if (!/[0-9a-zA-Z]{17}/.test(id)) {
-      notifyAboutIncorrectId()
-    }
-    return true;
+    check(id, String);
+    return /[0-9a-zA-Z]{17}/.test(id);
   }),
 
   OptionalMongoId: Match.Where(function (id) {
