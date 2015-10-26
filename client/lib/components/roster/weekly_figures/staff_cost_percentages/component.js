@@ -1,22 +1,14 @@
 var component = FlowComponents.define("staffCostPercentagesTr", function(props) {
+  console.log(props.day);
   this.dayObj = props.day;
-  this.figureBox = new FigureBox();
+  this.figureBox = new FigureBox(this.dayObj);
 });
 
 component.state.actual = function() {
-  var self = this;
-  var wages;
-  var sales;
-
-  var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(self.dayObj.date), "status": {$ne: "draft"}, "type": null}).fetch();
-  wages = this.figureBox.calcStaffCost(shifts);
-  
-  var actualSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch(); //ImportedActualSales
-  sales = this.figureBox.calcSalesCost(actualSales, 'actualQuantity');
-
+  var actual = this.figureBox.getDailyActual();
   var percentage = 0;
-  if(sales > 0) {
-    percentage = (wages/sales);
+  if(actual.actualSales > 0) {
+    percentage = (actual.actualWages/actual.actualSales);
   }
   percentage = percentage * 100;
   this.set("actualStaffCostPercentage", percentage);
@@ -24,19 +16,11 @@ component.state.actual = function() {
 };
 
 component.state.forecast = function() {
-  var self = this;
-  var wages;
-  var sales;
-
-  var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(self.dayObj.date), "status": {$ne: "finished"}, "type": null}).fetch();
-  wages = this.figureBox.calcStaffCost(shifts);
-  
-  var forecastesSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.dayObj.date)}).fetch(); //SalesPrediction
-  sales = this.figureBox.calcSalesCost(forecastesSales, 'predictionQuantity');
+  var forecasted = this.figureBox.getDailyForecast();
 
   var percentage = 0;
-  if(sales > 0) {
-    percentage = (wages/sales);
+  if(forecasted.forecastedSales> 0) {
+    percentage = (forecasted.forecastedWages/forecasted.forecastedSales);
   }
   percentage = percentage * 100;
   this.set("forecastedStaffCostPercentage", percentage);

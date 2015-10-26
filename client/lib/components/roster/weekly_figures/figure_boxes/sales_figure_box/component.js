@@ -1,7 +1,11 @@
 var component = FlowComponents.define("salesFigureBox", function (props) {
   this.actual = props.actual;
   this.forecasted = props.forecasted;
-  this.figureBox = new FigureBox();
+  var data = {
+    declining: props.actual,
+    subtrahend: props.forecasted
+  };
+  this.figureBox = new FigureBox(data);
 });
 
 component.state.weeklySale = function () {
@@ -13,6 +17,5 @@ component.state.forecastedSale = function () {
 };
 
 component.state.percent = function () {
-  return this.figureBox.percent(this.actual,this.forecasted);
-
+  return this.figureBox.percent();
 };
