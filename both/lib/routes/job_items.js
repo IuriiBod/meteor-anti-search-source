@@ -9,7 +9,7 @@ Router.route('/jobItems', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections'),
       Meteor.subscribe("userSubs", ['joblist']),
-      Meteor.subscribe("jobItems")
+      Meteor.subscribe("jobItems", null, 'active')
     ];
   },
   data: function() {
@@ -28,7 +28,7 @@ Router.route('/jobItems/:type', {
   waitOn: function() {
     return [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('jobTypes'),
+      Meteor.subscribe('jobTypes', null, 'archived'),
       Meteor.subscribe('sections'),
       Meteor.subscribe("userSubs", ['joblist'])
     ];
