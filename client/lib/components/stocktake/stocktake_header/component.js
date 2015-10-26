@@ -10,12 +10,8 @@ component.action.startStocktake = function () {
   if (stocktake) {
     $("#newStocktakeModal").modal();
   } else {
-    Meteor.call("createMainStocktake", date, function (err, id) {
-      if (err) {
-        HospoHero.error(err);
-      } else {
-        Router.go("stocktakeCounting", {"_id": id});
-      }
-    });
+    Meteor.call("createMainStocktake", date, HospoHero.handleMethodResult(function (id) {
+      Router.go("stocktakeCounting", {"_id": id});
+    }));
   }
 };

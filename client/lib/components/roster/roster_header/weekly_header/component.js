@@ -50,11 +50,7 @@ component.action.publishRoster = function () {
   }
 
   if (tobePublished.length > 0) {
-    Meteor.call("publishRoster", weekNo, tobePublished, function (err) {
-      if (err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("publishRoster", weekNo, tobePublished, fHospoHero.handleMethodResult());
     users.forEach(function (user) {
       var to = Meteor.users.findOne(user);
       if (to) {
@@ -100,11 +96,7 @@ component.action.publishRoster = function () {
             "name": to.username
           };
 
-          Meteor.call("notifyRoster", sendTo, info, function (err) {
-            if (err) {
-              HospoHero.error(err);
-            }
-          });
+          Meteor.call("notifyRoster", sendTo, info, HospoHero.handleMethodResult());
         }
       }
     });
