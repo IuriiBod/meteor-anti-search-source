@@ -3,18 +3,10 @@ var autolinker = new Autolinker({
 });
 
 var component = FlowComponents.define("textArea", function(props) {
-  this.placeholder = props.placeholder;
+  this.set('placeholder', props.placeholder);
   this.type = props.type;
-  if(props.referenceId) {
-    this.ref = props.referenceId;
-  } else {
-    this.ref = null;
-  }
-  if(props.refType) {
-    this.refType = props.refType;
-  } else {
-    this.refType = null;
-  }
+  this.ref = props.referenceId ? props.referenceId : null;
+  this.refType = props.refType ? props.refType : null;
 });
 
 component.state.settings = function() {
@@ -35,10 +27,6 @@ component.state.settings = function() {
     noMatchTemplate: Template.noMatchTemplate
   }];
   return data;  
-};
-
-component.state.placeholder = function() {
-  return this.placeholder;
 };
 
 component.action.submit = function(text) {
