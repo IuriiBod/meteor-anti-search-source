@@ -7,11 +7,7 @@ Template.userDetailed.events({
     var state = user.isActive ? 'de-activate' : 'activate';
     var confirmChange = confirm("Are you sure you want to " + state + " this user");
     if(confirmChange) {
-      Meteor.call("changeStatus", userId, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("changeStatus", userId, HospoHero.handleMethodResult());
     }
   },
 
@@ -20,11 +16,7 @@ Template.userDetailed.events({
     if(confirm(changeRoleMessage)) {
       var userId = e.target.dataset.id;
       var newRoleId = e.target.value;
-      Meteor.call('changeUserRole', userId, newRoleId, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call('changeUserRole', userId, newRoleId, HospoHero.handleMethodResult());
     }
   }
 });

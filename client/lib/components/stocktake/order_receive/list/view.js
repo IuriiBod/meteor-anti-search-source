@@ -2,29 +2,7 @@ Template.orderReceive.events({
   'click .markDeliveryReceived': function(event) {
     event.preventDefault();
     var receiptId = Session.get("thisReceipt");
-    Meteor.call("receiveDelivery", receiptId, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      } else {
-        var orders = StockOrders.find({"orderReceipt": receiptId}).fetch();
-        if(orders && orders.length > 0) {
-          orders.forEach(function(order) {
-            var note = "Order receive on receipt " + receiptId;
-            var quantity = order.countOrdered;
-            if(order.hasOwnProperty("countDelivered")) {
-              quantity = order.countDelivered;
-            }
-            var date = moment(date).format("YYYY-MM-DD");
-            Meteor.call("updateCurrentStock", order.stockId, note, quantity, date, function(err) {
-              if(err) {
-                HospoHero.error(err);
-              }
-            });
-
-          });
-        }
-      }
-    });
+    Meteor.call("receiveDelivery", receiptId, HospoHero.handleMethodResult());
   },
 
   'keyup #orderReceiveNotes': function(event) {
@@ -34,11 +12,7 @@ Template.orderReceive.events({
       var info = {
         "receiveNote": text.trim()
       };
-      Meteor.call("updateReceipt", Session.get("thisReceipt"), info, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("updateReceipt", Session.get("thisReceipt"), info, HospoHero.handleMethodResult());
     }
   },
 
@@ -97,12 +71,7 @@ Template.orderReceive.events({
                 },
                 function(new_Blob){
                   urls['convertedUrl'] = new_Blob.url;
-                  Meteor.call("uploadInvoice", Session.get("thisReceipt"), urls, function(err) {
-                    if(err) {
-                      HospoHero.error(err);
-                    } else {
-                    }
-                  });
+                  Meteor.call("uploadInvoice", Session.get("thisReceipt"), urls, HospoHero.handleMethodResult());
                 }
               );
             }

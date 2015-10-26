@@ -9,11 +9,7 @@ Template.menuDetailWidgets.rendered = function() {
       var id = $(this).attr("data-id");
       
       if(id) {
-        Meteor.call("editMenuItem", id, {salesPrice: newValue}, function(err) {
-          if(err) {
-            HospoHero.error(err);
-          }
-        });
+        Meteor.call("editMenuItem", id, {salesPrice: newValue}, HospoHero.handleMethodResult());
       }
     }
   });

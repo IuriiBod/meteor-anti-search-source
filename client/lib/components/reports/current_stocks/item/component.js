@@ -41,23 +41,19 @@ component.prototype.onListRendered = function () {
   if (weekNo) {
     Tracker.autorun(function () {
       var week = getWeekStartEnd(weekNo);
-      Meteor.call("readDaily", week.monday, week.sunday, function (err, data) {
-        if (err) {
-          HospoHero.error(err);
-        } else {
-          self.set("data", data);
-          if (data && data.length > 0) {
-            data.forEach(function (doc) {
-              var item = {
-                "stockId": doc._id.stockId,
-                "date": doc._id.date,
-                "count": doc.count
-              };
-              CurrentStocksLocal.insert(item);
-            });
-          }
+      Meteor.call("readDaily", week.monday, week.sunday, HospoHero.handleMethodResult(function (data) {
+        self.set("data", data);
+        if (data && data.length > 0) {
+          data.forEach(function (doc) {
+            var item = {
+              "stockId": doc._id.stockId,
+              "date": doc._id.date,
+              "count": doc.count
+            };
+            CurrentStocksLocal.insert(item);
+          });
         }
-      });
+      }));
     });
   }
 };

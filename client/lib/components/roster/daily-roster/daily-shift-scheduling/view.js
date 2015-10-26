@@ -24,12 +24,7 @@ Template.dailyShiftScheduling.events({
   'change .selectWorkers': function (event) {
     var workerId = $(event.target).val();
     var shiftId = $(event.target).attr("data-id");
-    Meteor.call("assignWorker", workerId, shiftId, function (err) {
-      if (err) {
-        $(event.target).val("");
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("assignWorker", workerId, shiftId, HospoHero.handleMethodResult());
 
     var shift = Shifts.find({_id: shiftId});
     if(shift) {
@@ -40,22 +35,14 @@ Template.dailyShiftScheduling.events({
         text: "You have been assigned to shift dated <b>" + HospoHero.dateUtils.intervalDateFormat(shift.startTime, shift.endTime) + "</b>",
         type: "update"
       };
-      Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("addShiftUpdate", shiftUpdateDoc, HospoHero.handleMethodResult());
     }
   },
 
   'click .generateRecurring': function(event) {
     event.preventDefault();
     var date = Router.current().params.date;
-    Meteor.call("generateRecurrings", date, function(err, result) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("generateRecurrings", date, HospoHero.handleMethodResult());
 
     var shift = Shifts.find({_id: shiftId});
     if(shift) {
@@ -66,11 +53,7 @@ Template.dailyShiftScheduling.events({
         text: "You have been assigned to shift dated <b>" + HospoHero.dateUtils.intervalDateFormat(shift.startTime, shift.endTime) + "</b>",
         type: "update"
       };
-      Meteor.call("addShiftUpdate", shiftUpdateDoc, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        }
-      });
+      Meteor.call("addShiftUpdate", shiftUpdateDoc, HospoHero.handleMethodResult());
     }
   },
 
@@ -78,11 +61,7 @@ Template.dailyShiftScheduling.events({
     event.preventDefault();
     var date = Router.current().params.date;
     console.log(date);
-    Meteor.call("generateRecurrings", date, function(err, result) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("generateRecurrings", date, HospoHero.handleMethodResult());
   }
 });
 

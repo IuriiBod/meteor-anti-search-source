@@ -2,24 +2,15 @@ Template.profileFlyout.events({
   'change .shiftsPerWeek': function(event) {
     var id = $(event.target).attr("data-id");
     var value = $(event.target).val();
-    Meteor.call("editBasicDetails", id, {"shiftsPerWeek": value}, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-    });
+    Meteor.call("editBasicDetails", id, {"shiftsPerWeek": value}, HospoHero.handleMethodResult());
   },
 
   "submit form#flyout-change-pin": function(event) {
     event.preventDefault();
     var newPin = Template.instance().find("#flyout-new-pin").value;
-    Meteor.call("changePinCode", newPin, function (err) {
-      if (err) {
-        HospoHero.error(err);
-      }
-      else {
-        alert("PIN has been changed.");
-      }
-    });
+    Meteor.call("changePinCode", newPin, HospoHero.handleMethodResult(function () {
+      HospoHero.info("PIN has been changed");
+    }));
   }
 });
 
@@ -147,11 +138,7 @@ Template.profileFlyout.rendered = function(){
       if(newValue) {
         var id = $(self).attr("data-id");
         var newRate = parseFloat(newValue);
-        if(newRate && (newRate == newRate)) {
-          newRate = newRate
-        } else {
-          newRate = 0;
-        }
+        newRate = isNaN(newRate) ? 0 : newRate;
         var editDetail = {"sundayrate": newRate};
         updateBasicDetails(id, editDetail, "profile.payrates.sunday");
       }
@@ -162,10 +149,6 @@ Template.profileFlyout.rendered = function(){
 
 };
 
-function updateBasicDetails(id, updateDetails, type) {
-  Meteor.call("editBasicDetails", id, updateDetails, function(err) {
-    if(err) {
-      HospoHero.error(err);
-    }
-  });
+function updateBasicDetails(id, updateDetails) {
+  Meteor.call("editBasicDetails", id, updateDetails, HospoHero.handleMethodResult());
 }

@@ -29,15 +29,11 @@ component.prototype.onCountRendered = function() {
       var id = $(this).closest("tr").attr("data-id");
       if(newValue) {
         var count = parseFloat(newValue) ? parseFloat(newValue) : 0;
-        Meteor.call("editOrderingCount", id, count, function(err) {
-          if(err) {
-            HospoHero.error(err);
-          } else {
-            if($(elem).next().length > 0) {
-              $(elem).next().find("a").click();
-            }
+        Meteor.call("editOrderingCount", id, count, HospoHero.handleMethodResult(function() {
+          if($(elem).next().length > 0) {
+            $(elem).next().find("a").click();
           }
-        });
+        }));
       }
     }
   });

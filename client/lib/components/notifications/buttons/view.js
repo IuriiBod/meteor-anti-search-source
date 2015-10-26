@@ -2,15 +2,8 @@ Template.notifiButtons.events({
   'click .readNotification': function(event) {
     event.preventDefault();
     var id = $(event.target).attr("data-id");
+    Meteor.call("readNotifications", id, HospoHero.handleMethodResult());
     $(".dropdown-notifi").addClass("open");
-    Meteor.call("readNotifications", id, function(err) {
-      if(err) {
-        HospoHero.error(err);
-      }
-      $(".dropdown-notifi").addClass("open");
-    });
-    $(".dropdown-notifi").addClass("open");
-
   },
 
   'click .goToItem': function(event) {    

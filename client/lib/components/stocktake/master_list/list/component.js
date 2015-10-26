@@ -8,13 +8,9 @@ component.state.listOfDates = function() {
 
 component.prototype.onListRender = function() {
   var self = this;
-  Meteor.call("stockTakeHistory", function(err, list) {
-    if(err) {
-      HospoHero.error(err);
-    } else {
-      self.set("historyList", list);
-    }
-  });
+  Meteor.call("stockTakeHistory", HospoHero.handleMethodResult(function(list) {
+    self.set("historyList", list);
+  }));
 
   Meteor.subscribe("stocktakeMains", new Date().getTime());
 };

@@ -9,7 +9,7 @@ var updateLastTaskRunDateForLocation = function (locationId) {
 };
 
 var updateActualSales = function (item) {
-  ImportedActualSales.update({
+  DailySales.update({ // ImportedActualSales
     date: TimeRangeQueryBuilder.forDay(item.date),
     menuItemId: item.menuItemId
   }, item, {upsert: true});
@@ -27,12 +27,13 @@ var createUpdateActualSalesFunction = function (locationId) {
         var menuItem = HospoHero.prediction.getMenuItemByRevelName(menuItemName, locationId);
 
         if (menuItem) {
-          updateActualSales({
-            quantity: salesData.menuItems[menuItemName],
+          var item = {
+            actualQuantity: salesData.menuItems[menuItemName],
             date: salesData.createdDate,
             menuItemId: menuItem._id,
             relations: menuItem.relations
-          });
+          };
+          updateActualSales(item);
         }
       });
 

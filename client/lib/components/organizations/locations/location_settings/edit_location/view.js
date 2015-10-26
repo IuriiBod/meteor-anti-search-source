@@ -146,13 +146,9 @@ Template.editLocation.events({
       delete validation.closingHour;
       delete validation.closingMinutes;
 
-      Meteor.call('updateLocationMainInfo', location._id, validation, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          HospoHero.success('Location was successfully changed');
-        }
-      });
+      Meteor.call('updateLocationMainInfo', location._id, validation, HospoHero.handleMethodResult(function() {
+        HospoHero.success('Location was successfully changed');
+      }));
     }
   },
 
@@ -163,13 +159,9 @@ Template.editLocation.events({
     if(validation) {
       var location = FlowComponents.callAction('getLocation')._result;
 
-      Meteor.call('updatePosSettings', location._id, validation, function(err) {
-        if(err) {
-          HospoHero.error(err);
-        } else {
-          HospoHero.success('POS Settings were successfully changed');
-        }
-      });
+      Meteor.call('updatePosSettings', location._id, validation, HospoHero.handleMethodResult(function() {
+        HospoHero.success('POS Settings were successfully changed');
+      }));
     }
   }
 });

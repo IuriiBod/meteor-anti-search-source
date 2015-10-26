@@ -24,13 +24,10 @@ Calendar.prototype.convertDate = function (date) {
 
 
 Calendar.prototype.assignJob = function (job, shift, startAt) {
-  Meteor.call("assignJob", job, shift, startAt, function (err) {
-    if (err) {
-      HospoHero.error(err);
-    } else {
-      $(this).remove();
-    }
-  })
+  var self = this;
+  Meteor.call("assignJob", job, shift, startAt, HospoHero.handleMethodResult(function () {
+    $(self).remove();
+  }));
 };
 
 
@@ -66,13 +63,9 @@ Calendar.prototype._autoUpdateCB = function () {
   if (!hasDate) {
     return;
   }
-  Meteor.call("generateRecurrings", self.options.shiftDate, function (err) {
-    if (err) {
-      HospoHero.error(err);
-    } else {
-      self.update();
-    }
-  });
+  Meteor.call("generateRecurrings", self.options.shiftDate, HospoHero.handleMethodResult(function () {
+    self.update();
+  }));
 };
 
 Calendar.prototype.autoUpdate = function () {
