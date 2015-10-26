@@ -50,7 +50,9 @@ Router.route('/jobItem/submit', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('sections')
+      Meteor.subscribe('sections'),
+      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe("ingredients")
     ];
   },
   data: function() {
@@ -104,7 +106,8 @@ Router.route('/jobItem/:_id/edit', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('sections'),
-      Meteor.subscribe('ingredients')
+      Meteor.subscribe('ingredients'),
+      Meteor.subscribe("allSuppliers")
     ];
   },
   data: function() {

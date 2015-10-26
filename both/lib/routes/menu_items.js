@@ -31,7 +31,9 @@ Router.route('/menuItems/submit', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('allCategories'),
-      Meteor.subscribe('allStatuses')
+      Meteor.subscribe('allStatuses'),
+      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe("ingredients")
     ];
   },
   data: function() {

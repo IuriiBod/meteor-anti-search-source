@@ -239,7 +239,7 @@ Template.editJobItem.events({
           info.repeatOn = repeatDays;
         }
       }
-      FlowComponents.callAction('submit', id, info);
+      FlowComponents.callAction('qmit', id, info);
     }
   },
 

@@ -7,9 +7,9 @@ var component = FlowComponents.define('jobItemDetailed', function(props) {
     this.jobitem.ingredients.forEach(function(ing) {
       ids.push(ing._id);
     });
-    if(ids.length > 0) {
-      Meteor.subscribe("ingredients", ids);
-    }
+    //if(ids.length > 0) {
+    //  Meteor.subscribe("ingredients", ids);
+    //}
   }
 });
 
