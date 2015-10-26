@@ -84,7 +84,7 @@ Meteor.methods({
       actionType: 'update',
       to: userId
     };
-    Meteor.call('sendNotification', options);
+    HospoHero.sendNotification(options);
 
     // Send an email to the invited user
     var sender = Meteor.user();
