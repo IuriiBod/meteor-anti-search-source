@@ -1,11 +1,11 @@
 <template name="navStock">
   {{#if canViewStock}}
-    <li class="{{isActiveRoute name='ingredientsList|stocktake|supplierOrdering'}}">
+    <li class="{{isActiveRoute name='ingredientsList|stocktakeList|orderReceiptsList|suppliersList'}}">
       <a href="#">
         <i class="fa fa-list"></i>
         <span class="nav-label">Stock</span>
       </a>
-      <ul class="nav nav-second-level collapse {{isActiveRoute name='ingredientsList|stocktake|supplierOrdering' className='in'}}">
+      <ul class="nav nav-second-level collapse {{isActiveRoute name='ingredientsList|stocktakeList|orderReceiptsList|suppliersList' className='in'}}">
         <li class="{{isActiveRoute name='ingredientsList'}}">
           <a href="{{pathFor route='ingredientsList'}}">List</a>
         </li>
