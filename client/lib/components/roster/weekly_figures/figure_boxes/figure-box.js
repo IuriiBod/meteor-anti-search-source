@@ -19,6 +19,7 @@ FigureBox.prototype.calcSalesCost = function (sales, propertyName) {
 };
 
 FigureBox.prototype.calcStaffCost = function (shifts) {
+  //console.log(shifts);
   var totalCost = 0;
   if (shifts && shifts.length > 0) {
     _.each(shifts, function (shift) {
@@ -33,13 +34,13 @@ FigureBox.prototype.calcStaffCost = function (shifts) {
         } else {
           totalhours = moment(shift.finishedAt).diff(moment(shift.startedAt), "h");
         }
-        //todo:see later, try to refacrtor
+        //todo:see later, try to refactor
         if (day) {
-          if (day == "Saturday") {
+          if (day === "Saturday") {
             if (user.profile.payrates.saturday) {
               rate = user.profile.payrates.saturday;
             }
-          } else if (day == "Sunday") {
+          } else if (day === "Sunday") {
             if (user.profile.payrates.sunday) {
               rate = user.profile.payrates.sunday;
             }
@@ -59,7 +60,6 @@ FigureBox.prototype.calcStaffCost = function (shifts) {
 };
 
 FigureBox.prototype.percent = function (declining, subtrahend) {
-  console.log(declining, subtrahend);
   var doc = {
     "value": 0,
     "textColor": "text-navy",

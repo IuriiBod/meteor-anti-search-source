@@ -5,61 +5,63 @@ var component = FlowComponents.define("figureBoxes", function (props) {
   this.weekRange = getWeekStartEnd(this.week, this.year);
 });
 
-component.state.weeklySale = function () {
+component.state.salesData = function () {
+  return{
+   weeklySale: weeklySale(this.weekRange, this.figureBox, this.week),
+   forecastedSale: forecastedSale(this.weekRange, this.figureBox),
+   weeklyStaffCost: weeklyStaffCost(this.weekRange, this.figureBox),
+   rosteredStaffCost: rosteredStaffCost(this.weekRange, this.figureBox)
+  }
+};
 
-  if (this.week < moment().week()) {
-    var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch(); // ImportedActualSales
-    var total = this.figureBox.calcSalesCost(sales, 'actualQuantity');
+weeklySale = function (weekRange, figureBox, week) {
+  var total;
+  if (week < moment().week()) {
+    var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(weekRange.monday)}, {sort: {"date": 1}}).fetch(); // ImportedActualSales
+    total = figureBox.calcSalesCost(sales, 'actualQuantity');
 
     //for current week: past days actual sales and for future dates forecasted sales
-  } else if (this.week == moment().week()) {
+  } else if (week == moment().week()) {
     var todayActualSale = !!DailySales.findOne({date: TimeRangeQueryBuilder.forDay(moment())}); //ImportedActualSales
-    if (todayActualSale) {
-      var querySeparator = moment().endOf('d');
-    } else {
-      var querySeparator = moment().startOf('d');
-    }
+    var querySeparator = todayActualSale?moment().endOf('d'):moment().startOf('d');
     var actualSales = DailySales.find({ //ImportedActualSales
       date: {
-        $gte: this.weekRange.monday,
+        $gte: weekRange.monday,
         $lte: querySeparator.toDate()
       }
     }, {sort: {"date": 1}}).fetch();
     var predictSales = DailySales.find({ //SalesPrediction
       date: {
         $gte: querySeparator.toDate(),
-        $lte: this.weekRange.sunday
+        $lte: weekRange.sunday
       }
     }, {sort: {date: 1}}).fetch();
-    var total = this.figureBox.calcSalesCost(actualSales, 'actualQuantity') + this.figureBox.calcSalesCost(predictSales, 'predictionQuantity');
+    total = figureBox.calcSalesCost(actualSales, 'actualQuantity') + figureBox.calcSalesCost(predictSales, 'predictionQuantity');
 
     //for future weeks: all forecasted sales
-  } else if (this.week > moment().week()) {
-    sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch(); //SalesPrediction
-    var total = this.figureBox.calcSalesCost(sales, 'predictionQuantity');
+  } else if (week > moment().week()) {
+    sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(weekRange.monday)}, {sort: {"date": 1}}).fetch(); //SalesPrediction
+    total = figureBox.calcSalesCost(sales, 'predictionQuantity');
   }
   return total;
 };
 
-component.state.forecastedSale = function () {
-  var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekRange.monday)}, {sort: {"date": 1}}).fetch(); //SalesPrediction
-  var total = this.figureBox.calcSalesCost(sales, 'predictionQuantity');
-  return total;
+forecastedSale = function (weekRange, figureBox) {
+  var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(weekRange.monday)}, {sort: {"date": 1}}).fetch(); //SalesPrediction
+  return figureBox.calcSalesCost(sales, 'predictionQuantity');
 };
 
-
-component.state.weeklyStaffCost = function () {
-  var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekRange.monday, true)}).fetch();
-  var total = this.figureBox.calcStaffCost(shifts);
-  return total
+weeklyStaffCost = function (weekRange, figureBox) {
+  var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(weekRange.monday)}).fetch();
+  return figureBox.calcStaffCost(shifts);
 };
 
-component.state.rosteredStaffCost = function () {
-  var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekRange.monday, true)}).fetch();
+rosteredStaffCost = function (weekRange, figureBox) {
+  var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(weekRange.monday)}).fetch();
   shifts = _.map(shifts, function (item) {
     item.status = "draft";
     return item;
   });
-  var total = this.figureBox.calcStaffCost(shifts);
-  return total
+  return figureBox.calcStaffCost(shifts);
 };
+

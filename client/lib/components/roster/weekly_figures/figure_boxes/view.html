@@ -1,8 +1,10 @@
 <template name="figureBoxes">
   <div class="row">
-    {{>render component="salesFigureBox" actual=state$weeklySale forecasted=state$forecastedSale}}
-    {{>render component="staffCostFigureBox" actual=state$weeklyStaffCost forecasted=state$rosteredStaffCost}}
-    {{>render component="staffCostPercentageFigureBox" actualSales=state$weeklySale forecastedSales=state$forecastedSale
-                                                       actualStaff=state$weeklyStaffCost forecastedStaff=state$rosteredStaffCost}}
+    {{#with state$salesData}}
+      {{>render component="salesFigureBox" actual=this.weeklySale forecasted=this.forecastedSale}}
+      {{>render component="staffCostFigureBox" actual=this.weeklyStaffCost forecasted=this.rosteredStaffCost}}
+      {{>render component="staffCostPercentageFigureBox" actualSales=this.weeklySale forecastedSales=this.forecastedSale
+      actualStaff=this.weeklyStaffCost forecastedStaff=this.rosteredStaffCost}}
+    {{/with}}
   </div>
 </template>
