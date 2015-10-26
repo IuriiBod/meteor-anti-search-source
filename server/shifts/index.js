@@ -9,11 +9,11 @@ var ShiftDocument = Match.Where(function (shift) {
     type: Match.OneOf(String, null),
 
     //optional properties
-    _id: Match.Optional(HospoHero.checkers.MongoId),
-    section: Match.Optional(HospoHero.checkers.MongoId),
-    createdBy: Match.Optional(HospoHero.checkers.MongoId),
-    assignedTo: Match.Optional(HospoHero.checkers.MongoId),
-    assignedBy: Match.Optional(HospoHero.checkers.MongoId),
+    _id: HospoHero.checkers.OptionalMongoId,
+    section: HospoHero.checkers.OptionalNullableMongoId,
+    createdBy: HospoHero.checkers.OptionalNullableMongoId,
+    assignedTo: HospoHero.checkers.OptionalNullableMongoId,
+    assignedBy: HospoHero.checkers.OptionalNullableMongoId,
     jobs: Match.Optional([HospoHero.checkers.MongoId]),
     status: Match.Optional(String),
     published: Match.Optional(Boolean),

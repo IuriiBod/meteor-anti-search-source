@@ -1,5 +1,3 @@
-console.log('test');
-
 var component = FlowComponents.define("weeklyRosterDay", function (props) {
   this.type = props.type;
   this.set('currentDate', props.currentDate);

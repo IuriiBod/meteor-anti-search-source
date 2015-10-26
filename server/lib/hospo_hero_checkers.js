@@ -1,20 +1,26 @@
-checkError = function (message) {
+var checkError = function (message) {
   throw new Meteor.Error(500, 'Check error: ' + message);
 };
+
+var MongoId = Match.Where(function (id) {
+  check(id, String);
+  return /[0-9a-zA-Z]{17}/.test(id);
+});
+
+var NullableMongoId = Match.OneOf(MongoId, null);
+
 
 Namespace('HospoHero.checkers', {
   /**
    * Mongo ID checker
    */
-  MongoId: Match.Where(function (id) {
-    check(id, String);
-    return /[0-9a-zA-Z]{17}/.test(id);
-  }),
+  MongoId: MongoId,
 
-  OptionalMongoId: Match.Where(function (id) {
-    check(id, Match.Optional(HospoHero.checkers.MongoId));
-    return true;
-  }),
+  OptionalMongoId: Match.Optional(MongoId),
+
+  NullableMongoId: NullableMongoId,
+
+  OptionalNullableMongoId: Match.Optional(NullableMongoId),
 
   WeekDate: Match.Where(function (weekDate) {
     try {
@@ -32,8 +38,8 @@ Namespace('HospoHero.checkers', {
     try {
       check(relations, {
         organizationId: HospoHero.checkers.MongoId,
-        locationId: HospoHero.checkers.OptionalMongoId,
-        areaId: HospoHero.checkers.OptionalMongoId
+        locationId: HospoHero.checkers.OptionalNullableMongoId,
+        areaId: HospoHero.checkers.OptionalNullableMongoId
       });
     } catch (err) {
       checkError('Incorrect relation');
