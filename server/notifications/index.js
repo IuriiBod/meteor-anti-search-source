@@ -1,48 +1,4 @@
 Meteor.methods({
-  sendNotification: function(itemId, notification) {
-    if(itemId) {
-      HospoHero.checkMongoId(itemId);
-    }
-    check(notification, Object);
-
-    var sendNotificationToId = [];
-
-    if(notification.to) {
-      sendNotificationToId = sendNotificationToId.concat(notification.to);
-    }
-
-    if(notification.type == 'menu' || notification.type == 'job') {
-      var type = notification.type + 'list';
-      var subscription = Subscriptions.findOne({_id: type});
-      sendNotificationToId = sendNotificationToId.concat(subscription.subscribers);
-    }
-
-    var userId = Meteor.userId() || null;
-
-    // removing userId from notifications list
-    var userIdIndex = sendNotificationToId.indexOf(userId);
-    sendNotificationToId.splice(userIdIndex, 1);
-
-    if(sendNotificationToId.length) {
-      var notificationObj = {
-        read: false,
-        createdBy: userId,
-        ref: itemId,
-        createdOn: new Date()
-      };
-
-      notificationObj.type = notification.type;
-      notificationObj.title = notification.title;
-      notificationObj.text = notification.text || '';
-      notificationObj.actionType = notification.actionType || 'update';
-
-      sendNotificationToId.forEach(function(to) {
-        notificationObj.to = to;
-        Notifications.insert(notificationObj);
-      });
-    }
-  },
-
   sendNewsfeedNotifications: function(itemId, type, options) {
     //tagging users
     //commenting on newsfeed items that as been created by someone

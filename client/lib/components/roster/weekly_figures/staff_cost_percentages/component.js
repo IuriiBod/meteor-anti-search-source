@@ -1,5 +1,4 @@
 var component = FlowComponents.define("staffCostPercentagesTr", function(props) {
-  console.log(props.day);
   this.dayObj = props.day;
   this.figureBox = new FigureBox(this.dayObj);
 });
