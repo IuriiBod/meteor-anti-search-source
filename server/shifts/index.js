@@ -1,68 +1,4 @@
 /**
- * Shift document checker
- */
-var ShiftDocument = Match.Where(function (shift) {
-  check(shift, {
-    startTime: Date,
-    endTime: Date,
-    shiftDate: Date,
-    type: Match.OneOf(String, null),
-
-    //optional properties
-    _id: HospoHero.checkers.OptionalMongoId,
-    section: HospoHero.checkers.OptionalNullableMongoId,
-    createdBy: HospoHero.checkers.OptionalNullableMongoId,
-    assignedTo: HospoHero.checkers.OptionalNullableMongoId,
-    assignedBy: HospoHero.checkers.OptionalNullableMongoId,
-    jobs: Match.Optional([HospoHero.checkers.MongoId]),
-    status: Match.Optional(String),
-    published: Match.Optional(Boolean),
-    publishedOn: Match.Optional(Number),
-    startedAt: Match.Optional(Number),
-    finishedAt: Match.Optional(Number),
-    order: Match.Optional(Number),
-    relations: Match.Optional(HospoHero.checkers.Relations)
-  });
-
-
-  //check if worker already assigned
-  if (shift.startTime.getTime() > shift.endTime.getTime()) {
-    logger.error("Start and end times invalid");
-    throw new Meteor.Error("Start and end times invalid");
-  }
-
-  if (shift.assignedTo) {
-    var assignedWorker = Meteor.users.findOne({_id: shift.assignedTo});
-    if (!assignedWorker) {
-      logger.error("Worker not found");
-      throw new Meteor.Error(404, "Worker not found");
-    }
-
-    var existInShift = !!Shifts.findOne({
-      _id: {$ne: shift._id},
-      shiftDate: TimeRangeQueryBuilder.forDay(shift.shiftDate),
-      assignedTo: shift.assignedTo
-    });
-    if (existInShift) {
-      logger.error("User already exist in a shift", {"date": shift.shiftDate});
-      throw new Meteor.Error(404, "Worker has already been assigned to a shift");
-    }
-  }
-
-  //specific checks for existing doc
-  if (!!shift._id) {
-    var shiftToUpdate = Shifts.findOne({_id: shift._id});
-
-    if (!shiftToUpdate) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
-    }
-  }
-
-  return true;
-});
-
-/**
  * Provides intelligent user notification about shift changes
  */
 var ShiftPropertyChangeLogger = {
@@ -107,7 +43,13 @@ var ShiftPropertyChangeLogger = {
     logger.info("Shift update insert");
     ShiftsUpdates.insert(updateDocument);
 
-    //todo: send build in app notification also
+    HospoHero.sendNotification({
+      type: 'shift',
+      title: text,
+      actionType: 'update',
+      to: shift.assignedTo,
+      ref: shift._id
+    });
   },
 
   _trackUserRemovedFromShift: function (oldShift, newShift, userId) {
@@ -150,7 +92,7 @@ Meteor.methods({
       logger.error(403, "User not permitted to create shifts");
     }
 
-    check(newShiftInfo, ShiftDocument);
+    check(newShiftInfo, HospoHero.checkers.ShiftDocument);
 
     var shiftsCount = Shifts.find({"shiftDate": TimeRangeQueryBuilder.forWeek(newShiftInfo.shiftDate)}).count();
 
@@ -188,7 +130,7 @@ Meteor.methods({
 
 
   editShift: function (updatedShift) {
-    check(updatedShift, ShiftDocument);
+    check(updatedShift, HospoHero.checkers.ShiftDocument);
 
     var userId = Meteor.userId();
     if (!HospoHero.canUser('edit roster', userId)) {
