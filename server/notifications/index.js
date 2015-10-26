@@ -1,41 +1,4 @@
 Meteor.methods({
-  sendNewsfeedNotifications: function(itemId, type, options) {
-    //tagging users
-    //commenting on newsfeed items that as been created by someone
-    //liking newsfeed items
-
-    var userId = Meteor.userId();
-    if(!HospoHero.isInOrganization(userId)) {
-      logger.error(403, "User not permitted to send notifications");
-      throw new Meteor.Error(403, "User not permitted to send notifications");
-    }
-
-    var info = {};
-    info.type = type;
-    info.read = false;
-    info.title = options.title;
-    info.createdBy = userId;
-    if(!options.users) {
-      logger.error('User ids not found');
-      throw new Meteor.Error(404, "User ids not found");
-    }
-    var userIds = [];
-    options.users.forEach(function(username) {
-      var filter = new RegExp(username);
-      var subscriber = Meteor.users.findOne({"username": filter});
-      if(subscriber && (subscriber._id != userId)) {
-        if(userIds.indexOf(subscriber._id) < 0) {
-          var doc = info;
-          doc.to = subscriber._id;
-          userIds.push(subscriber._id);
-
-          var id = Notifications.insert(doc);
-          logger.info("Notification send to userId", subscriber._id, id);
-        }
-      }
-    });
-  },
-
   notifyRoster: function (to, info) {
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User not permitted to notify about roster changes");
