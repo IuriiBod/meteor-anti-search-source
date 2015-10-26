@@ -271,7 +271,8 @@ Meteor.methods({
     var menu = MenuItems.findOne({_id: id});
     if (menu) {
       var status = menu.status == 'archived' ? 'active' : 'archived';
-      return MenuItems.update({_id: id}, {$set: {status: status}});
+      MenuItems.update({_id: id}, {$set: {status: status}});
+      return status;
     }
   },
 

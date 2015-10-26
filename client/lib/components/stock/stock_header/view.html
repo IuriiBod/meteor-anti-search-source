@@ -1,0 +1,28 @@
+<template name="stockHeader">
+  <div class="title-action">
+    {{#if state$isArchived}}
+      <a href="{{pathFor route='ingredientsList'}}" class="btn btn-info">
+        <i class="fa fa-long-arrow-left"></i> Active Items
+      </a>
+    {{else}}
+      {{#if canEditStock}}
+        <div class="btn-group">
+          <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false">
+            <i class="fa fa-cog"></i>
+            Settings
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" style="margin-left: -56px;">
+            <li>
+              <a href="{{pathFor route='ingredientsListType' type='archive'}}">Archived Items</a>
+            </li>
+            <li>
+              <a href="#addIngredientModal" data-toggle="modal">Add new stock</a>
+            </li>
+          </ul>
+        </div>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>

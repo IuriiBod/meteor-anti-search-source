@@ -1,0 +1,9 @@
+<template name="navJobs">
+  {{#if canViewJob}}
+    <li class="{{isActiveRoute regex='jobItemsMaster|jobItemsMasterType|submitJobItem|jobItemDetailed|jobItemEdit'}}">
+      <a href="{{pathFor route='jobItemsMaster'}}">
+        <i class="fa fa-spoon"></i> <span class="nav-label">Jobs</span>
+      </a>
+    </li>
+  {{/if}}
+</template>

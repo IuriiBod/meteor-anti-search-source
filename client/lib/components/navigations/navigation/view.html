@@ -2,114 +2,21 @@
   {{#if currentUser}}
     <nav class="navbar-default navbar-static-side hidden-print" role="navigation">
       <div class="sidebar-collapse">
-        <!-- Close canvas menu used only on OffCanvas page -->
-        <!-- You can remove this tag if you dont use offCanvas menu -->
         <a class="close-canvas-menu"><i class="fa fa-times"></i></a>
-        <!-- End offCanvas menu toggle -->
 
         <ul class="nav" id="side-menu">
-          <li class="special_link">
-            <a href="/"><span class="nav-label">Hospo Hero</span></a>
-          </li>
-          <!-- USER PROFILE HEADER -->
-          <li class="{{isActiveRoute regex='home'}}">
-            <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboard</span></a>
-          </li>
+          {{> navHeader}}
+          {{> navDashboard}}
 
           {{#if isInOrganization}}
             {{#if getCurrentAreaId}}
-              {{#if canViewForecast}}
-                <li class="{{isActiveRoute regex='salesPrediction'}}">
-                  <a href="{{pathFor "salesPrediction" year=year week=week}}">
-                    <i class="fa fa-bar-chart"></i>
-                    <span class="nav-label">Forecast</span>
-                  </a>
-                </li>
-              {{/if}}
-
-              {{#if canViewRoster}}
-                <li class="{{isActiveRoute regex='weeklyRoster|dailyRoster|templateWeeklyRoster'}}">
-                  <a href="#">
-                    <i class="fa fa-calendar-o"></i>
-                    <span class="nav-label">Roster</span>
-                  </a>
-                  <ul class="nav nav-second-level collapse {{isActiveRoute regex='dailyRoster|weeklyRoster|templateWeeklyRoster' className='in'}}">
-                    <li class="{{isActiveRoute regex='weeklyRoster'}}">
-                      <a href="/roster/weekly/{{year}}/{{week}}">Weekly</a>
-                    </li>
-                    <li class="{{isActiveRoute regex='dailyRoster'}}">
-                      <a href="/roster/daily/{{today}}">Daily</a>
-                    </li>
-
-                    {{#if canEditRoster}}
-                      <li class="{{isActiveRoute regex='templateWeeklyRoster'}}">
-                        <a href="/roster/template/weekly">Template</a>
-                      </li>
-                    {{/if}}
-                  </ul>
-                </li>
-              {{/if}}
-
-              {{#if canViewMenu}}
-                <li class="{{isActiveRoute regex='menuItemsMaster|submitMenuItem|menuItemsMasterType|menuItemDetail'}}">
-                  <a href="/menuItems/{{state$category}}/{{state$status}}"><i class="fa fa-cutlery"></i> <span class="nav-label">Menu</span></a>
-                </li>
-              {{/if}}
-
-              {{#if canViewJob}}
-                <li class="{{isActiveRoute regex='jobItemsMaster|jobItemsMasterType|submitJobItem|jobItemDetailed|jobItemEdit'}}">
-                  <a href="/jobItems"><i class="fa fa-spoon"></i> <span class="nav-label">Jobs</span> </a>
-                </li>
-              {{/if}}
-
-              {{#if canViewStock}}
-                <li class="{{isActiveRoute name='ingredientsList|stocktake|supplierOrdering'}}">
-                  <a href="#">
-                    <i class="fa fa-list"></i>
-                    <span class="nav-label">Stock</span>
-                  </a>
-                  <ul class="nav nav-second-level collapse {{isActiveRoute name='ingredientsList|stocktake|supplierOrdering' className='in'}}">
-                    <li class="{{isActiveRoute name='ingredientsList'}}">
-                      <a href="/stocklist">List</a>
-                    </li>
-
-                    {{#if canEditStock}}
-                      <li class="{{isActiveRoute name='stocktake'}}">
-                        <a href="/stocktake">Stocktake</a>
-                      </li>
-                      <li class="{{isActiveRoute name='supplierOrdering'}}">
-                        <a href="/stocktake/order/receipts">Receive Orders</a>
-                      </li>
-                      <li class="{{isActiveRoute name='suppliersList'}}">
-                        <a href="/suppliers">Suppliers</a>
-                      </li>
-                    {{/if}}
-                  </ul>
-                </li>
-              {{/if}}
-
-              {{#if isOrganizationOwner}}
-                <li class="{{isActiveRoute name='teamHours|currentStocks'}}">
-                  <a href="#">
-                    <i class="fa fa-line-chart"></i>
-                    <span class="nav-label">Reports</span>
-                  </a>
-                  <ul class="nav nav-second-level collapse {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
-                    <li class="{{isActiveRoute name='teamHours'}}">
-                      <a href="/reports/{{year}}/{{week}}#shifts">Team Hours</a>
-                    </li>
-                    <li class="{{isActiveRoute name='currentStocks'}}">
-                      <a href="/reports/stocktake/currentStocks/{{year}}/{{week}}">Daily stock</a>
-                    </li>
-                  </ul>
-                </li>
-              {{/if}}
-
-              {{#if isManager}}
-                <li class="{{isActiveRoute regex='admin'}}">
-                  <a href="/admin"><i class="fa -o fa-cog"></i> <span class="nav-label">Settings</span> </a>
-                </li>
-              {{/if}}
+              {{> navForecast year=year week=week}}
+              {{> navRoster today=today year=year week=week}}
+              {{> navMenu}}
+              {{> navJobs}}
+              {{> navStock}}
+              {{> navReports year=year week=week}}
+              {{> navSettings}}
             {{/if}}
           {{/if}}
         </ul>

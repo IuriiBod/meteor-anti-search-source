@@ -1,0 +1,74 @@
+<template name="jobDetailsHeader">
+  <div class="title-action">
+    <div class="btn-group">
+      <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+        <i class="fa fa-cog"></i>
+        Settings
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" style="margin-left: -56px;">
+        <li>
+          {{#if state$isSubscribed}}
+            <a href="#" class="hidden-print subscribeButton">
+              <i class="fa fa-lg fa-rss text-info"></i> Unsubscribe
+            </a>
+          {{else}}
+            <a href="#" class="hidden-print subscribeButton">
+              <i class="fa fa-lg fa-rss text-muted"></i> Subscribe
+            </a>
+          {{/if}}
+        </li>
+        {{#if canEditJob}}
+          <li>
+            <a href="#" class="hidden-print editJobItemBtn">
+              <i class="fa fa-edit" data-id="{{state$id}}"></i> Edit
+            </a>
+          </li>
+          <li>
+            <a href="" class="hidden-print copyJobItemBtn" data-id="{{state$id}}">
+              <i class="fa fa-copy" data-id="{{state$id}}"></i> Copy
+            </a>
+          </li>
+        {{/if}}
+        <li>
+          <a href="" class="hidden-print printJobItemBtn" data-id="{{state$id}}">
+            <i class="fa fa-print"></i> Print
+          </a>
+        </li>
+        {{#if canEditJob}}
+          <li role="separator" class="divider"></li>
+          {{#if state$isArchived}}
+            <li>
+              <a href="#" class="hidden-print archiveJobItem" data-id="{{state$id}}">
+                <i class="fa fa-dropbox" data-id="{{state$id}}"></i>
+                Restore
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hidden-print deleteJobItem" data-id="{{state$id}}">
+                <i class="fa fa-trash-o" data-id="{{state$id}}"></i>
+                Delete
+              </a>
+            </li>
+          {{else}}
+            <li>
+              <a href="#" class="hidden-print archiveJobItem" data-id="{{state$id}}">
+                <i class="fa fa-archive" data-id="{{state$id}}"></i>
+                Archive
+              </a>
+            </li>
+          {{/ if}}
+        {{/ if}}
+      </ul>
+    </div>
+  </div>
+
+  {{#if canEditJob}}
+    <!--AREA CHOOSER-->
+    <div class="modal fade" id="areaChooser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      {{> render component = 'areaChooser' onAreaSelected=state$onAreaSelected}}
+    </div>
+    <!--AREA CHOOSER-->
+  {{/if}}
+</template>

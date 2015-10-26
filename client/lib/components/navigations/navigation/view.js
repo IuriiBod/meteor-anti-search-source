@@ -1,27 +1,20 @@
 Template.navigation.rendered = function(){
-  //setTimeout(function() {
-    // Initialize metisMenu
-    $('#side-menu').metisMenu();
-  //}, 5000);
+  $('#side-menu').metisMenu();
 };
 
-// Used only on OffCanvas layout
 Template.navigation.events({
-  'click .close-canvas-menu' : function(){
+  'click .close-canvas-menu': function(){
     $('body').toggleClass("mini-navbar");
   },
 
-  'click #signOutButton': function(event) {
-    event.preventDefault();
-    Meteor.logout();
-  },
-  
-  'click #side-menu>li': function(e, tpl) {
+  'click #side-menu>li': function(e) {
     var li = $(e.target).closest('li');
 
-    if (li.closest("ul").attr("id") == "side-menu") {
-      li.addClass('active').children('ul').addClass('in');
-      li.siblings().removeClass('active').children('ul').removeClass('in');
+    if(!li.hasClass('nav-header')) {
+      if (li.closest("ul").attr("id") == "side-menu") {
+        li.addClass('active').children('ul').addClass('in');
+        li.siblings().removeClass('active').children('ul').removeClass('in');
+      }
     }
   }
 });
