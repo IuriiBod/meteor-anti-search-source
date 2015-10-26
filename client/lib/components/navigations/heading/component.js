@@ -48,16 +48,3 @@ component.state.headingToLoad = function () {
   var type = this.get('type');
   return headingsList.hasOwnProperty(type) ? headingsList[type] : false;
 };
-
-component.state.currentDate = function () {
-  return {
-    year: Router.current().params.year,
-    week: Router.current().params.week
-  }
-};
-
-component.state.onDateChanged = function () {
-  return function (weekDate) {
-    Router.go(Router.current().route.getName(), weekDate);
-  };
-};

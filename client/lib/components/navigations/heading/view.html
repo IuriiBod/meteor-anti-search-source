@@ -4,12 +4,7 @@
 
     <div class="col-sm-7">
       {{#if state$headingToLoad}}
-        {{> render
-            component=state$headingToLoad
-            year=state$currentDate.year
-            week=state$currentDate.week
-            onDateChanged=state$onDateChanged
-        }}
+        {{> render component=state$headingToLoad}}
       {{/if}}
     </div>
   </div>

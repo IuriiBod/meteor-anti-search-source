@@ -1,9 +1,14 @@
-var component = FlowComponents.define('weeklyHeader', function (props) {
-  this.set('year', props.year);
-  this.set('week', props.week);
-  this.set('onDateChanged', props.onDateChanged);
+var component = FlowComponents.define('weeklyHeader', function () {
+  this.set('year', Router.current().params.year);
+  this.set('week', Router.current().params.week);
   this.set('collapseIn', false);
 });
+
+component.state.onDateChanged = function () {
+  return function (weekDate) {
+    Router.go(Router.current().route.getName(), weekDate);
+  };
+};
 
 component.state.isPublished = function () {
   var date = moment().week(Router.current().params.week);
