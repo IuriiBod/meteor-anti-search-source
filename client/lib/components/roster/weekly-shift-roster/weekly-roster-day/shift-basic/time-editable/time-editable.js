@@ -1,30 +1,33 @@
-console.log('test');
-
 Template.shiftBasicTimeEditable.onRendered(function () {
-  //var editableSelector = '.' + this.data.property + '-picker';
   this.$('.time').editable(createShiftEndTimeEditableConfig(this));
 });
 
+
+Template.shiftBasicTimeEditable.helpers({
+  currentTime: function () {
+    return this.shift[this.property];
+  }
+});
+
+
 var createShiftEndTimeEditableConfig = function (templateInstance) {
   var onSuccess = function (response, newTime) {
-    console.log('success', newTime);
-
     var shift = templateInstance.data.shift;
-
     shift[templateInstance.data.property] = HospoHero.dateUtils.shiftDate(newTime, shift.type === 'template');
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
 
-  var shift = templateInstance.data.shift;
   return {
     type: 'combodate',
     title: 'Select ' + templateInstance.data.caption,
-    template: 'HH:mm',
-    viewformat: 'HH:mm',
+    template: "HH:mm",
+    viewformat: "HH:mm",
+    format: "YYYY-MM-DD HH:mm",
+    display: false,
     showbuttons: true,
-    inputclass: 'editableTime',
+    inputclass: "editableTime",
     mode: 'inline',
-    value: moment(shift[templateInstance.data.property]),
     success: onSuccess
   };
 };
+

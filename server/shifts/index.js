@@ -106,6 +106,8 @@ var ShiftPropertyChangeLogger = {
 
     logger.info("Shift update insert");
     ShiftsUpdates.insert(updateDocument);
+
+    //todo: send build in app notification also
   },
 
   _trackUserRemovedFromShift: function (oldShift, newShift, userId) {
