@@ -176,10 +176,11 @@ Meteor.methods({
     var options = {
       title: text.join(''),
       type: "claim",
-      to: userIds
+      to: userIds,
+      ref: shiftId
     };
 
-    Meteor.call("sendNotification", shiftId, options);
+    HospoHero.sendNotification(options);
   },
 
   confirmClaim: function(shiftId, userId) {
@@ -214,9 +215,10 @@ Meteor.methods({
       title: text,
       actionType: 'confirm',
       type: 'roster',
-      to: userId
+      to: userId,
+      ref: shiftId
     };
-    Meteor.call("sendNotification", shiftId, options);
+    HospoHero.sendNotification(options);
   },
 
   rejectClaim: function(shiftId, userId) {
@@ -245,8 +247,9 @@ Meteor.methods({
       "title": text,
       "actionType": "reject",
       type: 'roster',
-      to: userId
+      to: userId,
+      ref: shiftId
     };
-    Meteor.call("sendNotification", shiftId, options);
+    HospoHero.sendNotification(options);
   }
 });

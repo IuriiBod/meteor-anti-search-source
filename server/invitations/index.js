@@ -46,9 +46,10 @@ Meteor.methods({
       type: 'invitation',
       title: 'User ' + invitation.name + ' has accept your invitation',
       actionType: 'update',
-      to: invitation.invitedBy
+      to: invitation.invitedBy,
+      ref: id
     };
-    Meteor.call('sendNotification', null, options);
+    HospoHero.sendNotification(options);
 
     var areaId = invitation.areaId;
     var area = Areas.findOne({_id: areaId});

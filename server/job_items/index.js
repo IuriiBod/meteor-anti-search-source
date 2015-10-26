@@ -88,9 +88,10 @@ Meteor.methods({
       type: 'job',
       title: doc.name + ' job has been created',
       actionType: 'create',
-      to: to
+      to: to,
+      ref: id
     };
-    Meteor.call("sendNotification", id, options);
+    HospoHero.sendNotification(options);
     return id;
   },
 
@@ -260,7 +261,7 @@ Meteor.methods({
         title: job.name + ' job has been updated',
         to: to
       };
-      Meteor.call("sendNotification", id, options);
+      HospoHero.sendNotification(options);
       return editJobId;
     }
   },
@@ -300,7 +301,7 @@ Meteor.methods({
       title: job.name + ' job has been deleted',
       to: to
     };
-    Meteor.call("sendNotification", id, options);
+    HospoHero.sendNotification(options);
   },
 
   'addIngredientsToJob': function(id, ingredient, quantity) {
@@ -420,5 +421,6 @@ Meteor.methods({
     var job = JobItems.findOne({_id: id});
     var status = (job && job.status == "archived") ? "active" : "archived";
     JobItems.update({_id: id}, {$set: {status: status}});
+    return status;
   }
 });

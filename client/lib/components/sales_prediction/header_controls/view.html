@@ -1,3 +1,5 @@
 <template name="salesPredictionHeader">
-  {{> render component="weekPicker" year=state$year week=state$week onDateChanged=state$onDateChanged}}
+  <div class="title-action prediction-header">
+    {{> render component="weekPicker" year=state$year week=state$week onDateChanged=state$onDateChanged}}
+  </div>
 </template>
