@@ -92,5 +92,5 @@ Meteor.methods({
     }
     Shifts.update({_id: shiftId}, {$set: updateDoc});
     return true;
-  } 
+  }
 });

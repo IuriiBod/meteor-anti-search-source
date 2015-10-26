@@ -18,23 +18,3 @@ Template.navigation.events({
     }
   }
 });
-
-Template.navigation.helpers({
-  today: function() {
-    return moment(new Date()).format("YYYY-MM-DD");
-  },
-
-  week: function() {
-    var today = moment();
-    var week = today.format("w");
-    week = parseInt(week);
-    if(today.format("dd") == "Su") {
-      week = (week - 1);
-    }
-    return week;
-  },
-  
-  year: function() {
-    return moment().format("YYYY");
-  }
-});
