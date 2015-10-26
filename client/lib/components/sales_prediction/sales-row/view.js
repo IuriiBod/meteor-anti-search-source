@@ -1,5 +1,6 @@
 Template.predictionSalesRow.onRendered(function () {
-  if(MenuItems.find().count()<11){
+  var maxItemsToHideBtn = 10;
+  if(MenuItems.find().count()<=maxItemsToHideBtn){
     $("#loadMoreBtn").addClass("hide");
   }
 });
