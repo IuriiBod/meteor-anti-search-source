@@ -10,7 +10,7 @@ Weather = {
 
     if (needUpdate) {
       var location = Locations.findOne({_id: locationId});
-      var worldWeather = new WorldWeather(location.country, location.city);
+      var worldWeather = new WorldWeather(location.city);
       var weatherForecastList = worldWeather.getForecast();
       weatherForecastList.forEach(function (forecast) {
         var forecastDate = moment(forecast.date).startOf('day').toDate();

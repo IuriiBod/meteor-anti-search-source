@@ -1,4 +1,4 @@
-Meteor.publish('jobItems', function(ids) {
+Meteor.publish('jobItems', function(ids, status) {
   if(this.userId) {
     var query = {
       status: 'active',
@@ -7,6 +7,10 @@ Meteor.publish('jobItems', function(ids) {
 
     if(ids && ids.length) {
       query._id = { $in: ids };
+    }
+
+    if(status) {
+      query.status = status;
     }
 
     return JobItems.find(query, {sort: {'name': 1}});

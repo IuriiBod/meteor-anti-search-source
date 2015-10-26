@@ -1,0 +1,18 @@
+<template name="navReports">
+  {{#if isOrganizationOwner}}
+    <li class="{{isActiveRoute name='teamHours|currentStocks'}}">
+      <a href="#">
+        <i class="fa fa-line-chart"></i>
+        <span class="nav-label">Reports</span>
+      </a>
+      <ul class="nav nav-second-level collapse {{isActiveRoute name='teamHours|currentStocks' className='in'}}">
+        <li class="{{isActiveRoute name='teamHours'}}">
+          <a href="{{pathFor route='teamHours' year=year week=week query='#shifts'}}">Team Hours</a>
+        </li>
+        <li class="{{isActiveRoute name='currentStocks'}}">
+          <a href="{{pathFor route='currentStocks' year=year week=week}}">Daily stock</a>
+        </li>
+      </ul>
+    </li>
+  {{/if}}
+</template>

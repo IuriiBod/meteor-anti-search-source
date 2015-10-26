@@ -4,8 +4,7 @@
  * @param {String} city
  * @constructor
  */
-WorldWeather = function WorldWeather(country, city) {
-  this._country = country;
+WorldWeather = function WorldWeather(city) {
   this._city = city;
   this._defaultParams = {
     q: this._city,
