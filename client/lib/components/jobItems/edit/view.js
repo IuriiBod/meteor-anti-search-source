@@ -1,13 +1,6 @@
 Template.editJobItem.helpers({
   ingredientsList: function() {
-    var ing = Session.get("selectedIngredients");
-    if(ing) {
-      if(ing.length > 0) {
-        Meteor.subscribe("ingredients", ing);
-        var ingredientsList = Ingredients.find({'_id': {$in: ing}}).fetch();
-        return ingredientsList;
-      }
-    }
+    Ingredients.find().fetch();
   },
 
   jobTypes: function() {
@@ -329,7 +322,6 @@ Template.editJobItem.events({
 });
 
 Template.editJobItem.onRendered(function() {
-  Session.set("selectedIngredients", null);
   Session.set("jobType", null);
   Session.set("frequency", null);
   this.$(".checklist").sortable({

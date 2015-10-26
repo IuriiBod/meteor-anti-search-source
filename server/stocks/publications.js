@@ -7,13 +7,11 @@ Meteor.publish("ingredients", function(ids) {
       sort: {'code': 1},
     };
 
-    if (ids.length > 0) {
+    if (ids && ids.length > 0) {
       query._id = {$in: ids};
     } else {
       options.limit = 10;
     }
-
-    logger.info("Ingredients published", {"ids": ids});
 
     return Ingredients.find(query, options);
   } else {
