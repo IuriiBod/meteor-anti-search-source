@@ -12,8 +12,7 @@ Namespace('HospoHero.checkers', {
   }),
 
   OptionalMongoId: Match.Where(function (id) {
-    var optionalPattern = Match.Optional(Match.OneOf(HospoHero.checkers.MongoId, null));
-    check(id, optionalPattern);
+    check(id, Match.Optional(HospoHero.checkers.MongoId));
     return true;
   }),
 

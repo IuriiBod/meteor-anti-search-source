@@ -1,3 +1,5 @@
+console.log('test');
+
 var component = FlowComponents.define("weeklyRosterDay", function (props) {
   this.type = props.type;
   this.set('currentDate', props.currentDate);
@@ -20,10 +22,13 @@ component.state.shifts = function () {
 };
 
 component.action.addShift = function () {
+  var zeroMoment = moment('00:00:00', 'HH:mm:ss');
+  var startHour = 8, endHour = 17;
+
   var newShiftInfo = {
-    startTime: new Date().setHours(8, 0),
-    endTime: new Date().setHours(17, 0),
-    shiftDate: HospoHero.dateUtils.shiftDate(null, this.get('hasTemplateType')),
+    startTime: new Date(zeroMoment.hours(startHour)),
+    endTime: new Date(zeroMoment.hours(endHour)),
+    shiftDate: HospoHero.dateUtils.shiftDate(this.get('currentDate'), this.get('hasTemplateType')),
     type: this.type
   };
   Meteor.call("createShift", newShiftInfo, HospoHero.handleMethodResult());

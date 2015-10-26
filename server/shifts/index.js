@@ -10,10 +10,10 @@ var ShiftDocument = Match.Where(function (shift) {
 
     //optional properties
     _id: Match.Optional(HospoHero.checkers.MongoId),
-    section: HospoHero.checkers.OptionalMongoId,
-    createdBy: HospoHero.checkers.OptionalMongoId,
-    assignedTo: HospoHero.checkers.OptionalMongoId,
-    assignedBy: HospoHero.checkers.OptionalMongoId,
+    section: Match.Optional(HospoHero.checkers.MongoId),
+    createdBy: Match.Optional(HospoHero.checkers.MongoId),
+    assignedTo: Match.Optional(HospoHero.checkers.MongoId),
+    assignedBy: Match.Optional(HospoHero.checkers.MongoId),
     jobs: Match.Optional([HospoHero.checkers.MongoId]),
     status: Match.Optional(String),
     published: Match.Optional(Boolean),
@@ -146,11 +146,11 @@ var ShiftPropertyChangeLogger = {
  */
 Meteor.methods({
   createShift: function (newShiftInfo) {
-    check(ShiftDocument, newShiftInfo);
-
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error(403, "User not permitted to create shifts");
     }
+
+    check(newShiftInfo, ShiftDocument);
 
     var shiftsCount = Shifts.find({"shiftDate": TimeRangeQueryBuilder.forWeek(newShiftInfo.shiftDate)}).count();
 
@@ -161,18 +161,16 @@ Meteor.methods({
       "relations.areaId": HospoHero.getCurrentAreaId()
     });
 
-    var newShiftDocument = _.extend(newShiftInfo, {
-      "section": newShiftInfo.section,
+    var defaultShiftProperties = {
       "createdBy": Meteor.userId(),
-      "assignedTo": null,
-      "assignedBy": null,
       "jobs": [],
       "status": "draft",
-      "type": type,
       "published": isRosterPublished,
       "order": shiftsCount,
       relations: HospoHero.getRelationsObject()
-    });
+    };
+
+    var newShiftDocument = _.extend(newShiftInfo, defaultShiftProperties);
 
     if (isRosterPublished) {
       newShiftDocument.publishedOn = Date.now();

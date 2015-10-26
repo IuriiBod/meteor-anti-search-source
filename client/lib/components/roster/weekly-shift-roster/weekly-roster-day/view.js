@@ -1,7 +1,5 @@
 Template.weeklyRosterDay.onRendered(function () {
   if (HospoHero.canUser('edit roster', Meteor.userId())) {
-    this.$(".sortable-list > div > li").css("cursor", "move");
-
     this.$(".sortable-list").sortable({
       "connectWith": ".sortable-list",
       "revert": true
@@ -66,9 +64,7 @@ Template.weeklyRosterDay.onRendered(function () {
 });
 
 Template.weeklyRosterDay.events({
-  'click .addShiftBox': function (event) {
-    event.preventDefault();
-    //todo: fix it
+  'click .add-shift-button': function (event, tmpl) {
     FlowComponents.callAction("addShift");
   }
 });
