@@ -1,10 +1,11 @@
 Namespace('HospoHero', {
   sendNotification: function(notification) {
-    if(!notification.to || !notification.title) {
-      throw new Meteor.Error('Notification must have title and recipient');
+    if (!notification.title) {
+      throw new Meteor.Error('Notification must have a title');
     }
 
     var notificationOptions = {
+      to: '',
       type: '',
       read: false,
       createtedBy: null,
@@ -16,10 +17,28 @@ Namespace('HospoHero', {
 
     _.extend(notificationOptions, notification);
 
-    if(!notificationOptions.createdBy) {
+    if (!notificationOptions.createdBy) {
       notificationOptions.createdBy = Meteor.userId() || null;
     }
 
-    Notifications.insert(notificationOptions);
+    var sendNotificationToId = [];
+
+    if (notificationOptions.type == 'menu' || notificationOptions.type == 'job') {
+      var type = notificationOptions.type + 'list';
+      var subscription = Subscriptions.findOne({_id: type});
+      sendNotificationToId = sendNotificationToId.concat(subscription.subscribers);
+    }
+
+    var userIdIndex = sendNotificationToId.indexOf(notificationOptions.to);
+    if(!userIdIndex) {
+      sendNotificationToId.push(notificationOptions.to);
+    }
+
+    if (sendNotificationToId.length) {
+      sendNotificationToId.forEach(function(to) {
+        notificationOptions.to = to;
+        Notifications.insert(notificationOptions);
+      });
+    }
   }
 });
