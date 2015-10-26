@@ -1,0 +1,9 @@
+<template name="navMenu">
+  {{#if canViewMenu}}
+    <li class="{{isActiveRoute regex='menuItemsMaster|submitMenuItem|menuItemsMasterType|menuItemDetail'}}">
+      <a href="{{pathFor route='menuItemsMaster' category='all' status='all'}}">
+        <i class="fa fa-cutlery"></i> <span class="nav-label">Menu</span>
+      </a>
+    </li>
+  {{/if}}
+</template>

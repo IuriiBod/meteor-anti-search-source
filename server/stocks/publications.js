@@ -1,16 +1,20 @@
-Meteor.publish("ingredients", function(ids) {
+Meteor.publish("ingredients", function(ids, status) {
   if(this.userId) {
     var query = {
       "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
     };
     var options = {
-      sort: {'code': 1},
+      sort: {'code': 1}
     };
 
     if (ids && ids.length > 0) {
       query._id = {$in: ids};
     } else {
       options.limit = 10;
+    }
+
+    if(status) {
+      query.status = status;
     }
 
     return Ingredients.find(query, options);

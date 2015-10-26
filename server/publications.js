@@ -95,47 +95,40 @@ Meteor.publishComposite('organizationInfo', {
     {
       // Publishing locations of organization
       find: function(organization) {
-        if(user && user.relations && user.relations.locationIds) {
-          var fields = {};
-          var query = {
-            organizationId: organization._id,
-            archived: { $ne: true }
-          };
+        var fields = {};
+        var query = {
+          organizationId: organization._id,
+          archived: { $ne: true }
+        };
 
-          if(role == 'manager' || role == 'worker') {
-            query._id = {$in: user.relations.locationIds};
-            if (role == 'worker') {
-              fields.name = 1;
-              fields.organizationId = 1;
-            }
+        if(user && user.relations && user.relations.locationIds) {
+          query._id = {$in: user.relations.locationIds};
+          if (role == 'worker') {
+            fields.name = 1;
+            fields.organizationId = 1;
           }
-          return Locations.find(query, { fields: fields });
-        } else {
-          this.ready();
         }
+        return Locations.find(query, { fields: fields });
       },
       children: [
         {
           // Publishing areas of locations
           find: function(location) {
-            if(user && user.relations && user.relations.areaIds) {
-              var fields = {};
-              var query = {
-                locationId: location._id,
-                archived: { $ne: true }
-              };
+            var fields = {};
+            var query = {
+              locationId: location._id,
+              archived: { $ne: true }
+            };
 
+            if(user && user.relations && user.relations.areaIds) {
               if(role == 'worker') {
                 fields.name = 1;
                 fields.locationId = 1;
                 fields.organizationId = 1;
                 query._id = { $in: user.relations.areaIds };
               }
-
-              return Areas.find(query, { fields: fields });
-            } else {
-              this.ready();
             }
+            return Areas.find(query, { fields: fields });
           }
         }
       ]

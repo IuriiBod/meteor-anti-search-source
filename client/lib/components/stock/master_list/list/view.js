@@ -59,8 +59,7 @@ Template.ingredientsList.events({
   }, 200)
 });
 
-
-Template.ingredientsList.rendered = function() {
+Template.ingredientsList.onRendered(function() {
   IngredientsListSearch.cleanHistory();
   var selector = {
     limit: 30
@@ -71,9 +70,7 @@ Template.ingredientsList.rendered = function() {
     selector.status = {$ne: "archived"};
   }
   IngredientsListSearch.search("", selector);
-};
 
-Template.ingredientsList.onRendered(function() {
   var tpl = this;
   Meteor.defer(function() {
     $(window).scroll(function(e){
