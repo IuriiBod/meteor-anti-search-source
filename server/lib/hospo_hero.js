@@ -31,7 +31,7 @@ Namespace('HospoHero', {
 
     var userIdIndex = sendNotificationToId.indexOf(notificationOptions.to);
     if(!userIdIndex) {
-      sendNotificationToId.push(notificationOptions.to);
+      sendNotificationToId.concat(notificationOptions.to);
     }
 
     if (sendNotificationToId.length) {
