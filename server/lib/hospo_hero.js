@@ -11,8 +11,7 @@ Namespace('HospoHero', {
       createtedBy: null,
       ref: '',
       text: '',
-      createdOn: Date.now(),
-      relations: HospoHero.getRelationsObject()
+      createdOn: Date.now()
     };
 
     _.extend(notificationOptions, notification);

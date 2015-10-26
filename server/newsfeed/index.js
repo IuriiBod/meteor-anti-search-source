@@ -12,11 +12,8 @@ Meteor.methods({
       "likes": [],
       relations: HospoHero.getRelationsObject()
     };
-    if(ref) {
-      doc["reference"] = ref;
-    } else {
-      doc['reference'] = null;
-    }
+    doc["reference"] = ref ? doc['reference'] : null;
+
     var id = NewsFeeds.insert(doc);
     logger.info("NewsFeed text inserted", id);
     return id;

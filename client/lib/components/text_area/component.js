@@ -35,11 +35,11 @@ component.state.settings = function() {
     noMatchTemplate: Template.noMatchTemplate
   }];
   return data;  
-}
+};
 
 component.state.placeholder = function() {
   return this.placeholder;
-}
+};
 
 component.action.submit = function(text) {
   var self = this;
@@ -62,10 +62,8 @@ component.action.submit = function(text) {
       var userClass = "label-success";
       var doc = {
         "class": userClass
-      }
-      if(subscriber.profile.firstname && subscriber.profile.lastname) {
-        doc["name"] = "@" + subscriber.profile.firstname + " " + subscriber.profile.lastname; 
-      } 
+      };
+      doc['name'] = "@" + HospoHero.username(subscriber._id);
       doc['username'] = "@" + subscriber.username;
       taggedUsers.push(doc);
     }
@@ -73,13 +71,7 @@ component.action.submit = function(text) {
 
   var textHtml = "<div class='non'>" + text + "</div>"
   taggedUsers.forEach(function(user) {
-    var name = null;
-    if(user.hasOwnProperty("name")) {
-      name = user.name;
-    } else {
-      name = user.username;
-    }
-    textHtml = textHtml.replace(user.username, "<span class='label " + user.class + "'>" + name + "</span>");
+    textHtml = textHtml.replace(user.username, "<span class='label " + user.class + "'>" + user.name + "</span>");
   });
   var linkedText = autolinker.link(textHtml);
 
