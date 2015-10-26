@@ -1,8 +1,3 @@
-$.fn.editable.defaults.mode = 'inline';
-
-Template.shiftBasic.onCreated(function () {});
-
-
 Template.shiftBasic.events({
   'click .remove-shift-button': function (event, tmpl) {
     event.preventDefault();

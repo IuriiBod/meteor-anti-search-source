@@ -1,74 +1,94 @@
+console.log('test');
+
 Template.weeklyRosterDay.onRendered(function () {
   if (HospoHero.canUser('edit roster', Meteor.userId())) {
-    this.$(".sortable-list > div > li").css("cursor", "move");
-
-    this.$(".sortable-list").sortable({
-      "connectWith": ".sortable-list",
-      "revert": true
-    });
-
-    var self = this;
-
-    this.$(".sortable-list").on("sortstop", function (event, ui) {
-      //var id = $(ui.item[0]).find("li").attr("data-id");//shiftid
-      //
-      //var order = 0;
-      //var nextOrder = $(ui.item[0]).next().find("li").attr("data-order");
-      //var prevOrder = $(ui.item[0]).prev().find("li").attr("data-order");
-      //
-      //var thisShift = Shifts.findOne(id);
-      //
-      //if (thisShift) {
-      //  if (!nextOrder) {
-      //    order = parseFloat(prevOrder) + 1;
-      //  } else if (!prevOrder) {
-      //    order = parseFloat(nextOrder) - 1;
-      //  } else {
-      //    order = (parseFloat(nextOrder) + parseFloat(prevOrder)) / 2;
-      //  }
-      //}
-      //
-      //Meteor.call("editShift", id, {"order": order}, HospoHero.handleMethodResult());
-      var droppedItemContext = Blaze.getData(ui.item[0]);
-      console.log('stop', droppedItemContext);
-    });
-
-    this.$(".sortable-list").on("sortreceive", function (event, ui) {
-      var droppedItemContext = Blaze.getData(ui.item[0]);
-      console.log('stop', droppedItemContext);
-      //var id = $(ui.item[0]).find("li").attr("data-id");//shiftid
-      //var newDate = $(this).attr("data-date")//date of moved list
-      //if (self.origin == "weeklyrostertemplate") {
-      //  newDate = parseInt(daysOfWeek.indexOf(newDate));
-      //}
-      //
-      //var order = 0;
-      //var nextOrder = $(ui.item[0]).next().find("li").attr("data-order");
-      //var prevOrder = $(ui.item[0]).prev().find("li").attr("data-order");
-      //
-      //var thisShift = Shifts.findOne(id);
-      //
-      //if (thisShift) {
-      //  if (!nextOrder) {
-      //    order = parseFloat(prevOrder) + 1;
-      //  } else if (!prevOrder) {
-      //    order = parseFloat(nextOrder) - 1;
-      //  } else {
-      //    order = (parseFloat(nextOrder) + parseFloat(prevOrder)) / 2;
-      //  }
-      //}
-      //
-      //if (id && newDate) {
-      //  Meteor.call("editShift", id, {"shiftDate": newDate, "order": order}, HospoHero.handleMethodResult());
-      //}
-    });
+    this.$(".sortable-list").sortable(createSortableConfig());
   }
 });
 
+
 Template.weeklyRosterDay.events({
-  'click .addShiftBox': function (event) {
-    event.preventDefault();
-    //todo: fix it
+  'click .add-shift-button': function (event, tmpl) {
     FlowComponents.callAction("addShift");
   }
 });
+
+var createSortableConfig = function () {
+  return {
+    connectWith: ".sortable-list",
+    revert: true,
+    stop: function (event, ui) {
+      try {
+        var sortedShift = new SortableHelper(ui).getSortedShift();
+
+        if (sortedShift) {
+          Meteor.call("editShift", sortedShift, HospoHero.handleMethodResult());
+        }
+      } catch (err) {
+        //cancel drop if shift isn't valid
+        $(this).sortable('cancel');
+
+        HospoHero.error(err);
+      }
+    }
+  };
+};
+
+
+var SortableHelper = function (ui) {
+  this._draggedShift = _.clone(this._getDataByItem(ui.item)); //clone it just in case
+  this._previousShift = this._getDataByItem(ui.item.prev());
+  this._nextShift = this._getDataByItem(ui.item.next());
+};
+
+
+SortableHelper.prototype._getDataByItem = function (item) {
+  var element = item[0];
+  return element ? Blaze.getData(element) : null;
+};
+
+
+SortableHelper.prototype._getTargetShiftDate = function () {
+  return this._previousShift && this._previousShift.shiftDate || this._nextShift && this._nextShift.shiftDate;
+};
+
+
+SortableHelper.prototype._isDroppedOnOtherDay = function () {
+  var currentShiftMoment = moment(this._draggedShift.shiftDate);
+  var targetShiftDate = this._getTargetShiftDate();
+
+  return !currentShiftMoment.isSame(targetShiftDate, 'day') ? targetShiftDate : false;
+};
+
+
+SortableHelper.prototype._getOrder = function () {
+  var order = 0;
+
+  if (!this._nextShift && this._previousShift) {
+    order = this._previousShift.order + 1;
+  } else if (!this._previousShift && this._nextShift) {
+    order = this._nextShift.order - 1;
+  } else {
+    order = (this._nextShift.order + this._previousShift.order) / 2;
+  }
+
+  return order;
+};
+
+
+SortableHelper.prototype.getSortedShift = function () {
+  if (this._draggedShift) {
+    this._draggedShift.order = this._getOrder();
+
+    var droppedDay = this._isDroppedOnOtherDay();
+    if (droppedDay) {
+      this._draggedShift.shiftDate = droppedDay;
+    }
+
+    check(this._draggedShift, HospoHero.checkers.ShiftDocument);
+
+    return this._draggedShift;
+  }
+};
+
+
