@@ -3,6 +3,10 @@ Namespace('HospoHero.dateUtils', {
     return moment(date).format(format);
   },
 
+  shortDateFormat: function (date) {
+    return moment(date).format('YYYY-MM-DD');
+  },
+
   timezones: function () {
     var zones = [];
     for (var i = -12; i <= 12; i++) {
@@ -80,5 +84,19 @@ Namespace('HospoHero.dateUtils', {
 
     //be careful, because this method may bring bug with time
     return dateMoment.toDate();
+  },
+
+  getDateByWeekDate: function (weekDate) {
+    return moment(weekDate.year, 'YYYY').week(weekDate.week).startOf('isoweek').toDate();
+  },
+
+  getWeekDays: function (weekDate) {
+    var weekStart = moment(this.getDateByWeekDate(weekDate));
+    var weekDays = [];
+    for (var i = 0; i < 7; i++) {
+      weekDays.push(new Date(weekStart.toDate()));
+      weekStart.add(1, 'day');
+    }
+    return weekDays;
   }
 });

@@ -53,19 +53,3 @@ Namespace('HospoHero.prediction', {
     return query;
   }
 });
-
-//todo: move merge this stuff with helpers.js after helpers.js refactoring
-Namespace('HospoHero.dateUtils', {
-  getDateByWeekDate: function (weekDate) {
-    return moment(weekDate.year, 'YYYY').week(weekDate.week).startOf('isoweek').toDate();
-  },
-  getWeekDays: function (weekDate) {
-    var weekStart = moment(this.getDateByWeekDate(weekDate));
-    var weekDays = [];
-    for (var i = 0; i < 7; i++) {
-      weekDays.push(new Date(weekStart.toDate()));
-      weekStart.add(1, 'day');
-    }
-    return weekDays;
-  }
-});
