@@ -10,12 +10,12 @@
 
           {{#if isInOrganization}}
             {{#if getCurrentAreaId}}
-              {{> navForecast year=year week=week}}
-              {{> navRoster today=today year=year week=week}}
+              {{> navForecast}}
+              {{> navRoster}}
               {{> navMenu}}
               {{> navJobs}}
               {{> navStock}}
-              {{> navReports year=year week=week}}
+              {{> navReports}}
               {{> navSettings}}
             {{/if}}
           {{/if}}
