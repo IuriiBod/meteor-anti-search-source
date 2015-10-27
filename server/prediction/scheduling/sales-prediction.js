@@ -116,19 +116,21 @@ salesPredictionUpdateJob = function () {
   });
 };
 
-if (!HospoHero.isDevelopmentMode()) {
-  SyncedCron.add({
-    name: 'Forecast refresh',
-    schedule: function (parser) {
-      return parser.text('at 05:00 am');
-    },
-    job: salesPredictionUpdateJob
-  });
 
-  Meteor.startup(function () {
-    //if we run first time -> make predictions immediately (in other thread)
-    Meteor.defer(salesPredictionUpdateJob);
-  });
-}
+//!!! disable it temporaly to be able control it manually
+//if (!HospoHero.isDevelopmentMode()) {
+//  SyncedCron.add({
+//    name: 'Forecast refresh',
+//    schedule: function (parser) {
+//      return parser.text('at 05:00 am');
+//    },
+//    job: salesPredictionUpdateJob
+//  });
+//
+//  Meteor.startup(function () {
+//    //if we run first time -> make predictions immediately (in other thread)
+//    Meteor.defer(salesPredictionUpdateJob);
+//  });
+//}
 
 
