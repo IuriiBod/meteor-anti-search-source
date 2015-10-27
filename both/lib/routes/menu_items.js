@@ -34,7 +34,8 @@ Router.route('/menuItems/submit', {
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe("allSuppliers"),
       Meteor.subscribe("ingredients"),
-      Meteor.subscribe('jobTypes')
+      Meteor.subscribe('jobTypes'),
+      Meteor.subscribe("jobItems")
     ];
   },
   data: function() {
