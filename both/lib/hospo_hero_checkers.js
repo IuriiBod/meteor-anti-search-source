@@ -84,6 +84,8 @@ var SubscriptionDocument = Match.Where(function(subscription) {
     type: String,
     itemIds: Match.OneOf(String, Object)
   });
+
+  return true;
 });
 
 

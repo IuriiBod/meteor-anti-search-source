@@ -16,21 +16,41 @@ Meteor.methods({
     }
 
     var isAll = subscription.itemIds === 'all';
+    var type = subscription.type;
 
     /**
      * Returns query to update
      * @param {string} itemIdNew - 'all' or ID of item
-     * @param {array} itemIdsOld - Array of subscribed item IDs
+     * @param {Array|string} itemIdsOld - Array of subscribed item IDs
      * @param {boolean} unsubscribe - If true - delete itemIdNew from itemIdsOld
      * @returns {{itemIds: *}}
      */
     var getUpdateQuery = function (itemIdNew, itemIdsOld, unsubscribe) {
-      if (unsubscribe && !all) {
-        var itemIndex = itemIdsOld.indexOf(itemIdNew);
-        if (itemIndex > -1) {
-          itemIdsOld.splice(itemIndex, 1);
+      if (unsubscribe && !isAll) {
+        if (itemIdsOld === 'all') {
+          // Unsubscribe from one element when was subscribed on all items before that
+          var subscriptonCollections = {
+            menu: MenuItems,
+            job: JobItems
+          };
+
+          itemIdsOld = subscriptonCollections[type].find({
+            'relations.areaId': HospoHero.getCurrentAreaId()
+          }).map(function (item) {
+            return item._id;
+          });
         }
-      } else if (!unsubscribe) {
+
+        if (_.isArray(itemIdsOld)) {
+          var itemIndex = itemIdsOld.indexOf(itemIdNew);
+          if (itemIndex > -1) {
+            itemIdsOld.splice(itemIndex, 1);
+          }
+        } else {
+          itemIdsOld = 'all';
+        }
+      }
+      else if (!unsubscribe) {
         isAll ? itemIdsOld = 'all' : itemIdsOld.push(itemIdNew);
       }
       return {itemIds: itemIdsOld};
@@ -43,7 +63,7 @@ Meteor.methods({
 
     if (subscriptionExists && unsubscribe && isAll) {
       Subscriptions.remove({_id: subscriptionExists._id});
-    } else if(!subscriptionExists && !unsubscribe) {
+    } else if (!subscriptionExists && !unsubscribe) {
       var defaultSubscription = {
         type: subscription.type,
         itemIds: isAll ? 'all' : [subscription.itemIds],
@@ -59,4 +79,5 @@ Meteor.methods({
       });
     }
   }
-});
+})
+;
