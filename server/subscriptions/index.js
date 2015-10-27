@@ -35,7 +35,7 @@ Meteor.methods({
           };
 
           itemIdsOld = subscriptonCollections[type].find({
-            'relations.areaId': HospoHero.getCurrentAreaId()
+            'relations.areaId': HospoHero.getCurrentAreaId(userId)
           }).map(function (item) {
             return item._id;
           });
@@ -58,7 +58,8 @@ Meteor.methods({
 
     var subscriptionExists = Subscriptions.findOne({
       subscriber: userId,
-      type: subscription.type
+      type: subscription.type,
+      'relations.areaId': HospoHero.getCurrentAreaId(userId)
     });
 
     if (subscriptionExists && unsubscribe && isAll) {
@@ -79,5 +80,4 @@ Meteor.methods({
       });
     }
   }
-})
-;
+});
