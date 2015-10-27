@@ -1,5 +1,3 @@
-console.log('test');
-
 Template.weeklyRosterDay.onRendered(function () {
   if (HospoHero.canUser('edit roster', Meteor.userId())) {
     this.$(".sortable-list").sortable(createSortableConfig());
