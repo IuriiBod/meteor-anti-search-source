@@ -82,11 +82,7 @@ var ShiftDocument = Match.Where(function (shift) {
 var SubscriptionDocument = Match.Where(function(subscription) {
   check(subscription, {
     type: String,
-    subscribers: Match.OneOf(String, Object),
-
-    // optional
-    _id: HospoHero.checkers.OptionalMongoId,
-    relations: Match.Optional(HospoHero.checkers.Relations)
+    itemIds: Match.OneOf(String, Object)
   });
 });
 
