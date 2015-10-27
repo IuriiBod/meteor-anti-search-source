@@ -5,7 +5,7 @@ var component = FlowComponents.define("staffCostFigureBox", function (props) {
     declining: props.forecasted,
     subtrahend: props.actual
   };
-  this.figureBox = new FigureBox(data);
+  this.figureBox = new FigureBoxDataHelper(data);
 });
 
 component.state.weeklyStaffCost = function () {

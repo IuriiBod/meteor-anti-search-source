@@ -1,6 +1,6 @@
 var component = FlowComponents.define("staffCostPercentagesTr", function(props) {
   this.dayObj = props.day;
-  this.figureBox = new FigureBox(this.dayObj);
+  this.figureBox = new FigureBoxDataHelper(this.dayObj);
 });
 
 component.state.actual = function() {

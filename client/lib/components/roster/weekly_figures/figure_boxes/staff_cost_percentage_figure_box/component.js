@@ -18,7 +18,7 @@ component.state.rosteredStaffWage = function () {
 };
 
 component.state.percent = function () {
-  var figureBox = new FigureBox({
+  var figureBox = new FigureBoxDataHelper({
     declining: this.get("forecastedWage"),
     subtrahend: this.get("actualWage")
   });

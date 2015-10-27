@@ -5,7 +5,7 @@ var component = FlowComponents.define("salesFigureBox", function (props) {
     declining: props.actual,
     subtrahend: props.forecasted
   };
-  this.figureBox = new FigureBox(data);
+  this.figureBox = new FigureBoxDataHelper(data);
 });
 
 component.state.weeklySale = function () {

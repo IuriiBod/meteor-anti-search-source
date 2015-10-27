@@ -1,4 +1,4 @@
-FigureBox = function FigureBox(data) {
+FigureBoxDataHelper = function FigureBoxDataHelper(data) {
   this.data = data;
   if (data.week && data.year) {
     this.data.weekRange = HospoHero.dateUtils.getWeekStartEnd(data.week, data.year);
@@ -9,7 +9,7 @@ FigureBox = function FigureBox(data) {
 
 };
 
-FigureBox.prototype.getWeeklySale = function () {
+FigureBoxDataHelper.prototype.getWeeklySale = function () {
   if (this.data.week != moment().week()) {
     var sales = this.sales;
     var propName = this.data.week < moment().week() ? 'actualQuantity' : 'predictionQuantity';
@@ -34,16 +34,16 @@ FigureBox.prototype.getWeeklySale = function () {
   }
 };
 
-FigureBox.prototype.getForecastedSales = function () {
+FigureBoxDataHelper.prototype.getForecastedSales = function () {
   var sales = this.sales;
   return this._calcSalesCost(sales, 'predictionQuantity');
 };
 
-FigureBox.prototype.getWeeklyStaffCost = function () {
+FigureBoxDataHelper.prototype.getWeeklyStaffCost = function () {
   return this._calcStaffCost(this.shifts);
 };
 
-FigureBox.prototype.getRosteredStaffCost = function () {
+FigureBoxDataHelper.prototype.getRosteredStaffCost = function () {
   var shifts = _.map(this.shifts, function (item) {
     item.status = "draft";
     return item;
@@ -51,7 +51,7 @@ FigureBox.prototype.getRosteredStaffCost = function () {
   return this._calcStaffCost(shifts);
 };
 
-FigureBox.prototype.getDailyActual = function () {
+FigureBoxDataHelper.prototype.getDailyActual = function () {
   var shifts = this._getShifts("draft");
   return {
     actualWages: this._calcStaffCost(shifts),
@@ -59,7 +59,7 @@ FigureBox.prototype.getDailyActual = function () {
   }
 };
 
-FigureBox.prototype.getDailyForecast = function () {
+FigureBoxDataHelper.prototype.getDailyForecast = function () {
   var shifts = this._getShifts("finished");
   return {
     forecastedWages: this._calcStaffCost(shifts),
@@ -67,7 +67,7 @@ FigureBox.prototype.getDailyForecast = function () {
   }
 };
 
-FigureBox.prototype.percent = function () {
+FigureBoxDataHelper.prototype.percent = function () {
   if (this.data.declining && this.data.subtrahend) {
     var doc = {
       "value": 0,
@@ -85,7 +85,7 @@ FigureBox.prototype.percent = function () {
   }
 };
 
-FigureBox.prototype._calcSalesCost = function (sales, propertyName) {
+FigureBoxDataHelper.prototype._calcSalesCost = function (sales, propertyName) {
   var totalCost = 0;
   if (sales && sales.length > 0 && !!MenuItems.findOne()) {
     _.each(sales, function (item) {
@@ -101,14 +101,15 @@ FigureBox.prototype._calcSalesCost = function (sales, propertyName) {
   return totalCost;
 };
 
-FigureBox.prototype._calcStaffCost = function (shifts) {
+FigureBoxDataHelper.prototype._calcStaffCost = function (shifts) {
+  var self = this;
   var totalCost = 0;
   if (shifts && shifts.length > 0) {
     _.each(shifts, function (shift) {
       var user = Meteor.users.findOne({_id: shift.assignedTo});
       if (user && user.profile && user.profile.payrates) {
-        var totalhours = this._getTotalHours(shift);
-        var rate = this._getPayrate(user, shift);
+        var totalhours = self._getTotalHours(shift);
+        var rate = self._getPayrate(user, shift);
         if (totalhours > 0) {
           totalCost += rate * totalhours;
         }
@@ -118,7 +119,7 @@ FigureBox.prototype._calcStaffCost = function (shifts) {
   return totalCost;
 };
 
-FigureBox.prototype._getPayrate = function (user, shift) {
+FigureBoxDataHelper.prototype._getPayrate = function (user, shift) {
   var day = moment(shift.shiftDate).format("dddd");
   if (day) {
     if (day === "Saturday") {
@@ -138,7 +139,7 @@ FigureBox.prototype._getPayrate = function (user, shift) {
   return 0;
 };
 
-FigureBox.prototype._getTotalHours = function (shift) {
+FigureBoxDataHelper.prototype._getTotalHours = function (shift) {
   if (shift.status == "draft" || shift.status == "started") {
     return moment(shift.endTime).diff(moment(shift.startTime), "hour");
   } else {
@@ -146,6 +147,6 @@ FigureBox.prototype._getTotalHours = function (shift) {
   }
 };
 
-FigureBox.prototype._getShifts = function (exept) {
+FigureBoxDataHelper.prototype._getShifts = function (exept) {
   return Shifts.find({"shiftDate": TimeRangeQueryBuilder.forDay(this.data), "status": {$ne: exept}, "type": null}).fetch();
 };

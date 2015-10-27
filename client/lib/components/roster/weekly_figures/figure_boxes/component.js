@@ -3,7 +3,7 @@ var component = FlowComponents.define("figureBoxes", function (props) {
     week: Router.current().params.week,
     year: Router.current().params.year
   };
-  this.figureBox = new FigureBox(data);
+  this.figureBox = new FigureBoxDataHelper(data);
 });
 
 component.state.salesData = function () {
