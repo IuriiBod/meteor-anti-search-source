@@ -98,5 +98,9 @@ Namespace('HospoHero.dateUtils', {
       weekStart.add(1, 'day');
     }
     return weekDays;
+  },
+
+  getMillisecondsFromDays: function (days) {
+    return days * 24 * 60 * 60 * 1000;
   }
 });

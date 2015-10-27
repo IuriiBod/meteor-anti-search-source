@@ -54,7 +54,7 @@ predictionModelRefreshJob = function () {
     if (predictionEnabled) {
       var forecastData = ForecastDates.findOne({locationId: location});
       var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
-          || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
+          || forecastData.lastUploadDate >= HospoHero.dateUtils.getMillisecondsFromDays(182);
 
       var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
 
