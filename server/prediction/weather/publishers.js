@@ -12,7 +12,7 @@ Meteor.publish('weatherForecast', function (year, week) {
   var currentArea = HospoHero.getCurrentArea(this.userId);
   var locationId = currentArea.locationId;
 
-  Weather.updateWeatherForecastForLocation(locationId);
+  new WeatherManager(locationId).updateForecast();
 
   var date = HospoHero.dateUtils.getDateByWeekDate({year: year, week: week});
   var weekRange = TimeRangeQueryBuilder.forWeek(date);

@@ -1,10 +1,3 @@
-//todo: get rid of this object
-Weather = {
-  updateWeatherForecastForLocation: function (locationId) {
-    new WeatherManager(locationId).updateForecast();
-  }
-};
-
 /**
  * Used to uploading historical/forecast and reading weather for specified location
  *
@@ -19,9 +12,10 @@ WeatherManager = function WeatherManager(locationId) {
 };
 
 /**
- * Returns weather for current date
+ * Returns weather for specified date
  *
  * @param {date|moment} date
+ * @returns {object|null} weather forecast
  */
 WeatherManager.prototype.getWeatherFor = function (date) {
   return WeatherForecast.findOne({locationId: this._locationId, date: TimeRangeQueryBuilder.forDay(date)});

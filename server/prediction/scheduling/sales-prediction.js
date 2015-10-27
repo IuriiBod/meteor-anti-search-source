@@ -1,14 +1,11 @@
-var getWeatherForecast = function (dayIndex, forecastDate, locationId) {
+var getWeatherForecast = function (dayIndex, forecastDate, weatherManager) {
   //todo: temporal. figure out typical weather
   var defaultWeather = {
     temp: 20.0,
     main: 'Clear'
   };
 
-  var currentWeather = dayIndex < 14 && WeatherForecast.findOne({
-      locationId: locationId,
-      date: TimeRangeQueryBuilder.forDay(forecastDate)
-    });
+  var currentWeather = dayIndex < 14 && weatherManager.getWeatherFor(forecastDate);
 
   return currentWeather || defaultWeather;
 };
@@ -23,12 +20,13 @@ var predict = function (days, locationId) {
   var areas = Areas.find({locationId: locationId});
   var roleManagerId = Roles.getRoleByName('Manager')._id;
 
-  Weather.updateWeatherForecastForLocation(locationId);
+  var weatherManager = new WeatherManager(locationId);
+  weatherManager.updateForecast();
 
   var currentWeather;
   for (var i = 0; i < days; i++) {
 
-    currentWeather = getWeatherForecast(i, dateMoment.toDate(), locationId);
+    currentWeather = getWeatherForecast(i, dateMoment.toDate(), weatherManager);
 
     areas.forEach(function (area) {
       var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});

@@ -1,5 +1,6 @@
 var CloudSettings = Meteor.settings.GoogleCloud;
 
+//todo: should be refactored
 var CsvEntryGenerator = {
   generate: function (salesData, weather, locationId) {
     var csvString = '';
@@ -20,6 +21,7 @@ var CsvEntryGenerator = {
   }
 };
 
+//todo: apply prototyping to it
 GoogleCloud = {
   _googleCloud: new gcloud({
     projectId: CloudSettings.PROJECT_ID,
@@ -31,7 +33,9 @@ GoogleCloud = {
 
   MAX_UPLOADED_DAYS_COUNT: 365,
 
+  //todo: should be as separate prototyping object
   createTrainingDataUploadingSession: function (trainingFileName, locationId, onUploadingFinishedCallback) {
+    var weatherManager = new WeatherManager(locationId);
     var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
     var trainingDataWriteStream = new through();
 
@@ -42,14 +46,17 @@ GoogleCloud = {
     var uploadedDaysCount = 0;
     var self = this;
 
+
     return {
       onDataReceived: function (salesData) {
         logger.info('Received daily sales', {date: salesData.createdDate});
-        var location = Locations.findOne({_id: locationId});
-        var worldWeather = new WorldWeather(location.city);
-        var weather = worldWeather.getHistorical(salesData.createdDate)[0];
-        var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather, locationId);
-        trainingDataWriteStream.push(csvEntriesForCurrentDay);
+
+        var weather = weatherManager.getWeatherFor(salesData.createdDate);
+
+        if (weather) {
+          var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather, locationId);
+          trainingDataWriteStream.push(csvEntriesForCurrentDay);
+        }
 
         uploadedDaysCount++;
 
@@ -71,5 +78,4 @@ GoogleCloud = {
       }
     });
   }
-
 };
