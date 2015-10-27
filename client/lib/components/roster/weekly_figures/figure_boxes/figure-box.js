@@ -4,6 +4,7 @@ FigureBox = function FigureBox(data) {
     this.data.weekRange = HospoHero.dateUtils.getWeekStartEnd(data.week, data.year);
     this.sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.data.weekRange.monday)}, {sort: {"date": 1}}).fetch();
     this.shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.data.weekRange.monday)}).fetch();
+    this.daySales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.data)}).fetch();
   }
 
 };
@@ -51,26 +52,18 @@ FigureBox.prototype.getRosteredStaffCost = function () {
 };
 
 FigureBox.prototype.getDailyActual = function () {
-  var shifts = Shifts.find({"shiftDate": TimeRangeQueryBuilder.forDay(this.data), "status": {$ne: "draft"}, "type": null}).fetch();
-  var actualSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.data)}).fetch(); //ImportedActualSales
-  console.log(this._calcStaffCost(shifts), this._calcSalesCost(actualSales, 'actualQuantity'));
+  var shifts = this._getShifts("draft");
   return {
     actualWages: this._calcStaffCost(shifts),
-    actualSales: this._calcSalesCost(actualSales, 'actualQuantity')
+    actualSales: this._calcSalesCost(this.daySales, 'actualQuantity')
   }
 };
 
 FigureBox.prototype.getDailyForecast = function () {
-  var shifts = Shifts.find({
-    "shiftDate": TimeRangeQueryBuilder.forDay(this.data),
-    "status": {$ne: "finished"},
-    "type": null
-  }).fetch();
-  var forecastesSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.data)}).fetch(); //SalesPrediction
-  console.log(this._calcStaffCost(shifts), this._calcSalesCost(forecastesSales, 'predictionQuantity'));
+  var shifts = this._getShifts("finished");
   return {
     forecastedWages: this._calcStaffCost(shifts),
-    forecastedSales: this._calcSalesCost(forecastesSales, 'predictionQuantity')
+    forecastedSales: this._calcSalesCost(this.daySales, 'predictionQuantity')
   }
 };
 
@@ -114,8 +107,8 @@ FigureBox.prototype._calcStaffCost = function (shifts) {
     _.each(shifts, function (shift) {
       var user = Meteor.users.findOne({_id: shift.assignedTo});
       if (user && user.profile && user.profile.payrates) {
-        var totalhours = getTotalHours(shift);
-        var rate = getPayrate(user, shift);
+        var totalhours = this._getTotalHours(shift);
+        var rate = this._getPayrate(user, shift);
         if (totalhours > 0) {
           totalCost += rate * totalhours;
         }
@@ -125,7 +118,7 @@ FigureBox.prototype._calcStaffCost = function (shifts) {
   return totalCost;
 };
 
-var getPayrate = function (user, shift) {
+FigureBox.prototype._getPayrate = function (user, shift) {
   var day = moment(shift.shiftDate).format("dddd");
   if (day) {
     if (day === "Saturday") {
@@ -145,10 +138,14 @@ var getPayrate = function (user, shift) {
   return 0;
 };
 
-var getTotalHours = function (shift) {
+FigureBox.prototype._getTotalHours = function (shift) {
   if (shift.status == "draft" || shift.status == "started") {
     return moment(shift.endTime).diff(moment(shift.startTime), "hour");
   } else {
     return moment(shift.finishedAt).diff(moment(shift.startedAt), "hour");
   }
+};
+
+FigureBox.prototype._getShifts = function (exept) {
+  return Shifts.find({"shiftDate": TimeRangeQueryBuilder.forDay(this.data), "status": {$ne: exept}, "type": null}).fetch();
 };
