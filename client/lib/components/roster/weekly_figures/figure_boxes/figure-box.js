@@ -1,7 +1,7 @@
 FigureBox = function FigureBox(data) {
   this.data = data;
   if(data.week && data.year){
-    this.data.weekRange = getWeekStartEnd(data.week, data.year);
+    this.data.weekRange = HospoHero.dateUtils.getWeekStartEnd(data.week, data.year);
   }
 };
 
