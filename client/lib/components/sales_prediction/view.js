@@ -6,6 +6,9 @@ var fields = ['name'];
 
 MenuItemsSearch = new SearchSource('menuItemsSearch', fields, options);
 
+var maxHistoryLength = 9;
+var limitAdd = 10;
+
 Template.salesPrediction.helpers({
   formatDate: function (date) {
     return moment(date).format('YYYY-MM-DD');
@@ -30,7 +33,6 @@ Template.salesPrediction.events({
     var text = $("#searchMenuItems").val().trim();
     if (MenuItemsSearch.history && MenuItemsSearch.history[text]) {
       var dataHistory = MenuItemsSearch.history[text].data;
-      var maxHistoryLength = 9;
       if (dataHistory.length >= maxHistoryLength) {
         MenuItemsSearch.cleanHistory();
         var count = dataHistory.length;
@@ -38,7 +40,7 @@ Template.salesPrediction.events({
         var category = Router.current().params.category;
         var filter = [];
         var selector = {
-          "limit": count + 10,
+          "limit": count + limitAdd,
           "endingAt": lastItem
         };
         filter.push({
@@ -50,7 +52,7 @@ Template.salesPrediction.events({
         }
         selector.filter = filter;
         MenuItemsSearch.search(text, selector);
-        if ((count + 10) >= MenuItems.find().count()) {
+        if ((count + limitAdd) >= MenuItems.find().count()) {
           $("#loadMoreBtn").addClass("hide");
         }
       }

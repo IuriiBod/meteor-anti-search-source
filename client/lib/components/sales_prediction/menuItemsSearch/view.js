@@ -1,16 +1,17 @@
 Template.menuItemsSearch.events({
   'keyup #searchMenuItems': function (event) {
+    MenuItemsSearch.cleanHistory();
     var text = $("#searchMenuItems").val().trim();
     MenuItemsSearch.search(text, getSelector());
   }
 });
 
 Template.menuItemsSearch.onRendered(function () {
+  MenuItemsSearch.cleanHistory();
   MenuItemsSearch.search("", getSelector());
 });
 
-getSelector = function () {
-  MenuItemsSearch.cleanHistory();
+var getSelector = function () {
   var category = Router.current().params.category;
   var selector = {
     limit: 10
