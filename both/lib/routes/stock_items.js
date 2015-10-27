@@ -7,7 +7,9 @@ Router.route('/stocklist', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("allSuppliers"),
-      Meteor.subscribe("ingredients", null, 'active')
+      Meteor.subscribe("ingredients", null, 'active'),
+      Meteor.subscribe("ingredientsRelatedJobs"),
+      Meteor.subscribe("ingredients")
     ];
   },
   data: function() {
@@ -27,6 +29,7 @@ Router.route('/stocklist/:type', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe("ingredientsRelatedJobs"),
       Meteor.subscribe("ingredients", null, 'archived')
     ]
   },
