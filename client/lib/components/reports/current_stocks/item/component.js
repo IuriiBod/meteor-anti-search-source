@@ -21,6 +21,11 @@ component.state.stockIds = function () {
   return stockIds;
 };
 
+component.state.stockById = function (stockId) {
+  var stock = Ingredients.findOne(stockId);
+  return stock ? stock.description : false;
+};
+
 component.state.countByDate = function (stockId) {
   var result = [];
   var week = getDatesFromWeekNumber(parseInt(Session.get("thisWeek")));
