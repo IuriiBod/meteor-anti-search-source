@@ -3,7 +3,6 @@ Template.ingredientItemDetailed.events({
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
     Session.set("thisIngredientId", id);
-    Meteor.subscribe("ingredients", [id]);
     $("#editIngredientModal").modal("show");
   },
 
