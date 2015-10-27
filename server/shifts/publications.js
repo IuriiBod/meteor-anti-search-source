@@ -1,5 +1,7 @@
-Meteor.publishAuthorized('weeklyRoster', function (date) {
-  check(date, Date);
+Meteor.publishAuthorized('weeklyRoster', function (weekDate) {
+  check(weekDate, HospoHero.checkers.WeekDate);
+
+  var date = HospoHero.dateUtils.getDateByWeekDate(weekDate);
 
   logger.info("Weekly shifts detailed publication");
 
