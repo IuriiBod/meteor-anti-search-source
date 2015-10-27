@@ -116,5 +116,12 @@ Namespace('HospoHero.otherUtils', {
       });
       return values;
     }
+  },
+
+  getWeekDateFromRoute: function (routeContext) {
+    return {
+      week: parseInt(routeContext.params.week),
+      year: parseInt(routeContext.params.year)
+    };
   }
 });

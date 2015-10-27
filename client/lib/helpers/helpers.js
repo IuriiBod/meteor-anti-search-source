@@ -77,10 +77,13 @@ var helpers = {
       return "-"
     }
   },
+  weekDateName: function (date) {
+    return moment(date).format('dddd');
+  },
   username: function (userId) {
     var user = Meteor.users.findOne(userId);
-    if(user && user.profile) {
-      if(user.profile.firstname && user.profile.lastname) {
+    if (user && user.profile) {
+      if (user.profile.firstname && user.profile.lastname) {
         return user.profile.firstname + " " + user.profile.lastname;
       } else {
         return user.username;
@@ -88,9 +91,9 @@ var helpers = {
     }
   },
   jobTypeById: function (id) {
-    if(id) {
+    if (id) {
       var type = JobTypes.findOne(id);
-      if(type) {
+      if (type) {
         return type.name;
       }
     } else {
@@ -98,9 +101,9 @@ var helpers = {
     }
   },
   sectionById: function (id) {
-    if(id) {
+    if (id) {
       var section = Sections.findOne(id);
-      if(section) {
+      if (section) {
         return section.name;
       }
     } else {
@@ -130,7 +133,8 @@ var helpers = {
     return (a === b);
   },
 
-  profilePicture: function(userId) {
+  profilePicture: function (userId) {
+    userId = userId ? userId : Meteor.userId();
     var user = Meteor.users.findOne(userId);
     if (user) {
       if (user.profile && user.profile.image) {
