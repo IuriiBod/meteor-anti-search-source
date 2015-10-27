@@ -53,7 +53,8 @@ Router.route('/stocktake/order/receive/:_id', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("receiptOrders", this.params._id),
-      Meteor.subscribe("orderReceipts", [this.params._id])
+      Meteor.subscribe("orderReceipts", [this.params._id]),
+      Meteor.subscribe("ingredients")
     ];
   },
   data: function() {
