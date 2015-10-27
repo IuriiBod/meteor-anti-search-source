@@ -33,7 +33,8 @@ Router.route('/menuItems/submit', {
       Meteor.subscribe('allCategories'),
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe("allSuppliers"),
-      Meteor.subscribe("ingredients")
+      Meteor.subscribe("ingredients"),
+      Meteor.subscribe('jobTypes')
     ];
   },
   data: function() {
@@ -81,7 +82,8 @@ Router.route('/menuItem/:_id', {
       Meteor.subscribe("allCategories"),
       Meteor.subscribe("allStatuses"),
       Meteor.subscribe("userSubs", ['menulist', this.params._id]),
-      Meteor.subscribe("usersList")
+      Meteor.subscribe("usersList"),
+      Meteor.subscribe('jobTypes')
     ];
   },
   data: function() {
