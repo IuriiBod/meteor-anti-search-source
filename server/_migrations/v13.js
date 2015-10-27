@@ -2,13 +2,21 @@ Migrations.add({
     version: 13,
     name: "Change Subscriptions collection structure",
     up: function () {
-      var subscriptions = Subscriptions.find().fetch();
+      Subscriptions.remove({
+        $and: [
+          { _id: { $ne: 'joblist' } },
+          { _id: { $ne: 'menulist' } }
+        ]
+      });
 
+      var subscriptions = Subscriptions.find().fetch();
       var defaultArea = Areas.findOne({name: 'Default Area'});
+
       if(defaultArea) {
-        for(var i=0; i<subscriptions.length; i++) {
-          var subscription = subscriptions[i];
+        subscriptions.forEach(function(subscription) {
           var newSubscriptionDocument = {
+            type: subscription._id === 'joblist' ? 'job' : 'menu',
+            itemIds: 'all',
             relations: {
               organizationId: defaultArea.organizationId,
               locationId: defaultArea.locationId,
@@ -16,22 +24,15 @@ Migrations.add({
             }
           };
 
-          newSubscriptionDocument.subscribers = subscription.subscribers;
-
-          if(subscription._id == 'joblist') {
-            newSubscriptionDocument.type = 'job';
-          } else if(subscription._id == 'menulist') {
-            newSubscriptionDocument.type = 'menu';
+          if(subscription.subscribers.length > 0) {
+            subscription.subscribers.forEach(function(subscriberId) {
+              newSubscriptionDocument.subscriber = subscriberId;
+              Subscriptions.insert(newSubscriptionDocument);
+            });
           }
 
           Subscriptions.remove({ _id: subscription._id });
-
-          if(newSubscriptionDocument.type) {
-            Subscriptions.insert(newSubscriptionDocument);
-          } else {
-            continue;
-          }
-        }
+        });
       } else {
         console.log('Error! Area with name "Default Area" does not exists!');
       }
