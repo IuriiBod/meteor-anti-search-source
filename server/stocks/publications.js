@@ -9,8 +9,6 @@ Meteor.publish("ingredients", function(ids, status) {
 
     if (ids && ids.length > 0) {
       query._id = {$in: ids};
-    } else {
-      options.limit = 10;
     }
 
     if(status) {
