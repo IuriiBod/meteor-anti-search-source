@@ -99,7 +99,7 @@ salesPredictionUpdateJob = function () {
       var lastUpdates = ForecastDates.findOne({locationId: location._id});
 
       var needFullUpdate = !lastUpdates || !lastUpdates.lastThreeDays
-          || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.dateUtils.getMillisecondsFromDays(42);
+        || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.dateUtils.getMillisecondsFromDays(42);
 
       if (needFullUpdate) {
         predict(84, location._id);
@@ -127,9 +127,7 @@ if (!HospoHero.isDevelopmentMode()) {
 
   Meteor.startup(function () {
     //if we run first time -> make predictions immediately (in other thread)
-
-    Meteor.setTimeout(salesPredictionUpdateJob, 0);
-
+    Meteor.defer(salesPredictionUpdateJob);
   });
 }
 
