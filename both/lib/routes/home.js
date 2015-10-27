@@ -11,6 +11,7 @@ Router.route("/", {
         Meteor.subscribe('shifts', 'past', Meteor.userId()),
         Meteor.subscribe('shifts', 'opened'),
         Meteor.subscribe('sections'),
+        Meteor.subscribe('usersList'),
         Meteor.subscribe('comments', Meteor.userId()),
         Meteor.subscribe('newsfeeds')
       ];
