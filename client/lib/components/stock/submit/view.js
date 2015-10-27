@@ -26,7 +26,7 @@ Template.submitIngredient.events({
       }
     ];
 
-    var info = HospoHero.otherUtils.getValuesFromEvent(event, fields, true);
+    var info = HospoHero.misc.getValuesFromEvent(event, fields, true);
 
     if(!info.code) {
       return HospoHero.error("You need to add a code");
