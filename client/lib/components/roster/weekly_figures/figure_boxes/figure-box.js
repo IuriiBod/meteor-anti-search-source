@@ -2,12 +2,15 @@ FigureBox = function FigureBox(data) {
   this.data = data;
   if (data.week && data.year) {
     this.data.weekRange = HospoHero.dateUtils.getWeekStartEnd(data.week, data.year);
+    this.sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.data.weekRange.monday)}, {sort: {"date": 1}}).fetch();
+    this.shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.data.weekRange.monday)}).fetch();
   }
+
 };
 
 FigureBox.prototype.getWeeklySale = function () {
   if (this.data.week != moment().week()) {
-    var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.data.weekRange.monday)}, {sort: {"date": 1}}).fetch();
+    var sales = this.sales;
     var propName = this.data.week < moment().week() ? 'actualQuantity' : 'predictionQuantity';
     return this._calcSalesCost(sales, propName);
     //for current week: past days actual sales and for future dates forecasted sales
@@ -31,18 +34,16 @@ FigureBox.prototype.getWeeklySale = function () {
 };
 
 FigureBox.prototype.getForecastedSales = function () {
-  var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.data.weekRange.monday)}, {sort: {"date": 1}}).fetch(); //SalesPrediction
+  var sales = this.sales;
   return this._calcSalesCost(sales, 'predictionQuantity');
 };
 
 FigureBox.prototype.getWeeklyStaffCost = function () {
-  var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.data.weekRange.monday)}).fetch();
-  return this._calcStaffCost(shifts);
+  return this._calcStaffCost(this.shifts);
 };
 
 FigureBox.prototype.getRosteredStaffCost = function () {
-  var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.data.weekRange.monday)}).fetch();
-  shifts = _.map(shifts, function (item) {
+  var shifts = _.map(this.shifts, function (item) {
     item.status = "draft";
     return item;
   });
