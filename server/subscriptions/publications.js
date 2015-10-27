@@ -1,9 +1,7 @@
-Meteor.publish("userSubs", function(ids) {
+Meteor.publish('userSubscriptions', function() {
   if(this.userId) {
-    if (ids.length > 0) {
-      logger.info("Subscriptions published ", {"id": ids});
-      return Subscriptions.find({"_id": {$in: ids}});
-    }
+    logger.info('Subscriptions for user ' + this.userId + ' published');
+    return Subscriptions.find({ subscriber: this.userId});
   } else {
     this.ready();
   }
