@@ -1,8 +1,8 @@
 <template name="shiftsSummary">
   <div class="ibox-title">
-    <span class="label pull-right pastShifts">Past</span>
-    <span class="label pull-right futureShifts">Future</span>
-    <span class="label pull-right openShifts">Open</span>
+    <span class="label pull-right pastShifts{{#if state$currentShiftState 'past'}} label-primary{{/if}}">Past</span>
+    <span class="label pull-right futureShifts{{#if state$currentShiftState 'future'}} label-primary{{/if}}">Future</span>
+    <span class="label pull-right openShifts{{#if state$currentShiftState 'open'}} label-primary{{/if}}">Open</span>
     <h5>Your shifts</h5>
   </div>
   <div class="ibox-content">
@@ -15,14 +15,14 @@
               <th class="text-left">Time</th>
               <th>Date</th>
               <th class="text-center">Section</th>
-              {{#if state$past}}
+              {{#if state$currentShiftState 'past'}}
                 <th class="text-center">Hours</th>
               {{/if}}
             </tr>
           </thead>
           <tbody>
             {{#each state$shifts}}
-              {{> render component="shiftItem" shift=this}}
+              {{> render component="shiftItem" shift=this shiftState=state$shiftState}}
             {{/each}}
           </tbody>
         </table>

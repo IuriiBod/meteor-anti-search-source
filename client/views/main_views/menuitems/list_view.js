@@ -6,32 +6,18 @@ Template.menuItemsListMainView.events({
 
   'click .subscribeMenuList': function(event) {
     event.preventDefault();
-    Meteor.call("subscribe", "menulist", function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
-      }
-    });
+    Meteor.call("subscribe", "menulist", HospoHero.handleMethodResult());
   },
 
   'click .unSubscribeMenuList': function(event) {
     event.preventDefault();
-    Meteor.call("unSubscribe", "menulist", function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
-      }
-    });
+    Meteor.call("unSubscribe", "menulist", HospoHero.handleMethodResult());
   }
 });
 
 Template.menuItemsListMainView.helpers({
   'isSubscribed': function() {
     var result = Subscriptions.findOne({"_id": "menulist", "subscribers": Meteor.userId()});
-    if(result) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!result;
   }
 });

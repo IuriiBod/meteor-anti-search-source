@@ -14,33 +14,16 @@ Meteor.methods({
       throw new Meteor.Error(404, "Cannot assign a job in this status");
     }
     var updateDoc = {};
-    // var yesterday = new Date();
-    // yesterday.setDate(yesterday.getDate() - 1);
-    if(job.onshift) {
-      var job_on_shift = Shifts.findOne(job.onshift);
-      if(!job_on_shift) {
-        logger.error("Shift not found");
-        throw new Meteor.Error(404, "Shift not found");
-      }
-      // if(new Date(job_on_shift.shiftDate) <= yesterday) {
-      //   logger.error("Shift cannot accept new jobs", {"shiftId": job.onshift});
-      //   throw new Meteor.Error(404, "This shift cannot accept new jobs");
-      // }
-      // if(job.onshift != sh)
-      // //removing from current onshift
-      // Shifts.update({"_id": job.onshift}, {$pull: {"jobs": jobId}});
-      // logger.info("Removed job from current shift");
-    } 
+    if(job.onshift && !Shifts.findOne(job.onshift)) {
+      logger.error("Shift not found");
+      throw new Meteor.Error(404, "Shift not found");
+    }
     if(shiftId) { //assign job
       var new_shift = Shifts.findOne(shiftId);
       if(!new_shift) {
         logger.error("Shift not found");
         throw new Meteor.Error(404, "Shift not found");
       }
-      // if(new Date(new_shift.shiftDate) <= yesterday) {
-      //   logger.error("Shift cannot accept new jobs", {"shiftId": shiftId});
-      //   throw new Meteor.Error(404, "This shift cannot accept new jobs");
-      // }
       if(shiftId != job.onshift) {
         updateDoc.onshift = shiftId;
       }
@@ -74,10 +57,11 @@ Meteor.methods({
   },
 
   'assignWorker': function(workerId, shiftId) {
-    if(!shiftId) {
-      logger.error("Shift Id not found");
-      throw new Meteor.Error(404, "Shift Id not found");
+    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
+      throw new Meteor.Error(403, "User not permitted to assign workers");
     }
+    HospoHero.checkMongoId(shiftId);
+
     var shift = Shifts.findOne(shiftId);
     if(!shift) {
       logger.error("Shift not found");
@@ -87,12 +71,6 @@ Meteor.methods({
       logger.error("Can't change shift parameters, as shift is active");
       throw new Meteor.Error(404, "Can't change shift parameters, as shift is active");
     }
-    // var yesterday = new Date();
-    // yesterday.setDate(yesterday.getDate() - 1);
-    // if(new Date(shift.shiftDate) <= yesterday) {
-    //   logger.error("Shift date passed");
-    //   throw new Meteor.Error(404, "Shift cannot be assigned, date is passed");
-    // }
     var updateDoc = {
       "assignedTo": null
     };
@@ -108,12 +86,11 @@ Meteor.methods({
         throw new Meteor.Error(404, "Worker not found");
       }
       updateDoc.assignedTo = workerId;
-      Shifts.update({_id: shiftId}, {$set: updateDoc});
       logger.info("Worker assigned to shift", {"shiftId": shiftId, "workerId": workerId});
     } else {
-      Shifts.update({_id: shiftId}, {$set: {"assignedTo": null}});
       logger.info("Worker removed from shift", {"shiftId": shiftId, "workerId": shift.assignedTo});
     }
-    return;
-  } 
+    Shifts.update({_id: shiftId}, {$set: updateDoc});
+    return true;
+  }
 });

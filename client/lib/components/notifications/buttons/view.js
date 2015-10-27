@@ -2,16 +2,8 @@ Template.notifiButtons.events({
   'click .readNotification': function(event) {
     event.preventDefault();
     var id = $(event.target).attr("data-id");
+    Meteor.call("readNotifications", id, HospoHero.handleMethodResult());
     $(".dropdown-notifi").addClass("open");
-    Meteor.call("readNotifications", id, function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
-      }
-      $(".dropdown-notifi").addClass("open");
-    });
-    $(".dropdown-notifi").addClass("open");
-
   },
 
   'click .goToItem': function(event) {    
@@ -40,6 +32,8 @@ Template.notifiButtons.events({
         } else if(notifi.actionType == "confirm" || notifi.actionType == "claim" || notifi.actionType == "update") {
           Router.go("shift", {"_id": ref});
         }
+      } else if(type == "newsfeed") {
+        Router.go("/");
       }
     }
   }

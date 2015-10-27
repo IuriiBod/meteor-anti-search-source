@@ -1,28 +1,23 @@
 <template name="usersList">
-  <div class="ibox-content">
+  <div class="panel-body">
     <br>
     <div class="table-responsive">
       <table class="table table-striped">
         <thead>
           <tr>
             <th>Username</th>
-            <th>Type </th>
+            <th>Type</th>
             <th>Email Address </th>
-            {{#if state$permittedAdmin}}
-            <th>Action</th>
+            {{#if isManager}}
+              <th>Action</th>
             {{/if}}
-<!--
-            {{#if state$permittedManagerAndAdmin}}
-            <th>Archive</th>
-            {{/if}}
--->
           </tr>
         </thead>
         <tbody>
-        {{#each state$activeUsers}}
+        {{#each state$users true}}
           {{> render component="userDetailed" user=this}}
         {{/each}}
-        {{#each state$deactiveUsers}}
+        {{#each state$users false}}
           {{> render component="userDetailed" user=this}}
         {{/each}}
         </tbody>

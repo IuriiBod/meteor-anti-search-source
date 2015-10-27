@@ -10,15 +10,13 @@ var component = FlowComponents.define('editJobItem', function (props) {
   var typeId = this.item.type;
   var type = JobTypes.findOne({_id: typeId});
   this.set('type', type.name);
+  this.onRendered(this.onFormRendered);
 });
 
 component.state.initialHTML = function () {
   var id = Session.get("thisJobItem");
   var item = JobItems.findOne(id);
   var type = item.type;
-  if(Session.get("jobType")) {
-    type = Session.get("jobType");
-  }
   var jobtype = JobTypes.findOne(type);
   if(jobtype && jobtype.name === "Prep") {
     if(item.recipe) {
@@ -53,11 +51,7 @@ component.state.isRecurring = function() {
   }
   var jobtype = JobTypes.findOne(type);
   if(jobtype) {
-    if(jobtype.name == "Recurring") {
-      return true;
-    } else {
-      return false;
-    }
+    return jobtype.name == "Recurring";
   }
 };
 
@@ -67,10 +61,6 @@ component.state.item = function () {
 
 component.state.step = function () {
   return this.item.step || 2;
-};
-
-component.state.ingredients = function () {
-  return this.item.ingredients;
 };
 
 component.state.jobTypes = function () {
@@ -138,54 +128,34 @@ component.state.startsOn = function () {
 };
 
 component.state.endsOnNotNull = function () {
-  if (this.item.endsOn) {
-    return true;
-  } else {
-    return false;
-  }
+  return !!this.item.endsOn;
 };
 
 component.state.endsNever = function () {
   var item = this.item;
   if (item && item.endsOn) {
-    if (item.endsOn.on == "endsNever") {
-      return true;
-    } else {
-      return false;
-    }
+    return item.endsOn.on == "endsNever";
   }
 };
 
 component.state.endsAfter = function () {
   var item = this.item;
   if (item && item.endsOn) {
-    if (item.endsOn.on == "endsAfter") {
-      return true;
-    } else {
-      return false;
-    }
+    return item.endsOn.on == "endsAfter";
   }
 };
 
 component.state.endOccurrences = function () {
   var item = this.item;
   if (item && item.endsOn) {
-    if (item.endsOn.on == "endsAfter") {
-      return item.endsOn.after;
-    } else {
-      return 10;
-    }
+    return item.endsOn.on == "endsAfter" ? item.endsOn.after : 10;
   }
 };
 
 component.state.endsOn = function () {
   var item = this.item;
   if (item && item.endsOn) {
-    if (item.endsOn.on == "endsOn") {
-      return true;
-    } else {
-      return false;
-    }
+    return item.endsOn.on == "endsOn";
   }
 };
 
@@ -237,39 +207,13 @@ component.state.wagePerHour = function () {
 };
 
 component.state.sectionsWithOutSelected = function() {
-  var sections = Sections.find({"_id": {$nin: [this.item.section]}});
-  return sections;
+  return Sections.find({"_id": {$nin: [this.item.section]}});
 };
 
 component.action.submit = function (id, info) {
-  Meteor.call("editJobItem", id, info, function (err) {
-    if (err) {
-      console.log(err);
-      return alert(err.reason);
-    } else {
-      var jobBefore = Session.get("updatingJob");
-      var desc = createNotificationText(id, jobBefore, info);
-
-      var options = {
-        "type": "edit",
-        "title": jobBefore.name + " " + jobBefore.type + " job has been updated",
-        "text": desc
-      };
-      Meteor.call("sendNotifications", id, "job", options, function (err) {
-        if (err) {
-          console.log(err);
-          return alert(err.reason);
-        } else {
-          var goback = Session.get("goBackMenu");
-          if (goback) {
-            Router.go("menuItemDetail", {"_id": goback});
-          }
-        }
-      });
-
-      Router.go("jobItemDetailed", {"_id": id});
-    }
-  });
+  Meteor.call("editJobItem", id, info, HospoHero.handleMethodResult(function() {
+    Router.go("jobItemDetailed", {"_id": id});
+  }));
 };
 
 component.state.isArchive = function() {
@@ -277,11 +221,61 @@ component.state.isArchive = function() {
   if (id) {
     var item = JobItems.findOne(id);
     if(item) {
-      if(item.status == "archived") {
-        return true;
-      } else {
-        return false;
+      return item.status == "archived";
+    }
+  }
+};
+
+component.prototype.onFormRendered = function() {
+  Session.set("localId", updateLocalJobItem());
+};
+
+updateLocalJobItem = function() {
+  var jobItemId = Session.get("thisJobItem");
+  LocalJobItem.remove({});
+  if(jobItemId) {
+    var jobItem = JobItems.findOne(jobItemId);
+    if(jobItem) {
+      var type = jobItem.type;
+      var itemType = JobTypes.findOne(type);
+      if(itemType && itemType.name == "Prep") {
+        var ings = [];
+        if(jobItem.ingredients && jobItem.ingredients.length > 0) {
+          jobItem.ingredients.forEach(function(item) {
+            if(ings.indexOf(item._id) < 0) {
+              ings.push(item._id);
+            }
+          });
+        }
+        return LocalJobItem.insert({"_id": jobItemId, "type": type, "ings": ings});
       }
     }
   }
-}
+};
+
+component.prototype.onFormRendered = function() {
+  Session.set("localId", updateLocalJobItem());
+};
+
+updateLocalJobItem = function() {
+  var jobItemId = Session.get("thisJobItem");
+  LocalJobItem.remove({});
+  if(jobItemId) {
+    var jobItem = JobItems.findOne(jobItemId);
+    if(jobItem) {
+      var type = jobItem.type;
+      var itemType = JobTypes.findOne(type);
+      if(itemType && itemType.name == "Prep") {
+        var ings = [];
+        if(jobItem.ingredients && jobItem.ingredients.length > 0) {
+          jobItem.ingredients.forEach(function(item) {
+            if(ings.indexOf(item._id) < 0) {
+              ings.push(item._id);
+            }
+          });
+        }
+        return LocalJobItem.insert({"_id": jobItemId, "type": type, "ings": ings});
+      }
+    }
+  }
+};

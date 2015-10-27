@@ -1,17 +1,11 @@
 Meteor.methods({
   'addShiftUpdate': function(doc) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error("No logged in user");
-      throw new Meteor.Error(404, "No logged in user");
+    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
+      logger.error(403, "User not permitted to add shift update");
     }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
-      logger.error("User not permitted to create shifts");
-      throw new Meteor.Error(403, "User not permitted to create shifts");
-    }
-    var id = ShiftsUpdates.insert(doc);
+    doc.locationId = HospoHero.getCurrentArea().locationId;
+
     logger.info("Shift update insert");
-    return id;
+    return ShiftsUpdates.insert(doc);
   }
 });

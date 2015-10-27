@@ -6,21 +6,19 @@ Accounts.onCreateUser(function(options, user){
       user.emails[0].address = user.services.google.email;
       user.emails[0].verified = user.services.google.verified_email;
       user.username = options.profile.name;
-  }     
-  if(!user.profile.name) {
-    user.profile.name = user.username;
+      user.profile.firstname = options.profile.name;
+      if(options.profile.picture) {
+        user.profile.image = options.profile.picture;
+      }
   }
   if(user.profile.pinCode) {
     user.pinCode = user.profile.pinCode;
     delete user.profile.pinCode;
   }
   
-  // if this is the first user ever, make them an admin
-  if(!Meteor.users.find().count()) {
-    user.isAdmin = true;
-  } else {
-    user.isWorker = true;
-  }
+  // if this is the first user ever, make him an owner
+  var role = Roles.getRoleByName('Owner');
+  user.roles = {defaultRole: role._id};
   return user;
 });
 
@@ -46,74 +44,11 @@ Meteor.methods({
       }
     });
   },
-  changeUserPermission: function(id, type) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    if(!user.isAdmin) {
-      logger.error("User not permitted to promote or demote users");
-      throw new Meteor.Error(403, "User not permitted to promote or demote users");
-    }
-    if(user._id == id) {
-      logger.error("Admin user cannot change your own permission");
-      throw new Meteor.Error(404, "Admin user cannot change your own permission");
-    }
-    if(!id) {
-      logger.error('No user has found');
-      throw new Meteor.Error(401, "User not found");
-    }
-    if(!type) {
-      logger.error('Type has not found');
-      throw new Meteor.Error(401, "Type has not found");
-    }
-    var userDoc = Meteor.users.findOne(id);
-    if(!userDoc) {
-      logger.error('User does not exist');
-      throw new Meteor.Error(401, "User does not exist");
-    }
-    var query = {
-      '$set': {}
-    };
-    var adminCount = Meteor.users.find({"isAdmin": true}).count();
-    if(adminCount < 1) {
-      if(type == "manager" || type == "worker") {
-        logger.error("Can't change type, system needs at least one admin");
-        throw new Meteor.Error(401, "Can't change type, system needs at least one admin");
-      }
-    }
-    if(type == "admin") {
-      query['$set'] = {
-        'isAdmin': true,
-        'isManager': false,
-        'isWorker': false
-      }
-    } else if(type == "manager") {
-      query['$set'] = {
-        'isManager': true,
-        'isAdmin': false,
-        'isWorker': false
-      }
-    } else if(type == "worker") {
-      query['$set'] = {
-        'isWorker': true,
-        'isAdmin': false,
-        'isManager': false
-      }
-    } else {
-      logger.error('Un-expected type');
-      throw new Meteor.Error(401, "Un-expected type");
-    }
-    Meteor.users.update({'_id': id}, query);
-    logger.info("User permission updated", {'id': id, 'type': type});
-  },
 
   editBasicDetails: function(id, editDetails) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+    if(!HospoHero.isManager()) {
+      logger.error("User not permitted to edit users details");
+      throw new Meteor.Error(403, "User not permitted to edit users details");
     }
     if(!id) {
       logger.error('No user has found');
@@ -127,15 +62,6 @@ Meteor.methods({
     if(!editDetails) {
       logger.error('Edit details not found');
       throw new Meteor.Error(401, "Edit details not found");
-    }
-    var permittedTopLevel = false;
-    if(user.isAdmin || user.isManager) {
-      permittedTopLevel = true;
-    }
-    var permittedForMe = (user._id == id);
-    if(!permittedForMe && !permittedTopLevel) {
-      logger.error("User not permitted to edit users details");
-      throw new Meteor.Error(404, "User not permitted to edit users details");
     }
 
     var query = {};
@@ -161,6 +87,15 @@ Meteor.methods({
     if(editDetails.shiftsPerWeek) {
       query['profile.shiftsPerWeek'] = editDetails.shiftsPerWeek;
     }
+    if(editDetails.profileImage) {
+      query['profile.image'] = editDetails.profileImage;
+    }
+    if(editDetails.firstname) {
+      query['profile.firstname'] = editDetails.firstname;
+    }
+    if(editDetails.lastname) {
+      query['profile.lastname'] = editDetails.lastname;
+    }
     if(Object.keys(query).length > 0) {
       Meteor.users.update({"_id": id}, {$set: query});
       logger.info("Users details updated ", editDetails);
@@ -168,54 +103,69 @@ Meteor.methods({
   },
 
   changeStatus: function(id) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
-      logger.error("User not permitted to create job items");
+    if(!HospoHero.isManager()) {
+      logger.error("User not permitted to change user status");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
     var userDoc = Meteor.users.findOne(id);
     if(!userDoc) {
-      logger.error('No user has found', id);
-      throw new Meteor.Error(401, "User not found");
+      logger.error("User not found", id);
+      throw new Meteor.Error("User not found");
     }
-    var query = {};
-    if(userDoc.isActive) {
-      query.isActive = false;
-    } else {
-      query.isActive = true;
-    }
-    Meteor.users.update({"_id": id}, {$set: query});
-    if(query.isActive) {
+    var isActive = !userDoc.isActive;
+
+    Meteor.users.update({"_id": id}, {$set: {isActive: isActive}});
+    if(isActive) {
       logger.info("User status activated", id);
     } else {
       logger.info("User status de-activated", id);
     }
   },
 
-  'resignDate': function(type, id, val) {
-    var user = Meteor.user();
-    if(!user) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+  resignDate: function(type, id, val) {
+    if(!HospoHero.isManager()) {
+      logger.error("User not permitted to resign workers");
+      throw new Meteor.Error(403, "User not permitted to resign workers");
     }
-    var permitted = isManagerOrAdmin(user);
-    if(!permitted) {
-      logger.error("User not permitted to create job items");
-      throw new Meteor.Error(403, "User not permitted to create jobs");
+
+    HospoHero.checkMongoId(id);
+    if(!Meteor.users.findOne(id)) {
+      logger.error("User not found ", id);
+      throw new Meteor.Error("User not found ", id);
     }
-    val = new Date(val).getTime();
+
+    val = HospoHero.dateUtils.shiftDate(val);
+
     if(type == "set" || type == "update") {
-      Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val, "isActive": false}});
-      Shifts.update({assignedTo: id, shiftDate: {$gte: val}}, {$set: {assignedTo: "null"}}, {multi: true});
+      Meteor.users.update({ _id: id }, {
+        $set: {
+          "profile.resignDate": val.getTime(),
+          isActive: false
+        }
+      });
+
+      Shifts.update({
+        assignedTo: id,
+        shiftDate: {
+          $gte: val
+        }
+      }, {
+        $set: {
+          assignedTo: "null"
+        }
+      }, {
+        multi: true
+      });
     } else if(type == "remove") {
-      Meteor.users.update({_id: id}, {$unset: {"profile.resignDate": ""}, $set: {"isActive": true}});
+      Meteor.users.update({ _id: id }, {
+        $unset: {
+          "profile.resignDate": ""
+        },
+        $set: {
+          isActive: true
+        }
+      });
     } else {
-      val = new Date(val).getTime();
       var nextShifts = Shifts.find({assignedTo: id, shiftDate: {$gte: val}}).fetch();
       if (nextShifts && nextShifts.length > 0) {
         return nextShifts;
@@ -224,6 +174,40 @@ Meteor.methods({
         Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val, "isActive": false}});
       }
     }
+  },
+
+  changeDefaultArea: function(areaId) {
+    if(Meteor.userId() && areaId) {
+      Meteor.users.update({
+        _id: Meteor.userId()
+      }, {
+        $set: {
+          currentAreaId: areaId
+        }
+      });
+    }
+  },
+
+  changeUserRole: function(userId, newRoleId) {
+    if(!HospoHero.isManager()) {
+      logger.error("User not permitted to change roles");
+      throw new Meteor.Error(403, "User not permitted to change roles");
+    }
+
+    HospoHero.checkMongoId(userId);
+    if(!Meteor.users.findOne(userId)) {
+      throw new Meteor.Error("User not found ", userId);
+    }
+
+    HospoHero.checkMongoId(newRoleId);
+    if(!Meteor.roles.findOne(newRoleId)) {
+      throw new Meteor.Error("Role not found", newRoleId);
+    }
+
+    var updateQuery = {};
+    updateQuery["roles." + HospoHero.getCurrentAreaId()] = newRoleId;
+
+    Meteor.users.update({ _id: userId }, {$set: updateQuery});
   }
 });
 

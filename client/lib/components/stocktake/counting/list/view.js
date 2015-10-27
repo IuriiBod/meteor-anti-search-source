@@ -25,12 +25,7 @@ Template.stockCounting.events({
           var self = this;
           var id = $(self).attr("data-id");
           if(newValue) {
-            Meteor.call("editSpecialArea", id, {"name": newValue}, function(err) {
-              if(err) {
-                console.log(err);
-                return alert(err.reason);
-              }
-            });
+            Meteor.call("editSpecialArea", id, newValue, HospoHero.handleMethodResult());
           }
         }
       });    
@@ -44,12 +39,7 @@ Template.stockCounting.events({
           var self = this;
           var id = $(self).attr("data-id");
           if(newValue) {
-            Meteor.call("editGeneralArea", id, {"name": newValue}, function(err) {
-              if(err) {
-                console.log(err);
-                return alert(err.reason);
-              }
-            });
+            Meteor.call("editGeneralArea", id, newValue, HospoHero.handleMethodResult());
           }
         }
       });
@@ -73,7 +63,7 @@ Template.stockCounting.events({
           var info = {
             "nextItemId": nextItemId,
             "prevItemId": prevItemId
-          }
+          };
           if(nextItemPosition) {
             info['nextItemPosition'] = nextItemPosition
           }
@@ -81,12 +71,7 @@ Template.stockCounting.events({
           if(prevItemPosition) {
             info['prevItemPosition'] = prevItemPosition
           }
-          Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, function(err) {
-            if(err) {
-              console.log(err);
-              return alert(err.reason);
-            } 
-          });
+          Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, HospoHero.handleMethodResult());
         }
       });
     }, 10);
@@ -98,14 +83,9 @@ Template.stockCounting.events({
     Session.set("editStockTake", false);
     var version = Session.get("thisVersion");
     if(version) {
-      Meteor.call("generateOrders", version, function(err, result) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        } else {
-          Router.go("stocktakeOrdering", {"_id": version})
-        }
-      });
+      Meteor.call("generateOrders", version, HospoHero.handleMethodResult(function() {
+        Router.go("stocktakeOrdering", {"_id": version})
+      }));
     }
   }
 });

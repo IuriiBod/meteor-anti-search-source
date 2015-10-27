@@ -1,7 +1,9 @@
 SearchSource.defineSource('jobItemsSearch', function(searchText, options) {
   var optionFileds = {sort: {'name': 1}};
   var docs = [];
-  var selector = {};
+  var selector = {
+    "relations.areaId": HospoHero.getCurrentAreaId()
+  };
   if(options) {
     if(options.endingAt) {
       selector['$or'] = [
@@ -16,10 +18,7 @@ SearchSource.defineSource('jobItemsSearch', function(searchText, options) {
       selector['_id'] = {$nin: options.ids}
     }
     if(options.type) {
-      var type = JobTypes.findOne({"name": options.type});
-      if(type) {
-        selector["type"] = type._id;
-      }
+      selector["type"] = options.type;
     }
     if(options.status) {
       selector['status'] = options.status;

@@ -1,0 +1,11 @@
+<template name="locationSettings">
+  {{#if isOrganizationOwner}}
+    <h1 class="location-name" style="display: inline-block" data-id="{{state$locationId}}">{{state$location.name}}</h1>
+  {{else}}
+    <h1>{{state$location.name}}</h1>
+  {{/if}}
+
+  <button class="btn btn-primary col-xs-12 open-flyout" data-id="createArea" data-location-id="{{state$locationId}}">Create Area</button>
+
+  {{> render component="editLocation" location=state$location}}
+</template>

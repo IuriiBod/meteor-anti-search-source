@@ -1,7 +1,8 @@
 SearchSource.defineSource('ingredients', function(searchText, options) {
   var optionFileds = {sort: {'code': 1}};
-  var docs = [];
-  var selector = {};
+  var selector = {
+    "relations.areaId": HospoHero.getCurrentAreaId()
+  };
   if(options) {
     if(options.endingAt) {
       selector['$or'] = [
@@ -25,14 +26,10 @@ SearchSource.defineSource('ingredients', function(searchText, options) {
     var regExp = buildRegExp(searchText);
     selector['$or'] = [
       {'code': regExp},
-      {'suppliers': regExp},
       {'description': regExp}
     ];
-    docs = Ingredients.find(selector, optionFileds).fetch();
-  } else {
-    docs = Ingredients.find(selector, optionFileds).fetch();
   }
-  return docs;
+  return Ingredients.find(selector, optionFileds).fetch();
 });
 
 function buildRegExp(searchText) {

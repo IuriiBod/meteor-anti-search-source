@@ -1,11 +1,12 @@
 var component = FlowComponents.define('stockModalItem', function(props) {
   this.stock = props.stock;
+  this.name = props.name;
   this.onRendered(this.onItemRendered);
 });
 
 component.state.item = function() {
   return this.stock;
-}
+};
 
 component.state.costPerPortionUsed = function() {
   var costPerPortionUsed = 0;
@@ -17,21 +18,32 @@ component.state.costPerPortionUsed = function() {
     }
   }
   return costPerPortionUsed;
-}
+};
 
 component.prototype.onItemRendered = function() {
-  $('.i-checks').iCheck({
+  var self = this;
+  $('.i-checks.selected-Ing').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
 
-  $('input').on('ifChecked', function(event){
+  $('input.selectedIng').on('ifChecked', function(event){
     var id = $(this).attr("data-id");
-    var sareaId = Session.get("activeSArea");
-    Meteor.call("assignStocksToAreas", id, sareaId, function(err) {
-      if(err) {
-        console.log(err);
-        return alert(err.reason);
+
+    if(self.name == "stockModal") {
+      var sareaId = Session.get("activeSArea");
+      Meteor.call("assignStocksToAreas", id, sareaId, HospoHero.handleMethodResult());
+    } else if(self.name == "editJob") {
+      var localId = Session.get("localId");
+
+      var localJobItem = LocalJobItem.findOne(localId);
+      if(localJobItem) {
+        LocalJobItem.update({"_id": localId}, {$addToSet: {"ings": id}});
+      } else {
+        var localMenuItem = LocalMenuItem.findOne(localId);
+        if(localMenuItem) {
+          LocalMenuItem.update({"_id": localId}, {$addToSet: {"ings": id}});
+        }
       }
-    });
+    }
   });
 };

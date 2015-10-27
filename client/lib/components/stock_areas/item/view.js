@@ -4,14 +4,9 @@ Template.areaItem.events({
       var name = $(event.target).val();
       var id = $(event.target).closest("li").attr("data-id");
       if(name) {
-        Meteor.call("createSpecialArea", name, id, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          } else {
-            $(event.target).focus();
-          }
-        });
+        Meteor.call("createSpecialArea", name, id, HospoHero.handleMethodResult(function() {
+          $(event.target).focus();
+        }));
       }
     }
 

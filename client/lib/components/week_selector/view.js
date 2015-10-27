@@ -1,15 +1,14 @@
 Template.weekSelector.rendered = function() {
   $('.i-checks').iCheck({
-    radioClass: 'iradio_square-green',
+    radioClass: 'iradio_square-green'
   });
-}
+};
 
 Template.weekSelector.events({
   'click .saveShifts': function(event) {
     event.preventDefault();
     var weekNo = Session.get("templateToWeek");
     var week = getDatesFromWeekNumber(weekNo);
-  
     var dates = [];
     week.forEach(function(day) {
       if(day && day.date) {
@@ -18,8 +17,8 @@ Template.weekSelector.events({
     });
 
     week.forEach(function(obj) {
-      var index = week.indexOf(obj);
-      var shifts = Shifts.find({"shiftDate": index, "type": "template"}).fetch();
+      var index = HospoHero.dateUtils.shiftDate(moment().day(obj.day));
+      var shifts = Shifts.find({"shiftDate": index, "type": "template"}, {sort: {"order": 1}}).fetch();
       if(shifts.length > 0) {
         shifts.forEach(function(shift) {
           var startHour = moment(shift.startTime).hour();
@@ -34,16 +33,13 @@ Template.weekSelector.events({
             "shiftDate": moment(obj.date).format("YYYY-MM-DD"),
             "section": shift.section,
             "assignedTo": shift.assignedTo,
-            "week": dates
-          }
-          Meteor.call("createShift", info, function(err) {
-            if(err) {
-              console.log(err);
-              return;
-            } else {
-              $("#notifiModal").modal("show");
-            }
-          });
+            "week": dates,
+            "order": shift.order
+          };
+
+          Meteor.call("createShift", info, HospoHero.handleMethodResult(function() {
+            $("#notifiModal").modal("show");
+          }));
         });
       }
     });
@@ -51,7 +47,7 @@ Template.weekSelector.events({
 
   'click .checklist-content': function(event) {
     var checked = $(event.target).is(":checked");
-    Session.set("templateToWeek", $(event.target).val())
+    Session.set("templateToWeek", $(event.target).val());
     Session.set("templateToYear", $(event.target).attr("data-year"));
   }
 });

@@ -1,5 +1,9 @@
 Meteor.methods({
   'createNewJob': function(info) {
+    if(!HospoHero.canUser('edit job', Meteor.userId())) {
+      logger.error("User is not permitted to create jobs");
+      throw new Meteor.Error(403, "User is not permitted to create jobs");
+    }
     if(!info.ref) {
       logger.error("Job field not found");
       throw new Meteor.Error(404, "Job field not found");
@@ -8,7 +12,8 @@ Meteor.methods({
       logger.error("Job type field not found");
       throw new Meteor.Error(404, "Job type field not found");
     }
-    var type = JobTypes.findOne(info.type);
+    var type = JobTypes.findOne({_id: info.type});
+
     if(!type) {
       logger.error("Job type not found");
       throw new Meteor.Error(404, "Job type not found");
@@ -20,7 +25,7 @@ Meteor.methods({
       logger.error("Active time not found for recurring type job");
       throw new Meteor.Error(404, "Active time not found for recurring type job");
     }
-    var job = JobItems.findOne(info.ref);
+    var job = JobItems.findOne({"name": info.ref});
     if(!job) {
       logger.error("Job not found");
       throw new Meteor.Error(404, "Job not found");
@@ -34,11 +39,16 @@ Meteor.methods({
       "onshift": null,
       "assignedTo": null,
       "createdOn": Date.now(),
-      "createdBy": Meteor.userId()
+      "createdBy": Meteor.userId(),
+      relations: HospoHero.getRelationsObject()
     };
     doc.name = type.name + " " + job.name;
     if(type.name == "Prep") {
       doc.portions = info.portions;
+      if(job.portions <= 0) {
+        logger.error("No of portions recorded on job is 0. Fix it to create job with correct active time");
+        throw new Meteor.Error(404, "No of portions recorded on job is 0. Fix it to create job with correct active time");
+      }
       var time = parseInt((job.activeTime/job.portions) * info.portions);
       if(time == time) {
         doc.activeTime = time;
@@ -47,7 +57,7 @@ Meteor.methods({
         throw new Meteor.Error(404, "Active time not valid");
       }
     } else {
-      doc.activeTime = info.activeTime;
+      doc.activeTime = parseInt(info.activeTime);
       doc.section = job.section;
       doc.startAt = job.repeatAt;
     }
@@ -57,6 +67,10 @@ Meteor.methods({
   },
 
   'editJob': function(id, editFields) {
+    if(!HospoHero.canUser('edit job', Meteor.userId())) {
+      logger.error("User is not permitted to edit jobs");
+      throw new Meteor.Error(403, "User is not permitted to edit jobs");
+    }
     if(!id) {
       logger.error("Job id field not found");
       throw new Meteor.Error(404, "Job id field not found");
@@ -83,6 +97,10 @@ Meteor.methods({
   },
 
   'deleteJob': function(id, shiftId) {
+    if(!HospoHero.canUser('edit job', Meteor.userId())) {
+      logger.error("User is not permitted to delete jobs");
+      throw new Meteor.Error(403, "User is not permitted to delete jobs");
+    }
     if(!id) {
       logger.error("Job id field not found");
       throw new Meteor.Error(404, "Job id field not found");
@@ -114,11 +132,18 @@ Meteor.methods({
   },
 
   'addJobType': function(type) {
+    if(!HospoHero.canUser('edit job', Meteor.userId())) {
+      logger.error("User is not permitted to create job types");
+      throw new Meteor.Error(403, "User is not permitted to create job types");
+    }
     if(!type) {
       logger.error("Job type field not found");
       throw new Meteor.Error("Job type field not found");
     }
-    var existingtype = JobTypes.findOne({'type': type});
+    var existingtype = JobTypes.findOne({
+      'type': type,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
     if(existingtype) {
       logger.error("Existing job type");
       throw new Meteor.Error("Exsiting job type");
@@ -128,6 +153,11 @@ Meteor.methods({
   },
 
   'changeJobStatus': function(jobId, state) {
+    if(!HospoHero.canUser('edit job', Meteor.userId())) {
+      logger.error("User is not permitted to change job status");
+      throw new Meteor.Error(403, "User is not permitted to change job status");
+    }
+
     if(!jobId) {
       logger.error("Job id field not found");
       throw new Meteor.Error(404, "Job id field not found");

@@ -1,20 +1,19 @@
 <template name="profile">
-  <div class="col-md-4">
+  <div class="col-md-12 col-lg-4">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
         <h5>Profile Detail</h5>
       </div>
       <div>
-        <div class="ibox-content no-padding border-left-right">
-          <img alt="image" class="img-responsive" src="{{state$image}}">
-        </div>
+        {{> render component = "profileImage" id=state$basic._id}}
         <div class="ibox-content profile-content">
           <h4>
             <strong>
               {{#if state$isEditPermitted}}
-                <a href="#" id="username" data-id="{{state$basic._id}}" class="editable">{{state$basic.username}}</a>
+                <a href="" id="firstname">{{state$firstName}}</a>
+                <a href="" id="lastname">{{state$lastName}}</a>
               {{else}}
-                {{state$basic.username}}
+                {{username state$basic._id}}
               {{/if}}
             </strong>
           </h4>
@@ -54,7 +53,7 @@
 
           <h4>Pay rates</h4>  
           <p>Weekdays ($): 
-          {{#if state$isAdminAndManagerPermitted}}
+          {{#if isManager}}
             <a href="#" id="weekdaysrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.weekdays}}</a>
           {{else}}
             {{#if state$basic.profile.payrates.weekdays}}
@@ -65,7 +64,7 @@
           {{/if}}
           </p>
           <p>Saturday ($): 
-           {{#if state$isAdminAndManagerPermitted}}
+           {{#if isManager}}
             <a href="#" id="saturdayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.saturday}}</a>
             {{else}}
               {{#if state$basic.profile.payrates.saturday}}
@@ -76,7 +75,7 @@
             {{/if}}
           </p>
           <p>Sunday ($):  
-           {{#if state$isAdminAndManagerPermitted}}
+           {{#if isManager}}
             <a href="#" id="sundayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.sunday}}</a>
             {{else}} 
               {{#if state$basic.profile.payrates.sunday}}
@@ -87,47 +86,10 @@
             {{/if}}
           </p>
           <br>
-
-          <!-- <h4>Availability</h4>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Monday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Tuesday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Wednesday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Thursday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Friday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Saturday 
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value=""> Sunday 
-            </label>
-          </div> -->
           <br>
 
           <h4>No. of shifts per week</h4>             
-          {{#if state$isAdminAndManagerPermitted}}
+          {{#if isManager}}
             <select class="form-control shiftsPerWeek" data-id="{{state$basic._id}}">
             {{#each state$shiftsPerWeek}}
               <option selected="{{this.selected}}">{{this.shift}}</option>
@@ -141,8 +103,8 @@
             {{/if}}
           {{/if}}
 
-          {{#if state$isAdminAndManagerPermitted}}
-            {{#if state$isMe}}
+          {{#if isManager}}
+            {{#if isMe state$id}}
                 {{#if state$hasResignDate}}
                     <br />
                     <h4>Resigned date</h4>

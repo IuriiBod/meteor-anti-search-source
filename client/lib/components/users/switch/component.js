@@ -31,11 +31,7 @@ component.action.logout = function() {
 component.action.switchUser = function(userId) {
   var loggedUsers = Session.get("loggedUsers");
   var token = loggedUsers[userId];
-  Meteor.loginWithToken(token, function (err) {
-    if (err) {
-      console.log(err);
-      return alert(err.reason);
-    }
+  Meteor.loginWithToken(token, HospoHero.handleMethodResult(function () {
     Router.go("pinLock");
-  });
+  }));
 };

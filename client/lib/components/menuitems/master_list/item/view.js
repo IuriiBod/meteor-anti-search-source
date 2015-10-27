@@ -5,12 +5,7 @@ Template.menuItem.events({
     if(result) {
       var id = $(event.target).attr("data-id");
       if(id) {
-        Meteor.call("deleteMenuItem", id, function(err) {
-          if(err) {
-            console.log(err);
-            return alert(err.reason);
-          }
-        });
+        Meteor.call("deleteMenuItem", id, HospoHero.handleMethodResult());
       }
     }
   },
@@ -25,12 +20,7 @@ Template.menuItem.events({
     }
     id = i.parent().attr("data-id");
 
-    Meteor.call("archiveMenuItem", id, function(err) {
-      if(err) {
-        console.log(err);
-        alert(err.reason);
-      }
-    });
+    Meteor.call("archiveMenuItem", id, HospoHero.handleMethodResult());
     i.parent().parent().remove();
   }
 });

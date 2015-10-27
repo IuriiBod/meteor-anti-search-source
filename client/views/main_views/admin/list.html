@@ -10,19 +10,31 @@
               <a href="#usersList" data-toggle="tab">Users</a>
             </li>
             <li class="">
+              <a href="#roles" data-toggle="tab">Roles</a>
+            </li>
+            <li class="">
               <a href="#sections" data-toggle="tab">Sections</a>
             </li>
             <li class="">
               <a href="#areas" data-toggle="tab">Stock Areas</a>
             </li>
             <li class="">
-              <a href="#timeout" data-toggle="tab">Timeout</a>
+              <a href="#timeout" data-toggle="tab">Inactivity Timeout</a>
             </li>
             <li class="">
               <a href="#cron-config" data-toggle="tab">Cron Config</a>
             </li>
+            <li class="">
+              <a href="#revel-link" data-toggle="tab">POS/ Menu Linking</a>
+            </li>
+            <li class="">
+              <a href="#force-forecast" data-toggle="tab">[dev]Force-Forecast</a>
+            </li>
+            <li class="">
+              <a href="#archiving" data-toggle="tab">Locations/Areas archiving</a>
+            </li>
           </ul>
-          
+
           <div class="tab-content">
             <div class="tab-pane active" id="usersList">
               {{> render component='usersList'}}
@@ -39,8 +51,20 @@
             <div class="tab-pane" id="cron-config">
               {{> render component="cronConfig"}}
             </div>
+            <div class="tab-pane" id="roles">
+              {{> render component='rolesSettings'}}
+            </div>
+            <div class="tab-pane" id="revel-link">
+              {{> render component='revelMenuLink'}}
+            </div>
+            <div class="tab-pane" id="force-forecast">
+              {{> render component='forceForecast'}}
+            </div>
+            <div class="tab-pane" id="archiving">
+              {{> render component="locationAreaArchiving"}}
+            </div>
           </div>
-        </div>          
+        </div>
       </div>
     </div>
   </div>

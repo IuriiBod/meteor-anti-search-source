@@ -1,18 +1,9 @@
-isManagerOrAdmin = function(user) {
-  if(user) {
-    if(user.isAdmin || user.isManager) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
+Namespace('HospoHero', {
+  isDevelopmentMode: function () {
+    return process.env.NODE_ENV === 'development';
+  },
 
-isAdmin = function(id) {
-  if(id) {
-    var user = Meteor.users.findOne(id);
-    if(user) {
-      return user.isAdmin;
-    }
+  getMillisecondsFromDays: function (days) {
+    return days * 24 * 60 * 60 * 1000;
   }
-}
+});

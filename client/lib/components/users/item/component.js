@@ -4,83 +4,43 @@ var component = FlowComponents.define('userDetailed', function(props) {
 
 component.state.user = function() {
   return this.user;
-}
+};
 
 component.state.email = function() {
-  return this.user.emails[0].address;
-}
-
-component.state.type = function() {
-  var type = null;
-  if(this.user.isAdmin) {
-    type = "Admin";
-  } else if(this.user.isManager) {
-    type = "Manager";
-  } else {
-    type = "Worker";
+  if(this.user.emails && this.user.emails[0]) {
+    return this.user.emails[0].address;
   }
-  return type;
-}
+};
 
-component.state.isAdminOrManager = function() {
-  if(this.user.isAdmin || this.user.isManager) {
-    return true;
-  } else {
-    return false;
+component.state.roleId = function () {
+  var currentArea = HospoHero.getCurrentAreaId();
+  if(currentArea) {
+    if(this.user.roles[currentArea]) {
+      return this.user.roles[currentArea];
+    } else if(this.user.roles.defaultRole) {
+      return this.user.roles.defaultRole;
+    }
   }
-}
+};
 
-component.state.isManager = function() {
-  if(this.user.isManager) {
-    return true;
-  } else {
-    return false;
+component.state.role = function() {
+  if(this.get('roleId')) {
+    return Roles.getRoleById(this.get('roleId')).name;
   }
-}
+};
 
-component.state.isWorker = function() {
-  if(this.user.isWorker) {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.roles = function () {
+  return Meteor.roles.find({
+    name: {
+      $ne: 'Owner'
+    }
+  });
+};
 
-component.state.isAdmin = function() {
-  if(this.user.isAdmin) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-component.state.ifMe = function() {
-  var me = Meteor.user();
-  if(me && me._id == this.user._id) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-component.state.permittedManagerAndAdmin = function() {
-  var user = Meteor.user();
-  if(user.isAdmin || user.isManager) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-component.state.permittedAdmin = function() {
-  var user = Meteor.user();
-  if(user.isAdmin) {
-    return true;
-  } else {
-    return false;
-  }
-}
+component.state.selectedRole = function (roleId) {
+  return roleId == this.get('roleId');
+};
 
 component.state.userStyle = function() {
   return this.user.isActive ? '' : 'text-decoration: line-through';
-}
+};

@@ -10,7 +10,7 @@ component.state.basics = function() {
       return supplier;
     }
   }
-}
+};
 
 component.state.status = function() {
   var id = Session.get("thisSupplier");
@@ -22,7 +22,7 @@ component.state.status = function() {
       }
     } 
   }
-}
+};
 
 component.state.lastOrder = function() {
   var orders = OrderReceipts.find({"supplier": Session.get("thisSupplier")}, {sort: {"date": -1}, limit: 1}).fetch();
@@ -31,7 +31,7 @@ component.state.lastOrder = function() {
       return orders[0].date;
     }
   }
-}
+};
 
 component.prototype.onSupplierRendered = function() {
   $("#supplierEmail").editable({
@@ -40,17 +40,14 @@ component.prototype.onSupplierRendered = function() {
     showbuttons: false,
     mode: 'inline',
     autotext: 'auto',
-    display: function(value, response) {
-    },
     success: function(response, newValue) {
-      var self = this;
       if(newValue) {
         var id = Session.get("thisSupplier");
         var editDetail = {"email": newValue};
         updateSupplierDetails(id, editDetail);
       }
     },
-    display: function(value, sourceData) {
+    display: function(value, response) {
     }
   });
 
@@ -63,7 +60,6 @@ component.prototype.onSupplierRendered = function() {
     display: function(value, response) {
     },
     success: function(response, newValue) {
-      var self = this;
       if(newValue) {
         var id = Session.get("thisSupplier");
         var editDetail = {"phone": newValue};
@@ -71,13 +67,8 @@ component.prototype.onSupplierRendered = function() {
       }
     }
   });
-}
+};
 
 function updateSupplierDetails(id, info) {
-  Meteor.call("updateSupplier", id, info, function(err) {
-    if(err) {
-      console.log(err);
-      return alert(err.reason);
-    }
-  });
+  Meteor.call("updateSupplier", id, info, HospoHero.handleMethodResult());
 }

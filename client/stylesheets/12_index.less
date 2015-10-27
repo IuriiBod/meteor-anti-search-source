@@ -1,3 +1,9 @@
+.flyout-container {
+  .editable {
+    padding: 0px;
+  }
+}
+
 .profile-image {
     width: 48px;
     height: 48px;
@@ -36,7 +42,7 @@
         }
         .message-avatar {
             float: left !important;
-            margin-right: !important;
+            margin-right: 0px !important;
         }
     }
 }
@@ -114,6 +120,10 @@
         padding-bottom: 80px;
         overflow-y: auto;
         .title {
+            .btn {
+              height: 60px;
+              margin-top: -5px;
+            }
             padding: 0;
             height: 61px;
             line-height: 61px;
@@ -276,11 +286,11 @@ span {
 
 
 // media queries for tablet
-@media (min-width: 768px) and (max-width: 991px){
-  .flyout-container, .flyout-notifi-container{
-    width: 50%;
-  }
-}
+//@media (min-width: 768px) and (max-width: 991px){
+//  .flyout-container, .flyout-notifi-container{
+//    width: 50%;
+//  }
+//}
 
 
 @media (max-width: 768px){
@@ -311,7 +321,10 @@ span {
     }
     .skin-setttings{
       .title {
-        i.fa{
+        i.fa {
+          font-size: 16px;
+        }
+        i.fa-angle-right{
           &:before{
               content: "\f00d";
           }
@@ -325,4 +338,94 @@ span {
   top: 8px;
   position: relative;
   border-bottom: 1px dashed;
+}
+
+.change-current-area.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.add-user-popup {
+  margin-top: 45px;
+  margin-bottom: -35px;
+  z-index: 100;
+  position: relative;
+
+  hr {
+    margin: 5px 0 0;
+  }
+
+  .no-results {
+    padding: 10px 0;
+  }
+}
+
+.search-user-info-content {
+  padding: 5px;
+  margin-top: 5px;
+  cursor: pointer;
+  &:hover {
+    color: #fff;
+    background-color: #1AB394;
+  }
+
+  .search-user-info-name {
+    margin-left: 5px;
+  }
+
+  .search-user-info-plus {
+    color: #fff;
+    margin: 9px 5px 0 0;
+  }
+}
+
+.user-photo-min {
+  max-height: 30px;
+  max-width: 30px;
+  border-radius: 5px;
+}
+
+.area-users {
+  padding: 10px;
+}
+
+.add-user-to-area-form {
+  margin-bottom: 10px;
+}
+
+.user-profile-image-container {
+  display: inline-block;
+  position: relative;
+
+  .remove-user-from-area {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: rgba(0,0,0,0.3);
+    color: #fff;
+    padding: 1px 3px;
+    cursor: pointer;
+    opacity: 0;
+  }
+}
+
+.open-flyout {
+  cursor: pointer;
+}
+
+.remove-image {
+  position: absolute;
+  color: #fff;
+  background-color: rgba(0,0,0,0.5);
+  padding: 5px 6px;
+  cursor: pointer;
+}
+
+.logo-element {
+  padding: 0 !important;
+}
+
+.nav-header {
+  padding: 15px !important;
+  font-size: 18px;
 }

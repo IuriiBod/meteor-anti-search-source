@@ -14,11 +14,16 @@
         <div class="row">
           <div class="col-xs-12 text-right">
             <span>Sale Price</span>
-            <h2 class="font-bold">$ 
-              <a href="#" 
-                 class="editMenuItem" 
-                 data-id="{{state$id}}" 
-                 style="color: #fff; border-color: #fff;">{{state$item.salesPrice}}</a>
+            <h2 class="font-bold">$
+              {{#if canEditMenu}}
+                <a href="#"
+                  class="editMenuItem"
+                  data-id="{{state$id}}"
+                  style="color: #fff; border-color: #fff;">{{state$item.salesPrice}}
+                </a>
+              {{else}}
+                {{state$item.salesPrice}}
+              {{/if}}
             </h2>
           </div>
         </div>

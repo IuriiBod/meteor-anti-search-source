@@ -1,0 +1,48 @@
+<template name="salesPrediction">
+  <div class="prediction-component">
+    <div class="prediction-panel">
+      <div class="sales-per-menu-item-section">
+        <table class="table table-striped table-condensed white-bg">
+          <thead>
+          <tr>
+            <th></th>
+            {{#each state$week}}
+              <th colspan="2" style="text-align: center;">
+                {{getDayOfWeek this}}
+                <h5>{{formatDate this}}</h5>
+              </th>
+            {{/each}}
+          </tr>
+          <tr>
+            <!--Weather-->
+            <td></td>
+            {{#each state$week}}
+              {{> render component="weatherForecast" date=this}}
+            {{/each}}
+          </tr>
+          <tr>
+            <th></th>
+            {{#each state$week}}
+              <th>Forecast</th>
+              <th>Actual</th>
+            {{/each}}
+          </tr>
+          </thead>
+          <tbody>
+          {{>render component="totalSalesRow"}}
+          {{#each state$menuItems}}
+            {{> render component="predictionSalesRow" currentWeekDate=state$currentWeekDate menuItem=this}}
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+    {{#unless state$areAllItemsLoaded}}
+        <div>
+            <button id="loadMoreBtn" class="btn btn-white center-block" type="button">
+                Load more
+            </button>
+        </div>
+    {{/unless}}
+</template>

@@ -16,17 +16,20 @@ Template.ingredientItemEdit.events({
   'click .removeIng': function(event) {
     event.preventDefault();
     var id = $(event.target).attr("data-id");
-    var ingList = Session.get("selectedIngredients");
-    if(ingList) {
-      if(ingList.length > 0) {
-        var index = ingList.indexOf(id);
-        if(index >= 0) {
-          ingList.splice(index, 1);
-          Session.set("selectedIngredients", ingList);
-        }
-      }
+    var localMenuId = Session.get("localId");
+    var localMenu = LocalMenuItem.findOne(localMenuId);
+    if(localMenu && localMenu.ings.length > 0) {
+      LocalMenuItem.update({"_id": localMenuId}, {$pull: {"ings": id}});
     }
     var item = $(event.target).closest('tr');
     $(item).remove();
+  },
+
+  'keypress .ing-qty': function(event) {
+    if(event.keyCode == 10 || event.keyCode == 13) {
+      event.preventDefault();
+      var elem = $(event.target);
+      $(elem).closest("tr").next().find("input").focus();
+    }
   }
 });

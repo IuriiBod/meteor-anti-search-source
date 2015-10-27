@@ -1,26 +1,25 @@
-Template.cronConfig.onRendered(function() {
-  this.$(".set-cron-time").datetimepicker({
-    format: 'LT'
-  });
-});
-
 Template.cronConfig.events({
   'submit #shift-updates-cron': function(e, tpl) {
     e.preventDefault();
-
-    var id = tpl.$('[name="cron-time"]').attr("data-id");
-    var val = tpl.$('[name="cron-time"]').val();
-
-    if(confirm("Do you really want to set new cron time?")) {
-      Meteor.call("updateCronTime", val, id, function(err, id) {
-        if(err) {
-          console.log(err);
-          return alert(err.reason);
-        } else {
-          tpl.$('[name="cron-time"]').attr("data-id", id);
-          tpl.$(".alert-area").html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>You should restart Meteor server to apply cron time change</div>');
-        }
-      });
-    }
+    var shiftUpdateHour = tpl.$('[name="shiftUpdatesHoursSelect"]').val();
+    Meteor.call('updateShiftUpdateHour', shiftUpdateHour, HospoHero.handleMethodResult(function() {
+      HospoHero.success('Time was successfully changed!');
+    }));
   }
+});
+
+
+Template.cronConfig.onRendered(function() {
+  $('.editable').editable({
+    type: 'select',
+    mode: 'popup',
+    display: false,
+    value: FlowComponents.callAction('getShiftUpdateHour')._result,
+    source: HospoHero.dateUtils.hours(),
+    success: function(response, newValue) {
+      Meteor.call('updateShiftUpdateHour', newValue, HospoHero.handleMethodResult(function() {
+        HospoHero.success('Cron time was successfully changed!');
+      }));
+    }
+  });
 });

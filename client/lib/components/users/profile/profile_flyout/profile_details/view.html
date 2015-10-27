@@ -1,0 +1,111 @@
+<template name="profileFlyout">
+  <div class="col-md-12">
+    <div>
+      <img alt="image" class="img-responsive" src="{{state$image}}">
+      <div class="profile-content">
+        <h4>
+          <strong>
+            {{#if state$isEditPermitted}}
+              <a href="#" id="flyout-username" data-id="{{state$basic._id}}" class="editable">{{state$basic.username}}</a>
+            {{else}}
+              {{state$basic.username}}
+            {{/if}}
+          </strong>
+        </h4>
+
+        <p><i class="fa fa-mobile-phone m-r-xs"></i>
+          {{#if state$isEditPermitted}}
+            <a href="#" id="flyout-phone" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.phone}}</a>
+          {{else}}
+            {{state$basic.profile.phone}}
+          {{/if}}
+        </p>
+
+        <p><i class="fa fa-envelope m-r-xs"></i>
+          {{#if state$isEditPermitted}}
+            <a href="#" id="flyout-email" data-id="{{state$basic._id}}" class="editable">{{state$email}}</a>
+          {{else}}
+            {{state$email}}
+          {{/if}}
+        </p>
+        <br>
+
+        <form id="flyout-change-pin">
+          <div class="form-group">
+            <label for="new-pin">New PIN</label>
+            <input type="password"
+                   class="form-control"
+                   placeholder="****"
+                   required=""
+                   id="flyout-new-pin"
+                   maxlength="4"
+                   pattern="^\d{4}$"
+                   title="Required four-digit PIN.">
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+        <br>
+
+        <h4>Pay rates</h4>
+        <p>Weekdays ($):
+        {{#if isManager}}
+          <a href="#" id="flyout-weekdaysrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.weekdays}}</a>
+        {{else}}
+          {{#if state$basic.profile.payrates.weekdays}}
+            {{state$basic.profile.payrates.weekdays}}
+          {{else}}
+            Not added
+          {{/if}}
+        {{/if}}
+        </p>
+        <p>Saturday ($):
+         {{#if isManager}}
+          <a href="#" id="flyout-saturdayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.saturday}}</a>
+          {{else}}
+            {{#if state$basic.profile.payrates.saturday}}
+              {{state$basic.profile.payrates.saturday}}
+            {{else}}
+              Not added
+            {{/if}}
+          {{/if}}
+        </p>
+        <p>Sunday ($):
+         {{#if isManager}}
+          <a href="#" id="flyout-sundayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.sunday}}</a>
+          {{else}}
+            {{#if state$basic.profile.payrates.sunday}}
+              {{state$basic.profile.payrates.sunday}}
+            {{else}}
+              Not added
+            {{/if}}
+          {{/if}}
+        </p>
+        <br>
+        <br>
+
+        <h4>No. of shifts per week</h4>
+        {{#if isManager}}
+          <select class="form-control shiftsPerWeek" data-id="{{state$basic._id}}">
+          {{#each state$shiftsPerWeek}}
+            <option selected="{{this.selected}}">{{this.shift}}</option>
+          {{/each}}
+          </select>
+        {{else}}
+          {{#if state$basic.profile.shiftsPerWeek}}
+            {{state$basic.profile.shiftsPerWeek}}
+          {{else}}
+            Not added
+          {{/if}}
+        {{/if}}
+
+        {{#if state$hasResignDate}}
+            <br />
+            <h4>Resigned date</h4>
+            <div>
+              {{state$resignDate}}
+            </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>
