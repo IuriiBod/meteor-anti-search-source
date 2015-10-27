@@ -24,39 +24,4 @@
   </div>
   <!-- End wrapper-->
 
-  <!-- SHIFT PROFILE -->
-  {{#if canEditRoster}}
-  <div class="modal fade" id="shiftProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component='shiftProfile'}}
-  </div>
-  {{/if}}
-  <!-- /SHIFT PROFILE -->
-
-  <!-- CALENDAR -->
-  <div id="calendarModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component='weekSelector'}}
-  </div>
-  <!-- /CALENDAR -->
-
-  <!-- NEW STOCKTAKE MODAL-->
-  {{#if canEditStock}}
-  <div class="modal fade" id="newStocktakeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component = 'newStocktakeModal' name="stockModal"}}
-  </div>
-  {{/if}}
-  <!-- /NEW STOCKTAKE MODAL -->
-
-  <!-- ADD NEW SUPPLIER-->
-  {{#if canEditStock}}
-  <div class="modal fade" id="addNewSupplierModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component = 'newSupplier'}}
-  </div>
-  {{/if}}
-  <!-- /ADD NEW SUPPLIER-->
-
-   <!-- ADD INGREDIENT-->
-  <div class="modal fade" id="addIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component = 'submitIngredient'}}
-  </div>
-  <!-- /ADD INGREDIENT -->
 </template>

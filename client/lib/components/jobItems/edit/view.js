@@ -257,7 +257,7 @@ Template.editJobItem.events({
 
   'click #addNewIngredient': function(event) {
     event.preventDefault();
-    $("#addIngredientModal").modal('show');
+    tmpl.$("#addIngredientModal").modal('show');
   },
 
   'click .cancelEditJobItem': function(event) {
