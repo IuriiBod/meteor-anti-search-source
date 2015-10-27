@@ -4,7 +4,10 @@ Router.route('/stocktake', {
   path: '/stocktake',
   template: "stockListMainView",
   waitOn: function() {
-    return Meteor.subscribe('organizationInfo');
+    return [
+      Meteor.subscribe('organizationInfo'),
+      Meteor.subscribe("stocktakeMains", new Date().getTime())
+    ];
   },
   data: function() {
     if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
