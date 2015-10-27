@@ -134,6 +134,7 @@ var helpers = {
   },
 
   profilePicture: function (userId) {
+    userId = userId ? userId : Meteor.userId();
     var user = Meteor.users.findOne(userId);
     if (user) {
       if (user.profile && user.profile.image) {

@@ -100,13 +100,17 @@ Namespace('HospoHero.dateUtils', {
     return weekDays;
   },
 
-  getWeekStartEnd: function (week, year){
-    if(!year){
+  getWeekStartEnd: function (week, year) {
+    if (!year) {
       year = moment().year()
     }
     return {
       monday: moment().year(year).week(week).day(1).toDate(),
       sunday: moment().year(year).week(week).day(7).toDate()
     }
+  },
+
+  getMillisecondsFromDays: function (days) {
+    return days * 24 * 60 * 60 * 1000;
   }
 });

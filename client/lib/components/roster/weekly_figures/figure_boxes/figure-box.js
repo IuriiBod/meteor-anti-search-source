@@ -51,9 +51,9 @@ FigureBox.prototype.getRosteredStaffCost = function () {
 };
 
 FigureBox.prototype.getDailyActual = function () {
-  var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(this.data.dayObj), "status": {$ne: "draft"}, "type": null}).fetch();
-  var actualSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.data.dayObj)}).fetch(); //ImportedActualSales
-
+  var shifts = Shifts.find({"shiftDate": TimeRangeQueryBuilder.forDay(this.data), "status": {$ne: "draft"}, "type": null}).fetch();
+  var actualSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.data)}).fetch(); //ImportedActualSales
+  console.log(this._calcStaffCost(shifts), this._calcSalesCost(actualSales, 'actualQuantity'));
   return {
     actualWages: this._calcStaffCost(shifts),
     actualSales: this._calcSalesCost(actualSales, 'actualQuantity')
@@ -62,11 +62,12 @@ FigureBox.prototype.getDailyActual = function () {
 
 FigureBox.prototype.getDailyForecast = function () {
   var shifts = Shifts.find({
-    "shiftDate": HospoHero.dateUtils.shiftDate(this.data.dayObj),
+    "shiftDate": TimeRangeQueryBuilder.forDay(this.data),
     "status": {$ne: "finished"},
     "type": null
   }).fetch();
-  var forecastesSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.data.dayObj)}).fetch(); //SalesPrediction
+  var forecastesSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.data)}).fetch(); //SalesPrediction
+  console.log(this._calcStaffCost(shifts), this._calcSalesCost(forecastesSales, 'predictionQuantity'));
   return {
     forecastedWages: this._calcStaffCost(shifts),
     forecastedSales: this._calcSalesCost(forecastesSales, 'predictionQuantity')

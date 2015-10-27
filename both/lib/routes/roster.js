@@ -1,10 +1,3 @@
-var getWeekDateFromRoute = function (routeContext) {
-  return {
-    week: parseInt(routeContext.params.week),
-    year: parseInt(routeContext.params.year)
-  };
-};
-
 Router.route('/roster/weekly/:year/:week', {
   name: "weeklyRoster",
   path: '/roster/weekly/:year/:week',
@@ -12,7 +5,7 @@ Router.route('/roster/weekly/:year/:week', {
   waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weeklyRoster', getWeekDateFromRoute(this)),
+      Meteor.subscribe('weeklyRoster', HospoHero.otherUtils.getWeekDateFromRoute(this)),
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections'),
       Meteor.subscribe('areaMenuItems'),
@@ -24,7 +17,7 @@ Router.route('/roster/weekly/:year/:week', {
       Router.go("/");
     }
     return {
-      weekDate: getWeekDateFromRoute(this)
+      weekDate:  HospoHero.otherUtils.getWeekDateFromRoute(this)
     }
   },
   fastRender: true

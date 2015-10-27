@@ -24,7 +24,7 @@ Router.route('/reports/:year/:week', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("usersList"),
-      Meteor.subscribe('weeklyRoster', {week: this.params.week, year: this.params.year})
+      Meteor.subscribe('weeklyRoster', HospoHero.otherUtils.getWeekDateFromRoute(this))
     ];
   },
   data: function () {
