@@ -24,8 +24,8 @@ var predict = function (days, locationId) {
     }
 
     areas.forEach(function (area) {
-      var query = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});
-      var items = MenuItems.find(query, {}); //get menu items for current area
+      var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});
+      var items = MenuItems.find(menuItemsQuery, {}); //get menu items for current area
 
       var notification = new Notification();
 
@@ -48,8 +48,7 @@ var predict = function (days, locationId) {
         if (i < 14 && currentData) {
           if (currentData) {
             if (currentData.quantity != predictItem.predictionQuantity) {
-              var query = HospoHero.prediction.getMenuItemsForPredictionQuery({_id: predictItem.menuItemId});
-              var itemName = MenuItems.findOne(query).name;
+              var itemName = MenuItems.findOne(HospoHero.prediction.getMenuItemsForPredictionQuery({_id: predictItem.menuItemId})).name;
 
               notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
             }
@@ -63,9 +62,9 @@ var predict = function (days, locationId) {
 
       });
 
-      var query = {};
-      query[area._id] = roleManagerId;
-      var receiversIds = Meteor.users.find({roles: query}).map(function (user) {
+      var receiversQuery = {};
+      receiversQuery[area._id] = roleManagerId;
+      var receiversIds = Meteor.users.find({roles: receiversQuery}).map(function (user) {
         return user._id;
       });
       notification.send(receiversIds);
