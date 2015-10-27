@@ -88,26 +88,3 @@ Router.route('/stocktake/orders/:_id', {
   },
   fastRender: true
 });
-
-Router.route('/stocktake/order/receipts/list', {
-  name: "orderReceiptsList",
-  path: '/stocktake/order/receipts',
-  template: "orderReceiptsListMainView",
-  waitOn: function() {
-    return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe("allOrderReceipts")
-    ];
-  },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
-      Router.go("/");
-    }
-    Session.set("thisState", false);
-    if(!Session.set("thisTime")) {
-      Session.set("thisTime", "week");
-    }
-    Session.set("editStockTake", false);
-  },
-  fastRender: true
-});
