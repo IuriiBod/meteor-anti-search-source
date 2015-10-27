@@ -78,7 +78,8 @@ Router.route('/stocktake/orders/:_id', {
       Meteor.subscribe("orderReceiptsByVersion", this.params._id),
       Meteor.subscribe("comments", this.params._id),
       Meteor.subscribe("usersList"),
-      Meteor.subscribe("ingredients")
+      Meteor.subscribe("ingredients"),
+      Meteor.subscribe("allSuppliers")
     ];
   },
   data: function() {
