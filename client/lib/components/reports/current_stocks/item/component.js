@@ -15,9 +15,6 @@ component.state.stockIds = function () {
       }
     });
   }
-  if (stockIds && stockIds.length > 0) {
-    Meteor.subscribe("ingredients", stockIds);
-  }
   return stockIds;
 };
 
