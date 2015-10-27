@@ -2,20 +2,20 @@
   <div class="social-feed-box">
     <div class="social-avatar">
       <a class="pull-left" href="#">
-        <img src="{{profilePicture state$newsfeedPost.createdBy}}" alt="image">
+        <img src="{{profilePicture state$post.createdBy}}" alt="image">
       </a>
-      <div class="media-body" data-id="{{state$newsfeedPost._id}}">
-        <a href="#">{{username state$newsfeedPost.createdBy}}</a>
+      <div class="media-body" data-id="{{state$post._id}}">
+        <a href="#">{{username state$post.createdBy}}</a>
         <a href="#" class="small thumbsup-like pull-left like-post">
           <i class="fa fa-thumbs-up"></i> 
           {{#if state$liked}} You and {{else}} {{/if}} {{state$likesCount}} Like this!
         </a>
-        <small class="text-muted pull-left">&nbsp;  - &nbsp;{{timeFormattedWithDate state$newsfeedPost.createdOn}}</small>
+        <small class="text-muted pull-left">&nbsp;  - &nbsp;{{timeFormattedWithDate state$post.createdOn}}</small>
       </div>
     </div>
 
     <div class="social-body">
-      {{{state$newsfeedPost.text}}}
+      {{{state$post.text}}}
     </div>
 
     <div class="social-footer">
@@ -26,10 +26,10 @@
       <div class="social-comment">
         <div class="form-group">
           <a class="pull-left" href="#">
-            <img src="{{profilePicture state$currentUser}}" alt="image">
+            <img src="{{profilePicture}}" alt="image">
           </a>
-          <div class="media-body" data-id="{{state$newsfeedPost._id}}">
-            {{> render component="textArea" placeholder="Write comment..." type="newsFeedSubTextBox" referenceId=state$newsfeedPost._id}}
+          <div class="media-body" data-id="{{state$post._id}}">
+            {{> render component="textArea" placeholder="Write comment..." type="newsFeedSubTextBox" referenceId=state$post._id}}
           </div>
         </div>
       </div>
