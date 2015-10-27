@@ -57,8 +57,8 @@ WeatherManager.prototype.updateForecast = function () {
 WeatherManager.prototype.updateHistorical = function () {
   var iterateMonthMoment = moment().subtract(1, 'year');
 
-  //iterate over last 12 months
-  for (var i = 0; i < 12; i++) {
+  //iterate over last 12 months including current month
+  for (var i = 0; i <= 12; i++) {
     //check if we need refresh historical data
     if (!this._isWeatherAvailableForMonth(iterateMonthMoment)) {
       //refresh historical data
@@ -75,7 +75,7 @@ WeatherManager.prototype._isWeatherAvailableForMonth = function (monthMomentToCh
 
   var monthForecastCount = WeatherForecast.find({
     date: TimeRangeQueryBuilder.forMonth(monthMomentToCheck),
-    locationId: locationId
+    locationId: this._locationId
   }).count();
 
   var requiredCount = endOfMonth.isBefore(nowMoment) ? endOfMonth.date() : nowMoment.date() - 1;
@@ -95,6 +95,7 @@ WeatherManager.prototype._uploadHistoricalDataForMonth = function (monthMoment) 
 
   var weatherData = this._weatherConnector.getHistorical(start, end);
 
+  var locationId = this._locationId;
   if (_.isArray(weatherData)) {
     weatherData.forEach(function (weatherEntry) {
       //store historical data in the same collection as forecast

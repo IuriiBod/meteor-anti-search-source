@@ -36,6 +36,8 @@ GoogleCloud = {
   //todo: should be as separate prototyping object
   createTrainingDataUploadingSession: function (trainingFileName, locationId, onUploadingFinishedCallback) {
     var weatherManager = new WeatherManager(locationId);
+    weatherManager.updateHistorical();
+
     var bucket = this._googleCloud.storage().bucket(CloudSettings.BUCKET);
     var trainingDataWriteStream = new through();
 
