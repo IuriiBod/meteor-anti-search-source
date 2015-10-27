@@ -1,19 +1,19 @@
 FigureBox = function FigureBox(data) {
   this.data = data;
-  if(data.week && data.year){
+  if (data.week && data.year) {
     this.data.weekRange = HospoHero.dateUtils.getWeekStartEnd(data.week, data.year);
   }
 };
 
 FigureBox.prototype.getWeeklySale = function () {
-  if(this.data.week!=moment().week()){
+  if (this.data.week != moment().week()) {
     var sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.data.weekRange.monday)}, {sort: {"date": 1}}).fetch();
-    var propName = this.data.week<moment().week()?'actualQuantity':'predictionQuantity';
+    var propName = this.data.week < moment().week() ? 'actualQuantity' : 'predictionQuantity';
     return this._calcSalesCost(sales, propName);
     //for current week: past days actual sales and for future dates forecasted sales
   } else {
     var todayActualSale = !!DailySales.findOne({date: TimeRangeQueryBuilder.forDay(moment())});
-    var querySeparator = todayActualSale?moment().endOf('d'):moment().startOf('d');
+    var querySeparator = todayActualSale ? moment().endOf('day') : moment().startOf('day');
     var actualSales = DailySales.find({ //ImportedActualSales
       date: {
         $gte: this.data.weekRange.monday,
@@ -60,7 +60,11 @@ FigureBox.prototype.getDailyActual = function () {
 };
 
 FigureBox.prototype.getDailyForecast = function () {
-  var shifts = Shifts.find({"shiftDate": HospoHero.dateUtils.shiftDate(this.data.dayObj), "status": {$ne: "finished"}, "type": null}).fetch();
+  var shifts = Shifts.find({
+    "shiftDate": HospoHero.dateUtils.shiftDate(this.data.dayObj),
+    "status": {$ne: "finished"},
+    "type": null
+  }).fetch();
   var forecastesSales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.data.dayObj)}).fetch(); //SalesPrediction
   return {
     forecastedWages: this._calcStaffCost(shifts),
@@ -69,7 +73,7 @@ FigureBox.prototype.getDailyForecast = function () {
 };
 
 FigureBox.prototype.percent = function () {
-  if(this.data.declining && this.data.subtrahend){
+  if (this.data.declining && this.data.subtrahend) {
     var doc = {
       "value": 0,
       "textColor": "text-navy",
@@ -141,8 +145,8 @@ var getPayrate = function (user, shift) {
 
 var getTotalHours = function (shift) {
   if (shift.status == "draft" || shift.status == "started") {
-    return moment(shift.endTime).diff(moment(shift.startTime), "h");
+    return moment(shift.endTime).diff(moment(shift.startTime), "hour");
   } else {
-    return moment(shift.finishedAt).diff(moment(shift.startedAt), "h");
+    return moment(shift.finishedAt).diff(moment(shift.startedAt), "hour");
   }
 };
