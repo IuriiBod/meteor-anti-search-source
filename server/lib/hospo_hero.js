@@ -5,7 +5,7 @@ Namespace('HospoHero', {
     }
 
     var notificationOptions = {
-      to: '',
+      to: [],
       type: '',
       read: false,
       createtedBy: null,
@@ -21,6 +21,7 @@ Namespace('HospoHero', {
     }
 
     var sendNotificationToId = [];
+    sendNotificationToId = sendNotificationToId.concat(notificationOptions.to);
 
     if (notificationOptions.type == 'menu' || notificationOptions.type == 'job') {
       var type = notificationOptions.type + 'list';
@@ -28,9 +29,9 @@ Namespace('HospoHero', {
       sendNotificationToId = sendNotificationToId.concat(subscription.subscribers);
     }
 
-    var userIdIndex = sendNotificationToId.indexOf(notificationOptions.to);
-    if(!userIdIndex) {
-      sendNotificationToId.concat(notificationOptions.to);
+    var userIdIndex = sendNotificationToId.indexOf(notificationOptions.createtedBy);
+    if(userIdIndex > -1) {
+      sendNotificationToId.splice(userIdIndex, 1);
     }
 
     if (sendNotificationToId.length) {

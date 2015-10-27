@@ -1,5 +1,5 @@
 Meteor.methods({
-  'createComment': function(text, ref) {
+  'createComment': function(text, ref, refType, recipients) {
     if(!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
@@ -21,6 +21,30 @@ Meteor.methods({
     };
     var id = Comments.insert(doc);
     logger.info("Comment inserted", id);
+
+    var typeCollectionRelations = {
+      menu: MenuItems,
+      job: JobItems,
+      workerJob: Jobs
+    };
+    var reference = typeCollectionRelations[refType].findOne({ _id: ref });
+
+    if(recipients.length) {
+      recipients = _.map(recipients, function(recipientName) {
+        var user = Meteor.users.findOne({username: recipientName});
+        return user ? user._id : null;
+      });
+    }
+
+    var options = {
+      title: 'New comment on ' + reference.name + ' by ' + HospoHero.username(Meteor.userId()),
+      to: recipients,
+      type: 'comment',
+      commentId: id
+    };
+
+    HospoHero.sendNotification(options);
+
     return id;
   }
 });
