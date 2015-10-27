@@ -6,7 +6,7 @@ Meteor.methods({
     if(Locations.find({organizationId: loc.organizationId, name: loc.name}).count() > 0) {
       throw new Meteor.Error("The location with the same name already exists!");
     }
-    var worldWeather = new WorldWeather(loc.city, loc.country);
+    var worldWeather = new WorldWeather(loc.city);
     if(!worldWeather.checkLocation()){
       throw new Meteor.Error("Make sure you inserted right country and city");
     }
@@ -57,7 +57,7 @@ Meteor.methods({
 
     HospoHero.checkMongoId(locationId);
     check(doc, Object);
-    var worldWeather = new WorldWeather(doc.city, doc.country)
+    var worldWeather = new WorldWeather(doc.city);
     if(!worldWeather.checkLocation()){
       throw new Meteor.Error("Make sure you inserted right country and city");
     }

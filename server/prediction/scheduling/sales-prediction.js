@@ -1,3 +1,19 @@
+var getWeatherForecast = function (dayIndex, forecastDate, locationId) {
+  //todo: temporal. figure out typical weather
+  var defaultWeather = {
+    temp: 20.0,
+    main: 'Clear'
+  };
+
+  var currentWeather = dayIndex < 14 && WeatherForecast.findOne({
+      locationId: locationId,
+      date: TimeRangeQueryBuilder.forDay(forecastDate)
+    });
+
+  return currentWeather || defaultWeather;
+};
+
+
 var predict = function (days, locationId) {
   logger.info('Make prediction', {days: days, locationId: locationId});
 
@@ -10,18 +26,9 @@ var predict = function (days, locationId) {
   Weather.updateWeatherForecastForLocation(locationId);
 
   var currentWeather;
-  for (var i = 1; i <= days; i++) {
-    var dayOfYear = dateMoment.dayOfYear();
+  for (var i = 0; i < days; i++) {
 
-    if (i < 15) {
-      currentWeather = WeatherForecast.findOne({locationId: locationId, date: TimeRangeQueryBuilder.forDay(today)});
-    } else {
-      //todo: temporal. figure out typical weather
-      currentWeather = {
-        temp: 20.0,
-        main: 'Clear'
-      }
-    }
+    currentWeather = getWeatherForecast(i, dateMoment.toDate(), locationId);
 
     areas.forEach(function (area) {
       var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});
@@ -30,7 +37,7 @@ var predict = function (days, locationId) {
       var notification = new Notification();
 
       items.forEach(function (item) {
-        var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
+        var dataVector = [item._id, currentWeather.temp, currentWeather.main, dateMoment.dayOfYear()];
         var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
         var predictItem = {
           date: moment(dateMoment).toDate(),
@@ -68,12 +75,12 @@ var predict = function (days, locationId) {
         return user._id;
       });
       notification.send(receiversIds);
-
     });
 
     dateMoment.add(1, 'day');
   }
 };
+
 
 var updateForecastDate = function (locationId, property, dateValue) {
   var properties = _.isArray(property) ? property : [property];

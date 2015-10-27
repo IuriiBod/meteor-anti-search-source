@@ -46,7 +46,7 @@ GoogleCloud = {
       onDataReceived: function (salesData) {
         logger.info('Received daily sales', {date: salesData.createdDate});
         var location = Locations.findOne({_id: locationId});
-        var worldWeather = new WorldWeather(location.country, location.city);
+        var worldWeather = new WorldWeather(location.city);
         var weather = worldWeather.getHistorical(salesData.createdDate)[0];
         var csvEntriesForCurrentDay = CsvEntryGenerator.generate(salesData, weather, locationId);
         trainingDataWriteStream.push(csvEntriesForCurrentDay);
