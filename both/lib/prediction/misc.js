@@ -16,6 +16,10 @@ TimeRangeQueryBuilder = {
 
   forDay: function (date, inUnix) {
     return this._buildQueryFor('day', date, inUnix);
+  },
+
+  forMonth: function (date, inUnix) {
+    return this._buildQueryFor('month', date, inUnix);
   }
 };
 
