@@ -226,4 +226,11 @@
       </div>
     </div>
   </div>
+  <!-- INGREDIENTS LIST-->
+  {{#if canViewStock}}
+    <div class="modal fade" id="ingredientsListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      {{> render component = 'stocksModalList' name="editJob"}}
+    </div>
+  {{/if}}
+  <!-- /INGREDIENTS LIST -->
 </template>

@@ -49,9 +49,9 @@ Template.submitJobItem.helpers({
 });
 
 Template.submitJobItem.events({
-  'click #showIngredientsList': function(event) {
+  'click #showIngredientsList': function(event,tmpl) {
     event.preventDefault();
-    $("#ingredientsListModal").modal("show");
+    tmpl.$("#ingredientsListModal").modal("show");
   },
 
   'click #addNewIngredient': function(event) {
