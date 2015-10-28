@@ -30,17 +30,18 @@ if (Meteor.isClient) {
 
 var InactivityTimeout = Match.Where(function (timeout) {
   check(timeout, Number);
+  timeout /= 6000;
   return timeout >= 1 && timeout <= 65536;
 });
 
 var AreaDocument = Match.Where(function(area) {
   check(area, {
     _id: HospoHero.checkers.OptionalMongoId,
-    name: Match.Optional(String),
-    locationId: HospoHero.checkers.OptionalMongoId,
-    organizationId: HospoHero.checkers.OptionalMongoId,
-    createdAt: Match.Optional(Number),
-    inactivityTimeout: Match.Optional(InactivityTimeout)
+    name: String,
+    locationId: HospoHero.checkers.MongoId,
+    organizationId: HospoHero.checkers.MongoId,
+    createdAt: Number,
+    inactivityTimeout: InactivityTimeout
   });
 
   return true;

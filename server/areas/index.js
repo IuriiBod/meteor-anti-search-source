@@ -1,6 +1,11 @@
 Meteor.methods({
   createArea: function (areaInfo) {
-    check(areaInfo, HospoHero.checkers.AreaDocument);
+    var defaultAreaProperties = {
+      createdAt: Date.now(),
+      inactivityTimeout: 600000
+    };
+    var newAreaDocument =_.extend(areaInfo, defaultAreaProperties);
+    check(newAreaDocument, HospoHero.checkers.AreaDocument);
 
     if (!HospoHero.isOrganizationOwner()) {
       throw new Meteor.Error(403, "User not permitted to create area");
@@ -10,13 +15,6 @@ Meteor.methods({
       logger.error('The area with the same name already exists!');
       throw new Meteor.Error('The area with the same name already exists!');
     }
-
-    var defaultAreaProperties = {
-      createdAt: Date.now(),
-      inactivityTimeout: 600000
-    };
-
-    var newAreaDocument =_.extend(areaInfo, defaultAreaProperties);
 
     // Create areaInfo
     var areaId = Areas.insert(newAreaDocument);
@@ -29,11 +27,6 @@ Meteor.methods({
     var userId = Meteor.userId();
     if(!HospoHero.canUser('edit areas', userId)) {
       logger.error(403, 'User not permitted to edit areas');
-    }
-
-    var newInactivityTimeout = updatedArea.inactivityTimeout;
-    if(newInactivityTimeout) {
-      updatedArea.inactivityTimeout = minutesToMs(newInactivityTimeout);
     }
 
     Areas.update({ _id: updatedArea._id }, { $set: updatedArea });
@@ -137,7 +130,3 @@ Meteor.methods({
     Meteor.users.update({_id: userId}, updateObject);
   }
 });
-
-var minutesToMs = function (minutes) {
-  return minutes * 60000;
-};
