@@ -50,7 +50,6 @@ Meteor.methods({
       type: 'menu',
       actionType: 'create',
       title: doc.name + ' menu created',
-      to: HospoHero.roles.getUserIdsByAction('edit menus'),
       ref: menuId
     };
     HospoHero.sendNotification(options);
@@ -136,7 +135,6 @@ Meteor.methods({
       var options = {
         title: 'Instructions on ' + menu.name + ' has been updated',
         type: 'menu',
-        to: HospoHero.roles.getUserIdsByAction('edit menus'),
         ref: id
       };
       HospoHero.sendNotification(options);
@@ -166,7 +164,6 @@ Meteor.methods({
       type: 'menu',
       actionType: 'delete',
       title: 'Menu ' + item.name + ' has been deleted',
-      to: HospoHero.roles.getUserIdsByAction('edit menus'),
       ref: id
     };
     HospoHero.sendNotification(options);

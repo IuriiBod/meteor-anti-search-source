@@ -7,27 +7,6 @@ Meteor.publish("allAreas", function() {
   }
 });
 
-Meteor.publish("areaSpecificStocks", function(generalArea) {
-  return Ingredients.find({"generalAreas": generalArea});
-});
-
-Meteor.publish("areaSpecificStockTakes", function(generalArea) {
-  var cursors = [];
-  var stocktakes = Stocktakes.find({"generalArea": generalArea});
-  cursors.push(stocktakes);
-  var ids = [];
-  stocktakes.fetch().forEach(function(item) {
-    if(ids.indexOf(item._id) < 0) {
-      ids.push(item.stockId);
-    }
-  });
-  if(ids.length > 0) {
-    cursors.push(Ingredients.find({"_id": {$in: ids}}));
-  }
-  logger.info("Stocktakes on general area published", generalArea);
-  return cursors;
-});
-
 Meteor.publish("stocktakeMains", function(date) {
   if(this.userId) {
     var query = {

@@ -7,7 +7,7 @@ Meteor.publish("allSuppliers", function() {
 
 Meteor.publish("suppliers", function(ids) {
   logger.info("Suppliers have been published", ids);
-  return Suppliers.find({"_id": {$in: ids}});
+  return Suppliers.find({ "_id": {$in: ids}, "relations.areaId": HospoHero.getCurrentAreaId(this.userId) });
 });
 
 Meteor.publish("supplierProfile", function(id) {

@@ -4,7 +4,9 @@ Router.route('/stocktake', {
   path: '/stocktake',
   template: "stockListMainView",
   waitOn: function() {
-    return Meteor.subscribe('organizationInfo');
+    return [
+      Meteor.subscribe('organizationInfo')
+    ];
   },
   data: function() {
     if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
@@ -23,7 +25,6 @@ Router.route('/stocktake/:_id', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("allAreas"),
-      Meteor.subscribe("allSuppliers"),
       Meteor.subscribe("stocktakes", this.params._id),
       Meteor.subscribe("ordersPlaced", this.params._id)
     ];
@@ -48,7 +49,9 @@ Router.route('/stocktake/order/receive/:_id', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("receiptOrders", this.params._id),
-      Meteor.subscribe("orderReceipts", [this.params._id])
+      Meteor.subscribe("orderReceipts", [this.params._id]),
+      Meteor.subscribe("ingredients"),
+      Meteor.subscribe("allSuppliers")
     ];
   },
   data: function() {
@@ -71,7 +74,9 @@ Router.route('/stocktake/orders/:_id', {
       Meteor.subscribe("ordersPlaced", this.params._id),
       Meteor.subscribe("orderReceiptsByVersion", this.params._id),
       Meteor.subscribe("comments", this.params._id),
-      Meteor.subscribe("usersList")
+      Meteor.subscribe("usersList"),
+      Meteor.subscribe("ingredients"),
+      Meteor.subscribe("allSuppliers")
     ];
   },
   data: function() {
@@ -79,29 +84,6 @@ Router.route('/stocktake/orders/:_id', {
       Router.go("/");
     }
     Session.set("thisVersion", this.params._id);
-    Session.set("editStockTake", false);
-  },
-  fastRender: true
-});
-
-Router.route('/stocktake/order/receipts/list', {
-  name: "orderReceiptsList",
-  path: '/stocktake/order/receipts',
-  template: "orderReceiptsListMainView",
-  waitOn: function() {
-    return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe("allOrderReceipts")
-    ];
-  },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
-      Router.go("/");
-    }
-    Session.set("thisState", false);
-    if(!Session.set("thisTime")) {
-      Session.set("thisTime", "week");
-    }
     Session.set("editStockTake", false);
   },
   fastRender: true

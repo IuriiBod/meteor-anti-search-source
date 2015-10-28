@@ -9,15 +9,11 @@ Meteor.publish("ingredients", function(ids, status) {
 
     if (ids && ids.length > 0) {
       query._id = {$in: ids};
-    } else {
-      options.limit = 10;
     }
 
     if(status) {
       query.status = status;
     }
-
-    logger.info("Ingredients published", {"ids": ids});
 
     return Ingredients.find(query, options);
   } else {
@@ -28,7 +24,7 @@ Meteor.publish("ingredients", function(ids, status) {
 Meteor.publish("ingredientsRelatedJobs", function(id) {
   if(this.userId) {
     logger.info("Related jobs published", {"id": id});
-    return JobItems.find({"ingredients._id": id});
+    return JobItems.find({ "ingredients._id": id, "relations.areaId": HospoHero.getCurrentAreaId(this.userId) });
   } else {
     this.ready();
   }

@@ -123,5 +123,25 @@ Namespace('HospoHero.misc', {
       week: parseInt(routeContext.params.week),
       year: parseInt(routeContext.params.year)
     };
+  },
+
+  getSubscriptionDocument: function(type, itemId) {
+    var subscription = Subscriptions.findOne({
+      type: type,
+      subscriber: Meteor.userId(),
+      'relations.areaId': HospoHero.getCurrentAreaId()
+    });
+
+    if(subscription) {
+      subscription.itemIds = itemId;
+    } else {
+      subscription = {
+        type: type,
+        itemIds: itemId,
+        subscriber: Meteor.userId(),
+        relations: HospoHero.getRelationsObject()
+      };
+    }
+    return subscription;
   }
 });
