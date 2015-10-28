@@ -13,7 +13,11 @@ WorldWeather = function WorldWeather(city) {
     key: Meteor.settings.WorldWeather.KEY
   };
   this._url = Meteor.settings.WorldWeather.HOST;
-  this._targetTime = '1200';
+  this._targetTimes = ['1200', '1300', '1400', '1500', '1600'];
+};
+
+WorldWeather.prototype._isTargetTime = function (time) {
+  return this._targetTimes.indexOf(time) > -1;
 };
 
 
@@ -45,11 +49,14 @@ WorldWeather.prototype._httpQuery = function (route, params) {
       params: allParams
     });
 
+    console.log('weather forecast responce', res.data);
+
     if (res.data.data.error) {
       this._onHttpError(params, res.data.data.error);
+      return false;
+    } else {
+      return res.data.data;
     }
-
-    return res.data.data || false;
   } catch (err) {
     this._onHttpError(params, err);
     return false;
@@ -81,6 +88,7 @@ WorldWeather.prototype.getHistorical = function (fromDate, toDate) {
  */
 WorldWeather.prototype.getForecast = function () {
   var data = this._httpQuery("weather.ashx", {});
+
   return this._mapWeatherEntries(data);
 };
 
@@ -94,13 +102,16 @@ WorldWeather.prototype.getForecast = function () {
 WorldWeather.prototype._mapWeatherEntries = function (data) {
   var self = this;
 
+  console.log('data in map ', data);
+
   return data && data.weather.map(function (weatherItem) {
       var hourly = _.find(weatherItem.hourly, function (hourlyItem) {
-        return hourlyItem.time === self._targetTime;
+        return self._isTargetTime(hourlyItem.time);
       });
 
       if (!hourly) {
-        throw new Meteor.Error(500, 'Weather parse error: Hourly record for 12:00 not found');
+        logger.error('Weather parse error: Hourly record for target time not found');
+        throw new Meteor.Error(500, 'Weather parse error: Hourly record for target time not found');
       }
 
       return {
