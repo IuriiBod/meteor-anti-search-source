@@ -9,7 +9,7 @@ Router.route('/menuItems/:category/:status', {
       Meteor.subscribe('allCategories'),
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe('menuList', this.params.category, this.params.status.toLowerCase()),
-      Meteor.subscribe('userSubs', ['menulist'])
+      Meteor.subscribe('userSubscriptions')
     ];
   },
   data: function() {
@@ -57,7 +57,7 @@ Router.route('/menuItems/:type', {
       Meteor.subscribe('allCategories'),
       Meteor.subscribe("allStatuses"),
       Meteor.subscribe("menuList", "all", "all"),
-      Meteor.subscribe("userSubs", ['menulist'])
+      Meteor.subscribe('userSubscriptions')
     ];
   },
   data: function() {
@@ -82,7 +82,7 @@ Router.route('/menuItem/:_id', {
       Meteor.subscribe("comments", this.params._id),
       Meteor.subscribe("allCategories"),
       Meteor.subscribe("allStatuses"),
-      Meteor.subscribe("userSubs", ['menulist', this.params._id]),
+      Meteor.subscribe('userSubscriptions'),
       Meteor.subscribe("usersList"),
       Meteor.subscribe('jobTypes')
     ];

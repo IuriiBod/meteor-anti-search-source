@@ -8,7 +8,7 @@ Router.route('/jobItems', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections'),
-      Meteor.subscribe("userSubs", ['joblist']),
+      Meteor.subscribe('userSubscriptions'),
       Meteor.subscribe("jobItems", null, 'active')
     ];
   },
@@ -30,7 +30,7 @@ Router.route('/jobItems/:type', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes', null, 'archived'),
       Meteor.subscribe('sections'),
-      Meteor.subscribe('userSubs', ['joblist'])
+      Meteor.subscribe('userSubscriptions')
     ];
   },
   data: function() {
@@ -78,10 +78,9 @@ Router.route('/jobItem/:_id', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('comments', this.params._id),
-      Meteor.subscribe('usersList'),
-      Meteor.subscribe('userSubs', [this.params._id, 'joblist']),
-      Meteor.subscribe('usersList'),
+      Meteor.subscribe("comments", this.params._id),
+      Meteor.subscribe("usersList"),
+      Meteor.subscribe('userSubscriptions'),
       Meteor.subscribe('allCategories'),
       Meteor.subscribe('jobsRelatedMenus', this.params._id)
     ];
