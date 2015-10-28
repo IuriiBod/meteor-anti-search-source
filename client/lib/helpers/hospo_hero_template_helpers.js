@@ -59,5 +59,3 @@ Namespace('HospoHero.template', {
 Object.keys(HospoHero.template).forEach(function (helper) {
   Template.registerHelper(helper, HospoHero.template[helper]);
 });
-
-Template.registerHelper('username', HospoHero.username);
