@@ -88,8 +88,7 @@ Meteor.methods({
     updateUserDocument.$addToSet['relations.locationIds'] = area.locationId;
     updateUserDocument.$addToSet['relations.areaIds'] = addedUserInfo.areaId;
 
-    // TODO: Uncoment
-    //Meteor.users.update({_id: userId}, updateUserDocument);
+    Meteor.users.update({_id: addedUserInfo.userId}, updateUserDocument);
 
     // Send notification to the invited user
     var options = {
@@ -98,8 +97,7 @@ Meteor.methods({
       to: addedUserInfo.userId
     };
 
-    // TODO: Uncoment
-    //HospoHero.sendNotification(options);
+    HospoHero.sendNotification(options);
 
     // Send an email to the invited user
     var emailSender = new EmailSender({
