@@ -1,10 +1,4 @@
 Template.dailyShiftScheduling.events({
-  'click .editShiftProfile': function (event) {
-    event.preventDefault();
-    var shiftId = $(event.target).attr("data-id");
-    Session.set("thisShift", shiftId);
-    $("#shiftProfile").modal();
-  },
 
   'click .fc-title': function (event) {
     event.stopPropagation();

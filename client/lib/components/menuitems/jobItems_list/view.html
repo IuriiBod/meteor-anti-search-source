@@ -17,4 +17,9 @@
       <button id="showJobItemsList"  class="btn btn-block btn-outline btn-primary" type="button"><i class="fa fa-plus"></i> Add prep jobs to menu item</button>
     </table>
   </div>
+  <!-- JOB ITEMS LIST-->
+  <div class="modal fade" id="jobItemListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {{> render component='jobItemsModalList' name="submitMenuItem"}}
+  </div>
+  <!-- /JOB ITEMS LIST -->
 </template>

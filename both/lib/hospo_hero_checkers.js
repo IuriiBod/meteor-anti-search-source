@@ -9,6 +9,16 @@ var MongoId = Match.Where(function (id) {
 
 var NullableMongoId = Match.OneOf(MongoId, null);
 
+var PosKey = Match.Where(function (key) {
+  check(key, String);
+  return /[0-9a-zA-Z]{32}/.test(key);
+});
+
+var PosSecret = Match.Where(function (key) {
+  check(key, String);
+  return /[0-9a-zA-Z]{64}/.test(key);
+});
+
 
 if (Meteor.isClient) {
   //mock object for logger on client side
@@ -17,6 +27,65 @@ if (Meteor.isClient) {
     }
   }
 }
+
+var InactivityTimeout = Match.Where(function (timeout) {
+  check(timeout, Number);
+  timeout /= 6000;
+  return timeout >= 1 && timeout <= 65536;
+});
+
+var AreaDocument = Match.Where(function (area) {
+  check(area, {
+    _id: HospoHero.checkers.OptionalMongoId,
+    name: String,
+    locationId: HospoHero.checkers.MongoId,
+    organizationId: HospoHero.checkers.MongoId,
+    createdAt: Number,
+    inactivityTimeout: InactivityTimeout
+  });
+
+  if (area._id) {
+    var existingArea = Areas.findOne({_id: area._id});
+    if (existingArea.name != area.name) {
+      if (!!Areas.findOne({locationId: area.locationId, name: area.name})) {
+        logger.error('The area with the same name already exists!');
+        throw new Meteor.Error('The area with the same name already exists!');
+      }
+    }
+  }
+  return true;
+});
+
+var LocationDocument = Match.Where(function (location) {
+  check(location, {
+    name: String,
+    timezone: String,
+    openingTime: Date,
+    closingTime: Date,
+    organizationId: MongoId,
+    createdAt: Number,
+    country: String,
+    city: String,
+    shiftUpdateHour: Number,
+
+    _id: HospoHero.checkers.OptionalMongoId,
+    address: Match.Optional(String),
+    pos: Match.OneOf(null, HospoHero.checkers.Pos)
+  });
+
+
+  if (!!Locations.findOne({organizationId: location.organizationId, name: location.name})) {
+    logger.error('The location with the same name already exists!');
+    throw new Meteor.Error("The location with the same name already exists!");
+  }
+
+  var worldWeather = new WorldWeather(location.city);
+  if (!worldWeather.checkLocation()) {
+    throw new Meteor.Error("Make sure you inserted right country and city");
+  }
+
+  return true;
+});
 
 var ShiftDocument = Match.Where(function (shift) {
   check(shift, {
@@ -79,6 +148,19 @@ var ShiftDocument = Match.Where(function (shift) {
   return true;
 });
 
+var SubscriptionDocument = Match.Where(function (subscription) {
+  check(subscription, {
+    type: Match.OneOf('menu', 'job'),
+    itemIds: Match.OneOf(HospoHero.checkers.MongoId, 'all'),
+    subscriber: HospoHero.checkers.MongoId,
+    relations: HospoHero.checkers.Relations,
+
+    _id: HospoHero.checkers.OptionalMongoId
+  });
+
+  return true;
+});
+
 
 Namespace('HospoHero.checkers', {
   /**
@@ -117,8 +199,24 @@ Namespace('HospoHero.checkers', {
     return true;
   }),
 
+  Pos: Match.Where(function (pos) {
+    try {
+      check(pos, {
+        key: PosKey,
+        secret: PosSecret,
+        host: String
+      });
+    } catch (e) {
+      checkError('Incorrect POS configuration');
+    }
+    return true;
+  }),
+
   /**
    * Shift document checker
    */
-  ShiftDocument: ShiftDocument
+  ShiftDocument: ShiftDocument,
+  AreaDocument: AreaDocument,
+  LocationDocument: LocationDocument,
+  SubscriptionDocument: SubscriptionDocument
 });

@@ -2,7 +2,6 @@ var component = FlowComponents.define("ingsAndPreps", function (props) {
   this.type = props.type;
   this.id = props.item._id;
   this.quantity = props.item.quantity;
-  this.onRendered(this.onItemRendered);
 });
 
 component.state.item = function () {
@@ -43,11 +42,5 @@ component.state.measure = function () {
     } else if (this.type == "ings") {
       return this.item.portionUsed;
     }
-  }
-};
-
-component.prototype.onItemRendered = function () {
-  if (this.type == "prep") {
-    Meteor.subscribe("jobItems", [this.id]);
   }
 };

@@ -3,7 +3,11 @@ var component = FlowComponents.define('jobDetailsHeader', function (props) {
 });
 
 component.state.isSubscribed = function () {
-  return !!Subscriptions.findOne({_id: this.get('id'), subscribers: Meteor.userId()});
+  return !!Subscriptions.findOne({
+    type: 'job',
+    subscriber: Meteor.userId(),
+    itemIds: this.get('id')
+  });
 };
 
 component.state.isArchived = function () {
@@ -21,8 +25,8 @@ component.state.onAreaSelected = function () {
 };
 
 component.action.subscribe = function () {
-  var method = this.get('isSubscribed') ? 'unSubscribe' : 'subscribe';
-  Meteor.call(method, this.get('id'), HospoHero.handleMethodResult());
+  var subscription = HospoHero.misc.getSubscriptionDocument('job', this.get('id'));
+  Meteor.call('subscribe', subscription, this.get('isSubscribed'), HospoHero.handleMethodResult());
 };
 
 component.action.archive = function () {
