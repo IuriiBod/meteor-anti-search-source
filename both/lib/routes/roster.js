@@ -5,7 +5,7 @@ Router.route('/roster/weekly/:year/:week', {
   waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weeklyRoster', HospoHero.otherUtils.getWeekDateFromRoute(this)),
+      Meteor.subscribe('weeklyRoster', HospoHero.misc.getWeekDateFromRoute(this)),
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections'),
       Meteor.subscribe('areaMenuItems'),
@@ -17,7 +17,7 @@ Router.route('/roster/weekly/:year/:week', {
       Router.go("/");
     }
     return {
-      weekDate:  HospoHero.otherUtils.getWeekDateFromRoute(this)
+      weekDate:  HospoHero.misc.getWeekDateFromRoute(this)
     }
   },
   fastRender: true
