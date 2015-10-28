@@ -1,4 +1,4 @@
-Namespace('HospoHero.otherUtils', {
+Namespace('HospoHero.misc', {
   getCountries: function () {
     return [
       {

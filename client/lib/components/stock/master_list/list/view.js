@@ -56,7 +56,15 @@ Template.ingredientsList.events({
         IngredientsListSearch.search(text, selector);
       }
     }
-  }, 200)
+  }, 200),
+
+  'click .editIngredient': function(event, tmpl) {
+    event.preventDefault();
+    var id = $(event.target).closest("tr").attr("data-id");
+    Session.set("thisIngredientId", id);
+    Meteor.subscribe("ingredients", [id]);
+    tmpl.$("#editIngredientModal").modal("show");
+  }
 });
 
 Template.ingredientsList.onRendered(function() {

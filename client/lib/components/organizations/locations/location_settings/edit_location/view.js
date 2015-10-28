@@ -107,7 +107,7 @@ Template.editLocation.helpers({
       tpl._customForm.addField('country', {
         label: 'Country',
         type: 'select',
-        options: HospoHero.otherUtils.getCountries(),
+        options: HospoHero.misc.getCountries(),
         value: location.country
       });
 
