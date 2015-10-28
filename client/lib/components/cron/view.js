@@ -7,7 +7,7 @@ Template.cronConfig.onRendered(function() {
     source: HospoHero.dateUtils.hours(),
     success: function(response, newValue) {
       var location = Locations.findOne({ _id: HospoHero.getCurrentArea().locationId });
-      location.shiftUpdateHour = newValue;
+      location.shiftUpdateHour = parseInt(newValue);
 
       Meteor.call('editLocation', location, HospoHero.handleMethodResult(function() {
         HospoHero.success('Cron time was successfully changed!');

@@ -9,12 +9,12 @@ var MongoId = Match.Where(function (id) {
 
 var NullableMongoId = Match.OneOf(MongoId, null);
 
-var POSkey = Match.Where(function(key) {
+var PosKey = Match.Where(function(key) {
   check(key, String);
   return /[0-9a-zA-Z]{32}/.test(key);
 });
 
-var POSsecret = Match.Where(function(key) {
+var PosSecret = Match.Where(function(key) {
   check(key, String);
   return /[0-9a-zA-Z]{64}/.test(key);
 });
@@ -44,6 +44,15 @@ var AreaDocument = Match.Where(function(area) {
     inactivityTimeout: InactivityTimeout
   });
 
+  if(area._id) {
+    var existingArea = Areas.findOne({ _id: area._id });
+    if(existingArea.name != area.name) {
+      if (!!Areas.findOne({locationId: area.locationId, name: area.name})) {
+        logger.error('The area with the same name already exists!');
+        throw new Meteor.Error('The area with the same name already exists!');
+      }
+    }
+  }
   return true;
 });
 
@@ -57,12 +66,22 @@ var LocationDocument = Match.Where(function(location) {
     createdAt: Number,
     country: String,
     city: String,
-    shiftUpdateHour: String,
+    shiftUpdateHour: Number,
 
     _id: HospoHero.checkers.OptionalMongoId,
     address: Match.Optional(String),
-    pos: Match.OneOf(null, HospoHero.checkers.POS)
+    pos: Match.OneOf(null, HospoHero.checkers.Pos)
   });
+
+  if(location._id) {
+    var existingLocation = Locations.findOne({ _id: location._id });
+    if(existingLocation.name != location.name) {
+      if (!!Locations.findOne({organizationId: location.organizationId, name: location.name})) {
+        logger.error('The location with the same name already exists!');
+        throw new Meteor.Error('The location with the same name already exists!');
+      }
+    }
+  }
 
   return true;
 });
@@ -166,11 +185,11 @@ Namespace('HospoHero.checkers', {
     return true;
   }),
 
-  POS: Match.Where(function(pos) {
+  Pos: Match.Where(function(pos) {
     try {
       check(pos, {
-        key: POSkey,
-        secret: POSsecret,
+        key: PosKey,
+        secret: PosSecret,
         host: String
       });
     } catch(e) {

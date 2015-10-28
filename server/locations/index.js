@@ -3,7 +3,7 @@ Meteor.methods({
     var defaultLocation = {
       address: '',
       pos: null,
-      shiftUpdateHour: '7',
+      shiftUpdateHour: 7,
       createdAt: Date.now()
     };
 
@@ -51,15 +51,6 @@ Meteor.methods({
     var userId = Meteor.userId();
     if(!HospoHero.canUser('edit locations', userId)) {
       throw new Meteor.Error(403, 'User not permitted to edit locations');
-    }
-
-    var oldLocation = Locations.findOne({ _id: updatedLocation._id });
-
-    // If location name was changed, check for existings location with the same name
-    if(oldLocation.name != updatedLocation.name) {
-      if(!!Locations.findOne({organizationId: updatedLocation.organizationId, name: updatedLocation.name})) {
-        throw new Meteor.Error("The location with the same name already exists!");
-      }
     }
 
     Locations.update({ _id: updatedLocation._id }, { $set: updatedLocation });

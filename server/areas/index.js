@@ -11,11 +11,6 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create area");
     }
 
-    if (!!Areas.findOne({locationId: areaInfo.locationId, name: areaInfo.name})) {
-      logger.error('The area with the same name already exists!');
-      throw new Meteor.Error('The area with the same name already exists!');
-    }
-
     // Create areaInfo
     var areaId = Areas.insert(newAreaDocument);
     logger.info('Area has been created', { areaId: areaId });
