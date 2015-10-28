@@ -47,8 +47,6 @@ var AreaDocument = Match.Where(function(area) {
 });
 
 var LocationDocument = Match.Where(function(location) {
-  console.log('LOC', location);
-
   check(location, {
     name: String,
     timezone: String,
