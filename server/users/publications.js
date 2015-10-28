@@ -1,3 +1,28 @@
+// Publishing current user
+Meteor.publish(null, function () {
+  if (this.userId) {
+    var fields = {
+      "services.google": 1,
+      profile: 1,
+      username: 1,
+      emails: 1,
+      isActive: 1,
+      relations: 1,
+      createdAt: 1,
+      currentAreaId: 1,
+      roles: 1
+    };
+
+    return Meteor.users.find({
+      _id: this.userId
+    }, {
+      fields: fields
+    });
+  } else {
+    this.ready();
+  }
+});
+
 Meteor.publish('profileUser', function (userId) {
   if (userId) {
     var user = Meteor.users.findOne(userId);
