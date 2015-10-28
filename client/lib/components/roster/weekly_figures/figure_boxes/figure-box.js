@@ -75,8 +75,10 @@ FigureBoxDataHelper.prototype.percent = function () {
       "icon": "fa-angle-up"
     };
     var diff = parseFloat(this.data.declining) - parseFloat(this.data.subtrahend);
-    doc.value = ((diff / parseFloat(this.data.subtrahend)) * 100);
-    doc.value = !isNaN(doc.value) ? doc.value.toFixed(2) : 0;
+    if(this.data.subtrahend !=0){
+      doc.value = ((diff / parseFloat(this.data.subtrahend)) * 100);
+    }
+    doc.value = doc.value.toFixed(2);
     if (diff < 0) {
       doc.textColor = "text-danger";
       doc.icon = "fa-angle-down";

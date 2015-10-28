@@ -9,11 +9,11 @@ var component = FlowComponents.define("salesFigureBox", function (props) {
 });
 
 component.state.weeklySale = function () {
-  return !isNaN(this.actual)?parseInt(this.actual).toLocaleString():0;
+  return parseInt(this.actual).toLocaleString();
 };
 
 component.state.forecastedSale = function () {
-  return !isNaN(this.forecasted)?this.forecasted.toFixed(2):0;
+  return this.forecasted.toFixed(2);
 };
 
 component.state.percent = function () {
