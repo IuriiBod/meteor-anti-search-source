@@ -1,6 +1,5 @@
 var component = FlowComponents.define("ordersListItem", function(props) {
   this.orderId = props.itemId;
-  this.onRendered(this.onItemRendered);
 });
 
 component.state.order = function() {
@@ -27,7 +26,4 @@ component.state.editable = function() {
 
 component.state.supplier = function() {
   return Session.get("activeSupplier");
-}
-
-component.prototype.onItemRendered = function() {
 }

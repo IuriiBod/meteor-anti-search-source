@@ -24,7 +24,7 @@ Meteor.publish("ingredients", function(ids, status) {
 Meteor.publish("ingredientsRelatedJobs", function(id) {
   if(this.userId) {
     logger.info("Related jobs published", {"id": id});
-    return JobItems.find({"ingredients._id": id});
+    return JobItems.find({ "ingredients._id": id, "relations.areaId": HospoHero.getCurrentAreaId(this.userId) });
   } else {
     this.ready();
   }

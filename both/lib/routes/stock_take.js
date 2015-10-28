@@ -5,8 +5,7 @@ Router.route('/stocktake', {
   template: "stockListMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe("stocktakeMains", new Date().getTime())
+      Meteor.subscribe('organizationInfo')
     ];
   },
   data: function() {
@@ -26,11 +25,8 @@ Router.route('/stocktake/:_id', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("allAreas"),
-      Meteor.subscribe("allSuppliers"),
       Meteor.subscribe("stocktakes", this.params._id),
-      Meteor.subscribe("ordersPlaced", this.params._id),
-      Meteor.subscribe("areaSpecificStockTakes"),
-      Meteor.subscribe("areaSpecificStocks")
+      Meteor.subscribe("ordersPlaced", this.params._id)
     ];
   },
   data: function() {
