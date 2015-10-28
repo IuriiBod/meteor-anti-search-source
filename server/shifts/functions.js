@@ -132,8 +132,8 @@ Meteor.methods({
       return shift.assignedTo;
     });
 
-    // Removing all undefined values
-    assignedUsers = _.compact(assignedUsers);
+    // Removing all non-unique and undefined values
+    assignedUsers = _.uniq(_.compact(assignedUsers));
 
     // Publishing shifts
     Shifts.update(shiftsToPublishQuery, {
@@ -144,6 +144,8 @@ Meteor.methods({
     }, {
       multi: true
     });
+
+    //Meteor.call();
   },
 
   claimShift: function (shiftId) {
