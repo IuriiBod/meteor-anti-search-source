@@ -9,6 +9,16 @@ var MongoId = Match.Where(function (id) {
 
 var NullableMongoId = Match.OneOf(MongoId, null);
 
+var POSkey = Match.Where(function(key) {
+  check(key, String);
+  return /[0-9a-zA-Z]{32}/.test(key);
+});
+
+var POSsecret = Match.Where(function(key) {
+  check(key, String);
+  return /[0-9a-zA-Z]{64}/.test(key);
+});
+
 
 if (Meteor.isClient) {
   //mock object for logger on client side
@@ -34,6 +44,24 @@ var AreaDocument = Match.Where(function(area) {
   });
 
   return true;
+});
+
+var LocationDocument = Match.Where(function(location) {
+  check(location, {
+    name: String,
+    timezone: String,
+    openingTime: Date,
+    closingTime: Date,
+    organizationId: MongoId,
+    createdAt: Number,
+    country: String,
+    city: String,
+    shiftUpdateHour: Number,
+
+    _id: HospoHero.checkers.OptionalMongoId,
+    address: Match.Optional(String),
+    pos: Match.Optional(HospoHero.checkers.POS)
+  })
 });
 
 var ShiftDocument = Match.Where(function (shift) {
@@ -135,10 +163,23 @@ Namespace('HospoHero.checkers', {
     return true;
   }),
 
+  POS: Match.Where(function(pos) {
+    try {
+      check(pos, {
+        key: POSkey,
+        secret: POSsecret,
+        host: String
+      })
+    } catch(e) {
+      checkError('Incorrect POS configuration');
+    }
+    return true;
+  }),
+
   /**
    * Shift document checker
    */
   ShiftDocument: ShiftDocument,
-
-  AreaDocument: AreaDocument
+  AreaDocument: AreaDocument,
+  LocationDocument: LocationDocument
 });

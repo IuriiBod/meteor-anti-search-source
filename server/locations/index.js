@@ -1,5 +1,9 @@
 Meteor.methods({
   'createLocation': function(loc) {
+
+    console.log('LOC', loc);
+    return false;
+
     if(!HospoHero.isOrganizationOwner()) {
       throw new Meteor.Error(403, 'User not permitted to create location');
     }
