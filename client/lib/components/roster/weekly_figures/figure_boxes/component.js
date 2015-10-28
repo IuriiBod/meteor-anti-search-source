@@ -7,10 +7,10 @@ var component = FlowComponents.define("figureBoxes", function (props) {
 });
 
 component.state.salesData = function () {
-  return{
-   weeklySale: this.figureBox.getWeeklySale(),
-   forecastedSale: this.figureBox.getForecastedSales(),
-   weeklyStaffCost: this.figureBox.getWeeklyStaffCost(),
-   rosteredStaffCost: this.figureBox.getRosteredStaffCost()
+  return {
+    weeklySale: this.figureBox.getWeeklySale(),
+    forecastedSale: this.figureBox.getForecastedSales(),
+    weeklyStaffCost: this.figureBox.getWeeklyStaffCost(),
+    rosteredStaffCost: this.figureBox.getRosteredStaffCost()
   }
 };

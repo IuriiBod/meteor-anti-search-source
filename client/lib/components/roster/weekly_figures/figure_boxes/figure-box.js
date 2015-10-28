@@ -75,7 +75,7 @@ FigureBoxDataHelper.prototype.percent = function () {
       "icon": "fa-angle-up"
     };
     var diff = parseFloat(this.data.declining) - parseFloat(this.data.subtrahend);
-    if(this.data.subtrahend !=0){
+    if (this.data.subtrahend != 0) {
       doc.value = ((diff / parseFloat(this.data.subtrahend)) * 100);
     }
     doc.value = doc.value.toFixed(2);
