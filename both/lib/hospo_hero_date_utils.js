@@ -155,7 +155,3 @@ Namespace('HospoHero.dateUtils', {
     return moment(time).format("HH:mm");
   }
 });
-
-Object.keys(HospoHero.dateUtils).forEach(function (helper) {
-  Template.registerHelper(helper, HospoHero.dateUtils[helper]);
-});

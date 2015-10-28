@@ -37,5 +37,24 @@ Namespace('HospoHero', {
   // Alert info message
   info: function (message) {
     sweetAlert("Info!", message, "info");
+  },
+
+  // Returns username. user can be user ID or user object
+  username: function(user) {
+    if(typeof user == "string") {
+      user = Meteor.users.findOne({_id: user});
+    }
+
+    if(user) {
+      if (user.profile.firstname && user.profile.lastname) {
+        return user.profile.firstname + " " + user.profile.lastname;
+      } else {
+        return user.username;
+      }
+    } else {
+      return '';
+    }
   }
 });
+
+Template.registerHelper('username', HospoHero.username);
