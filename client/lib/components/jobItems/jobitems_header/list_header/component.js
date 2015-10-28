@@ -16,9 +16,6 @@ component.state.isSubscribed = function () {
 };
 
 component.action.subscribe = function () {
-  var subscription = {
-    type: 'job',
-    itemIds: 'all'
-  };
+  var subscription = HospoHero.misc.getSubscriptionDocument('job', 'all');
   Meteor.call('subscribe', subscription, this.get('isSubscribed'), HospoHero.handleMethodResult());
 };

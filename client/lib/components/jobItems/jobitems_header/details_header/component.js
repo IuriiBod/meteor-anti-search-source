@@ -28,10 +28,7 @@ component.state.onAreaSelected = function () {
 };
 
 component.action.subscribe = function () {
-  var subscription = {
-    type: 'job',
-    itemIds: this.get('id')
-  };
+  var subscription = HospoHero.misc.getSubscriptionDocument('job', this.get('id'));
   Meteor.call('subscribe', subscription, this.get('isSubscribed'), HospoHero.handleMethodResult());
 };
 
