@@ -53,7 +53,7 @@ component.state.actual = function() {
   });
   this.set("actualStaffCost", total);
   return total;
-}
+};
 
 component.state.forecast = function() {
   var total = 0;
@@ -102,7 +102,7 @@ component.state.forecast = function() {
   });
   this.set("forecastedStaffCost", total);
   return total;
-}
+};
 
 component.state.class = function() {
   var actual = this.get("actualStaffCost");
@@ -114,4 +114,14 @@ component.state.class = function() {
       return "text-danger";
     }
   }
-}
+};
+
+component.state.formatCurrency = function (currencyString) {
+  if (currencyString && currencyString > 0) {
+    currencyString = currencyString.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+    currencyString = currencyString.substring(0, currencyString.lastIndexOf('.'));
+    return currencyString;
+  } else {
+    return 0;
+  }
+};

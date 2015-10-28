@@ -4,8 +4,8 @@ Template.stocksModalList.events({
     FlowComponents.callAction('keyup', text);
   }, 200),
 
-  'click #addNewIng': function(event) {
+  'click #addNewIng': function(event, tmpl) {
     event.preventDefault();
-    $("#addIngredientModal").modal('show');
+    tmpl.$("#addIngredientModal").modal('show');
   }
 });

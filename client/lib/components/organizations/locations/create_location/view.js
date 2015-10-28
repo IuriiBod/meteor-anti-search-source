@@ -12,7 +12,7 @@ Template.createLocation.helpers({
   },
 
   countries: function(){
-    return HospoHero.otherUtils.getCountries();
+    return HospoHero.misc.getCountries();
   }
 });
 
@@ -31,10 +31,10 @@ Template.createLocation.events({
       'address',
       'timezone'
     ];
-    var doc = HospoHero.otherUtils.getValuesFromEvent(e, fields, true);
-    doc.pos = HospoHero.otherUtils.getValuesFromEvent(e, ['posKey', 'posSecret', 'posHost'], true);
-    doc.openingTime = HospoHero.otherUtils.getValuesFromEvent(e, ['openingHour', 'openingMinutes'], true);
-    doc.closingTime = HospoHero.otherUtils.getValuesFromEvent(e, ['closingHour', 'closingMinutes'], true);
+    var doc = HospoHero.misc.getValuesFromEvent(e, fields, true);
+    doc.pos = HospoHero.misc.getValuesFromEvent(e, ['posKey', 'posSecret', 'posHost'], true);
+    doc.openingTime = HospoHero.misc.getValuesFromEvent(e, ['openingHour', 'openingMinutes'], true);
+    doc.closingTime = HospoHero.misc.getValuesFromEvent(e, ['closingHour', 'closingMinutes'], true);
     doc.organizationId = e.target.dataset.id;
 
     FlowComponents.callAction('submit', doc);
