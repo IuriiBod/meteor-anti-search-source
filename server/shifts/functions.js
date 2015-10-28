@@ -128,24 +128,84 @@ Meteor.methods({
     };
 
     // IDs of user to notify
-    var assignedUsers = Shifts.find(shiftsToPublishQuery).map(function (shift) {
-      return shift.assignedTo;
+    var usersToNotify = {};
+    var openShifts = [];
+
+    var shiftsToPublish = Shifts.find(shiftsToPublishQuery, {
+      fields: {
+        assignedTo: 1,
+        startTime: 1,
+        shiftDate: 1,
+        endTime: 1
+      }
     });
 
-    // Removing all non-unique and undefined values
-    assignedUsers = _.uniq(_.compact(assignedUsers));
+    if(shiftsToPublish.count() > 0) {
+      shiftsToPublish.forEach(function (shift) {
+        if(shift.assignedTo) {
+          if(usersToNotify[shift.assignedTo]) {
+            usersToNotify[shift.assignedTo].push(shift);
+          } else {
+            usersToNotify[shift.assignedTo] = [shift];
+          }
+        } else {
+          openShifts.push(shift);
+        }
+      })
+    }
+
+    Meteor.call('notifyUsersPublishRoster', date, usersToNotify, openShifts);
 
     // Publishing shifts
-    Shifts.update(shiftsToPublishQuery, {
-      $set: {
-        published: true,
-        publishedOn: new Date()
-      }
-    }, {
-      multi: true
-    });
+    //Shifts.update(shiftsToPublishQuery, {
+    //  $set: {
+    //    published: true,
+    //    publishedOn: new Date()
+    //  }
+    //}, {
+    //  multi: true
+    //});
+  },
 
-    //Meteor.call();
+  notifyUsersPublishRoster: function(date, usersToNotify, openShifts) {
+    var notifyObjectLength = Object.keys(usersToNotify).length;
+    if(notifyObjectLength > 0) {
+      var stringDate = moment(date).format("dddd, Do MMMM YYYY");
+
+      if(openShifts.length) {
+        var notifyOpenShifts = {
+          type: 'roster',
+          title: 'Weekly roster for the week starting from ' + stringDate + ' published. Checkout open shifts'
+        };
+
+        var text = _.reduce(openShifts, function(memo, shift) {
+          return memo + '<li>' + HospoHero.dateUtils.shiftDateInterval(shift) + '</li>';
+        }, '');
+        notifyOpenShifts.text = '<ul>' + text + '</ul>';
+      }
+
+      for(var userId in usersToNotify) {
+        var options = {
+          type: 'roster',
+          to: userId,
+          title: 'Weekly roster for the week starting from ' + stringDate + ' published. Checkout your shifts',
+        };
+
+        var text = _.reduce(usersToNotify[userId], function(memo, shift) {
+          return memo + '<li>' + HospoHero.dateUtils.shiftDateInterval(shift) + '</li>';
+        }, '');
+
+        options.text = '<ul>' + text + '</ul>';
+        // Send users shifts
+        HospoHero.sendNotification(options);
+
+        if(notifyOpenShifts) {
+          notifyOpenShifts.to = userId;
+          // Send open shifts
+          HospoHero.sendNotification(options);
+        }
+      }
+    }
   },
 
   claimShift: function (shiftId) {

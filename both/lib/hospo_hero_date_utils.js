@@ -46,26 +46,15 @@ Namespace('HospoHero.dateUtils', {
     return minutes;
   },
 
-  intervalDateFormat: function (startDate, endDate) {
-    var dayFormat = 'YYYY-MM-DD';
-    var timeFormat = 'H:mm';
-    var resultDate = [];
+  shiftDateInterval: function (shift) {
+    var dayFormat = 'ddd, Do MMMM';
+    var timeFormat = 'hh:mm A';
 
-    startDate = moment(startDate);
-    endDate = moment(endDate);
+    var day = HospoHero.dateUtils.formatDate(shift.shiftDate, dayFormat);
+    var startTime = HospoHero.dateUtils.formatDate(shift.startTime, timeFormat);
+    var endTime = HospoHero.dateUtils.formatDate(shift.endTime, timeFormat);
 
-    var startDay = HospoHero.dateUtils.formatDate(startDate, dayFormat);
-    var startTime = HospoHero.dateUtils.formatDate(startDate, timeFormat);
-
-    var endDay = HospoHero.dateUtils.formatDate(endDate, dayFormat);
-    var endTime = HospoHero.dateUtils.formatDate(endDate, timeFormat);
-
-    resultDate.push(startDay + ' ' + startTime + ' - ');
-    if (startDay != endDay) {
-      resultDate.push(endDay);
-    }
-    resultDate.push(endTime);
-    return resultDate.join('');
+    return day + ' ' + startTime + ' - ' + endTime;
   },
 
   timeFormat: function (date) {
