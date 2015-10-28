@@ -34,7 +34,12 @@ Template.areaSettings.onRendered(function() {
     success: function(response, newValue) {
       var id = this.dataset.id;
       if(id) {
-        Meteor.call("updateAreaName", id, newValue, HospoHero.handleMethodResult());
+        var updatedArea = {
+          _id: id,
+          name: newValue
+        };
+
+        Meteor.call('editArea', updatedArea, HospoHero.handleMethodResult());
       }
     }
   });

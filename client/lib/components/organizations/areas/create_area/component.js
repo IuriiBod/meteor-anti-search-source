@@ -23,8 +23,5 @@ component.action.changeEnabled = function() {
 
 component.action.createArea = function (areaInfo) {
   areaInfo.organizationId = this.organizationId;
-
   Meteor.call("createArea", areaInfo, HospoHero.handleMethodResult());
-
-  return true;
 };

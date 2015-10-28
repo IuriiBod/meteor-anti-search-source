@@ -18,6 +18,24 @@ if (Meteor.isClient) {
   }
 }
 
+var InactivityTimeout = Match.Where(function (timeout) {
+  check(timeout, Number);
+  return timeout >= 1 && timeout <= 65536;
+});
+
+var AreaDocument = Match.Where(function(area) {
+  check(area, {
+    _id: HospoHero.checkers.OptionalMongoId,
+    name: Match.Optional(String),
+    locationId: HospoHero.checkers.OptionalMongoId,
+    organizationId: HospoHero.checkers.OptionalMongoId,
+    createdAt: Match.Optional(Number),
+    inactivityTimeout: Match.Optional(InactivityTimeout)
+  });
+
+  return true;
+});
+
 var ShiftDocument = Match.Where(function (shift) {
   check(shift, {
     startTime: Date,
@@ -120,5 +138,7 @@ Namespace('HospoHero.checkers', {
   /**
    * Shift document checker
    */
-  ShiftDocument: ShiftDocument
+  ShiftDocument: ShiftDocument,
+
+  AreaDocument: AreaDocument
 });
