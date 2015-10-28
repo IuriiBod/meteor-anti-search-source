@@ -4,7 +4,10 @@ Router.route('/suppliers', {
   path: '/suppliers',
   template: "suppliersListMainView",
   waitOn: function() {
-    return Meteor.subscribe('organizationInfo');
+    return [
+      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe('organizationInfo')
+    ];
   },
   data: function() {
     if(!Meteor.userId()) {
@@ -24,7 +27,7 @@ Router.route('/supplier/profile/:_id', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("supplierProfile", this.params._id),
       Meteor.subscribe("comments", this.params._id),
-      Meteor.subscribe("allSuppliers")
+      Meteor.subscribe("usersList")
     ];
   },
   data: function() {

@@ -31,7 +31,11 @@ Router.route('/menuItems/submit', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('allCategories'),
-      Meteor.subscribe('allStatuses')
+      Meteor.subscribe('allStatuses'),
+      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe("ingredients"),
+      Meteor.subscribe('jobTypes'),
+      Meteor.subscribe("jobItems")
     ];
   },
   data: function() {
@@ -78,7 +82,9 @@ Router.route('/menuItem/:_id', {
       Meteor.subscribe("comments", this.params._id),
       Meteor.subscribe("allCategories"),
       Meteor.subscribe("allStatuses"),
-      Meteor.subscribe('userSubscriptions')
+      Meteor.subscribe('userSubscriptions'),
+      Meteor.subscribe("usersList"),
+      Meteor.subscribe('jobTypes')
     ];
   },
   data: function() {

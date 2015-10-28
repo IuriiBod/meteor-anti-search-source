@@ -1,16 +1,6 @@
 var component = FlowComponents.define('jobItemDetailed', function(props) {
   this.jobitem = props.jobitem;
   this.type = props.type;
-  var ids = [];
-
-  if(this.jobitem.ingredients && this.jobitem.ingredients.length > 0) {
-    this.jobitem.ingredients.forEach(function(ing) {
-      ids.push(ing._id);
-    });
-    if(ids.length > 0) {
-      Meteor.subscribe("ingredients", ids);
-    }
-  }
 });
 
 component.state.showSection = function() {
