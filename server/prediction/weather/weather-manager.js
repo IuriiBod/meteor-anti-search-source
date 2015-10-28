@@ -37,8 +37,6 @@ WeatherManager.prototype.updateForecast = function () {
   if (needUpdate) {
     var weatherForecastList = this._weatherConnector.getForecast();
 
-    console.log('got in manager', weatherForecastList);
-
     weatherForecastList.forEach(function (forecast) {
       var forecastDate = moment(forecast.date).startOf('day').toDate();
       var forecastEntry = _.extend(forecast, {

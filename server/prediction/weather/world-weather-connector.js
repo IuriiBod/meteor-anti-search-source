@@ -49,8 +49,6 @@ WorldWeather.prototype._httpQuery = function (route, params) {
       params: allParams
     });
 
-    console.log('weather forecast responce', res.data);
-
     if (res.data.data.error) {
       this._onHttpError(params, res.data.data.error);
       return false;
@@ -101,8 +99,6 @@ WorldWeather.prototype.getForecast = function () {
  */
 WorldWeather.prototype._mapWeatherEntries = function (data) {
   var self = this;
-
-  console.log('data in map ', data);
 
   return data && data.weather.map(function (weatherItem) {
       var hourly = _.find(weatherItem.hourly, function (hourlyItem) {
