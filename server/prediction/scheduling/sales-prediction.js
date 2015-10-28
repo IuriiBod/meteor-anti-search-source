@@ -23,10 +23,9 @@ var predict = function (days, locationId) {
   var weatherManager = new WeatherManager(locationId);
   weatherManager.updateForecast();
 
-  var currentWeather;
   for (var i = 0; i < days; i++) {
 
-    currentWeather = getWeatherForecast(i, dateMoment.toDate(), weatherManager);
+    var currentWeather = getWeatherForecast(i, dateMoment.toDate(), weatherManager);
 
     areas.forEach(function (area) {
       var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});
@@ -37,6 +36,9 @@ var predict = function (days, locationId) {
       items.forEach(function (item) {
         var dataVector = [item._id, currentWeather.temp, currentWeather.main, dateMoment.dayOfYear()];
         var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
+
+        logger.info('Made prediction', {menuItem: item.name, date: dateMoment.toDate(), predictedQty: quantity});
+
         var predictItem = {
           date: moment(dateMoment).toDate(),
           predictionQuantity: quantity,
@@ -60,10 +62,10 @@ var predict = function (days, locationId) {
           }
         }
 
-        DailySales.update({ //SalesPrediction
+        DailySales.update({
           date: TimeRangeQueryBuilder.forDay(predictItem.date),
           menuItemId: predictItem.menuItemId
-        }, predictItem, {upsert: true});
+        }, {$set: predictItem}, {upsert: true});
 
       });
 
