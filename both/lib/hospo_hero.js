@@ -76,8 +76,7 @@ Namespace('HospoHero', {
   getCurrentAreaId: function (userId) {
     userId = userId ? userId : Meteor.userId();
     var user = userId ? Meteor.users.findOne({_id: userId}) : Meteor.user();
-    var result = user && user.currentAreaId ? user.currentAreaId : false;
-    return result;
+    return user && user.currentAreaId ? user.currentAreaId : false;
   },
 
   getCurrentArea: function (userId) {
