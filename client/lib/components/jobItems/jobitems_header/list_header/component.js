@@ -7,15 +7,7 @@ component.state.isArchived = function () {
   return archive && archive == 'archive';
 };
 
-component.state.isSubscribed = function () {
-  return !!Subscriptions.findOne({
-    type: 'job',
-    subscriber: Meteor.userId(),
-    itemIds: 'all'
-  });
-};
-
 component.action.subscribe = function () {
   var subscription = HospoHero.misc.getSubscriptionDocument('job', 'all');
-  Meteor.call('subscribe', subscription, this.get('isSubscribed'), HospoHero.handleMethodResult());
+  Meteor.call('subscribe', subscription, false, HospoHero.handleMethodResult());
 };

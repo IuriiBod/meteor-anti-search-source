@@ -6,10 +6,7 @@ component.state.isSubscribed = function () {
   return !!Subscriptions.findOne({
     type: 'job',
     subscriber: Meteor.userId(),
-    $or: [
-      { itemIds: 'all' },
-      { itemIds: this.get('id') }
-    ]
+    itemIds: this.get('id')
   });
 };
 
