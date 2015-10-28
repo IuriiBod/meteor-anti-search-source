@@ -1,9 +1,3 @@
-Template.settingsMenuItem.helpers({
-  'equal': function(a, b) {
-    return (a === b);
-  }
-});
-
 Template.settingsMenuItem.events({
   'click #showIngredientsList': function(event) {
     event.preventDefault();

@@ -102,5 +102,60 @@ Namespace('HospoHero.dateUtils', {
 
   getMillisecondsFromDays: function (days) {
     return days * 24 * 60 * 60 * 1000;
+  },
+
+  weekDateName: function (date) {
+    return moment(date).format('dddd');
+  },
+
+  dateFormat: function (date) {
+    return date ? moment(date).format('YYYY-MM-DD') : '-';
+  },
+
+  fullDateFormat: function(date) {
+    return moment(date).format("DD/MM/YY hh:mm a");
+  },
+
+  dayFormat: function (date) {
+    return date ? moment(date).format('ddd, Do MMMM') : '-';
+  },
+
+  timeFormattedWithDate: function (time) {
+    return time ? moment(time).format('MMMM Do YYYY, h:mm:ss a') : '-';
+  },
+
+  secondsToMinutes: function (secs) {
+    return secs / 60;
+  },
+
+  timeDuration: function (time) {
+    var hours = moment.duration(time).hours();
+    var mins = moment.duration(time).minutes();
+
+    var timeFormat = function(value, name) {
+      if(value > 0) {
+        var result = value + ' ' + name;
+        return value == 1 ? result : result + 's';
+      } else {
+        return '';
+      }
+    };
+
+    var durationText = timeFormat(hours, 'hour') + ' ' + timeFormat(mins, 'minute');
+    return durationText.trim();
+  },
+
+  //Formatted time with Ago
+  timeFromNow: function (time) {
+    return moment(time).fromNow();
+  },
+
+  //Formatted time with AM PM
+  timeFormat: function (time) {
+    return moment(time).format("HH:mm");
   }
+});
+
+Object.keys(HospoHero.dateUtils).forEach(function (helper) {
+  Template.registerHelper(helper, HospoHero.dateUtils[helper]);
 });
