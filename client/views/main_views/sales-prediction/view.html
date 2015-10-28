@@ -2,10 +2,6 @@
   <!-- Page heading -->
   {{> render component="pageHeading" title="Forecast" name="salesPrediction"}}
   <div class="wrapper wrapper-content animated sales-prediction-content">
-    <div class="row">
-      {{> render component="FilterByCategory"}}
-      {{> render component="menuItemsSearch"}}
-    </div>
     {{> render component="salesPrediction" date=date}}
   </div>
 </template>

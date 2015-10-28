@@ -1,4 +1,8 @@
 <template name="salesPrediction">
+  <div class="row">
+    {{> render component="FilterByCategory"}}
+    {{> render component="menuItemsSearch" searchSource=state$getSearchSource}}
+  </div>
   <div class="prediction-component">
     <div class="prediction-panel">
       <div class="sales-per-menu-item-section">
