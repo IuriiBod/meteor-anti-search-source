@@ -105,8 +105,8 @@ Namespace('HospoHero.dateUtils', {
       year = moment().year()
     }
     return {
-      monday: moment().year(year).week(week).day(1).toDate(),
-      sunday: moment().year(year).week(week).day(7).toDate()
+      monday: moment().year(year).week(week).startOf("isoWeek").toDate(),
+      sunday: moment().year(year).week(week).endOf("isoWeek").toDate()
     }
   },
 
