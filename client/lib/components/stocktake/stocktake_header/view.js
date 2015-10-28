@@ -1,6 +1,6 @@
 Template.stocktakeHeader.events({
-  'click #startNewStocktake': function (event) {
+  'click #startNewStocktake': function (event, tmpl) {
     event.preventDefault();
-    FlowComponents.callAction('startStocktake');
+    FlowComponents.callAction('startStocktake', tmpl);
   }
 });
