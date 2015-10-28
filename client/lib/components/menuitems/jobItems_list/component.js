@@ -14,7 +14,6 @@ component.state.jobItemsList = function() {
       }
     } 
   }
-  Meteor.subscribe("jobItems", ids);
   return ids;
 };
 

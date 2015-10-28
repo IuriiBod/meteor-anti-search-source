@@ -11,7 +11,6 @@ component.state.id = function() {
 
 component.state.relatedJobs = function() {
   var id = Session.get("thisIngredientId");
-  Meteor.subscribe("ingredientsRelatedJobs", id);
   return JobItems.find({ "ingredients._id": id }).fetch();
 };
 
@@ -43,7 +42,6 @@ component.state.isArchive = function() {
 
 // TODO: Check this method
 component.action.archiveIng = function(id, state) {
-  Meteor.subscribe("ingredients", [id]);
   var self = this;
   Meteor.call("archiveIngredient", id, state, HospoHero.handleMethodResult(function() {
     $("#editIngredientModal").modal("hide");

@@ -1,7 +1,6 @@
 Template.editIngredientItem.helpers({
   item: function() {
     var id = Session.get("thisIngredientId");
-    Meteor.subscribe("ingredients", [id]);
     if(id) {
       return Ingredients.findOne(id);
     }

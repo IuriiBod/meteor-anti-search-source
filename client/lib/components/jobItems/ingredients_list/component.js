@@ -1,6 +1,5 @@
 var component = FlowComponents.define("listOfIngredients", function(props) {
   this.name = props.name;
-  Meteor.subscribe("allSuppliers");
   this.id = props.id;
 });
 
@@ -20,7 +19,6 @@ component.state.ingredientsList = function() {
       }
     }
   }
-  Meteor.subscribe("ingredients", ids);
   return ids;
 };
 
