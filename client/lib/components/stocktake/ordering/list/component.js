@@ -18,20 +18,13 @@ component.state.list = function() {
     "supplier": Session.get("activeSupplier")
   });
   var dataFetched = data.fetch();
-  var ings = [];
   var orderIds = [];
   if(dataFetched.length > 0) {
     dataFetched.forEach(function(doc) {
-      if(ings.indexOf(doc.stockId) < 0) {
-        ings.push(doc.stockId);
-      }
       if(orderIds.indexOf(doc._id) < 0) {
         orderIds.push(doc._id);
       }
     });
-    if(ings.length > 0) {
-      Meteor.subscribe("ingredients", ings);
-    }
   }
   return orderIds;
 }
