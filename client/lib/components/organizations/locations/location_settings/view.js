@@ -24,7 +24,9 @@ Template.locationSettings.onRendered(function() {
     success: function(response, newValue) {
       var id = this.dataset.id;
       if(id) {
-        Meteor.call("updateLocationName", id, newValue, HospoHero.handleMethodResult());
+        var location = Locations.findOne({ _id: id });
+        location.name = newValue;
+        Meteor.call('editLocation', location, HospoHero.handleMethodResult());
       }
     }
   });

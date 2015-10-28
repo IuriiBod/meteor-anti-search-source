@@ -8,7 +8,7 @@ Template.editLocation.onCreated(function() {
 Template.editLocation.helpers({
   posForm: function() {
     var location = FlowComponents.callAction('getLocation')._result;
-    if(location) {
+    if(location && location.pos) {
       var tpl = Template.instance();
       tpl._posForm = new CustomForm({
         name: 'posForm',
@@ -146,7 +146,8 @@ Template.editLocation.events({
       delete validation.closingHour;
       delete validation.closingMinutes;
 
-      Meteor.call('updateLocationMainInfo', location._id, validation, HospoHero.handleMethodResult(function() {
+      var updatedLocation = _.extend(location, validation);
+      Meteor.call('editLocation', updatedLocation, HospoHero.handleMethodResult(function() {
         HospoHero.success('Location was successfully changed');
       }));
     }
@@ -159,7 +160,8 @@ Template.editLocation.events({
     if(validation) {
       var location = FlowComponents.callAction('getLocation')._result;
 
-      Meteor.call('updatePosSettings', location._id, validation, HospoHero.handleMethodResult(function() {
+      var updatedLocation = _.extend(location, validation);
+      Meteor.call('editLocation', updatedLocation, HospoHero.handleMethodResult(function() {
         HospoHero.success('POS Settings were successfully changed');
       }));
     }

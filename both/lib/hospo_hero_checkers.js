@@ -47,6 +47,8 @@ var AreaDocument = Match.Where(function(area) {
 });
 
 var LocationDocument = Match.Where(function(location) {
+  console.log('LOC', location);
+
   check(location, {
     name: String,
     timezone: String,
@@ -56,12 +58,14 @@ var LocationDocument = Match.Where(function(location) {
     createdAt: Number,
     country: String,
     city: String,
-    shiftUpdateHour: Number,
+    shiftUpdateHour: String,
 
     _id: HospoHero.checkers.OptionalMongoId,
     address: Match.Optional(String),
-    pos: Match.Optional(HospoHero.checkers.POS)
-  })
+    pos: Match.OneOf(null, HospoHero.checkers.POS)
+  });
+
+  return true;
 });
 
 var ShiftDocument = Match.Where(function (shift) {
@@ -169,7 +173,7 @@ Namespace('HospoHero.checkers', {
         key: POSkey,
         secret: POSsecret,
         host: String
-      })
+      });
     } catch(e) {
       checkError('Incorrect POS configuration');
     }
