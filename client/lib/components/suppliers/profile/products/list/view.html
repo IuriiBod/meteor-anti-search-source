@@ -19,4 +19,11 @@
       </tbody>
     </table>
   </div>
+  <!-- EDIT INGREDIENT-->
+  {{#if canViewStock}}
+    <div class="modal fade" id="editIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      {{> render component = 'editIngredientItem'}}
+    </div>
+  {{/if}}
+  <!-- /EDIT INGREDIENT -->
 </template>

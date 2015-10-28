@@ -1,12 +1,12 @@
 Template.settingsMenuItem.events({
-  'click #showIngredientsList': function(event) {
+  'click #showIngredientsList': function(event, tmpl) {
     event.preventDefault();
-    $("#ingredientsListModal").modal("show");
+    tmpl.$("#ingredientsListModal").modal("show");
   },
 
-  'click #addNewIngredient': function (event) {
+  'click #addNewIngredient': function (event, tmpl) {
     event.preventDefault();
-    $("#addIngredientModal").modal('show');
+    tmpl.$("#addIngredientModal").modal('show');
   },
 
   'click #addNewJobItem': function (event) {
@@ -14,9 +14,9 @@ Template.settingsMenuItem.events({
     Router.go("submitJobItem");
   },
 
-  'click #showJobItemsList': function (event) {
+  'click #showJobItemsList': function (event, tmpl) {
     event.preventDefault();
-    $("#jobItemListModal").modal("show");
+    tmpl.$("#jobItemListModal").modal("show");
   },
 
   'submit form': function (event) {

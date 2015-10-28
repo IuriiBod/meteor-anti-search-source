@@ -1,6 +1,6 @@
 Template.listOfJobItems.events({
-  'click #showJobItemsList': function(event) {
+  'click #showJobItemsList': function(event,tmpl) {
     event.preventDefault();
-    $("#jobItemListModal").modal("show");
+    tmpl.$("#jobItemListModal").modal("show");
   }
 });
