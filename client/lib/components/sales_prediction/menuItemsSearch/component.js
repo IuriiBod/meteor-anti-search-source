@@ -2,11 +2,8 @@ var component = FlowComponents.define("menuItemsSearch", function (props) {
   this.MenuItemsSearch = props.searchSource;
 });
 
-component.action.SearchSourceCleanHistory = function () {
+component.action.SearchAndCleanHistory = function (text) {
   this.MenuItemsSearch.cleanHistory();
-};
-
-component.action.SearchSourceSearch = function (text) {
   this.MenuItemsSearch.search(text, getSelector());
 };
 

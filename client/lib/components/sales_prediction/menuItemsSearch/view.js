@@ -1,13 +1,11 @@
 Template.menuItemsSearch.events({
   'keyup #searchMenuItems': function (event) {
-    FlowComponents.callAction("SearchSourceCleanHistory");
     var text = $("#searchMenuItems").val().trim();
-    FlowComponents.callAction("SearchSourceSearch", text);
+    FlowComponents.callAction("SearchAndCleanHistory", text);
   }
 });
 
 Template.menuItemsSearch.onRendered(function () {
-  FlowComponents.callAction("SearchSourceCleanHistory");
-  FlowComponents.callAction("SearchSourceSearch", "");
+  FlowComponents.callAction("SearchAndCleanHistory", "");
 });
 
