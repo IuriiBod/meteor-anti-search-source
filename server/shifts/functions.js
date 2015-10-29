@@ -171,12 +171,13 @@ Meteor.methods({
     var notifyObjectLength = Object.keys(usersToNotify).length;
     if(notifyObjectLength > 0) {
       var text;
-      var stringDate = moment(date).format("dddd, Do MMMM YYYY");
+      var stringDate = moment(date).startOf('isoweek').format("dddd, Do MMMM YYYY");
+      var subject = 'Weekly roster for the week starting from ' + stringDate + ' published.';
 
       if(openShifts.length) {
         var notifyOpenShifts = {
           type: 'roster',
-          title: 'Weekly roster for the week starting from ' + stringDate + ' published. Checkout open shifts'
+          title: subject + ' Checkout open shifts'
         };
 
         text = _.reduce(openShifts, function(memo, shift) {
@@ -185,11 +186,15 @@ Meteor.methods({
         notifyOpenShifts.text = '<ul>' + text + '</ul>';
       }
 
+      var emailSender = new EmailSender({
+        from: Meteor.userId(),
+        subject: subject
+      });
+
       for(var userId in usersToNotify) {
         // Sending open shifts at first
         if(notifyOpenShifts) {
           notifyOpenShifts.to = userId;
-          // Send open shifts
           HospoHero.sendNotification(notifyOpenShifts);
         }
 
@@ -206,6 +211,21 @@ Meteor.methods({
         options.text = '<ul>' + text + '</ul>';
         // Sending users shifts
         HospoHero.sendNotification(options);
+
+        // Sending email to user
+        emailSender.addOption('to', userId);
+
+        text = [];
+        text.push("I've just published the roster for the week starting " + stringDate + ".<br><br>");
+        text.push("Here's your shifts");
+        text.push(options.text);
+
+        if(notifyOpenShifts) {
+          text.push("<br><br>And check open shifts. You can claim them from the dashboard.");
+          text.push(notifyOpenShifts.text);
+        }
+        emailSender.addOption('text', text.join(''));
+        emailSender.send();
       }
     }
   },
