@@ -187,15 +187,45 @@ FigureBoxDataHelper.prototype._getTotalHours = function (shift) {
 };
 
 //---------DAILY SHIT-------------
+FigureBoxDataHelper.prototype.getDailyActual = function () {
+  var shifts = this._getShifts("draft");
+  return {
+    actualWages: this._calcStaffCost(shifts),
+    actualSales: this._calcSalesCost(this.daySales, 'actualQuantity')
+  }
+};
+
+FigureBoxDataHelper.prototype.getDailyForecast = function () {
+  var shifts = this._getShifts("finished");
+  return {
+    forecastedWages: this._calcStaffCost(shifts),
+    forecastedSales: this._calcSalesCost(this.daySales, 'predictionQuantity')
+  }
+};
+
 FigureBoxDataHelper.prototype._getShifts = function (exept, day) {
   return Shifts.find({"shiftDate": TimeRangeQueryBuilder.forDay(day), "status": {$ne: exept}, "type": null}).fetch();
 };
 
 FigureBoxDataHelper.prototype.getDailyStaff = function (day) {
-  var draftShifts = this._getShifts("finished", day);
-  var finishedShifts = this._getShifts("draft", day);
+  var actualDailyStaff = this._calcStaffCost(this._getShifts("draft", day));
+  var forecastedDailyStaff = this._calcStaffCost(this._getShifts("finished", day));
+  var dailySales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(day)}).fetch();
+  var actualSales = this._calcSalesCost(dailySales, "actualQuantity");
+  var forecastedSales = this._calcSalesCost(dailySales, "predictionQuantity");
+  var actualWage = 0;
+  var forecastedWage = 0;
+
+  if (actualSales != 0) {
+    actualWage = (actualDailyStaff / actualSales) * 100;
+  }
+  if (forecastedSales != 0) {
+    forecastedWage = (forecastedDailyStaff / forecastedSales) * 100;
+  }
   return {
-    actual: this._calcStaffCost(finishedShifts),
-    forecasted: this._calcStaffCost(draftShifts)
+    actual: actualDailyStaff,
+    forecasted: forecastedDailyStaff,
+    actualWage: actualWage,
+    forecastedWage: forecastedWage
   }
 };

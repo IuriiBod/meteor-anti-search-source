@@ -1,7 +1,6 @@
 var component = FlowComponents.define("staffCostTr", function (props) {
-  this.dayObj = props.day;
-  this.figureBoxDataHelper = props.figureBoxDataHelper;
-  this.dailyStaff = this.figureBoxDataHelper.getDailyStaff(this.dayObj);
+  var figureBoxDataHelper = props.figureBoxDataHelper;
+  this.dailyStaff = figureBoxDataHelper.getDailyStaff(props.day);
 });
 
 component.state.actual = function () {
