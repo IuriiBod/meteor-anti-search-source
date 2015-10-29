@@ -2,8 +2,8 @@ Template.shiftBasicWorkerEditable.onRendered(function () {
   this.$('.select-worker').editable(createSelectWorkerEditableConfig(this));
 });
 
-var workersSourceMixin = function (editableConfig, templateInstance) {
 
+var workersSourceMixin = function (editableConfig, templateInstance) {
   var getAlreadyAssignedWorkersIds = function () {
     var shift = templateInstance.data;
     return Shifts.find({
@@ -37,16 +37,12 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
 
     workersQuery["roles." + HospoHero.getCurrentAreaId()] = {$in: getCanBeRostedRoles()};
 
-    var workerOptions = Meteor.users.find(workersQuery, {sort: {"username": 1}}).map(function (worker) {
+    return Meteor.users.find(workersQuery, {sort: {"username": 1}}).map(function (worker) {
       return {
         value: worker._id,
         text: HospoHero.username(worker)
       };
     });
-
-    workerOptions.push({value: "Open", text: "Open"});
-
-    return workerOptions;
   };
 
   return _.extend(editableConfig, {source: sourceFn});
@@ -65,15 +61,18 @@ var createSelectWorkerEditableConfig = function (templateInstance) {
     assignWorkerToShift(workerId);
   };
 
-  var shift = templateInstance.data;
   var editableOptions = {
     type: "select",
     title: 'Select worker to assign',
+    prepend: [{value: "Open", text: "Open"}],
     inputclass: "editableWidth",
     showbuttons: false,
     emptytext: 'Open',
     defaultValue: "Open",
-    value: shift.assignedTo,
+    //block internal x-editable displaying because we are using blaze for it
+    display: function () {
+      return '';
+    },
     success: onEditSuccess
   };
 
