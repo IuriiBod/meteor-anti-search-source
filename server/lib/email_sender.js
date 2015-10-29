@@ -1,6 +1,6 @@
 EmailSender = function EmailSender(emailOptions) {
-  this.receiver = emailOptions.to;
-  this.sender = emailOptions.from;
+  this.to = emailOptions.to;
+  this.from = emailOptions.from;
   this.subject = emailOptions.subject;
   this.emailType = emailOptions.emailType;
   this.text = emailOptions.text;
@@ -81,7 +81,7 @@ EmailSender._getEmailHeader = function(receiver) {
  * @private
  */
 EmailSender._getEmailFooter = function(sender) {
-  return 'If you have any questions let me know.<br>' + EmailSender._getUsername(sender);
+  return '<br><br>If you have any questions let me know.<br>' + EmailSender._getUsername(sender);
 };
 
 /**
@@ -107,8 +107,8 @@ EmailSender.prototype._getEmailContent = function(emailType) {
  * @private
  */
 EmailSender.prototype._initialize = function() {
-  this.receiver = EmailSender._getUserObject(this.receiver);
-  this.sender = EmailSender._getUserObject(this.sender);
+  this.receiver = EmailSender._getUserObject(this.to);
+  this.sender = EmailSender._getUserObject(this.from);
   this.subject = EmailSender._getSubject(this.subjectPrefix, this.subject);
 
   this.html = EmailSender._getEmailHeader(this.receiver);
@@ -128,4 +128,14 @@ EmailSender.prototype.send = function() {
     subject: this.subject,
     html: this.html
   });
+};
+
+/**
+ * Adds the parameter name to object
+ *
+ * @param {string} name - The name of the parameter
+ * @param {string} value - The value of parameter
+ */
+EmailSender.prototype.addOption = function(name, value) {
+  this[name] = value;
 };

@@ -37,7 +37,7 @@ Template.dailyShiftScheduling.events({
         to: workerId,
         userId: Meteor.userId(),
         shiftId: shiftId,
-        text: "You have been assigned to shift dated <b>" + HospoHero.dateUtils.intervalDateFormat(shift.startTime, shift.endTime) + "</b>",
+        text: "You have been assigned to shift dated <b>" + HospoHero.dateUtils.shiftDateInterval(shift) + "</b>",
         type: "update"
       };
       Meteor.call("addShiftUpdate", shiftUpdateDoc, HospoHero.handleMethodResult());
