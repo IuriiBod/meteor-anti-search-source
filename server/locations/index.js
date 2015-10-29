@@ -14,15 +14,6 @@ Meteor.methods({
     if(!HospoHero.isOrganizationOwner()) {
       throw new Meteor.Error(403, 'User not permitted to create location');
     }
-    if(!!Locations.findOne({organizationId: location.organizationId, name: location.name})) {
-      throw new Meteor.Error("The location with the same name already exists!");
-    }
-
-    // TODO: Uncoment
-    //var worldWeather = new WorldWeather(location.city, location.country);
-    //if(!worldWeather.checkLocation()){
-    //  throw new Meteor.Error("Make sure you inserted right country and city");
-    //}
 
     // Create location
     var id = Locations.insert(location);

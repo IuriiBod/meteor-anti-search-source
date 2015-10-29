@@ -83,12 +83,14 @@ predictionModelRefreshJob = function () {
   });
 };
 
-if (!HospoHero.isDevelopmentMode()) {
-  SyncedCron.add({
-    name: 'Prediction model refresh',
-    schedule: function (parser) {
-      return parser.text('at 03:00 am');
-    },
-    job: predictionModelRefreshJob
-  });
-}
+
+//!!! disable it temporaly to be able control it manually
+//if (!HospoHero.isDevelopmentMode()) {
+//  SyncedCron.add({
+//    name: 'Prediction model refresh',
+//    schedule: function (parser) {
+//      return parser.text('at 03:00 am');
+//    },
+//    job: predictionModelRefreshJob
+//  });
+//}
