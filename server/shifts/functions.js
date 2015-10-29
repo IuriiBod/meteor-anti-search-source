@@ -170,6 +170,7 @@ Meteor.methods({
   notifyUsersPublishRoster: function(date, usersToNotify, openShifts) {
     var notifyObjectLength = Object.keys(usersToNotify).length;
     if(notifyObjectLength > 0) {
+      var text;
       var stringDate = moment(date).format("dddd, Do MMMM YYYY");
 
       if(openShifts.length) {
@@ -178,32 +179,33 @@ Meteor.methods({
           title: 'Weekly roster for the week starting from ' + stringDate + ' published. Checkout open shifts'
         };
 
-        var text = _.reduce(openShifts, function(memo, shift) {
+        text = _.reduce(openShifts, function(memo, shift) {
           return memo + '<li>' + HospoHero.dateUtils.shiftDateInterval(shift) + '</li>';
         }, '');
         notifyOpenShifts.text = '<ul>' + text + '</ul>';
       }
 
       for(var userId in usersToNotify) {
+        // Sending open shifts at first
+        if(notifyOpenShifts) {
+          notifyOpenShifts.to = userId;
+          // Send open shifts
+          HospoHero.sendNotification(notifyOpenShifts);
+        }
+
         var options = {
           type: 'roster',
           to: userId,
           title: 'Weekly roster for the week starting from ' + stringDate + ' published. Checkout your shifts',
         };
 
-        var text = _.reduce(usersToNotify[userId], function(memo, shift) {
+        text = _.reduce(usersToNotify[userId], function(memo, shift) {
           return memo + '<li>' + HospoHero.dateUtils.shiftDateInterval(shift) + '</li>';
         }, '');
 
         options.text = '<ul>' + text + '</ul>';
-        // Send users shifts
+        // Sending users shifts
         HospoHero.sendNotification(options);
-
-        if(notifyOpenShifts) {
-          notifyOpenShifts.to = userId;
-          // Send open shifts
-          HospoHero.sendNotification(options);
-        }
       }
     }
   },
