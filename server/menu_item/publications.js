@@ -20,10 +20,10 @@ Meteor.publish("menuList", function (categoryId, status) {
   }
 });
 
-Meteor.publishComposite('menuItem', function(id) {
+Meteor.publishComposite('menuItem', function (id) {
   return {
-    find: function() {
-      if(this.userId) {
+    find: function () {
+      if (this.userId) {
         return MenuItems.find({
           _id: id,
           "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
@@ -34,9 +34,9 @@ Meteor.publishComposite('menuItem', function(id) {
     },
     children: [
       {
-        find: function(menuItem) {
-          if(menuItem && menuItem.ingredients && menuItem.ingredients.length) {
-            var ings = _.map(menuItem.ingredients, function(ingredient) {
+        find: function (menuItem) {
+          if (menuItem && menuItem.ingredients && menuItem.ingredients.length) {
+            var ings = _.map(menuItem.ingredients, function (ingredient) {
               return ingredient._id;
             });
             return Ingredients.find({_id: {$in: ings}});
@@ -46,9 +46,9 @@ Meteor.publishComposite('menuItem', function(id) {
         }
       },
       {
-        find: function(menuItem) {
-          if(menuItem && menuItem.jobItems && menuItem.jobItems.length) {
-            var jobs = _.map(menuItem.jobItems, function(jobItem) {
+        find: function (menuItem) {
+          if (menuItem && menuItem.jobItems && menuItem.jobItems.length) {
+            var jobs = _.map(menuItem.jobItems, function (jobItem) {
               return jobItem._id;
             });
             return JobItems.find({_id: {$in: jobs}});
@@ -77,11 +77,7 @@ Meteor.publish("menuItems", function (ids) {
 });
 
 
-Meteor.publish("areaMenuItems", function () {
-  if (this.userId) {
-    var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
-    return MenuItems.find({'relations.areaId': currentAreaId});
-  } else {
-    this.ready();
-  }
+Meteor.publishAuthorized("areaMenuItems", function () {
+  var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+  return MenuItems.find({'relations.areaId': currentAreaId});
 });
