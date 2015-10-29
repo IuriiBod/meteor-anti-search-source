@@ -101,7 +101,7 @@ Namespace('HospoHero.dateUtils', {
     return date ? moment(date).format('YYYY-MM-DD') : '-';
   },
 
-  fullDateFormat: function(date) {
+  fullDateFormat: function (date) {
     return moment(date).format("DD/MM/YY hh:mm a");
   },
 
@@ -121,8 +121,8 @@ Namespace('HospoHero.dateUtils', {
     var hours = moment.duration(time).hours();
     var mins = moment.duration(time).minutes();
 
-    var timeFormat = function(value, name) {
-      if(value > 0) {
+    var timeFormat = function (value, name) {
+      if (value > 0) {
         var result = value + ' ' + name;
         return value == 1 ? result : result + 's';
       } else {
