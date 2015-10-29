@@ -1,10 +1,10 @@
 var component = FlowComponents.define("staffCostPercentagesTr", function (props) {
   this.dayObj = props.day;
-  this.figureBox = new FigureBoxDataHelper(this.dayObj);
+  this.figureBoxDataHelper = props.figureBoxDataHelper;
 });
 
 component.state.actual = function () {
-  var actual = this.figureBox.getDailyActual();
+  var actual = 0//this.figureBox.getDailyActual();
   var percentage = 0;
   if (actual.actualSales > 0) {
     percentage = (actual.actualWages / actual.actualSales);
@@ -15,7 +15,7 @@ component.state.actual = function () {
 };
 
 component.state.forecast = function () {
-  var forecasted = this.figureBox.getDailyForecast();
+  var forecasted = 0//this.figureBox.getDailyForecast();
 
   var percentage = 0;
   if (forecasted.forecastedSales > 0) {

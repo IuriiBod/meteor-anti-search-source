@@ -1,16 +1,7 @@
 var component = FlowComponents.define("figureBoxes", function (props) {
-  var data = {
-    week: Router.current().params.week,
-    year: Router.current().params.year
-  };
-  this.figureBox = new FigureBoxDataHelper(data);
+  this.figureBox = props.figureBoxDataHelper;
 });
 
-component.state.salesData = function () {
-  return {
-    weeklySale: this.figureBox.getWeeklySale(),
-    forecastedSale: this.figureBox.getForecastedSales(),
-    weeklyStaffCost: this.figureBox.getWeeklyStaffCost(),
-    rosteredStaffCost: this.figureBox.getRosteredStaffCost()
-  }
+component.state.getFigureBoxDataHelper = function () {
+  return this.figureBox;
 };

@@ -4,10 +4,10 @@ Router.route('/roster/prediction/:year/:week/:category', {
   waitOn: function () {
     return [
       this.subscribe('organizationInfo'),
-      this.subscribe('weatherForecast', parseInt(this.params.year), parseInt(this.params.week)),
+      this.subscribe('weatherForecast', HospoHero.misc.getWeekDateFromRoute(this)),
       this.subscribe('areaMenuItems', this.params.category),
       this.subscribe('allCategories'),
-      this.subscribe("dailySales", parseInt(this.params.year), parseInt(this.params.week))
+      this.subscribe("dailySales", HospoHero.misc.getWeekDateFromRoute(this))
     ];
   },
   data: function () {

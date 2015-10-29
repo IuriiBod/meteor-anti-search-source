@@ -9,7 +9,7 @@ Router.route('/roster/weekly/:year/:week', {
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections'),
       Meteor.subscribe('areaMenuItems'),
-      Meteor.subscribe('dailySales', parseInt(this.params.year), parseInt(this.params.week))
+      Meteor.subscribe('dailySales', HospoHero.misc.getWeekDateFromRoute(this))
     ];
   },
   data: function () {
