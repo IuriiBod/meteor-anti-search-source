@@ -11,7 +11,7 @@ component.state.forecast = function () {
   return Math.round(this.dailyStaff.forecasted).toLocaleString();
 };
 
-component.state.class = function () {
+component.state.textClass = function () {
   if (this.dailyStaff.actual && this.dailyStaff.forecasted) {
     if (this.dailyStaff.actual <= this.dailyStaff.forecasted) {
       return "text-info";

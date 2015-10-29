@@ -5,9 +5,6 @@ Template.salesPrediction.helpers({
 
   getDayOfWeek: function (date) {
     return moment(date).format('dddd');
-  },
-  'getMenuItems': function () {
-    return FlowComponents.callAction("getData")._result
   }
 });
 

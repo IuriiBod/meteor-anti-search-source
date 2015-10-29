@@ -11,8 +11,8 @@ component.state.forecast = function () {
   return this.dailyStaff.forecastedWage;
 };
 
-component.state.class = function () {
-  if (this.dailyStaff.actualWage && this.dailyStaff.forecastedWage) {
+component.state.textClass = function () {
+  if(this.dailyStaff.actualWage != 0){
     if (this.dailyStaff.actualWage <= this.dailyStaff.forecastedWage) {
       return "text-info";
     } else {

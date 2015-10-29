@@ -1,9 +1,9 @@
 var component = FlowComponents.define("salesPrediction", function (props) {
   this.set('currentWeekDate', props.date);
-
-  this.defaultMenuItemsQuantityLimit = 10;
-  this.set('menuItemsQuantityLimit', this.defaultMenuItemsQuantityLimit);
-  this.set('areAllItemsLoaded', false);
+  this.set("allMenuItemsLoaded", false);
+  this.maxHistoryLength = 10;
+  this.limitAdd = 10;
+  this.clicks = 0;
 
   var options = {
     keepHistory: 1000 * 60 * 5,
@@ -19,33 +19,37 @@ component.state.week = function () {
   return HospoHero.dateUtils.getWeekDays(currentWeekDate);
 };
 
-component.action.getData = function () {
-  return this.MenuItemsSearch.getData({
+component.state.getMenuItems = function () {
+  var MenuItems = this.MenuItemsSearch.getData({
     transform: function (matchText, regExp) {
       return matchText.replace(regExp, "<b>$&</b>")
     },
     sort: {'name': 1}
   });
+  return MenuItems;
 };
 
 component.state.getSearchSource = function () {
   return this.MenuItemsSearch;
 };
 
+component.state.allItemsLoaded = function () {
+  return this.get("allMenuItemsLoaded");
+};
+
 component.action.loadMoreBtnClick = function (text) {
-  var maxHistoryLength = 9;
-  var limitAdd = 10;
   var search = this.MenuItemsSearch;
+  this.clicks++;
   if (search.history && search.history[text]) {
     var dataHistory = search.history[text].data;
-    if (dataHistory.length >= maxHistoryLength) {
+    if (dataHistory.length >= this.maxHistoryLength) {
       search.cleanHistory();
       var count = dataHistory.length;
       var lastItem = dataHistory[count - 1]['name'];
       var category = Router.current().params.category;
       var filter = [];
       var selector = {
-        "limit": count + limitAdd,
+        "limit": count + this.limitAdd,
         "endingAt": lastItem
       };
       filter.push({
@@ -57,9 +61,9 @@ component.action.loadMoreBtnClick = function (text) {
       }
       selector.filter = filter;
       search.search(text, selector);
-      if ((count + limitAdd) >= MenuItems.find().count()) {
-        $("#loadMoreBtn").addClass("hide");
-      }
     }
+  }
+  if((this.clicks*this.limitAdd)>dataHistory.length){
+    this.set("allMenuItemsLoaded", true);
   }
 };

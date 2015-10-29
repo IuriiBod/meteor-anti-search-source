@@ -1,26 +1,18 @@
 FigureBoxDataHelper = function FigureBoxDataHelper(weekDate) {
   this.weekDate = weekDate;
   this.weekDate.weekRange = HospoHero.dateUtils.getWeekStartEnd(weekDate.week, weekDate.year);
-  //this.sales = DailySales.find({date: TimeRangeQueryBuilder.forWeek(this.weekDate.weekRange.monday)}, {sort: {"date": 1}}).fetch();
-  //this.shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekDate.weekRange.monday)}).fetch();
-  //this.daySales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(this.weekDate)}).fetch();
 
-
-  this.Sales = this._sales(); //done
-
-  this.Staff = this._staffCost();  //done
-
-  this.Wages = {  //done
+  this.Sales = this._sales();
+  this.Staff = this._staffCost();
+  this.Wages = {
     actual: this._calcWage("actual"),
     forecasted: this._calcWage("forecasted")
   };
-
   this.PercentDocs = {
     sales: this._formPercentDoc(this.Sales.actual, this.Sales.forecasted),
     staff: this._formPercentDoc(this.Staff.forecasted, this.Staff.actual),
     wage: this._formPercentDoc(this.Wages.forecasted, this.Wages.actual)
   }
-
 };
 
 //GETTERS
