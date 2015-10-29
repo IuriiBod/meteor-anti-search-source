@@ -1,8 +1,7 @@
-Meteor.publish('weatherForecast', function (year, week) {
-  check(year, Number);
-  check(week, Number);
+Meteor.publish('weatherForecast', function (weekDate) {
+  check(weekDate, HospoHero.checkers.WeekDate);
 
-  logger.info('Weather subscribe ', {year: year, week: week});
+  logger.info('Weather subscribe ', weekDate);
 
   var haveAccess = HospoHero.canUser('view forecast', this.userId);
   if (!haveAccess) {
@@ -14,7 +13,7 @@ Meteor.publish('weatherForecast', function (year, week) {
 
   new WeatherManager(locationId).updateForecast();
 
-  var date = HospoHero.dateUtils.getDateByWeekDate({year: year, week: week});
+  var date = HospoHero.dateUtils.getDateByWeekDate(weekDate);
   var weekRange = TimeRangeQueryBuilder.forWeek(date);
 
   return WeatherForecast.find({date: weekRange, locationId: locationId});

@@ -2,10 +2,11 @@ Router.route('/forecast/:year/:week', {
   name: "salesPrediction",
   template: "salesPredictionPage",
   waitOn: function () {
+    var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
     return [
       this.subscribe('organizationInfo'),
-      this.subscribe('weatherForecast', parseInt(this.params.year), parseInt(this.params.week)),
-      this.subscribe("dailySales")
+      this.subscribe('weatherForecast', currentWeekDate),
+      this.subscribe('dailySales', currentWeekDate)
     ];
   },
   data: function () {
