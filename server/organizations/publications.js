@@ -62,6 +62,12 @@ Meteor.publishComposite('organizationInfo', {
       }
     },
     {
+      // Publishing invitations fot current organization
+      find: function(organization) {
+        return Invitations.find({ organizationId: organization._id });
+      }
+    },
+    {
       // Publishing locations of organization
       find: function (organization) {
         if (this.userId) {
