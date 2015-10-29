@@ -52,7 +52,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     var item = Ingredients.findOne({_id: id});
     if(!item) {
@@ -113,7 +113,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     var item = Ingredients.findOne(id);
     if(!item) {

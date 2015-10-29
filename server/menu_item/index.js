@@ -62,7 +62,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     var item = MenuItems.findOne(id);
     if (!item) {
@@ -149,7 +149,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     var item = MenuItems.findOne(id);
     if (!item) {
@@ -175,7 +175,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    HospoHero.checkMongoId(menuId);
+    check(menuId, HospoHero.checkers.MongoId);
     check(itemObject, Object);
 
     var menuItem = MenuItems.findOne(menuId);
@@ -196,7 +196,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    HospoHero.checkMongoId(menuId);
+    check(menuId, HospoHero.checkers.MongoId);
     check(itemObject, Object);
 
     var menuItem = MenuItems.findOne(menuId);
@@ -219,8 +219,8 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    HospoHero.checkMongoId(menuId);
-    HospoHero.checkMongoId(areaId);
+    check(menuId, HospoHero.checkers.MongoId);
+    check(areaId, HospoHero.checkers.MongoId);
 
     var area = Areas.findOne(areaId);
     if(!area) {
@@ -228,36 +228,8 @@ Meteor.methods({
       throw new Meteor.Error("Area not found!");
     }
 
-    var exist = MenuItems.findOne({
-      _id: menuId,
-      "relations.areaId": HospoHero.getCurrentAreaId()
-    });
-    if (!exist) {
-      logger.error('Menu should exist to be duplicated');
-      throw new Meteor.Error("Menu should exist to be duplicated");
-    }
-
-    // Add slashes before special characters (+, ., \)
-    var menuName = exist.name.replace(/([\+\\\.\?])/g, '\\$1');
-    var filter = new RegExp(menuName, 'i');
-    var count = MenuItems.find({ "name": filter, "relations.areaId": areaId }).count();
-
-    delete exist._id;
-    delete exist.relations;
-
-    if(count > 0) {
-      exist.name = exist.name + " - copy " + count;
-    }
-    exist.createdBy = Meteor.userId();
-    exist.createdOn = Date.now();
-    exist.relations = {
-      organizationId: area.organizationId,
-      locationId: area.locationId,
-      areaId: areaId
-    };
-
-    var newid = MenuItems.insert(exist);
-    logger.info("Duplicate Menu items added ", {"original": menuId, "duplicate": newid});
+    var newId = HospoHero.duplicateMenuItem(menuId, areaId);
+    logger.info("Duplicate Menu items added ", {"original": menuId, "duplicate": newId});
   },
 
   'archiveMenuItem': function (id) {
@@ -266,7 +238,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     var menu = MenuItems.findOne({_id: id});
     if (menu) {
@@ -290,3 +262,9 @@ Meteor.methods({
     MenuItems.update({_id: menuItemId}, {$set: query});
   }
 });
+
+var copyIngredients = function(ingredientsList) {
+  return _.map(ingredientsList, function(ingredient) {
+
+  });
+};
