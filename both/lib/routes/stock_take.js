@@ -3,13 +3,13 @@ Router.route('/stocktake', {
   name: "stocktakeList",
   path: '/stocktake',
   template: "stockListMainView",
-  waitOn: function() {
+  waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo')
     ];
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
+  data: function () {
+    if (!HospoHero.canUser('edit stocks')()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);
@@ -21,7 +21,7 @@ Router.route('/stocktake/:_id', {
   name: "stocktakeCounting",
   path: '/stocktake/:_id',
   template: "stocktakeCountingMainView",
-  waitOn: function() {
+  waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("allAreas"),
@@ -29,23 +29,24 @@ Router.route('/stocktake/:_id', {
       Meteor.subscribe("ordersPlaced", this.params._id)
     ];
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
+  data: function () {
+    if (!HospoHero.canUser('edit stocks')()) {
       Router.go("/");
     }
     Session.set("activeSArea", null);
     Session.set("activeGArea", null);
-    Session.set("thisVersion", this.params._id);;
+    Session.set("thisVersion", this.params._id);
     Session.set("editStockTake", false);
   },
   fastRender: true
 });
 
+
 Router.route('/stocktake/order/receive/:_id', {
   name: "orderReceive",
   path: '/stocktake/order/receive/:_id',
   template: "orderReceiveMainView",
-  waitOn: function() {
+  waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("receiptOrders", this.params._id),
@@ -54,8 +55,8 @@ Router.route('/stocktake/order/receive/:_id', {
       Meteor.subscribe("allSuppliers")
     ];
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
+  data: function () {
+    if (!HospoHero.canUser('edit stocks')()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);
@@ -68,7 +69,7 @@ Router.route('/stocktake/orders/:_id', {
   name: "stocktakeOrdering",
   path: '/stocktake/orders/:_id',
   template: "stocktakeOrderingMainView",
-  waitOn: function() {
+  waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("ordersPlaced", this.params._id),
@@ -79,12 +80,26 @@ Router.route('/stocktake/orders/:_id', {
       Meteor.subscribe("allSuppliers")
     ];
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit stocks')()) {
+  data: function () {
+    if (!HospoHero.canUser('edit stocks')()) {
       Router.go("/");
     }
     Session.set("thisVersion", this.params._id);
     Session.set("editStockTake", false);
   },
   fastRender: true
+});
+
+
+Router.route('orderReceiptsList', {
+  path: '/stocktake/order/receipts',
+  template: 'orderReceiptsListMainView',
+  waitOn: function () {
+    return [Meteor.subscribe("allOrderReceipts")];
+  },
+  data: function () {
+    Session.set("thisState", false);
+    Session.set("thisTime", "week");
+    Session.set("editStockTake", false);
+  }
 });

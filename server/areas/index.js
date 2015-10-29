@@ -69,10 +69,13 @@ Meteor.methods({
     };
 
     updateUserDocument.$set['roles.' + addedUserInfo.areaId] = addedUserInfo.roleId;
+
     updateUserDocument.$set['relations.organizationId'] = area.organizationId;
 
     updateUserDocument.$addToSet['relations.locationIds'] = area.locationId;
     updateUserDocument.$addToSet['relations.areaIds'] = addedUserInfo.areaId;
+
+    console.log('update doc', updateUserDocument);
 
     Meteor.users.update({_id: addedUserInfo.userId}, updateUserDocument);
 
@@ -110,11 +113,10 @@ Meteor.methods({
       $pull: {
         'relations.areaIds': areaId
       },
-      $unset: {
-        roles: {}
-      }
+      $unset: {}
     };
-    updateObject.$unset.roles[areaId] = '';
+
+    updateObject.$unset['roles.' + areaId] = '';
 
     if (!!Meteor.users.findOne({_id: userId, currentAreaId: areaId})) {
       updateObject.$unset.currentAreaId = '';

@@ -63,13 +63,13 @@ var PosSecret = Match.Where(function (key) {
 });
 
 
-if (Meteor.isClient) {
-  //mock object for logger on client side
-  var logger = {
-    error: function () {
-    }
-  }
-}
+//if (Meteor.isClient) {
+//  //mock object for logger on client side
+//  var logger = {
+//    error: function () {
+//    }
+//  }
+//}
 
 var InactivityTimeout = Match.Where(function (timeout) {
   check(timeout, Number);
