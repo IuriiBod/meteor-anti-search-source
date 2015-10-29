@@ -3,21 +3,26 @@ Router.route('/roster/weekly/:year/:week', {
   path: '/roster/weekly/:year/:week',
   template: "weeklyRosterMainView",
   waitOn: function () {
-    return [
+    var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
+    var subscriptions = [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weeklyRoster', HospoHero.misc.getWeekDateFromRoute(this)),
+      Meteor.subscribe('weeklyRoster', currentWeekDate),
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('areaMenuItems'),
-      Meteor.subscribe('dailySales')
+      Meteor.subscribe('areaMenuItems')
     ];
+
+    if (HospoHero.canUser('view forecast', Meteor.userId())) {
+      subscriptions.push(Meteor.subscribe('dailySales',currentWeekDate));
+    }
+    return subscriptions;
   },
   data: function () {
     if (!HospoHero.canUser('view roster')()) {
       Router.go("/");
     }
     return {
-      weekDate:  HospoHero.misc.getWeekDateFromRoute(this)
+      weekDate: HospoHero.misc.getWeekDateFromRoute(this)
     }
   }
 });

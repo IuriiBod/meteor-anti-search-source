@@ -3,14 +3,11 @@ Meteor.publish('jobTypes', function() {
   return JobTypes.find();
 });
 
-Meteor.publish('sections', function(areaId, id) {
+Meteor.publish('sections', function(areaId) {
   if(this.userId) {
     var query = {
       "relations.areaId": areaId
     };
-    if(id) {
-      query._id = id;
-    }
     return Sections.find(query);
   }
 });

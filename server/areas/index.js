@@ -4,7 +4,7 @@ Meteor.methods({
       createdAt: Date.now(),
       inactivityTimeout: 600000
     };
-    var newAreaDocument =_.extend(areaInfo, defaultAreaProperties);
+    var newAreaDocument = _.extend(areaInfo, defaultAreaProperties);
     check(newAreaDocument, HospoHero.checkers.AreaDocument);
 
     if (!HospoHero.isOrganizationOwner()) {
@@ -13,19 +13,19 @@ Meteor.methods({
 
     // Create areaInfo
     var areaId = Areas.insert(newAreaDocument);
-    logger.info('Area has been created', { areaId: areaId });
+    logger.info('Area has been created', {areaId: areaId});
   },
 
-  editArea: function(updatedArea) {
+  editArea: function (updatedArea) {
     check(updatedArea, HospoHero.checkers.AreaDocument);
 
     var userId = Meteor.userId();
-    if(!HospoHero.canUser('edit areas', userId)) {
+    if (!HospoHero.canUser('edit areas', userId)) {
       logger.error(403, 'User not permitted to edit areas');
     }
 
-    Areas.update({ _id: updatedArea._id }, { $set: updatedArea });
-    logger.info('Area has been updated', { areaId: updatedArea._id });
+    Areas.update({_id: updatedArea._id}, {$set: updatedArea});
+    logger.info('Area has been updated', {areaId: updatedArea._id});
   },
 
   deleteArea: function (areaId) {
@@ -39,7 +39,7 @@ Meteor.methods({
     Meteor.users.update({"relations.areaIds": areaId}, {$pull: {"relations.areaIds": areaId}});
     Meteor.users.update({currentAreaId: areaId}, {$unset: {currentAreaId: 1}});
 
-    logger.info('Area has been removed', { areaId: areaId });
+    logger.info('Area has been removed', {areaId: areaId});
   },
 
   /**
@@ -64,17 +64,18 @@ Meteor.methods({
     var area = Areas.findOne({_id: addedUserInfo.areaId});
 
     var updateUserDocument = {
-      $set: {
-        roles: {}
-      },
+      $set: {},
       $addToSet: {}
     };
 
-    updateUserDocument.$set.roles[addedUserInfo.areaId] = addedUserInfo.roleId;
+    updateUserDocument.$set['roles.' + addedUserInfo.areaId] = addedUserInfo.roleId;
+
     updateUserDocument.$set['relations.organizationId'] = area.organizationId;
 
     updateUserDocument.$addToSet['relations.locationIds'] = area.locationId;
     updateUserDocument.$addToSet['relations.areaIds'] = addedUserInfo.areaId;
+
+    console.log('update doc', updateUserDocument);
 
     Meteor.users.update({_id: addedUserInfo.userId}, updateUserDocument);
 
@@ -112,11 +113,10 @@ Meteor.methods({
       $pull: {
         'relations.areaIds': areaId
       },
-      $unset: {
-        roles: {}
-      }
+      $unset: {}
     };
-    updateObject.$unset.roles[areaId] = '';
+
+    updateObject.$unset['roles.' + areaId] = '';
 
     if (!!Meteor.users.findOne({_id: userId, currentAreaId: areaId})) {
       updateObject.$unset.currentAreaId = '';
