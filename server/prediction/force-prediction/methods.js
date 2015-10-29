@@ -1,7 +1,12 @@
 Meteor.methods({
   updatePredictions: function () {
-    ForecastDates.remove({});
-    salesPredictionUpdateJob();
+    try {
+      ForecastDates.remove({});
+      salesPredictionUpdateJob();
+    } catch (err) {
+      logger.error(err);
+      return false;
+    }
     return true;
   },
 
