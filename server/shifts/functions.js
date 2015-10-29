@@ -162,7 +162,7 @@ Meteor.methods({
     Shifts.update(shiftsToPublishQuery, {
       $set: {
         published: true,
-        publishedOn: new Date()
+        publishedOn: Date.now()
       }
     }, {
       multi: true
