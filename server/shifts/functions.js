@@ -109,10 +109,14 @@ Meteor.methods({
     if (Object.keys(updateDoc).length > 0) {
       Shifts.update({'_id': id}, {$set: updateDoc});
       logger.info("Shift clock details updated", {"shiftId": id});
-      return;
     }
   },
 
+  /**
+   * Publishes the roster
+   *
+   * @param {Date} date - The date of publishing roster
+   */
   publishRoster: function (date) {
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User not permitted to publish shifts");
@@ -167,9 +171,15 @@ Meteor.methods({
     //});
   },
 
+  /**
+   * Sends notifications and emails to rostered users after publishing new roster
+   *
+   * @param {Date} date - The date of published roster
+   * @param {Object} usersToNotify - The object of users to notify
+   * @param {Array} openShifts - The array of open shifts (if exists)
+   */
   notifyUsersPublishRoster: function(date, usersToNotify, openShifts) {
-    var notifyObjectLength = Object.keys(usersToNotify).length;
-    if(notifyObjectLength > 0) {
+    if(Object.keys(usersToNotify).length > 0) {
       var text;
       var stringDate = moment(date).startOf('isoweek').format("dddd, Do MMMM YYYY");
       var subject = 'Weekly roster for the week starting from ' + stringDate + ' published.';
