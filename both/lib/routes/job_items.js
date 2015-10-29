@@ -17,8 +17,7 @@ Router.route('/jobItems', {
       Router.go('/');
     }
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItems/:type', {
@@ -38,8 +37,7 @@ Router.route('/jobItems/:type', {
       Router.go('/');
     }
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItem/submit', {
@@ -65,8 +63,7 @@ Router.route('/jobItem/submit', {
     }
     Session.set('thisJobItem', null);
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItem/:_id', {
@@ -91,8 +88,7 @@ Router.route('/jobItem/:_id', {
     }
     Session.set('thisJobItem', this.params._id);
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItem/:_id/edit', {
@@ -115,6 +111,5 @@ Router.route('/jobItem/:_id/edit', {
     }
     Session.set('thisJobItem', this.params._id);
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });

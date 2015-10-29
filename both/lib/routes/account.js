@@ -75,8 +75,7 @@ Router.route('/admin', {
       Router.go("/");
     }
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 // ---------------------USER PROFILE
@@ -99,8 +98,7 @@ Router.route('/user/profile/:_id', {
     }
     Session.set("profileUser", this.params._id);
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 // --------------------INVITATION

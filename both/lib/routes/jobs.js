@@ -13,6 +13,5 @@ Router.route('/jobs', {
       Router.go("/");
     }
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });

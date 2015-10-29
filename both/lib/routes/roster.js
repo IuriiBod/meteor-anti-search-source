@@ -19,8 +19,7 @@ Router.route('/roster/weekly/:year/:week', {
     return {
       weekDate:  HospoHero.misc.getWeekDateFromRoute(this)
     }
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/roster/daily/:date', {
@@ -42,8 +41,7 @@ Router.route('/roster/daily/:date', {
     if (!HospoHero.canUser('view roster')()) {
       Router.go("/");
     }
-  },
-  fastRender: true
+  }
 });
 
 
@@ -63,6 +61,5 @@ Router.route('/roster/template/weekly', {
     if (!HospoHero.canUser('view roster')()) {
       Router.go('/');
     }
-  },
-  fastRender: true
+  }
 });
