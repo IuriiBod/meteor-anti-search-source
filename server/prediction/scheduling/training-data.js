@@ -1,13 +1,3 @@
-var updateLastTaskRunDateForLocation = function (locationId) {
-  //update task run date
-  ForecastDates.update({locationId: locationId}, {
-    $set: {
-      lastUploadDate: new Date(),
-      locationId: locationId
-    }
-  }, {upsert: true});
-};
-
 var updateActualSales = function (item) {
   DailySales.update({
     date: TimeRangeQueryBuilder.forDay(item.date),
@@ -52,9 +42,10 @@ predictionModelRefreshJob = function () {
     var predictionEnabled = HospoHero.prediction.isAvailableForLocation(location);
 
     if (predictionEnabled) {
-      var forecastData = ForecastDates.findOne({locationId: location});
-      var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
-        || forecastData.lastUploadDate >= HospoHero.dateUtils.getMillisecondsFromDays(182);
+      var lastForecastModelUploadDate = location.lastForecastModelUploadDate || false;
+
+      var needToUpdateModel = !lastForecastModelUploadDate
+          || moment(lastForecastModelUploadDate) < moment().subtract(182, 'day');
 
       var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
 
@@ -72,7 +63,7 @@ predictionModelRefreshJob = function () {
 
         updateSession.onUploadingFinished();
 
-        updateLastTaskRunDateForLocation(location._id);
+        Locations.update({_id: location._id}, {$set: {lastForecastModelUploadDate: new Date()}});
       } else {
         //update sales for last day only
         revelClient.uploadAndReduceOrderItems(function (salesData) {
