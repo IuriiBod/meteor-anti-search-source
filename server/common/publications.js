@@ -3,10 +3,10 @@ Meteor.publish('jobTypes', function() {
   return JobTypes.find();
 });
 
-Meteor.publish('sections', function(id) {
+Meteor.publish('sections', function(areaId, id) {
   if(this.userId) {
     var query = {
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      "relations.areaId": areaId
     };
     if(id) {
       query._id = id;

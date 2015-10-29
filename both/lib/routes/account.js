@@ -62,7 +62,7 @@ Router.route('/admin', {
   waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("allAreas"),
       Meteor.subscribe('usersList'),
       Meteor.subscribe('locationsOfOrganization'),
@@ -90,7 +90,7 @@ Router.route('/user/profile/:_id', {
       Meteor.subscribe("profileUser", this.params._id),
       Meteor.subscribe('shifts', 'future', this.params._id),
       Meteor.subscribe('shifts', 'opened'),
-      Meteor.subscribe('sections')
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
   data: function () {

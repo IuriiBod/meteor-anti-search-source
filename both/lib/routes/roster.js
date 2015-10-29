@@ -7,7 +7,7 @@ Router.route('/roster/weekly/:year/:week', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('weeklyRoster', HospoHero.misc.getWeekDateFromRoute(this)),
       Meteor.subscribe('workers'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('areaMenuItems'),
       Meteor.subscribe('dailySales')
     ];
@@ -34,7 +34,7 @@ Router.route('/roster/daily/:date', {
       Meteor.subscribe('workers'),
       Meteor.subscribe('jobs', 'unassigned'),
       Meteor.subscribe('jobItems'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('jobTypes')
     ];
   },
@@ -56,7 +56,7 @@ Router.route('/roster/template/weekly', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('weeklyRosterTemplate'),
       Meteor.subscribe('workers'),
-      Meteor.subscribe('sections')
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
     ];
   },
   data: function () {
