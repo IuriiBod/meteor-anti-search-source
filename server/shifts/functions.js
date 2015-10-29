@@ -168,66 +168,7 @@ Meteor.methods({
       multi: true
     });
 
-    Meteor.call('notifyUsersPublishRoster', date, usersToNotify, openShifts);
-  },
-
-  /**
-   * Sends notifications and emails to rostered users after publishing new roster
-   *
-   * @param {Date} date - The date of published roster
-   * @param {Object} usersToNotify - The object of users to notify
-   * @param {Array} openShifts - The array of open shifts (if exists)
-   */
-  notifyUsersPublishRoster: function(date, usersToNotify, openShifts) {
-    if(Object.keys(usersToNotify).length > 0) {
-      var text;
-      var stringDate = moment(date).startOf('isoweek').format("dddd, Do MMMM YYYY");
-      var subject = 'Weekly roster for the week starting from ' + stringDate + ' published.';
-
-      // Creating the instance of EmailSender object
-      var emailSender = new EmailSender({
-        from: Meteor.userId(),
-        subject: subject
-      });
-
-      // If there are some opened shifts
-      // create the notification object for it
-      if(openShifts.length) {
-        var notifyOpenShifts = {
-          type: 'roster',
-          title: subject + ' Checkout open shifts',
-          text: formatNotificationText(openShifts)
-        };
-      }
-
-      for(var userId in usersToNotify) {
-        if(usersToNotify.hasOwnProperty(userId)) {
-          // Sending open shifts at first
-          if (notifyOpenShifts) {
-            notifyOpenShifts.to = userId;
-            HospoHero.sendNotification(notifyOpenShifts);
-          }
-
-          var options = {
-            type: 'roster',
-            to: userId,
-            title: subject + ' Checkout your shifts',
-            text: formatNotificationText(usersToNotify[userId])
-          };
-
-          // Sending users shifts
-          HospoHero.sendNotification(options);
-
-          // Adding receiver ID and email text to the EmailSender object
-          emailSender.addOption('to', userId);
-          var openShiftsText = notifyOpenShifts ? notifyOpenShifts.text : '';
-          emailSender.addOption('text', formatEmailText(stringDate, options.text, openShiftsText));
-
-          // Sending email to user
-          emailSender.send();
-        }
-      }
-    }
+    notifyUsersPublishRoster(date, usersToNotify, openShifts);
   },
 
   claimShift: function (shiftId) {
@@ -379,4 +320,63 @@ var formatEmailText = function(date, userShiftsText, openShiftsText) {
     text.push(openShiftsText);
   }
   return text.join('');
+};
+
+/**
+ * Sends notifications and emails to rostered users after publishing new roster
+ *
+ * @param {Date} date - The date of published roster
+ * @param {Object} usersToNotify - The object of users to notify
+ * @param {Array} openShifts - The array of open shifts (if exists)
+ */
+var notifyUsersPublishRoster = function(date, usersToNotify, openShifts) {
+  if(Object.keys(usersToNotify).length > 0) {
+    var text;
+    var stringDate = moment(date).startOf('isoweek').format("dddd, Do MMMM YYYY");
+    var subject = 'Weekly roster for the week starting from ' + stringDate + ' published.';
+
+    // Creating the instance of EmailSender object
+    var emailSender = new EmailSender({
+      from: Meteor.userId(),
+      subject: subject
+    });
+
+    // If there are some opened shifts
+    // create the notification object for it
+    if(openShifts.length) {
+      var notifyOpenShifts = {
+        type: 'roster',
+        title: subject + ' Checkout open shifts',
+        text: formatNotificationText(openShifts)
+      };
+    }
+
+    for(var userId in usersToNotify) {
+      if(usersToNotify.hasOwnProperty(userId)) {
+        // Sending open shifts at first
+        if (notifyOpenShifts) {
+          notifyOpenShifts.to = userId;
+          HospoHero.sendNotification(notifyOpenShifts);
+        }
+
+        var options = {
+          type: 'roster',
+          to: userId,
+          title: subject + ' Checkout your shifts',
+          text: formatNotificationText(usersToNotify[userId])
+        };
+
+        // Sending users shifts
+        HospoHero.sendNotification(options);
+
+        // Adding receiver ID and email text to the EmailSender object
+        emailSender.addOption('to', userId);
+        var openShiftsText = notifyOpenShifts ? notifyOpenShifts.text : '';
+        emailSender.addOption('text', formatEmailText(stringDate, options.text, openShiftsText));
+
+        // Sending email to user
+        emailSender.send();
+      }
+    }
+  }
 };
