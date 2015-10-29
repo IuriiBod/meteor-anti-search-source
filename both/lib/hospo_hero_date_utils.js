@@ -48,7 +48,7 @@ Namespace('HospoHero.dateUtils', {
 
   shiftDateInterval: function (shift) {
     var dayFormat = 'ddd, Do MMMM';
-    var timeFormat = 'hh:mm A';
+    var timeFormat = 'h:mm A';
 
     var day = HospoHero.dateUtils.formatDate(shift.shiftDate, dayFormat);
     var startTime = HospoHero.dateUtils.formatDate(shift.startTime, timeFormat);
@@ -58,7 +58,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   timeFormat: function (date) {
-    return HospoHero.dateUtils.formatDate(date, 'H:mm');
+    return HospoHero.dateUtils.formatDate(date, 'h:mm A');
   },
 
   shiftDate: function (date, isTemplate) {
@@ -137,10 +137,5 @@ Namespace('HospoHero.dateUtils', {
   //Formatted time with Ago
   timeFromNow: function (time) {
     return moment(time).fromNow();
-  },
-
-  //Formatted time with AM PM
-  timeFormat: function (time) {
-    return moment(time).format("HH:mm");
   }
 });

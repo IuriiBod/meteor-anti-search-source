@@ -1,11 +1,8 @@
 var component = FlowComponents.define('weeklyHeader', function () {
-  var year = Router.current().params.year;
-  var week = Router.current().params.week;
-
-  this.set('year', year);
-  this.set('week', week);
+  var currentDate = HospoHero.misc.getWeekDateFromRoute(Router.current());
+  this.set('currentDate', currentDate);
   this.set('collapseIn', false);
-  this.set('publishedOnDate', moment().year(year).week(week).toDate());
+  this.set('publishedOnDate', HospoHero.dateUtils.getDateByWeekDate(currentDate));
 });
 
 component.state.onDateChanged = function () {
