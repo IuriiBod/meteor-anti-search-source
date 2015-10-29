@@ -1,6 +1,5 @@
 Meteor.methods({
   updatePredictions: function () {
-    ForecastDates.remove({});
     salesPredictionUpdateJob();
     return true;
   },

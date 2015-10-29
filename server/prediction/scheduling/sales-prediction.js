@@ -75,46 +75,42 @@ var predict = function (days, locationId) {
   }
 };
 
-var updateForecastDate = function (locationId, property, dateValue) {
-  var properties = _.isArray(property) ? property : [property];
+var getPredicionUpdatedDate = function (locationId, interval) {
+  var predictionDate = moment();
+  predictionDate.add(interval - 1, 'day');
 
-  var updateQuery = _.reduce(properties, function (query, property) {
-    query[property] = dateValue;
-    return query;
-  }, {});
+  var menuItemFromCurrentLocation = MenuItems.findOne({'relations.locationId': locationId});
 
-  ForecastDates.update({locationId: locationId}, {$set: updateQuery}, {upsert: true});
+  var dailySaleQuery = {menuItemId: menuItemFromCurrentLocation._id};
+  _.extend(dailySaleQuery, {date: TimeRangeQueryBuilder.forDay(predictionDate)});
+
+  var dailySale = DailySales.findOne(dailySaleQuery);
+
+  if (dailySale) {
+    return dailySale.predictionUpdatedAt;
+  }
 };
-
 
 salesPredictionUpdateJob = function () {
   logger.info('started prediction update job');
 
+  var updateDayIntervals = [84, 7, 2];
   var locations = Locations.find({archived: {$ne: true}});
-
-  var todayMoment = moment();
-
   locations.forEach(function (location) {
     if (HospoHero.prediction.isAvailableForLocation(location)) {
-      var lastUpdates = ForecastDates.findOne({locationId: location._id});
 
-      var needFullUpdate = !lastUpdates || !lastUpdates.lastThreeDays
-        || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.dateUtils.getMillisecondsFromDays(42);
+      updateDayIntervals.forEach(function (interval) {
+        var predictionUpdatedDate = getPredicionUpdatedDate(location._id, interval, 'day') || false;
+        var shouldBeUpdatedBy = moment().subtract(parseInt(interval/2), 'day');
 
-      if (needFullUpdate) {
-        predict(84, location._id);
-        updateForecastDate(location._id, ['lastSixWeeks', 'lastThreeDays'], todayMoment.toDate());
-
-      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.dateUtils.getMillisecondsFromDays(3)) {
-        predict(7, location._id);
-        updateForecastDate(location._id, 'lastThreeDays', todayMoment.toDate());
-
-      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.dateUtils.getMillisecondsFromDays(3)) {
-        predict(2, location._id);
-      }
+        if (!predictionUpdatedDate || moment(predictionUpdatedDate) < shouldBeUpdatedBy) {
+          predict(interval, location._id);
+        }
+      });
     }
   });
 };
+
 
 if (!HospoHero.isDevelopmentMode()) {
   SyncedCron.add({
