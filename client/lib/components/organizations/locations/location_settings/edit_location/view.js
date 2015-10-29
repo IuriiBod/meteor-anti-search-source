@@ -9,6 +9,14 @@ Template.editLocation.helpers({
   posForm: function() {
     var location = FlowComponents.callAction('getLocation')._result;
     if(location) {
+      if(!location.pos) {
+        location.pos = {
+          key: '',
+          secret: '',
+          host: ''
+        };
+      }
+
       var tpl = Template.instance();
       tpl._posForm = new CustomForm({
         name: 'posForm',
@@ -18,7 +26,7 @@ Template.editLocation.helpers({
       tpl._posForm.addField('posKey', {
         label: 'Key',
         placeholder: 'Key',
-        value: location.pos.posKey || '',
+        value: location.pos.key,
         validation: {
           required: true
         }
@@ -27,7 +35,7 @@ Template.editLocation.helpers({
       tpl._posForm.addField('posSecret', {
         label: 'Secret',
         placeholder: 'Secret',
-        value: location.pos.posSecret || '',
+        value: location.pos.secret,
         validation: {
           required: true
         }
@@ -36,7 +44,7 @@ Template.editLocation.helpers({
       tpl._posForm.addField('posHost', {
         label: 'Host',
         placeholder: 'Host',
-        value: location.pos.posHost || '',
+        value: location.pos.host,
         validation: {
           required: true
         }
@@ -146,7 +154,8 @@ Template.editLocation.events({
       delete validation.closingHour;
       delete validation.closingMinutes;
 
-      Meteor.call('updateLocationMainInfo', location._id, validation, HospoHero.handleMethodResult(function() {
+      var updatedLocation = _.extend(location, validation);
+      Meteor.call('editLocation', updatedLocation, HospoHero.handleMethodResult(function() {
         HospoHero.success('Location was successfully changed');
       }));
     }
@@ -159,7 +168,13 @@ Template.editLocation.events({
     if(validation) {
       var location = FlowComponents.callAction('getLocation')._result;
 
-      Meteor.call('updatePosSettings', location._id, validation, HospoHero.handleMethodResult(function() {
+      location.pos = {
+        key: validation.posKey,
+        secret: validation.posSecret,
+        host: validation.posHost
+      };
+
+      Meteor.call('editLocation', location, HospoHero.handleMethodResult(function() {
         HospoHero.success('POS Settings were successfully changed');
       }));
     }
