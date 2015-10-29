@@ -1,8 +1,7 @@
-var component = FlowComponents.define("inactivityTimeoutField", function () {
-
-});
+var component = FlowComponents.define("inactivityTimeoutField", function () {});
 
 component.action.valueChange = function (value) {
-  var areaId = HospoHero.getCurrentAreaId();
-  Meteor.call('updateAreaInactivityTimeout', areaId, value);
+  var area = Areas.findOne({ _id: HospoHero.getCurrentAreaId() });
+  area.inactivityTimeout = value * 60000;
+  Meteor.call('editArea', area, HospoHero.handleMethodResult());
 };

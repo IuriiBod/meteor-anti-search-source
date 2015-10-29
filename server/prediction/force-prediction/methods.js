@@ -1,6 +1,12 @@
 Meteor.methods({
   updatePredictions: function () {
     salesPredictionUpdateJob();
+    try {
+      salesPredictionUpdateJob();
+    } catch (err) {
+      logger.error(err);
+      return false;
+    }
     return true;
   },
 
