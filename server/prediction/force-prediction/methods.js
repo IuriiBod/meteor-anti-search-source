@@ -1,6 +1,5 @@
 Meteor.methods({
   updatePredictions: function () {
-    salesPredictionUpdateJob();
     try {
       salesPredictionUpdateJob();
     } catch (err) {

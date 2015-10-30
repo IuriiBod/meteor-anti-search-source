@@ -8,7 +8,6 @@ salesPredictionUpdateJob = function () {
 
       updateDayIntervals.forEach(function (interval) {
         var needToUpdate = isNeedToUpdate(interval, location._id);
-        console.log('needToUpdate: ', needToUpdate);
         if (needToUpdate) {
           predict(interval, location._id);
         }
@@ -120,10 +119,7 @@ var isNeedToUpdate = function (interval, locationId) {
   var predictionUpdatedDate = getPredicionUpdatedDate(locationId, halfOfInterval+1) || false;
   var shouldBeUpdatedBy = moment().subtract(halfOfInterval, 'day');
 
-  if (!predictionUpdatedDate || moment(predictionUpdatedDate) < shouldBeUpdatedBy) {
-    return true;
-  }
-  return false;
+  return !predictionUpdatedDate || moment(predictionUpdatedDate) < shouldBeUpdatedBy;
 };
 
 //!!! disable it temporaly to be able control it manually
