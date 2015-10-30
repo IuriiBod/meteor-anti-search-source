@@ -5,7 +5,7 @@ Router.route('/menuItems/:category/:status', {
   template: "menuItemsListMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('allCategories'),
+      Meteor.subscribe('allCategories', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe('menuList', this.params.category, this.params.status.toLowerCase()),
       Meteor.subscribe('userSubscriptions', HospoHero.getCurrentAreaId(Meteor.userId()))
@@ -28,7 +28,7 @@ Router.route('/menuItems/submit', {
   template: "menuItemSubmitMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('allCategories'),
+      Meteor.subscribe('allCategories', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId())),
@@ -51,7 +51,7 @@ Router.route('/menuItems/:type', {
   template: "menuItemsListMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('allCategories'),
+      Meteor.subscribe('allCategories', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("allStatuses"),
       Meteor.subscribe("menuList", "all", "all"),
       Meteor.subscribe('userSubscriptions', HospoHero.getCurrentAreaId(Meteor.userId()))
@@ -76,7 +76,7 @@ Router.route('/menuItem/:_id', {
     return [
       Meteor.subscribe("menuItem", this.params._id),
       Meteor.subscribe('comments', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe("allCategories"),
+      Meteor.subscribe('allCategories', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("allStatuses"),
       Meteor.subscribe('userSubscriptions', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),

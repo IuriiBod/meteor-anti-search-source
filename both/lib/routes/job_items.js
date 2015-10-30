@@ -77,7 +77,7 @@ Router.route('/jobItem/:_id', {
       Meteor.subscribe('comments', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('userSubscriptions', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('allCategories'),
+      Meteor.subscribe('allCategories', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('jobsRelatedMenus', this.params._id)
     ];
   },
