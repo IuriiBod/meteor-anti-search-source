@@ -30,7 +30,5 @@ component.action.addShift = function () {
     type: this.type
   };
 
-  console.log('newShift', newShiftInfo);
-
   Meteor.call("createShift", newShiftInfo, HospoHero.handleMethodResult());
 };
