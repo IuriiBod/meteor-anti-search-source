@@ -16,8 +16,9 @@ component.state.isArchived = function () {
 };
 
 component.state.onAreaSelected = function () {
+  var menuItemId = this.get('id');
   return function(areaId) {
-    Meteor.call("duplicateMenuItem", this.get('id'), areaId, HospoHero.handleMethodResult(function () {
+    Meteor.call("duplicateMenuItem", menuItemId, areaId, HospoHero.handleMethodResult(function () {
       HospoHero.success("Menu item has successfully copied!");
       $('#areaChooser').modal('hide');
     }));

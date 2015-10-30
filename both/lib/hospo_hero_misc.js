@@ -6,23 +6,23 @@ Namespace('HospoHero.misc', {
    * @param {Boolean} trim
    * @returns {String|Object}
    */
-  getValuesFromEvent: function(event, fields, trim) {
-    var getValue = function(value, trim) {
+  getValuesFromEvent: function (event, fields, trim) {
+    var getValue = function (value, trim) {
       return trim ? value.trim() : value;
     };
-    
-    if(_.isString(fields)) {
+
+    if (_.isString(fields)) {
       return getValue(event.target[fields].value, trim);
-    } else if(_.isArray(fields)) {
+    } else if (_.isArray(fields)) {
       var values = {};
-      fields.forEach(function(field) {
-        if(_.isObject(field)) {
+      fields.forEach(function (field) {
+        if (_.isObject(field)) {
           var value = getValue(event.target[field.name].value, trim);
-          if(field.parse) {
+          if (field.parse) {
             value = field.parse == 'int' ? parseInt(value) : parseFloat(value);
           }
 
-          if(field.type && field.type == 'number') {
+          if (field.type && field.type == 'number') {
             value = isNaN(value) ? 0 : value;
           }
 
@@ -37,6 +37,12 @@ Namespace('HospoHero.misc', {
     }
   },
 
+  getWeekRangeQueryByRouter: function (router) {
+    var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(router);
+    var date = HospoHero.dateUtils.getDateByWeekDate(currentWeekDate);
+    return TimeRangeQueryBuilder.forWeek(date, false);
+  },
+
   getWeekDateFromRoute: function (routeContext) {
     return {
       week: parseInt(routeContext.params.week),
@@ -44,14 +50,14 @@ Namespace('HospoHero.misc', {
     };
   },
 
-  getSubscriptionDocument: function(type, itemId) {
+  getSubscriptionDocument: function (type, itemId) {
     var subscription = Subscriptions.findOne({
       type: type,
       subscriber: Meteor.userId(),
       'relations.areaId': HospoHero.getCurrentAreaId()
     });
 
-    if(subscription) {
+    if (subscription) {
       subscription.itemIds = itemId;
     } else {
       subscription = {
