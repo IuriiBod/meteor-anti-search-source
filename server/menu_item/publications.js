@@ -1,7 +1,7 @@
-Meteor.publish("menuList", function (categoryId, status) {
+Meteor.publish('menuList', function (areaId, categoryId, status) {
   if (this.userId) {
     var query = {
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      'relations.areaId': areaId
     };
 
     if (categoryId && categoryId != "all") {
@@ -12,7 +12,7 @@ Meteor.publish("menuList", function (categoryId, status) {
       query.status = (status && status != 'all') ? status : {$ne: 'archived'};
     }
 
-    logger.info("Menu Items list published", categoryId, status);
+    logger.info('Menu Items list published', categoryId, status);
 
     return MenuItems.find(query, {sort: {"name": 1}, limit: 30});
   } else {
