@@ -1,3 +1,22 @@
+salesPredictionUpdateJob = function () {
+  logger.info('started prediction update job');
+
+  var updateDayIntervals = [84, 7, 2];
+  var locations = Locations.find({archived: {$ne: true}});
+  locations.forEach(function (location) {
+    if (HospoHero.prediction.isAvailableForLocation(location)) {
+
+      updateDayIntervals.forEach(function (interval) {
+        var needToUpdate = isNeedToUpdate(interval, location._id);
+        console.log('needToUpdate: ', needToUpdate);
+        if (needToUpdate) {
+          predict(interval, location._id);
+        }
+      });
+    }
+  });
+};
+
 var getWeatherForecast = function (dayIndex, forecastDate, weatherManager) {
   //todo: temporal. figure out typical weather
   var defaultWeather = {
@@ -84,41 +103,28 @@ var predict = function (days, locationId) {
 
 var getPredicionUpdatedDate = function (locationId, interval) {
   var predictionDate = moment();
-  predictionDate.add(interval - 1, 'day');
+  predictionDate.add(interval, 'day');
 
   var menuItemFromCurrentLocation = MenuItems.findOne({'relations.locationId': locationId});
-
   var dailySaleQuery = {menuItemId: menuItemFromCurrentLocation._id};
   _.extend(dailySaleQuery, {date: TimeRangeQueryBuilder.forDay(predictionDate)});
 
   var dailySale = DailySales.findOne(dailySaleQuery);
-
   if (dailySale) {
     return dailySale.predictionUpdatedAt;
   }
 };
 
-salesPredictionUpdateJob = function () {
-  logger.info('started prediction update job');
+var isNeedToUpdate = function (interval, locationId) {
+  var halfOfInterval = parseInt(interval/2);
+  var predictionUpdatedDate = getPredicionUpdatedDate(locationId, halfOfInterval+1) || false;
+  var shouldBeUpdatedBy = moment().subtract(halfOfInterval, 'day');
 
-  var updateDayIntervals = [84, 7, 2];
-  var locations = Locations.find({archived: {$ne: true}});
-  locations.forEach(function (location) {
-    if (HospoHero.prediction.isAvailableForLocation(location)) {
-
-      updateDayIntervals.forEach(function (interval) {
-        var predictionUpdatedDate = getPredicionUpdatedDate(location._id, interval, 'day') || false;
-        var shouldBeUpdatedBy = moment().subtract(parseInt(interval/2), 'day');
-
-        if (!predictionUpdatedDate || moment(predictionUpdatedDate) < shouldBeUpdatedBy) {
-          predict(interval, location._id);
-        }
-      });
-    }
-  });
+  if (!predictionUpdatedDate || moment(predictionUpdatedDate) < shouldBeUpdatedBy) {
+    return true;
+  }
+  return false;
 };
-
-
 
 //!!! disable it temporaly to be able control it manually
 //if (!HospoHero.isDevelopmentMode()) {
