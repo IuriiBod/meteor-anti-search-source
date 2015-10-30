@@ -62,13 +62,13 @@ var PosSecret = Match.Where(function (key) {
   return /[0-9a-zA-Z]{64}/.test(key);
 });
 
-//if (Meteor.isClient) {
-//  //mock object for logger on client side
-//  var logger = {
-//    error: function () {
-//    }
-//  }
-//}
+
+logger = Meteor.isServer ? logger : {
+  error: function () {
+    console.log('ERROR: ', arguments);
+  }
+};
+
 
 var InactivityTimeout = Match.Where(function (timeout) {
   check(timeout, Number);
