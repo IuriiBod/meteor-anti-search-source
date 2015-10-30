@@ -8,7 +8,7 @@ Router.route('/menuItems/:category/:status', {
       Meteor.subscribe('allCategories'),
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe('menuList', this.params.category, this.params.status.toLowerCase()),
-      Meteor.subscribe('userSubscriptions')
+      Meteor.subscribe('userSubscriptions', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
   data: function() {
@@ -54,7 +54,7 @@ Router.route('/menuItems/:type', {
       Meteor.subscribe('allCategories'),
       Meteor.subscribe("allStatuses"),
       Meteor.subscribe("menuList", "all", "all"),
-      Meteor.subscribe('userSubscriptions')
+      Meteor.subscribe('userSubscriptions', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
   data: function() {
@@ -78,7 +78,7 @@ Router.route('/menuItem/:_id', {
       Meteor.subscribe('comments', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("allCategories"),
       Meteor.subscribe("allStatuses"),
-      Meteor.subscribe('userSubscriptions'),
+      Meteor.subscribe('userSubscriptions', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('jobTypes')
     ];
