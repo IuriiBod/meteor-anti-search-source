@@ -49,7 +49,7 @@ Router.route('/jobItem/submit', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe("ingredients")
+      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
   data: function() {

@@ -1,7 +1,7 @@
-Meteor.publish("ingredients", function(ids, status) {
+Meteor.publish('ingredients', function(ids, areaId, status) {
   if(this.userId) {
     var query = {
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      'relations.areaId': areaId
     };
     var options = {
       sort: {'code': 1}

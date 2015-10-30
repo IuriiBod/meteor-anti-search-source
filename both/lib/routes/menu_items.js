@@ -31,7 +31,7 @@ Router.route('/menuItems/submit', {
       Meteor.subscribe('allCategories'),
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe("ingredients"),
+      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('jobItems', null, HospoHero.getCurrentAreaId(Meteor.userId()))
     ];

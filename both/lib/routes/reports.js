@@ -5,7 +5,7 @@ Router.route('/reports/stocktake/currentStocks/:year/:week', {
   template: "currentStocksReportView",
   waitOn: function () {
     return [
-      Meteor.subscribe("ingredients")
+      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
   data: function () {

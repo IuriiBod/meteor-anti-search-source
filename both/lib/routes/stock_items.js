@@ -8,7 +8,7 @@ Router.route('/stocklist', {
       Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
       //Meteor.subscribe("ingredients", null, 'active'),
       //Meteor.subscribe("ingredientsRelatedJobs"),
-      Meteor.subscribe("ingredients")
+      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
   data: function() {
@@ -28,7 +28,7 @@ Router.route('/stocklist/:type', {
     return [
       Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("ingredientsRelatedJobs"),
-      Meteor.subscribe("ingredients", null, 'archived')
+      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId()), 'archived')
     ]
   },
   data: function() {

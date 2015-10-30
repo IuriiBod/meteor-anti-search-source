@@ -44,7 +44,7 @@ Router.route('/stocktake/order/receive/:_id', {
     return [
       Meteor.subscribe("receiptOrders", this.params._id),
       Meteor.subscribe("orderReceipts", [this.params._id]),
-      Meteor.subscribe("ingredients"),
+      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
@@ -68,7 +68,7 @@ Router.route('/stocktake/orders/:_id', {
       Meteor.subscribe("orderReceiptsByVersion", this.params._id),
       Meteor.subscribe('comments', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe("ingredients"),
+      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
