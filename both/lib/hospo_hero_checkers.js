@@ -239,7 +239,7 @@ Namespace('HospoHero.checkers', {
     var differenceInMs = moment(weekRange.$lte).diff(weekRange.$gte);
     var weeksCount = moment.duration(differenceInMs).asWeeks();
 
-    return weeksCount <= 1; //should be less or equal one week
+    return weeksCount <= 1.5; //should be less or equal 1.5 of week to prevent large ranges
   }),
 
   Relations: Match.Where(function (relations) {
