@@ -11,8 +11,7 @@ Router.route('/suppliers', {
       Router.go("/");
     }
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/supplier/profile/:_id', {
@@ -33,6 +32,5 @@ Router.route('/supplier/profile/:_id', {
     }
     Session.set("thisSupplier", this.params._id);
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });

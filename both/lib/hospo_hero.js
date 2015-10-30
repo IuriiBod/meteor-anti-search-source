@@ -1,17 +1,4 @@
 Namespace('HospoHero', {
-  checkMongoId: function (id) {
-    check(id, String);
-    if (!/[0-9a-zA-Z]{17}/.test(id)) {
-      throw new Meteor.Error("Expected MongoID");
-    }
-  },
-
-  checkDate: function (date) {
-    if (!moment(date).isValid()) {
-      throw new Meteor.Error("Expected date");
-    }
-  },
-
   isInOrganization: function (userId) {
     userId = userId ? userId : Meteor.userId();
     var user = Meteor.users.findOne({_id: userId});

@@ -12,8 +12,7 @@ Router.route('/reports/stocktake/currentStocks/:year/:week', {
     }
     Session.set("thisWeek", this.params.week);
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/reports/:year/:week', {
@@ -35,6 +34,5 @@ Router.route('/reports/:year/:week', {
     Session.set("editStockTake", false);
     Session.set("thisYear", this.params.year);
     Session.set("thisWeek", this.params.week);
-  },
-  fastRender: true
+  }
 });

@@ -17,8 +17,7 @@ Router.route('/stocklist', {
       Router.go("/");
     }
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/stocklist/:type', {
@@ -38,6 +37,5 @@ Router.route('/stocklist/:type', {
       Router.go("/");
     }
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
