@@ -12,12 +12,12 @@ Meteor.publishAuthorized('weeklyRoster', function (weekDate) {
   });
 });
 
-Meteor.publishAuthorized('weeklyRosterTemplate', function () {
+Meteor.publishAuthorized('weeklyRosterTemplate', function (areaId) {
   logger.info("Weekly shifts template");
 
   //get shifts
   return Shifts.find({
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
+    'relations.areaId': areaId,
     type: 'template'
   });
 });

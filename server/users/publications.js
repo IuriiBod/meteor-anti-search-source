@@ -98,14 +98,11 @@ Meteor.publish("selectedUsersList", function (usersIds) {
 });
 
 //managers and workers that should be assigned to shifts
-Meteor.publishComposite('workers', function () {
-  var currentAreaId;
+Meteor.publishComposite('workers', function (areaId) {
   return {
     find: function () {
       if (this.userId) {
         var user = Meteor.users.findOne(this.userId);
-
-        currentAreaId = user.currentAreaId ? user.currentAreaId : null;
 
         if (user && user.relations && user.relations.organizationId) {
           return Meteor.roles.find({
@@ -123,9 +120,9 @@ Meteor.publishComposite('workers', function () {
     children: [
       {
         find: function (role) {
-          if (currentAreaId) {
-            var query = {"relations.areaIds": currentAreaId};
-            query["roles." + currentAreaId] = role._id;
+          if (areaId) {
+            var query = {'relations.areaIds': areaId};
+            query["roles." + areaId] = role._id;
             return Meteor.users.find(query);
           } else {
             this.ready();
