@@ -31,7 +31,7 @@ Router.route('/roster/weekly/:year/:week', {
 Router.route('/roster/daily/:date', {
   name: "dailyRoster",
   path: '/roster/daily/:date',
-  template: "dailyRosterMainView",
+  template: 'dailyRosterMainView',
   waitOn: function () {
     return [
       Meteor.subscribe('organizationInfo'),
