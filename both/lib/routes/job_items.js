@@ -8,7 +8,7 @@ Router.route('/jobItems', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('userSubscriptions', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe("jobItems", null, 'active')
+      Meteor.subscribe('jobItems', null, HospoHero.getCurrentAreaId(Meteor.userId()), 'active')
     ];
   },
   data: function() {
@@ -26,7 +26,7 @@ Router.route('/jobItems/:type', {
   template: 'jobItemsListMainView',
   waitOn: function() {
     return [
-      Meteor.subscribe('jobItems', null, 'archived'),
+      Meteor.subscribe('jobItems', null, HospoHero.getCurrentAreaId(Meteor.userId()), 'archived'),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('userSubscriptions', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];

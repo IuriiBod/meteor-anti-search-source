@@ -35,7 +35,7 @@ Router.route('/roster/daily/:date', {
       Meteor.subscribe('daily', this.params.date, null),
       Meteor.subscribe('workers'),
       Meteor.subscribe('jobs', 'unassigned'),
-      Meteor.subscribe('jobItems'),
+      Meteor.subscribe('jobItems', null, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('jobTypes')
     ];

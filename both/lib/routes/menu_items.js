@@ -33,7 +33,7 @@ Router.route('/menuItems/submit', {
       Meteor.subscribe("allSuppliers"),
       Meteor.subscribe("ingredients"),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe("jobItems")
+      Meteor.subscribe('jobItems', null, HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
   data: function() {
