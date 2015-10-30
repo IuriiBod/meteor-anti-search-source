@@ -32,7 +32,7 @@ Router.route('/roster/daily/:date', {
   template: "dailyRosterMainView",
   waitOn: function () {
     return [
-      Meteor.subscribe('daily', this.params.date, null),
+      Meteor.subscribe('daily', this.params.date, HospoHero.getCurrentAreaId(Meteor.userId()), null),
       Meteor.subscribe('workers'),
       Meteor.subscribe('jobs', 'unassigned'),
       Meteor.subscribe('jobItems', null, HospoHero.getCurrentAreaId(Meteor.userId())),

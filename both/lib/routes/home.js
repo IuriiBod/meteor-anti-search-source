@@ -13,7 +13,7 @@ Router.route('/', {
         Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
         Meteor.subscribe('comments', Meteor.userId(), HospoHero.getCurrentAreaId(Meteor.userId())),
         Meteor.subscribe('newsfeeds'),
-        Meteor.subscribe('daily', moment().format('YYYY-MM-DD'), Meteor.userId())
+        Meteor.subscribe('daily', moment().format('YYYY-MM-DD'), HospoHero.getCurrentAreaId(Meteor.userId()), Meteor.userId())
       ];
     }
   },

@@ -23,14 +23,14 @@ Meteor.publishAuthorized('weeklyRosterTemplate', function () {
 });
 
 
-Meteor.publishComposite('daily', function (date, worker) {
+Meteor.publishComposite('daily', function (date, areaId, worker) {
   return {
     find: function () {
       if (this.userId) {
         var query = {
           shiftDate: moment(date).startOf('day'),
           type: null,
-          "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+          'relations.areaId': areaId
         };
 
         if (worker) {

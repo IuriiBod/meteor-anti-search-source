@@ -4,9 +4,7 @@ Router.route('/reports/stocktake/currentStocks/:year/:week', {
   path: '/reports/stocktake/currentStocks/:year/:week',
   template: "currentStocksReportView",
   waitOn: function () {
-    return [
-      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId()))
-    ];
+    return Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId()));
   },
   data: function () {
     if (!Meteor.userId() || !HospoHero.canUser('edit roster')()) {
