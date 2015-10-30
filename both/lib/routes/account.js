@@ -59,10 +59,10 @@ Router.route('/admin', {
   waitOn: function () {
     return [
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe("allAreas"),
+      Meteor.subscribe('allAreas', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('locationsOfOrganization'),
-      Meteor.subscribe("areasOfOrganization"),
+      Meteor.subscribe('areasOfOrganization'),
       Meteor.subscribe('menuList', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },

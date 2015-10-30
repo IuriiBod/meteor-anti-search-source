@@ -27,7 +27,7 @@ Router.route('/stocklist/:type', {
   waitOn: function() {
     return [
       Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe("ingredientsRelatedJobs"),
+      Meteor.subscribe('ingredientsRelatedJobs'),
       Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId()), 'archived')
     ]
   },
