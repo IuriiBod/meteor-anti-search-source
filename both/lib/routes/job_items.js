@@ -100,7 +100,7 @@ Router.route('/jobItem/:_id/edit', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('ingredients'),
+      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
