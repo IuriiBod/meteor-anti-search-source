@@ -4,7 +4,6 @@ Router.route('/forecast/:year/:week', {
   waitOn: function () {
     var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
     return [
-      this.subscribe('organizationInfo'),
       this.subscribe('weatherForecast', currentWeekDate),
       this.subscribe('dailySales', currentWeekDate)
     ];

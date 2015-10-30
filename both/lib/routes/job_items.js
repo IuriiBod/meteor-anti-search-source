@@ -5,7 +5,6 @@ Router.route('/jobItems', {
   template: 'jobItemsListMainView',
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections'),
       Meteor.subscribe('userSubscriptions'),
@@ -27,7 +26,6 @@ Router.route('/jobItems/:type', {
   template: 'jobItemsListMainView',
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes', null, 'archived'),
       Meteor.subscribe('sections'),
       Meteor.subscribe('userSubscriptions')
@@ -48,7 +46,6 @@ Router.route('/jobItem/submit', {
   template: 'submitJobItemMainView',
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections'),
       Meteor.subscribe("allSuppliers"),
@@ -75,7 +72,6 @@ Router.route('/jobItem/:_id', {
   template: 'jobItemDetailedMainView',
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe("comments", this.params._id),
@@ -101,7 +97,6 @@ Router.route('/jobItem/:_id/edit', {
   template: 'jobItemEditView',
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('sections'),

@@ -5,7 +5,6 @@ Router.route('/reports/stocktake/currentStocks/:year/:week', {
   template: "currentStocksReportView",
   waitOn: function () {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("ingredients")
     ];
   },
@@ -25,7 +24,6 @@ Router.route('/reports/:year/:week', {
   template: "teamHoursMainView",
   waitOn: function () {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("usersList"),
       Meteor.subscribe('weeklyRoster', HospoHero.misc.getWeekDateFromRoute(this))
     ];

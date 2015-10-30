@@ -6,7 +6,6 @@ Router.route('/', {
   waitOn: function() {
     if(Meteor.userId()) {
       return [
-        Meteor.subscribe('organizationInfo'),
         Meteor.subscribe('shifts', 'future', Meteor.userId()),
         Meteor.subscribe('shifts', 'past', Meteor.userId()),
         Meteor.subscribe('shifts', 'opened'),

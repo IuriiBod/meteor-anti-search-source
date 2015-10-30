@@ -5,7 +5,6 @@ Router.route('/menuItems/:category/:status', {
   template: "menuItemsListMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('allCategories'),
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe('menuList', this.params.category, this.params.status.toLowerCase()),
@@ -29,7 +28,6 @@ Router.route('/menuItems/submit', {
   template: "menuItemSubmitMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('allCategories'),
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe("allSuppliers"),
@@ -53,7 +51,6 @@ Router.route('/menuItems/:type', {
   template: "menuItemsListMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('allCategories'),
       Meteor.subscribe("allStatuses"),
       Meteor.subscribe("menuList", "all", "all"),
@@ -77,7 +74,6 @@ Router.route('/menuItem/:_id', {
   template: "menuItemDetailedMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("menuItem", this.params._id),
       Meteor.subscribe("comments", this.params._id),
       Meteor.subscribe("allCategories"),

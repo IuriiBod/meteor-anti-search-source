@@ -5,7 +5,6 @@ Router.route('/roster/weekly/:year/:week', {
   waitOn: function () {
     var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
     var subscriptions = [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('weeklyRoster', currentWeekDate),
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections'),
@@ -33,7 +32,6 @@ Router.route('/roster/daily/:date', {
   template: "dailyRosterMainView",
   waitOn: function () {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('daily', this.params.date, null),
       Meteor.subscribe('workers'),
       Meteor.subscribe('jobs', 'unassigned'),
@@ -57,7 +55,6 @@ Router.route('/roster/template/weekly', {
   template: "weeklyRosterTemplateMainView",
   waitOn: function () {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('weeklyRosterTemplate'),
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections')

@@ -5,7 +5,6 @@ Router.route('/stocklist', {
   template: "listOfStocksMasterMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("allSuppliers"),
       //Meteor.subscribe("ingredients", null, 'active'),
       //Meteor.subscribe("ingredientsRelatedJobs"),
@@ -27,7 +26,6 @@ Router.route('/stocklist/:type', {
   template: "listOfStocksMasterMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("allSuppliers"),
       Meteor.subscribe("ingredientsRelatedJobs"),
       Meteor.subscribe("ingredients", null, 'archived')
