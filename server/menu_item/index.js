@@ -96,6 +96,11 @@ Meteor.methods({
         updateDoc.instructions = info.instructions;
       }
     }
+    if (info.revelName) {
+      if (info.revelName != item.revelName) {
+        updateDoc.revelName = info.revelName;
+      }
+    }
 
     if (info.ingredients) {
       updateDoc.ingredients = [];
@@ -169,7 +174,7 @@ Meteor.methods({
     HospoHero.sendNotification(options);
   },
 
-  addItemToMenu: function(menuId, itemObject) {
+  addItemToMenu: function (menuId, itemObject) {
     if (!HospoHero.canUser('edit menu', Meteor.userId())) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
@@ -222,15 +227,15 @@ Meteor.methods({
     check(menuItemId, HospoHero.checkers.MongoId);
     check(areaId, HospoHero.checkers.MongoId);
 
-    if(!Areas.findOne(areaId)) {
+    if (!Areas.findOne(areaId)) {
       logger.error("Area not found!");
       throw new Meteor.Error("Area not found!");
     }
 
-    var menuItem = MenuItems.findOne({ _id: menuItemId });
+    var menuItem = MenuItems.findOne({_id: menuItemId});
     menuItem = HospoHero.misc.omitAndExtend(menuItem, ['_id', 'relations'], areaId);
 
-    menuItem.jobItems = HospoHero.misc.itemsMapperWithCallback(menuItem.jobItems, function(item) {
+    menuItem.jobItems = HospoHero.misc.itemsMapperWithCallback(menuItem.jobItems, function (item) {
       return Meteor.call('duplicateJobItem', item._id, areaId, item.quantity);
     });
 
@@ -262,24 +267,24 @@ Meteor.methods({
     }
   },
 
-  'editMenuIngredientsOrJobItems': function(menuItemId, itemProps, type){
+  'editMenuIngredientsOrJobItems': function (menuItemId, itemProps, type) {
     var items = MenuItems.findOne({_id: menuItemId})[type];
 
     _.each(items, function (item, index) {
-      if(item._id == itemProps._id){
+      if (item._id == itemProps._id) {
         items[index].quantity = itemProps.quantity;
       }
     });
 
-    var query ={};
+    var query = {};
     query[type] = items;
     MenuItems.update({_id: menuItemId}, {$set: query});
   }
 });
 
-var duplicateMenuCategory = function(menuCategoryId, areaId) {
-  var category = Categories.findOne({ _id: menuCategoryId });
-  if(category.relations.areaId != areaId) {
+var duplicateMenuCategory = function (menuCategoryId, areaId) {
+  var category = Categories.findOne({_id: menuCategoryId});
+  if (category.relations.areaId != areaId) {
     var existsCategory = Categories.findOne({'relations.areaId': areaId, name: category.name});
     if (existsCategory) {
       menuCategoryId = existsCategory._id;
