@@ -15,3 +15,12 @@ Router.route('/forecast/:year/:week', {
     };
   }
 });
+
+//temporal route
+Router.route("forceForecast", {
+  path: '/forceForecast',
+  template: "forceForecast",
+  data: function () {
+    return {};
+  }
+});
