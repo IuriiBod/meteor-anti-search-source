@@ -1,7 +1,7 @@
-Meteor.publish("ingredients", function(ids, status) {
+Meteor.publish('ingredients', function(ids, areaId, status) {
   if(this.userId) {
     var query = {
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      'relations.areaId': areaId
     };
     var options = {
       sort: {'code': 1}
@@ -21,9 +21,9 @@ Meteor.publish("ingredients", function(ids, status) {
   }
 });
 
-Meteor.publish("ingredientsRelatedJobs", function(id) {
+Meteor.publish('ingredientsRelatedJobs', function(id) {
   if(this.userId) {
-    logger.info("Related jobs published", {"id": id});
+    logger.info('Related jobs published', {_id: id});
     return JobItems.find({ "ingredients._id": id, "relations.areaId": HospoHero.getCurrentAreaId(this.userId) });
   } else {
     this.ready();

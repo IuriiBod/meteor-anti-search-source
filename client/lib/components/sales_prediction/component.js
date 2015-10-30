@@ -18,7 +18,7 @@ component.state.menuItems = function () {
 component.action.subsctibeOnMenuItems = function (tmpl) {
   var self = this;
   tmpl.autorun(function () {
-    tmpl.subscribe('areaMenuItemsInfiniteScroll', self.get('menuItemsQuantityLimit'), function () {
+    tmpl.subscribe('areaMenuItemsInfiniteScroll', self.get('menuItemsQuantityLimit'), HospoHero.getCurrentAreaId(Meteor.userId()), function () {
       var loadedMenuItemsQuantity = MenuItems.find().count();
       if(loadedMenuItemsQuantity == self.lastLoadedMenuItemsQuantity) {
         self.set('areAllItemsLoaded', true);
