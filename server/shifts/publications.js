@@ -1,5 +1,4 @@
 Meteor.publishAuthorized('weeklyRoster', function (weekRange) {
-  logger.info('weekly roster ', weekRange);
   check(weekRange, HospoHero.checkers.WeekRange);
 
   logger.info("Shift date range in publisher", weekRange);

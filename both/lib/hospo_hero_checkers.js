@@ -236,7 +236,10 @@ Namespace('HospoHero.checkers', {
       $lte: Date
     });
     //ensure week range have one week duration
-    return moment(weekRange.$gte).endOf('isoweek').valueOf() === weekRange.$lte.valueOf();
+    var differenceInMs = moment(weekRange.$lte).diff(weekRange.$gte);
+    var weeksCount = moment.duration(differenceInMs).asWeeks();
+
+    return weeksCount <= 1; //should be less or equal one week
   }),
 
   Relations: Match.Where(function (relations) {
