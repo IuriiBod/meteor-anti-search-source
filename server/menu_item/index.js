@@ -262,9 +262,3 @@ Meteor.methods({
     MenuItems.update({_id: menuItemId}, {$set: query});
   }
 });
-
-var copyIngredients = function(ingredientsList) {
-  return _.map(ingredientsList, function(ingredient) {
-
-  });
-};
