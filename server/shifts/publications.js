@@ -63,11 +63,11 @@ Meteor.publishAuthorized("shift", function (id) {
 });
 
 // New publisher for shifts
-Meteor.publishAuthorized('shifts', function (type, userId) {
+Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
   var query = {
     assignedTo: userId,
     type: null,
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    'relations.areaId': areaId
   };
 
   var options = {
@@ -88,6 +88,6 @@ Meteor.publishAuthorized('shifts', function (type, userId) {
     this.ready();
   }
 
-  logger.info("Rostered ", type, " shifts for user ", userId, " have been published");
+  logger.info('Rostered ', type, ' shifts for user ', userId, ' have been published');
   return Shifts.find(query, options);
 });

@@ -83,8 +83,8 @@ Router.route('/user/profile/:_id', {
   waitOn: function () {
     return [
       Meteor.subscribe("profileUser", this.params._id),
-      Meteor.subscribe('shifts', 'future', this.params._id),
-      Meteor.subscribe('shifts', 'opened'),
+      Meteor.subscribe('shifts', 'future', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
+      Meteor.subscribe('shifts', 'opened', null, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
