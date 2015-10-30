@@ -83,14 +83,13 @@ Meteor.methods({
     var id = JobItems.insert(doc);
     logger.info("Job Item inserted", {"jobId": id, 'type': type.name});
 
-    var to = HospoHero.roles.getUserIdsByAction('edit jobs');
     var options = {
       type: 'job',
       title: doc.name + ' job has been created',
       actionType: 'create',
-      to: to
+      ref: id
     };
-    Meteor.call("sendNotification", id, options);
+    HospoHero.sendNotification(options);
     return id;
   },
 
@@ -254,13 +253,12 @@ Meteor.methods({
       logger.info("Job Item updated", {"JobItemId": id});
       var editJobId = JobItems.update({'_id': id}, query);
 
-      var to = HospoHero.roles.getUserIdsByAction('edit jobs');
       var options = {
         type: 'job',
         title: job.name + ' job has been updated',
-        to: to
+        ref: id
       };
-      Meteor.call("sendNotification", id, options);
+      HospoHero.sendNotification(options);
       return editJobId;
     }
   },
@@ -293,14 +291,12 @@ Meteor.methods({
     logger.info("Job Item removed", {"id": id});
     JobItems.remove({'_id': id});
 
-    var to = HospoHero.roles.getUserIdsByAction('edit jobs');
     var options = {
       actionType: 'delete',
       type: 'job',
       title: job.name + ' job has been deleted',
-      to: to
     };
-    Meteor.call("sendNotification", id, options);
+    HospoHero.sendNotification(options);
   },
 
   'addIngredientsToJob': function(id, ingredient, quantity) {

@@ -1,7 +1,6 @@
 Template.editIngredientItem.helpers({
   item: function() {
     var id = Session.get("thisIngredientId");
-    Meteor.subscribe("ingredients", [id]);
     if(id) {
       return Ingredients.findOne(id);
     }
@@ -36,7 +35,7 @@ Template.editIngredientItem.events({
       }
     ];
 
-    var info = HospoHero.otherUtils.getValuesFromEvent(event, fields, true);
+    var info = HospoHero.misc.getValuesFromEvent(event, fields, true);
 
     if(!info.code) {
       return alert("Code must have a value");

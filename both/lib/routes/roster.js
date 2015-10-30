@@ -1,25 +1,30 @@
-//-----------------ROSTER
 Router.route('/roster/weekly/:year/:week', {
   name: "weeklyRoster",
   path: '/roster/weekly/:year/:week',
   template: "weeklyRosterMainView",
   waitOn: function () {
-    var date = HospoHero.dateUtils.getDateByWeekDate({week: this.params.week, year: this.params.year});
-    return [
+    var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
+    var subscriptions = [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weeklyRoster', date),
+      Meteor.subscribe('weeklyRoster', currentWeekDate),
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections'),
-      Meteor.subscribe('areaMenuItems'),
-      Meteor.subscribe('dailySales')
+      Meteor.subscribe('areaMenuItems')
     ];
+
+    if (HospoHero.canUser('view forecast', Meteor.userId())) {
+      subscriptions.push(Meteor.subscribe('dailySales',currentWeekDate));
+    }
+    return subscriptions;
   },
   data: function () {
     if (!HospoHero.canUser('view roster')()) {
       Router.go("/");
     }
-  },
-  fastRender: true
+    return {
+      weekDate: HospoHero.misc.getWeekDateFromRoute(this)
+    }
+  }
 });
 
 Router.route('/roster/daily/:date', {

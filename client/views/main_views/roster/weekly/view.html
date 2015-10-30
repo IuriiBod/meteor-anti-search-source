@@ -2,7 +2,12 @@
   <!-- Page heading -->
   {{> render component="pageHeading" title="Weekly Roster" category='Roster' name="weeklyroster"}}
 
+
+  {{#if canViewForecast}}
+    {{> render component="weeklyFigures" weekDate=weekDate}}
+  {{/if}}
+
   <div class="wrapper wrapper-content animated">
-    {{> render component="weeklyShiftRoster" name="weeklyroster"}}
+    {{> render component="weeklyShiftRoster" type=null weekDate=weekDate}}
   </div>
 </template>

@@ -1,5 +1,5 @@
 Meteor.methods({
-  "switchArchiveLocation": function(location){
+  switchArchiveLocation: function(location){
     if(HospoHero.isOrganizationOwner()){
       var res = !location.archived;
       Locations.update({_id: location._id}, {$set:{archived: res}});
@@ -11,11 +11,10 @@ Meteor.methods({
       throw new Meteor.Error("NOT ORGANIZATION OWNER");
     }
   },
-  "switchArchiveArea": function(area, toSet){
+  switchArchiveArea: function(area, toSet){
     if(HospoHero.isOrganizationOwner()){
       var canArchive = !Locations.findOne({_id: area.locationId}).archived;
       if(typeof(toSet)==="undefined" && canArchive){
-        console.log(canArchive);
         var res = !area.archived;
         Areas.update({_id: area._id}, {$set:{archived: res}});
       }else if(typeof(toSet) === "boolean"){

@@ -9,10 +9,10 @@ var updateLastTaskRunDateForLocation = function (locationId) {
 };
 
 var updateActualSales = function (item) {
-  DailySales.update({ // ImportedActualSales
+  DailySales.update({
     date: TimeRangeQueryBuilder.forDay(item.date),
     menuItemId: item.menuItemId
-  }, item, {upsert: true});
+  }, {$set: item}, {upsert: true});
 };
 
 
@@ -54,7 +54,7 @@ predictionModelRefreshJob = function () {
     if (predictionEnabled) {
       var forecastData = ForecastDates.findOne({locationId: location});
       var needToUpdateModel = !forecastData || !forecastData.lastUploadDate
-          || forecastData.lastUploadDate >= HospoHero.getMillisecondsFromDays(182);
+        || forecastData.lastUploadDate >= HospoHero.dateUtils.getMillisecondsFromDays(182);
 
       var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
 
@@ -83,15 +83,14 @@ predictionModelRefreshJob = function () {
   });
 };
 
-if (!HospoHero.isDevelopmentMode()) {
-  SyncedCron.add({
-    name: 'Prediction model refresh',
-    schedule: function (parser) {
-      return parser.text('at 03:00 am');
-    },
-    job: predictionModelRefreshJob
-  });
-}
 
-
-
+//!!! disable it temporaly to be able control it manually
+//if (!HospoHero.isDevelopmentMode()) {
+//  SyncedCron.add({
+//    name: 'Prediction model refresh',
+//    schedule: function (parser) {
+//      return parser.text('at 03:00 am');
+//    },
+//    job: predictionModelRefreshJob
+//  });
+//}

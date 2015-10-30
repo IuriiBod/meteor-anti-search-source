@@ -1,3 +1,18 @@
+var headingComponentsMap = {
+  menulist: 'menuListHeader',
+  menudetailed: 'menuDetailsHeader',
+  jobslist: 'jobListHeader',
+  jobitemdetailed: 'jobDetailsHeader',
+  ingredientslist: 'stockHeader',
+  teamHoursReport: 'reportsHeader',
+  currentStocksReport: 'reportsHeader',
+  weeklyroster: 'weeklyHeader',
+  dailyroster: 'dailyHeader',
+  weeklyrostertemplate: 'weeklyTemplateHeader',
+  salesPrediction: 'salesPredictionHeader',
+  stocktakeList: 'stocktakeHeader'
+};
+
 var component = FlowComponents.define("pageHeading", function (props) {
   this.title = props.title;
   this.category = props.category;
@@ -30,21 +45,6 @@ component.state.title = function () {
 };
 
 component.state.headingToLoad = function () {
-  var headingsList = {
-    menulist:             'menuListHeader',
-    menudetailed:         'menuDetailsHeader',
-    jobslist:             'jobListHeader',
-    jobitemdetailed:      'jobDetailsHeader',
-    ingredientslist:      'stockHeader',
-    teamHoursReport:      'reportsHeader',
-    currentStocksReport:  'reportsHeader',
-    weeklyroster:         'weeklyHeader',
-    dailyroster:          'dailyHeader',
-    weeklyrostertemplate: 'weeklyTemplateHeader',
-    salesPrediction:      'salesPredictionHeader',
-    stocktakeList:        'stocktakeHeader'
-  };
-
   var type = this.get('type');
-  return headingsList.hasOwnProperty(type) ? headingsList[type] : false;
+  return headingComponentsMap.hasOwnProperty(type) ? headingComponentsMap[type] : false;
 };

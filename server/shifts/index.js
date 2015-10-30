@@ -1,170 +1,166 @@
+/**
+ * Provides intelligent user notification about shift changes
+ */
+var ShiftPropertyChangeLogger = {
+  trackedProperties: {
+    startTime: 'start time',
+    endTime: 'end time',
+    shiftDate: 'shift date',
+    assignedTo: 'assignment'
+  },
+
+  propertiesFormatters: {
+    startTime: HospoHero.dateUtils.timeFormat,
+    endTime: HospoHero.dateUtils.timeFormat,
+    shiftDate: HospoHero.dateUtils.shortDateFormat,
+    assignedTo: HospoHero.username
+  },
+
+  _formatProperty: function (shift, property) {
+    return this.propertiesFormatters[property](shift[property]);
+  },
+
+  _notificationTitle: function (shift) {
+    return 'Update on shift dated ' + HospoHero.dateUtils.shiftDateInterval(shift);
+  },
+
+  _notificationChangeMessage: function (oldShift, newShift, propertyName) {
+    return this.trackedProperties[propertyName] + ' has been updated to ' + this._formatProperty(newShift, propertyName);
+  },
+
+  _sendNotification: function (message, shift, fromUserId) {
+    var text = this._notificationTitle(shift) + ': ' + message;
+
+    var updateDocument = {
+      to: shift.assignedTo,
+      userId: fromUserId,
+      shiftId: shift._id,
+      text: text,
+      locationId: shift.relations.locationId,
+      type: "update"
+    };
+
+    logger.info("Shift update insert");
+    ShiftsUpdates.insert(updateDocument);
+
+    HospoHero.sendNotification({
+      type: 'shift',
+      title: text,
+      actionType: 'update',
+      to: shift.assignedTo,
+      ref: shift._id
+    });
+  },
+
+  _trackUserRemovedFromShift: function (oldShift, newShift, userId) {
+    if (oldShift.assignedTo && oldShift.assignedTo !== newShift.assignedTo) {
+      var message = 'You have been removed from this assigned shift';
+      this._sendNotification(message, oldShift, userId);
+    }
+  },
+
+  trackChanges: function (newShift, userId) {
+    if (newShift.published) {
+      var oldShift = Shifts.findOne({_id: newShift._id});
+
+      var isPropertyChanged = function (propertyName) {
+        return oldShift[propertyName] !== newShift[propertyName];
+      };
+
+      var self = this;
+      var shiftChangesMessages = Object.keys(this.trackedProperties).filter(function (propertyName) {
+        return isPropertyChanged(propertyName);
+      }).map(function (propertyName) {
+        return self._notificationChangeMessage(oldShift, newShift, propertyName);
+      });
+
+      var fullMessage = shiftChangesMessages.join(', ');
+      this._sendNotification(fullMessage, oldShift, userId);
+
+      this._trackUserRemovedFromShift(oldShift, newShift, userId);
+    }
+  }
+};
+
+
+/*
+ * Shift modification methods
+ */
 Meteor.methods({
-  'createShift': function(info) {
-    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
+  createShift: function (newShiftInfo) {
+    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error(403, "User not permitted to create shifts");
     }
 
-    var shiftDate = HospoHero.dateUtils.shiftDate(info.shiftDate);
-    var startTime = new Date(info.startTime);
-    var endTime = new Date(info.endTime);
-    if(startTime && endTime) {
-      if(startTime.getTime() > endTime.getTime()) {
-        logger.error("Start and end times invalid");
-        throw new Meteor.Error("Start and end times invalid");
-      }
-    }
-    var type = null;
-    if(info.hasOwnProperty("type")) {
-      type = info.type;
-    }
+    check(newShiftInfo, HospoHero.checkers.ShiftDocument);
 
-    var order = 0;
-    if(info.hasOwnProperty(order)) {
-      order = parseFloat(info.order);
-    } else {
-      var shifts = Shifts.find({"shiftDate": shiftDate}).fetch();
-      if(shifts) {
-        order = shifts.length;
-      }
-    }
+    var shiftsCount = Shifts.find({"shiftDate": TimeRangeQueryBuilder.forWeek(newShiftInfo.shiftDate)}).count();
 
+    // publish new shift if other shifts of this week are published
+    var isRosterPublished = !!Shifts.findOne({
+      "shiftDate": TimeRangeQueryBuilder.forDay(newShiftInfo.shiftDate),
+      "published": true,
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    });
 
-    var doc = {
-      "startTime": startTime,
-      "endTime": endTime,
-      "shiftDate": shiftDate,
-      "section": info.section,
-      "createdBy": Meteor.userId(), //add logged in users id
-      "assignedTo": null, //update
-      "assignedBy": null, //update
+    var defaultShiftProperties = {
+      "createdBy": Meteor.userId(),
       "jobs": [],
       "status": "draft",
-      "type": type,
-      "published": false,
-      "order": order,
+      "published": isRosterPublished,
+      "order": shiftsCount,
       relations: HospoHero.getRelationsObject()
     };
 
-    if(info.hasOwnProperty("week") && info.week.length > 0) {
-      var alreadyPublished = Shifts.findOne({
-        "shiftDate": {$in: info.week},
-        "published": true,
-        "relations.areaId": HospoHero.getCurrentAreaId()
-      });
-      if(alreadyPublished) {
-        doc.published = true;
-        doc['publishedOn'] = Date.now();
-      }
-    }
-    
-    if(info.assignedTo) {
-      var alreadyAssigned = Shifts.findOne({"assignedTo": info.assignedTo, "shiftDate": shiftDate});
-      if(!alreadyAssigned) {
-        doc.assignedTo = info.assignedTo;
-      } else {
-        logger.error("Duplicating shift");
-        throw new Meteor.Error(404, "Duplicating shift");
-      }
+    var newShiftDocument = _.extend(newShiftInfo, defaultShiftProperties);
+
+    if (isRosterPublished) {
+      newShiftDocument.publishedOn = Date.now();
     }
 
-    var id = Shifts.insert(doc);
-    logger.info("Shift inserted", {"shiftId": id, "date": info.shiftDate, "type": type});
-    return id;
+    var createdShiftId = Shifts.insert(newShiftDocument);
+
+    logger.info("Shift inserted", {
+      "shiftId": createdShiftId,
+      "date": newShiftInfo.shiftDate
+    });
+
+    return createdShiftId;
   },
 
-  'editShift': function(id, info) {
-    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
+
+  editShift: function (updatedShift) {
+    check(updatedShift, HospoHero.checkers.ShiftDocument);
+
+    var userId = Meteor.userId();
+    if (!HospoHero.canUser('edit roster', userId)) {
       logger.error(403, "User not permitted to create shifts");
     }
 
-    HospoHero.checkMongoId(id);
-    check(info, Object);
+    ShiftPropertyChangeLogger.trackChanges(updatedShift, userId);
 
-    var shift = Shifts.findOne({_id: id});
-    if(!shift) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
-    }
-
-    var updateDoc = {};
-    var startTime = info.hasOwnProperty("startTime") ? new Date(info.startTime) : new Date(shift.startTime);
-    var endTime = info.hasOwnProperty("endTime") ? new Date(info.endTime) : new Date(shift.endTime);
-
-    if(startTime.getTime() >= endTime.getTime()) {
-      logger.error("Start or end time is invalid");
-      throw new Meteor.Error(404, "Start and end times invalid");
-    } else {
-      updateDoc.startTime = startTime;
-      updateDoc.endTime = endTime;
-    }
-
-    if(info.hasOwnProperty("section")) {
-      updateDoc.section = info.section;
-    }
-
-    if(info.shiftDate) {
-      if(shift.shiftDate.getTime() != new Date(info.shiftDate).getTime()) {
-        var shiftDate = moment(info.shiftDate).startOf('day').toDate();
-        if(shift.assignedTo) {
-          var existingWorker = Shifts.findOne({"shiftDate": shiftDate, "assignedTo": shift.assignedTo});
-
-          if(existingWorker) {
-            logger.error("The worker already has an assigned shift on this date ", {"id": info._id});
-            throw new Meteor.Error(404, "The worker already has an assigned shift on this date");
-          }
-        } 
-        updateDoc.shiftDate = shiftDate;
-      }
-    }
-
-    if(info.order) {
-      updateDoc.order = parseFloat(info.order);
-    }
-
-    if(info.assignedTo) {
-      var date = null;
-      if(updateDoc.shiftDate) {
-        date = updateDoc.shiftDate;
-      } else {
-        date = shift.shiftDate;
-      }
-      var existInShift = Shifts.findOne({"shiftDate": date, "assignedTo": info.assignedTo});
-      if(existInShift) {
-        logger.error("User already exist in a shift", {"date": date});
-        throw new Meteor.Error(404, "Worker has already been assigned to a shift");
-      }
-      var worker = Meteor.users.findOne(info.assignedTo);
-      if(!worker) {
-        logger.error("Worker not found");
-        throw new Meteor.Error(404, "Worker not found");
-      }
-      updateDoc.assignedTo = info.assignedTo;
-    }
-
-    if(Object.keys(updateDoc).length > 0) {
-      Shifts.update({'_id': id}, {$set: updateDoc});
-      logger.info("Shift details updated", {"shiftId": id});
-    }
+    Shifts.update({'_id': updatedShift._id}, {$set: updatedShift});
+    logger.info("Shift details updated", {"shiftId": updatedShift._id});
   },
 
-  'deleteShift': function(id) {
-    if(!HospoHero.canUser('edit roster', Meteor.userId())) {
-      logger.error(403, "User not permitted to create shifts");
+
+  deleteShift: function (shiftToDeleteId) {
+    check(shiftToDeleteId, HospoHero.checkers.MongoId);
+
+    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+      logger.error(403, "User not permitted to delete shifts");
     }
 
-    HospoHero.checkMongoId(id);
+    var shift = Shifts.findOne(shiftToDeleteId);
 
-    var shift = Shifts.findOne(id);
-    if(!shift) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
+    if (shift) {
+      if (shift.assignedTo || shift.jobs.length > 0) {
+        logger.error("Can't delete a shift with assigned worker or jobs", {"id": shiftToDeleteId});
+        throw new Meteor.Error(404, "Can't delete a shift with assigned worker or jobs");
+      }
+
+      Shifts.remove({_id: shiftToDeleteId});
+      logger.info("Shift deleted", {"shiftId": shiftToDeleteId});
     }
-    if(shift.assignedTo || shift.jobs.length > 0) {
-      logger.error("Can't delete a shift with assigned worker or jobs", {"id": id});
-      throw new Meteor.Error(404, "Can't delete a shift with assigned worker or jobs");
-    }
-    Shifts.remove({'_id': id});
-    logger.info("Shift deleted", {"shiftId": id});
-    return true;
   }
 });

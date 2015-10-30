@@ -6,6 +6,7 @@ var component = FlowComponents.define("currentStockData", function (props) {
 
 component.state.stockIds = function () {
   var data = this.get("data");
+  //console.log('data: ', data);
   var stockIds = [];
 
   if (data) {
@@ -15,10 +16,12 @@ component.state.stockIds = function () {
       }
     });
   }
-  if (stockIds && stockIds.length > 0) {
-    Meteor.subscribe("ingredients", stockIds);
-  }
   return stockIds;
+};
+
+component.state.stockById = function (stockId) {
+  var stock = Ingredients.findOne(stockId);
+  return stock ? stock.description : false;
 };
 
 component.state.countByDate = function (stockId) {

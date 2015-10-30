@@ -1,3 +1,16 @@
+var getWeatherForecast = function (dayIndex, forecastDate, weatherManager) {
+  //todo: temporal. figure out typical weather
+  var defaultWeather = {
+    temp: 20.0,
+    main: 'Clear'
+  };
+
+  var currentWeather = dayIndex < 14 && weatherManager.getWeatherFor(forecastDate);
+
+  return currentWeather || defaultWeather;
+};
+
+
 var predict = function (days, locationId) {
   logger.info('Make prediction', {days: days, locationId: locationId});
 
@@ -7,31 +20,25 @@ var predict = function (days, locationId) {
   var areas = Areas.find({locationId: locationId});
   var roleManagerId = Roles.getRoleByName('Manager')._id;
 
-  Weather.updateWeatherForecastForLocation(locationId);
+  var weatherManager = new WeatherManager(locationId);
+  weatherManager.updateForecast();
 
-  var currentWeather;
-  for (var i = 1; i <= days; i++) {
-    var dayOfYear = dateMoment.dayOfYear();
+  for (var i = 0; i < days; i++) {
 
-    if (i < 15) {
-      currentWeather = WeatherForecast.findOne({locationId: locationId, date: TimeRangeQueryBuilder.forDay(today)});
-    } else {
-      //todo: temporal. figure out typical weather
-      currentWeather = {
-        temp: 20.0,
-        main: 'Clear'
-      }
-    }
+    var currentWeather = getWeatherForecast(i, dateMoment.toDate(), weatherManager);
 
     areas.forEach(function (area) {
-      var query = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});
-      var items = MenuItems.find(query, {}); //get menu items for current area
+      var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});
+      var items = MenuItems.find(menuItemsQuery, {}); //get menu items for current area
 
       var notification = new Notification();
 
       items.forEach(function (item) {
-        var dataVector = [item._id, currentWeather.temp, currentWeather.main, dayOfYear];
+        var dataVector = [item._id, currentWeather.temp, currentWeather.main, dateMoment.dayOfYear()];
         var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
+
+        logger.info('Made prediction', {menuItem: item.name, date: dateMoment.toDate(), predictedQty: quantity});
+
         var predictItem = {
           date: moment(dateMoment).toDate(),
           predictionQuantity: quantity,
@@ -48,33 +55,32 @@ var predict = function (days, locationId) {
         if (i < 14 && currentData) {
           if (currentData) {
             if (currentData.quantity != predictItem.predictionQuantity) {
-              var query = HospoHero.prediction.getMenuItemsForPredictionQuery({_id: predictItem.menuItemId});
-              var itemName = MenuItems.findOne(query).name;
+              var itemName = MenuItems.findOne(HospoHero.prediction.getMenuItemsForPredictionQuery({_id: predictItem.menuItemId})).name;
 
               notification.add(dateMoment.toDate(), itemName, currentData.quantity, predictItem.quantity);
             }
           }
         }
 
-        DailySales.update({ //SalesPrediction
+        DailySales.update({
           date: TimeRangeQueryBuilder.forDay(predictItem.date),
           menuItemId: predictItem.menuItemId
-        }, predictItem, {upsert: true});
+        }, {$set: predictItem}, {upsert: true});
 
       });
 
-      var query = {};
-      query[area._id] = roleManagerId;
-      var receiversIds = Meteor.users.find({roles: query}).map(function (user) {
+      var receiversQuery = {};
+      receiversQuery[area._id] = roleManagerId;
+      var receiversIds = Meteor.users.find({roles: receiversQuery}).map(function (user) {
         return user._id;
       });
       notification.send(receiversIds);
-
     });
 
     dateMoment.add(1, 'day');
   }
 };
+
 
 var updateForecastDate = function (locationId, property, dateValue) {
   var properties = _.isArray(property) ? property : [property];
@@ -100,38 +106,38 @@ salesPredictionUpdateJob = function () {
       var lastUpdates = ForecastDates.findOne({locationId: location._id});
 
       var needFullUpdate = !lastUpdates || !lastUpdates.lastThreeDays
-          || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.getMillisecondsFromDays(42);
+        || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.dateUtils.getMillisecondsFromDays(42);
 
       if (needFullUpdate) {
         predict(84, location._id);
         updateForecastDate(location._id, ['lastSixWeeks', 'lastThreeDays'], todayMoment.toDate());
 
-      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.getMillisecondsFromDays(3)) {
+      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.dateUtils.getMillisecondsFromDays(3)) {
         predict(7, location._id);
         updateForecastDate(location._id, 'lastThreeDays', todayMoment.toDate());
 
-      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.getMillisecondsFromDays(3)) {
+      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.dateUtils.getMillisecondsFromDays(3)) {
         predict(2, location._id);
       }
     }
   });
 };
 
-if (!HospoHero.isDevelopmentMode()) {
-  SyncedCron.add({
-    name: 'Forecast refresh',
-    schedule: function (parser) {
-      return parser.text('at 05:00 am');
-    },
-    job: salesPredictionUpdateJob
-  });
 
-  Meteor.startup(function () {
-    //if we run first time -> make predictions immediately (in other thread)
-
-    Meteor.setTimeout(salesPredictionUpdateJob, 0);
-
-  });
-}
+//!!! disable it temporaly to be able control it manually
+//if (!HospoHero.isDevelopmentMode()) {
+//  SyncedCron.add({
+//    name: 'Forecast refresh',
+//    schedule: function (parser) {
+//      return parser.text('at 05:00 am');
+//    },
+//    job: salesPredictionUpdateJob
+//  });
+//
+//  Meteor.startup(function () {
+//    //if we run first time -> make predictions immediately (in other thread)
+//    Meteor.defer(salesPredictionUpdateJob);
+//  });
+//}
 
 

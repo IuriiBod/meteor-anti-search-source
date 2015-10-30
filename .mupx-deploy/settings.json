@@ -30,5 +30,6 @@
       "clientId": "24418709828-gcgojuj4t4gkfc5kke2u1vr7btmv093g.apps.googleusercontent.com",
       "secret": "ALNUwQE9u31XHqj31fMYXxVb"
     }
-  ]
+  ],
+  "logLevel": "warn"
 }

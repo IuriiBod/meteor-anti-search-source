@@ -20,5 +20,12 @@
         </tbody>
       </table>
     </div>
+    <!-- ADD NEW SUPPLIER-->
+    {{#if canEditStock}}
+      <div class="modal fade" id="addNewSupplierModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        {{> render component = 'newSupplier'}}
+      </div>
+    {{/if}}
+    <!-- /ADD NEW SUPPLIER-->
   </div>
 </template>
