@@ -222,7 +222,7 @@ Meteor.methods({
       throw new Meteor.Error(404, "User not permitted to generate receipts");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     var receipt = OrderReceipts.findOne(id);
     if(!receipt) {

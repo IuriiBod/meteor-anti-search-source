@@ -4,12 +4,12 @@ Router.route('/jobItems', {
   path: '/jobItems',
   template: 'jobItemsListMainView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('sections'),
-      Meteor.subscribe('userSubscriptions'),
-      Meteor.subscribe("jobItems", null, 'active')
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('userSubscriptions', currentAreaId),
+      Meteor.subscribe('jobItems', null, currentAreaId, 'active')
     ];
   },
   data: function() {
@@ -17,8 +17,7 @@ Router.route('/jobItems', {
       Router.go('/');
     }
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItems/:type', {
@@ -26,11 +25,11 @@ Router.route('/jobItems/:type', {
   path: '/jobItems/:type',
   template: 'jobItemsListMainView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('jobTypes', null, 'archived'),
-      Meteor.subscribe('sections'),
-      Meteor.subscribe('userSubscriptions')
+      Meteor.subscribe('jobItems', null, currentAreaId, 'archived'),
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },
   data: function() {
@@ -38,8 +37,7 @@ Router.route('/jobItems/:type', {
       Router.go('/');
     }
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItem/submit', {
@@ -47,12 +45,12 @@ Router.route('/jobItem/submit', {
   path: '/jobItem/submit',
   template: 'submitJobItemMainView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('sections'),
-      Meteor.subscribe("allSuppliers"),
-      Meteor.subscribe("ingredients")
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('allSuppliers', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
   data: function() {
@@ -65,8 +63,7 @@ Router.route('/jobItem/submit', {
     }
     Session.set('thisJobItem', null);
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItem/:_id', {
@@ -74,14 +71,14 @@ Router.route('/jobItem/:_id', {
   path: '/jobItem/:_id',
   template: 'jobItemDetailedMainView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe("comments", this.params._id),
-      Meteor.subscribe("usersList"),
-      Meteor.subscribe('userSubscriptions'),
-      Meteor.subscribe('allCategories'),
+      Meteor.subscribe('comments', this.params._id, currentAreaId),
+      Meteor.subscribe('usersList', currentAreaId),
+      Meteor.subscribe('userSubscriptions', currentAreaId),
+      Meteor.subscribe('allCategories', currentAreaId),
       Meteor.subscribe('jobsRelatedMenus', this.params._id)
     ];
   },
@@ -91,8 +88,7 @@ Router.route('/jobItem/:_id', {
     }
     Session.set('thisJobItem', this.params._id);
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItem/:_id/edit', {
@@ -100,13 +96,13 @@ Router.route('/jobItem/:_id/edit', {
   path: '/jobItem/:_id/edit',
   template: 'jobItemEditView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('jobItem', this.params._id),
-      Meteor.subscribe('sections'),
-      Meteor.subscribe('ingredients'),
-      Meteor.subscribe("allSuppliers")
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('allSuppliers', currentAreaId)
     ];
   },
   data: function() {
@@ -115,6 +111,5 @@ Router.route('/jobItem/:_id/edit', {
     }
     Session.set('thisJobItem', this.params._id);
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });

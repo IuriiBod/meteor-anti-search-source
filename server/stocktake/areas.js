@@ -33,7 +33,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to edit general areas");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
     check(newName, String);
 
     if(!id) {
@@ -60,7 +60,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to delete general areas");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
     if(!id) {
       logger.error("Id should have a value");
       throw new Meteor.Error("Id should have a value");
@@ -92,7 +92,7 @@ Meteor.methods({
       throw new Meteor.Error("Special area should have a name");
     }
 
-    HospoHero.checkMongoId(gareaId);
+    check(gareaId, HospoHero.checkers.MongoId);
     if(!gareaId) {
       logger.error("General area id not found");
       throw new Meteor.Error("General area id not found");
@@ -139,7 +139,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to edit special areas");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
     if(!id) {
       logger.error("Special area should have a id");
       throw new Meteor.Error("Special area should have a id");
@@ -168,8 +168,8 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to assign stock to areas");
     }
 
-    HospoHero.checkMongoId(stockId);
-    HospoHero.checkMongoId(sareaId);
+    check(stockId, HospoHero.checkers.MongoId);
+    check(sareaId, HospoHero.checkers.MongoId);
 
     if(!Ingredients.findOne(stockId)) {
       logger.error('Stock item does not exist', stockId);
@@ -196,8 +196,8 @@ Meteor.methods({
       throw new Meteor.Error(404, "User not permitted to remove stocks from areas");
     }
 
-    HospoHero.checkMongoId(stockId);
-    HospoHero.checkMongoId(sareaId);
+    check(stockId, HospoHero.checkers.MongoId);
+    check(sareaId, HospoHero.checkers.MongoId);
 
     if(!Ingredients.findOne(stockId)) {
       logger.error('Stock item does not exist', stockId);
@@ -231,7 +231,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to delete general areas");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
     if(!id) {
       logger.error("Id should have a value");
       throw new Meteor.Error("Id should have a value");

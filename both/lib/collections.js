@@ -40,7 +40,6 @@ Invitations = new Mongo.Collection("invitations");
 
 //new forecast functionality
 WeatherForecast = new Mongo.Collection("weatherForecast");
-ForecastDates = new Mongo.Collection("forecastDates");  //dates of last prediction updates
 DailySales = new Mongo.Collection("dailySales");
 
 ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
