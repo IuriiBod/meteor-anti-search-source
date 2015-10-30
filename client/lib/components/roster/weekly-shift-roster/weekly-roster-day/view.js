@@ -33,6 +33,7 @@ var createSortableConfig = function () {
 
 
 var SortableHelper = function (ui) {
+  this._draggedToDate = new Date(ui.item.parent().data('current-date'));
   this._draggedShift = _.clone(this._getDataByItem(ui.item)); //clone it just in case
   this._previousShift = this._getDataByItem(ui.item.prev());
   this._nextShift = this._getDataByItem(ui.item.next());
@@ -44,20 +45,6 @@ SortableHelper.prototype._getDataByItem = function (item) {
   return element ? Blaze.getData(element) : null;
 };
 
-
-SortableHelper.prototype._getTargetShiftDate = function () {
-  return this._previousShift && this._previousShift.shiftDate || this._nextShift && this._nextShift.shiftDate;
-};
-
-
-SortableHelper.prototype._isDroppedOnOtherDay = function () {
-  var currentShiftMoment = moment(this._draggedShift.shiftDate);
-  var targetShiftDate = this._getTargetShiftDate();
-
-  return !currentShiftMoment.isSame(targetShiftDate, 'day') ? targetShiftDate : false;
-};
-
-
 SortableHelper.prototype._getOrder = function () {
   var order = 0;
 
@@ -65,7 +52,7 @@ SortableHelper.prototype._getOrder = function () {
     order = this._previousShift.order + 1;
   } else if (!this._previousShift && this._nextShift) {
     order = this._nextShift.order - 1;
-  } else {
+  } else if(this._nextShift && this._previousShift) {
     order = (this._nextShift.order + this._previousShift.order) / 2;
   }
 
@@ -76,16 +63,10 @@ SortableHelper.prototype._getOrder = function () {
 SortableHelper.prototype.getSortedShift = function () {
   if (this._draggedShift) {
     this._draggedShift.order = this._getOrder();
-
-    var droppedDay = this._isDroppedOnOtherDay();
-    if (droppedDay) {
-      this._draggedShift.shiftDate = droppedDay;
-    }
+    this._draggedShift.shiftDate = this._draggedToDate;
 
     check(this._draggedShift, HospoHero.checkers.ShiftDocument);
 
     return this._draggedShift;
   }
 };
-
-
