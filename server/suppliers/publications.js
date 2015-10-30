@@ -1,7 +1,7 @@
-Meteor.publish("allSuppliers", function() {
+Meteor.publish('allSuppliers', function(areaId) {
   if(this.userId) {
-    logger.info("All suppliers have been published");
-    return Suppliers.find({ "relations.areaId": HospoHero.getCurrentAreaId(this.userId) });
+    logger.info('All suppliers have been published');
+    return Suppliers.find({ 'relations.areaId': areaId });
   }
 });
 

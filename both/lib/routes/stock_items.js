@@ -4,12 +4,12 @@ Router.route('/stocklist', {
   path: '/stocklist',
   template: "listOfStocksMasterMainView",
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe('allSuppliers', currentAreaId),
       //Meteor.subscribe("ingredients", null, 'active'),
       //Meteor.subscribe("ingredientsRelatedJobs"),
-      Meteor.subscribe("ingredients")
+      Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
   data: function() {
@@ -25,11 +25,11 @@ Router.route('/stocklist/:type', {
   path: '/stocklist/:type',
   template: "listOfStocksMasterMainView",
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe("allSuppliers"),
-      Meteor.subscribe("ingredientsRelatedJobs"),
-      Meteor.subscribe("ingredients", null, 'archived')
+      Meteor.subscribe('allSuppliers', currentAreaId),
+      Meteor.subscribe('ingredientsRelatedJobs'),
+      Meteor.subscribe('ingredients', null, currentAreaId, 'archived')
     ]
   },
   data: function() {

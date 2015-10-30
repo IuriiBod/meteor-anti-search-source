@@ -6,19 +6,19 @@ Meteor.publish('jobTypes', function() {
 Meteor.publish('sections', function(areaId) {
   if(this.userId) {
     var query = {
-      "relations.areaId": areaId
+      'relations.areaId': areaId
     };
     return Sections.find(query);
   }
 });
 
-Meteor.publish('allCategories', function() {
+Meteor.publish('allCategories', function(areaId) {
   if(this.userId) {
     var query = {
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      'relations.areaId': areaId
     };
 
-    logger.info("Categories published");
+    logger.info('Categories published');
     return Categories.find(query);
   } else {
     this.ready();

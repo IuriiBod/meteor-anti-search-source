@@ -1,10 +1,10 @@
-Meteor.publish('jobs', function(type, ids) {
+Meteor.publish('jobs', function(areaId, type, ids) {
   var query = {
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    'relations.areaId': areaId
   };
 
   if(type == 'unassigned') {
-    query.status = "draft";
+    query.status = 'draft';
     query.onshift = null;
   }
 
