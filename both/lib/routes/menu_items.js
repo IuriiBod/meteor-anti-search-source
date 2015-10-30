@@ -19,8 +19,7 @@ Router.route('/menuItems/:category/:status', {
     Session.set("category", this.params.category);
     Session.set("status", this.params.status.toLowerCase());
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/menuItems/submit', {
@@ -43,8 +42,7 @@ Router.route('/menuItems/submit', {
       Router.go("/");
     }
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/menuItems/:type', {
@@ -67,8 +65,7 @@ Router.route('/menuItems/:type', {
     Session.set("category", "all");
     Session.set("status", "all");
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/menuItem/:_id', {
@@ -94,6 +91,5 @@ Router.route('/menuItem/:_id', {
     //todo: get rid of sessions later
     Session.set("thisMenuItem", this.params._id);
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });

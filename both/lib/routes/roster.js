@@ -9,7 +9,7 @@ Router.route('/roster/weekly/:year/:week', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('weeklyRoster', weekRange),
       Meteor.subscribe('workers'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('areaMenuItems')
     ];
 
@@ -39,7 +39,7 @@ Router.route('/roster/daily/:date', {
       Meteor.subscribe('workers'),
       Meteor.subscribe('jobs', 'unassigned'),
       Meteor.subscribe('jobItems'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('jobTypes')
     ];
   },
@@ -47,8 +47,7 @@ Router.route('/roster/daily/:date', {
     if (!HospoHero.canUser('view roster')()) {
       Router.go("/");
     }
-  },
-  fastRender: true
+  }
 });
 
 
@@ -61,13 +60,12 @@ Router.route('/roster/template/weekly', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('weeklyRosterTemplate'),
       Meteor.subscribe('workers'),
-      Meteor.subscribe('sections')
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
     ];
   },
   data: function () {
     if (!HospoHero.canUser('view roster')()) {
       Router.go('/');
     }
-  },
-  fastRender: true
+  }
 });

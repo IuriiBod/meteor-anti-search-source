@@ -55,8 +55,8 @@ Meteor.methods({
       logger.error('No user has logged in');
       throw new Meteor.Error(403, "User not permitted to update post");
     }
-    HospoHero.checkMongoId(id);
-    HospoHero.checkMongoId(userId);
+    check(id, HospoHero.checkers.MongoId);
+    check(userId, HospoHero.checkers.MongoId);
 
     var newsFeed = NewsFeeds.findOne(id);
     if(!newsFeed) {
