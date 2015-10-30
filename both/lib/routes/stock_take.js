@@ -17,8 +17,9 @@ Router.route('/stocktake/:_id', {
   path: '/stocktake/:_id',
   template: "stocktakeCountingMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('allAreas', HospoHero.getCurrentAreaId(Meteor.userId())),
+      Meteor.subscribe('allAreas', currentAreaId),
       Meteor.subscribe("stocktakes", this.params._id),
       Meteor.subscribe('ordersPlaced', this.params._id)
     ];
@@ -41,11 +42,12 @@ Router.route('/stocktake/order/receive/:_id', {
   path: '/stocktake/order/receive/:_id',
   template: "orderReceiveMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('receiptOrders', this.params._id),
       Meteor.subscribe("orderReceipts", [this.params._id]),
-      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId()))
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('allSuppliers', currentAreaId)
     ];
   },
   data: function () {
@@ -63,13 +65,14 @@ Router.route('/stocktake/orders/:_id', {
   path: '/stocktake/orders/:_id',
   template: "stocktakeOrderingMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('ordersPlaced', this.params._id),
-      Meteor.subscribe('orderReceiptsByVersion', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('comments', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId()))
+      Meteor.subscribe('orderReceiptsByVersion', this.params._id, currentAreaId),
+      Meteor.subscribe('comments', this.params._id, currentAreaId),
+      Meteor.subscribe('usersList', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('allSuppliers', currentAreaId)
     ];
   },
   data: function () {

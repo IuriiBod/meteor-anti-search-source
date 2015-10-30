@@ -57,13 +57,14 @@ Router.route('/admin', {
   path: '/admin',
   template: "adminMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('allAreas', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('allAreas', currentAreaId),
+      Meteor.subscribe('usersList', currentAreaId),
       Meteor.subscribe('locationsOfOrganization'),
       Meteor.subscribe('areasOfOrganization'),
-      Meteor.subscribe('menuList', HospoHero.getCurrentAreaId(Meteor.userId()))
+      Meteor.subscribe('menuList', currentAreaId)
     ];
   },
   data: function () {
@@ -81,11 +82,12 @@ Router.route('/user/profile/:_id', {
   path: "/user/profile/:_id",
   template: "profileMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe("profileUser", this.params._id),
-      Meteor.subscribe('shifts', 'future', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('shifts', 'opened', null, HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId()))
+      Meteor.subscribe('shifts', 'future', this.params._id, currentAreaId),
+      Meteor.subscribe('shifts', 'opened', null, currentAreaId),
+      Meteor.subscribe('sections', currentAreaId)
     ];
   },
   data: function () {

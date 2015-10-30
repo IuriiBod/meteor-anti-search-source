@@ -3,9 +3,10 @@ Router.route('/forecast/:year/:week', {
   template: "salesPredictionPage",
   waitOn: function () {
     var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      this.subscribe('weatherForecast', currentWeekDate, HospoHero.getCurrentAreaId(Meteor.userId())),
-      this.subscribe('dailySales', currentWeekDate, HospoHero.getCurrentAreaId(Meteor.userId()))
+      this.subscribe('weatherForecast', currentWeekDate, currentAreaId),
+      this.subscribe('dailySales', currentWeekDate, currentAreaId)
     ];
   },
   data: function () {

@@ -4,11 +4,12 @@ Router.route('/roster/weekly/:year/:week', {
   template: "weeklyRosterMainView",
   waitOn: function () {
     var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     var subscriptions = [
       Meteor.subscribe('weeklyRoster', currentWeekDate),
-      Meteor.subscribe('workers', HospoHero.getCurrentAreaId(Meteor.userId)),
-      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('areaMenuItems', HospoHero.getCurrentAreaId(Meteor.userId()))
+      Meteor.subscribe('workers', currentAreaId),
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('areaMenuItems', currentAreaId)
     ];
 
     if (HospoHero.canUser('view forecast', Meteor.userId())) {
@@ -31,12 +32,13 @@ Router.route('/roster/daily/:date', {
   path: '/roster/daily/:date',
   template: "dailyRosterMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('daily', this.params.date, HospoHero.getCurrentAreaId(Meteor.userId()), null),
-      Meteor.subscribe('workers', HospoHero.getCurrentAreaId(Meteor.userId)),
-      Meteor.subscribe(HospoHero.getCurrentAreaId(Meteor.userId()), 'jobs', 'unassigned'),
-      Meteor.subscribe('jobItems', null, HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
+      Meteor.subscribe('daily', this.params.date, currentAreaId, null),
+      Meteor.subscribe('workers', currentAreaId),
+      Meteor.subscribe(currentAreaId, 'jobs', 'unassigned'),
+      Meteor.subscribe('jobItems', null, currentAreaId),
+      Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('jobTypes')
     ];
   },
@@ -54,10 +56,11 @@ Router.route('/roster/template/weekly', {
   path: '/roster/template/weekly',
   template: "weeklyRosterTemplateMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('weeklyRosterTemplate', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('workers', HospoHero.getCurrentAreaId(Meteor.userId)),
-      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId()))
+      Meteor.subscribe('weeklyRosterTemplate', currentAreaId),
+      Meteor.subscribe('workers', currentAreaId),
+      Meteor.subscribe('sections', currentAreaId)
     ];
   },
   data: function () {

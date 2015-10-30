@@ -4,9 +4,7 @@ Router.route('/suppliers', {
   path: '/suppliers',
   template: "suppliersListMainView",
   waitOn: function() {
-    return [
-      Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
-    ];
+    return Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId()));
   },
   data: function() {
     if(!Meteor.userId()) {
@@ -22,10 +20,11 @@ Router.route('/supplier/profile/:_id', {
   path: "/supplier/profile/:_id",
   template: "supplierProfileMainView",
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe("supplierProfile", this.params._id),
-      Meteor.subscribe('comments', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId()))
+      Meteor.subscribe('comments', this.params._id, currentAreaId),
+      Meteor.subscribe('usersList', currentAreaId)
     ];
   },
   data: function() {
