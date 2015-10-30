@@ -1,14 +1,12 @@
-Meteor.publishAuthorized('weeklyRoster', function (weekDate) {
-  check(weekDate, HospoHero.checkers.WeekDate);
+Meteor.publishAuthorized('weeklyRoster', function (weekRange) {
+  check(weekRange, HospoHero.checkers.WeekRange);
 
-  var date = HospoHero.dateUtils.getDateByWeekDate(weekDate);
-
-  logger.info("Weekly shifts detailed publication");
+  logger.info("Shift date range in publisher", weekRange);
 
   //get shifts
   return Shifts.find({
     "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
-    shiftDate: TimeRangeQueryBuilder.forWeek(date, false)
+    shiftDate: weekRange
   });
 });
 
