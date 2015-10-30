@@ -25,7 +25,8 @@ Meteor.methods({
     var typeCollectionRelations = {
       menu: MenuItems,
       job: JobItems,
-      workerJob: Jobs
+      workerJob: Jobs,
+      supplier: Suppliers
     };
     var reference = typeCollectionRelations[refType].findOne({ _id: ref });
 

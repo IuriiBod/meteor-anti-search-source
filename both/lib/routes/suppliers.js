@@ -5,7 +5,7 @@ Router.route('/suppliers', {
   template: "suppliersListMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
     ];
   },
   data: function() {

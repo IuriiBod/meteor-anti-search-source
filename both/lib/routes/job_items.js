@@ -48,7 +48,7 @@ Router.route('/jobItem/submit', {
     return [
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("ingredients")
     ];
   },
@@ -101,7 +101,7 @@ Router.route('/jobItem/:_id/edit', {
       Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('ingredients'),
-      Meteor.subscribe("allSuppliers")
+      Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
   data: function() {

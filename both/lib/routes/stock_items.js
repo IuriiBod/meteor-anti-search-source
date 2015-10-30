@@ -5,7 +5,7 @@ Router.route('/stocklist', {
   template: "listOfStocksMasterMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
       //Meteor.subscribe("ingredients", null, 'active'),
       //Meteor.subscribe("ingredientsRelatedJobs"),
       Meteor.subscribe("ingredients")
@@ -26,7 +26,7 @@ Router.route('/stocklist/:type', {
   template: "listOfStocksMasterMainView",
   waitOn: function() {
     return [
-      Meteor.subscribe("allSuppliers"),
+      Meteor.subscribe('allSuppliers', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("ingredientsRelatedJobs"),
       Meteor.subscribe("ingredients", null, 'archived')
     ]
