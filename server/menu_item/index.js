@@ -213,23 +213,37 @@ Meteor.methods({
     return MenuItems.find().count();
   },
 
-  duplicateMenuItem: function (menuId, areaId) {
+  duplicateMenuItem: function (menuItemId, areaId) {
     if (!HospoHero.canUser('edit menu', Meteor.userId())) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    check(menuId, HospoHero.checkers.MongoId);
+    check(menuItemId, HospoHero.checkers.MongoId);
     check(areaId, HospoHero.checkers.MongoId);
 
-    var area = Areas.findOne(areaId);
-    if(!area) {
+    if(!Areas.findOne(areaId)) {
       logger.error("Area not found!");
       throw new Meteor.Error("Area not found!");
     }
 
-    var newId = HospoHero.duplicateMenuItem(menuId, areaId);
-    logger.info("Duplicate Menu items added ", {"original": menuId, "duplicate": newId});
+    var menuItem = MenuItems.findOne({ _id: menuItemId });
+    menuItem = HospoHero.misc.omitAndExtend(menuItem, ['_id', 'relations'], areaId);
+
+    menuItem.jobItems = HospoHero.misc.itemsMapperWithCallback(menuItem.jobItems, function(item) {
+      return Meteor.call('duplicateJobItem', item._id, areaId, item.quantity);
+    });
+
+    menuItem.ingredients = HospoHero.misc.itemsMapperWithCallback(menuItem.ingredients, function (item) {
+      return Meteor.call('duplicateIngredient', item._id, areaId, item.quantity);
+    });
+
+    menuItem.name = HospoHero.misc.copyingItemName(menuItem.name, MenuItems, areaId);
+    menuItem.category = duplicateMenuCategory(menuItem.category, areaId);
+
+    var newId = MenuItems.insert(menuItem);
+
+    logger.info("Duplicate Menu items added ", {"original": menuItemId, "duplicate": newId});
   },
 
   'archiveMenuItem': function (id) {
@@ -262,3 +276,17 @@ Meteor.methods({
     MenuItems.update({_id: menuItemId}, {$set: query});
   }
 });
+
+var duplicateMenuCategory = function(menuCategoryId, areaId) {
+  var category = Categories.findOne({ _id: menuCategoryId });
+  if(category.relations.areaId != areaId) {
+    var existsCategory = Categories.findOne({'relations.areaId': areaId, name: category.name});
+    if (existsCategory) {
+      menuCategoryId = existsCategory._id;
+    } else {
+      category = HospoHero.misc.omitAndExtend(category, ['_id', 'relations'], areaId);
+      menuCategoryId = Categories.insert(category);
+    }
+  }
+  return menuCategoryId;
+};
