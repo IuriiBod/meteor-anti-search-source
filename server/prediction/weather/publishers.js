@@ -1,4 +1,4 @@
-Meteor.publish('weatherForecast', function (weekDate) {
+Meteor.publish('weatherForecast', function (weekDate, areaId) {
   check(weekDate, HospoHero.checkers.WeekDate);
 
   logger.info('Weather subscribe ', weekDate);
@@ -8,7 +8,7 @@ Meteor.publish('weatherForecast', function (weekDate) {
     this.error(new Meteor.Error(403, 'Access Denied'));
   }
 
-  var currentArea = HospoHero.getCurrentArea(this.userId);
+  var currentArea = Areas.findOne({ _id: areaId });
   var locationId = currentArea.locationId;
 
   new WeatherManager(locationId).updateForecast();

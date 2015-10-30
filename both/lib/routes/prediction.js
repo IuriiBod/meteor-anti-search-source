@@ -4,8 +4,8 @@ Router.route('/forecast/:year/:week', {
   waitOn: function () {
     var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
     return [
-      this.subscribe('weatherForecast', currentWeekDate),
-      this.subscribe('dailySales', currentWeekDate)
+      this.subscribe('weatherForecast', currentWeekDate, HospoHero.getCurrentAreaId(Meteor.userId())),
+      this.subscribe('dailySales', currentWeekDate, HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },
   data: function () {
@@ -15,5 +15,5 @@ Router.route('/forecast/:year/:week', {
         week: this.params.week
       }
     };
-  },
+  }
 });

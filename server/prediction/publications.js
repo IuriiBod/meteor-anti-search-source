@@ -1,4 +1,4 @@
-Meteor.publish('dailySales', function (weekDate) {
+Meteor.publish('dailySales', function (weekDate, areaId) {
   check(weekDate, HospoHero.checkers.WeekDate);
 
   var haveAccess = HospoHero.canUser('view forecast', this.userId);
@@ -7,8 +7,6 @@ Meteor.publish('dailySales', function (weekDate) {
   }
 
   var targetDate = HospoHero.dateUtils.getDateByWeekDate(weekDate);
-
-  var areaId = HospoHero.getCurrentAreaId(this.userId);
 
   return DailySales.find({'relations.areaId': areaId, date: TimeRangeQueryBuilder.forWeek(targetDate)});
 });
