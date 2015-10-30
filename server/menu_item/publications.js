@@ -77,7 +77,6 @@ Meteor.publish("menuItems", function (ids) {
 });
 
 
-Meteor.publishAuthorized("areaMenuItems", function () {
-  var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
-  return MenuItems.find({'relations.areaId': currentAreaId});
+Meteor.publishAuthorized('areaMenuItems', function (areaId) {
+  return MenuItems.find({'relations.areaId': areaId});
 });

@@ -8,7 +8,7 @@ Router.route('/roster/weekly/:year/:week', {
       Meteor.subscribe('weeklyRoster', currentWeekDate),
       Meteor.subscribe('workers'),
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('areaMenuItems')
+      Meteor.subscribe('areaMenuItems', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
 
     if (HospoHero.canUser('view forecast', Meteor.userId())) {
@@ -17,7 +17,7 @@ Router.route('/roster/weekly/:year/:week', {
     return subscriptions;
   },
   data: function () {
-    if (!HospoHero.canUser('view roster')()) {
+    if (!HospoHero.canUser('view roster', Meteor.userId())) {
       Router.go("/");
     }
     return {
@@ -41,7 +41,7 @@ Router.route('/roster/daily/:date', {
     ];
   },
   data: function () {
-    if (!HospoHero.canUser('view roster')()) {
+    if (!HospoHero.canUser('view roster', Meteor.userId())) {
       Router.go("/");
     }
   },
