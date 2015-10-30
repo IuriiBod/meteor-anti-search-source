@@ -66,7 +66,7 @@ Router.route('/stocktake/orders/:_id', {
     return [
       Meteor.subscribe("ordersPlaced", this.params._id),
       Meteor.subscribe("orderReceiptsByVersion", this.params._id),
-      Meteor.subscribe("comments", this.params._id),
+      Meteor.subscribe('comments', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("ingredients"),
       Meteor.subscribe("allSuppliers")

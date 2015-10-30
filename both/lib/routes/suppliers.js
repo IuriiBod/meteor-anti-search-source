@@ -24,7 +24,7 @@ Router.route('/supplier/profile/:_id', {
   waitOn: function() {
     return [
       Meteor.subscribe("supplierProfile", this.params._id),
-      Meteor.subscribe("comments", this.params._id),
+      Meteor.subscribe('comments', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId()))
     ];
   },

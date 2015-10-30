@@ -75,7 +75,7 @@ Router.route('/menuItem/:_id', {
   waitOn: function() {
     return [
       Meteor.subscribe("menuItem", this.params._id),
-      Meteor.subscribe("comments", this.params._id),
+      Meteor.subscribe('comments', this.params._id, HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("allCategories"),
       Meteor.subscribe("allStatuses"),
       Meteor.subscribe('userSubscriptions'),
