@@ -12,7 +12,7 @@ Migrations.add({
           _id: location._id
         }, {
           $set: {
-            shiftUpdateHour: '7'
+            shiftUpdateHour: 7
           }
         });
       });

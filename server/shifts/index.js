@@ -21,7 +21,7 @@ var ShiftPropertyChangeLogger = {
   },
 
   _notificationTitle: function (shift) {
-    return 'Update on shift dated ' + HospoHero.dateUtils.intervalDateFormat(shift.startTime, shift.endTime);
+    return 'Update on shift dated ' + HospoHero.dateUtils.shiftDateInterval(shift);
   },
 
   _notificationChangeMessage: function (oldShift, newShift, propertyName) {
