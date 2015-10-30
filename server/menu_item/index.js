@@ -274,10 +274,6 @@ Meteor.methods({
     var query ={};
     query[type] = items;
     MenuItems.update({_id: menuItemId}, {$set: query});
-  },
-
-  'updateMenuItemRevelName': function (menuItemId, newRevelName) {
-    Meteor.call('editMenuItem', menuItemId, {name: newRevelName});
   }
 });
 
