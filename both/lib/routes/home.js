@@ -9,7 +9,7 @@ Router.route('/', {
         Meteor.subscribe('shifts', 'future', Meteor.userId()),
         Meteor.subscribe('shifts', 'past', Meteor.userId()),
         Meteor.subscribe('shifts', 'opened'),
-        Meteor.subscribe('sections'),
+        Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
         Meteor.subscribe('usersList'),
         Meteor.subscribe('comments', Meteor.userId()),
         Meteor.subscribe('newsfeeds'),
