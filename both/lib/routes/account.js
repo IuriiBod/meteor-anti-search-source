@@ -60,7 +60,7 @@ Router.route('/admin', {
     return [
       Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("allAreas"),
-      Meteor.subscribe('usersList'),
+      Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('locationsOfOrganization'),
       Meteor.subscribe("areasOfOrganization"),
       Meteor.subscribe('menuList')

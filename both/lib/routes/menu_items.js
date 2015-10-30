@@ -79,7 +79,7 @@ Router.route('/menuItem/:_id', {
       Meteor.subscribe("allCategories"),
       Meteor.subscribe("allStatuses"),
       Meteor.subscribe('userSubscriptions'),
-      Meteor.subscribe("usersList"),
+      Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('jobTypes')
     ];
   },

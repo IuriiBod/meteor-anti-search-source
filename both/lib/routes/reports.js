@@ -24,7 +24,7 @@ Router.route('/reports/:year/:week', {
   template: "teamHoursMainView",
   waitOn: function () {
     return [
-      Meteor.subscribe("usersList"),
+      Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('weeklyRoster', HospoHero.misc.getWeekDateFromRoute(this))
     ];
   },

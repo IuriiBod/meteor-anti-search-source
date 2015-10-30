@@ -10,7 +10,7 @@ Router.route('/', {
         Meteor.subscribe('shifts', 'past', Meteor.userId(), HospoHero.getCurrentAreaId(Meteor.userId())),
         Meteor.subscribe('shifts', 'opened', null, HospoHero.getCurrentAreaId(Meteor.userId())),
         Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
-        Meteor.subscribe('usersList'),
+        Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
         Meteor.subscribe('comments', Meteor.userId()),
         Meteor.subscribe('newsfeeds'),
         Meteor.subscribe('daily', moment().format('YYYY-MM-DD'), Meteor.userId())
