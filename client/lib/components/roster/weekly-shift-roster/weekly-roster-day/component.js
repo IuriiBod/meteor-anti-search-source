@@ -29,5 +29,6 @@ component.action.addShift = function () {
     shiftDate: HospoHero.dateUtils.shiftDate(this.get('currentDate'), this.get('hasTemplateType')),
     type: this.type
   };
+
   Meteor.call("createShift", newShiftInfo, HospoHero.handleMethodResult());
 };

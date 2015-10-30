@@ -21,9 +21,10 @@ Router.route('/reports/:year/:week', {
   path: "/reports/:year/:week",
   template: "teamHoursMainView",
   waitOn: function () {
+    var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
     return [
       Meteor.subscribe('usersList', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('weeklyRoster', HospoHero.misc.getWeekDateFromRoute(this))
+      Meteor.subscribe('weeklyRoster', weekRange)
     ];
   },
   data: function () {
