@@ -13,8 +13,7 @@ Router.route('/stocktake', {
       Router.go("/");
     }
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/stocktake/:_id', {
@@ -37,8 +36,7 @@ Router.route('/stocktake/:_id', {
     Session.set("activeGArea", null);
     Session.set("thisVersion", this.params._id);
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 
@@ -61,8 +59,7 @@ Router.route('/stocktake/order/receive/:_id', {
     }
     Session.set("editStockTake", false);
     Session.set("thisReceipt", this.params._id);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/stocktake/orders/:_id', {
@@ -86,8 +83,7 @@ Router.route('/stocktake/orders/:_id', {
     }
     Session.set("thisVersion", this.params._id);
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 

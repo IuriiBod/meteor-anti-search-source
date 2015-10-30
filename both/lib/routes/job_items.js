@@ -7,7 +7,7 @@ Router.route('/jobItems', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('userSubscriptions'),
       Meteor.subscribe("jobItems", null, 'active')
     ];
@@ -17,8 +17,7 @@ Router.route('/jobItems', {
       Router.go('/');
     }
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItems/:type', {
@@ -29,7 +28,7 @@ Router.route('/jobItems/:type', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes', null, 'archived'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('userSubscriptions')
     ];
   },
@@ -38,8 +37,7 @@ Router.route('/jobItems/:type', {
       Router.go('/');
     }
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItem/submit', {
@@ -50,7 +48,7 @@ Router.route('/jobItem/submit', {
     return [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe("allSuppliers"),
       Meteor.subscribe("ingredients")
     ];
@@ -65,8 +63,7 @@ Router.route('/jobItem/submit', {
     }
     Session.set('thisJobItem', null);
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItem/:_id', {
@@ -91,8 +88,7 @@ Router.route('/jobItem/:_id', {
     }
     Session.set('thisJobItem', this.params._id);
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/jobItem/:_id/edit', {
@@ -104,7 +100,7 @@ Router.route('/jobItem/:_id/edit', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('jobItem', this.params._id),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('ingredients'),
       Meteor.subscribe("allSuppliers")
     ];
@@ -115,6 +111,5 @@ Router.route('/jobItem/:_id/edit', {
     }
     Session.set('thisJobItem', this.params._id);
     Session.set('editStockTake', false);
-  },
-  fastRender: true
+  }
 });

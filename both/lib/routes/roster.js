@@ -3,17 +3,18 @@ Router.route('/roster/weekly/:year/:week', {
   path: '/roster/weekly/:year/:week',
   template: "weeklyRosterMainView",
   waitOn: function () {
-    var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
+    var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
+
     var subscriptions = [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weeklyRoster', currentWeekDate),
+      Meteor.subscribe('weeklyRoster', weekRange),
       Meteor.subscribe('workers'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('areaMenuItems')
     ];
 
     if (HospoHero.canUser('view forecast', Meteor.userId())) {
-      subscriptions.push(Meteor.subscribe('dailySales',currentWeekDate));
+      subscriptions.push(Meteor.subscribe('dailySales',weekRange));
     }
     return subscriptions;
   },
@@ -38,7 +39,7 @@ Router.route('/roster/daily/:date', {
       Meteor.subscribe('workers'),
       Meteor.subscribe('jobs', 'unassigned'),
       Meteor.subscribe('jobItems'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
       Meteor.subscribe('jobTypes')
     ];
   },
@@ -46,8 +47,7 @@ Router.route('/roster/daily/:date', {
     if (!HospoHero.canUser('view roster')()) {
       Router.go("/");
     }
-  },
-  fastRender: true
+  }
 });
 
 
@@ -60,13 +60,12 @@ Router.route('/roster/template/weekly', {
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('weeklyRosterTemplate'),
       Meteor.subscribe('workers'),
-      Meteor.subscribe('sections')
+      Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId())),
     ];
   },
   data: function () {
     if (!HospoHero.canUser('view roster')()) {
       Router.go('/');
     }
-  },
-  fastRender: true
+  }
 });

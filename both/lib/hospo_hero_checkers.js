@@ -62,7 +62,6 @@ var PosSecret = Match.Where(function (key) {
   return /[0-9a-zA-Z]{64}/.test(key);
 });
 
-
 //if (Meteor.isClient) {
 //  //mock object for logger on client side
 //  var logger = {
@@ -231,16 +230,13 @@ Namespace('HospoHero.checkers', {
 
   OptionalNullableMongoId: Match.Optional(NullableMongoId),
 
-  WeekDate: Match.Where(function (weekDate) {
-    try {
-      check(weekDate, {
-        week: Number,
-        year: Number
-      });
-    } catch (err) {
-      checkError('Incorrect week date');
-    }
-    return true;
+  WeekRange: Match.Where(function (weekRange) {
+    check(weekRange, {
+      $gte: Date,
+      $lte: Date
+    });
+    //ensure week range have one week duration
+    return moment(weekRange.$gte).endOf('isoweek').valueOf() === weekRange.$lte.valueOf();
   }),
 
   Relations: Match.Where(function (relations) {

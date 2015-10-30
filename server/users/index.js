@@ -128,7 +128,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to resign workers");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
     if(!Meteor.users.findOne(id)) {
       logger.error("User not found ", id);
       throw new Meteor.Error("User not found ", id);
@@ -194,12 +194,12 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to change roles");
     }
 
-    HospoHero.checkMongoId(userId);
+    check(userId, HospoHero.checkers.MongoId);
     if(!Meteor.users.findOne(userId)) {
       throw new Meteor.Error("User not found ", userId);
     }
 
-    HospoHero.checkMongoId(newRoleId);
+    check(newRoleId, HospoHero.checkers.MongoId);
     if(!Meteor.roles.findOne(newRoleId)) {
       throw new Meteor.Error("Role not found", newRoleId);
     }
