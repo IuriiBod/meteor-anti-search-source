@@ -3,12 +3,16 @@ Meteor.publishAuthorized('weeklyRoster', function (weekDate) {
 
   var date = HospoHero.dateUtils.getDateByWeekDate(weekDate);
 
-  logger.info("Weekly shifts detailed publication");
+  logger.info("Weekly shifts detailed publication", {weekDate: weekDate, date: date});
+
+  var shiftDateRange = TimeRangeQueryBuilder.forWeek(date, false);
+
+  logger.info("Shift date range in publisher", shiftDateRange);
 
   //get shifts
   return Shifts.find({
     "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
-    shiftDate: TimeRangeQueryBuilder.forWeek(date, false)
+    shiftDate: shiftDateRange
   });
 });
 
