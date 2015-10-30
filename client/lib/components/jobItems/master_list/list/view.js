@@ -60,6 +60,9 @@ Template.jobItemsList.events({
 });
 
 Template.jobItemsList.onRendered(function() {
+  var prepType = JobTypes.findOne({ name: 'Prep' });
+  Session.set('type', prepType._id);
+
   var tpl = this;
   Meteor.defer(function() {
     $(window).scroll(function(e){
