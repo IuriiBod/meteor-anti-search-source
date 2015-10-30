@@ -62,13 +62,13 @@ var PosSecret = Match.Where(function (key) {
   return /[0-9a-zA-Z]{64}/.test(key);
 });
 
-//if (Meteor.isClient) {
-//  //mock object for logger on client side
-//  var logger = {
-//    error: function () {
-//    }
-//  }
-//}
+
+logger = Meteor.isServer ? logger : {
+  error: function () {
+    console.log('ERROR: ', arguments);
+  }
+};
+
 
 var InactivityTimeout = Match.Where(function (timeout) {
   check(timeout, Number);
@@ -236,7 +236,10 @@ Namespace('HospoHero.checkers', {
       $lte: Date
     });
     //ensure week range have one week duration
-    return moment(weekRange.$gte).endOf('isoweek').valueOf() === weekRange.$lte.valueOf();
+    var differenceInMs = moment(weekRange.$lte).diff(weekRange.$gte);
+    var weeksCount = moment.duration(differenceInMs).asWeeks();
+
+    return weeksCount <= 1.5; //should be less or equal 1.5 of week to prevent large ranges
   }),
 
   Relations: Match.Where(function (relations) {
