@@ -1,5 +1,5 @@
 Meteor.publish('weatherForecast', function (weekRange) {
-  //check(weekDate, HospoHero.checkers.WeekDate);
+  check(weekDate, HospoHero.checkers.WeekRange);
 
   logger.info('Weather subscribe ', weekRange);
 

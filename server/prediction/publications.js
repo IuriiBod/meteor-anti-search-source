@@ -1,5 +1,5 @@
 Meteor.publish('dailySales', function (weekRange) {
-  //check(weekDate, HospoHero.checkers.WeekDate);
+  check(weekDate, HospoHero.checkers.WeekRange);
 
   var haveAccess = HospoHero.canUser('view forecast', this.userId);
   if (!haveAccess) {
