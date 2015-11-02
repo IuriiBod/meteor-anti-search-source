@@ -62,7 +62,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   shiftDate: function (date, isTemplate) {
-    date = date ? date : new Date();
+    date = date ? date : moment().startOf('d');
 
     var dateMoment;
     if (isTemplate) {
@@ -87,6 +87,16 @@ Namespace('HospoHero.dateUtils', {
       weekStart.add(1, 'day');
     }
     return weekDays;
+  },
+
+  getWeekStartEnd: function (week, year) {
+    if (!year) {
+      year = moment().year()
+    }
+    return {
+      monday: moment().year(year).week(week).startOf("isoWeek").toDate(),
+      sunday: moment().year(year).week(week).endOf("isoWeek").toDate()
+    }
   },
 
   weekDateName: function (date) {

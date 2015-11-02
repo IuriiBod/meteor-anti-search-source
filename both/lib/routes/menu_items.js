@@ -38,7 +38,7 @@ Router.route('/menuItems/submit', {
     ];
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit menu')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit menus')()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);

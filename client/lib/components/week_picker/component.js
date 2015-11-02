@@ -33,7 +33,7 @@ component.state.currentWeekStr = function () {
 
   //todo: it should be refactored
   //todo: (use "moment" instead of huge amount of code below with external dependencies)
-  var weekStartEnd = getWeekStartEnd(weekDate.week, weekDate.year);
+  var weekStartEnd = HospoHero.dateUtils.getWeekStartEnd(weekDate.week, weekDate.year);
   var firstDay = weekStartEnd.monday;
   var lastDay = weekStartEnd.sunday;
 

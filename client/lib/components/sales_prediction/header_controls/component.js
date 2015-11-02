@@ -4,6 +4,7 @@ var component = FlowComponents.define('salesPredictionHeader', function () {
 
 component.state.onDateChanged = function () {
   return function (weekDate) {
+    weekDate.category = Router.current().params.category;
     Router.go('salesPrediction', weekDate);
   };
 };

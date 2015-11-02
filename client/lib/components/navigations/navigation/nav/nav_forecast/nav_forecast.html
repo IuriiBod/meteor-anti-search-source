@@ -1,7 +1,7 @@
 <template name="navForecast">
   {{#if canViewForecast}}
     <li class="{{isActiveRoute regex='salesPrediction'}}">
-      <a href="{{pathFor "salesPrediction" year=year week=week}}">
+      <a href="{{pathFor "salesPrediction" year=year week=week category="all"}}">
         <i class="fa fa-bar-chart"></i>
         <span class="nav-label">Forecast</span>
       </a>

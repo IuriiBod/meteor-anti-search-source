@@ -1,7 +1,3 @@
-Template.salesPrediction.onCreated(function () {
-  FlowComponents.callAction('subsctibeOnMenuItems', this);
-});
-
 Template.salesPrediction.helpers({
   formatDate: function (date) {
     return moment(date).format('YYYY-MM-DD');
@@ -13,7 +9,9 @@ Template.salesPrediction.helpers({
 });
 
 Template.salesPrediction.events({
-  'click #loadMoreBtn': function () {
-    FlowComponents.callAction('loadMoreMenuItems');
+  'click #loadMoreBtn': function (event) {
+    event.preventDefault();
+    var text = $("#searchMenuItems").val().trim();
+    FlowComponents.callAction("loadMoreBtnClick", text);
   }
 });
