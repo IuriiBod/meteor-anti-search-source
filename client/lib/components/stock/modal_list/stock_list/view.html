@@ -29,8 +29,12 @@
                 {{/each}}
               </tbody>
             </table>
+              {{#unless state$showAddStockItemMenu}}
               <div class="alert alert-warning">If your stock item is not in the list, <a id="addNewIng" class="alert-link">click here</a> to add it. Once you save it, it will appear next time you search.</div>
-              {{> render component = "submitIngredient"  isModal=false}}
+              {{/unless}}
+              {{#if state$showAddStockItemMenu}}
+                {{> render component = "submitIngredient" isModal=false}}
+              {{/if}}
           </div>
         </div>
       </form>

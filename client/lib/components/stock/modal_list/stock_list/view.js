@@ -4,8 +4,12 @@ Template.stocksModalList.events({
     FlowComponents.callAction('keyup', text);
   }, 200),
 
-  'click #addNewIng': function(event, tmpl) {
+  'click #addNewIng': function(event) {
     event.preventDefault();
-    tmpl.$("#addIngredientModal").modal('show');
+    FlowComponents.callAction('showAddStockItemMenu');
+  },
+   //event for submitIngredient template
+  'click #addIngredientBtn': function() {
+    FlowComponents.callAction('hideAddStockItemMenu');
   }
 });
