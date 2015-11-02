@@ -62,7 +62,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   shiftDate: function (date, isTemplate) {
-    date = date ? date : new Date();
+    date = date ? date : moment().startOf('d');
 
     var dateMoment;
     if (isTemplate) {

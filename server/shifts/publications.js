@@ -68,15 +68,10 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
     'relations.areaId': areaId
   };
 
-  var options = {
-    limit: 10
-  };
-
   if (type == 'future' || type == 'opened') {
     query.shiftDate = {$gte: HospoHero.dateUtils.shiftDate()};
-
     if (type == 'opened') {
-      query.assignedTo = null;
+      query.assignedTo = {$in:[null, undefined]};
       query.published = true;
     }
   } else if (type == 'past') {
@@ -87,5 +82,5 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
   }
 
   logger.info('Rostered ', type, ' shifts for user ', userId, ' have been published');
-  return Shifts.find(query, options);
+  return Shifts.find(query);
 });
