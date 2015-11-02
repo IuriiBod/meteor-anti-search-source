@@ -54,7 +54,7 @@ Router.route('/jobItem/submit', {
     ];
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit job')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
       Router.go('/');
     }
     var prep = JobTypes.findOne({'name': 'Prep'});
@@ -106,7 +106,7 @@ Router.route('/jobItem/:_id/edit', {
     ];
   },
   data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit job')()) {
+    if(!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
       Router.go('/');
     }
     Session.set('thisJobItem', this.params._id);

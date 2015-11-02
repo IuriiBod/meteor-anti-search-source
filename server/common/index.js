@@ -25,7 +25,7 @@ Meteor.methods({
   },
 
   createStatus: function(name) {
-    if(!HospoHero.canUser('edit menu', Meteor.userId())) {
+    if(!HospoHero.canUser('edit menus', Meteor.userId())) {
       logger.error("User not permitted to add statuses");
       throw new Meteor.Error(403, "User not permitted to add statuses");
     }
