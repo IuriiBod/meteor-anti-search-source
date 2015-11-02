@@ -43,7 +43,7 @@ component.prototype.onListRendered = function () {
   var weekNo = Session.get("thisWeek");
   if (weekNo) {
     Tracker.autorun(function () {
-      var week = getWeekStartEnd(weekNo);
+      var week = HospoHero.dateUtils.getWeekStartEnd(weekNo);
       Meteor.call("readDaily", week.monday, week.sunday, HospoHero.handleMethodResult(function (data) {
         self.set("data", data);
         if (data && data.length > 0) {

@@ -1,6 +1,6 @@
 <template name="predictionSalesRow">
   <tr>
-    <td>{{state$menuItem.name}}</td>
+    <td>{{{state$menuItem.name}}}</td>
     {{#each state$weekPrediction}}
       {{> render component="predictionSalesCell" displayItem=this itemId =state$menuItem._id }}
     {{/each}}

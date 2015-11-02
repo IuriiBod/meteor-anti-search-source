@@ -1,6 +1,7 @@
 <template name="locationItem">
   {{#with state$getLocation}}
-    <div class="panel-heading" role="tab" id="heading-{{_id}}">
+    <div class="panel-heading" role="button" id="heading-{{_id}}" data-toggle="collapse" data-parent="#accordion"
+         href="#body-{{_id}}" aria-expanded="false" aria-controls="body-{{_id}}">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#body-{{_id}}"
            aria-expanded="false" aria-controls="body-{{_id}}">

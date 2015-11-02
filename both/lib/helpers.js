@@ -107,19 +107,6 @@ getDatesFromWeekNumberWithYear = function (weekNo, date) {
   return week;
 };
 
-getWeekStartEnd = function (week, year) {
-  if (year == undefined) {
-    year = new Date().getFullYear();
-  }
-  var monday = getFirstDateOfISOWeek(week, year);
-  var sunday = moment(monday).add(6, "d").endOf("d").toDate();
-
-  return {
-    "monday": monday,
-    "sunday": sunday
-  }
-};
-
 getMonthName = function (monthIndex, shortName) {
   var fullMonthName = ["January", "Fabruary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   var shortMonthName = ["Jan", "Fab", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];

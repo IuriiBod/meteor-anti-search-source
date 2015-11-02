@@ -89,6 +89,16 @@ Namespace('HospoHero.dateUtils', {
     return weekDays;
   },
 
+  getWeekStartEnd: function (week, year) {
+    if (!year) {
+      year = moment().year()
+    }
+    return {
+      monday: moment().year(year).week(week).startOf("isoWeek").toDate(),
+      sunday: moment().year(year).week(week).endOf("isoWeek").toDate()
+    }
+  },
+
   weekDateName: function (date) {
     return moment(date).format('dddd');
   },
