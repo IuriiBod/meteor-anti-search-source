@@ -1,80 +1,69 @@
-<template name="submitIngredient">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Add Stocks</h4>
-      </div>
-      <form class="form-horizontal" role="form">
-        <div class="modal-body">
-          <div class="form-group">
+<template name="submitIngredientBody">
+    <form id = "submitIngredientForm" class="form-horizontal" role="form">
+        <div class="form-group">
             <label class="col-sm-4 control-label">Supplier's Code</label>
             <div class="col-sm-6 ">
-              <input type="text" name="code" class="form-control" placeholder="Add Code" >
+                <input type="text" name="code" class="form-control" placeholder="Add Code" >
             </div>
-          </div>
-          <div class="form-group">
+        </div>
+        <div class="form-group">
             <label class="col-sm-4 control-label">Description</label>
             <div class="col-sm-6 ">
-              <input type="text" name="desc" class="form-control" placeholder="Add Description" >
+                <input type="text" name="desc" class="form-control" placeholder="Add Description" >
             </div>
-          </div>
-          <div class="form-group">
+        </div>
+        <div class="form-group">
             <label class="col-sm-4 control-label">Supplier</label>
             <div class="col-sm-6 ">
-              <select name="supplier" class="form-control">
-                <option value="">Select a supplier</option>
-                {{#each state$suppliers}}
-                <option value="{{_id}}">{{name}}</option>
-                {{/each}}        
-              </select>
+                <select name="supplier" class="form-control">
+                    <option value="">Select a supplier</option>
+                    {{#each state$suppliers}}
+                        <option value="{{_id}}">{{name}}</option>
+                    {{/each}}
+                </select>
             </div>
-          </div>
-          <div class="form-group">
+        </div>
+        <div class="form-group">
             <label class="col-sm-4 control-label">Portion Ordered (b)</label>
             <div class="col-sm-6">
-              <input type="text" name="portionOrdered" class="form-control" placeholder="Type a unit"/>
-              <!--<select name="portionOrdered" class="form-control">-->
+                <input type="text" name="portionOrdered" class="form-control" placeholder="Type a unit"/>
+                <!--<select name="portionOrdered" class="form-control">-->
                 <!--<option value="">Select a unit</option>-->
-                <!--{{#each state$unitsOrdered}}-->
-                  <!--<option>{{unit}}</option>-->
-                <!--{{/each}}-->
-              <!--</select>-->
+                    <!--{{#each state$unitsOrdered}}-->
+                <!--<option>{{unit}}</option>-->
+                    <!--{{/each}}-->
+                <!--</select>-->
             </div>
-          </div>
-          <div class="form-group">
+        </div>
+        <div class="form-group">
             <label class="col-sm-4 control-label">Cost per Portion (b)</label>
             <div class="col-sm-6">
-              <div class="input-group">
-                <span class="input-group-addon">$</span>
-                <input type="text" name="costPerPortion" class="form-control" placeholder="Cost of a portion ordered" >
-              </div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" name="costPerPortion" class="form-control" placeholder="Cost of a portion ordered" >
+                </div>
             </div>
-          </div>
-          <div class="form-group">
+        </div>
+        <div class="form-group">
             <label class="col-sm-4 control-label">Portion Used (a)</label>
             <div class="col-sm-6 ">
-              <input type="text" name="portionUsed" placeholder="Type a unit" class="form-control"/>
-              <!--<select name="portionUsed" class="form-control">-->
+                <input type="text" name="portionUsed" placeholder="Type a unit" class="form-control"/>
+                <!--<select name="portionUsed" class="form-control">-->
                 <!--<option value="">Select a unit</option>-->
-                <!--{{#each state$unitsUsed}}-->
+                    <!--{{#each state$unitsUsed}}-->
                 <!--<option>{{unit}}</option>-->
-                <!--{{/each}}-->
-              <!--</select>-->
+                    <!--{{/each}}-->
+                <!--</select>-->
             </div>
-          </div>
-          <div class="form-group">
+        </div>
+        <div class="form-group">
             <label class="col-sm-4 control-label">How many (a)'s in (b)</label>
             <div class="col-sm-6">
-              <input type="text" name="unitSize" class="form-control" placeholder="Unit Size" >
+                <input type="text" name="unitSize" class="form-control" placeholder="Unit Size" >
             </div>
-          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
+        {{#unless state$isModal}}
+            <button id="addIngredientBtn" type="submit" class="btn btn-primary">Add ingredient</button>
+        {{/unless}}
+    </form>
 </template>
