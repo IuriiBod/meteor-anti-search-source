@@ -24,25 +24,12 @@ component.state.shifts = function () {
       "relations.areaId": HospoHero.getCurrentAreaId()
     }, {sort: {'shiftDate': -1}}).fetch();
   } else if (state == "open") {
-    var user = Meteor.user();
-    if (user.profile.resignDate) {
-      shifts = Shifts.find({
-        "assignedTo": null,
-        "published": true,
-        $and: [
-          {"shiftDate": {$gte: HospoHero.dateUtils.shiftDate()}},
-          {"shiftDate": {$lt: HospoHero.dateUtils.shiftDate(user.profile.resignDate)}}
-        ],
-        "relations.areaId": HospoHero.getCurrentAreaId()
-      }, {sort: {'shiftDate': 1}}).fetch();
-    } else {
-      shifts = Shifts.find({
-        "assignedTo": null,
-        "published": true,
-        "shiftDate": {$gte: HospoHero.dateUtils.shiftDate(moment().add(1, 'day'))},
-        "relations.areaId": HospoHero.getCurrentAreaId()
-      }, {sort: {'shiftDate': 1}}).fetch();
-    }
+    shifts = Shifts.find({
+      "assignedTo": {$in: [null, undefined]},
+      "published": true,
+      "shiftDate": {$gte: HospoHero.dateUtils.shiftDate()},
+      "relations.areaId": HospoHero.getCurrentAreaId()
+    }, {sort: {'shiftDate': 1}}).fetch();
   }
   return shifts;
 };

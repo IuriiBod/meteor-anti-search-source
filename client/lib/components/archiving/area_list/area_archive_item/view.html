@@ -1,8 +1,12 @@
 <template name="areaArchiveItem">
   {{#with state$getArea}}
-    <li class="list-group-item {{settings.text_class}}">
+    <li class="list-group-item">
       {{name}}
-      <button class="btn btn-xs pull-right {{settings.btn_class}} archive-loc-btn">{{settings.btn_text}}</button>
+      {{#unless state$isCurrentArea this._id}}
+        {{#with btnSettings this.archived}}
+          <button class="btn btn-xs {{btnClass}} pull-right archive-loc-btn">{{text}}</button>
+        {{/with}}
+      {{/unless}}
     </li>
   {{/with}}
 </template>

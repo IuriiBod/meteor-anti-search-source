@@ -1,11 +1,6 @@
 Revel = function Revel(posCredentials) {
   this._posCredentials = posCredentials;
   this.DATA_LIMIT = 5000;
-
-  if (HospoHero.isDevelopmentMode()) {
-    //add mock data source
-    revelMockMixin(this);
-  }
 };
 
 
@@ -43,6 +38,7 @@ Revel.prototype.queryRevelResource = function (resource, orderBy, isAscending, f
     return false;
   }
 };
+
 
 Revel.prototype.queryRevelOrderItems = function (offset) {
   return this.queryRevelResource('OrderItem', 'created_date', false, [
@@ -141,46 +137,49 @@ RevelSalesDataBucket.prototype.isEmpty = function () {
 };
 
 
-/**
- * Data source with mock data for development mode
- */
-var MockOrderItemDataSource = function MockOrderItemDataSource() {
-  this.currentDate = moment();
-};
-
-MockOrderItemDataSource.prototype.load = function () {
-  var query = HospoHero.prediction.getMenuItemsForPredictionQuery();
-  var items = MenuItems.find(query).fetch();
-
-  var result = {
-    meta: {
-      'limit': 5000,
-      'offset': 0,
-      'total_count': 616142
-    },
-    objects: []
+//======== mock data provider ============
+if (HospoHero.isDevelopmentMode()) {
+  /**
+   * Data source with mock data for development mode
+   */
+  var MockOrderItemDataSource = function MockOrderItemDataSource() {
+    this.currentDate = moment();
   };
 
-  var self = this;
+  MockOrderItemDataSource.prototype.load = function () {
+    var query = HospoHero.prediction.getMenuItemsForPredictionQuery();
+    var items = MenuItems.find(query).fetch();
 
-  _.each(items, function (item) {
-    var pushObject = {
-      created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
-      product_name_override: item.name,
-      quantity: Math.floor(Math.random() * 10 + 1)
+    var result = {
+      meta: {
+        'limit': 5000,
+        'offset': 0,
+        'total_count': 616142
+      },
+      objects: []
     };
-    result.objects.push(pushObject);
-  });
-  this.currentDate.subtract(1, 'd');
-  return result
-};
 
-var revelMockMixin = function (context) {
-  //temporal mock datasource
-  var mockRevel = new MockOrderItemDataSource();
+    var self = this;
 
-  context.queryRevelOrderItems = function (offset) {
-    return mockRevel.load(context.DATA_LIMIT, offset);
+    _.each(items, function (item) {
+      var pushObject = {
+        created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
+        product_name_override: item.name,
+        quantity: Math.floor(Math.random() * 10 + 1)
+      };
+      result.objects.push(pushObject);
+    });
+    this.currentDate.subtract(1, 'd');
+    return result
   };
-};
 
+  //add mock data source
+  _.extend(Revel.prototype, {
+    queryRevelOrderItems: function (offset) {
+      if (!this._mockRevelSource) {
+        this._mockRevelSource = new MockOrderItemDataSource();
+      }
+      return this._mockRevelSource.load(context.DATA_LIMIT, offset);
+    }
+  });
+}

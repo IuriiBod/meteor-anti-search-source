@@ -1,4 +1,13 @@
 Namespace('HospoHero', {
+  isProductionMode: function () {
+    return process.env.ROOT_URL.indexOf('app.hospohero.com') > -1;
+  },
+  isTestingMode: function () {
+    return !HospoHero.isDevelopmentMode() && !HospoHero.isProductionMode();
+  },
+  isDevelopmentMode: function () {
+    return process.env.NODE_ENV === 'development';
+  },
   sendNotification: function (notification) {
     if (!notification.title) {
       throw new Meteor.Error('Notification must have a title');

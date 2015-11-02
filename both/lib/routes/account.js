@@ -1,35 +1,31 @@
-//--------------------SIGN IN
-
-Router.route('/signIn', function () {
-  this.render('signIn');
-  this.layout('blankLayout');
-}, {
-  name: "signIn",
-  path: "/signIn",
-  data: function () {
+Router.route('signIn', {
+  path: '/signIn',
+  layoutTemplate: 'blankLayout',
+  template: 'signIn',
+  onBeforeAction: function () {
     if (Meteor.userId()) {
-      Router.go("/");
+      Router.go('/');
+    } else {
+      this.next();
     }
-    Session.set("editStockTake", false);
+  },
+  data: function () {
+    Session.set('editStockTake', false);
   }
 });
 
 
-//--------------------REGISTER
-
-Router.route('/register', function () {
-  this.render('signUp');
-  this.layout('blankLayout');
-}, {
-  name: "signUp"
+Router.route('signUp', {
+  path: '/register',
+  layoutTemplate: 'blankLayout',
+  template: 'signUp'
 });
 
-//--------------------PIN CODE LOCK PAGE
 
-Router.route("/pinLock", {
-  layoutTemplate: "blankLayout",
-  name: "pinLock",
-  path: "/pinLock",
+Router.route('pinLock', {
+  path: '/pinLock',
+  layoutTemplate: 'blankLayout',
+  template: 'pinLock',
   data: function () {
     return {
       backwardUrl: this.params.query.backwardUrl
@@ -37,23 +33,39 @@ Router.route("/pinLock", {
   }
 });
 
-//--------------------SWITCH USER
-
-Router.route("/switchUser", {
-  layoutTemplate: "blankLayout",
-  name: "switchUser",
-  template: "switchUserView",
-  path: "/switchUser",
+Router.route('invitationAccept', {
+  path: '/invitations/:_id',
+  layoutTemplate: 'blankLayout',
+  template: 'invitationAccept',
   waitOn: function () {
-    var usersIds = Session.get("loggedUsers") || {};
-    usersIds = _.keys(usersIds);
-    return Meteor.subscribe("selectedUsersList", usersIds);
+    return Meteor.subscribe('invitationById', this.params._id);
+  },
+  onBeforeAction: function () {
+    if (Meteor.userId()) {
+      Router.go('/');
+    } else {
+      this.next();
+    }
+  },
+  data: function () {
+    Session.set('editStockTake', false);
   }
 });
 
-// ---------------------ADMIN
-Router.route('/admin', {
-  name: "admin",
+
+Router.route('switchUser', {
+  path: '/switchUser',
+  layoutTemplate: 'blankLayout',
+  template: 'switchUserView',
+  waitOn: function () {
+    var usersIds = Session.get('loggedUsers') || {};
+    usersIds = _.keys(usersIds);
+    return Meteor.subscribe('selectedUsersList', usersIds);
+  }
+});
+
+
+Router.route('admin', {
   path: '/admin',
   template: "adminMainView",
   waitOn: function () {
@@ -69,48 +81,27 @@ Router.route('/admin', {
   },
   data: function () {
     if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go("/");
+      Router.go('/');
     }
-    Session.set("editStockTake", false);
+    Session.set('editStockTake', false);
   }
 });
 
-// ---------------------USER PROFILE
 Router.route('/user/profile/:_id', {
-  name: "profile",
-  path: "/user/profile/:_id",
-  template: "profileMainView",
+  name: 'profile',
+  path: '/user/profile/:_id',
+  template: 'profileMainView',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe("profileUser", this.params._id),
+      Meteor.subscribe('profileUser', this.params._id),
       Meteor.subscribe('shifts', 'future', this.params._id, currentAreaId),
       Meteor.subscribe('shifts', 'opened', null, currentAreaId),
       Meteor.subscribe('sections', currentAreaId)
     ];
   },
   data: function () {
-    if (!Meteor.userId()) {
-      Router.go("/");
-    }
-    Session.set("profileUser", this.params._id);
-    Session.set("editStockTake", false);
-  }
-});
-
-// --------------------INVITATION
-Router.route('/invitations/:_id', function () {
-  this.render('invitationAccept');
-  this.layout('blankLayout');
-}, {
-  name: "invitationAccept",
-  waitOn: function () {
-    return Meteor.subscribe('invitationById', this.params._id);
-  },
-  data: function () {
-    if (Meteor.userId()) {
-      Router.go("/");
-    }
-    Session.set("editStockTake", false);
+    Session.set('profileUser', this.params._id);
+    Session.set('editStockTake', false);
   }
 });

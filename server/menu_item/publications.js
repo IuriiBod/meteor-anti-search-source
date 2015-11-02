@@ -77,6 +77,21 @@ Meteor.publish("menuItems", function (ids) {
 });
 
 
-Meteor.publishAuthorized('areaMenuItems', function (areaId) {
-  return MenuItems.find({'relations.areaId': areaId});
+Meteor.publishAuthorized("areaMenuItems", function (areaId, categoryId) {
+  if (this.userId) {
+    var query = {
+      "relations.areaId": areaId,
+      status: "active"
+    };
+
+    if (categoryId && categoryId != "all") {
+      query.category = categoryId;
+    }
+
+    logger.info("Menu Items list published", categoryId);
+
+    return MenuItems.find(query, {sort:{name: 1}});
+  } else {
+    this.ready();
+  }
 });

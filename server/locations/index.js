@@ -14,7 +14,6 @@ Meteor.methods({
     if(!HospoHero.isOrganizationOwner()) {
       throw new Meteor.Error(403, 'User not permitted to create location');
     }
-
     // Create location
     var id = Locations.insert(location);
     logger.info('Location was created', { locationId: id });
