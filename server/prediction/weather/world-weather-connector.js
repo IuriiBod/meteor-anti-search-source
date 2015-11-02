@@ -42,7 +42,6 @@ WorldWeather.prototype._onHttpError = function (params, error) {
  */
 WorldWeather.prototype._httpQuery = function (route, params) {
   var defaultParams = _.clone(this._defaultParams);
-
   var allParams = _.extend(defaultParams, params);
   try {
     var res = HTTP.get(this._url + route, {
@@ -99,7 +98,6 @@ WorldWeather.prototype.getForecast = function () {
  */
 WorldWeather.prototype._mapWeatherEntries = function (data) {
   var self = this;
-
   return data && data.weather.map(function (weatherItem) {
       var hourly = _.find(weatherItem.hourly, function (hourlyItem) {
         return self._isTargetTime(hourlyItem.time);
@@ -136,7 +134,7 @@ WorldWeather.prototype.checkLocation = function () {
 if (HospoHero.isDevelopmentMode()) {
   var mockDataGenerator = function () {
     var start, end;
-    if (arguments.length > 1) {//historical
+    if (arguments.length > 0) {//historical
       start = moment(arguments[0]);
       end = moment(arguments[1]).add(1, 'day');
     } else {//forecast

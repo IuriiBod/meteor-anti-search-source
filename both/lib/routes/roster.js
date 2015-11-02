@@ -6,6 +6,9 @@ Router.route('/roster/weekly/:year/:week', {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     var subscriptions = [
+      Meteor.subscribe('organizationInfo'),
+      Meteor.subscribe('areaMenuItems'),
+      Meteor.subscribe('dailySales', weekRange, currentAreaId),
       Meteor.subscribe('weeklyRoster', weekRange),
       Meteor.subscribe('workers', currentAreaId),
       Meteor.subscribe('sections', currentAreaId),

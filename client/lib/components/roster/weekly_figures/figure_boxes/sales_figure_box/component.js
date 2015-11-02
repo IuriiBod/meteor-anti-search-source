@@ -1,18 +1,17 @@
 var component = FlowComponents.define("salesFigureBox", function (props) {
-  this.actual = props.actual;
-  this.forecasted = props.forecasted;
-  this.figureBox = new FigureBox();
+  var figureBox = props.figureBox;
+  this.sales = figureBox.getSales();
+  this.percentDoc = figureBox.getPercentDocs();
 });
 
 component.state.weeklySale = function () {
-  return parseInt(this.actual).toLocaleString();
+  return parseInt(this.sales.actual).toLocaleString();
 };
 
 component.state.forecastedSale = function () {
-  return this.forecasted.toFixed(2);
+  return this.sales.forecasted.toFixed(2);
 };
 
 component.state.percent = function () {
-  return this.figureBox.percent(this.actual,this.forecasted);
-
+  return this.percentDoc.sales;
 };

@@ -1,17 +1,17 @@
 var component = FlowComponents.define("staffCostFigureBox", function (props) {
-    this.actual = props.actual;
-    this.forecasted = props.forecasted;
-    this.figureBox = new FigureBox();
+  var figureBox = props.figureBox;
+  this.staff = figureBox.getStaff();
+  this.percentDoc = figureBox.getPercentDocs();
 });
 
 component.state.weeklyStaffCost = function () {
-    return this.actual.toFixed(2)
+  return this.staff.actual.toFixed(2);
 };
 
 component.state.percent = function () {
-    return this.figureBox.percent(this.forecasted,this.actual);
+  return this.percentDoc.staff;
 };
 
 component.state.rosteredStaffCost = function () {
-    return this.forecasted.toFixed(2)
+  return this.staff.forecasted.toFixed(2);
 };
