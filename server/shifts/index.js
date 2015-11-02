@@ -82,6 +82,19 @@ var ShiftPropertyChangeLogger = {
   }
 };
 
+/**
+ * updates shift status if it needs to
+ * @param updatedShift shift to adjust
+ */
+var adjustShiftStatus = function (updatedShift) {
+  if (updatedShift.startedAt && updatedShift.status === 'draft') {
+    updatedShift.status = 'started';
+  }
+  if (updatedShift.finishedAt && updatedShift.status !== 'finished') {
+    updatedShift.status = 'finished';
+  }
+};
+
 
 /*
  * Shift modification methods
@@ -134,10 +147,12 @@ Meteor.methods({
 
     var userId = Meteor.userId();
     if (!HospoHero.canUser('edit roster', userId)) {
-      logger.error(403, "User not permitted to create shifts");
+      logger.error(403, "User not permitted to edit shifts");
     }
 
     ShiftPropertyChangeLogger.trackChanges(updatedShift, userId);
+
+    adjustShiftStatus(updatedShift);
 
     Shifts.update({'_id': updatedShift._id}, {$set: updatedShift});
     logger.info("Shift details updated", {"shiftId": updatedShift._id});

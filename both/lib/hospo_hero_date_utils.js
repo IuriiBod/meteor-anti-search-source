@@ -75,6 +75,41 @@ Namespace('HospoHero.dateUtils', {
     return dateMoment.toDate();
   },
 
+  /**
+   * Ensures that all shift times have the same date
+   *
+   * @param updatedShift shift to adjust
+   */
+  adjustShiftTimes: function (updatedShift) {
+    // Returns new valid time based on shift's date
+    var shiftTime = function (time) {
+      var timeMoment = moment(time);
+      return moment(updatedShift.shiftDate).hours(timeMoment.hours()).minutes(timeMoment.minutes()).toDate();
+    };
+
+    //todo: add startedAt and finishedAt after converting them to Date type
+
+    ['startTime', 'endTime'].forEach(function (propertyName) {
+      updatedShift[propertyName] = shiftTime(updatedShift, updatedShift[propertyName])
+    });
+  },
+
+  //todo: temporal method remove after converting finishedAt,startedAt
+  adjustShiftUnixTimes: function (updatedShift) {
+    // Returns new valid time based on shift's date
+    var shiftTime = function (time) {
+      var timeMoment = moment(time);
+      return moment(updatedShift.shiftDate).hours(timeMoment.hours()).minutes(timeMoment.minutes()).toDate().getTime();
+    };
+
+    //todo: add startedAt and finishedAt after converting them to Date type
+
+    ['finishedAt', 'startedAt'].forEach(function (propertyName) {
+      updatedShift[propertyName] = shiftTime(updatedShift, updatedShift[propertyName])
+    });
+  },
+
+
   getDateByWeekDate: function (weekDate) {
     return moment(weekDate.year, 'YYYY').week(weekDate.week).startOf('isoweek').toDate();
   },

@@ -40,6 +40,23 @@ DocumentCheckerHelper.prototype.checkProperty = function (propertyName, checkFn)
   return false;
 };
 
+/**
+ * Makes check if any of specified properties was changed.
+ * `checkFn` will be called only one time
+ *
+ * @param properties
+ * @param checkFn
+ */
+DocumentCheckerHelper.prototype.checkPropertiesGroup = function (properties, checkFn) {
+  if (_.isArray(properties)) {
+    var self = this;
+
+    properties.forEach(function (propertyName) {
+      return !self.checkProperty(propertyName, checkFn);
+    });
+  }
+};
+
 
 var checkError = function (message) {
   throw new Meteor.Error(500, 'Check error: ' + message);
@@ -149,7 +166,7 @@ var ShiftDocument = Match.Where(function (shift) {
     assignedTo: HospoHero.checkers.OptionalNullableMongoId,
     assignedBy: HospoHero.checkers.OptionalNullableMongoId,
     jobs: Match.Optional([HospoHero.checkers.MongoId]),
-    status: Match.Optional(String),
+    status: Match.Optional(Match.OneOf('draft', 'started', 'finished')),
     published: Match.Optional(Boolean),
     publishedOn: Match.Optional(Number),
     startedAt: Match.Optional(Number),
@@ -158,47 +175,39 @@ var ShiftDocument = Match.Where(function (shift) {
     relations: Match.Optional(HospoHero.checkers.Relations)
   });
 
-  var checkStartEndTime = function () {
-    if (shift.startTime.getTime() > shift.endTime.getTime()) {
-      logger.error("Start and end times invalid");
-      throw new Meteor.Error("Start and end times invalid");
-    }
-  };
-
-
-  var checkAssignedTo = function () {
-    var assignedWorker = Meteor.users.findOne({_id: shift.assignedTo});
-    if (!assignedWorker) {
-      logger.error("Worker not found");
-      throw new Meteor.Error(404, "Worker not found");
-    }
-
-    var existInShift = !!Shifts.findOne({
-      _id: {$ne: shift._id},
-      shiftDate: TimeRangeQueryBuilder.forDay(shift.shiftDate),
-      assignedTo: shift.assignedTo
-    });
-    if (existInShift) {
-      logger.error("User already exist in a shift", {"date": shift.shiftDate});
-      throw new Meteor.Error(404, "Worker has already been assigned to a shift");
-    }
-  };
-
   var checkerHelper = new DocumentCheckerHelper(shift, Shifts);
 
+  checkerHelper.checkPropertiesGroup(['startTime', 'endTime'], function () {
+    if (shift.startTime.getTime() > shift.endTime.getTime()) {
+      throw new Meteor.Error("Start and end times invalid");
+    }
+  });
 
-  if (!checkerHelper.checkProperty('startTime', checkStartEndTime)) {
-    //if start time wasn't checked try to check end time
-    checkerHelper.checkProperty('endTime', checkStartEndTime);
-  }
-
+  checkerHelper.checkPropertiesGroup(['startedAt', 'finishedAt'], function () {
+    if (shift.startedAt > shift.finishedAt) {
+      throw new Meteor.Error("Started time should be less then finished");
+    }
+  });
 
   //check if worker already assigned
   if (shift.assignedTo) {
-    if (!checkerHelper.checkProperty('assignedTo', checkAssignedTo)) {
-      //if wasn't checked make the same check if shiftDate changed
-      checkerHelper.checkProperty('shiftDate', checkAssignedTo);
-    }
+    checkerHelper.checkPropertiesGroup(['assignedTo', 'shiftDate'], function () {
+      var assignedWorker = Meteor.users.findOne({_id: shift.assignedTo});
+      if (!assignedWorker) {
+        logger.error("Worker not found");
+        throw new Meteor.Error(404, "Worker not found");
+      }
+
+      var existInShift = !!Shifts.findOne({
+        _id: {$ne: shift._id},
+        shiftDate: TimeRangeQueryBuilder.forDay(shift.shiftDate),
+        assignedTo: shift.assignedTo
+      });
+      if (existInShift) {
+        logger.error("User already exist in a shift", {"date": shift.shiftDate});
+        throw new Meteor.Error(404, "Worker has already been assigned to a shift");
+      }
+    });
   }
 
   return true;

@@ -2,14 +2,10 @@ Router.route('signIn', {
   path: '/signIn',
   layoutTemplate: 'blankLayout',
   template: 'signIn',
-  onBeforeAction: function () {
+  data: function () {
     if (Meteor.userId()) {
       Router.go('/');
-    } else {
-      this.next();
     }
-  },
-  data: function () {
     Session.set('editStockTake', false);
   }
 });
@@ -40,14 +36,10 @@ Router.route('invitationAccept', {
   waitOn: function () {
     return Meteor.subscribe('invitationById', this.params._id);
   },
-  onBeforeAction: function () {
+  data: function () {
     if (Meteor.userId()) {
       Router.go('/');
-    } else {
-      this.next();
     }
-  },
-  data: function () {
     Session.set('editStockTake', false);
   }
 });
