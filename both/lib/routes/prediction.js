@@ -8,7 +8,7 @@ Router.route('/roster/prediction/:year/:week/:category', {
 
       this.subscribe('organizationInfo'),
       this.subscribe('areaMenuItems', currentAreaId, this.params.category),
-      this.subscribe('allCategories'),
+      this.subscribe('allCategories', currentAreaId),
       this.subscribe('weatherForecast', weekRange, currentAreaId),
       this.subscribe('dailySales', weekRange, currentAreaId)
 
