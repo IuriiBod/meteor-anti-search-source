@@ -4,12 +4,12 @@ Router.route('/menuItems/:category/:status', {
   path: '/menuItems/:category/:status',
   template: "menuItemsListMainView",
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('allCategories'),
+      Meteor.subscribe('allCategories', currentAreaId),
       Meteor.subscribe('allStatuses'),
-      Meteor.subscribe('menuList', this.params.category, this.params.status.toLowerCase()),
-      Meteor.subscribe('userSubs', ['menulist'])
+      Meteor.subscribe('menuList', currentAreaId, this.params.category, this.params.status.toLowerCase()),
+      Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },
   data: function() {
@@ -19,8 +19,7 @@ Router.route('/menuItems/:category/:status', {
     Session.set("category", this.params.category);
     Session.set("status", this.params.status.toLowerCase());
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/menuItems/submit', {
@@ -28,10 +27,14 @@ Router.route('/menuItems/submit', {
   path: '/menuItems/submit',
   template: "menuItemSubmitMainView",
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('allCategories'),
-      Meteor.subscribe('allStatuses')
+      Meteor.subscribe('allCategories', currentAreaId),
+      Meteor.subscribe('allStatuses'),
+      Meteor.subscribe('allSuppliers', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('jobTypes'),
+      Meteor.subscribe('jobItems', null, currentAreaId)
     ];
   },
   data: function() {
@@ -39,8 +42,7 @@ Router.route('/menuItems/submit', {
       Router.go("/");
     }
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/menuItems/:type', {
@@ -48,12 +50,12 @@ Router.route('/menuItems/:type', {
   path: '/menuItems/:type',
   template: "menuItemsListMainView",
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('allCategories'),
-      Meteor.subscribe("allStatuses"),
-      Meteor.subscribe("menuList", "all", "all"),
-      Meteor.subscribe("userSubs", ['menulist'])
+      Meteor.subscribe('allCategories', currentAreaId),
+      Meteor.subscribe('allStatuses'),
+      Meteor.subscribe('menuList', currentAreaId, 'all', 'all'),
+      Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },
   data: function() {
@@ -63,8 +65,7 @@ Router.route('/menuItems/:type', {
     Session.set("category", "all");
     Session.set("status", "all");
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 Router.route('/menuItem/:_id', {
@@ -72,13 +73,15 @@ Router.route('/menuItem/:_id', {
   path: '/menuItem/:_id',
   template: "menuItemDetailedMainView",
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("menuItem", this.params._id),
-      Meteor.subscribe("comments", this.params._id),
-      Meteor.subscribe("allCategories"),
-      Meteor.subscribe("allStatuses"),
-      Meteor.subscribe("userSubs", ['menulist', this.params._id])
+      Meteor.subscribe('comments', this.params._id, currentAreaId),
+      Meteor.subscribe('allCategories', currentAreaId),
+      Meteor.subscribe('allStatuses'),
+      Meteor.subscribe('userSubscriptions', currentAreaId),
+      Meteor.subscribe('usersList', currentAreaId),
+      Meteor.subscribe('jobTypes')
     ];
   },
   data: function() {
@@ -88,6 +91,5 @@ Router.route('/menuItem/:_id', {
     //todo: get rid of sessions later
     Session.set("thisMenuItem", this.params._id);
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });

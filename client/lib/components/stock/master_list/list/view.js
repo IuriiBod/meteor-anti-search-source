@@ -62,7 +62,7 @@ Template.ingredientsList.events({
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
     Session.set("thisIngredientId", id);
-    Meteor.subscribe("ingredients", [id]);
+    Meteor.subscribe('ingredients', [id], HospoHero.getCurrentAreaId(Meteor.userId()));
     tmpl.$("#editIngredientModal").modal("show");
   }
 });

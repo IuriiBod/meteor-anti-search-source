@@ -30,9 +30,6 @@ Router.route("/pinLock", {
   layoutTemplate: "blankLayout",
   name: "pinLock",
   path: "/pinLock",
-  waitOn: function() {
-    return Meteor.subscribe('organizationInfo');
-  },
   data: function () {
     return {
       backwardUrl: this.params.query.backwardUrl
@@ -60,14 +57,14 @@ Router.route('/admin', {
   path: '/admin',
   template: "adminMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('sections'),
-      Meteor.subscribe("allAreas"),
-      Meteor.subscribe('usersList'),
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('allAreas', currentAreaId),
+      Meteor.subscribe('usersList', currentAreaId),
       Meteor.subscribe('locationsOfOrganization'),
-      Meteor.subscribe("areasOfOrganization"),
-      Meteor.subscribe('menuList')
+      Meteor.subscribe('areasOfOrganization'),
+      Meteor.subscribe('menuList', currentAreaId)
     ];
   },
   data: function () {
@@ -75,8 +72,7 @@ Router.route('/admin', {
       Router.go("/");
     }
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 // ---------------------USER PROFILE
@@ -85,12 +81,12 @@ Router.route('/user/profile/:_id', {
   path: "/user/profile/:_id",
   template: "profileMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe("profileUser", this.params._id),
-      Meteor.subscribe('shifts', 'future', this.params._id),
-      Meteor.subscribe('shifts', 'opened'),
-      Meteor.subscribe('sections')
+      Meteor.subscribe('shifts', 'future', this.params._id, currentAreaId),
+      Meteor.subscribe('shifts', 'opened', null, currentAreaId),
+      Meteor.subscribe('sections', currentAreaId)
     ];
   },
   data: function () {
@@ -99,8 +95,7 @@ Router.route('/user/profile/:_id', {
     }
     Session.set("profileUser", this.params._id);
     Session.set("editStockTake", false);
-  },
-  fastRender: true
+  }
 });
 
 // --------------------INVITATION

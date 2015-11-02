@@ -1,10 +1,10 @@
-Meteor.publishComposite('comments', function (ref) {
+Meteor.publishComposite('comments', function (ref, areaId) {
   return {
     find: function() {
       if(this.userId) {
         var query = {
           "reference": ref,
-          "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+          "relations.areaId": areaId
         };
 
         logger.info("Comments published", ref);

@@ -37,7 +37,7 @@ component.state.createdByImage = function() {
 };
 
 component.prototype.onItemRendered = function() {
-  if(this.notification.type == "roster" && this.notification.actionType != "publish") {
+  if(this.notification.type == "roster" && this.notification.ref) {
     Meteor.subscribe("shift", this.notification.ref);
   }
 };

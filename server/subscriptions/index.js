@@ -1,37 +1,90 @@
 Meteor.methods({
-  subscribe: function(subscription) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
-    var userId = Meteor.userId();
-    if(!subscription) {
-      logger.error('No subscription given');
-      throw new Meteor.Error(401, "No subscription given");
-    }
-    var existingSubscription = Subscriptions.findOne(subscription);
-    if(existingSubscription) {
-      Subscriptions.update({"_id": subscription}, {$addToSet: {"subscribers":  userId}});
-    } else {
-      Subscriptions.insert({"_id": subscription, "subscribers":  [userId]});
-    }
-    logger.info("Subscriber added", {"subscription": subscription, "subscriber": userId});
-  },
+  /**
+   * Subscribe or unsubscribe user from items
+   *
+   * @param {Object} subscription - The subscription parameters
+   * @param {string} [subscription._id] - ID of subscription
+   * @param {string} subscription.type - Type of subscription (menu|job)
+   * @param {string} subscription.itemIds - 'all' or item ID
+   * @param {string} subscription.subscriber - ID of subscriber
+   * @param {Object} subscription.relations - HospoHero relations object
+   * @param {boolean} unsubscribeTrigger - If true - unsubscribes user from itemIds. Otherwise - subscribes on it
+   */
+  subscribe: function (subscription, unsubscribeTrigger) {
+    check(subscription, HospoHero.checkers.SubscriptionDocument);
 
-  unSubscribe: function(subscription) {
-    if(!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
-    }
     var userId = Meteor.userId();
-    if(!subscription) {
-      logger.error('No subscription given');
-      throw new Meteor.Error(401, "No subscription given");
+
+    // Find what do we want to change
+    var itemIds = getItemIds(subscription.itemIds, subscription.type);
+
+    // Check existing of subscription
+    var subscriptionExists = Subscriptions.findOne({
+      subscriber: userId,
+      type: subscription.type,
+      'relations.areaId': HospoHero.getCurrentAreaId(userId)
+    });
+
+    if(!subscriptionExists) {
+      if(_.isString(itemIds)) {
+        itemIds = [itemIds];
+      }
+      subscription.itemIds = itemIds;
+      Subscriptions.insert(subscription);
+    } else {
+      var updateQuery = getUpdateQuery();
+      Subscriptions.update({ _id: subscriptionExists._id }, updateQuery);
     }
-    var existingSubscription = Subscriptions.findOne({"_id": subscription, "subscribers": userId});
-    if(existingSubscription) {
-      Subscriptions.update({'_id': subscription}, {$pull: {"subscribers": userId}});
-      logger.info("Subscriber removed", {"menu": subscription, "user": userId});
-    }
+
   }
 });
+
+/**
+ * Returns ID of items to subscribe/unsubscribe
+ * @param {string} itemIds - Item ID or 'all'
+ * @param {string} type - Type of subscription (menu|job)
+ * @returns {string|Array}
+ */
+var getItemIds = function(itemIds, type) {
+  if(itemIds === 'all') {
+    var subscriptonCollections = {
+      menu: MenuItems,
+      job: JobItems
+    };
+
+    itemIds = subscriptonCollections[type].find({
+      'relations.areaId': HospoHero.getCurrentAreaId(Meteor.userId())
+    }).map(function (item) {
+      return item._id;
+    });
+  }
+
+  return itemIds;
+};
+
+/**
+ * Returns update query for subscription
+ * @param {string|Array} itemIds - IDs of subscribed/unsubscribed items
+ * @param {boolean} unsubscribeTrigger - If true - unsubscribes user from itemIds. Otherwise - subscribes on it
+ */
+var getUpdateQuery = function(itemIds, unsubscribeTrigger) {
+  var updateQuery = {};
+
+  if(unsubscribeTrigger) {
+    updateQuery.$pull = {
+      itemIds: itemIds
+    };
+  } else {
+    if(_.isArray(itemIds)) {
+      updateQuery.$addToSet = {
+        itemIds: {
+          $each: itemIds
+        }
+      };
+    } else {
+      updateQuery.$addToSet = {
+        itemIds: itemIds
+      };
+    }
+  }
+};

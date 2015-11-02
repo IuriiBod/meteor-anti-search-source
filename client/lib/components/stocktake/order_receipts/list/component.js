@@ -45,15 +45,6 @@ component.state.list = function() {
         }
       });
     }
-    if(users.length > 0) {
-      Meteor.subscribe("selectedUsers", users);
-    }
-    if(suppliers.length > 0) {
-      Meteor.subscribe("suppliers", suppliers);
-    }
-    if(ids.length > 0) {
-      Meteor.subscribe("receiptOrders", ids);
-    }
     return data;
   }
 };

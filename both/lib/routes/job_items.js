@@ -1,115 +1,115 @@
 // ---------------------JOB ITEMS
 Router.route('/jobItems', {
-  name: "jobItemsMaster",
+  name: 'jobItemsMaster',
   path: '/jobItems',
-  template: "jobItemsListMainView",
+  template: 'jobItemsListMainView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('sections'),
-      Meteor.subscribe("userSubs", ['joblist']),
-      Meteor.subscribe("jobItems", null, 'active')
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('userSubscriptions', currentAreaId),
+      Meteor.subscribe('jobItems', null, currentAreaId, 'active')
     ];
   },
   data: function() {
     if(!Meteor.userId()) {
-      Router.go("/");
+      Router.go('/');
     }
-    Session.set("editStockTake", false);
-  },
-  fastRender: true
+    Session.set('editStockTake', false);
+  }
 });
 
 Router.route('/jobItems/:type', {
-  name: "jobItemsMasterType",
+  name: 'jobItemsMasterType',
   path: '/jobItems/:type',
-  template: "jobItemsListMainView",
+  template: 'jobItemsListMainView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('jobTypes', null, 'archived'),
-      Meteor.subscribe('sections'),
-      Meteor.subscribe("userSubs", ['joblist'])
+      Meteor.subscribe('jobItems', null, currentAreaId, 'archived'),
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },
   data: function() {
     if(!Meteor.userId()) {
-      Router.go("/");
+      Router.go('/');
     }
-    Session.set("editStockTake", false);
-  },
-  fastRender: true
+    Session.set('editStockTake', false);
+  }
 });
 
 Router.route('/jobItem/submit', {
-  name: "submitJobItem",
+  name: 'submitJobItem',
   path: '/jobItem/submit',
-  template: "submitJobItemMainView",
+  template: 'submitJobItemMainView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('sections')
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('allSuppliers', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
   data: function() {
     if(!Meteor.userId() || !HospoHero.canUser('edit job')()) {
-      Router.go("/");
+      Router.go('/');
     }
-    var prep = JobTypes.findOne({"name": "Prep"});
+    var prep = JobTypes.findOne({'name': 'Prep'});
     if(prep) {
-      Session.set("jobType", prep._id);
+      Session.set('jobType', prep._id);
     }
-    Session.set("thisJobItem", null);
-    Session.set("selectedIngredients", null);
-    Session.set("editStockTake", false);
-  },
-  fastRender: true
+    Session.set('thisJobItem', null);
+    Session.set('editStockTake', false);
+  }
 });
 
 Router.route('/jobItem/:_id', {
-  name: "jobItemDetailed",
+  name: 'jobItemDetailed',
   path: '/jobItem/:_id',
-  template: "jobItemDetailedMainView",
+  template: 'jobItemDetailedMainView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe("comments", this.params._id),
-      Meteor.subscribe("usersList"),
-      Meteor.subscribe("userSubs", [this.params._id, 'joblist'])
+      Meteor.subscribe('comments', this.params._id, currentAreaId),
+      Meteor.subscribe('usersList', currentAreaId),
+      Meteor.subscribe('userSubscriptions', currentAreaId),
+      Meteor.subscribe('allCategories', currentAreaId),
+      Meteor.subscribe('jobsRelatedMenus', this.params._id)
     ];
   },
   data: function() {
     if(!Meteor.userId()) {
-      Router.go("/");
+      Router.go('/');
     }
-    Session.set("thisJobItem", this.params._id);
-    Session.set("editStockTake", false);
-  },
-  fastRender: true
+    Session.set('thisJobItem', this.params._id);
+    Session.set('editStockTake', false);
+  }
 });
 
 Router.route('/jobItem/:_id/edit', {
-  name: "jobItemEdit",
+  name: 'jobItemEdit',
   path: '/jobItem/:_id/edit',
-  template: "jobItemEditView",
+  template: 'jobItemEditView',
   waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('jobItem', this.params._id),
-      Meteor.subscribe('sections')
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('allSuppliers', currentAreaId)
     ];
   },
   data: function() {
     if(!Meteor.userId() || !HospoHero.canUser('edit job')()) {
-      Router.go("/");
+      Router.go('/');
     }
-    Session.set("thisJobItem", this.params._id);
-    Session.set("editStockTake", false);
-  },
-  fastRender: true
+    Session.set('thisJobItem', this.params._id);
+    Session.set('editStockTake', false);
+  }
 });

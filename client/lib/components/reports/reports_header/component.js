@@ -1,13 +1,10 @@
-var component = FlowComponents.define('reportsHeader', function (props) {
-  this.set('year', Router.current().params.year);
-  this.set('week', Router.current().params.week);
-
-  // TODO: Do we need this state?
-  this.set('type', 'reports');
+var component = FlowComponents.define('reportsHeader', function () {
+  this.set('currentDate', HospoHero.misc.getWeekDateFromRoute(Router.current()));
 });
 
 component.state.onDateChanged = function () {
   return function (weekDate) {
-    Router.go(Router.current().route.getName(), weekDate);
+    var routeName = Router.current().route.getName();
+    Router.go(routeName, weekDate);
   };
 };

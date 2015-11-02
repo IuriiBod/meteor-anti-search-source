@@ -5,13 +5,9 @@
 
 meteor-platform
 iron:router
-meteorhacks:npm
 
-
-npm-container
 meteorhacks:flow-components
 meteorhacks:search-source
-meteorhacks:fast-render
 accounts-ui
 accounts-google
 accounts-password

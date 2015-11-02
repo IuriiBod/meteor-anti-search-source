@@ -37,7 +37,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     if(!Suppliers.findOne(id)) {
       logger.error("Supplier does not exist", id);
@@ -74,7 +74,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     var supplier = Suppliers.findOne(id);
     if(!supplier) {

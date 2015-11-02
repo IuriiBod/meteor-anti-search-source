@@ -1,9 +1,10 @@
-Meteor.publish("userSubs", function(ids) {
+Meteor.publishAuthorized('userSubscriptions', function(areaId) {
   if(this.userId) {
-    if (ids.length > 0) {
-      logger.info("Subscriptions published ", {"id": ids});
-      return Subscriptions.find({"_id": {$in: ids}});
-    }
+    logger.info('Subscriptions for user ' + this.userId + ' published');
+    return Subscriptions.find({
+      subscriber: this.userId,
+      'relations.areaId': areaId
+    });
   } else {
     this.ready();
   }

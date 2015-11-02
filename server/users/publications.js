@@ -1,3 +1,28 @@
+// Publishing current user
+Meteor.publish(null, function () {
+  if (this.userId) {
+    var fields = {
+      "services.google": 1,
+      profile: 1,
+      username: 1,
+      emails: 1,
+      isActive: 1,
+      relations: 1,
+      createdAt: 1,
+      currentAreaId: 1,
+      roles: 1
+    };
+
+    return Meteor.users.find({
+      _id: this.userId
+    }, {
+      fields: fields
+    });
+  } else {
+    this.ready();
+  }
+});
+
 Meteor.publish('profileUser', function (userId) {
   if (userId) {
     var user = Meteor.users.findOne(userId);
@@ -30,7 +55,7 @@ Meteor.publish('profileUser', function (userId) {
   }
 });
 
-Meteor.publish("usersList", function () {
+Meteor.publish('usersList', function (areaId) {
   if (this.userId) {
     var options = {
       username: 1,
@@ -41,10 +66,8 @@ Meteor.publish("usersList", function () {
       currentAreaId: 1
     };
 
-    var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
-
-    options["roles." + currentAreaId] = 1;
-    var users = Meteor.users.find({"relations.areaIds": currentAreaId}, {fields: options});
+    options["roles." + areaId] = 1;
+    var users = Meteor.users.find({'relations.areaIds': areaId}, {fields: options});
     logger.info("Userlist published");
     return users;
   } else {
@@ -75,14 +98,11 @@ Meteor.publish("selectedUsersList", function (usersIds) {
 });
 
 //managers and workers that should be assigned to shifts
-Meteor.publishComposite('workers', function () {
-  var currentAreaId;
+Meteor.publishComposite('workers', function (areaId) {
   return {
     find: function () {
       if (this.userId) {
         var user = Meteor.users.findOne(this.userId);
-
-        currentAreaId = user.currentAreaId ? user.currentAreaId : null;
 
         if (user && user.relations && user.relations.organizationId) {
           return Meteor.roles.find({
@@ -100,9 +120,9 @@ Meteor.publishComposite('workers', function () {
     children: [
       {
         find: function (role) {
-          if (currentAreaId) {
-            var query = {"relations.areaIds": currentAreaId};
-            query["roles." + currentAreaId] = role._id;
+          if (areaId) {
+            var query = {'relations.areaIds': areaId};
+            query["roles." + areaId] = role._id;
             return Meteor.users.find(query);
           } else {
             this.ready();

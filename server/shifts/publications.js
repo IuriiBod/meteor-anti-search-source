@@ -1,66 +1,34 @@
-Meteor.publishAuthorized('weeklyRoster', function (weekDate) {
-  check(weekDate, HospoHero.checkers.WeekDate);
+Meteor.publishAuthorized('weeklyRoster', function (weekRange) {
+  check(weekRange, HospoHero.checkers.WeekRange);
 
-  var date = HospoHero.dateUtils.getDateByWeekDate(weekDate);
-
-  logger.info("Weekly shifts detailed publication");
+  logger.info("Shift date range in publisher", weekRange);
 
   //get shifts
   return Shifts.find({
     "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
-    shiftDate: TimeRangeQueryBuilder.forWeek(date, false)
+    shiftDate: weekRange
   });
 });
 
-Meteor.publishAuthorized('weeklyRosterTemplate', function () {
+Meteor.publishAuthorized('weeklyRosterTemplate', function (areaId) {
   logger.info("Weekly shifts template");
 
   //get shifts
   return Shifts.find({
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
+    'relations.areaId': areaId,
     type: 'template'
   });
 });
 
 
-Meteor.publishComposite('shiftDetails', function (shiftId) {
-  check(shiftId, HospoHero.checkers.MongoId);
-
-  return {
-    find: function () {
-      return Shifts.find({_id: shiftId});
-    },
-    children: [
-      {
-        find: function (shift) {
-          return Jobs.find({
-            "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
-            _id: {$in: shift.jobs}
-          }, {limit: 10});
-        }
-      },
-      {
-        find: function (shift) {
-          //small hack
-          //use existing subscription to prevent code duplications
-          //analog of Meteor.subscribe('profileUser',shift.assignedTo)
-          //todo: this hack should be extracted as separate method
-          return Meteor.server.publish_handlers['profileUser'].call(this, shift.assignedTo);
-        }
-      }
-    ]
-  }
-});
-
-
-Meteor.publishComposite('daily', function (date, worker) {
+Meteor.publishComposite('daily', function (date, areaId, worker) {
   return {
     find: function () {
       if (this.userId) {
         var query = {
           shiftDate: moment(date).startOf('day'),
           type: null,
-          "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+          'relations.areaId': areaId
         };
 
         if (worker) {
@@ -93,11 +61,11 @@ Meteor.publishAuthorized("shift", function (id) {
 });
 
 // New publisher for shifts
-Meteor.publishAuthorized('shifts', function (type, userId) {
+Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
   var query = {
     assignedTo: userId,
     type: null,
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    'relations.areaId': areaId
   };
 
   var options = {
@@ -118,6 +86,6 @@ Meteor.publishAuthorized('shifts', function (type, userId) {
     this.ready();
   }
 
-  logger.info("Rostered ", type, " shifts for user ", userId, " have been published");
+  logger.info('Rostered ', type, ' shifts for user ', userId, ' have been published');
   return Shifts.find(query, options);
 });

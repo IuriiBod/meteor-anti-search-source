@@ -1,5 +1,5 @@
 Namespace('HospoHero', {
-  sendNotification: function(notification) {
+  sendNotification: function (notification) {
     if (!notification.title) {
       throw new Meteor.Error('Notification must have a title');
     }
@@ -24,18 +24,34 @@ Namespace('HospoHero', {
     sendNotificationToId = sendNotificationToId.concat(notificationOptions.to);
 
     if (notificationOptions.type == 'menu' || notificationOptions.type == 'job') {
-      var type = notificationOptions.type + 'list';
-      var subscription = Subscriptions.findOne({_id: type});
-      sendNotificationToId = sendNotificationToId.concat(subscription.subscribers);
+      var subscriptionsQuery = {
+        type: notificationOptions.type,
+        'relations.areaId': HospoHero.getCurrentAreaId()
+      };
+
+      if (notificationOptions.ref == '') {
+        subscriptionsQuery.itemIds = 'all';
+      } else {
+        subscriptionsQuery.$or = [
+          {itemIds: notificationOptions.ref},
+          {itemIds: 'all'}
+        ];
+      }
+
+      var subscriberIds = Subscriptions.find(subscriptionsQuery).map(function (subscription) {
+        return subscription.subscriber;
+      });
+
+      sendNotificationToId = sendNotificationToId.concat(subscriberIds);
     }
 
     var userIdIndex = sendNotificationToId.indexOf(notificationOptions.createtedBy);
-    if(userIdIndex > -1) {
+    if (userIdIndex > -1) {
       sendNotificationToId.splice(userIdIndex, 1);
     }
 
     if (sendNotificationToId.length) {
-      sendNotificationToId.forEach(function(to) {
+      sendNotificationToId.forEach(function (to) {
         notificationOptions.to = to;
         Notifications.insert(notificationOptions);
       });
