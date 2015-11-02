@@ -1,17 +1,17 @@
 Meteor.methods({
-  createIngredients: function(info) {
-    if(!HospoHero.canUser('edit stocks', Meteor.userId())) {
+  createIngredients: function (info) {
+    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
     check(info, Object);
 
-    if(!info.code) {
+    if (!info.code) {
       logger.error("Code field not found");
       throw new Meteor.Error(404, "Code field not found");
     }
-    if(!info.description) {
+    if (!info.description) {
       logger.error("Description field not found");
       throw new Meteor.Error(404, "Description field not found");
     }
@@ -19,7 +19,7 @@ Meteor.methods({
       "code": info.code,
       "relations.areaId": HospoHero.getCurrentAreaId()
     });
-    if(exist) {
+    if (exist) {
       logger.error("Duplicate entry");
       throw new Meteor.Error(404, "Duplicate entry, change code and try again");
     }
@@ -46,60 +46,60 @@ Meteor.methods({
     return id;
   },
 
-  editIngredient: function(id, info) {
-    if(!HospoHero.canUser('edit stocks', Meteor.userId())) {
+  editIngredient: function (id, info) {
+    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     var item = Ingredients.findOne({_id: id});
-    if(!item) {
+    if (!item) {
       logger.error("Item not found");
       throw new Meteor.Error(404, "Item not found");
     }
-    if(Object.keys(info).length < 0) {
+    if (Object.keys(info).length < 0) {
       logger.error("No editing fields found");
       throw new Meteor.Error(404, "No editing fields found");
     }
     var updateDoc = {};
-    if(info.code) {
-      if(item.code != info.code) {
+    if (info.code) {
+      if (item.code != info.code) {
         updateDoc.code = info.code;
       }
     }
-    if(info.description) {
-      if(item.description != info.description) {
+    if (info.description) {
+      if (item.description != info.description) {
         updateDoc.description = info.description;
       }
     }
-    if(info.suppliers) {
+    if (info.suppliers) {
       updateDoc.suppliers = info.suppliers;
     }
-    if(info.portionOrdered) {
-      if(item.portionOrdered != info.portionOrdered) {
+    if (info.portionOrdered) {
+      if (item.portionOrdered != info.portionOrdered) {
         updateDoc.portionOrdered = info.portionOrdered;
       }
     }
-    if(info.unitSize) {
-      if(item.unitSize != info.unitSize) {
+    if (info.unitSize) {
+      if (item.unitSize != info.unitSize) {
         updateDoc.unitSize = parseFloat(info.unitSize);
       }
     }
-    if(info.costPerPortion) {
-      if(info.costPerPortion == info.costPerPortion) {
-        if(item.costPerPortion != info.costPerPortion) {
+    if (info.costPerPortion) {
+      if (info.costPerPortion == info.costPerPortion) {
+        if (item.costPerPortion != info.costPerPortion) {
           updateDoc.costPerPortion = parseFloat(info.costPerPortion);
         }
       }
     }
-    if(info.portionUsed) {
-      if(item.portionUsed != info.portionUsed) {
+    if (info.portionUsed) {
+      if (item.portionUsed != info.portionUsed) {
         updateDoc.portionUsed = info.portionUsed;
       }
     }
-    if(Object.keys(updateDoc).length > 0) {
+    if (Object.keys(updateDoc).length > 0) {
       updateDoc['editedOn'] = Date.now();
       updateDoc['editedBy'] = Meteor.userId();
       Ingredients.update({'_id': id}, {$set: updateDoc});
@@ -107,27 +107,27 @@ Meteor.methods({
     }
   },
 
-  archiveIngredient: function(id, status) {
-    if(!HospoHero.canUser('edit stocks', Meteor.userId())) {
+  archiveIngredient: function (id, status) {
+    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    HospoHero.checkMongoId(id);
+    check(id, HospoHero.checkers.MongoId);
 
     var item = Ingredients.findOne(id);
-    if(!item) {
+    if (!item) {
       logger.error("Item not found");
       throw new Meteor.Error(404, "Item not found");
     }
 
-    if(status == 'delete') {
+    if (status == 'delete') {
       var existInPreps = JobItems.findOne(
         {"type": "Prep", "ingredients": {$elemMatch: {"_id": id}}},
         {fields: {"ingredients": {$elemMatch: {"_id": id}}}}
       );
-      if(existInPreps) {
-        if(existInPreps.ingredients.length > 0) {
+      if (existInPreps) {
+        if (existInPreps.ingredients.length > 0) {
           logger.error("Item found in Prep jobs, can't delete. Archiving ingredient");
         }
       }
@@ -135,35 +135,70 @@ Meteor.methods({
         {"ingredients": {$elemMatch: {"_id": id}}},
         {fields: {"ingredients": {$elemMatch: {"_id": id}}}}
       );
-      if(existInMenuItems) {
-        if(existInMenuItems.ingredients.length > 0) {
+      if (existInMenuItems) {
+        if (existInMenuItems.ingredients.length > 0) {
           logger.error("Item found in Menu Items, can't delete. Archiving ingredient", id);
         }
       }
 
       var existInStocktakes = Stocktakes.findOne({"stockId": id});
-      if(existInStocktakes) {
+      if (existInStocktakes) {
         logger.error("Item found in stock counting, can't delete. Archiving ingredient");
       }
 
-      if(existInPreps || existInMenuItems || existInStocktakes) {
+      if (existInPreps || existInMenuItems || existInStocktakes) {
         throw  new Meteor.Error(404, "Stock item cannot be deleted, archived");
       } else {
         Ingredients.remove(id);
         logger.info("Ingredient deleted", id);
       }
-    } else if(status == "archive") {
+    } else if (status == "archive") {
       Ingredients.update({"_id": id}, {$set: {"status": "archived"}});
       logger.error("Stock item archived ", id);
-    } else if(status == "restore") {
+    } else if (status == "restore") {
       Ingredients.update({"_id": id}, {$set: {"status": "active"}});
       logger.error("Stock item restored ", id);
     }
   },
 
-  ingredientsCount: function() {
+  ingredientsCount: function () {
     return Ingredients.find({
       "relations.areaId": HospoHero.getCurrentAreaId()
     }).count();
+  },
+
+  duplicateIngredient: function (ingredientId, areaId, quantity) {
+    var ingredient = Ingredients.findOne({_id: ingredientId});
+
+    if (ingredient.relations.areaId != areaId) {
+      var existsItem = Ingredients.findOne({'relations.areaId': areaId, description: ingredient.description});
+
+      if (existsItem) {
+        ingredientId = existsItem._id;
+      } else {
+        ingredient = HospoHero.misc.omitAndExtend(ingredient, ['_id', 'relations', 'specialAreas', 'generalAreas'], areaId);
+
+        if (ingredient.suppliers) {
+          ingredient.suppliers = duplicateSupplier(ingredient.suppliers, areaId);
+        }
+        ingredientId = Ingredients.insert(ingredient);
+      }
+    }
+
+    return quantity === false ? ingredientId : {_id: ingredientId, quantity: quantity};
   }
 });
+
+var duplicateSupplier = function (supplierId, areaId) {
+  var supplier = Suppliers.findOne({_id: supplierId});
+  if (supplier.relations.areaId != areaId) {
+    var existsSupplier = Suppliers.findOne({'relations.areaId': areaId, name: supplier.name});
+    if (existsSupplier) {
+      supplierId = existsSupplier._id;
+    } else {
+      supplier = HospoHero.misc.omitAndExtend(supplier, ['_id', 'relations'], areaId);
+      supplierId = Suppliers.insert(supplier);
+    }
+  }
+  return supplierId;
+};

@@ -2,21 +2,30 @@ Router.route('/roster/prediction/:year/:week/:category', {
   name: "salesPrediction",
   template: "salesPredictionPage",
   waitOn: function () {
-    var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
+    var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
+
       this.subscribe('organizationInfo'),
-      this.subscribe('weatherForecast', HospoHero.misc.getWeekDateFromRoute(this)),
-      this.subscribe('areaMenuItems', this.params.category),
+      this.subscribe('areaMenuItems', currentAreaId, this.params.category),
       this.subscribe('allCategories'),
-      this.subscribe("dailySales", HospoHero.misc.getWeekDateFromRoute(this))
+      this.subscribe('weatherForecast', weekRange, currentAreaId),
+      this.subscribe('dailySales', weekRange, currentAreaId)
+
     ];
   },
   data: function () {
     return {
-      date: {
-        year: this.params.year,
-        week: this.params.week
-      }
+      date: HospoHero.misc.getWeekDateFromRoute(this)
     };
+  }
+});
+
+//temporal route
+Router.route("forceForecast", {
+  path: '/forceForecast',
+  template: "forceForecast",
+  data: function () {
+    return {};
   }
 });

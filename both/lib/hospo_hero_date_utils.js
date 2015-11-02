@@ -99,10 +99,6 @@ Namespace('HospoHero.dateUtils', {
     }
   },
 
-  getMillisecondsFromDays: function (days) {
-    return days * 24 * 60 * 60 * 1000;
-  },
-
   weekDateName: function (date) {
     return moment(date).format('dddd');
   },
@@ -127,6 +123,7 @@ Namespace('HospoHero.dateUtils', {
     return secs / 60;
   },
 
+  // This method also aren't used
   timeDuration: function (time) {
     var hours = moment.duration(time).hours();
     var mins = moment.duration(time).minutes();

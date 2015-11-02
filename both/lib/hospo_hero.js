@@ -1,30 +1,23 @@
 Namespace('HospoHero', {
-  checkMongoId: function (id) {
-    check(id, String);
-    if (!/[0-9a-zA-Z]{17}/.test(id)) {
-      throw new Meteor.Error("Expected MongoID");
-    }
-  },
-
-  checkDate: function (date) {
-    if (!moment(date).isValid()) {
-      throw new Meteor.Error("Expected date");
-    }
-  },
-
-  isInOrganization: function(userId) {
+  isInOrganization: function (userId) {
     userId = userId ? userId : Meteor.userId();
     var user = Meteor.users.findOne({_id: userId});
     return user && user.relations && user.relations.organizationId ? user.relations.organizationId : false;
   },
 
-  isOrganizationOwner: function(userId) {
-    userId = userId ? userId : Meteor.userId();
+  isOrganizationOwner: function (userId) {
+    if(!userId){
+      try{
+        userId = Meteor.userId();
+      }catch(error){
+        return false;
+      }
+    }
     var orgId = HospoHero.isInOrganization(userId);
     return !!Organizations.findOne({_id: orgId, owner: userId});
   },
 
-  isInRole: function(roleName, userId, areaId) {
+  isInRole: function (roleName, userId, areaId) {
     userId = userId ? userId : Meteor.userId();
     if (!userId) {
       return false;
@@ -39,7 +32,7 @@ Namespace('HospoHero', {
     };
     var role = Roles.getRoleByName(roleName);
 
-    if(role) {
+    if (role) {
       query['roles.' + areaId] = role._id;
       return !!Meteor.users.findOne(query);
     } else {
@@ -47,17 +40,17 @@ Namespace('HospoHero', {
     }
   },
 
-  isOwner: function(userId, areaId) {
+  isOwner: function (userId, areaId) {
     return HospoHero.isInRole('Owner', userId, areaId);
   },
 
-  isManager: function(userId, areaId) {
+  isManager: function (userId, areaId) {
     return HospoHero.isInRole('Manager', userId, areaId) ||
-        HospoHero.isOrganizationOwner(userId) ||
-        HospoHero.isOwner(userId, areaId);
+      HospoHero.isOrganizationOwner(userId) ||
+      HospoHero.isOwner(userId, areaId);
   },
 
-  isWorker: function(userId, areaId) {
+  isWorker: function (userId, areaId) {
     return HospoHero.isInRole('Worker', userId, areaId);
   },
 
@@ -94,12 +87,12 @@ Namespace('HospoHero', {
   },
 
   // Returns username. user can be user ID or user object
-  username: function(user) {
-    if(typeof user == "string") {
+  username: function (user) {
+    if (typeof user == "string") {
       user = Meteor.users.findOne({_id: user});
     }
 
-    if(user) {
+    if (user) {
       if (user.profile.firstname && user.profile.lastname) {
         return user.profile.firstname + " " + user.profile.lastname;
       } else {

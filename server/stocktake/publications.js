@@ -1,32 +1,32 @@
-Meteor.publish("allAreas", function () {
+Meteor.publish('allAreas', function (currentAreaId) {
   if (this.userId) {
     return [
-      GeneralAreas.find({"relations.areaId": HospoHero.getCurrentAreaId(this.userId)}),
-      SpecialAreas.find({"relations.areaId": HospoHero.getCurrentAreaId(this.userId)})
+      GeneralAreas.find({'relations.areaId': currentAreaId}),
+      SpecialAreas.find({'relations.areaId': currentAreaId})
     ];
   }
 });
 
-Meteor.publish("stocktakeMains", function (date) {
+Meteor.publish('stocktakeMains', function (date) {
   if (this.userId) {
     var query = {
-      "stocktakeDate": new Date(date).getTime(),
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      stocktakeDate: new Date(date).getTime(),
+      'relations.areaId': HospoHero.getCurrentAreaId(this.userId)
     };
     return StocktakeMain.find(query);
   }
 });
 
-Meteor.publish("stocktakes", function (version) {
+Meteor.publish('stocktakes', function (version) {
   return [
-    Stocktakes.find({"version": version}),
+    Stocktakes.find({version: version}),
     StocktakeMain.find(version)
   ];
 });
 
-Meteor.publish("ordersPlaced", function (version) {
-  logger.info("Stock orders published for version ", version);
-  return StockOrders.find({"version": version});
+Meteor.publish('ordersPlaced', function (version) {
+  logger.info('Stock orders published for version ', version);
+  return StockOrders.find({version: version});
 });
 
 Meteor.publish("orderReceipts", function (ids) {
@@ -34,17 +34,17 @@ Meteor.publish("orderReceipts", function (ids) {
   return OrderReceipts.find({"_id": {$in: ids}});
 });
 
-Meteor.publish("orderReceiptsByVersion", function (version) {
+Meteor.publish('orderReceiptsByVersion', function (version, areaId) {
   logger.info("Stock order receipts published by version", version);
   return OrderReceipts.find({
-    "version": version,
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    version: version,
+    'relations.areaId': areaId
   });
 });
 
-Meteor.publishAuthorized("allOrderReceipts", function () {
+Meteor.publishAuthorized('allOrderReceipts', function (areaId) {
   return OrderReceipts.find({
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    'relations.areaId': areaId
   }, {
     sort: {"date": -1}, limit: 10
   });

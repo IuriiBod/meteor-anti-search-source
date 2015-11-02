@@ -13,41 +13,6 @@ Template.dailyShiftScheduling.events({
       $flyoutContainer.addClass("show");
     }
     return false;
-  },
-
-  'change .selectWorkers': function (event) {
-    var workerId = $(event.target).val();
-    var shiftId = $(event.target).attr("data-id");
-
-    var shift = Shifts.findOne({_id: shiftId});
-    shift.assignedTo = workerId;
-    Meteor.call('updateShift', shift, HospoHero.handleMethodResult());
-  },
-
-  //todo: get rid of event handlers duplication!!!
-  'click .generateRecurring': function (event) {
-    event.preventDefault();
-    var date = Router.current().params.date;
-    Meteor.call("generateRecurrings", date, HospoHero.handleMethodResult());
-
-    //todo: get rid of this stuff, it should be done on server side
-    var shift = Shifts.find({_id: shiftId});
-    if (shift) {
-      var shiftUpdateDoc = {
-        to: workerId,
-        userId: Meteor.userId(),
-        shiftId: shiftId,
-        text: "You have been assigned to shift dated <b>" + HospoHero.dateUtils.shiftDateInterval(shift) + "</b>",
-        type: "update"
-      };
-      Meteor.call("addShiftUpdate", shiftUpdateDoc, HospoHero.handleMethodResult());
-    }
-  },
-
-  'click .generateRecurring': function (event) {
-    event.preventDefault();
-    var date = Router.current().params.date;
-    Meteor.call("generateRecurrings", date, HospoHero.handleMethodResult());
   }
 });
 

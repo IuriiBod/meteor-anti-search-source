@@ -1,8 +1,8 @@
-Meteor.publish('jobItems', function(ids, status) {
+Meteor.publish('jobItems', function(ids, areaId, status) {
   if(this.userId) {
     var query = {
       status: 'active',
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      'relations.areaId': areaId
     };
 
     if(ids && ids.length) {

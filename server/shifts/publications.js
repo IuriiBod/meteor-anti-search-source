@@ -1,36 +1,34 @@
-Meteor.publishAuthorized('weeklyRoster', function (weekDate) {
-  check(weekDate, HospoHero.checkers.WeekDate);
+Meteor.publishAuthorized('weeklyRoster', function (weekRange) {
+  check(weekRange, HospoHero.checkers.WeekRange);
 
-  var date = HospoHero.dateUtils.getDateByWeekDate(weekDate);
-
-  logger.info("Weekly shifts detailed publication");
+  logger.info("Shift date range in publisher", weekRange);
 
   //get shifts
   return Shifts.find({
     "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
-    shiftDate: TimeRangeQueryBuilder.forWeek(date, false)
+    shiftDate: weekRange
   });
 });
 
-Meteor.publishAuthorized('weeklyRosterTemplate', function () {
+Meteor.publishAuthorized('weeklyRosterTemplate', function (areaId) {
   logger.info("Weekly shifts template");
 
   //get shifts
   return Shifts.find({
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
+    'relations.areaId': areaId,
     type: 'template'
   });
 });
 
 
-Meteor.publishComposite('daily', function (date, worker) {
+Meteor.publishComposite('daily', function (date, areaId, worker) {
   return {
     find: function () {
       if (this.userId) {
         var query = {
           shiftDate: moment(date).startOf('day'),
           type: null,
-          "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+          'relations.areaId': areaId
         };
 
         if (worker) {
@@ -63,11 +61,11 @@ Meteor.publishAuthorized("shift", function (id) {
 });
 
 // New publisher for shifts
-Meteor.publishAuthorized('shifts', function (type, userId) {
+Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
   var query = {
     assignedTo: userId,
     type: null,
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+    'relations.areaId': areaId
   };
 
   var options = {
@@ -88,6 +86,6 @@ Meteor.publishAuthorized('shifts', function (type, userId) {
     this.ready();
   }
 
-  logger.info("Rostered ", type, " shifts for user ", userId, " have been published");
+  logger.info('Rostered ', type, ' shifts for user ', userId, ' have been published');
   return Shifts.find(query, options);
 });

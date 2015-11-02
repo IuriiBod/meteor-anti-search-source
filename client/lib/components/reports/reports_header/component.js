@@ -4,6 +4,7 @@ var component = FlowComponents.define('reportsHeader', function () {
 
 component.state.onDateChanged = function () {
   return function (weekDate) {
-    Router.go(Router.current().route.getName(), weekDate);
+    var routeName = Router.current().route.getName();
+    Router.go(routeName, weekDate);
   };
 };

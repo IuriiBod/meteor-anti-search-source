@@ -1,3 +1,21 @@
+salesPredictionUpdateJob = function () {
+  logger.info('started prediction update job');
+
+  var updateDayIntervals = [84, 7, 2];
+  var locations = Locations.find({archived: {$ne: true}});
+  locations.forEach(function (location) {
+    if (HospoHero.prediction.isAvailableForLocation(location)) {
+
+      updateDayIntervals.forEach(function (interval) {
+        var needToUpdate = isNeedToUpdate(interval, location._id);
+        if (needToUpdate) {
+          predict(interval, location._id);
+        }
+      });
+    }
+  });
+};
+
 var getWeatherForecast = function (dayIndex, forecastDate, weatherManager) {
   //todo: temporal. figure out typical weather
   var defaultWeather = {
@@ -75,54 +93,34 @@ var predict = function (days, locationId) {
         return user._id;
       });
       notification.send(receiversIds);
+
     });
 
     dateMoment.add(1, 'day');
   }
 };
 
+var getPredicionUpdatedDate = function (locationId, interval) {
+  var predictionDate = moment();
+  predictionDate.add(interval, 'day');
 
-var updateForecastDate = function (locationId, property, dateValue) {
-  var properties = _.isArray(property) ? property : [property];
+  var menuItemFromCurrentLocation = MenuItems.findOne({'relations.locationId': locationId});
+  var dailySaleQuery = {menuItemId: menuItemFromCurrentLocation._id};
+  _.extend(dailySaleQuery, {date: TimeRangeQueryBuilder.forDay(predictionDate)});
 
-  var updateQuery = _.reduce(properties, function (query, property) {
-    query[property] = dateValue;
-    return query;
-  }, {});
-
-  ForecastDates.update({locationId: locationId}, {$set: updateQuery}, {upsert: true});
+  var dailySale = DailySales.findOne(dailySaleQuery);
+  if (dailySale) {
+    return dailySale.predictionUpdatedAt;
+  }
 };
 
+var isNeedToUpdate = function (interval, locationId) {
+  var halfOfInterval = parseInt(interval/2);
+  var predictionUpdatedDate = getPredicionUpdatedDate(locationId, halfOfInterval+1) || false;
+  var shouldBeUpdatedBy = moment().subtract(halfOfInterval, 'day');
 
-salesPredictionUpdateJob = function () {
-  logger.info('started prediction update job');
-
-  var locations = Locations.find({archived: {$ne: true}});
-
-  var todayMoment = moment();
-
-  locations.forEach(function (location) {
-    if (HospoHero.prediction.isAvailableForLocation(location)) {
-      var lastUpdates = ForecastDates.findOne({locationId: location._id});
-
-      var needFullUpdate = !lastUpdates || !lastUpdates.lastThreeDays
-        || todayMoment.diff(lastUpdates.lastSixWeeks) >= HospoHero.dateUtils.getMillisecondsFromDays(42);
-
-      if (needFullUpdate) {
-        predict(84, location._id);
-        updateForecastDate(location._id, ['lastSixWeeks', 'lastThreeDays'], todayMoment.toDate());
-
-      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.dateUtils.getMillisecondsFromDays(3)) {
-        predict(7, location._id);
-        updateForecastDate(location._id, 'lastThreeDays', todayMoment.toDate());
-
-      } else if (todayMoment.diff(lastUpdates.lastThreeDays) >= HospoHero.dateUtils.getMillisecondsFromDays(3)) {
-        predict(2, location._id);
-      }
-    }
-  });
+  return !predictionUpdatedDate || moment(predictionUpdatedDate) < shouldBeUpdatedBy;
 };
-
 
 //!!! disable it temporaly to be able control it manually
 //if (!HospoHero.isDevelopmentMode()) {

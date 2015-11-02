@@ -39,6 +39,7 @@ Namespace('HospoHero.roles', {
     "Edit Users": "edit users",
     "View Forecast": "view forecast",
     "Edit Areas": "edit areas",
+    "View Areas Reports": "view areas reports",
     "View areas financial info": "view area's financial info",
     "Edit Locations": "edit locations",
     "Billing Account": "edit billing account",

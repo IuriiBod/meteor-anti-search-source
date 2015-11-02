@@ -3,23 +3,25 @@ Router.route('/roster/weekly/:year/:week', {
   path: '/roster/weekly/:year/:week',
   template: "weeklyRosterMainView",
   waitOn: function () {
-    var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(this);
+    var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     var subscriptions = [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weeklyRoster', currentWeekDate),
-      Meteor.subscribe('workers'),
-      Meteor.subscribe('sections'),
       Meteor.subscribe('areaMenuItems'),
-      Meteor.subscribe('dailySales', HospoHero.misc.getWeekDateFromRoute(this))
+      Meteor.subscribe('dailySales', weekRange, currentAreaId),
+      Meteor.subscribe('weeklyRoster', weekRange),
+      Meteor.subscribe('workers', currentAreaId),
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('areaMenuItems', currentAreaId)
     ];
 
     if (HospoHero.canUser('view forecast', Meteor.userId())) {
-      subscriptions.push(Meteor.subscribe('dailySales',currentWeekDate));
+      subscriptions.push(Meteor.subscribe('dailySales',weekRange));
     }
     return subscriptions;
   },
   data: function () {
-    if (!HospoHero.canUser('view roster')()) {
+    if (!HospoHero.canUser('view roster', Meteor.userId())) {
       Router.go("/");
     }
     return {
@@ -31,24 +33,23 @@ Router.route('/roster/weekly/:year/:week', {
 Router.route('/roster/daily/:date', {
   name: "dailyRoster",
   path: '/roster/daily/:date',
-  template: "dailyRosterMainView",
+  template: 'dailyRosterMainView',
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('daily', this.params.date, null),
-      Meteor.subscribe('workers'),
-      Meteor.subscribe('jobs', 'unassigned'),
-      Meteor.subscribe('jobItems'),
-      Meteor.subscribe('sections'),
+      Meteor.subscribe('daily', this.params.date, currentAreaId, null),
+      Meteor.subscribe('workers', currentAreaId),
+      Meteor.subscribe('jobs', currentAreaId, 'unassigned'),
+      Meteor.subscribe('jobItems', null, currentAreaId),
+      Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('jobTypes')
     ];
   },
   data: function () {
-    if (!HospoHero.canUser('view roster')()) {
+    if (!HospoHero.canUser('view roster', Meteor.userId())) {
       Router.go("/");
     }
-  },
-  fastRender: true
+  }
 });
 
 
@@ -57,17 +58,16 @@ Router.route('/roster/template/weekly', {
   path: '/roster/template/weekly',
   template: "weeklyRosterTemplateMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('weeklyRosterTemplate'),
-      Meteor.subscribe('workers'),
-      Meteor.subscribe('sections')
+      Meteor.subscribe('weeklyRosterTemplate', currentAreaId),
+      Meteor.subscribe('workers', currentAreaId),
+      Meteor.subscribe('sections', currentAreaId)
     ];
   },
   data: function () {
-    if (!HospoHero.canUser('view roster')()) {
+    if (!HospoHero.canUser('view roster', Meteor.userId())) {
       Router.go('/');
     }
-  },
-  fastRender: true
+  }
 });
