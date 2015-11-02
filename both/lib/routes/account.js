@@ -5,6 +5,7 @@ Router.route('signIn', {
   onBeforeAction: function () {
     if (Meteor.userId()) {
       Router.go('/');
+    } else {
       this.next();
     }
   },
@@ -42,6 +43,7 @@ Router.route('invitationAccept', {
   onBeforeAction: function () {
     if (Meteor.userId()) {
       Router.go('/');
+    } else {
       this.next();
     }
   },
@@ -97,12 +99,6 @@ Router.route('/user/profile/:_id', {
       Meteor.subscribe('shifts', 'opened', null, currentAreaId),
       Meteor.subscribe('sections', currentAreaId)
     ];
-  },
-  onBeforeAction: function () {
-    if (!Meteor.userId()) {
-      Router.go('/');
-      this.next();
-    }
   },
   data: function () {
     Session.set('profileUser', this.params._id);
