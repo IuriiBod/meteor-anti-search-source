@@ -13,7 +13,10 @@ Template.shiftBasicTimeEditable.helpers({
 var createShiftEndTimeEditableConfig = function (templateInstance) {
   var onSuccess = function (response, newTime) {
     var shift = templateInstance.data.shift;
-    shift[templateInstance.data.property] = HospoHero.dateUtils.shiftDate(newTime, shift.type === 'template');
+    shift[templateInstance.data.property] = newTime;
+
+    HospoHero.dateUtils.adjustShiftTimes(newTime);
+
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
 
