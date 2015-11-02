@@ -19,7 +19,7 @@ Template.addUserPopup.events({
     var name = $('[name="newUserName"]').val();
     var role = $('select[name="userRole"]').val();
 
-    if (!name || name.trim().length <= 3) {
+    if (!name || name.trim().length < 3) {
       tpl.$('.input-group').addClass('has-error');
       tpl.$('input[name="newUserName"]').val('').focus();
     } else {
