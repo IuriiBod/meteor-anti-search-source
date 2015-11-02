@@ -6,6 +6,10 @@ component.state.getLocation = function () {
   return this.location;
 };
 
+component.state.isCurrentLocation = function (locationId) {
+  return HospoHero.getCurrentArea().locationId === locationId
+};
+
 component.action.getLocation = function () {
   return this.location;
 };
