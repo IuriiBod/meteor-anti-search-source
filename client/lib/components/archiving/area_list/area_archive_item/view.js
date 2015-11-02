@@ -5,3 +5,17 @@ Template.areaArchiveItem.events({
     Meteor.call("switchArchiveArea", area);
   }
 });
+
+Template.areaArchiveItem.helpers({
+  btnSettings: function (archived){
+    var settings = {
+      btnClass: "btn-default",
+      text: "archive"
+    };
+    if(archived){
+      settings.btnClass = "btn-danger";
+      settings.text = "unarchive";
+    }
+    return settings;
+  }
+});
