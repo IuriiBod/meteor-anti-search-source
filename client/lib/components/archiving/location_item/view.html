@@ -6,7 +6,11 @@
            aria-expanded="false" aria-controls="body-{{_id}}">
           {{name}}
         </a>
-        <button class="btn btn-xs {{settings.btn_class}} pull-right archive-loc-btn">{{settings.btn_text}}</button>
+        {{#if archived}}
+          <button class="btn btn-xs btn-danger pull-right archive-loc-btn">unarchive</button>
+        {{else}}
+          <button class="btn btn-xs btn-default pull-right archive-loc-btn">archive</button>
+        {{/if}}
       </h4>
     </div>
   {{/with}}
