@@ -82,6 +82,5 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
   }
 
   logger.info('Rostered ', type, ' shifts for user ', userId, ' have been published');
-  var shifts = Shifts.find(query);
-  return shifts;
+  return Shifts.find(query);
 });
