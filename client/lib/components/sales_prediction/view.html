@@ -1,4 +1,8 @@
 <template name="salesPrediction">
+  <div class="row">
+    {{> render component="FilterByCategory"}}
+    {{> render component="menuItemsSearch" searchSource=state$getSearchSource}}
+  </div>
   <div class="prediction-component">
     <div class="prediction-panel">
       <div class="sales-per-menu-item-section">
@@ -30,7 +34,7 @@
           </thead>
           <tbody>
           {{>render component="totalSalesRow"}}
-          {{#each state$menuItems}}
+          {{#each state$getMenuItems}}
             {{> render component="predictionSalesRow" currentWeekDate=state$currentWeekDate menuItem=this}}
           {{/each}}
           </tbody>
@@ -38,11 +42,16 @@
       </div>
     </div>
   </div>
-    {{#unless state$areAllItemsLoaded}}
-        <div>
-            <button id="loadMoreBtn" class="btn btn-white center-block" type="button">
-                Load more
-            </button>
-        </div>
-    {{/unless}}
+  {{#if state$allItemsLoaded}}
+    <br>
+    <div class="text-center">
+      <h4><b>All menu items are loaded</b></h4>
+    </div>
+  {{else}}
+    <div>
+      <button id="loadMoreBtn" class="btn btn-white center-block" type="button">
+        Load more
+      </button>
+    </div>
+  {{/if}}
 </template>

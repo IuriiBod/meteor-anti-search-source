@@ -1,6 +1,7 @@
 Meteor.publish('dailySales', function (weekRange, areaId) {
   check(weekRange, HospoHero.checkers.WeekRange);
 
+
   var haveAccess = HospoHero.canUser('view forecast', this.userId);
   if (!haveAccess) {
     this.error(new Meteor.Error(403, 'Access Denied'));

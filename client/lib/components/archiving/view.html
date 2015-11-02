@@ -2,7 +2,7 @@
   <div class="panel-body">
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
       {{#each state$locations}}
-        <div class="panel panel-{{settings.panel}}">
+        <div class="panel panel-default">
           {{>render component="locationItem" location=this}}
           <div id="body-{{_id}}" class="panel-collapse collapse" role="tabpanel"
                aria-labelledby="heading-{{_id}}">
