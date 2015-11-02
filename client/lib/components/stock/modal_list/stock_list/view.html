@@ -29,15 +29,15 @@
                 {{/each}}
               </tbody>
             </table>
+              {{#unless state$showAddStockItemMenu}}
               <div class="alert alert-warning">If your stock item is not in the list, <a id="addNewIng" class="alert-link">click here</a> to add it. Once you save it, it will appear next time you search.</div>
+              {{/unless}}
+              {{#if state$showAddStockItemMenu}}
+                {{> render component = "submitIngredient" isModal=false}}
+              {{/if}}
           </div>
         </div>
       </form>
     </div>
   </div>
-  <!-- ADD INGREDIENT-->
-  <div class="modal fade" id="addIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component = 'submitIngredient'}}
-  </div>
-  <!-- /ADD INGREDIENT -->
 </template>

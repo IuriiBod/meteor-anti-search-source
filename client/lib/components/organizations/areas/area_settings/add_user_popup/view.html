@@ -6,7 +6,7 @@
     <div class="panel-body">
       {{#if state$inSearchMode}}
         <form class="add-user-to-area-form">
-          <input type="text" class="form-control" placeholder="e.g. john@gmail.com" name="addUserName">
+          <input type="text" class="form-control input-field" placeholder="e.g. john@gmail.com" name="addUserName">
 
           {{#if state$inviteNewUser}}
             {{> render component='inviteNewUser'}}
