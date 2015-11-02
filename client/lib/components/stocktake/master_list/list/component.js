@@ -11,6 +11,4 @@ component.prototype.onListRender = function() {
   Meteor.call("stockTakeHistory", HospoHero.handleMethodResult(function(list) {
     self.set("historyList", list);
   }));
-
-  Meteor.subscribe("stocktakeMains", new Date().getTime());
 };

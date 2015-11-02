@@ -39,7 +39,6 @@ component.state.sections = function() {
 
 component.action.submit = function(info) {
   Meteor.call("createJobItem", info, HospoHero.handleMethodResult(function(id) {
-    Session.set("selectedIngredients", null);
     Session.set("selectedJobItems", null);
     Session.set("checklist", []);
     Router.go("jobItemDetailed", {"_id": id});

@@ -1,27 +1,27 @@
 Template.createLocation.helpers({
-  timezones: function() {
+  timezones: function () {
     return HospoHero.dateUtils.timezones();
   },
 
-  hours: function() {
+  hours: function () {
     return HospoHero.dateUtils.hours();
   },
 
-  minutes: function() {
+  minutes: function () {
     return HospoHero.dateUtils.minutes();
   },
 
-  countries: function(){
+  countries: function () {
     return HospoHero.misc.getCountries();
   }
 });
 
 Template.createLocation.events({
-  'change input[type="radio"]': function() {
+  'change input[type="radio"]': function () {
     FlowComponents.callAction('changeEnable');
   },
 
-  'submit form': function(e) {
+  'submit form': function (e) {
     e.preventDefault();
 
     var fields = [
@@ -32,9 +32,20 @@ Template.createLocation.events({
       'timezone'
     ];
     var doc = HospoHero.misc.getValuesFromEvent(e, fields, true);
-    doc.pos = HospoHero.misc.getValuesFromEvent(e, ['posKey', 'posSecret', 'posHost'], true);
+
+    var pos = HospoHero.misc.getValuesFromEvent(e, ['posKey', 'posSecret', 'posHost'], true);
+    if(pos.posKey || pos.posSecret || pos.posHost) {
+      doc.pos = {
+        key: pos.posKey,
+        secret: pos.posSecret,
+        host: pos.postHost
+      };
+    }
+
     doc.openingTime = HospoHero.misc.getValuesFromEvent(e, ['openingHour', 'openingMinutes'], true);
+    doc.openingTime = moment(doc.openingTime).toDate();
     doc.closingTime = HospoHero.misc.getValuesFromEvent(e, ['closingHour', 'closingMinutes'], true);
+    doc.closingTime = moment(doc.closingTime).toDate();
     doc.organizationId = e.target.dataset.id;
 
     FlowComponents.callAction('submit', doc);

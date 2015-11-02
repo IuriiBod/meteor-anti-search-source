@@ -5,21 +5,26 @@ Namespace('HospoHero', {
    * @param {String} [userId]
    * @returns {Function|Boolean}
    */
-  canUser: function() {
+  canUser: function () {
     var action = arguments[0];
 
     var hasPermission = function (action, userId) {
       userId = userId ? userId : Meteor.userId();
       var user = Meteor.users.findOne(userId);
 
-      if(!user || !user.currentAreaId) {
+      if (!user || !user.currentAreaId) {
         return false;
       }
-      var roleId = user.roles[user.currentAreaId];
-      return Roles.hasAction(roleId, action);
+
+      if (user.roles) {
+        var roleId = user.roles[user.currentAreaId];
+        return Roles.hasAction(roleId, action);
+      } else {
+        return false;
+      }
     };
 
-    var checkPermission = function(userId) {
+    var checkPermission = function (userId) {
       // Organization's owner can't be rosted
       return (action !== 'can be rosted' && HospoHero.isOrganizationOwner(userId)) || hasPermission(action, userId);
     };

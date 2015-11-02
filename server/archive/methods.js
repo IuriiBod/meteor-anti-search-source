@@ -1,5 +1,5 @@
 Meteor.methods({
-  "switchArchiveLocation": function(location){
+  switchArchiveLocation: function(location){
     if(HospoHero.isOrganizationOwner()){
       var res = !location.archived;
       Locations.update({_id: location._id}, {$set:{archived: res}});

@@ -1,6 +1,6 @@
 /**
  * Api key should be stored in app's settings
- * @param {String} country
+ *
  * @param {String} city
  * @constructor
  */
@@ -13,32 +13,56 @@ WorldWeather = function WorldWeather(city) {
     key: Meteor.settings.WorldWeather.KEY
   };
   this._url = Meteor.settings.WorldWeather.HOST;
-  this._targetTime = '1200';
+  this._targetTimes = ['1200', '1300', '1400', '1500', '1600'];
+};
+
+WorldWeather.prototype._isTargetTime = function (time) {
+  return this._targetTimes.indexOf(time) > -1;
+};
+
+
+/**
+ * Handles and logs errors from WorldWeather API
+ *
+ * @param params request parameters
+ * @param error request error
+ * @private
+ */
+WorldWeather.prototype._onHttpError = function (params, error) {
+  logger.error('WorldWeather Access Error', {params: params, error: error});
 };
 
 /**
  * Base method used to access world weather API
+ *
  * @private
  * @param {String} route API route for WorldWeather (weather, past-weather)
  * @param {Object} params Parameters for request (location, dates)
  * @return {Object|Boolean} Returns object with weather date. If request failed returns false
  */
 WorldWeather.prototype._httpQuery = function (route, params) {
-  var defaultParams = _.extend({}, this._defaultParams);
+  var defaultParams = _.clone(this._defaultParams);
   var allParams = _.extend(defaultParams, params);
   try {
     var res = HTTP.get(this._url + route, {
       params: allParams
     });
-    return res.data;
+
+    if (res.data.data.error) {
+      this._onHttpError(params, res.data.data.error);
+      return false;
+    } else {
+      return res.data.data;
+    }
   } catch (err) {
-    logger.error('WorldWeather Access Error', {params: params, error: err});
+    this._onHttpError(params, err);
     return false;
   }
 };
 
 /**
  * Method used to get past weather for given interval
+ *
  * @param {Date|String} fromDate
  * @param {Date|String} toDate
  * @return {Array} Return an array of objects of formated weather data.
@@ -61,32 +85,36 @@ WorldWeather.prototype.getHistorical = function (fromDate, toDate) {
  */
 WorldWeather.prototype.getForecast = function () {
   var data = this._httpQuery("weather.ashx", {});
+
   return this._mapWeatherEntries(data);
 };
 
 /**
  * Method for parsing weather response
+ *
  * @param data
  * @returns {any|*|Array}
  * @private
  */
 WorldWeather.prototype._mapWeatherEntries = function (data) {
   var self = this;
-  return data.data.weather.map(function (weatherItem) {
-    var hourly = _.find(weatherItem.hourly, function (hourlyItem) {
-      return hourlyItem.time === self._targetTime;
-    });
+  return data && data.weather.map(function (weatherItem) {
+      var hourly = _.find(weatherItem.hourly, function (hourlyItem) {
+        return self._isTargetTime(hourlyItem.time);
+      });
 
-    if (!hourly) {
-      throw new Meteor.Error('Weather parse error');
-    }
-    return {
-      date: new Date(weatherItem.date),
-      temp: parseInt(hourly.tempC),
-      main: hourly.weatherDesc[0].value,
-      icon: hourly.weatherIconUrl[0].value
-    };
-  });
+      if (!hourly) {
+        logger.error('Weather parse error: Hourly record for target time not found');
+        throw new Meteor.Error(500, 'Weather parse error: Hourly record for target time not found');
+      }
+
+      return {
+        date: new Date(weatherItem.date),
+        temp: parseInt(hourly.tempC),
+        main: hourly.weatherDesc[0].value,
+        icon: hourly.weatherIconUrl[0].value
+      };
+    });
 };
 
 /**
@@ -98,7 +126,7 @@ WorldWeather.prototype.checkLocation = function () {
   var data = this._httpQuery("weather.ashx", {
     q: this._city
   });
-  return !data.data.error
+  return !!data;
 };
 
 

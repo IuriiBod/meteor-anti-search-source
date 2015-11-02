@@ -23,36 +23,6 @@ Meteor.publishAuthorized('weeklyRosterTemplate', function () {
 });
 
 
-Meteor.publishComposite('shiftDetails', function (shiftId) {
-  check(shiftId, HospoHero.checkers.MongoId);
-
-  return {
-    find: function () {
-      return Shifts.find({_id: shiftId});
-    },
-    children: [
-      {
-        find: function (shift) {
-          return Jobs.find({
-            "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
-            _id: {$in: shift.jobs}
-          }, {limit: 10});
-        }
-      },
-      {
-        find: function (shift) {
-          //small hack
-          //use existing subscription to prevent code duplications
-          //analog of Meteor.subscribe('profileUser',shift.assignedTo)
-          //todo: this hack should be extracted as separate method
-          return Meteor.server.publish_handlers['profileUser'].call(this, shift.assignedTo);
-        }
-      }
-    ]
-  }
-});
-
-
 Meteor.publishComposite('daily', function (date, worker) {
   return {
     find: function () {

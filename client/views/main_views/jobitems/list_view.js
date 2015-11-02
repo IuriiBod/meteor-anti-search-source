@@ -4,16 +4,6 @@ Template.jobItemsListMainView.events({
     Router.go("submitJobItem");
   },
 
-  'click .subscribeJobsList': function(event) {
-    event.preventDefault();
-    Meteor.call("subscribe", "joblist", HospoHero.handleMethodResult());
-  },
-
-  'click .unSubscribeJobsList': function(event) {
-    event.preventDefault();
-    Meteor.call("unSubscribe", "joblist", HospoHero.handleMethodResult());
-  },
-
   'click .jobtypesPanel>li': function(e) {
     Session.set("type", $(e.target).parent().attr("data-id"));
     JobItemsSearch.cleanHistory();
@@ -28,11 +18,6 @@ Template.jobItemsListMainView.events({
 });
 
 Template.jobItemsListMainView.helpers({
-  'isSubscribed': function() {
-    var result = Subscriptions.findOne({"_id": "joblist", "subscribers": Meteor.userId()});
-    return !!result;
-  },
-
   jobTypes: function() {
     return JobTypes.find({}, {sort: {"name": 1}});
   }

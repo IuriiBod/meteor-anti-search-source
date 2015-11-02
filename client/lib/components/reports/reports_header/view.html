@@ -1,5 +1,5 @@
 <template name="reportsHeader">
-  <div class="title-action" data-type="{{state$type}}">
-    {{>render component="weekPicker" year=state$year week=state$week onDateChanged=state$onDateChanged}}
+  <div class="title-action">
+    {{>render component="weekPicker" year=state$currentDate.year week=state$currentDate.week onDateChanged=state$onDateChanged}}
   </div>
 </template>
