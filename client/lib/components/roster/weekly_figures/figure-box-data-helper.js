@@ -139,10 +139,10 @@ FigureBoxDataHelper.prototype._calcStaffCost = function (shifts) {
     _.each(shifts, function (shift) {
       var user = Meteor.users.findOne({_id: shift.assignedTo});
       if (user && user.profile && user.profile.payrates) {
-        var totalhours = self._getTotalHours(shift);
+        var totalminutes = self._getTotalMinutes(shift);
         var rate = self._getPayrate(user, shift);
-        if (totalhours > 0) {
-          totalCost += rate * totalhours;
+        if (totalminutes > 0) {
+          totalCost += (rate/60) * totalminutes;
         }
       }
     });
@@ -170,11 +170,11 @@ FigureBoxDataHelper.prototype._getPayrate = function (user, shift) {
   return 0;
 };
 
-FigureBoxDataHelper.prototype._getTotalHours = function (shift) {
+FigureBoxDataHelper.prototype._getTotalMinutes = function (shift) {
   if (shift.status == "draft" || shift.status == "started") {
-    return moment(shift.endTime).diff(moment(shift.startTime), "hour");
+    return moment(shift.endTime).diff(moment(shift.startTime), "minutes");
   } else {
-    return moment(shift.finishedAt).diff(moment(shift.startedAt), "hour");
+    return moment(shift.finishedAt).diff(moment(shift.startedAt), "minutes");
   }
 };
 
@@ -185,7 +185,12 @@ FigureBoxDataHelper.prototype._getDailyShifts = function (exept, day) {
 
 FigureBoxDataHelper.prototype.getDailyStaff = function (day) {
   var actualDailyStaff = this._calcStaffCost(this._getDailyShifts("draft", day));
-  var forecastedDailyStaff = this._calcStaffCost(this._getDailyShifts("finished", day));
+  var allShifts = this._getDailyShifts(null, day);
+  allShifts = _.map(allShifts, function (item) {
+    item.status = "draft";
+    return item;
+  });
+  var forecastedDailyStaff = this._calcStaffCost(allShifts);
   var dailySales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(day)}).fetch();
   var actualSales = this._calcSalesCost(dailySales, "actualQuantity");
   var forecastedSales = this._calcSalesCost(dailySales, "predictionQuantity");
