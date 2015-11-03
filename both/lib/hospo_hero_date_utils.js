@@ -90,7 +90,7 @@ Namespace('HospoHero.dateUtils', {
     //todo: add startedAt and finishedAt after converting them to Date type
 
     ['startTime', 'endTime'].forEach(function (propertyName) {
-      updatedShift[propertyName] = shiftTime(updatedShift, updatedShift[propertyName])
+      updatedShift[propertyName] = shiftTime(updatedShift[propertyName])
     });
   },
 
@@ -101,8 +101,6 @@ Namespace('HospoHero.dateUtils', {
       var timeMoment = moment(time);
       return moment(updatedShift.shiftDate).hours(timeMoment.hours()).minutes(timeMoment.minutes()).toDate().getTime();
     };
-
-    //todo: add startedAt and finishedAt after converting them to Date type
 
     ['finishedAt', 'startedAt'].forEach(function (propertyName) {
       updatedShift[propertyName] = shiftTime(updatedShift, updatedShift[propertyName])
