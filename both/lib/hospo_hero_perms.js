@@ -9,7 +9,12 @@ Namespace('HospoHero', {
     var action = arguments[0];
 
     var hasPermission = function (action, userId) {
-      userId = userId ? userId : Meteor.userId();
+      try {
+        userId = userId ? userId : Meteor.userId();
+      } catch (err) {
+        return false;
+      }
+      
       var user = Meteor.users.findOne(userId);
 
       if (!user || !user.currentAreaId) {
