@@ -185,7 +185,12 @@ FigureBoxDataHelper.prototype._getDailyShifts = function (exept, day) {
 
 FigureBoxDataHelper.prototype.getDailyStaff = function (day) {
   var actualDailyStaff = this._calcStaffCost(this._getDailyShifts("draft", day));
-  var forecastedDailyStaff = this._calcStaffCost(this._getDailyShifts("finished", day));
+  var allShifts = this._getDailyShifts(null, day);
+  allShifts = _.map(allShifts, function (item) {
+    item.status = "draft";
+    return item;
+  });
+  var forecastedDailyStaff = this._calcStaffCost(allShifts);
   var dailySales = DailySales.find({"date": TimeRangeQueryBuilder.forDay(day)}).fetch();
   var actualSales = this._calcSalesCost(dailySales, "actualQuantity");
   var forecastedSales = this._calcSalesCost(dailySales, "predictionQuantity");
