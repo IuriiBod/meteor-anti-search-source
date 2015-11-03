@@ -213,6 +213,14 @@ var ShiftDocument = Match.Where(function (shift) {
   return true;
 });
 
+var ShiftId = Match.Where(function (id) {
+  check(id, HospoHero.checkers.MongoId);
+  if (!Shifts.findOne({_id: id})) {
+    throw new Meteor.Error(404, "Shift not found");
+  }
+  return true
+});
+
 var SubscriptionDocument = Match.Where(function (subscription) {
   check(subscription, {
     type: Match.OneOf('menu', 'job'),
@@ -283,5 +291,6 @@ Namespace('HospoHero.checkers', {
   ShiftDocument: ShiftDocument,
   AreaDocument: AreaDocument,
   LocationDocument: LocationDocument,
-  SubscriptionDocument: SubscriptionDocument
+  SubscriptionDocument: SubscriptionDocument,
+  ShiftId: ShiftId
 });
