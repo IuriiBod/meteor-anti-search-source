@@ -57,8 +57,8 @@ Meteor.methods({
       roleId: mongoIdChecker
     });
 
-    if (!HospoHero.isOrganizationOwner()) {
-      throw new Meteor.Error(403, "User not permitted to remove users from area");
+    if (!HospoHero.canUser('invite users')) {
+      throw new Meteor.Error(403, "User not permitted to add users to area");
     }
 
     var area = Areas.findOne({_id: addedUserInfo.areaId});
@@ -102,7 +102,7 @@ Meteor.methods({
   },
 
   removeUserFromArea: function (userId, areaId) {
-    if (!HospoHero.isOrganizationOwner()) {
+    if (!HospoHero.canUser('invite users')) {
       throw new Meteor.Error(403, "User not permitted to remove users from area");
     }
 
