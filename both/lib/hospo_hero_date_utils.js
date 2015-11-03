@@ -104,7 +104,7 @@ Namespace('HospoHero.dateUtils', {
     };
 
     ['finishedAt', 'startedAt'].forEach(function (propertyName) {
-      updatedShift[propertyName] = shiftTime(updatedShift, updatedShift[propertyName])
+      updatedShift[propertyName] = shiftTime(updatedShift[propertyName])
     });
   },
 
