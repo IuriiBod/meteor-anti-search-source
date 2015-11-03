@@ -10,6 +10,7 @@ var consoleTransportOptions = {
 var papertrailTransportOptions = {
   host: 'logs3.papertrailapp.com',
   port: 35920,
+  level: Meteor.settings.logLevel || 'warn',
   logFormat: function (level, message) {
     return '[' + level + '] ' + message;
   },
