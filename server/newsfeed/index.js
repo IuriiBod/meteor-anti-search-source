@@ -20,7 +20,6 @@ Meteor.methods({
     var options;
     if(ref) {
       var feed = NewsFeeds.findOne({ _id: ref });
-
       if(feed.createdBy != Meteor.userId()) {
         options = {
           title: "There is a new comment to your newsfeed post",
@@ -31,7 +30,6 @@ Meteor.methods({
         HospoHero.sendNotification(options);
       }
     }
-
     if(recipients.length) {
       recipients = _.map(recipients, function(recipientName) {
         var user = Meteor.users.findOne({username: recipientName});

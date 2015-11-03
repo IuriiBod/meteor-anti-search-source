@@ -5,5 +5,5 @@ component.state.newsFeedsExist = function() {
 };
 
 component.state.newsFeedsList = function() {
-  return NewsFeeds.find({"reference": null}, {sort: {"createdOn": -1}});
+  return NewsFeeds.find({"relations.areaId": HospoHero.getCurrentAreaId(),"reference": null}, {sort: {"createdOn": -1}});
 };
