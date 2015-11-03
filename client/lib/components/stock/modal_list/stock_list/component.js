@@ -9,6 +9,8 @@ var component = FlowComponents.define('stocksModalList', function(props) {
   var fields = ['code', 'description'];
 
   this.IngredientsSearch = new SearchSource('ingredients', fields, options);
+
+  this.set('showAddStockItemMenu', false);
 });
 
 component.state.name = function() {
@@ -76,4 +78,12 @@ component.action.keyup = function(text) {
   var ids = this.setIds();
   this.set("text", text);
   this.IngredientsSearch.search(text, {"ids": ids, "limit": 10, "status": "active"});
+};
+
+component.action.showAddStockItemMenu = function() {
+  this.set('showAddStockItemMenu', true);
+};
+
+component.action.hideAddStockItemMenu = function() {
+  this.set('showAddStockItemMenu', false);
 };
