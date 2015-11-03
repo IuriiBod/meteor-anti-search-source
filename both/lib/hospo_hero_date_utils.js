@@ -82,6 +82,7 @@ Namespace('HospoHero.dateUtils', {
    */
   adjustShiftTimes: function (updatedShift) {
     // Returns new valid time based on shift's date
+    console.log(updatedShift.shiftDate);
     var shiftTime = function (time) {
       var timeMoment = moment(time);
       return moment(updatedShift.shiftDate).hours(timeMoment.hours()).minutes(timeMoment.minutes()).toDate();

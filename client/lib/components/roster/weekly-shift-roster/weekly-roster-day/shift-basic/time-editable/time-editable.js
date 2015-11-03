@@ -23,7 +23,7 @@ var createShiftEndTimeEditableConfig = function (templateInstance) {
 
     shift[templateInstance.data.property] = fixZeroYearComdateMoment(newTime);
 
-    HospoHero.dateUtils.adjustShiftTimes(newTime);
+    HospoHero.dateUtils.adjustShiftTimes(shift);
 
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };

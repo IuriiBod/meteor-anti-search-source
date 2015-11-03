@@ -179,7 +179,7 @@ var ShiftDocument = Match.Where(function (shift) {
 
   checkerHelper.checkPropertiesGroup(['startTime', 'endTime'], function () {
     if (shift.startTime.getTime() > shift.endTime.getTime()) {
-      throw new Meteor.Error("Start and end times invalid");
+      throw new Meteor.Error("'Start time' should be less then 'end time'");
     }
   });
 
