@@ -28,7 +28,7 @@ var migrationFn = function () {
 
 
 Migrations.add({
-  version: 15,
+  version: 16,
   name: "Adjust shift's dates",
   up: migrationFn
 });
