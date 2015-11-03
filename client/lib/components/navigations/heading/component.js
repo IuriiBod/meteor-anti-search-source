@@ -10,7 +10,8 @@ var headingComponentsMap = {
   dailyroster: 'dailyHeader',
   weeklyrostertemplate: 'weeklyTemplateHeader',
   salesPrediction: 'salesPredictionHeader',
-  stocktakeList: 'stocktakeHeader'
+  stocktakeList: 'stocktakeHeader',
+  suppliersListHeader: 'suppliersListHeader'
 };
 
 var component = FlowComponents.define("pageHeading", function (props) {
