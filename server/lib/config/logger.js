@@ -7,20 +7,23 @@ var consoleTransportOptions = {
   humanReadableUnhandledException: true
 };
 
-var fileTransportOptions = {
-  name: 'file.error',
-  filename: '/root/hospo_hero.log',
-  colorize: true,
+var papertrailTransportOptions = {
+  host: 'logs3.papertrailapp.com',
+  port: 35920,
   level: Meteor.settings.logLevel || 'warn',
-  levels: {debug: 0, info: 1, warn: 2, error: 3},
-  colors: {debug: 'blue', info: 'green', warn: 'orange', error: 'red'},
+  logFormat: function (level, message) {
+    return '[' + level + '] ' + message;
+  },
+  inlineMeta: true,
   json: true,
+  colorize: true,
   handleExeptions: true
 };
 
+
 // Add & configure transport
 if (HospoHero.isProductionMode()) {
-  logger.addTransport('file', fileTransportOptions);
+  logger.addTransport('papertrail', papertrailTransportOptions);
 } else {
   logger.addTransport('console', consoleTransportOptions);
 }
