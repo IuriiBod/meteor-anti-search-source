@@ -8,7 +8,6 @@ Router.route('/roster/weekly/:year/:week', {
     var subscriptions = [
       Meteor.subscribe('organizationInfo'),
       Meteor.subscribe('areaMenuItems'),
-      Meteor.subscribe('dailySales', weekRange, currentAreaId),
       Meteor.subscribe('weeklyRoster', weekRange),
       Meteor.subscribe('workers', currentAreaId),
       Meteor.subscribe('sections', currentAreaId),
@@ -16,7 +15,7 @@ Router.route('/roster/weekly/:year/:week', {
     ];
 
     if (HospoHero.canUser('view forecast', Meteor.userId())) {
-      subscriptions.push(Meteor.subscribe('dailySales',weekRange));
+      subscriptions.push(Meteor.subscribe('dailySales', weekRange, currentAreaId));
     }
     return subscriptions;
   },
