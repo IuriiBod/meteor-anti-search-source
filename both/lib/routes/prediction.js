@@ -1,4 +1,4 @@
-Router.route('/roster/prediction/:year/:week/:category', {
+Router.route('/forecast/:year/:week/:category', {
   name: "salesPrediction",
   template: "salesPredictionPage",
   waitOn: function () {

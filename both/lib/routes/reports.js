@@ -5,14 +5,10 @@ Router.route('/reports/stocktake/currentStocks/:year/:week', {
   waitOn: function () {
     return Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId()));
   },
-  onBeforeAction: function () {
+  data: function () {
     if (!Meteor.userId() || !HospoHero.canUser('edit roster')()) {
       Router.go("/");
-    } else {
-      this.next();
     }
-  },
-  data: function () {
     Session.set("thisWeek", this.params.week);
     Session.set("editStockTake", false);
   }
@@ -29,14 +25,10 @@ Router.route('/reports/:year/:week', {
       Meteor.subscribe('weeklyRoster', weekRange)
     ];
   },
-  onBeforeAction: function () {
+  data: function () {
     if (!Meteor.userId() || !HospoHero.canUser('edit roster')()) {
       Router.go("/");
-    } else {
-      this.next();
     }
-  },
-  data: function () {
     Session.set("reportHash", this.params.hash);
     Session.set("editStockTake", false);
     Session.set("thisYear", this.params.year);

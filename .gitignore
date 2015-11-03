@@ -4,3 +4,4 @@ smart.lock
 .gagarin
 .idea
 .dump
+restore_remote_db.sh

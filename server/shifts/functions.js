@@ -1,115 +1,30 @@
+var canClockInOut = function (shiftId, user) {
+  var assignedTo = Shifts.findOne({_id: shiftId}).assignedTo;
+  return (assignedTo && (assignedTo === user._id || HospoHero.canUser('edit roster')))
+};
+
 Meteor.methods({
-  'clockIn': function (id) {
-    if (!id) {
-      logger.error("Shift id not found");
-      throw new Meteor.Error(404, "Shift id not found");
-    }
+  clockIn: function (id) {
     var user = Meteor.user();
-    if (!user) {
-      logger.error("User not found");
-      throw new Meteor.Error(404, "User not found");
+    if (!canClockInOut(id, user)) {
+      throw new Meteor.Error("You have no permissions to Clock In/Clock Out");
     }
-    var shift = Shifts.findOne({"_id": id});
-    if (!shift) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
-    }
-    if (shift.assignedTo != user._id && user.isWorker == true) {
-      logger.error("You don't have permission to clock in");
-      throw new Meteor.Error(404, "You don't have permission to clock in");
-    }
+    check(id, HospoHero.checkers.ShiftId);
     Shifts.update({"_id": id}, {$set: {"status": "started", "startedAt": new Date().getTime()}});
     logger.info("Shift started", {"shiftId": id, "worker": user._id});
   },
 
-  'clockOut': function (id) {
-    if (!id) {
-      logger.error("Shift id not found");
-      throw new Meteor.Error(404, "Shift id not found");
-    }
+  clockOut: function (id) {
     var user = Meteor.user();
-    if (!user) {
-      logger.error("User not found");
-      throw new Meteor.Error(404, "User not found");
+    if (!canClockInOut(id, user)) {
+      throw new Meteor.Error("You have no permissions to Clock In/Clock Out");
     }
-    var shift = Shifts.findOne({"_id": id, "status": "started"});
-    if (!shift) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
+    check(id, HospoHero.checkers.ShiftId);
+    if (Shifts.findOne({"_id": id}).status === 'started'){
+      Shifts.update({"_id": id}, {$set: {"status": "finished", "finishedAt": new Date().getTime()}});
+      logger.info("Shift ended", {"shiftId": id, "worker": user._id});
     }
-    if (shift.assignedTo != user._id && user.isWorker == true) {
-      logger.error("You don't have permission to clock out");
-      throw new Meteor.Error(404, "You don't have permission to clock out");
-    }
-    Shifts.update({"_id": id}, {$set: {"status": "finished", "finishedAt": new Date().getTime()}});
-    logger.info("Shift ended", {"shiftId": id, "worker": user._id});
-  },
 
-  'editClock': function (id, info) {
-    var user = Meteor.user();
-    if (!user) {
-      logger.error("User not found");
-      throw new Meteor.Error(404, "User not found");
-    }
-    var permitted = isManagerOrAdmin(user);
-    if (!permitted) {
-      logger.error("User not permitted to delete shifts");
-      throw new Meteor.Error(403, "User not permitted to delete shifts ");
-    }
-    if (!id) {
-      logger.error("Shift id not found");
-      throw new Meteor.Error(404, "Shift id not found");
-    }
-    var shift = Shifts.findOne({"_id": id});
-    if (!shift) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
-    }
-    // if(shift.status == "started") {
-    //   logger.error("Shift has started. Can't change time till it's finished");
-    //   throw new Meteor.Error(404, "Shift has started. Can't change time till it's finished");
-    // }
-    var updateDoc = {};
-    if (info.startDraft) {
-      if (!shift.startedAt) {
-        updateDoc.startedAt = info.startDraft;
-        updateDoc.status = "started";
-      }
-    } else {
-      if (info.startedAt) {
-        var startTime = new Date(info.startedAt).getTime();
-        if (startTime != shift.startedAt) {
-          if (startTime > shift.finishedAt) {
-            logger.error("Start time should be less than finished time");
-            throw new Meteor.Error(404, "Start time should be less than finished time");
-          } else {
-            updateDoc.startedAt = info.startedAt;
-            if (shift.status == "draft") {
-              updateDoc.status = "started";
-            }
-          }
-        }
-      }
-      if (info.finishedAt) {
-        var finishedTime = new Date(info.finishedAt).getTime();
-        if (finishedTime != shift.finishedAt) {
-
-          if (finishedTime <= shift.startedAt) {
-            logger.error("Finish time should be greater than start time");
-            throw new Meteor.Error(404, "Finish time should be greater than start time");
-          } else {
-            updateDoc.finishedAt = info.finishedAt;
-            if (shift.status != "finished") {
-              updateDoc.status = "finished";
-            }
-          }
-        }
-      }
-    }
-    if (Object.keys(updateDoc).length > 0) {
-      Shifts.update({'_id': id}, {$set: updateDoc});
-      logger.info("Shift clock details updated", {"shiftId": id});
-    }
   },
 
   /**
@@ -144,10 +59,10 @@ Meteor.methods({
       }
     });
 
-    if(shiftsToPublish.count() > 0) {
+    if (shiftsToPublish.count() > 0) {
       shiftsToPublish.forEach(function (shift) {
-        if(shift.assignedTo) {
-          if(usersToNotify[shift.assignedTo]) {
+        if (shift.assignedTo) {
+          if (usersToNotify[shift.assignedTo]) {
             usersToNotify[shift.assignedTo].push(shift);
           } else {
             usersToNotify[shift.assignedTo] = [shift];
@@ -177,11 +92,8 @@ Meteor.methods({
       logger.error("User not found");
       throw new Meteor.Error(404, "User not found");
     }
+    check(shiftId, HospoHero.checkers.ShiftId);
     var shift = Shifts.findOne(shiftId);
-    if (!shift) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
-    }
     if (shift.assignedTo) {
       logger.error("Shift has already been assigned");
       throw new Meteor.Error(404, "Shift has already been assigned");
@@ -238,11 +150,8 @@ Meteor.methods({
       logger.error("Claimed user not found");
       throw new Meteor.Error(404, "Claimed user not found");
     }
+    check(shiftId, HospoHero.checkers.ShiftId);
     var shift = Shifts.findOne(shiftId);
-    if (!shift) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
-    }
     if (shift.assignedTo) {
       logger.error("Shift has already been assigned");
       throw new Meteor.Error(404, "Shift has already been assigned");
@@ -274,11 +183,8 @@ Meteor.methods({
       logger.error("User does not have permission to confirm a shift claim");
       throw new Meteor.Error(403, "User does not have permission to confirm a shift claim");
     }
+    check(shiftId, HospoHero.checkers.ShiftId);
     var shift = Shifts.findOne(shiftId);
-    if (!shift) {
-      logger.error("Shift not found");
-      throw new Meteor.Error(404, "Shift not found");
-    }
     if (shift.assignedTo == userId) {
       logger.error("User has been assigned to this shift");
       throw new Meteor.Error(404, "User has been assigned to this shift");
@@ -302,14 +208,14 @@ Meteor.methods({
   }
 });
 
-var formatNotificationText = function(notificationTextArray) {
+var formatNotificationText = function (notificationTextArray) {
   var text = _.reduce(notificationTextArray, function (memo, shift) {
     return memo + '<li>' + HospoHero.dateUtils.shiftDateInterval(shift) + '</li>';
   }, '');
   return '<ul>' + text + '</ul>';
 };
 
-var formatEmailText = function(date, userShiftsText, openShiftsText) {
+var formatEmailText = function (date, userShiftsText, openShiftsText) {
   var text = [];
   text.push("I've just published the roster for the week starting " + date + ".<br><br>");
   text.push("Here's your shifts");
@@ -329,8 +235,8 @@ var formatEmailText = function(date, userShiftsText, openShiftsText) {
  * @param {Object} usersToNotify - The object of users to notify
  * @param {Array} openShifts - The array of open shifts (if exists)
  */
-var notifyUsersPublishRoster = function(date, usersToNotify, openShifts) {
-  if(Object.keys(usersToNotify).length > 0) {
+var notifyUsersPublishRoster = function (date, usersToNotify, openShifts) {
+  if (Object.keys(usersToNotify).length > 0) {
     var text;
     var stringDate = moment(date).startOf('isoweek').format("dddd, Do MMMM YYYY");
     var subject = 'Weekly roster for the week starting from ' + stringDate + ' published.';
@@ -343,7 +249,7 @@ var notifyUsersPublishRoster = function(date, usersToNotify, openShifts) {
 
     // If there are some opened shifts
     // create the notification object for it
-    if(openShifts.length) {
+    if (openShifts.length) {
       var notifyOpenShifts = {
         type: 'roster',
         title: subject + ' Checkout open shifts',
@@ -351,8 +257,8 @@ var notifyUsersPublishRoster = function(date, usersToNotify, openShifts) {
       };
     }
 
-    for(var userId in usersToNotify) {
-      if(usersToNotify.hasOwnProperty(userId)) {
+    for (var userId in usersToNotify) {
+      if (usersToNotify.hasOwnProperty(userId)) {
         // Sending open shifts at first
         if (notifyOpenShifts) {
           notifyOpenShifts.to = userId;

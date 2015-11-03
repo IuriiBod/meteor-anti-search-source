@@ -11,9 +11,20 @@ Template.shiftBasicTimeEditable.helpers({
 
 
 var createShiftEndTimeEditableConfig = function (templateInstance) {
+  var fixZeroYearComdateMoment = function (momentToFix) {
+    var shitTimeMoment = moment().hours(momentToFix.hours());
+    shitTimeMoment.minutes(momentToFix.minutes());
+    shitTimeMoment.seconds(0);
+    return shitTimeMoment.toDate();
+  };
+
   var onSuccess = function (response, newTime) {
     var shift = templateInstance.data.shift;
-    shift[templateInstance.data.property] = HospoHero.dateUtils.shiftDate(newTime, shift.type === 'template');
+
+    shift[templateInstance.data.property] = fixZeroYearComdateMoment(newTime);
+
+    HospoHero.dateUtils.adjustShiftTimes(shift);
+
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
 
