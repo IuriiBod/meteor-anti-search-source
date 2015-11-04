@@ -25,7 +25,7 @@ Migrations.add({
     //admin = Meteor.users.findOne({username: 'Tom'});
     admin = false;
 
-    if(!admin) {
+    if(!admin && !Meteor.users.findOne({username: "admin"})) {
       var id = Accounts.createUser({
         username: 'admin',
         email: 'admin@admin.com',
