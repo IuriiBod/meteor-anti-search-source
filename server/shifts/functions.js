@@ -34,6 +34,7 @@ Meteor.methods({
    */
   publishRoster: function (date) {
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+      logger.info("CAN USER ERROR");
       logger.error("User not permitted to publish shifts");
       throw new Meteor.Error(403, "User not permitted to publish shifts ");
     }
@@ -58,6 +59,9 @@ Meteor.methods({
         endTime: 1
       }
     });
+    logger.info("======SHIFTS TO PUBLISH=====");
+    logger.info(shiftsToPublish);
+    logger.info("=============================");
 
     if (shiftsToPublish.count() > 0) {
       shiftsToPublish.forEach(function (shift) {
@@ -72,7 +76,7 @@ Meteor.methods({
         }
       })
     }
-
+    logger.info("STARTING UPDATING");
     // Publishing shifts
     Shifts.update(shiftsToPublishQuery, {
       $set: {
@@ -81,6 +85,8 @@ Meteor.methods({
       }
     }, {
       multi: true
+    }, function (res) {
+      logger.info("UPDATE RES=>"+res);
     });
 
     notifyUsersPublishRoster(date, usersToNotify, openShifts);
