@@ -44,10 +44,7 @@ getIngredientItem = function (id) {
     if (item) {
       if ((item.costPerPortion > 0) && (item.unitSize > 0)) {
         item.costPerPortionUsed = item.costPerPortion / item.unitSize;
-        item.costPerPortionUsed = Math.round(item.costPerPortionUsed * 100) / 100;
-        if (item.costPerPortionUsed === 0) {
-          item.costPerPortionUsed = 0.01;
-        }
+        item.costPerPortionUsed = Math.round(item.costPerPortionUsed * 10000) / 10000;
       } else {
         item.costPerPortion = 0;
         item.costPerPortionUsed = 0;
