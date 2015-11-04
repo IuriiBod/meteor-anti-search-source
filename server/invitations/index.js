@@ -22,23 +22,30 @@ Meteor.methods({
     text += "If you have any questions let me know.<br>";
     text += senderInfo.username;
 
-    Email.send({
+    var emailOptions = {
       "to": email,
       "from": senderInfo.emails[0].address,
-      "subject": "[Hero Chef] Added to the "+ area.name + " area",
+      "subject": "[Hero Chef] Added to the " + area.name + " area",
       "html": text
-    });
+    };
+
+    if (HospoHero.isDevelopmentMode()) {
+      logger.warn('Send email', emailOptions);
+    } else {
+      Email.send(emailOptions);
+    }
+
   },
 
-  deleteInvitation: function(id) {
+  deleteInvitation: function (id) {
     Invitations.remove({_id: id});
   },
 
-  acceptInvitation: function(id, user) {
+  acceptInvitation: function (id, user) {
     var userId = Accounts.createUser(user);
 
     Invitations.update({_id: id}, {
-      $set: { accepted: true }
+      $set: {accepted: true}
     });
 
     var invitation = Invitations.findOne({_id: id});

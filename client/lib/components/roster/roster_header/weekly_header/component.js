@@ -25,5 +25,6 @@ component.action.triggerCollapse = function () {
 };
 
 component.action.publishRoster = function () {
-  Meteor.call('publishRoster', this.get('publishedOnDate'), HospoHero.handleMethodResult());
+  var query = TimeRangeQueryBuilder.forWeek(this.get('publishedOnDate'));
+  Meteor.call('publishRoster', query, HospoHero.handleMethodResult());
 };
