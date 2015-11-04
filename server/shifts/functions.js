@@ -32,15 +32,12 @@ Meteor.methods({
    *
    * @param {Date} date - The date of publishing roster
    */
-  publishRoster: function (date) {
+  publishRoster: function (shiftDateQuery) {
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
-      logger.info("CAN USER ERROR");
       logger.error("User not permitted to publish shifts");
       throw new Meteor.Error(403, "User not permitted to publish shifts ");
     }
 
-    var shiftDateQuery = TimeRangeQueryBuilder.forWeek(date);
-    console.log("DATE QUERY=> ",shiftDateQuery);
     var shiftsToPublishQuery = {
       shiftDate: shiftDateQuery,
       published: false,
@@ -60,9 +57,6 @@ Meteor.methods({
         endTime: 1
       }
     });
-    console.log("======SHIFTS TO PUBLISH=====");
-    console.log(shiftsToPublish.fetch());
-    console.log("=============================");
 
     if (shiftsToPublish.count() > 0) {
       shiftsToPublish.forEach(function (shift) {
@@ -77,7 +71,6 @@ Meteor.methods({
         }
       })
     }
-    logger.info("STARTING UPDATING");
     // Publishing shifts
     Shifts.update(shiftsToPublishQuery, {
       $set: {
