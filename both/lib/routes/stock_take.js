@@ -21,7 +21,8 @@ Router.route('/stocktake/:_id', {
       Meteor.subscribe('allAreas', currentAreaId),
       Meteor.subscribe("stocktakes", this.params._id),
       Meteor.subscribe('ordersPlaced', this.params._id),
-      Meteor.subscribe('allSuppliers', currentAreaId)
+      Meteor.subscribe('allSuppliers', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
   data: function () {
