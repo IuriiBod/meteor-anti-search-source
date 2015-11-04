@@ -132,3 +132,7 @@ li > img {
 .label-success a {
   color: #FFFFFF;
 }
+
+.table-scrollable{
+  overflow: auto;
+}
