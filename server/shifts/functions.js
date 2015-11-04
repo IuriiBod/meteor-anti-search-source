@@ -60,7 +60,7 @@ Meteor.methods({
       }
     });
     logger.info("======SHIFTS TO PUBLISH=====");
-    logger.info(shiftsToPublish);
+    logger.info(shiftsToPublish.fetch());
     logger.info("=============================");
 
     if (shiftsToPublish.count() > 0) {
