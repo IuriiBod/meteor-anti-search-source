@@ -1,13 +1,14 @@
-var CloudSettings = Meteor.settings.GoogleCloud;
-
 GooglePredictionApi = function GooglePredictionApi(locationId) {
+  var cloudSettings = Meteor.settings.GoogleCloud;
   var authOptions = {
-    serviceEmail: CloudSettings.SERVICE_EMAIL,
-    pemFile: CloudSettings.PEM_FILE,
+    serviceEmail: cloudSettings.SERVICE_EMAIL,
+    pemFile: cloudSettings.PEM_FILE,
     projectName: 'HospoHero'
   };
+
   this._client = new GooglePrediction(authOptions);
   this._locationId = locationId;
+  this._bucketName = cloudSettings.BUCKET
 };
 
 GooglePredictionApi.prototype._getModelName = function () {
@@ -26,22 +27,48 @@ GooglePredictionApi.prototype._getTrainingFileName = function () {
   }
 };
 
-GooglePredictionApi.prototype.getUpdatePredictionModelSession = function () {
-  var self = this;
-  var onFinished = function () {
-    //start learning
-    self._client.insert(self._getModelName(), CloudSettings.BUCKET, self._getTrainingFileName());
-  };
+/**
+ * Updates prediction model for current location
+ *
+ */
+GooglePredictionApi.prototype.updatePredictionModel = function () {
+  var location = Locations.findOne({_id: this._locationId});
 
-  //uplaod data to google cloud storage
-  return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(), this._locationId, onFinished);
+  //find out if we need to update prediction model (every half year)
+  var lastForecastModelUploadDate = location.lastForecastModelUploadDate || false;
+
+  var needToUpdateModel = !lastForecastModelUploadDate
+    || moment(lastForecastModelUploadDate) < moment().subtract(182, 'day');
+
+  if (needToUpdateModel) {
+    var trainingFileName = this._getTrainingFileName();
+    var googleCloud = GoogleCloud(this._locationId, trainingFileName);
+
+    //upload daily sales data into file in google cloud storage
+    googleCloud.uploadSalesData();
+
+    this._client.insert(this._getModelName(), this._bucketName, trainingFileName);
+
+    //refresh update date
+    Locations.update({_id: location._id}, {$set: {lastForecastModelUploadDate: new Date()}});
+  }
 };
 
+/**
+ * Uses google prediction generated model to make prediction for specified menu item and date
+ *
+ * @param inputData
+ * @returns {*}
+ */
 GooglePredictionApi.prototype.makePrediction = function (inputData) {
   if (HospoHero.isDevelopmentMode()) {
     return Math.floor(Math.random() * 100);
   } else {
-    return this._client.predict(this._getModelName(), inputData).outputValue;
+    var predictedValue = parseInt(this._client.predict(this._getModelName(), inputData).outputValue);
+    if (predictedValue < 0) {
+      predictedValue = 0;
+    }
+    return predictedValue;
   }
 };
 
@@ -77,7 +104,10 @@ GooglePredictionApi.prototype.removePredictionModel = function () {
     if (modelToRemove) {
       this._client.remove(modelName);
       var trainingFileName = this._getTrainingFileName();
-      GoogleCloud.removeTrainingDataFile(trainingFileName);
+
+      //remove file from cloud storage
+      var googleCloud = GoogleCloud(this._locationId, trainingFileName);
+      googleCloud.removeModelFile();
     }
   }
 };

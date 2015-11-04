@@ -1,4 +1,9 @@
-var updateActualSales = function (item) {
+var ActualSalesImporter = function ActualSalesImporter(locationId) {
+  this._locationId = locationId;
+};
+
+
+ActualSalesImporter.prototype._updateActualSale = function (item) {
   DailySales.update({
     date: TimeRangeQueryBuilder.forDay(item.date),
     menuItemId: item.menuItemId
@@ -6,31 +11,42 @@ var updateActualSales = function (item) {
 };
 
 
-var createUpdateActualSalesFunction = function (locationId) {
-  //updates sales data for previous day
-  var isHandledFirstDay = false;
-  var previousDayMoment = moment().subtract(1, 'day');
+ActualSalesImporter.prototype._getLastImportedSaleDate = function () {
+  var lastImportedSale = DailySales.findOne({
+    'relations.locationId': this._locationId,
+    actualQuantity: {$gt: 0}
+  }, {
+    sort: {date: -1}
+  });
 
+  // if there is no imported data the import whole year
+  return lastImportedSale && lastImportedSale.date || moment().subtract(1, 'year').toDate();
+};
+
+
+ActualSalesImporter.prototype.getOnDayReceivedCallback = function () {
+  var self = this;
+
+  var lastDateToImport = this._getLastImportedSaleDate();
+
+  //this function is used like a callback in revel connector
+  //it should return false if loading is finished
   return function (salesData) {
-    if (!isHandledFirstDay && previousDayMoment.isSame(salesData.createdDate, 'day')) {
-      Object.keys(salesData.menuItems).forEach(function (menuItemName) {
-        var menuItem = HospoHero.prediction.getMenuItemByRevelName(menuItemName, locationId);
+    Object.keys(salesData.menuItems).forEach(function (menuItemName) {
+      var menuItem = HospoHero.prediction.getMenuItemByRevelName(menuItemName, locationId);
 
-        if (menuItem) {
-          var item = {
-            actualQuantity: salesData.menuItems[menuItemName],
-            date: salesData.createdDate,
-            menuItemId: menuItem._id,
-            relations: menuItem.relations
-          };
-          updateActualSales(item);
-        }
-      });
+      if (menuItem) {
+        var item = {
+          actualQuantity: salesData.menuItems[menuItemName],
+          date: salesData.createdDate,
+          menuItemId: menuItem._id,
+          relations: menuItem.relations
+        };
+        self._updateActualSale(item);
+      }
+    });
 
-      isHandledFirstDay = false;
-      return false;
-    }
-    return true;
+    return !moment(salesData.createdDate).isBefore(lastDateToImport);
   };
 };
 
@@ -42,34 +58,14 @@ predictionModelRefreshJob = function () {
     var predictionEnabled = HospoHero.prediction.isAvailableForLocation(location);
 
     if (predictionEnabled) {
-      var lastForecastModelUploadDate = location.lastForecastModelUploadDate || false;
-
-      var needToUpdateModel = !lastForecastModelUploadDate
-          || moment(lastForecastModelUploadDate) < moment().subtract(182, 'day');
-
-      var updateActualSalesFn = createUpdateActualSalesFunction(location._id);
-
+      //import missed actual sales
       var revelClient = new Revel(location.pos);
+      var salesImporter = new ActualSalesImporter(location._id);
+      revelClient.uploadAndReduceOrderItems(salesImporter.getOnDayReceivedCallback());
 
-      if (needToUpdateModel) {
-        var predictionApi = new GooglePredictionApi(location._id);
-        var updateSession = predictionApi.getUpdatePredictionModelSession(location._id);
-
-        //upload sales training data for the last year
-        revelClient.uploadAndReduceOrderItems(function (salesData) {
-          updateActualSalesFn(salesData);
-          return updateSession.onDataReceived(salesData);
-        });
-
-        updateSession.onUploadingFinished();
-
-        Locations.update({_id: location._id}, {$set: {lastForecastModelUploadDate: new Date()}});
-      } else {
-        //update sales for last day only
-        revelClient.uploadAndReduceOrderItems(function (salesData) {
-          return updateActualSalesFn(salesData);
-        });
-      }
+      //try to update prediction model
+      var predictionApi = new GooglePredictionApi(location._id);
+      predictionApi.updatePredictionModel();
     }
   });
 };
