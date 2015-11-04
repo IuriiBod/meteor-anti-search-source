@@ -1,0 +1,17 @@
+<template name="menuEntry">
+    <li>
+        <a href="#">
+            {{#if state$icon}}
+                <i class="fa {{state$icon}}"></i>
+            {{/if}}
+            <span class="nav-label"> {{state$title}}</span>
+        </a>
+        {{#if state$subMenuItems}}
+            <ul class="nav nav-second-level">
+                {{#each state$subMenuItems}}
+                    {{> render component="menuEntry" menuEntry=this}}
+                {{/each}}
+            </ul>
+        {{/if}}
+    </li>
+</template>

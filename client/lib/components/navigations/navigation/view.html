@@ -6,17 +6,13 @@
 
         <ul class="nav" id="side-menu">
           {{> navHeader}}
-          {{> navDashboard}}
 
+          {{> render component="menuEntry" menuEntry=state$dashboardEntry}}
           {{#if isInOrganization}}
             {{#if getCurrentAreaId}}
-              {{> navForecast}}
-              {{> navRoster}}
-              {{> navMenu}}
-              {{> navJobs}}
-              {{> navStock}}
-              {{> navReports}}
-              {{> navSettings}}
+                {{#each state$menuEntries}}
+                    {{> render component="menuEntry" menuEntry=this}}
+                {{/each}}
             {{/if}}
           {{/if}}
         </ul>
@@ -24,3 +20,20 @@
     </nav>
   {{/if}}
 </template>
+
+
+
+
+
+
+
+
+
+
+<!--{{> navForecast}}-->
+<!--{{> navRoster}}-->
+<!--{{> navMenu}}-->
+<!--{{> navJobs}}-->
+<!--{{> navStock}}-->
+<!--{{> navReports}}-->
+<!--{{> navSettings}}-->
