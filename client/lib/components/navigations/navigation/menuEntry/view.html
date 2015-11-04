@@ -1,6 +1,7 @@
 <template name="menuEntry">
-    <li>
-        <a href="#">
+    {{#if state$permission }}
+    <li class="{{isActiveRoute regex=state$activeOnRoutes}}">
+        <a href={{state$pathForMenuItem}}>
             {{#if state$icon}}
                 <i class="fa {{state$icon}}"></i>
             {{/if}}
@@ -14,4 +15,5 @@
             </ul>
         {{/if}}
     </li>
+    {{/if}}
 </template>

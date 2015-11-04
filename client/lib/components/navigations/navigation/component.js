@@ -1,7 +1,8 @@
-var dashBoadEntry =     {
+var dashboardEntry =     {
     title: 'Dashboard',
     route: 'home',
-    icon: 'fa-th-large'
+    icon: 'fa-th-large',
+    activeOnRoutes: 'home'
 };
 
 var menuEntries = [
@@ -9,7 +10,9 @@ var menuEntries = [
         title: 'Forecast',
         route: 'salesPrediction',
         icon: 'fa-bar-chart',
-        permission: 'canViewForecast',
+        permission: {
+          canUser: 'view forecast'
+        },
         params: function () {
             return {
                 year: moment().year(),
@@ -22,24 +25,41 @@ var menuEntries = [
         title: 'Menu',
         route: 'menuItemsMaster',
         icon: 'fa-cutlery',
-        permission: 'canViewMenu'
+        permission: {
+            canUser: 'view menus'
+        },
+        activeOnRoutes: ['menuItemsMaster', 'submitMenuItem', 'menuItemsMasterType', 'menuItemDetail'],
+        params: function () {
+            return {
+                category: 'all',
+                status: 'all'
+            }
+        }
     },
     {
         title: 'Jobs',
         route: 'jobItemsMaster',
         icon: 'fa-spoon',
-        permission: 'canViewJob'
+        permission: {
+            canUser: 'view jobs'
+        },
+        activeOnRoutes: ['jobItemsMaster', 'jobItemsMasterType', 'submitJobItem', 'jobItemDetailed', 'jobItemEdit']
     },
     {
         title: 'Settings',
         route: 'admin',
         icon: 'fa-cog',
-        permission: 'isManager'
+        permission: {
+            isUser: 'isManager'
+        }
     },
     {
         title: 'Roster',
         icon: 'fa-calendar-o',
-        permission: 'canViewRoster',
+        permission: {
+            canUser: 'view roster'
+        },
+        activeOnRoutes: ['weeklyRoster', 'dailyRoster', 'templateWeeklyRoster'],
         subMenuEntries: [
             {
                 title: 'Weekly',
@@ -62,14 +82,20 @@ var menuEntries = [
             },
             {
                 title: 'Template',
-                route: 'templateWeeklyRoster'
+                route: 'templateWeeklyRoster',
+                permission: {
+                    canUser: 'edit roster'
+                }
             }
         ]
     },
     {
         title: 'Reports',
         icon: 'fa-line-chart',
-        permission: 'isOrganizationOwner',
+        permission: {
+            isUser: 'isOrganizationOwner'
+        },
+        activeOnRoutes: ['teamHours', 'currentStocks'],
         subMenuEntries: [
             {
                 title: 'Team Hours',
@@ -95,7 +121,10 @@ var menuEntries = [
     {
         title: 'Stock',
         icon: 'fa-list',
-        permission: 'canViewStock',
+        permission: {
+            canUser: 'view stocks'
+        },
+        activeOnRoutes: ['ingredientsList', 'stocktakeList', 'orderReceiptsList', 'suppliersList'],
         subMenuEntries: [
             {
                 title: 'List',
@@ -120,7 +149,7 @@ var menuEntries = [
 var component = FlowComponents.define("navigation", function(props) {});
 
 component.state.dashboardEntry = function() {
-    return dashBoadEntry;
+    return dashboardEntry;
 }
 
 component.state.menuEntries = function () {
