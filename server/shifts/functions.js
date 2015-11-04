@@ -40,6 +40,7 @@ Meteor.methods({
     }
 
     var shiftDateQuery = TimeRangeQueryBuilder.forWeek(date);
+    console.log("DATE QUERY=> ",shiftDateQuery);
     var shiftsToPublishQuery = {
       shiftDate: shiftDateQuery,
       published: false,
@@ -59,9 +60,9 @@ Meteor.methods({
         endTime: 1
       }
     });
-    logger.info("======SHIFTS TO PUBLISH=====");
-    logger.info(shiftsToPublish.fetch());
-    logger.info("=============================");
+    console.log("======SHIFTS TO PUBLISH=====");
+    console.log(shiftsToPublish.fetch());
+    console.log("=============================");
 
     if (shiftsToPublish.count() > 0) {
       shiftsToPublish.forEach(function (shift) {
@@ -85,8 +86,6 @@ Meteor.methods({
       }
     }, {
       multi: true
-    }, function (res) {
-      logger.info("UPDATE RES=>"+res);
     });
 
     notifyUsersPublishRoster(date, usersToNotify, openShifts);
