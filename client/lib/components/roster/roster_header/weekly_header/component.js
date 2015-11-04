@@ -25,5 +25,6 @@ component.action.triggerCollapse = function () {
 };
 
 component.action.publishRoster = function () {
+  console.log("PUBLISH CLICKED");
   Meteor.call('publishRoster', this.get('publishedOnDate'), HospoHero.handleMethodResult());
 };
