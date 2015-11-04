@@ -19,7 +19,7 @@ component.state.totaltime = function () {
       var date = day.date;
       var shift = Shifts.findOne({
         "assignedTo": userId,
-        "shiftDate": HospoHero.dateUtils.shiftDate(date),
+        "shiftDate": TimeRangeQueryBuilder.forDay(new Date(date)),
         $or: [{"status": "finished"}, {"status": "started"}]
       });
       if (shift) {
@@ -47,8 +47,8 @@ component.state.totaltime = function () {
       time = totalhours;
     }
 
-    if(totalmins > 0) {
-      totalmins = (totalmins/60) * 100;
+    if (totalmins > 0) {
+      totalmins = (totalmins / 60) * 100;
       totalmins = Math.floor(totalmins);
       time += "." + totalmins;
     } else {
@@ -73,7 +73,7 @@ component.state.wage = function () {
       var shift = Shifts.findOne(
         {
           "assignedTo": user._id,
-          "shiftDate": HospoHero.dateUtils.shiftDate(date),
+          "shiftDate": TimeRangeQueryBuilder.forDay(new Date(date)),
           $or: [{"status": "finished"}, {"status": "started"}]
         });
       if (shift) {
@@ -125,7 +125,7 @@ component.state.dailyHours = function () {
       doc["date"] = date;
       var shift = Shifts.findOne({
         "assignedTo": userId,
-        "shiftDate": HospoHero.dateUtils.shiftDate(date),
+        "shiftDate": TimeRangeQueryBuilder.forDay(new Date(date)),
         $or: [{"status": "finished"}, {"status": "started"}]
       });
       if (shift) {
@@ -155,7 +155,7 @@ component.state.dailyShifts = function () {
       doc["date"] = date;
       var shift = Shifts.findOne({
         "assignedTo": userId,
-        "shiftDate": HospoHero.dateUtils.shiftDate(date)
+        "shiftDate": TimeRangeQueryBuilder.forDay(new Date(date))
       });
       if (shift) {
         doc["shift"] = shift._id;
@@ -190,10 +190,12 @@ component.state.activeWage = function () {
       var shift = Shifts.findOne(
         {
           "assignedTo": user._id,
-          "shiftDate": HospoHero.dateUtils.shiftDate(date),
+          "shiftDate": TimeRangeQueryBuilder.forDay(new Date(date)),
           $or: [{"status": "finished"}, {"status": "started"}]
         });
+
       if (shift) {
+        //console.log(user.username, ' Date: ', date);
         if (shift.finishedAt && shift.startedAt) {
           diff = (shift.finishedAt - shift.startedAt);
         } else if (shift.startedAt) {
@@ -236,5 +238,9 @@ component.state.activeWage = function () {
     Session.set("reportHash", "shifts");
   }
 
-  return (parseFloat(totalWage) > 0) || (hash == "shiftsall") || (hash == "hoursall");
+  var result = (parseFloat(totalWage) > 0) || (hash == "shiftsall") || (hash == "hoursall");
+
+  //console.log(this.user.username, ' => ', result);
+
+  return result;
 };
