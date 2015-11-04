@@ -23,5 +23,17 @@ Meteor.methods({
     }
     Notifications.update({'_id': id, 'to': userId}, {$set: {"read": true}});
     logger.info("Notification read", {"user": userId, "notification": id});
+  },
+  'changeArea': function (id) {
+    var userId = Meteor.userId();
+    if (!userId) {
+      logger.error('No user has logged in');
+      throw new Meteor.Error(401, "User not logged in");
+    }
+    if (!Meteor.users.findOne({_id: userId, "relations.areaIds": {$all: [id]}})) {
+      logger.error('User ' + userId + ' not assigned to area ' + id);
+      throw new Meteor.Error("You are not assigned to that area");
+    }
+    Meteor.users.update({_id: userId}, {$set: {currentAreaId: id}});
   }
 });

@@ -33,6 +33,9 @@ Template.notifiButtons.events({
           Router.go("shift", {"_id": ref});
         }
       } else if(type == "newsfeed") {
+        if(notifi.relations){
+          Meteor.call('changeArea', notifi.relations.areaId, HospoHero.handleMethodResult());
+        }
         Router.go("/");
       }
     }
