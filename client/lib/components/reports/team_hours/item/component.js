@@ -1,6 +1,30 @@
 var component = FlowComponents.define("teamHoursItem", function (props) {
   this.user = props.user;
+  this.weekDate = HospoHero.misc.getWeekDateFromRoute(Router.current());
 });
+
+
+component.prototype.getUserPayRate = function (date) {
+  var user = this.user;
+  if (user.profile && user.profile.payrates) {
+    var wageDoc = user.profile.payrates;
+
+    var currentWeekDay = moment(date).format('dddd').toLowerCase();
+
+    var rate = wageDoc[currentWeekDay];
+    if (!rate) {
+      rate = wageDoc['weekdays']
+    }
+    return rate;
+  } else {
+    return 0;
+  }
+};
+
+
+component.state.weekDays = function () {
+  return HospoHero.dateUtils.getWeekDays(this.weekDate);
+};
 
 component.state.user = function () {
   return this.user;
@@ -140,29 +164,6 @@ component.state.dailyHours = function () {
       hours.push(doc);
     });
     return hours;
-  }
-};
-
-component.state.dailyShifts = function () {
-  var shifts = [];
-  if (this.user) {
-    var userId = this.user._id;
-    var weekNo = Session.get("thisWeek");
-    var week = getDatesFromWeekNumber(weekNo);
-    week.forEach(function (day) {
-      var doc = {};
-      var date = day.date;
-      doc["date"] = date;
-      var shift = Shifts.findOne({
-        "assignedTo": userId,
-        "shiftDate": TimeRangeQueryBuilder.forDay(new Date(date))
-      });
-      if (shift) {
-        doc["shift"] = shift._id;
-      }
-      shifts.push(doc);
-    });
-    return shifts;
   }
 };
 

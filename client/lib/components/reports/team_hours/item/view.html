@@ -1,25 +1,25 @@
 <template name="teamHoursItem">
   {{#if state$activeWage}}
-  <tr class="gradeX">
-    <td>{{username state$user._id}}</td>
-    <td>{{state$totaltime}}</td>
-    <td>${{state$wage}}</td>
-    {{#if state$activeShifts}}
-      {{#each state$dailyShifts}}
-        <td class="center activeTime">
-          {{> render component='reportData' shift=this}}    
-        </td>
-      {{/each}}
-    {{/if}}
-    {{#if state$activeView}}
-      {{#each state$dailyHours}}
-        {{#if activeTime}}
-          <td class="center activeTime">{{timeDurationWithDecimal activeTime}}</td>
-        {{else}}
-          <td class="center activeTime">-</td>
-        {{/if}}
-      {{/each}}
-    {{/if}}
-  </tr>
+    <tr class="gradeX">
+      <td>{{username state$user._id}}</td>
+      <td>{{state$totaltime}}</td>
+      <td>${{state$wage}}</td>
+      {{#if state$activeShifts}}
+        {{#each state$weekDays}}
+          <td class="center activeTime">
+            {{> render component='reportData' date=this userId=state$user._id}}
+          </td>
+        {{/each}}
+      {{/if}}
+      {{#if state$activeView}}
+        {{#each state$dailyHours}}
+          {{#if activeTime}}
+            <td class="center activeTime">{{timeDurationWithDecimal activeTime}}</td>
+          {{else}}
+            <td class="center activeTime">-</td>
+          {{/if}}
+        {{/each}}
+      {{/if}}
+    </tr>
   {{/if}}
 </template>
