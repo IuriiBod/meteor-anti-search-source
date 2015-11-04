@@ -1,23 +1,29 @@
 <template name="teamHours">
-  <div class="pull-right m-l-md m-t-xs">
-    <span class="label label-warning shiftView">Shifts</span>
-    <span class="label label-info hoursView">Hours</span>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="pull-right m-l-md m-t-xs">
+        <span class="label label-warning shiftView">Shifts</span>
+        <span class="label label-info hoursView">Hours</span>
+      </div>
+    </div>
+    <div class="col-xs-12 table-scrollable">
+      <table class="table table-hover table-striped table-scrollable team-hours-table" id="dataTablesEx">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Total Hours</th>
+          <th>Total Wage</th>
+          {{#each state$weekDays}}
+            <th>{{dayOfWeek this}} <br>{{formatDate this}}</th>
+          {{/each}}
+        </tr>
+        </thead>
+        <tbody>
+        {{#each state$users}}
+          {{> render component="teamHoursItem" user=this tableViewMode=state$tableViewMode}}
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
   </div>
-  <table class="table table-hover table-striped team-hours-table" id="dataTablesEx">
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th>Total Hours</th>
-      <th>Total Wage</th>
-      {{#each state$weekDays}}
-        <th>{{dayOfWeek this}} <br>{{formatDate this}}</th>
-      {{/each}}
-    </tr>
-    </thead>
-    <tbody>
-    {{#each state$users}}
-      {{> render component="teamHoursItem" user=this tableViewMode=state$tableViewMode}}
-    {{/each}}
-    </tbody>
-  </table>
 </template>
