@@ -13,3 +13,7 @@ component.state.hasLocations = function() {
   var organizationId = HospoHero.isInOrganization();
   return Locations.find({organizationId: organizationId}).count() > 0
 };
+
+component.state.areaColor = function () {
+  return HospoHero.getCurrentArea().color;
+};

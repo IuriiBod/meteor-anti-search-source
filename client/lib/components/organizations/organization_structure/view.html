@@ -3,7 +3,8 @@
   {{#each state$locations}}
     <ul class="list-group" style="display: block;">
       {{#if isOrganizationOwner}}
-        <li class="list-group-item lead open-flyout location-settings" style="display: block; cursor: pointer; "
+        <li class="list-group-item lead open-flyout location-settings"
+            style="display: block; cursor: pointer;"
             data-id="locationSettings">
           {{name}}
           <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
@@ -14,7 +15,8 @@
         </li>
       {{/if}}
       {{#each state$areas _id}}
-        <li class="list-group-item" style="display: block;">
+        <li class="list-group-item area-color-border"
+            style="display: block; border-left-color: {{state$areaColor _id}};">
           <a href="#" class="change-current-area{{#if state$currentArea _id}} active{{/if}}">{{name}}</a>
 
           {{#if isManager}}
