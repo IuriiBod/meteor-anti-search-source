@@ -1,19 +1,19 @@
 <template name="menuEntry">
     {{#if state$permission }}
-    <li class="{{isActiveRoute regex=state$activeOnRoutes}}">
-        <a href={{state$pathForMenuItem}}>
-            {{#if state$icon}}
-                <i class="fa {{state$icon}}"></i>
+        <li class="{{isActiveRoute regex=state$activeOnRoutes}}">
+            <a class="menu-entry-title" href={{state$pathForMenuItem}}>
+                {{#if state$icon}}
+                    <i class="fa {{state$icon}}"></i>
+                {{/if}}
+                <span class="nav-label"> {{state$title}}</span>
+            </a>
+            {{#if state$subMenuItems}}
+                <ul class="nav nav-second-level" style="display: none;">
+                    {{#each state$subMenuItems}}
+                        {{> render component="menuEntry" menuEntry=this}}
+                    {{/each}}
+                </ul>
             {{/if}}
-            <span class="nav-label"> {{state$title}}</span>
-        </a>
-        {{#if state$subMenuItems}}
-            <ul class="nav nav-second-level">
-                {{#each state$subMenuItems}}
-                    {{> render component="menuEntry" menuEntry=this}}
-                {{/each}}
-            </ul>
-        {{/if}}
-    </li>
+        </li>
     {{/if}}
 </template>

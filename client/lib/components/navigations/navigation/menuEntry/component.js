@@ -11,7 +11,8 @@ component.state.icon = function() {
 };
 
 component.state.subMenuItems = function() {
-    return this.menuEntry.subMenuEntries || false;
+    var subMenusItems = this.menuEntry.subMenuEntries || false;
+    return subMenusItems;
 };
 
 component.state.pathForMenuItem = function() {
@@ -54,7 +55,6 @@ component.state.activeOnRoutes = function() {
     if (_.isString(activeOnRoutes)) {
         return activeOnRoutes;
     } else if (_.isArray(activeOnRoutes)) {
-        console.log('routes: ', activeOnRoutes.join('|'));
         return activeOnRoutes.join('|');
     }
 };
