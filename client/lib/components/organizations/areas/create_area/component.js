@@ -23,5 +23,13 @@ component.action.changeEnabled = function() {
 
 component.action.createArea = function (areaInfo) {
   areaInfo.organizationId = this.organizationId;
+  areaInfo.color = this.get('color');
   Meteor.call("createArea", areaInfo, HospoHero.handleMethodResult());
+};
+
+component.state.onColorChange = function () {
+  var self = this;
+  return function(color) {
+    self.set('color', color);
+  }
 };
