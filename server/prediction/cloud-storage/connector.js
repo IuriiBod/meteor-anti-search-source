@@ -20,6 +20,8 @@ GoogleCloud = function GoogleCloud(locationId, trainingFileName) {
 
 
 GoogleCloud.prototype.uploadSalesData = function () {
+  logger.info('Started uploading sales data on cloud storage', {locationId: this._locationId});
+
   var trainingDataWriteStream = new through();
   trainingDataWriteStream.pipe(this._cloudFile.createWriteStream());
 
@@ -32,8 +34,11 @@ GoogleCloud.prototype.uploadSalesData = function () {
 
     var dailySalesCursor = DailySales.find({
       'relations.locationId': this._locationId,
+      actualQuantity: {$gte: 0},
       date: TimeRangeQueryBuilder.forDay(currentDateMoment)
     });
+
+    logger.info('Daily sales for', {date: currentDateMoment.toDate(), count: dailySalesCursor.count()});
 
     dailySalesCursor.forEach(function (dailySale) {
       var csvLine = predictionModelDataGenerator.getDataForSale(dailySale);
@@ -45,6 +50,8 @@ GoogleCloud.prototype.uploadSalesData = function () {
   }
 
   trainingDataWriteStream.end();
+
+  logger.info('Uploading of daily sales finished', {locationId: this._locationId});
 };
 
 

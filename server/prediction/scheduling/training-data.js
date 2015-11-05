@@ -3,6 +3,14 @@ var ActualSalesImporter = function ActualSalesImporter(locationId) {
 };
 
 
+ActualSalesImporter.prototype._getMenuItemByRevelName = function (menuItemName) {
+  return MenuItems.findOne({
+    'relations.locationId': this._locationId,
+    $or: [{revelName: menuItemName}, {name: menuItemName}]
+  });
+};
+
+
 ActualSalesImporter.prototype._updateActualSale = function (item) {
   DailySales.update({
     date: TimeRangeQueryBuilder.forDay(item.date),
@@ -33,7 +41,7 @@ ActualSalesImporter.prototype.getOnDayReceivedCallback = function () {
   //it should return false if loading is finished
   return function (salesData) {
     Object.keys(salesData.menuItems).forEach(function (menuItemName) {
-      var menuItem = HospoHero.prediction.getMenuItemByRevelName(menuItemName, locationId);
+      var menuItem = self._getMenuItemByRevelName(menuItemName);
 
       if (menuItem) {
         var item = {
@@ -58,6 +66,7 @@ predictionModelRefreshJob = function () {
     var predictionEnabled = HospoHero.prediction.isAvailableForLocation(location);
 
     if (predictionEnabled) {
+      logger.info('Started import actual sales data', {locationId: location._id});
       //import missed actual sales
       var revelClient = new Revel(location.pos);
       var salesImporter = new ActualSalesImporter(location._id);

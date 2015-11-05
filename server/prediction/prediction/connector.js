@@ -26,6 +26,8 @@ GooglePredictionApi.prototype._getTrainingFileName = function () {
 GooglePredictionApi.prototype.updatePredictionModel = function () {
   var location = Locations.findOne({_id: this._locationId});
 
+  logger.info('Updating prediction model', {locationId: this._locationId});
+
   //find out if we need to update prediction model (every half year)
   var lastForecastModelUploadDate = location.lastForecastModelUploadDate || false;
 
@@ -39,10 +41,14 @@ GooglePredictionApi.prototype.updatePredictionModel = function () {
     //upload daily sales data into file in google cloud storage
     googleCloud.uploadSalesData();
 
-    this._client.insert(this._getModelName(), this._bucketName, trainingFileName);
+    var predictionModelName = this._getModelName();
+    this._client.insert(predictionModelName, this._bucketName, trainingFileName);
 
     //refresh update date
     Locations.update({_id: location._id}, {$set: {lastForecastModelUploadDate: new Date()}});
+    logger.info('Started training prediction model', {name: predictionModelName});
+  } else {
+    logger.info("Model don't need update", {locationId: this._locationId, lastUpdatedAt: lastForecastModelUploadDate});
   }
 };
 
@@ -53,15 +59,15 @@ GooglePredictionApi.prototype.updatePredictionModel = function () {
  * @returns {*}
  */
 GooglePredictionApi.prototype.makePrediction = function (inputData) {
-  if (HospoHero.isDevelopmentMode()) {
-    return Math.floor(Math.random() * 100);
-  } else {
-    var predictedValue = parseInt(this._client.predict(this._getModelName(), inputData).outputValue);
-    if (predictedValue < 0) {
-      predictedValue = 0;
-    }
-    return predictedValue;
+
+  var predictedValue = parseInt(this._client.predict(this._getModelName(), inputData).outputValue);
+  if (predictedValue < 0) {
+    predictedValue = 0;
   }
+
+  logger.info('Made prediction', {menuItemId: inputData[0], value: predictedValue});
+
+  return predictedValue;
 };
 
 /**
@@ -108,6 +114,9 @@ GooglePredictionApi.prototype.removePredictionModel = function () {
 //mock mix-in for prediction API
 if (HospoHero.isDevelopmentMode()) {
   _.extend(GooglePredictionApi.prototype, {
+    makePrediction: function () {
+      return Math.floor(Math.random() * 100);
+    },
     _getModelName: function () {
       return "trainingModel"
     },
