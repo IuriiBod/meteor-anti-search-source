@@ -57,28 +57,6 @@ Router.route('switchUser', {
 });
 
 
-Router.route('admin', {
-  path: '/admin',
-  template: "adminMainView",
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('sections', currentAreaId),
-      Meteor.subscribe('allAreas', currentAreaId),
-      Meteor.subscribe('usersList', currentAreaId),
-      Meteor.subscribe('locationsOfOrganization'),
-      Meteor.subscribe('areasOfOrganization'),
-      Meteor.subscribe('menuList', currentAreaId)
-    ];
-  },
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
-    Session.set('editStockTake', false);
-  }
-});
-
 Router.route('/user/profile/:_id', {
   name: 'profile',
   path: '/user/profile/:_id',
