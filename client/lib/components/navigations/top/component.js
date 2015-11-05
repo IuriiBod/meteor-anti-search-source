@@ -16,7 +16,10 @@ component.state.hasLocations = function () {
 };
 
 component.state.areaColor = function () {
-  return HospoHero.getCurrentArea().color;
+  var area = HospoHero.getCurrentArea();
+  if(area) {
+    return area.color;
+  }
 };
 
 component.state.settingsMenuItems = function () {
@@ -52,6 +55,26 @@ component.state.settingsMenuItems = function () {
     {
       route: 'archivingSettings',
       title: 'Locations/Areas archiving'
+    }
+  ];
+};
+
+component.state.profileMenuItems = function () {
+  return [
+    {
+      route: 'profile',
+      title: 'My Profile',
+      params: {
+        _id: Meteor.userId()
+      }
+    },
+    {
+      route: 'switchUser',
+      title: 'Switch User'
+    },
+    {
+      route: 'logout',
+      title: 'Logout'
     }
   ];
 };

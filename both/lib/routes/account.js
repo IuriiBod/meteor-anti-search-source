@@ -29,6 +29,13 @@ Router.route('pinLock', {
   }
 });
 
+Router.route('logout', {
+  'path': '/logout',
+  data: function() {
+    return Meteor.logout();
+  }
+});
+
 Router.route('invitationAccept', {
   path: '/invitations/:_id',
   layoutTemplate: 'blankLayout',
@@ -57,8 +64,7 @@ Router.route('switchUser', {
 });
 
 
-Router.route('/user/profile/:_id', {
-  name: 'profile',
+Router.route('profile', {
   path: '/user/profile/:_id',
   template: 'profileMainView',
   waitOn: function () {
