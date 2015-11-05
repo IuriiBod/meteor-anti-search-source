@@ -1,9 +1,13 @@
 <template name="areaSettings">
-  {{#if isManager}}
-    <h1 class="area-name" style="display: inline-block;" data-id="{{state$area._id}}" data-display="false">{{state$area.name}}</h1>
-  {{else}}
-    <h1 style="display: inline-block;">{{state$area.name}}</h1>
-  {{/if}}
+
+  <h1 class="area-name" style="display: inline-block;" data-id="{{state$area._id}}" data-display="false">{{state$area.name}}</h1>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Area Color</label>
+    <div class="col-sm-10">
+      {{>render component="colorPicker" onColorChange=state$onColorChange checkedColor=state$areaColor}}
+    </div>
+  </div>
 
   <div class="area-users">
     {{#each state$areaUsers}}

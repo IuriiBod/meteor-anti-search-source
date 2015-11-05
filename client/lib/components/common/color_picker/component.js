@@ -1,5 +1,6 @@
 var component = FlowComponents.define('colorPicker', function (props) {
-  this.set('checkedColor', 'rgb(97, 189, 79)');
+  var checkedColor = props.checkedColor ? props.checkedColor : 'rgb(97, 189, 79)';
+  this.set('checkedColor', checkedColor);
   this.onColorChange = props.onColorChange;
 
   this.onColorChange(this.get('checkedColor'));
