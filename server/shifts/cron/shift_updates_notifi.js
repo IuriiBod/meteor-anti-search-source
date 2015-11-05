@@ -44,15 +44,49 @@ ShiftUpdatesToEmail = function ShiftUpdatesToEmail (options) {
 };
 
 ShiftUpdatesToEmail.prototype._setRecipients = function() {
-  var receiver = Meteor.users.findOne(this.receiver);
-  this.receiverName = HospoHero.username(receiver);
-  this.to = receiver.emails[0].address;
+  var receiver;
+  var sender;
+
+  try {
+    receiver = this._getUserData(this.receiver);
+  } catch(e) {
+    console.log(e.message);
+    return false;
+  }
+
+  this.receiverName = receiver.username;
+  this.to = receiver.email;
   delete this.receiver;
 
   var senderId = this.shiftUpdates[0].userId;
-  var sender = Meteor.users.findOne(senderId);
-  this.senderName = HospoHero.username(sender);
-  this.from = sender.emails[0].address;
+  try {
+    sender = this._getUserData(senderId);
+  } catch(e) {
+    console.log(e.message);
+    return false;
+  }
+
+  this.senderName = sender.username;
+  this.from = sender.email;
+
+  return true;
+};
+
+ShiftUpdatesToEmail.prototype._getUserData = function(userId) {
+  if(userId) {
+    var user = Meteor.users.findOne(userId);
+
+    if (user && user.emails && user.emails.length) {
+      return {
+        username: HospoHero.username(user),
+        email: user.emails[0].address
+      };
+    } else {
+      throw new Meteor.Error(ShiftUpdatesToEmail.userNotFoundError(this.receiver));
+    }
+  } else {
+    throw new Meteor.Error('Receiver ID undefined');
+  }
 };
 
 ShiftUpdatesToEmail.prototype._generateEmail = function() {
@@ -72,14 +106,21 @@ ShiftUpdatesToEmail.prototype._generateEmail = function() {
   this.emailText = emailText.join('');
 };
 
-ShiftUpdatesToEmail.prototype.sendEmail = function() {
-  this._setRecipients();
-  this._generateEmail();
+ShiftUpdatesToEmail.userNotFoundError = function(userId) {
+  return 'User ' + userId + ' not found';
+};
 
-  return Email.send({
-    to: this.to,
-    from: this.from,
-    subject: this.subject,
-    html: this.emailText
-  });
+ShiftUpdatesToEmail.prototype.sendEmail = function() {
+  if(this._setRecipients()) {
+    this._generateEmail();
+
+    return Email.send({
+      to: this.to,
+      from: this.from,
+      subject: this.subject,
+      html: this.emailText
+    });
+  } else {
+    return false;
+  }
 };
