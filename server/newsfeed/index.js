@@ -25,7 +25,8 @@ Meteor.methods({
           title: "There is a new comment to your newsfeed post",
           to: feed.createdBy,
           ref: ref,
-          type: 'newsfeed'
+          type: 'newsfeed',
+          relations: doc.relations
         };
         HospoHero.sendNotification(options);
       }
@@ -41,7 +42,8 @@ Meteor.methods({
       title: "You've been mentioned in the newsfeed",
       to: recipients,
       ref: id,
-      type: 'newsfeed'
+      type: 'newsfeed',
+      relations: doc.relations
     };
     HospoHero.sendNotification(options);
 

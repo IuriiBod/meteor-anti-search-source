@@ -1,23 +1,19 @@
-Meteor.publish('menuList', function (areaId, categoryId, status) {
-  if (this.userId) {
-    var query = {
-      'relations.areaId': areaId
-    };
+Meteor.publishAuthorized('menuList', function (areaId, categoryId, status) {
+  var query = {
+    'relations.areaId': areaId
+  };
 
-    if (categoryId && categoryId != "all") {
-      query.category = categoryId;
-    }
-
-    if (status) {
-      query.status = (status && status != 'all') ? status : {$ne: 'archived'};
-    }
-
-    logger.info('Menu Items list published', categoryId, status);
-
-    return MenuItems.find(query, {sort: {"name": 1}, limit: 30});
-  } else {
-    this.ready();
+  if (categoryId && categoryId != "all") {
+    query.category = categoryId;
   }
+
+  if (status) {
+    query.status = (status && status != 'all') ? status : {$ne: 'archived'};
+  }
+
+  logger.info('Menu Items list published', categoryId, status);
+
+  return MenuItems.find(query, {sort: {"name": 1}});
 });
 
 Meteor.publishComposite('menuItem', function (id) {
@@ -90,7 +86,7 @@ Meteor.publishAuthorized("areaMenuItems", function (areaId, categoryId) {
 
     logger.info("Menu Items list published", categoryId);
 
-    return MenuItems.find(query, {sort:{name: 1}});
+    return MenuItems.find(query, {sort: {name: 1}});
   } else {
     this.ready();
   }
