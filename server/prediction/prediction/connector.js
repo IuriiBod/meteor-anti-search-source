@@ -12,19 +12,11 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
 };
 
 GooglePredictionApi.prototype._getModelName = function () {
-  if (HospoHero.isDevelopmentMode()) {
-    return "trainingModel"
-  } else {
-    return "trainingModel-" + this._locationId;
-  }
+  return "trainingModel-" + this._locationId;
 };
 
 GooglePredictionApi.prototype._getTrainingFileName = function () {
-  if (HospoHero.isDevelopmentMode()) {
-    return "sales-data"
-  } else {
-    return "sales-data-" + this._locationId + ".csv";
-  }
+  return "sales-data-" + this._locationId + ".csv";
 };
 
 /**
@@ -111,3 +103,17 @@ GooglePredictionApi.prototype.removePredictionModel = function () {
     }
   }
 };
+
+
+//mock mix-in for prediction API
+if (HospoHero.isDevelopmentMode()) {
+  _.extend(GooglePredictionApi.prototype, {
+    _getModelName: function () {
+      return "trainingModel"
+    },
+
+    _getTrainingFileName: function () {
+      return "sales-data"
+    }
+  });
+}
