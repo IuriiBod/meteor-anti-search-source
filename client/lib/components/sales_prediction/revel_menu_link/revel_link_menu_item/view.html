@@ -7,7 +7,9 @@
 
       <div class="col-md-6">
         <a href="#" class="edit-revel-name">
-          {{state$revelName}}
+          {{#each state$posNames}}
+            {{>render component="posEditItem" name=this}}
+          {{/each}}
         </a>
       </div>
     {{/with}}

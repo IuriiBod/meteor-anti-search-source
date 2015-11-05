@@ -69,8 +69,9 @@ Meteor.methods({
       logger.error("Menu item should exist");
       throw new Meteor.Error(404, "Menu item should exist");
     }
-
+    var updatePush = {};
     var updateDoc = {};
+    console.log(info);
     if (info.name) {
       if (info.name != item.name) {
         updateDoc.name = info.name;
@@ -96,10 +97,8 @@ Meteor.methods({
         updateDoc.instructions = info.instructions;
       }
     }
-    if (info.revelName) {
-      if (info.revelName != item.revelName) {
-        updateDoc.revelName = info.revelName;
-      }
+    if (info.posName) {
+      updatePush.posNames = info.posName;
     }
 
     if (info.ingredients) {
@@ -130,6 +129,7 @@ Meteor.methods({
     if (info.image || info.image == '') {
       updateDoc.image = info.image;
     }
+    var updateQuery = {};
     if (Object.keys(updateDoc).length > 0) {
       updateDoc['editedBy'] = Meteor.userId();
       updateDoc['editedOn'] = Date.now();
@@ -143,9 +143,15 @@ Meteor.methods({
         ref: id
       };
       HospoHero.sendNotification(options);
-
-      return MenuItems.update({"_id": id}, {$set: updateDoc});
+      if (Object.keys(updatePush).length > 0) {
+        updateQuery = {$set: updateDoc, $push: updatePush}
+      } else {
+        updateQuery = {$set: updateDoc}
+      }
+    } else if (Object.keys(updatePush).length > 0) {
+      updateQuery = {$push: updatePush}
     }
+    return MenuItems.update({"_id": id}, updateQuery);
   },
 
   deleteMenuItem: function (id) {

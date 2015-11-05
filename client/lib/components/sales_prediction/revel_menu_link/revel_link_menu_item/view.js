@@ -1,13 +1,13 @@
 Template.revelLinkMenuItem.onRendered(function () {
 
   var self = this;
-  var onSuccess = function (response, newRevelName) {
+  var onSuccess = function (response, newPosName) {
     //unable to call flow-component's action here because of 'indy implementation'
     // so we will trigger custom action on template's view
     // more `indy code`!
     self.$('.edit-revel-name').trigger({
       type: 'update.revel.name',
-      newRevelName: newRevelName
+      newPosName: newPosName
     });
   };
 
@@ -24,6 +24,6 @@ Template.revelLinkMenuItem.onRendered(function () {
 
 Template.revelLinkMenuItem.events({
   'update.revel.name .edit-revel-name': function (event, tmpl) {
-    FlowComponents.callAction('updateRevelName', event.newRevelName);
+    FlowComponents.callAction('updatePosName', event.newPosName);
   }
 });
