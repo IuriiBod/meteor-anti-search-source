@@ -198,9 +198,17 @@ var ShiftDocument = Match.Where(function (shift) {
         throw new Meteor.Error(404, "Worker not found");
       }
 
+      var occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
       var existInShift = !!Shifts.findOne({
         _id: {$ne: shift._id},
-        shiftDate: TimeRangeQueryBuilder.forDay(shift.shiftDate),
+        $or: [
+          { startTime: occupiedTimeRange },
+          { endTime: occupiedTimeRange },
+          { $and: [
+            { startTime: {$lte: shift.startTime} },
+            { endTime: {$gte: shift.endTime} }
+          ]}
+        ],
         assignedTo: shift.assignedTo
       });
       if (existInShift) {
