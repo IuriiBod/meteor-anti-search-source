@@ -72,13 +72,20 @@ WeatherManager.prototype.updateHistorical = function () {
 WeatherManager.prototype._isWeatherAvailableForMonth = function (monthMomentToCheck) {
   var nowMoment = moment();
   var endOfMonth = moment(monthMomentToCheck).endOf('month');
+  var startOfMonth = moment(monthMomentToCheck).startOf('month');
+  var isCurrentMonth = monthMomentToCheck.isSame(nowMoment, 'month');
+
+  var dateQuery = isCurrentMonth ? {
+    $gte: startOfMonth.toDate(),
+    $lte: moment().endOf('day')
+  } : TimeRangeQueryBuilder.forMonth(monthMomentToCheck);
 
   var monthForecastCount = WeatherForecast.find({
-    date: TimeRangeQueryBuilder.forMonth(monthMomentToCheck),
+    date: dateQuery,
     locationId: this._locationId
   }).count();
 
-  var requiredCount = endOfMonth.isBefore(nowMoment) ? endOfMonth.date() : nowMoment.date() - 1;
+  var requiredCount = isCurrentMonth ? endOfMonth.date() : nowMoment.date();
 
   return monthForecastCount >= requiredCount;
 };

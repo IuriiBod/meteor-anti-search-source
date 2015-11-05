@@ -36,7 +36,7 @@ GooglePredictionApi.prototype.updatePredictionModel = function () {
 
   if (needToUpdateModel) {
     var trainingFileName = this._getTrainingFileName();
-    var googleCloud = GoogleCloud(this._locationId, trainingFileName);
+    var googleCloud = new GoogleCloud(this._locationId, trainingFileName);
 
     //upload daily sales data into file in google cloud storage
     googleCloud.uploadSalesData();

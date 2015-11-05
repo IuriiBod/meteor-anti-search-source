@@ -75,13 +75,19 @@ PredictionModelDataGenerator = function PredictionModelDataGenerator(locationId)
   this._weatherManager.updateHistorical();
 
   //primitive weather caching
-  this._currentWeather = this._weatherManager.getWeatherFor(moment().subtract(1, 'day'));
+  var previousDateMoment = moment().subtract(1, 'day');
+  this._currentWeather = this._getWeatherForDate(previousDateMoment);
 };
 
+PredictionModelDataGenerator.prototype._getWeatherForDate = function (date) {
+  var weather = this._weatherManager.getWeatherFor(date);
+  console.log('get weather for:', date, weather);
+  return weather;
+};
 
 PredictionModelDataGenerator.prototype._getWeatherForSale = function (dailySale) {
   if (!moment(dailySale.date).isSame(this._currentWeather.date, 'day')) {
-    this._currentWeather = this._weatherManager.getWeatherFor(dailySale.date);
+    this._currentWeather = this._getWeatherForDate(dailySale.date);
   }
   return this._currentWeather;
 };
