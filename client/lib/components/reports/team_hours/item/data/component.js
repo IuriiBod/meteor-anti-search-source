@@ -7,9 +7,12 @@ var component = FlowComponents.define("reportData", function (props) {
 
 
   //exclude this shift if it is in future
-  if (currentShift && moment(currentShift.shiftDate).isAfter(new Date)) {
-    currentShift = false;
-  }
+  //var endOfToday = moment().endOf('day');
+  //if (currentShift && moment(currentShift.shiftDate).isAfter(endOfToday)) {
+  //  currentShift = false;
+  //}
+
+  console.log('shift', props.date, currentShift);
 
   this.set('shift', currentShift);
 });

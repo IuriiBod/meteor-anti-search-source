@@ -1,15 +1,16 @@
 var requireLogIn = function () {
-  if (Meteor.userId()) {
+  if (Meteor.loggingIn()) {
+    this.render(this.loadingTemplate);
+  } else if (Meteor.userId()) {
     var user = Meteor.user();
 
     if (user.relations && user.relations.organizationId) {
-      if(user.currentAreaId && Areas.findOne({_id: user.currentAreaId, archived:{$ne:"true"}})){
+      if (user.currentAreaId && Areas.findOne({_id: user.currentAreaId, archived: {$ne: "true"}})) {
         return this.next();
-      }else{
+      } else {
         Router.go("home");
         return this.next();
       }
-
     } else {
       if (Organizations.findOne({owner: Meteor.userId()})) {
         return this.next();
@@ -23,5 +24,6 @@ var requireLogIn = function () {
     return this.next();
   }
 };
+
 
 Router.onBeforeAction(requireLogIn, {except: ['signIn', 'signUp', 'invitationAccept', 'switchUser']});
