@@ -1,12 +1,4 @@
 var migrationFn = function () {
-  Shifts.update({}, {
-    $unset: {
-      shiftDate: 1
-    }
-  }, {
-    multi: true
-  });
-
   Shifts.find({
     $or: [
       {
