@@ -43,32 +43,25 @@ ShiftUpdatesToEmail = function ShiftUpdatesToEmail (options) {
   this.subject = '[Hero Chef] Daily shift updates';
 };
 
-ShiftUpdatesToEmail.prototype._setRecipients = function() {
-  var receiver;
-  var sender;
+ShiftUpdatesToEmail.prototype._getSenderAndReceiver = function() {
+  var receiver = this._getUserData(this.receiver);
 
-  try {
-    receiver = this._getUserData(this.receiver);
-  } catch(e) {
-    console.log(e.message);
+  if(!receiver) {
     return false;
+  } else {
+    this.receiverName = receiver.username;
+    this.to = receiver.email;
+    delete this.receiver;
   }
-
-  this.receiverName = receiver.username;
-  this.to = receiver.email;
-  delete this.receiver;
 
   var senderId = this.shiftUpdates[0].userId;
-  try {
-    sender = this._getUserData(senderId);
-  } catch(e) {
-    console.log(e.message);
+  var sender = this._getUserData(senderId);
+  if(!sender) {
     return false;
+  } else {
+    this.senderName = sender.username;
+    this.from = sender.email;
   }
-
-  this.senderName = sender.username;
-  this.from = sender.email;
-
   return true;
 };
 
@@ -82,14 +75,16 @@ ShiftUpdatesToEmail.prototype._getUserData = function(userId) {
         email: user.emails[0].address
       };
     } else {
-      throw new Meteor.Error(ShiftUpdatesToEmail.userNotFoundError(this.receiver));
+      logger.error(ShiftUpdatesToEmail.userNotFoundError(this.receiver));
+      return false;
     }
   } else {
-    throw new Meteor.Error('Receiver ID undefined');
+    logger.error('Receiver ID undefined');
+    return false;
   }
 };
 
-ShiftUpdatesToEmail.prototype._generateEmail = function() {
+ShiftUpdatesToEmail.prototype._generateEmailText = function() {
   var emailText = [];
   var color;
 
@@ -111,8 +106,8 @@ ShiftUpdatesToEmail.userNotFoundError = function(userId) {
 };
 
 ShiftUpdatesToEmail.prototype.sendEmail = function() {
-  if(this._setRecipients()) {
-    this._generateEmail();
+  if(this._getSenderAndReceiver()) {
+    this._generateEmailText();
 
     return Email.send({
       to: this.to,
