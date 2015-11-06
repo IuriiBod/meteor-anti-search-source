@@ -46,14 +46,6 @@ var menuEntries = [
         activeOnRoutes: ['jobItemsMaster', 'jobItemsMasterType', 'submitJobItem', 'jobItemDetailed', 'jobItemEdit']
     },
     {
-        title: 'Settings',
-        route: 'admin',
-        icon: 'fa-cog',
-        permission: {
-            isUser: 'isManager'
-        }
-    },
-    {
         title: 'Roster',
         icon: 'fa-calendar-o',
         permission: {

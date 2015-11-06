@@ -15,6 +15,14 @@ component.state.subMenuItems = function() {
     return subMenusItems;
 };
 
+component.state.subMenuItemsCount = function() {
+    var subMenusItems = this.menuEntry.subMenuEntries || false;
+    if (subMenusItems) {
+        return subMenusItems.length;
+    }
+    return false;
+}
+
 component.state.pathForMenuItem = function() {
     var route = this.menuEntry.route || null;
     if (!route) {

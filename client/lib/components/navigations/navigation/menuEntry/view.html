@@ -8,7 +8,7 @@
                 <span class="nav-label"> {{state$title}}</span>
             </a>
             {{#if state$subMenuItems}}
-                <ul class="nav nav-second-level slider">
+                <ul class="nav nav-second-level slider slider-for-{{state$subMenuItemsCount}}-elements">
                     {{#each state$subMenuItems}}
                         {{> render component="menuEntry" menuEntry=this}}
                     {{/each}}
