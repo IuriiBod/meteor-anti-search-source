@@ -15,8 +15,8 @@ var ShiftDocument = Match.Where(function (shift) {
     status: Match.Optional(Match.OneOf('draft', 'started', 'finished')),
     published: Match.Optional(Boolean),
     publishedOn: Match.Optional(Number),
-    startedAt: Match.Optional(Number),
-    finishedAt: Match.Optional(Number),
+    startedAt: Match.Optional(Date),
+    finishedAt: Match.Optional(Date),
     order: Match.Optional(Number),
     relations: Match.Optional(HospoHero.checkers.Relations)
   });
