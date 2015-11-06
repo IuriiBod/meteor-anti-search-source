@@ -1,5 +1,6 @@
 <template name="teamHours">
   <div class="row">
+    {{> render component="teamHoursItemsSearch" onKeyUp=state$onKeyUp}}
     <div class="col-xs-12">
       <div class="pull-right m-l-md m-t-xs">
         <span class="label label-warning shiftView">Shifts</span>

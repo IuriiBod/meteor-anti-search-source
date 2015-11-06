@@ -2,6 +2,7 @@ var component = FlowComponents.define("teamHours", function (props) {
   this.onRendered(this.onListRendered);
   this.weekDate = HospoHero.misc.getWeekDateFromRoute(Router.current());
   this.set('tableViewMode', 'shifts');
+  this.set('searchText', '');
 });
 
 component.state.weekDays = function () {
@@ -9,7 +10,19 @@ component.state.weekDays = function () {
 };
 
 component.state.users = function () {
-  return Meteor.users.find();
+  var query = {};
+  var searchText = this.get('searchText');
+  if(searchText) {
+    query.username = new RegExp(searchText);
+  }
+  return Meteor.users.find(query);
+};
+
+component.state.onKeyUp = function () {
+  var self = this;
+  return function(searchText) {
+    self.set('searchText', searchText);
+  }
 };
 
 component.action.changeTableViewMode = function (newMode) {
@@ -20,13 +33,13 @@ component.prototype.onListRendered = function () {
   $.fn.editable.defaults.mode = 'inline';
   $.fn.editable.defaults.showbuttons = false;
 
-  $('.team-hours-table').dataTable({
-    responsive: true,
-    "dom": 'T<"clear">lfrtip',
-    "tableTools": {
-      "sSwfPath": "/swf/copy_csv_xls_pdf.swf"
-    }
-  });
+  //$('.team-hours-table').dataTable({
+  //  responsive: true,
+  //  "dom": 'T<"clear">lfrtip',
+  //  "tableTools": {
+  //    "sSwfPath": "/swf/copy_csv_xls_pdf.swf"
+  //  }
+  //});
 };
 
 
