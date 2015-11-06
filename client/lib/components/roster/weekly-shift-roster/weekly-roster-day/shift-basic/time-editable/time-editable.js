@@ -31,9 +31,9 @@ var createShiftEndTimeEditableConfig = function (templateInstance) {
   return {
     type: 'combodate',
     title: 'Select ' + templateInstance.data.caption,
-    template: "HH:mm",
-    viewformat: "HH:mm",
-    format: "YYYY-MM-DD HH:mm",
+    template: "h:mm A",
+    viewformat: "h:mm A",
+    format: "YYYY-MM-DD h:mm A",
     display: false,
     showbuttons: true,
     inputclass: "editableTime",
