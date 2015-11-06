@@ -79,6 +79,10 @@ var PosSecret = Match.Where(function (key) {
   return /[0-9a-zA-Z]{64}/.test(key);
 });
 
+var RgbColor = Match.Where(function(color) {
+  check(color, String);
+  return /rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)/.test(color);
+});
 
 logger = Meteor.isServer ? logger : {
   error: function () {
@@ -100,7 +104,9 @@ var AreaDocument = Match.Where(function (area) {
     locationId: HospoHero.checkers.MongoId,
     organizationId: HospoHero.checkers.MongoId,
     createdAt: Number,
-    inactivityTimeout: InactivityTimeout
+    inactivityTimeout: InactivityTimeout,
+    archived: Boolean,
+    color: HospoHero.checkers.RgbColor
   });
 
   var checkerHelper = new DocumentCheckerHelper(area, Areas);
@@ -292,6 +298,8 @@ Namespace('HospoHero.checkers', {
     }
     return true;
   }),
+
+  RgbColor: RgbColor,
 
   /**
    * Shift document checker
