@@ -3,10 +3,10 @@ var ActualSalesImporter = function ActualSalesImporter(locationId) {
 };
 
 
-ActualSalesImporter.prototype._getMenuItemByRevelName = function (menuItemName) {
+ActualSalesImporter.prototype._getMenuItemByPosName = function (menuItemName) {
   return MenuItems.findOne({
     'relations.locationId': this._locationId,
-    $or: [{revelName: menuItemName}, {name: menuItemName}]
+    $or: [{'posNames': menuItemName}, {name: menuItemName}]
   });
 };
 
@@ -41,7 +41,7 @@ ActualSalesImporter.prototype.getOnDayReceivedCallback = function () {
   //it should return false if loading is finished
   return function (salesData) {
     Object.keys(salesData.menuItems).forEach(function (menuItemName) {
-      var menuItem = self._getMenuItemByRevelName(menuItemName);
+      var menuItem = self._getMenuItemByPosName(menuItemName);
 
       if (menuItem) {
         var item = {

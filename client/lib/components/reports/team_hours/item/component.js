@@ -1,240 +1,103 @@
 var component = FlowComponents.define("teamHoursItem", function (props) {
-  this.user = props.user;
+  this.set('user', props.user);
+  this.tableViewMode = props.tableViewMode;
+  this.weekDate = HospoHero.misc.getWeekDateFromRoute(Router.current());
+
+  var weeklyValues = this.getTotalTimeAndWage();
+
+  this.set('weeklyValues', weeklyValues);
 });
 
-component.state.user = function () {
-  return this.user;
+
+component.state.weekDays = function () {
+  return HospoHero.dateUtils.getWeekDays(this.weekDate);
 };
 
-component.state.totaltime = function () {
-  var totalhours = 0;
-  var totalmins = 0;
-  if (this.user) {
-    var userId = this.user._id;
-    var weekNo = parseInt(Router.current().params.week);
-    var year = parseInt(Router.current().params.year);
-    var week = getDatesFromWeekNumber(weekNo, year);
 
-    week.forEach(function (day) {
-      var date = day.date;
-      var shift = Shifts.findOne({
-        "assignedTo": userId,
-        "shiftDate": HospoHero.dateUtils.shiftDate(date),
-        $or: [{"status": "finished"}, {"status": "started"}]
-      });
-      if (shift) {
-        var diff = 0;
-        if (shift.finishedAt && shift.startedAt) {
-          diff = (shift.finishedAt - shift.startedAt);
-        } else if (shift.startedAt) {
-          if (moment(shift.shiftDate).format("YYYY-MM-DD") == moment().format("YYYY-MM-DD")) {
-            diff = (new Date().getTime() - shift.startedAt);
-          }
-        }
-        totalhours += moment.duration(diff).hours();
-        totalmins += moment.duration(diff).minutes();
-      }
-    });
+component.state.hasWage = function () {
+  var values = this.get('weeklyValues');
+  return values.wage > 0;
+};
 
-    if (totalmins >= 60) {
-      totalhours += Math.floor(totalmins / 60);
-      totalmins = (totalmins % 60);
+
+component.state.isShowShifts = function () {
+  return this.tableViewMode === 'shifts';
+};
+
+
+component.prototype.getUserPayRate = function (date) {
+  var user = this.get('user');
+  if (user.profile && user.profile.payrates) {
+    var wageDoc = user.profile.payrates;
+
+    var currentWeekDay = moment(date).format('dddd').toLowerCase();
+
+    var rate = wageDoc[currentWeekDay];
+    if (!rate) {
+      rate = wageDoc['weekdays']
     }
-    var time = null;
-    if (totalhours < 10) {
-      time = "0" + totalhours;
-    } else {
-      time = totalhours;
-    }
-
-    if(totalmins > 0) {
-      totalmins = (totalmins/60) * 100;
-      totalmins = Math.floor(totalmins);
-      time += "." + totalmins;
-    } else {
-      time += ".00";
-    }
-
-    return time;
+    return rate;
+  } else {
+    return 0;
   }
 };
 
-component.state.wage = function () {
+
+component.prototype.roundNumber = function (number) {
+  return Math.round(number * 100) / 100;
+};
+
+
+component.prototype.getDailyHoursManager = function () {
+  var res = [];
+  for (var i = 0; i < 7; i++) {
+    res[i] = 0;
+  }
+
+  var componentInstance = this;
+
+  return {
+    _minutes: res,
+    addMinutes: function (date, duration) {
+      var dayNumber = moment(date).day() - 1; //because week in moment starts from sunday
+      this._minutes[dayNumber] += duration;
+    },
+    getHours: function () {
+      return this._minutes.map(function (minutesValue) {
+        return componentInstance.roundNumber(minutesValue / 60);
+      })
+    }
+  };
+};
+
+
+component.prototype.getTotalTimeAndWage = function () {
+  var user = this.get('user');
+  var dateForWeek = HospoHero.dateUtils.getDateByWeekDate(this.weekDate);
+
+  var weekShifts = Shifts.find({
+    "assignedTo": user._id,
+    "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek),
+    $or: [{"status": "finished"}, {"status": "started"}]
+  });
+
+  var self = this;
+  var dailyHoursManager = this.getDailyHoursManager();
+  var totalMinutes = 0;
   var totalWage = 0;
-  if (this.user) {
-    var user = this.user;
-    var weekNo = Session.get("thisWeek");
-    var week = getDatesFromWeekNumber(weekNo);
-    week.forEach(function (day) {
-      var totalhours = 0;
-      var totalmins = 0;
-      var date = day.date;
-      var diff = 0;
-      var shift = Shifts.findOne(
-        {
-          "assignedTo": user._id,
-          "shiftDate": HospoHero.dateUtils.shiftDate(date),
-          $or: [{"status": "finished"}, {"status": "started"}]
-        });
-      if (shift) {
-        if (shift.finishedAt && shift.startedAt) {
-          diff = (shift.finishedAt - shift.startedAt);
-        } else if (shift.startedAt) {
-          if (moment(shift.shiftDate).format("YYYY-MM-DD") == moment().format("YYYY-MM-DD")) {
-            diff += (new Date().getTime() - shift.startedAt);
-          }
-        }
-      }
 
-      if (diff > 0) {
-        totalhours = moment.duration(diff).hours();
-        totalmins = moment.duration(diff).minutes();
+  weekShifts.forEach(function (shift) {
+    var shiftDuration = moment(shift.finishedAt).diff(shift.startedAt, 'minutes');
 
-        if (user.profile && user.profile.payrates) {
-          var wageDoc = user.profile.payrates;
-          var rate = 0;
-          if (day.day == "Sunday") {
-            rate = parseInt(wageDoc['sunday']);
-          } else if (day.day == "Saturday") {
-            rate = parseInt(wageDoc['saturday']);
-          } else {
-            rate = parseInt(wageDoc['weekdays']);
-          }
-          totalWage += rate * parseInt(totalhours);
-          totalWage += (rate / 60) * parseInt(totalmins);
-        }
-      }
-    });
-    if (totalWage > 0 && (totalWage == totalWage)) {
-      return Math.round(totalWage * 100) / 100;
-    } else {
-      return 0;
-    }
+    totalMinutes += shiftDuration;
+    totalWage += (self.getUserPayRate(shift.date) / 60) * shiftDuration;
+    dailyHoursManager.addMinutes(shift.shiftDate, shiftDuration);
+  });
+
+  return {
+    wage: this.roundNumber(totalWage),
+    time: this.roundNumber(totalMinutes / 60), // convert to hours and round
+    dailyHours: dailyHoursManager.getHours()
   }
 };
 
-component.state.dailyHours = function () {
-  var hours = [];
-  if (this.user) {
-    var userId = this.user._id;
-    var weekNo = Session.get("thisWeek");
-    var week = getDatesFromWeekNumber(weekNo);
-    week.forEach(function (day) {
-      var doc = {};
-      var date = day.date;
-      doc["date"] = date;
-      var shift = Shifts.findOne({
-        "assignedTo": userId,
-        "shiftDate": HospoHero.dateUtils.shiftDate(date),
-        $or: [{"status": "finished"}, {"status": "started"}]
-      });
-      if (shift) {
-        if (shift.startedAt && shift.finishedAt) {
-          doc["activeTime"] = (shift.finishedAt - shift.startedAt);
-        } else if (shift.startedAt) {
-          doc['activeTime'] = (new Date().getTime() - shift.startedAt);
-        } else {
-          doc['activeTime'] = 0;
-        }
-      }
-      hours.push(doc);
-    });
-    return hours;
-  }
-};
-
-component.state.dailyShifts = function () {
-  var shifts = [];
-  if (this.user) {
-    var userId = this.user._id;
-    var weekNo = Session.get("thisWeek");
-    var week = getDatesFromWeekNumber(weekNo);
-    week.forEach(function (day) {
-      var doc = {};
-      var date = day.date;
-      doc["date"] = date;
-      var shift = Shifts.findOne({
-        "assignedTo": userId,
-        "shiftDate": HospoHero.dateUtils.shiftDate(date)
-      });
-      if (shift) {
-        doc["shift"] = shift._id;
-      }
-      shifts.push(doc);
-    });
-    return shifts;
-  }
-};
-
-component.state.activeShifts = function () {
-  var hash = Session.get("reportHash");
-  return !!((hash == "shifts") || (hash == "shiftsall"));
-};
-
-component.state.activeView = function () {
-  var hash = Session.get("reportHash");
-  return !!((hash == "hours") || (hash == "hoursall"));
-};
-
-component.state.activeWage = function () {
-  var totalWage = 0;
-  if (this.user) {
-    var user = this.user;
-    var weekNo = Session.get("thisWeek");
-    var week = getDatesFromWeekNumber(weekNo);
-    week.forEach(function (day) {
-      var totalhours = 0;
-      var totalmins = 0;
-      var date = day.date;
-      var diff = 0;
-      var shift = Shifts.findOne(
-        {
-          "assignedTo": user._id,
-          "shiftDate": HospoHero.dateUtils.shiftDate(date),
-          $or: [{"status": "finished"}, {"status": "started"}]
-        });
-      if (shift) {
-        if (shift.finishedAt && shift.startedAt) {
-          diff = (shift.finishedAt - shift.startedAt);
-        } else if (shift.startedAt) {
-          if (moment(shift.shiftDate).format("YYYY-MM-DD") == moment().format("YYYY-MM-DD")) {
-            diff += (new Date().getTime() - shift.startedAt);
-          }
-        }
-      }
-
-      if (diff > 0) {
-        totalhours = moment.duration(diff).hours();
-        totalmins = moment.duration(diff).minutes();
-
-        if (user.profile && user.profile.payrates) {
-          var wageDoc = user.profile.payrates;
-          var rate = 0;
-          if (day.day == "Sunday") {
-            rate = parseInt(wageDoc['sunday']);
-          } else if (day.day == "Saturday") {
-            rate = parseInt(wageDoc['saturday']);
-          } else {
-            rate = parseInt(wageDoc['weekdays']);
-          }
-          totalWage += rate * parseInt(totalhours);
-          totalWage += (rate / 60) * parseInt(totalmins);
-        }
-      }
-    });
-    if (totalWage > 0 && (totalWage == totalWage)) {
-      totalWage = Math.round(totalWage * 100) / 100;
-    } else {
-      totalWage = 0;
-    }
-  }
-
-
-  var hash = Session.get("reportHash");
-  if (hash === null) {
-    hash = "shifts";
-    Session.set("reportHash", "shifts");
-  }
-
-  return (parseFloat(totalWage) > 0) || (hash == "shiftsall") || (hash == "hoursall");
-};

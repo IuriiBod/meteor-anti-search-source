@@ -108,6 +108,8 @@ Meteor.publishComposite('organizationInfo', {
                   fields.name = 1;
                   fields.locationId = 1;
                   fields.organizationId = 1;
+                  fields.color = 1;
+                  fields.archived = 1;
                   query._id = {$in: user.relations.areaIds};
                 }
               }

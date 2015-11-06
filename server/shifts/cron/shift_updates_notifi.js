@@ -43,19 +43,48 @@ ShiftUpdatesToEmail = function ShiftUpdatesToEmail (options) {
   this.subject = '[Hero Chef] Daily shift updates';
 };
 
-ShiftUpdatesToEmail.prototype._setRecipients = function() {
-  var receiver = Meteor.users.findOne(this.receiver);
-  this.receiverName = HospoHero.username(receiver);
-  this.to = receiver.emails[0].address;
-  delete this.receiver;
+ShiftUpdatesToEmail.prototype._getSenderAndReceiver = function() {
+  var receiver = this._getUserData(this.receiver);
+
+  if(!receiver) {
+    return false;
+  } else {
+    this.receiverName = receiver.username;
+    this.to = receiver.email;
+    delete this.receiver;
+  }
 
   var senderId = this.shiftUpdates[0].userId;
-  var sender = Meteor.users.findOne(senderId);
-  this.senderName = HospoHero.username(sender);
-  this.from = sender.emails[0].address;
+  var sender = this._getUserData(senderId);
+  if(!sender) {
+    return false;
+  } else {
+    this.senderName = sender.username;
+    this.from = sender.email;
+  }
+  return true;
 };
 
-ShiftUpdatesToEmail.prototype._generateEmail = function() {
+ShiftUpdatesToEmail.prototype._getUserData = function(userId) {
+  if(userId) {
+    var user = Meteor.users.findOne(userId);
+
+    if (user && user.emails && user.emails.length) {
+      return {
+        username: HospoHero.username(user),
+        email: user.emails[0].address
+      };
+    } else {
+      logger.error(ShiftUpdatesToEmail.userNotFoundError(this.receiver));
+      return false;
+    }
+  } else {
+    logger.error('Receiver ID undefined');
+    return false;
+  }
+};
+
+ShiftUpdatesToEmail.prototype._generateEmailText = function() {
   var emailText = [];
   var color;
 
@@ -72,14 +101,21 @@ ShiftUpdatesToEmail.prototype._generateEmail = function() {
   this.emailText = emailText.join('');
 };
 
-ShiftUpdatesToEmail.prototype.sendEmail = function() {
-  this._setRecipients();
-  this._generateEmail();
+ShiftUpdatesToEmail.userNotFoundError = function(userId) {
+  return 'User ' + userId + ' not found';
+};
 
-  return Email.send({
-    to: this.to,
-    from: this.from,
-    subject: this.subject,
-    html: this.emailText
-  });
+ShiftUpdatesToEmail.prototype.sendEmail = function() {
+  if(this._getSenderAndReceiver()) {
+    this._generateEmailText();
+
+    return Email.send({
+      to: this.to,
+      from: this.from,
+      subject: this.subject,
+      html: this.emailText
+    });
+  } else {
+    return false;
+  }
 };

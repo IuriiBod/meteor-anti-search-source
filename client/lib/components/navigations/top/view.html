@@ -8,6 +8,7 @@
         {{#if isInOrganization}}
           <li>
             <span class="open-flyout" data-id="organizationStructure">
+              <span class="area-color-icon" style="background-color: {{state$areaColor}};"></span>
               {{getCurrentArea.name}}
             </span>
           </li>
@@ -15,10 +16,11 @@
             <a class="count-info open-flyout" data-id="organizationStructure"><i class="fa fa-sitemap"></i></a>
           </li>
         {{/if}}
-        <li>
-          <a class="count-info open-flyout" href="#" data-id="profileFlyoutLinks">
+        <li class="dropdown">
+          <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-user"></i>
           </a>
+          {{> settingsDropdownMenu menuItems=state$profileMenuItems}}
         </li>
         <li>
           <a class="count-info notifi-toggler" href="#">
@@ -32,35 +34,17 @@
             {{> render component="notifiFlyout"}}
           </div>
         </li>
+        {{#if isManager}}
+          <li class="dropdown">
+          <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-cog"></i>
+          </a>
+          {{> settingsDropdownMenu menuItems=state$settingsMenuItems}}
+        </li>
+        {{/if}}
       </ul>
     </nav>
   </div>
-
-  {{#if currentUser}}
-    <!-- Flyout profileFlyoutLinks -->
-    <div class="theme-config flyout-container" id="profileFlyoutLinks">
-      <div class="theme-config-box">
-        <div class="skin-setttings">
-          <div class="white-notify-bg">
-            <div class="title clearfix">
-              <a href="#" class="theme-config-close-btn" data-id="profileFlyoutLinks">
-                <i class="fa fa-angle-right"></i>
-              </a>
-              {{username currentUser._id}}
-            </div>
-            <div class="ibox float-e-margins" style="margin-bottom: 0;">
-              <div class="ibox-content" style="padding-bottom: 10px;">
-                <div class="feed-activity-list">
-                  {{>render component='profileFlyoutLinks'}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Flyout profileFlyoutLinks -->
-  {{/if}}
 
   {{#if isInOrganization}}
     <!-- Flyout organizationStructure -->
