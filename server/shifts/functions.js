@@ -10,7 +10,7 @@ Meteor.methods({
       throw new Meteor.Error("You have no permissions to Clock In/Clock Out");
     }
     check(id, HospoHero.checkers.ShiftId);
-    Shifts.update({"_id": id}, {$set: {"status": "started", "startedAt": new Date().getTime()}});
+    Shifts.update({"_id": id}, {$set: {"status": "started", "startedAt": new Date()}});
     logger.info("Shift started", {"shiftId": id, "worker": user._id});
   },
 
@@ -21,7 +21,7 @@ Meteor.methods({
     }
     check(id, HospoHero.checkers.ShiftId);
     if (Shifts.findOne({"_id": id}).status === 'started'){
-      Shifts.update({"_id": id}, {$set: {"status": "finished", "finishedAt": new Date().getTime()}});
+      Shifts.update({"_id": id}, {$set: {"status": "finished", "finishedAt": new Date()}});
       logger.info("Shift ended", {"shiftId": id, "worker": user._id});
     }
 
