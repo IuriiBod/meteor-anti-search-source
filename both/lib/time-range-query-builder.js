@@ -20,5 +20,11 @@ TimeRangeQueryBuilder = {
 
   forMonth: function (date, inUnix) {
     return this._buildQueryFor('month', date, inUnix);
+  },
+
+  forInterval: function(startDate, endDate) {
+    var start = moment(startDate);
+    var end = moment(endDate);
+    return {$gte: start.toDate(), $lte: end.toDate()};
   }
 };

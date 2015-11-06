@@ -1,17 +1,17 @@
 var component = FlowComponents.define('areaSettings', function(props) {
   this.set('organizationId', props.organizationId);
-  this.areaId = props.areaId;
+  this.set('areaId', props.areaId);
   this.set('addUser', false);
 });
 
 component.state.area = function() {
-  return Areas.findOne({_id: this.areaId});
+  return Areas.findOne({_id: this.get('areaId')});
 };
 
 component.state.areaUsers = function() {
   return Meteor.users.find({
     $or: [
-      { 'relations.areaIds': this.areaId },
+      { 'relations.areaIds': this.get('areaId') },
       {
         'relations.organizationId': this.get('organizationId'),
         'relations.locationIds': null,
@@ -25,6 +25,23 @@ component.state.areaUsers = function() {
   });
 };
 
+component.state.areaColor = function () {
+  var area = this.get('area');
+  if(area) {
+    return this.get('area').color;
+  }
+};
+
+component.state.onColorChange = function () {
+  var area = this.get('area');
+  return function(color) {
+    if(area) {
+      area.color = color;
+      Meteor.call('editArea', area, HospoHero.handleMethodResult());
+    }
+  }
+};
+
 component.action.deleteArea = function(id) {
   Meteor.call('deleteArea', id, HospoHero.handleMethodResult());
 };
@@ -34,5 +51,5 @@ component.action.toggleAddUser = function() {
 };
 
 component.action.removeUserFromArea = function (userId) {
-  Meteor.call('removeUserFromArea', userId, this.areaId, HospoHero.handleMethodResult());
+  Meteor.call('removeUserFromArea', userId, get('areaId'), HospoHero.handleMethodResult());
 };
