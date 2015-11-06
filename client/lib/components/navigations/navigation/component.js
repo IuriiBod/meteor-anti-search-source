@@ -11,7 +11,8 @@ var menuEntries = [
         route: 'salesPrediction',
         icon: 'fa-bar-chart',
         permission: {
-          canUser: 'view forecast'
+            type: 'canUser',
+            action: 'view forecast'
         },
         params: function () {
             return {
@@ -26,7 +27,8 @@ var menuEntries = [
         route: 'menuItemsMaster',
         icon: 'fa-cutlery',
         permission: {
-            canUser: 'view menus'
+            type: 'canUser',
+            action: 'view menus'
         },
         activeOnRoutes: ['menuItemsMaster', 'submitMenuItem', 'menuItemsMasterType', 'menuItemDetail'],
         params: function () {
@@ -41,7 +43,8 @@ var menuEntries = [
         route: 'jobItemsMaster',
         icon: 'fa-spoon',
         permission: {
-            canUser: 'view jobs'
+            type: 'canUser',
+            action: 'view jobs'
         },
         activeOnRoutes: ['jobItemsMaster', 'jobItemsMasterType', 'submitJobItem', 'jobItemDetailed', 'jobItemEdit']
     },
@@ -49,7 +52,8 @@ var menuEntries = [
         title: 'Roster',
         icon: 'fa-calendar-o',
         permission: {
-            canUser: 'view roster'
+            type: 'canUser',
+            action: 'view roster'
         },
         activeOnRoutes: ['weeklyRoster', 'dailyRoster', 'templateWeeklyRoster'],
         subMenuEntries: [
@@ -76,8 +80,9 @@ var menuEntries = [
                 title: 'Template',
                 route: 'templateWeeklyRoster',
                 permission: {
-                    canUser: 'edit roster'
-                }
+                    type: 'canUser',
+                    action: 'edit roster'
+                },
             }
         ]
     },
@@ -85,7 +90,7 @@ var menuEntries = [
         title: 'Reports',
         icon: 'fa-line-chart',
         permission: {
-            isUser: 'isOrganizationOwner'
+            type: 'isOrganizationOwner'
         },
         activeOnRoutes: ['teamHours', 'currentStocks'],
         subMenuEntries: [
@@ -114,7 +119,8 @@ var menuEntries = [
         title: 'Stock',
         icon: 'fa-list',
         permission: {
-            canUser: 'view stocks'
+            type: 'canUser',
+            action: 'view stocks'
         },
         activeOnRoutes: ['ingredientsList', 'stocktakeList', 'orderReceiptsList', 'suppliersList'],
         subMenuEntries: [

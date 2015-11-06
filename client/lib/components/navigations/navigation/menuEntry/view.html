@@ -1,7 +1,7 @@
 <template name="menuEntry">
     {{#if state$permission }}
         <li class="nav-first-level-item {{isActiveRoute regex=state$activeOnRoutes}}">
-            <a class="menu-entry-title" href={{state$pathForMenuItem}}>
+                <a class="menu-entry-title" href={{pathFor route=state$route data=state$routeParams}}>
                 {{#if state$icon}}
                     <i class="fa {{state$icon}}"></i>
                 {{/if}}

@@ -21,20 +21,19 @@ component.state.subMenuItemsCount = function() {
         return subMenusItems.length;
     }
     return false;
-}
+};
 
-component.state.pathForMenuItem = function() {
-    var route = this.menuEntry.route || null;
-    if (!route) {
-        return '#';
-    }
+component.state.route = function() {
+    var route = this.menuEntry.route || '#';
+    return route;
+};
 
+component.state.routeParams = function() {
     var params = this.menuEntry.params || {};
     if (_.isFunction(params)) {
         params = params();
     };
-
-    return Router.path(route, params);
+    return params;
 };
 
 component.state.permission = function() {
@@ -45,17 +44,7 @@ component.state.permission = function() {
         return true;
     };
 
-    if (permission.canUser) {
-        return HospoHero.canUser(permission)(Meteor.userId());
-    } else if (permission.isUser) {
-        switch(permission.isUser) {
-            case 'isManager': return HospoHero.isManager(); break;
-            case 'isOrganizationOwner': return HospoHero.isOrganizationOwner(); break;
-            default: return false;
-        }
-    }
-
-    return false;
+    return HospoHero[permission.type](permission.action) || false;
 };
 
 component.state.activeOnRoutes = function() {
