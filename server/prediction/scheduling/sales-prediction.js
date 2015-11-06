@@ -53,7 +53,7 @@ var predict = function (days, locationId) {
 
       items.forEach(function (item) {
         var dataVector = [item._id, currentWeather.temp, currentWeather.main, dateMoment.dayOfYear()];
-        var quantity = parseInt(prediction.makePrediction(dataVector), locationId);
+        var quantity = prediction.makePrediction(dataVector);
 
         logger.info('Made prediction', {menuItem: item.name, date: dateMoment.toDate(), predictedQty: quantity});
 
@@ -100,23 +100,25 @@ var predict = function (days, locationId) {
   }
 };
 
-var getPredicionUpdatedDate = function (locationId, interval) {
+var getPredictionUpdatedDate = function (locationId, interval) {
   var predictionDate = moment();
   predictionDate.add(interval, 'day');
 
   var menuItemFromCurrentLocation = MenuItems.findOne({'relations.locationId': locationId});
-  var dailySaleQuery = {menuItemId: menuItemFromCurrentLocation._id};
-  _.extend(dailySaleQuery, {date: TimeRangeQueryBuilder.forDay(predictionDate)});
 
-  var dailySale = DailySales.findOne(dailySaleQuery);
+  var dailySale = DailySales.findOne({
+    menuItemId: menuItemFromCurrentLocation._id,
+    date: TimeRangeQueryBuilder.forDay(predictionDate)
+  });
+
   if (dailySale) {
     return dailySale.predictionUpdatedAt;
   }
 };
 
 var isNeedToUpdate = function (interval, locationId) {
-  var halfOfInterval = parseInt(interval/2);
-  var predictionUpdatedDate = getPredicionUpdatedDate(locationId, halfOfInterval+1) || false;
+  var halfOfInterval = parseInt(interval / 2);
+  var predictionUpdatedDate = getPredictionUpdatedDate(locationId, halfOfInterval + 1) || false;
   var shouldBeUpdatedBy = moment().subtract(halfOfInterval, 'day');
 
   return !predictionUpdatedDate || moment(predictionUpdatedDate) < shouldBeUpdatedBy;

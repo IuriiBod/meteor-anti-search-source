@@ -41,17 +41,12 @@
         </table>
       </div>
     </div>
+    <div class="load-more-button-wrapper">
+      {{#if state$allItemsLoaded}}
+        <h4><b>All menu items are loaded</b></h4>
+      {{else}}
+        <button id="loadMoreBtn" class="btn btn-white center-block" type="button">Load more</button>
+      {{/if}}
+    </div>
   </div>
-  {{#if state$allItemsLoaded}}
-    <br>
-    <div class="text-center">
-      <h4><b>All menu items are loaded</b></h4>
-    </div>
-  {{else}}
-    <div>
-      <button id="loadMoreBtn" class="btn btn-white center-block" type="button">
-        Load more
-      </button>
-    </div>
-  {{/if}}
 </template>

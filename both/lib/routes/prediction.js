@@ -1,6 +1,6 @@
-Router.route('/forecast/:year/:week/:category', {
-  name: "salesPrediction",
-  template: "salesPredictionPage",
+Router.route('salesPrediction', {
+  template: 'salesPredictionPage',
+  path: '/forecast/:year/:week/:category',
   waitOn: function () {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
@@ -22,10 +22,10 @@ Router.route('/forecast/:year/:week/:category', {
 });
 
 //temporal route
-Router.route("forceForecast", {
-  path: '/forceForecast',
-  template: "forceForecast",
-  data: function () {
-    return {};
+Router.route('forceForecast', {
+  path: '/force',
+  template: 'forceForecast',
+  waitOn: function () {
+    return this.subscribe('organizationInfo');
   }
 });
