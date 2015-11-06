@@ -1,8 +1,10 @@
 <template name="revelMenuLink">
   <div class="container-fluid revel-menu-link-component">
-    <div class="list-group">
+    <div class="agile-list row">
       {{#each state$menuItems}}
-        {{> render component='revelLinkMenuItem' menuItem=this}}
+        <div class="col-md-4 pos-item-positioning">
+          {{> render component='revelLinkMenuItem' menuItem=this}}
+        </div>
       {{/each}}
     </div>
   </div>
