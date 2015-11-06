@@ -138,48 +138,48 @@ RevelSalesDataBucket.prototype.isEmpty = function () {
 
 
 //======== mock data provider ============
-if (HospoHero.isDevelopmentMode()) {
-  /**
-   * Data source with mock data for development mode
-   */
-  var MockOrderItemDataSource = function MockOrderItemDataSource() {
-    this.currentDate = moment();
-  };
-
-  MockOrderItemDataSource.prototype.load = function () {
-    var query = HospoHero.prediction.getMenuItemsForPredictionQuery();
-    var items = MenuItems.find(query).fetch();
-
-    var result = {
-      meta: {
-        'limit': 5000,
-        'offset': 0,
-        'total_count': 616142
-      },
-      objects: []
-    };
-
-    var self = this;
-
-    _.each(items, function (item) {
-      var pushObject = {
-        created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
-        product_name_override: item.name,
-        quantity: Math.floor(Math.random() * 10 + 1)
-      };
-      result.objects.push(pushObject);
-    });
-    this.currentDate.subtract(1, 'd');
-    return result
-  };
-
-  //add mock data source
-  _.extend(Revel.prototype, {
-    queryRevelOrderItems: function (offset) {
-      if (!this._mockRevelSource) {
-        this._mockRevelSource = new MockOrderItemDataSource();
-      }
-      return this._mockRevelSource.load(context.DATA_LIMIT, offset);
-    }
-  });
-}
+//if (HospoHero.isDevelopmentMode()) {
+//  /**
+//   * Data source with mock data for development mode
+//   */
+//  var MockOrderItemDataSource = function MockOrderItemDataSource() {
+//    this.currentDate = moment();
+//  };
+//
+//  MockOrderItemDataSource.prototype.load = function () {
+//    var query = HospoHero.prediction.getMenuItemsForPredictionQuery();
+//    var items = MenuItems.find(query).fetch();
+//
+//    var result = {
+//      meta: {
+//        'limit': 5000,
+//        'offset': 0,
+//        'total_count': 616142
+//      },
+//      objects: []
+//    };
+//
+//    var self = this;
+//
+//    _.each(items, function (item) {
+//      var pushObject = {
+//        created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
+//        product_name_override: item.name,
+//        quantity: Math.floor(Math.random() * 10 + 1)
+//      };
+//      result.objects.push(pushObject);
+//    });
+//    this.currentDate.subtract(1, 'd');
+//    return result
+//  };
+//
+//  //add mock data source
+//  _.extend(Revel.prototype, {
+//    queryRevelOrderItems: function (offset) {
+//      if (!this._mockRevelSource) {
+//        this._mockRevelSource = new MockOrderItemDataSource();
+//      }
+//      return this._mockRevelSource.load(context.DATA_LIMIT, offset);
+//    }
+//  });
+//}
