@@ -73,7 +73,6 @@ Template.profile.rendered = function(){
     mode: 'inline',
     placeholder: "Enter first name here",
     success: function(response, newValue) {
-      var self = this;
       if(newValue) {
         var id = Session.get("profileUser");
         var editDetail = {"firstname": newValue.trim()};
@@ -90,7 +89,6 @@ Template.profile.rendered = function(){
     mode: 'inline',
     placeholder: "Enter last name here",
     success: function(response, newValue) {
-      var self = this;
       if(newValue) {
         var id = Session.get("profileUser");
         var editDetail = {"lastname": newValue.trim()};
@@ -146,11 +144,7 @@ Template.profile.rendered = function(){
       if(newValue) {
         var id = $(self).attr("data-id");
         var newRate = parseFloat(newValue);
-        if(newRate && (newRate == newRate)) {
-          newRate = newRate
-        } else {
-          newRate = 0;
-        }
+        newRate = isNaN(newRate) ? 0 : newRate;
         var editDetail = {"weekdaysrate": newRate};
         updateBasicDetails(id, editDetail);
       }
@@ -170,11 +164,7 @@ Template.profile.rendered = function(){
       if(newValue) {
         var id = $(self).attr("data-id");
         var newRate = parseFloat(newValue);
-        if(newRate && (newRate == newRate)) {
-          newRate = newRate
-        } else {
-          newRate = 0;
-        }
+        newRate = isNaN(newRate) ? 0 : newRate;
         var editDetail = {"saturdayrate": newRate};
         updateBasicDetails(id, editDetail);
       }
@@ -194,11 +184,7 @@ Template.profile.rendered = function(){
       if(newValue) {
         var id = $(self).attr("data-id");
         var newRate = parseFloat(newValue);
-        if(newRate && (newRate == newRate)) {
-          newRate = newRate
-        } else {
-          newRate = 0;
-        }
+        newRate = isNaN(newRate) ? 0 : newRate;
         var editDetail = {"sundayrate": newRate};
         updateBasicDetails(id, editDetail);
       }

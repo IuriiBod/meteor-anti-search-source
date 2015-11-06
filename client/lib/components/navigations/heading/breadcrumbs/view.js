@@ -8,7 +8,7 @@ Template.breadcrumbs.events({
     } else if (category == "Menus") {
       Router.go("menuItemsMaster", {"category": Session.get("category"), "status": Session.get("status")});
     } else if (category == "Settings") {
-      Router.go("admin");
+      Router.go("home");
     } else if (category == "Stocktake List") {
       Router.go("stocktakeList");
     }
