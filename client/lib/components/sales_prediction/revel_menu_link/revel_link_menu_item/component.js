@@ -3,13 +3,14 @@ var component = FlowComponents.define('revelLinkMenuItem', function (props) {
 });
 
 
-component.state.revelName = function () {
+component.state.posNames = function () {
   var menuItem = this.get('menuItem');
-  return menuItem.revelName || menuItem.name;
+  return menuItem.posNames;
+};
+
+component.action.addPosName = function () {
+  var menuItem = this.get('menuItem');
+  Meteor.call('addPosName', "AddPosNameHere", menuItem._id);
 };
 
 
-component.action.updateRevelName = function (newRevelName) {
-  var menuItem = this.get('menuItem');
-  Meteor.call('editMenuItem', menuItem._id, {revelName: newRevelName}, HospoHero.handleMethodResult());
-};

@@ -1,6 +1,9 @@
 <template name="teamHours">
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-10">
+      {{> render component="itemsSearch" onKeyUp=state$onKeyUp}}
+    </div>
+    <div class="col-xs-2">
       <div class="pull-right m-l-md m-t-xs">
         <span class="label label-warning shiftView">Shifts</span>
         <span class="label label-info hoursView">Hours</span>
@@ -20,7 +23,7 @@
         </thead>
         <tbody>
         {{#each state$users}}
-          {{> render component="teamHoursItem" user=this tableViewMode=state$tableViewMode}}
+          {{> render component="teamHoursItem" user=this tableViewMode=state$tableViewMode limit=state$limit}}
         {{/each}}
         </tbody>
       </table>
