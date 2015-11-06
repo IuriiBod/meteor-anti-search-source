@@ -1,25 +1,20 @@
 <template name="navigation">
-  {{#if currentUser}}
-    <nav class="navbar-default navbar-static-side hidden-print" role="navigation">
-      <div class="sidebar-collapse">
-        <a class="close-canvas-menu"><i class="fa fa-times"></i></a>
+    <nav id="side-menu-nav-wrapper" class="navbar-default navbar-static-side hidden-print" role="navigation">
+        <div class="sidebar-collapse">
+            <a class="close-canvas-menu"><i class="fa fa-times"></i></a>
 
-        <ul class="nav" id="side-menu">
-          {{> navHeader}}
-          {{> navDashboard}}
+            <ul class="nav" id="side-menu">
+                {{> navHeader}}
 
-          {{#if isInOrganization}}
-            {{#if getCurrentAreaId}}
-              {{> navForecast}}
-              {{> navRoster}}
-              {{> navMenu}}
-              {{> navJobs}}
-              {{> navStock}}
-              {{> navReports}}
-            {{/if}}
-          {{/if}}
-        </ul>
-      </div>
+                {{> render component="menuEntry" menuEntry=state$dashboardEntry}}
+                {{#if isInOrganization}}
+                    {{#if getCurrentAreaId}}
+                        {{#each state$menuEntries}}
+                            {{> render component="menuEntry" menuEntry=this}}
+                        {{/each}}
+                    {{/if}}
+                {{/if}}
+            </ul>
+        </div>
     </nav>
-  {{/if}}
 </template>
