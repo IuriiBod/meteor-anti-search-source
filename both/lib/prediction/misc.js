@@ -1,5 +1,5 @@
 Namespace('HospoHero.prediction', {
-  getMenuItemByRevelName: function (menuItemName, locationId) {
+  getMenuItemByPosName: function (menuItemName, locationId) {
     return MenuItems.findOne({
       'relations.locationId': locationId,
       $or: [{posNames: {$all:[menuItemName]}}, {name: menuItemName}]

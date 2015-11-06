@@ -7,7 +7,7 @@ var CsvEntryGenerator = {
     var dayOfYear = moment(salesData.createdDate).dayOfYear();
 
     _.each(salesData.menuItems, function (selledCount, menuItemName) {
-      var menuItem = HospoHero.prediction.getMenuItemByRevelName(menuItemName, locationId);
+      var menuItem = HospoHero.prediction.getMenuItemByPosName(menuItemName, locationId);
 
       if (menuItem) {
         csvString += selledCount + ', "' + menuItem._id + '", ' + weather.temp + ', "' + weather.main + '", ' + dayOfYear + '\n';
