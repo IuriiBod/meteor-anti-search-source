@@ -1,5 +1,8 @@
 <template name="jobDetailsHeader">
   <div class="title-action">
+    <button class="btn btn-primary hidden-print editJobItemBtn">
+      <i class="fa fa-edit" data-id="{{state$id}}"></i> Edit Job
+    </button>
     <div class="btn-group">
       <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
@@ -20,11 +23,6 @@
           {{/if}}
         </li>
         {{#if canEditJob}}
-          <li>
-            <a href="#" class="hidden-print editJobItemBtn">
-              <i class="fa fa-edit" data-id="{{state$id}}"></i> Edit
-            </a>
-          </li>
           <li>
             <a href="" class="hidden-print copyJobItemBtn" data-id="{{state$id}}">
               <i class="fa fa-copy" data-id="{{state$id}}"></i> Copy
