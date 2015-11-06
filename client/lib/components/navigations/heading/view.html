@@ -2,7 +2,7 @@
   <div class="row wrapper border-bottom white-bg page-heading">
     {{> render component='breadcrumbs' heading=state$heading id=state$id type=state$type title=state$title}}
 
-    <div class="col-sm-7">
+    <div class="col-sm-6">
       {{#if state$headingToLoad}}
         {{> render component=state$headingToLoad}}
       {{/if}}

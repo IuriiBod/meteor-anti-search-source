@@ -29,6 +29,13 @@ Router.route('pinLock', {
   }
 });
 
+Router.route('logout', {
+  'path': '/logout',
+  data: function() {
+    return Meteor.logout();
+  }
+});
+
 Router.route('invitationAccept', {
   path: '/invitations/:_id',
   layoutTemplate: 'blankLayout',
@@ -57,30 +64,7 @@ Router.route('switchUser', {
 });
 
 
-Router.route('admin', {
-  path: '/admin',
-  template: "adminMainView",
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('sections', currentAreaId),
-      Meteor.subscribe('allAreas', currentAreaId),
-      Meteor.subscribe('usersList', currentAreaId),
-      Meteor.subscribe('locationsOfOrganization'),
-      Meteor.subscribe('areasOfOrganization'),
-      Meteor.subscribe('menuList', currentAreaId)
-    ];
-  },
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
-    Session.set('editStockTake', false);
-  }
-});
-
-Router.route('/user/profile/:_id', {
-  name: 'profile',
+Router.route('profile', {
   path: '/user/profile/:_id',
   template: 'profileMainView',
   waitOn: function () {

@@ -14,7 +14,7 @@ var createUpdateActualSalesFunction = function (locationId) {
   return function (salesData) {
     if (!isHandledFirstDay && previousDayMoment.isSame(salesData.createdDate, 'day')) {
       Object.keys(salesData.menuItems).forEach(function (menuItemName) {
-        var menuItem = HospoHero.prediction.getMenuItemByRevelName(menuItemName, locationId);
+        var menuItem = HospoHero.prediction.getMenuItemByPosName(menuItemName, locationId);
 
         if (menuItem) {
           var item = {
