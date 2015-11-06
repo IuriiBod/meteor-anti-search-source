@@ -4,10 +4,10 @@ var component = FlowComponents.define("reportData", function (props) {
     "assignedTo": props.userId,
     "shiftDate": TimeRangeQueryBuilder.forDay(props.date)
   });
-
-
+  
   //exclude this shift if it is in future
-  if (currentShift && moment(currentShift.shiftDate).isAfter(new Date)) {
+  var endOfToday = moment().endOf('day');
+  if (currentShift && moment(currentShift.shiftDate).isAfter(endOfToday)) {
     currentShift = false;
   }
 

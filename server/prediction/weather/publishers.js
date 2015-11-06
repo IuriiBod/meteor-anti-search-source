@@ -1,5 +1,6 @@
 Meteor.publish('weatherForecast', function (weekRange, areaId) {
   check(weekRange, HospoHero.checkers.WeekRange);
+  check(areaId, HospoHero.checkers.MongoId);
 
   logger.info('Weather subscribe ', weekRange);
 
@@ -8,10 +9,12 @@ Meteor.publish('weatherForecast', function (weekRange, areaId) {
     this.error(new Meteor.Error(403, 'Access Denied'));
   }
 
-  var currentArea = Areas.findOne({ _id: areaId });
-  var locationId = currentArea.locationId;
+  var currentArea = Areas.findOne({_id: areaId});
 
-  new WeatherManager(locationId).updateForecast();
+  if (currentArea) {
+    var locationId = currentArea.locationId;
+    new WeatherManager(locationId).updateForecast();
+  }
 
   return WeatherForecast.find({date: weekRange, locationId: locationId});
 });
