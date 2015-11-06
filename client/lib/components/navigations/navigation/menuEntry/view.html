@@ -1,6 +1,6 @@
 <template name="menuEntry">
     {{#if state$permission }}
-        <li class="{{isActiveRoute regex=state$activeOnRoutes}}">
+        <li class="nav-first-level-item {{isActiveRoute regex=state$activeOnRoutes}}">
             <a class="menu-entry-title" href={{state$pathForMenuItem}}>
                 {{#if state$icon}}
                     <i class="fa {{state$icon}}"></i>
@@ -8,7 +8,7 @@
                 <span class="nav-label"> {{state$title}}</span>
             </a>
             {{#if state$subMenuItems}}
-                <ul class="nav nav-second-level" style="display: none;">
+                <ul class="nav nav-second-level slider">
                     {{#each state$subMenuItems}}
                         {{> render component="menuEntry" menuEntry=this}}
                     {{/each}}
