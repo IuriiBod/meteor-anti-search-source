@@ -5,11 +5,12 @@ var component = FlowComponents.define('revelLinkMenuItem', function (props) {
 
 component.state.posNames = function () {
   var menuItem = this.get('menuItem');
-  return menuItem.posNames || [menuItem.name];
+  return menuItem.posNames;
 };
 
-
-component.action.updatePosName = function (newPosName) {
+component.action.addPosName = function () {
   var menuItem = this.get('menuItem');
-  Meteor.call('editMenuItem', menuItem._id, {posName: newPosName}, HospoHero.handleMethodResult());
+  Meteor.call('addPosName', "AddPosNameHere", menuItem._id);
 };
+
+

@@ -1011,7 +1011,7 @@ table.issue-tracker tbody tr td {
   list-style: none;
   margin: 0;
 }
-.agile-list li {
+.agile-list li,.agile-list>div>*{
 
   background: #FAFAFB;
   border: 1px solid #e7eaec;
@@ -1023,21 +1023,26 @@ table.issue-tracker tbody tr td {
   cursor: pointer;
   background: #fff;
 }
-.agile-list li.warning-element {
+.agile-list .warning-element {
   border-left: 3px solid @yellow;
 }
-.agile-list li.danger-element {
+.agile-list .danger-element {
   border-left: 3px solid @red;
 }
-.agile-list li.info-element {
+.agile-list .info-element {
   border-left: 3px solid @blue;
 }
-.agile-list li.success-element {
+.agile-list .success-element {
   border-left: 3px solid @navy;
 }
 .agile-detail {
   margin-top: 5px;
   font-size: 12px;
+}
+
+.pos-item-positioning {
+  display: inline-block !important;
+  vertical-align: top !important;
 }
 
 /* DIFF */
