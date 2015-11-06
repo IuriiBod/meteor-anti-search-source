@@ -1,4 +1,4 @@
-var component = FlowComponents.define('teamHoursItemsSearch', function (props) {
+var component = FlowComponents.define('itemsSearch', function (props) {
   this.onKeyUp = props.onKeyUp;
 });
 
