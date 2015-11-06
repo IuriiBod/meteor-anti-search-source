@@ -13,10 +13,12 @@ component.state.weekDays = function () {
   return HospoHero.dateUtils.getWeekDays(this.weekDate);
 };
 
+
 component.state.hasWage = function () {
   var values = this.get('weeklyValues');
   return values.wage > 0;
 };
+
 
 component.state.isShowShifts = function () {
   return this.tableViewMode === 'shifts';
@@ -57,7 +59,7 @@ component.prototype.getDailyHoursManager = function () {
   return {
     _minutes: res,
     addMinutes: function (date, duration) {
-      var dayNumber = moment(date).day();
+      var dayNumber = moment(date).day() - 1; //because week in moment starts from sunday
       this._minutes[dayNumber] += duration;
     },
     getHours: function () {
