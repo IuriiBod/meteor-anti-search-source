@@ -1,9 +1,13 @@
 var component = FlowComponents.define('colorPicker', function (props) {
-  var checkedColor = props.checkedColor ? props.checkedColor : 'rgb(97, 189, 79)';
+  var defaultColor = 'rgb(97, 189, 79)';
+
+  var checkedColor = props.checkedColor ? props.checkedColor : defaultColor;
   this.set('checkedColor', checkedColor);
   this.onColorChange = props.onColorChange;
 
-  this.onColorChange(this.get('checkedColor'));
+  if(!props.checkedColor) {
+    this.onColorChange(this.get('checkedColor'));
+  }
 });
 
 component.state.areaColors = function () {
