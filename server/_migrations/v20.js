@@ -34,7 +34,7 @@ var migrationFn = function () {
 
 
 Migrations.add({
-  version: 19,
+  version: 20,
   name: "Changing shift started/finished at time to Date",
   up: migrationFn
 });
