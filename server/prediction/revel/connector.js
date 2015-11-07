@@ -161,15 +161,16 @@ if (HospoHero.isDevelopmentMode()) {
 
     var self = this;
 
-    _.each(items, function (item) {
-      var pushObject = {
+    result.objects = items.map(function (item) {
+      return {
         created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
         product_name_override: item.name,
         quantity: Math.floor(Math.random() * 10 + 1)
       };
-      result.objects.push(pushObject);
     });
+
     this.currentDate.subtract(1, 'd');
+
     return result
   };
 
@@ -179,7 +180,7 @@ if (HospoHero.isDevelopmentMode()) {
       if (!this._mockRevelSource) {
         this._mockRevelSource = new MockOrderItemDataSource();
       }
-      return this._mockRevelSource.load(context.DATA_LIMIT, offset);
+      return this._mockRevelSource.load(offset);
     }
   });
 }
