@@ -96,8 +96,16 @@ UniEmailSender = function UniEmailSender(emailOptions) {
                                                               emailOptions.templateData);
 };
 
-// UniEmailSender private methods
+/**
+ * Sends email with UniEmailSenderOptions parameters
+ */
+UniEmailSender.prototype.send = function () {
+  Email.send(UniEmailSenderOptions);
+};
 
+// ---------------------------------------------------------------------------------------------------------------------
+// UniEmailSender private methods
+// ---------------------------------------------------------------------------------------------------------------------
 /**
  * Returns an email of interested user
  * @param userId
@@ -136,11 +144,4 @@ UniEmailSender.prototype._getEmailHtmlFromTemplate = function (blazeTemplateName
     logger.error('Email template ' + blazeTemplateName + ' not found!');
     throw new Meteor.Error('Email template ' + blazeTemplateName + ' not found!');
   }
-};
-
-/**
- * Sends email with UniEmailSenderOptions parameters
- */
-UniEmailSender.prototype.send = function () {
-  Email.send(UniEmailSenderOptions);
 };
