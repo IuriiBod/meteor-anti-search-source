@@ -1,5 +1,5 @@
 <template name="menuEntry">
-  {{#if state$permission }}
+  {{#if state$permission}}
     <li class="nav-first-level-item {{isActiveRoute regex=state$activeOnRoutes}}">
       <a class="menu-entry-title" href="{{state$hrefPath}}">
         {{#if state$icon}}

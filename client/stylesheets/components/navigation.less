@@ -1,48 +1,62 @@
 #side-menu-nav-wrapper {
-  position: fixed;
   bottom: 0;
-  overflow-y: auto;
   top: 0;
 
-
-  .slider {
-    height: 0;
-    overflow: hidden;
-    transition: height 300ms;
-  }
-
-  .nav-first-level-item.active {
+  .nav-first-level-item {
     .slider {
-      height: auto;
+      height: 0;
+      transition: height 300ms;
+      @media (min-width: 768px) {
+        overflow: hidden;
+      }
     }
-  }
 
-  .slide-down {
-    transition: height 300ms;
-  }
+    &.active {
+      .slider {
+        height: auto;
+      }
+    }
 
-  .nav-first-level-item:hover {
-    .slider {
-      &.slider-for-1-menu-item {
-        height: 42px; // Height of one menu item(32px) + 10px margin
-        .slide-down;
-      }
-      &.slider-for-2-menu-item {
-        height: 74px;
-        .slide-down;
-      }
-      &.slider-for-3-menu-item {
-        height: 106px;
-        .slide-down;
-      }
-      &.slider-for-4-menu-item {
-        height: 138px;
-        .slide-down;
-      }
-      &.slider-for-5-menu-item {
-        height: 170px;
-        .slide-down;
+    &:hover {
+      ul.nav.nav-second-level.slider {
+
+        .sub-menu-container(@item-count) {
+          transition: height 300ms;
+          height: @item-count * 32px + 10px;
+
+          @media (max-width: 768px) {
+            height: @item-count * 37px + 20px;
+          }
+        }
+
+        &.slider-for-1-menu-item {
+          .sub-menu-container(1);
+        }
+
+        &.slider-for-2-menu-item {
+          .sub-menu-container(2);
+        }
+
+        &.slider-for-3-menu-item {
+          .sub-menu-container(3);
+        }
+
+        &.slider-for-4-menu-item {
+          .sub-menu-container(4);
+        }
+
+        &.slider-for-5-menu-item {
+          .sub-menu-container(5);
+        }
+
+        @media (max-width: 768px) {
+          span.nav-label {
+            display: block;
+          }
+        }
       }
     }
   }
 }
+
+
