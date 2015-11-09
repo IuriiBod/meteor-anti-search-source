@@ -1,51 +1,81 @@
-#side-menu-nav-wrapper {
-  bottom: 0;
-  top: 0;
-  overflow-y: scroll;
+@import "../theme-globals.import.less";
 
-  .nav-first-level-item {
-    .slider {
-      height: 0;
-      transition: height 300ms;
-      overflow: hidden;
+#wrapper {
+  &.force-show-sidebar {
+    #page-wrapper {
+      position: inherit;
+      margin: 0 0 0 @sidebar-width;
     }
 
-    &.active {
+    #side-menu-nav-wrapper {
+      display: inline-block;
+      width: @sidebar-width;
+      position: fixed;
+    }
+  }
+
+  &.force-hide-sidebar {
+    #page-wrapper {
+      position: inherit;
+      margin: 0;
+    }
+
+    #side-menu-nav-wrapper {
+      display: none;
+    }
+  }
+
+  #side-menu-nav-wrapper {
+    bottom: 0;
+    top: 0;
+    overflow-y: scroll;
+
+    .nav-first-level-item {
       .slider {
-        height: auto;
+        height: 0;
+        transition: height 300ms;
+        overflow: hidden;
       }
-    }
 
-    &:hover {
-      ul.nav.nav-second-level.slider {
-
-        .sub-menu-container(@item-count) {
-          transition: height 300ms;
-          height: @item-count * 32px + 10px;
+      &.active {
+        .slider {
+          height: auto;
         }
+      }
 
-        &.slider-for-1-menu-item {
-          .sub-menu-container(1);
-        }
+      &:hover {
+        ul.nav.nav-second-level.slider {
 
-        &.slider-for-2-menu-item {
-          .sub-menu-container(2);
-        }
+          .sub-menu-container(@item-count) {
+            transition: height 300ms;
+            height: @item-count * 32px + 10px;
+          }
 
-        &.slider-for-3-menu-item {
-          .sub-menu-container(3);
-        }
+          &.slider-for-1-menu-item {
+            .sub-menu-container(1);
+          }
 
-        &.slider-for-4-menu-item {
-          .sub-menu-container(4);
-        }
+          &.slider-for-2-menu-item {
+            .sub-menu-container(2);
+          }
 
-        &.slider-for-5-menu-item {
-          .sub-menu-container(5);
+          &.slider-for-3-menu-item {
+            .sub-menu-container(3);
+          }
+
+          &.slider-for-4-menu-item {
+            .sub-menu-container(4);
+          }
+
+          &.slider-for-5-menu-item {
+            .sub-menu-container(5);
+          }
         }
       }
     }
   }
 }
+
+
 
 

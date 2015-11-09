@@ -1,21 +1,32 @@
 Template.topNavbar.rendered = function () {
   $('html')
-  .click(function (event) {
-    var flyout = $(".flyout-notifi-container");
-    if (!flyout.is(event.target) && flyout.has(event.target).length === 0) {
-      flyout.removeClass('show');
-    }
-  })
-  .click(function (event) {
-    var flyout = $(".flyout-container");
-    var createOrganization = $('.create-organization');
-    if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!createOrganization.is(event.target) && createOrganization.has(event.target).length === 0)) {
-      flyout.removeClass('show');
-    }
-  });
+    .click(function (event) {
+      var flyout = $(".flyout-notifi-container");
+      if (!flyout.is(event.target) && flyout.has(event.target).length === 0) {
+        flyout.removeClass('show');
+      }
+    })
+    .click(function (event) {
+      var flyout = $(".flyout-container");
+      var createOrganization = $('.create-organization');
+      if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!createOrganization.is(event.target) && createOrganization.has(event.target).length === 0)) {
+        flyout.removeClass('show');
+      }
+    });
 };
 
 Template.topNavbar.events({
+  'click #navbar-minimalize': function (event, tmpl) {
+    var forceShow = 'force-show-sidebar ', forceHide = 'force-hide-sidebar';
+    var body = $('#wrapper');
+    if (body.is('.' + forceShow)) {
+      body.removeClass(forceShow).addClass(forceHide);
+    } else {
+      body.removeClass(forceHide).addClass(forceShow);
+    }
+    console.log('change');
+  },
+
   'click #signInButton': function (event) {
     event.preventDefault();
     Router.go("signIn");
@@ -88,14 +99,14 @@ Template.topNavbar.helpers({
     return moment().format("w");
   },
 
-  showCreateOrgFlyout: function() {
+  showCreateOrgFlyout: function () {
     return Template.instance().showCreateOrgFlyout.get();
   }
 });
 
-Template.topNavbar.created = function() {
+Template.topNavbar.created = function () {
   this.showCreateOrgFlyout = new ReactiveVar();
-  this.autorun(_.bind(function() {
+  this.autorun(_.bind(function () {
     this.showCreateOrgFlyout.set(false);
   }, this));
 };
