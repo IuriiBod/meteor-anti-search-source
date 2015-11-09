@@ -1,11 +1,4 @@
 Namespace('HospoHero.prediction', {
-  getMenuItemByPosName: function (menuItemName, locationId) {
-    return MenuItems.findOne({
-      'relations.locationId': locationId,
-      $or: [{posNames: {$all:[menuItemName]}}, {name: menuItemName}]
-    })
-  },
-
   /**
    * Check whether location can use prediction functionality
    * @param {String|Object} location to check

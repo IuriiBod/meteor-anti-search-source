@@ -1,48 +1,73 @@
-var CloudSettings = Meteor.settings.GoogleCloud;
-
 GooglePredictionApi = function GooglePredictionApi(locationId) {
+  var cloudSettings = Meteor.settings.GoogleCloud;
   var authOptions = {
-    serviceEmail: CloudSettings.SERVICE_EMAIL,
-    pemFile: CloudSettings.PEM_FILE,
+    serviceEmail: cloudSettings.SERVICE_EMAIL,
+    pemFile: cloudSettings.PEM_FILE,
     projectName: 'HospoHero'
   };
+
   this._client = new GooglePrediction(authOptions);
   this._locationId = locationId;
+  this._bucketName = cloudSettings.BUCKET
 };
 
 GooglePredictionApi.prototype._getModelName = function () {
-  if (HospoHero.isDevelopmentMode()) {
-    return "trainingModel"
-  } else {
-    return "trainingModel-" + this._locationId;
-  }
+  return "trainingModel-" + this._locationId;
 };
 
 GooglePredictionApi.prototype._getTrainingFileName = function () {
-  if (HospoHero.isDevelopmentMode()) {
-    return "sales-data"
+  return "sales-data-" + this._locationId + ".csv";
+};
+
+/**
+ * Updates prediction model for current location
+ *
+ */
+GooglePredictionApi.prototype.updatePredictionModel = function () {
+  var location = Locations.findOne({_id: this._locationId});
+
+  logger.info('Updating prediction model', {locationId: this._locationId});
+
+  //find out if we need to update prediction model (every half year)
+  var lastForecastModelUploadDate = location.lastForecastModelUploadDate || false;
+
+  var needToUpdateModel = !lastForecastModelUploadDate
+    || moment(lastForecastModelUploadDate) < moment().subtract(182, 'day');
+
+  if (needToUpdateModel) {
+    var trainingFileName = this._getTrainingFileName();
+    var googleCloud = new GoogleCloud(this._locationId, trainingFileName);
+
+    //upload daily sales data into file in google cloud storage
+    googleCloud.uploadSalesData();
+
+    var predictionModelName = this._getModelName();
+    this._client.insert(predictionModelName, this._bucketName, trainingFileName);
+
+    //refresh update date
+    Locations.update({_id: location._id}, {$set: {lastForecastModelUploadDate: new Date()}});
+    logger.info('Started training prediction model', {name: predictionModelName});
   } else {
-    return "sales-data-" + this._locationId + ".csv";
+    logger.info("Model don't need update", {locationId: this._locationId, lastUpdatedAt: lastForecastModelUploadDate});
   }
 };
 
-GooglePredictionApi.prototype.getUpdatePredictionModelSession = function () {
-  var self = this;
-  var onFinished = function () {
-    //start learning
-    self._client.insert(self._getModelName(), CloudSettings.BUCKET, self._getTrainingFileName());
-  };
-
-  //uplaod data to google cloud storage
-  return GoogleCloud.createTrainingDataUploadingSession(this._getTrainingFileName(), this._locationId, onFinished);
-};
-
+/**
+ * Uses google prediction generated model to make prediction for specified menu item and date
+ *
+ * @param inputData
+ * @returns {*}
+ */
 GooglePredictionApi.prototype.makePrediction = function (inputData) {
-  if (HospoHero.isDevelopmentMode()) {
-    return Math.floor(Math.random() * 100);
-  } else {
-    return this._client.predict(this._getModelName(), inputData).outputValue;
+
+  var predictedValue = parseInt(this._client.predict(this._getModelName(), inputData).outputValue);
+  if (predictedValue < 0) {
+    predictedValue = 0;
   }
+
+  logger.info('Made prediction', {menuItemId: inputData[0], value: predictedValue});
+
+  return predictedValue;
 };
 
 /**
@@ -77,7 +102,27 @@ GooglePredictionApi.prototype.removePredictionModel = function () {
     if (modelToRemove) {
       this._client.remove(modelName);
       var trainingFileName = this._getTrainingFileName();
-      GoogleCloud.removeTrainingDataFile(trainingFileName);
+
+      //remove file from cloud storage
+      var googleCloud = GoogleCloud(this._locationId, trainingFileName);
+      googleCloud.removeModelFile();
     }
   }
 };
+
+
+//mock mix-in for prediction API
+if (HospoHero.isDevelopmentMode()) {
+  _.extend(GooglePredictionApi.prototype, {
+    makePrediction: function () {
+      return Math.floor(Math.random() * 100);
+    },
+    _getModelName: function () {
+      return "trainingModel"
+    },
+
+    _getTrainingFileName: function () {
+      return "sales-data"
+    }
+  });
+}

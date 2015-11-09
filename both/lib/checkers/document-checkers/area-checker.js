@@ -12,7 +12,7 @@ var AreaDocument = Match.Where(function (area) {
     organizationId: HospoHero.checkers.MongoId,
     createdAt: Number,
     inactivityTimeout: InactivityTimeout,
-    archived: Boolean,
+    archived: Match.Optional(Boolean),
     color: HospoHero.checkers.RgbColor
   });
 
