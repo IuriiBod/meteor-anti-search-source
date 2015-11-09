@@ -20,7 +20,7 @@ Namespace('HospoHero', {
       to: [],
       type: '',
       read: false,
-      createtedBy: null,
+      createdBy: null,
       ref: '',
       text: '',
       createdOn: Date.now()

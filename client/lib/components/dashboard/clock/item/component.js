@@ -63,7 +63,7 @@ component.prototype.onClockRendered = function() {
       };
       var intervalleft = Meteor.setInterval(timeLeft, 1000);
     } else if(this.item.text == "Clock Out") {
-      clock = new Date(this.item.startedAt).getTime();
+      clock = this.item.startedAt.getTime();
       var timeSpent = function() {
         if(clock < new Date().getTime()) {
           clock--;

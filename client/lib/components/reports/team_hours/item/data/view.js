@@ -10,7 +10,7 @@ Template.reportData.events({
         var shift = Shifts.findOne({_id: id});
         if (shift) {
           shift[propertyName] = newValue;
-          HospoHero.dateUtils.adjustShiftUnixTimes(shift);
+          HospoHero.dateUtils.adjustShiftTimes(shift);
 
           Meteor.call("editShift", shift, HospoHero.handleMethodResult(function () {
             $(self).removeClass('editable-unsaved');

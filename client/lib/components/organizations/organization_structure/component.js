@@ -44,7 +44,10 @@ component.state.currentArea = function(id) {
 };
 
 component.state.areaColor = function (areaId) {
-  return Areas.findOne({ _id: areaId }).color;
+  var area = Areas.findOne({ _id: areaId });
+  if(area) {
+    return area.color;
+  }
 };
 
 component.action.changeLocation = function(id) {
