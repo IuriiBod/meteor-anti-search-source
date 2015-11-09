@@ -5,8 +5,7 @@ Template.shiftBasicTimeEditable.onRendered(function () {
 
 Template.shiftBasicTimeEditable.helpers({
   currentTime: function () {
-    var currentTime = this.shift[this.property];
-    return HospoHero.dateUtils.getTimeWithTimezone(null, currentTime);
+    return this.shift[this.property];
   }
 });
 

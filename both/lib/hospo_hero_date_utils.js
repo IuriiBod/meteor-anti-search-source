@@ -1,7 +1,7 @@
 Namespace('HospoHero.dateUtils', {
   formatDate: function (date, format) {
-    date = HospoHero.dateUtils.getTimeWithTimezone(null, date);
-    return date.format(format);
+    //date = HospoHero.dateUtils.getTimeWithTimezone(null, date);
+    return moment(date).format(format);
   },
 
   shortDateFormat: function (date) {
