@@ -1,14 +1,13 @@
 #side-menu-nav-wrapper {
   bottom: 0;
   top: 0;
+  overflow-y: scroll;
 
   .nav-first-level-item {
     .slider {
       height: 0;
       transition: height 300ms;
-      @media (min-width: 768px) {
-        overflow: hidden;
-      }
+      overflow: hidden;
     }
 
     &.active {
@@ -23,10 +22,6 @@
         .sub-menu-container(@item-count) {
           transition: height 300ms;
           height: @item-count * 32px + 10px;
-
-          @media (max-width: 768px) {
-            height: @item-count * 37px + 20px;
-          }
         }
 
         &.slider-for-1-menu-item {
@@ -47,12 +42,6 @@
 
         &.slider-for-5-menu-item {
           .sub-menu-container(5);
-        }
-
-        @media (max-width: 768px) {
-          span.nav-label {
-            display: block;
-          }
         }
       }
     }
