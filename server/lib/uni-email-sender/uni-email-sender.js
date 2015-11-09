@@ -1,9 +1,56 @@
 /**
+ * UniEmailSender. How to use?
+ *
+ * At first, you need to create object with email options. It can be looks like this one:
+ *
+ * var emailOptions = {
+ *   senderId: 'kfZMbk62tgFSxmDen',
+ *   receiverId: 'MGBaDcpnxwhckt6qL',
+ *   emailTemplate: {
+ *     subject: 'Welcome!',
+ *     blazeTemplateToRenderName: 'helloUser'
+ *   },
+ *   templateData: {
+ *     username: 'Vadym'
+ *   },
+ *   needToNotify: true,
+ *   notificationData: {
+ *     type: 'organization',
+ *     actionType: 'create',
+ *     relations: {
+ *       organizationId: 'R6PN9uFby4jYr4aiA',
+ *       locationId: 'ppuSjk3WzjYwbvZQ3',
+ *       areaId: 'Jeoa5mjds2ybBnne8'
+ *     }
+ *   }
+ * };
+ *
+ * Then, you need to create an instance of UniEmailSender class
+ *
+ * var uniEmailSender = new UniEmailSender(emailOptions);
+ *
+ * And after that, send an e-mail and notification by calling send() method
+ *
+ * uniEmailSender.send();
+ *
+ * If you set needToNotify key to false and don't pass notificationData object,
+ * UniEmailSender will send only an e-mail, not notification
+ */
+
+
+/**
  * Object for saving parameters which passed into UniEmailSender
  * @type {{Object}}
  */
 var UniEmailSenderOptions = {};
 
+// =====================================================================================================================
+
+/**
+ * Object to save parameters which inserts into Notifications collection
+ * @type {{}}
+ */
+var UniNotificationSenderOptions = {};
 // =====================================================================================================================
 
 /**
@@ -69,11 +116,14 @@ var EmailOptionsChecker = {
  * @constructor
  */
 UniEmailSender = function UniEmailSender(emailOptions) {
+  // TODO: Move to the HospoHero Object and pass it as parameter?
   var settingsForOptions = {
     senderId: String,
     receiverId: String,
     emailTemplate: Object,
-    templateData: Object
+    templateData: Object,
+    needToNotify: Boolean,
+    notificationData: Match.Optional(Object)
   };
   // check of input options
   EmailOptionsChecker.checkTypesOfEmailOptions(emailOptions, settingsForOptions);
@@ -94,6 +144,11 @@ UniEmailSender = function UniEmailSender(emailOptions) {
   // save html of email
   UniEmailSenderOptions.html = this._getEmailHtmlFromTemplate(emailOptions.emailTemplate.blazeTemplateToRenderName,
                                                               emailOptions.templateData);
+
+  // Check if need to send a notification to user
+  if(emailOptions.needToNotify) {
+    this._getNotificationOptions(emailOptions);
+  }
 };
 
 /**
@@ -101,6 +156,10 @@ UniEmailSender = function UniEmailSender(emailOptions) {
  */
 UniEmailSender.prototype.send = function () {
   Email.send(UniEmailSenderOptions);
+
+  if(UniNotificationSenderOptions) {
+    var id = Notifications.insert(UniNotificationSenderOptions);
+  }
 };
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -144,4 +203,19 @@ UniEmailSender.prototype._getEmailHtmlFromTemplate = function (blazeTemplateName
     logger.error('Email template ' + blazeTemplateName + ' not found!');
     throw new Meteor.Error('Email template ' + blazeTemplateName + ' not found!');
   }
+};
+
+UniEmailSender.prototype._getNotificationOptions = function(options) {
+  var notificationOptions = {
+    to: options.receiverId,
+    type: '',
+    read: false,
+    createtedBy: options.senderId,
+    ref: '',
+    title: options.emailTemplate.subject,
+    actionType: 'update',
+    text: UniEmailSenderOptions.html,
+    createdOn: Date.now()
+  };
+  UniNotificationSenderOptions = _.extend(notificationOptions, options.notificationData);
 };
