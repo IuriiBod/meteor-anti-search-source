@@ -1,9 +1,11 @@
 Namespace('HospoHero.dateUtils', {
   formatDate: function (date, format) {
-    return moment(date).format(format);
+    date = HospoHero.dateUtils.getTimeWithTimezone(null, date);
+    return date.format(format);
   },
 
   shortDateFormat: function (date) {
+    date = HospoHero.dateUtils.getTimeWithTimezone(null, date);
     return moment(date).format('YYYY-MM-DD');
   },
 
@@ -133,23 +135,40 @@ Namespace('HospoHero.dateUtils', {
   },
 
   weekDateName: function (date) {
+    date = HospoHero.dateUtils.getTimeWithTimezone(null, date);
     return moment(date).format('dddd');
   },
 
   dateFormat: function (date) {
-    return date ? moment(date).format('YYYY-MM-DD') : '-';
+    if(date) {
+      date = HospoHero.dateUtils.getTimeWithTimezone(null, date);
+      return moment(date).format('YYYY-MM-DD');
+    } else {
+      return '-';
+    }
   },
 
   fullDateFormat: function (date) {
+    date = HospoHero.dateUtils.getTimeWithTimezone(null, date);
     return moment(date).format("DD/MM/YY hh:mm a");
   },
 
   dayFormat: function (date) {
-    return date ? moment(date).format('ddd, Do MMMM') : '-';
+    if(date) {
+      date = HospoHero.dateUtils.getTimeWithTimezone(null, date);
+      return moment(date).format('ddd, Do MMMM');
+    } else {
+      return '-';
+    }
   },
 
   timeFormattedWithDate: function (time) {
-    return time ? moment(time).format('MMMM Do YYYY, h:mm:ss a') : '-';
+    if(time) {
+      time = HospoHero.dateUtils.getTimeWithTimezone(null, time);
+      return moment(time).format('MMMM Do YYYY, h:mm:ss a');
+    } else {
+      return '-';
+    }
   },
 
   secondsToMinutes: function (secs) {
@@ -179,7 +198,36 @@ Namespace('HospoHero.dateUtils', {
     return moment(time).fromNow();
   },
 
-  getTimeWithTimezone: function() {
+  /**
+   * Return date respectively to preset timezone
+   *
+   * @param {String} locationIdOrTimezone - location ID or timezone (from -12 to 12)
+   * @param {Date|String|null} date - date to process. If null - uses current date
+   * @returns {Object} Moment object of date in passed timezone
+   */
+  getTimeWithTimezone: function(locationIdOrTimezone, date) {
+    // If locationIdOrTimezone is null, try to get current location ID
+    locationIdOrTimezone = locationIdOrTimezone ? locationIdOrTimezone : currentLocationId();
 
+    // If length greater than 2, we've got probably MongoId
+    var timezoneOffset = locationIdOrTimezone.length > 2 ?
+      getTimezoneOffsetFromLocation(locationIdOrTimezone) : timezoneToTimezoneOffset(locationIdOrTimezone);
+
+    var dateToProcess = !date ? moment() : moment(date);
+    return dateToProcess.utcOffset(timezoneOffset);
   }
 });
+
+var getTimezoneOffsetFromLocation = function(locationId) {
+  var location = Locations.findOne({_id: locationId});
+  return location.timezone ? timezoneToTimezoneOffset(location.timezone) : moment().utcOffset();
+};
+
+var timezoneToTimezoneOffset = function(timezone) {
+  return timezone * 60;
+};
+
+var currentLocationId = function() {
+  var area = HospoHero.getCurrentArea();
+  return area ? area.locationId : false;
+};
