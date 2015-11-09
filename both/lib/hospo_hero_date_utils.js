@@ -10,12 +10,12 @@ Namespace('HospoHero.dateUtils', {
   timezones: function () {
     var zones = [];
     for (var i = -12; i <= 12; i++) {
-      if (i > 0) {
-        i = "+" + i;
-      }
+      var text = 'UTC ';
+      text += i > 0 ? '+' + i : i;
+
       zones.push({
-        value: 'UTC ' + i,
-        text: 'UTC ' + i
+        value: i,
+        text: text
       });
     }
     return zones;
@@ -177,5 +177,9 @@ Namespace('HospoHero.dateUtils', {
   //Formatted time with Ago
   timeFromNow: function (time) {
     return moment(time).fromNow();
+  },
+
+  getTimeWithTimezone: function() {
+
   }
 });
