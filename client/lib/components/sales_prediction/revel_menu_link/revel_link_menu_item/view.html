@@ -7,6 +7,10 @@
           <i class="fa fa-plus-circle fa-lg add-pos-name"></i>
         </a>
       </div>
+      {{#if state$attachPosName}}
+        {{>render component='selectPos' item=this}}
+      {{/if}}
+
       <hr>
       <div class="col-md-12">
         <div class="row">

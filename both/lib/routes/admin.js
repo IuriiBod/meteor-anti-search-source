@@ -103,7 +103,10 @@ Router.route('posSettings', {
   path: '/settings/pos',
   template: "adminMainView",
   waitOn: function () {
-    return Meteor.subscribe('menuList', HospoHero.getCurrentAreaId(Meteor.userId()));
+    return [
+      Meteor.subscribe('menuList', HospoHero.getCurrentAreaId(Meteor.userId())),
+      Meteor.subscribe('posMenuItems')
+    ]
   },
   data: function () {
     if (!Meteor.userId() || !HospoHero.isManager()) {
