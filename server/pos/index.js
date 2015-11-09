@@ -17,9 +17,23 @@ Meteor.methods({
           relations: relationObj
         });
       });
+      Meteor.call('updateMenuItemsPriceFromPos');
     }
-    else{
+    else {
       throw new Meteor.error("Failed to update POS");
     }
+  },
+
+  'updateMenuItemsPriceFromPos': function () {
+    var menuItems = MenuItems.find({posNames: {$exists: true, $not: {$size: 0}}}).fetch();
+    _.each(menuItems, function (item) {
+      item.posNames.forEach(function (posName) {
+        var posObj = PosMenuItems.findOne({name: posName});
+        if(posObj){
+          MenuItems.update({_id: item._id}, {$set:{salesPrice: posObj.price}});
+          return false;
+        }
+      });
+    });
   }
 });
