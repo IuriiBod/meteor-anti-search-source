@@ -8,9 +8,9 @@
     }
 
     #side-menu-nav-wrapper {
-      display: inline-block;
+      //display: block;
       width: @sidebar-width;
-      position: fixed;
+      //position: fixed;
     }
   }
 
@@ -21,7 +21,8 @@
     }
 
     #side-menu-nav-wrapper {
-      display: none;
+      //display: none;
+      width: 0;
     }
   }
 
@@ -29,6 +30,9 @@
     bottom: 0;
     top: 0;
     overflow-y: scroll;
+    overflow-x: hidden;
+    //transition: all .3s;
+    width: @sidebar-width;
 
     .nav-first-level-item {
       .slider {

@@ -24,7 +24,6 @@ Template.topNavbar.events({
     } else {
       body.removeClass(forceHide).addClass(forceShow);
     }
-    console.log('change');
   },
 
   'click #signInButton': function (event) {

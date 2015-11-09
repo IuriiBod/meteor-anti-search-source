@@ -4,13 +4,13 @@
     #page-wrapper {
       position: inherit;
       margin: 0 0 0 @sidebar-width;
-
     }
 
     .navbar-static-side {
       z-index: 2001;
       position: absolute;
       width: @sidebar-width;
+      overflow: hidden;
     }
 
     .navbar-top-links .dropdown-messages,
@@ -28,7 +28,8 @@
     }
 
     #side-menu-nav-wrapper {
-      display: none;
+      position: fixed;
+      width: 0;
     }
 
     .ibox-tools {
