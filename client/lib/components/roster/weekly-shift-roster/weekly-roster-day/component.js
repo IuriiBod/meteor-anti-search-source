@@ -20,13 +20,16 @@ component.state.shifts = function () {
 };
 
 component.action.addShift = function () {
-  var zeroMoment = moment('00:00:00', 'HH:mm:ss');
-  var startHour = 8, endHour = 17;
+  var zeroMoment = moment(HospoHero.dateUtils.shiftDate(this.get('currentDate'), this.get('hasTemplateType')));
+
+  var shiftDate = new Date(zeroMoment);
+  var startHour = new Date(zeroMoment.hours(8));
+  var endHour = new Date(zeroMoment.hours(17));
 
   var newShiftInfo = {
-    startTime: new Date(zeroMoment.hours(startHour)),
-    endTime: new Date(zeroMoment.hours(endHour)),
-    shiftDate: HospoHero.dateUtils.shiftDate(this.get('currentDate'), this.get('hasTemplateType')),
+    startTime: startHour,
+    endTime: endHour,
+    shiftDate: shiftDate,
     type: this.type
   };
 

@@ -1,48 +1,28 @@
 Template.topNavbar.rendered = function () {
-  // FIXED TOP NAVBAR OPTION
-  // Uncomment this if you want to have fixed top navbar
-  // $('body').addClass('fixed-nav');
-  // $(".navbar-static-top").removeClass('navbar-static-top').addClass('navbar-fixed-top');
-
   $('html')
-  .click(function (event) {
-    var flyout = $(".flyout-notifi-container");
-    if (!flyout.is(event.target) && flyout.has(event.target).length === 0) {
-      flyout.removeClass('show');
-    }
-  })
-  .click(function (event) {
-    var flyout = $(".flyout-container");
-    var createOrganization = $('.create-organization');
-    if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!createOrganization.is(event.target) && createOrganization.has(event.target).length === 0)) {
-      flyout.removeClass('show');
-    }
-  });
+    .click(function (event) {
+      var flyout = $(".flyout-notifi-container");
+      if (!flyout.is(event.target) && flyout.has(event.target).length === 0) {
+        flyout.removeClass('show');
+      }
+    })
+    .click(function (event) {
+      var flyout = $(".flyout-container");
+      var createOrganization = $('.create-organization');
+      if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!createOrganization.is(event.target) && createOrganization.has(event.target).length === 0)) {
+        flyout.removeClass('show');
+      }
+    });
 };
 
 Template.topNavbar.events({
-  // Toggle left navigation
-  'click #navbar-minimalize': function (event) {
-    event.preventDefault();
-    // Toggle special class
-    $("body").toggleClass("mini-navbar");
-
-    // Enable smoothly hide/show menu
-    if (!$('body').hasClass('mini-navbar') || $('body').hasClass('body-small')) {
-      // Hide menu in order to smoothly turn on when maximize menu
-      $('#side-menu').hide();
-      // For smoothly turn on menu
-      setTimeout(function () {
-        $('#side-menu').fadeIn(500);
-      }, 100);
-    } else if ($('body').hasClass('fixed-sidebar')) {
-      $('#side-menu').hide();
-      setTimeout(function () {
-        $('#side-menu').fadeIn(500);
-      }, 300);
+  'click #navbar-minimalize': function (event, tmpl) {
+    var forceShow = 'force-show-sidebar ', forceHide = 'force-hide-sidebar';
+    var body = $('#wrapper');
+    if (body.is('.' + forceShow)) {
+      body.removeClass(forceShow).addClass(forceHide);
     } else {
-      // Remove all inline style from jquery fadeIn function to reset menu state
-      $('#side-menu').removeAttr('style');
+      body.removeClass(forceHide).addClass(forceShow);
     }
   },
 
@@ -118,14 +98,14 @@ Template.topNavbar.helpers({
     return moment().format("w");
   },
 
-  showCreateOrgFlyout: function() {
+  showCreateOrgFlyout: function () {
     return Template.instance().showCreateOrgFlyout.get();
   }
 });
 
-Template.topNavbar.created = function() {
+Template.topNavbar.created = function () {
   this.showCreateOrgFlyout = new ReactiveVar();
-  this.autorun(_.bind(function() {
+  this.autorun(_.bind(function () {
     this.showCreateOrgFlyout.set(false);
   }, this));
 };

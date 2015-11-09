@@ -38,21 +38,24 @@
   border-color: @nav-bg;
 }
 
-.navbar-top-links li {
-  display: inline-block;
-}
+.navbar-top-links {
+  li {
+    display: inline-block;
 
-.navbar-top-links li:last-child {
-  margin-right: 40px;
-}
+    &:last-child {
+      margin-right: 40px;
+    }
 
-.body-small .navbar-top-links li:last-child {
-  margin-right: 0;
-}
+    a {
+      padding: 20px 10px;
+      min-height: 50px;
+    }
 
-.navbar-top-links li a {
-  padding: 20px 10px;
-  min-height: 50px;
+  }
+
+  & > li:first-child {
+    margin-left: 20px;
+  }
 }
 
 .dropdown-menu {
@@ -148,14 +151,13 @@
 }
 
 .pace-done .nav-header {
-  transition:all 0.5s;
+  transition: all 0.5s;
 }
 
 .nav > li.active {
   border-left: 4px solid darken(@navy, 2%);
   background: darken(@nav-bg, 3%);
 }
-
 
 .nav.nav-second-level > li.active {
   border: none;
@@ -285,7 +287,8 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
   background: @navy;
   color: white;
 }
-.navbar-default .special_link span.label{
+
+.navbar-default .special_link span.label {
   background: #fff;
   color: @navy;
 }
@@ -294,11 +297,13 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
   background: lighten(@navy, 3%);
   color: white;
 }
+
 .navbar-default .landing_link a:hover {
   background: @navy !important;
   color: white;
 }
-.navbar-default .landing_link a span.label{
+
+.navbar-default .landing_link a span.label {
   background: #fff;
   color: lighten(@navy, 3%);
 }
@@ -335,8 +340,7 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
 }
 
 body.fixed-nav #wrapper .navbar-static-side,
-body.fixed-nav #wrapper #page-wrapper
-{
+body.fixed-nav #wrapper #page-wrapper {
   margin-top: 60px;
 }
 
@@ -394,7 +398,7 @@ body.mini-navbar #page-wrapper {
 }
 
 body.fixed-sidebar.mini-navbar .footer,
-body.canvas-menu.mini-navbar .footer{
+body.canvas-menu.mini-navbar .footer {
   margin: 0 0 0 0 !important;
 }
 
@@ -486,7 +490,6 @@ body.canvas-menu.mini-navbar .navbar-default .nav li .profile-element a span {
   left: 0px
 }
 
-
 body.canvas-menu nav.navbar-static-side {
   z-index: 2001;
   background: #2f4050;
@@ -494,7 +497,6 @@ body.canvas-menu nav.navbar-static-side {
   position: fixed;
   display: none;
 }
-
 
 body.canvas-menu.mini-navbar nav.navbar-static-side {
   display: block;
