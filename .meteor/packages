@@ -61,4 +61,5 @@ percolate:synced-cron
 dbernhard:jquery-ui-draggable
 reywood:publish-composite
 jss:publish-authorized
+natestrauser:select2
 meteorhacks:ssr
