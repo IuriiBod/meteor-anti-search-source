@@ -1,3 +1,4 @@
+// TODO: Chnge to UniEmailSender
 EmailSender = function EmailSender(emailOptions) {
   this.to = emailOptions.to;
   this.from = emailOptions.from;
