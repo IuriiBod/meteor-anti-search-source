@@ -1,20 +1,24 @@
 <template name="navigation">
-    <nav id="side-menu-nav-wrapper" class="navbar-default navbar-static-side hidden-print" role="navigation">
-        <div class="sidebar-collapse">
-            <a class="close-canvas-menu"><i class="fa fa-times"></i></a>
+  <nav id="side-menu-nav-wrapper" class="navbar-default navbar-static-side hidden-print" role="navigation">
+    <div class="sidebar-collapse">
 
-            <ul class="nav" id="side-menu">
-                {{> navHeader}}
+      <ul class="nav" id="side-menu">
+        <li class="nav-header special_link">
+          <div class="profile-element">
+            Hospo Hero
+          </div>
+        </li>
 
-                {{> render component="menuEntry" menuEntry=state$dashboardEntry}}
-                {{#if isInOrganization}}
-                    {{#if getCurrentAreaId}}
-                        {{#each state$menuEntries}}
-                            {{> render component="menuEntry" menuEntry=this}}
-                        {{/each}}
-                    {{/if}}
-                {{/if}}
-            </ul>
-        </div>
-    </nav>
+        {{> render component="menuEntry" menuEntry=state$dashboardEntry}}
+
+        {{#if isInOrganization}}
+          {{#if getCurrentAreaId}}
+            {{#each state$menuEntries}}
+              {{> render component="menuEntry" menuEntry=this}}
+            {{/each}}
+          {{/if}}
+        {{/if}}
+      </ul>
+    </div>
+  </nav>
 </template>
