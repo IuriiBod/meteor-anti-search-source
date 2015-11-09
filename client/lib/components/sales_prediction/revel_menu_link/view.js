@@ -1,5 +1,5 @@
 Template.revelMenuLink.events({
-  'click .update-pos': function (e, t){
+  'click .update-pos-btn': function (e, t){
     FlowComponents.callAction('updatePos');
   }
 });
