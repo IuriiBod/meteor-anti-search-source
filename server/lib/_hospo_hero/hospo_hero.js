@@ -1,4 +1,7 @@
 Namespace('HospoHero', {
+  isDatabaseImportMode: function () {
+    return !!process.env.DATABASE_IMPORT_MODE;
+  },
   isProductionMode: function () {
     return process.env.ROOT_URL.indexOf('app.hospohero.com') > -1;
   },
