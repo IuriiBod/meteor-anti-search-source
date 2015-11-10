@@ -45,15 +45,34 @@ var ShiftDocument = Match.Where(function (shift) {
       }
 
       var occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
+
+      console.log('KJHKLHKLJH', Shifts.findOne({
+        _id: {$ne: shift._id},
+        $or: [
+          {startTime: occupiedTimeRange},
+          {endTime: occupiedTimeRange},
+          {
+            $and: [
+              {startTime: {$lte: shift.startTime}},
+              {endTime: {$gte: shift.endTime}}
+            ]
+          }
+        ],
+        assignedTo: shift.assignedTo
+      }));
+
+
       var existInShift = !!Shifts.findOne({
         _id: {$ne: shift._id},
         $or: [
-          { startTime: occupiedTimeRange },
-          { endTime: occupiedTimeRange },
-          { $and: [
-            { startTime: {$lte: shift.startTime} },
-            { endTime: {$gte: shift.endTime} }
-          ]}
+          {startTime: occupiedTimeRange},
+          {endTime: occupiedTimeRange},
+          {
+            $and: [
+              {startTime: {$lte: shift.startTime}},
+              {endTime: {$gte: shift.endTime}}
+            ]
+          }
         ],
         assignedTo: shift.assignedTo
       });
@@ -62,6 +81,15 @@ var ShiftDocument = Match.Where(function (shift) {
         throw new Meteor.Error(404, "Worker has already been assigned to a shift");
       }
     });
+
+    if (shift.section) {
+      checkerHelper.checkProperty('section', function () {
+        if (!Meteor.users.findOne({_id: shift.assignedTo, 'profile.sections': shift.section})) {
+          logger.error("User not trained for this section", {"sectionId": shift.section});
+          throw new Meteor.Error(404, "User not trained for this section");
+        }
+      });
+    }
   }
 
   return true;
