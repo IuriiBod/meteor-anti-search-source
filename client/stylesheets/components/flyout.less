@@ -1,0 +1,207 @@
+@padding: 10px;
+.flyout-container {
+  z-index: 10000;
+
+  .flyout {
+    // root node for each opened flyout
+    background: #EEE;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+
+    //some custom elements:
+    .flyout-header {
+      background: #CCC;
+      padding: @padding;
+      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5)
+    }
+
+    .flyout-content {
+      padding: @padding;
+    }
+  }
+  //.editable {
+  //  padding: 0;
+  //}
+}
+
+//
+//.flyout-container .skin-setttings {
+//  padding-bottom: 10px !important;
+//}
+//
+//.flyout-container .theme-config-box .removeAssignedJob {
+//  position: relative !important;
+//  top: 2px;
+//  bottom: 2px;
+//  margin: auto;
+//  width: 98%;
+//  left: -4px;
+//  background-color: #f64747;
+//}
+//
+//// flyout-container redesign
+//.flyout-container, .flyout-notifi-container {
+//  position: fixed;
+//  top: 0 !important;
+//  width: 500px;
+//  -webkit-transform: translateX(100%);
+//  -moz-transform: translateX(100%);
+//  transform: translateX(100%);
+//  -webkit-transition: all 0.5s ease;
+//  -moz-transition: all 0.5s ease;
+//  transition: all 0.5s ease;
+//  z-index: 1020;
+//  visibility: hidden;
+//  @media screen and (max-width: 767px) {
+//    z-index: 2002;
+//  }
+//  &.show {
+//    -webkit-transform: translateX(0);
+//    -moz-transform: translateX(0);
+//    transform: translateX(0);
+//    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+//    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+//    visibility: visible;
+//  }
+//
+//  .theme-config-box {
+//    margin: 0;
+//    -webkit-transition-duration: 0s;
+//    -moz-transition-duration: 0s;
+//    transition-duration: 0s;
+//    .removeAssignedJob {
+//      position: absolute;
+//      bottom: 20px;
+//      left: 3%;
+//      right: 3%;
+//      background-color: #f64747;
+//      -webkit-border-radius: 17px;
+//      -moz-border-radius: 17px;
+//      border-radius: 17px;
+//      color: #fff;
+//      font-size: 14px;
+//      font-weight: 600;
+//      padding: 5px 0;
+//      width: 94%;
+//      outline: none;
+//      -webkit-transition: all 0.3s ease;
+//      -o-transition: all 0.3s ease;
+//      transition: all 0.3s ease;
+//    }
+//    .removeAssignedJob:hover {
+//      background-color: #e50b0b;
+//    }
+//  }
+//
+//  .skin-setttings {
+//    margin-left: 0;
+//    width: 100% !important;
+//    border-left: 1px solid #e7eaec;
+//    border-right: 1px solid #e7eaec;
+//    padding-bottom: 80px;
+//    overflow-y: auto;
+//    .title {
+//      .btn {
+//        height: 60px;
+//        margin-top: -5px;
+//      }
+//      padding: 0;
+//      height: 61px;
+//      line-height: 61px;
+//      background-color: #e8e8e8;
+//      font-size: 13px;
+//      color: #696969;
+//      position: relative;
+//      .theme-config-close-btn, .theme-config-close-notifi-btn {
+//        position: absolute;
+//        left: 0;
+//        top: 0;
+//        height: 61px;
+//        text-decoration: none;
+//        padding: 0 20px;
+//        float: left;
+//      }
+//      i.fa {
+//        line-height: 61px;
+//        font-size: 20px;
+//        color: #696969;
+//      }
+//    }
+//  }
+//
+//  .white-notify-bg {
+//    background: #fff;
+//    width: 100%;
+//    height: 100%;
+//  }
+//
+//  .setings-item::after {
+//    clear: both;
+//    content: "";
+//    display: table;
+//  }
+//
+//  .setings-item.m-t-md {
+//    padding: 0;
+//    & > span {
+//      display: inline-block;
+//      padding: 10px 30px 0 30px;
+//    }
+//    .ibox-content {
+//      background-color: transparent;
+//      padding: 0;
+//    }
+//  }
+//}
+//
+//// flyout-container end redesign
+//
+///*****************************************************************
+//            media queries
+//*******************************************************************/
+//// media queries for tablet
+////@media (min-width: 768px) and (max-width: 991px){
+////  .flyout-container, .flyout-notifi-container{
+////    width: 50%;
+////  }
+////}
+//
+//@media (max-width: 768px) {
+//  .flyout-container, .flyout-notifi-container {
+//    width: 100%;
+//
+//    .setings-item {
+//      padding: 8px 10px;
+//      &.m-t-md {
+//        & > span {
+//          padding: 8px 10px;
+//        }
+//      }
+//    }
+//
+//    .checklist-content {
+//      .checklist-check {
+//        padding: 8px 10px;
+//      }
+//    }
+//
+//    .theme-config-box {
+//      .removeAssignedJob {
+//        width: 80%;
+//        left: 10%;
+//        right: 10%;
+//      }
+//    }
+//    .skin-setttings {
+//      .title {
+//        i.fa {
+//          font-size: 16px;
+//        }
+//        i.fa-angle-right {
+//          &:before {
+//            content: "\f00d";
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
