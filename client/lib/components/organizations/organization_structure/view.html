@@ -1,18 +1,9 @@
-<template name="myCustomTemplate">
-  <div class="flyout-header">
-    <button class="close-flyout-button"> x </button>
-  </div>
-  <div class="flyout-content">
-    {{yourMessage}}
-  </div>
-</template>
-
 <template name="organizationStructure">
   <div class="flyout-header">
     <button class="close-flyout-button">
       <i class="fa fa-angle-right"></i>
-      {{>organizationButtons isOwner=isOrganizationOwner hasLocations=state$hasLocations}}
     </button>
+    {{>organizationButtons isOwner=isOrganizationOwner hasLocations=state$hasLocations}}
   </div>
 
   <div class="flyout-content">

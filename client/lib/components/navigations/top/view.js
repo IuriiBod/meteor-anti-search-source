@@ -55,18 +55,8 @@ Template.topNavbar.events({
     return false;
   },
 
-  'click .open-flyout': function (e) {
-    //e.stopPropagation();
-    //e.preventDefault();
-    //var id = e.target.dataset.id;
-    //if (!id) {
-    //  id = e.target.parentNode.dataset.id;
-    //}
-    //if (!id) {
-    //  id = e.target.parentNode.parentNode.dataset.id;
-    //}
-    //$("#" + id).addClass("show");
-    FlyoutManager.open('myCustomTemplate', {yourMessage: 'Hello, Flyouts!'});
+  'click .organization-structure-flyout': function () {
+    FlyoutManager.open('organizationStructure');
   },
 
   'click .theme-config-close-btn': function (event) {

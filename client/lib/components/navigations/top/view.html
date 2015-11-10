@@ -7,7 +7,7 @@
       <ul class="nav navbar-top-links navbar-right">
         {{#if isInOrganization}}
           <li>
-            <span class="open-flyout" data-id="organizationStructure">
+            <span class="organization-structure-flyout">
               <span class="area-color-icon" style="background-color: {{state$areaColor}};"></span>
               {{getCurrentArea.name}}
             </span>
@@ -45,9 +45,4 @@
       </ul>
     </nav>
   </div>
-
-
-  <!--{{#if isInOrganization}}-->
-    <!--{{>render component='organizationStructure' isOrganizationOwner=isOrganizationOwner relation=state$relation}}    -->
-  <!--{{/if}}-->
 </template>
