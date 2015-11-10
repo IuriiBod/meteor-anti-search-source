@@ -208,6 +208,20 @@ Meteor.methods({
     updateQuery["roles." + HospoHero.getCurrentAreaId()] = newRoleId;
 
     Meteor.users.update({ _id: userId }, {$set: updateQuery});
+  },
+
+  toggleUserTrainingSection: function(userId, sectionId, isAddingSection) {
+    var query = {};
+    if(isAddingSection) {
+      query.$addToSet = {
+        'profile.sections': sectionId
+      }
+    } else {
+      query.$pull = {
+        'profile.sections': sectionId
+      }
+    }
+    Meteor.users.update({_id: userId}, query);
   }
 });
 
