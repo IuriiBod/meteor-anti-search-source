@@ -56,16 +56,17 @@ Template.topNavbar.events({
   },
 
   'click .open-flyout': function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    var id = e.target.dataset.id;
-    if (!id) {
-      id = e.target.parentNode.dataset.id;
-    }
-    if (!id) {
-      id = e.target.parentNode.parentNode.dataset.id;
-    }
-    $("#" + id).addClass("show");
+    //e.stopPropagation();
+    //e.preventDefault();
+    //var id = e.target.dataset.id;
+    //if (!id) {
+    //  id = e.target.parentNode.dataset.id;
+    //}
+    //if (!id) {
+    //  id = e.target.parentNode.parentNode.dataset.id;
+    //}
+    //$("#" + id).addClass("show");
+    FlyoutManager.open('myCustomTemplate', {yourMessage: 'Hello, Flyouts!'});
   },
 
   'click .theme-config-close-btn': function (event) {
@@ -96,10 +97,6 @@ Template.topNavbar.helpers({
 
   week: function () {
     return moment().format("w");
-  },
-
-  showCreateOrgFlyout: function () {
-    return Template.instance().showCreateOrgFlyout.get();
   }
 });
 

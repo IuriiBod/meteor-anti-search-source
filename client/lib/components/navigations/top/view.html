@@ -46,29 +46,8 @@
     </nav>
   </div>
 
-  {{#if isInOrganization}}
-    <!-- Flyout organizationStructure -->
-    <div class="theme-config flyout-container" id="organizationStructure">
-      <div class="theme-config-box">
-        <div class="skin-setttings">
-          <div class="white-notify-bg">
-            <div class="title clearfix">
-              <a href="#" class="theme-config-close-btn" data-id="organizationStructure">
-                <i class="fa fa-angle-right"></i>
-              </a>
-              {{>organizationButtons isOwner=isOrganizationOwner hasLocations=state$hasLocations}}
-            </div>
-            <div class="ibox float-e-margins" style="margin-bottom: 0;">
-              <div class="ibox-content" style="padding-bottom: 10px;">
-                <div class="feed-activity-list">
-                  {{>render component='organizationStructure' organization=getOrganization isOrganizationOwner=isOrganizationOwner relation=state$relation}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Flyout organizationStructure -->
-  {{/if}}
+
+  <!--{{#if isInOrganization}}-->
+    <!--{{>render component='organizationStructure' isOrganizationOwner=isOrganizationOwner relation=state$relation}}    -->
+  <!--{{/if}}-->
 </template>
