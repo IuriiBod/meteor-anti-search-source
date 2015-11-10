@@ -57,13 +57,20 @@ Revel.prototype._queryResource = function (resourceName, options) {
   }
 };
 
+//Revel.prototype._extractResourceIdFromUri = function (resourceUri) {
+//  var resourceIdRegExp = /\/\w+\/\w+\/(\d+)\//;
+//  var matched = resourceIdRegExp.exec(resourceUri);
+//  return _.isArray(matched) && matched[1]; // return first group
+//};
+
 Revel.prototype.loadProductItems = function () {
   var result = this._queryResource('Product', {
-    fields: ['name', 'price']
+    fields: ['name', 'price', 'id']
   });
 
   return result && _.isArray(result.objects) && result.objects.map(function (item) {
       return {
+        posId: item.id,
         name: item.name,
         price: item.price
       }
