@@ -6,16 +6,13 @@ Meteor.methods({
       secret: Meteor.settings.Revel.SECRET
     };
     var revel = new Revel(posCredentials);
-    var data = revel.queryRevelResource('Product', 'id', true, ['name', 'price'], 0);
+    var data = revel.queryRevelProductItems();
     var relationObj = HospoHero.getRelationsObject();
     if (data) {
       PosMenuItems.remove({'relations.locationId': relationObj.locationId});
-      _.each(data.objects, function (item) {
-        PosMenuItems.insert({
-          name: item.name,
-          price: item.price,
-          relations: relationObj
-        });
+      _.each(data, function (item) {
+        item.relations = relationObj;
+        PosMenuItems.insert(item);
       });
       Meteor.call('updateMenuItemsPriceFromPos');
     }
