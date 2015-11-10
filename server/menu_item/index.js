@@ -69,7 +69,8 @@ Meteor.methods({
 
   addPosName: function (name, id) {
     checkMenuItem(id);
-    MenuItems.update({_id: id}, {$addToSet: {posNames: name}});
+    var posItem = PosMenuItems.findOne({name: name});
+    MenuItems.update({_id: id}, {$addToSet: {posNames: name}, $set:{salesPrice: posItem.price}});
   },
 
   editMenuItem: function (id, info) {
