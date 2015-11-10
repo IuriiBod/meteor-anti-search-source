@@ -37,6 +37,7 @@ Meteor.publish('profileUser', function (userId) {
         relations: 1,
         createdAt: 1,
         currentAreaId: 1,
+        sections: 1,
         "roles.defaultRole": 1
       };
 
