@@ -1,36 +1,49 @@
+var updateMenuItemsPriceFromPos = function (locationId) {
+  var menuItems = MenuItems.find({
+    posNames: {$exists: true, $not: {$size: 0}},
+    'relations.locationId': locationId
+  });
+
+  menuItems.forEach(function (item) {
+    item.posNames.forEach(function (posName) {
+      var posObj = PosMenuItems.findOne({name: posName, 'relations.locationId': locationId});
+      if (posObj) {
+        MenuItems.update({_id: item._id}, {$set: {salesPrice: posObj.price}});
+        return false;
+      }
+    });
+  });
+};
+
 Meteor.methods({
   'updatePos': function () {
-    var posCredentials = {
-      host: Meteor.settings.Revel.HOST,
-      key: Meteor.settings.Revel.KEY,
-      secret: Meteor.settings.Revel.SECRET
-    };
-    var revel = new Revel(posCredentials);
-    var data = revel.queryRevelProductItems();
-    var relationObj = HospoHero.getRelationsObject();
-    if (data) {
-      PosMenuItems.remove({'relations.locationId': relationObj.locationId});
-      _.each(data, function (item) {
-        item.relations = relationObj;
-        PosMenuItems.insert(item);
-      });
-      Meteor.call('updateMenuItemsPriceFromPos');
+    if (!HospoHero.canUser('view forecast', this.userId)) {
+      throw new Meteor.Error('Access denied');
     }
-    else {
-      throw new Meteor.error("Failed to update POS");
-    }
-  },
 
-  'updateMenuItemsPriceFromPos': function () {
-    var menuItems = MenuItems.find({posNames: {$exists: true, $not: {$size: 0}}}).fetch();
-    _.each(menuItems, function (item) {
-      item.posNames.forEach(function (posName) {
-        var posObj = PosMenuItems.findOne({name: posName});
-        if(posObj){
-          MenuItems.update({_id: item._id}, {$set:{salesPrice: posObj.price}});
-          return false;
-        }
-      });
+    var relationObj = HospoHero.getRelationsObject();
+    var locationId = relationObj.locationId;
+
+    if (!HospoHero.prediction.isAvailableForLocation(locationId)) {
+      throw new Meteor.Error("Current location hadn't connected POS system");
+    }
+
+    var posCredentials = Locations.findOne({_id: locationId}).pos;
+
+    var revel = new Revel(posCredentials);
+    var data = revel.loadProductItems();
+
+    if (!_.isArray(data)) {
+      throw new Meteor.Error("Failed to update menu items from POS");
+    }
+
+    PosMenuItems.remove({'relations.locationId': locationId});
+
+    data.forEach(function (item) {
+      item.relations = relationObj;
+      PosMenuItems.insert(item);
     });
+
+    updateMenuItemsPriceFromPos(locationId);
   }
 });
