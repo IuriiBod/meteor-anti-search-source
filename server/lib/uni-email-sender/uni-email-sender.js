@@ -38,19 +38,6 @@
  */
 
 
-/**
- * Object for saving parameters which passed into UniEmailSender
- * @type {{Object}}
- */
-var UniEmailSenderOptions = {};
-
-// =====================================================================================================================
-
-/**
- * Object to save parameters which inserts into Notifications collection
- * @type {{}}
- */
-var UniNotificationSenderOptions = {};
 // =====================================================================================================================
 
 /**
@@ -116,6 +103,18 @@ var EmailOptionsChecker = {
  * @constructor
  */
 UniEmailSender = function UniEmailSender(emailOptions) {
+  /**
+   * Object for saving parameters which passed into UniEmailSender
+   * @type {{Object}}
+   */
+  this.UniEmailSenderOptions = {};
+
+  /**
+   * Object to save parameters which inserts into Notifications collection
+   * @type {{}}
+   */
+  this.UniNotificationSenderOptions = {};
+
   // TODO: Move to the HospoHero Object and pass it as parameter?
   var settingsForOptions = {
     senderId: String,
@@ -136,13 +135,13 @@ UniEmailSender = function UniEmailSender(emailOptions) {
   }
 
   // save sender and receiver emails
-  UniEmailSenderOptions.from = this._getUserEmail(emailOptions.senderId);
-  UniEmailSenderOptions.to = this._getUserEmail(emailOptions.receiverId);
+  this.UniEmailSenderOptions.from = this._getUserEmail(emailOptions.senderId);
+  this.UniEmailSenderOptions.to = this._getUserEmail(emailOptions.receiverId);
 
   // save email subject
-  UniEmailSenderOptions.subject = this._getEmailSubject(emailOptions.emailTemplate.subject);
+  this.UniEmailSenderOptions.subject = this._getEmailSubject(emailOptions.emailTemplate.subject);
   // save html of email
-  UniEmailSenderOptions.html = this._getEmailHtmlFromTemplate(emailOptions.emailTemplate.blazeTemplateToRenderName,
+  this.UniEmailSenderOptions.html = this._getEmailHtmlFromTemplate(emailOptions.emailTemplate.blazeTemplateToRenderName,
                                                               emailOptions.templateData);
 
   // Check if need to send a notification to user
@@ -155,10 +154,10 @@ UniEmailSender = function UniEmailSender(emailOptions) {
  * Sends email with UniEmailSenderOptions parameters
  */
 UniEmailSender.prototype.send = function () {
-  Email.send(UniEmailSenderOptions);
+  Email.send(this.UniEmailSenderOptions);
 
-  if(UniNotificationSenderOptions) {
-    var id = Notifications.insert(UniNotificationSenderOptions);
+  if(this.UniNotificationSenderOptions) {
+    Notifications.insert(this.UniNotificationSenderOptions);
   }
 };
 
@@ -214,8 +213,8 @@ UniEmailSender.prototype._getNotificationOptions = function(options) {
     ref: '',
     title: options.emailTemplate.subject,
     actionType: 'update',
-    text: UniEmailSenderOptions.html,
+    text: this.UniEmailSenderOptions.html,
     createdOn: Date.now()
   };
-  UniNotificationSenderOptions = _.extend(notificationOptions, options.notificationData);
+  this.UniNotificationSenderOptions = _.extend(notificationOptions, options.notificationData);
 };
