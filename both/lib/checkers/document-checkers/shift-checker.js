@@ -45,23 +45,6 @@ var ShiftDocument = Match.Where(function (shift) {
       }
 
       var occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
-
-      console.log('KJHKLHKLJH', Shifts.findOne({
-        _id: {$ne: shift._id},
-        $or: [
-          {startTime: occupiedTimeRange},
-          {endTime: occupiedTimeRange},
-          {
-            $and: [
-              {startTime: {$lte: shift.startTime}},
-              {endTime: {$gte: shift.endTime}}
-            ]
-          }
-        ],
-        assignedTo: shift.assignedTo
-      }));
-
-
       var existInShift = !!Shifts.findOne({
         _id: {$ne: shift._id},
         $or: [
