@@ -214,11 +214,11 @@ Meteor.methods({
     var query = {};
     if(isAddingSection) {
       query.$addToSet = {
-        sections: sectionId
+        'profile.sections': sectionId
       }
     } else {
       query.$pull = {
-        sections: sectionId
+        'profile.sections': sectionId
       }
     }
     Meteor.users.update({_id: userId}, query);

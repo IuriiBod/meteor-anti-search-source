@@ -29,7 +29,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
     var shiftSection = shift.section;
 
     if(shiftSection) {
-      return Meteor.users.find({sections: shiftSection}).map(function (user) {
+      return Meteor.users.find({'profile.sections': shiftSection}).map(function (user) {
         return user._id;
       });
     } else {

@@ -11,7 +11,7 @@ component.state.sections = function () {
 component.state.userSelectedSections = function (sectionId) {
   return !!Meteor.users.findOne({
     _id: this.userId,
-    sections: sectionId
+    'profile.sections': sectionId
   });
 };
 
