@@ -29,28 +29,6 @@ Router.route('/roster/weekly/:year/:week', {
   }
 });
 
-Router.route('/roster/daily/:date', {
-  name: "dailyRoster",
-  path: '/roster/daily/:date',
-  template: 'dailyRosterMainView',
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('daily', this.params.date, currentAreaId, null),
-      Meteor.subscribe('workers', currentAreaId),
-      Meteor.subscribe('jobs', currentAreaId, 'unassigned'),
-      Meteor.subscribe('jobItems', null, currentAreaId),
-      Meteor.subscribe('sections', currentAreaId),
-      Meteor.subscribe('jobTypes')
-    ];
-  },
-  data: function () {
-    if (!HospoHero.canUser('view roster', Meteor.userId())) {
-      Router.go("/");
-    }
-  }
-});
-
 
 Router.route('/roster/template/weekly', {
   name: "templateWeeklyRoster",

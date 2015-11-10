@@ -4,7 +4,7 @@ var LocationDocument = Match.Where(function (location) {
     timezone: String,
     openingTime: Date,
     closingTime: Date,
-    organizationId: MongoId,
+    organizationId: HospoHero.checkers.MongoId,
     createdAt: Number,
     country: String,
     city: String,

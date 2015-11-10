@@ -38,20 +38,23 @@
   border-color: @nav-bg;
 }
 
-.navbar-top-links li {
-  display: inline-block;
+.navbar-top-links {
+  li {
+    display: inline-block;
 
-  &:first-child {
+    &:last-child {
+      margin-right: 40px;
+    }
+
+    a {
+      padding: 20px 10px;
+      min-height: 50px;
+    }
+
+  }
+
+  & > li:first-child {
     margin-left: 20px;
-  }
-
-  &:last-child {
-    margin-right: 40px;
-  }
-
-  a {
-    padding: 20px 10px;
-    min-height: 50px;
   }
 }
 

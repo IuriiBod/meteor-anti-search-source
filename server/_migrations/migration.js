@@ -1,7 +1,7 @@
-Meteor.startup(function () {
-  //process.env.NO_MIGRATION - flag that enables run app without migrations
-  if (!process.env.NO_MIGRATION) {
+if (!HospoHero.isDatabaseImportMode()) {
+  Meteor.startup(function () {
+    //process.env.NO_MIGRATION - flag that enables run app without migrations
     console.log('Database version: ', Migrations.getVersion());
     Migrations.migrateTo('latest');
-  }
-});
+  });
+}

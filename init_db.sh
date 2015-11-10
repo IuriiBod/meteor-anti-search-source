@@ -10,7 +10,7 @@ mongodump -u "${MONGO_USER}" -h "${MONGO_DOMAIN}" -d "${MONGO_DB}" -p "${MONGO_P
 meteor reset
 
 #run app without migrations
-export NO_MIGRATION=1
+export DATABASE_IMPORT_MODE=1
 meteor --port 9999 --settings ./.mupx-deploy/settings.json & sleep 15
 
 mongorestore --db meteor -h localhost --port 10000 --drop  "${DEST_DIR}/${MONGO_DB}"

@@ -42,15 +42,6 @@ var menuEntries = [
         }
       },
       {
-        title: 'Daily',
-        route: 'dailyRoster',
-        params: function () {
-          return {
-            date: moment().format("YYYY-MM-DD")
-          }
-        }
-      },
-      {
         title: 'Template',
         route: 'templateWeeklyRoster',
         permission: {
