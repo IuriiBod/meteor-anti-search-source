@@ -3,8 +3,8 @@ Template.selectPos.onRendered(function () {
 });
 
 Template.selectPos.events({
-  'click .add-pos-btn': function (e, t) {
-    var name = t.$('.selectPosName').val();
+  'click .add-pos-btn': function (event, tmpl) {
+    var name = tmpl.$('.selectPosName').val();
     FlowComponents.callAction('addNewPos', name);
   }
 });

@@ -119,7 +119,6 @@ Namespace('HospoHero.dateUtils', {
   },
 
   weekDateName: function (date) {
-    date = HospoHero.dateUtils.getTimeWithTimezone(null, date);
     return moment(date).format('dddd');
   },
 
