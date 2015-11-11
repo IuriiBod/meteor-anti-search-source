@@ -41,18 +41,20 @@ Namespace('HospoHero', {
 
   // Returns username. user can be user ID or user object
   username: function(user) {
-    if(typeof user == "string") {
+    var userNameString = '';
+    if (typeof user == "string") {
+      userNameString = user;
       user = Meteor.users.findOne({_id: user});
     }
 
-    if(user) {
+    if (_.isObject(user)) {
       if (user.profile.firstname && user.profile.lastname) {
         return user.profile.firstname + " " + user.profile.lastname;
       } else {
         return user.username;
       }
     } else {
-      return '';
+      return userNameString;
     }
   }
 });

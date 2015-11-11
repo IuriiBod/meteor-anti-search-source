@@ -2,6 +2,12 @@ Template.shiftBasicWorkerEditable.onRendered(function () {
   this.$('.select-worker').editable(createSelectWorkerEditableConfig(this));
 });
 
+Template.shiftBasicWorkerEditable.helpers({
+  assignedTo: function() {
+    return this.assignedTo ? this.assignedTo : 'Open';
+  }
+});
+
 
 var workersSourceMixin = function (editableConfig, templateInstance) {
   var getAlreadyAssignedWorkersIds = function () {
