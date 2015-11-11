@@ -211,6 +211,10 @@ Meteor.methods({
   },
 
   toggleUserTrainingSection: function(userId, sectionId, isAddingSection) {
+    check(userId, HospoHero.checkers.MongoId);
+    check(sectionId, HospoHero.checkers.MongoId);
+    check(isAddingSection, Boolean);
+
     var query = {};
     if(isAddingSection) {
       query.$addToSet = {
