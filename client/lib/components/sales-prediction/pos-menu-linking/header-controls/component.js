@@ -2,7 +2,7 @@ var component = FlowComponents.define('posMenuLinkingHeader', function (props) {
 });
 
 component.state.isSalesSynced = function () {
-  return true;
+  return !MenuItems.findOne({isNotSyncedWithPos: true});
 };
 
 component.action.updatePosMenuItems = function () {

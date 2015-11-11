@@ -4,14 +4,24 @@ Meteor.methods({
 
     var relationObj = HospoHero.getRelationsObject();
 
-    var posItem = PosMenuItems.findOne({name: name, 'relations.locationId': relationObj.locationId});
-    MenuItems.update({_id: menuItemId}, {$addToSet: {posNames: name}, $set: {salesPrice: posItem.price}});
+    var posItem = PosMenuItems.findOne({
+      name: name,
+      'relations.locationId': relationObj.locationId
+    });
+
+    MenuItems.update({_id: menuItemId}, {
+      $addToSet: {posNames: name},
+      $set: {salesPrice: posItem.price, isNotSyncedWithPos: true}
+    });
   },
 
   deletePosNameFromMenuItem: function (menuItemId, name) {
     checkMenuItem(menuItemId);
 
-    MenuItems.update({_id: menuItemId}, {$pull: {posNames: name}});
+    MenuItems.update({_id: menuItemId}, {
+      $pull: {posNames: name},
+      $set: {isNotSyncedWithPos: true}
+    });
   },
 
   createMenuItem: function (info) {
