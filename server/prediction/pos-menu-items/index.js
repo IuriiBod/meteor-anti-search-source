@@ -47,3 +47,4 @@ Meteor.methods({
     updateMenuItemsPriceFromPos(locationId);
   }
 });
+
