@@ -7,7 +7,7 @@ var checkForecastPermission = function (subscribtion) {
 };
 
 
-Meteor.publishAuthorize('posMenuItems', function () {
+Meteor.publishAuthorized('posMenuItems', function () {
   if (checkForecastPermission(this)) {
     var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
     var relationsObj = HospoHero.getRelationsObject(currentAreaId);
