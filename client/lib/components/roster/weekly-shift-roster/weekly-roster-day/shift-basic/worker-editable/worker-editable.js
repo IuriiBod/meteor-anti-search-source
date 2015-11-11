@@ -24,16 +24,38 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
     });
   };
 
-  var sourceFn = function () {
+  var getTraindeWorkers = function() {
+    var shift = templateInstance.data;
+    var shiftSection = shift.section;
+
+    if(shiftSection) {
+      return Meteor.users.find({'profile.sections': shiftSection}).map(function (user) {
+        return user._id;
+      });
+    } else {
+      return [];
+    }
+  };
+
+  var sourceFn = function (getAvailableWorkers, showTrainedWorkers) {
     var shift = templateInstance.data;
     var workersQuery = {
-      "_id": {$nin: getAlreadyAssignedWorkersIds()},
       "isActive": true,
       $or: [
         {"profile.resignDate": null},
         {"profile.resignDate": {$gt: shift.shiftDate}}
       ]
     };
+
+    var assignedWorkers = getAlreadyAssignedWorkersIds();
+    var trainedWorkers = getTraindeWorkers();
+    if(showTrainedWorkers) {
+      assignedWorkers = _.difference(trainedWorkers, assignedWorkers);
+    } else if(getAvailableWorkers) {
+      assignedWorkers = _.union(trainedWorkers, assignedWorkers);
+    }
+
+    workersQuery._id = getAvailableWorkers ? {$nin: assignedWorkers} : {$in: assignedWorkers};
 
     workersQuery["roles." + HospoHero.getCurrentAreaId()] = {$in: getCanBeRostedRoles()};
 
@@ -45,7 +67,14 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
     });
   };
 
-  return _.extend(editableConfig, {source: sourceFn});
+  editableConfig.source = function() {
+    return [
+      {text: '-- Available & Trained --', children: sourceFn(false, true)},
+      {text: '-- Available --', children: sourceFn(true, false)},
+      {text: '-- Not available --', children: sourceFn(false, false)}
+    ];
+  };
+  return editableConfig;
 };
 
 
