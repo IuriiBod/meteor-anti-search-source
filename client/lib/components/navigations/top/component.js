@@ -44,10 +44,11 @@ component.state.settingsMenuItems = function () {
       route: 'inactivityTimeoutSettings',
       title: 'Inactivity Timeout'
     },
-    {
-      route: 'cronConfigSettings',
-      title: 'Cron Config'
-    },
+    // todo: Uncomment if we need shift updates sending
+    //{
+    //  route: 'cronConfigSettings',
+    //  title: 'Cron Config'
+    //},
     {
       route: 'posSettings',
       title: 'POS / Menu Linking'

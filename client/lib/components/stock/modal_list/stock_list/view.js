@@ -11,5 +11,8 @@ Template.stocksModalList.events({
    //event for submitIngredient template
   'click #addIngredientBtn': function() {
     FlowComponents.callAction('hideAddStockItemMenu');
+  },
+  'click #cancel': function() {
+    FlowComponents.callAction('hideAddStockItemMenu');
   }
 });
