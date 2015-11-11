@@ -15,10 +15,20 @@
           {{state$quantity}}
         {{/if}}
       </td>
-      <td>{{#if state$measure}} {{state$measure}} {{else}} -NA- {{/if}}</td>
+      <td>
+        {{#if state$measure}}
+          {{state$measure}}
+        {{else}}
+          -NA-
+        {{/if}}
+      </td>
+      <td>
+        0
+      </td>
       {{#if canEditMenu}}
         <td>
-          <i class="fa fa-trash remove-{{state$type}} text-danger" style="cursor: pointer;" data-id="{{state$item._id}}" data-type="{{state$type}}"></i>
+          <i class="fa fa-trash remove-{{state$type}} text-danger" style="cursor: pointer;" data-id="{{state$item._id}}"
+             data-type="{{state$type}}"></i>
         </td>
       {{/if}}
     </tr>
