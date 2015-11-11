@@ -1,6 +1,7 @@
 component = FlowComponents.define('jobItemDetail', function(props) {
   this.id = Router.current().params._id;
   this.set('job', getPrepItem(this.id));
+  console.log(this.get('job'));
 });
 
 component.state.section = function() {
