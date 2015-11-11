@@ -51,10 +51,8 @@ var ShiftDocument = Match.Where(function (shift) {
           {startTime: occupiedTimeRange},
           {endTime: occupiedTimeRange},
           {
-            $and: [
-              {startTime: {$lte: shift.startTime}},
-              {endTime: {$gte: shift.endTime}}
-            ]
+            startTime: {$lte: shift.startTime},
+            endTime: {$gte: shift.endTime}
           }
         ],
         assignedTo: shift.assignedTo
