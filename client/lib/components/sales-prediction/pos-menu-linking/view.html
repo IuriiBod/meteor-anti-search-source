@@ -1,11 +1,7 @@
 <template name="posMenuLinking">
   <div class="container-fluid pos-menu-link-component">
-    <div class="agile-list row">
-      {{#each state$menuItems}}
-        <div class="col-md-4 pos-item-positioning">
-          {{> render component='revelLinkMenuItem' menuItem=this}}
-        </div>
-      {{/each}}
-    </div>
+    {{#each state$menuItems}}
+      {{> render component='revelLinkMenuItem' menuItem=this}}
+    {{/each}}
   </div>
 </template>
