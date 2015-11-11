@@ -3,5 +3,8 @@ Template.submitIngredient.events({
     event.preventDefault();
     var $form = $(tmpl.find('#submitIngredientForm'));
     $form.submit();
+  },
+  'click #cancel': function(e) {
+    e.preventDefault();
   }
 });
