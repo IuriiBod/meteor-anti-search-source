@@ -44,3 +44,14 @@ component.state.measure = function () {
     }
   }
 };
+
+component.state.price = function () {
+  if (this.item){
+    if (this.type === 'prep'){
+      var item = getPrepItem(this.id);
+      return item.prepCostPerPortion* this.quantity;
+    }
+    var item = getIngredientItem(this.id);
+    return item.costPerPortionUsed;
+  }
+};

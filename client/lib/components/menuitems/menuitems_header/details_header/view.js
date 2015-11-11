@@ -35,7 +35,6 @@ Template.menuDetailsHeader.onRendered(function() {
     showbuttons: true,
     display: false,
     mode: 'inline',
-    toggle: 'mouseenter',
     success: function (response, newValue) {
       Meteor.call("editMenuItem", Router.current().params._id, {name: newValue}, HospoHero.handleMethodResult());
     }
