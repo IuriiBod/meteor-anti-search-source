@@ -45,7 +45,8 @@ Namespace('HospoHero.roles', {
     "Billing Account": "edit billing account",
     "Edit Organization": "edit organization settings",
     "Edit users payrate": "edit user's payrate",
-    "All Rights": "all rights"
+    "All Rights": "all rights",
+    "View Reports": "view reports"
   },
 
   getActions: function() {
