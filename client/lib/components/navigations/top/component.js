@@ -70,6 +70,10 @@ component.state.profileMenuItems = function () {
       }
     },
     {
+      route: 'userUnavailability',
+      title: 'My unavailability'
+    },
+    {
       route: 'switchUser',
       title: 'Switch User'
     },
