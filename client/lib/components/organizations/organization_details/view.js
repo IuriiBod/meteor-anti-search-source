@@ -6,5 +6,9 @@ Template.organizationDetailsPage.events({
     //  Meteor.call('deleteOrganization', id, HospoHero.handleMethodResult());
     //  $('.flyout-container').removeClass('show');
     //}
+  },
+
+  'click .change-billing-account-flyout': function(event, tmpl) {
+    FlyoutManager.open('changeBillingAccount');
   }
 });

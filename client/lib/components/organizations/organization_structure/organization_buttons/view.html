@@ -12,7 +12,7 @@
   {{/if}}
 
   {{#if canInvite}}
-    <span class="pull-right btn btn-sm btn-link open-flyout organization-settings-buttons" data-id="invitationsList"><i
+    <span class="pull-right btn btn-sm btn-link invitation-flyout organization-settings-buttons"><i
       class="fa fa-fw fa-envelope"></i></span>
   {{/if}}
 
@@ -23,11 +23,11 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="#" class="open-flyout" data-id="createLocation">Add Location</a>
+          <a href="#" class="create-location-flyout">Add Location</a>
         </li>
         {{#if hasLocations}}
           <li>
-            <a href="#" class="open-flyout" data-id="createArea">Add Area</a>
+            <a href="#" class="create-area-flyout">Add Area</a>
           </li>
         {{/if}}
       </ul>

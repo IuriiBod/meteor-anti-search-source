@@ -45,16 +45,6 @@ Template.topNavbar.events({
     });
   },
 
-  'click .notifi-toggler': function (event) {
-    event.stopPropagation();
-    if ($(".flyout-notifi-container").hasClass("show")) {
-      $(".flyout-notifi-container").removeClass("show");
-    } else {
-      $(".flyout-notifi-container").addClass("show");
-    }
-    return false;
-  },
-
   'click .organization-structure-flyout': function () {
     FlyoutManager.open('organizationStructure', {}, true);
   },

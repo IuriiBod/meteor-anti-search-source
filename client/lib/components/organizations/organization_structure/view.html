@@ -3,7 +3,9 @@
     <button class="close-flyout-button">
       <i class="fa fa-angle-right"></i>
     </button>
-    {{>organizationButtons isOwner=isOrganizationOwner hasLocations=state$hasLocations}}
+    {{>organizationButtons  isOwner=isOrganizationOwner
+                            hasLocations=state$hasLocations
+                            organizationId=state$organization._id}}
   </div>
 
   <div class="flyout-content">
@@ -36,82 +38,6 @@
       </ul>
     {{/each}}
   </div>
-
-  <!--{{#if canInvite}}-->
-    <!--&lt;!&ndash; Flyout invitationsList &ndash;&gt;-->
-    <!--<div class="theme-config flyout-container" id="invitationsList">-->
-      <!--<div class="theme-config-box">-->
-        <!--<div class="skin-setttings">-->
-          <!--<div class="white-notify-bg">-->
-            <!--<div class="title clearfix">-->
-              <!--<a href="#" class="theme-config-close-btn" data-id="invitationsList">-->
-                <!--<i class="fa fa-angle-right"></i>-->
-              <!--</a>-->
-              <!--Invitations List-->
-            <!--</div>-->
-            <!--<div class="ibox float-e-margins" style="margin-bottom: 0;">-->
-              <!--<div class="ibox-content" style="padding-bottom: 10px;">-->
-                <!--<div class="feed-activity-list">-->
-                  <!--{{> render component="invitationsList" organizationId=state$organization._id}}-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--&lt;!&ndash; Flyout invitationsList &ndash;&gt;-->
-  <!--{{/if}}-->
-
-  <!--{{#if isOrganizationOwner}}-->
-    <!--&lt;!&ndash; Flyout organizationDetailsPage &ndash;&gt;-->
-    <!--<div class="theme-config flyout-container" id="organizationDetailsPage">-->
-      <!--<div class="theme-config-box">-->
-        <!--<div class="skin-setttings">-->
-          <!--<div class="white-notify-bg">-->
-            <!--<div class="title clearfix">-->
-              <!--<a href="#" class="theme-config-close-btn" data-id="organizationDetailsPage">-->
-                <!--<i class="fa fa-angle-right"></i>-->
-              <!--</a>-->
-              <!--Organization Settings-->
-            <!--</div>-->
-            <!--<div class="ibox float-e-margins" style="margin-bottom: 0;">-->
-              <!--<div class="ibox-content" style="padding-bottom: 10px;">-->
-                <!--<div class="feed-activity-list">-->
-                  <!--{{> render component="organizationDetailsPage" organizationId=state$organization._id}}-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--&lt;!&ndash; Flyout organizationDetailsPage &ndash;&gt;-->
-
-    <!--&lt;!&ndash; Flyout createLocation &ndash;&gt;-->
-    <!--<div class="theme-config flyout-container" id="createLocation">-->
-      <!--<div class="theme-config-box">-->
-        <!--<div class="skin-setttings">-->
-          <!--<div class="white-notify-bg">-->
-            <!--<div class="title clearfix">-->
-              <!--<a href="#" class="theme-config-close-btn" data-id="createLocation">-->
-                <!--<i class="fa fa-angle-right"></i>-->
-              <!--</a>-->
-              <!--Add Location-->
-            <!--</div>-->
-            <!--<div class="ibox float-e-margins" style="margin-bottom: 0;">-->
-              <!--<div class="ibox-content" style="padding-bottom: 10px;">-->
-                <!--<div class="feed-activity-list">-->
-                  <!--{{> render component="createLocation" organizationId=state$organization._id}}-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--&lt;!&ndash; Flyout createLocation &ndash;&gt;-->
-  <!--{{/if}}-->
 
   <!--{{#if isManager}}-->
     <!--&lt;!&ndash; Flyout locationSettings &ndash;&gt;-->

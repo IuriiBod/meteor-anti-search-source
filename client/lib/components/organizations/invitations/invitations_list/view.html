@@ -1,19 +1,32 @@
 <template name="invitationsList">
-  <div class="btn-group col-xs-12">
-    <button class="btn col-xs-6{{#unless state$isAccepted}} btn-primary{{else}} btn-default{{/unless}} show-unaccepted">Unaccepted</button>
-    <button class="btn col-xs-6{{#if state$isAccepted}} btn-primary{{else}} btn-default{{/if}} show-accepted">Accepted</button>
+  <div class="flyout-header">
+    <button class="close-flyout-button">
+      <i class="fa fa-angle-right"></i>
+    </button>
+    Invitations List
   </div>
 
-  <table class="table">
-    <thead>
+  <div class="flyout-content">
+    <div class="btn-group col-xs-12">
+      <button
+        class="btn col-xs-6{{#unless state$isAccepted}} btn-primary{{else}} btn-default{{/unless}} show-unaccepted">
+        Unaccepted
+      </button>
+      <button class="btn col-xs-6{{#if state$isAccepted}} btn-primary{{else}} btn-default{{/if}} show-accepted">
+        Accepted
+      </button>
+    </div>
+
+    <table class="table">
+      <thead>
       <tr>
         <th>Name</th>
         <th>Email</th>
         <th>Invitation Date</th>
         <th>Action</th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       {{#each state$invitations}}
         <tr>
           <td>{{name}}</td>
@@ -26,6 +39,7 @@
           </td>
         </tr>
       {{/each}}
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </template>

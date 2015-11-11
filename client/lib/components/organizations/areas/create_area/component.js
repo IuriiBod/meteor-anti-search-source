@@ -21,11 +21,14 @@ component.action.changeEnabled = function() {
   this.set('enabled', !this.get('enabled'));
 };
 
-component.action.createArea = function (areaInfo) {
+component.action.createArea = function (areaInfo, domElement) {
   areaInfo.organizationId = this.organizationId;
   areaInfo.color = this.get('color');
   areaInfo.archived = false;
-  Meteor.call("createArea", areaInfo, HospoHero.handleMethodResult());
+  Meteor.call("createArea", areaInfo, HospoHero.handleMethodResult(function() {
+    var flyout = FlyoutManager.getInstanceByElement(domElement);
+    flyout.close();
+  }));
 };
 
 component.state.onColorChange = function () {
