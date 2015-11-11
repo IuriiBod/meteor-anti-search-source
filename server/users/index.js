@@ -208,6 +208,29 @@ Meteor.methods({
     updateQuery["roles." + HospoHero.getCurrentAreaId()] = newRoleId;
 
     Meteor.users.update({ _id: userId }, {$set: updateQuery});
+  },
+
+  toggleUserTrainingSection: function(userId, sectionId, isAddingSection) {
+    check(userId, HospoHero.checkers.MongoId);
+    check(sectionId, HospoHero.checkers.MongoId);
+    check(isAddingSection, Boolean);
+
+    if(!HospoHero.canUser('edit users', Meteor.userId())) {
+      logger.error('User not permitted to edit other users', {userId: Meteor.userId()});
+      throw new Meteor.Error('User not permitted to edit other users', {userId: Meteor.userId()});
+    }
+    
+    var query = {};
+    if(isAddingSection) {
+      query.$addToSet = {
+        'profile.sections': sectionId
+      }
+    } else {
+      query.$pull = {
+        'profile.sections': sectionId
+      }
+    }
+    Meteor.users.update({_id: userId}, query);
   }
 });
 

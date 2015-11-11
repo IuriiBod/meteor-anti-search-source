@@ -77,11 +77,13 @@ Router.route('/menuItem/:_id', {
     return [
       Meteor.subscribe("menuItem", this.params._id),
       Meteor.subscribe('comments', this.params._id, currentAreaId),
+      Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('allCategories', currentAreaId),
       Meteor.subscribe('allStatuses'),
       Meteor.subscribe('userSubscriptions', currentAreaId),
       Meteor.subscribe('usersList', currentAreaId),
-      Meteor.subscribe('jobTypes')
+      Meteor.subscribe('jobTypes'),
+      Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
   data: function() {
