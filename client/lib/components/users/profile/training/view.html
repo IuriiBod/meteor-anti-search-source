@@ -5,7 +5,19 @@
         <h5>Training</h5>
       </div>
       <div class="ibox-content">
-        Coming soon
+
+        {{#each state$sections}}
+          <div class="form-group">
+            {{#if state$userSelectedSections _id}}
+              <input type="checkbox" class="section-checker" value="{{_id}}" checked="checked">
+            {{else}}
+              <input type="checkbox" class="section-checker" value="{{_id}}">
+            {{/if}}
+
+            {{name}}
+          </div>
+        {{/each}}
+
       </div>
     </div>
   </div>
