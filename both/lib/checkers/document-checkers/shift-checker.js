@@ -64,7 +64,7 @@ var ShiftDocument = Match.Where(function (shift) {
     });
 
     if (shift.section) {
-      checkerHelper.checkProperty('section', function () {
+      checkerHelper.checkPropertiesGroup(['assignedTo', 'section'], function () {
         if (!Meteor.users.findOne({_id: shift.assignedTo, 'profile.sections': shift.section})) {
           logger.error("User not trained for this section", {"sectionId": shift.section});
           throw new Meteor.Error(404, "User not trained for this section");
