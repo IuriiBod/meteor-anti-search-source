@@ -3,15 +3,11 @@ var component = FlowComponents.define('posEditItem', function (props) {
   this.item = props.item;
 });
 
-component.state.getName = function(){
+component.state.getName = function () {
   return this.name;
 };
 
-component.action.updatePosName = function (newPosName) {
-  Meteor.call('editPosName', this.item._id, newPosName, this.name, HospoHero.handleMethodResult());
-};
-
 component.action.deletePosName = function () {
-  Meteor.call('deletePosName', this.name, this.item._id);
+  Meteor.call('deletePosNameFromMenuItem', this.item._id, this.name, HospoHero.handleMethodResult());
 };
 
