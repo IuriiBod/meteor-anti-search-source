@@ -56,7 +56,7 @@ Template.topNavbar.events({
   },
 
   'click .organization-structure-flyout': function () {
-    FlyoutManager.open('organizationStructure');
+    FlyoutManager.open('organizationStructure', {}, true);
   },
 
   'click .theme-config-close-btn': function (event) {
