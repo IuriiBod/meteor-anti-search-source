@@ -8,5 +8,5 @@ component.state.allPos = function () {
 
 component.action.addNewPos = function (name) {
   var menuItem = this.get('menuItem');
-  Meteor.call('addPosName', name, menuItem._id);
+  Meteor.call('addPosNameToMenuItem', menuItem._id, name, HospoHero.handleMethodResult());
 };

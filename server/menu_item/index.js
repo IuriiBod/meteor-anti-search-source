@@ -1,4 +1,29 @@
 Meteor.methods({
+  addPosNameToMenuItem: function (menuItemId, name) {
+    checkMenuItem(menuItemId);
+
+    var relationObj = HospoHero.getRelationsObject();
+
+    var posItem = PosMenuItems.findOne({
+      name: name,
+      'relations.locationId': relationObj.locationId
+    });
+
+    MenuItems.update({_id: menuItemId}, {
+      $addToSet: {posNames: name},
+      $set: {salesPrice: posItem.price, isNotSyncedWithPos: true}
+    });
+  },
+
+  deletePosNameFromMenuItem: function (menuItemId, name) {
+    checkMenuItem(menuItemId);
+
+    MenuItems.update({_id: menuItemId}, {
+      $pull: {posNames: name},
+      $set: {isNotSyncedWithPos: true}
+    });
+  },
+
   createMenuItem: function (info) {
     if (!HospoHero.canUser('edit menus', Meteor.userId())) {
       logger.error("User not permitted to create menu items");
@@ -54,23 +79,6 @@ Meteor.methods({
     };
     HospoHero.sendNotification(options);
     return menuId;
-  },
-
-  editPosName: function (id, newName, oldName) {
-    checkMenuItem(id);
-    MenuItems.update({_id: id}, {$pull: {posNames: oldName}});
-    MenuItems.update({_id: id}, {$addToSet: {posNames: newName}});
-  },
-
-  deletePosName: function (name, id) {
-    checkMenuItem(id);
-    MenuItems.update({_id:id}, {$pull: {posNames: name}});
-  },
-
-  addPosName: function (name, id) {
-    checkMenuItem(id);
-    var posItem = PosMenuItems.findOne({name: name});
-    MenuItems.update({_id: id}, {$addToSet: {posNames: name}, $set:{salesPrice: posItem.price}});
   },
 
   editMenuItem: function (id, info) {

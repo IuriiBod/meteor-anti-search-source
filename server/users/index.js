@@ -215,6 +215,11 @@ Meteor.methods({
     check(sectionId, HospoHero.checkers.MongoId);
     check(isAddingSection, Boolean);
 
+    if(!HospoHero.canUser('edit users', Meteor.userId())) {
+      logger.error('User not permitted to edit other users', {userId: Meteor.userId()});
+      throw new Meteor.Error('User not permitted to edit other users', {userId: Meteor.userId()});
+    }
+    
     var query = {};
     if(isAddingSection) {
       query.$addToSet = {

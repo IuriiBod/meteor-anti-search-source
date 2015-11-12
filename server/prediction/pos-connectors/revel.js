@@ -4,30 +4,48 @@ Revel = function Revel(posCredentials) {
 };
 
 
-Revel.prototype.queryRevelResource = function (resource, orderBy, isAscending, fields, offset) {
-  var orderByStr;
+Revel.prototype._convertOptionsToQueryParams = function (options) {
+  var queryParams = {
+    limit: this.DATA_LIMIT,
+    format: 'json',
+    offset: 0
+  };
 
-  if (isAscending) {
-    orderByStr = orderBy;
-  } else {
-    orderByStr = '-' + orderBy;
+  if (options) {
+    _.extend(queryParams, options);
   }
 
+  if (queryParams.fields) {
+    queryParams.fields = queryParams.fields.join(',');
+  }
+
+  return queryParams;
+};
+
+/**
+ * Queries particular resource from Revel
+ *
+ * @param resourceName
+ * @param {object} options - custom query options
+ * @param {string} options.order_by - property to order (for descending order add "-" before property name)
+ * @param {Array} options.fields - fields to pick
+ * @param {number} options.offset - used for pagination
+ * @returns {boolean|Array} false - if we got an error
+ * @private
+ */
+Revel.prototype._queryResource = function (resourceName, options) {
   try {
     var pos = this._posCredentials;
 
-    var response = HTTP.get(pos.host + '/resources/' + resource, {
+    var queryParams = this._convertOptionsToQueryParams(options);
+
+    var response = HTTP.get(pos.host + '/resources/' + resourceName, {
       headers: {
         'API-AUTHENTICATION': pos.key + ':' + pos.secret
       },
-      params: {
-        limit: this.DATA_LIMIT,
-        offset: offset,
-        order_by: orderByStr,
-        fields: fields.join(','),
-        format: 'json'
-      }
+      params: queryParams
     });
+
     if (response.statusCode === 200) {
       return response.data;
     } else {
@@ -39,29 +57,58 @@ Revel.prototype.queryRevelResource = function (resource, orderBy, isAscending, f
   }
 };
 
-Revel.prototype.queryRevelProductItems = function () {
-  var items = this.queryRevelResource('Product', 'id', true, ['name', 'price'], 0);
-  return _.map(items.objects, function (item) {
-    return {
-      name: item.name,
-      price: item.price
-    }
-  })
-};
+//Revel.prototype._extractResourceIdFromUri = function (resourceUri) {
+//  var resourceIdRegExp = /\/\w+\/\w+\/(\d+)\//;
+//  var matched = resourceIdRegExp.exec(resourceUri);
+//  return _.isArray(matched) && matched[1]; // return first group
+//};
 
-Revel.prototype.queryRevelOrderItems = function (offset) {
-  return this.queryRevelResource('OrderItem', 'created_date', false, [
-    'product_name_override',
-    'created_date',
-    'quantity'
-  ], offset);
+Revel.prototype.loadProductItems = function () {
+  var result = this._queryResource('Product', {
+    fields: ['name', 'price', 'id']
+  });
+
+  return result && _.isArray(result.objects) && result.objects.map(function (item) {
+      return {
+        posId: item.id,
+        name: item.name,
+        price: item.price
+      }
+    });
 };
 
 /**
- *Iterates through order items in Revel
- * @param onDateReceived callback receives sales data for one day, should return false to stop iteration
+ * Loads order items from Revel
+ *
+ * @param offset loading offset
+ * @param {*|string|number} revelMenuItemId load only order items for specific product
+ * @returns {boolean|Array}
  */
-Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived) {
+Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
+  var queryOptions = {
+    order_by: '-created_date',
+    fields: [
+      'product_name_override',
+      'created_date',
+      'quantity'
+    ],
+    offset: offset
+  };
+
+  if (revelMenuItemId) {
+    queryOptions.product = revelMenuItemId;
+  }
+
+  return this._queryResource('OrderItem', queryOptions);
+};
+
+/**
+ * Uploads order items for particular product in Revel
+ *
+ * @param onDateReceived callback receives sales data for one day, should return false to stop iteration
+ * @param revelMenuItemId ID of product item in Revel POS
+ */
+Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuItemId) {
   var offset = 0;
   var totalCount = this.DATA_LIMIT;
   var toContinue = true;
@@ -71,7 +118,7 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived) {
   while (offset <= totalCount && toContinue) {
     logger.info('Request to Revel server', {offset: offset, total: totalCount});
 
-    var result = this.queryRevelOrderItems(offset);
+    var result = this.loadOrderItems(offset, revelMenuItemId);
 
     //handle Revel API error
     if (result === false) {
@@ -98,6 +145,7 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived) {
 
 /**
  * Used to collect and group by menu item loaded data
+ *
  * @constructor
  */
 var RevelSalesDataBucket = function () {
@@ -184,18 +232,18 @@ if (HospoHero.isDevelopmentMode()) {
 
   //add mock data source
   _.extend(Revel.prototype, {
-    queryRevelOrderItems: function (offset) {
+    loadOrderItems: function (offset) {
       if (!this._mockRevelSource) {
         this._mockRevelSource = new MockOrderItemDataSource();
       }
       return this._mockRevelSource.load(context.DATA_LIMIT, offset);
     },
-    queryRevelProductItems: function () {
-      var productItems = PosMenuItems.find().fetch();
-      return _.map(productItems, function (item) {
+    loadProductItems: function () {
+      var productItems = MenuItems.find({}, {limit: 10});
+      return productItems.map(function (item) {
         return {
-          name: item.name,
-          price: Math.round(Math.random()*15)
+          name: item.name + ' POS',
+          price: Math.round(Math.random() * 20)
         }
       })
     }
