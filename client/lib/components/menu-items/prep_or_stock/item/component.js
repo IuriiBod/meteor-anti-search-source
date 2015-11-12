@@ -46,12 +46,12 @@ component.state.measure = function () {
 };
 
 component.state.price = function () {
-  if (this.item){
-    if (this.type === 'prep'){
+  if (this.item) {
+    if (this.type === 'prep') {
       var item = getPrepItem(this.id);
-      return item.prepCostPerPortion* this.quantity;
+      return Math.round(item.prepCostPerPortion * this.quantity * 100) / 100;
     }
     var item = getIngredientItem(this.id);
-    return item.costPerPortionUsed;
+    return Math.round(item.costPerPortionUsed * this.quantity * 100) / 100;
   }
 };

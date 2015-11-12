@@ -22,24 +22,24 @@ Meteor.methods({
 
     //find out which items should be synchronized
     var unsyncedItemsQuery = {'relations.areaId': area._id, isNotSyncedWithPos: true};
-    var menuItemsToSync = MenuItems.find(unsyncedItemsQuery, {fields: {_id: 1, posNames: 1}});
-    var unsyncedItemsIds = menuItemsToSync.map(function (item) {
-      return item._id;
-    });
-
-    //remove old sales data
-    DailySales.remove({_id: {$in: unsyncedItemsIds}});
-
-    //upload sales using pos connector
-    var posConnector = new Revel(location.pos);
-    menuItemsToSync.forEach(function (menuItem) {
-      menuItem.posNames.forEach(function (posName) {
-        var posMenuItem = PosMenuItems.findOne({name: posName, 'relations.locationId': locationId});
-        posConnector.uploadAndReduceOrderItems(function (uploadedData) {
-          //todo: use actual sales importer here
-        }, posMenuItem.posId);
-      });
-    });
+    //var menuItemsToSync = MenuItems.find(unsyncedItemsQuery, {fields: {_id: 1, posNames: 1}});
+    //var unsyncedItemsIds = menuItemsToSync.map(function (item) {
+    //  return item._id;
+    //});
+    //
+    ////remove old sales data
+    //DailySales.remove({_id: {$in: unsyncedItemsIds}});
+    //
+    ////upload sales using pos connector
+    //var posConnector = new Revel(location.pos);
+    //menuItemsToSync.forEach(function (menuItem) {
+    //  menuItem.posNames.forEach(function (posName) {
+    //    var posMenuItem = PosMenuItems.findOne({name: posName, 'relations.locationId': locationId});
+    //    posConnector.uploadAndReduceOrderItems(function (uploadedData) {
+    //      //todo: use actual sales importer here
+    //    }, posMenuItem.posId);
+    //  });
+    //});
 
 
     //mark all menu items as sales synchronized
