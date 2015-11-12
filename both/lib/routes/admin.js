@@ -9,7 +9,6 @@ Router.route('usersSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
       component: 'usersList',
       title: 'Users'
@@ -24,7 +23,6 @@ Router.route('rolesSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
 
     return {
       component: 'rolesSettings',
@@ -76,7 +74,6 @@ Router.route('inactivityTimeoutSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
       component: 'inactivityTimeoutField',
       title: 'Inactivity Timeout'
@@ -91,7 +88,6 @@ Router.route('cronConfigSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
       component: 'cronConfig',
       title: 'Cron Config'
@@ -100,7 +96,7 @@ Router.route('cronConfigSettings', {
 });
 
 Router.route('posSettings', {
-  path: '/settings/pos',
+  path: '/settings/pos-mapping',
   template: "adminMainView",
   waitOn: function () {
     return [
@@ -112,9 +108,8 @@ Router.route('posSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
-      component: 'revelMenuLink',
+      component: 'posMenuLinking',
       title: 'POS / Menu Linking'
     }
   }
@@ -133,7 +128,6 @@ Router.route('archivingSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
       component: 'locationAreaArchiving',
       title: 'Locations/Areas archiving'

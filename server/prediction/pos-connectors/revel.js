@@ -1,0 +1,251 @@
+Revel = function Revel(posCredentials) {
+  this._posCredentials = posCredentials;
+  this.DATA_LIMIT = 5000;
+};
+
+
+Revel.prototype._convertOptionsToQueryParams = function (options) {
+  var queryParams = {
+    limit: this.DATA_LIMIT,
+    format: 'json',
+    offset: 0
+  };
+
+  if (options) {
+    _.extend(queryParams, options);
+  }
+
+  if (queryParams.fields) {
+    queryParams.fields = queryParams.fields.join(',');
+  }
+
+  return queryParams;
+};
+
+/**
+ * Queries particular resource from Revel
+ *
+ * @param resourceName
+ * @param {object} options - custom query options
+ * @param {string} options.order_by - property to order (for descending order add "-" before property name)
+ * @param {Array} options.fields - fields to pick
+ * @param {number} options.offset - used for pagination
+ * @returns {boolean|Array} false - if we got an error
+ * @private
+ */
+Revel.prototype._queryResource = function (resourceName, options) {
+  try {
+    var pos = this._posCredentials;
+
+    var queryParams = this._convertOptionsToQueryParams(options);
+
+    var response = HTTP.get(pos.host + '/resources/' + resourceName, {
+      headers: {
+        'API-AUTHENTICATION': pos.key + ':' + pos.secret
+      },
+      params: queryParams
+    });
+
+    if (response.statusCode === 200) {
+      return response.data;
+    } else {
+      throw new Meteor.Error(response.statusCode, 'Error while connecting to Revel');
+    }
+  } catch (err) {
+    logger.info('Error while connecting to Revel', {response: err});
+    return false;
+  }
+};
+
+//Revel.prototype._extractResourceIdFromUri = function (resourceUri) {
+//  var resourceIdRegExp = /\/\w+\/\w+\/(\d+)\//;
+//  var matched = resourceIdRegExp.exec(resourceUri);
+//  return _.isArray(matched) && matched[1]; // return first group
+//};
+
+Revel.prototype.loadProductItems = function () {
+  var result = this._queryResource('Product', {
+    fields: ['name', 'price', 'id']
+  });
+
+  return result && _.isArray(result.objects) && result.objects.map(function (item) {
+      return {
+        posId: item.id,
+        name: item.name,
+        price: item.price
+      }
+    });
+};
+
+/**
+ * Loads order items from Revel
+ *
+ * @param offset loading offset
+ * @param {*|string|number} revelMenuItemId load only order items for specific product
+ * @returns {boolean|Array}
+ */
+Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
+  var queryOptions = {
+    order_by: '-created_date',
+    fields: [
+      'product_name_override',
+      'created_date',
+      'quantity'
+    ],
+    offset: offset
+  };
+
+  if (revelMenuItemId) {
+    queryOptions.product = revelMenuItemId;
+  }
+
+  return this._queryResource('OrderItem', queryOptions);
+};
+
+/**
+ * Uploads order items for particular product in Revel
+ *
+ * @param onDateReceived callback receives sales data for one day, should return false to stop iteration
+ * @param revelMenuItemId ID of product item in Revel POS
+ */
+Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuItemId) {
+  var offset = 0;
+  var totalCount = this.DATA_LIMIT;
+  var toContinue = true;
+
+  var bucket = new RevelSalesDataBucket();
+
+  while (offset <= totalCount && toContinue) {
+    logger.info('Request to Revel server', {offset: offset, total: totalCount});
+
+    var result = this.loadOrderItems(offset, revelMenuItemId);
+
+    //handle Revel API error
+    if (result === false) {
+      return;
+    }
+
+    if (totalCount === this.DATA_LIMIT) {
+      totalCount = result.meta.total_count;
+    }
+
+    result.objects.every(function (entry) {
+      if (!bucket.put(entry)) {
+        toContinue = onDateReceived(bucket.getDataAndReset());
+        bucket.put(entry); //put next day entry
+        return toContinue;
+      }
+      return true;
+    });
+
+    offset += this.DATA_LIMIT;
+  }
+};
+
+
+/**
+ * Used to collect and group by menu item loaded data
+ *
+ * @constructor
+ */
+var RevelSalesDataBucket = function () {
+  this._data = {};
+  this._dayNumber = false;
+};
+
+//if entity related to other date returns false
+RevelSalesDataBucket.prototype.put = function (entry) {
+  //console.log(entry.created_date);
+  var dayOfYear = moment(entry.created_date).dayOfYear();
+  var productName = entry.product_name_override;
+
+  if (this.isEmpty()) {
+    this._dayNumber = dayOfYear;
+    this._createdDate = entry.created_date;
+  }
+
+  if (dayOfYear === this._dayNumber) {
+    if (!isFinite(this._data[productName])) {
+      this._data[productName] = 0;
+    }
+
+    this._data[productName] += entry.quantity;
+    return true;
+  }
+
+  return false;
+};
+
+RevelSalesDataBucket.prototype.getDataAndReset = function () {
+  var result = {
+    menuItems: this._data,
+    createdDate: new Date(this._createdDate)
+  };
+
+//reset project
+  this._data = {};
+  this._dayNumber = false;
+
+  return result;
+};
+
+RevelSalesDataBucket.prototype.isEmpty = function () {
+  return this._dayNumber === false
+};
+
+
+//======== mock data provider ============
+if (HospoHero.isDevelopmentMode()) {
+  /**
+   * Data source with mock data for development mode
+   */
+  var MockOrderItemDataSource = function MockOrderItemDataSource() {
+    this.currentDate = moment();
+  };
+
+  MockOrderItemDataSource.prototype.load = function () {
+    var query = HospoHero.prediction.getMenuItemsForPredictionQuery();
+    var items = MenuItems.find(query).fetch();
+
+    var result = {
+      meta: {
+        'limit': 5000,
+        'offset': 0,
+        'total_count': 616142
+      },
+      objects: []
+    };
+
+    var self = this;
+
+    _.each(items, function (item) {
+      var pushObject = {
+        created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
+        product_name_override: item.name,
+        quantity: Math.floor(Math.random() * 10 + 1)
+      };
+      result.objects.push(pushObject);
+    });
+    this.currentDate.subtract(1, 'd');
+    return result
+  };
+
+  //add mock data source
+  _.extend(Revel.prototype, {
+    loadOrderItems: function (offset) {
+      if (!this._mockRevelSource) {
+        this._mockRevelSource = new MockOrderItemDataSource();
+      }
+      return this._mockRevelSource.load(context.DATA_LIMIT, offset);
+    },
+    loadProductItems: function () {
+      var productItems = MenuItems.find({}, {limit: 10});
+      return productItems.map(function (item) {
+        return {
+          name: item.name + ' POS',
+          price: Math.round(Math.random() * 20)
+        }
+      })
+    }
+  });
+}

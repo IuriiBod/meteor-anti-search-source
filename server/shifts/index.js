@@ -31,17 +31,18 @@ var ShiftPropertyChangeLogger = {
   _sendNotification: function (message, shift, fromUserId) {
     var text = this._notificationTitle(shift) + ': ' + message;
 
-    var updateDocument = {
-      to: shift.assignedTo,
-      userId: fromUserId,
-      shiftId: shift._id,
-      text: text,
-      locationId: shift.relations.locationId,
-      type: "update"
-    };
-
-    logger.info("Shift update insert");
-    ShiftsUpdates.insert(updateDocument);
+    // todo: Uncomment if we need shift updates sending
+    //var updateDocument = {
+    //  to: shift.assignedTo,
+    //  userId: fromUserId,
+    //  shiftId: shift._id,
+    //  text: text,
+    //  locationId: shift.relations.locationId,
+    //  type: "update"
+    //};
+    //
+    //logger.info("Shift update insert");
+    //ShiftsUpdates.insert(updateDocument);
 
     HospoHero.sendNotification({
       type: 'shift',

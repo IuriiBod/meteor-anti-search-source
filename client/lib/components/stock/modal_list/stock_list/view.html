@@ -10,32 +10,35 @@
       </div>
       <form class="form-horizontal" role="form" style="padding: 10px 20px">
         <div class="modal-body">
-            <input type="text" class="form-control input-lg" id="searchText-box" placeholder="Search for stocks..."><br>
-          <div class="row">
-            <table class="table table-striped">
-              <thead>
+          {{#if state$showAddStockItemMenu}}
+            {{> render component = "submitIngredient" isModal=false}}
+          {{else}}
+            <input type="text" class="form-control input-lg" id="searchText-box"
+                   placeholder="Search for stocks..."><br>
+            <div class="row">
+              <table class="table table-striped">
+                <thead>
                 <tr>
                   <th>Code</th>
-                  <th>Description</th>
+                  <th>Name</th>
                   <th>Supplier</th>
-                  <th>Portion used</th>
-                  <th>Cost per Portion Used ($)</th>
+                  <th>Unit used</th>
+                  <th>How much does each unit cost?</th>
                   <th>Action</th>
                 </tr>
-              </thead>
-             <tbody>
+                </thead>
+                <tbody>
                 {{#each state$getIngredients}}
                   {{> render component='stockModalItem' stock=this name=state$name}}
                 {{/each}}
-              </tbody>
-            </table>
-              {{#unless state$showAddStockItemMenu}}
-              <div class="alert alert-warning">If your stock item is not in the list, <a id="addNewIng" class="alert-link">click here</a> to add it. Once you save it, it will appear next time you search.</div>
-              {{/unless}}
-              {{#if state$showAddStockItemMenu}}
-                {{> render component = "submitIngredient" isModal=false}}
-              {{/if}}
-          </div>
+                </tbody>
+              </table>
+              <div class="alert alert-warning">If your stock item is not in the list,
+                <a id="addNewIng" class="alert-link">click here</a> to add it. Once you save it, it will appear next
+                time you search.
+              </div>
+            </div>
+          {{/if}}
         </div>
       </form>
     </div>

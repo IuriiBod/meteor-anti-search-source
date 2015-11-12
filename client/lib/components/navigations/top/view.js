@@ -19,10 +19,10 @@ Template.topNavbar.events({
   'click #navbar-minimalize': function (event, tmpl) {
     var forceShow = 'force-show-sidebar ', forceHide = 'force-hide-sidebar';
     var body = $('#wrapper');
-    if (body.is('.' + forceShow)) {
-      body.removeClass(forceShow).addClass(forceHide);
-    } else {
+    if (body.is('.' + forceHide)) {
       body.removeClass(forceHide).addClass(forceShow);
+    } else {
+      body.removeClass(forceShow).addClass(forceHide);
     }
   },
 
