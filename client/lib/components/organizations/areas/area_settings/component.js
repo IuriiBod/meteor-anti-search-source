@@ -1,5 +1,4 @@
 var component = FlowComponents.define('areaSettings', function(props) {
-  this.set('organizationId', props.organizationId);
   this.set('areaId', props.areaId);
   this.set('addUser', false);
 });
@@ -9,20 +8,23 @@ component.state.area = function() {
 };
 
 component.state.areaUsers = function() {
-  return Meteor.users.find({
-    $or: [
-      { 'relations.areaIds': this.get('areaId') },
-      {
-        'relations.organizationId': this.get('organizationId'),
-        'relations.locationIds': null,
-        'relations.areaIds': null
+  var area = this.get('area');
+  if(area) {
+    return Meteor.users.find({
+      $or: [
+        {'relations.areaIds': this.get('areaId')},
+        {
+          'relations.organizationId': area.organizationId,
+          'relations.locationIds': null,
+          'relations.areaIds': null
+        }
+      ]
+    }, {
+      sort: {
+        username: 1
       }
-    ]
-  }, {
-    sort: {
-      username: 1
-    }
-  });
+    });
+  }
 };
 
 component.state.areaColor = function () {
@@ -51,5 +53,5 @@ component.action.toggleAddUser = function() {
 };
 
 component.action.removeUserFromArea = function (userId) {
-  Meteor.call('removeUserFromArea', userId, get('areaId'), HospoHero.handleMethodResult());
+  Meteor.call('removeUserFromArea', userId, this.get('areaId'), HospoHero.handleMethodResult());
 };

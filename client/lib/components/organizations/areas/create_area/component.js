@@ -1,6 +1,6 @@
 var component = FlowComponents.define("createArea", function(props) {
   this.organizationId = props.organizationId;
-  this.locationId = props.locationId;
+  this.set('locationId', props.locationId);
   this.set('enabled', true);
 });
 
@@ -11,10 +11,6 @@ component.state.locations = function() {
       return {value: location._id, text: location.name}
     });
   }
-};
-
-component.state.activeLocation = function(id) {
-  return this.locationId == id;
 };
 
 component.action.changeEnabled = function() {
