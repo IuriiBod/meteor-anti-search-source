@@ -1,7 +1,15 @@
 <template name="userUnavailabilityMainView">
   <div class="wrapper wrapper-content animated">
     <div class="row">
-      Here will be a component
+      {{#if isUnavailablesList}}
+        {{> render component="userUnavailability"}}
+      {{/if}}
+      {{#if isAddNewUnavailable}}
+        <!--{{> render component="userUnavailability"}}-->
+      {{/if}}
+      {{#if isAddNewLeaveRequest}}
+        <!--{{> render component="userUnavailability"}}-->
+      {{/if}}
     </div>
   </div>
 </template>

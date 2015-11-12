@@ -1,0 +1,18 @@
+<template name="userUnavailability">
+  <div class="panel-body user-unavailability">
+    <!-- User into -->
+    <div class="user-info-wrapper">
+      {{> render component = "profileImage" id=state$user._id}}
+      <div class="ibox-content profile-content">
+        <h4>
+          <strong>
+            {{username state$user.username}}
+          </strong>
+        </h4>
+      </div>
+    </div>
+    <!-- Components with unavailables and leave requests -->
+    {{> render component="unavailabilitiesComponent" type="unavailables"}}
+    {{> render component="unavailabilitiesComponent" type="leaveRequests"}}
+  </div>
+</template>

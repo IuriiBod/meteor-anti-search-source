@@ -1,0 +1,32 @@
+<template name="unavailabilitiesComponent">
+  <div class="component-wrapper">
+    <div class="row">
+
+      <!-- Component name(unavailability or leave request) -->
+      <div class="col-md-6">
+        <h4 class="pull-left">{{state$componentHeader}}</h4>
+      </div>
+
+      <!-- Add new item button -->
+      <div class="col-md-5">
+        <button id="newItemBtn" class="pull-right btn btn-primary btn-xs">Add new</button>
+      </div>
+    </div>
+
+    <!-- List with items -->
+    <div>
+      {{#if state$items}}
+        {{#each state$items}}
+          {{#if state$isUnavailables}}
+            {{> render component="unavailabilityItem" item=this}}
+          {{/if}}
+          {{#if state$isLeaveRequests}}
+            {{> render component="leaveRequestItem" item=this}}
+          {{/if}}
+        {{/each}}
+      {{else}}
+        <p class="text-muted">No {{state$componentName}} to display</p>
+      {{/if}}
+    </div>
+  </div>
+</template>

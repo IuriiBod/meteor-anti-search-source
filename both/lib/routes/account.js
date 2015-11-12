@@ -81,9 +81,3 @@ Router.route('profile', {
     Session.set('editStockTake', false);
   }
 });
-
-
-Router.route('userUnavailability', {
-  path: '/unavailability',
-  template: 'userUnavailabilityMainView'
-});
