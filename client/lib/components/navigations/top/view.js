@@ -45,6 +45,10 @@ Template.topNavbar.events({
     });
   },
 
+  'click .notifi-toggler': function () {
+    FlyoutManager.open('notifiFlyout', {}, true);
+  },
+
   'click .organization-structure-flyout': function () {
     FlyoutManager.open('organizationStructure', {}, true);
   },

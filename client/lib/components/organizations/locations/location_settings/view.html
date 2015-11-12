@@ -7,19 +7,17 @@
   </div>
 
   <div class="flyout-content">
-    <div class="flyout-content-scroll">
-      {{#if isOrganizationOwner}}
-        <h1 class="location-name" style="display: inline-block"
-            data-id="{{state$locationId}}">{{state$location.name}}</h1>
-      {{else}}
-        <h1>{{state$location.name}}</h1>
-      {{/if}}
+    {{#if isOrganizationOwner}}
+      <h1 class="location-name" style="display: inline-block"
+          data-id="{{state$locationId}}">{{state$location.name}}</h1>
+    {{else}}
+      <h1>{{state$location.name}}</h1>
+    {{/if}}
 
-      <button class="btn btn-primary col-xs-12 create-area-flyout">
-        Create Area
-      </button>
+    <button class="btn btn-primary col-xs-12 create-area-flyout">
+      Create Area
+    </button>
 
-      {{> render component="editLocation" location=state$location}}
-    </div>
+    {{> render component="editLocation" location=state$location}}
   </div>
 </template>
