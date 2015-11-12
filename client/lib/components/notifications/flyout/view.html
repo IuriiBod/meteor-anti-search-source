@@ -1,31 +1,31 @@
 <template name="notifiFlyout">
-  <div class="theme-config flyout-notifi-container">
-    <div class="theme-config-box">
-      <div class="skin-setttings">
-        <div class="white-notify-bg">
-          <div class="title clearfix"><a href="" class="theme-config-close-notifi-btn"><i class="fa fa-angle-right"></i></a>Notifications</div>
-          {{#if state$count}}
-            {{#each state$notifications}}
-              <div class="ibox float-e-margins" style="margin-bottom: 0;">
-                <div class="ibox-content" style="padding-bottom: 10px;">
-                  <div class="feed-activity-list">
-                    {{> render component='notifiText' noti=this}}
-                  </div>
-                </div>
-              </div>
-            {{/each}}
-            <div class="text-center link-block" style="border-top: 1px solid #E7EAEC; padding-top: 15px;">
-              <a href="#" class="markAllAsRead">
-                <strong>Mark All As Read</strong>
-              </a>
+  <div class="flyout-header">
+    <button class="close-flyout-button">
+      <i class="fa fa-angle-right"></i>
+    </button>
+    Notifications
+  </div>
+
+  <div class="flyout-content">
+    {{#if state$count}}
+      {{#each state$notifications}}
+        <div class="ibox float-e-margins" style="margin-bottom: 0;">
+          <div class="ibox-content" style="padding-bottom: 10px;">
+            <div class="feed-activity-list">
+              {{> render component='notifiText' noti=this}}
             </div>
-          {{else}}
-            <div class="text-center link-block">
-              <strong>No unread notifications</strong>
-            </div>
-          {{/if}}
+          </div>
         </div>
+      {{/each}}
+      <div class="text-center link-block" style="border-top: 1px solid #E7EAEC; padding-top: 15px;">
+        <a href="#" class="markAllAsRead">
+          <strong>Mark All As Read</strong>
+        </a>
       </div>
-    </div>
+    {{else}}
+      <div class="text-center link-block">
+        <strong>No unread notifications</strong>
+      </div>
+    {{/if}}
   </div>
 </template>

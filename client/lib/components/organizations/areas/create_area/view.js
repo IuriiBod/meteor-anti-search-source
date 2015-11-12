@@ -7,13 +7,6 @@ Template.createArea.events({
     e.preventDefault();
 
     var areaInfo = HospoHero.misc.getValuesFromEvent(e, ['name', 'locationId'], true);
-    FlowComponents.callAction('createArea', areaInfo);
-    e.target.reset();
-    $("#createArea").removeClass("show");
-    $("#locationSettings").removeClass("show");
-  },
-
-  'click .close-flyout': function() {
-    $("#createArea").removeClass("show");
+    FlowComponents.callAction('createArea', areaInfo, e.target);
   }
 });

@@ -18,8 +18,12 @@ component.state.locations = function() {
       }
     }
 
-    return Locations.find(selector).fetch();
+    return Locations.find(selector);
   }
+};
+
+component.state.hasLocations = function () {
+  return this.get('locations').count();
 };
 
 component.state.areas = function(locationId) {
@@ -35,7 +39,7 @@ component.state.areas = function(locationId) {
       selector._id = {$in: user.relations.areaIds};
     }
   }
-  return Areas.find(selector).fetch();
+  return Areas.find(selector);
 };
 
 component.state.currentArea = function(id) {

@@ -7,13 +7,13 @@
       <ul class="nav navbar-top-links navbar-right">
         {{#if isInOrganization}}
           <li>
-            <span class="open-flyout" data-id="organizationStructure">
+            <span class="organization-structure-flyout">
               <span class="area-color-icon" style="background-color: {{state$areaColor}};"></span>
               {{getCurrentArea.name}}
             </span>
           </li>
           <li>
-            <a class="count-info open-flyout" data-id="organizationStructure"><i class="fa fa-sitemap"></i></a>
+            <a class="count-info organization-structure-flyout"><i class="fa fa-sitemap"></i></a>
           </li>
         {{/if}}
         <li class="dropdown">
@@ -29,10 +29,6 @@
               <span class="label label-primary">{{state$count}}</span>
             {{/if}}
           </a>
-
-          <div class="flyout">
-            {{> render component="notifiFlyout"}}
-          </div>
         </li>
         {{#if isManager}}
           <li class="dropdown">
@@ -45,30 +41,4 @@
       </ul>
     </nav>
   </div>
-
-  {{#if isInOrganization}}
-    <!-- Flyout organizationStructure -->
-    <div class="theme-config flyout-container" id="organizationStructure">
-      <div class="theme-config-box">
-        <div class="skin-setttings">
-          <div class="white-notify-bg">
-            <div class="title clearfix">
-              <a href="#" class="theme-config-close-btn" data-id="organizationStructure">
-                <i class="fa fa-angle-right"></i>
-              </a>
-              {{>organizationButtons isOwner=isOrganizationOwner hasLocations=state$hasLocations}}
-            </div>
-            <div class="ibox float-e-margins" style="margin-bottom: 0;">
-              <div class="ibox-content" style="padding-bottom: 10px;">
-                <div class="feed-activity-list">
-                  {{>render component='organizationStructure' organization=getOrganization isOrganizationOwner=isOrganizationOwner relation=state$relation}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Flyout organizationStructure -->
-  {{/if}}
 </template>
