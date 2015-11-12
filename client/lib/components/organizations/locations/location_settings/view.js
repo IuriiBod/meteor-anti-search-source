@@ -3,7 +3,8 @@ Template.locationSettings.events({
     if (confirm("Are you sure, you want to delete this location?")) {
       var id = e.target.dataset.id;
       FlowComponents.callAction('deleteLocation', id);
-      $("#locationSettings").removeClass('show');
+      var flyout = FlyoutManager.getInstanceByElement(e.target);
+      flyout.close();
     }
   },
 
