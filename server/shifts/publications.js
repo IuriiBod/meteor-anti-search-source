@@ -69,7 +69,7 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
   };
 
   if (type == 'future' || type == 'opened') {
-    query.shiftDate = {$gte: HospoHero.dateUtils.shiftDate()};
+    query.shiftDate = {$gte: new Date()};
     if (type == 'opened') {
       query.assignedTo = {$in:[null, undefined]};
       query.published = true;

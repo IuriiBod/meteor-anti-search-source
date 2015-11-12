@@ -111,7 +111,7 @@ Meteor.methods({
 
     // publish new shift if other shifts of this week are published
     var isRosterPublished = !!Shifts.findOne({
-      "shiftDate": TimeRangeQueryBuilder.forDay(newShiftInfo.shiftDate),
+      "shiftDate": TimeRangeQueryBuilder.forWeek(newShiftInfo.shiftDate),
       "published": true,
       "relations.areaId": HospoHero.getCurrentAreaId()
     });
