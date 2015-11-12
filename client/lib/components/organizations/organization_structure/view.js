@@ -1,7 +1,8 @@
 Template.organizationStructure.events({
   'click .location-settings': function() {
-    FlowComponents.callAction('changeLocation', this._id);
-    $('.location-name').editable('setValue', this.name);
+    //FlowComponents.callAction('changeLocation', this._id);
+    //$('.location-name').editable('setValue', this.name);
+    FlyoutManager.open('locationSettings', {locationId: this._id}, true);
   },
 
   'click .area-settings': function() {

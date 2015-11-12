@@ -13,9 +13,8 @@
     {{#each state$locations}}
       <ul class="list-group" style="display: block;">
         {{#if isOrganizationOwner}}
-          <li class="list-group-item lead open-flyout location-settings"
-              style="display: block; cursor: pointer;"
-              data-id="locationSettings">
+          <li class="list-group-item lead location-settings"
+              style="display: block; cursor: pointer;">
             {{name}}
             <span class="badge"><i class="fa fa-fw fa-cog"></i></span>
           </li>
