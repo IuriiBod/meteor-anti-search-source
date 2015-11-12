@@ -1,20 +1,3 @@
-Template.topNavbar.rendered = function () {
-  //$('html')
-  //  .click(function (event) {
-  //    var flyout = $(".flyout-notifi-container");
-  //    if (!flyout.is(event.target) && flyout.has(event.target).length === 0) {
-  //      flyout.removeClass('show');
-  //    }
-  //  })
-  //  .click(function (event) {
-  //    var flyout = $(".flyout-container");
-  //    var createOrganization = $('.create-organization');
-  //    if ((!flyout.is(event.target) && flyout.has(event.target).length === 0) && (!createOrganization.is(event.target) && createOrganization.has(event.target).length === 0)) {
-  //      flyout.removeClass('show');
-  //    }
-  //  });
-};
-
 Template.topNavbar.events({
   'click #navbar-minimalize': function (event, tmpl) {
     var forceShow = 'force-show-sidebar ', forceHide = 'force-hide-sidebar';
