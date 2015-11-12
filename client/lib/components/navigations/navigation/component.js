@@ -108,7 +108,8 @@ var menuEntries = [
     title: 'Reports',
     icon: 'fa-line-chart',
     permission: {
-      type: 'isOrganizationOwner'
+      type: 'canUser',
+      action: 'view reports'
     },
     activeOnRoutes: ['teamHours', 'currentStocks'],
     subMenuEntries: [

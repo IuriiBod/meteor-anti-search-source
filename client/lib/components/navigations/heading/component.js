@@ -1,4 +1,5 @@
 var headingComponentsMap = {
+  //props.name : 'headerComponent',
   menulist: 'menuListHeader',
   menudetailed: 'menuDetailsHeader',
   jobslist: 'jobListHeader',
@@ -11,7 +12,8 @@ var headingComponentsMap = {
   weeklyrostertemplate: 'weeklyTemplateHeader',
   salesPrediction: 'salesPredictionHeader',
   stocktakeList: 'stocktakeHeader',
-  suppliersListHeader: 'suppliersListHeader'
+  suppliersListHeader: 'suppliersListHeader',
+  posMenuLinking: 'posMenuLinkingHeader'
 };
 
 var component = FlowComponents.define("pageHeading", function (props) {

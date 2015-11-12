@@ -111,8 +111,7 @@ WorldWeather.prototype._mapWeatherEntries = function (data) {
       return {
         date: new Date(weatherItem.date),
         temp: parseInt(hourly.tempC),
-        main: hourly.weatherDesc[0].value,
-        icon: hourly.weatherIconUrl[0].value
+        main: hourly.weatherDesc[0].value
       };
     });
 };
@@ -147,9 +146,7 @@ if (HospoHero.isDevelopmentMode()) {
       result.push({
         date: new Date(start.toDate()),
         temp: Math.floor(Math.random() * 100 % 30),
-        main: ['Clear', 'Clouds', 'Rain'][Math.floor(Math.random() * 10 % 3)],
-        icon: 'http://openweathermap.org/img/w/'
-        + ['01d.png', '02d.png', '03d.png', '04d.png', '09d.png', '10d.png', '11d.png', '13d.png'][Math.floor(Math.random() * 100 % 8)]
+        main: ['Clear', 'Cloudy', 'Light rain'][Math.floor(Math.random() * 10 % 3)]
       });
       start.add(1, 'day');
     }

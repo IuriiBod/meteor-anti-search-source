@@ -19,7 +19,8 @@ var actions = {
   "Billing Account": "edit billing account",
   "Edit Organization": "edit organization settings",
   "All Rights": "all rights",
-  "Edit users payrate": "edit user's payrate"
+  "Edit users payrate": "edit user's payrate",
+  "View Reports": "view reports"
 };
 
 var defaultRoles = [
@@ -49,7 +50,8 @@ var defaultRoles = [
       "view area reports",
       "edit locations",
       "be rosted",
-      "edit user's payrate"
+      "edit user's payrate",
+      "view reports"
     ]
   },
 

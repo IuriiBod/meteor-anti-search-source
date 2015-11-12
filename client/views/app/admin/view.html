@@ -1,12 +1,13 @@
 <template name="adminMainView">
   <!-- Page heading -->
-  {{> render component="pageHeading" title=templateData.title category="Settings"}}
+  {{> render component="pageHeading" title=title category="Settings" name=component}}
+
   <div class="wrapper wrapper-content">
     <div class="row">
       <div class="col-md-12">
         <div class="ibox">
           <div class="ibox-content">
-            {{> render component=templateData.component}}
+            {{> render component=component}}
           </div>
         </div>
       </div>
