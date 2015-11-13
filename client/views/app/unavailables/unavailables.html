@@ -5,10 +5,13 @@
         {{> render component="userUnavailability"}}
       {{/if}}
       {{#if isAddNewUnavailable}}
-        <!--{{> render component="userUnavailability"}}-->
+        {{> render component="addNewUnavailability"}}
       {{/if}}
       {{#if isAddNewLeaveRequest}}
-        <!--{{> render component="userUnavailability"}}-->
+        {{> render component="addNewLeaveRequest"}}
+      {{/if}}
+      {{#if isViewLeaveRequest}}
+        {{> render component="viewLeaveRequest"}}
       {{/if}}
     </div>
   </div>

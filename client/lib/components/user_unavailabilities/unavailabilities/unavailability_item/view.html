@@ -3,13 +3,25 @@
 
     <!-- Date -->
     <div class="col-md-2 unavailability-item-date">
-      <p>{{state$date}}</p>
+      <div class="row">
+        <p>{{state$date}}</p>
+      </div>
     </div>
 
-    <div class="col-md-9 unavailability-item-details-wrapper">
+    <!-- Item details -->
+    <div class="col-md-9 item-details-wrapper">
       <div class="row">
-        <div class="col-md-10 unavailability-item-details">
+        <div class="col-md-10 item-details">
           <div>
+
+            <!-- Repeat -->
+            {{#if state$repeat}}
+              <div class="row">
+                <p>
+                  Every {{state$repeat}} since {{state$date}}
+                </p>
+              </div>
+            {{/if}}
 
             <!-- Comment -->
             <div class="row">
@@ -32,8 +44,8 @@
         </div>
 
         <!-- Delete button -->
-        <div class="col-md-1 col-md-offset-1 delete-icon-wrapper">
-          <i class="fa fa-trash-o delete-icon pull-right" role="button"></i>
+        <div class="col-md-1 col-md-offset-1 item-actions">
+          <i id="deleteUnavailabilityBtn" class="fa fa-trash-o delete-icon pull-right" role="button"></i>
         </div>
       </div>
     </div>

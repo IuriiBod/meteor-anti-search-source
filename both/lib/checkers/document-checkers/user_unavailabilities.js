@@ -1,9 +1,9 @@
 var UnavailabilityChecker = Match.Where(function (unavailability) {
     check(unavailability, {
+        _id: HospoHero.checkers.MongoId,
         startDate: Date,
         endDate: Date,
         repeat: checkRepeatField,
-
 
         comment: Match.Optional(String)
     });

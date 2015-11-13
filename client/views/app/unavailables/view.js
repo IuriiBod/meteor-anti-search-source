@@ -10,5 +10,8 @@ Template.userUnavailabilityMainView.helpers({
     },
     'isAddNewLeaveRequest': function () {
         return Template.instance().data.isAddNewLeaveRequest || false;
+    },
+    'isViewLeaveRequest': function () {
+        return Template.instance().data.isViewLeaveRequest || false;
     }
 });

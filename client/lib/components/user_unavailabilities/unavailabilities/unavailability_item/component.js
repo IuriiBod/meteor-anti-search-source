@@ -4,7 +4,7 @@ var component = FlowComponents.define('unavailabilityItem', function (props) {
 
 component.state.date = function () {
     var date = this.item.startDate;
-    return moment(date).format('ddd Do MM');
+    return moment(date).format('ddd D MMM');
 };
 
 component.state.isAllDay = function () {
@@ -24,6 +24,24 @@ component.state.time = function () {
     }
 };
 
+component.state.repeat = function () {
+    if (this.item.repeat == 'never') {
+        return false;
+    }
+    if (this.item.repeat == 'weekly') {
+        return 'week';
+    }
+    if (this.item.repeat == 'monthly') {
+        return 'month';
+    }
+    return false;
+};
+
 component.state.comment = function () {
     return this.item.comment || false;
 };
+
+
+component.action.removeUnavailability = function () {
+    Meteor.call('removeUnavailability', this.item);
+}
