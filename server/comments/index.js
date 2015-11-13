@@ -41,7 +41,9 @@ Meteor.methods({
       title: 'New comment on ' + reference.name + ' by ' + HospoHero.username(Meteor.userId()),
       to: recipients,
       type: 'comment',
-      commentId: id
+      commentId: id,
+      ref: ref,
+      refType: refType
     };
 
     HospoHero.sendNotification(options);

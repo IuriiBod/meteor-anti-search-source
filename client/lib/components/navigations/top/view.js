@@ -20,29 +20,12 @@ Template.topNavbar.events({
     Router.go("signIn");
   },
 
-  'click .markAllAsRead': function (event) {
-    event.preventDefault();
-    var notifi = Notifications.find({"read": false, "to": Meteor.userId()}).fetch();
-    notifi.forEach(function (not) {
-      Meteor.call("readNotifications", not._id, HospoHero.handleMethodResult());
-    });
-  },
-
   'click .notifi-toggler': function () {
     FlyoutManager.open('notifiFlyout', {}, true);
   },
 
   'click .organization-structure-flyout': function () {
     FlyoutManager.open('organizationStructure', {}, true);
-  },
-
-  'click .theme-config-close-btn': function (event) {
-    var el = $(event.target);
-    if (el.hasClass('fa')) {
-      el = el.parent();
-    }
-    $("#" + el.attr('data-id')).removeClass("show");
-    Template.instance().showCreateOrgFlyout.set(false);
   }
 });
 
