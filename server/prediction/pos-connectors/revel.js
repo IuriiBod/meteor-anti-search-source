@@ -57,12 +57,6 @@ Revel.prototype._queryResource = function (resourceName, options) {
   }
 };
 
-//Revel.prototype._extractResourceIdFromUri = function (resourceUri) {
-//  var resourceIdRegExp = /\/\w+\/\w+\/(\d+)\//;
-//  var matched = resourceIdRegExp.exec(resourceUri);
-//  return _.isArray(matched) && matched[1]; // return first group
-//};
-
 Revel.prototype.loadProductItems = function () {
   var result = this._queryResource('Product', {
     fields: ['name', 'price', 'id']
@@ -88,7 +82,6 @@ Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
   var queryOptions = {
     order_by: '-created_date',
     fields: [
-      'product_name_override',
       'created_date',
       'quantity'
     ],
@@ -149,15 +142,13 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuI
  * @constructor
  */
 var RevelSalesDataBucket = function () {
-  this._data = {};
+  this._quantity = 0;
   this._dayNumber = false;
 };
 
 //if entity related to other date returns false
 RevelSalesDataBucket.prototype.put = function (entry) {
-  //console.log(entry.created_date);
   var dayOfYear = moment(entry.created_date).dayOfYear();
-  var productName = entry.product_name_override;
 
   if (this.isEmpty()) {
     this._dayNumber = dayOfYear;
@@ -165,11 +156,7 @@ RevelSalesDataBucket.prototype.put = function (entry) {
   }
 
   if (dayOfYear === this._dayNumber) {
-    if (!isFinite(this._data[productName])) {
-      this._data[productName] = 0;
-    }
-
-    this._data[productName] += entry.quantity;
+    this._quantity += entry.quantity;
     return true;
   }
 
@@ -178,12 +165,12 @@ RevelSalesDataBucket.prototype.put = function (entry) {
 
 RevelSalesDataBucket.prototype.getDataAndReset = function () {
   var result = {
-    menuItems: this._data,
+    quantity: this._quantity,
     createdDate: new Date(this._createdDate)
   };
 
 //reset project
-  this._data = {};
+  this._quantity = 0;
   this._dayNumber = false;
 
   return result;
@@ -204,9 +191,6 @@ if (HospoHero.isDevelopmentMode()) {
   };
 
   MockOrderItemDataSource.prototype.load = function () {
-    var query = HospoHero.prediction.getMenuItemsForPredictionQuery();
-    var items = MenuItems.find(query).fetch();
-
     var result = {
       meta: {
         'limit': 5000,
@@ -218,34 +202,39 @@ if (HospoHero.isDevelopmentMode()) {
 
     var self = this;
 
-    _.each(items, function (item) {
+    var itemsCount = Math.floor(Math.random() * 10 + 1);
+
+    for (var i = 0; i < itemsCount; i++) {
       var pushObject = {
         created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
-        product_name_override: item.name,
         quantity: Math.floor(Math.random() * 10 + 1)
       };
       result.objects.push(pushObject);
-    });
+
+    }
+
     this.currentDate.subtract(1, 'd');
-    return result
+
+    return result;
   };
 
   //add mock data source
   _.extend(Revel.prototype, {
     loadOrderItems: function (offset) {
-      if (!this._mockRevelSource) {
+      if (offset === 0) {
         this._mockRevelSource = new MockOrderItemDataSource();
       }
-      return this._mockRevelSource.load(context.DATA_LIMIT, offset);
+      return this._mockRevelSource.load();
     },
     loadProductItems: function () {
       var productItems = MenuItems.find({}, {limit: 10});
       return productItems.map(function (item) {
         return {
           name: item.name + ' POS',
-          price: Math.round(Math.random() * 20)
+          price: Math.round(Math.random() * 20),
+          posId: Math.round(Math.random() * 100)
         }
-      })
+      });
     }
   });
 }
