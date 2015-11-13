@@ -63,29 +63,30 @@ ForecastMaker.prototype._getNotificationSender = function (area) {
     send: function () {
       if (changes.length > 0) {
         var receiversIds = getReceivers();
-        receiversIds.forEach(function (receiverId) {
-          new UniEmailSender({
-            senderId: Meteor.users.findOne({})._id,//todo: temporal, remove after email sender improvement
-            receiverId: receiverId,
-            emailTemplate: {
-              subject: 'Some predictions have been changed',
-              blazeTemplateToRenderName: 'forecastUpdate'
-            },
-            templateData: {
-              changes: changes
-            },
-            needToNotify: true,
-            notificationData: {
-              type: 'prediction',
-              actionType: 'update',
-              relations: {
-                organizationId: area.organizationId,
-                locationId: area.locationId,
-                areaId: area._id
-              }
-            }
-          }).send();
-        });
+        logger.info('Notify about prediction change', {receivers: receiversIds, changes: changes});
+        //receiversIds.forEach(function (receiverId) {
+        //  new UniEmailSender({
+        //    senderId: Meteor.users.findOne({})._id,//todo: temporal, remove after email sender improvement
+        //    receiverId: receiverId,
+        //    emailTemplate: {
+        //      subject: 'Some predictions have been changed',
+        //      blazeTemplateToRenderName: 'forecastUpdate'
+        //    },
+        //    templateData: {
+        //      changes: changes
+        //    },
+        //    needToNotify: true,
+        //    notificationData: {
+        //      type: 'prediction',
+        //      actionType: 'update',
+        //      relations: {
+        //        organizationId: area.organizationId,
+        //        locationId: area.locationId,
+        //        areaId: area._id
+        //      }
+        //    }
+        //  }).send();
+        //});
       }
     }
   };
@@ -105,7 +106,7 @@ ForecastMaker.prototype._predictFor = function (days) {
     var currentWeather = this._getWeatherForecast(i, dateMoment.toDate());
 
     areas.forEach(function (area) {
-      var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});
+      var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id}, true);
       var items = MenuItems.find(menuItemsQuery, {}); //get menu items for current area
 
       var notificationSender = self._getNotificationSender(area);
