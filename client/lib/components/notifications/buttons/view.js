@@ -13,7 +13,7 @@ Template.notifiButtons.events({
     var type = $(event.target).attr("data-type");
     var notifi = Notifications.findOne(id);
 
-    var flyout = FlyoutManager.getInstanceByElement(e.target);
+    var flyout = FlyoutManager.getInstanceByElement(event.target);
     flyout.close();
 
     if(notifi) {
@@ -39,7 +39,7 @@ Template.notifiButtons.events({
         if(notifi.relations){
           Meteor.call('changeArea', notifi.relations.areaId, HospoHero.handleMethodResult());
         }
-        Router.go("/");
+        Router.go("home", {}, {hash: ref});
       }
     }
   }

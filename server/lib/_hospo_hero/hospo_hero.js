@@ -15,6 +15,8 @@ Namespace('HospoHero', {
     //&& process.env.USER !== 'taras';
   },
   sendNotification: function (notification) {
+    console.log('NOTI', notification);
+
     if (!notification.title) {
       throw new Meteor.Error('Notification must have a title');
     }

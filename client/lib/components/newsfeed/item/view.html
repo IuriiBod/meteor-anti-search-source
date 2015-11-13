@@ -4,8 +4,8 @@
       <a class="pull-left" href="#">
         <img src="{{profilePicture state$post.createdBy}}" alt="image">
       </a>
-      <div class="media-body" data-id="{{state$post._id}}">
-        <a href="#">{{username state$post.createdBy}}</a>
+      <div class="media-body">
+        <a href="#" name="{{state$post._id}}">{{username state$post.createdBy}}</a>
         <a href="#" class="small thumbsup-like pull-left like-post">
           <i class="fa fa-thumbs-up"></i> 
           {{#if state$liked}} You and {{else}} {{/if}} {{state$likesCount}} Like this!
