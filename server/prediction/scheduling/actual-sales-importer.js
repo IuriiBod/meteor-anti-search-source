@@ -74,6 +74,8 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
       'relations.locationId': self._location._id
     });
 
+    logger.info('POS product', {_id: posMenuItem._id, name: posName});
+
     self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
   });
 

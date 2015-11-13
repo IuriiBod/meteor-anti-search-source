@@ -41,6 +41,8 @@ Meteor.methods({
 
       //mark all menu items as sales synchronized
       MenuItems.update(unsyncedItemsQuery, {$set: {isNotSyncedWithPos: false}})
+    } else {
+      logger.info('Nothing to sync');
     }
   }
 });
