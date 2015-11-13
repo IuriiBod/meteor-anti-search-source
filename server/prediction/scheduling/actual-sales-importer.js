@@ -1,15 +1,13 @@
+/**
+ * Imports actual sales from POS system, connected to specified location
+ *
+ * @param locationId
+ * @constructor
+ */
 ActualSalesImporter = function ActualSalesImporter(locationId) {
   this._location = Locations.findOne({_id: locationId});
   this._revelClient = new Revel(this._location.pos);
 };
-
-
-//ActualSalesImporter.prototype._getMenuItemByPosName = function (menuItemName) {
-//  return MenuItems.findOne({
-//    'relations.locationId': this._location._id,
-//    $or: [{'posNames': menuItemName}, {name: menuItemName}]
-//  });
-//};
 
 
 ActualSalesImporter.prototype._updateActualSale = function (item) {
@@ -31,7 +29,8 @@ ActualSalesImporter.prototype._getLastImportedSaleDate = function (menuItemId) {
   });
 
   // if there is no imported data the import whole year
-  return lastImportedSale && lastImportedSale.date || moment().subtract(1, 'year').toDate();
+  return lastImportedSale && moment(lastImportedSale.date).endOf('day').toDate()
+    || moment().subtract(1, 'year').toDate();
 };
 
 /**
@@ -47,6 +46,12 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
   //this function is used like a callback in revel connector
   //it should return false if loading is finished
   var onDateUploaded = function (salesData) {
+    var needContinueLoading = !moment(salesData.createdDate).isBefore(lastDateToImport);
+
+    if (!needContinueLoading) {
+      return false;
+    }
+
     var item = {
       actualQuantity: salesData.quantity,
       date: salesData.createdDate,
@@ -56,14 +61,17 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
 
     self._updateActualSale(item);
 
-    //todo: resolve date range overlay here (should stop loading immediately)
-    return !moment(salesData.createdDate).isBefore(lastDateToImport);
+    return true;
   };
 
 
   //upload sales using pos connector
   menuItem.posNames.forEach(function (posName) {
-    var posMenuItem = PosMenuItems.findOne({name: posName, 'relations.locationId': self._location._id});
+    var posMenuItem = PosMenuItems.findOne({
+      name: posName,
+      'relations.locationId': self._location._id
+    });
+
     self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
   });
 };
@@ -73,7 +81,7 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
  * @param menuItemsToImportQuery menu items' mongodb query
  */
 ActualSalesImporter.prototype.importByQuery = function (menuItemsToImportQuery) {
-  var menuItemsToSync = MenuItems.find(menuItemsToImportQuery,{fields: {_id: 1, posNames: 1, relations: 1}});
+  var menuItemsToSync = MenuItems.find(menuItemsToImportQuery, {fields: {_id: 1, posNames: 1, relations: 1}});
   var self = this;
 
   menuItemsToSync.forEach(function (menuItem) {
