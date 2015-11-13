@@ -71,14 +71,16 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
   if (type == 'future' || type == 'opened') {
     query.shiftDate = {$gte: new Date()};
     if (type == 'opened') {
-      query.assignedTo = {$in:[null, undefined]};
+      query.assignedTo = {$in: [null, undefined]};
       query.published = true;
     }
   } else if (type == 'past') {
     query.shiftDate = {$lte: new Date()};
     query.endTime = {$lte: new Date()};
+  } else if (type == 'today') {
+    query.shiftDate = {$gte:moment().startOf('d').toDate(), $lte:moment().endOf('d').toDate()}
   } else {
-    this.ready();
+
   }
 
   logger.info('Rostered ', type, ' shifts for user ', userId, ' have been published');

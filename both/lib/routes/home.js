@@ -10,6 +10,7 @@ Router.route('/', {
         Meteor.subscribe('shifts', 'future', Meteor.userId(), currentAreaId),
         Meteor.subscribe('shifts', 'past', Meteor.userId(), currentAreaId),
         Meteor.subscribe('shifts', 'opened', null, currentAreaId),
+        Meteor.subscribe('shifts', 'today', Meteor.userId(), currentAreaId),
         Meteor.subscribe('sections', currentAreaId),
         Meteor.subscribe('usersList', currentAreaId),
         Meteor.subscribe('comments', Meteor.userId(), currentAreaId),
