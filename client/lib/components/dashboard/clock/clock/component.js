@@ -19,7 +19,7 @@ component.state.clockInPermission = function() {
     }]
   };
 
-  query["relations.areaId"] = HospoHero.getCurrentArea()._id;
+  query["relations.areaId"] = HospoHero.getCurrentAreaId();
 
   var shift = Shifts.findOne(query, {sort: {"startTime": 1}});
   this.set("inShift", shift);
