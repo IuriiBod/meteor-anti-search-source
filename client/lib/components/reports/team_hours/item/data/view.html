@@ -1,20 +1,25 @@
 <template name="reportData">
   {{#if state$shift}}
+    <!--Start Time-->
+    {{#if state$editStart}}
+      {{>render component='timepicker' shift=state$shift type="editStart" editCb=state$toggleEditStartTime}}
+    {{else}}
+      <a href="#" class="start-time">{{state$startedTime}}</a>
+    {{/if}}
+
+    <!--separator--> - <!--separator-->
+
+    <!--End Time-->
     {{#if state$shift.startedAt}}
-      <a href="#" class="editShiftStart" data-shift="{{state$shift._id}}"
-         data-time="{{state$shift.startedAt}}">{{timeFormat state$shift.startedAt}}</a> -
-      {{#if state$shift.finishedAt}}
-        <a href="#" class="editShiftEnd" data-shift="{{state$shift._id}}"
-           data-time="{{state$shift.finishedAt}}">{{timeFormat state$shift.finishedAt}}</a>
+      {{#if state$editEnd}}
+        {{>render component='timepicker' shift=state$shift type="editEnd" editCb=state$toggleEditEndTime}}
       {{else}}
-        {{#if state$isCurrentShift}}
-          <a href="#" class="stopCurrentShift" data-shift="{{state$shift._id}}" data-value="{{state$nowTime}}">Now</a>
+        {{#if equal state$endedTime 'Now'}}
+          <a href="#" class="stopCurrentShift">Now</a>
         {{else}}
-          <a href="#" class="editShiftEnd" data-shift="{{state$shift._id}}" data-value="{{state$endTime}}">End</a>
+          <a href="#" class="end-time">{{state$endedTime}}</a>
         {{/if}}
       {{/if}}
-    {{else}}
-      <a href="#" class="editShiftStart" data-shift="{{state$shift._id}}" data-value="{{state$startTime}}">Start</a>
     {{/if}}
   {{else}}
     -
