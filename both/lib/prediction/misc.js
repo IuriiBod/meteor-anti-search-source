@@ -17,17 +17,17 @@ Namespace('HospoHero.prediction', {
   },
 
   getMenuItemsForPredictionQuery: function (params, withPosNamesOnly) {
-    var query = [{
-      $and: {status: {$ne: "ideas"}}
-    }];
+    var query = {
+      $and: [{status: {$ne: "ideas"}}]
+    };
 
     if (withPosNamesOnly) {
       //has at least one pos name
-      query[0].$and.posNames = {$not: {$size: 0}, $exists: true};
+      query.$and.push({posNames: {$not: {$size: 0}, $exists: true}});
     }
 
     if (_.isObject(params)) {
-      query.push(params);
+      query.$and.push(params);
     }
 
     return query;

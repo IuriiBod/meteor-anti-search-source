@@ -14,7 +14,7 @@ Meteor.methods({
 
     var locationId = area.locationId;
 
-    if (!Hospohero.prediction.isAvailableForLocation(locationId)) {
+    if (!HospoHero.prediction.isAvailableForLocation(locationId)) {
       throw new Meteor.Error("Current location hadn't connected POS system")
     }
 
