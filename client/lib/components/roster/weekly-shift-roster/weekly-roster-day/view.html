@@ -1,7 +1,23 @@
 <template name="weeklyRosterDay">
-  <div class="col-lg-13">
+  <div class="col-lg-13 weekly-roster-day-container">
     <!--head with date-->
-    <h4>{{weekDateName state$currentDate}}</h4>
+    <h4>
+      {{weekDateName state$currentDate}}
+
+      {{#unless state$hasTemplateType}}
+        {{#if canViewRoster}}
+          <span class="manager-note-flyout">
+          <i class="fa fa-sticky-note"></i>
+            {{#if state$managerNotesCount}}
+              <span class="manager-notes-count label label-primary">
+                {{state$managerNotesCount}}
+              </span>
+            {{/if}}
+        </span>
+        {{/if}}
+      {{/unless}}
+    </h4>
+
     {{#unless state$hasTemplateType}}
       <h4>{{dateFormat state$currentDate}}</h4>
     {{/unless}}

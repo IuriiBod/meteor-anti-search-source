@@ -18,7 +18,6 @@ meteorhacks:aggregate
 mizzao:autocomplete
 konecty:autolinker
 less
-fortawesome:fontawesome
 twbs:bootstrap
 zimme:iron-router-active
 jquery
@@ -65,3 +64,4 @@ natestrauser:select2
 meteorhacks:ssr
 trsdln:flyouts
 russ:weather-icons
+fortawesome:fontawesome

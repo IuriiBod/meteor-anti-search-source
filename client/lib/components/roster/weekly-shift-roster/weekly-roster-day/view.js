@@ -7,6 +7,10 @@ Template.weeklyRosterDay.onRendered(function () {
 Template.weeklyRosterDay.events({
   'click .add-shift-button': function (event, tmpl) {
     FlowComponents.callAction("addShift");
+  },
+
+  'click .manager-note-flyout': function() {
+    FlowComponents.callAction('openManagerNotesFlyout');
   }
 });
 
