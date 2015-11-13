@@ -11,7 +11,8 @@ Router.route('/roster/weekly/:year/:week', {
       Meteor.subscribe('weeklyRoster', weekRange),
       Meteor.subscribe('workers', currentAreaId),
       Meteor.subscribe('sections', currentAreaId),
-      Meteor.subscribe('areaMenuItems', currentAreaId)
+      Meteor.subscribe('areaMenuItems', currentAreaId),
+      Meteor.subscribe('managerNotes', weekRange, currentAreaId)
     ];
 
     if (HospoHero.canUser('view forecast', Meteor.userId())) {
