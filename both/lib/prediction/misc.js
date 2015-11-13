@@ -16,12 +16,20 @@ Namespace('HospoHero.prediction', {
       }, true);
   },
 
-  getMenuItemsForPredictionQuery: function (params) {
-    var query = {status: {$ne: "ideas"}};
+  getMenuItemsForPredictionQuery: function (params, withPosNamesOnly) {
+    var query = {
+      $and: [{status: {$ne: "ideas"}}]
+    };
+
+    if (withPosNamesOnly) {
+      //has at least one pos name
+      query.$and.push({posNames: {$not: {$size: 0}, $exists: true}});
+    }
 
     if (_.isObject(params)) {
-      _.extend(query, params);
+      query.$and.push(params);
     }
+
     return query;
   }
 });
