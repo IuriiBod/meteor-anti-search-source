@@ -52,7 +52,7 @@ Revel.prototype._queryResource = function (resourceName, options) {
       throw new Meteor.Error(response.statusCode, 'Error while connecting to Revel');
     }
   } catch (err) {
-    logger.info('Error while connecting to Revel', {response: err});
+    logger.error('Error while connecting to Revel', {response: err});
     return false;
   }
 };
@@ -85,12 +85,9 @@ Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
       'created_date',
       'quantity'
     ],
-    offset: offset
+    offset: offset,
+    product: revelMenuItemId
   };
-
-  if (revelMenuItemId) {
-    queryOptions.product = revelMenuItemId;
-  }
 
   return this._queryResource('OrderItem', queryOptions);
 };
