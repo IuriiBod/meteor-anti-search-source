@@ -183,6 +183,10 @@ RevelSalesDataBucket.prototype.isEmpty = function () {
 
 //======== mock data provider ============
 if (HospoHero.isDevelopmentMode()) {
+  var random = function (n) {
+    return Math.floor(Math.random() * n);
+  };
+
   /**
    * Data source with mock data for development mode
    */
@@ -195,25 +199,23 @@ if (HospoHero.isDevelopmentMode()) {
       meta: {
         'limit': 5000,
         'offset': 0,
-        'total_count': 616142
+        'total_count': 61614200
       },
       objects: []
     };
 
     var self = this;
 
-    var itemsCount = Math.floor(Math.random() * 10 + 1);
-
-    for (var i = 0; i < itemsCount; i++) {
+    for (var i = 0; i < 5000; i++) {
       var pushObject = {
         created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
-        quantity: Math.floor(Math.random() * 10 + 1)
+        quantity: random(5)
       };
       result.objects.push(pushObject);
-
+      if (random(3) === 0) {//33% to go to next day
+        this.currentDate.subtract(1, 'd');
+      }
     }
-
-    this.currentDate.subtract(1, 'd');
 
     return result;
   };
@@ -231,8 +233,8 @@ if (HospoHero.isDevelopmentMode()) {
       return productItems.map(function (item) {
         return {
           name: item.name + ' POS',
-          price: Math.round(Math.random() * 20),
-          posId: Math.round(Math.random() * 100)
+          price: random(100),
+          posId: random(300)
         }
       });
     }
