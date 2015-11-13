@@ -63,29 +63,30 @@ ForecastMaker.prototype._getNotificationSender = function (area) {
     send: function () {
       if (changes.length > 0) {
         var receiversIds = getReceivers();
-        receiversIds.forEach(function (receiverId) {
-          new UniEmailSender({
-            senderId: Meteor.users.findOne({})._id,//todo: temporal, remove after email sender improvement
-            receiverId: receiverId,
-            emailTemplate: {
-              subject: 'Some predictions have been changed',
-              blazeTemplateToRenderName: 'forecastUpdate'
-            },
-            templateData: {
-              changes: changes
-            },
-            needToNotify: true,
-            notificationData: {
-              type: 'prediction',
-              actionType: 'update',
-              relations: {
-                organizationId: area.organizationId,
-                locationId: area.locationId,
-                areaId: area._id
-              }
-            }
-          }).send();
-        });
+        logger.info('Notify about prediction change', {receivers: receiversIds, changes: changes});
+        //receiversIds.forEach(function (receiverId) {
+        //  new UniEmailSender({
+        //    senderId: Meteor.users.findOne({})._id,//todo: temporal, remove after email sender improvement
+        //    receiverId: receiverId,
+        //    emailTemplate: {
+        //      subject: 'Some predictions have been changed',
+        //      blazeTemplateToRenderName: 'forecastUpdate'
+        //    },
+        //    templateData: {
+        //      changes: changes
+        //    },
+        //    needToNotify: true,
+        //    notificationData: {
+        //      type: 'prediction',
+        //      actionType: 'update',
+        //      relations: {
+        //        organizationId: area.organizationId,
+        //        locationId: area.locationId,
+        //        areaId: area._id
+        //      }
+        //    }
+        //  }).send();
+        //});
       }
     }
   };

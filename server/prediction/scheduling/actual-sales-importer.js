@@ -43,6 +43,8 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
 
   var lastDateToImport = this._getLastImportedSaleDate(menuItem._id);
 
+  logger.info('Started actual sales import', {menuItemId: menuItem._id, menuItemName: menuItem.name});
+
   //this function is used like a callback in revel connector
   //it should return false if loading is finished
   var onDateUploaded = function (salesData) {
@@ -74,6 +76,8 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
 
     self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
   });
+
+  logger.info('Import is finished');
 };
 
 /**
