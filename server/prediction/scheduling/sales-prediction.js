@@ -100,7 +100,7 @@ ForecastMaker.prototype._predictFor = function (days) {
   var dateMoment = moment();
   var self = this;
 
-  var areas = Areas.find({locationId: locationId});
+  var areas = Areas.find({locationId: this._locationId});
 
   for (var i = 0; i < days; i++) {
     var currentWeather = this._getWeatherForecast(i, dateMoment.toDate());
