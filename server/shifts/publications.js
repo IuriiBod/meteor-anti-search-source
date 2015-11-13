@@ -80,7 +80,7 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
   } else if (type == 'today') {
     query.shiftDate = {$gte:moment().startOf('d').toDate(), $lte:moment().endOf('d').toDate()}
   } else {
-
+    this.ready();
   }
 
   logger.info('Rostered ', type, ' shifts for user ', userId, ' have been published');
