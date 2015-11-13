@@ -1,5 +1,9 @@
 Template.notifiFlyout.events({
-  'click .theme-config-close-notifi-btn': function(event) {
-    $(".flyout-notifi-container").removeClass("show");
+  'click .markAllAsRead': function (event) {
+    event.preventDefault();
+    var notifi = Notifications.find({"read": false, "to": Meteor.userId()}).fetch();
+    notifi.forEach(function (not) {
+      Meteor.call("readNotifications", not._id, HospoHero.handleMethodResult());
+    });
   }
 });
