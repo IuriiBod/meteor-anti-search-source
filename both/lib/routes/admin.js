@@ -99,9 +99,10 @@ Router.route('posSettings', {
   path: '/settings/pos-mapping',
   template: "adminMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('menuList', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('posMenuItems')
+      Meteor.subscribe('menuItemsForPosLinking', currentAreaId),
+      Meteor.subscribe('posMenuItems', currentAreaId)
     ]
   },
   data: function () {

@@ -7,6 +7,7 @@ JobItems = new Mongo.Collection("jobItems");
 Jobs = new Mongo.Collection("jobs");
 
 Shifts = new Mongo.Collection("shifts");
+ManagerNotes = new Mongo.Collection('managerNotes');
 
 Comments = new Mongo.Collection("comments");
 Notifications = new Mongo.Collection("notifications");

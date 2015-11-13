@@ -85,7 +85,7 @@ WeatherManager.prototype._isWeatherAvailableForMonth = function (monthMomentToCh
     locationId: this._locationId
   }).count();
 
-  var requiredCount = isCurrentMonth ? endOfMonth.date() : nowMoment.date();
+  var requiredCount = isCurrentMonth ? nowMoment.date() : endOfMonth.date();
 
   return monthForecastCount >= requiredCount;
 };

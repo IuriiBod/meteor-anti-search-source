@@ -19,6 +19,13 @@ component.state.shifts = function () {
   });
 };
 
+component.state.managerNotesCount = function () {
+  return ManagerNotes.find({
+    noteDate: this.get('currentDate'),
+    'relations.areaId': HospoHero.getCurrentAreaId()
+  }).count();
+};
+
 component.action.addShift = function () {
   var zeroMoment = moment(HospoHero.dateUtils.shiftDate(this.get('currentDate'), this.get('hasTemplateType')));
 
@@ -34,4 +41,8 @@ component.action.addShift = function () {
   };
 
   Meteor.call("createShift", newShiftInfo, HospoHero.handleMethodResult());
+};
+
+component.action.openManagerNotesFlyout = function () {
+  FlyoutManager.open('managerNotes', {date: this.get('currentDate')}, true);
 };

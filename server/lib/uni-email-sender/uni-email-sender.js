@@ -47,7 +47,8 @@
  * @type {{Object}}
  */
 var blazeViewsAndFileNames = {
-  'helloUser': 'hello-user.html'
+  'helloUser': 'hello-user.html',
+  forecastUpdate: 'forecast-update.html'
 };
 
 // =====================================================================================================================
@@ -142,10 +143,10 @@ UniEmailSender = function UniEmailSender(emailOptions) {
   this.UniEmailSenderOptions.subject = this._getEmailSubject(emailOptions.emailTemplate.subject);
   // save html of email
   this.UniEmailSenderOptions.html = this._getEmailHtmlFromTemplate(emailOptions.emailTemplate.blazeTemplateToRenderName,
-                                                              emailOptions.templateData);
+    emailOptions.templateData);
 
   // Check if need to send a notification to user
-  if(emailOptions.needToNotify) {
+  if (emailOptions.needToNotify) {
     this._getNotificationOptions(emailOptions);
   }
 };
@@ -156,7 +157,7 @@ UniEmailSender = function UniEmailSender(emailOptions) {
 UniEmailSender.prototype.send = function () {
   Email.send(this.UniEmailSenderOptions);
 
-  if(this.UniNotificationSenderOptions) {
+  if (this.UniNotificationSenderOptions) {
     Notifications.insert(this.UniNotificationSenderOptions);
   }
 };
@@ -194,7 +195,7 @@ UniEmailSender.prototype._getEmailSubject = function (emailSubject) {
 UniEmailSender.prototype._getEmailHtmlFromTemplate = function (blazeTemplateName, emailTemplateData) {
   var templatePath = blazeViewsAndFileNames[blazeTemplateName];
 
-  if(templatePath) {
+  if (templatePath) {
     templatePath = 'email-templates/' + templatePath;
     SSR.compileTemplate(blazeTemplateName, Assets.getText(templatePath));
     return SSR.render(blazeTemplateName, emailTemplateData);
@@ -204,7 +205,7 @@ UniEmailSender.prototype._getEmailHtmlFromTemplate = function (blazeTemplateName
   }
 };
 
-UniEmailSender.prototype._getNotificationOptions = function(options) {
+UniEmailSender.prototype._getNotificationOptions = function (options) {
   var notificationOptions = {
     to: options.receiverId,
     type: '',

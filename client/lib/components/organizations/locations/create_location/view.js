@@ -9,7 +9,7 @@ Template.createLocation.events({
     FlowComponents.callAction('changeEnable');
   },
 
-  'submit form': function (e) {
+  'submit form': function (e, tmpl) {
     e.preventDefault();
 
     var fields = [
@@ -66,7 +66,7 @@ Template.createLocation.events({
 
     FlowComponents.callAction('submit', doc);
 
-    e.target.reset();
-    $("#createLocation").removeClass("show");
+    var flyout = FlyoutManager.getInstanceByElement(e.target);
+    flyout.close();
   }
 });

@@ -7,12 +7,25 @@ var checkForecastPermission = function (subscribtion) {
 };
 
 
-Meteor.publishAuthorized('posMenuItems', function () {
+Meteor.publishAuthorized('posMenuItems', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
   if (checkForecastPermission(this)) {
-    var currentAreaId = HospoHero.getCurrentAreaId(this.userId);
-    var relationsObj = HospoHero.getRelationsObject(currentAreaId);
+    var relationsObj = HospoHero.getRelationsObject(areaId);
     return PosMenuItems.find({
       'relations.locationId': relationsObj.locationId
     });
+  }
+});
+
+Meteor.publish('menuItemsForPosLinking', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
+  if (checkForecastPermission(this)) {
+    logger.info('Menu items for POS menu linking', {areaId: areaId});
+
+    var query = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': areaId});
+
+    return MenuItems.find(query);
   }
 });
