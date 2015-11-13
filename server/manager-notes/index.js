@@ -1,7 +1,5 @@
 Meteor.methods({
   upsertManagerNote: function(noteObject) {
-    console.log('NOTE', noteObject);
-
     check(noteObject, HospoHero.checkers.ManagerNotesDocument);
 
     if (!HospoHero.canUser('edit roster')) {
@@ -13,6 +11,17 @@ Meteor.methods({
       } else {
         return ManagerNotes.insert(noteObject);
       }
+    }
+  },
+
+  deleteManagerNote: function(noteId) {
+    check(noteId, HospoHero.checkers.MongoId);
+
+    if (!HospoHero.canUser('edit roster')) {
+      logger.error('User not permitted to delete manager notes!', {userId: Meteor.userId()});
+      throw new Meteor.Error('User not permitted to delete manager notes!', {userId: Meteor.userId()});
+    } else {
+      return ManagerNotes.remove({_id: noteId});
     }
   }
 });

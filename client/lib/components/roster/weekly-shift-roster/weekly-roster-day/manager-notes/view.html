@@ -8,17 +8,16 @@
 
   <div class="flyout-content">
     {{#if state$notes.count}}
-      <div class="text-center link-block">
-        <button class="btn btn-link create-note-button">
-          <i class="fa fa-plus"></i>
-          Create a note
-        </button>
-      </div>
-      {{#each state$notes}}
-
-      {{/each}}
+      {{# if canEditRoster}}
+        <div class="text-center link-block manager-note-create-block">
+          <button class="btn btn-link create-note-button">
+            <i class="fa fa-plus"></i>
+            Create a note
+          </button>
+        </div>
+      {{/if}}
     {{else}}
-      <div class="text-center link-block">
+      <div class="text-center link-block manager-note-create-block">
         <strong>No notes for today, </strong>
         <button class="btn btn-link create-note-button">
           <i class="fa fa-plus"></i>
@@ -27,9 +26,16 @@
       </div>
     {{/if}}
 
-    {{#if state$displayEditor}}
-      {{> render component="managerNotesEditor" noteId=state$noteId onSubmit=state$addManagerNote date=state$date}}
+    {{# if canEditRoster}}
+      {{#if state$displayEditor}}
+        {{> render component="managerNotesEditor" noteId=state$noteId onSubmit=state$addManagerNote date=state$date}}
+      {{/if}}
     {{/if}}
 
+    {{#if state$notes.count}}
+      {{#each state$notes}}
+        {{> render component="managerNoteItem" note=this}}
+      {{/each}}
+    {{/if}}
   </div>
 </template>

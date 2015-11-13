@@ -2,9 +2,8 @@
   position: relative;
 
   .manager-note-flyout {
-    position: absolute;
-    top: 0;
-    right: 10px;
+    position: relative;
+    margin-left: 10px;
     font-size: 18px;
     cursor: pointer;
 
@@ -29,5 +28,35 @@
   .close-editor {
     cursor: pointer;
     font-size: 20px;
+  }
+}
+
+.manager-note-create-block {
+  padding-bottom: 0 !important;
+}
+
+.note-item {
+  border-bottom: 1px solid #E7EAEC;
+  padding: 15px 15px 5px;
+
+  .note-author {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .note-text {
+    padding: 9px 11px;
+    border: 1px solid #E7EAEC;
+  }
+
+  .note-action-bar {
+    color: #8c8c8c;
+
+    .note-date {
+      padding: 0 12px 6px;
+      display: inline-block;
+      margin-top: 10px;
+      vertical-align: middle;
+    }
   }
 }
