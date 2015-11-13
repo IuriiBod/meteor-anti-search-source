@@ -1,31 +1,47 @@
 <template name="invitationsList">
-  <div class="btn-group col-xs-12">
-    <button class="btn col-xs-6{{#unless state$isAccepted}} btn-primary{{else}} btn-default{{/unless}} show-unaccepted">Unaccepted</button>
-    <button class="btn col-xs-6{{#if state$isAccepted}} btn-primary{{else}} btn-default{{/if}} show-accepted">Accepted</button>
+  <div class="flyout-header">
+    <button class="close-flyout-button">
+      <i class="fa fa-angle-right"></i>
+    </button>
+    Invitations List
   </div>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Invitation Date</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each state$invitations}}
+  <div class="flyout-content">
+    <div class="flyout-content-extra-padding">
+      <div class="btn-group col-xs-12">
+        <button
+          class="btn col-xs-6{{#unless state$isAccepted}} btn-primary{{else}} btn-default{{/unless}} show-unaccepted">
+          Unaccepted
+        </button>
+        <button class="btn col-xs-6{{#if state$isAccepted}} btn-primary{{else}} btn-default{{/if}} show-accepted">
+          Accepted
+        </button>
+      </div>
+
+      <table class="table">
+        <thead>
         <tr>
-          <td>{{name}}</td>
-          <td>{{email}}</td>
-          <td>{{dateFormat createdAt}}</td>
-          <td class="text-center">
-            <a href="#" class="delete-invitation text-danger">
-              <i class="fa fa-remove"></i>
-            </a>
-          </td>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Invitation Date</th>
+          <th>Action</th>
         </tr>
-      {{/each}}
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+        {{#each state$invitations}}
+          <tr>
+            <td>{{name}}</td>
+            <td>{{email}}</td>
+            <td>{{dateFormat createdAt}}</td>
+            <td class="text-center">
+              <a href="#" class="delete-invitation text-danger">
+                <i class="fa fa-remove"></i>
+              </a>
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>

@@ -42,7 +42,9 @@ GoogleCloud.prototype.uploadSalesData = function () {
 
     dailySalesCursor.forEach(function (dailySale) {
       var csvLine = predictionModelDataGenerator.getDataForSale(dailySale);
-      trainingDataWriteStream.push(csvLine);
+      if (csvLine) {
+        trainingDataWriteStream.push(csvLine);
+      }
     });
 
     currentDateMoment.subtract(1, 'day');
@@ -80,9 +82,7 @@ PredictionModelDataGenerator = function PredictionModelDataGenerator(locationId)
 };
 
 PredictionModelDataGenerator.prototype._getWeatherForDate = function (date) {
-  var weather = this._weatherManager.getWeatherFor(date);
-  console.log('get weather for:', date, weather);
-  return weather;
+  return this._weatherManager.getWeatherFor(date);
 };
 
 PredictionModelDataGenerator.prototype._getWeatherForSale = function (dailySale) {
@@ -97,6 +97,11 @@ PredictionModelDataGenerator.prototype.getDataForSale = function (dailySale) {
   var dayOfYear = moment(dailySale.date).dayOfYear();
 
   var weather = this._getWeatherForSale(dailySale);
+
+  if (!weather) {
+    logger.error('Weather not found', {locationId: this._locationId, date: dailySale.date});
+    return false;
+  }
 
   return dailySale.actualQuantity + ', "' + dailySale.menuItemId + '", ' +
     weather.temp + ', "' + weather.main + '", ' + dayOfYear + '\n';

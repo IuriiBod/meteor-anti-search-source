@@ -3,7 +3,8 @@ Template.areaSettings.events({
     if(confirm("Are you sure, you want to delete this area?")) {
       var id = e.target.dataset.id;
       FlowComponents.callAction('deleteArea', id);
-      $("#areaSettings").removeClass('show');
+      var flyout = FlyoutManager.getInstanceByElement(e.target);
+      flyout.close();
     }
   },
 

@@ -77,7 +77,7 @@ Template.editLocation.helpers({
         label: 'Timezone',
         type: 'select',
         options: HospoHero.dateUtils.timezones(),
-        value: location.timezone
+        value: parseInt(location.timezone)
       });
 
       tpl._customForm.addField('openingHour', {

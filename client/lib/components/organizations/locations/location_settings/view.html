@@ -1,11 +1,23 @@
 <template name="locationSettings">
-  {{#if isOrganizationOwner}}
-    <h1 class="location-name" style="display: inline-block" data-id="{{state$locationId}}">{{state$location.name}}</h1>
-  {{else}}
-    <h1>{{state$location.name}}</h1>
-  {{/if}}
+  <div class="flyout-header">
+    <button class="close-flyout-button">
+      <i class="fa fa-angle-right"></i>
+    </button>
+    {{state$location.name}} location settings
+  </div>
 
-  <button class="btn btn-primary col-xs-12 open-flyout" data-id="createArea" data-location-id="{{state$locationId}}">Create Area</button>
+  <div class="flyout-content">
+    {{#if isOrganizationOwner}}
+      <h1 class="location-name" style="display: inline-block"
+          data-id="{{state$locationId}}">{{state$location.name}}</h1>
+    {{else}}
+      <h1>{{state$location.name}}</h1>
+    {{/if}}
 
-  {{> render component="editLocation" location=state$location}}
+    <button class="btn btn-primary col-xs-12 create-area-flyout">
+      Create Area
+    </button>
+
+    {{> render component="editLocation" location=state$location}}
+  </div>
 </template>

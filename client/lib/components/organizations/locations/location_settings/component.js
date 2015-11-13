@@ -1,5 +1,4 @@
 var component = FlowComponents.define('locationSettings', function(props) {
-  this.set('organizationId', props.organizationId);
   this.set('locationId', props.locationId);
 });
 
@@ -11,4 +10,11 @@ component.state.location = function() {
 
 component.action.deleteLocation = function(id) {
   Meteor.call('deleteLocation', id, HospoHero.handleMethodResult());
+};
+
+component.action.openCreateAreaFlyout = function () {
+  var location = this.get('location');
+  if(location) {
+    FlyoutManager.open('createArea', {organizationId: location.organizationId, locationId: location._id}, true);
+  }
 };

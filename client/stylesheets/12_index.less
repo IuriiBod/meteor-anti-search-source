@@ -1,262 +1,151 @@
-.flyout-container {
-  .editable {
-    padding: 0px;
-  }
-}
-
 .profile-image {
-    width: 48px;
-    height: 48px;
+  width: 48px;
+  height: 48px;
 }
-.menu-item-image, .content &>p &>img {
-    width: 100% !important;
-    height: 191px !important;
+
+.menu-item-image, .content & > p & > img {
+  width: 100% !important;
+  height: 191px !important;
 }
-.ibox-content &>div &>img,.col-md-12 &>.ibox &>.ibox-content &>img,.panel-body &>div &>img,.panel-body &>p &>div &>img,.panel-body &>p &>img,.panel-body &>img,.note-editable &>div &>img,.note-editable &>img,.content &>p &>div &>img {
-    max-width: 30%;
-    height: auto;
+
+.ibox-content & > div & > img, .col-md-12 & > .ibox & > .ibox-content & > img, .panel-body & > div & > img, .panel-body & > p & > div & > img, .panel-body & > p & > img, .panel-body & > img, .note-editable & > div & > img, .note-editable & > img, .content & > p & > div & > img {
+  max-width: 30%;
+  height: auto;
 }
+
 .image {
-    & > img {
-        width: 100%;
-        height: 315px;
-    }
+  & > img {
+    width: 100%;
+    height: 315px;
+  }
 }
+
 .chat-discussion {
-    .chat-message:nth-child(2n) {
-        .message-avatar {
-            margin-left: 0px !important;
-        }
-        .message {
-            text-align: none !important;
-            margin-right: 0px !important;
-        }
+  .chat-message:nth-child(2n) {
+    .message-avatar {
+      margin-left: 0 !important;
     }
-    .chat-message {
-        .message {
-            text-align: left !important;
-            margin-left: 55px !important;
-        }
-        .message-date {
-            float: right !important;
-        }
-        .message-avatar {
-            float: left !important;
-            margin-right: 0px !important;
-        }
+    .message {
+      text-align: left !important;
+      margin-right: 0 !important;
     }
+  }
+  .chat-message {
+    .message {
+      text-align: left !important;
+      margin-left: 55px !important;
+    }
+    .message-date {
+      float: right !important;
+    }
+    .message-avatar {
+      float: left !important;
+      margin-right: 0 !important;
+    }
+  }
 }
+
 .theme-config {
-    top: 97px !important;
-    height: 100% !important;
+  top: 97px !important;
+  height: 100% !important;
 }
+
 .skin-setttings {
-    width: 300px !important;
-    height: 100% !important;
+  width: 300px !important;
+  height: 100% !important;
 }
+
 .theme-config-box {
-    height: 100% !important;
-    margin-right: -300px;
+  height: 100% !important;
+  margin-right: -300px;
 }
-// flyout-container redesign
-.flyout-container, .flyout-notifi-container {
-    position: fixed;
-    top: 0 !important;
-    width: 500px;
-    -webkit-transform: translateX(100%);
-    -moz-transform: translateX(100%);
-    transform: translateX(100%);
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-    z-index: 1020;
-    visibility: hidden;
-    @media screen and (max-width: 767px){
-        z-index: 2002;
-    }
-    &.show{
-      -webkit-transform: translateX(0);
-      -moz-transform: translateX(0);
-      transform: translateX(0);
-      -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
-      box-shadow: 0 6px 12px rgba(0,0,0,.175);
+
+.switch.full {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.checklist-content {
+  .checklist-check {
+    background-color: #fff;
+    padding: 0;
+    border-bottom: 1px solid #d6d6d7;
+    position: relative;
+    padding: 14px 30px;
+  }
+  .checklist-check.checked {
+    background-color: #f9f9fa;
+  }
+  label {
+    margin-bottom: 0;
+    display: block;
+    cursor: pointer;
+    font-weight: 600;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  input[type="checkbox"] {
+    display: none;
+  }
+  input[type="checkbox"]:checked ~ .custom-checkbox {
+    background: #50c7c7;
+    &:after {
       visibility: visible;
+      opacity: 1;
     }
-
-    .theme-config-box {
-        margin: 0;
-        -webkit-transition-duration: 0s;
-        -moz-transition-duration: 0s;
-        transition-duration: 0s;
-        .removeAssignedJob {
-            position: absolute;
-            bottom: 20px;
-            left: 3%;
-            right: 3%;
-            background-color: #f64747;
-            -webkit-border-radius: 17px;
-            -moz-border-radius: 17px;
-            border-radius: 17px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 5px 0;
-            width: 94%;
-            outline: none;
-            -webkit-transition: all 0.3s ease;
-            -o-transition: all 0.3s ease;
-            transition: all 0.3s ease;
-        }
-        .removeAssignedJob:hover {
-            background-color: #e50b0b;
-        }
-    }
-
-    .skin-setttings {
-        margin-left: 0;
-        width: 100% !important;
-        border-left: 1px solid #e7eaec;
-        border-right: 1px solid #e7eaec;
-        padding-bottom: 80px;
-        overflow-y: auto;
-        .title {
-            .btn {
-              height: 60px;
-              margin-top: -5px;
-            }
-            padding: 0;
-            height: 61px;
-            line-height: 61px;
-            background-color: #e8e8e8;
-            font-size: 13px;
-            color: #696969;
-            position: relative;
-            .theme-config-close-btn, .theme-config-close-notifi-btn {
-                position: absolute;
-                left: 0;
-                top: 0;
-                height: 61px;
-                text-decoration: none;
-                padding: 0 20px;
-                float: left;
-            }
-            i.fa {
-                line-height: 61px;
-                font-size: 20px;
-                color: #696969;
-            }
-        }
-    }
-
-  .white-notify-bg {
-      background: #fff;
-      width: 100%;
-      height: 100%;
   }
 
-    .setings-item::after {
-        clear: both;
-        content: "";
-        display: table;
-    }
+  .custom-checkbox {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 17px;
+    width: 30px;
+    height: 30px;
+    line-height: 28px;
+    text-align: center;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 1px solid #50c7c7;
+    -webkit-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background: 0;
+  }
+  .custom-checkbox:after {
+    content: "\f00c";
+    display: inline-block;
+    color: #fff;
+    font: normal normal normal 16px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0);
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+  }
+  .icheckbox_square-green.checked {
+    background-color: #50c7c7;
+  }
+  .icheckbox_square-green.checked:after {
+    visibility: visible;
+    opacity: 1;
+  }
+}
 
-    .setings-item.m-t-md {
-        padding: 0;
-        & > span {
-            display: inline-block;
-            padding: 10px 30px 0 30px;
-        }
-        .ibox-content {
-            background-color: transparent;
-            padding: 0;
-        }
-    }
-}
-// flyout-container end redesign
-.switch.full {
-    width: 100%;
-    margin-top: 15px;
-}
-.checklist-content {
-    .checklist-check {
-        background-color: #fff;
-        padding: 0;
-        border-bottom: 1px solid #d6d6d7;
-        position: relative;
-        padding: 14px 30px;
-    }
-    .checklist-check.checked {
-        background-color: #f9f9fa;
-    }
-    label {
-        margin-bottom: 0;
-        display: block;
-        cursor: pointer;
-        font-weight: 600;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-    input[type="checkbox"] {
-        display: none;
-    }
-    input[type="checkbox"]:checked ~ .custom-checkbox {
-        background: #50c7c7;
-        &:after{
-          visibility: visible;
-          opacity: 1;
-        }
-    }
-
-    .custom-checkbox {
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 17px;
-        width: 30px;
-        height: 30px;
-        line-height: 28px;
-        text-align: center;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
-        border-radius: 50%;
-        background-color: transparent;
-        border: 1px solid #50c7c7;
-        -webkit-transition: all 0.2s ease;
-        -o-transition: all 0.2s ease;
-        transition: all 0.2s ease;
-        cursor: pointer;
-        background: 0;
-    }
-    .custom-checkbox:after {
-        content: "\f00c";
-        display: inline-block;
-        color: #fff;
-        font: normal normal normal 16px/1 FontAwesome;
-        font-size: inherit;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        transform: translate(0, 0);
-        visibility: hidden;
-        opacity: 0;
-        -webkit-transition: all 0.2s ease;
-        -o-transition: all 0.2s ease;
-        transition: all 0.2s ease;
-    }
-    .icheckbox_square-green.checked {
-        background-color: #50c7c7;
-    }
-    .icheckbox_square-green.checked:after {
-        visibility: visible;
-        opacity: 1;
-    }
-}
 .navbar-top-links {
   .dropdown-alerts {
-      width: 400px;
-      min-width: 0;
-      margin-left: -74px;
+    width: 400px;
+    min-width: 0;
+    margin-left: -74px;
   }
   .notifi-alerts {
     & > li {
@@ -264,74 +153,26 @@
     }
   }
 }
+
 .filter-menus {
-    width: 93% !important;
-    left: 15px !important;
+  width: 93% !important;
+  left: 15px !important;
 }
-.showJobProfile,.showJobProfile:hover {
-    color: #fff;
+
+.showJobProfile, .showJobProfile:hover {
+  color: #fff;
 }
+
 .field {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
+
 .m-l-xxxxl {
-    margin-left: 110px;
+  margin-left: 110px;
 }
+
 span {
-    cursor: pointer;
-}
-/*****************************************************************
-            media queries
-*******************************************************************/
-
-
-// media queries for tablet
-//@media (min-width: 768px) and (max-width: 991px){
-//  .flyout-container, .flyout-notifi-container{
-//    width: 50%;
-//  }
-//}
-
-
-@media (max-width: 768px){
-  .flyout-container, .flyout-notifi-container{
-    width: 100%;
-
-    .setings-item{
-      padding: 8px 10px;
-      &.m-t-md{
-         & > span{
-           padding: 8px 10px;
-         }
-       }
-    }
-
-    .checklist-content{
-      .checklist-check{
-        padding: 8px 10px;
-      }
-    }
-
-    .theme-config-box{
-      .removeAssignedJob{
-        width: 80%;
-        left: 10%;
-        right: 10%;
-      }
-    }
-    .skin-setttings{
-      .title {
-        i.fa {
-          font-size: 16px;
-        }
-        i.fa-angle-right{
-          &:before{
-              content: "\f00d";
-          }
-        }
-      }
-    }
-  }
+  cursor: pointer;
 }
 
 .my-editable-link {
@@ -401,7 +242,7 @@ span {
     position: absolute;
     right: 0;
     top: 0;
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0, 0, 0, 0.3);
     color: #fff;
     padding: 1px 3px;
     cursor: pointer;
@@ -416,7 +257,7 @@ span {
 .remove-image {
   position: absolute;
   color: #fff;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 5px 6px;
   cursor: pointer;
 }

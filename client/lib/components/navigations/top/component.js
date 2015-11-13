@@ -10,11 +10,6 @@ component.state.notifications = function () {
   return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
 };
 
-component.state.hasLocations = function () {
-  var organizationId = HospoHero.isInOrganization();
-  return Locations.find({organizationId: organizationId}).count() > 0
-};
-
 component.state.areaColor = function () {
   var area = HospoHero.getCurrentArea();
   if(area) {

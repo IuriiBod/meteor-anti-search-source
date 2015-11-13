@@ -1,12 +1,12 @@
 Template.organizationStructure.events({
   'click .location-settings': function() {
-    FlowComponents.callAction('changeLocation', this._id);
-    $('.location-name').editable('setValue', this.name);
+    FlyoutManager.open('locationSettings', {locationId: this._id}, true);
   },
+
   'click .area-settings': function() {
-    FlowComponents.callAction('changeArea', this._id);
-    $('.area-name').editable('setValue', this.name);
+    FlyoutManager.open('areaSettings', {areaId: this._id}, true);
   },
+
   'click .change-current-area': function(e) {
     e.preventDefault();
     FlowComponents.callAction('changeDefaultArea', this._id);
