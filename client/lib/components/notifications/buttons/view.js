@@ -39,7 +39,7 @@ Template.notifiButtons.events({
         if(notifi.relations){
           Meteor.call('changeArea', notifi.relations.areaId, HospoHero.handleMethodResult());
         }
-        Router.go("home", {}, {hash: ref});
+        Router.go("home");
       }
     }
   }
