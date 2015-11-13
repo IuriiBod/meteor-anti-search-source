@@ -17,7 +17,11 @@ Namespace('HospoHero.prediction', {
   },
 
   getMenuItemsForPredictionQuery: function (params) {
-    var query = {status: {$ne: "ideas"}};
+    var query = {
+      status: {$ne: "ideas"},
+      //has at least one pos name
+      posNames: {$not: {$size: 0}, $exists: true}
+    };
 
     if (_.isObject(params)) {
       _.extend(query, params);

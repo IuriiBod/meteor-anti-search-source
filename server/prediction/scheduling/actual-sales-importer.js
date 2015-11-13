@@ -1,0 +1,82 @@
+ActualSalesImporter = function ActualSalesImporter(locationId) {
+  this._location = Locations.findOne({_id: locationId});
+  this._revelClient = new Revel(this._location.pos);
+};
+
+
+//ActualSalesImporter.prototype._getMenuItemByPosName = function (menuItemName) {
+//  return MenuItems.findOne({
+//    'relations.locationId': this._location._id,
+//    $or: [{'posNames': menuItemName}, {name: menuItemName}]
+//  });
+//};
+
+
+ActualSalesImporter.prototype._updateActualSale = function (item) {
+  DailySales.update({
+    date: TimeRangeQueryBuilder.forDay(item.date),
+    menuItemId: item.menuItemId,
+    relations: item.relations
+  }, {$inc: {actualQuantity: item.actualQuantity}}, {upsert: true});
+};
+
+
+ActualSalesImporter.prototype._getLastImportedSaleDate = function (menuItemId) {
+  var lastImportedSale = DailySales.findOne({
+    'relations.locationId': this._location._id,
+    menuItemId: menuItemId,
+    actualQuantity: {$gt: 0}
+  }, {
+    sort: {date: -1}
+  });
+
+  // if there is no imported data the import whole year
+  return lastImportedSale && lastImportedSale.date || moment().subtract(1, 'year').toDate();
+};
+
+/**
+ * Imports actual sales for single menu item
+ *
+ * @param menuItem
+ */
+ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
+  var self = this;
+
+  var lastDateToImport = this._getLastImportedSaleDate(menuItem._id);
+
+  //this function is used like a callback in revel connector
+  //it should return false if loading is finished
+  var onDateUploaded = function (salesData) {
+    var item = {
+      actualQuantity: salesData.quantity,
+      date: salesData.createdDate,
+      menuItemId: menuItem._id,
+      relations: menuItem.relations
+    };
+
+    self._updateActualSale(item);
+
+    //todo: resolve date range overlay here (should stop loading immediately)
+    return !moment(salesData.createdDate).isBefore(lastDateToImport);
+  };
+
+
+  //upload sales using pos connector
+  menuItem.posNames.forEach(function (posName) {
+    var posMenuItem = PosMenuItems.findOne({name: posName, 'relations.locationId': self._location._id});
+    self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
+  });
+};
+
+/**
+ * Imports actual sales for specified menu items
+ * @param menuItemsToImportQuery menu items' mongodb query
+ */
+ActualSalesImporter.prototype.importByQuery = function (menuItemsToImportQuery) {
+  var menuItemsToSync = MenuItems.find(menuItemsToImportQuery,{fields: {_id: 1, posNames: 1, relations: 1}});
+  var self = this;
+
+  menuItemsToSync.forEach(function (menuItem) {
+    self.importForMenuItem(menuItem);
+  });
+};
