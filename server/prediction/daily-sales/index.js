@@ -7,7 +7,7 @@ Meteor.methods({
 
     //find out current area
     var area = HospoHero.getCurrentArea(this.userId);
-    console.log(area);
+
     if (!area) {
       throw new Meteor.Error('Current area not specified');
     }

@@ -15,7 +15,7 @@ ActualSalesImporter.prototype._updateActualSale = function (item) {
     date: TimeRangeQueryBuilder.forDay(item.date),
     menuItemId: item.menuItemId,
     relations: item.relations
-  }, {$inc: {actualQuantity: item.actualQuantity}}, {upsert: true});
+  }, {$inc: {actualQuantity: item.actualQuantity}, $set: {date: item.date}}, {upsert: true});
 };
 
 
@@ -43,7 +43,7 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
 
   var lastDateToImport = this._getLastImportedSaleDate(menuItem._id);
 
-  logger.info('Started actual sales import', {menuItemId: menuItem._id, menuItemName: menuItem.name});
+  logger.info('Started actual sales import', {menuItemId: menuItem._id});
 
   //this function is used like a callback in revel connector
   //it should return false if loading is finished
