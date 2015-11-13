@@ -7,7 +7,7 @@ predictionModelRefreshJob = function () {
     if (predictionEnabled) {
       logger.info('Started import actual sales data', {locationId: location._id});
 
-      var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.locationId': location._id});
+      var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.locationId': location._id}, true);
 
       //import missed actual sales
       var salesImporter = new ActualSalesImporter(location._id);

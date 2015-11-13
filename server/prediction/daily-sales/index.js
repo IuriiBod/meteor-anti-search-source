@@ -7,12 +7,12 @@ Meteor.methods({
 
     //find out current area
     var area = HospoHero.getCurrentArea(this.userId);
-
+    console.log(area);
     if (!area) {
       throw new Meteor.Error('Current area not specified');
     }
 
-    var locationId = area.relations.locationId;
+    var locationId = area.locationId;
 
     if (!Hospohero.prediction.isAvailableForLocation(locationId)) {
       throw new Meteor.Error("Current location hadn't connected POS system")
@@ -24,7 +24,7 @@ Meteor.methods({
     var unsyncedItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({
       'relations.areaId': area._id,
       isNotSyncedWithPos: true
-    });
+    },true);
 
     var menuItemsToSync = MenuItems.find(unsyncedItemsQuery, {fields: {_id: 1}});
 

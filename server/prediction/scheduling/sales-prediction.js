@@ -106,7 +106,7 @@ ForecastMaker.prototype._predictFor = function (days) {
     var currentWeather = this._getWeatherForecast(i, dateMoment.toDate());
 
     areas.forEach(function (area) {
-      var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id});
+      var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id}, true);
       var items = MenuItems.find(menuItemsQuery, {}); //get menu items for current area
 
       var notificationSender = self._getNotificationSender(area);
