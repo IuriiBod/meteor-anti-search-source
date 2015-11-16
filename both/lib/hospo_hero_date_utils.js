@@ -71,8 +71,13 @@ Namespace('HospoHero.dateUtils', {
     return day + ' ' + startTime + ' - ' + endTime;
   },
 
-  timeFormat: function (date) {
-    return HospoHero.dateUtils.formatDate(date, 'h:mm A');
+  timeFormat: function (date, locationId) {
+    var dateFormat = 'h:mm A';
+    if(locationId && _.isString(locationId)) {
+      return HospoHero.dateUtils.formatDateWithTimezone(date, locationId, dateFormat);
+    } else {
+      return HospoHero.dateUtils.formatDate(date, dateFormat);
+    }
   },
 
   shiftDate: function (date, isTemplate) {
