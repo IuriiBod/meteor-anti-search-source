@@ -17,7 +17,10 @@ Template.createLocation.events({
       'country',
       'city',
       'address',
-      'timezone'
+      {
+        name: 'timezone',
+        parse: 'int'
+      }
     ];
     var doc = HospoHero.misc.getValuesFromEvent(e, fields, true);
 
