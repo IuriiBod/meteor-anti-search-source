@@ -9,14 +9,12 @@ Namespace('HospoHero', {
     return !HospoHero.isDevelopmentMode() && !HospoHero.isProductionMode();
   },
   isDevelopmentMode: function () {
-    return process.env.NODE_ENV === 'development'
-        // environment user check:
-        // prevents loading mock data while migrating on local machine
-      && process.env.USER !== 'taras';
+    return process.env.NODE_ENV === 'development';
+    // environment user check:
+    // prevents loading mock data while migrating on local machine
+    //&& process.env.USER !== 'taras';
   },
   sendNotification: function (notification) {
-    console.log('NOTI', notification);
-
     if (!notification.title) {
       throw new Meteor.Error('Notification must have a title');
     }
