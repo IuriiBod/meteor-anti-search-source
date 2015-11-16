@@ -49,7 +49,6 @@ component.state.isAwaiting = function () {
     return !(this.item.approved && this.item.declined);
 };
 
-
-component.action.viewLeaveRequest = function () {
-    Router.go('viewLeaveRequest', {id: this.item._id});
+component.action.removeLeaveRequest = function () {
+    Meteor.call('removeLeaveRequest', this.item._id);
 };

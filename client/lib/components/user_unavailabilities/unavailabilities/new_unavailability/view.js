@@ -2,27 +2,26 @@ Template.addNewUnavailability.onRendered(function () {
     var self = this;
 
     // Define a dateTimePickers
-    var now = moment().minute(0);
     self.$('#datePicker').datetimepicker({
         format: 'YYYY MMM Do',
-        minDate: now,
-        defaultDate: now
+        minDate: moment(),
+        defaultDate: moment()
     });
     self.$('#startTimePicker').datetimepicker({
         format: 'HH:mm',
-        stepping: 5,
-        minDate: now
+        stepping: 10,
+        minDate: moment(),
+        defaultDate: moment().add(10, 'minutes')
     });
     self.$('#endTimePicker').datetimepicker({
         format: 'HH:mm',
-        stepping: 5,
-        minDate: now.add(10, 'minutes')
+        stepping: 10,
+        minDate: moment().add(10, 'minutes'),
+        defaultDate: moment().add(1, 'hours')
     });
+
     var startTimePicker = self.$('#startTimePicker').data("DateTimePicker");
     var endTimePicker = self.$('#endTimePicker').data("DateTimePicker");
-
-    startTimePicker.date(now);
-    endTimePicker.date(now.add(1, 'hours'));
 
     // Events for dateTimePickers
     self.$("#datePicker").on("dp.change", function (e) {

@@ -1,5 +1,5 @@
 Template.unavailabilityItem.events({
-    'click #deleteUnavailabilityBtn': function () {
+    'click #removeUnavailabilityBtn': function () {
         FlowComponents.callAction('removeUnavailability');
     }
 });

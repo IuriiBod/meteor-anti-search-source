@@ -12,7 +12,7 @@ Meteor.methods({
         Meteor.users.update({_id: this.userId}, {$pull: {unavailables: unavailability}});
     },
 
-    addLeaveRequest: function (newLeaveRequest) {
+    createNewLeaveRequest: function (newLeaveRequest) {
         check(newLeaveRequest, HospoHero.checkers.LeaveRequestChecker);
 
         newLeaveRequest.userId = this.userId;
@@ -22,11 +22,17 @@ Meteor.methods({
     },
     removeLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
+
+        LeaveRequests.remove({_id: leaveRequestId});
     },
     approveLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
+
+        LeaveRequests.update(leaveRequestId, {$set: {approved: true}});
     },
     declineLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
+
+        LeaveRequests.update(leaveRequestId, {$set: {declined: true}});
     }
 });

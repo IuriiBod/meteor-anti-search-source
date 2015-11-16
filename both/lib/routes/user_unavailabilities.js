@@ -2,8 +2,8 @@ Router.route('userUnavailability', {
     path: '/unavailabilities',
     template: 'userUnavailabilityMainView',
     waitOn: function () {
-        Meteor.subscribe('userUnavailables');
-        Meteor.subscribe('leaveRequests');
+        Meteor.subscribe('userAllUnavailabilities');
+        Meteor.subscribe('userAllLeaveRequests');
     },
     data: {
         isUnavailablesList: true
@@ -29,7 +29,12 @@ Router.route('addNewLeaveRequest', {
 Router.route('viewLeaveRequest', {
     path: '/leaveRequests/:id',
     template: 'userUnavailabilityMainView',
-    data: {
-        isViewLeaveRequest: true
+    data: function () {
+        return {
+            isViewLeaveRequest: true
+        }
+    },
+    waitOn: function () {
+        Meteor.subscribe('leaveRequest', this.params.id);
     }
 });

@@ -14,7 +14,7 @@ var LeaveRequestChecker = Match.Where(function (leaveRequest) {
     check(leaveRequest, {
         startDate: Date,
         endDate: Date,
-
+        notifyManagerId: HospoHero.checkers.MongoId,
         comment: Match.Optional(String)
     });
     return true;

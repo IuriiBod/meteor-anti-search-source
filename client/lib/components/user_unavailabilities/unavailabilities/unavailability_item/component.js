@@ -8,15 +8,15 @@ component.state.date = function () {
 };
 
 component.state.isAllDay = function () {
-    var startTime = moment(this.item.startDate).format('hh:mm');
+    var startTime = moment(this.item.startDate).format('HH:mm');
     var endTime = moment(this.item.endDate).format('hh:mm');
 
     return startTime == endTime;
 };
 
 component.state.time = function () {
-    var startTime = moment(this.item.startDate).format('hh:mm');
-    var endTime = moment(this.item.endDate).format('hh:mm');
+    var startTime = moment(this.item.startDate).format('HH:mm');
+    var endTime = moment(this.item.endDate).format('HH:mm');
 
     return {
         startTime: startTime,
@@ -44,4 +44,4 @@ component.state.comment = function () {
 
 component.action.removeUnavailability = function () {
     Meteor.call('removeUnavailability', this.item);
-}
+};

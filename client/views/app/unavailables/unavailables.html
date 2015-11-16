@@ -8,10 +8,10 @@
         {{> render component="addNewUnavailability"}}
       {{/if}}
       {{#if isAddNewLeaveRequest}}
-        {{> render component="addNewLeaveRequest"}}
+        {{> render component="viewLeaveRequest" mode="add"}}
       {{/if}}
       {{#if isViewLeaveRequest}}
-        {{> render component="viewLeaveRequest"}}
+        {{> render component="viewLeaveRequest" mode="review"}}
       {{/if}}
     </div>
   </div>
