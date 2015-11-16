@@ -5,6 +5,17 @@ var checkOrganizationOwner = function (userId) {
 };
 
 Meteor.methods({
+  updatePredictionModel: function () {
+    checkOrganizationOwner(this.userId);
+    try {
+      predictionModelRefreshJob();
+    } catch (err) {
+      logger.error(err);
+      return false;
+    }
+    return true;
+  },
+
   updatePredictions: function () {
     checkOrganizationOwner(this.userId);
     try {
@@ -16,16 +27,15 @@ Meteor.methods({
     return true;
   },
 
-  updatePredictionModel: function () {
-    checkOrganizationOwner(this.userId);
-    predictionModelRefreshJob();
-    return true;
-  },
-
   getPredictionModelStatus: function () {
     checkOrganizationOwner(this.userId);
-    var currentArea = HospoHero.getCurrentArea(this.userId);
-    var googlePredictionApi = new GooglePredictionApi(currentArea.locationId);
-    return googlePredictionApi.getModelStatus();
+    try {
+      var currentArea = HospoHero.getCurrentArea(this.userId);
+      var googlePredictionApi = new GooglePredictionApi(currentArea.locationId);
+      return googlePredictionApi.getModelStatus();
+    } catch (err) {
+      logger.error(err);
+      return false;
+    }
   }
 });
