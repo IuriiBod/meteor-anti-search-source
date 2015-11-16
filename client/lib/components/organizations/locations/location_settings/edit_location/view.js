@@ -155,6 +155,7 @@ Template.editLocation.events({
       delete validation.closingMinutes;
 
       var updatedLocation = _.extend(location, validation);
+      updatedLocation.timezone = parseInt(updatedLocation.timezone);
       Meteor.call('editLocation', updatedLocation, HospoHero.handleMethodResult(function() {
         HospoHero.success('Location was successfully changed');
       }));

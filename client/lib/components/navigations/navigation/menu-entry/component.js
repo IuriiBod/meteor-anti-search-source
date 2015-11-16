@@ -16,6 +16,13 @@ component.state.subMenuItems = function () {
 
 component.state.subMenuItemsCount = function () {
   var subMenusItems = this.menuEntry.subMenuEntries;
+
+  if(subMenusItems) {
+    subMenusItems = subMenusItems.filter(function(item) {
+      return checkPermission(item.permission);
+    });
+  }
+
   return subMenusItems && subMenusItems.length || false;
 };
 
@@ -26,19 +33,22 @@ component.state.hrefPath = function () {
   return route && Router.path(route, params) || '#';
 };
 
-component.state.permission = function () {
-  var permission = this.menuEntry.permission || null;
-
-  // If permission property is absent, render this menu entry
-  if (!permission) {
-    return true;
-  }
-
-  return HospoHero[permission.type](permission.action) || false;
+component.state.permission = function (permission) {
+  permission = permission || this.menuEntry.permission;
+  return checkPermission(permission);
 };
 
 component.state.activeOnRoutes = function () {
   var activeOnRoutes = this.menuEntry.activeOnRoutes || this.menuEntry.route;
 
   return _.isArray(activeOnRoutes) && activeOnRoutes.join('|') || activeOnRoutes;
+};
+
+
+var checkPermission = function (permission) {
+  // If permission property is absent, render this menu entry
+  if (!permission) {
+    return true;
+  }
+  return HospoHero.canUser(permission, Meteor.userId());
 };

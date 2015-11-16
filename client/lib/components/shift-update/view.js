@@ -1,4 +1,4 @@
-Template.cronConfig.onRendered(function() {
+Template.shitUpdateNotificationConfig.onRendered(function() {
   $('.editable').editable({
     type: 'select',
     mode: 'popup',

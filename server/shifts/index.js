@@ -17,7 +17,11 @@ var ShiftPropertyChangeLogger = {
   },
 
   _formatProperty: function (shift, property) {
-    return this.propertiesFormatters[property](shift[property]);
+    if(_.isDate(shift[property])) {
+      return this.propertiesFormatters[property](shift[property], shift.relations.locationId);
+    } else {
+      return this.propertiesFormatters[property](shift[property]);
+    }
   },
 
   _notificationTitle: function (shift) {
@@ -28,27 +32,26 @@ var ShiftPropertyChangeLogger = {
     return this.trackedProperties[propertyName] + ' has been updated to ' + this._formatProperty(newShift, propertyName);
   },
 
-  _sendNotification: function (message, shift, fromUserId) {
+  _sendNotification: function (message, shift, fromUserId, toUserId) {
     var text = this._notificationTitle(shift) + ': ' + message;
 
-    // todo: Uncomment if we need shift updates sending
-    //var updateDocument = {
-    //  to: shift.assignedTo,
-    //  userId: fromUserId,
-    //  shiftId: shift._id,
-    //  text: text,
-    //  locationId: shift.relations.locationId,
-    //  type: "update"
-    //};
-    //
-    //logger.info("Shift update insert");
-    //ShiftsUpdates.insert(updateDocument);
+    var updateDocument = {
+      to: toUserId,
+      userId: fromUserId,
+      shiftId: shift._id,
+      text: text,
+      locationId: shift.relations.locationId,
+      type: "update"
+    };
+
+    logger.info("Shift update insert");
+    ShiftsUpdates.insert(updateDocument);
 
     HospoHero.sendNotification({
       type: 'shift',
       title: text,
       actionType: 'update',
-      to: shift.assignedTo,
+      to: toUserId,
       ref: shift._id
     });
   },
@@ -56,7 +59,7 @@ var ShiftPropertyChangeLogger = {
   _trackUserRemovedFromShift: function (oldShift, newShift, userId) {
     if (oldShift.assignedTo && oldShift.assignedTo !== newShift.assignedTo) {
       var message = 'You have been removed from this assigned shift';
-      this._sendNotification(message, oldShift, userId);
+      this._sendNotification(message, oldShift, userId, oldShift.assignedTo);
     }
   },
 
@@ -65,7 +68,14 @@ var ShiftPropertyChangeLogger = {
       var oldShift = Shifts.findOne({_id: newShift._id});
 
       var isPropertyChanged = function (propertyName) {
-        return oldShift[propertyName] !== newShift[propertyName];
+        var oldPropertyValue = oldShift[propertyName];
+        var newPropertyValue = newShift[propertyName];
+
+        if (_.isDate(oldPropertyValue)) {
+          oldPropertyValue = oldPropertyValue.valueOf();
+          newPropertyValue = newPropertyValue.valueOf();
+        }
+        return oldPropertyValue !== newPropertyValue;
       };
 
       var self = this;
@@ -76,7 +86,7 @@ var ShiftPropertyChangeLogger = {
       });
 
       var fullMessage = shiftChangesMessages.join(', ');
-      this._sendNotification(fullMessage, oldShift, userId);
+      this._sendNotification(fullMessage, oldShift, userId, newShift.assignedTo);
 
       this._trackUserRemovedFromShift(oldShift, newShift, userId);
     }

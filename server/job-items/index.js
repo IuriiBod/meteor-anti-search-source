@@ -366,6 +366,29 @@ Meteor.methods({
 
     var job = JobItems.findOne({_id: id});
     var status = (job && job.status == "archived") ? "active" : "archived";
+
+    if(status == 'archived') {
+      var existInMenus = MenuItems.find({
+        jobItems: {
+          $elemMatch: {
+            _id: id
+          }
+        }
+      });
+
+      if (existInMenus.count()) {
+        var error = [];
+        error.push("Can't archive item! Remove it form next menus:\n");
+
+        existInMenus.forEach(function (item) {
+          error.push('- ' + item.name + '\n');
+        });
+
+        logger.error(404, error.join(''));
+        throw new Meteor.Error(404, error.join(''));
+      }
+    }
+
     JobItems.update({_id: id}, {$set: {status: status}});
     return status;
   }

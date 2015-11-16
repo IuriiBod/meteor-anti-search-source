@@ -31,7 +31,7 @@ Template.weekPicker.onRendered(function () {
       week: weekNumber
     }).then(function (savedWeekDate) {
       if (savedWeekDate) {
-        this.$(".datepicker").datepicker('setDate', HospoHero.dateUtils.getDateByWeekDate(savedWeekDate))
+        this.$(".datepicker").datepicker('setDate', HospoHero.dateUtils.getDateByWeekDate(savedWeekDate));
       }
     });
   }).bind(this);
@@ -55,6 +55,6 @@ Template.weekPicker.events({
 
   'show .datepicker': function (event, tmpl) {
     //mark all selected week before showing
-    $(".day.active").siblings(".day").addClass("week");
+    $('.day.active').siblings('.day').addClass('week');
   }
 });
