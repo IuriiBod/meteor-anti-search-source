@@ -81,16 +81,16 @@ Router.route('inactivityTimeoutSettings', {
   }
 });
 
-Router.route('cronConfigSettings', {
-  path: '/settings/cron-config',
+Router.route('shitUpdateNotificationConfig', {
+  path: '/settings/shift-update-time',
   template: "adminMainView",
   data: function () {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
     return {
-      component: 'cronConfig',
-      title: 'Cron Config'
+      component: 'shitUpdateNotificationConfig',
+      title: 'Shift Updates Notification Time'
     }
   }
 });
