@@ -141,11 +141,11 @@ Meteor.methods({
         logger.error(404, error.join(''));
         throw new Meteor.Error(404, error.join(''));
       }
-      //var existInStocktakes = Stocktakes.findOne({"stockId": id});
-      //if (existInStocktakes) {
-      //  logger.error("Item found in stock counting, can't archive");
-      //  throw new Meteor.Error("Item found in stock counting, can't archive");
-      //}
+      var existInStocktakes = Stocktakes.findOne({"stockId": id});
+      if (existInStocktakes) {
+        logger.error("Item found in stock counting, can't archive");
+        throw new Meteor.Error("Item found in stock counting, can't archive");
+      }
     }
 
     if (status == "archive") {
