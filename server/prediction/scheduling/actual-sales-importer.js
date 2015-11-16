@@ -43,8 +43,7 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
 
   var lastDateToImport = this._getLastImportedSaleDate(menuItem._id);
 
-  var miTemp = MenuItems.findOne({_id: menuItem._id});
-  logger.info('Started actual sales import', {menuItemId: menuItem._id, name: miTemp.name});
+  logger.info('Started actual sales import', {menuItemId: menuItem._id, name: menuItem.name});
 
   //this function is used like a callback in revel connector
   //it should return false if loading is finished
@@ -75,7 +74,7 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
       'relations.locationId': self._location._id
     });
 
-    //logger.info('POS product', {_id: posMenuItem._id, name: posName});
+    logger.info('POS product', {_id: posMenuItem._id, name: posName});
 
     self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
   });
@@ -88,7 +87,7 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
  * @param menuItemsToImportQuery menu items' mongodb query
  */
 ActualSalesImporter.prototype.importByQuery = function (menuItemsToImportQuery) {
-  var menuItemsToSync = MenuItems.find(menuItemsToImportQuery, {fields: {_id: 1, posNames: 1, relations: 1}});
+  var menuItemsToSync = MenuItems.find(menuItemsToImportQuery, {fields: {_id: 1, posNames: 1, relations: 1, name: 1}});
   var self = this;
 
   menuItemsToSync.forEach(function (menuItem) {
