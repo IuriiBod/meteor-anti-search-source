@@ -22,8 +22,9 @@ GooglePredictionApi.prototype._getTrainingFileName = function () {
 /**
  * Updates prediction model for current location
  *
+ * @param isForcedUpdate forces model update even if it don't need update
  */
-GooglePredictionApi.prototype.updatePredictionModel = function () {
+GooglePredictionApi.prototype.updatePredictionModel = function (isForcedUpdate) {
   var location = Locations.findOne({_id: this._locationId});
 
   logger.info('Updating prediction model', {locationId: this._locationId});
@@ -34,7 +35,7 @@ GooglePredictionApi.prototype.updatePredictionModel = function () {
   var needToUpdateModel = !lastForecastModelUploadDate
     || moment(lastForecastModelUploadDate) < moment().subtract(182, 'day');
 
-  if (needToUpdateModel) {
+  if (needToUpdateModel || isForcedUpdate) {
     var trainingFileName = this._getTrainingFileName();
     var googleCloud = new GoogleCloud(this._locationId, trainingFileName);
 
