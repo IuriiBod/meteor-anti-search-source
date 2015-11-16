@@ -34,7 +34,7 @@ component.state.permission = function () {
     return true;
   }
 
-  return HospoHero[permission.type](permission.action) || false;
+  return HospoHero.canUser(permission, Meteor.userId());
 };
 
 component.state.activeOnRoutes = function () {
