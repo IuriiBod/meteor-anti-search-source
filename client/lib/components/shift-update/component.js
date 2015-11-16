@@ -1,4 +1,4 @@
-var component = FlowComponents.define('cronConfig', function(props) {});
+var component = FlowComponents.define('shitUpdateNotificationConfig', function(props) {});
 
 component.state.shiftUpdateHour = function () {
   var location = Locations.findOne({

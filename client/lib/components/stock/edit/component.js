@@ -1,69 +1,66 @@
-var component = FlowComponents.define('editIngredientItem', function(props) {});
+var component = FlowComponents.define('editIngredientItem', function (props) {
+});
 
-component.state.id = function() {
+component.state.id = function () {
   var id = Session.get("thisIngredientId");
   var ing = Ingredients.findOne(id);
-  if(ing) {
+  if (ing) {
     this.set("description", ing.description)
   }
   return id;
 };
 
-component.state.relatedJobs = function() {
+component.state.relatedJobs = function () {
   var id = Session.get("thisIngredientId");
-  return JobItems.find({ "ingredients._id": id }).fetch();
+  return JobItems.find({"ingredients._id": id}).fetch();
 };
 
-component.state.convertTime = function(time) {
+component.state.convertTime = function (time) {
   return time / 60;
 };
 
-component.action.submit = function(info) {
-   Meteor.call("editIngredient", this.get('id'), info, HospoHero.handleMethodResult(function() {
+component.action.submit = function (info) {
+  Meteor.call("editIngredient", this.get('id'), info, HospoHero.handleMethodResult(function () {
     IngredientsListSearch.cleanHistory();
     $("#editIngredientModal").modal("hide");
   }));
 };
 
-component.state.suppliers = function() {
+component.state.suppliers = function () {
   var id = Session.get("thisIngredientId");
   var ing = Ingredients.findOne(id);
-  if(ing) {
+  if (ing) {
     return Suppliers.find({"_id": {$nin: [ing.suppliers]}}, {sort: {"name": 1}});
   }
 };
 
-component.state.isArchive = function() {
+component.state.isArchive = function () {
   var id = Session.get("thisIngredientId");
-  if(id != undefined) {
+  if (id != undefined) {
     return !!Ingredients.findOne({_id: id, status: 'archived'});
   }
 };
 
 // TODO: Check this method
-component.action.archiveIng = function(id, state) {
-  var self = this;
-  Meteor.call("archiveIngredient", id, state, HospoHero.handleMethodResult(function() {
+component.action.archiveIng = function (id, state) {
+  Meteor.call("archiveIngredient", id, state, HospoHero.handleMethodResult(function () {
     $("#editIngredientModal").modal("hide");
 
-    var stock = Ingredients.findOne(id);
-    if(stock) {
-      var text = "Stock item " + stock.description;
-      if(stock.status == "active") {
-        text += " restored";
-      } else if(stock.status == "archived") {
-        text += " archived";
-      }
-      HospoHero.info(text);
+    var text = "Stock item";
+    if (state == "restore") {
+      text += " restored";
+    } else if (state == "archive") {
+      text += " archived";
     } else {
-      HospoHero.info("Stock item " + self.get("description") + " removed");
+      text += " removed";
     }
+    HospoHero.info(text);
 
     IngredientsListSearch.cleanHistory();
     var selector = {
       limit: 30
     };
-    if(Router.current().params.type == "archive") {
+    if (Router.current().params.type == "archive") {
       selector.status = "archived";
     } else {
       selector.status = {$ne: "archived"};

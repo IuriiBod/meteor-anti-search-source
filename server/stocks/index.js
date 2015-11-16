@@ -121,43 +121,42 @@ Meteor.methods({
       throw new Meteor.Error(404, "Item not found");
     }
 
-    if (status == 'delete') {
-      var existInPreps = JobItems.findOne(
-        {"type": "Prep", "ingredients": {$elemMatch: {"_id": id}}},
-        {fields: {"ingredients": {$elemMatch: {"_id": id}}}}
+    if (status == 'archive') {
+      var prepId = JobTypes.findOne({name: 'Prep'})._id;
+      var existInPreps = JobItems.find(
+        {type: prepId, ingredients: {$elemMatch: {_id: id}}, status: 'active'},
+        {fields: {ingredients: {$elemMatch: {_id: id}}, name: 1}}
       );
-      if (existInPreps) {
-        if (existInPreps.ingredients.length > 0) {
-          logger.error("Item found in Prep jobs, can't delete. Archiving ingredient");
-        }
-      }
-      var existInMenuItems = MenuItems.findOne(
-        {"ingredients": {$elemMatch: {"_id": id}}},
-        {fields: {"ingredients": {$elemMatch: {"_id": id}}}}
+      var existInMenuItems = MenuItems.find(
+        {ingredients: {$elemMatch: {"_id": id}}, status: 'active'},
+        {fields: {ingredients: {$elemMatch: {"_id": id}}, name: 1}}
       );
-      if (existInMenuItems) {
-        if (existInMenuItems.ingredients.length > 0) {
-          logger.error("Item found in Menu Items, can't delete. Archiving ingredient", id);
-        }
-      }
 
+      if (existInPreps.count() || existInMenuItems.count()) {
+        var error = [];
+        error.push("Can't archive item! Remove it form next items first:\n");
+        error.push(existingItemsFormat(existInPreps, 'Jobs'));
+        error.push(existingItemsFormat(existInMenuItems, 'Menus'));
+
+        logger.error(404, error.join(''));
+        throw new Meteor.Error(404, error.join(''));
+      }
       var existInStocktakes = Stocktakes.findOne({"stockId": id});
       if (existInStocktakes) {
-        logger.error("Item found in stock counting, can't delete. Archiving ingredient");
+        logger.error("Item found in stock counting, can't archive");
+        throw new Meteor.Error("Item found in stock counting, can't archive");
       }
+    }
 
-      if (existInPreps || existInMenuItems || existInStocktakes) {
-        throw  new Meteor.Error(404, "Stock item cannot be deleted, archived");
-      } else {
-        Ingredients.remove(id);
-        logger.info("Ingredient deleted", id);
-      }
-    } else if (status == "archive") {
+    if (status == "archive") {
       Ingredients.update({"_id": id}, {$set: {"status": "archived"}});
       logger.error("Stock item archived ", id);
     } else if (status == "restore") {
       Ingredients.update({"_id": id}, {$set: {"status": "active"}});
       logger.error("Stock item restored ", id);
+    } else {
+      Ingredients.remove(id);
+      logger.info("Ingredient deleted", id);
     }
   },
 
@@ -201,4 +200,15 @@ var duplicateSupplier = function (supplierId, areaId) {
     }
   }
   return supplierId;
+};
+
+var existingItemsFormat = function(items, title) {
+  var error = [];
+  if(items.count()) {
+    error.push('\n' + title + ': \n');
+    items.forEach(function (item) {
+      error.push('- ' + item.name + '\n');
+    });
+  }
+  return error.join('');
 };

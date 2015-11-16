@@ -41,7 +41,7 @@ CustomForm.prototype._getInputSelect = function(name, params) {
   if(params.options && params.options.length) {
     _.map(params.options, function(option, key) {
       field.push('<option value="' + option.value + '"');
-      if(params.value && (key === params.value || option.value === params.value)) {
+      if(params.value !== undefined && (key === params.value || option.value === params.value)) {
         field.push(' selected="selected"');
       }
       field.push('>' + option.text + '</option>');
