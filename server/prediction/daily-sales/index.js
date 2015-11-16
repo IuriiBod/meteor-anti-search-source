@@ -40,7 +40,11 @@ Meteor.methods({
       salesImporter.importByQuery(unsyncedItemsQuery);
 
       //mark all menu items as sales synchronized
-      MenuItems.update(unsyncedItemsQuery, {$set: {isNotSyncedWithPos: false}})
+      MenuItems.update(unsyncedItemsQuery, {$set: {isNotSyncedWithPos: false}});
+
+      //force to update prediction model
+      var predictionApi = new GooglePredictionApi(location._id);
+      predictionApi.updatePredictionModel(true);
     } else {
       logger.info('Nothing to sync');
     }
