@@ -124,12 +124,12 @@ Meteor.methods({
     if (status == 'archive') {
       var prepId = JobTypes.findOne({name: 'Prep'})._id;
       var existInPreps = JobItems.find(
-        { type: prepId, ingredients: { $elemMatch: { _id: id } } },
-        { fields: { ingredients: { $elemMatch: { _id: id } }, name: 1 } }
+        {type: prepId, ingredients: {$elemMatch: {_id: id}}, status: 'active'},
+        {fields: {ingredients: {$elemMatch: {_id: id}}, name: 1}}
       );
       var existInMenuItems = MenuItems.find(
-        { ingredients: { $elemMatch: { "_id": id } } },
-        { fields: { ingredients: { $elemMatch: { "_id": id } }, name: 1 } }
+        {ingredients: {$elemMatch: {"_id": id}}, status: 'active'},
+        {fields: {ingredients: {$elemMatch: {"_id": id}}, name: 1}}
       );
 
       if (existInPreps.count() || existInMenuItems.count()) {
@@ -141,12 +141,14 @@ Meteor.methods({
         logger.error(404, error.join(''));
         throw new Meteor.Error(404, error.join(''));
       }
-      var existInStocktakes = Stocktakes.findOne({"stockId": id});
-      if (existInStocktakes) {
-        logger.error("Item found in stock counting, can't archive");
-        throw new Meteor.Error("Item found in stock counting, can't archive");
-      }
-    } else if (status == "archive") {
+      //var existInStocktakes = Stocktakes.findOne({"stockId": id});
+      //if (existInStocktakes) {
+      //  logger.error("Item found in stock counting, can't archive");
+      //  throw new Meteor.Error("Item found in stock counting, can't archive");
+      //}
+    }
+
+    if (status == "archive") {
       Ingredients.update({"_id": id}, {$set: {"status": "archived"}});
       logger.error("Stock item archived ", id);
     } else if (status == "restore") {
