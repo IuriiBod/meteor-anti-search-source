@@ -90,7 +90,6 @@ component.state.receiptExists = function(supplier) {
 component.prototype.onListRendered = function() {
   $(".expectedDeliveryDate")
   .datepicker({
-    'todayBtn': true,
     'todayHighlight': true,
     'weekStart': 1
   })
