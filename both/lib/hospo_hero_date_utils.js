@@ -1,4 +1,18 @@
 Namespace('HospoHero.dateUtils', {
+  /**
+   * Convert date to the necessary timezone and format
+   * @param {String | Object} date - date string or Date object
+   * @param {String} locationId - ID of location (get timezone from this location)
+   * @param {String} dateFormat - moment format of output date
+   * @returns {String}
+   */
+  formatDateWithTimezone: function(date, locationId, dateFormat) {
+    date = moment(date);
+    var location = Locations.findOne({_id: locationId});
+    var timezoneOffset = location.timezone * 60;
+    return date.utcOffset(timezoneOffset).format(dateFormat);
+  },
+
   formatDate: function (date, format) {
     return moment(date).format(format);
   },
@@ -50,9 +64,9 @@ Namespace('HospoHero.dateUtils', {
     var dayFormat = 'ddd, Do MMMM';
     var timeFormat = 'h:mm A';
 
-    var day = HospoHero.dateUtils.formatDate(shift.shiftDate, dayFormat);
-    var startTime = HospoHero.dateUtils.formatDate(shift.startTime, timeFormat);
-    var endTime = HospoHero.dateUtils.formatDate(shift.endTime, timeFormat);
+    var day = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, shift.relations.locationId, dayFormat);
+    var startTime = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, shift.relations.locationId, timeFormat);
+    var endTime = HospoHero.dateUtils.formatDateWithTimezone(shift.endTime, shift.relations.locationId, timeFormat);
 
     return day + ' ' + startTime + ' - ' + endTime;
   },
