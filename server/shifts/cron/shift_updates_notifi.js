@@ -15,7 +15,7 @@ SyncedCron.add({
 
 var sendShiftUpdates = function(locationId) {
   var users = ShiftsUpdates.find({
-    //locationId: locationId
+    locationId: locationId
   }).fetch();
 
   var shiftsGroupedByUser = _.groupBy(users, function(user) {
@@ -119,5 +119,3 @@ ShiftUpdatesToEmail.prototype.sendEmail = function() {
     return false;
   }
 };
-
-sendShiftUpdates();
