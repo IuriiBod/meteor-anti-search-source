@@ -4,8 +4,9 @@ var component = FlowComponents.define('editLocationForm', function (props) {
   this.onSubmit = props.onSubmit;
   this.onCancel = props.onCancel;
 
-  this.defaultOpeningTime = moment('8:00').toDate();
-  this.defaultClosingTime = moment('17:00').toDate();
+  var format = 'HH:mm';
+  this.defaultOpeningTime = moment('08:00', format).toDate();
+  this.defaultClosingTime = moment('17:00', format).toDate();
 });
 
 component.state.timeZone = function () {

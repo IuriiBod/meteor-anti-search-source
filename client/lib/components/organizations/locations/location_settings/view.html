@@ -7,18 +7,24 @@
   </div>
 
   <div class="flyout-content">
+    <div class="container-fluid">
       <h1>{{state$location.name}}</h1>
 
-    <button class="btn btn-primary col-xs-12 create-area-flyout">
-      Create Area
-    </button>
+      <div class="row">
+        <button class="btn btn-primary col-xs-12 create-area-flyout">
+          Create Area
+        </button>
+      </div>
 
-    {{> render component="editLocationForm" locationDoc=state$location submitCaption="Save" onSubmit=state$onLocationSubmit onCancel=state$onCancel}}
+      {{> render component="editLocationForm" locationDoc=state$location submitCaption="Save" onSubmit=state$onLocationSubmit onCancel=state$onCancel}}
 
-    {{#if isOrganizationOwner}}
-      <button class="btn btn-danger col-xs-12 delete-location">
-        Delete Location
-      </button>
-    {{/if}}
+      {{#if isOrganizationOwner}}
+        <div class="row">
+          <button class="btn btn-danger  delete-location">
+            Delete Location
+          </button>
+        </div>
+      {{/if}}
+    </div>
   </div>
 </template>

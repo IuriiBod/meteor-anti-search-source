@@ -1,5 +1,5 @@
 <template name="editLocationForm">
-  <form class="form-horizontal">
+  <form class="form-horizontal edit-location-form-component">
     {{#with state$locationDoc}}
       <div class="form-group">
         <label class="col-sm-2 control-label">Location Name</label>
@@ -70,10 +70,11 @@
         </div>
       </div>
     {{/with}}
-
-    <div class="btn-group col-xs-12">
-      <button type="submit" class="btn btn-primary col-xs-6">{{state$submitCaption}}</button>
-      <button type="button" class="btn btn-default col-xs-6 close-flyout">Cancel</button>
+    <div class="form-group">
+      <div class="btn-group col-xs-12">
+        <button type="submit" class="btn btn-primary col-xs-6">{{state$submitCaption}}</button>
+        <button type="button" class="btn btn-default col-xs-6 close-flyout">Cancel</button>
+      </div>
     </div>
   </form>
 </template>
