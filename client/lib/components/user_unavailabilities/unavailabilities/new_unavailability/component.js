@@ -1,9 +1,15 @@
-var component = FlowComponents.define('addNewUnavailability', function (props) {
+var component = FlowComponents.define('addNewUnavailability', function () {
+    this.set('timePickerVisibility', '');
     this.set('isAllDay', false);
 });
 
-component.action.isAllDayChange = function (newValue) {
-    this.set('isAllDay', newValue);
+component.action.isAllDayChange = function (value) {
+    this.set('isAllDay', value);
+    if (value) {
+        this.set('timePickerVisibility', 'hide');
+    } else {
+        this.set('timePickerVisibility', '');
+    }
 };
 
 component.action.addUnavailability = function (newUnavailability) {
@@ -15,9 +21,9 @@ component.action.addUnavailability = function (newUnavailability) {
     };
 
     if (this.get('isAllDay')) {
-        unavailability.endDate = new Date(newUnavailability.startDate);
+        unavailability.endDate = new Date(newUnavailability.startTime);
     } else {
-        unavailability.endDate = new Date(newUnavailability.endDate);
+        unavailability.endDate = new Date(newUnavailability.endTime);
     };
 
     Meteor.call('addUnavailability', unavailability);

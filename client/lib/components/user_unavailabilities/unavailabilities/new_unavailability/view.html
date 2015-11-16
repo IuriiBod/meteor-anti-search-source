@@ -27,20 +27,17 @@
         </div>
       </div>
 
-      <!-- Have error when it's absent -->
-      {{#unless state$isAllDay}}
-        <!-- Time -->
-        <div class="form-group col-md-12">
-          <div id="startTimePicker" class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-            <input class="set-due-date form-control" type="text"/>
-          </div>
-          <div id="endTimePicker" class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-            <input class="set-due-date form-control" type="text"/>
-          </div>
+      <!-- Time -->
+      <div class="form-group col-md-12 {{state$timePickerVisibility}}">
+        <div id="startTimePicker" class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+          <input class="set-due-date form-control" type="text"/>
         </div>
-      {{/unless}}
+        <div id="endTimePicker" class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+          <input class="set-due-date form-control" type="text"/>
+        </div>
+      </div>
 
       <!-- Repeats -->
       <div class="form-group col-md-12">

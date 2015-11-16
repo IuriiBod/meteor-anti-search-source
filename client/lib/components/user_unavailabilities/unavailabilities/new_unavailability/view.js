@@ -9,31 +9,34 @@ Template.addNewUnavailability.onRendered(function () {
         defaultDate: now
     });
     self.$('#startTimePicker').datetimepicker({
-        format: 'hh:mm',
+        format: 'HH:mm',
         stepping: 5,
-        defaultDate: now
+        minDate: now
     });
     self.$('#endTimePicker').datetimepicker({
-        format: 'hh:mm',
+        format: 'HH:mm',
         stepping: 5,
-        defaultDate: now.add(1, 'hours')
+        minDate: now.add(10, 'minutes')
     });
+    var startTimePicker = self.$('#startTimePicker').data("DateTimePicker");
+    var endTimePicker = self.$('#endTimePicker').data("DateTimePicker");
+
+    startTimePicker.date(now);
+    endTimePicker.date(now.add(1, 'hours'));
 
     // Events for dateTimePickers
     self.$("#datePicker").on("dp.change", function (e) {
         var newDate = e.date || moment();
 
-        var startTimePicker = self.$('#startTimePicker').data("DateTimePicker");
-        setDateForTimePickers(startTimePicker, newDate);
-
-        var endTimePicker = self.$('#endTimePicker').data("DateTimePicker");
-        setDateForTimePickers(endTimePicker, newDate);
+        setDateForTimePicker(startTimePicker, newDate);
+        setDateForTimePicker(endTimePicker, newDate);
     });
     self.$("#startTimePicker").on("dp.change", function (e) {
-        self.$('#endTimePicker').data("DateTimePicker").minDate(e.date);
-    });
-    self.$("#endTimePicker").on("dp.change", function (e) {
-        self.$('#startTimePicker').data("DateTimePicker").maxDate(e.date);
+        endTimePicker.minDate(e.date.add(10, 'minutes'));
+
+        if (endTimePicker.minDate() > endTimePicker.date()) {
+            endTimePicker.date(endTimePicker.minDate());
+        }
     });
 });
 
@@ -53,7 +56,7 @@ Template.addNewUnavailability.events({
     }
 });
 
-var setDateForTimePickers = function (timePicker, newDate) {
+var setDateForTimePicker = function (timePicker, newDate) {
     var time = timePicker.date() || moment();
     time.date(newDate.date()).month(newDate.month()).year(newDate.year());
     timePicker.date(time);
