@@ -65,7 +65,14 @@ var ShiftPropertyChangeLogger = {
       var oldShift = Shifts.findOne({_id: newShift._id});
 
       var isPropertyChanged = function (propertyName) {
-        return oldShift[propertyName] !== newShift[propertyName];
+        var oldPropertyValue = oldShift[propertyName];
+        var newPropertyValue = newShift[propertyName];
+
+        if(_.isDate(oldPropertyValue)) {
+          oldPropertyValue = oldPropertyValue.valueOf();
+          newPropertyValue = oldPropertyValue.valueOf();
+        }
+        return  oldPropertyValue !== newPropertyValue;
       };
 
       var self = this;
