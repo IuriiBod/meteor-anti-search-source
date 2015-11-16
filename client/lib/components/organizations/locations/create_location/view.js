@@ -7,11 +7,8 @@ Template.createLocation.helpers({
   }
 });
 
-Template.createLocation.events({
-  'change input[type="radio"]': function () {
-    FlowComponents.callAction('changeEnable');
-  },
 
+Template.createLocation.events({
   'submit form': function (event, tmpl) {
     event.preventDefault();
 
@@ -19,11 +16,7 @@ Template.createLocation.events({
       'name',
       'country',
       'city',
-      'address',
-      {
-        name: 'timezone',
-        parse: 'int'
-      }
+      'address'
     ];
     var doc = HospoHero.misc.getValuesFromEvent(event, fields, true);
 
@@ -70,7 +63,7 @@ Template.createLocation.events({
       }
     ], true);
     doc.closingTime = moment(doc.closingTime).toDate();
-    doc.organizationId = event.target.dataset.id;
+    doc.organizationId = HospoHero.getOrganizationId();
 
     FlowComponents.callAction('submit', doc);
 

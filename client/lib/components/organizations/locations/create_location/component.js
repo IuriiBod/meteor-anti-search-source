@@ -1,12 +1,6 @@
-var component = FlowComponents.define("createLocation", function(props) {
-  this.set('organizationId', props.organizationId);
-  this.set('enabled', true);
+var component = FlowComponents.define("createLocation", function (props) {
 });
 
-component.action.changeEnable = function() {
-  this.set('enabled', !this.get('enabled'));
-};
-
-component.action.submit = function(doc) {
+component.action.submit = function (doc) {
   Meteor.call("createLocation", doc, HospoHero.handleMethodResult());
 };
