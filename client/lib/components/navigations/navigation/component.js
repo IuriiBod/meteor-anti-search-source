@@ -10,10 +10,7 @@ var menuEntries = [
     title: 'Forecast',
     route: 'salesPrediction',
     icon: 'fa-bar-chart',
-    permission: {
-      type: 'canUser',
-      action: 'view forecast'
-    },
+    permission: 'view forecast',
     params: function () {
       return {
         year: moment().year(),
@@ -25,10 +22,7 @@ var menuEntries = [
   {
     title: 'Roster',
     icon: 'fa-calendar-o',
-    permission: {
-      type: 'canUser',
-      action: 'view roster'
-    },
+    permission: 'view roster',
     activeOnRoutes: ['weeklyRoster', 'dailyRoster', 'templateWeeklyRoster'],
     subMenuEntries: [
       {
@@ -44,10 +38,7 @@ var menuEntries = [
       {
         title: 'Template',
         route: 'templateWeeklyRoster',
-        permission: {
-          type: 'canUser',
-          action: 'edit roster'
-        }
+        permission: 'edit roster'
       }
     ]
   },
@@ -55,10 +46,7 @@ var menuEntries = [
     title: 'Menu',
     route: 'menuItemsMaster',
     icon: 'fa-cutlery',
-    permission: {
-      type: 'canUser',
-      action: 'view menus'
-    },
+    permission: 'view menus',
     activeOnRoutes: ['menuItemsMaster', 'submitMenuItem', 'menuItemsMasterType', 'menuItemDetail'],
     params: function () {
       return {
@@ -71,19 +59,13 @@ var menuEntries = [
     title: 'Jobs',
     route: 'jobItemsMaster',
     icon: 'fa-spoon',
-    permission: {
-      type: 'canUser',
-      action: 'view jobs'
-    },
+    permission: 'view jobs',
     activeOnRoutes: ['jobItemsMaster', 'jobItemsMasterType', 'submitJobItem', 'jobItemDetailed', 'jobItemEdit']
   },
   {
     title: 'Stock',
     icon: 'fa-list',
-    permission: {
-      type: 'canUser',
-      action: 'view stocks'
-    },
+    permission: 'view stocks',
     activeOnRoutes: ['ingredientsList', 'stocktakeList', 'orderReceiptsList', 'suppliersList'],
     subMenuEntries: [
       {
@@ -92,7 +74,8 @@ var menuEntries = [
       },
       {
         title: 'Stocktake',
-        route: 'stocktakeList'
+        route: 'stocktakeList',
+        permission: 'edit stocks'
       },
       {
         title: 'Receive Orders',
@@ -107,10 +90,7 @@ var menuEntries = [
   {
     title: 'Reports',
     icon: 'fa-line-chart',
-    permission: {
-      type: 'canUser',
-      action: 'view reports'
-    },
+    permission: 'view reports',
     activeOnRoutes: ['teamHours', 'currentStocks'],
     subMenuEntries: [
       {

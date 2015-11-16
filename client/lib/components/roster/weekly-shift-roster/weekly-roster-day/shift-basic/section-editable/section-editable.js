@@ -1,5 +1,5 @@
 Template.shiftBasicSectionEditable.onRendered(function () {
-  this.$('.section').editable(createSectionToAssignEditableConfig(this._id));
+  this.$('.section').editable(createSectionToAssignEditableConfig(this.data._id));
 });
 
 Template.shiftBasicSectionEditable.helpers({

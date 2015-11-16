@@ -17,7 +17,11 @@ var ShiftPropertyChangeLogger = {
   },
 
   _formatProperty: function (shift, property) {
-    return this.propertiesFormatters[property](shift[property]);
+    if(_.isDate(shift[property])) {
+      return this.propertiesFormatters[property](shift[property], shift.relations.locationId);
+    } else {
+      return this.propertiesFormatters[property](shift[property]);
+    }
   },
 
   _notificationTitle: function (shift) {
@@ -31,18 +35,17 @@ var ShiftPropertyChangeLogger = {
   _sendNotification: function (message, shift, fromUserId, toUserId) {
     var text = this._notificationTitle(shift) + ': ' + message;
 
-    // todo: Uncomment if we need shift updates sending
-    //var updateDocument = {
-    //  to: toUserId,
-    //  userId: fromUserId,
-    //  shiftId: shift._id,
-    //  text: text,
-    //  locationId: shift.relations.locationId,
-    //  type: "update"
-    //};
-    //
-    //logger.info("Shift update insert");
-    //ShiftsUpdates.insert(updateDocument);
+    var updateDocument = {
+      to: toUserId,
+      userId: fromUserId,
+      shiftId: shift._id,
+      text: text,
+      locationId: shift.relations.locationId,
+      type: "update"
+    };
+
+    logger.info("Shift update insert");
+    ShiftsUpdates.insert(updateDocument);
 
     HospoHero.sendNotification({
       type: 'shift',
