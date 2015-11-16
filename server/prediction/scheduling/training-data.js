@@ -5,7 +5,7 @@ predictionModelRefreshJob = function () {
     var predictionEnabled = HospoHero.prediction.isAvailableForLocation(location);
 
     if (predictionEnabled) {
-      logger.info('Started import actual sales data', {locationId: location._id});
+      logger.info('Started import actual sales data', {locationId: location._id, name: location.name});
 
       var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.locationId': location._id}, true);
 

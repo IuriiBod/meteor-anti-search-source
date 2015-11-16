@@ -28,12 +28,12 @@ var ShiftPropertyChangeLogger = {
     return this.trackedProperties[propertyName] + ' has been updated to ' + this._formatProperty(newShift, propertyName);
   },
 
-  _sendNotification: function (message, shift, fromUserId) {
+  _sendNotification: function (message, shift, fromUserId, toUserId) {
     var text = this._notificationTitle(shift) + ': ' + message;
 
     // todo: Uncomment if we need shift updates sending
     //var updateDocument = {
-    //  to: shift.assignedTo,
+    //  to: toUserId,
     //  userId: fromUserId,
     //  shiftId: shift._id,
     //  text: text,
@@ -48,7 +48,7 @@ var ShiftPropertyChangeLogger = {
       type: 'shift',
       title: text,
       actionType: 'update',
-      to: shift.assignedTo,
+      to: toUserId,
       ref: shift._id
     });
   },
@@ -56,7 +56,7 @@ var ShiftPropertyChangeLogger = {
   _trackUserRemovedFromShift: function (oldShift, newShift, userId) {
     if (oldShift.assignedTo && oldShift.assignedTo !== newShift.assignedTo) {
       var message = 'You have been removed from this assigned shift';
-      this._sendNotification(message, oldShift, userId);
+      this._sendNotification(message, oldShift, userId, oldShift.assignedTo);
     }
   },
 
@@ -65,7 +65,14 @@ var ShiftPropertyChangeLogger = {
       var oldShift = Shifts.findOne({_id: newShift._id});
 
       var isPropertyChanged = function (propertyName) {
-        return oldShift[propertyName] !== newShift[propertyName];
+        var oldPropertyValue = oldShift[propertyName];
+        var newPropertyValue = newShift[propertyName];
+
+        if (_.isDate(oldPropertyValue)) {
+          oldPropertyValue = oldPropertyValue.valueOf();
+          newPropertyValue = newPropertyValue.valueOf();
+        }
+        return oldPropertyValue !== newPropertyValue;
       };
 
       var self = this;
@@ -76,7 +83,7 @@ var ShiftPropertyChangeLogger = {
       });
 
       var fullMessage = shiftChangesMessages.join(', ');
-      this._sendNotification(fullMessage, oldShift, userId);
+      this._sendNotification(fullMessage, oldShift, userId, newShift.assignedTo);
 
       this._trackUserRemovedFromShift(oldShift, newShift, userId);
     }

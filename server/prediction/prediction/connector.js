@@ -122,7 +122,7 @@ if (HospoHero.isDevelopmentMode()) {
     },
 
     _getTrainingFileName: function () {
-      return "sales-data"
+      return "sales-data.csv"
     }
   });
 }
