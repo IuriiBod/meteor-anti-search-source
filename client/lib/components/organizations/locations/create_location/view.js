@@ -1,6 +1,9 @@
 Template.createLocation.helpers({
   countries: function () {
     return HospoHero.misc.getCountries();
+  },
+  usersTimeZone: function () {
+    return TimezonePicker.detectedZone();
   }
 });
 
@@ -9,8 +12,8 @@ Template.createLocation.events({
     FlowComponents.callAction('changeEnable');
   },
 
-  'submit form': function (e, tmpl) {
-    e.preventDefault();
+  'submit form': function (event, tmpl) {
+    event.preventDefault();
 
     var fields = [
       'name',
@@ -19,9 +22,11 @@ Template.createLocation.events({
       'address',
       'timezone'
     ];
-    var doc = HospoHero.misc.getValuesFromEvent(e, fields, true);
+    var doc = HospoHero.misc.getValuesFromEvent(event, fields, true);
 
-    var pos = HospoHero.misc.getValuesFromEvent(e, [
+    doc.timezone = tmpl.$('.time-zone-select').val();
+
+    var pos = HospoHero.misc.getValuesFromEvent(event, [
       {
         name: 'posKey',
         newName: 'key'
@@ -35,11 +40,11 @@ Template.createLocation.events({
         newName: 'host'
       }
     ], true);
-    if(pos.key || pos.secret || pos.host) {
+    if (pos.key || pos.secret || pos.host) {
       doc.pos = pos;
     }
 
-    doc.openingTime = HospoHero.misc.getValuesFromEvent(e, [
+    doc.openingTime = HospoHero.misc.getValuesFromEvent(event, [
       {
         name: 'openingHour',
         newName: 'hours'
@@ -51,7 +56,7 @@ Template.createLocation.events({
     ], true);
     doc.openingTime = moment(doc.openingTime).toDate();
 
-    doc.closingTime = HospoHero.misc.getValuesFromEvent(e, [
+    doc.closingTime = HospoHero.misc.getValuesFromEvent(event, [
       {
         name: 'closingHour',
         newName: 'hours'
@@ -62,11 +67,11 @@ Template.createLocation.events({
       }
     ], true);
     doc.closingTime = moment(doc.closingTime).toDate();
-    doc.organizationId = e.target.dataset.id;
+    doc.organizationId = event.target.dataset.id;
 
     FlowComponents.callAction('submit', doc);
 
-    var flyout = FlyoutManager.getInstanceByElement(e.target);
+    var flyout = FlyoutManager.getInstanceByElement(event.target);
     flyout.close();
   }
 });
