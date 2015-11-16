@@ -55,7 +55,8 @@ Meteor.methods({
         assignedTo: 1,
         startTime: 1,
         shiftDate: 1,
-        endTime: 1
+        endTime: 1,
+        relations: 1
       }
     });
 

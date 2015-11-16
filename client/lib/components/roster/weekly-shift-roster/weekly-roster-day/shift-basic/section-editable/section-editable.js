@@ -1,5 +1,5 @@
 Template.shiftBasicSectionEditable.onRendered(function () {
-  this.$('.section').editable(createSectionToAssignEditableConfig(this));
+  this.$('.section').editable(createSectionToAssignEditableConfig(this._id));
 });
 
 Template.shiftBasicSectionEditable.helpers({
@@ -28,9 +28,9 @@ var sectionSourceAssignMixin = function (editableConfig) {
 };
 
 
-var createSectionToAssignEditableConfig = function (templateInstance) {
+var createSectionToAssignEditableConfig = function (shiftId) {
   var onSuccess = function (response, newSection) {
-    var shift = templateInstance.data;
+    var shift = Shifts.findOne({_id: shiftId});
     newSection = newSection === "Open" ? null : newSection;
 
     shift.section = newSection;

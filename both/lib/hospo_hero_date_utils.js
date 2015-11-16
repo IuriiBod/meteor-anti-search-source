@@ -64,10 +64,10 @@ Namespace('HospoHero.dateUtils', {
     var dayFormat = 'ddd, Do MMMM';
     var timeFormat = 'h:mm A';
 
+    var day = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, shift.relations.locationId, dayFormat);
     var startTime = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, shift.relations.locationId, timeFormat);
     var endTime = HospoHero.dateUtils.formatDateWithTimezone(shift.endTime, shift.relations.locationId, timeFormat);
 
-    var day = HospoHero.dateUtils.formatDate(startTime, dayFormat);
     return day + ' ' + startTime + ' - ' + endTime;
   },
 
