@@ -43,8 +43,7 @@ Invitations = new Mongo.Collection("invitations");
 WeatherForecast = new Mongo.Collection("weatherForecast");
 DailySales = new Mongo.Collection("dailySales");
 
-// todo: Uncomment if we need shift updates sending
-//ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
+ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
 
 
 //POS
