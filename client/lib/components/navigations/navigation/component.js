@@ -74,7 +74,8 @@ var menuEntries = [
       },
       {
         title: 'Stocktake',
-        route: 'stocktakeList'
+        route: 'stocktakeList',
+        permission: 'edit stocks'
       },
       {
         title: 'Receive Orders',
