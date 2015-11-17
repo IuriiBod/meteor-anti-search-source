@@ -14,15 +14,10 @@ Meteor.methods({
     createNewLeaveRequest: function (newLeaveRequest) {
         check(newLeaveRequest, HospoHero.checkers.LeaveRequestChecker);
 
-        var isNotifyManagerExist = !!Meteor.users.find({_id: newLeaveRequest.notifyManagerId});
-        if (isNotifyManagerExist) {
-            newLeaveRequest.userId = this.userId;
-            newLeaveRequest.approved = false;
-            newLeaveRequest.declined = false;
-            LeaveRequests.insert(newLeaveRequest);
-        } else {
-            throw new Meteor.Error('Error', 'Chosen manager not exist in DB!');
-        };
+        newLeaveRequest.userId = this.userId;
+        newLeaveRequest.approved = false;
+        newLeaveRequest.declined = false;
+        LeaveRequests.insert(newLeaveRequest);
     },
     removeLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
@@ -32,28 +27,36 @@ Meteor.methods({
             LeaveRequests.remove({_id: leaveRequestId});
         } else {
             throw new Meteor.Error('Permission denied', 'You can\' remove this leave request!');
-        };
+        }
     },
     approveLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
 
         var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
-
         if (HospoHero.canUser('approve leave requests', this.userId) && thisLeaveRequest.userId != this.userId) {
-            LeaveRequests.update(leaveRequestId, {$set: {approved: true}});
+
+            if (!(thisLeaveRequest.approved && thisLeaveRequest.declined)) {
+                LeaveRequests.update(leaveRequestId, {$set: {approved: true}});
+            } else {
+                throw new Meteor.Error('Error', 'Leave request already approved or declined!');
+            }
         } else {
             throw new Meteor.Error('Permission denied', 'You can\' approve this leave request!');
-        };
+        }
     },
     declineLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
 
         var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
-
         if (HospoHero.canUser('decline leave requests', this.userId) && thisLeaveRequest.userId != this.userId) {
-            LeaveRequests.update(leaveRequestId, {$set: {declined: true}});
+
+            if (!(thisLeaveRequest.approved && thisLeaveRequest.declined)) {
+                LeaveRequests.update(leaveRequestId, {$set: {declined: true}});
+            } else {
+                throw new Meteor.Error('Error', 'Leave request already approved or declined!');
+            }
         } else {
             throw new Meteor.Error('Permission denied', 'You can\' decline this leave request!');
-        };
+        }
     }
 });

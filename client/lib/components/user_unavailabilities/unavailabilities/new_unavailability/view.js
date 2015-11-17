@@ -59,5 +59,5 @@ var getValues = function (tmpl) {
         endTime: endTime,
         repeat: repeat,
         comment: comment
-    }
+    };
 };

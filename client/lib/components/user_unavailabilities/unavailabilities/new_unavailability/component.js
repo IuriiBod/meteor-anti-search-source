@@ -23,7 +23,7 @@ component.action.addUnavailability = function (params) {
         comment: params.comment
     };
 
-    Meteor.call('addUnavailability', unavailability);
+    Meteor.call('addUnavailability', unavailability, HospoHero.handleMethodResult());
     Router.go('userUnavailability');
 };
 

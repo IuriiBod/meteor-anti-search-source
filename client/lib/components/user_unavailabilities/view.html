@@ -1,6 +1,7 @@
 <template name="userUnavailability">
   <div class="panel-body user-unavailability">
-    <!-- User into -->
+
+    <!-- User info -->
     <div class="user-info-wrapper col-md-offset-1">
       <div class="profile-image">
         <img alt="image" id="profilePicture" class="img-responsive" src="{{state$profileImgSrc}}">
@@ -13,8 +14,9 @@
         </h4>
       </div>
     </div>
+
     <!-- Components with unavailables and leave requests -->
-    {{> render component="unavailabilitiesComponent" type="unavailables"}}
-    {{> render component="unavailabilitiesComponent" type="leaveRequests"}}
+    {{> render component="unavailabilitiesOrLeaveRequestsComponent" type="unavailabilities"}}
+    {{> render component="unavailabilitiesOrLeaveRequestsComponent" type="leaveRequests"}}
   </div>
 </template>

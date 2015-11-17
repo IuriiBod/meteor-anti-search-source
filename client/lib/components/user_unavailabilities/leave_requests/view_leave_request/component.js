@@ -38,10 +38,10 @@ component.action.saveLeaveRequest = function (newLeaveRequest) {
 };
 
 component.action.approveLeaveRequest = function () {
-    Meteor.call('approveLeaveRequest', this.get('leaveRequest')._id);
+    Meteor.call('approveLeaveRequest', this.get('leaveRequest')._id, HospoHero.handleMethodResult());
     Router.go('userUnavailability');
 };
 component.action.declineLeaveRequest = function () {
-    Meteor.call('declineLeaveRequest', this.get('leaveRequest')._id);
+    Meteor.call('declineLeaveRequest', this.get('leaveRequest')._id, HospoHero.handleMethodResult());
     Router.go('userUnavailability');
 };

@@ -7,6 +7,11 @@ var UnavailabilityChecker = Match.Where(function (unavailability) {
 
         comment: Match.Optional(String)
     });
+
+    if (startDate > endDate) {
+        return false;
+    };
+
     return true;
 });
 
@@ -17,14 +22,22 @@ var LeaveRequestChecker = Match.Where(function (leaveRequest) {
         notifyManagerId: HospoHero.checkers.MongoId,
         comment: Match.Optional(String)
     });
+
+    if (leaveRequest.startDate > leaveRequest.endDate) {
+        return false;
+    };
+
+    var notifyManager = Meteor.users.findOne({_id: leaveRequest.notifyManagerId});
+    if (!(notifyManager && HospoHero.canUser('approve leave requests'), notifyManager._id)) {
+        return false;
+    };
     return true;
 });
 
 var checkRepeatField = Match.Where(function (value) {
-    var res = !!_.find(['monthly', 'weekly', 'never'], function(allowedValue) {
+    return !!_.find(['monthly', 'weekly', 'never'], function(allowedValue) {
         return allowedValue == value;
     });
-    return res;
 });
 
 Namespace('HospoHero.checkers', {

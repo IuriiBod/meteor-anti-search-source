@@ -36,5 +36,5 @@ component.state.comment = function () {
 };
 
 component.action.removeUnavailability = function () {
-    Meteor.call('removeUnavailability', this.item);
+    Meteor.call('removeUnavailability', this.item, HospoHero.handleMethodResult());
 };
