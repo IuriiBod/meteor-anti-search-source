@@ -7,23 +7,49 @@
  * Possible notification data entries formats: String, Number.
  *
  * Note: If your notification data contains dates you should
- * convert it to appropriate location's timezone and convert to string.
+ * format it in appropriate location's timezone.
+ *
+ * Also you can use `_notificationId` in your template to
+ * link notification's metadata with notification itself.
+ * This feature may be used in server side routes for
+ * processing any notification's actions.
  *
  * @param {string} subject notification's subject/title
  * @param {string} templateName handlebars template name
- * @param {object} templateData data to render on template
- * @param {*|string} senderId user that sanded notification
+ * @param {*|object} templateData data to render on template
+ * @param {*|object} options additional configuration
+ * @param {*|string} options.senderId user that sanded notification
+ * @param {*|object} options.metadata additional notification data
+ * @param {*|boolean} options.interactive deny automatic reading (usually if notification requires an action)
  * @constructor
  */
-NotificationSender = function (subject, templateName, templateData, senderId) {
-  this._options = {
+NotificationSender = function (subject, templateName, templateData, options) {
+  this._options = _.extend(options || {}, {
     subject: subject,
-    senderId: senderId
-  };
-
-  //todo: render text here
-  this._html = '';
+    templateName: templateName,
+    templateData: templateData || {}
+  });
 };
+
+/**
+ * @returns true is notification requires some action
+ * @private
+ */
+NotificationSender.prototype._isInteractive = function () {
+  return this._options.interactive;
+};
+
+
+NotificationSender.prototype._renderTemplateWithData = function (notificationId) {
+  var templateData = this._options.templateData;
+
+  if (this._isInteractive()) {
+    templateData._notificationId = notificationId
+  }
+
+  return Handlebars.templates[this._options.templateName](templateData);
+};
+
 
 NotificationSender.prototype._getEmailSubject = function () {
   return '[HospoHero] | ' + this._options.subject;
@@ -39,20 +65,68 @@ NotificationSender.prototype._getUserEmail = function (userId) {
   var user = Meteor.users.findOne(userId);
   return user && user.emails && user.emails.length ? user.emails[0].address : false;
 };
+
+
+NotificationSender.prototype._insertNotification = function (receiverId, markAsRead) {
+  var notificationOptions = {
+    to: receiverId,
+    read: !!markAsRead,
+    createdBy: this._options.senderId,
+    title: this._options.subject,
+    interactive: this._options.interactive,
+    meta: this._options.meta,
+    createdOn: Date.now()
+  };
+
+  var html = false;
+
+  if (this._isInteractive()) {
+    var notificationId = Notifications.insert(notificationOptions);
+
+    html = this._renderTemplateWithData(notificationId);
+
+    Notifications.update({_id: notificationId}, {
+      $set: {text: html}
+    });
+  } else {
+    html = this._renderTemplateWithData();
+    notificationOptions.text = html;
+    Notifications.insert(notificationOptions);
+  }
+
+  console.log('insert notification', notificationOptions);
+
+  return html;
+};
+
+
+NotificationSender.prototype._sendEmailBasic = function (receiverId, text) {
+  var emailOptions = {
+    subject: this._getEmailSubject(),
+    from: this._getUserEmail(this._options.senderId) || 'notifications@hospohero.com',
+    to: this._getUserEmail(receiverId),
+    html: text
+  };
+
+  Email.send(emailOptions);
+};
+
+
 /**
  * Sends email to specified receiver
  *
  * @param receiverId
  */
 NotificationSender.prototype.sendEmail = function (receiverId) {
-  var emailOptions = {
-    subject: this._getEmailSubject(),
-    from: this._getUserEmail(this._options.senderId) || 'notifications@hospohero.com',
-    to: this._getUserEmail(receiverId),
-    html: this._html
-  };
+  var html;
 
-  Email.send(emailOptions);
+  if (this._isInteractive()) {
+    html = this._insertNotification(receiverId, true);
+  } else {
+    html = this._renderTemplateWithData();
+  }
+
+  this._sendEmailBasic(receiverId, html);
 };
 
 /**
@@ -61,14 +135,11 @@ NotificationSender.prototype.sendEmail = function (receiverId) {
  * @param receiverId
  */
 NotificationSender.prototype.sendNotification = function (receiverId) {
-  var notificationOptions = {
-    to: receiverId,
-    read: false,
-    createdBy: this._options.senderId,
-    title: this._options.subject,
-    text: this._html,
-    createdOn: Date.now()
-  };
+  this._insertNotification(receiverId, false);
+};
 
-  Notifications.insert(notificationOptions);
+
+NotificationSender.prototype.sendBoth = function (receiverId) {
+  var html = this._insertNotification(receiverId, false);
+  this._sendEmailBasic(receiverId, html);
 };

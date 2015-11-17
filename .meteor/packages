@@ -60,10 +60,10 @@ dbernhard:jquery-ui-draggable
 reywood:publish-composite
 jss:publish-authorized
 natestrauser:select2
-meteorhacks:ssr
 trsdln:flyouts
 russ:weather-icons
 fortawesome:fontawesome
-joshowens:timezone-picker
-mrt:moment-timezone
+
 momentjs:moment
+joshowens:timezone-picker
+cmather:handlebars-server
