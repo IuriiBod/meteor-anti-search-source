@@ -114,7 +114,7 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuI
       return;
     }
 
-    if (totalCount === this.DATA_LIMIT) {
+    if (!totalCount) {
       totalCount = result.meta.total_count;
       bucket.timezone(result.meta.time_zone);
     }
@@ -209,6 +209,7 @@ if (HospoHero.isDevelopmentMode()) {
       meta: {
         'limit': 5000,
         'offset': 0,
+        'time_zone': 'Australia/Melbourne',
         'total_count': 61614200
       },
       objects: []
