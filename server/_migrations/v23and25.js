@@ -1,6 +1,7 @@
 resetPredictionData = function () {
   DailySales.remove({});
   Locations.update({}, {$unset: {lastForecastModelUploadDate: ''}}, {multi: true});
+  MenuItems.update({}, {$set: {isNotSyncedWithPos: false}}, {multi: true});
 };
 
 Migrations.add({
