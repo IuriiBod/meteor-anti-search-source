@@ -21,7 +21,7 @@ var ShiftDocument = Match.Where(function (shift) {
     relations: Match.Optional(HospoHero.checkers.Relations)
   });
 
-  var checkerHelper = new DocumentCheckerHelper(shift, Shifts);
+  var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(shift, Shifts);
 
   checkerHelper.checkPropertiesGroup(['startTime', 'endTime'], function () {
     if (shift.startTime.getTime() > shift.endTime.getTime()) {

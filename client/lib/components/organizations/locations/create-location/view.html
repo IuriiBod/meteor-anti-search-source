@@ -1,0 +1,14 @@
+<template name="createLocation">
+  <div class="flyout-header">
+    <button class="close-flyout-button">
+      <i class="fa fa-angle-right"></i>
+    </button>
+    Add Location
+  </div>
+
+  <div class="flyout-content">
+    <div class="container-fluid">
+      {{> render component="editLocationForm" submitCaption="Create" onSubmit=state$onLocationSubmit onCancel=state$onCancel}}
+    </div>
+  </div>
+</template>

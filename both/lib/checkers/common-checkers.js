@@ -1,3 +1,5 @@
+
+
 var MongoId = Match.Where(function (id) {
   check(id, String);
   return /[0-9a-zA-Z]{17}/.test(id);
@@ -15,7 +17,7 @@ var PosSecret = Match.Where(function (key) {
   return /[0-9a-zA-Z]{64}/.test(key);
 });
 
-var RgbColor = Match.Where(function(color) {
+var RgbColor = Match.Where(function (color) {
   check(color, String);
   return /rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)/.test(color);
 });
@@ -63,7 +65,7 @@ Namespace('HospoHero.checkers', {
         areaId: HospoHero.checkers.OptionalNullableMongoId
       });
     } catch (err) {
-      checkError('Incorrect relation');
+      HospoHero.checkerUtils.checkError('Incorrect relation');
     }
     return true;
   }),
@@ -79,7 +81,7 @@ Namespace('HospoHero.checkers', {
         host: String
       });
     } catch (e) {
-      checkError('Incorrect POS configuration');
+      HospoHero.checkerUtils.checkError('Incorrect POS configuration');
     }
     return true;
   }),
