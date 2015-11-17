@@ -6,7 +6,7 @@ var UserRelations = Match.Where(function(relation) {
       areaIds: Match.OneOf([HospoHero.checkers.MongoId], null)
     });
   } catch(err) {
-    checkError('Incorrect user relations object!')
+    HospoHero.checkerUtils.checkError('Incorrect user relations object!')
   }
   return true;
 });
@@ -25,7 +25,7 @@ var UserChecker = Match.Where(function(user) {
     roles: Match.Optional(Object)
   });
 
-  var checkerHelper = new DocumentCheckerHelper(user, Meteor.users);
+  var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(user, Meteor.users);
 
   checkerHelper.checkProperty('username', function () {
     if (!!Meteor.users.findOne({username: user.username})) {

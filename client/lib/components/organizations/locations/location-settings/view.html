@@ -11,18 +11,22 @@
       <h1>{{state$location.name}}</h1>
 
       <div class="row">
-        <button class="btn btn-primary col-xs-12 create-area-flyout">
-          Create Area
-        </button>
+        <div class="col-xs-12">
+          <button class="btn btn-primary btn-full-width create-area-flyout">
+            Create Area
+          </button>
+        </div>
       </div>
 
       {{> render component="editLocationForm" locationDoc=state$location submitCaption="Save" onSubmit=state$onLocationSubmit onCancel=state$onCancel}}
 
       {{#if isOrganizationOwner}}
         <div class="row">
-          <button class="btn btn-danger  delete-location">
-            Delete Location
-          </button>
+          <div class="col-xs-12">
+            <button class="btn btn-danger btn-full-width delete-location">
+              Delete Location
+            </button>
+          </div>
         </div>
       {{/if}}
     </div>

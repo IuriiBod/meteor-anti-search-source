@@ -16,7 +16,8 @@ component.state.timeZone = function () {
 
 component.state.openingTime = function () {
   var locationDoc = this.get('locationDoc');
-  return locationDoc.openingTime || this.defaultOpeningTime;
+  var openingTime = locationDoc.openingTime || this.defaultOpeningTime;
+  return openingTime;
 };
 
 component.state.closingTime = function () {
@@ -25,15 +26,17 @@ component.state.closingTime = function () {
 };
 
 
-component.action.submit = function (newLocationDoc) {
+component.action.submit = function (newLocationDoc, event) {
   if (_.isFunction(this.onSubmit)) {
-    this.onSubmit(newLocationDoc);
+    var updatedLocationDoc = this.get('locationDoc');
+    _.extend(updatedLocationDoc, newLocationDoc);
+    this.onSubmit(updatedLocationDoc, event);
   }
 };
 
 
-component.action.cancel = function () {
+component.action.cancel = function (event) {
   if (_.isFunction(this.onCancel)) {
-    this.onCancel();
+    this.onCancel(event);
   }
 };

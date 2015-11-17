@@ -7,6 +7,8 @@
   </div>
 
   <div class="flyout-content">
-    {{> render component="editLocationForm" submitCaption="Create" onSubmit=state$onLocationSubmit onCancel=state$onCancel}}
+    <div class="container-fluid">
+      {{> render component="editLocationForm" submitCaption="Create" onSubmit=state$onLocationSubmit onCancel=state$onCancel}}
+    </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 var LocationDocument = Match.Where(function (location) {
   check(location, {
     name: String,
-    timezone: Number,
+    timezone: String,
     openingTime: Date,
     closingTime: Date,
     organizationId: HospoHero.checkers.MongoId,
@@ -16,7 +16,7 @@ var LocationDocument = Match.Where(function (location) {
   });
 
 
-  var checkerHelper = new DocumentCheckerHelper(location, Locations);
+  var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(location, Locations);
 
   checkerHelper.checkProperty('name', function () {
     if (!!Locations.findOne({organizationId: location.organizationId, name: location.name})) {

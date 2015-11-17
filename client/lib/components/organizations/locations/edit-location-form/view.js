@@ -5,7 +5,7 @@ Template.editLocationForm.helpers({
 });
 
 Template.editLocationForm.events({
-  'submit .location-form': function (event, tmpl) {
+  'submit .edit-location-form-component': function (event, tmpl) {
     event.preventDefault();
 
     var fields = [
@@ -14,6 +14,7 @@ Template.editLocationForm.events({
       'city',
       'address'
     ];
+
     var locationDoc = HospoHero.misc.getValuesFromEvent(event, fields, true);
 
     locationDoc.timezone = tmpl.$('.time-zone-select').val();
@@ -60,7 +61,7 @@ Template.editLocationForm.events({
     ], true);
     locationDoc.closingTime = moment(locationDoc.closingTime).toDate();
 
-    locationDoc.organizationId = HospoHero.getOrganizationId();
+    locationDoc.organizationId = HospoHero.getOrganization()._id;
 
     FlowComponents.callAction('submit', locationDoc, event);
   },
