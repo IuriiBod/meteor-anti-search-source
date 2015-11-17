@@ -12,7 +12,6 @@ component.prototype.isWeekDatesEqual = function (dateA, dateB) {
 component.action.onDateChanged = function (newWeekDate) {
   var currentWeekDate = this.get('weekDate');
   if (!this.isWeekDatesEqual(newWeekDate, currentWeekDate)) {
-    //console.log("NOT EQUAL");
     this.set('weekDate', newWeekDate);
     if (this.onDateChangedCallback) {
       this.onDateChangedCallback(newWeekDate);
@@ -30,41 +29,20 @@ component.action.getCurrentWeekDate = function () {
 
 component.state.currentWeekStr = function () {
   var weekDate = this.get('weekDate');
+  var weekStartEnd = moment().set(weekDate);
+  var firstDay = moment(weekStartEnd).startOf('isoweek');
+  var lastDay = moment(weekStartEnd).endOf('isoweek');
 
-  //todo: it should be refactored
-  //todo: (use "moment" instead of huge amount of code below with external dependencies)
-  var weekStartEnd = HospoHero.dateUtils.getWeekStartEnd(weekDate.week, weekDate.year);
-  var firstDay = weekStartEnd.monday;
-  var lastDay = weekStartEnd.sunday;
-
-
-  var firstDayDate = firstDay.getDate();
-  var lastDayDate = lastDay.getDate();
-
-  var firstDayMonth = firstDay.getMonth();
-  var lastDayMonth = lastDay.getMonth();
-
-  var firstDayMonthName = getMonthName(firstDay.getMonth(), true);
-  firstDayMonthName = firstDayMonthName.toUpperCase();
-  var lastDayMonthName = getMonthName(lastDay.getMonth(), true);
-  lastDayMonthName = lastDayMonthName.toUpperCase();
-
-  var firstDayYear = firstDay.getFullYear();
-  var lastDayYear = lastDay.getFullYear();
-
-  var currentDate = "";
-
-  if (firstDayMonth == lastDayMonth) {
-    currentDate = firstDayDate + " - " + lastDayDate + " " + firstDayMonthName + ", " + firstDayYear + ", ";
-  } else if (firstDayMonth != lastDayMonth) {
-    if (firstDayYear == lastDayYear) {
-      currentDate = firstDayDate + " " + firstDayMonthName + " - " + lastDayDate + " " + lastDayMonthName + ", " + firstDayYear + ", ";
+  var currentDate;
+  if(firstDay.year() != lastDay.year()) {
+    currentDate = firstDay.format('D MMM YYYY - ') + lastDay.format('D MMM YYYY');
+  } else {
+    if(firstDay.month() != lastDay.month()) {
+      currentDate = firstDay.format('D MMM - ') + lastDay.format('D MMM YYY');
     } else {
-      currentDate = firstDayDate + " " + firstDayMonthName + " " + firstDayYear + " - " + lastDayDate + " " + lastDayMonthName + " " + lastDayYear + ", ";
+      currentDate = firstDay.format('D - ') + lastDay.format('D MMM YYYY');
     }
   }
-
-  currentDate += "WEEK " + weekDate.week;
-
-  return currentDate;
+  currentDate += ", week " + weekDate.week;
+  return currentDate.toUpperCase();
 };
