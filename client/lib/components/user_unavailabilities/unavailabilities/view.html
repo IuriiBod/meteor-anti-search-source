@@ -17,7 +17,7 @@
     <div>
       {{#if state$items}}
         {{#each state$items}}
-          {{#if state$isUnavailables}}
+          {{#if state$isUnavailabilities}}
             {{> render component="unavailabilityItem" item=this}}
           {{/if}}
           {{#if state$isLeaveRequests}}

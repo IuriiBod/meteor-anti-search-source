@@ -1,12 +1,14 @@
 <template name="userUnavailability">
   <div class="panel-body user-unavailability">
     <!-- User into -->
-    <div class="user-info-wrapper">
-      {{> render component = "profileImage" id=state$user._id}}
+    <div class="user-info-wrapper col-md-offset-1">
+      <div class="profile-image">
+        <img alt="image" id="profilePicture" class="img-responsive" src="{{state$profileImgSrc}}">
+      </div>
       <div class="ibox-content profile-content">
         <h4>
           <strong>
-            {{username state$user.username}}
+            {{username state$userName}}
           </strong>
         </h4>
       </div>

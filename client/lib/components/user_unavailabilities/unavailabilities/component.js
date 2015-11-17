@@ -3,7 +3,7 @@ var component = FlowComponents.define('unavailabilitiesComponent', function (pro
 });
 
 component.state.componentName = function () {
-    if (this.get('isUnavailables')) {
+    if (this.get('isUnavailabilities')) {
         return 'unavailables';
     } else if (this.get('isLeaveRequests')) {
         return 'leave requests';
@@ -14,16 +14,16 @@ component.state.isLeaveRequests = function () {
     return this.componentType == 'leaveRequests';
 };
 
-component.state.isUnavailables = function () {
+component.state.isUnavailabilities = function () {
     return this.componentType == 'unavailables';
 };
 
 // Can be leave requests or unavailables
 component.state.items = function () {
-    if (this.get('isUnavailables')) {
+    if (this.get('isUnavailabilities')) {
         return Meteor.user().unavailables || [];
     } else if (this.get('isLeaveRequests')) {
-        return LeaveRequests.find();
+        return LeaveRequests.find().fetch();
     }
 };
 
@@ -32,7 +32,7 @@ component.state.leaveRequests = function () {
 };
 
 component.state.componentHeader = function () {
-    if (this.get('isUnavailables')) {
+    if (this.get('isUnavailabilities')) {
         return 'UNAVAILABILITY'
     } else if (this.get('isLeaveRequests')) {
         return 'LEAVE REQUESTS'
@@ -40,7 +40,7 @@ component.state.componentHeader = function () {
 };
 
 component.action.newItem = function () {
-    if (this.get('isUnavailables')) {
+    if (this.get('isUnavailabilities')) {
         Router.go('addNewUnavailability');
     } else if (this.get('isLeaveRequests')) {
         Router.go('addNewLeaveRequest');
