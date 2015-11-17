@@ -12,7 +12,7 @@ ActualSalesImporter = function ActualSalesImporter(locationId) {
 
 ActualSalesImporter.prototype._updateActualSale = function (item) {
   DailySales.update({
-    date: TimeRangeQueryBuilder.forDay(item.date),
+    date: TimeRangeQueryBuilder.forDay(item.date, this._location._id),
     menuItemId: item.menuItemId,
     relations: item.relations
   }, {$inc: {actualQuantity: item.actualQuantity}, $set: {date: item.date}}, {upsert: true});
@@ -29,7 +29,8 @@ ActualSalesImporter.prototype._getLastImportedSaleDate = function (menuItemId) {
   });
 
   // if there is no imported data the import whole year
-  return lastImportedSale && moment(lastImportedSale.date).endOf('day').toDate()
+  return lastImportedSale
+    && HsopoHero.dateUtils.getDateMomentForLocation(lastImportedSale.date, this._location._id).endOf('day').toDate()
     || moment().subtract(1, 'year').toDate();
 };
 

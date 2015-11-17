@@ -23,7 +23,7 @@ ForecastMaker.prototype._getWeatherForecast = function (dayIndex, forecastDate) 
 
 ForecastMaker.prototype._updateForecastEntry = function (newForecastInfo) {
   DailySales.update({
-    date: TimeRangeQueryBuilder.forDay(newForecastInfo.date),
+    date: TimeRangeQueryBuilder.forDay(newForecastInfo.date, this._locationId),
     menuItemId: newForecastInfo.menuItemId
   }, {$set: newForecastInfo}, {upsert: true});
 };
@@ -39,12 +39,13 @@ ForecastMaker.prototype._getNotificationSender = function (area) {
     });
   };
 
+  var self = this;
   var changes = [];
 
   return {
     addChange: function (newForecastInfo, menuItem) {
       var oldForecast = DailySales.findOne({
-        date: TimeRangeQueryBuilder.forDay(newForecastInfo.date),
+        date: TimeRangeQueryBuilder.forDay(newForecastInfo.date, self._locationId),
         menuItemId: newForecastInfo.menuItemId
       });
 
@@ -149,7 +150,7 @@ ForecastMaker.prototype._getPredictionUpdatedDate = function (interval) {
 
   var dailySale = DailySales.findOne({
     menuItemId: menuItemFromCurrentLocation._id,
-    date: TimeRangeQueryBuilder.forDay(predictionDate)
+    date: TimeRangeQueryBuilder.forDay(predictionDate, this._locationId)
   });
 
   if (dailySale) {

@@ -35,7 +35,7 @@ GoogleCloud.prototype.uploadSalesData = function () {
     var dailySalesCursor = DailySales.find({
       'relations.locationId': this._locationId,
       actualQuantity: {$gte: 0},
-      date: TimeRangeQueryBuilder.forDay(currentDateMoment)
+      date: TimeRangeQueryBuilder.forDay(currentDateMoment, this._locationId)
     });
 
     logger.info('Daily sales for', {date: currentDateMoment.toDate(), count: dailySalesCursor.count()});
@@ -86,7 +86,8 @@ PredictionModelDataGenerator.prototype._getWeatherForDate = function (date) {
 };
 
 PredictionModelDataGenerator.prototype._getWeatherForSale = function (dailySale) {
-  if (!moment(dailySale.date).isSame(this._currentWeather.date, 'day')) {
+  var localDateMoment = HospoHero.dateUtils.getDateMomentForLocation(dailySale.date, this._locationId);
+  if (!localDateMoment.isSame(this._currentWeather.date, 'day')) {
     this._currentWeather = this._getWeatherForDate(dailySale.date);
   }
   return this._currentWeather;

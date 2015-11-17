@@ -2,15 +2,23 @@ Namespace('HospoHero.dateUtils', {
   /**
    * Convert date to the necessary timezone and format
    * @param {String | Object} date - date string or Date object
-   * @param {String} locationId - ID of location (get timezone from this location)
    * @param {String} dateFormat - moment format of output date
+   * @param {String} locationId - ID of location (get timezone from this location)
    * @returns {String}
    */
-  formatDateWithTimezone: function(date, locationId, dateFormat) {
-    date = moment(date);
-    var location = Locations.findOne({_id: locationId});
-    var timezoneOffset = location.timezone * 60;
-    return date.utcOffset(timezoneOffset).format(dateFormat);
+  formatDateWithTimezone: function (date, dateFormat, locationId) {
+    return HospoHero.dateUtils.getDateMomentForLocation(date, locationId).format(dateFormat);
+  },
+
+  /**
+   * Returns moment for specified date in timezone for specified location
+   * @param date
+   * @param locationId
+   * @returns {*}
+   */
+  getDateMomentForLocation: function (date, locationId) {
+    var location = Locations.findOne({_id: locationId}, {fields: {timezone: 1}});
+    return moment(date).tz(location.timezone);
   },
 
   formatDate: function (date, format) {
@@ -19,20 +27,6 @@ Namespace('HospoHero.dateUtils', {
 
   shortDateFormat: function (date) {
     return moment(date).format('YYYY-MM-DD');
-  },
-
-  timezones: function () {
-    var zones = [];
-    for (var i = -12; i <= 12; i++) {
-      var text = 'UTC ';
-      text += i > 0 ? '+' + i : i;
-
-      zones.push({
-        value: i,
-        text: text
-      });
-    }
-    return zones;
   },
 
   hours: function () {
@@ -64,17 +58,19 @@ Namespace('HospoHero.dateUtils', {
     var dayFormat = 'ddd, Do MMMM';
     var timeFormat = 'h:mm A';
 
-    var day = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, shift.relations.locationId, dayFormat);
-    var startTime = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, shift.relations.locationId, timeFormat);
-    var endTime = HospoHero.dateUtils.formatDateWithTimezone(shift.endTime, shift.relations.locationId, timeFormat);
+    var locationId = shift.relations.locationId;
+
+    var day = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, dayFormat, locationId);
+    var startTime = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, timeFormat, locationId);
+    var endTime = HospoHero.dateUtils.formatDateWithTimezone(shift.endTime, timeFormat, locationId);
 
     return day + ' ' + startTime + ' - ' + endTime;
   },
 
   timeFormat: function (date, locationId) {
     var dateFormat = 'h:mm A';
-    if(locationId && _.isString(locationId)) {
-      return HospoHero.dateUtils.formatDateWithTimezone(date, locationId, dateFormat);
+    if (locationId && _.isString(locationId)) {
+      return HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
     } else {
       return HospoHero.dateUtils.formatDate(date, dateFormat);
     }
