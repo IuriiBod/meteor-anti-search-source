@@ -1,0 +1,80 @@
+<template name="editLocationForm">
+  <form class="form-horizontal edit-location-form-component">
+    {{#with state$locationDoc}}
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Location Name</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="name" required="required" value="{{name}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Country</label>
+
+        <div class="col-sm-10">
+          {{> render component='selectComponent' values=countries selected=country name='country'}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">City</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="city" required="required" value="{{city}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Address</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="address" required="required" value="{{address}}">
+        </div>
+      </div>
+    {{/with}}
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Timezone</label>
+
+      <div class="col-sm-10">
+        {{> timezonePicker class="form-control time-zone-select" selected=state$timeZone}}
+      </div>
+    </div>
+
+    {{> render component="locationTimeSelect" time=state$openingTime label="Opening Time" hoursName="openingHour" minutesName="openingMinutes"}}
+    {{> render component="locationTimeSelect" time=state$closingTime label="Closing Time" hoursName="closingHour" minutesName="closingMinutes"}}
+
+    <!--todo: extract this stuff to separate component-->
+    {{#with state$locationDoc}}
+      <div class="panel panel-default">
+        <div class="panel-heading text-center"><b>POS Settings (optional)</b></div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Host</label>
+
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="posHost" value="{{pos.host}}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Key</label>
+
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="posKey" value="{{pos.key}}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Secret</label>
+
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="posSecret" value="{{pos.secret}}">
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/with}}
+    <div class="form-group">
+      <div class="btn-group col-xs-12">
+        <button type="submit" class="btn btn-primary btn-half-width">{{state$submitCaption}}</button>
+        <button type="button" class="btn btn-default btn-half-width close-flyout">Cancel</button>
+      </div>
+    </div>
+  </form>
+</template>

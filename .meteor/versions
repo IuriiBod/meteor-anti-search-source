@@ -43,6 +43,7 @@ iron:location@1.0.9
 iron:middleware-stack@1.0.9
 iron:router@1.0.9
 iron:url@1.0.9
+joshowens:timezone-picker@0.1.2
 jquery@1.11.3_2
 json@1.0.3
 jss:meteor-google-prediction@0.2.1
@@ -72,6 +73,8 @@ momentjs:moment@2.10.6
 mongo@1.1.0
 mongo-livedata@1.0.8
 mrt:jquery-ui-sortable@1.10.3
+mrt:moment@2.8.1
+mrt:moment-timezone@0.2.1
 natestrauser:select2@4.0.0_1
 natestrauser:x-editable-bootstrap@1.5.2_2
 npm-bcrypt@0.7.8_2

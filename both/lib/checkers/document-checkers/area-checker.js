@@ -16,7 +16,7 @@ var AreaDocument = Match.Where(function (area) {
     color: HospoHero.checkers.RgbColor
   });
 
-  var checkerHelper = new DocumentCheckerHelper(area, Areas);
+  var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(area, Areas);
 
   checkerHelper.checkProperty('name', function () {
     if (!!Areas.findOne({locationId: area.locationId, name: area.name})) {
