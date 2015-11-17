@@ -100,13 +100,12 @@ Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
  */
 Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuItemId) {
   var offset = 0;
-  var totalCount = this.DATA_LIMIT;
+  var totalCount = false;
   var toContinue = true;
 
   var bucket = new RevelSalesDataBucket();
 
   while (offset <= totalCount && toContinue) {
-    logger.info('Request to Revel server', {offset: offset, total: totalCount});
 
     var result = this.loadOrderItems(offset, revelMenuItemId);
 
@@ -115,9 +114,12 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuI
       return;
     }
 
-    if (totalCount === this.DATA_LIMIT) {
+    if (!totalCount) {
       totalCount = result.meta.total_count;
+      bucket.timezone(result.meta.time_zone);
     }
+
+    logger.info('Requested to Revel', {offset: offset, total: totalCount});
 
     result.objects.every(function (entry) {
       if (!bucket.put(entry)) {
@@ -143,6 +145,11 @@ var RevelSalesDataBucket = function () {
   this._dayNumber = false;
 };
 
+
+RevelSalesDataBucket.prototype.timezone = function (timezoneStr) {
+  this._timezone = timezoneStr;
+};
+
 //if entity related to other date returns false
 RevelSalesDataBucket.prototype.put = function (entry) {
   var dayOfYear = moment(entry.created_date).dayOfYear();
@@ -161,9 +168,15 @@ RevelSalesDataBucket.prototype.put = function (entry) {
 };
 
 RevelSalesDataBucket.prototype.getDataAndReset = function () {
+  //convert to start of day
+  var startOfCreatedDate = moment(this._createdDate).startOf('day').format('YYYY-MM-DDTHH:mm:ss');
+
+  //convert to appropriate time zone
+  var createdDate = moment.tz(startOfCreatedDate, this._timezone).toDate();
+
   var result = {
     quantity: this._quantity,
-    createdDate: new Date(this._createdDate)
+    createdDate: createdDate
   };
 
 //reset project
@@ -196,6 +209,7 @@ if (HospoHero.isDevelopmentMode()) {
       meta: {
         'limit': 5000,
         'offset': 0,
+        'time_zone': 'Australia/Melbourne',
         'total_count': 61614200
       },
       objects: []

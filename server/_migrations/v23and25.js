@@ -8,3 +8,9 @@ Migrations.add({
   name: "Reset forecast data",
   up: resetPredictionData
 });
+
+Migrations.add({
+  version: 25,
+  name: "Reset forecast data",
+  up: resetPredictionData
+});
