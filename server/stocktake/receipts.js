@@ -42,8 +42,6 @@ Meteor.methods({
       "version": version
     });
 
-    console.log('INFO', info);
-
     if (info.hasOwnProperty("through")) {
       if (info.through == "emailed") {
         //send email to supplier
