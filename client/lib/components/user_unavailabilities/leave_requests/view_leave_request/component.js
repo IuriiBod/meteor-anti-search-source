@@ -19,8 +19,7 @@ component.state.canBeApprovedOrDeclined = function () {
 component.state.managers = function () {
     var managers = [];
     Meteor.users.find().forEach(function (user) {
-        if (HospoHero.isManager(user._id)) {
-            //if (HospoHero.isManager(user._id) && user._id != Meteor.userId()) {
+        if (user._id != Meteor.userId() && HospoHero.canUser('approve leave requests', user._id)) {
             managers.push({
                 _id: user._id,
                 name: user.profile.name || user.username

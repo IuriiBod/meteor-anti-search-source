@@ -8,20 +8,14 @@ component.state.date = function () {
 };
 
 component.state.isAllDay = function () {
-    var startTime = moment(this.item.startDate).format('HH:mm');
-    var endTime = moment(this.item.endDate).format('hh:mm');
-
-    return startTime == endTime;
+    return this.item.startDate.getTime() == this.item.endDate.getTime();
 };
 
 component.state.time = function () {
-    var startTime = moment(this.item.startDate).format('HH:mm');
-    var endTime = moment(this.item.endDate).format('HH:mm');
-
     return {
-        startTime: startTime,
-        endTime: endTime
-    }
+        startTime: moment(this.item.startDate).format('HH:mm'),
+        endTime: moment(this.item.endDate).format('HH:mm')
+    };
 };
 
 component.state.repeat = function () {
@@ -40,7 +34,6 @@ component.state.repeat = function () {
 component.state.comment = function () {
     return this.item.comment || false;
 };
-
 
 component.action.removeUnavailability = function () {
     Meteor.call('removeUnavailability', this.item);

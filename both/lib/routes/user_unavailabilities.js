@@ -2,9 +2,11 @@ Router.route('userUnavailability', {
     path: '/unavailabilities',
     template: 'userUnavailabilityMainView',
     waitOn: function () {
+        var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
         return [
             Meteor.subscribe('userAllUnavailabilities'),
-            Meteor.subscribe('userAllLeaveRequests')
+            Meteor.subscribe('userAllLeaveRequests'),
+            Meteor.subscribe('usersList', currentAreaId)
         ];
     },
     data: {
@@ -25,6 +27,12 @@ Router.route('addNewLeaveRequest', {
     template: 'userUnavailabilityMainView',
     data: {
         isAddNewLeaveRequest: true
+    },
+    waitOn: function () {
+        var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+        return [
+            Meteor.subscribe('usersList', currentAreaId)
+        ];
     }
 });
 

@@ -21,9 +21,11 @@ component.state.isUnavailabilities = function () {
 // Can be leave requests or unavailables
 component.state.items = function () {
     if (this.get('isUnavailabilities')) {
-        return Meteor.user().unavailables || [];
+        var unavailabilities = Meteor.user().unavailabilities || [];
+        unavailabilities = _.sortBy(unavailabilities, 'startDate');
+        return unavailabilities;
     } else if (this.get('isLeaveRequests')) {
-        return LeaveRequests.find().fetch();
+        return LeaveRequests.find({}, {sort: {startDate: 1}}).fetch();
     }
 };
 

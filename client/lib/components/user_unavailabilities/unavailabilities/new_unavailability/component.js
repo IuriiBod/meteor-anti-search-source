@@ -12,20 +12,21 @@ component.action.isAllDayChange = function (value) {
     }
 };
 
-component.action.addUnavailability = function (newUnavailability) {
+component.action.addUnavailability = function (params) {
+    var startDate = getDate(params.date, params.startTime);
+    var endDate = this.get('isAllDay') ? startDate : getDate(params.date, params.endTime);
 
     var unavailability = {
-        startDate: new Date(newUnavailability.startTime),
-        repeat: newUnavailability.repeat,
-        comment: newUnavailability.comment
-    };
-
-    if (this.get('isAllDay')) {
-        unavailability.endDate = new Date(newUnavailability.startTime);
-    } else {
-        unavailability.endDate = new Date(newUnavailability.endTime);
+        startDate: startDate,
+        endDate: endDate,
+        repeat: params.repeat,
+        comment: params.comment
     };
 
     Meteor.call('addUnavailability', unavailability);
     Router.go('userUnavailability');
+};
+
+var getDate = function (date, time) {
+    return new Date(moment(date).hours(time.hours()).minutes(time.minutes()));
 };

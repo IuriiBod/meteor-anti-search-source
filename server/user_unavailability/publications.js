@@ -1,6 +1,6 @@
 Meteor.publish('userAllUnavailabilities', function () {
     return Meteor.users.find({_id: this.userId},
-        {fields: {'unavailables': 1}});
+        {fields: {'unavailabilities': 1}});
 });
 
 

@@ -3,12 +3,12 @@ Meteor.methods({
         newUnavailability._id = Random.id();
         check(newUnavailability, HospoHero.checkers.UnavailabilityChecker);
 
-        Meteor.users.update({_id: this.userId}, {$push: {unavailables: newUnavailability}})
+        Meteor.users.update({_id: this.userId}, {$push: {unavailabilities: newUnavailability}})
     },
     removeUnavailability: function (unavailability) {
         check(unavailability, HospoHero.checkers.UnavailabilityChecker);
 
-        Meteor.users.update({_id: this.userId}, {$pull: {unavailables: unavailability}});
+        Meteor.users.update({_id: this.userId}, {$pull: {unavailabilities: unavailability}});
     },
 
     createNewLeaveRequest: function (newLeaveRequest) {
@@ -37,8 +37,9 @@ Meteor.methods({
     approveLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
 
-        var notifyManagerId = LeaveRequests.findOne({_id: leaveRequestId}).notifyManagerId;
-        if (notifyManagerId == this.userId) {
+        var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
+
+        if (HospoHero.canUser('approve leave requests', this.userId) && thisLeaveRequest.userId != this.userId) {
             LeaveRequests.update(leaveRequestId, {$set: {approved: true}});
         } else {
             throw new Meteor.Error('Permission denied', 'You can\' approve this leave request!');
@@ -46,9 +47,10 @@ Meteor.methods({
     },
     declineLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
-        var notifyManagerId = LeaveRequests.findOne({_id: leaveRequestId}).notifyManagerId;
 
-        if (notifyManagerId == this.userId) {
+        var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
+
+        if (HospoHero.canUser('decline leave requests', this.userId) && thisLeaveRequest.userId != this.userId) {
             LeaveRequests.update(leaveRequestId, {$set: {declined: true}});
         } else {
             throw new Meteor.Error('Permission denied', 'You can\' decline this leave request!');

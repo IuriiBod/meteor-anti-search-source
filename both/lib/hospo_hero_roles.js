@@ -46,11 +46,13 @@ Namespace('HospoHero.roles', {
     "Edit Organization": "edit organization settings",
     "Edit users payrate": "edit user's payrate",
     "All Rights": "all rights",
-    "View Reports": "view reports"
+    "View Reports": "view reports",
+    "Approve Leave Requests": "approve leave requests",
+    "Decline Leave Requests": "decline leave requests"
   },
 
   getActions: function() {
-    return _.map(HospoHero.roles.actions, function(action, text) {
+    return _.map(HospoHero.roles.actions, function (action, text) {
       return {
         value: action,
         text: text
