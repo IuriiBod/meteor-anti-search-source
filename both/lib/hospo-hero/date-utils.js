@@ -7,9 +7,18 @@ Namespace('HospoHero.dateUtils', {
    * @returns {String}
    */
   formatDateWithTimezone: function (date, dateFormat, locationId) {
-    date = moment(date);
+    return HospoHero.dateUtils.getDateMomentForLocation(date, locationId).format(dateFormat);
+  },
+
+  /**
+   * Returns moment for specified date in timezone for specified location
+   * @param date
+   * @param locationId
+   * @returns {*}
+   */
+  getDateMomentForLocation: function (date, locationId) {
     var location = Locations.findOne({_id: locationId}, {fields: {timezone: 1}});
-    return date.tz(location.timezone).format(dateFormat);
+    return moment(date).tz(location.timezone);
   },
 
   formatDate: function (date, format) {

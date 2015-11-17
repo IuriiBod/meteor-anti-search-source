@@ -1,28 +1,56 @@
 TimeRangeQueryBuilder = {
-  _buildQueryFor: function (unitStr, date, inUnix) {
-    var start = moment(date).startOf(unitStr);
-    var end = moment(date).endOf(unitStr);
-    if (inUnix) {
-      return {$gte: start.toDate().getTime(), $lte: end.toDate().getTime()};
+  _buildQueryFor: function (unitStr, date, locationId) {
+    var start, end;
+    if (locationId) {
+      var location = Locations.findOne({_id: locationId}, {fields: {timezone: 1}});
+      start = moment(date).tz(location.timezone).startOf(unitStr);
+      end = moment(date).tz(location.timezone).endOf(unitStr);
+    } else {
+      start = moment(date).startOf(unitStr);
+      end = moment(date).endOf(unitStr);
     }
-    else {
-      return {$gte: start.toDate(), $lte: end.toDate()};
-    }
+
+    return {$gte: start.toDate(), $lte: end.toDate()};
   },
 
-  forWeek: function (date, inUnix) {
-    return this._buildQueryFor('isoweek', date, inUnix);
+  /**
+   *
+   * @param date basic date
+   * @param {*|ID} locationId consider using this param for timezones support on server side
+   * @returns {*|{$gte, $lte}}
+   */
+  forWeek: function (date, locationId) {
+    return this._buildQueryFor('isoweek', date, locationId);
   },
 
-  forDay: function (date, inUnix) {
-    return this._buildQueryFor('day', date, inUnix);
+  /**
+   *
+   * @param date basic date
+   * @param {*|ID} locationId consider using this param for timezones support on server side
+   * @returns {*|{$gte, $lte}}
+   */
+  forDay: function (date, locationId) {
+    return this._buildQueryFor('day', date, locationId);
   },
 
-  forMonth: function (date, inUnix) {
-    return this._buildQueryFor('month', date, inUnix);
+  /**
+   *
+   * @param date basic date
+   * @param {*|ID} locationId consider using this param for timezones support on server side
+   * @returns {*|{$gte, $lte}}
+   */
+  forMonth: function (date, locationId) {
+    return this._buildQueryFor('month', date, locationId);
   },
 
-  forInterval: function(startDate, endDate) {
+  /**
+   * Returns query for specified dates
+   *
+   * @param startDate
+   * @param endDate
+   * @returns {{$gte: *, $lte: *}}
+   */
+  forInterval: function (startDate, endDate) {
     var start = moment(startDate);
     var end = moment(endDate);
     return {$gte: start.toDate(), $lte: end.toDate()};
