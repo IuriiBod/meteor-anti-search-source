@@ -16,7 +16,7 @@ component.state.weekDays = function () {
 
 component.state.hasWage = function () {
   var values = this.get('weeklyValues');
-  return values.wage > 0;
+  return values.wage >= 0;
 };
 
 
@@ -77,21 +77,24 @@ component.prototype.getTotalTimeAndWage = function () {
 
   var weekShifts = Shifts.find({
     "assignedTo": user._id,
-    "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek),
-    $or: [{"status": "finished"}, {"status": "started"}]
+    "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek)
   });
 
   var self = this;
   var dailyHoursManager = this.getDailyHoursManager();
   var totalMinutes = 0;
-  var totalWage = 0;
+  var totalWage = -1;
 
   weekShifts.forEach(function (shift) {
-    var shiftDuration = moment(shift.finishedAt).diff(shift.startedAt, 'minutes');
+    totalWage = 0;
 
-    totalMinutes += shiftDuration;
-    totalWage += (self.getUserPayRate(shift.date) / 60) * shiftDuration;
-    dailyHoursManager.addMinutes(shift.shiftDate, shiftDuration);
+    if(shift.startedAt || shift.finishedAt) {
+      var shiftDuration = moment(shift.finishedAt).diff(shift.startedAt, 'minutes');
+
+      totalMinutes += shiftDuration;
+      totalWage += (self.getUserPayRate(shift.date) / 60) * shiftDuration;
+      dailyHoursManager.addMinutes(shift.shiftDate, shiftDuration);
+    }
   });
 
   return {
