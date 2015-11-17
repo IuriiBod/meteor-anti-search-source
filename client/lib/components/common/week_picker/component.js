@@ -29,7 +29,7 @@ component.action.getCurrentWeekDate = function () {
 
 component.state.currentWeekStr = function () {
   var weekDate = this.get('weekDate');
-  var weekStartEnd = moment().set(weekDate);
+  var weekStartEnd = moment().set('year', weekDate.year).set('week', weekDate.week);
   var firstDay = moment(weekStartEnd).startOf('isoweek');
   var lastDay = moment(weekStartEnd).endOf('isoweek');
 
@@ -38,7 +38,7 @@ component.state.currentWeekStr = function () {
     currentDate = firstDay.format('D MMM YYYY - ') + lastDay.format('D MMM YYYY');
   } else {
     if(firstDay.month() != lastDay.month()) {
-      currentDate = firstDay.format('D MMM - ') + lastDay.format('D MMM YYY');
+      currentDate = firstDay.format('D MMM - ') + lastDay.format('D MMM YYYY');
     } else {
       currentDate = firstDay.format('D - ') + lastDay.format('D MMM YYYY');
     }

@@ -56,3 +56,18 @@ DocumentCheckerHelper.prototype.checkPropertiesGroup = function (properties, che
     });
   }
 };
+
+
+Namespace('HospoHero.checkerUtils', {
+  DocumentCheckerHelper: DocumentCheckerHelper,
+
+  checkError: function (message) {
+    throw new Meteor.Error(502, message);
+  }
+});
+
+logger = Meteor.isServer ? logger : {
+  error: function () {
+    console.log('ERROR: ', arguments);
+  }
+};

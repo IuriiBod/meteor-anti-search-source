@@ -55,7 +55,6 @@ underscore
 random
 u2622:persistent-session
 deepwell:bootstrap-datepicker2
-momentjs:moment
 percolate:synced-cron
 dbernhard:jquery-ui-draggable
 reywood:publish-composite
@@ -65,3 +64,5 @@ meteorhacks:ssr
 trsdln:flyouts
 russ:weather-icons
 fortawesome:fontawesome
+joshowens:timezone-picker
+mrt:moment-timezone
