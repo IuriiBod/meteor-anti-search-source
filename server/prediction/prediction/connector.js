@@ -65,9 +65,6 @@ GooglePredictionApi.prototype.makePrediction = function (inputData) {
   if (predictedValue < 0) {
     predictedValue = 0;
   }
-
-  logger.info('Made prediction', {menuItemId: inputData[0], value: predictedValue});
-
   return predictedValue;
 };
 
