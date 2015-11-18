@@ -1,8 +1,12 @@
 Template.timepicker.onRendered(function () {
-  this.$('.picker-group').datetimepicker({
-    format: 'LT',
-    date: moment()
-  });
+  var self = this;
+  FlowComponents.callAction('getTime')
+    .then(function(time) {
+      self.$('.picker-group').datetimepicker({
+        format: 'LT',
+        date: time
+      });
+    });
 });
 
 Template.timepicker.events({

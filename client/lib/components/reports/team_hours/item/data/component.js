@@ -7,17 +7,10 @@ var component = FlowComponents.define("reportData", function (props) {
 });
 
 component.state.shift = function () {
-  //exclude this shift if it is in future
-  var endOfToday = moment().endOf('day');
-  var shift = Shifts.findOne({
+  return  Shifts.findOne({
     "assignedTo": this.userId,
     "shiftDate": this.shiftDate
   });
-
-  if (shift && moment(shift.shiftDate).isAfter(endOfToday)) {
-    shift = false;
-  }
-  return shift
 };
 
 component.state.startedTime = function () {
