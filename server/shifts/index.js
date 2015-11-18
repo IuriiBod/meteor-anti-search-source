@@ -17,7 +17,7 @@ var ShiftPropertyChangeLogger = {
   },
 
   _formatProperty: function (shift, property) {
-    if(_.isDate(shift[property])) {
+    if (_.isDate(shift[property])) {
       return this.propertiesFormatters[property](shift[property], shift.relations.locationId);
     } else {
       return this.propertiesFormatters[property](shift[property]);
