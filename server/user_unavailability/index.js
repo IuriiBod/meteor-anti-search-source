@@ -1,21 +1,20 @@
 Meteor.methods({
     addUnavailability: function (newUnavailability) {
-        newUnavailability._id = Random.id();
-        check(newUnavailability, HospoHero.checkers.UnavailabilityChecker);
+        check(newUnavailability, HospoHero.checkers.UnavailabilityObject);
 
         Meteor.users.update({_id: this.userId}, {$push: {unavailabilities: newUnavailability}})
     },
     removeUnavailability: function (unavailability) {
-        check(unavailability, HospoHero.checkers.UnavailabilityChecker);
+        check(unavailability, HospoHero.checkers.UnavailabilityObject);
 
         Meteor.users.update({_id: this.userId}, {$pull: {unavailabilities: unavailability}});
     },
 
     createNewLeaveRequest: function (newLeaveRequest) {
-        check(newLeaveRequest, HospoHero.checkers.LeaveRequestChecker);
-
         newLeaveRequest.userId = this.userId;
         newLeaveRequest.status = 'awaiting';
+        check(newLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
+
         LeaveRequests.insert(newLeaveRequest);
     },
     removeLeaveRequest: function (leaveRequestId) {
@@ -30,30 +29,25 @@ Meteor.methods({
         }
     },
     approveLeaveRequest: function (leaveRequestId) {
+        check(leaveRequestId, HospoHero.checkers.MongoId);
+
         changeLeaveRequestStatus(this.userId, leaveRequestId, 'approved');
     },
     declineLeaveRequest: function (leaveRequestId) {
+        check(leaveRequestId, HospoHero.checkers.MongoId);
+
         changeLeaveRequestStatus(this.userId, leaveRequestId, 'declined');
     }
 });
 
 
 var changeLeaveRequestStatus = function (currentUserId, leaveRequestId, newStatus) {
-    check(currentUserId, HospoHero.checkers.CanUserChangeLeaveRequestsStatusChecker);
-
     var thisLeaveRequest = findLeaveRequest(leaveRequestId);
+    thisLeaveRequest.currentUserId = currentUserId;
 
-    console.log(currentUserId, thisLeaveRequest.notifyManagerId, currentUserId == thisLeaveRequest.notifyManagerId);
+    check(thisLeaveRequest, HospoHero.checkers.canBeApprovedOrDeclined);
 
-    if (currentUserId == thisLeaveRequest.userId) {
-        throw new Meteor.Error('Error', 'You can\'t change the status of the own leave request!');
-    }
-
-    if (thisLeaveRequest.status == 'awaiting') {
-        LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
-    } else {
-        throw  new Meteor.Error('Error', 'Leave request is already ' + thisLeaveRequest.status + '!');
-    }
+    LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
 };
 
 var findLeaveRequest = function (leaveRequestId) {
