@@ -1,6 +1,6 @@
 <template name="addNewUnavailability">
   <div class="panel-body new-unavailability">
-    <form class="form-horizontal">
+    <form class="form-horizontal unavailability-form">
 
       <!-- Date -->
       <div class="form-group col-md-12">
@@ -11,14 +11,14 @@
         </div>
         <div class="row">
           <div class="col-md-9">
-            <div id="datePicker" class="input-group">
+            <div class="date-picker input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
               <input class="set-due-date form-control" type="text"/>
             </div>
           </div>
           <div class="col-md-3">
             <div class="col-md-6">
-              <input id="allDayCheckbox" type="checkbox">
+              <input type="checkbox" class="all-day-checkbox">
             </div>
             <div class="col-md-6">
               <label>All day?</label>
@@ -29,11 +29,11 @@
 
       <!-- Time -->
       <div class="form-group col-md-12 {{state$timePickerVisibility}}">
-        <div id="startTimePicker" class="input-group">
+        <div class="start-time-picker input-group">
           <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
           <input class="set-due-date form-control" type="text"/>
         </div>
-        <div id="endTimePicker" class="input-group">
+        <div class="end-time-picker input-group">
           <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
           <input class="set-due-date form-control" type="text"/>
         </div>
@@ -48,7 +48,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <select id="repeatSelect" class="form-control">
+            <select class="repeat-select form-control">
               <option value="never">Never</option>
               <option value="weekly">Weekly</option>
               <option value="monthly">Monthly</option>
@@ -66,7 +66,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <input id="commentInputText" class="form-control" type="text">
+            <input class="comment-input form-control" type="text">
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@
       <div class="form-group col-md-12">
         <div class="row">
           <div class="col-md-4 col-md-offset-8">
-            <button id="cancelBtn" type="button" class="btn btn-primary pull-left btn-white">Cancel</button>
+            <button type="button" class="cancel-button btn btn-primary pull-left btn-white">Cancel</button>
             <button type="submit" class="btn btn-primary pull-right">Add</button>
           </div>
         </div>

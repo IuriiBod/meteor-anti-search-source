@@ -1,5 +1,5 @@
 Template.unavailabilitiesOrLeaveRequestsComponent.events({
-    'click #newItemBtn': function () {
+    'click .new-item-button': function () {
         FlowComponents.callAction('newItem');
     }
 })

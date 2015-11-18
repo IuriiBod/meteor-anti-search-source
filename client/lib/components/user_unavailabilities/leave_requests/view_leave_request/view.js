@@ -1,20 +1,38 @@
+Template.viewLeaveRequest.onCreated(function () {
+    this.getRequestValuesFromTemplate = function () {
+        var startDate = this.$('.start-date-picker').data('DateTimePicker').date();
+        var endDate = this.$('.end-date-picker').data('DateTimePicker').date();
+        var notifyManagerId = this.$('.notify-manager-select').val() || '';
+        var comment = this.$('.comment-input').val() || '';
+
+        return {
+            startDate: startDate,
+            endDate: endDate,
+            notifyManagerId: notifyManagerId,
+            comment: comment
+        }
+    };
+});
+
 Template.viewLeaveRequest.onRendered(function () {
 
     // Define a dateTimePickers
-    self.$('#startDatePicker').datetimepicker({
+    self.$('.start-date-picker').datetimepicker({
         format: 'YYYY MMM Do',
         minDate: moment(),
         defaultDate: moment()
     });
-    self.$('#endDatePicker').datetimepicker({
+    self.$('.end-date-picker').datetimepicker({
         format: 'YYYY MMM Do',
         minDate: moment().add(1, 'day'),
         defaultDate: moment().add(1, 'day')
     });
 
     // Events for dateTimePicker
-    self.$("#startDatePicker").on("dp.change", function (e) {
-        var endDatePicker = self.$('#endDatePicker').data("DateTimePicker");
+    // Set minDate for end-date-picker, that equals date of start-date-picker,
+    // and change date on end-time-picker, if current date less than minDate
+    self.$(".start-date-picker").on("dp.change", function (e) {
+        var endDatePicker = self.$('.end-date-picker').data("DateTimePicker");
         endDatePicker.minDate(e.date.add(1, 'day'));
 
         if (endDatePicker.minDate() > endDatePicker.date()) {
@@ -24,33 +42,19 @@ Template.viewLeaveRequest.onRendered(function () {
 });
 
 Template.viewLeaveRequest.events({
-    'submit .form-horizontal': function (e, tmpl) {
+    'submit .leave-request-form': function (e, tmpl) {
         e.preventDefault();
 
-        var values = getValues(tmpl);
+        var values = tmpl.getRequestValuesFromTemplate();
         FlowComponents.callAction('saveLeaveRequest', values);
     },
-    'click #cancelBtn': function () {
+    'click .cancel-button': function () {
         Router.go('userUnavailability');
     },
-    'click #approveBtn': function () {
+    'click .approve-button': function () {
         FlowComponents.callAction('approveLeaveRequest');
     },
-    'click #declineBtn': function () {
+    'click .decline-button': function () {
         FlowComponents.callAction('declineLeaveRequest');
     }
 });
-
-var getValues = function (tmpl) {
-    var startDate = tmpl.$('#startDatePicker').data('DateTimePicker').date();
-    var endDate = tmpl.$('#endDatePicker').data('DateTimePicker').date();
-    var notifyManagerId = tmpl.$('#notifyManagerSelect').val() || '';
-    var comment = tmpl.$('#commentInputText').val() || '';
-
-    return {
-        startDate: startDate,
-        endDate: endDate,
-        notifyManagerId: notifyManagerId,
-        comment: comment
-    }
-};

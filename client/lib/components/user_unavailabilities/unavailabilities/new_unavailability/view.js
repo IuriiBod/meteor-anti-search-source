@@ -1,26 +1,44 @@
+Template.addNewUnavailability.onCreated(function () {
+    this.getValuesFromTemplate = function () {
+        var date = this.$('.date-picker').data('DateTimePicker').date();
+        var startTime = this.$('.start-time-picker').data('DateTimePicker').date();
+        var endTime = this.$('.end-time-picker').data('DateTimePicker').date();
+        var repeat = this.$('.repeat-select').val();
+        var comment = this.$('.comment-input').val();
+
+        return {
+            date: date,
+            startTime: startTime,
+            endTime: endTime,
+            repeat: repeat,
+            comment: comment
+        };
+    };
+});
+
 Template.addNewUnavailability.onRendered(function () {
     var self = this;
 
     // Define a dateTimePickers
-    self.$('#datePicker').datetimepicker({
+    self.$('.date-picker').datetimepicker({
         format: 'YYYY MMM Do',
         minDate: moment(),
         defaultDate: moment()
     });
-    self.$('#startTimePicker').datetimepicker({
+    self.$('.start-time-picker').datetimepicker({
         format: 'HH:mm',
         stepping: 10,
         defaultDate: moment()
     });
-    self.$('#endTimePicker').datetimepicker({
+    self.$('.end-time-picker').datetimepicker({
         format: 'HH:mm',
         stepping: 10,
         defaultDate: moment().add(1, 'hours'),
         minDate: moment().add(10, 'minutes')
     });
 
-    self.$("#startTimePicker").on("dp.change", function (e) {
-        var endTimePicker = self.$("#endTimePicker").data("DateTimePicker");
+    self.$('.start-time-picker').on("dp.change", function (e) {
+        var endTimePicker = self.$('.end-time-picker').data("DateTimePicker");
 
         endTimePicker.minDate(e.date.add(10, 'minutes'));
 
@@ -31,33 +49,18 @@ Template.addNewUnavailability.onRendered(function () {
 });
 
 Template.addNewUnavailability.events({
-    'submit .form-horizontal': function (e, tmpl) {
+    'submit .unavailability-form': function (e, tmpl) {
         e.preventDefault();
 
-        var values = getValues(tmpl);
+        console.log(this);
+        var values = tmpl.getValuesFromTemplate();
         FlowComponents.callAction('addUnavailability', values);
     },
-    'click #cancelBtn': function () {
+    'click .cancel-button': function () {
         Router.go('userUnavailability');
     },
-    'change #allDayCheckbox': function (e) {
+    'change .all-day-checkbox': function (e) {
         var value = $(e.currentTarget).prop('checked');
         FlowComponents.callAction('isAllDayChange', value);
     }
 });
-
-var getValues = function (tmpl) {
-    var date = tmpl.$('#datePicker').data('DateTimePicker').date();
-    var startTime = tmpl.$('#startTimePicker').data('DateTimePicker').date();
-    var endTime = tmpl.$('#endTimePicker').data('DateTimePicker').date();
-    var repeat = tmpl.$('#repeatSelect').val();
-    var comment = tmpl.$('#commentInputText').val();
-
-    return {
-        date: date,
-        startTime: startTime,
-        endTime: endTime,
-        repeat: repeat,
-        comment: comment
-    };
-};
