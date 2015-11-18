@@ -10,10 +10,13 @@ component.prototype.isWeekDatesEqual = function (dateA, dateB) {
 
 
 component.action.onDateChanged = function (newWeekDate) {
+  console.log('ondatechanged', newWeekDate);
+
   var currentWeekDate = this.get('weekDate');
   if (!this.isWeekDatesEqual(newWeekDate, currentWeekDate)) {
     this.set('weekDate', newWeekDate);
     if (this.onDateChangedCallback) {
+      console.log('callback');
       this.onDateChangedCallback(newWeekDate);
     }
     return newWeekDate;
@@ -34,10 +37,10 @@ component.state.currentWeekStr = function () {
   var lastDay = moment(weekStartEnd).endOf('isoweek');
 
   var currentDate;
-  if(firstDay.year() != lastDay.year()) {
+  if (firstDay.year() != lastDay.year()) {
     currentDate = firstDay.format('D MMM YYYY - ') + lastDay.format('D MMM YYYY');
   } else {
-    if(firstDay.month() != lastDay.month()) {
+    if (firstDay.month() != lastDay.month()) {
       currentDate = firstDay.format('D MMM - ') + lastDay.format('D MMM YYYY');
     } else {
       currentDate = firstDay.format('D - ') + lastDay.format('D MMM YYYY');
