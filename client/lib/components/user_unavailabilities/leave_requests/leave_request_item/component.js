@@ -38,15 +38,15 @@ component.state.status = function () {
 };
 
 component.state.isApproved = function () {
-    return this.item.approved && !this.item.declined;
+    return this.item.status == 'approved';
 };
 
 component.state.isDeclined = function () {
-    return !this.item.approved && this.item.declined
+    return this.item.status == 'declined';
 };
 
 component.state.isAwaiting = function () {
-    return !(this.item.approved && this.item.declined);
+    return this.item.status == 'awaiting';
 };
 
 component.action.removeLeaveRequest = function () {

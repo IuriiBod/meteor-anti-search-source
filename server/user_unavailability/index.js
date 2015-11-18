@@ -15,14 +15,14 @@ Meteor.methods({
         check(newLeaveRequest, HospoHero.checkers.LeaveRequestChecker);
 
         newLeaveRequest.userId = this.userId;
-        newLeaveRequest.approved = false;
-        newLeaveRequest.declined = false;
+        newLeaveRequest.status = 'awaiting';
         LeaveRequests.insert(newLeaveRequest);
     },
     removeLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
 
-        var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
+        var thisLeaveRequest = findLeaveRequest(leaveRequestId);
+
         if (thisLeaveRequest.notifyManagerId == this.userId || this.userId == thisLeaveRequest.userId) {
             LeaveRequests.remove({_id: leaveRequestId});
         } else {
@@ -30,33 +30,36 @@ Meteor.methods({
         }
     },
     approveLeaveRequest: function (leaveRequestId) {
-        check(leaveRequestId, HospoHero.checkers.MongoId);
-
-        var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
-        if (HospoHero.canUser('approve leave requests', this.userId) && thisLeaveRequest.userId != this.userId) {
-
-            if (!(thisLeaveRequest.approved && thisLeaveRequest.declined)) {
-                LeaveRequests.update(leaveRequestId, {$set: {approved: true}});
-            } else {
-                throw new Meteor.Error('Error', 'Leave request already approved or declined!');
-            }
-        } else {
-            throw new Meteor.Error('Permission denied', 'You can\' approve this leave request!');
-        }
+        changeLeaveRequestStatus(this.userId, leaveRequestId, 'approved');
     },
     declineLeaveRequest: function (leaveRequestId) {
-        check(leaveRequestId, HospoHero.checkers.MongoId);
-
-        var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
-        if (HospoHero.canUser('decline leave requests', this.userId) && thisLeaveRequest.userId != this.userId) {
-
-            if (!(thisLeaveRequest.approved && thisLeaveRequest.declined)) {
-                LeaveRequests.update(leaveRequestId, {$set: {declined: true}});
-            } else {
-                throw new Meteor.Error('Error', 'Leave request already approved or declined!');
-            }
-        } else {
-            throw new Meteor.Error('Permission denied', 'You can\' decline this leave request!');
-        }
+        changeLeaveRequestStatus(this.userId, leaveRequestId, 'declined');
     }
 });
+
+
+var changeLeaveRequestStatus = function (currentUserId, leaveRequestId, newStatus) {
+    check(currentUserId, HospoHero.checkers.CanUserChangeLeaveRequestsStatusChecker);
+
+    var thisLeaveRequest = findLeaveRequest(leaveRequestId);
+
+    console.log(currentUserId, thisLeaveRequest.notifyManagerId, currentUserId == thisLeaveRequest.notifyManagerId);
+
+    if (currentUserId == thisLeaveRequest.userId) {
+        throw new Meteor.Error('Error', 'You can\'t change the status of the own leave request!');
+    }
+
+    if (thisLeaveRequest.status == 'awaiting') {
+        LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
+    } else {
+        throw  new Meteor.Error('Error', 'Leave request is already ' + thisLeaveRequest.status + '!');
+    }
+};
+
+var findLeaveRequest = function (leaveRequestId) {
+    var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
+    if (!thisLeaveRequest) {
+        throw  new Meteor.Error('Error', 'Leave request is not exist!');
+    }
+    return thisLeaveRequest;
+};
