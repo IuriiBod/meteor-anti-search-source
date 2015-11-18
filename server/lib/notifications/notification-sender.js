@@ -107,9 +107,6 @@ NotificationSender.prototype._insertNotification = function (receiverId, markAsR
     notificationOptions.text = html;
     Notifications.insert(notificationOptions);
   }
-
-  console.log('insert notification', notificationOptions);
-
   return html;
 };
 
