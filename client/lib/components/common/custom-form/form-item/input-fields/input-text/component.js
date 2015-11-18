@@ -19,7 +19,7 @@ component.state.disabled = function () {
 component.action.checkValid = function (value) {
   this.set('value', value.trim());
   var validation = this.get('item').validation;
-  var errors = validation.errors || {};
+  var errorsText = validation.errors || {};
 
   var validationFunctions = {
     minLength: this.checkLength('min'),
@@ -30,7 +30,7 @@ component.action.checkValid = function (value) {
   var validationErrors = {
     minLength: this.setError("Minimum required length"),
     maxLength: this.setError("Maximum required length"),
-    re: errors.re ? this.setError(errors.re) : this.setError("Invalid format")
+    re: errorsText.re ? this.setError(errorsText.re) : this.setError("Invalid format")
   };
 
   for (var key in validationFunctions) {
@@ -42,7 +42,7 @@ component.action.checkValid = function (value) {
     }
   }
 
-  this.setError('')('');
+  this.setError('');
 
 };
 
@@ -61,12 +61,22 @@ component.prototype.checkRegExp = function () {
   }
 };
 
-component.prototype.setError = function (errorText) {
-  var self = this;
-  return function (errorParams) {
-    if(errorParams && (_.isString(errorParams) || _.isNumber(errorParams))) {
-      errorText += ": " + errorParams;
+component.prototype.setError = function () {
+  if(arguments && arguments.length) {
+    var errorText = arguments[0];
+    var self = this;
+
+    if(errorText === '') {
+      return self.errorHandler('');
+    } else {
+      return function (errorParams) {
+        if (errorParams && (_.isString(errorParams) || _.isNumber(errorParams))) {
+          errorText += ": " + errorParams;
+        }
+        self.errorHandler(errorText);
+      }
     }
-    self.errorHandler(errorText);
+  } else {
+    return false;
   }
 };
