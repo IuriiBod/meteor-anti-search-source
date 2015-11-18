@@ -14,6 +14,20 @@
  * This feature may be used in server side routes for
  * processing any notification's actions.
  *
+ * Usage examples:
+ * ```
+ *  new NotificationSender('Test1', 'test', {username: 'User'})
+ *  .sendEmail('kfZMbk62tgFSxmDen');
+ *
+ *  new NotificationSender('Test2', 'test', {username: 'User'})
+ *  .sendBoth('kfZMbk62tgFSxmDen');
+ *
+ *  new NotificationSender('Test3', 'test', {username: 'User'}, {
+ *   interactive: true,
+ *   meta: {aaa: 333}
+ * }).sendBoth('kfZMbk62tgFSxmDen');
+ * ```
+ *
  * @param {string} subject notification's subject/title
  * @param {string} templateName handlebars template name
  * @param {*|object} templateData data to render on template
