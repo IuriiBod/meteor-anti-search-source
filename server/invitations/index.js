@@ -41,7 +41,15 @@ Meteor.methods({
     Invitations.remove({_id: id});
   },
 
-  acceptInvitation: function (id, user) {
+  acceptInvitation: function (id, response) {
+    var nonProfileItems = ['username', 'email', 'password'];
+    var user = {
+      profile: {}
+    };
+
+    _.extend(user, _.pick(response, nonProfileItems));
+    _.extend(user.profile, _.omit(response, nonProfileItems));
+
     var userId = Accounts.createUser(user);
 
     Invitations.update({_id: id}, {

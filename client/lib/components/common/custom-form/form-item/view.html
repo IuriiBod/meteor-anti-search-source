@@ -1,0 +1,10 @@
+<template name="customFormItem">
+  <div class="form-group{{#if state$errors}} has-error{{/if}}">
+    <label for="{{state$item.name}}">{{state$item.label}}</label>
+    {{> render component=state$componentToRender item=state$item errorHandler=state$errorHandler}}
+
+    {{#if state$errors}}
+      <span class="help-block">{{state$errors}}</span>
+    {{/if}}
+  </div>
+</template>
