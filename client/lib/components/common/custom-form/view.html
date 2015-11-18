@@ -1,0 +1,9 @@
+<template name="customForm">
+  <form>
+    {{#each state$fields}}
+      {{> render component="customFormItem" item=this errorHandler=state$errorHandler}}
+    {{/each}}
+
+    <button type="submit" class="btn btn-lg btn-block btn-default">{{state$submitCaption}}</button>
+  </form>
+</template>
