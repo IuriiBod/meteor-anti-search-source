@@ -10,7 +10,7 @@ Router.route('userUnavailability', {
         ];
     },
     data: {
-        isUnavailablesList: true
+        userUnavailability: true
     }
 });
 
@@ -18,7 +18,7 @@ Router.route('addNewUnavailability', {
     path: '/unavailabilities/new',
     template: 'userUnavailabilityMainView',
     data: {
-        isAddNewUnavailable: true
+        addNewUnavailability: true
     }
 });
 
@@ -26,7 +26,7 @@ Router.route('addNewLeaveRequest', {
     path: '/leaveRequests/newLeaveRequest',
     template: 'userUnavailabilityMainView',
     data: {
-        isAddNewLeaveRequest: true
+        addNewLeaveRequest: true
     },
     waitOn: function () {
         var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
@@ -41,7 +41,7 @@ Router.route('viewLeaveRequest', {
     template: 'userUnavailabilityMainView',
     data: function () {
         return {
-            isViewLeaveRequest: true
+            viewLeaveRequest: true
         }
     },
     waitOn: function () {
