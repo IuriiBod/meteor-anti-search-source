@@ -26,8 +26,8 @@ component.state.managers = function () {
 };
 
 component.action.saveLeaveRequest = function (newLeaveRequest) {
-    newLeaveRequest.startDate = new Date(newLeaveRequest.startDate);
-    newLeaveRequest.endDate = new Date(newLeaveRequest.endDate);
+    newLeaveRequest.startDate = newLeaveRequest.startDate.toDate();
+    newLeaveRequest.endDate = newLeaveRequest.endDate.toDate();
 
     Meteor.call('createNewLeaveRequest', newLeaveRequest, HospoHero.handleMethodResult());
     Router.go('userUnavailability');

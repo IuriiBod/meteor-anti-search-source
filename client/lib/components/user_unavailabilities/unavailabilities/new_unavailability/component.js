@@ -13,8 +13,8 @@ component.action.isAllDayChange = function (value) {
 };
 
 component.action.addUnavailability = function (params) {
-    var startDate = getDate(params.date, params.startTime);
-    var endDate = this.get('isAllDay') ? startDate : getDate(params.date, params.endTime);
+    var startDate = this.getDateFromDateAndTimePickers(params.date, params.startTime);
+    var endDate = this.get('isAllDay') ? startDate : this.getDateFromDateAndTimePickers(params.date, params.endTime);
 
     var unavailability = {
         startDate: startDate,
@@ -27,6 +27,6 @@ component.action.addUnavailability = function (params) {
     Router.go('userUnavailability');
 };
 
-var getDate = function (date, time) {
-    return new Date(moment(date).hours(time.hours()).minutes(time.minutes()));
+component.prototype.getDateFromDateAndTimePickers = function (date, time) {
+    return moment(date).hours(time.hours()).minutes(time.minutes()).toDate();
 };

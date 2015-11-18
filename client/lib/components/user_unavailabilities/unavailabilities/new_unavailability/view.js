@@ -52,7 +52,6 @@ Template.addNewUnavailability.events({
     'submit .unavailability-form': function (e, tmpl) {
         e.preventDefault();
 
-        console.log(this);
         var values = tmpl.getValuesFromTemplate();
         FlowComponents.callAction('addUnavailability', values);
     },
