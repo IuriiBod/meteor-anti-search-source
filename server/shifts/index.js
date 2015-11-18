@@ -8,19 +8,19 @@ var ShiftPropertyChangeLogger = {
     shiftDate: 'shift date',
     assignedTo: 'assignment'
   },
-
-  propertiesFormatters: {
-    startTime: HospoHero.dateUtils.timeFormat,
-    endTime: HospoHero.dateUtils.timeFormat,
-    shiftDate: HospoHero.dateUtils.shortDateFormat,
-    assignedTo: HospoHero.username
-  },
-
+  
   _formatProperty: function (shift, property) {
-    if(_.isDate(shift[property])) {
-      return this.propertiesFormatters[property](shift[property], shift.relations.locationId);
+    var propertiesFormatters = {
+      startTime: HospoHero.dateUtils.timeFormat,
+      endTime: HospoHero.dateUtils.timeFormat,
+      shiftDate: HospoHero.dateUtils.shortDateFormat,
+      assignedTo: HospoHero.username
+    };
+
+    if (_.isDate(shift[property])) {
+      return propertiesFormatters[property](shift[property], shift.relations.locationId);
     } else {
-      return this.propertiesFormatters[property](shift[property]);
+      return propertiesFormatters[property](shift[property]);
     }
   },
 

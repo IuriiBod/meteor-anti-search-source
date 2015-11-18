@@ -10,7 +10,9 @@ component.state.weekDays = function () {
 };
 
 component.state.users = function () {
-  var query = {};
+  var query = {
+    'relations.areaIds': HospoHero.getCurrentAreaId()
+  };
   var searchText = this.get('searchText');
   if(searchText) {
     query.username = new RegExp(searchText, 'i');

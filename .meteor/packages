@@ -5,6 +5,12 @@
 
 meteor-platform
 iron:router
+cmather:handlebars-server
+http
+micah:google-cloud
+votercircle:winston
+jss:through
+percolate:migrations
 
 meteorhacks:flow-components
 meteorhacks:search-source
@@ -33,11 +39,6 @@ hospohero:stale-session
 reactive-var
 ogourment:settings
 
-http
-micah:google-cloud
-
-votercircle:winston
-jss:through
 claudiojulio:blueimp-gallery
 summernote:standalone
 planettraining:jquery-fullcalendar
@@ -46,7 +47,6 @@ rochal:slimscroll
 
 natestrauser:x-editable-bootstrap
 
-percolate:migrations
 alonoslav:roles
 
 zephraph:namespace
@@ -65,5 +65,5 @@ russ:weather-icons
 fortawesome:fontawesome
 
 momentjs:moment
+jss:moment-timezone
 joshowens:timezone-picker
-cmather:handlebars-server
