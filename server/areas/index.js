@@ -75,30 +75,14 @@ Meteor.methods({
     updateUserDocument.$addToSet['relations.locationIds'] = area.locationId;
     updateUserDocument.$addToSet['relations.areaIds'] = addedUserInfo.areaId;
 
-    console.log('update doc', updateUserDocument);
-
     Meteor.users.update({_id: addedUserInfo.userId}, updateUserDocument);
 
     // Send notification to the invited user
-    var options = {
-      type: 'invitation',
-      title: "You've been added to the " + area.name + " area",
-      to: addedUserInfo.userId
-    };
-
-    HospoHero.sendNotification(options);
-
-    // Send an email to the invited user
-    var emailSender = new EmailSender({
-      to: addedUserInfo.userId,
-      from: Meteor.userId(),
-      subject: "Added to the " + area.name + " area",
-      emailType: 'invite user',
-      params: {
-        areaName: area.name
-      }
-    });
-    emailSender.send();
+    new NotificationSender(
+      'New invitation',
+      'add-user-to-area',
+      {areaName: area.name}
+    ).sendBoth(addedUserInfo.userId);
   },
 
   removeUserFromArea: function (userId, areaId) {
