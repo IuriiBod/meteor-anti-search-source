@@ -57,26 +57,27 @@ Meteor.methods({
     });
 
     var invitation = Invitations.findOne({_id: id});
-    var options = {
-      type: 'invitation',
-      title: 'User ' + invitation.name + ' has accept your invitation',
-      actionType: 'update',
-      to: invitation.invitedBy,
-      ref: id
-    };
-    HospoHero.sendNotification(options);
+    var area = Areas.findOne({_id: invitation.areaId});
 
-    var areaId = invitation.areaId;
-    var area = Areas.findOne({_id: areaId});
+    // send a notification to the user
+    new NotificationSender(
+      'Invitation accepted',
+      'invitation-accepted',
+      {
+        username: invitation.name,
+        areaName: area.name
+      }
+    ).sendBoth(invitation.invitedBy);
+
     var updateObject = {
       roles: {},
       relations: {
         organizationId: area.organizationId,
         locationIds: [area.locationId],
-        areaIds: [areaId]
+        areaIds: [area._id]
       }
     };
-    updateObject.roles[areaId] = invitation.roleId;
+    updateObject.roles[area._id] = invitation.roleId;
     Meteor.users.update({_id: userId}, {$set: updateObject});
   }
 });
