@@ -15,7 +15,8 @@ Router.route('/claim/:id/:action', {
             assignedTo: claimedBy
           },
           $unset: {
-            claimedBy: 1
+            claimedBy: 1,
+            rejectedFor: 1
           }
         });
         Notifications.remove({'meta.shiftId': shiftId});
@@ -23,6 +24,9 @@ Router.route('/claim/:id/:action', {
         Shifts.update({_id: shiftId}, {
           $pull: {
             claimedBy: claimedBy
+          },
+          $addToSet: {
+            rejectedFor: claimedBy
           }
         });
         Notifications.remove({
