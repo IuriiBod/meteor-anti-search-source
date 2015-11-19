@@ -8,7 +8,7 @@ if (HospoHero.isProductionMode()) {
           method.apply(this, arguments);
         } catch (err) {
           //log error and return it to client
-          logger.error(err.toString());
+          logger.error(err.stack);
           throw err;
         }
       };
