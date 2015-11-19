@@ -107,37 +107,25 @@ Meteor.methods({
 
     var userIds = HospoHero.roles.getUserIdsByAction('approves roster requests');
 
-    var text = [];
-    text.push("Shift on ");
-    text.push(moment(shift.shiftDate).format("ddd, Do MMMM"));
-    text.push(" has been claimed by following workers");
-    text.push('<ul>');
+    if(userIds.length) {
+      var notificationSender = new NotificationSender(
+        'Shift claiming',
+        'claim-shift',
+        {
+          date: HospoHero.dateUtils.formatDateWithTimezone(shift.shiftDate, 'ddd, Do MMMM', shift.relations.locationId),
+          username: HospoHero.username(userId),
+          confirmRoute: Router.path('claim', {id: shiftId, action: 'confirm'}),
+          rejectRoute: Router.path('claim', {id: shiftId, action: 'reject'})
+        },
+        {
+          interactive: true
+        }
+      );
 
-    shift = Shifts.findOne({_id: shiftId});
-    shift.claimedBy.forEach(function (userId) {
-      text.push('<li>');
-      text.push(HospoHero.username(userId));
-      text.push(' <a href="#" class="confirmClaim" data-id="');
-      text.push(userId);
-      text.push('" data-shift="');
-      text.push(shiftId);
-      text.push('"><small class="text-success">Confirm</small></a>');
-      text.push(' <a href="#" class="rejectClaim" data-id="');
-      text.push(userId);
-      text.push('" data-shift="');
-      text.push(shiftId);
-      text.push('"><small class="text-danger">Reject</small></a></li>');
-    });
-    text.push('</ul>');
-
-    var options = {
-      title: text.join(''),
-      type: "claim",
-      to: userIds,
-      ref: shiftId
-    };
-
-    HospoHero.sendNotification(options);
+      userIds.forEach(function(userId) {
+        notificationSender.sendNotification(userId);
+      });
+    }
   },
 
   confirmClaim: function (shiftId, userId) {
