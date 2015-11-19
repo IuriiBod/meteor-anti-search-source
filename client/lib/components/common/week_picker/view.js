@@ -1,22 +1,23 @@
 Template.weekPicker.onRendered(function () {
-  this.getPickedMoment = function () {
-    return moment(this.$(".datepicker").datepicker('getDate'));
-  };
-
   var self = this;
 
   FlowComponents.callAction('getCurrentWeekDate').then(function (weekDate) {
-    var initialDate = HospoHero.dateUtils.getDateByWeekDate(weekDate);
-    var datePickerElement = self.$(".date-picker-container");
+    self.oldDateWeek = weekDate;
+
+    var initialDate = moment(HospoHero.dateUtils.getDateByWeekDate(weekDate));
+    var datePickerElement = self.$(".date-picker-input");
+
     datePickerElement.datetimepicker({
-      calendarWeeks: true
-      //weekStart: 1
-      //toggleActive: true,
-      //autoclose: true
+      calendarWeeks: true,
+      format: 'YYYY-MM-DD'
     });
     self.datePicker = datePickerElement.data("DateTimePicker");
-    //datePicker.datepicker("setDate", initialDate);
+    self.datePicker.date(initialDate);
   });
+
+  this.isSameAsOldWeekDate = function (newDateWeek) {
+    return newDateWeek.week === this.oldDateWeek.week && newDateWeek.year === this.oldDateWeek.year;
+  };
 
 
   this.getWeekDateByMoment = function (dateMoment) {
@@ -27,29 +28,33 @@ Template.weekPicker.onRendered(function () {
   };
 
   this.updatePickedMoment = function (weekChange) {
-    var currentMoment = this.getPickedMoment();
-    console.log('click', weekChange, currentMoment.toDate());
+    var currentMoment = moment(this.datePicker.date().toDate());
 
-    if (weekChange !== 0) {
+    var applyChangeToCurrentMoment = function () {
       var methodName = weekChange === 1 ? 'add' : 'subtract';
       currentMoment[methodName](1, 'week');
+    };
+
+    if (weekChange !== 0) {
+      applyChangeToCurrentMoment();
+      if (this.isSameAsOldWeekDate(this.getWeekDateByMoment(currentMoment))) {
+        applyChangeToCurrentMoment();
+      }
     }
 
     var weekDate = this.getWeekDateByMoment(currentMoment);
 
-    FlowComponents.callAction('onDateChanged', weekDate).then(function (savedWeekDate) {
-      //if (savedWeekDate) {
-      //  var date = HospoHero.dateUtils.getDateByWeekDate(savedWeekDate);
-      //  this.$(".datepicker").datepicker('setDate', date);
-      //}
-    });
+    if (!this.isSameAsOldWeekDate(weekDate)) {
+      FlowComponents.callAction('onDateChanged', weekDate);
+      self.oldDateWeek = weekDate;
+    }
   };
 });
 
 
 Template.weekPicker.events({
   'click .date-picker-button': function (event, tmpl) {
-    tmpl.datePicker.show();
+    tmpl.datePicker.toggle();
   },
 
   'click .next-week': function (event, tmpl) {
@@ -62,11 +67,11 @@ Template.weekPicker.events({
     tmpl.updatePickedMoment(-1);
   },
 
-  'changeDate .datepicker': function (event, tmpl) {
+  'dp.change .date-picker-input': function (event, tmpl) {
     tmpl.updatePickedMoment(0);
   },
 
-  'show .datepicker': function (event, tmpl) {
+  'dp.show .date-picker-input': function (event, tmpl) {
     //mark all selected week before showing
     $('.day.active').siblings('.day').addClass('week');
   }

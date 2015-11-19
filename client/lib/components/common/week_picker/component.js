@@ -10,18 +10,10 @@ component.prototype.isWeekDatesEqual = function (dateA, dateB) {
 
 
 component.action.onDateChanged = function (newWeekDate) {
-  console.log('ondatechanged', newWeekDate);
-
-  var currentWeekDate = this.get('weekDate');
-  if (!this.isWeekDatesEqual(newWeekDate, currentWeekDate)) {
-    this.set('weekDate', newWeekDate);
-    if (this.onDateChangedCallback) {
-      console.log('callback');
-      this.onDateChangedCallback(newWeekDate);
-    }
-    return newWeekDate;
+  this.set('weekDate', newWeekDate);
+  if (_.isFunction(this.onDateChangedCallback)) {
+    this.onDateChangedCallback(newWeekDate);
   }
-  return false;
 };
 
 
