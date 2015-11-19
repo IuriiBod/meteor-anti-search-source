@@ -32,7 +32,7 @@ Meteor.methods({
       subscription.itemIds = itemIds;
       Subscriptions.insert(subscription);
     } else {
-      var updateQuery = getUpdateQuery();
+      var updateQuery = getUpdateQuery(itemIds, unsubscribeTrigger);
       Subscriptions.update({ _id: subscriptionExists._id }, updateQuery);
     }
 
@@ -87,4 +87,5 @@ var getUpdateQuery = function(itemIds, unsubscribeTrigger) {
       };
     }
   }
+  return updateQuery;
 };
