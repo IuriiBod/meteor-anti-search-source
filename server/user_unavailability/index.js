@@ -11,6 +11,7 @@ Meteor.methods({
     },
 
     createNewLeaveRequest: function (newLeaveRequest) {
+        console.log('server method');
         newLeaveRequest.userId = this.userId;
         newLeaveRequest.status = 'awaiting';
         check(newLeaveRequest, HospoHero.checkers.LeaveRequestDocument);

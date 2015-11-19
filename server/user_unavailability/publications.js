@@ -7,7 +7,3 @@ Meteor.publish('userAllUnavailabilities', function () {
 Meteor.publish('userAllLeaveRequests', function () {
     return LeaveRequests.find({userId: this.userId});
 });
-
-Meteor.publish('leaveRequest', function (id) {
-    return LeaveRequests.find({_id: id, userId: this.userId});
-});

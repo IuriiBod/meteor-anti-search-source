@@ -25,19 +25,19 @@ component.state.managers = function () {
     return Meteor.users.find({_id: {$in: managersIds}});
 };
 
-component.action.saveLeaveRequest = function (newLeaveRequest) {
+component.action.saveLeaveRequest = function (newLeaveRequest, flyout) {
     newLeaveRequest.startDate = newLeaveRequest.startDate.toDate();
     newLeaveRequest.endDate = newLeaveRequest.endDate.toDate();
 
-    Meteor.call('createNewLeaveRequest', newLeaveRequest, HospoHero.handleMethodResult());
-    Router.go('userUnavailability');
+    // close flyout, if success
+    Meteor.call('createNewLeaveRequest', newLeaveRequest, HospoHero.handleMethodResult(function () {
+        flyout.close();
+    }));
 };
 
 component.action.approveLeaveRequest = function () {
     Meteor.call('approveLeaveRequest', this.get('leaveRequest')._id, HospoHero.handleMethodResult());
-    Router.go('userUnavailability');
 };
 component.action.declineLeaveRequest = function () {
     Meteor.call('declineLeaveRequest', this.get('leaveRequest')._id, HospoHero.handleMethodResult());
-    Router.go('userUnavailability');
 };

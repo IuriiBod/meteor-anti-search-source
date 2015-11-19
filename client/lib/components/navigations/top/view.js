@@ -26,6 +26,10 @@ Template.topNavbar.events({
 
   'click .organization-structure-flyout': function () {
     FlyoutManager.open('organizationStructure', {}, true);
+  },
+
+  'click .user-unavailabilities-flyout': function () {
+    FlyoutManager.open('userUnavailability', {}, true);
   }
 });
 

@@ -15,6 +15,10 @@ Template.viewLeaveRequest.onCreated(function () {
 });
 
 Template.viewLeaveRequest.onRendered(function () {
+    var self = this;
+
+    // Get a current flyout
+    self.currentFlyout = FlyoutManager.getInstanceByElement(self.$('.view-leave-request'));
 
     // Define a dateTimePickers
     self.$('.start-date-picker').datetimepicker({
@@ -46,10 +50,8 @@ Template.viewLeaveRequest.events({
         e.preventDefault();
 
         var values = tmpl.getRequestValuesFromTemplate();
-        FlowComponents.callAction('saveLeaveRequest', values);
-    },
-    'click .cancel-button': function () {
-        Router.go('userUnavailability');
+
+        FlowComponents.callAction('saveLeaveRequest', values, tmpl.currentFlyout);
     },
     'click .approve-button': function () {
         FlowComponents.callAction('approveLeaveRequest');

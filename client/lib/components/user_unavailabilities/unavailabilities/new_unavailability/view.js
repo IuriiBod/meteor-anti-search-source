@@ -19,6 +19,9 @@ Template.addNewUnavailability.onCreated(function () {
 Template.addNewUnavailability.onRendered(function () {
     var self = this;
 
+    // Get current flyout
+    self.currentFlyout = FlyoutManager.getInstanceByElement(self.$('.new-unavailability'));
+
     // Define a dateTimePickers
     self.$('.date-picker').datetimepicker({
         format: 'YYYY MMM Do',
@@ -53,10 +56,7 @@ Template.addNewUnavailability.events({
         e.preventDefault();
 
         var values = tmpl.getValuesFromTemplate();
-        FlowComponents.callAction('addUnavailability', values);
-    },
-    'click .cancel-button': function () {
-        Router.go('userUnavailability');
+        FlowComponents.callAction('addUnavailability', values, tmpl.currentFlyout);
     },
     'change .all-day-checkbox': function (e) {
         var value = $(e.currentTarget).prop('checked');

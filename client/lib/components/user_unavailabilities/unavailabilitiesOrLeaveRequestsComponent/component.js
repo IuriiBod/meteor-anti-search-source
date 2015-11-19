@@ -44,8 +44,8 @@ component.state.componentHeader = function () {
 
 component.action.newItem = function () {
     if (this.get('isUnavailabilities')) {
-        Router.go('addNewUnavailability');
+        FlyoutManager.open('addNewUnavailability', {}, true);
     } else if (this.get('isLeaveRequests')) {
-        Router.go('addNewLeaveRequest');
+        FlyoutManager.open('viewLeaveRequest', {}, true);
     }
 };

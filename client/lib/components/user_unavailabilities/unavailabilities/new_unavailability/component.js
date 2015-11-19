@@ -12,7 +12,7 @@ component.action.isAllDayChange = function (value) {
     }
 };
 
-component.action.addUnavailability = function (params) {
+component.action.addUnavailability = function (params, flyout) {
     var startDate = this.getDateFromDateAndTimePickers(params.date, params.startTime);
     var endDate = this.get('isAllDay') ? startDate : this.getDateFromDateAndTimePickers(params.date, params.endTime);
 
@@ -23,8 +23,10 @@ component.action.addUnavailability = function (params) {
         comment: params.comment
     };
 
-    Meteor.call('addUnavailability', unavailability, HospoHero.handleMethodResult());
-    Router.go('userUnavailability');
+    // close flyout, if success
+    Meteor.call('addUnavailability', unavailability, HospoHero.handleMethodResult(function () {
+        flyout.close();
+    }));
 };
 
 component.prototype.getDateFromDateAndTimePickers = function (date, time) {
