@@ -37,5 +37,11 @@ Meteor.methods({
       logger.error(err);
       return false;
     }
+  },
+
+  resetForecastData: function () {
+    DailySales.remove({});
+    Locations.update({}, {$unset: {lastForecastModelUploadDate: ''}}, {multi: true});
+    MenuItems.update({}, {$set: {isNotSyncedWithPos: false}}, {multi: true});
   }
 });

@@ -14,18 +14,37 @@
  * This feature may be used in server side routes for
  * processing any notification's actions.
  *
+ * Template data helpers
+ * You can also define you own helpers
+ * Note: notification helpers act as simple handlebars helpers.
+ * `_notificationId` will be also included in root context.
+ *
  * Usage examples:
  * ```
  *  new NotificationSender('Test1', 'test', {username: 'User'})
  *  .sendEmail('kfZMbk62tgFSxmDen');
  *
- *  new NotificationSender('Test2', 'test', {username: 'User'})
- *  .sendBoth('kfZMbk62tgFSxmDen');
- *
- *  new NotificationSender('Test3', 'test', {username: 'User'}, {
- *   interactive: true,
- *   meta: {aaa: 333}
+ * new NotificationSender('Test3', 'test', {
+ *     username: 'User',
+ *     persons: [
+ *         {name: 'John'},
+ *         {name: 'James'},
+ *         {name: 'Jim'}
+ *     ],
+ *     menuItemId: '4NCAWrYMj75cYKQ9L'
+ * }, {
+ *     interactive: true,
+ *     helpers: {
+ *         greeting: function () {
+ *             return 'Hello, ' + this.name;
+ *         },
+ *         menuItemUrl: function () {
+ *             return Router.path('menuItemDetail', {_id: this.menuItemId});
+ *         }
+ *     },
+ *     meta: {aaa: 333}
  * }).sendBoth('kfZMbk62tgFSxmDen');
+ *
  * ```
  *
  * @param {string} subject notification's subject/title
@@ -35,6 +54,7 @@
  * @param {*|string} options.senderId user that sanded notification
  * @param {*|object} options.metadata additional notification data
  * @param {*|boolean} options.interactive deny automatic reading (usually if notification requires an action)
+ * @param {*|object} options.helpers define you own formatting helpers
  * @constructor
  */
 NotificationSender = function (subject, templateName, templateData, options) {
@@ -43,6 +63,13 @@ NotificationSender = function (subject, templateName, templateData, options) {
     templateName: templateName,
     templateData: templateData || {}
   });
+
+  //register current notification helpers
+  if (options && _.isObject(options.helpers)) {
+    _.each(options.helpers, function (helperFn, helperName) {
+      OriginalHandlebars.registerHelper(helperName, helperFn);
+    });
+  }
 };
 
 /**

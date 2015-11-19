@@ -77,7 +77,7 @@ component.prototype.getTotalTimeAndWage = function () {
 
   var weekShifts = Shifts.find({
     "assignedTo": user._id,
-    "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek, HospoHero.getCurrentArea().locationId)
+    "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek)
   });
 
   var self = this;
@@ -91,10 +91,14 @@ component.prototype.getTotalTimeAndWage = function () {
   weekShifts.forEach(function (shift) {
     hasShifts = true;
     if(shift.startedAt || shift.finishedAt) {
-      var locationStart = HospoHero.dateUtils.getDateMomentForLocation(shift.startedAt, shift.relations.locationId);
-      var locationFinish = HospoHero.dateUtils.getDateMomentForLocation(shift.finishedAt, shift.relations.locationId);
+      var locationStart = moment(shift.startedAt);
+      var locationFinish = moment(shift.finishedAt);
       // I don't know why, but some shifts have startedAt in one day and finishedAt in another
-      locationFinish.date(locationStart.date());
+      locationFinish.set({
+        date: locationStart.date(),
+        month: locationStart.month(),
+        year: locationStart.year()
+      });
 
       var shiftDuration = locationFinish.diff(locationStart, 'minutes');
 
