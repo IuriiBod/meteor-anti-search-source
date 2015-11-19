@@ -20,7 +20,7 @@ Meteor.methods({
       throw new Meteor.Error("You have no permissions to Clock In/Clock Out");
     }
     check(id, HospoHero.checkers.ShiftId);
-    if (Shifts.findOne({"_id": id}).status === 'started'){
+    if (Shifts.findOne({"_id": id}).status === 'started') {
       Shifts.update({"_id": id}, {$set: {"status": "finished", "finishedAt": new Date()}});
       logger.info("Shift ended", {"shiftId": id, "worker": user._id});
     }
@@ -107,22 +107,29 @@ Meteor.methods({
 
     var userIds = HospoHero.roles.getUserIdsByAction('approves roster requests');
 
-    if(userIds.length) {
+    if (userIds.length) {
       var notificationSender = new NotificationSender(
         'Shift claiming',
         'claim-shift',
         {
           date: HospoHero.dateUtils.formatDateWithTimezone(shift.shiftDate, 'ddd, Do MMMM', shift.relations.locationId),
-          username: HospoHero.username(userId),
-          confirmRoute: Router.path('claim', {id: shiftId, action: 'confirm'}),
-          rejectRoute: Router.path('claim', {id: shiftId, action: 'reject'})
+          username: HospoHero.username(userId)
         },
         {
-          interactive: true
+          interactive: true,
+          helpers: {
+            claimUrl: function (action) {
+              return Router.path('claim', {id: this._notificationId, action: action});
+            }
+          },
+          meta: {
+            shiftId: shiftId,
+            claimedBy: userId
+          }
         }
       );
 
-      userIds.forEach(function(userId) {
+      userIds.forEach(function (userId) {
         notificationSender.sendNotification(userId);
       });
     }

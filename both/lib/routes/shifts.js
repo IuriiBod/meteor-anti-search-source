@@ -1,10 +1,38 @@
 Router.route('/claim/:id/:action', {
   name: 'claim',
-  waitOn: function () {
-    return Meteor.subscribe('ingredients', null, HospoHero.getCurrentAreaId(Meteor.userId()));
-  },
-  data: function () {
-    Session.set("thisWeek", this.params.week);
-    Session.set("editStockTake", false);
+  where: 'server',
+  action: function () {
+    var notificationId = this.params.id;
+    var action = this.params.action;
+    var notification = Notifications.findOne({_id: notificationId});
+
+    if(notification) {
+      var shiftId = notification.meta.shiftId;
+      var claimedBy = notification.meta.claimedBy;
+      if(action === 'confirm') {
+        Shifts.update({_id: shiftId}, {
+          $set: {
+            assignedTo: claimedBy
+          },
+          $unset: {
+            claimedBy: 1
+          }
+        });
+        Notifications.remove({'meta.shiftId': shiftId});
+      } else {
+        Shifts.update({_id: shiftId}, {
+          $pull: {
+            claimedBy: claimedBy
+          }
+        });
+        Notifications.remove({
+          'meta.shiftId': shiftId,
+          'meta.claimedBy': claimedBy
+        });
+      }
+    }
+
+    this.response.writeHead(301, {'Location': '/'});
+    this.response.end();
   }
-}, {where: 'server'});
+});
