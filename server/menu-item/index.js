@@ -155,16 +155,6 @@ Meteor.methods({
     if (Object.keys(updateDoc).length > 0) {
       updateDoc['editedBy'] = Meteor.userId();
       updateDoc['editedOn'] = Date.now();
-
-      logger.info("Menu item updated ", id);
-
-      var menu = MenuItems.findOne(id);
-      var options = {
-        title: 'Instructions on ' + menu.name + ' has been updated',
-        type: 'menu',
-        ref: id
-      };
-      HospoHero.sendNotification(options);
       updateQuery = {$set: updateDoc}
     }
 
@@ -189,6 +179,7 @@ Meteor.methods({
       }
     });
 
+    logger.info("Menu item updated ", id);
     return MenuItems.update({"_id": id}, updateQuery);
   },
 
