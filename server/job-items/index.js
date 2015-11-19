@@ -306,26 +306,31 @@ Meteor.methods({
       throw new Meteor.Error(404, "Job Item not found");
     }
 
-    var existInMenuItems = MenuItems.findOne(
-      {"jobItems": {$elemMatch: {"_id": id}}},
-      {fields: {"jobItems": {$elemMatch: {"_id": id}}}}
+    var notificationSender = new NotificationSender(
+      'Job item deleted',
+      'job-item-deleted',
+      {
+        itemName: job.name,
+        username: HospoHero.username(Meteor.userId())
+      }
     );
 
-    if (existInMenuItems) {
-      if (existInMenuItems.jobItems.length > 0) {
-        logger.error("Item found in Menu Items, can't delete. Archiving job item");
-        throw new Meteor.Error(404, "Delete not permitted");
+    // Find job items subscribers
+    var subscriptionsQuery = {
+      type: 'job',
+      itemIds: id
+    };
+
+    Subscriptions.find(subscriptionsQuery).forEach(function (subscription) {
+      if (subscription.subscriber != Meteor.userId()) {
+        notificationSender.sendNotification(subscription.subscriber);
       }
-    }
+      subscription.itemIds = id;
+      Meteor.call('subscribe', subscription, true);
+    });
+
     logger.info("Job Item removed", {"id": id});
     JobItems.remove({'_id': id});
-
-    var options = {
-      actionType: 'delete',
-      type: 'job',
-      title: job.name + ' job has been deleted',
-    };
-    HospoHero.sendNotification(options);
   },
 
   'addIngredientsToJob': function (id, ingredient, quantity) {

@@ -13,7 +13,7 @@ Meteor.methods({
   subscribe: function (subscription, unsubscribeTrigger) {
     check(subscription, HospoHero.checkers.SubscriptionDocument);
 
-    var userId = Meteor.userId();
+    var userId = subscription.subscriber || Meteor.userId();
 
     // Find what do we want to change
     var itemIds = getItemIds(subscription.itemIds, subscription.type);
