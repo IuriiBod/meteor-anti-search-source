@@ -77,30 +77,41 @@ component.prototype.getTotalTimeAndWage = function () {
 
   var weekShifts = Shifts.find({
     "assignedTo": user._id,
-    "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek)
+    "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek, HospoHero.getCurrentArea().locationId)
   });
 
   var self = this;
   var dailyHoursManager = this.getDailyHoursManager();
   var totalMinutes = 0;
-  var totalWage = -1;
+  var totalWage = 0;
+
+  // The Crutch
+  var hasShifts = false;
 
   weekShifts.forEach(function (shift) {
-    totalWage = 0;
-
+    hasShifts = true;
     if(shift.startedAt || shift.finishedAt) {
-      var shiftDuration = moment(shift.finishedAt).diff(shift.startedAt, 'minutes');
+      var locationStart = HospoHero.dateUtils.getDateMomentForLocation(shift.startedAt, shift.relations.locationId);
+      var locationFinish = HospoHero.dateUtils.getDateMomentForLocation(shift.finishedAt, shift.relations.locationId);
+      // I don't know why, but some shifts have startedAt in one day and finishedAt in another
+      locationFinish.date(locationStart.date());
+
+      var shiftDuration = locationFinish.diff(locationStart, 'minutes');
 
       totalMinutes += shiftDuration;
-      totalWage += (self.getUserPayRate(shift.date) / 60) * shiftDuration;
-      dailyHoursManager.addMinutes(shift.shiftDate, shiftDuration);
+      totalWage += (self.getUserPayRate(locationStart) / 60) * shiftDuration;
+      dailyHoursManager.addMinutes(locationStart, shiftDuration);
     }
   });
 
-  return {
-    wage: this.roundNumber(totalWage),
-    time: this.roundNumber(totalMinutes / 60), // convert to hours and round
-    dailyHours: dailyHoursManager.getHours()
+  if(hasShifts) {
+    return {
+      wage: this.roundNumber(totalWage),
+      time: this.roundNumber(totalMinutes / 60), // convert to hours and round
+      dailyHours: dailyHoursManager.getHours()
+    }
+  } else {
+    return false;
   }
 };
 
