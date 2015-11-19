@@ -83,13 +83,27 @@ Meteor.methods({
     var id = JobItems.insert(doc);
     logger.info("Job Item inserted", {"jobId": id, 'type': type.name});
 
-    var options = {
+    var notificationSender = new NotificationSender(
+      'Job item created',
+      'job-item-created',
+      {
+        itemName: doc.name,
+        username: HospoHero.username(Meteor.userId())
+      }
+    );
+
+    // Find job items subscribers
+    var subscriptionsQuery = {
       type: 'job',
-      title: doc.name + ' job has been created',
-      actionType: 'create',
-      ref: id
+      'relations.areaId': HospoHero.getCurrentAreaId()
     };
-    HospoHero.sendNotification(options);
+
+    Subscriptions.find(subscriptionsQuery).forEach(function (subscription) {
+      if (subscription.subscriber != Meteor.userId()) {
+        notificationSender.sendNotification(subscription.subscriber);
+      }
+    });
+
     return id;
   },
 
@@ -367,7 +381,7 @@ Meteor.methods({
     var job = JobItems.findOne({_id: id});
     var status = (job && job.status == "archived") ? "active" : "archived";
 
-    if(status == 'archived') {
+    if (status == 'archived') {
       var existInMenus = MenuItems.find({
         jobItems: {
           $elemMatch: {
