@@ -5,10 +5,10 @@ if (HospoHero.isProductionMode()) {
     var wrapWithExceptionLogging = function (method) {
       return function () {
         try {
-          method.apply(this, arguments);
+          return method.apply(this, arguments);
         } catch (err) {
           //log error and return it to client
-          logger.error(err.toString());
+          logger.error(err.stack);
           throw err;
         }
       };
