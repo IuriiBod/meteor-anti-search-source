@@ -71,13 +71,26 @@ Meteor.methods({
     var menuId = MenuItems.insert(doc);
     logger.info("Menu items added ", menuId);
 
-    var options = {
+    var notificationSender = new NotificationSender(
+      'Menu item created',
+      'menu-item-created',
+      {
+        itemName: doc.name,
+        username: HospoHero.username(Meteor.userId())
+      }
+    );
+
+    // Find menu items subscribers
+    var subscriptionsQuery = {
       type: 'menu',
-      actionType: 'create',
-      title: doc.name + ' menu created',
-      ref: menuId
+      'relations.areaId': HospoHero.getCurrentAreaId()
     };
-    HospoHero.sendNotification(options);
+
+    Subscriptions.find(subscriptionsQuery).forEach(function (subscription) {
+      if (subscription.subscriber != Meteor.userId()) {
+        notificationSender.sendNotification(subscription.subscriber);
+      }
+    });
     return menuId;
   },
 
@@ -154,22 +167,59 @@ Meteor.methods({
       HospoHero.sendNotification(options);
       updateQuery = {$set: updateDoc}
     }
+
+    var notificationSender = new NotificationSender(
+      'Menu item updated',
+      'menu-item-updated',
+      {
+        itemName: updateDoc.name,
+        username: HospoHero.username(Meteor.userId())
+      }
+    );
+
+    // Find menu items subscribers
+    var subscriptionsQuery = {
+      type: 'menu',
+      itemIds: id
+    };
+
+    Subscriptions.find(subscriptionsQuery).forEach(function (subscription) {
+      if (subscription.subscriber != Meteor.userId()) {
+        notificationSender.sendNotification(subscription.subscriber);
+      }
+    });
+
     return MenuItems.update({"_id": id}, updateQuery);
   },
 
   deleteMenuItem: function (id) {
     var item = checkMenuItem(id);
 
+    var notificationSender = new NotificationSender(
+      'Menu item deleted',
+      'menu-item-deleted',
+      {
+        itemName: item.name,
+        username: HospoHero.username(Meteor.userId())
+      }
+    );
+
+    // Find job items subscribers
+    var subscriptionsQuery = {
+      type: 'menu',
+      itemIds: id
+    };
+
+    Subscriptions.find(subscriptionsQuery).forEach(function (subscription) {
+      if (subscription.subscriber != Meteor.userId()) {
+        notificationSender.sendNotification(subscription.subscriber);
+      }
+      subscription.itemIds = id;
+      Meteor.call('subscribe', subscription, true);
+    });
+
     logger.info("Menu item deleted", id);
     MenuItems.remove(id);
-
-    var options = {
-      type: 'menu',
-      actionType: 'delete',
-      title: 'Menu ' + item.name + ' has been deleted',
-      ref: id
-    };
-    HospoHero.sendNotification(options);
   },
 
   addItemToMenu: function (menuId, itemObject) {
