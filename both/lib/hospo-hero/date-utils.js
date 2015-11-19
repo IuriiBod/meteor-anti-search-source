@@ -108,11 +108,11 @@ Namespace('HospoHero.dateUtils', {
   },
 
   getDateByWeekDate: function (weekDate) {
-    return moment(weekDate.year, 'YYYY').week(weekDate.week).startOf('isoweek').toDate();
+    return moment().year(weekDate.year).week(weekDate.week).toDate();
   },
 
   getWeekDays: function (weekDate) {
-    var weekStart = moment(this.getDateByWeekDate(weekDate));
+    var weekStart = moment(this.getDateByWeekDate(weekDate)).startOf('isoWeek');
     var weekDays = [];
     for (var i = 0; i < 7; i++) {
       weekDays.push(new Date(weekStart.toDate()));
