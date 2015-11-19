@@ -54,6 +54,7 @@ var changeLeaveRequestStatus = function (currentUserId, leaveRequestId, newStatu
     check(thisLeaveRequest, HospoHero.checkers.canBeApprovedOrDeclined);
 
     LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
+    Notifications.remove({'meta.leaveRequestId': leaveRequestId});
 };
 
 var findLeaveRequest = function (leaveRequestId) {
