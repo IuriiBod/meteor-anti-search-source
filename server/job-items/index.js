@@ -267,12 +267,27 @@ Meteor.methods({
       logger.info("Job Item updated", {"JobItemId": id});
       var editJobId = JobItems.update({'_id': id}, query);
 
-      var options = {
+      var notificationSender = new NotificationSender(
+        'Job item updated',
+        'job-item-updated',
+        {
+          itemName: updateDoc.name,
+          username: HospoHero.username(Meteor.userId())
+        }
+      );
+
+      // Find job items subscribers
+      var subscriptionsQuery = {
         type: 'job',
-        title: job.name + ' job has been updated',
-        ref: id
+        itemIds: id
       };
-      HospoHero.sendNotification(options);
+
+      Subscriptions.find(subscriptionsQuery).forEach(function (subscription) {
+        if (subscription.subscriber != Meteor.userId()) {
+          notificationSender.sendNotification(subscription.subscriber);
+        }
+      });
+
       return editJobId;
     }
   },
