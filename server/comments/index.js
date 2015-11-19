@@ -37,7 +37,7 @@ Meteor.methods({
       supplier: 'supplierProfile'
     };
     var routeName = routesRelations[refType];
-    var linkToItem = Router.path(routeName, {_id: ref});
+    var linkToItem = Router.url(routeName, {_id: ref});
 
     var notificationSender = new NotificationSender(
       'New comment',

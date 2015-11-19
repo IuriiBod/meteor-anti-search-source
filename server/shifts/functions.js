@@ -142,7 +142,7 @@ Meteor.methods({
           interactive: true,
           helpers: {
             claimUrl: function (action) {
-              return Router.path('claim', {id: this._notificationId, action: action});
+              return Router.url('claim', {id: this._notificationId, action: action});
             }
           },
           meta: {
