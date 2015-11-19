@@ -1,12 +1,14 @@
 var component = FlowComponents.define('viewLeaveRequest', function (props) {
     this.mode = props.mode;
 
-    this.set('leaveRequest', LeaveRequests.findOne());
+    if (props.leaveRequestId) {
+        this.set('leaveRequest', LeaveRequests.findOne({_id: props.leaveRequestId}));
+    }
 });
 
 
 component.state.isReviewMode = function () {
-    return this.mode == 'review';
+    return this.mode == 'review' && this.get('leaveRequest');
 };
 
 component.state.canBeApprovedOrDeclined = function () {
@@ -23,6 +25,10 @@ component.state.managers = function () {
     });
 
     return Meteor.users.find({_id: {$in: managersIds}});
+};
+
+component.state.formatDate = function (date) {
+    return moment(date).format('ddd D MMM');
 };
 
 component.action.saveLeaveRequest = function (newLeaveRequest, flyout) {

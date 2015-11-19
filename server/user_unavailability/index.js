@@ -11,12 +11,16 @@ Meteor.methods({
     },
 
     createNewLeaveRequest: function (newLeaveRequest) {
-        console.log('server method');
-        newLeaveRequest.userId = this.userId;
+        var self = this;
+
+        newLeaveRequest.userId = self.userId;
         newLeaveRequest.status = 'awaiting';
         check(newLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
 
-        LeaveRequests.insert(newLeaveRequest);
+        LeaveRequests.insert(newLeaveRequest, function () {
+            var inserterLeaveRequestId = arguments[1];
+            sendNotification(inserterLeaveRequestId, self.connection.httpHeaders.host);
+        });
     },
     removeLeaveRequest: function (leaveRequestId) {
         check(leaveRequestId, HospoHero.checkers.MongoId);
@@ -25,6 +29,7 @@ Meteor.methods({
 
         if (thisLeaveRequest.notifyManagerId == this.userId || this.userId == thisLeaveRequest.userId) {
             LeaveRequests.remove({_id: leaveRequestId});
+            Notifications.remove({'meta.leaveRequestId': leaveRequestId});
         } else {
             throw new Meteor.Error('Permission denied', 'You can\' remove this leave request!');
         }
@@ -57,4 +62,41 @@ var findLeaveRequest = function (leaveRequestId) {
         throw  new Meteor.Error('Error', 'Leave request is not exist!');
     }
     return thisLeaveRequest;
+};
+
+
+var sendNotification = function (insertedLeaveRequestId, hostname) {
+    // add prefix, if hostname doesn't have it
+    if (!/^http:\/\/.+/.test(hostname)) {
+        hostname = 'http://' + hostname;
+    }
+
+    var currentLeaveRequest = LeaveRequests.findOne({_id: insertedLeaveRequestId});
+
+    var notificationSender = Meteor.users.findOne({_id: currentLeaveRequest.userId});
+    var notificationRecipient = Meteor.users.findOne({_id: currentLeaveRequest.notifyManagerId});
+
+    var notificationTitle = 'Leave request from ' + notificationSender;
+
+    var params = {
+        recipientName: notificationRecipient.profile.name || notificationRecipient.username,
+
+        startDate: moment(currentLeaveRequest.startDate).format('ddd, DD MMM'),
+        endDate: moment(currentLeaveRequest.endDate).format('ddd, DD MMM'),
+
+        leaveRequestURL: hostname + '/leaveRequests/' + insertedLeaveRequestId
+    };
+
+    var options = {
+        interactive: true,
+        meta: {
+            leaveRequestId: insertedLeaveRequestId
+        }
+    };
+
+    // // For testing
+    //new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationSender._id);
+
+    new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationRecipient._id);
+
 };
