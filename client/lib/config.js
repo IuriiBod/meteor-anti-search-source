@@ -6,5 +6,6 @@ Accounts.ui.config({
   passwordSignupFields: 'USERNAME_AND_EMAIL'
 });
 
+
 //x-editable config
 $.fn.editable.defaults.mode = 'inline';
