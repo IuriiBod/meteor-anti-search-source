@@ -12,6 +12,7 @@ Meteor.methods({
 
     createNewLeaveRequest: function (newLeaveRequest) {
         var self = this;
+        check(self.userId, HospoHero.checkers.MongoId);
 
         newLeaveRequest.userId = self.userId;
         newLeaveRequest.status = 'awaiting';
@@ -23,6 +24,7 @@ Meteor.methods({
         });
     },
     removeLeaveRequest: function (leaveRequestId) {
+        check(this.userId, HospoHero.checkers.MongoId);
         check(leaveRequestId, HospoHero.checkers.MongoId);
 
         var thisLeaveRequest = findLeaveRequest(leaveRequestId);
@@ -35,11 +37,13 @@ Meteor.methods({
         }
     },
     approveLeaveRequest: function (leaveRequestId) {
+        check(this.userId, HospoHero.checkers.MongoId);
         check(leaveRequestId, HospoHero.checkers.MongoId);
 
         changeLeaveRequestStatus(this.userId, leaveRequestId, 'approved');
     },
     declineLeaveRequest: function (leaveRequestId) {
+        check(this.userId, HospoHero.checkers.MongoId);
         check(leaveRequestId, HospoHero.checkers.MongoId);
 
         changeLeaveRequestStatus(this.userId, leaveRequestId, 'declined');
@@ -51,7 +55,7 @@ var changeLeaveRequestStatus = function (currentUserId, leaveRequestId, newStatu
     var thisLeaveRequest = findLeaveRequest(leaveRequestId);
     thisLeaveRequest.currentUserId = currentUserId;
 
-    check(thisLeaveRequest, HospoHero.checkers.canBeApprovedOrDeclined);
+    //check(thisLeaveRequest, HospoHero.checkers.canBeApprovedOrDeclined);
 
     LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
     Notifications.remove({'meta.leaveRequestId': leaveRequestId});
@@ -77,7 +81,7 @@ var sendNotification = function (insertedLeaveRequestId, hostname) {
     var notificationSender = Meteor.users.findOne({_id: currentLeaveRequest.userId});
     var notificationRecipient = Meteor.users.findOne({_id: currentLeaveRequest.notifyManagerId});
 
-    var notificationTitle = 'Leave request from ' + notificationSender;
+    var notificationTitle = 'Leave request from ' + notificationSender.profile.name || notificationSender.username;
 
     var params = {
         recipientName: notificationRecipient.profile.name || notificationRecipient.username,
@@ -85,7 +89,7 @@ var sendNotification = function (insertedLeaveRequestId, hostname) {
         startDate: moment(currentLeaveRequest.startDate).format('ddd, DD MMM'),
         endDate: moment(currentLeaveRequest.endDate).format('ddd, DD MMM'),
 
-        leaveRequestURL: hostname + '/leaveRequests/' + insertedLeaveRequestId
+        leaveRequestLink: hostname + '/leaveRequests/' + insertedLeaveRequestId
     };
 
     var options = {
@@ -96,8 +100,8 @@ var sendNotification = function (insertedLeaveRequestId, hostname) {
     };
 
     // // For testing
-    //new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationSender._id);
+    new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationSender._id);
 
-    new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationRecipient._id);
+    //new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationRecipient._id);
 
 };

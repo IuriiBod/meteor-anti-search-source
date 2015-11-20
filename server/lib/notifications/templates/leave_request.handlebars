@@ -3,6 +3,10 @@
 
   <p>I want to take time off from {{startDate}} to {{endDate}}</p>
 
-  <p>Please, approve or decline my <a type="link" href="{{leaveRequestURL}}">leave request</a>.</p>
+  <p>Please, review my <a type="link" href="{{leaveRequestLink}}">leave request</a>.</p>
 
+  <div>
+    <button><a href="{{approveLeaveRequestLink}}" target="_blank">Approve</a></button>
+    <button><a href="{{declineLeaveRequestLink}}" target="_blank">Decline</a></button>
+  </div>
 </div>
