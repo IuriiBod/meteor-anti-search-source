@@ -79,8 +79,11 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
     query.shiftDate = {$lte: todayDate};
     query.endTime = {$lte: todayDate};
   } else if (type == 'today') {
-    var locationId = Areas.findOne({_id: areaId}).locationId;
-    query.shiftDate = TimeRangeQueryBuilder.forDay(todayDate, locationId);
+    var currentArea = Areas.findOne({_id: areaId});
+    if (currentArea) {
+      var locationId = currentArea.locationId;
+      query.shiftDate = TimeRangeQueryBuilder.forDay(todayDate, locationId);
+    }
   } else {
     this.ready();
     return;

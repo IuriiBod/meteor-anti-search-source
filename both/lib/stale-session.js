@@ -19,17 +19,13 @@ if (Meteor.isClient) {
       if (!userId) {
         return;
       }
-      var currRouter = Router.current();
-      var backwardUrl = "/";
-      if (currRouter && currRouter.route) {
-        var routeName = currRouter.route.getName();
-        backwardUrl = currRouter.url;
-      }
+      var routeName = Router.current().getName();
       var allowedRouters = ["pinLock", "switchUser"];
       var isAllowedRouter = _.contains(allowedRouters, routeName);
       if (!isAllowedRouter) {
+        var backwardUrl = HospoHero.getBackwardUrl();
         Router.go("pinLock", {}, {
-          query: "backwardUrl=" + backwardUrl.replace(Meteor.absoluteUrl(), "/")
+          query: "backwardUrl=" + backwardUrl
         });
       }
     };
