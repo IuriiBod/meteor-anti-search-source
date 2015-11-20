@@ -55,7 +55,7 @@ var changeLeaveRequestStatus = function (currentUserId, leaveRequestId, newStatu
     var thisLeaveRequest = findLeaveRequest(leaveRequestId);
     thisLeaveRequest.currentUserId = currentUserId;
 
-    //check(thisLeaveRequest, HospoHero.checkers.canBeApprovedOrDeclined);
+    check(thisLeaveRequest, HospoHero.checkers.canBeApprovedOrDeclined);
 
     LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
     Notifications.remove({'meta.leaveRequestId': leaveRequestId});
@@ -94,14 +94,21 @@ var sendNotification = function (insertedLeaveRequestId, hostname) {
 
     var options = {
         interactive: true,
+        helpers: {
+            approveLeaveRequestUrl: function () {
+                return NotificationSender.actionUrlFor('approveLeaveRequest', insertedLeaveRequestId);
+            },
+            declineLeaveRequestUrl: function () {
+                return NotificationSender.actionUrlFor('declineLeaveRequest', insertedLeaveRequestId);
+            }
+        },
         meta: {
             leaveRequestId: insertedLeaveRequestId
         }
     };
 
     // // For testing
-    new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationSender._id);
+    //new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationSender._id);
 
-    //new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationRecipient._id);
-
+    new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationRecipient._id);
 };
