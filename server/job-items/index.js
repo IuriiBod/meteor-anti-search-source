@@ -92,13 +92,8 @@ Meteor.methods({
       }
     );
 
-    // Find job items subscribers
-    var subscriptionsQuery = {
-      type: 'job',
-      'relations.areaId': HospoHero.getCurrentAreaId()
-    };
-
-    Subscriptions.find(subscriptionsQuery).forEach(function (subscription) {
+    var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('job');
+    subscriberIds.forEach(function (subscription) {
       if (subscription.subscriber != Meteor.userId()) {
         notificationSender.sendNotification(subscription.subscriber);
       }
@@ -276,13 +271,8 @@ Meteor.methods({
         }
       );
 
-      // Find job items subscribers
-      var subscriptionsQuery = {
-        type: 'job',
-        itemIds: id
-      };
-
-      Subscriptions.find(subscriptionsQuery).forEach(function (subscription) {
+      var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('job', id);
+      subscriberIds.forEach(function (subscription) {
         if (subscription.subscriber != Meteor.userId()) {
           notificationSender.sendNotification(subscription.subscriber);
         }
@@ -315,13 +305,8 @@ Meteor.methods({
       }
     );
 
-    // Find job items subscribers
-    var subscriptionsQuery = {
-      type: 'job',
-      itemIds: id
-    };
-
-    Subscriptions.find(subscriptionsQuery).forEach(function (subscription) {
+    var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('job', id);
+    subscriberIds.forEach(function (subscription) {
       if (subscription.subscriber != Meteor.userId()) {
         notificationSender.sendNotification(subscription.subscriber);
       }
