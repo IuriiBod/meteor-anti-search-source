@@ -1,0 +1,11 @@
+<template name="notificationAction">
+  <div class="notification-action-content">
+    <h3>
+      {{#unless actionResult}}
+        Performing action...
+      {{else}}
+        {{actionResult}}
+      {{/unless}}
+    </h3>
+  </div>
+</template>
