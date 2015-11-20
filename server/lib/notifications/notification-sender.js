@@ -39,7 +39,7 @@
  *             return 'Hello, ' + this.name;
  *         },
  *         menuItemUrl: function () {
- *             return Router.path('menuItemDetail', {_id: this.menuItemId});
+ *             return Router.url('menuItemDetail', {_id: this.menuItemId});
  *         }
  *     },
  *     meta: {aaa: 333}

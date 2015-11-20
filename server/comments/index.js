@@ -30,23 +30,31 @@ Meteor.methods({
     };
     var reference = typeCollectionRelations[refType].findOne({ _id: ref });
 
+    var routesRelations = {
+      menu: 'menuItemDetail',
+      job: 'jobItemDetailed',
+      workerJob: '',
+      supplier: 'supplierProfile'
+    };
+    var routeName = routesRelations[refType];
+    var linkToItem = Router.url(routeName, {_id: ref});
+
+    var notificationSender = new NotificationSender(
+      'New comment',
+      'new-comment',
+      {
+        itemName: reference.name,
+        username: HospoHero.username(Meteor.userId()),
+        linkToItem: linkToItem
+      }
+    );
+
     if(recipients.length) {
-      recipients = _.map(recipients, function(recipientName) {
+      recipients.forEach(function(recipientName) {
         var user = Meteor.users.findOne({username: recipientName});
-        return user ? user._id : null;
+        notificationSender.sendNotification(user._id);
       });
     }
-
-    var options = {
-      title: 'New comment on ' + reference.name + ' by ' + HospoHero.username(Meteor.userId()),
-      to: recipients,
-      type: 'comment',
-      commentId: id,
-      ref: ref,
-      refType: refType
-    };
-
-    HospoHero.sendNotification(options);
 
     return id;
   }

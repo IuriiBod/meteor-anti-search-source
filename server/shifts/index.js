@@ -33,13 +33,12 @@ var ShiftPropertyChangeLogger = {
   },
 
   _sendNotification: function (message, shift, fromUserId, toUserId) {
-    var text = this._notificationTitle(shift) + ': ' + message;
-
+    var notificationText = this._notificationTitle(shift) + ': ' + message;
     var updateDocument = {
       to: toUserId,
       userId: fromUserId,
       shiftId: shift._id,
-      text: text,
+      text: notificationText,
       locationId: shift.relations.locationId,
       type: "update"
     };
@@ -47,13 +46,13 @@ var ShiftPropertyChangeLogger = {
     logger.info("Shift update insert");
     ShiftsUpdates.insert(updateDocument);
 
-    HospoHero.sendNotification({
-      type: 'shift',
-      title: text,
-      actionType: 'update',
-      to: toUserId,
-      ref: shift._id
-    });
+    new NotificationSender(
+      'Update on shift',
+      'update-on-shift',
+      {
+        text: notificationText
+      }
+    ).sendNotification(toUserId);
   },
 
   _trackUserRemovedFromShift: function (oldShift, newShift, userId) {
