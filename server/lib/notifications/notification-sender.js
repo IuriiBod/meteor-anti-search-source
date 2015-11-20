@@ -181,3 +181,24 @@ NotificationSender.prototype.sendBoth = function (receiverId) {
   var html = this._insertNotification(receiverId, false);
   this._sendEmailBasic(receiverId, html);
 };
+
+
+/**
+ * Returns URL to action 'parking' page for specified action
+ * and notification ID
+ *
+ * @param {string} methodName
+ * @param {string} notificationId
+ * @param {string} action
+ */
+NotificationSender.actionUrlFor = function (methodName, notificationId, action) {
+  var queryMap = {
+    method: methodName,
+    id: notificationId,
+    action: action
+  };
+  var query = _.map(queryMap, function (value, property) {
+    return property + '=' + value;
+  }).join('&');
+  return Router.url('notificationAction', {query: query});
+};
