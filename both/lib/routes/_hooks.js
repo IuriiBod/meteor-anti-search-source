@@ -56,10 +56,15 @@ var requireLogIn = function () {
       }
     }
   } else {
-    Router.go('signIn');
+    var backwardUrl = HospoHero.misc.getBackwardUrl();
+    var goOptions = {};
+    if (backwardUrl !== '/') {
+      goOptions.query = 'backwardUrl=' + backwardUrl;
+    }
+    Router.go('signIn', {}, goOptions);
     return this.next();
   }
 };
 
 
-Router.onBeforeAction(requireLogIn, {except: ['signIn', 'signUp', 'invitationAccept', 'switchUser']});
+Router.onBeforeAction(requireLogIn, {except: ['signIn', 'signUp', 'invitationAccept', 'switchUser', 'claim']});

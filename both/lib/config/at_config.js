@@ -59,14 +59,14 @@ AccountsTemplates.addField({
   type: "select",
   displayName: "Gender",
   select: [
-      {
-          text: "Male",
-          value: "male",
-      },
-      {
-          text: "Female",
-          value: "female",
-      }
+    {
+      text: "Male",
+      value: "male",
+    },
+    {
+      text: "Female",
+      value: "female",
+    }
   ]
 });
 
@@ -91,13 +91,13 @@ AccountsTemplates.addField({
 });
 
 /*
-AccountsTemplates.addField({
-_id: 'username_and_email',
-type: 'text',
-displayName: 'Name or Email',
-placeholder: 'name or email',
-});
-*/
+ AccountsTemplates.addField({
+ _id: 'username_and_email',
+ type: 'text',
+ displayName: 'Name or Email',
+ placeholder: 'name or email',
+ });
+ */
 
 
 //Routes
@@ -124,5 +124,18 @@ AccountsTemplates.configure({
   positiveFeedback: false,
   negativeValidation: true,
   positiveValidation: true,
+
+  onSubmitHook: function (error, state) {
+    if (!error && state === 'signIn') {
+      var currentRouter = Router.current();
+
+      if (currentRouter && currentRouter.params.query && currentRouter.params.query.backwardUrl) {
+        var backwardUrl = currentRouter.params.query.backwardUrl;
+        Meteor.setTimeout(function () {
+          Router.go(backwardUrl);
+        }, 1500);
+      }
+    }
+  }
 });
 
