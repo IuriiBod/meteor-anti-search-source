@@ -69,6 +69,10 @@ Namespace('HospoHero.misc', {
     }
     return subscription;
   },
+  getBackwardUrl: function () {
+    var locationHref = location.href;
+    return locationHref.replace(Meteor.absoluteUrl(), "/");
+  },
   getCountries: function () {
     return [
       {
