@@ -88,7 +88,7 @@ Meteor.publish("selectedUsersList", function (usersIds) {
     logger.info("SelectedUserlist published");
     return Meteor.users.find({
       _id: {$in: usersIds},
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+      "relations.organizationId": HospoHero.getCurrentArea(this.userId).organizationId
     }, {
       fields: options
     });

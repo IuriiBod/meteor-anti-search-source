@@ -128,6 +128,7 @@ Meteor.publishComposite('organizationInfo', {
                   fields.organizationId = 1;
                   fields.color = 1;
                   fields.archived = 1;
+                  fields.inactivityTimeout = 1;
                   query._id = {$in: user.relations.areaIds};
                 }
               }
