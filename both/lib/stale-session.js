@@ -23,8 +23,9 @@ if (Meteor.isClient) {
       var allowedRouters = ["pinLock", "switchUser"];
       var isAllowedRouter = _.contains(allowedRouters, routeName);
       if (!isAllowedRouter) {
-        var backwardUrl = HospoHero.getBackwardUrl();
-        Router.go("pinLock", {}, {
+        Router.go("pinLock", {
+          userId: userId
+        }, {
           query: "backwardUrl=" + backwardUrl
         });
       }

@@ -19,9 +19,12 @@ Router.route('signUp', {
 
 
 Router.route('pinLock', {
-  path: '/pinLock',
+  path: '/pinLock/:userId',
   layoutTemplate: 'blankLayout',
   template: 'pinLock',
+  waitOn: function() {
+    return Meteor.subscribe('profileUser', this.params.userId);
+  },
   data: function () {
     return {
       backwardUrl: this.params.query.backwardUrl

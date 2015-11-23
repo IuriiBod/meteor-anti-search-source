@@ -64,6 +64,7 @@ StaleSession = {
   start: function () {
     if (this.sessionExpired) {
       this.onSessionExpiration();
+      Meteor.logout();
     }
     else {
       if (this.timeFromLastActivity >= this.inactivityTimeout) {
