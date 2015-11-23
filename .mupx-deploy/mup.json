@@ -12,8 +12,8 @@
 
 
   "ssl": {
-    "certificate": "./app_hospohero_com.ca-bundle", // this is a bundle of certificates
-    "key": "./app_hospohero_com.p7b", // this is the private key of the certificate
+    "certificate": "./ssl/bundle.crt", // this is a bundle of certificates
+    "key": "./ssl/private.key", // this is the private key of the certificate
     "port": 443 // 443 is the default value and it's the standard HTTPS port
   },
 
