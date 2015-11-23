@@ -7,9 +7,9 @@
       <span>
         <a href="#" class="pull-left" id="{{state$post._id}}">{{username state$post.createdBy}} &nbsp;&nbsp;</a>  {{{state$post.text}}}
       </span>
-      <a href="#" class="small like-post">
-        <i class="fa fa-thumbs-up"></i> 
-        {{#if state$liked}} You and {{else}} {{/if}} {{state$likesCount}} Like this!
+      <a href="#" class="small like-sub-post">
+        <i class="fa fa-thumbs-up"></i>
+        {{likesCounterText state$getLikesCountForPost}}
       </a> -
       <small class="text-muted">{{timeFormattedWithDate state$post.createdOn}}</small>
     </div>

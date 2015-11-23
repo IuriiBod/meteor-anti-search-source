@@ -81,20 +81,6 @@ Router.route('inactivityTimeoutSettings', {
   }
 });
 
-Router.route('shitUpdateNotificationConfig', {
-  path: '/settings/shift-update-time',
-  template: "adminMainView",
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
-    return {
-      component: 'shitUpdateNotificationConfig',
-      title: 'Shift Updates Notification Time'
-    }
-  }
-});
-
 Router.route('posSettings', {
   path: '/settings/pos-mapping',
   template: "adminMainView",
