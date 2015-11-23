@@ -16,11 +16,14 @@ component.state.weekPrediction = function () {
     date: TimeRangeQueryBuilder.forWeek(monday),
     menuItemId: id
   }, {sort: {date: 1}}).fetch(), function (item) {
-    return {date: moment(item.date).format('YYYY-MM-DD'), actualQuantity: item.actualQuantity, predictionQuantity: item.predictionQuantity};
+    return {
+      date: moment(item.date).format('YYYY-MM-DD'),
+      actualQuantity: item.actualQuantity,
+      predictionQuantity: item.predictionQuantity
+    };
   });
   dailySales = _.sortBy(importMissingData(dates, dailySales), 'date');
   return dailySales;
-
 };
 
 var importMissingData = function (dates, importArray) {

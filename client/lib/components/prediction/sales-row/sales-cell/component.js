@@ -1,11 +1,15 @@
 var component = FlowComponents.define('predictionSalesCell', function (props) {
+  this.dailySale = props.displayItem;
+
+  console.log(this.dailySale);
+
   this.set('predictionQuantity', props.displayItem.predictionQuantity);
   this.set('actualQuantity', props.displayItem.actualQuantity);
 });
 
 component.state.isFuturePrediction = function () {
-  //todo: update with actual date
-  return moment().startOf('day').isBefore(new Date());
+  var dailySaleDate = new Date(this.dailySale.date);
+  return moment().startOf('day').isBefore(dailySaleDate);
 };
 
 component.state.onPredictedValueChangedCb = function () {
@@ -14,9 +18,9 @@ component.state.onPredictedValueChangedCb = function () {
   return function (newValue) {
     var numberVal = parseInt(newValue);
 
-    console.log('changed value to ', numberVal);
-    //if(_.isNumber(numberVal)){
-    //  Meteor.call('editForecast',numberVal,HospoHero.handleMethodResult());
-    //}
+    if (_.isNumber(numberVal)) {
+      var currentDate = new Date(self.dailySale.date);
+      Meteor.call('editForecast', currentDate, numberVal, HospoHero.handleMethodResult());
+    }
   };
 };
