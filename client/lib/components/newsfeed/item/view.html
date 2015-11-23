@@ -7,8 +7,8 @@
       <div class="media-body">
         <a href="#" id="{{state$post._id}}">{{username state$post.createdBy}}</a>
         <a href="#" class="small thumbsup-like pull-left like-post">
-          <i class="fa fa-thumbs-up"></i> 
-          {{#if state$liked}} You and {{else}} {{/if}} {{state$likesCount}} Like this!
+          <i class="fa fa-thumbs-up"></i>
+          {{likesCounterText state$getLikesCountForPost}}
         </a>
         <small class="text-muted pull-left">&nbsp;  - &nbsp;{{timeFormattedWithDate state$post.createdOn}}</small>
       </div>
