@@ -1,5 +1,6 @@
 var component = FlowComponents.define('pinCode', function(props) {
-  var user = Meteor.users.findOne(props.id);
+  var userId = Router.current().params.userId;
+  var user = Meteor.users.findOne(userId);
   this.set("user", user);
   this.set("backwardUrl", props.backwardUrl);
 });
@@ -17,9 +18,14 @@ component.state.image = function() {
 
 component.action.inputPinCode = function(pinCode) {
   var backwardUrl = this.get("backwardUrl") || '/';
-  Meteor.call("inputPinCode", pinCode, HospoHero.handleMethodResult(function (res) {
-    StaleSession.reset();
-    Router.go(backwardUrl);
+  var userId = this.get('user')._id;
+
+  Meteor.call("inputPinCode", userId, pinCode, HospoHero.handleMethodResult(function () {
+    var loggedUsers = Session.get("loggedUsers");
+    var token = loggedUsers[userId];
+    Meteor.loginWithToken(token, HospoHero.handleMethodResult(function() {
+      Router.go(backwardUrl);
+    }));
   }));
 };
 
