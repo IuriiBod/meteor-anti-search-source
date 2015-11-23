@@ -26,8 +26,6 @@ Router.route('pinLock', {
     return Meteor.subscribe('profileUser', this.params.userId);
   },
   data: function () {
-    // TODO: Where logout must be situated?
-    Meteor.logout();
     return {
       backwardUrl: this.params.query.backwardUrl
     };
