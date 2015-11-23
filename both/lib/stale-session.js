@@ -19,7 +19,7 @@ if (Meteor.isClient) {
       if (!userId) {
         return;
       }
-      var routeName = Router.current().getName();
+      var routeName = Router.current().route.getName();
       var allowedRouters = ["pinLock", "switchUser"];
       var isAllowedRouter = _.contains(allowedRouters, routeName);
       if (!isAllowedRouter) {
