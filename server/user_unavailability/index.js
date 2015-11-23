@@ -12,7 +12,9 @@ Meteor.methods({
 
     createNewLeaveRequest: function (newLeaveRequest) {
         var self = this;
-        check(self.userId, HospoHero.checkers.MongoId);
+        if (!this.userId) {
+            throw new Meteor.Error('Permission denied', 'You are not logged in!');
+        }
 
         newLeaveRequest.userId = self.userId;
         newLeaveRequest.status = 'awaiting';
@@ -20,14 +22,17 @@ Meteor.methods({
 
         LeaveRequests.insert(newLeaveRequest, function () {
             var inserterLeaveRequestId = arguments[1];
-            sendNotification(inserterLeaveRequestId, self.connection.httpHeaders.host);
+            sendNotification(inserterLeaveRequestId);
         });
     },
     removeLeaveRequest: function (leaveRequestId) {
-        check(this.userId, HospoHero.checkers.MongoId);
-        check(leaveRequestId, HospoHero.checkers.MongoId);
+        if (!this.userId) {
+            throw new Meteor.Error('Permission denied', 'You are not logged in!');
+        }
+        //check(leaveRequestId, HospoHero.checkers.MongoId);
 
         var thisLeaveRequest = findLeaveRequest(leaveRequestId);
+        check(thisLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
 
         if (thisLeaveRequest.notifyManagerId == this.userId || this.userId == thisLeaveRequest.userId) {
             LeaveRequests.remove({_id: leaveRequestId});
@@ -37,13 +42,17 @@ Meteor.methods({
         }
     },
     approveLeaveRequest: function (leaveRequestId) {
-        check(this.userId, HospoHero.checkers.MongoId);
+        if (!this.userId) {
+            throw new Meteor.Error('Permission denied', 'You are not logged in!');
+        }
         check(leaveRequestId, HospoHero.checkers.MongoId);
 
         changeLeaveRequestStatus(this.userId, leaveRequestId, 'approved');
     },
     declineLeaveRequest: function (leaveRequestId) {
-        check(this.userId, HospoHero.checkers.MongoId);
+        if (!this.userId) {
+            throw new Meteor.Error('Permission denied', 'You are not logged in!');
+        }
         check(leaveRequestId, HospoHero.checkers.MongoId);
 
         changeLeaveRequestStatus(this.userId, leaveRequestId, 'declined');
@@ -53,9 +62,15 @@ Meteor.methods({
 
 var changeLeaveRequestStatus = function (currentUserId, leaveRequestId, newStatus) {
     var thisLeaveRequest = findLeaveRequest(leaveRequestId);
-    thisLeaveRequest.currentUserId = currentUserId;
+    check(thisLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
 
-    check(thisLeaveRequest, HospoHero.checkers.canBeApprovedOrDeclined);
+    if (thisLeaveRequest.status != 'awaiting') {
+        throw new Meteor.Error("'This request already approved/declined'");
+    }
+
+    if (thisLeaveRequest.notifyManagerId != currentUserId) {
+        throw new Meteor.Error("'You can't approve or decline this request'");
+    }
 
     LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
     Notifications.remove({'meta.leaveRequestId': leaveRequestId});
@@ -70,11 +85,7 @@ var findLeaveRequest = function (leaveRequestId) {
 };
 
 
-var sendNotification = function (insertedLeaveRequestId, hostname) {
-    // add prefix, if hostname doesn't have it
-    if (!/^http:\/\/.+/.test(hostname)) {
-        hostname = 'http://' + hostname;
-    }
+var sendNotification = function (insertedLeaveRequestId) {
 
     var currentLeaveRequest = LeaveRequests.findOne({_id: insertedLeaveRequestId});
 
@@ -89,7 +100,7 @@ var sendNotification = function (insertedLeaveRequestId, hostname) {
         startDate: moment(currentLeaveRequest.startDate).format('ddd, DD MMM'),
         endDate: moment(currentLeaveRequest.endDate).format('ddd, DD MMM'),
 
-        leaveRequestLink: hostname + '/leaveRequests/' + insertedLeaveRequestId
+        leaveRequestLink: Router.url('viewLeaveRequest', {id: insertedLeaveRequestId})
     };
 
     var options = {
@@ -106,6 +117,7 @@ var sendNotification = function (insertedLeaveRequestId, hostname) {
             leaveRequestId: insertedLeaveRequestId
         }
     };
+
 
     // // For testing
     //new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationSender._id);

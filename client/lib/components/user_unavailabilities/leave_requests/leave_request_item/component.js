@@ -17,36 +17,7 @@ component.state.comment = function () {
 };
 
 component.state.status = function () {
-    if (this.get('isApproved')) {
-        return {
-            text: 'Approved',
-            style: 'status-approved'
-        };
-    }
-    if (this.get('isDeclined')) {
-        return {
-            text: 'Declined',
-            style: 'status-declined'
-        };
-    }
-    if (this.get('isAwaiting')) {
-        return {
-            text: 'Awaiting',
-            style: 'status-awaiting'
-        };
-    }
-};
-
-component.state.isApproved = function () {
-    return this.item.status == 'approved';
-};
-
-component.state.isDeclined = function () {
-    return this.item.status == 'declined';
-};
-
-component.state.isAwaiting = function () {
-    return this.item.status == 'awaiting';
+    return this.item.status;
 };
 
 component.action.removeLeaveRequest = function () {
