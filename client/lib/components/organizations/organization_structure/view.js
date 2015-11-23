@@ -10,7 +10,14 @@ Template.organizationStructure.events({
   'click .change-current-area': function(e) {
     e.preventDefault();
     FlowComponents.callAction('changeDefaultArea', this._id);
-    Router.go('home');
-    $("#organizationStructure").removeClass("show");
+    var routerParams = Router.current().params;
+
+    var paramsToRedirect = ['_id', 'id'];
+
+    paramsToRedirect.forEach(function(param) {
+      if(routerParams[param]) {
+        Router.go('home');
+      }
+    });
   }
 });
