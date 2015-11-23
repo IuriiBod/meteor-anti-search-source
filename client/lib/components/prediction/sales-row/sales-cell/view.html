@@ -1,4 +1,10 @@
 <template name="predictionSalesCell">
-    <td>{{state$predictionQuantity}}</td>
-    <td>{{state$actualQuantity}}</td>
+  <td class="prediction-cell">
+    {{#if state$isFuturePrediction}}
+      {{> render component="ghostEditable" value=state$predictionQuantity onValueChanged=state$onPredictedValueChangedCb}}
+    {{else}}
+      {{state$predictionQuantity}}
+    {{/if}}
+  </td>
+  <td>{{state$actualQuantity}}</td>
 </template>

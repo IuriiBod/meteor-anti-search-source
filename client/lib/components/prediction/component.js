@@ -19,14 +19,14 @@ component.state.week = function () {
   return HospoHero.dateUtils.getWeekDays(currentWeekDate);
 };
 
-component.state.getMenuItems = function () {
-  var MenuItems = this.MenuItemsSearch.getData({
+component.state.menuItems = function () {
+  var foundMenuItems = this.MenuItemsSearch.getData({
     transform: function (matchText, regExp) {
       return matchText.replace(regExp, "<b>$&</b>")
     },
     sort: {'name': 1}
   });
-  return MenuItems;
+  return foundMenuItems;
 };
 
 component.state.getSearchSource = function () {
