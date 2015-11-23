@@ -5,3 +5,5 @@ smart.lock
 .idea
 .dump
 restore_remote_db.sh
+.mupx-deploy/app_hospohero_com.ca-bundle
+.mupx-deploy/app_hospohero_com.p7b

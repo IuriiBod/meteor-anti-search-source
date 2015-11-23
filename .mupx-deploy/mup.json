@@ -10,6 +10,13 @@
     }
   ],
 
+
+  "ssl": {
+    "certificate": "./app_hospohero_com.ca-bundle", // this is a bundle of certificates
+    "key": "./app_hospohero_com.p7b", // this is the private key of the certificate
+    "port": 443 // 443 is the default value and it's the standard HTTPS port
+  },
+
   // Install MongoDB in the server, does not destroy local MongoDB on future setup
   "setupMongo": false,
 
