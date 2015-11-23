@@ -1,8 +1,4 @@
-Template.newsFeedPost.rendered = function () {
-  $(".message-input-comment").val("");
-};
-
-Template.newsFeedPost.helpers({
+Template.subNewsFeedPost.helpers({
   likesCounterText: function (likesObject) {
     var likesCounterText = [];
     if (likesObject.likedByMe) {
@@ -21,8 +17,8 @@ Template.newsFeedPost.helpers({
   }
 });
 
-Template.newsFeedPost.events({
-  'click .like-post': function (event) {
+Template.subNewsFeedPost.events({
+  'click .like-sub-post': function(event) {
     event.preventDefault();
     FlowComponents.callAction("likePost");
   }

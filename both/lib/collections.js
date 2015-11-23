@@ -49,7 +49,6 @@ LeaveRequests = new Mongo.Collection('leaveRequests');
 //ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
 ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
 
-
 //POS
 PosMenuItems = new Mongo.Collection('posMenuItems');
 

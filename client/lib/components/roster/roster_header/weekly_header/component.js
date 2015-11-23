@@ -2,7 +2,7 @@ var component = FlowComponents.define('weeklyHeader', function () {
   var currentDate = HospoHero.misc.getWeekDateFromRoute(Router.current());
   this.set('currentDate', currentDate);
   this.set('collapseIn', false);
-  this.set('publishedOnDate', HospoHero.dateUtils.getDateByWeekDate(currentDate));
+  this.set('selectedWeekDate', HospoHero.dateUtils.getDateByWeekDate(currentDate));
 });
 
 component.state.onDateChanged = function () {
@@ -12,12 +12,18 @@ component.state.onDateChanged = function () {
 };
 
 component.state.isPublished = function () {
-  var shiftDateQuery = TimeRangeQueryBuilder.forWeek(this.get('publishedOnDate'));
-  return !!Shifts.findOne({
+  var shiftDateQuery = TimeRangeQueryBuilder.forWeek(this.get('selectedWeekDate'));
+  var shift = Shifts.findOne({
     shiftDate: shiftDateQuery,
     published: true,
     'relations.areaId': HospoHero.getCurrentAreaId()
   });
+
+  if (shift) {
+    this.set('publishedOnDate', moment(shift.publishedOn));
+  }
+
+  return !!shift;
 };
 
 component.action.triggerCollapse = function () {
@@ -25,6 +31,6 @@ component.action.triggerCollapse = function () {
 };
 
 component.action.publishRoster = function () {
-  var query = TimeRangeQueryBuilder.forWeek(this.get('publishedOnDate'));
+  var query = TimeRangeQueryBuilder.forWeek(this.get('selectedWeekDate'));
   Meteor.call('publishRoster', query, HospoHero.handleMethodResult());
 };
