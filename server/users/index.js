@@ -23,9 +23,9 @@ Accounts.onCreateUser(function(options, user){
 });
 
 Meteor.methods({
-  inputPinCode: function (pinCode) {
+  inputPinCode: function (userId, pinCode) {
     var user = Meteor.users.findOne({
-      _id: this.userId,
+      _id: userId,
       pinCode: pinCode
     });
     if (_.isUndefined(user)) {

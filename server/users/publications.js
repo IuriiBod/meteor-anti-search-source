@@ -76,25 +76,20 @@ Meteor.publish('usersList', function (areaId) {
 });
 
 Meteor.publish("selectedUsersList", function (usersIds) {
-  if (this.userId) {
-    var options = {
-      username: 1,
-      emails: 1,
-      isActive: 1,
-      profile: 1,
-      currentAreaId: 1
-    };
+  var options = {
+    username: 1,
+    emails: 1,
+    isActive: 1,
+    profile: 1,
+    currentAreaId: 1
+  };
 
-    logger.info("SelectedUserlist published");
-    return Meteor.users.find({
-      _id: {$in: usersIds},
-      "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
-    }, {
-      fields: options
-    });
-  } else {
-    this.ready();
-  }
+  logger.info("SelectedUserlist published");
+  return Meteor.users.find({
+    _id: {$in: usersIds}
+  }, {
+    fields: options
+  });
 });
 
 //managers and workers that should be assigned to shifts

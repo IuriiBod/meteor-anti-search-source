@@ -202,32 +202,3 @@ NotificationSender.actionUrlFor = function (methodName, notificationId, action) 
   }).join('&');
   return Router.url('notificationAction', {}, {query: query});
 };
-
-
-// ====== usage example of interactive feature with parking page
-//todo: remove or comment in future
-Meteor.methods({
-  sayHello: function (notificationId, actionStr) {
-    //some security checks may be here
-
-    //get rid of notification after performing action
-    Notifications.remove({_id: notificationId});
-    return 'You made action: ' + actionStr + ' for notificationId ' + notificationId;
-  }
-});
-
-//run this method to test interactive feature
-Meteor.methods({
-  testInteractiveNotify: function () {
-    new NotificationSender('Simple test', 'test', {}, {
-      interactive: true,
-      helpers: {
-        makeActionUrl: function () {
-          return NotificationSender.actionUrlFor('sayHello', this._notificationId, 'doSomething');
-        }
-      }
-    }).sendNotification('kfZMbk62tgFSxmDen');
-  }
-});
-
-//end of example
