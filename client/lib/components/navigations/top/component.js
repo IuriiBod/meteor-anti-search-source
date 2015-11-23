@@ -40,10 +40,6 @@ component.state.settingsMenuItems = function () {
       title: 'Inactivity Timeout'
     },
     {
-      route: 'shitUpdateNotificationConfig',
-      title: 'Shift Updates Notification'
-    },
-    {
       route: 'posSettings',
       title: 'POS / Menu Linking'
     },
