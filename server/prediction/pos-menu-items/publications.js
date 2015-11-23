@@ -18,6 +18,7 @@ Meteor.publishAuthorized('posMenuItems', function (areaId) {
   }
 });
 
+
 Meteor.publish('menuItemsForPosLinking', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
