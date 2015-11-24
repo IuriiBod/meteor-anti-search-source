@@ -34,18 +34,6 @@ var ShiftPropertyChangeLogger = {
 
   _sendNotification: function (message, shift, fromUserId, toUserId) {
     var notificationText = this._notificationTitle(shift) + ': ' + message;
-    var updateDocument = {
-      to: toUserId,
-      userId: fromUserId,
-      shiftId: shift._id,
-      text: notificationText,
-      locationId: shift.relations.locationId,
-      type: "update"
-    };
-
-    logger.info("Shift update insert");
-    ShiftsUpdates.insert(updateDocument);
-
     new NotificationSender(
       'Update on shift',
       'update-on-shift',

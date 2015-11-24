@@ -43,9 +43,6 @@ Invitations = new Mongo.Collection("invitations");
 WeatherForecast = new Mongo.Collection("weatherForecast");
 DailySales = new Mongo.Collection("dailySales");
 
-ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
-
-
 //POS
 PosMenuItems = new Mongo.Collection('posMenuItems');
 
