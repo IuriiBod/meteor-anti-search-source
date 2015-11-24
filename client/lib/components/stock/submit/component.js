@@ -26,8 +26,14 @@ component.action.submit = function (event) {
       name: 'supplier',
       newName: 'suppliers'
     },
-    'unitOrdered',
-    'unitUsed',
+    {
+      name: 'unitOrdered',
+      newName: 'portionOrdered'
+    },
+    {
+      name: 'unitUsed',
+      newName: 'portionUsed'
+    },
     {
       name: 'costPerPortion',
       parse: 'float',
