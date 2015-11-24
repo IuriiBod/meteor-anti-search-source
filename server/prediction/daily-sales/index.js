@@ -65,14 +65,17 @@ Meteor.methods({
     if (menuItem) {
       var locationId = menuItem.relations.locationId;
       var startOfDate = HospoHero.dateUtils.getDateMomentForLocation(date, locationId).startOf('day').toDate();
+
       DailySales.update({
         date: TimeRangeQueryBuilder.forDay(date, locationId),
-        menuItemId: menuItemId
+        menuItemId: menuItemId,
+        relations: menuItem.relations
       }, {
         $set: {
           date: startOfDate,
-          predictedQuantity: predictedQuantity,
-          isPredictionManual: true
+          predictionQuantity: predictedQuantity,
+          isPredictionManual: true,
+          relations: menuItem.relations
         }
       }, {upsert: true});
     } else {

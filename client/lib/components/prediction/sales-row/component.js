@@ -31,7 +31,7 @@ var importMissingData = function (dates, importArray, menuItemId) {
       if (moment(item.date).isSame(dateItem, 'day')) {
         item.actualQuantity = item.actualQuantity || 0;
         item.predictionQuantity = item.predictionQuantity || 0;
-        item.menuItemId = item.menuItemId || menuItemId;
+        //item.date = moment(item.date).endOf('day').toDate();
         executedArray[index] = item;
         toPushMissingItem = false;
       }
@@ -39,7 +39,8 @@ var importMissingData = function (dates, importArray, menuItemId) {
 
     if (toPushMissingItem) {
       executedArray.push({
-        date: dateItem,
+        menuItemId: menuItemId,
+        date: moment(dateItem).endOf('day').toDate(),
         actualQuantity: 0,
         predictionQuantity: 0
       });

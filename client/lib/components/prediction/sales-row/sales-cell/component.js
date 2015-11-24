@@ -1,15 +1,17 @@
 var component = FlowComponents.define('predictionSalesCell', function (props) {
   this.dailySale = props.displayItem;
 
-  console.log(this.dailySale);
-
   this.set('predictionQuantity', props.displayItem.predictionQuantity);
   this.set('actualQuantity', props.displayItem.actualQuantity);
 });
 
 component.state.isFuturePrediction = function () {
   var dailySaleDate = new Date(this.dailySale.date);
-  return moment().startOf('day').isBefore(dailySaleDate);
+  var isFuture = moment().add(1, 'day').startOf('day').isBefore(dailySaleDate);
+  if (this.dailySale.menuItemId === 'jfoKQtFhGxtGsrspC') {
+    console.log(this.dailySale);
+  }
+  return isFuture;
 };
 
 component.state.onPredictedValueChangedCb = function () {
@@ -19,8 +21,8 @@ component.state.onPredictedValueChangedCb = function () {
     var numberVal = parseInt(newValue);
 
     if (_.isNumber(numberVal)) {
-      var currentDate = new Date(self.dailySale.date);
-      Meteor.call('editForecast', currentDate, numberVal, HospoHero.handleMethodResult());
+      var dailySale = self.dailySale;
+      Meteor.call('editForecast', dailySale.menuItemId, dailySale.date, numberVal, HospoHero.handleMethodResult());
     }
   };
 };
