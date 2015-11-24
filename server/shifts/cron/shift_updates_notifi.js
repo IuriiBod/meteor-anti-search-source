@@ -1,9 +1,9 @@
 SyncedCron.add({
   name: 'Send emails to users with shift updates',
-  schedule: function(parser) {
+  schedule: function (parser) {
     return parser.text('every 1 hour');
   },
-  job: function() {
+  job: function () {
     var locationsToUpdate = Locations.find({
       shiftUpdateHour: new Date().getHours()
     });
@@ -13,16 +13,16 @@ SyncedCron.add({
   }
 });
 
-var sendShiftUpdates = function(locationId) {
+var sendShiftUpdates = function (locationId) {
   var users = ShiftsUpdates.find({
     locationId: locationId
   }).fetch();
 
-  var shiftsGroupedByUser = _.groupBy(users, function(user) {
+  var shiftsGroupedByUser = _.groupBy(users, function (user) {
     return user.to;
   });
 
-  Object.keys(shiftsGroupedByUser).forEach(function(userId) {
+  Object.keys(shiftsGroupedByUser).forEach(function (userId) {
     new NotificationSender(
       'Daily shift updates',
       'daily-shift-updates',

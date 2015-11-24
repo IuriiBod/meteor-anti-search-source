@@ -1,7 +1,7 @@
 Meteor.publishComposite('comments', function (ref, areaId) {
   return {
-    find: function() {
-      if(this.userId) {
+    find: function () {
+      if (this.userId) {
         var query = {
           "reference": ref,
           "relations.areaId": areaId
@@ -18,7 +18,7 @@ Meteor.publishComposite('comments', function (ref, areaId) {
     },
     children: [
       {
-        find: function(comment) {
+        find: function (comment) {
           return Meteor.users.find({
             _id: comment.createdBy
           });

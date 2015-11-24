@@ -31,7 +31,7 @@ var importMissingData = function (dates, importArray, menuItemId) {
       if (moment(item.date).isSame(dateItem, 'day')) {
         item.actualQuantity = item.actualQuantity || 0;
         item.predictionQuantity = item.predictionQuantity || 0;
-        //item.date = moment(item.date).endOf('day').toDate();
+
         executedArray[index] = item;
         toPushMissingItem = false;
       }

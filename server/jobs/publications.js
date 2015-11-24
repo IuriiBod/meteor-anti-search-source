@@ -1,15 +1,15 @@
-Meteor.publish('jobs', function(areaId, type, ids) {
+Meteor.publish('jobs', function (areaId, type, ids) {
   var query = {
     'relations.areaId': areaId
   };
 
-  if(type == 'unassigned') {
+  if (type == 'unassigned') {
     query.status = 'draft';
     query.onshift = null;
   }
 
-  if(ids && ids.length) {
-    query._id = { $in: ids };
+  if (ids && ids.length) {
+    query._id = {$in: ids};
   }
   return Jobs.find(query, {limit: 10});
 });

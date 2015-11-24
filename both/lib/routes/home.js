@@ -3,8 +3,8 @@ Router.route('/', {
   name: 'home',
   template: 'home',
   path: '/',
-  waitOn: function() {
-    if(Meteor.userId()) {
+  waitOn: function () {
+    if (Meteor.userId()) {
       var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
       return [
         Meteor.subscribe('shifts', 'future', Meteor.userId(), currentAreaId),
@@ -19,7 +19,7 @@ Router.route('/', {
       ];
     }
   },
-  data: function() {
+  data: function () {
     Session.set('editStockTake', false);
   }
 });

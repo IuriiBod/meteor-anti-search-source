@@ -17,13 +17,13 @@ component.state.errorHandler = function () {
 };
 
 component.action.submitForm = function (eventObject) {
-  if(_.values(this.get('errors')).indexOf(true) > -1) {
+  if (_.values(this.get('errors')).indexOf(true) > -1) {
     return false;
   } else {
     var fields = this.get('fields');
 
     var values = {};
-    fields.forEach(function(field) {
+    fields.forEach(function (field) {
       values[field.name] = eventObject.target[field.name].value;
     });
 

@@ -4,7 +4,7 @@ Migrations.add({
   up: function () {
     var menuItemsToChange = MenuItems.find({revelName: {$ne: undefined}}).fetch();
     _.each(menuItemsToChange, function (item) {
-      MenuItems.update({_id:item._id}, {$set:{posNames:[item.revelName]}, $unset:{revelName:1}});
+      MenuItems.update({_id: item._id}, {$set: {posNames: [item.revelName]}, $unset: {revelName: 1}});
     })
   }
 });

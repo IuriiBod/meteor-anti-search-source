@@ -63,7 +63,7 @@ component.action.loadMoreBtnClick = function (text) {
       search.search(text, selector);
     }
   }
-  if((this.clicks*this.limitAdd)>dataHistory.length){
+  if ((this.clicks * this.limitAdd) > dataHistory.length) {
     this.set("allMenuItemsLoaded", true);
   }
 };

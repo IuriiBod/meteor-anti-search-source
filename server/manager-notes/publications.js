@@ -13,7 +13,7 @@ Meteor.publishComposite('managerNotes', function (weekRange, areaId) {
     },
     children: [
       {
-        find: function(note) {
+        find: function (note) {
           if (this.userId) {
             return Meteor.users.find({_id: note.createdBy}, {
               fields: {

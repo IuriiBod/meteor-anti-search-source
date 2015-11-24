@@ -5,7 +5,7 @@ var component = FlowComponents.define('colorPicker', function (props) {
   this.set('checkedColor', checkedColor);
   this.onColorChange = props.onColorChange;
 
-  if(!props.checkedColor) {
+  if (!props.checkedColor) {
     this.onColorChange(this.get('checkedColor'));
   }
 });
@@ -28,7 +28,7 @@ component.state.areaColors = function () {
 
 component.state.onColorCheck = function () {
   var self = this;
-  return function(color) {
+  return function (color) {
     self.set('checkedColor', color);
     self.onColorChange(color);
   }

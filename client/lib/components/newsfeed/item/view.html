@@ -4,13 +4,14 @@
       <a class="pull-left" href="#">
         <img src="{{profilePicture state$post.createdBy}}" alt="image">
       </a>
+
       <div class="media-body">
         <a href="#" id="{{state$post._id}}">{{username state$post.createdBy}}</a>
         <a href="#" class="small thumbsup-like pull-left like-post">
-          <i class="fa fa-thumbs-up"></i> 
+          <i class="fa fa-thumbs-up"></i>
           {{#if state$liked}} You and {{else}} {{/if}} {{state$likesCount}} Like this!
         </a>
-        <small class="text-muted pull-left">&nbsp;  - &nbsp;{{timeFormattedWithDate state$post.createdOn}}</small>
+        <small class="text-muted pull-left">&nbsp; - &nbsp;{{timeFormattedWithDate state$post.createdOn}}</small>
       </div>
     </div>
 
@@ -28,6 +29,7 @@
           <a class="pull-left" href="#">
             <img src="{{profilePicture}}" alt="image">
           </a>
+
           <div class="media-body" data-id="{{state$post._id}}">
             {{> render component="textArea" placeholder="Write comment..." type="newsFeedSubTextBox" referenceId=state$post._id}}
           </div>

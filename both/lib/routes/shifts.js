@@ -6,10 +6,10 @@ Router.route('/claim/:id/:action', {
     var action = this.params.action;
     var notification = Notifications.findOne({_id: notificationId});
 
-    if(notification) {
+    if (notification) {
       var shiftId = notification.meta.shiftId;
       var claimedBy = notification.meta.claimedBy;
-      if(action === 'confirm') {
+      if (action === 'confirm') {
         Shifts.update({_id: shiftId}, {
           $set: {
             assignedTo: claimedBy

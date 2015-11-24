@@ -1,1 +1,2 @@
-var component = FlowComponents.define('rolesSettings', function (props) {});
+var component = FlowComponents.define('rolesSettings', function (props) {
+});

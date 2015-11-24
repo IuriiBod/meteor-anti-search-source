@@ -1,5 +1,5 @@
 Meteor.methods({
-  createNewsfeed: function(text, ref, recipients) {
+  createNewsfeed: function (text, ref, recipients) {
     if (!HospoHero.isInOrganization()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(403, "User not permitted to create post");
@@ -17,9 +17,9 @@ Meteor.methods({
     var id = NewsFeeds.insert(doc);
     logger.info("NewsFeed text inserted", id);
 
-    if(ref) {
-      var feed = NewsFeeds.findOne({ _id: ref });
-      if(feed.createdBy != Meteor.userId()) {
+    if (ref) {
+      var feed = NewsFeeds.findOne({_id: ref});
+      if (feed.createdBy != Meteor.userId()) {
         new NotificationSender(
           'New comment',
           'new-newsfeed-comment',
@@ -29,7 +29,7 @@ Meteor.methods({
         ).sendNotification(feed.createdBy);
       }
     }
-    if(recipients.length) {
+    if (recipients.length) {
       var notificationSender = new NotificationSender(
         'Mention in a newsfeed',
         'mention-in-a-newsfeed',
@@ -37,7 +37,7 @@ Meteor.methods({
           username: HospoHero.username(Meteor.userId())
         }
       );
-      recipients.forEach(function(recipientName) {
+      recipients.forEach(function (recipientName) {
         var user = Meteor.users.findOne({username: recipientName});
         notificationSender.sendNotification(user._id);
       });
@@ -45,7 +45,7 @@ Meteor.methods({
     return id;
   },
 
-  updateNewsfeed: function(id, userId) {
+  updateNewsfeed: function (id, userId) {
     if (!HospoHero.isInOrganization()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(403, "User not permitted to update post");
@@ -54,11 +54,11 @@ Meteor.methods({
     check(userId, HospoHero.checkers.MongoId);
 
     var newsFeed = NewsFeeds.findOne(id);
-    if(!newsFeed) {
+    if (!newsFeed) {
       logger.error("NewsFeed item not found");
       throw new Meteor.Error(404, "NewsFeed item not found");
     }
-    if(newsFeed.likes.indexOf(userId) >= 0) {
+    if (newsFeed.likes.indexOf(userId) >= 0) {
       NewsFeeds.update({_id: id}, {$pull: {likes: userId}});
     } else {
       NewsFeeds.update({_id: id}, {$addToSet: {likes: userId}});
