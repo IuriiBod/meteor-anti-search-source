@@ -24,7 +24,12 @@ Meteor.publish('menuItemsForPosLinking', function (areaId) {
   if (checkForecastPermission(this)) {
     logger.info('Menu items for POS menu linking', {areaId: areaId});
 
-    var query = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': areaId});
+    var query = HospoHero.prediction.getMenuItemsForPredictionQuery({
+      'relations.areaId': areaId,
+      status: {
+        $ne: 'archived'
+      }
+    });
 
     return MenuItems.find(query);
   }
