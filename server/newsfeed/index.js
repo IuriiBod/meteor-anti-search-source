@@ -17,36 +17,31 @@ Meteor.methods({
     var id = NewsFeeds.insert(doc);
     logger.info("NewsFeed text inserted", id);
 
-    var options;
     if(ref) {
       var feed = NewsFeeds.findOne({ _id: ref });
       if(feed.createdBy != Meteor.userId()) {
-        options = {
-          title: "There is a new comment to your newsfeed post",
-          to: feed.createdBy,
-          ref: ref,
-          type: 'newsfeed',
-          relations: doc.relations
-        };
-        HospoHero.sendNotification(options);
+        new NotificationSender(
+          'New comment',
+          'new-newsfeed-comment',
+          {
+            username: HospoHero.username(Meteor.userId())
+          }
+        ).sendNotification(feed.createdBy);
       }
     }
     if(recipients.length) {
-      recipients = _.map(recipients, function(recipientName) {
+      var notificationSender = new NotificationSender(
+        'Mention in a newsfeed',
+        'mention-in-a-newsfeed',
+        {
+          username: HospoHero.username(Meteor.userId())
+        }
+      );
+      recipients.forEach(function(recipientName) {
         var user = Meteor.users.findOne({username: recipientName});
-        return user ? user._id : null;
+        notificationSender.sendNotification(user._id);
       });
     }
-
-    options = {
-      title: "You've been mentioned in the newsfeed",
-      to: recipients,
-      ref: id,
-      type: 'newsfeed',
-      relations: doc.relations
-    };
-    HospoHero.sendNotification(options);
-
     return id;
   },
 

@@ -68,17 +68,25 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
     'relations.areaId': areaId
   };
 
+  var todayDate = new Date();
   if (type == 'future' || type == 'opened') {
-    query.shiftDate = {$gte: HospoHero.dateUtils.shiftDate()};
+    query.shiftDate = {$gte: todayDate};
     if (type == 'opened') {
-      query.assignedTo = {$in:[null, undefined]};
+      query.assignedTo = {$in: [null, undefined]};
       query.published = true;
     }
   } else if (type == 'past') {
-    query.shiftDate = {$lte: new Date()};
-    query.endTime = {$lte: new Date()};
+    query.shiftDate = {$lte: todayDate};
+    query.endTime = {$lte: todayDate};
+  } else if (type == 'today') {
+    var currentArea = Areas.findOne({_id: areaId});
+    if (currentArea) {
+      var locationId = currentArea.locationId;
+      query.shiftDate = TimeRangeQueryBuilder.forDay(todayDate, locationId);
+    }
   } else {
     this.ready();
+    return;
   }
 
   logger.info('Rostered ', type, ' shifts for user ', userId, ' have been published');

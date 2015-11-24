@@ -9,7 +9,6 @@ Router.route('usersSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
       component: 'usersList',
       title: 'Users'
@@ -24,7 +23,6 @@ Router.route('rolesSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
 
     return {
       component: 'rolesSettings',
@@ -76,7 +74,6 @@ Router.route('inactivityTimeoutSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
       component: 'inactivityTimeoutField',
       title: 'Inactivity Timeout'
@@ -84,37 +81,22 @@ Router.route('inactivityTimeoutSettings', {
   }
 });
 
-Router.route('cronConfigSettings', {
-  path: '/settings/cron-config',
-  template: "adminMainView",
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
-    Session.set('editStockTake', false);
-    return {
-      component: 'cronConfig',
-      title: 'Cron Config'
-    }
-  }
-});
-
 Router.route('posSettings', {
-  path: '/settings/pos',
+  path: '/settings/pos-mapping',
   template: "adminMainView",
   waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('menuList', HospoHero.getCurrentAreaId(Meteor.userId())),
-      Meteor.subscribe('posMenuItems')
+      Meteor.subscribe('menuItemsForPosLinking', currentAreaId),
+      Meteor.subscribe('posMenuItems', currentAreaId)
     ]
   },
   data: function () {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
-      component: 'revelMenuLink',
+      component: 'posMenuLinking',
       title: 'POS / Menu Linking'
     }
   }
@@ -133,7 +115,6 @@ Router.route('archivingSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
       component: 'locationAreaArchiving',
       title: 'Locations/Areas archiving'

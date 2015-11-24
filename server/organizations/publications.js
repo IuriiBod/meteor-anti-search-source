@@ -63,8 +63,26 @@ Meteor.publishComposite('organizationInfo', {
     },
     {
       // Publishing invitations fot current organization
-      find: function(organization) {
-        return Invitations.find({ organizationId: organization._id });
+      find: function (organization) {
+        return Invitations.find({organizationId: organization._id});
+      }
+    },
+    {
+      // Publishing users of current organization
+      find: function (organization) {
+        if (this.userId && (HospoHero.canUser('edit areas', this.userId) || HospoHero.canUser('edit locations', this.userId))) {
+          return Meteor.users.find({
+            isActive: true,
+            "relations.organizationId": organization._id
+          }, {
+            fields: {
+              username: 1,
+              "services.google.picture": 1,
+              profile: 1,
+              relations: 1
+            }
+          });
+        }
       }
     },
     {
@@ -110,6 +128,7 @@ Meteor.publishComposite('organizationInfo', {
                   fields.organizationId = 1;
                   fields.color = 1;
                   fields.archived = 1;
+                  fields.inactivityTimeout = 1;
                   query._id = {$in: user.relations.areaIds};
                 }
               }
@@ -120,35 +139,6 @@ Meteor.publishComposite('organizationInfo', {
           }
         }
       ]
-    },
-    {
-      // Publishing users of current area
-      find: function (organization) {
-        if (this.userId) {
-          var user = Meteor.users.findOne(this.userId);
-
-          if (user && user.currentAreaId) {
-            return Meteor.users.find({
-              isActive: true,
-              $or: [
-                {"relations.areaIds": user.currentAreaId},
-                {
-                  "relations.organizationId": organization._id,
-                  "relations.locationIds": null,
-                  "relations.areaIds": null
-                }
-              ]
-            }, {
-              fields: {
-                username: 1,
-                "services.google.picture": 1,
-                profile: 1,
-                relations: 1
-              }
-            });
-          }
-        }
-      }
     }
   ]
 });

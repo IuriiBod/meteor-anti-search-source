@@ -61,7 +61,6 @@ Template.submitJobItem.events({
 
   'submit form': function(event) {
     event.preventDefault();
-    var local
     var name = $(event.target).find('[name=name]').val().trim();
     var typeId = $(event.target).find('[name=type]').val();
     var typeDoc = JobTypes.findOne(typeId);

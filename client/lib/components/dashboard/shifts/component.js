@@ -14,7 +14,7 @@ component.state.shifts = function () {
     shifts = Shifts.find({
       "assignedTo": Meteor.userId(),
       "published": true,
-      "shiftDate": {$gte: HospoHero.dateUtils.shiftDate(moment().add(1, 'day'))},
+      "shiftDate": {$gte: new Date()},
       "relations.areaId": HospoHero.getCurrentAreaId()
     }, {sort: {'shiftDate': 1}}).fetch();
   } else if (state == "past") {
@@ -27,7 +27,7 @@ component.state.shifts = function () {
     shifts = Shifts.find({
       "assignedTo": {$in: [null, undefined]},
       "published": true,
-      "shiftDate": {$gte: HospoHero.dateUtils.shiftDate()},
+      "shiftDate": {$gte: new Date()},
       "relations.areaId": HospoHero.getCurrentAreaId()
     }, {sort: {'shiftDate': 1}}).fetch();
   }

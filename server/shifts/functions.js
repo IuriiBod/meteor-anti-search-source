@@ -20,7 +20,7 @@ Meteor.methods({
       throw new Meteor.Error("You have no permissions to Clock In/Clock Out");
     }
     check(id, HospoHero.checkers.ShiftId);
-    if (Shifts.findOne({"_id": id}).status === 'started'){
+    if (Shifts.findOne({"_id": id}).status === 'started') {
       Shifts.update({"_id": id}, {$set: {"status": "finished", "finishedAt": new Date()}});
       logger.info("Shift ended", {"shiftId": id, "worker": user._id});
     }
@@ -55,12 +55,17 @@ Meteor.methods({
         assignedTo: 1,
         startTime: 1,
         shiftDate: 1,
-        endTime: 1
+        endTime: 1,
+        relations: 1
       }
     });
 
     if (shiftsToPublish.count() > 0) {
+      var locationId = null;
+
       shiftsToPublish.forEach(function (shift) {
+        locationId = shift.relations.locationId;
+
         if (shift.assignedTo) {
           if (usersToNotify[shift.assignedTo]) {
             usersToNotify[shift.assignedTo].push(shift);
@@ -70,19 +75,38 @@ Meteor.methods({
         } else {
           openShifts.push(shift);
         }
-      })
-    }
-    // Publishing shifts
-    Shifts.update(shiftsToPublishQuery, {
-      $set: {
-        published: true,
-        publishedOn: Date.now()
-      }
-    }, {
-      multi: true
-    });
+      });
 
-    notifyUsersPublishRoster(shiftDateQuery.$gte, usersToNotify, openShifts);
+      // Publishing shifts
+      Shifts.update(shiftsToPublishQuery, {
+        $set: {
+          published: true,
+          publishedOn: Date.now()
+        }
+      }, {
+        multi: true
+      });
+
+      Object.keys(usersToNotify).forEach(function (key) {
+        new NotificationSender(
+          'Weekly roster published',
+          'roster-published',
+          {
+            date: HospoHero.dateUtils.formatDateWithTimezone(shiftDateQuery.$gte, 'ddd, Do MMMM', locationId),
+            shifts: usersToNotify[key],
+            openShifts: openShifts,
+            publishedByName: HospoHero.username(Meteor.userId())
+          },
+          {
+            helpers: {
+              dateFormatter: function (shift) {
+                return HospoHero.dateUtils.shiftDateInterval(shift)
+              }
+            }
+          }
+        ).sendBoth(key);
+      });
+    }
   },
 
   claimShift: function (shiftId) {
@@ -106,37 +130,32 @@ Meteor.methods({
 
     var userIds = HospoHero.roles.getUserIdsByAction('approves roster requests');
 
-    var text = [];
-    text.push("Shift on ");
-    text.push(moment(shift.shiftDate).format("ddd, Do MMMM"));
-    text.push(" has been claimed by following workers");
-    text.push('<ul>');
+    if (userIds.length) {
+      var notificationSender = new NotificationSender(
+        'Shift claiming',
+        'claim-shift',
+        {
+          date: HospoHero.dateUtils.formatDateWithTimezone(shift.shiftDate, 'ddd, Do MMMM', shift.relations.locationId),
+          username: HospoHero.username(userId)
+        },
+        {
+          interactive: true,
+          helpers: {
+            claimUrl: function (action) {
+              return Router.url('claim', {id: this._notificationId, action: action});
+            }
+          },
+          meta: {
+            shiftId: shiftId,
+            claimedBy: userId
+          }
+        }
+      );
 
-    shift = Shifts.findOne({_id: shiftId});
-    shift.claimedBy.forEach(function (userId) {
-      text.push('<li>');
-      text.push(HospoHero.username(userId));
-      text.push(' <a href="#" class="confirmClaim" data-id="');
-      text.push(userId);
-      text.push('" data-shift="');
-      text.push(shiftId);
-      text.push('"><small class="text-success">Confirm</small></a>');
-      text.push(' <a href="#" class="rejectClaim" data-id="');
-      text.push(userId);
-      text.push('" data-shift="');
-      text.push(shiftId);
-      text.push('"><small class="text-danger">Reject</small></a></li>');
-    });
-    text.push('</ul>');
-
-    var options = {
-      title: text.join(''),
-      type: "claim",
-      to: userIds,
-      ref: shiftId
-    };
-
-    HospoHero.sendNotification(options);
+      userIds.forEach(function (userId) {
+        notificationSender.sendNotification(userId);
+      });
+    }
   },
 
   confirmClaim: function (shiftId, userId) {
@@ -166,15 +185,13 @@ Meteor.methods({
     Shifts.update({"_id": shiftId}, {$set: {"assignedTo": userId}, $unset: {claimedBy: 1}});
     logger.info("Shift claim confirmed ", {"shiftId": shiftId, "user": userId});
 
-    var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been confirmed";
-    var options = {
-      title: text,
-      actionType: 'confirm',
-      type: 'roster',
-      to: userId,
-      ref: shiftId
-    };
-    HospoHero.sendNotification(options);
+    new NotificationSender(
+      'Claim confirmed',
+      'claim-confirmed',
+      {
+        date: HospoHero.dateUtils.formatDateWithTimezone(shift.shiftDate, 'ddd, Do MMMM', shift.relations.locationId)
+      }
+    ).sendNotification(userId);
   },
 
   rejectClaim: function (shiftId, userId) {
@@ -195,93 +212,12 @@ Meteor.methods({
     Shifts.update({"_id": shiftId}, {$pull: {"claimedBy": userId}, $push: {"rejectedFor": userId}});
     logger.info("Shift claim rejected ", {"shiftId": shiftId, "user": userId});
 
-    var text = "Shift claim on " + moment(shift.shiftDate).format("ddd, Do MMMM") + " has been rejected";
-    var options = {
-      "title": text,
-      "actionType": "reject",
-      type: 'roster',
-      to: userId,
-      ref: shiftId
-    };
-    HospoHero.sendNotification(options);
+    new NotificationSender(
+      'Claim rejected',
+      'claim-rejected',
+      {
+        date: HospoHero.dateUtils.formatDateWithTimezone(shift.shiftDate, 'ddd, Do MMMM', shift.relations.locationId)
+      }
+    ).sendNotification(userId);
   }
 });
-
-var formatNotificationText = function (notificationTextArray) {
-  var text = _.reduce(notificationTextArray, function (memo, shift) {
-    return memo + '<li>' + HospoHero.dateUtils.shiftDateInterval(shift) + '</li>';
-  }, '');
-  return '<ul>' + text + '</ul>';
-};
-
-var formatEmailText = function (date, userShiftsText, openShiftsText) {
-  var text = [];
-  text.push("I've just published the roster for the week starting " + date + ".<br><br>");
-  text.push("Here's your shifts");
-  text.push(userShiftsText);
-
-  if (openShiftsText) {
-    text.push("<br><br>And check open shifts. You can claim them from the dashboard.");
-    text.push(openShiftsText);
-  }
-  return text.join('');
-};
-
-/**
- * Sends notifications and emails to rostered users after publishing new roster
- *
- * @param {Date} date - The date of published roster
- * @param {Object} usersToNotify - The object of users to notify
- * @param {Array} openShifts - The array of open shifts (if exists)
- */
-var notifyUsersPublishRoster = function (date, usersToNotify, openShifts) {
-  if (Object.keys(usersToNotify).length > 0) {
-    var text;
-    var stringDate = moment(date).startOf('isoweek').format("dddd, Do MMMM YYYY");
-    var subject = 'Weekly roster for the week starting from ' + stringDate + ' published.';
-
-    // Creating the instance of EmailSender object
-    var emailSender = new EmailSender({
-      from: Meteor.userId(),
-      subject: subject
-    });
-
-    // If there are some opened shifts
-    // create the notification object for it
-    if (openShifts.length) {
-      var notifyOpenShifts = {
-        type: 'roster',
-        title: subject + ' Checkout open shifts',
-        text: formatNotificationText(openShifts)
-      };
-    }
-
-    for (var userId in usersToNotify) {
-      if (usersToNotify.hasOwnProperty(userId)) {
-        // Sending open shifts at first
-        if (notifyOpenShifts) {
-          notifyOpenShifts.to = userId;
-          HospoHero.sendNotification(notifyOpenShifts);
-        }
-
-        var options = {
-          type: 'roster',
-          to: userId,
-          title: subject + ' Checkout your shifts',
-          text: formatNotificationText(usersToNotify[userId])
-        };
-
-        // Sending users shifts
-        HospoHero.sendNotification(options);
-
-        // Adding receiver ID and email text to the EmailSender object
-        emailSender.addOption('to', userId);
-        var openShiftsText = notifyOpenShifts ? notifyOpenShifts.text : '';
-        emailSender.addOption('text', formatEmailText(stringDate, options.text, openShiftsText));
-
-        // Sending email to user
-        emailSender.send();
-      }
-    }
-  }
-};

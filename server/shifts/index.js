@@ -8,16 +8,20 @@ var ShiftPropertyChangeLogger = {
     shiftDate: 'shift date',
     assignedTo: 'assignment'
   },
-
-  propertiesFormatters: {
-    startTime: HospoHero.dateUtils.timeFormat,
-    endTime: HospoHero.dateUtils.timeFormat,
-    shiftDate: HospoHero.dateUtils.shortDateFormat,
-    assignedTo: HospoHero.username
-  },
-
+  
   _formatProperty: function (shift, property) {
-    return this.propertiesFormatters[property](shift[property]);
+    var propertiesFormatters = {
+      startTime: HospoHero.dateUtils.timeFormat,
+      endTime: HospoHero.dateUtils.timeFormat,
+      shiftDate: HospoHero.dateUtils.shortDateFormat,
+      assignedTo: HospoHero.username
+    };
+
+    if (_.isDate(shift[property])) {
+      return propertiesFormatters[property](shift[property], shift.relations.locationId);
+    } else {
+      return propertiesFormatters[property](shift[property]);
+    }
   },
 
   _notificationTitle: function (shift) {
@@ -28,35 +32,21 @@ var ShiftPropertyChangeLogger = {
     return this.trackedProperties[propertyName] + ' has been updated to ' + this._formatProperty(newShift, propertyName);
   },
 
-  _sendNotification: function (message, shift, fromUserId) {
-    var text = this._notificationTitle(shift) + ': ' + message;
-
-    // todo: Uncomment if we need shift updates sending
-    //var updateDocument = {
-    //  to: shift.assignedTo,
-    //  userId: fromUserId,
-    //  shiftId: shift._id,
-    //  text: text,
-    //  locationId: shift.relations.locationId,
-    //  type: "update"
-    //};
-    //
-    //logger.info("Shift update insert");
-    //ShiftsUpdates.insert(updateDocument);
-
-    HospoHero.sendNotification({
-      type: 'shift',
-      title: text,
-      actionType: 'update',
-      to: shift.assignedTo,
-      ref: shift._id
-    });
+  _sendNotification: function (message, shift, fromUserId, toUserId) {
+    var notificationText = this._notificationTitle(shift) + ': ' + message;
+    new NotificationSender(
+      'Update on shift',
+      'update-on-shift',
+      {
+        text: notificationText
+      }
+    ).sendNotification(toUserId);
   },
 
   _trackUserRemovedFromShift: function (oldShift, newShift, userId) {
     if (oldShift.assignedTo && oldShift.assignedTo !== newShift.assignedTo) {
       var message = 'You have been removed from this assigned shift';
-      this._sendNotification(message, oldShift, userId);
+      this._sendNotification(message, oldShift, userId, oldShift.assignedTo);
     }
   },
 
@@ -65,7 +55,14 @@ var ShiftPropertyChangeLogger = {
       var oldShift = Shifts.findOne({_id: newShift._id});
 
       var isPropertyChanged = function (propertyName) {
-        return oldShift[propertyName] !== newShift[propertyName];
+        var oldPropertyValue = oldShift[propertyName];
+        var newPropertyValue = newShift[propertyName];
+
+        if (_.isDate(oldPropertyValue)) {
+          oldPropertyValue = oldPropertyValue.valueOf();
+          newPropertyValue = newPropertyValue.valueOf();
+        }
+        return oldPropertyValue !== newPropertyValue;
       };
 
       var self = this;
@@ -76,7 +73,7 @@ var ShiftPropertyChangeLogger = {
       });
 
       var fullMessage = shiftChangesMessages.join(', ');
-      this._sendNotification(fullMessage, oldShift, userId);
+      this._sendNotification(fullMessage, oldShift, userId, newShift.assignedTo);
 
       this._trackUserRemovedFromShift(oldShift, newShift, userId);
     }
@@ -112,7 +109,7 @@ Meteor.methods({
 
     // publish new shift if other shifts of this week are published
     var isRosterPublished = !!Shifts.findOne({
-      "shiftDate": TimeRangeQueryBuilder.forDay(newShiftInfo.shiftDate),
+      "shiftDate": TimeRangeQueryBuilder.forWeek(newShiftInfo.shiftDate),
       "published": true,
       "relations.areaId": HospoHero.getCurrentAreaId()
     });

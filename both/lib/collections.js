@@ -7,6 +7,7 @@ JobItems = new Mongo.Collection("jobItems");
 Jobs = new Mongo.Collection("jobs");
 
 Shifts = new Mongo.Collection("shifts");
+ManagerNotes = new Mongo.Collection('managerNotes');
 
 Comments = new Mongo.Collection("comments");
 Notifications = new Mongo.Collection("notifications");
@@ -41,10 +42,6 @@ Invitations = new Mongo.Collection("invitations");
 //new forecast functionality
 WeatherForecast = new Mongo.Collection("weatherForecast");
 DailySales = new Mongo.Collection("dailySales");
-
-// todo: Uncomment if we need shift updates sending
-//ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
-
 
 //POS
 PosMenuItems = new Mongo.Collection('posMenuItems');

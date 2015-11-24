@@ -3,7 +3,6 @@ Meteor.methods({
     var defaultLocation = {
       address: '',
       pos: null,
-      shiftUpdateHour: 7,
       createdAt: Date.now()
     };
 

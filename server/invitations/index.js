@@ -14,34 +14,32 @@ Meteor.methods({
     };
 
     var id = Invitations.insert(invitation);
-    var url = process.env.ROOT_URL + "invitations/" + id;
 
-    var text = "Hi " + name + ",<br><br>";
-    text += "You've been added to the " + area.name + " area.<br>";
-    text += "To complete registration go on this link: <a href='" + url + "'>" + url + "</a><br><br>";
-    text += "If you have any questions let me know.<br>";
-    text += senderInfo.username;
-
-    var emailOptions = {
-      "to": email,
-      "from": senderInfo.emails[0].address,
-      "subject": "[Hero Chef] Added to the " + area.name + " area",
-      "html": text
-    };
-
-    if (HospoHero.isDevelopmentMode()) {
-      logger.warn('Send email', emailOptions);
-    } else {
-      Email.send(emailOptions);
-    }
-
+    new NotificationSender(
+      'Added to the ' + area.name + ' area',
+      'invitation-email',
+      {
+        name: name,
+        areaName: area.name,
+        url: process.env.ROOT_URL + "invitations/" + id,
+        sender: HospoHero.username(Meteor.userId())
+      }
+    ).sendEmail(email);
   },
 
   deleteInvitation: function (id) {
     Invitations.remove({_id: id});
   },
 
-  acceptInvitation: function (id, user) {
+  acceptInvitation: function (id, response) {
+    var nonProfileItems = ['username', 'email', 'password'];
+    var user = {
+      profile: {}
+    };
+
+    _.extend(user, _.pick(response, nonProfileItems));
+    _.extend(user.profile, _.omit(response, nonProfileItems));
+
     var userId = Accounts.createUser(user);
 
     Invitations.update({_id: id}, {
@@ -49,26 +47,27 @@ Meteor.methods({
     });
 
     var invitation = Invitations.findOne({_id: id});
-    var options = {
-      type: 'invitation',
-      title: 'User ' + invitation.name + ' has accept your invitation',
-      actionType: 'update',
-      to: invitation.invitedBy,
-      ref: id
-    };
-    HospoHero.sendNotification(options);
+    var area = Areas.findOne({_id: invitation.areaId});
 
-    var areaId = invitation.areaId;
-    var area = Areas.findOne({_id: areaId});
+    // send a notification to the user
+    new NotificationSender(
+      'Invitation accepted',
+      'invitation-accepted',
+      {
+        username: invitation.name,
+        areaName: area.name
+      }
+    ).sendBoth(invitation.invitedBy);
+
     var updateObject = {
       roles: {},
       relations: {
         organizationId: area.organizationId,
         locationIds: [area.locationId],
-        areaIds: [areaId]
+        areaIds: [area._id]
       }
     };
-    updateObject.roles[areaId] = invitation.roleId;
+    updateObject.roles[area._id] = invitation.roleId;
     Meteor.users.update({_id: userId}, {$set: updateObject});
   }
 });

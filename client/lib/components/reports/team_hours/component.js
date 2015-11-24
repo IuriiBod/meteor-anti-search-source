@@ -10,7 +10,9 @@ component.state.weekDays = function () {
 };
 
 component.state.users = function () {
-  var query = {};
+  var query = {
+    'relations.areaIds': HospoHero.getCurrentAreaId()
+  };
   var searchText = this.get('searchText');
   if(searchText) {
     query.username = new RegExp(searchText, 'i');
@@ -33,5 +35,3 @@ component.prototype.onListRendered = function () {
   $.fn.editable.defaults.mode = 'inline';
   $.fn.editable.defaults.showbuttons = false;
 };
-
-

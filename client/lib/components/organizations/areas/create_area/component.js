@@ -1,6 +1,6 @@
 var component = FlowComponents.define("createArea", function(props) {
   this.organizationId = props.organizationId;
-  this.locationId = props.locationId;
+  this.set('locationId', props.locationId);
   this.set('enabled', true);
 });
 
@@ -13,19 +13,18 @@ component.state.locations = function() {
   }
 };
 
-component.state.activeLocation = function(id) {
-  return this.locationId == id;
-};
-
 component.action.changeEnabled = function() {
   this.set('enabled', !this.get('enabled'));
 };
 
-component.action.createArea = function (areaInfo) {
+component.action.createArea = function (areaInfo, domElement) {
   areaInfo.organizationId = this.organizationId;
   areaInfo.color = this.get('color');
   areaInfo.archived = false;
-  Meteor.call("createArea", areaInfo, HospoHero.handleMethodResult());
+  Meteor.call("createArea", areaInfo, HospoHero.handleMethodResult(function() {
+    var flyout = FlyoutManager.getInstanceByElement(domElement);
+    flyout.close();
+  }));
 };
 
 component.state.onColorChange = function () {

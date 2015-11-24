@@ -27,7 +27,9 @@ RoutePermissionChecker.prototype.checkIsUserInOrganization = function () {
 RoutePermissionChecker.prototype._permissionsByRouteName = {
   // route_name : 'permission to check',
   teamHours: 'edit roster',
-  currentStocks: 'edit roster'
+  currentStocks: 'edit roster',
+  weeklyRoster: 'view roster',
+  templateWeeklyRoster: 'edit roster'
   //todo: add other routes and their permissions
 };
 
@@ -54,10 +56,14 @@ var requireLogIn = function () {
       }
     }
   } else {
-    Router.go('signIn');
+    var backwardUrl = HospoHero.misc.getBackwardUrl();
+    var goOptions = {};
+    if (backwardUrl !== '/') {
+      goOptions.query = 'backwardUrl=' + backwardUrl;
+    }
+    Router.go('signIn', {}, goOptions);
     return this.next();
   }
 };
 
-
-Router.onBeforeAction(requireLogIn, {except: ['signIn', 'signUp', 'invitationAccept', 'switchUser']});
+Router.onBeforeAction(requireLogIn, {except: ['signIn', 'signUp', 'invitationAccept', 'switchUser', 'claim', 'pinLock']});

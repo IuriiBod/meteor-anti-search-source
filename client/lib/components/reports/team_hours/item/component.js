@@ -16,7 +16,7 @@ component.state.weekDays = function () {
 
 component.state.hasWage = function () {
   var values = this.get('weeklyValues');
-  return values.wage > 0;
+  return values.wage >= 0;
 };
 
 
@@ -77,8 +77,7 @@ component.prototype.getTotalTimeAndWage = function () {
 
   var weekShifts = Shifts.find({
     "assignedTo": user._id,
-    "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek),
-    $or: [{"status": "finished"}, {"status": "started"}]
+    "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek)
   });
 
   var self = this;
@@ -86,18 +85,37 @@ component.prototype.getTotalTimeAndWage = function () {
   var totalMinutes = 0;
   var totalWage = 0;
 
-  weekShifts.forEach(function (shift) {
-    var shiftDuration = moment(shift.finishedAt).diff(shift.startedAt, 'minutes');
+  // The Crutch
+  var hasShifts = false;
 
-    totalMinutes += shiftDuration;
-    totalWage += (self.getUserPayRate(shift.date) / 60) * shiftDuration;
-    dailyHoursManager.addMinutes(shift.shiftDate, shiftDuration);
+  weekShifts.forEach(function (shift) {
+    hasShifts = true;
+    if(shift.startedAt || shift.finishedAt) {
+      var locationStart = moment(shift.startedAt);
+      var locationFinish = moment(shift.finishedAt);
+      // I don't know why, but some shifts have startedAt in one day and finishedAt in another
+      locationFinish.set({
+        date: locationStart.date(),
+        month: locationStart.month(),
+        year: locationStart.year()
+      });
+
+      var shiftDuration = locationFinish.diff(locationStart, 'minutes');
+
+      totalMinutes += shiftDuration;
+      totalWage += (self.getUserPayRate(locationStart) / 60) * shiftDuration;
+      dailyHoursManager.addMinutes(locationStart, shiftDuration);
+    }
   });
 
-  return {
-    wage: this.roundNumber(totalWage),
-    time: this.roundNumber(totalMinutes / 60), // convert to hours and round
-    dailyHours: dailyHoursManager.getHours()
+  if(hasShifts) {
+    return {
+      wage: this.roundNumber(totalWage),
+      time: this.roundNumber(totalMinutes / 60), // convert to hours and round
+      dailyHours: dailyHoursManager.getHours()
+    }
+  } else {
+    return false;
   }
 };
 

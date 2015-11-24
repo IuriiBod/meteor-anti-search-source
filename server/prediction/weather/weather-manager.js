@@ -18,7 +18,10 @@ WeatherManager = function WeatherManager(locationId) {
  * @returns {object|null} weather forecast
  */
 WeatherManager.prototype.getWeatherFor = function (date) {
-  return WeatherForecast.findOne({locationId: this._locationId, date: TimeRangeQueryBuilder.forDay(date)});
+  return WeatherForecast.findOne({
+    locationId: this._locationId,
+    date: TimeRangeQueryBuilder.forDay(date, this._locationId)
+  });
 };
 
 //todo: write docs for other methods
@@ -85,7 +88,7 @@ WeatherManager.prototype._isWeatherAvailableForMonth = function (monthMomentToCh
     locationId: this._locationId
   }).count();
 
-  var requiredCount = isCurrentMonth ? endOfMonth.date() : nowMoment.date();
+  var requiredCount = isCurrentMonth ? nowMoment.date() : endOfMonth.date();
 
   return monthForecastCount >= requiredCount;
 };

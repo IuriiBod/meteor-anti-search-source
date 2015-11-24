@@ -19,7 +19,7 @@ var createShiftEndTimeEditableConfig = function (templateInstance) {
   };
 
   var onSuccess = function (response, newTime) {
-    var shift = templateInstance.data.shift;
+    var shift = Shifts.findOne({_id: templateInstance.data.shift._id});
 
     shift[templateInstance.data.property] = fixZeroYearComdateMoment(newTime);
 
