@@ -3,7 +3,7 @@ Router.route('/jobItems', {
   name: 'jobItemsMaster',
   path: '/jobItems',
   template: 'jobItemsListMainView',
-  waitOn: function() {
+  waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('jobTypes'),
@@ -12,8 +12,8 @@ Router.route('/jobItems', {
       Meteor.subscribe('jobItems', null, currentAreaId, 'active')
     ];
   },
-  data: function() {
-    if(!Meteor.userId()) {
+  data: function () {
+    if (!Meteor.userId()) {
       Router.go('/');
     }
     Session.set('editStockTake', false);
@@ -24,7 +24,7 @@ Router.route('/jobItems/:type', {
   name: 'jobItemsMasterType',
   path: '/jobItems/:type',
   template: 'jobItemsListMainView',
-  waitOn: function() {
+  waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('jobItems', null, currentAreaId, 'archived'),
@@ -32,8 +32,8 @@ Router.route('/jobItems/:type', {
       Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },
-  data: function() {
-    if(!Meteor.userId()) {
+  data: function () {
+    if (!Meteor.userId()) {
       Router.go('/');
     }
     Session.set('editStockTake', false);
@@ -44,7 +44,7 @@ Router.route('/jobItem/submit', {
   name: 'submitJobItem',
   path: '/jobItem/submit',
   template: 'submitJobItemMainView',
-  waitOn: function() {
+  waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('jobTypes'),
@@ -53,12 +53,12 @@ Router.route('/jobItem/submit', {
       Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
+  data: function () {
+    if (!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
       Router.go('/');
     }
     var prep = JobTypes.findOne({'name': 'Prep'});
-    if(prep) {
+    if (prep) {
       Session.set('jobType', prep._id);
     }
     Session.set('thisJobItem', null);
@@ -70,7 +70,7 @@ Router.route('/jobItem/:_id', {
   name: 'jobItemDetailed',
   path: '/jobItem/:_id',
   template: 'jobItemDetailedMainView',
-  waitOn: function() {
+  waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('jobItem', this.params._id),
@@ -82,8 +82,8 @@ Router.route('/jobItem/:_id', {
       Meteor.subscribe('jobsRelatedMenus', this.params._id)
     ];
   },
-  data: function() {
-    if(!Meteor.userId()) {
+  data: function () {
+    if (!Meteor.userId()) {
       Router.go('/');
     }
     Session.set('thisJobItem', this.params._id);
@@ -95,7 +95,7 @@ Router.route('/jobItem/:_id/edit', {
   name: 'jobItemEdit',
   path: '/jobItem/:_id/edit',
   template: 'jobItemEditView',
-  waitOn: function() {
+  waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('jobTypes'),
@@ -105,8 +105,8 @@ Router.route('/jobItem/:_id/edit', {
       Meteor.subscribe('allSuppliers', currentAreaId)
     ];
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
+  data: function () {
+    if (!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
       Router.go('/');
     }
     Session.set('thisJobItem', this.params._id);

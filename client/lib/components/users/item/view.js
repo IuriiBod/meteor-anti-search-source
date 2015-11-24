@@ -1,19 +1,19 @@
 Template.userDetailed.events({
-  'click .archiveUser': function(event) {
+  'click .archiveUser': function (event) {
     event.preventDefault();
     var userId = $(event.target).closest("tr").attr("data-id");
     var user = Meteor.users.findOne(userId);
 
     var state = user.isActive ? 'de-activate' : 'activate';
     var confirmChange = confirm("Are you sure you want to " + state + " this user");
-    if(confirmChange) {
+    if (confirmChange) {
       Meteor.call("changeStatus", userId, HospoHero.handleMethodResult());
     }
   },
 
-  'change select[name="roleSelector"]': function(e) {
+  'change select[name="roleSelector"]': function (e) {
     var changeRoleMessage = "Do you really want to change the role of the user?";
-    if(confirm(changeRoleMessage)) {
+    if (confirm(changeRoleMessage)) {
       var userId = e.target.dataset.id;
       var newRoleId = e.target.value;
       Meteor.call('changeUserRole', userId, newRoleId, HospoHero.handleMethodResult());

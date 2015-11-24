@@ -1,9 +1,9 @@
 Migrations.add({
   version: 2,
   name: "Change Admin to Owner",
-  up: function() {
+  up: function () {
     var role = Meteor.roles.findOne({name: 'Admin'});
-    if(role) {
+    if (role) {
       Meteor.roles.update({
         _id: role._id
       }, {

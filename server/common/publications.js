@@ -1,10 +1,10 @@
-Meteor.publish('jobTypes', function() {
+Meteor.publish('jobTypes', function () {
   logger.info("JobTypes publication");
   return JobTypes.find();
 });
 
-Meteor.publish('sections', function(areaId) {
-  if(this.userId) {
+Meteor.publish('sections', function (areaId) {
+  if (this.userId) {
     var query = {
       'relations.areaId': areaId
     };
@@ -12,8 +12,8 @@ Meteor.publish('sections', function(areaId) {
   }
 });
 
-Meteor.publish('allCategories', function(areaId) {
-  if(this.userId) {
+Meteor.publish('allCategories', function (areaId) {
+  if (this.userId) {
     var query = {
       'relations.areaId': areaId
     };
@@ -25,7 +25,7 @@ Meteor.publish('allCategories', function(areaId) {
   }
 });
 
-Meteor.publish('allStatuses', function() {
+Meteor.publish('allStatuses', function () {
   logger.info("Statuses published");
   return Statuses.find();
 });

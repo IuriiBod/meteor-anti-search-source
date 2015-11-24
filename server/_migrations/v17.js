@@ -13,7 +13,7 @@ var migrationFn = function () {
     'rgb(182, 187, 191)'
   ];
 
-  Areas.find().forEach(function(area, index) {
+  Areas.find().forEach(function (area, index) {
     index = index % colors.length;
     var color = colors[index];
     Areas.update({

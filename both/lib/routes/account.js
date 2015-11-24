@@ -22,7 +22,7 @@ Router.route('pinLock', {
   path: '/pinLock/:userId',
   layoutTemplate: 'blankLayout',
   template: 'pinLock',
-  waitOn: function() {
+  waitOn: function () {
     return Meteor.subscribe('profileUser', this.params.userId);
   },
   data: function () {
@@ -34,7 +34,7 @@ Router.route('pinLock', {
 
 Router.route('logout', {
   'path': '/logout',
-  data: function() {
+  data: function () {
     return Meteor.logout();
   }
 });

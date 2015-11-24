@@ -3,7 +3,7 @@ Meteor.methods({
     if (HospoHero.isOrganizationOwner()) {
       var res = !location.archived;
       Locations.update({_id: location._id}, {$set: {archived: res}});
-      var areas = Areas.find({locationId: location._id}, {fields:{_id: 1}}).fetch();
+      var areas = Areas.find({locationId: location._id}, {fields: {_id: 1}}).fetch();
       areas = _.map(areas, function (area) {
         return area._id;
       });

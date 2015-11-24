@@ -1,7 +1,7 @@
 Migrations.add({
   version: 1,
   name: "Add organizations and roles to the project",
-  up: function() {
+  up: function () {
     var admin;
     var organization;
     var organizationId;
@@ -25,7 +25,7 @@ Migrations.add({
     //admin = Meteor.users.findOne({username: 'Tom'});
     admin = false;
 
-    if(!admin && !Meteor.users.findOne({username: "admin"})) {
+    if (!admin && !Meteor.users.findOne({username: "admin"})) {
       var id = Accounts.createUser({
         username: 'admin',
         email: 'admin@admin.com',
@@ -84,17 +84,17 @@ Migrations.add({
 
     // Find all users
     users = Meteor.users.find().fetch();
-    if(users.length) {
+    if (users.length) {
       var ownerRole = Meteor.roles.findOne({name: 'Owner'});
       var managerRole = Meteor.roles.findOne({name: 'Manager'});
       var workerRole = Meteor.roles.findOne({name: 'Worker'});
 
-      users.forEach(function(user) {
-        if(user._id == admin._id) {
+      users.forEach(function (user) {
+        if (user._id == admin._id) {
           userUpdateQuery.$set.roles['defaultRole'] = ownerRole._id;
           relationInsertQuery.locationIds = null;
           relationInsertQuery.areaIds = null;
-        } else if(user.isAdmin || user.isManager) {
+        } else if (user.isAdmin || user.isManager) {
           userUpdateQuery.$set.roles[areaId] = managerRole._id;
         } else {
           userUpdateQuery.$set.roles[areaId] = workerRole._id;
@@ -131,13 +131,13 @@ Migrations.add({
       areaId: areaId
     };
 
-    collections.forEach(function(collection) {
+    collections.forEach(function (collection) {
       // Find all shifts
       var docs = collection.find().fetch();
-      if(docs) {
-        docs.forEach(function(doc) {
+      if (docs) {
+        docs.forEach(function (doc) {
           // Create new relations
-          collection.update({ _id: doc._id }, {$set: {relations: relationInsertQuery}});
+          collection.update({_id: doc._id}, {$set: {relations: relationInsertQuery}});
         });
       }
     });

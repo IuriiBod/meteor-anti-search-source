@@ -3,17 +3,17 @@
   <br><br>
   Here's your shifts:
   <ul>
-  {{#each shifts}}
-    <li>{{dateFormatter this}}</li>
-  {{/each}}
+    {{#each shifts}}
+      <li>{{dateFormatter this}}</li>
+    {{/each}}
   </ul>
 
   {{#if openShifts}}
-  And check open shifts. You can claim them from the dashboard.
-  <ul>
-  {{#each openShifts}}
-    <li>{{dateFormatter this}}</li>
-  {{/each}}
-  </ul>
-{{/if}}
+    And check open shifts. You can claim them from the dashboard.
+    <ul>
+      {{#each openShifts}}
+        <li>{{dateFormatter this}}</li>
+      {{/each}}
+    </ul>
+  {{/if}}
 </div>

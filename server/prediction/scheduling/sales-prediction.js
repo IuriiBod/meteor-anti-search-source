@@ -22,10 +22,17 @@ ForecastMaker.prototype._getWeatherForecast = function (dayIndex, forecastDate) 
 
 
 ForecastMaker.prototype._updateForecastEntry = function (newForecastInfo) {
-  DailySales.update({
+  var dailySalesQuery = {
     date: TimeRangeQueryBuilder.forDay(newForecastInfo.date, this._locationId),
     menuItemId: newForecastInfo.menuItemId
-  }, {$set: newForecastInfo}, {upsert: true});
+  };
+
+  var oldDailySales = DailySales.findOne(dailySalesQuery);
+
+  //update forecast only if there is no manual input
+  if (!oldDailySales || !oldDailySales.isPredictionManual) {
+    DailySales.update(dailySalesQuery, {$set: newForecastInfo}, {upsert: true});
+  }
 };
 
 
@@ -65,29 +72,11 @@ ForecastMaker.prototype._getNotificationSender = function (area) {
       if (changes.length > 0) {
         var receiversIds = getReceivers();
         logger.info('Notify about prediction change', {receivers: receiversIds, changes: changes});
-        //receiversIds.forEach(function (receiverId) {
-        //  new UniEmailSender({
-        //    senderId: Meteor.users.findOne({})._id,//todo: temporal, remove after email sender improvement
-        //    receiverId: receiverId,
-        //    emailTemplate: {
-        //      subject: 'Some predictions have been changed',
-        //      blazeTemplateToRenderName: 'forecastUpdate'
-        //    },
-        //    templateData: {
-        //      changes: changes
-        //    },
-        //    needToNotify: true,
-        //    notificationData: {
-        //      type: 'prediction',
-        //      actionType: 'update',
-        //      relations: {
-        //        organizationId: area.organizationId,
-        //        locationId: area.locationId,
-        //        areaId: area._id
-        //      }
-        //    }
-        //  }).send();
-        //});
+        var notificationTitle = 'Some predictions have been changed';
+        var notificationSender = new NotificationSender(notificationTitle, 'forecast-update', changes);
+        receiversIds.forEach(function (receiverId) {
+          notificationSender.sendNotification(receiverId);
+        });
       }
     }
   };

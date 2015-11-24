@@ -12,15 +12,15 @@ var migrationFn = function () {
         }
       }
     ]
-  }).forEach(function(shift) {
+  }).forEach(function (shift) {
     var startedAtStamp = shift.startedAt;
     var finishedAtStamp = shift.finishedAt;
     var set = {};
 
-    if(startedAtStamp) {
+    if (startedAtStamp) {
       set.startedAt = new Date(startedAtStamp);
     }
-    if(finishedAtStamp) {
+    if (finishedAtStamp) {
       set.finishedAt = new Date(finishedAtStamp);
     }
 

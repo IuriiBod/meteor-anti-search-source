@@ -8,7 +8,7 @@ var ShiftPropertyChangeLogger = {
     shiftDate: 'shift date',
     assignedTo: 'assignment'
   },
-  
+
   _formatProperty: function (shift, property) {
     var propertiesFormatters = {
       startTime: HospoHero.dateUtils.timeFormat,

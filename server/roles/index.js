@@ -1,6 +1,6 @@
 Meteor.methods({
   addRole: function (name, actions) {
-    if(!HospoHero.isManager()) {
+    if (!HospoHero.isManager()) {
       throw new Meteor.Error(403, 'User has no permissions to create roles');
     }
 
@@ -17,7 +17,7 @@ Meteor.methods({
   },
 
   editRole: function (id, updateObject) {
-    if(!HospoHero.isManager()) {
+    if (!HospoHero.isManager()) {
       throw new Meteor.Error(403, 'User has no permissions to edit roles');
     }
 
@@ -25,7 +25,7 @@ Meteor.methods({
   },
 
   deleteRole: function (roleToDeleteId) {
-    if(!HospoHero.isManager()) {
+    if (!HospoHero.isManager()) {
       throw new Meteor.Error(403, 'User has no permissions to delete roles');
     }
     var roleToDelete = Roles.getRoleById(roleToDeleteId);
@@ -39,6 +39,6 @@ Meteor.methods({
     $set['roles.' + currentAreaId] = worker._id;
 
     Meteor.roles.remove({_id: roleToDeleteId});
-    Meteor.users.update(query, { $set: $set });
+    Meteor.users.update(query, {$set: $set});
   }
 });
