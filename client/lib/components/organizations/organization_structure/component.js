@@ -23,7 +23,8 @@ component.state.locations = function() {
 };
 
 component.state.hasLocations = function () {
-  return this.get('locations').count();
+  var locations = this.get('locations');
+  return locations ? locations.count() : false;
 };
 
 component.state.areas = function(locationId) {

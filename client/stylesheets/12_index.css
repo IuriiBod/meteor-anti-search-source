@@ -1,138 +1,139 @@
 .profile-image {
-  width: 48px;
-  height: 48px;
+    width: 48px;
+    height: 48px;
 }
 
 .menu-item-image, .content > p > img {
-  width: 100% !important;
-  height: 191px !important;
+    width: 100% !important;
+    height: 191px !important;
 }
 
-.ibox-content > div >  img, 
+.ibox-content > div > img,
 .col-md-12 > .ibox > .ibox-content > img,
 .panel-body > div > img,
 .panel-body > p > div > img,
 .panel-body > p > img,
-.panel-body > img, 
+.panel-body > img,
 .note-editable > div > img,
 .note-editable > img,
 .content > p > div > img {
-  max-width: 30%;
-  height: auto;
+    max-width: 30%;
+    height: auto;
 }
 
-.image > img{
-  width: 100%;
-  height: 315px;
+.image > img {
+    width: 100%;
+    height: 315px;
 }
 
 /*CHATS ALIGN FIX ON LEFT*/
 .chat-discussion .chat-message:nth-child(2n) .message-avatar {
-  margin-left: 0px !important;
+    margin-left: 0px !important;
 }
 
 .chat-discussion .chat-message:nth-child(2n) .message {
-  text-align: inherit !important;
-  margin-right: 0px !important;
+    text-align: inherit !important;
+    margin-right: 0px !important;
 }
 
 .chat-discussion .chat-message .message {
-  text-align: left !important;
-  margin-left: 55px !important;
+    text-align: left !important;
+    margin-left: 55px !important;
 }
 
 .chat-discussion .chat-message .message-date {
-  float: right !important;
+    float: right !important;
 }
 
 .chat-discussion .chat-message .message-avatar {
-  float: left !important;
-  margin-right:0px !important;
+    float: left !important;
+    margin-right: 0px !important;
 }
+
 /*CHATS ALIGN FIX ON LEFT*/
 
 .theme-config {
-  top: 97px !important;
-  height: 100% !important;
+    top: 97px !important;
+    height: 100% !important;
 }
 
 .skin-setttings {
-  width: 300px !important;
-  height: 100% !important;
+    width: 300px !important;
+    height: 100% !important;
 }
 
 .theme-config-box {
-  height: 100% !important;
-  margin-right: -300px;
+    height: 100% !important;
+    margin-right: -300px;
 }
 
 .navbar-top-links .dropdown-alerts {
-  width: 400px;
-  min-width: 0;
+    width: 400px;
+    min-width: 0;
 }
 
 .navbar-top-links .dropdown-alerts {
-  margin-left: -74px;
+    margin-left: -74px;
 }
 
 .filter-menus {
-  width: 93% !important; 
-  left: 15px !important;
-} 
+    width: 93% !important;
+    left: 15px !important;
+}
 
 .showJobProfile,
 .showJobProfile:hover {
-  color: #fff;
+    color: #fff;
 }
 
 .field {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .m-l-xxxxl {
-  margin-left: 110px;
+    margin-left: 110px;
 }
 
 span {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .notifi-ul {
-  padding-left: 16px !important;
+    padding-left: 16px !important;
 }
 
 li > img {
-  display: block !important;
-  max-width: 100% !important;
-  height: auto !important;
+    display: block !important;
+    max-width: 100% !important;
+    height: auto !important;
 }
 
 .font-20 {
-  font-size: 20px !important;
+    font-size: 20px !important;
 }
 
 .areaBox > a {
-  white-space: inherit !important;
+    white-space: inherit !important;
 }
 
 .ordering_count {
-  max-width: 120px !important;
+    max-width: 120px !important;
 }
 
 .ordering_count .editable-input input {
-  max-width: 100px;
+    max-width: 100px;
 }
 
 .caret-pulled-right {
-  position: relative;
-  bottom: 17px;
-  right: 10px;
+    position: relative;
+    bottom: 17px;
+    right: 10px;
 }
 
 .label-success a {
-  color: #FFFFFF;
+    color: #FFFFFF;
 }
 
-.table-scrollable{
-  overflow: auto;
+.table-scrollable {
+    overflow: auto;
 }

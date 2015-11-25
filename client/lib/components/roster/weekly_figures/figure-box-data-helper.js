@@ -142,7 +142,7 @@ FigureBoxDataHelper.prototype._calcStaffCost = function (shifts) {
         var totalminutes = self._getTotalMinutes(shift);
         var rate = self._getPayrate(user, shift);
         if (totalminutes > 0) {
-          totalCost += (rate/60) * totalminutes;
+          totalCost += (rate / 60) * totalminutes;
         }
       }
     });

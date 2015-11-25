@@ -1,33 +1,33 @@
-SearchSource.defineSource('jobItemsSearch', function(searchText, options) {
+SearchSource.defineSource('jobItemsSearch', function (searchText, options) {
   var optionFileds = {sort: {'name': 1}};
   var docs = [];
   var selector = {
     "relations.areaId": HospoHero.getCurrentAreaId()
   };
-  if(options) {
-    if(options.endingAt) {
+  if (options) {
+    if (options.endingAt) {
       selector['$or'] = [
         {'name': {$gt: options.endingAt}},
         {'name': {$lte: options.endingAt}}
       ]
     }
-    if(options.limit) {
+    if (options.limit) {
       optionFileds['limit'] = options.limit;
     }
-    if(options.ids) {
+    if (options.ids) {
       selector['_id'] = {$nin: options.ids}
     }
-    if(options.type) {
+    if (options.type) {
       selector["type"] = options.type;
     }
-    if(options.status) {
+    if (options.status) {
       selector['status'] = options.status;
     }
   } else {
     optionFileds['limit'] = 10;
   }
 
-  if(searchText) {
+  if (searchText) {
     var regExp = buildRegExp(searchText);
     selector['$or'] = [
       {'name': regExp}

@@ -1,5 +1,5 @@
 Template.locationDetails.helpers({
-  'locationName': function() {
+  'locationName': function () {
     var loc = Locations.findOne();
     return loc.name;
   }

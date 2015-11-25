@@ -1,6 +1,6 @@
-Meteor.publish("newNotifications", function() {
+Meteor.publish("newNotifications", function () {
   var userId = this.userId;
-  if(userId) {
+  if (userId) {
     var notifi = Notifications.find(
       {
         "to": userId,
@@ -17,9 +17,9 @@ Meteor.publish("newNotifications", function() {
   }
 });
 
-Meteor.publish("readNotifications", function() {
+Meteor.publish("readNotifications", function () {
   var userId = this.userId;
-  if(userId) {
+  if (userId) {
     var notifi = Notifications.find({
         "to": userId,
         "read": true,

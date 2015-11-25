@@ -1,9 +1,13 @@
+var checkForecastPermissions = function (userId) {
+  var haveAccess = HospoHero.canUser('view forecast', userId);
+  if (!haveAccess) {
+    throw new Meteor.Error(403, 'Access Denied');
+  }
+};
+
 Meteor.methods({
   synchronizeActualSales: function () {
-    var haveAccess = HospoHero.canUser('view forecast', this.userId);
-    if (!haveAccess) {
-      throw new Meteor.Error(403, 'Access Denied');
-    }
+    checkForecastPermissions(this.userId);
 
     //find out current area
     var area = HospoHero.getCurrentArea(this.userId);
@@ -47,6 +51,35 @@ Meteor.methods({
       predictionApi.updatePredictionModel(true);
     } else {
       logger.info('Nothing to sync');
+    }
+  },
+
+  editForecast: function (menuItemId, date, predictedQuantity) {
+    check(menuItemId, HospoHero.checkers.MongoId);
+    check(date, Date);
+    check(predictedQuantity, Number);
+
+    checkForecastPermissions(this.userId);
+
+    var menuItem = MenuItems.findOne({_id: menuItemId}, {fields: {relations: 1, _id: 1}});
+    if (menuItem) {
+      var locationId = menuItem.relations.locationId;
+      var startOfDate = HospoHero.dateUtils.getDateMomentForLocation(date, locationId).startOf('day').toDate();
+
+      DailySales.update({
+        date: TimeRangeQueryBuilder.forDay(date, locationId),
+        menuItemId: menuItemId,
+        relations: menuItem.relations
+      }, {
+        $set: {
+          date: startOfDate,
+          predictionQuantity: predictedQuantity,
+          isPredictionManual: true,
+          relations: menuItem.relations
+        }
+      }, {upsert: true});
+    } else {
+      logger.error('Menu item not found', {id: menuItemId});
     }
   }
 });

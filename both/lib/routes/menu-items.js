@@ -3,7 +3,7 @@ Router.route('/menuItems/:category/:status', {
   name: "menuItemsMaster",
   path: '/menuItems/:category/:status',
   template: "menuItemsListMainView",
-  waitOn: function() {
+  waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allCategories', currentAreaId),
@@ -12,8 +12,8 @@ Router.route('/menuItems/:category/:status', {
       Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },
-  data: function() {
-    if(!Meteor.userId()) {
+  data: function () {
+    if (!Meteor.userId()) {
       Router.go("/");
     }
     Session.set("category", this.params.category);
@@ -26,7 +26,7 @@ Router.route('/menuItems/submit', {
   name: "submitMenuItem",
   path: '/menuItems/submit',
   template: "menuItemSubmitMainView",
-  waitOn: function() {
+  waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allCategories', currentAreaId),
@@ -37,8 +37,8 @@ Router.route('/menuItems/submit', {
       Meteor.subscribe('jobItems', null, currentAreaId)
     ];
   },
-  data: function() {
-    if(!Meteor.userId() || !HospoHero.canUser('edit menus')()) {
+  data: function () {
+    if (!Meteor.userId() || !HospoHero.canUser('edit menus')()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);
@@ -49,7 +49,7 @@ Router.route('/menuItems/:type', {
   name: "menuItemsMasterType",
   path: '/menuItems/:type',
   template: "menuItemsListMainView",
-  waitOn: function() {
+  waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allCategories', currentAreaId),
@@ -58,8 +58,8 @@ Router.route('/menuItems/:type', {
       Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },
-  data: function() {
-    if(!Meteor.userId()) {
+  data: function () {
+    if (!Meteor.userId()) {
       Router.go("/");
     }
     Session.set("category", "all");
@@ -72,7 +72,7 @@ Router.route('/menuItem/:_id', {
   name: "menuItemDetail",
   path: '/menuItem/:_id',
   template: "menuItemDetailedMainView",
-  waitOn: function() {
+  waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe("menuItem", this.params._id),
@@ -86,8 +86,8 @@ Router.route('/menuItem/:_id', {
       Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
-  data: function() {
-    if(!Meteor.userId()) {
+  data: function () {
+    if (!Meteor.userId()) {
       Router.go("/");
     }
     //todo: get rid of sessions later

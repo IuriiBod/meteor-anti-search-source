@@ -8,7 +8,6 @@ var LocationDocument = Match.Where(function (location) {
     createdAt: Number,
     country: String,
     city: String,
-    shiftUpdateHour: Number,
 
     _id: HospoHero.checkers.OptionalMongoId,
     address: Match.Optional(String),

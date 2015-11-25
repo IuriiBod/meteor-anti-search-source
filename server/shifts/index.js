@@ -8,7 +8,7 @@ var ShiftPropertyChangeLogger = {
     shiftDate: 'shift date',
     assignedTo: 'assignment'
   },
-  
+
   _formatProperty: function (shift, property) {
     var propertiesFormatters = {
       startTime: HospoHero.dateUtils.timeFormat,
@@ -34,18 +34,6 @@ var ShiftPropertyChangeLogger = {
 
   _sendNotification: function (message, shift, fromUserId, toUserId) {
     var notificationText = this._notificationTitle(shift) + ': ' + message;
-    var updateDocument = {
-      to: toUserId,
-      userId: fromUserId,
-      shiftId: shift._id,
-      text: notificationText,
-      locationId: shift.relations.locationId,
-      type: "update"
-    };
-
-    logger.info("Shift update insert");
-    ShiftsUpdates.insert(updateDocument);
-
     new NotificationSender(
       'Update on shift',
       'update-on-shift',

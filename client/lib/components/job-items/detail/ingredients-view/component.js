@@ -12,13 +12,13 @@ component.state.ing = function() {
       return item;
     }
   }
-}
+};
 
 component.state.quantity = function() {
   if(this.ingredient && this.ingredient.quantity) {
     return this.ingredient.quantity;
   }
-}
+};
 
 component.state.cost = function() {
   var ing = this.get("ing");
@@ -27,4 +27,4 @@ component.state.cost = function() {
     cost = Math.round(cost * 100)/100;
     return cost;
   }
-}
+};

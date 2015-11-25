@@ -40,7 +40,7 @@ Namespace('HospoHero', {
   },
 
   // Returns username. user can be user ID or user object
-  username: function(user) {
+  username: function (user) {
     var userNameString = '';
     if (typeof user == "string") {
       userNameString = user;

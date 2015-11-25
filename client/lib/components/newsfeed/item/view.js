@@ -1,11 +1,29 @@
-Template.newsFeedPost.rendered = function(){
+Template.newsFeedPost.rendered = function () {
   $(".message-input-comment").val("");
 };
 
+Template.newsFeedPost.helpers({
+  likesCounterText: function (likesObject) {
+    var likesCounterText = [];
+    if (likesObject.likedByMe) {
+      likesCounterText.push('You');
+    }
+
+    if (likesObject.likesCount) {
+      if (likesObject.likedByMe) {
+        likesCounterText.push('and');
+      }
+      likesCounterText.push(likesObject.likesCount);
+    }
+    likesCounterText.push('like this');
+
+    return likesCounterText.join(' ');
+  }
+});
+
 Template.newsFeedPost.events({
-  'click .like-post': function(event) {
+  'click .like-post': function (event) {
     event.preventDefault();
-    var id = $(event.target).closest("div").attr("data-id");
-    FlowComponents.callAction("likePost", id);
+    FlowComponents.callAction("likePost");
   }
 });

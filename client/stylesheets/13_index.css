@@ -8,71 +8,73 @@
 */
 
 .editableWidth {
-  width: 100% !important;
+    width: 100% !important;
 }
 
 .editableform .control-group {
-  width: auto;
-  white-space: nowrap;
+    width: auto;
+    white-space: nowrap;
 }
 
 @media (min-width: 1200px) {
     .col-lg-13.first {
         margin-left: 15px;
     }
+
     .col-lg-13 {
         width: 13.4%;
     }
+
     .col-lg-13 {
         float: left;
         margin-left: 8px;
-  }
+    }
 
-  .editable-input {
-    vertical-align: top;
-    display: -webkit-inline-box !important;
-    width: auto;
-    white-space: normal;
-    zoom: 1;
-  }
+    .editable-input {
+        vertical-align: top;
+        display: -webkit-inline-box !important;
+        width: auto;
+        white-space: normal;
+        zoom: 1;
+    }
 }
 
 @media screen and (min-width: 1200px) and (max-width: 1800px) {
-  .col-lg-13 .editableform .control-group {
-    width: 79%;
-    white-space: pre !important;
-  }
+    .col-lg-13 .editableform .control-group {
+        width: 79%;
+        white-space: pre !important;
+    }
 }
 
 @media screen and (min-width: 901px) and (max-width: 1120px) {
-  .profile-content .editableform .control-group {
-    width: 99%;
-    white-space: pre !important;
-  }
+    .profile-content .editableform .control-group {
+        width: 99%;
+        white-space: pre !important;
+    }
 }
 
 @media (max-width: 768px) {
-  .combodate > select {
-    display: inline !important;
-  }
+    .combodate > select {
+        display: inline !important;
+    }
 }
 
 .page-center {
-  top: 170px;
+    top: 170px;
 }
 
 .clockIn, .clockOut {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 input {
-  color: #555 !important;
+    color: #555 !important;
 }
 
-.form-inline .form-control{
-  width: 100% !important;
+.form-inline .form-control {
+    width: 100% !important;
 }
 
 .fa-reorder {
-  cursor: move;
+    cursor: move;
 }

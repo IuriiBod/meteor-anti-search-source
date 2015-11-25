@@ -1,11 +1,11 @@
 Namespace('HospoHero.roles', {
-  getUserIdsByAction: function(action) {
+  getUserIdsByAction: function (action) {
     var roleIds = Meteor.roles.find({
       $or: [
-        { actions: action },
-        { actions: 'all rights' }
+        {actions: action},
+        {actions: 'all rights'}
       ]
-    }).map(function(role) {
+    }).map(function (role) {
       return role._id;
     });
 
@@ -14,12 +14,12 @@ Namespace('HospoHero.roles', {
 
     var query = {
       $or: [
-        { 'roles.defaultRole': {$in: roleIds} },
+        {'roles.defaultRole': {$in: roleIds}},
         temp
       ]
     };
 
-    return Meteor.users.find(query).map(function(user) {
+    return Meteor.users.find(query).map(function (user) {
       return user._id;
     });
   },
@@ -49,8 +49,8 @@ Namespace('HospoHero.roles', {
     "View Reports": "view reports"
   },
 
-  getActions: function() {
-    return _.map(HospoHero.roles.actions, function(action, text) {
+  getActions: function () {
+    return _.map(HospoHero.roles.actions, function (action, text) {
       return {
         value: action,
         text: text
