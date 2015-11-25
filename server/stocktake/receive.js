@@ -27,11 +27,11 @@ Meteor.methods({
 
 
     var orders = StockOrders.find({"orderReceipt": receiptId}).fetch();
-    if(orders && orders.length > 0) {
-      orders.forEach(function(order) {
+    if (orders && orders.length > 0) {
+      orders.forEach(function (order) {
         var note = "Order receive on receipt " + receiptId;
         var quantity = order.countOrdered;
-        if(order.hasOwnProperty("countDelivered")) {
+        if (order.hasOwnProperty("countDelivered")) {
           quantity = order.countDelivered;
         }
         var date = moment(date).format("YYYY-MM-DD");

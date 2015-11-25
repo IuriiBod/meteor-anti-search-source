@@ -1,15 +1,15 @@
-Meteor.publish('jobItems', function(ids, areaId, status) {
-  if(this.userId) {
+Meteor.publish('jobItems', function (ids, areaId, status) {
+  if (this.userId) {
     var query = {
       status: 'active',
       'relations.areaId': areaId
     };
 
-    if(ids && ids.length) {
-      query._id = { $in: ids };
+    if (ids && ids.length) {
+      query._id = {$in: ids};
     }
 
-    if(status) {
+    if (status) {
       query.status = status;
     }
 
@@ -19,10 +19,10 @@ Meteor.publish('jobItems', function(ids, areaId, status) {
   }
 });
 
-Meteor.publishComposite('jobItem', function(id) {
+Meteor.publishComposite('jobItem', function (id) {
   return {
-    find: function() {
-      if(this.userId && id) {
+    find: function () {
+      if (this.userId && id) {
         return JobItems.find({_id: id});
       } else {
         this.ready();
@@ -30,21 +30,21 @@ Meteor.publishComposite('jobItem', function(id) {
     },
     children: [
       {
-        find: function(jobItem) {
-          if(jobItem && jobItem.ingredients && jobItem.ingredients.length) {
-            var ingredients = _.map(jobItem.ingredients, function(ingredient) {
+        find: function (jobItem) {
+          if (jobItem && jobItem.ingredients && jobItem.ingredients.length) {
+            var ingredients = _.map(jobItem.ingredients, function (ingredient) {
               return ingredient._id;
             });
-            return Ingredients.find({ _id: { $in: ingredients } });
+            return Ingredients.find({_id: {$in: ingredients}});
           } else {
             this.ready();
           }
         }
       },
       {
-        find: function(jobItem) {
-          if(jobItem && jobItem.section) {
-            return Sections.find({ _id: jobItem.section });
+        find: function (jobItem) {
+          if (jobItem && jobItem.section) {
+            return Sections.find({_id: jobItem.section});
           } else {
             this.ready();
           }
@@ -54,8 +54,8 @@ Meteor.publishComposite('jobItem', function(id) {
   };
 });
 
-Meteor.publish("jobsRelatedMenus", function(id) {
-  if(this.userId) {
+Meteor.publish("jobsRelatedMenus", function (id) {
+  if (this.userId) {
     logger.info("Related menus published", {"id": id});
     return MenuItems.find({"jobItems._id": id});
   } else {
@@ -65,8 +65,8 @@ Meteor.publish("jobsRelatedMenus", function(id) {
   return MenuItems.find({"jobItems._id": id});
 });
 
-Meteor.publish("autocomplete-jobItems", function(selector, options) {
-  if(this.userId) {
+Meteor.publish("autocomplete-jobItems", function (selector, options) {
+  if (this.userId) {
     var sub = this;
     var search;
 
@@ -85,7 +85,7 @@ Meteor.publish("autocomplete-jobItems", function(selector, options) {
     query.name = new RegExp(search, options);
     var limit = options.limit || 10;
 
-    if(selector.type) {
+    if (selector.type) {
       query.type = selector.type;
     }
 
@@ -93,7 +93,7 @@ Meteor.publish("autocomplete-jobItems", function(selector, options) {
     JobItems.find(query, {
       limit: limit
     }).observeChanges({
-      added: function(id, fields) {
+      added: function (id, fields) {
         sub.added("autocompleteRecords", id, fields)
       }
     });

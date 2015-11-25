@@ -1,0 +1,27 @@
+@import '../theme-globals.import.less';
+
+.ghost-editable-component {
+  display: inline-block;
+
+  .ghost-editable-input {
+    outline: none;
+    border: none;
+    background: rgba(0, 0, 0, 0);
+
+    &:not(:focus) {
+      border-bottom: dashed 1px #0088cc;
+    }
+
+    &:focus {
+      outline: 1px solid @navy;
+    }
+  }
+
+  .submit-value-button {
+    color: @navy;
+  }
+
+  .hide-button {
+    display: none;
+  }
+}

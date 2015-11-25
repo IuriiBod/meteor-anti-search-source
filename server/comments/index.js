@@ -1,14 +1,14 @@
 Meteor.methods({
-  'createComment': function(text, ref, refType, recipients) {
-    if(!Meteor.userId()) {
+  'createComment': function (text, ref, refType, recipients) {
+    if (!Meteor.userId()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
     }
-    if(!text) {
+    if (!text) {
       logger.error("Text field not found");
       throw new Meteor.Error(404, "Text field not found");
     }
-    if(!ref) {
+    if (!ref) {
       logger.error("Reference field not found");
       throw new Meteor.Error(404, "Reference field not found");
     }
@@ -28,7 +28,7 @@ Meteor.methods({
       workerJob: Jobs,
       supplier: Suppliers
     };
-    var reference = typeCollectionRelations[refType].findOne({ _id: ref });
+    var reference = typeCollectionRelations[refType].findOne({_id: ref});
 
     var routesRelations = {
       menu: 'menuItemDetail',
@@ -49,8 +49,8 @@ Meteor.methods({
       }
     );
 
-    if(recipients.length) {
-      recipients.forEach(function(recipientName) {
+    if (recipients.length) {
+      recipients.forEach(function (recipientName) {
         var user = Meteor.users.findOne({username: recipientName});
         notificationSender.sendNotification(user._id);
       });

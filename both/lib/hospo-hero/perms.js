@@ -14,7 +14,7 @@ Namespace('HospoHero', {
       } catch (err) {
         return false;
       }
-      
+
       var user = Meteor.users.findOne(userId);
 
       if (!user || !user.currentAreaId) {

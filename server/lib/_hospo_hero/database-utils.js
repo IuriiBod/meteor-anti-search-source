@@ -5,7 +5,7 @@ Namespace('HospoHero.databaseUtils', {
       'relations.areaId': HospoHero.getCurrentAreaId(Meteor.userId())
     };
 
-    if(itemId) {
+    if (itemId) {
       subscribedForCollection.itemIds = itemId;
     }
     return Subscriptions.find(subscriptionsQuery);

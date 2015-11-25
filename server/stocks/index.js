@@ -202,9 +202,9 @@ var duplicateSupplier = function (supplierId, areaId) {
   return supplierId;
 };
 
-var existingItemsFormat = function(items, title) {
+var existingItemsFormat = function (items, title) {
   var error = [];
-  if(items.count()) {
+  if (items.count()) {
     error.push('\n' + title + ': \n');
     items.forEach(function (item) {
       error.push('- ' + item.name + '\n');

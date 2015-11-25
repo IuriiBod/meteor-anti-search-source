@@ -18,7 +18,7 @@ Namespace('HospoHero.prediction', {
 
   getMenuItemsForPredictionQuery: function (params, withPosNamesOnly) {
     var query = {
-      $and: [{status: {$ne: "ideas"}}]
+      $and: [{status: 'active'}]
     };
 
     if (withPosNamesOnly) {

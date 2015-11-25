@@ -30,7 +30,7 @@ ActualSalesImporter.prototype._getLastImportedSaleDate = function (menuItemId) {
 
   // if there is no imported data the import whole year
   return lastImportedSale
-    && HsopoHero.dateUtils.getDateMomentForLocation(lastImportedSale.date, this._location._id).endOf('day').toDate()
+    && HospoHero.dateUtils.getDateMomentForLocation(lastImportedSale.date, this._location._id).endOf('day').toDate()
     || moment().subtract(1, 'year').toDate();
 };
 

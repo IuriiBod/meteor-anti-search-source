@@ -1,17 +1,18 @@
 <template name="usersList">
   <div class="panel-body">
     <br>
+
     <div class="table-responsive">
       <table class="table table-striped">
         <thead>
-          <tr>
-            <th>Username</th>
-            <th>Type</th>
-            <th>Email Address </th>
-            {{#if isManager}}
-              <th>Action</th>
-            {{/if}}
-          </tr>
+        <tr>
+          <th>Username</th>
+          <th>Type</th>
+          <th>Email Address</th>
+          {{#if isManager}}
+            <th>Action</th>
+          {{/if}}
+        </tr>
         </thead>
         <tbody>
         {{#each state$users true}}

@@ -1,11 +1,11 @@
 <template name="totalSalesRow">
-    <tr>
-        <td><b>Sales</b></td>
-        {{#each state$week}}
-            {{#with state$getTotalSales this}}
-                <td>${{predicted}}</td>
-                <td>${{actual}}</td>
-            {{/with}}
-        {{/each}}
-    </tr>
+  <tr>
+    <td><b>Sales</b></td>
+    {{#each state$week}}
+      {{#with state$getTotalSales this}}
+        <td>${{predicted}}</td>
+        <td>${{actual}}</td>
+      {{/with}}
+    {{/each}}
+  </tr>
 </template>

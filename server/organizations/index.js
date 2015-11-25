@@ -29,13 +29,13 @@ Meteor.methods({
   //  return true;
   //},
 
-  'deleteOrganization': function(id) {
+  'deleteOrganization': function (id) {
     var user = Meteor.user();
-    if(!user) {
+    if (!user) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
     }
-    if(!HospoHero.isOrganizationOwner()) {
+    if (!HospoHero.isOrganizationOwner()) {
       logger.error("User not permitted to delete organization");
       throw new Meteor.Error(403, "User not permitted to delete organization");
     }
