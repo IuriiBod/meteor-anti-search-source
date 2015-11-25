@@ -1,44 +1,68 @@
 <template name="basics">
+
+  <!-- Supplier status -->
   <div class="row">
     <div class="col-lg-12">
       <dl class="dl-horizontal">
-        <dt>Status:</dt> 
+        <dt>Status:</dt>
         <dd>
-          {{#if state$status}}
-          <span class="label label-primary supplierStatus">Active</span>
-          {{else}}
-          <span class="label label-danger supplierStatus">Archived</span>
-          {{/if}}
+          <span class="label label-primary supplierStatus">
+            {{#if state$status}}
+              Active
+            {{else}}
+              Archived
+            {{/if}}
+          </span>
         </dd>
       </dl>
     </div>
   </div>
+
   <div class="row">
+    <!-- Supplier editable information -->
+    <div class="col-lg-5">
+      <dl class="dl-horizontal">
+        <dt>Email address:</dt>
+        <dd><a class="supplier-email">{{state$supplier.email}}</a></dd>
+        <dt>Phone number:</dt>
+        <dd><a class="supplier-phone">{{state$supplier.phone}}</a></dd>
+        <dt>Minimum order amount:</dt>
+        <dd><a class="minimum-order-amount">{{state$supplier.minimumOrderAmount}}</a></dd>
+        <dt>Delivery time:</dt>
+        <dd>
+          <a class="delivery-time">Every {{state$supplier.deliveryDay}}
+            at {{timeFormat state$supplier.deliveryTime}}</a>
+        </dd>
+        <dt>Contact name:</dt>
+        <dd><a class="contact-name">{{state$supplier.contactName}}</a></dd>
+        <dt>Customer number:</dt>
+        <dd><a class="customer-number">{{state$supplier.customerNumber}}</a></dd>
+      </dl>
+    </div>
+    <!-- Cluster info -->
     <div class="col-lg-4">
       <dl class="dl-horizontal">
-        <dt>Email address:</dt> <dd><a href="" id="supplierEmail">{{state$basics.email}}</a></dd>
-        <dt>Phone number:</dt> <dd><a href="" id="supplierPhone">{{state$basics.phone}}</a></dd>
+        <dt>Last order on:</dt>
+        <dd>{{dateFormat state$lastOrder.date}}</dd>
+        <dt>Created on:</dt>
+        <dd>{{dateFormat state$supplier.createdOn}}</dd>
       </dl>
     </div>
-    <div class="col-lg-4" id="cluster_info">
-      <dl class="dl-horizontal" >
-        <dt>Last order on:</dt> <dd>{{dateFormat state$lastOrder}}</dd>
-        <dt>Created on:</dt> <dd>{{dateFormat state$basics.createdOn}}</dd>
-      </dl>
-    </div>
-    <div class="col-lg-4" id="cluster_info">
-      <dl class="dl-horizontal" >
+    <!-- Upload price list -->
+    <div class="col-lg-3">
+      <dl class="dl-horizontal">
         <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
-        {{#if state$basics.priceList}}
+        {{#if state$supplier.priceList}}
           <div class="file uploadedPriceList">
-              <div class="image">
-                <img id="uploadedImageUrl" src="{{state$basics.priceList}}" class="img-responsive menu-item-image">
-              </div>
+            <div class="image">
+              <img id="uploadedImageUrl" src="{{state$supplier.priceList}}" class="img-responsive menu-item-image">
+            </div>
           </div>
         {{else}}
           <div class="file uploadedPriceList hide">
             <a href="#">
               <span class="corner"></span>
+
               <div class="image">
                 <img id="uploadedImageUrl" src="" class="img-responsive menu-item-image">
               </div>

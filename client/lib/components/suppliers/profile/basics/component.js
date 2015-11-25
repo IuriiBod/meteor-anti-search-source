@@ -1,74 +1,42 @@
-var component = FlowComponents.define("basics", function(props) {
-  this.onRendered(this.onSupplierRendered);
+var component = FlowComponents.define('basics', function (props) {
+    this.supplierId = props.id;
 });
 
-component.state.basics = function() {
-  var id = Session.get("thisSupplier");
-  if(id) {
-    var supplier = Suppliers.findOne(id);
-    if(supplier) {
-      return supplier;
-    }
-  }
-};
-
-component.state.status = function() {
-  var id = Session.get("thisSupplier");
-  if(id) {
-    var supplier = Suppliers.findOne(id);
-    if(supplier) {
-      if(supplier.active) {
-        return true;
-      }
-    } 
-  }
-};
-
-component.state.lastOrder = function() {
-  var orders = OrderReceipts.find({"supplier": Session.get("thisSupplier")}, {sort: {"date": -1}, limit: 1}).fetch();
-  if(orders && orders.length > 0) {
-    if(orders[0].date) {
-      return orders[0].date;
-    }
-  }
-};
-
-component.prototype.onSupplierRendered = function() {
-  $("#supplierEmail").editable({
-    type: "text",
-    title: 'Edit supplier email',
-    showbuttons: false,
-    mode: 'inline',
-    autotext: 'auto',
-    success: function(response, newValue) {
-      if(newValue) {
-        var id = Session.get("thisSupplier");
-        var editDetail = {"email": newValue};
-        updateSupplierDetails(id, editDetail);
-      }
-    },
-    display: function(value, response) {
-    }
-  });
-
-  $("#supplierPhone").editable({
-    type: 'text',
-    title: 'Edit phone number',
-    showbuttons: false,
-    mode: 'inline',
-    autotext: 'auto',
-    display: function(value, response) {
-    },
-    success: function(response, newValue) {
-      if(newValue) {
-        var id = Session.get("thisSupplier");
-        var editDetail = {"phone": newValue};
-        updateSupplierDetails(id, editDetail);
-      }
-    }
-  });
-};
-
-function updateSupplierDetails(id, info) {
-  Meteor.call("updateSupplier", id, info, HospoHero.handleMethodResult());
+component.state.supplier = function () {
+    return Suppliers.findOne({_id: this.supplierId});
 }
+
+component.state.status = function () {
+    return this.get('supplier').active;
+};
+
+component.state.lastOrder = function () {
+    return OrderReceipts.findOne({'supplier': this.get('supplier')._id}, {sort: {'date': -1}, limit: 1});
+};
+
+component.action.getThisSupplier = function () {
+    return this.get('supplier');
+};
+
+component.action.changeSupplierStatus = function () {
+    var id = this.get('supplier').id;
+    Meteor.call('activateReactivateSuppliers', id, HospoHero.handleMethodResult());
+};
+
+component.action.uploadPriceList = function () {
+    var self = this;
+    filepicker.pickAndStore({
+            mimetype: 'image/*', services: ['COMPUTER']
+        },
+        {},
+        function (InkBlobs) {
+            var doc = (InkBlobs);
+            if (doc) {
+                var url = doc[0].url;
+                Meteor.call('updateSupplier', self.get('supplier')._id, {'priceList': url},
+                    HospoHero.handleMethodResult());
+                return true;
+            }
+        }
+    );
+};
