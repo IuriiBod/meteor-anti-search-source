@@ -8,6 +8,12 @@
     }
   ],
 
+  "ssl": {
+    "certificate": "./ssl/app_hospohero_bundle.crt", // this is a bundle of certificates
+    "key": "./ssl/app_hospohero.key", // this is the private key of the certificate
+    "port": 443 // 443 is the default value and it's the standard HTTPS port
+  },
+
   // Install MongoDB in the server, does not destroy local MongoDB on future setup
   "setupMongo": false,
 
@@ -19,7 +25,7 @@
 
   // Configure environment
   "env": {
-    "ROOT_URL": "http://app.hospohero.com/",
+    "ROOT_URL": "https://app.hospohero.com/",
     "MONGO_URL": "mongodb://cloudninja:Bertaroo1@c144.capital.3.mongolayer.com:10144,c144.capital.2.mongolayer.com:10144/herochef",
     "MAIL_URL": "smtp://notifications%40hospohero.com:Bertaroo724@smtp.mailgun.org:587/"
   },
