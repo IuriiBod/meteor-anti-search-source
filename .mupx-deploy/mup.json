@@ -10,8 +10,8 @@
 
 
   "ssl": {
-    "certificate": "./ssl/bundle.crt", // this is a bundle of certificates
-    "key": "./ssl/private.key", // this is the private key of the certificate
+    "certificate": "./ssl/app_hospohero_bundle.crt", // this is a bundle of certificates
+    "key": "./ssl/app_hospohero.key", // this is the private key of the certificate
     "port": 443 // 443 is the default value and it's the standard HTTPS port
   },
 
