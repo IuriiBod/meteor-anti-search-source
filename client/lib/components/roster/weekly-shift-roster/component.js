@@ -1,5 +1,5 @@
 var component = FlowComponents.define("weeklyShiftRoster", function (props) {
-  this.set('type',props.type);
+  this.set('type', props.type);
 
   if (props.weekDate) {
     this.weekDate = props.weekDate;

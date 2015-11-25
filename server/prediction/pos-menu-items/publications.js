@@ -18,13 +18,19 @@ Meteor.publishAuthorized('posMenuItems', function (areaId) {
   }
 });
 
+
 Meteor.publish('menuItemsForPosLinking', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
   if (checkForecastPermission(this)) {
     logger.info('Menu items for POS menu linking', {areaId: areaId});
 
-    var query = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': areaId});
+    var query = HospoHero.prediction.getMenuItemsForPredictionQuery({
+      'relations.areaId': areaId,
+      status: {
+        $ne: 'archived'
+      }
+    });
 
     return MenuItems.find(query);
   }

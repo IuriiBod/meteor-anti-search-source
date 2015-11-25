@@ -6,10 +6,10 @@ Namespace('HospoHero', {
   },
 
   isOrganizationOwner: function (userId) {
-    if(!userId){
-      try{
+    if (!userId) {
+      try {
         userId = Meteor.userId();
-      }catch(error){
+      } catch (error) {
         return false;
       }
     }

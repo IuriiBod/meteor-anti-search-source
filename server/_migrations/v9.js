@@ -1,7 +1,7 @@
 Migrations.add({
   version: 9,
   name: "Changing shift dates from timestamps to Date objects",
-  up: function() {
+  up: function () {
     var shifts = Shifts.find();
 
     if (shifts.count()) {

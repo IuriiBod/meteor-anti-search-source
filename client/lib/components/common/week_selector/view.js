@@ -1,26 +1,26 @@
-Template.weekSelector.rendered = function() {
+Template.weekSelector.rendered = function () {
   $('.i-checks').iCheck({
     radioClass: 'iradio_square-green'
   });
 };
 
 Template.weekSelector.events({
-  'click .saveShifts': function(event) {
+  'click .saveShifts': function (event) {
     event.preventDefault();
     var weekNo = Session.get("templateToWeek");
     var week = getDatesFromWeekNumber(weekNo);
     var dates = [];
-    week.forEach(function(day) {
-      if(day && day.date) {
+    week.forEach(function (day) {
+      if (day && day.date) {
         dates.push(new Date(day.date).getTime())
       }
     });
 
-    week.forEach(function(obj) {
+    week.forEach(function (obj) {
       var index = HospoHero.dateUtils.shiftDate(moment().day(obj.day));
       var shifts = Shifts.find({"shiftDate": index, "type": "template"}, {sort: {"order": 1}}).fetch();
-      if(shifts.length > 0) {
-        shifts.forEach(function(shift) {
+      if (shifts.length > 0) {
+        shifts.forEach(function (shift) {
           var startHour = moment(shift.startTime).hour();
           var startMin = moment(shift.startTime).minute();
 
@@ -37,7 +37,7 @@ Template.weekSelector.events({
             "order": shift.order
           };
 
-          Meteor.call("createShift", info, HospoHero.handleMethodResult(function() {
+          Meteor.call("createShift", info, HospoHero.handleMethodResult(function () {
             $("#notifiModal").modal("show");
           }));
         });
@@ -45,7 +45,7 @@ Template.weekSelector.events({
     });
   },
 
-  'click .checklist-content': function(event) {
+  'click .checklist-content': function (event) {
     var checked = $(event.target).is(":checked");
     Session.set("templateToWeek", $(event.target).val());
     Session.set("templateToYear", $(event.target).attr("data-year"));

@@ -1,5 +1,5 @@
 Migrations.add({
-  version:8,
+  version: 8,
   name: "WeatherForecast cleaning",
   up: function () {
     WeatherForecast.remove({});
