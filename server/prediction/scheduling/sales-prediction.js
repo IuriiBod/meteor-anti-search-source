@@ -22,17 +22,10 @@ ForecastMaker.prototype._getWeatherForecast = function (dayIndex, forecastDate) 
 
 
 ForecastMaker.prototype._updateForecastEntry = function (newForecastInfo) {
-  var dailySalesQuery = {
+  DailySales.update({
     date: TimeRangeQueryBuilder.forDay(newForecastInfo.date, this._locationId),
     menuItemId: newForecastInfo.menuItemId
-  };
-
-  var oldDailySales = DailySales.findOne(dailySalesQuery);
-
-  //update forecast only if there is no manual input
-  if (!oldDailySales || !oldDailySales.isPredictionManual) {
-    DailySales.update(dailySalesQuery, {$set: newForecastInfo}, {upsert: true});
-  }
+  }, {$set: newForecastInfo}, {upsert: true});
 };
 
 

@@ -73,13 +73,20 @@ Meteor.methods({
       }, {
         $set: {
           date: startOfDate,
-          predictionQuantity: predictedQuantity,
-          isPredictionManual: true,
+          manualPredictionQuantity: predictedQuantity,
           relations: menuItem.relations
         }
       }, {upsert: true});
     } else {
       logger.error('Menu item not found', {id: menuItemId});
     }
+  },
+
+  removeManualForecast: function (dailySaleId) {
+    check(dailySaleId, HospoHero.checkers.MongoId);
+
+    checkForecastPermissions(this.userId);
+
+    DailySales.update({_id: dailySaleId}, {$unset: {manualPredictionQuantity: ''}});
   }
 });
