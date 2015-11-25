@@ -12,8 +12,10 @@
           <a href="#" class="btn btn-white allTimeReceipts {{#if state$allTime}} active {{/if}}">All time</a>
         </div>
         <hr>
-        <table class="table table-condensed table-hover table-striped">
-          <thead>
+        <div class="table-responsive">
+
+          <table class="table table-condensed table-hover table-striped">
+            <thead>
             <tr>
               <th>Date expected</th>
               <th>Supplier</th>
@@ -22,15 +24,16 @@
               <th>Received</th>
               <th>Invoice Uploaded</th>
             </tr>
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             {{#each state$list}}
               {{> render component="orderReceiptItem" item=this}}
             {{else}}
               No entries to show
             {{/each}}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
