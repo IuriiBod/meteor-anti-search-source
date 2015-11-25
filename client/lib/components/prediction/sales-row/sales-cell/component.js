@@ -8,6 +8,11 @@ component.state.isFuturePrediction = function () {
   return moment().add(1, 'day').startOf('day').isBefore(dailySaleDate);
 };
 
+component.state.predictionQuantity = function () {
+  var sale = this.get('dailySale');
+  return sale.manualPredictionQuantity || sale.predictionQuantity;
+};
+
 
 component.state.onPredictedValueChangedCb = function () {
   var self = this;
@@ -20,4 +25,10 @@ component.state.onPredictedValueChangedCb = function () {
       Meteor.call('editForecast', dailySale.menuItemId, dailySale.date, numberVal, HospoHero.handleMethodResult());
     }
   };
+};
+
+component.action.removeManualPrediction = function () {
+  var sale = this.get('dailySale');
+
+  Meteor.call('removeManualForecast', sale._id, HospoHero.handleMethodResult());
 };
