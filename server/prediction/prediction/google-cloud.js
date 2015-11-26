@@ -76,34 +76,50 @@ PredictionModelDataGenerator = function PredictionModelDataGenerator(locationId)
   this._weatherManager = new WeatherManager(locationId);
   this._weatherManager.updateHistorical();
 
-  //primitive weather caching
-  var previousDateMoment = moment().subtract(1, 'day');
-  this._currentWeather = this._getWeatherForDate(previousDateMoment);
+  //weather cache
+  this._currentWeather = false;
 };
 
-PredictionModelDataGenerator.prototype._getWeatherForDate = function (date) {
-  return this._weatherManager.getWeatherFor(date);
-};
 
-PredictionModelDataGenerator.prototype._getWeatherForSale = function (dailySale) {
-  var localDateMoment = HospoHero.dateUtils.getDateMomentForLocation(dailySale.date, this._locationId);
-  if (!localDateMoment.isSame(this._currentWeather.date, 'day')) {
-    this._currentWeather = this._getWeatherForDate(dailySale.date);
+PredictionModelDataGenerator.prototype._getWeatherForMoment = function (dailySaleMoment) {
+  if (!this._currentWeather || !dailySaleMoment.isSame(this._currentWeather.date, 'day')) {
+    this._currentWeather = this._weatherManager.getWeatherFor(dailySaleMoment);
   }
   return this._currentWeather;
 };
 
 
-PredictionModelDataGenerator.prototype.getDataForSale = function (dailySale) {
-  var dayOfYear = moment(dailySale.date).dayOfYear();
+PredictionModelDataGenerator.prototype._convertValueVectorToString = function (vector) {
+  return vector.map(function (value) {
+      if (_.isString(value)) {
+        value = '"' + value + '"';
+      }
+      return value;
+    }).join(', ') + '\n';
+};
 
-  var weather = this._getWeatherForSale(dailySale);
+
+PredictionModelDataGenerator.prototype.getDataForSale = function (dailySale) {
+  var localDateMoment = HospoHero.dateUtils.getDateMomentForLocation(dailySale.date, this._locationId);
+
+  var weather = this._getWeatherForMoment(localDateMoment);
 
   if (!weather) {
     logger.error('Weather not found', {locationId: this._locationId, date: dailySale.date});
     return false;
   }
 
-  return dailySale.actualQuantity + ', "' + dailySale.menuItemId + '", ' +
-    weather.temp + ', "' + weather.main + '", ' + dayOfYear + '\n';
+  var dayOfYear = localDateMoment.dayOfYear();
+  var weekDay = localDateMoment.format('ddd');
+
+  var valuesVector = [
+    dailySale.actualQuantity,
+    dailySale.menuItemId,
+    weather.temp,
+    weather.main,
+    weekDay,
+    dayOfYear
+  ];
+
+  return this._convertValueVectorToString(valuesVector);
 };
