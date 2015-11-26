@@ -12,7 +12,7 @@ Namespace('HospoHero.dateUtils', {
 
   /**
    * Returns moment for specified date in timezone for specified location
-   * @param {date|moment} date
+   * @param {date|*} date Date or moment
    * @param {string|object} location location document or it's ID
    * @returns {*}
    */

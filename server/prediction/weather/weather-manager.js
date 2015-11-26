@@ -6,9 +6,9 @@
  */
 WeatherManager = function WeatherManager(locationId) {
   this._locationId = locationId;
+  this.location = Locations.findOne({_id: locationId});
 
-  var location = Locations.findOne({_id: locationId});
-  this._weatherConnector = new WorldWeather(location.city);
+  this._weatherConnector = new WorldWeather(this.location.city);
 };
 
 /**
@@ -20,7 +20,7 @@ WeatherManager = function WeatherManager(locationId) {
 WeatherManager.prototype.getWeatherFor = function (date) {
   return WeatherForecast.findOne({
     locationId: this._locationId,
-    date: TimeRangeQueryBuilder.forDay(date, this._locationId)
+    date: TimeRangeQueryBuilder.forDay(date, this.location)
   });
 };
 
@@ -32,7 +32,7 @@ WeatherManager.prototype.getWeatherFor = function (date) {
  * @private
  */
 WeatherManager.prototype._getLocalMomentByDate = function (date) {
-  return HospoHero.dateUtils.getDateMomentForLocation(date || new Date(), this._locationId);
+  return HospoHero.dateUtils.getDateMomentForLocation(date || new Date(), this.location);
 };
 
 /**
@@ -48,7 +48,7 @@ WeatherManager.prototype.updateForecast = function () {
 
   var lastForecast = WeatherForecast.findOne({
     locationId: locationId,
-    date: TimeRangeQueryBuilder.forDay(today, locationId)
+    date: TimeRangeQueryBuilder.forDay(today, this.location)
   }, {sort: {date: -1}});
 
   //check if we need an update forecast
@@ -69,7 +69,7 @@ WeatherManager.prototype.updateForecast = function () {
 
       WeatherForecast.update({
         locationId: locationId,
-        date: TimeRangeQueryBuilder.forDay(forecastMoment, self._locationId)
+        date: TimeRangeQueryBuilder.forDay(forecastMoment, self.location)
       }, {$set: forecastEntry}, {upsert: true});
     });
   }
@@ -109,7 +109,7 @@ WeatherManager.prototype._isWeatherAvailableForMonth = function (monthMomentToCh
   var dateQuery = isCurrentMonth ? {
     $gte: startOfMonth.toDate(),
     $lte: moment(nowMoment).endOf('day')
-  } : TimeRangeQueryBuilder.forMonth(monthMomentToCheck, this._locationId);
+  } : TimeRangeQueryBuilder.forMonth(monthMomentToCheck, this.location);
 
   var monthForecastCount = WeatherForecast.find({
     date: dateQuery,
@@ -140,17 +140,17 @@ WeatherManager.prototype._uploadHistoricalDataForMonth = function (monthMoment) 
 
   var weatherData = this._weatherConnector.getHistorical(start, end);
 
-  var locationId = this._locationId;
   if (_.isArray(weatherData)) {
+    var self = this;
     weatherData.forEach(function (weatherEntry) {
       //store historical data in the same collection as forecast
       var infoToUpdate = _.extend(weatherEntry, {
-        locationId: locationId
+        locationId: self._locationId
       });
 
       WeatherForecast.update({
-        date: TimeRangeQueryBuilder.forDay(infoToUpdate.date, locationId),
-        locationId: locationId
+        date: TimeRangeQueryBuilder.forDay(infoToUpdate.date, self.location),
+        locationId: self._locationId
       }, {$set: infoToUpdate}, {upsert: true});
     });
   }
