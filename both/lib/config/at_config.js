@@ -105,8 +105,8 @@ AccountsTemplates.addField({
 // AccountsTemplates.configureRoute('signUp', {
 //   path: '/register'
 // });
-AccountsTemplates.configureRoute('forgotPwd');
-AccountsTemplates.configureRoute('resetPwd');
+//AccountsTemplates.configureRoute('forgotPwd');
+//AccountsTemplates.configureRoute('resetPwd');
 //AccountsTemplates.configureRoute('changePwd');
 //AccountsTemplates.configureRoute('enrollAccount');
 //AccountsTemplates.configureRoute('verifyEmail');
@@ -115,7 +115,7 @@ AccountsTemplates.configureRoute('resetPwd');
 // Options
 AccountsTemplates.configure({
   enablePasswordChange: false,
-  showForgotPasswordLink: true,
+  showForgotPasswordLink: false,
   confirmPassword: false,
   overrideLoginErrors: true,
   forbidClientAccountCreation: false,
