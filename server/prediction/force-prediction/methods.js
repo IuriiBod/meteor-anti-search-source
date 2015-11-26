@@ -44,8 +44,7 @@ Meteor.methods({
   },
 
   resetForecastData: function () {
-    DailySales.remove({});
+    DailySales.update({}, {$unset: {predictionQuantity: '', predictionUpdatedAt: ''}}, {multi: true});
     Locations.update({}, {$unset: {lastForecastModelUploadDate: ''}}, {multi: true});
-    MenuItems.update({}, {$set: {isNotSyncedWithPos: false}}, {multi: true});
   }
 });
