@@ -1,10 +1,5 @@
 <template name="stockModalItem">
   <tr>
-    <td><a href="" data-toggle="modal" class="editIngredient">{{{state$item.code}}}</a></td>
-    <td>{{{state$item.description}}}</td>
-    <td>{{supplierName state$item.suppliers}}</td>
-    <td>{{state$item.portionUsed}}</td>
-    <td>$ {{state$costPerPortionUsed}}</td>
     <td>
       <div class="i-checks selected-Ing">
         <label>
@@ -12,5 +7,10 @@
         </label>
       </div>
     </td>
+    <td>{{state$item.code}}</td>
+    <td>{{state$item.description}}</td>
+    <td>{{supplierName state$item.suppliers}}</td>
+    <td>{{state$item.portionUsed}}</td>
+    <td>${{state$costPerPortionUsed}}</td>
   </tr>
 </template>
