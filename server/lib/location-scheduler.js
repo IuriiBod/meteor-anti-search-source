@@ -84,20 +84,3 @@ LocationScheduler.prototype.start = function () {
 Namespace('HospoHero.LocationScheduler', new LocationScheduler());
 
 
-HospoHero.LocationScheduler.addDailyJob('Test location job hour', function (location) {
-  return 13;
-}, function (location, localMoment) {
-  console.log('hour job');
-  console.log(location._id, localMoment.format('YYYY-MM-DD HH:mm'));
-});
-
-HospoHero.LocationScheduler.addDailyJob('Test location job date', function (location) {
-  var m = moment();
-  m.hours(13);
-  return m.toDate();
-}, function (location, localMoment) {
-  console.log('date job');
-  console.log(location_id, localMoment.format('YYYY-MM-DD HH:mm'));
-});
-
-
