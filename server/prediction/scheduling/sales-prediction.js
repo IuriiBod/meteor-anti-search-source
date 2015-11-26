@@ -80,7 +80,7 @@ ForecastMaker.prototype._predictFor = function (days) {
   logger.info('Make prediction', {days: days, locationId: this._locationId});
 
   var today = new Date();
-  var dateMoment = moment();
+  var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), this._locationId);
   var self = this;
 
   var areas = Areas.find({locationId: this._locationId});
@@ -95,7 +95,7 @@ ForecastMaker.prototype._predictFor = function (days) {
       var notificationSender = self._getNotificationSender(area);
 
       items.forEach(function (menuItem) {
-        var dataVector = [menuItem._id, currentWeather.temp, currentWeather.main, dateMoment.dayOfYear()];
+        var dataVector = [menuItem._id, currentWeather.temp, currentWeather.main, dateMoment.day(), dateMoment.dayOfYear()];
         var quantity = self._predictionApi.makePrediction(dataVector);
 
         logger.info('Made prediction', {menuItem: menuItem.name, date: dateMoment.toDate(), predictedQty: quantity});
