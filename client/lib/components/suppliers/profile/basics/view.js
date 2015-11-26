@@ -22,7 +22,7 @@ Template.basics.onRendered(function () {
 Template.basics.events({
     'click #uploadPriceList': function (e) {
         e.preventDefault();
-        FlowComponents.callAction('uploadPriceList').then(function(res){
+        FlowComponents.callAction('uploadPriceList').then(function (res) {
             if (res) {
                 $('.uploadedPriceList').removeClass('hide');
                 $('#uploadedImageUrl').attr('src', url);
@@ -42,46 +42,58 @@ var defineEditableComponents = function (tmpl) {
     tmpl.$('.supplier-email').editable({
         type: 'text',
         title: 'Edit supplier email',
-        showbuttons: false,
         mode: 'inline',
         autotext: 'auto',
         display: function () {
         },
         success: function (response, newValue) {
             tmpl.updateSupplierDetails('email', newValue);
+        },
+        validate: function(value) {
+            if (!/.+@(.+){2,}\.(.+){2,}/.test(value)) {
+                return 'Only email!'
+            }
         }
     });
 
     tmpl.$('.supplier-phone').editable({
         type: 'text',
         title: 'Edit phone number',
-        showbuttons: false,
         mode: 'inline',
         autotext: 'auto',
         display: function () {
         },
         success: function (response, newValue) {
             tmpl.updateSupplierDetails('phone', newValue);
+        },
+        validate: function (value) {
+            if (!/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(value)) {
+                return 'Only phone number!'
+            }
         }
     });
 
     tmpl.$('.minimum-order-amount').editable({
         type: 'text',
         title: 'Minimum order amount',
-        showbuttons: false,
         mode: 'inline',
         autotext: 'auto',
         display: function () {
         },
         success: function (response, newValue) {
+            newValue = parseInt(newValue);
             tmpl.updateSupplierDetails('minimumOrderAmount', newValue);
+        },
+        validate: function (value) {
+            if (!/\d+/.test(value)) {
+                return 'Only number!';
+            }
         }
     });
 
     tmpl.$('.contact-name').editable({
         type: 'text',
         title: 'Minimum order amount',
-        showbuttons: false,
         mode: 'inline',
         autotext: 'auto',
         display: function () {
@@ -94,13 +106,17 @@ var defineEditableComponents = function (tmpl) {
     tmpl.$('.customer-number').editable({
         type: 'text',
         title: 'Minimum order amount',
-        showbuttons: false,
         mode: 'inline',
         autotext: 'auto',
         display: function () {
         },
         success: function (response, newValue) {
             tmpl.updateSupplierDetails('customerNumber', newValue);
+        },
+        validate: function (value) {
+            if (!/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(value)) {
+                return 'Only phone number!'
+            }
         }
     });
 };

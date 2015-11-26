@@ -49,3 +49,7 @@ Template.newSupplier.events({
         tmpl.closeModal("#addNewSupplierModal");
     }
 });
+
+Template.newSupplier.helpers({
+   'phoneNumberPattern': /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
+});
