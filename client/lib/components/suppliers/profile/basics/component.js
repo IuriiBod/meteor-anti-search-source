@@ -26,7 +26,7 @@ component.action.changeSupplierStatus = function () {
 component.action.uploadPriceList = function () {
     var self = this;
     filepicker.pickAndStore({
-            mimetype: 'image/*', services: ['COMPUTER']
+            mimetype: 'application/pdf', services: ['COMPUTER']
         },
         {},
         function (InkBlobs) {

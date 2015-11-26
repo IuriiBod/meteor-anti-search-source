@@ -30,8 +30,9 @@
         <dd><a class="minimum-order-amount">{{state$supplier.minimumOrderAmount}}</a></dd>
         <dt>Delivery time:</dt>
         <dd>
-          <a class="delivery-time">Every {{state$supplier.deliveryDay}}
-            at {{timeFormat state$supplier.deliveryTime}}</a>
+          <p>Every <a class="delivery-day" data-type="select" value="{{state$supplier.deliveryDay}}"></a> at
+            <a class="delivery-time" data-type="combodate" data-pk="1" data-value="{{formatDate state$supplier.deliveryTime "hh:mm:ss"}}" data-title="Select date"></a>
+          </p>
         </dd>
         <dt>Contact name:</dt>
         <dd><a class="contact-name">{{state$supplier.contactName}}</a></dd>

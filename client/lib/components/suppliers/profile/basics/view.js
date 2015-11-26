@@ -2,10 +2,6 @@ Template.basics.onCreated(function () {
     var self = this;
     self.supplier = new ReactiveVar();
 
-    FlowComponents.callAction('getThisSupplier').then(function (res) {
-        self.supplier.set(res);
-    });
-
     self.updateSupplierDetails = function (field, newValue) {
         if (newValue) {
             var doc = self.supplier.get();
@@ -16,7 +12,11 @@ Template.basics.onCreated(function () {
 });
 
 Template.basics.onRendered(function () {
-    defineEditableComponents(this);
+    var self = this;
+    FlowComponents.callAction('getThisSupplier').then(function (res) {
+        self.supplier.set(res);
+        defineEditableComponents(self);
+    });
 });
 
 Template.basics.events({
@@ -42,14 +42,12 @@ var defineEditableComponents = function (tmpl) {
     tmpl.$('.supplier-email').editable({
         type: 'text',
         title: 'Edit supplier email',
-        mode: 'inline',
-        autotext: 'auto',
         display: function () {
         },
         success: function (response, newValue) {
             tmpl.updateSupplierDetails('email', newValue);
         },
-        validate: function(value) {
+        validate: function (value) {
             if (!/.+@(.+){2,}\.(.+){2,}/.test(value)) {
                 return 'Only email!'
             }
@@ -59,8 +57,6 @@ var defineEditableComponents = function (tmpl) {
     tmpl.$('.supplier-phone').editable({
         type: 'text',
         title: 'Edit phone number',
-        mode: 'inline',
-        autotext: 'auto',
         display: function () {
         },
         success: function (response, newValue) {
@@ -76,8 +72,6 @@ var defineEditableComponents = function (tmpl) {
     tmpl.$('.minimum-order-amount').editable({
         type: 'text',
         title: 'Minimum order amount',
-        mode: 'inline',
-        autotext: 'auto',
         display: function () {
         },
         success: function (response, newValue) {
@@ -91,11 +85,36 @@ var defineEditableComponents = function (tmpl) {
         }
     });
 
+    tmpl.$('.delivery-day').editable({
+        success: function (response, newValue) {
+            tmpl.updateSupplierDetails('deliveryDay', newValue);
+        },
+        value: tmpl.supplier.get().deliveryDay,
+        source: [
+            {value: 'sunday', text: 'Sunday'},
+            {value: 'monday', text: 'Monday'},
+            {value: 'tuesday', text: 'Tuesday'},
+            {value: 'wednesday', text: 'Wednesday'},
+            {value: 'thursday', text: 'Thursday'},
+            {value: 'friday', text: 'Friday'},
+            {value: 'saturday', text: 'Saturday'}
+        ]
+    });
+
+    tmpl.$('.delivery-time').editable({
+        viewformat: 'hh:mm A',
+        template: 'hh:mm A',
+        combodate: {
+            minuteStep: 10
+        }
+        //success: function (response, newValue) {
+        //    //tmpl.updateSupplierDetails('deliveryTime', newValue);
+        //}
+    });
+
     tmpl.$('.contact-name').editable({
         type: 'text',
         title: 'Minimum order amount',
-        mode: 'inline',
-        autotext: 'auto',
         display: function () {
         },
         success: function (response, newValue) {
@@ -106,8 +125,6 @@ var defineEditableComponents = function (tmpl) {
     tmpl.$('.customer-number').editable({
         type: 'text',
         title: 'Minimum order amount',
-        mode: 'inline',
-        autotext: 'auto',
         display: function () {
         },
         success: function (response, newValue) {
