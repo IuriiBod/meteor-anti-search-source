@@ -80,11 +80,22 @@ PredictionModelDataGenerator = function PredictionModelDataGenerator(locationId)
   this._currentWeather = false;
 };
 
+
 PredictionModelDataGenerator.prototype._getWeatherForMoment = function (dailySaleMoment) {
   if (!this._currentWeather || !dailySaleMoment.isSame(this._currentWeather.date, 'day')) {
     this._currentWeather = this._weatherManager.getWeatherFor(dailySaleMoment);
   }
   return this._currentWeather;
+};
+
+
+PredictionModelDataGenerator.prototype._convertValueVectorToString = function (vector) {
+  return vector.map(function (value) {
+      if (_.isString(value)) {
+        value = '"' + value + '"';
+      }
+      return value;
+    }).join(', ') + '\n';
 };
 
 
@@ -99,8 +110,16 @@ PredictionModelDataGenerator.prototype.getDataForSale = function (dailySale) {
   }
 
   var dayOfYear = localDateMoment.dayOfYear();
-  var weekDayNumber = localDateMoment.day();
+  var weekDay = localDateMoment.format('ddd');
 
-  return dailySale.actualQuantity + ', "' + dailySale.menuItemId + '", ' +
-    weather.temp + ', "' + weather.main + '", ' + weekDayNumber + ', ' + dayOfYear + '\n';
+  var valuesVector = [
+    dailySale.actualQuantity,
+    dailySale.menuItemId,
+    weather.temp,
+    weather.main,
+    weekDay,
+    dayOfYear
+  ];
+
+  return this._convertValueVectorToString(valuesVector);
 };
