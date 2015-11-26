@@ -4,11 +4,13 @@ var checkOrganizationOwner = function (userId) {
   }
 };
 
+
 Meteor.methods({
   updatePredictionModel: function () {
     checkOrganizationOwner(this.userId);
     try {
-      predictionModelRefreshJob();
+      var locations = Locations.find({archived: {$ne: true}});
+      locations.forEach(updateTrainingDataForLocation);
     } catch (err) {
       logger.error(err);
       return false;
@@ -19,7 +21,9 @@ Meteor.methods({
   updatePredictions: function () {
     checkOrganizationOwner(this.userId);
     try {
-      salesPredictionUpdateJob();
+      logger.info('started prediction update job');
+      var locations = Locations.find({archived: {$ne: true}});
+      locations.forEach(updateForecastForLocation);
     } catch (err) {
       logger.error(err);
       return false;

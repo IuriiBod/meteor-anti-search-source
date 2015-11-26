@@ -163,33 +163,16 @@ ForecastMaker.prototype.makeForecast = function () {
 };
 
 
-//=============== update forecast cron job =================
-salesPredictionUpdateJob = function () {
-  logger.info('started prediction update job');
-
-  var locations = Locations.find({archived: {$ne: true}});
-
-  locations.forEach(function (location) {
-    if (HospoHero.prediction.isAvailableForLocation(location)) {
-      var forecastMaker = new ForecastMaker(location._id);
-      forecastMaker.makeForecast();
-    }
-  });
+updateForecastForLocation = function (location) {
+  if (HospoHero.prediction.isAvailableForLocation(location)) {
+    var forecastMaker = new ForecastMaker(location._id);
+    forecastMaker.makeForecast();
+  }
 };
 
 
-//!!! disable it temporaly to be able control it manually
-//if (!HospoHero.isDevelopmentMode()) {
-//  SyncedCron.add({
-//    name: 'Forecast refresh',
-//    schedule: function (parser) {
-//      return parser.text('at 05:00 am');
-//    },
-//    job: salesPredictionUpdateJob
-//  });
-//
-//  Meteor.startup(function () {
-//    //if we run first time -> make predictions immediately (in other thread)
-//    Meteor.defer(salesPredictionUpdateJob);
-//  });
-//}
+if (HospoHero.isProductionMode()) {
+  HospoHero.LocationScheduler.addDailyJob('Update forecast', function (location) {
+    return 3; //3:00 AM
+  }, updateForecastForLocation);
+}

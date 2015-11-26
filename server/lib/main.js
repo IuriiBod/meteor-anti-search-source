@@ -1,4 +1,4 @@
-/**
+/*
  * This file will be executed last on startup
  */
 if (!HospoHero.isDatabaseImportMode()) {
