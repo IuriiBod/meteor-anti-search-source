@@ -24,7 +24,7 @@ LocationScheduler.prototype._cronHourlyJob = function () {
   var self = this;
 
   Locations.find({archived: {$ne: true}}).forEach(function (location) {
-    var localMoment = HospoHero.dateUtils.getDateMomentForLocation(currentTime, location._id);
+    var localMoment = HospoHero.dateUtils.getDateMomentForLocation(currentTime, location);
 
     var isSameHour = function (timeResult) {
       if (_.isNumber(timeResult)) {
