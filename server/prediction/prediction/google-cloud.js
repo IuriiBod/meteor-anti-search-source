@@ -1,5 +1,5 @@
-GoogleCloud = function GoogleCloud(menuItemId, trainingFileName) {
-  this._menuItem = MenuItems.findOne({_id: menuItemId}, {fields: {name: 1, relations: 1}});
+GoogleCloud = function GoogleCloud(menuItem, trainingFileName) {
+  this._menuItem = menuItem;
 
   var cloudSettings = Meteor.settings.GoogleCloud;
 
