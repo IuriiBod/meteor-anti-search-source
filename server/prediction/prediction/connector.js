@@ -1,3 +1,6 @@
+//todo this thing will continue to work with location
+//todo but now some methods will receive menuItemId to identify which model we should use
+
 GooglePredictionApi = function GooglePredictionApi(locationId) {
   var cloudSettings = Meteor.settings.GoogleCloud;
   var authOptions = {
@@ -11,9 +14,11 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
   this._bucketName = cloudSettings.BUCKET
 };
 
+
 GooglePredictionApi.prototype._getModelName = function () {
   return "trainingModel-" + this._locationId;
 };
+
 
 GooglePredictionApi.prototype._getTrainingFileName = function () {
   return "sales-data-" + this._locationId + ".csv";
