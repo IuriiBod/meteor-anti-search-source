@@ -9,6 +9,9 @@ Template.organizationStructure.events({
 
   'click .change-current-area': function(e) {
     e.preventDefault();
+
+    Meteor.call('serverNotification', 'HospoHero notification', 'This is only the test notification');
+
     FlowComponents.callAction('changeDefaultArea', this._id);
     var routerParams = Router.current().params;
 
