@@ -8,39 +8,24 @@ var checkOrganizationOwner = function (userId) {
 Meteor.methods({
   updatePredictionModel: function () {
     checkOrganizationOwner(this.userId);
-    try {
-      var locations = Locations.find({archived: {$ne: true}});
-      locations.forEach(updateTrainingDataForLocation);
-    } catch (err) {
-      logger.error(err);
-      return err;
-    }
+    var locations = Locations.find({archived: {$ne: true}});
+    locations.forEach(updateTrainingDataForLocation);
     return true;
   },
 
   updatePredictions: function () {
     checkOrganizationOwner(this.userId);
-    try {
-      logger.info('started prediction update job');
-      var locations = Locations.find({archived: {$ne: true}});
-      locations.forEach(updateForecastForLocation);
-    } catch (err) {
-      logger.error(err);
-      return err;
-    }
+    logger.info('started prediction update job');
+    var locations = Locations.find({archived: {$ne: true}});
+    locations.forEach(updateForecastForLocation);
     return true;
   },
 
   getPredictionModelStatus: function () {
     checkOrganizationOwner(this.userId);
-    try {
-      var currentArea = HospoHero.getCurrentArea(this.userId);
-      var googlePredictionApi = new GooglePredictionApi(currentArea.locationId);
-      return googlePredictionApi.getModelStatus();
-    } catch (err) {
-      logger.error(err);
-      return err;
-    }
+    var currentArea = HospoHero.getCurrentArea(this.userId);
+    var googlePredictionApi = new GooglePredictionApi(currentArea.locationId);
+    return googlePredictionApi.getModelStatus();
   },
 
   resetForecastData: function () {
