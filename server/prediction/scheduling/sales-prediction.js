@@ -2,10 +2,10 @@ var ForecastMaker = function (location) {
   this._location = location;
   this._locationId = location._id;
 
-  this._weatherManager = new WeatherManager(locationId);
+  this._weatherManager = new WeatherManager(this._locationId);
   this._weatherManager.updateForecast();
 
-  this._predictionApi = new GooglePredictionApi(locationId);
+  this._predictionApi = new GooglePredictionApi(this._locationId);
 };
 
 
