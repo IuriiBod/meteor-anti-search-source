@@ -102,14 +102,19 @@ var defineEditableComponents = function (tmpl) {
     });
 
     tmpl.$('.delivery-time').editable({
-        viewformat: 'hh:mm A',
-        template: 'hh:mm A',
-        combodate: {
-            minuteStep: 10
+        type: 'combodate',
+        template: "h:mm A",
+        viewformat: "h:mm A",
+        //format: "YYYY-MM-DD h:mm A",
+        display: false,
+        showbuttons: true,
+        inputclass: "editableTime",
+        mode: 'inline',
+        //minuteStep: 20,
+        success: function (response, newValue) {
+            newValue = newValue.toDate();
+            tmpl.updateSupplierDetails('deliveryTime', newValue);
         }
-        //success: function (response, newValue) {
-        //    //tmpl.updateSupplierDetails('deliveryTime', newValue);
-        //}
     });
 
     tmpl.$('.contact-name').editable({

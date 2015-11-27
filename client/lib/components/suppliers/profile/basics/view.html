@@ -31,7 +31,7 @@
         <dt>Delivery time:</dt>
         <dd>
           <p>Every <a class="delivery-day" data-type="select" value="{{state$supplier.deliveryDay}}"></a> at
-            <a class="delivery-time" data-type="combodate" data-pk="1" data-value="{{formatDate state$supplier.deliveryTime "hh:mm:ss"}}" data-title="Select date"></a>
+            <a class="delivery-time">{{timeFormat state$supplier.deliveryTime}}</a>
           </p>
         </dd>
         <dt>Contact name:</dt>
