@@ -1,4 +1,5 @@
 App.info({
+  id: 'com.tomhay.hospohero',
   name: 'Hospo Hero',
   description: 'Taking a lot of the kitchen manual tasks and making them quick, easy and accurate',
   author: 'Tom Hay',
@@ -47,3 +48,5 @@ App.launchScreens({
 });
 
 App.setPreference('StatusBarOverlaysWebView', 'false');
+
+App.accessRule('*');
