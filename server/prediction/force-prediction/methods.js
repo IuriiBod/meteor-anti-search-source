@@ -13,7 +13,7 @@ Meteor.methods({
       locations.forEach(updateTrainingDataForLocation);
     } catch (err) {
       logger.error(err);
-      return false;
+      return err;
     }
     return true;
   },
@@ -26,7 +26,7 @@ Meteor.methods({
       locations.forEach(updateForecastForLocation);
     } catch (err) {
       logger.error(err);
-      return false;
+      return err;
     }
     return true;
   },
@@ -39,7 +39,7 @@ Meteor.methods({
       return googlePredictionApi.getModelStatus();
     } catch (err) {
       logger.error(err);
-      return false;
+      return err;
     }
   },
 
