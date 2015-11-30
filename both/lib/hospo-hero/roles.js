@@ -9,18 +9,13 @@ Namespace('HospoHero.roles', {
       return role._id;
     });
 
-    var temp = {};
-    temp['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
-
-    var query = {
-      $or: [
-        {'roles.defaultRole': {$in: roleIds}},
-        temp
-      ]
-    };
+    var query = {};
+    query['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
 
     return Meteor.users.find(query).map(function (user) {
-      return user._id;
+      if (user._id != Meteor.userId()) {
+        return user._id;
+      }
     });
   },
 
