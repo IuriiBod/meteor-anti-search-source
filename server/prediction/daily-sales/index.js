@@ -48,7 +48,7 @@ Meteor.methods({
 
       //force to update prediction model
       var predictionApi = new GooglePredictionApi(location._id);
-      predictionApi.updatePredictionModel(true);
+      predictionApi.updatePredictionModel(unsyncedItemsQuery, true);
     } else {
       logger.info('Nothing to sync');
     }

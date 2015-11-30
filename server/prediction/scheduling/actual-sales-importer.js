@@ -12,7 +12,7 @@ ActualSalesImporter = function ActualSalesImporter(locationId) {
 
 ActualSalesImporter.prototype._updateActualSale = function (item) {
   DailySales.update({
-    date: TimeRangeQueryBuilder.forDay(item.date, this._location._id),
+    date: TimeRangeQueryBuilder.forDay(item.date, this._location),
     menuItemId: item.menuItemId,
     relations: item.relations
   }, {$inc: {actualQuantity: item.actualQuantity}, $set: {date: item.date}}, {upsert: true});
@@ -49,7 +49,9 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
   //this function is used like a callback in revel connector
   //it should return false if loading is finished
   var onDateUploaded = function (salesData) {
-    var needContinueLoading = !moment(salesData.createdDate).isBefore(lastDateToImport);
+    var localItemDateMoment = HospoHero.dateUtils.getDateMomentForLocation(salesData.createdDate, self._location);
+
+    var needContinueLoading = !localItemDateMoment.isBefore(lastDateToImport);
 
     if (!needContinueLoading) {
       return false;
@@ -57,7 +59,7 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
 
     var item = {
       actualQuantity: salesData.quantity,
-      date: salesData.createdDate,
+      date: localItemDateMoment.startOf('day').toDate(),
       menuItemId: menuItem._id,
       relations: menuItem.relations
     };
@@ -75,9 +77,18 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
       'relations.locationId': self._location._id
     });
 
-    logger.info('POS product', {_id: posMenuItem._id, name: posName});
-
-    self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
+    if (posMenuItem) {
+      logger.info('POS product', {_id: posMenuItem._id, name: posName});
+      self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
+    } else {
+      // keeps data integrity (if there is no such menu item imported
+      // then it was removed from POS system, so we can remove it from
+      // menu item's POS names too)
+      MenuItems.update({_id: menuItem._id}, {
+        $pull: {posNames: posName},
+        $set: {isNotSyncedWithPos: true}
+      });
+    }
   });
 
   logger.info('Import is finished');
