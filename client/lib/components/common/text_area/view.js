@@ -3,6 +3,7 @@ Template.textArea.events({
     if (event.keyCode == 10 || event.keyCode == 13) {
       event.preventDefault();
       var text = $(event.target).val();
+      $(event.target).val('');
       if (text) {
         FlowComponents.callAction('submit', text);
       }
