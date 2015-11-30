@@ -25,7 +25,21 @@ Meteor.methods({
     checkOrganizationOwner(this.userId);
     var currentArea = HospoHero.getCurrentArea(this.userId);
     var googlePredictionApi = new GooglePredictionApi(currentArea.locationId);
-    return googlePredictionApi.getModelStatus();
+
+    var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({
+      'relations.locationId': currentArea.locationId
+    }, true);
+
+    var predictedMenuItems = MenuItems.find(menuItemsQuery, {fields: {name: 1, _id: 1}});
+
+    var modelsStatuses = {};
+    predictedMenuItems.forEach(function (menuItem) {
+      modelsStatuses[menuItem.name] = googlePredictionApi.getModelStatus(menuItem._id);
+    });
+
+    return _.reduce(modelsStatuses, function (result, status, name) {
+      return result + name + ': ' + status + '\n';
+    }, '');
   },
 
   resetForecastData: function () {

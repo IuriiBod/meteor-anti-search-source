@@ -102,8 +102,8 @@ GooglePredictionApi.prototype.makePrediction = function (menuItemId, inputData) 
  * ERROR: STORAGE LOCATION IS INVALID
  * @returns {String} model status
  */
-GooglePredictionApi.prototype.getModelStatus = function () {
-  return this._client.get(this._getModelName()).trainingStatus;
+GooglePredictionApi.prototype.getModelStatus = function (menuItemId) {
+  return this._client.get(this._getModelName(menuItemId)).trainingStatus;
 };
 
 /**

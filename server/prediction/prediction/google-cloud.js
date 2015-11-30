@@ -28,20 +28,36 @@ GoogleCloud.prototype.uploadSalesData = function () {
 
   var predictionModelDataGenerator = new PredictionModelDataGenerator(this._menuItem);
 
-  var yearDateRange = TimeRangeQueryBuilder.forInterval(moment().substract(1, 'year'), moment());
+  var locationId = this._menuItem.relations.locationId;
+  var nowMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), locationId);
+  var indexMoment = moment(nowMoment);
 
-  var yearSaleCursor = DailySales.find({
-    menuItemId: this._menuItem._id,
-    actualQuantity: {$gte: 0},
-    date: yearDateRange
-  });
 
-  yearSaleCursor.forEach(function (dailySale) {
-    var csvLine = predictionModelDataGenerator.getDataForSale(dailySale);
+  var guaranteeDailySale = function (dailySale) {
+    if (!dailySale) {
+      dailySale = {
+        actualQuantity: 0,
+        date: moment(indexMoment).toDate()
+      };
+    }
+    return dailySale;
+  };
+
+  while (nowMoment.diff(indexMoment, 'days') <= 365) {
+    var dailySale = DailySales.findOne({
+      menuItemId: this._menuItem._id,
+      actualQuantity: {$gte: 0},
+      date: TimeRangeQueryBuilder.forDay(indexMoment)
+    });
+
+    var csvLine = predictionModelDataGenerator.getDataForSale(guaranteeDailySale(dailySale));
+
     if (csvLine) {
       trainingDataWriteStream.push(csvLine);
     }
-  });
+
+    indexMoment.subtract(1, 'day');
+  }
 
   trainingDataWriteStream.end();
 
@@ -66,6 +82,7 @@ GoogleCloud.prototype.removeModelFile = function () {
 PredictionModelDataGenerator = function PredictionModelDataGenerator(menuItem) {
   this._menuItem = menuItem;
   this._locationId = menuItem.relations.locationId;
+  this._location = Locations.findOne({_id: this._locationId});
 
   this._weatherManager = new WeatherManager(this._locationId);
 
@@ -84,7 +101,7 @@ PredictionModelDataGenerator.prototype._convertValueVectorToString = function (v
 
 
 PredictionModelDataGenerator.prototype.getDataForSale = function (dailySale) {
-  var localDateMoment = HospoHero.dateUtils.getDateMomentForLocation(dailySale.date, this._locationId);
+  var localDateMoment = HospoHero.dateUtils.getDateMomentForLocation(dailySale.date, this._location);
 
   var weather = this._weatherManager.getWeatherFor(localDateMoment);
 
