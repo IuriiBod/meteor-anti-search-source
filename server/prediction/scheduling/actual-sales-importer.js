@@ -77,9 +77,18 @@ ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
       'relations.locationId': self._location._id
     });
 
-    logger.info('POS product', {_id: posMenuItem._id, name: posName});
-
-    self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
+    if (posMenuItem) {
+      logger.info('POS product', {_id: posMenuItem._id, name: posName});
+      self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
+    } else {
+      // keeps data integrity (if there is no such menu item imported
+      // then it was removed from POS system, so we can remove it from
+      // menu item's POS names too)
+      MenuItems.update({_id: menuItem._id}, {
+        $pull: {posNames: posName},
+        $set: {isNotSyncedWithPos: true}
+      });
+    }
   });
 
   logger.info('Import is finished');

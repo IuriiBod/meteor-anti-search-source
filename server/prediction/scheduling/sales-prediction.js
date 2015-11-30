@@ -152,16 +152,17 @@ ForecastMaker.prototype._needToUpdate = function (interval) {
 
 
 ForecastMaker.prototype.makeForecast = function () {
-  var updateDayIntervals = [84, 7, 2];
   var self = this;
 
-  updateDayIntervals.forEach(function (interval) {
+  this._updateDayIntervals.forEach(function (interval) {
     if (self._needToUpdate(interval)) {
       self._predictFor(interval);
       return false;
     }
   });
 };
+
+ForecastMaker.prototype._updateDayIntervals = [84, 7, 2];
 
 
 updateForecastForLocation = function (location) {
@@ -176,4 +177,9 @@ if (HospoHero.isProductionMode()) {
   HospoHero.LocationScheduler.addDailyJob('Update forecast', function (location) {
     return 3; //3:00 AM
   }, updateForecastForLocation);
+}
+
+
+if (HospoHero.isDevelopmentMode()) {
+  ForecastMaker.prototype._updateDayIntervals = [2];
 }

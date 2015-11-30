@@ -13,12 +13,12 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
 
 
 GooglePredictionApi.prototype._getModelName = function (menuItemId) {
-  return "trainingModel-" + menuItemId;
+  return "menu-item-" + menuItemId;
 };
 
 
 GooglePredictionApi.prototype._getTrainingFileName = function (menuItemId) {
-  return "sales-data-" + menuItemId + ".csv";
+  return "menu-item-" + menuItemId + ".csv";
 };
 
 
@@ -50,7 +50,8 @@ GooglePredictionApi.prototype.updatePredictionModel = function (isForcedUpdate) 
     || moment(lastForecastModelUploadDate) < moment().subtract(182, 'day');
 
   if (needToUpdateModel || isForcedUpdate) {
-    var targetMenuItems = MenuItems.find({'relations.locationId': this._locationId}, {
+    var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.locationId': this._locationId}, true);
+    var targetMenuItems = MenuItems.find(menuItemsQuery, {
       fields: {
         _id: 1,
         name: 1,
@@ -116,7 +117,7 @@ GooglePredictionApi.prototype.removePredictionModel = function (menuItemId) {
   var modelsList = this._client.list();
 
   if (modelsList.items) {
-    var modelToRemove = _.find(modelsList, function (model) {
+    var modelToRemove = _.find(modelsList.items, function (model) {
       return model.id === modelName;
     });
 
@@ -133,19 +134,34 @@ GooglePredictionApi.prototype.removePredictionModel = function (menuItemId) {
   }
 };
 
+/**
+ * Service method, may be used to clean up after some global
+ * configuration changes
+ *
+ * @private
+ */
+GooglePredictionApi.prototype._removeAllPredictionModels = function () {
+  var modelsList = this._client.list();
+
+  if (_.isArray(modelsList.items)) {
+    var self = this;
+    modelsList.items.forEach(function (model) {
+      self._client.remove(model.id);
+      logger.info('Removed prediction model ', {name: model.id});
+    });
+  }
+};
+
 
 //mock mix-in for prediction API
 if (HospoHero.isDevelopmentMode()) {
   _.extend(GooglePredictionApi.prototype, {
-    makePrediction: function () {
-      return Math.floor(Math.random() * 100);
-    },
-    _getModelName: function () {
-      return "trainingModel"
+    _getModelName: function (menuItemId) {
+      return "test-" + menuItemId;
     },
 
-    _getTrainingFileName: function () {
-      return "sales-data.csv"
+    _getTrainingFileName: function (menuItemId) {
+      return 'test-' + menuItemId + '.csv';
     }
   });
 }

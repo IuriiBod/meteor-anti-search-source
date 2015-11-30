@@ -79,7 +79,7 @@ GoogleCloud.prototype.removeModelFile = function () {
  * @param menuItem
  * @constructor
  */
-PredictionModelDataGenerator = function PredictionModelDataGenerator(menuItem) {
+var PredictionModelDataGenerator = function PredictionModelDataGenerator(menuItem) {
   this._menuItem = menuItem;
   this._locationId = menuItem.relations.locationId;
   this._location = Locations.findOne({_id: this._locationId});

@@ -220,7 +220,7 @@ if (HospoHero.isDevelopmentMode()) {
     for (var i = 0; i < 5000; i++) {
       var pushObject = {
         created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
-        quantity: random(5) + 50
+        quantity: 1000
       };
       result.objects.push(pushObject);
       if (random(3) === 0) {//33% to go to next day
