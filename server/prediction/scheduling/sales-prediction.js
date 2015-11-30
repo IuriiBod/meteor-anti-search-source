@@ -166,10 +166,11 @@ ForecastMaker.prototype._updateDayIntervals = [84, 7, 2];
 
 
 updateForecastForLocation = function (location) {
-  if (HospoHero.prediction.isAvailableForLocation(location)) {
-    var forecastMaker = new ForecastMaker(location);
-    forecastMaker.makeForecast();
-  }
+  logger.error('Started forecast generation', {locationId: location._id});
+  //if (HospoHero.prediction.isAvailableForLocation(location)) {
+  //  var forecastMaker = new ForecastMaker(location);
+  //  forecastMaker.makeForecast();
+  //}
 };
 
 
