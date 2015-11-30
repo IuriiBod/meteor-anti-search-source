@@ -220,7 +220,7 @@ if (HospoHero.isDevelopmentMode()) {
     for (var i = 0; i < 5000; i++) {
       var pushObject = {
         created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
-        quantity: random(5)
+        quantity: random(5) + 50
       };
       result.objects.push(pushObject);
       if (random(3) === 0) {//33% to go to next day
@@ -233,10 +233,11 @@ if (HospoHero.isDevelopmentMode()) {
 
   //add mock data source
   _.extend(Revel.prototype, {
-    loadOrderItems: function (offset) {
+    loadOrderItems: function (offset, revelProductId) {
       if (offset === 0) {
         this._mockRevelSource = new MockOrderItemDataSource();
       }
+      console.log('mock items generator offset=', offset, '  id=', revelProductId);
       return this._mockRevelSource.load();
     },
     loadProductItems: function () {
