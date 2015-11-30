@@ -3,7 +3,7 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
   var authOptions = {
     serviceEmail: cloudSettings.SERVICE_EMAIL,
     pemFile: cloudSettings.PEM_FILE,
-    projectName: 'HospoHero'
+    projectName: cloudSettings.PROJECT_NAME
   };
 
   this._client = new GooglePrediction(authOptions);
