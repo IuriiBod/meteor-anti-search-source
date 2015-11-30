@@ -170,11 +170,25 @@ FigureBoxDataHelper.prototype._getPayrate = function (user, shift) {
   return 0;
 };
 
+// I don't know why, but some shifts have startedAt in one day and finishedAt in another
+FigureBoxDataHelper.prototype._finishDateFix = function (convertToDate, finishDate) {
+  var convertToMoment = moment(convertToDate);
+  var convertedMoment = moment(finishDate);
+  convertedMoment.set({
+    date: convertToMoment.date(),
+    month: convertToMoment.month(),
+    year: convertToMoment.year()
+  });
+  return convertedMoment;
+};
+
 FigureBoxDataHelper.prototype._getTotalMinutes = function (shift) {
   if (shift.status == "draft" || shift.status == "started") {
-    return moment(shift.endTime).diff(moment(shift.startTime), "minutes");
+    return moment(this._finishDateFix(shift.startTime, shift.endTime))
+      .diff(moment(shift.startTime), "minutes");
   } else {
-    return moment(shift.finishedAt).diff(moment(shift.startedAt), "minutes");
+    return moment(this._finishDateFix(shift.startedAt, shift.finishedAt))
+      .diff(moment(shift.startedAt), "minutes");
   }
 };
 
