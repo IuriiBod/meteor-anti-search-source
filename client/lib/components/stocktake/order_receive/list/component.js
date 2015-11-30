@@ -1,14 +1,16 @@
-var component = FlowComponents.define("orderReceive", function(props) {});
+var component = FlowComponents.define("orderReceive", function(props) {
+  this.id = Router.current().params._id;
+});
 
 component.state.list = function() {
-  var data = StockOrders.find({"orderReceipt": Session.get("thisReceipt"), "countOrdered": {$gt: 0}});
+  var data = StockOrders.find({"orderReceipt": this.id, "countOrdered": {$gt: 0}});
   if(data) {
     return data;
   }
-}
+};
 
 component.state.total = function() {
-  var orders = StockOrders.find({"orderReceipt": Session.get("thisReceipt")}).fetch();
+  var orders = StockOrders.find({"orderReceipt": this.id}).fetch();
   var cost = 0;
   if(orders.length > 0) {
     orders.forEach(function(order) {
@@ -16,29 +18,27 @@ component.state.total = function() {
     });
   }
   return cost;
-}
+};
 
 component.state.receipt = function() {
-  var id = Session.get("thisReceipt")
-  var data = OrderReceipts.findOne(id);
+  var data = OrderReceipts.findOne(this.id);
   if(data) {
     return data;
   }
-}
+};
 
 component.state.isReceived = function() {
-  var id = Session.get("thisReceipt")
-  var data = OrderReceipts.findOne(id);
+  var data = OrderReceipts.findOne(this.id);
   if(data) {
     if(data.received) {
       return true;
     } 
   }
-}
+};
 
 component.state.receivedNote = function() {
-  var receipt = OrderReceipts.findOne(Session.get("thisReceipt"));
+  var receipt = OrderReceipts.findOne(this.id);
   if(receipt) {
     return receipt.receiveNote;
   }
-}
+};
