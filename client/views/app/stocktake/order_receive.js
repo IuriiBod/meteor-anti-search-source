@@ -1,7 +1,7 @@
 Template.orderReceiveMainView.helpers({
   title: function () {
     var id = Session.get("thisReceipt");
-    var title = "Suppleir Orders Receive";
+    var title = "Supplier Orders Receive";
     if (id) {
       var receipt = OrderReceipts.findOne(id);
       if (receipt && receipt.supplier) {
