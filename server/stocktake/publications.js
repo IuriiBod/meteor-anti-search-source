@@ -56,6 +56,11 @@ Meteor.publishComposite('allOrderReceipts', function (areaId) {
         find: function (orderReceipt) {
           return Suppliers.find({_id: orderReceipt.supplier});
         }
+      },
+      {
+        find: function (orderReceipt) {
+          return StockOrders.find({orderReceipt: orderReceipt._id});
+        }
       }
     ]
   };
