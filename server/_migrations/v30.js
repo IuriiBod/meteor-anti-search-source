@@ -32,5 +32,4 @@ Migrations.add({
       });
     });
   }
-  
 });
