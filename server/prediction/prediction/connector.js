@@ -36,9 +36,10 @@ GooglePredictionApi.prototype._buildPredictionModelForMenuItem = function (menuI
 /**
  * Updates prediction model for current location
  *
+ * @param menuItemsQuery MongoDB query for menu items prediction models need to be updated
  * @param isForcedUpdate forces model update even if it don't need update
  */
-GooglePredictionApi.prototype.updatePredictionModel = function (isForcedUpdate) {
+GooglePredictionApi.prototype.updatePredictionModel = function (menuItemsQuery, isForcedUpdate) {
   var location = Locations.findOne({_id: this._locationId});
 
   logger.info('Building prediction models for locations', {locationId: this._locationId});
@@ -50,7 +51,6 @@ GooglePredictionApi.prototype.updatePredictionModel = function (isForcedUpdate) 
     || moment(lastForecastModelUploadDate) < moment().subtract(182, 'day');
 
   if (needToUpdateModel || isForcedUpdate) {
-    var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.locationId': this._locationId}, true);
     var targetMenuItems = MenuItems.find(menuItemsQuery, {
       fields: {
         _id: 1,

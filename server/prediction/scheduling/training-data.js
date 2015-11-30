@@ -12,7 +12,7 @@ updateTrainingDataForLocation = function (location) {
 
     //try to update prediction model
     var predictionApi = new GooglePredictionApi(location._id);
-    predictionApi.updatePredictionModel();
+    predictionApi.updatePredictionModel(menuItemsQuery);
   }
 };
 
