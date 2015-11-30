@@ -42,12 +42,23 @@ Meteor.publish('orderReceiptsByVersion', function (version, areaId) {
   });
 });
 
-Meteor.publishAuthorized('allOrderReceipts', function (areaId) {
-  return OrderReceipts.find({
-    'relations.areaId': areaId
-  }, {
-    sort: {"date": -1}, limit: 10
-  });
+Meteor.publishComposite('allOrderReceipts', function (areaId) {
+  return {
+    find: function () {
+      return OrderReceipts.find({
+        'relations.areaId': areaId
+      }, {
+        sort: {"date": -1}, limit: 10
+      })
+    },
+    children: [
+      {
+        find: function (orderReceipt) {
+          return Suppliers.find({_id: orderReceipt.supplier});
+        }
+      }
+    ]
+  };
 });
 
 Meteor.publish("receiptOrders", function (receiptId) {
