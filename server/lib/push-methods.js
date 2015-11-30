@@ -17,8 +17,7 @@ Meteor.methods({
       sound: 'airhorn.caf',
       payload: {
         title: title,
-        text:text,
-        historyId: result
+        text:text
       },
       query: {
         // this will send to all users
@@ -34,8 +33,7 @@ Meteor.methods({
       badge: badge,
       sound: 'airhorn.caf',
       payload: {
-        title: title,
-        historyId: result
+        title: title
       },
       query: {
         userId: userId //this will send to a specific Meteor.user()._id
