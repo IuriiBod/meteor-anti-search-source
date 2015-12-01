@@ -52,6 +52,7 @@ var ShiftDocument = Match.Where(function (shift) {
                 endDate: {$gte: shift.endTime}
             }
             ];
+
             var isUserHasUnavailability = !!Meteor.users.findOne({
                 _id: assignedUserId,
                 unavailabilities: {

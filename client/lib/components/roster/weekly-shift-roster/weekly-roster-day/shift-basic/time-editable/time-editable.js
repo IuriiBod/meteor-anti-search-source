@@ -32,11 +32,63 @@ Template.shiftBasicTimeEditable.onCreated(function () {
 
         self.setDefaultValueInTimePicker(self.startTimePicker, 'startTime');
         self.setDefaultValueInTimePicker(self.endTimePicker, 'endTime');
+    };
+
+    self.getUserUnavailableTimeIntervals = function () {
+        var assignedUserId = self.data.shift.assignedTo;
+        if (!assignedUserId) {
+            return;
+        }
+
+        unavailabileTimeIntervals = [];
+
+        var shiftStartOfDayDate = moment(self.data.shift.startTime).startOf('day').toDate();
+        var shiftEndOfDayDate = moment(self.data.shift.startTime).endOf('day').toDate();
+
+        var leaveRequests = LeaveRequests.find({
+            userId: assignedUserId,
+            startDate: {$lte: shiftStartOfDayDate},
+            endDate: {$gte: shiftEndOfDayDate}
+        }).fetch();
+
+        if (leaveRequests.length > 0) {
+            unavailabileTimeIntervals.push({
+                startDate: shiftStartOfDayDate,
+                endDate: shiftEndOfDayDate
+            });
+            return unavailabileTimeIntervals;
+        }
+
+        var unavailabilities = Meteor.users.findOne({_id: assignedUserId}).unavailabilities || [];
+
+        unavailabilities.every(function (unavailability) {
+            if (unavailability.startDate >= shiftStartOfDayDate && unavailability.endDate <= shiftEndOfDayDate) {
+                if (unavailability.startDate.getTime() == unavailability.endDate.getTime()) {
+                    unavailabileTimeIntervals.push({
+                        startDate: shiftStartOfDayDate,
+                        endDate: shiftEndOfDayDate
+                    });
+                    return false;
+                } else {
+                    var interval = {
+                        startDate: unavailability.startDate,
+                        endDate: unavailability.endDate
+                    }
+                    unavailabileTimeIntervals.push(interval);
+                    return true;
+                }
+            }
+            return true;
+        });
+
+        return unavailabileTimeIntervals;
     }
 });
 
 Template.shiftBasicTimeEditable.onRendered(function () {
     var self = this;
+    var unavailabileTimeIntervals = self.getUserUnavailableTimeIntervals();
+    console.log('unavailabileTimeIntervals:\n', unavailabileTimeIntervals);
 
     var DATE_TIME_PICKER_FORMAT = 'HH:mm';
     var DATE_TIME_PICKER_STEP = 10;
