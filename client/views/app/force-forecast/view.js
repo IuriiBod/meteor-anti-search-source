@@ -8,7 +8,9 @@ var processMthodResult = function (err, res) {
 
 Template.forceForecast.events({
   'click .import-raw': function (event, tmpl) {
-    Meteor.call('importRawOrders', processMthodResult)
+    if (confirm('It will remove old raw data.\nAre you sure?')) {
+      Meteor.call('importRawOrders', processMthodResult)
+    }
   },
 
   'click .update-prediction': function (event, tmpl) {
