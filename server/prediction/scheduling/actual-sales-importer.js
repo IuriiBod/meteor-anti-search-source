@@ -82,6 +82,24 @@ ActualSalesImporter.prototype._createOnDailySaleUploadCallback = function (lastM
   };
 };
 
+/**
+ * Removes all actual and forecast sales for specified location
+ * @private
+ */
+ActualSalesImporter.prototype._resetActualSales = function () {
+  var locationDocumentQuery = {
+    'relations.locationId': this._locationId
+  };
+
+  DailySales.remove(locationDocumentQuery);
+
+  MenuItems.update(locationDocumentQuery, {
+    $unset: {
+      isNotSyncedWithPos: '',
+      lastForecastModelUpdateDate: ''
+    }
+  }, {multi: true});
+};
 
 /**
  * Imports all actual sales that are in pos
@@ -103,23 +121,4 @@ ActualSalesImporter.prototype.importAll = function (resetAllBeforeImport) {
   this._revelClient.uploadAndReduceOrderItems(onDateUploaded);
 
   logger.info('Import is finished');
-};
-
-/**
- * Removes all actual and forecast sales for specified location
- * @private
- */
-ActualSalesImporter.prototype._resetActualSales = function () {
-  var locationDocumentQuery = {
-    'relations.locationId': this._locationId
-  };
-
-  DailySales.remove(locationDocumentQuery);
-
-  MenuItems.update(locationDocumentQuery, {
-    $unset: {
-      isNotSyncedWithPos: '',
-      lastForecastModelUpdateDate: ''
-    }
-  }, {multi: true});
 };

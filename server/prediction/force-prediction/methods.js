@@ -16,6 +16,14 @@ Meteor.methods({
     return true;
   },
 
+  resetForecastData: function () {
+    checkOrganizationOwner(this.userId);
+    var currentArea = HospoHero.getCurrentArea(this.userId);
+    var importer = new ActualSalesImporter(currentArea.locationId);
+    importer._resetActualSales();
+    return true;
+  },
+
   updatePredictions: function () {
     checkOrganizationOwner(this.userId);
     logger.info('started prediction update job');
@@ -45,11 +53,6 @@ Meteor.methods({
     }, '');
   },
 
-  resetForecastData: function () {
-    DailySales.update({}, {$unset: {predictionQuantity: '', predictionUpdatedAt: ''}}, {multi: true});
-    Locations.update({}, {$unset: {lastForecastModelUploadDate: ''}}, {multi: true});
-    return true;
-  },
 
   importRawOrders: function () {
     checkOrganizationOwner(this.userId);
