@@ -162,7 +162,7 @@ ForecastMaker.prototype.makeForecast = function () {
   });
 };
 
-ForecastMaker.prototype._updateDayIntervals = [84, 7, 2];
+ForecastMaker.prototype._updateDayIntervals = [14];//[84, 7, 2];
 
 
 updateForecastForLocation = function (location) {
