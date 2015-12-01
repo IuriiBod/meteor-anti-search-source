@@ -2,10 +2,10 @@ var ForecastMaker = function (location) {
   this._location = location;
   this._locationId = location._id;
 
-  this._weatherManager = new WeatherManager(locationId);
+  this._weatherManager = new WeatherManager(this._locationId);
   this._weatherManager.updateForecast();
 
-  this._predictionApi = new GooglePredictionApi(locationId);
+  this._predictionApi = new GooglePredictionApi(this._locationId);
 };
 
 
@@ -96,8 +96,8 @@ ForecastMaker.prototype._predictFor = function (days) {
       var notificationSender = self._getNotificationSender(area);
 
       items.forEach(function (menuItem) {
-        var dataVector = [menuItem._id, currentWeather.temp, currentWeather.main, dateMoment.format('ddd'), dateMoment.dayOfYear()];
-        var quantity = self._predictionApi.makePrediction(dataVector);
+        var dataVector = [currentWeather.temp, currentWeather.main, dateMoment.format('ddd'), dateMoment.dayOfYear()];
+        var quantity = self._predictionApi.makePrediction(menuItem._id, dataVector);
 
         logger.info('Made prediction', {menuItem: menuItem.name, date: dateMoment.toDate(), predictedQty: quantity});
 
@@ -152,10 +152,9 @@ ForecastMaker.prototype._needToUpdate = function (interval) {
 
 
 ForecastMaker.prototype.makeForecast = function () {
-  var updateDayIntervals = [84, 7, 2];
   var self = this;
 
-  updateDayIntervals.forEach(function (interval) {
+  this._updateDayIntervals.forEach(function (interval) {
     if (self._needToUpdate(interval)) {
       self._predictFor(interval);
       return false;
@@ -163,12 +162,15 @@ ForecastMaker.prototype.makeForecast = function () {
   });
 };
 
+ForecastMaker.prototype._updateDayIntervals = [84, 7, 2];
+
 
 updateForecastForLocation = function (location) {
-  if (HospoHero.prediction.isAvailableForLocation(location)) {
-    var forecastMaker = new ForecastMaker(location);
-    forecastMaker.makeForecast();
-  }
+  logger.error('Started forecast generation', {locationId: location._id});
+  //if (HospoHero.prediction.isAvailableForLocation(location)) {
+  //  var forecastMaker = new ForecastMaker(location);
+  //  forecastMaker.makeForecast();
+  //}
 };
 
 
@@ -176,4 +178,9 @@ if (HospoHero.isProductionMode()) {
   HospoHero.LocationScheduler.addDailyJob('Update forecast', function (location) {
     return 3; //3:00 AM
   }, updateForecastForLocation);
+}
+
+
+if (HospoHero.isDevelopmentMode()) {
+  ForecastMaker.prototype._updateDayIntervals = [2];
 }

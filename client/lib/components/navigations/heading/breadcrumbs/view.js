@@ -11,6 +11,10 @@ Template.breadcrumbs.events({
       Router.go("home");
     } else if (category == "Stocktake List") {
       Router.go("stocktakeList");
+    } else if (category == "Stocktake") {
+      Router.go("orderReceiptsList");
+    } else if (category == "Stocks") {
+      Router.go("suppliersList");
     }
   },
 

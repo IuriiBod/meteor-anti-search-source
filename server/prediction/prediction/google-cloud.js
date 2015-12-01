@@ -1,5 +1,5 @@
-GoogleCloud = function GoogleCloud(locationId, trainingFileName) {
-  this._locationId = locationId;
+GoogleCloud = function GoogleCloud(menuItem, trainingFileName) {
+  this._menuItem = menuItem;
 
   var cloudSettings = Meteor.settings.GoogleCloud;
 
@@ -14,46 +14,54 @@ GoogleCloud = function GoogleCloud(locationId, trainingFileName) {
   var bucket = googleCloud.storage().bucket(cloudSettings.BUCKET);
 
   this._cloudFile = bucket.file(trainingFileName);
-
-  this.MAX_UPLOADED_DAYS_COUNT = 365;
 };
 
 
 GoogleCloud.prototype.uploadSalesData = function () {
-  logger.info('Started uploading sales data on cloud storage', {locationId: this._locationId});
+  logger.info('Started uploading sales data on cloud storage', {
+    menuItemId: this._menuItem._id,
+    name: this._menuItem.name
+  });
 
   var trainingDataWriteStream = new through();
   trainingDataWriteStream.pipe(this._cloudFile.createWriteStream());
 
-  var predictionModelDataGenerator = new PredictionModelDataGenerator(this._locationId);
+  var predictionModelDataGenerator = new PredictionModelDataGenerator(this._menuItem);
 
-  var uploadedDaysCount = 0;
-  var currentDateMoment = moment().subtract(1, 'day');
+  var locationId = this._menuItem.relations.locationId;
+  var nowMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), locationId);
+  var indexMoment = moment(nowMoment);
 
-  while (uploadedDaysCount < this.MAX_UPLOADED_DAYS_COUNT) {
 
-    var dailySalesCursor = DailySales.find({
-      'relations.locationId': this._locationId,
+  var guaranteeDailySale = function (dailySale) {
+    if (!dailySale) {
+      dailySale = {
+        actualQuantity: 0,
+        date: moment(indexMoment).toDate()
+      };
+    }
+    return dailySale;
+  };
+
+  while (nowMoment.diff(indexMoment, 'days') <= 365) {
+    var dailySale = DailySales.findOne({
+      menuItemId: this._menuItem._id,
       actualQuantity: {$gte: 0},
-      date: TimeRangeQueryBuilder.forDay(currentDateMoment, this._locationId)
+      date: TimeRangeQueryBuilder.forDay(indexMoment)
     });
 
-    logger.info('Daily sales for', {date: currentDateMoment.toDate(), count: dailySalesCursor.count()});
+    var csvLine = predictionModelDataGenerator.getDataForSale(guaranteeDailySale(dailySale));
 
-    dailySalesCursor.forEach(function (dailySale) {
-      var csvLine = predictionModelDataGenerator.getDataForSale(dailySale);
-      if (csvLine) {
-        trainingDataWriteStream.push(csvLine);
-      }
-    });
+    if (csvLine) {
+      trainingDataWriteStream.push(csvLine);
+    }
 
-    currentDateMoment.subtract(1, 'day');
-    uploadedDaysCount++;
+    indexMoment.subtract(1, 'day');
   }
 
   trainingDataWriteStream.end();
 
-  logger.info('Uploading of daily sales finished', {locationId: this._locationId});
+  logger.info('Finished uploading sales data', {menuItemId: this._menuItem._id});
 };
 
 
@@ -68,24 +76,17 @@ GoogleCloud.prototype.removeModelFile = function () {
 
 /**
  * Used to generate CSV data for prediction model
- * @param locationId
+ * @param menuItem
  * @constructor
  */
-PredictionModelDataGenerator = function PredictionModelDataGenerator(locationId) {
-  this._locationId = locationId;
-  this._weatherManager = new WeatherManager(locationId);
+var PredictionModelDataGenerator = function PredictionModelDataGenerator(menuItem) {
+  this._menuItem = menuItem;
+  this._locationId = menuItem.relations.locationId;
+  this._location = Locations.findOne({_id: this._locationId});
+
+  this._weatherManager = new WeatherManager(this._locationId);
+
   this._weatherManager.updateHistorical();
-
-  //weather cache
-  this._currentWeather = false;
-};
-
-
-PredictionModelDataGenerator.prototype._getWeatherForMoment = function (dailySaleMoment) {
-  if (!this._currentWeather || !dailySaleMoment.isSame(this._currentWeather.date, 'day')) {
-    this._currentWeather = this._weatherManager.getWeatherFor(dailySaleMoment);
-  }
-  return this._currentWeather;
 };
 
 
@@ -100,25 +101,21 @@ PredictionModelDataGenerator.prototype._convertValueVectorToString = function (v
 
 
 PredictionModelDataGenerator.prototype.getDataForSale = function (dailySale) {
-  var localDateMoment = HospoHero.dateUtils.getDateMomentForLocation(dailySale.date, this._locationId);
+  var localDateMoment = HospoHero.dateUtils.getDateMomentForLocation(dailySale.date, this._location);
 
-  var weather = this._getWeatherForMoment(localDateMoment);
+  var weather = this._weatherManager.getWeatherFor(localDateMoment);
 
   if (!weather) {
     logger.error('Weather not found', {locationId: this._locationId, date: dailySale.date});
     return false;
   }
 
-  var dayOfYear = localDateMoment.dayOfYear();
-  var weekDay = localDateMoment.format('ddd');
-
   var valuesVector = [
     dailySale.actualQuantity,
-    dailySale.menuItemId,
     weather.temp,
     weather.main,
-    weekDay,
-    dayOfYear
+    localDateMoment.format('ddd'),
+    localDateMoment.dayOfYear()
   ];
 
   return this._convertValueVectorToString(valuesVector);
