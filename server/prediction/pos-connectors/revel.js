@@ -234,64 +234,31 @@ RevelSalesDataBucket.prototype._extractIdFromUri = function (uri) {
 
 //======== mock data provider ============
 if (HospoHero.isDevelopmentMode()) {
-  var random = function (n) {
-    return Math.floor(Math.random() * n);
-  };
-
-  /**
-   * Data source with mock data for development mode
-   */
-  var MockOrderItemDataSource = function MockOrderItemDataSource() {
-    this.currentDate = moment();
-  };
-
-  MockOrderItemDataSource.prototype.load = function (revelProductId) {
-    var result = {
-      meta: {
-        'limit': 5000,
-        'offset': 0,
-        'time_zone': 'Australia/Melbourne',
-        'total_count': 61614200
-      },
-      objects: []
-    };
-
-    var self = this;
-
-    for (var i = 0; i < 5000; i++) {
-      var id = revelProductId || random(100);
-      var pushObject = {
-        created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
-        quantity: 1000,
-        product: '/resources/Product/' + id + '/'
-      };
-      result.objects.push(pushObject);
-      if (random(3) === 0) {//33% to go to next day
-        this.currentDate.subtract(1, 'd');
-      }
-    }
-
-    return result;
-  };
-
   //add mock data source
   _.extend(Revel.prototype, {
     loadOrderItems: function (offset, revelProductId) {
-      if (offset === 0) {
-        this._mockRevelSource = new MockOrderItemDataSource();
+      logger.info('Mock loadOrderItems', {offset: offset, productId: revelProductId});
+      var limit = 5000;
+      var result = {
+        meta: {
+          'limit': limit,
+          'offset': offset,
+          'time_zone': 'Australia/Melbourne',
+          'total_count': RawOrders.find({}).count()
+        },
+        objects: []
+      };
+
+      var query = {};
+
+      if (revelProductId) {
+        var menuItem = PosMenuItems.findOne({posId: revelProductId});
+        query.product = menuItem.name;
       }
-      console.log('mock items generator offset=', offset, '  id=', revelProductId);
-      return this._mockRevelSource.load(revelProductId);
-    },
-    loadProductItems: function () {
-      var productItems = MenuItems.find({}, {limit: 10});
-      return productItems.map(function (item) {
-        return {
-          name: item.name + ' POS',
-          price: random(100),
-          posId: random(300)
-        }
-      });
+
+      result.objects = RawOrders.find(query, {limit: limit, offset: offset}).fetch();
+
+      return result;
     }
   });
 }
