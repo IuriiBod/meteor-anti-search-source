@@ -151,17 +151,3 @@ GooglePredictionApi.prototype._removeAllPredictionModels = function () {
     });
   }
 };
-
-
-//mock mix-in for prediction API
-if (HospoHero.isDevelopmentMode()) {
-  _.extend(GooglePredictionApi.prototype, {
-    _getModelName: function (menuItemId) {
-      return "test-" + menuItemId;
-    },
-
-    _getTrainingFileName: function (menuItemId) {
-      return 'test-' + menuItemId + '.csv';
-    }
-  });
-}
