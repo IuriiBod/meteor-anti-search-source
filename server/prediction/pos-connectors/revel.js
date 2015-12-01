@@ -57,6 +57,11 @@ Revel.prototype._queryResource = function (resourceName, options) {
   }
 };
 
+/**
+ * Loads product (menu) items from from Revel
+ *
+ * @returns {boolean|Array}
+ */
 Revel.prototype.loadProductItems = function () {
   var result = this._queryResource('Product', {
     fields: ['name', 'price', 'id']
@@ -74,11 +79,10 @@ Revel.prototype.loadProductItems = function () {
 /**
  * Loads order items from Revel
  *
- * @param offset loading offset
- * @param {*|string|number} revelMenuItemId load only order items for specific product
+ * @param {number} offset loading offset
  * @returns {boolean|Array}
  */
-Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
+Revel.prototype.loadOrderItems = function (offset) {
   var queryOptions = {
     order_by: '-created_date',
     fields: [
@@ -89,10 +93,6 @@ Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
     offset: offset
   };
 
-  if (revelMenuItemId) {
-    queryOptions.product = revelMenuItemId;
-  }
-
   return this._queryResource('OrderItem', queryOptions);
 };
 
@@ -100,9 +100,8 @@ Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
  * Uploads order items for particular product in Revel
  *
  * @param onDateReceived callback receives sales data for one day, should return false to stop iteration
- * @param revelMenuItemId ID of product item in Revel POS
  */
-Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuItemId) {
+Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived) {
   var offset = 0;
   var totalCount = false;
   var toContinue = true;
@@ -111,7 +110,7 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuI
 
   while (offset <= totalCount && toContinue) {
 
-    var result = this.loadOrderItems(offset, revelMenuItemId);
+    var result = this.loadOrderItems(offset);
 
     //handle Revel API error
     if (result === false) {
@@ -138,7 +137,12 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuI
   }
 };
 
-
+/**
+ * Uploads order items 'as is' for the last year
+ * (Method is temporal, may be removed in future)
+ *
+ * @param onOrdersLoaded
+ */
 Revel.prototype.uploadRawOrderItems = function (onOrdersLoaded) {
   var offset = 0;
   var totalCount = false;
@@ -177,7 +181,7 @@ Revel.prototype.uploadRawOrderItems = function (onOrdersLoaded) {
  * @constructor
  */
 var RevelSalesDataBucket = function () {
-  this._quantity = 0;
+  this._data = {};
   this._dayNumber = false;
 };
 
@@ -188,7 +192,8 @@ RevelSalesDataBucket.prototype.timezone = function (timezoneStr) {
 
 //if entity related to other date returns false
 RevelSalesDataBucket.prototype.put = function (entry) {
-  var dayOfYear = moment(entry.created_date).dayOfYear();
+  var dayOfYear = moment.tz(entry.created_date, this._timezone).dayOfYear();
+  var productName = entry.product;
 
   if (this.isEmpty()) {
     this._dayNumber = dayOfYear;
@@ -196,48 +201,44 @@ RevelSalesDataBucket.prototype.put = function (entry) {
   }
 
   if (dayOfYear === this._dayNumber) {
-    this._quantity += entry.quantity;
+    if (!isFinite(this._data[productName])) {
+      this._data[productName] = 0;
+    }
+
+    this._data[productName] += entry.quantity;
     return true;
   }
 
   return false;
 };
 
-RevelSalesDataBucket.prototype.getDataAndReset = function () {
-  //convert to start of day
-  var startOfCreatedDate = moment(this._createdDate).startOf('day').format('YYYY-MM-DDTHH:mm:ss');
 
+RevelSalesDataBucket.prototype.getDataAndReset = function () {
   //convert to appropriate time zone
-  var createdDate = moment.tz(startOfCreatedDate, this._timezone).toDate();
+  var createdDate = moment.tz(this._createdDate, this._timezone).startOf('day').toDate();
 
   var result = {
-    quantity: this._quantity,
+    menuItems: this._data,
     createdDate: createdDate
   };
 
 //reset project
-  this._quantity = 0;
+  this._data = {};
   this._dayNumber = false;
 
   return result;
 };
+
 
 RevelSalesDataBucket.prototype.isEmpty = function () {
   return this._dayNumber === false
 };
 
 
-RevelSalesDataBucket.prototype._extractIdFromUri = function (uri) {
-  return parseInt(/\/\w+\/\w+\/(\d+)\//.exec(uri)[1]); //1st group
-};
-
-
-//======== mock data provider ============
 if (HospoHero.isDevelopmentMode()) {
-  //add mock data source
   _.extend(Revel.prototype, {
-    loadOrderItems: function (offset, revelProductId) {
-      logger.info('Mock loadOrderItems', {offset: offset, productId: revelProductId});
+    loadOrderItems: function (offset) {
+      logger.info('Mock loadOrderItems', {offset: offset});
       var limit = 5000;
       var result = {
         meta: {
@@ -251,12 +252,7 @@ if (HospoHero.isDevelopmentMode()) {
 
       var query = {};
 
-      if (revelProductId) {
-        var menuItem = PosMenuItems.findOne({posId: revelProductId});
-        query.product = menuItem.name;
-      }
-
-      result.objects = RawOrders.find(query, {limit: limit, offset: offset}).fetch();
+      result.objects = RawOrders.find(query, {limit: limit, offset: offset, sort: {created_date: -1}}).fetch();
 
       return result;
     }
