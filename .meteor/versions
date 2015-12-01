@@ -78,6 +78,7 @@ mongo-livedata@1.0.8
 mrt:jquery-ui-sortable@1.10.3
 mrt:moment@2.8.1
 mrt:moment-timezone@0.2.1
+natestrauser:filepicker-plus@2.0.0
 natestrauser:select2@4.0.0_1
 natestrauser:x-editable-bootstrap@1.5.2_2
 npm-bcrypt@0.7.8_2

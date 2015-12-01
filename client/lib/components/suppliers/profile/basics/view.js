@@ -105,12 +105,10 @@ var defineEditableComponents = function (tmpl) {
         type: 'combodate',
         template: "h:mm A",
         viewformat: "h:mm A",
-        //format: "YYYY-MM-DD h:mm A",
         display: false,
         showbuttons: true,
         inputclass: "editableTime",
         mode: 'inline',
-        //minuteStep: 20,
         success: function (response, newValue) {
             newValue = newValue.toDate();
             tmpl.updateSupplierDetails('deliveryTime', newValue);

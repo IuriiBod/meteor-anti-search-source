@@ -30,7 +30,7 @@
         <dd><a class="minimum-order-amount">{{state$supplier.minimumOrderAmount}}</a></dd>
         <dt>Delivery time:</dt>
         <dd>
-          <p>Every <a class="delivery-day" data-type="select" value="{{state$supplier.deliveryDay}}"></a> at
+          <p>Every <a class="delivery-day" data-type="select"></a> at
             <a class="delivery-time">{{timeFormat state$supplier.deliveryTime}}</a>
           </p>
         </dd>
@@ -54,11 +54,11 @@
       <dl class="dl-horizontal">
         <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
         {{#if state$supplier.priceList}}
-          <div class="file uploadedPriceList">
-            <div class="image">
-              <img id="uploadedImageUrl" src="{{state$supplier.priceList}}" class="img-responsive menu-item-image">
-            </div>
-          </div>
+          <ul>
+            {{#each state$supplier.priceList}}
+              <li><a href="{{this}}" target="_blank">Price list</a></li>
+            {{/each}}
+          </ul>
         {{else}}
           <div class="file uploadedPriceList hide">
             <a href="#">
