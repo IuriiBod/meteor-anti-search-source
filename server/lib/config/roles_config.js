@@ -20,7 +20,8 @@ var actions = {
   "Edit Organization": "edit organization settings",
   "All Rights": "all rights",
   "Edit users payrate": "edit user's payrate",
-  "View Reports": "view reports"
+  "View Reports": "view reports",
+  "Receive Deliveries": "receive deliveries"
 };
 
 var defaultRoles = [
@@ -51,7 +52,8 @@ var defaultRoles = [
       "edit locations",
       "be rosted",
       "edit user's payrate",
-      "view reports"
+      "view reports",
+      "receive deliveries"
     ]
   },
 
@@ -62,7 +64,8 @@ var defaultRoles = [
       "view menus",
       "view roster",
       "view stocks",
-      "be rosted"
+      "be rosted",
+      "receive deliveries"
     ]
   }
 ];

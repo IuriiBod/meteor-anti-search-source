@@ -37,11 +37,12 @@ Namespace('HospoHero.roles', {
     "View Areas Reports": "view areas reports",
     "View areas financial info": "view area's financial info",
     "Edit Locations": "edit locations",
-    "Billing Account": "edit billing account",
+    //"Billing Account": "edit billing account",
     "Edit Organization": "edit organization settings",
     "Edit users payrate": "edit user's payrate",
-    "All Rights": "all rights",
-    "View Reports": "view reports"
+    //"All Rights": "all rights",
+    "View Reports": "view reports",
+    "Receive Deliveries": "receive deliveries"
   },
 
   getActions: function () {
