@@ -215,11 +215,11 @@ RevelSalesDataBucket.prototype.put = function (entry) {
 
 RevelSalesDataBucket.prototype.getDataAndReset = function () {
   //convert to appropriate time zone
-  var createdDate = moment.tz(this._createdDate, this._timezone).startOf('day').toDate();
+  var createdMoment = moment.tz(this._createdDate, this._timezone).startOf('day');
 
   var result = {
     menuItems: this._data,
-    createdDate: createdDate
+    createdMoment: createdMoment
   };
 
 //reset project

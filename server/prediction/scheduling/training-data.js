@@ -8,7 +8,7 @@ updateTrainingDataForLocation = function (location) {
 
     //import missed actual sales
     var salesImporter = new ActualSalesImporter(location._id);
-    salesImporter.importByQuery(menuItemsQuery);
+    salesImporter.importAll();
 
     //try to update prediction model
     var predictionApi = new GooglePredictionApi(location._id);
