@@ -4,6 +4,9 @@ var checkOrganizationOwner = function (userId) {
   }
 };
 
+//this collection is used to imitate Revel API with real data
+RawOrders = new Mongo.Collection('rawOrders');
+
 
 Meteor.methods({
   updatePredictionModel: function () {
@@ -45,6 +48,22 @@ Meteor.methods({
   resetForecastData: function () {
     DailySales.update({}, {$unset: {predictionQuantity: '', predictionUpdatedAt: ''}}, {multi: true});
     Locations.update({}, {$unset: {lastForecastModelUploadDate: ''}}, {multi: true});
+    return true;
+  },
+
+  importRawOrders: function () {
+    checkOrganizationOwner(this.userId);
+    //remove old data
+    RawOrders.remove({});
+
+    var area = HospoHero.getCurrentArea(this.userId);
+    var location = Locations.findOne({_id: area.locationId});
+    var revelApi = new Revel(location.pos);
+    revelApi.uploadRawOrderItems(function (orderItems) {
+      orderItems.forEach(function (item) {
+        RawOrders.insert(item);
+      });
+    });
     return true;
   }
 });

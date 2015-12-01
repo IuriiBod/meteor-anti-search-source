@@ -7,6 +7,10 @@ var processMthodResult = function (err, res) {
 };
 
 Template.forceForecast.events({
+  'click .import-raw': function (event, tmpl) {
+    Meteor.call('importRawOrders', processMthodResult)
+  },
+
   'click .update-prediction': function (event, tmpl) {
     Meteor.call('updatePredictionModel', processMthodResult)
   },

@@ -83,11 +83,15 @@ Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
     order_by: '-created_date',
     fields: [
       'created_date',
-      'quantity'
+      'quantity',
+      'product'
     ],
-    offset: offset,
-    product: revelMenuItemId
+    offset: offset
   };
+
+  if (revelMenuItemId) {
+    queryOptions.product = revelMenuItemId;
+  }
 
   return this._queryResource('OrderItem', queryOptions);
 };
@@ -129,6 +133,38 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuI
       }
       return true;
     });
+
+    offset += this.DATA_LIMIT;
+  }
+};
+
+
+Revel.prototype.uploadRawOrderItems = function (onOrdersLoaded) {
+  var offset = 0;
+  var totalCount = false;
+  var yearBackMoment = moment().subtract(1, 'year');
+
+  while (true) {
+    var result = this.loadOrderItems(offset);
+
+    //handle Revel API error
+    if (result === false) {
+      return;
+    }
+
+    if (!totalCount) {
+      totalCount = result.meta.total_count;
+    }
+
+    logger.info('Requested to Revel', {offset: offset, total: totalCount});
+
+    onOrdersLoaded(result.objects);
+
+    //check if 1 year is imported
+    var lastOrder = result.objects[result.objects.length - 1];
+    if (yearBackMoment.isAfter(lastOrder.created_date)) {
+      break;
+    }
 
     offset += this.DATA_LIMIT;
   }
@@ -191,6 +227,11 @@ RevelSalesDataBucket.prototype.isEmpty = function () {
 };
 
 
+RevelSalesDataBucket.prototype._extractIdFromUri = function (uri) {
+  return parseInt(/\/\w+\/\w+\/(\d+)\//.exec(uri)[1]); //1st group
+};
+
+
 //======== mock data provider ============
 if (HospoHero.isDevelopmentMode()) {
   var random = function (n) {
@@ -204,7 +245,7 @@ if (HospoHero.isDevelopmentMode()) {
     this.currentDate = moment();
   };
 
-  MockOrderItemDataSource.prototype.load = function () {
+  MockOrderItemDataSource.prototype.load = function (revelProductId) {
     var result = {
       meta: {
         'limit': 5000,
@@ -218,9 +259,11 @@ if (HospoHero.isDevelopmentMode()) {
     var self = this;
 
     for (var i = 0; i < 5000; i++) {
+      var id = revelProductId || random(100);
       var pushObject = {
         created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
-        quantity: 1000
+        quantity: 1000,
+        product: '/resources/Product/' + id + '/'
       };
       result.objects.push(pushObject);
       if (random(3) === 0) {//33% to go to next day
@@ -238,7 +281,7 @@ if (HospoHero.isDevelopmentMode()) {
         this._mockRevelSource = new MockOrderItemDataSource();
       }
       console.log('mock items generator offset=', offset, '  id=', revelProductId);
-      return this._mockRevelSource.load();
+      return this._mockRevelSource.load(revelProductId);
     },
     loadProductItems: function () {
       var productItems = MenuItems.find({}, {limit: 10});
