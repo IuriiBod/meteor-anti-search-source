@@ -1,6 +1,7 @@
-var component = FlowComponents.define("sections", function(props) {});
+var component = FlowComponents.define("sections", function (props) {
+});
 
-component.state.sections = function() {
+component.state.sections = function () {
   return Sections.find({
     'relations.areaId': HospoHero.getCurrentAreaId()
   });

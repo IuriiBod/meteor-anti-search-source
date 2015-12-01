@@ -1,5 +1,3 @@
-
-
 var MongoId = Match.Where(function (id) {
   check(id, String);
   return /[0-9a-zA-Z]{17}/.test(id);

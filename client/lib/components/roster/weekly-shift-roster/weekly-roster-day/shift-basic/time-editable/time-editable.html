@@ -1,3 +1,25 @@
 <template name="shiftBasicTimeEditable">
-  <a href="#" class="time" data-pk="1">{{timeFormat currentTime}}</a>
+  <form class="time-range-selector {{timeRangeSelectorDisplayClass}}">
+    <div class="form-group">
+      <div class='input-group date start-time'>
+        <input type='text' class="form-control"/>
+        <span class="input-group-addon">
+        <span class="glyphicon glyphicon-time"></span>
+      </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class='input-group date end-time'>
+        <input type='text' class="form-control"/>
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-time"></span>
+        </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <button type="button" class="cancel-button btn btn-primary"><i class="fa fa-minus-circle"></i></button>
+      <button type="submit" class="edit-shift-time-button btn btn-primary"><i class="fa fa-check"></i></button>
+    </div>
+  </form>
+  <a href="#" class="time {{timeDisplayClass}}">{{timeFormat shift.startTime}} - {{timeFormat shift.endTime}}</a>
 </template>

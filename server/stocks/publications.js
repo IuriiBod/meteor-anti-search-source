@@ -1,5 +1,5 @@
-Meteor.publish('ingredients', function(ids, areaId, status) {
-  if(this.userId) {
+Meteor.publish('ingredients', function (ids, areaId, status) {
+  if (this.userId) {
     var query = {
       'relations.areaId': areaId
     };
@@ -11,7 +11,7 @@ Meteor.publish('ingredients', function(ids, areaId, status) {
       query._id = {$in: ids};
     }
 
-    if(status) {
+    if (status) {
       query.status = status;
     }
 
@@ -21,10 +21,10 @@ Meteor.publish('ingredients', function(ids, areaId, status) {
   }
 });
 
-Meteor.publish('ingredientsRelatedJobs', function(id) {
-  if(this.userId) {
+Meteor.publish('ingredientsRelatedJobs', function (id) {
+  if (this.userId) {
     logger.info('Related jobs published', {_id: id});
-    return JobItems.find({ "ingredients._id": id, "relations.areaId": HospoHero.getCurrentAreaId(this.userId) });
+    return JobItems.find({"ingredients._id": id, "relations.areaId": HospoHero.getCurrentAreaId(this.userId)});
   } else {
     this.ready();
   }

@@ -1,43 +1,40 @@
 Namespace('HospoHero', {
-    /**
-     * Check whether user is able to perform specified action
-     * @param {String} action
-     * @param {String} [userId]
-     * @returns {Function|Boolean}
-     */
-    canUser: function () {
-        var action = arguments[0];
+  /**
+   * Check whether user is able to perform specified action
+   * @param {String} action
+   * @param {String} [userId]
+   * @returns {Function|Boolean}
+   */
+  canUser: function () {
+    var action = arguments[0];
 
-        var hasPermission = function (action, userId) {
-            var roleIds = Meteor.roles.find({
-                $or: [
-                    {actions: action},
-                    {actions: 'all rights'}
-                ]
-            }).map(function (role) {
-                return role._id;
-            });
+    var hasPermission = function (action, userId) {
+      try {
+        userId = userId ? userId : Meteor.userId();
+      } catch (err) {
+        return false;
+      }
 
-            var temp = {};
-            temp['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
+      var user = Meteor.users.findOne(userId);
 
-            var query = {
-                _id: userId,
-                $or: [
-                    {'roles.defaultRole': {$in: roleIds}},
-                    temp
-                ]
-            };
+      if (!user || !user.currentAreaId) {
+        return false;
+      }
 
-            return !!Meteor.users.findOne(query);
-        };
+      if (user.roles) {
+        var roleId = user.roles[user.currentAreaId];
+        return Roles.hasAction(roleId, action);
+      } else {
+        return false;
+      }
+    };
 
-        var checkPermission = function (userId) {
-            // Organization's owner can't be rosted
-            return (action !== 'can be rosted' && HospoHero.isOrganizationOwner(userId)) || hasPermission(action, userId);
-        };
+    var checkPermission = function (userId) {
+      // Organization's owner can't be rosted
+      return (action !== 'can be rosted' && HospoHero.isOrganizationOwner(userId)) || hasPermission(action, userId);
+    };
 
-        // arguments[1] - userId
-        return arguments.length > 1 ? checkPermission(arguments[1]) : checkPermission;
-    }
+    // arguments[1] - userId
+    return arguments.length > 1 ? checkPermission(arguments[1]) : checkPermission;
+  }
 });

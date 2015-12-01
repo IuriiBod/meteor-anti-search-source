@@ -1,17 +1,17 @@
-var UserRelations = Match.Where(function(relation) {
+var UserRelations = Match.Where(function (relation) {
   try {
     check(relation, {
       organizationId: HospoHero.checkers.MongoId,
       locationIds: Match.OneOf([HospoHero.checkers.MongoId], null),
       areaIds: Match.OneOf([HospoHero.checkers.MongoId], null)
     });
-  } catch(err) {
+  } catch (err) {
     HospoHero.checkerUtils.checkError('Incorrect user relations object!')
   }
   return true;
 });
 
-var UserChecker = Match.Where(function(user) {
+var UserChecker = Match.Where(function (user) {
   check(user, {
     _id: HospoHero.checkers.MongoId,
     createdAt: Date,

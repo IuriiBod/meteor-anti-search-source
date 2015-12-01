@@ -1,26 +1,21 @@
 Namespace('HospoHero.roles', {
-  getUserIdsByAction: function(action) {
+  getUserIdsByAction: function (action) {
     var roleIds = Meteor.roles.find({
       $or: [
-        { actions: action },
-        { actions: 'all rights' }
+        {actions: action},
+        {actions: 'all rights'}
       ]
-    }).map(function(role) {
+    }).map(function (role) {
       return role._id;
     });
 
-    var temp = {};
-    temp['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
+    var query = {};
+    query['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
 
-    var query = {
-      $or: [
-        { 'roles.defaultRole': {$in: roleIds} },
-        temp
-      ]
-    };
-
-    return Meteor.users.find(query).map(function(user) {
-      return user._id;
+    return Meteor.users.find(query).map(function (user) {
+      if (user._id != Meteor.userId()) {
+        return user._id;
+      }
     });
   },
 
@@ -46,12 +41,10 @@ Namespace('HospoHero.roles', {
     "Edit Organization": "edit organization settings",
     "Edit users payrate": "edit user's payrate",
     "All Rights": "all rights",
-    "View Reports": "view reports",
-    "Approve Leave Requests": "approve leave requests",
-    "Decline Leave Requests": "decline leave requests"
+    "View Reports": "view reports"
   },
 
-  getActions: function() {
+  getActions: function () {
     return _.map(HospoHero.roles.actions, function (action, text) {
       return {
         value: action,

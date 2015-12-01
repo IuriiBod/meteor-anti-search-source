@@ -29,9 +29,10 @@ var getTotalPrice = function (array, propertyName) {
       var price = 0;
 
       var menuItem = MenuItems.findOne({_id: item.menuItemId});
-      if(menuItem && menuItem.salesPrice) {
+      if (menuItem && menuItem.salesPrice) {
         price = menuItem.salesPrice;
-      };
+      }
+      ;
 
       total += quantity * price;
     });

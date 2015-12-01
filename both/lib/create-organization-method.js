@@ -1,6 +1,6 @@
 Meteor.methods({
   'createOrganization': function (orgName) {
-    if(Meteor.isSimulating) {
+    if (Meteor.isSimulating) {
       if (!HospoHero.isManager()) {
         logger.error("User not permitted to create organizations");
         throw new Meteor.Error(403, "User not permitted to create organization");

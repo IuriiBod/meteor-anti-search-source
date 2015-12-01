@@ -1,63 +1,69 @@
 var component = FlowComponents.define('submitIngredientBody', function (props) {
-    var isModal = props.isModal || false;
-    this.set('isModal', isModal);
+  var isModal = props.isModal || false;
+  this.set('isModal', isModal);
 
-    this.set('unitOrdered', '[unit ordered]');
-    this.set('unitUsed', '[unit used]');
+  this.set('unitOrdered', '[unit ordered]');
+  this.set('unitUsed', '[unit used]');
 });
 
 component.action.changeUnitOrdered = function (unitOrderedNewVal) {
-    this.set('unitOrdered', unitOrderedNewVal);
+  this.set('unitOrdered', unitOrderedNewVal);
 };
 
 component.action.changeUnitUsed = function (unitUsedNewVal) {
-    this.set('unitUsed', unitUsedNewVal);
+  this.set('unitUsed', unitUsedNewVal);
 };
 
 component.action.submit = function (event) {
 
-    var fields = [
-        'code',
-        {
-            name: 'name',
-            newName: 'description'
-        },
-        {
-            name: 'supplier',
-            newName: 'suppliers'
-        },
-        'unitOrdered',
-        'unitUsed',
-        {
-            name: 'costPerPortion',
-            parse: 'float',
-            type: 'number'
-        },
-        {
-            name: 'unitSize',
-            parse: 'float',
-            type: 'number'
-        }
-    ];
-
-    var info = HospoHero.misc.getValuesFromEvent(event, fields, true);
-
-    if (!info.code) {
-        return HospoHero.error("You need to add a code");
+  var fields = [
+    'code',
+    {
+      name: 'name',
+      newName: 'description'
+    },
+    {
+      name: 'supplier',
+      newName: 'suppliers'
+    },
+    {
+      name: 'unitOrdered',
+      newName: 'portionOrdered'
+    },
+    {
+      name: 'unitUsed',
+      newName: 'portionUsed'
+    },
+    {
+      name: 'costPerPortion',
+      parse: 'float',
+      type: 'number'
+    },
+    {
+      name: 'unitSize',
+      parse: 'float',
+      type: 'number'
     }
+  ];
 
-    if (!info.description) {
-        return HospoHero.error("You need to a description");
-    }
+  var info = HospoHero.misc.getValuesFromEvent(event, fields, true);
 
-    info.costPerPortion = Math.round(info.costPerPortion * 100) / 100;
+  if (!info.code) {
+    return HospoHero.error("You need to add a code");
+  }
 
-    Meteor.call("createIngredients", info, HospoHero.handleMethodResult(function () {
-        IngredientsListSearch.cleanHistory();
-        IngredientsListSearch.search("", {"limit": 10});
-    }));
+  if (!info.description) {
+    return HospoHero.error("You need to a description");
+  }
+
+  info.costPerPortion = Math.round(info.costPerPortion * 100) / 100;
+
+  Meteor.call("createIngredients", info, HospoHero.handleMethodResult(function () {
+    IngredientsListSearch.cleanHistory();
+    IngredientsListSearch.search("", {"limit": 10});
+  }));
 };
 
 component.state.suppliers = function () {
-    return Suppliers.find({}, {sort: {"name": 1}});
+  return Suppliers.find({}, {sort: {"name": 1}});
 };

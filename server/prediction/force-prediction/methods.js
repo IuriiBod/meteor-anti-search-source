@@ -4,44 +4,47 @@ var checkOrganizationOwner = function (userId) {
   }
 };
 
+
 Meteor.methods({
   updatePredictionModel: function () {
     checkOrganizationOwner(this.userId);
-    try {
-      predictionModelRefreshJob();
-    } catch (err) {
-      logger.error(err);
-      return false;
-    }
+    var locations = Locations.find({archived: {$ne: true}});
+    locations.forEach(updateTrainingDataForLocation);
     return true;
   },
 
   updatePredictions: function () {
     checkOrganizationOwner(this.userId);
-    try {
-      salesPredictionUpdateJob();
-    } catch (err) {
-      logger.error(err);
-      return false;
-    }
+    logger.info('started prediction update job');
+    var locations = Locations.find({archived: {$ne: true}});
+    locations.forEach(updateForecastForLocation);
     return true;
   },
 
   getPredictionModelStatus: function () {
     checkOrganizationOwner(this.userId);
-    try {
-      var currentArea = HospoHero.getCurrentArea(this.userId);
-      var googlePredictionApi = new GooglePredictionApi(currentArea.locationId);
-      return googlePredictionApi.getModelStatus();
-    } catch (err) {
-      logger.error(err);
-      return false;
-    }
+    var currentArea = HospoHero.getCurrentArea(this.userId);
+    var googlePredictionApi = new GooglePredictionApi(currentArea.locationId);
+
+    var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({
+      'relations.locationId': currentArea.locationId
+    }, true);
+
+    var predictedMenuItems = MenuItems.find(menuItemsQuery, {fields: {name: 1, _id: 1}});
+
+    var modelsStatuses = {};
+    predictedMenuItems.forEach(function (menuItem) {
+      modelsStatuses[menuItem.name] = googlePredictionApi.getModelStatus(menuItem._id);
+    });
+
+    return _.reduce(modelsStatuses, function (result, status, name) {
+      return result + name + ': ' + status + '\n';
+    }, '');
   },
 
   resetForecastData: function () {
-    DailySales.remove({});
+    DailySales.update({}, {$unset: {predictionQuantity: '', predictionUpdatedAt: ''}}, {multi: true});
     Locations.update({}, {$unset: {lastForecastModelUploadDate: ''}}, {multi: true});
-    MenuItems.update({}, {$set: {isNotSyncedWithPos: false}}, {multi: true});
+    return true;
   }
 });

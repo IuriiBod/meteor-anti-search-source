@@ -6,9 +6,9 @@
  */
 WeatherManager = function WeatherManager(locationId) {
   this._locationId = locationId;
+  this.location = Locations.findOne({_id: locationId});
 
-  var location = Locations.findOne({_id: locationId});
-  this._weatherConnector = new WorldWeather(location.city);
+  this._weatherConnector = new WorldWeather(this.location.city);
 };
 
 /**
@@ -20,45 +20,66 @@ WeatherManager = function WeatherManager(locationId) {
 WeatherManager.prototype.getWeatherFor = function (date) {
   return WeatherForecast.findOne({
     locationId: this._locationId,
-    date: TimeRangeQueryBuilder.forDay(date, this._locationId)
+    date: TimeRangeQueryBuilder.forDay(date, this.location)
   });
 };
 
-//todo: write docs for other methods
+/**
+ * Returns local moment for current location
+ *
+ * @param {date} [date]
+ * @returns {*}
+ * @private
+ */
+WeatherManager.prototype._getLocalMomentByDate = function (date) {
+  return HospoHero.dateUtils.getDateMomentForLocation(date || new Date(), this.location);
+};
 
+/**
+ * Updates weather forecast for current location
+ */
 WeatherManager.prototype.updateForecast = function () {
   var locationId = this._locationId;
 
   logger.info('updating weather forecast for location', {_id: locationId});
 
-  //check if we need an update forecast
-  var today = moment().startOf('day').toDate();//today is start of day
+  //today is start of day
+  var today = this._getLocalMomentByDate().startOf('day');
 
-  var lastForecast = WeatherForecast.findOne({locationId: locationId, date: today});
-  var needUpdate = !lastForecast || !moment(lastForecast.updatedAt).isSame(today, 'day');
+  var lastForecast = WeatherForecast.findOne({
+    locationId: locationId,
+    date: TimeRangeQueryBuilder.forDay(today, this.location)
+  }, {sort: {date: -1}});
+
+  //check if we need an update forecast
+  var needUpdate = !lastForecast || !today.isSame(lastForecast.updatedAt, 'day');
 
   if (needUpdate) {
     var weatherForecastList = this._weatherConnector.getForecast();
+    var self = this;
 
     weatherForecastList.forEach(function (forecast) {
-      var forecastDate = moment(forecast.date).startOf('day').toDate();
+      var forecastMoment = self._getLocalMomentByDate(forecast.date).startOf('day');
+
       var forecastEntry = _.extend(forecast, {
-        date: forecastDate,
-        updatedAt: today,
+        date: forecastMoment.toDate(),
+        updatedAt: today.toDate(),
         locationId: locationId
       });
 
       WeatherForecast.update({
         locationId: locationId,
-        date: forecastDate
+        date: TimeRangeQueryBuilder.forDay(forecastMoment, self.location)
       }, {$set: forecastEntry}, {upsert: true});
     });
   }
 };
 
-
+/**
+ * Updates historical data for current location
+ */
 WeatherManager.prototype.updateHistorical = function () {
-  var iterateMonthMoment = moment().subtract(1, 'year');
+  var iterateMonthMoment = this._getLocalMomentByDate().subtract(1, 'year');
 
   //iterate over last 12 months including current month
   for (var i = 0; i <= 12; i++) {
@@ -71,17 +92,24 @@ WeatherManager.prototype.updateHistorical = function () {
   }
 };
 
-
+/**
+ * Checks if all days in current month have weather forecast
+ * for current location
+ *
+ * @param monthMomentToCheck
+ * @returns {boolean}
+ * @private
+ */
 WeatherManager.prototype._isWeatherAvailableForMonth = function (monthMomentToCheck) {
-  var nowMoment = moment();
+  var nowMoment = this._getLocalMomentByDate();
   var endOfMonth = moment(monthMomentToCheck).endOf('month');
   var startOfMonth = moment(monthMomentToCheck).startOf('month');
   var isCurrentMonth = monthMomentToCheck.isSame(nowMoment, 'month');
 
   var dateQuery = isCurrentMonth ? {
     $gte: startOfMonth.toDate(),
-    $lte: moment().endOf('day')
-  } : TimeRangeQueryBuilder.forMonth(monthMomentToCheck);
+    $lte: moment(nowMoment).endOf('day')
+  } : TimeRangeQueryBuilder.forMonth(monthMomentToCheck, this.location);
 
   var monthForecastCount = WeatherForecast.find({
     date: dateQuery,
@@ -93,29 +121,36 @@ WeatherManager.prototype._isWeatherAvailableForMonth = function (monthMomentToCh
   return monthForecastCount >= requiredCount;
 };
 
-
+/**
+ * Upload historical data for specified month
+ *
+ * @param monthMoment
+ * @private
+ */
 WeatherManager.prototype._uploadHistoricalDataForMonth = function (monthMoment) {
-  var nowMoment = moment();
+  monthMoment = moment(monthMoment);//copy month moment
 
-  var start = new Date(monthMoment.startOf('month'));
+  var nowMoment = this._getLocalMomentByDate();
+
+  var start = moment(monthMoment.startOf('month'));
   monthMoment.endOf('month');
 
   //to the end of month or to current date if end in future
-  var end = monthMoment.isBefore(nowMoment) ? monthMoment.toDate() : nowMoment.toDate();
+  var end = moment(monthMoment.isBefore(nowMoment) ? monthMoment : nowMoment);
 
   var weatherData = this._weatherConnector.getHistorical(start, end);
 
-  var locationId = this._locationId;
   if (_.isArray(weatherData)) {
+    var self = this;
     weatherData.forEach(function (weatherEntry) {
       //store historical data in the same collection as forecast
       var infoToUpdate = _.extend(weatherEntry, {
-        locationId: locationId
+        locationId: self._locationId
       });
 
       WeatherForecast.update({
-        date: TimeRangeQueryBuilder.forDay(infoToUpdate.date),
-        locationId: locationId
+        date: TimeRangeQueryBuilder.forDay(infoToUpdate.date, self.location),
+        locationId: self._locationId
       }, {$set: infoToUpdate}, {upsert: true});
     });
   }

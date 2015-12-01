@@ -3,15 +3,15 @@
     {{#if isInOrganization}}
       {{#if getCurrentArea}}
         <div class="row">
-          <div class="col-md-7">
+          <div class="col-md-5 col-xs-12 pull-right">
+            <div class="ibox float-e-margins">
+              {{> render component="shiftsSummary"}}
+            </div>
+          </div>
+          <div class="col-md-7 col-xs-12">
             <div class="ibox float-e-margins">
               {{> render component="clock"}}
               {{> render component="newsFeed" user=currentUser}}
-            </div>
-          </div>
-          <div class="col-md-5">
-            <div class="ibox float-e-margins">
-              {{> render component="shiftsSummary"}}
             </div>
           </div>
         </div>

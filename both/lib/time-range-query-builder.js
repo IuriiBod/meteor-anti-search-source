@@ -1,8 +1,12 @@
 TimeRangeQueryBuilder = {
-  _buildQueryFor: function (unitStr, date, locationId) {
+  _buildQueryFor: function (unitStr, date, location) {
     var start, end;
-    if (locationId) {
-      var location = Locations.findOne({_id: locationId}, {fields: {timezone: 1}});
+
+    if (location) {
+      if (_.isString(location)) {
+        location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
+      }
+
       start = moment(date).tz(location.timezone).startOf(unitStr);
       end = moment(date).tz(location.timezone).endOf(unitStr);
     } else {
@@ -16,7 +20,7 @@ TimeRangeQueryBuilder = {
   /**
    *
    * @param date basic date
-   * @param {*|ID} locationId consider using this param for timezones support on server side
+   * @param {string|object} [locationId] consider using this param for timezones support on server side
    * @returns {*|{$gte, $lte}}
    */
   forWeek: function (date, locationId) {
@@ -26,7 +30,7 @@ TimeRangeQueryBuilder = {
   /**
    *
    * @param date basic date
-   * @param {*|ID} locationId consider using this param for timezones support on server side
+   * @param {string|object} [locationId] consider using this param for timezones support on server side
    * @returns {*|{$gte, $lte}}
    */
   forDay: function (date, locationId) {
@@ -36,7 +40,7 @@ TimeRangeQueryBuilder = {
   /**
    *
    * @param date basic date
-   * @param {*|ID} locationId consider using this param for timezones support on server side
+   * @param {string|object} [locationId] consider using this param for timezones support on server side
    * @returns {*|{$gte, $lte}}
    */
   forMonth: function (date, locationId) {

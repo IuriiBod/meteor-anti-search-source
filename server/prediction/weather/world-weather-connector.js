@@ -98,22 +98,25 @@ WorldWeather.prototype.getForecast = function () {
  */
 WorldWeather.prototype._mapWeatherEntries = function (data) {
   var self = this;
-  return data && data.weather.map(function (weatherItem) {
-      var hourly = _.find(weatherItem.hourly, function (hourlyItem) {
-        return self._isTargetTime(hourlyItem.time);
-      });
+  var reduceFn = function (result, weatherItem) {
+    var hourly = _.find(weatherItem.hourly, function (hourlyItem) {
+      return self._isTargetTime(hourlyItem.time);
+    });
 
-      if (!hourly) {
-        logger.error('Weather parse error: Hourly record for target time not found');
-        throw new Meteor.Error(500, 'Weather parse error: Hourly record for target time not found');
-      }
-
-      return {
+    if (!hourly) {
+      logger.error('Weather parse error: Hourly record for target time not found', weatherItem);
+    } else {
+      result.push({
         date: new Date(weatherItem.date),
         temp: parseInt(hourly.tempC),
         main: hourly.weatherDesc[0].value
-      };
-    });
+      });
+    }
+
+    return result;
+  };
+
+  return data && _.reduce(data.weather, reduceFn, []);
 };
 
 /**

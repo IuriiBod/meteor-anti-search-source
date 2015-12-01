@@ -14,7 +14,7 @@ component.state.users = function () {
     'relations.areaIds': HospoHero.getCurrentAreaId()
   };
   var searchText = this.get('searchText');
-  if(searchText) {
+  if (searchText) {
     query.username = new RegExp(searchText, 'i');
   }
   return Meteor.users.find(query);
@@ -22,7 +22,7 @@ component.state.users = function () {
 
 component.state.onKeyUp = function () {
   var self = this;
-  return function(searchText) {
+  return function (searchText) {
     self.set('searchText', searchText);
   }
 };

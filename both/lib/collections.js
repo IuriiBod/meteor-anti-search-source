@@ -53,5 +53,5 @@ ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
 PosMenuItems = new Mongo.Collection('posMenuItems');
 
 // null collections
-LocalMenuItem =  new Mongo.Collection(null);
-LocalJobItem =  new Mongo.Collection(null);
+LocalMenuItem = new Mongo.Collection(null);
+LocalJobItem = new Mongo.Collection(null);
