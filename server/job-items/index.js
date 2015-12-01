@@ -88,7 +88,8 @@ Meteor.methods({
       'job-item-created',
       {
         itemName: doc.name,
-        username: HospoHero.username(Meteor.userId())
+        username: HospoHero.username(Meteor.userId()),
+        linkToItem: Router.url('jobItemDetailed', {_id: id})
       }
     );
 
@@ -267,7 +268,8 @@ Meteor.methods({
         'job-item-updated',
         {
           itemName: updateDoc.name,
-          username: HospoHero.username(Meteor.userId())
+          username: HospoHero.username(Meteor.userId()),
+          linkToItem: Router.url('jobItemDetailed', {_id: id})
         }
       );
 
@@ -301,7 +303,8 @@ Meteor.methods({
       'job-item-deleted',
       {
         itemName: job.name,
-        username: HospoHero.username(Meteor.userId())
+        username: HospoHero.username(Meteor.userId()),
+        linkToItem: Router.url(routeName, {_id: id})
       }
     );
 
