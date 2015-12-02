@@ -184,5 +184,5 @@ if (HospoHero.isProductionMode()) {
 
 
 if (HospoHero.isDevelopmentMode()) {
-  ForecastMaker.prototype._updateDayIntervals = [2];
+  ForecastMaker.prototype._updateDayIntervals = [7];
 }

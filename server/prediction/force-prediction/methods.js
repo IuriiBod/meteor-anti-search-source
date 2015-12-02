@@ -6,6 +6,7 @@ var checkOrganizationOwner = function (userId) {
 
 //this collection is used to imitate Revel API with real data
 RawOrders = new Mongo.Collection('rawOrders');
+RawOrders._ensureIndex({created_date: -1});
 
 
 Meteor.methods({
