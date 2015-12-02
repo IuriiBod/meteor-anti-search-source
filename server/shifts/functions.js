@@ -87,15 +87,22 @@ Meteor.methods({
         multi: true
       });
 
+      var shiftDate = shiftDateQuery.$gte;
+      var routeParams = {
+        week: moment(shiftDate).week(),
+        year: moment(shiftDate).year()
+      };
+
       Object.keys(usersToNotify).forEach(function (key) {
         new NotificationSender(
           'Weekly roster published',
           'roster-published',
           {
-            date: HospoHero.dateUtils.formatDateWithTimezone(shiftDateQuery.$gte, 'ddd, Do MMMM', locationId),
+            date: HospoHero.dateUtils.formatDateWithTimezone(shiftDate, 'ddd, Do MMMM', locationId),
             shifts: usersToNotify[key],
             openShifts: openShifts,
-            publishedByName: HospoHero.username(Meteor.userId())
+            publishedByName: HospoHero.username(Meteor.userId()),
+            linkToItem: Router.url('weeklyRoster', routeParams)
           },
           {
             helpers: {

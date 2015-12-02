@@ -34,11 +34,18 @@ var ShiftPropertyChangeLogger = {
 
   _sendNotification: function (message, shift, fromUserId, toUserId) {
     var notificationText = this._notificationTitle(shift) + ': ' + message;
+    var weekStartMoment = HospoHero.dateUtils.getDateMomentForLocation(shift.startTime, HospoHero.getCurrentArea().locationId).startOf('isoWeek');
+    var routeParams = {
+      week: moment(weekStartMoment).week(),
+      year: moment(weekStartMoment).year()
+    };
+
     new NotificationSender(
       'Update on shift',
       'update-on-shift',
       {
-        text: notificationText
+        text: notificationText,
+        linkToItem: Router.url('weeklyRoster', routeParams)
       }
     ).sendNotification(toUserId);
   },
