@@ -19,6 +19,16 @@ Namespace('HospoHero.roles', {
     });
   },
 
+  getUserRoleName: function (userId, areaId) {
+    userId = userId || Meteor.userId();
+    areaId = areaId || HospoHero.getCurrentAreaId(userId);
+
+    var user = Meteor.users.findOne({_id: userId});
+    var roleId = user.roles.defaultRole || user.roles[areaId];
+    var role = Roles.getRoleById(roleId);
+    return role && role.name || '';
+  },
+
   actions: {
     "View Jobs": "view jobs",
     "Edit Jobs": "edit jobs",
