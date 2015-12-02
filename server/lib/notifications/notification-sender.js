@@ -103,6 +103,10 @@ NotificationSender.prototype._getEmailSubject = function () {
  * @private
  */
 NotificationSender.prototype._getUserEmail = function (userId) {
+  if (userId.indexOf('@') > -1) {
+    return userId;
+  }
+
   var user = Meteor.users.findOne(userId);
   return user && user.emails && user.emails.length ? user.emails[0].address : false;
 };
