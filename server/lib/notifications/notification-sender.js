@@ -103,7 +103,7 @@ NotificationSender.prototype._getEmailSubject = function () {
  * @private
  */
 NotificationSender.prototype._getUserEmail = function (userId) {
-  if (userId.indexOf('@') > -1) {
+  if (userId && userId.indexOf('@') > -1) {
     return userId;
   }
 
@@ -142,11 +142,11 @@ NotificationSender.prototype._insertNotification = function (receiverId, markAsR
 };
 
 
-NotificationSender.prototype._sendEmailBasic = function (receiverId, text) {
+NotificationSender.prototype._sendEmailBasic = function (receiver, text) {
   var emailOptions = {
     subject: this._getEmailSubject(),
     from: this._getUserEmail(this._options.senderId) || 'notifications@hospohero.com',
-    to: this._getUserEmail(receiverId),
+    to: this._getUserEmail(receiver),
     html: text
   };
 
@@ -157,18 +157,18 @@ NotificationSender.prototype._sendEmailBasic = function (receiverId, text) {
 /**
  * Sends email to specified receiver
  *
- * @param receiverId
+ * @param receiver - user ID or email
  */
-NotificationSender.prototype.sendEmail = function (receiverId) {
+NotificationSender.prototype.sendEmail = function (receiver) {
   var html;
 
   if (this._isInteractive()) {
-    html = this._insertNotification(receiverId, true);
+    html = this._insertNotification(receiver, true);
   } else {
     html = this._renderTemplateWithData();
   }
 
-  this._sendEmailBasic(receiverId, html);
+  this._sendEmailBasic(receiver, html);
 };
 
 /**
