@@ -26,6 +26,14 @@ ActualSalesImporter.prototype._updateActualSale = function (item) {
 };
 
 
+ActualSalesImporter.prototype._getMenuItemByPosName = function (posMenuItemName) {
+  return MenuItems.findOne({
+    posNames: posMenuItemName,
+    'relations.locationId': this._location._id
+  }, {fields: {relations: 1, _id: 1}});
+};
+
+
 ActualSalesImporter.prototype._getLastImportedSaleMoment = function () {
   var lastImportedSale = DailySales.findOne({
     'relations.locationId': this._location._id,
@@ -58,11 +66,8 @@ ActualSalesImporter.prototype._createOnDailySaleUploadCallback = function (lastM
 
     var createdDate = salesData.createdMoment.toDate();
 
-    _.each(salesData, function (actualQuantity, posMenuItemName) {
-      var menuItem = MenuItems.findOne({
-        posNames: posMenuItemName,
-        'relations.locationId': self._locationId
-      }, {fields: {relations: 1, _id: 1}});
+    _.each(salesData.menuItems, function (actualQuantity, posMenuItemName) {
+      var menuItem = self._getMenuItemByPosName(posMenuItemName);
 
       if (menuItem) {
         var item = {
@@ -88,7 +93,7 @@ ActualSalesImporter.prototype._createOnDailySaleUploadCallback = function (lastM
  */
 ActualSalesImporter.prototype._resetActualSales = function () {
   var locationDocumentQuery = {
-    'relations.locationId': this._locationId
+    'relations.locationId': this._location._id
   };
 
   DailySales.remove(locationDocumentQuery);
@@ -117,7 +122,7 @@ ActualSalesImporter.prototype.importAll = function (resetAllBeforeImport) {
   //it should return false if loading is finished
   var onDateUploaded = this._createOnDailySaleUploadCallback(lastMomentToImport);
 
-  logger.info('Started actual sales import', {locationId: this._locationId});
+  logger.info('Started actual sales import', {locationId: this._location._id});
   this._revelClient.uploadAndReduceOrderItems(onDateUploaded);
 
   logger.info('Import is finished');
