@@ -12,8 +12,8 @@ var ForecastMaker = function (location) {
 ForecastMaker.prototype._getWeatherForecast = function (dayIndex, forecastDate) {
   //todo: temporal. figure out typical weather
   var defaultWeather = {
-    temp: 20.0,
-    main: 'Clear'
+    temp: 25,
+    main: 'Sunny'
   };
 
   var currentWeather = dayIndex < 14 && this._weatherManager.getWeatherFor(forecastDate);
