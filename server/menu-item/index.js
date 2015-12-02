@@ -76,7 +76,8 @@ Meteor.methods({
       'menu-item-created',
       {
         itemName: doc.name,
-        username: HospoHero.username(Meteor.userId())
+        username: HospoHero.username(Meteor.userId()),
+        linkToItem: Router.url('menuItemDetail', {_id: menuId})
       }
     );
 
@@ -158,7 +159,8 @@ Meteor.methods({
       'menu-item-updated',
       {
         itemName: updateDoc.name,
-        username: HospoHero.username(Meteor.userId())
+        username: HospoHero.username(Meteor.userId()),
+        linkToItem: Router.url('menuItemDetail', {_id: id})
       }
     );
 

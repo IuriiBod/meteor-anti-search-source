@@ -29,6 +29,10 @@ component.state.settings = function () {
   return data;
 };
 
+component.state.buttonCaption = function () {
+  return this.ref ? 'Add comment' : 'Share';
+};
+
 component.action.submit = function (text) {
   var self = this;
   //find tagged users

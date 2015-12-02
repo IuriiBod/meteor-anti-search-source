@@ -72,8 +72,22 @@ FigureBoxDataHelper.prototype._sales = function () {
 
 FigureBoxDataHelper.prototype._staffCost = function () {
   //ACTUAL STAFF COST
-  var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekDate.weekRange.monday)}).fetch();
-  var actual = this._calcStaffCost(shifts);
+  //var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekDate.weekRange.monday)}).fetch();
+
+  var shifts;
+
+  // get shifts which are already finished
+  shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekDate.weekRange.monday), finishedAt: {$ne: null}}).fetch();
+  var currentActual = this._calcStaffCost(shifts);
+
+  // get shifts which are not finished yet
+  shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekDate.weekRange.monday), finishedAt: null}).fetch();
+  var forecastedActual = this._calcStaffCost(shifts);
+
+  var actual = currentActual + forecastedActual;
+
+  shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekDate.weekRange.monday)}).fetch();
+  //var actual = this._calcStaffCost(shifts);
 
   //PREDICTED STAFF COST
   shifts = _.map(shifts, function (item) {
@@ -142,7 +156,7 @@ FigureBoxDataHelper.prototype._calcStaffCost = function (shifts) {
         var totalminutes = self._getTotalMinutes(shift);
         var rate = self._getPayrate(user, shift);
         if (totalminutes > 0) {
-          totalCost += (rate / 60) * totalminutes;
+          totalCost += (totalminutes / 60) * rate;
         }
       }
     });
@@ -183,7 +197,7 @@ FigureBoxDataHelper.prototype._finishDateFix = function (convertToDate, finishDa
 };
 
 FigureBoxDataHelper.prototype._getTotalMinutes = function (shift) {
-  if (shift.status == "draft" || shift.status == "started") {
+  if (!shift.finishedAt) {
     return moment(this._finishDateFix(shift.startTime, shift.endTime))
       .diff(moment(shift.startTime), "minutes");
   } else {

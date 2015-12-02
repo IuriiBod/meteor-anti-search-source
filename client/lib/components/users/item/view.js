@@ -12,11 +12,8 @@ Template.userDetailed.events({
   },
 
   'change select[name="roleSelector"]': function (e) {
-    var changeRoleMessage = "Do you really want to change the role of the user?";
-    if (confirm(changeRoleMessage)) {
-      var userId = e.target.dataset.id;
-      var newRoleId = e.target.value;
-      Meteor.call('changeUserRole', userId, newRoleId, HospoHero.handleMethodResult());
-    }
+    var userId = e.target.dataset.id;
+    var newRoleId = e.target.value;
+    Meteor.call('changeUserRole', userId, newRoleId, HospoHero.handleMethodResult());
   }
 });
