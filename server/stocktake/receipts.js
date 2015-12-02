@@ -1,6 +1,6 @@
 Meteor.methods({
   generateReceipts: function (version, supplier, info) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(403, "User not permitted to generate receipts");
     }
@@ -133,7 +133,7 @@ Meteor.methods({
   },
 
   updateReceipt: function (id, info) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(404, "User not permitted to generate receipts");
     }
@@ -209,7 +209,7 @@ Meteor.methods({
   },
 
   uploadInvoice: function (id, info) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(404, "User not permitted to generate receipts");
     }

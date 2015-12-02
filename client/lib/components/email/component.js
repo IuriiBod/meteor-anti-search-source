@@ -20,6 +20,10 @@ component.state.initialHTML = function () {
     "relations.areaId": HospoHero.getCurrentAreaId(),
     "countOrdered": {$gt: 0}
   }).fetch();
+
+  var area = HospoHero.getCurrentArea();
+  var location = Locations.findOne({_id: area.locationId});
+
   var supplier = Suppliers.findOne(supplierId);
   if (supplier) {
     var text = "<p>Hi " + supplier.name + ",</p>";
@@ -30,10 +34,13 @@ component.state.initialHTML = function () {
       var date = moment().add(1, 'day');
       text += moment(date).format("YYYY-MM-DD") + ".</p>";
     }
-    text += "<p>If there are any items that you cannot supply or changes you wish, please email us.</p><br>";
+    text += "<p>If there are any items you can't supply or any other problems with the order please contact me asap.</p><br>";
     if (receipt && receipt.orderNote) {
       text += "<p>Note: " + receipt.orderNote + "</p>";
     }
+
+    text += 'Order Details: ' + location.name + ', ' + area.name + '<br>';
+    text += location.address + ', ' + location.city;
 
     if (data && data.length > 0) {
       text += "<br><table class='table table-condensed table-hover table-striped'>";

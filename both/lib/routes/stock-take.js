@@ -4,16 +4,12 @@ Router.route('/stocktake', {
   path: '/stocktake',
   template: "stockListMainView",
   data: function () {
-    if (!HospoHero.canUser('edit stocks')()) {
-      Router.go("/");
-    }
     Session.set("editStockTake", false);
   }
 });
 
 Router.route('/stocktake/:_id', {
   name: "stocktakeCounting",
-  path: '/stocktake/:_id',
   template: "stocktakeCountingMainView",
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
@@ -26,9 +22,6 @@ Router.route('/stocktake/:_id', {
     ];
   },
   data: function () {
-    if (!HospoHero.canUser('edit stocks')()) {
-      Router.go("/");
-    }
     Session.set("activeSArea", null);
     Session.set("activeGArea", null);
     Session.set("thisVersion", this.params._id);
@@ -51,9 +44,6 @@ Router.route('/stocktake/order/receive/:_id', {
     ];
   },
   data: function () {
-    if (!HospoHero.canUser('edit stocks')()) {
-      Router.go("/");
-    }
     Session.set("editStockTake", false);
     Session.set("thisReceipt", this.params._id);
   }
@@ -75,9 +65,6 @@ Router.route('/stocktake/orders/:_id', {
     ];
   },
   data: function () {
-    if (!HospoHero.canUser('edit stocks')()) {
-      Router.go("/");
-    }
     Session.set("thisVersion", this.params._id);
     Session.set("editStockTake", false);
   }

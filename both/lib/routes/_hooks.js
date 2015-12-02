@@ -29,7 +29,11 @@ RoutePermissionChecker.prototype._permissionsByRouteName = {
   teamHours: 'edit roster',
   currentStocks: 'edit roster',
   weeklyRoster: 'view roster',
-  templateWeeklyRoster: 'edit roster'
+  templateWeeklyRoster: 'edit roster',
+  stocktake: 'edit stocks',
+  stocktakeCounting: 'edit stocks',
+  orderReceive: 'receive deliveries',
+  stocktakeOrdering: 'receive deliveries'
   //todo: add other routes and their permissions
 };
 
