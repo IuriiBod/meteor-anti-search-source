@@ -41,35 +41,39 @@ GooglePredictionApi.prototype._buildPredictionModelForMenuItem = function (menuI
  */
 GooglePredictionApi.prototype.updatePredictionModel = function (menuItemsQuery, isForcedUpdate) {
   var location = Locations.findOne({_id: this._locationId});
-
   logger.info('Building prediction models for locations', {locationId: this._locationId});
 
-  //find out if we need to update prediction model (every half year)
-  var lastForecastModelUploadDate = location.lastForecastModelUploadDate || false;
+  var targetMenuItems = MenuItems.find(menuItemsQuery, {
+    fields: {
+      _id: 1,
+      name: 1,
+      lastForecastModelUpdateDate: 1,
+      relations: 1
+    }
+  });
 
-  var needToUpdateModel = !lastForecastModelUploadDate
-    || moment(lastForecastModelUploadDate) < moment().subtract(182, 'day');
+  var self = this;
+  targetMenuItems.forEach(function (menuItem) {
+    //find out if we need to update prediction model (every half year)
+    var lastForecastModelUpdateDate = menuItem.lastForecastModelUpdateDate || false;
 
-  if (needToUpdateModel || isForcedUpdate) {
-    var targetMenuItems = MenuItems.find(menuItemsQuery, {
-      fields: {
-        _id: 1,
-        name: 1,
-        relations: 1
-      }
-    });
+    var needToUpdateModel = !lastForecastModelUpdateDate
+      || moment(lastForecastModelUpdateDate) < moment().subtract(182, 'day');
 
-    var self = this;
-    targetMenuItems.forEach(function (menuItem) {
+    if (needToUpdateModel || isForcedUpdate) {
       self._buildPredictionModelForMenuItem(menuItem);
-    });
 
-    //refresh update date
-    Locations.update({_id: location._id}, {$set: {lastForecastModelUploadDate: new Date()}});
-    logger.info('Finished building prediction models');
-  } else {
-    logger.info("Model don't need update", {locationId: this._locationId, lastUpdatedAt: lastForecastModelUploadDate});
-  }
+      //refresh update date
+      MenuItems.update({_id: location._id}, {$set: {lastForecastModelUpdateDate: new Date()}});
+    } else {
+      logger.info("Model don't need update", {
+        menuItemId: menuItem._id,
+        lastUpdatedAt: lastForecastModelUpdateDate
+      });
+    }
+  });
+
+  logger.info('Finished building prediction models');
 };
 
 /**
@@ -151,17 +155,3 @@ GooglePredictionApi.prototype._removeAllPredictionModels = function () {
     });
   }
 };
-
-
-//mock mix-in for prediction API
-if (HospoHero.isDevelopmentMode()) {
-  _.extend(GooglePredictionApi.prototype, {
-    _getModelName: function (menuItemId) {
-      return "test-" + menuItemId;
-    },
-
-    _getTrainingFileName: function (menuItemId) {
-      return 'test-' + menuItemId + '.csv';
-    }
-  });
-}

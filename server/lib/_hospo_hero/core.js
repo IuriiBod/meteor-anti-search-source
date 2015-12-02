@@ -1,5 +1,6 @@
 Namespace('HospoHero', {
   isDatabaseImportMode: function () {
+    //process.env.NO_MIGRATION - flag that enables run app without migrations
     return !!process.env.DATABASE_IMPORT_MODE;
   },
 

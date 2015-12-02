@@ -166,21 +166,23 @@ ForecastMaker.prototype._updateDayIntervals = [14];//[84, 7, 2];
 
 
 updateForecastForLocation = function (location) {
-  logger.error('Started forecast generation', {locationId: location._id});
-  //if (HospoHero.prediction.isAvailableForLocation(location)) {
-  //  var forecastMaker = new ForecastMaker(location);
-  //  forecastMaker.makeForecast();
-  //}
+  if (HospoHero.prediction.isAvailableForLocation(location)) {
+    var forecastMaker = new ForecastMaker(location);
+    forecastMaker.makeForecast();
+  }
 };
 
 
 if (HospoHero.isProductionMode()) {
   HospoHero.LocationScheduler.addDailyJob('Update forecast', function (location) {
     return 3; //3:00 AM
-  }, updateForecastForLocation);
+  }, function (location) {
+    logger.error('Started forecast generation', {locationId: location._id});
+    //updateForecastForLocation(location);
+  });
 }
 
 
 if (HospoHero.isDevelopmentMode()) {
-  ForecastMaker.prototype._updateDayIntervals = [2];
+  ForecastMaker.prototype._updateDayIntervals = [7];
 }
