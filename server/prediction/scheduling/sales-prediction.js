@@ -81,7 +81,7 @@ ForecastMaker.prototype._predictFor = function (days) {
   logger.info('Make prediction', {days: days, locationId: this._locationId});
 
   var today = new Date();
-  var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), this._location);
+  var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), this._location).startOf('day');
   var self = this;
 
   var areas = Areas.find({locationId: this._locationId});
@@ -91,7 +91,7 @@ ForecastMaker.prototype._predictFor = function (days) {
 
     areas.forEach(function (area) {
       var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id}, true);
-      var items = MenuItems.find(menuItemsQuery, {}); //get menu items for current area
+      var items = MenuItems.find(menuItemsQuery, {_id: 1, relations: 1, status: 1, name: 1}); //get menu items for current area
 
       var notificationSender = self._getNotificationSender(area);
 
