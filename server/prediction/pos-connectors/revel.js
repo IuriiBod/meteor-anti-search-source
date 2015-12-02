@@ -231,7 +231,7 @@ RevelSalesDataBucket.prototype.getDataAndReset = function () {
 
 
 RevelSalesDataBucket.prototype.isEmpty = function () {
-  return this._dayNumber === false
+  return this._dayNumber === false;
 };
 
 
@@ -252,7 +252,7 @@ if (HospoHero.isDevelopmentMode()) {
 
       var query = {};
 
-      result.objects = RawOrders.find(query, {limit: limit, offset: offset, sort: {created_date: -1}}).fetch();
+      result.objects = RawOrders.find(query, {limit: limit, skip: offset, sort: {created_date: -1}}).fetch();
 
       return result;
     }

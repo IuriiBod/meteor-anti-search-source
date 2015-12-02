@@ -56,11 +56,12 @@ ActualSalesImporter.prototype._getLastImportedSaleMoment = function () {
 
 ActualSalesImporter.prototype._createOnDailySaleUploadCallback = function (lastMomentToImport) {
   var self = this;
+  var ignoredOrderItemsCount = 0;
 
   return function (salesData) {
-
     //check if we need to stop
     if (lastMomentToImport.isAfter(salesData.createdMoment)) {
+      logger.warn('Ignored order items', {count: ignoredOrderItemsCount});
       return false;
     }
 
@@ -79,7 +80,8 @@ ActualSalesImporter.prototype._createOnDailySaleUploadCallback = function (lastM
 
         self._updateActualSale(item);
       } else {
-        logger.warn('Mapped menu item not found', {posName: posMenuItemName});
+        ignoredOrderItemsCount++;
+        //logger.warn('Mapped menu item not found', {posName: posMenuItemName});
       }
     });
 
