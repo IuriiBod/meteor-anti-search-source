@@ -138,7 +138,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   dateFormat: function (date) {
-    return date ? moment(date).format('YYYY-MM-DD') : '-';
+    return date ? moment(date).format('ddd DD/MM/YYYY') : '-';
   },
 
   fullDateFormat: function (date) {

@@ -12,8 +12,8 @@ var ForecastMaker = function (location) {
 ForecastMaker.prototype._getWeatherForecast = function (dayIndex, forecastDate) {
   //todo: temporal. figure out typical weather
   var defaultWeather = {
-    temp: 20.0,
-    main: 'Clear'
+    temp: 25,
+    main: 'Sunny'
   };
 
   var currentWeather = dayIndex < 14 && this._weatherManager.getWeatherFor(forecastDate);
@@ -81,7 +81,7 @@ ForecastMaker.prototype._predictFor = function (days) {
   logger.info('Make prediction', {days: days, locationId: this._locationId});
 
   var today = new Date();
-  var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), this._location);
+  var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), this._location).startOf('day');
   var self = this;
 
   var areas = Areas.find({locationId: this._locationId});
@@ -91,7 +91,7 @@ ForecastMaker.prototype._predictFor = function (days) {
 
     areas.forEach(function (area) {
       var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id}, true);
-      var items = MenuItems.find(menuItemsQuery, {}); //get menu items for current area
+      var items = MenuItems.find(menuItemsQuery, {_id: 1, relations: 1, status: 1, name: 1}); //get menu items for current area
 
       var notificationSender = self._getNotificationSender(area);
 
@@ -162,25 +162,27 @@ ForecastMaker.prototype.makeForecast = function () {
   });
 };
 
-ForecastMaker.prototype._updateDayIntervals = [84, 7, 2];
+ForecastMaker.prototype._updateDayIntervals = [14];//[84, 7, 2];
 
 
 updateForecastForLocation = function (location) {
-  logger.error('Started forecast generation', {locationId: location._id});
-  //if (HospoHero.prediction.isAvailableForLocation(location)) {
-  //  var forecastMaker = new ForecastMaker(location);
-  //  forecastMaker.makeForecast();
-  //}
+  if (HospoHero.prediction.isAvailableForLocation(location)) {
+    var forecastMaker = new ForecastMaker(location);
+    forecastMaker.makeForecast();
+  }
 };
 
 
 if (HospoHero.isProductionMode()) {
   HospoHero.LocationScheduler.addDailyJob('Update forecast', function (location) {
     return 3; //3:00 AM
-  }, updateForecastForLocation);
+  }, function (location) {
+    logger.error('Started forecast generation', {locationId: location._id});
+    //updateForecastForLocation(location);
+  });
 }
 
 
 if (HospoHero.isDevelopmentMode()) {
-  ForecastMaker.prototype._updateDayIntervals = [2];
+  ForecastMaker.prototype._updateDayIntervals = [7];
 }

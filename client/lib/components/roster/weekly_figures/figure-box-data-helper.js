@@ -71,16 +71,27 @@ FigureBoxDataHelper.prototype._sales = function () {
 };
 
 FigureBoxDataHelper.prototype._staffCost = function () {
-  //ACTUAL STAFF COST
-  var shifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekDate.weekRange.monday)}).fetch();
-  var actual = this._calcStaffCost(shifts);
+  var finishedShifts = Shifts.find({
+    endTime: TimeRangeQueryBuilder.forInterval(this.weekDate.weekRange.monday, new Date()),
+    status: 'finished'
+  }).fetch();
+  var actualStaffCost = this._calcStaffCost(finishedShifts);
+
+  var draftShifts = Shifts.find({
+    startTime: TimeRangeQueryBuilder.forInterval(new Date(), this.weekDate.weekRange.sunday),
+    status: {$ne: 'finished'}
+  }).fetch();
+  var forecastedStaffCost = this._calcStaffCost(draftShifts);
+  var actual = actualStaffCost + forecastedStaffCost;
+
+  var allShifts = Shifts.find({shiftDate: TimeRangeQueryBuilder.forWeek(this.weekDate.weekRange.monday)}).fetch();
 
   //PREDICTED STAFF COST
-  shifts = _.map(shifts, function (item) {
+  allShifts = _.map(allShifts, function (item) {
     item.status = "draft";
     return item;
   });
-  var forecasted = this._calcStaffCost(shifts);
+  var forecasted = this._calcStaffCost(allShifts);
 
   return {
     actual: actual,
@@ -142,7 +153,7 @@ FigureBoxDataHelper.prototype._calcStaffCost = function (shifts) {
         var totalminutes = self._getTotalMinutes(shift);
         var rate = self._getPayrate(user, shift);
         if (totalminutes > 0) {
-          totalCost += (rate / 60) * totalminutes;
+          totalCost += (totalminutes / 60) * rate;
         }
       }
     });
@@ -183,7 +194,7 @@ FigureBoxDataHelper.prototype._finishDateFix = function (convertToDate, finishDa
 };
 
 FigureBoxDataHelper.prototype._getTotalMinutes = function (shift) {
-  if (shift.status == "draft" || shift.status == "started") {
+  if (shift.status == 'draft' || shift.status == 'started') {
     return moment(this._finishDateFix(shift.startTime, shift.endTime))
       .diff(moment(shift.startTime), "minutes");
   } else {
@@ -193,13 +204,14 @@ FigureBoxDataHelper.prototype._getTotalMinutes = function (shift) {
 };
 
 //DAILY SALES
-FigureBoxDataHelper.prototype._getDailyShifts = function (exept, day) {
-  return Shifts.find({"shiftDate": TimeRangeQueryBuilder.forDay(day), "status": {$ne: exept}, "type": null}).fetch();
+FigureBoxDataHelper.prototype._getDailyShifts = function (day, isFinished) {
+  var statusQeury = isFinished ? 'finished' : {$ne: null};
+  return Shifts.find({"shiftDate": TimeRangeQueryBuilder.forDay(day), "status": statusQeury, "type": null}).fetch();
 };
 
 FigureBoxDataHelper.prototype.getDailyStaff = function (day) {
-  var actualDailyStaff = this._calcStaffCost(this._getDailyShifts("draft", day));
-  var allShifts = this._getDailyShifts(null, day);
+  var actualDailyStaff = this._calcStaffCost(this._getDailyShifts(day, true));
+  var allShifts = this._getDailyShifts(day, false);
   allShifts = _.map(allShifts, function (item) {
     item.status = "draft";
     return item;

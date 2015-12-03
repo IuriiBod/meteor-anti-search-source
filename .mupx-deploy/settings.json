@@ -31,5 +31,6 @@
       "secret": "ALNUwQE9u31XHqj31fMYXxVb"
     }
   ],
-  "logLevel": "warn"
+  "useRawOrders": true,
+  "logLevel": "info"
 }

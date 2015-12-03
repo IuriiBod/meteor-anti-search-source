@@ -2,7 +2,7 @@ rawColl = CurrentStocks.rawCollection();
 
 Meteor.methods({
   updateCurrentStock: function (stockId, note, quantity, date) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
       logger.error("User not permitted to edit current stock");
       throw new Meteor.Error(403, "User not permitted to edit current stock");
     }
@@ -27,7 +27,7 @@ Meteor.methods({
   },
 
   resetCurrentStock: function (stockId, note, quantity, date) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
       logger.error("User not permitted to reset current stock");
       throw new Meteor.Error(403, "User not permitted to reset current stock");
     }
