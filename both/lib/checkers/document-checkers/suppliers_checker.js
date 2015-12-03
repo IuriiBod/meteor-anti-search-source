@@ -12,7 +12,7 @@ var SupplierChecker = Match.Where(function (supplier) {
 
             return amount > 0;
         }),
-        deliveryDay: Match.OneOf('monday', 'sunday', 'monday', 'tuesday',
+        deliveryDay: Match.OneOf('sunday', 'monday', 'tuesday',
             'wednesday', 'thursday', 'friday', 'saturday'),
         deliveryTime: Date,
         contactName: String,
@@ -23,7 +23,7 @@ var SupplierChecker = Match.Where(function (supplier) {
         relations: Match.Optional(HospoHero.checkers.Relations),
         active: Match.Optional(Boolean),
         createdOn: Match.Optional(Date),
-        priceList: Match.Optional(String)
+        priceList: Match.Optional(Array)
     });
 
     var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(supplier, Suppliers);

@@ -20,7 +20,7 @@
 
   <div class="row">
     <!-- Supplier editable information -->
-    <div class="col-lg-5">
+    <div class="col-sm-8">
       <dl class="dl-horizontal">
         <dt>Email address:</dt>
         <dd><a class="supplier-email">{{state$supplier.email}}</a></dd>
@@ -41,7 +41,7 @@
       </dl>
     </div>
     <!-- Cluster info -->
-    <div class="col-lg-4">
+    <div class="col-sm-4">
       <dl class="dl-horizontal">
         <dt>Last order on:</dt>
         <dd>{{dateFormat state$lastOrder.date}}</dd>
@@ -50,7 +50,7 @@
       </dl>
     </div>
     <!-- Upload price list -->
-    <div class="col-lg-3">
+    <div class="col-xs-12">
       <dl class="dl-horizontal">
         <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
         {{#if state$supplier.priceList}}
