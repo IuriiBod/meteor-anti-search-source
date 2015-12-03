@@ -3,13 +3,26 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
+standard-minifiers
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+tracker
+logging
+reload
+ejson
+spacebars
+check
 http
-#force-ssl
+force-ssl
 service-configuration
 jquery
 email
 underscore
 random
+less
 micah:google-cloud
 jss:through
 votercircle:winston
@@ -27,7 +40,6 @@ useraccounts:bootstrap
 meteorhacks:aggregate
 mizzao:autocomplete
 konecty:autolinker
-less
 twbs:bootstrap
 zimme:iron-router-active
 okgrow:router-autoscroll
@@ -66,15 +78,3 @@ fortawesome:fontawesome
 momentjs:moment
 jss:moment-timezone
 joshowens:timezone-picker
-standard-minifiers
-meteor-base
-mobile-experience
-mongo
-blaze-html-templates
-session
-tracker
-logging
-reload
-ejson
-spacebars
-check
