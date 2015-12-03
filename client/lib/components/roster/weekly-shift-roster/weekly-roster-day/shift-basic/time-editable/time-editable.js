@@ -175,6 +175,7 @@ Template.shiftBasicTimeEditable.onRendered(function () {
     if (unavailabileTimeIntervals.length > 0) {
         var availableTimeIntervals = self.getAvailableIntervals(unavailabileTimeIntervals);
         console.log('\n\n', Meteor.users.findOne({_id: self.data.shift.assignedTo}).username);
+        console.log('shift date:\n', self.data.shift.startTime, self.data.shift.endTime);
         console.log('unavailabileTimeIntervals:\n', unavailabileTimeIntervals);
         console.log('availableTimeIntervals:\n', availableTimeIntervals);
     }
@@ -186,14 +187,12 @@ Template.shiftBasicTimeEditable.onRendered(function () {
         format: DATE_TIME_PICKER_FORMAT,
         dayViewHeaderFormat: DATE_TIME_PICKER_FORMAT,
         stepping: DATE_TIME_PICKER_STEP,
-        defaultDate: moment(self.data.shift.startTime),
         disabledTimeIntervals: unavailabileTimeIntervals
     });
     self.$('.end-time').datetimepicker({
         format: DATE_TIME_PICKER_FORMAT,
         dayViewHeaderFormat: DATE_TIME_PICKER_FORMAT,
         stepping: DATE_TIME_PICKER_STEP,
-        defaultDate: moment(self.data.shift.endTime),
         disabledTimeIntervals: unavailabileTimeIntervals,
 
         useCurrent: false //Important! See issue #1075
@@ -201,6 +200,10 @@ Template.shiftBasicTimeEditable.onRendered(function () {
 
     self.startTimePicker = self.$('.start-time').data("DateTimePicker");
     self.endTimePicker = self.$('.end-time').data("DateTimePicker");
+
+    // because, defaultDate does't works
+    self.setDefaultValueInTimePicker(self.startTimePicker, 'startTime');
+    self.setDefaultValueInTimePicker(self.endTimePicker, 'endTime');
 
     var MINIMUM_SHIFT_DURATION = 30;
     self.$(".start-time").on("dp.change", function (e) {

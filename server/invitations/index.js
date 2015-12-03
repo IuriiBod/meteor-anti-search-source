@@ -21,7 +21,7 @@ Meteor.methods({
       {
         name: name,
         areaName: area.name,
-        url: process.env.ROOT_URL + "invitations/" + id,
+        url: Router.url('invitationAccept', {_id: id}),
         sender: HospoHero.username(Meteor.userId())
       }
     ).sendEmail(email);

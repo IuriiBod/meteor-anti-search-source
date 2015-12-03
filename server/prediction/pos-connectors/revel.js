@@ -57,6 +57,11 @@ Revel.prototype._queryResource = function (resourceName, options) {
   }
 };
 
+/**
+ * Loads product (menu) items from from Revel
+ *
+ * @returns {boolean|Array}
+ */
 Revel.prototype.loadProductItems = function () {
   var result = this._queryResource('Product', {
     fields: ['name', 'price', 'id']
@@ -74,19 +79,18 @@ Revel.prototype.loadProductItems = function () {
 /**
  * Loads order items from Revel
  *
- * @param offset loading offset
- * @param {*|string|number} revelMenuItemId load only order items for specific product
+ * @param {number} offset loading offset
  * @returns {boolean|Array}
  */
-Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
+Revel.prototype.loadOrderItems = function (offset) {
   var queryOptions = {
     order_by: '-created_date',
     fields: [
       'created_date',
-      'quantity'
+      'quantity',
+      'product'
     ],
-    offset: offset,
-    product: revelMenuItemId
+    offset: offset
   };
 
   return this._queryResource('OrderItem', queryOptions);
@@ -96,9 +100,8 @@ Revel.prototype.loadOrderItems = function (offset, revelMenuItemId) {
  * Uploads order items for particular product in Revel
  *
  * @param onDateReceived callback receives sales data for one day, should return false to stop iteration
- * @param revelMenuItemId ID of product item in Revel POS
  */
-Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuItemId) {
+Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived) {
   var offset = 0;
   var totalCount = false;
   var toContinue = true;
@@ -107,7 +110,7 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuI
 
   while (offset <= totalCount && toContinue) {
 
-    var result = this.loadOrderItems(offset, revelMenuItemId);
+    var result = this.loadOrderItems(offset);
 
     //handle Revel API error
     if (result === false) {
@@ -134,6 +137,43 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuI
   }
 };
 
+/**
+ * Uploads order items 'as is' for the last year
+ * (Method is temporal, may be removed in future)
+ *
+ * @param onOrdersLoaded
+ */
+Revel.prototype.uploadRawOrderItems = function (onOrdersLoaded) {
+  var offset = 0;
+  var totalCount = false;
+  var yearBackMoment = moment().subtract(1, 'year');
+
+  while (true) {
+    var result = this.loadOrderItems(offset);
+
+    //handle Revel API error
+    if (result === false) {
+      return;
+    }
+
+    if (!totalCount) {
+      totalCount = result.meta.total_count;
+    }
+
+    logger.info('Requested to Revel', {offset: offset, total: totalCount});
+
+    onOrdersLoaded(result.objects);
+
+    //check if 1 year is imported
+    var lastOrder = result.objects[result.objects.length - 1];
+    if (yearBackMoment.isAfter(lastOrder.created_date)) {
+      break;
+    }
+
+    offset += this.DATA_LIMIT;
+  }
+};
+
 
 /**
  * Used to collect and group by menu item loaded data
@@ -141,7 +181,7 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived, revelMenuI
  * @constructor
  */
 var RevelSalesDataBucket = function () {
-  this._quantity = 0;
+  this._data = {};
   this._dayNumber = false;
 };
 
@@ -152,7 +192,8 @@ RevelSalesDataBucket.prototype.timezone = function (timezoneStr) {
 
 //if entity related to other date returns false
 RevelSalesDataBucket.prototype.put = function (entry) {
-  var dayOfYear = moment(entry.created_date).dayOfYear();
+  var dayOfYear = moment.tz(entry.created_date, this._timezone).dayOfYear();
+  var productName = entry.product;
 
   if (this.isEmpty()) {
     this._dayNumber = dayOfYear;
@@ -160,95 +201,60 @@ RevelSalesDataBucket.prototype.put = function (entry) {
   }
 
   if (dayOfYear === this._dayNumber) {
-    this._quantity += entry.quantity;
+    if (!isFinite(this._data[productName])) {
+      this._data[productName] = 0;
+    }
+
+    this._data[productName] += entry.quantity;
     return true;
   }
 
   return false;
 };
 
-RevelSalesDataBucket.prototype.getDataAndReset = function () {
-  //convert to start of day
-  var startOfCreatedDate = moment(this._createdDate).startOf('day').format('YYYY-MM-DDTHH:mm:ss');
 
+RevelSalesDataBucket.prototype.getDataAndReset = function () {
   //convert to appropriate time zone
-  var createdDate = moment.tz(startOfCreatedDate, this._timezone).toDate();
+  var createdMoment = moment.tz(this._createdDate, this._timezone).startOf('day');
 
   var result = {
-    quantity: this._quantity,
-    createdDate: createdDate
+    menuItems: this._data,
+    createdMoment: createdMoment
   };
 
 //reset project
-  this._quantity = 0;
+  this._data = {};
   this._dayNumber = false;
 
   return result;
 };
 
+
 RevelSalesDataBucket.prototype.isEmpty = function () {
-  return this._dayNumber === false
+  return this._dayNumber === false;
 };
 
 
-//======== mock data provider ============
-if (HospoHero.isDevelopmentMode()) {
-  var random = function (n) {
-    return Math.floor(Math.random() * n);
-  };
-
-  /**
-   * Data source with mock data for development mode
-   */
-  var MockOrderItemDataSource = function MockOrderItemDataSource() {
-    this.currentDate = moment();
-  };
-
-  MockOrderItemDataSource.prototype.load = function () {
-    var result = {
-      meta: {
-        'limit': 5000,
-        'offset': 0,
-        'time_zone': 'Australia/Melbourne',
-        'total_count': 61614200
-      },
-      objects: []
-    };
-
-    var self = this;
-
-    for (var i = 0; i < 5000; i++) {
-      var pushObject = {
-        created_date: self.currentDate.format('YYYY-MM-DDTHH:mm:ss'),
-        quantity: 1000
-      };
-      result.objects.push(pushObject);
-      if (random(3) === 0) {//33% to go to next day
-        this.currentDate.subtract(1, 'd');
-      }
-    }
-
-    return result;
-  };
-
-  //add mock data source
+if (HospoHero.isDevelopmentMode() || Meteor.settings.useRawOrders === true) {
   _.extend(Revel.prototype, {
-    loadOrderItems: function (offset, revelProductId) {
-      if (offset === 0) {
-        this._mockRevelSource = new MockOrderItemDataSource();
-      }
-      console.log('mock items generator offset=', offset, '  id=', revelProductId);
-      return this._mockRevelSource.load();
-    },
-    loadProductItems: function () {
-      var productItems = MenuItems.find({}, {limit: 10});
-      return productItems.map(function (item) {
-        return {
-          name: item.name + ' POS',
-          price: random(100),
-          posId: random(300)
-        }
-      });
+    loadOrderItems: function (offset) {
+      logger.info('Mock loadOrderItems', {offset: offset});
+      var limit = 5000;
+      var result = {
+        meta: {
+          'limit': limit,
+          'offset': offset,
+          'time_zone': 'Australia/Melbourne',
+          'total_count': RawOrders.find({}).count()
+        },
+        objects: []
+      };
+
+      var query = {};
+
+      result.objects = RawOrders.find(query, {limit: limit, skip: offset, sort: {created_date: -1}}).fetch();
+
+      return result;
     }
   });
 }

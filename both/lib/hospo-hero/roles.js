@@ -19,6 +19,16 @@ Namespace('HospoHero.roles', {
     });
   },
 
+  getUserRoleName: function (userId, areaId) {
+    userId = userId || Meteor.userId();
+    areaId = areaId || HospoHero.getCurrentAreaId(userId);
+
+    var user = Meteor.users.findOne({_id: userId});
+    var roleId = user.roles.defaultRole || user.roles[areaId];
+    var role = Roles.getRoleById(roleId);
+    return role && role.name || '';
+  },
+
   actions: {
     "View Jobs": "view jobs",
     "Edit Jobs": "edit jobs",
@@ -37,11 +47,12 @@ Namespace('HospoHero.roles', {
     "View Areas Reports": "view areas reports",
     "View areas financial info": "view area's financial info",
     "Edit Locations": "edit locations",
-    "Billing Account": "edit billing account",
+    //"Billing Account": "edit billing account",
     "Edit Organization": "edit organization settings",
     "Edit users payrate": "edit user's payrate",
-    "All Rights": "all rights",
-    "View Reports": "view reports"
+    //"All Rights": "all rights",
+    "View Reports": "view reports",
+    "Receive Deliveries": "receive deliveries"
   },
 
   getActions: function () {

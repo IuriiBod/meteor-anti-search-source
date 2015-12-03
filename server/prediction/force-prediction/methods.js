@@ -4,12 +4,24 @@ var checkOrganizationOwner = function (userId) {
   }
 };
 
+//this collection is used to imitate Revel API with real data
+RawOrders = new Mongo.Collection('rawOrders');
+RawOrders._ensureIndex({created_date: -1});
+
 
 Meteor.methods({
   updatePredictionModel: function () {
     checkOrganizationOwner(this.userId);
     var locations = Locations.find({archived: {$ne: true}});
     locations.forEach(updateTrainingDataForLocation);
+    return true;
+  },
+
+  resetForecastData: function () {
+    checkOrganizationOwner(this.userId);
+    var currentArea = HospoHero.getCurrentArea(this.userId);
+    var importer = new ActualSalesImporter(currentArea.locationId);
+    importer._resetActualSales();
     return true;
   },
 
@@ -42,9 +54,20 @@ Meteor.methods({
     }, '');
   },
 
-  resetForecastData: function () {
-    DailySales.update({}, {$unset: {predictionQuantity: '', predictionUpdatedAt: ''}}, {multi: true});
-    Locations.update({}, {$unset: {lastForecastModelUploadDate: ''}}, {multi: true});
+
+  importRawOrders: function () {
+    checkOrganizationOwner(this.userId);
+    //remove old data
+    RawOrders.remove({});
+
+    var area = HospoHero.getCurrentArea(this.userId);
+    var location = Locations.findOne({_id: area.locationId});
+    var revelApi = new Revel(location.pos);
+    revelApi.uploadRawOrderItems(function (orderItems) {
+      orderItems.forEach(function (item) {
+        RawOrders.insert(item);
+      });
+    });
     return true;
   }
 });

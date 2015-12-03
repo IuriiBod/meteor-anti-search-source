@@ -9,12 +9,11 @@ Template.composeMail.events({
     var supplier = Session.get("activeSupplier");
     var version = Session.get("thisVersion");
     var address = to;
-    var deliveryDate = moment().add(7, 'days');
-    deliveryDate = moment(deliveryDate).format("YYYY-MM-DD");
+    var deliveryDate = parseInt(moment().add(1, 'day').format('x'));
     var info = {
       "through": orderType,
       "details": address,
-      "deliveryDate": new Date(deliveryDate).getTime(),
+      "deliveryDate": deliveryDate,
       "to": to,
       "title": title,
       "emailText": mailBody

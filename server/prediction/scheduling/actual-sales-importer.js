@@ -15,94 +15,117 @@ ActualSalesImporter.prototype._updateActualSale = function (item) {
     date: TimeRangeQueryBuilder.forDay(item.date, this._location),
     menuItemId: item.menuItemId,
     relations: item.relations
-  }, {$inc: {actualQuantity: item.actualQuantity}, $set: {date: item.date}}, {upsert: true});
+  }, {
+    $inc: {
+      actualQuantity: item.actualQuantity
+    },
+    $set: {
+      date: item.date
+    }
+  }, {upsert: true});
 };
 
 
-ActualSalesImporter.prototype._getLastImportedSaleDate = function (menuItemId) {
+ActualSalesImporter.prototype._getMenuItemByPosName = function (posMenuItemName) {
+  return MenuItems.findOne({
+    posNames: posMenuItemName,
+    'relations.locationId': this._location._id
+  }, {fields: {relations: 1, _id: 1}});
+};
+
+
+ActualSalesImporter.prototype._getLastImportedSaleMoment = function () {
   var lastImportedSale = DailySales.findOne({
     'relations.locationId': this._location._id,
-    menuItemId: menuItemId,
     actualQuantity: {$gt: 0}
   }, {
     sort: {date: -1}
   });
 
-  // if there is no imported data the import whole year
-  return lastImportedSale
-    && HospoHero.dateUtils.getDateMomentForLocation(lastImportedSale.date, this._location._id).endOf('day').toDate()
-    || moment().subtract(1, 'year').toDate();
+  var lastMoment;
+  if (lastImportedSale) {
+    lastMoment = HospoHero.dateUtils.getDateMomentForLocation(lastImportedSale.date, this._location._id)
+  } else {
+    // if there is no imported data the import whole year
+    lastMoment = moment().subtract(1, 'year');
+  }
+
+  return lastMoment.endOf('day');
 };
 
-/**
- * Imports actual sales for single menu item
- *
- * @param menuItem
- */
-ActualSalesImporter.prototype.importForMenuItem = function (menuItem) {
+
+ActualSalesImporter.prototype._createOnDailySaleUploadCallback = function (lastMomentToImport) {
   var self = this;
+  var ignoredOrderItemsCount = 0;
 
-  var lastDateToImport = this._getLastImportedSaleDate(menuItem._id);
-
-  logger.info('Started actual sales import', {menuItemId: menuItem._id, name: menuItem.name});
-
-  //this function is used like a callback in revel connector
-  //it should return false if loading is finished
-  var onDateUploaded = function (salesData) {
-    var localItemDateMoment = HospoHero.dateUtils.getDateMomentForLocation(salesData.createdDate, self._location);
-
-    var needContinueLoading = !localItemDateMoment.isBefore(lastDateToImport);
-
-    if (!needContinueLoading) {
+  return function (salesData) {
+    //check if we need to stop
+    if (lastMomentToImport.isAfter(salesData.createdMoment)) {
+      logger.warn('Ignored order items', {count: ignoredOrderItemsCount});
       return false;
     }
 
-    var item = {
-      actualQuantity: salesData.quantity,
-      date: localItemDateMoment.startOf('day').toDate(),
-      menuItemId: menuItem._id,
-      relations: menuItem.relations
-    };
+    var createdDate = salesData.createdMoment.toDate();
 
-    self._updateActualSale(item);
+    _.each(salesData.menuItems, function (actualQuantity, posMenuItemName) {
+      var menuItem = self._getMenuItemByPosName(posMenuItemName);
+
+      if (menuItem) {
+        var item = {
+          actualQuantity: actualQuantity,
+          date: createdDate,
+          menuItemId: menuItem._id,
+          relations: menuItem.relations
+        };
+
+        self._updateActualSale(item);
+      } else {
+        ignoredOrderItemsCount++;
+        //logger.warn('Mapped menu item not found', {posName: posMenuItemName});
+      }
+    });
 
     return true;
   };
-
-
-  //upload sales using pos connector
-  menuItem.posNames.forEach(function (posName) {
-    var posMenuItem = PosMenuItems.findOne({
-      name: posName,
-      'relations.locationId': self._location._id
-    });
-
-    if (posMenuItem) {
-      logger.info('POS product', {_id: posMenuItem._id, name: posName});
-      self._revelClient.uploadAndReduceOrderItems(onDateUploaded, posMenuItem.posId);
-    } else {
-      // keeps data integrity (if there is no such menu item imported
-      // then it was removed from POS system, so we can remove it from
-      // menu item's POS names too)
-      MenuItems.update({_id: menuItem._id}, {
-        $pull: {posNames: posName},
-        $set: {isNotSyncedWithPos: true}
-      });
-    }
-  });
-
-  logger.info('Import is finished');
 };
 
 /**
- * Imports actual sales for specified menu items
- * @param menuItemsToImportQuery menu items' mongodb query
+ * Removes all actual and forecast sales for specified location
+ * @private
  */
-ActualSalesImporter.prototype.importByQuery = function (menuItemsToImportQuery) {
-  var menuItemsToSync = MenuItems.find(menuItemsToImportQuery, {fields: {_id: 1, posNames: 1, relations: 1, name: 1}});
-  var self = this;
+ActualSalesImporter.prototype._resetActualSales = function () {
+  var locationDocumentQuery = {
+    'relations.locationId': this._location._id
+  };
 
-  menuItemsToSync.forEach(function (menuItem) {
-    self.importForMenuItem(menuItem);
-  });
+  DailySales.remove(locationDocumentQuery);
+
+  MenuItems.update(locationDocumentQuery, {
+    $unset: {
+      isNotSyncedWithPos: '',
+      lastForecastModelUpdateDate: ''
+    }
+  }, {multi: true});
+};
+
+/**
+ * Imports all actual sales that are in pos
+ *
+ * @param {boolean} [resetAllBeforeImport] removes all data instead of adding to existing actual sales
+ */
+ActualSalesImporter.prototype.importAll = function (resetAllBeforeImport) {
+  if (resetAllBeforeImport) {
+    this._resetActualSales();
+  }
+
+  var lastMomentToImport = this._getLastImportedSaleMoment();
+
+  //this function is used as callback in revel connector
+  //it should return false if loading is finished
+  var onDateUploaded = this._createOnDailySaleUploadCallback(lastMomentToImport);
+
+  logger.info('Started actual sales import', {locationId: this._location._id});
+  this._revelClient.uploadAndReduceOrderItems(onDateUploaded);
+
+  logger.info('Import is finished');
 };
