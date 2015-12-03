@@ -40,11 +40,6 @@ Template.shiftBasicTimeEditable.onCreated(function () {
             return;
         }
 
-        var shiftUnavailableTimeIntervals = [];
-
-        var shiftStartOfDayDate = moment(self.data.shift.startTime).startOf('day').toDate();
-        var shiftEndOfDayDate = moment(self.data.shift.startTime).endOf('day').toDate();
-
         // This checking should be in method assign user, and moving shift through days
         //// find leave request, that overlays current shift
         //var leaveRequests = LeaveRequests.find({
@@ -62,101 +57,114 @@ Template.shiftBasicTimeEditable.onCreated(function () {
         //    return unavailabileTimeIntervals;
         //}
 
+        debugger;
+
         var unavailabilities = Meteor.users.findOne({_id: assignedUserId}).unavailabilities || [];
 
-        unavailabilities.every(function (unavailability) {
-            var isUnavailabilityForToday = unavailability.repeat != 'never' && self.checkRepeatUnavailability(unavailability)
-                || unavailability.startDate >= shiftStartOfDayDate && unavailability.endDate <= shiftEndOfDayDate;
-
-            if (isUnavailabilityForToday) {
-                return self.getUnavailabilityInterval(unavailability, shiftUnavailableTimeIntervals);
+        var todayUnavailabilities = [];
+        unavailabilities.forEach(function(unavailabilityItem){
+            if (self.checkIsUnavailabilityForToday(unavailabilityItem)) {
+                todayUnavailabilities.push(unavailabilityItem);
             }
-            return true;
         });
 
-        return shiftUnavailableTimeIntervals;
+        var isAllDayUnavailability = !!_.find(todayUnavailabilities, function (unavailabilityItem) {
+            return unavailabilityItem.isAllDay;
+        });
+
+        if (isAllDayUnavailability) {
+            var shiftUnavailabilityStartMoment = moment(self.data.shift.startTime).startOf('day').toDate();
+            var shiftUnavailabilityEndMoment = moment(self.data.shift.endTime).endOf('day').toDate();
+            return [
+                shiftUnavailabilityStartMoment,
+                shiftUnavailabilityEndMoment
+            ];
+        } else {
+            return self.getUnavailableIntervals(todayUnavailabilities);
+        }
+    };
+
+    self.checkIsUnavailabilityForToday = function (unavailability) {
+        var shiftStartOfDayDate = moment(self.data.shift.startTime).startOf('day').toDate();
+        var shiftEndOfDayDate = moment(shiftStartOfDayDate).endOf('day').toDate();
+
+        return unavailability.repeat != 'never' && self.checkRepeatUnavailability(unavailability)
+            || unavailability.startDate >= shiftStartOfDayDate && unavailability.endDate <= shiftEndOfDayDate;
     };
 
     self.checkRepeatUnavailability = function (unavailability) {
+        debugger;
         var unavailabilityMoment = moment(unavailability.startDate).startOf('day');
-        var shiftMoment = moment(self.data.shift.startDate).startOf('day');
+        var shiftMoment = moment(self.data.shift.startTime).startOf('day');
 
         // check day of week repeat
-        if (unavailabilityMoment.day() == shiftMoment.day()) {
+        if (unavailability.repeat == 'weekly' && unavailabilityMoment.day() == shiftMoment.day()) {
             return true;
         }
 
-        // check day of month repeat
-        var diffBetweenMoments = shiftMoment.diff(unavailabilityMoment, 'month');
+        if (unavailability.repeat == 'monthly') {
+            // check day of month repeat
+            var diffBetweenMoments = shiftMoment.diff(unavailabilityMoment, 'month');
+            unavailabilityMoment.add(diffBetweenMoments, 'month');
 
-        unavailabilityMoment.add(diffBetweenMoments, 'month');
-
-        if (unavailabilityMoment.date() == shiftMoment.date() && unavailabilityMoment.month() == shiftMoment.month()) {
-            return true;
+            if (unavailabilityMoment.date() == shiftMoment.date()
+                && unavailabilityMoment.month() == shiftMoment.month()) {
+                return true;
+            }
         }
         return false;
     };
 
-    self.getUnavailabilityInterval = function (unavailabilityItem, shiftUnavailableTimeIntervals) {
-        var shiftUnavailabilityStartMoment = moment(self.data.shift.startDate);
-        var shiftUnavailabilityEndMoment = moment(self.data.shift.startDate);
-
-        // if unavailability for all day
-        if (unavailabilityItem.startDate.getTime() == unavailabilityItem.endDate.getTime()) {
-            shiftUnavailabilityStartMoment.startOf('day');
-            shiftUnavailabilityEndMoment.endOf('day');
-
-            shiftUnavailableTimeIntervals.push([
-                shiftUnavailabilityStartMoment,
-                shiftUnavailabilityEndMoment
-            ]);
-            return false;
-        } else {
-            // or, for part of day
-            var unavailabilityStartTime = moment(unavailabilityItem.startDate);
-            var unavailabilityEndTime = moment(unavailabilityItem.endDate);
-            shiftUnavailabilityStartMoment.hours(unavailabilityStartTime.hours()).minutes(unavailabilityStartTime.minutes());
-            shiftUnavailabilityEndMoment.hours(unavailabilityEndTime.hours()).minutes(unavailabilityEndTime.minutes());
-
+    self.getUnavailableIntervals = function (unavailabilities) {
+        unavailabilities.sort(function(a, b) {
+            if (a.startDate == b.startDate) {
+                return 0;
+            }
+            return a.startDate > b.startDate ? 1 : -1;
+        });
+        var intervals = [];
+        unavailabilities.forEach(function (unavailabilityItem) {
+            var intervalStartTime = unavailabilityItem.startDate;
+            var intervalEndTime = unavailabilityItem.endDate;
             var interval = [
-                shiftUnavailabilityStartMoment,
-                shiftUnavailabilityEndMoment
+                intervalStartTime,
+                intervalEndTime
             ];
-            shiftUnavailableTimeIntervals.push(interval);
-            return true;
-        }
+            intervals.push(interval);
+        });
+        return intervals;
     };
 
-    self.getAvailableIntervals = function (unavailabileTimeIntervals) {
-        unavailabileTimeIntervals.sort(function (a, b){
-            if (a.startTime > b.startTime) {
-                return 1;
-            } if (a.startTime < b.startTime) {
-                return -1;
-            }
-            return 0;
-        });
-        debugger;
-        var availableTimeIntervals = [];
-        var shiftMoment = moment(self.data.shift.startDate);
-
-        for (var i = -1; i < unavailabileTimeIntervals.length; i++) {
-            var availableInterval = {};
-            if (i == -1) {
-                availableInterval.startTime = shiftMoment.startOf('day');
-                availableInterval.endTime = unavailabileTimeIntervals[i + 1][0];
-            } else if (i < unavailabileTimeIntervals.length - 1) {
-                availableInterval.startTime = unavailabileTimeIntervals[i][1];
-                availableInterval.endTime = unavailabileTimeIntervals[i + 1][0];
-            }
-            else {
-                availableInterval.startTime = unavailabileTimeIntervals[i][1];
-                availableInterval.endTime = shiftMoment.endOf('day');
-            }
-            availableTimeIntervals.push(availableInterval);
-        }
-        return availableTimeIntervals;
-    }
+    //self.getAvailableIntervals = function (unavailabileTimeIntervals) {
+    //    unavailabileTimeIntervals.sort(function (a, b) {
+    //        if (a.startTime > b.startTime) {
+    //            return 1;
+    //        }
+    //        if (a.startTime < b.startTime) {
+    //            return -1;
+    //        }
+    //        return 0;
+    //    });
+    //    var availableTimeIntervals = [];
+    //    var shiftMoment = moment(self.data.shift.startTime);
+    //
+    //    for (var i = -1; i < unavailabileTimeIntervals.length; i++) {
+    //        var availableInterval = {};
+    //        if (i == -1) {
+    //            availableInterval.startTime = shiftMoment.startOf('day');
+    //            availableInterval.endTime = unavailabileTimeIntervals[i + 1][0];
+    //        } else if (i < unavailabileTimeIntervals.length - 1) {
+    //            availableInterval.startTime = unavailabileTimeIntervals[i][1];
+    //            availableInterval.endTime = unavailabileTimeIntervals[i + 1][0];
+    //        }
+    //        else {
+    //            availableInterval.startTime = unavailabileTimeIntervals[i][1];
+    //            availableInterval.endTime = shiftMoment.endOf('day');
+    //        }
+    //        availableTimeIntervals.push(availableInterval);
+    //    }
+    //    return availableTimeIntervals;
+    //}
 });
 
 Template.shiftBasicTimeEditable.onRendered(function () {
@@ -164,9 +172,9 @@ Template.shiftBasicTimeEditable.onRendered(function () {
     var unavailabileTimeIntervals = self.getUserUnavailableTimeIntervals();
 
     if (unavailabileTimeIntervals) {
-        var availableTimeIntervals = self.getAvailableIntervals(unavailabileTimeIntervals);
+        //var availableTimeIntervals = self.getAvailableIntervals(unavailabileTimeIntervals);
         console.log('unavailabileTimeIntervals:\n', unavailabileTimeIntervals);
-        console.log('availableTimeIntervals:\n', availableTimeIntervals);
+        //console.log('availableTimeIntervals:\n', availableTimeIntervals);
     }
 
     var DATE_TIME_PICKER_FORMAT = 'HH:mm';

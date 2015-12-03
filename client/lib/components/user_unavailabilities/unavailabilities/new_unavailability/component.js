@@ -14,11 +14,17 @@ component.action.isAllDayChange = function (value) {
 
 component.action.addUnavailability = function (params, flyout) {
     var startDate = this.getDateFromDateAndTimePickers(params.date, params.startTime);
-    var endDate = this.get('isAllDay') ? startDate : this.getDateFromDateAndTimePickers(params.date, params.endTime);
+    var endDate = this.getDateFromDateAndTimePickers(params.date, params.endTime);
+
+    if (this.get('isAllDay')) {
+        startDate = moment(startDate).startOf('day').toDate();
+        endDate = moment(endDate).endOf('day').toDate();
+    }
 
     var unavailability = {
         startDate: startDate,
         endDate: endDate,
+        isAllDay: this.get('isAllDay'),
         repeat: params.repeat,
         comment: params.comment
     };

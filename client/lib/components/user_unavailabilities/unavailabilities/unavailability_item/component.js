@@ -8,7 +8,7 @@ component.state.date = function () {
 };
 
 component.state.isAllDay = function () {
-    return this.item.startDate.getTime() == this.item.endDate.getTime();
+    return this.item.isAllDay;
 };
 
 component.state.time = function () {

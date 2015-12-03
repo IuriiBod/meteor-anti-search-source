@@ -3,6 +3,7 @@ var UnavailabilityObject = Match.Where(function (unavailability) {
         startDate: Date,
         endDate: Date,
         repeat: Match.OneOf('monthly', 'weekly', 'never'),
+        isAllDay: Boolean,
 
         _id: HospoHero.checkers.OptionalMongoId,
         comment: Match.Optional(String)

@@ -3,7 +3,6 @@ Meteor.publish('userAllUnavailabilities', function () {
         {fields: {'unavailabilities': 1}});
 });
 
-
 Meteor.publish('userAllLeaveRequests', function () {
     return LeaveRequests.find({userId: this.userId});
 });
