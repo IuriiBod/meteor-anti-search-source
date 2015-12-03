@@ -12,12 +12,14 @@ Namespace('HospoHero.dateUtils', {
 
   /**
    * Returns moment for specified date in timezone for specified location
-   * @param date
-   * @param locationId
+   * @param {date|*} date Date or moment
+   * @param {string|object} location location document or it's ID
    * @returns {*}
    */
-  getDateMomentForLocation: function (date, locationId) {
-    var location = Locations.findOne({_id: locationId}, {fields: {timezone: 1}});
+  getDateMomentForLocation: function (date, location) {
+    if (_.isString(location)) {
+      location = Locations.findOne({_id: location}, {fields: {timezone: 1}})
+    }
     return moment(date).tz(location.timezone);
   },
 
@@ -136,7 +138,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   dateFormat: function (date) {
-    return date ? moment(date).format('YYYY-MM-DD') : '-';
+    return date ? moment(date).format('ddd DD/MM/YYYY') : '-';
   },
 
   timeFormat: function (date) {

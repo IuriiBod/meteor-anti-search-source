@@ -24,7 +24,8 @@ Meteor.methods({
           'New comment',
           'new-newsfeed-comment',
           {
-            username: HospoHero.username(Meteor.userId())
+            username: HospoHero.username(Meteor.userId()),
+            linkToItem: Router.url('home')
           }
         ).sendNotification(feed.createdBy);
       }
@@ -34,7 +35,8 @@ Meteor.methods({
         'Mention in a newsfeed',
         'mention-in-a-newsfeed',
         {
-          username: HospoHero.username(Meteor.userId())
+          username: HospoHero.username(Meteor.userId()),
+          linkToItem: Router.url('home')
         }
       );
       recipients.forEach(function (recipientName) {

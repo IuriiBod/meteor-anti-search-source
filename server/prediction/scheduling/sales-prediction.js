@@ -1,18 +1,19 @@
-var ForecastMaker = function (locationId) {
-  this._locationId = locationId;
+var ForecastMaker = function (location) {
+  this._location = location;
+  this._locationId = location._id;
 
-  this._weatherManager = new WeatherManager(locationId);
+  this._weatherManager = new WeatherManager(this._locationId);
   this._weatherManager.updateForecast();
 
-  this._predictionApi = new GooglePredictionApi(locationId);
+  this._predictionApi = new GooglePredictionApi(this._locationId);
 };
 
 
 ForecastMaker.prototype._getWeatherForecast = function (dayIndex, forecastDate) {
   //todo: temporal. figure out typical weather
   var defaultWeather = {
-    temp: 20.0,
-    main: 'Clear'
+    temp: 25,
+    main: 'Sunny'
   };
 
   var currentWeather = dayIndex < 14 && this._weatherManager.getWeatherFor(forecastDate);
@@ -23,7 +24,7 @@ ForecastMaker.prototype._getWeatherForecast = function (dayIndex, forecastDate) 
 
 ForecastMaker.prototype._updateForecastEntry = function (newForecastInfo) {
   DailySales.update({
-    date: TimeRangeQueryBuilder.forDay(newForecastInfo.date, this._locationId),
+    date: TimeRangeQueryBuilder.forDay(newForecastInfo.date, this._location),
     menuItemId: newForecastInfo.menuItemId
   }, {$set: newForecastInfo}, {upsert: true});
 };
@@ -45,7 +46,7 @@ ForecastMaker.prototype._getNotificationSender = function (area) {
   return {
     addChange: function (newForecastInfo, menuItem) {
       var oldForecast = DailySales.findOne({
-        date: TimeRangeQueryBuilder.forDay(newForecastInfo.date, self._locationId),
+        date: TimeRangeQueryBuilder.forDay(newForecastInfo.date, self._location),
         menuItemId: newForecastInfo.menuItemId
       });
 
@@ -80,7 +81,7 @@ ForecastMaker.prototype._predictFor = function (days) {
   logger.info('Make prediction', {days: days, locationId: this._locationId});
 
   var today = new Date();
-  var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), this._locationId);
+  var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), this._location).startOf('day');
   var self = this;
 
   var areas = Areas.find({locationId: this._locationId});
@@ -90,13 +91,13 @@ ForecastMaker.prototype._predictFor = function (days) {
 
     areas.forEach(function (area) {
       var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id}, true);
-      var items = MenuItems.find(menuItemsQuery, {}); //get menu items for current area
+      var items = MenuItems.find(menuItemsQuery, {_id: 1, relations: 1, status: 1, name: 1}); //get menu items for current area
 
       var notificationSender = self._getNotificationSender(area);
 
       items.forEach(function (menuItem) {
-        var dataVector = [menuItem._id, currentWeather.temp, currentWeather.main, dateMoment.day(), dateMoment.dayOfYear()];
-        var quantity = self._predictionApi.makePrediction(dataVector);
+        var dataVector = [currentWeather.temp, currentWeather.main, dateMoment.format('ddd'), dateMoment.dayOfYear()];
+        var quantity = self._predictionApi.makePrediction(menuItem._id, dataVector);
 
         logger.info('Made prediction', {menuItem: menuItem.name, date: dateMoment.toDate(), predictedQty: quantity});
 
@@ -151,10 +152,9 @@ ForecastMaker.prototype._needToUpdate = function (interval) {
 
 
 ForecastMaker.prototype.makeForecast = function () {
-  var updateDayIntervals = [84, 7, 2];
   var self = this;
 
-  updateDayIntervals.forEach(function (interval) {
+  this._updateDayIntervals.forEach(function (interval) {
     if (self._needToUpdate(interval)) {
       self._predictFor(interval);
       return false;
@@ -162,34 +162,27 @@ ForecastMaker.prototype.makeForecast = function () {
   });
 };
 
+ForecastMaker.prototype._updateDayIntervals = [14];//[84, 7, 2];
 
-//=============== update forecast cron job =================
-salesPredictionUpdateJob = function () {
-  logger.info('started prediction update job');
 
-  var locations = Locations.find({archived: {$ne: true}});
-
-  locations.forEach(function (location) {
-    if (HospoHero.prediction.isAvailableForLocation(location)) {
-      var forecastMaker = new ForecastMaker(location._id);
-      forecastMaker.makeForecast();
-    }
-  });
+updateForecastForLocation = function (location) {
+  if (HospoHero.prediction.isAvailableForLocation(location)) {
+    var forecastMaker = new ForecastMaker(location);
+    forecastMaker.makeForecast();
+  }
 };
 
 
-//!!! disable it temporaly to be able control it manually
-//if (!HospoHero.isDevelopmentMode()) {
-//  SyncedCron.add({
-//    name: 'Forecast refresh',
-//    schedule: function (parser) {
-//      return parser.text('at 05:00 am');
-//    },
-//    job: salesPredictionUpdateJob
-//  });
-//
-//  Meteor.startup(function () {
-//    //if we run first time -> make predictions immediately (in other thread)
-//    Meteor.defer(salesPredictionUpdateJob);
-//  });
-//}
+if (HospoHero.isProductionMode()) {
+  HospoHero.LocationScheduler.addDailyJob('Update forecast', function (location) {
+    return 3; //3:00 AM
+  }, function (location) {
+    logger.error('Started forecast generation', {locationId: location._id});
+    //updateForecastForLocation(location);
+  });
+}
+
+
+if (HospoHero.isDevelopmentMode()) {
+  ForecastMaker.prototype._updateDayIntervals = [7];
+}

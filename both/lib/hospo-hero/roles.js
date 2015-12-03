@@ -9,19 +9,24 @@ Namespace('HospoHero.roles', {
       return role._id;
     });
 
-    var temp = {};
-    temp['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
-
-    var query = {
-      $or: [
-        {'roles.defaultRole': {$in: roleIds}},
-        temp
-      ]
-    };
+    var query = {};
+    query['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
 
     return Meteor.users.find(query).map(function (user) {
-      return user._id;
+      if (user._id != Meteor.userId()) {
+        return user._id;
+      }
     });
+  },
+
+  getUserRoleName: function (userId, areaId) {
+    userId = userId || Meteor.userId();
+    areaId = areaId || HospoHero.getCurrentAreaId(userId);
+
+    var user = Meteor.users.findOne({_id: userId});
+    var roleId = user.roles.defaultRole || user.roles[areaId];
+    var role = Roles.getRoleById(roleId);
+    return role && role.name || '';
   },
 
   actions: {
@@ -42,11 +47,12 @@ Namespace('HospoHero.roles', {
     "View Areas Reports": "view areas reports",
     "View areas financial info": "view area's financial info",
     "Edit Locations": "edit locations",
-    "Billing Account": "edit billing account",
+    //"Billing Account": "edit billing account",
     "Edit Organization": "edit organization settings",
     "Edit users payrate": "edit user's payrate",
-    "All Rights": "all rights",
-    "View Reports": "view reports"
+    //"All Rights": "all rights",
+    "View Reports": "view reports",
+    "Receive Deliveries": "receive deliveries"
   },
 
   getActions: function () {

@@ -3,7 +3,7 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
   var authOptions = {
     serviceEmail: cloudSettings.SERVICE_EMAIL,
     pemFile: cloudSettings.PEM_FILE,
-    projectName: 'HospoHero'
+    projectName: cloudSettings.PROJECT_NAME
   };
 
   this._client = new GooglePrediction(authOptions);
@@ -11,57 +11,83 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
   this._bucketName = cloudSettings.BUCKET
 };
 
-GooglePredictionApi.prototype._getModelName = function () {
-  return "trainingModel-" + this._locationId;
+
+GooglePredictionApi.prototype._getModelName = function (menuItemId) {
+  return "menu-item-" + menuItemId;
 };
 
-GooglePredictionApi.prototype._getTrainingFileName = function () {
-  return "sales-data-" + this._locationId + ".csv";
+
+GooglePredictionApi.prototype._getTrainingFileName = function (menuItemId) {
+  return "menu-item-" + menuItemId + ".csv";
+};
+
+
+GooglePredictionApi.prototype._buildPredictionModelForMenuItem = function (menuItem) {
+  var trainingFileName = this._getTrainingFileName(menuItem._id);
+  var googleCloud = new GoogleCloud(menuItem, trainingFileName);
+
+  //upload daily sales data into file in google cloud storage
+  googleCloud.uploadSalesData();
+
+  var predictionModelName = this._getModelName(menuItem._id);
+  this._client.insert(predictionModelName, this._bucketName, trainingFileName);
 };
 
 /**
  * Updates prediction model for current location
  *
+ * @param menuItemsQuery MongoDB query for menu items prediction models need to be updated
  * @param isForcedUpdate forces model update even if it don't need update
  */
-GooglePredictionApi.prototype.updatePredictionModel = function (isForcedUpdate) {
+GooglePredictionApi.prototype.updatePredictionModel = function (menuItemsQuery, isForcedUpdate) {
   var location = Locations.findOne({_id: this._locationId});
+  logger.info('Building prediction models for locations', {locationId: this._locationId});
 
-  logger.info('Updating prediction model', {locationId: this._locationId});
+  var targetMenuItems = MenuItems.find(menuItemsQuery, {
+    fields: {
+      _id: 1,
+      name: 1,
+      lastForecastModelUpdateDate: 1,
+      relations: 1
+    }
+  });
 
-  //find out if we need to update prediction model (every half year)
-  var lastForecastModelUploadDate = location.lastForecastModelUploadDate || false;
+  var self = this;
+  targetMenuItems.forEach(function (menuItem) {
+    //find out if we need to update prediction model (every half year)
+    var lastForecastModelUpdateDate = menuItem.lastForecastModelUpdateDate || false;
 
-  var needToUpdateModel = !lastForecastModelUploadDate
-    || moment(lastForecastModelUploadDate) < moment().subtract(182, 'day');
+    var needToUpdateModel = !lastForecastModelUpdateDate
+      || moment(lastForecastModelUpdateDate) < moment().subtract(182, 'day');
 
-  if (needToUpdateModel || isForcedUpdate) {
-    var trainingFileName = this._getTrainingFileName();
-    var googleCloud = new GoogleCloud(this._locationId, trainingFileName);
+    if (needToUpdateModel || isForcedUpdate) {
+      self._buildPredictionModelForMenuItem(menuItem);
 
-    //upload daily sales data into file in google cloud storage
-    googleCloud.uploadSalesData();
+      //refresh update date
+      MenuItems.update({_id: location._id}, {$set: {lastForecastModelUpdateDate: new Date()}});
+    } else {
+      logger.info("Model don't need update", {
+        menuItemId: menuItem._id,
+        lastUpdatedAt: lastForecastModelUpdateDate
+      });
+    }
+  });
 
-    var predictionModelName = this._getModelName();
-    this._client.insert(predictionModelName, this._bucketName, trainingFileName);
-
-    //refresh update date
-    Locations.update({_id: location._id}, {$set: {lastForecastModelUploadDate: new Date()}});
-    logger.info('Started training prediction model', {name: predictionModelName});
-  } else {
-    logger.info("Model don't need update", {locationId: this._locationId, lastUpdatedAt: lastForecastModelUploadDate});
-  }
+  logger.info('Finished building prediction models');
 };
 
 /**
  * Uses google prediction generated model to make prediction for specified menu item and date
  *
+ * @param menuItemId
  * @param inputData
  * @returns {*}
  */
-GooglePredictionApi.prototype.makePrediction = function (inputData) {
+GooglePredictionApi.prototype.makePrediction = function (menuItemId, inputData) {
+  var modelName = this._getModelName(menuItemId);
+  var predictionResult = this._client.predict(modelName, inputData);
 
-  var predictedValue = parseInt(this._client.predict(this._getModelName(), inputData).outputValue);
+  var predictedValue = parseInt(predictionResult.outputValue);
   if (predictedValue < 0) {
     predictedValue = 0;
   }
@@ -81,19 +107,21 @@ GooglePredictionApi.prototype.makePrediction = function (inputData) {
  * ERROR: STORAGE LOCATION IS INVALID
  * @returns {String} model status
  */
-GooglePredictionApi.prototype.getModelStatus = function () {
-  return this._client.get(this._getModelName()).trainingStatus;
+GooglePredictionApi.prototype.getModelStatus = function (menuItemId) {
+  return this._client.get(this._getModelName(menuItemId)).trainingStatus;
 };
 
 /**
  * Remove prediction model includes also removing related CSV file in cloud storage
+ *
+ * @param menuItemId
  */
-GooglePredictionApi.prototype.removePredictionModel = function () {
-  var modelName = this._getModelName();
+GooglePredictionApi.prototype.removePredictionModel = function (menuItemId) {
+  var modelName = this._getModelName(menuItemId);
   var modelsList = this._client.list();
 
   if (modelsList.items) {
-    var modelToRemove = _.find(modelsList, function (model) {
+    var modelToRemove = _.find(modelsList.items, function (model) {
       return model.id === modelName;
     });
 
@@ -101,26 +129,29 @@ GooglePredictionApi.prototype.removePredictionModel = function () {
       this._client.remove(modelName);
       var trainingFileName = this._getTrainingFileName();
 
+      var menuItem = MenuItems.findOne({_id: menuItemId});
+
       //remove file from cloud storage
-      var googleCloud = GoogleCloud(this._locationId, trainingFileName);
+      var googleCloud = GoogleCloud(menuItem, trainingFileName);
       googleCloud.removeModelFile();
     }
   }
 };
 
+/**
+ * Service method, may be used to clean up after some global
+ * configuration changes
+ *
+ * @private
+ */
+GooglePredictionApi.prototype._removeAllPredictionModels = function () {
+  var modelsList = this._client.list();
 
-//mock mix-in for prediction API
-if (HospoHero.isDevelopmentMode()) {
-  _.extend(GooglePredictionApi.prototype, {
-    makePrediction: function () {
-      return Math.floor(Math.random() * 100);
-    },
-    _getModelName: function () {
-      return "trainingModel"
-    },
-
-    _getTrainingFileName: function () {
-      return "sales-data.csv"
-    }
-  });
-}
+  if (_.isArray(modelsList.items)) {
+    var self = this;
+    modelsList.items.forEach(function (model) {
+      self._client.remove(model.id);
+      logger.info('Removed prediction model ', {name: model.id});
+    });
+  }
+};

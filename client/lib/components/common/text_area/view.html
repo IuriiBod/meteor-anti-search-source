@@ -1,8 +1,10 @@
 <template name="textArea">
   {{#textareaAutocomplete
   settings=state$settings
-  id="msg"
   name="message"
   class="form-control message-input-post" placeholder=state$placeholder}}
   {{/textareaAutocomplete}}
+  <button class="submit-textarea btn btn-sm btn-primary pull-right">
+    {{state$buttonCaption}}
+  </button>
 </template>

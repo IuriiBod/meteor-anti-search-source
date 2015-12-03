@@ -22,33 +22,21 @@ Meteor.methods({
       throw new Meteor.Error("Current location hadn't connected POS system")
     }
 
-    var location = Locations.findOne({_id: locationId});
-
     //find out which items should be synchronized
     var unsyncedItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({
-      'relations.areaId': area._id,
+      'relations.locationId': locationId,
       isNotSyncedWithPos: true
     }, true);
 
-    var menuItemsToSync = MenuItems.find(unsyncedItemsQuery, {fields: {_id: 1}});
+    var menuItemsToSyncCount = MenuItems.find(unsyncedItemsQuery, {fields: {_id: 1}}).count();
 
-    if (menuItemsToSync.count() > 0) {
-      var unsyncedItemsIds = menuItemsToSync.map(function (menuItem) {
-        return menuItem._id;
-      });
-
-      //remove old sales data
-      DailySales.remove({_id: {$in: unsyncedItemsIds}});
-
+    if (menuItemsToSyncCount > 0) {
       var salesImporter = new ActualSalesImporter(locationId);
-      salesImporter.importByQuery(unsyncedItemsQuery);
-
-      //mark all menu items as sales synchronized
-      MenuItems.update(unsyncedItemsQuery, {$set: {isNotSyncedWithPos: false}}, {multi: true});
+      salesImporter.importAll(true);
 
       //force to update prediction model
-      var predictionApi = new GooglePredictionApi(location._id);
-      predictionApi.updatePredictionModel(true);
+      var predictionApi = new GooglePredictionApi(locationId);
+      predictionApi.updatePredictionModel(unsyncedItemsQuery, true);
     } else {
       logger.info('Nothing to sync');
     }

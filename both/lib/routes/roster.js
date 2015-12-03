@@ -7,8 +7,7 @@ Router.route('/roster/weekly/:year/:week', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     var subscriptions = [
       Meteor.subscribe('organizationInfo'),
-      Meteor.subscribe('areaMenuItems'),
-      Meteor.subscribe('weeklyRoster', weekRange),
+      Meteor.subscribe('weeklyRoster', weekRange, currentAreaId),
       Meteor.subscribe('workers', currentAreaId),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('areaMenuItems', currentAreaId),

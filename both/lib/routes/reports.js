@@ -20,7 +20,7 @@ Router.route('/reports/:year/:week', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('usersList', currentAreaId),
-      Meteor.subscribe('weeklyRoster', weekRange)
+      Meteor.subscribe('weeklyRoster', weekRange, currentAreaId)
     ];
   },
   data: function () {

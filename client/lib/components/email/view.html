@@ -37,6 +37,7 @@
           <br>
 
           <div class="clearfix"></div>
+          {{state$componentRendered}}
           {{> render component="textEditor" id='composeMailEditorSubmit' initialHtml=state$initialHTML}}
 
           <div class="mail-body text-right tooltip-demo">

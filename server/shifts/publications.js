@@ -1,11 +1,11 @@
-Meteor.publishAuthorized('weeklyRoster', function (weekRange) {
+Meteor.publishAuthorized('weeklyRoster', function (weekRange, areaId) {
   check(weekRange, HospoHero.checkers.WeekRange);
 
   logger.info("Shift date range in publisher", weekRange);
 
   //get shifts
   return Shifts.find({
-    "relations.areaId": HospoHero.getCurrentAreaId(this.userId),
+    "relations.areaId": areaId,
     shiftDate: weekRange
   });
 });
