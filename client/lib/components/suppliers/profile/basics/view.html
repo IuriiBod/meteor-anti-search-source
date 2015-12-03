@@ -1,76 +1,82 @@
 <template name="basics">
-
-  <!-- Supplier status -->
-  <div class="row">
-    <div class="col-lg-12">
-      <dl class="dl-horizontal">
-        <dt>Status:</dt>
-        <dd>
-          <span class="label label-primary supplierStatus">
-            {{#if state$status}}
-              Active
-            {{else}}
-              Archived
-            {{/if}}
-          </span>
-        </dd>
-      </dl>
-    </div>
-  </div>
-
   <div class="row">
     <!-- Supplier editable information -->
-    <div class="col-sm-8">
-      <dl class="dl-horizontal">
-        <dt>Email address:</dt>
-        <dd><a class="supplier-email">{{state$supplier.email}}</a></dd>
-        <dt>Phone number:</dt>
-        <dd><a class="supplier-phone">{{state$supplier.phone}}</a></dd>
-        <dt>Minimum order amount:</dt>
-        <dd><a class="minimum-order-amount">{{state$supplier.minimumOrderAmount}}</a></dd>
-        <dt>Delivery time:</dt>
-        <dd>
-          <p>Every <a class="delivery-day" data-type="select"></a> at
+    <div class="col-md-6 col-lg-4">
+      <table class="table suppliers-table">
+        <tr>
+          <td>Status:</td>
+          <td>
+            <span class="label label-primary supplierStatus">
+              {{#if state$status}}
+                Active
+              {{else}}
+                Archived
+              {{/if}}
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Email address:</td>
+          <td><a class="supplier-email">{{state$supplier.email}}</a></td>
+        </tr>
+        <tr>
+          <td>Phone number:</td>
+          <td><a class="supplier-phone">{{state$supplier.phone}}</a></td>
+        </tr>
+        <tr>
+          <td>Minimum order amount:</td>
+          <td><a class="minimum-order-amount">{{state$supplier.minimumOrderAmount}}</a></td>
+        </tr>
+        <tr>
+          <td>Delivery time:</td>
+          <td>
+            Every <a class="delivery-day" data-type="select"></a> at
             <a class="delivery-time">{{timeFormat state$supplier.deliveryTime}}</a>
-          </p>
-        </dd>
-        <dt>Contact name:</dt>
-        <dd><a class="contact-name">{{state$supplier.contactName}}</a></dd>
-        <dt>Customer number:</dt>
-        <dd><a class="customer-number">{{state$supplier.customerNumber}}</a></dd>
-      </dl>
+          </td>
+        </tr>
+        <tr>
+          <td>Contact name:</td>
+          <td><a class="contact-name">{{state$supplier.contactName}}</a></td>
+        </tr>
+        <tr>
+          <td>Customer number:</td>
+          <td><a class="customer-number">{{state$supplier.customerNumber}}</a></td>
+        </tr>
+      </table>
     </div>
     <!-- Cluster info -->
-    <div class="col-sm-4">
-      <dl class="dl-horizontal">
-        <dt>Last order on:</dt>
-        <dd>{{dateFormat state$lastOrder.date}}</dd>
-        <dt>Created on:</dt>
-        <dd>{{dateFormat state$supplier.createdOn}}</dd>
-      </dl>
+    <div class="col-md-6 col-lg-4">
+      <table class="table suppliers-table">
+        <tr>
+          <td>Last order on:</td>
+          <td>{{dateFormat state$lastOrder.date}}</td>
+        </tr>
+        <tr>
+          <td>Created on:</td>
+          <td>{{dateFormat state$supplier.createdOn}}</td>
+        </tr>
+      </table>
     </div>
     <!-- Upload price list -->
-    <div class="col-xs-12">
-      <dl class="dl-horizontal">
-        <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
+    <div class="col-md-12 col-lg-4">
+      <table class="table">
+        <tr>
+          <td>
+            <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
+          </td>
+        </tr>
         {{#if state$supplier.priceList}}
-          <ul>
-            {{#each state$supplier.priceList}}
-              <li><a href="{{this}}" target="_blank">Price list</a></li>
-            {{/each}}
-          </ul>
-        {{else}}
-          <div class="file uploadedPriceList hide">
-            <a href="#">
-              <span class="corner"></span>
-
-              <div class="image">
-                <img id="uploadedImageUrl" src="" class="img-responsive menu-item-image">
-              </div>
-            </a>
-          </div>
+          <tr>
+            <td>
+              <ul>
+                {{#each state$supplier.priceList}}
+                  <li><a href="{{this}}" target="_blank">Price list</a></li>
+                {{/each}}
+              </ul>
+            </td>
+          </tr>
         {{/if}}
-      </dl>
+      </table>
     </div>
   </div>
 </template>
