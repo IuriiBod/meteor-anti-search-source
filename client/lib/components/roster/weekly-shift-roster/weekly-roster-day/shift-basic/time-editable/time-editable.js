@@ -126,11 +126,48 @@ Template.shiftBasicTimeEditable.onCreated(function () {
             return true;
         }
     };
+
+    self.getAvailableIntervals = function (unavailabileTimeIntervals) {
+        unavailabileTimeIntervals.sort(function (a, b){
+            if (a.startTime > b.startTime) {
+                return 1;
+            } if (a.startTime < b.startTime) {
+                return -1;
+            }
+            return 0;
+        });
+        debugger;
+        var availableTimeIntervals = [];
+        var shiftMoment = moment(self.data.shift.startDate);
+
+        for (var i = -1; i < unavailabileTimeIntervals.length; i++) {
+            var availableInterval = {};
+            if (i == -1) {
+                availableInterval.startTime = shiftMoment.startOf('day');
+                availableInterval.endTime = unavailabileTimeIntervals[i + 1][0];
+            } else if (i < unavailabileTimeIntervals.length - 1) {
+                availableInterval.startTime = unavailabileTimeIntervals[i][1];
+                availableInterval.endTime = unavailabileTimeIntervals[i + 1][0];
+            }
+            else {
+                availableInterval.startTime = unavailabileTimeIntervals[i][1];
+                availableInterval.endTime = shiftMoment.endOf('day');
+            }
+            availableTimeIntervals.push(availableInterval);
+        }
+        return availableTimeIntervals;
+    }
 });
 
 Template.shiftBasicTimeEditable.onRendered(function () {
     var self = this;
     var unavailabileTimeIntervals = self.getUserUnavailableTimeIntervals();
+
+    if (unavailabileTimeIntervals) {
+        var availableTimeIntervals = self.getAvailableIntervals(unavailabileTimeIntervals);
+        console.log('unavailabileTimeIntervals:\n', unavailabileTimeIntervals);
+        console.log('availableTimeIntervals:\n', availableTimeIntervals);
+    }
 
     var DATE_TIME_PICKER_FORMAT = 'HH:mm';
     var DATE_TIME_PICKER_STEP = 10;
