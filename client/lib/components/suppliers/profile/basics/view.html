@@ -61,16 +61,27 @@
     <div class="col-md-12 col-lg-4">
       <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
       {{#if state$supplier.priceList}}
-        <table class="table">
+        <table class="table suppliers-table text-center">
           <tr>
-            <td>
-              <ul>
-                {{#each state$supplier.priceList}}
-                  <li><a href="{{this}}" target="_blank">Price list</a></li>
-                {{/each}}
-              </ul>
-            </td>
+            <th>Name</th>
+            <th>Uploaded at</th>
+            <th>Actions</th>
           </tr>
+          {{#each state$supplier.priceList}}
+            <tr>
+              <td>
+                <a href="{{url}}" target="_blank">{{name}}</a>
+              </td>
+              <td>
+                {{dateFormat uploadedAt}}
+              </td>
+              <td>
+                <a href="#" class="delete-price-list text-danger">
+                  <i class="fa fa-remove"></i>
+                </a>
+              </td>
+            </tr>
+          {{/each}}
         </table>
       {{/if}}
     </div>

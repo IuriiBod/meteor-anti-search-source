@@ -47,3 +47,7 @@ component.action.uploadPriceList = function () {
     }
   );
 };
+
+component.action.removePriceList = function (priceListObject) {
+  Meteor.call('removePriceList', this.supplierId, priceListObject, HospoHero.handleMethodResult());
+};

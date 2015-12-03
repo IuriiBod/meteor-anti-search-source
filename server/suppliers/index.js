@@ -72,5 +72,19 @@ Meteor.methods({
       logger.error("There are no status of supplier ", id);
       throw new Meteor.Error("There are no status of supplier ");
     }
+  },
+
+  removePriceList: function (supplierId, priceListObject) {
+    check([priceListObject], HospoHero.checkers.PriceListsChecker);
+
+    Suppliers.update({
+      _id: supplierId
+    }, {
+      $pull: {
+        priceList: {
+          url: priceListObject.url
+        }
+      }
+    });
   }
 });
