@@ -9,6 +9,7 @@ Template.organizationStructure.events({
 
   'click .change-current-area': function(e) {
     e.preventDefault();
+
     FlowComponents.callAction('changeDefaultArea', this._id);
     var routerParams = Router.current().params;
 
