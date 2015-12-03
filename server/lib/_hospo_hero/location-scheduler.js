@@ -28,8 +28,7 @@ LocationScheduler.prototype._cronHourlyJob = function () {
 
     var isSameHour = function (timeResult) {
       if (_.isNumber(timeResult)) {
-        timeResult = moment().hours(timeResult);
-        var localTimeResult = HospoHero.dateUtils.getDateMomentForLocation(timeResult, location);
+        var localTimeResult = moment(localMoment).hours(timeResult);
         return localMoment.isSame(localTimeResult, 'hour');
       } else {
         return false;
