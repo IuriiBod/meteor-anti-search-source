@@ -57,12 +57,10 @@ Template.shiftBasicTimeEditable.onCreated(function () {
         //    return unavailabileTimeIntervals;
         //}
 
-        debugger;
-
         var unavailabilities = Meteor.users.findOne({_id: assignedUserId}).unavailabilities || [];
 
         var todayUnavailabilities = [];
-        unavailabilities.forEach(function(unavailabilityItem){
+        unavailabilities.forEach(function (unavailabilityItem) {
             if (self.checkIsUnavailabilityForToday(unavailabilityItem)) {
                 todayUnavailabilities.push(unavailabilityItem);
             }
@@ -93,7 +91,6 @@ Template.shiftBasicTimeEditable.onCreated(function () {
     };
 
     self.checkRepeatUnavailability = function (unavailability) {
-        debugger;
         var unavailabilityMoment = moment(unavailability.startDate).startOf('day');
         var shiftMoment = moment(self.data.shift.startTime).startOf('day');
 
@@ -116,7 +113,7 @@ Template.shiftBasicTimeEditable.onCreated(function () {
     };
 
     self.getUnavailableIntervals = function (unavailabilities) {
-        unavailabilities.sort(function(a, b) {
+        unavailabilities.sort(function (a, b) {
             if (a.startDate == b.startDate) {
                 return 0;
             }
@@ -135,46 +132,41 @@ Template.shiftBasicTimeEditable.onCreated(function () {
         return intervals;
     };
 
-    //self.getAvailableIntervals = function (unavailabileTimeIntervals) {
-    //    unavailabileTimeIntervals.sort(function (a, b) {
-    //        if (a.startTime > b.startTime) {
-    //            return 1;
-    //        }
-    //        if (a.startTime < b.startTime) {
-    //            return -1;
-    //        }
-    //        return 0;
-    //    });
-    //    var availableTimeIntervals = [];
-    //    var shiftMoment = moment(self.data.shift.startTime);
-    //
-    //    for (var i = -1; i < unavailabileTimeIntervals.length; i++) {
-    //        var availableInterval = {};
-    //        if (i == -1) {
-    //            availableInterval.startTime = shiftMoment.startOf('day');
-    //            availableInterval.endTime = unavailabileTimeIntervals[i + 1][0];
-    //        } else if (i < unavailabileTimeIntervals.length - 1) {
-    //            availableInterval.startTime = unavailabileTimeIntervals[i][1];
-    //            availableInterval.endTime = unavailabileTimeIntervals[i + 1][0];
-    //        }
-    //        else {
-    //            availableInterval.startTime = unavailabileTimeIntervals[i][1];
-    //            availableInterval.endTime = shiftMoment.endOf('day');
-    //        }
-    //        availableTimeIntervals.push(availableInterval);
-    //    }
-    //    return availableTimeIntervals;
-    //}
+    self.getAvailableIntervals = function (unavailabileTimeIntervals) {
+        debugger
+        var shiftStartOfDay = moment(self.data.shift.startTime).startOf('day').toDate();
+        var shiftEndOfDay = moment(shiftStartOfDay).endOf('day').toDate();
+        var availableTimeIntervals = [];
+
+        for (var i = -1; i < unavailabileTimeIntervals.length; i++) {
+            var interval = {};
+            // for first unavailable interval
+            if (i == -1) {
+                interval.minTime = shiftStartOfDay;
+                interval.maxTime = unavailabileTimeIntervals[i + 1][0];
+            }
+            // for last unavailable interval
+            else if (i == unavailabileTimeIntervals.length - 1) {
+                interval.minTime = unavailabileTimeIntervals[i][1];
+                interval.maxTime = shiftEndOfDay;
+            }
+            else if (i > -1) {
+                interval.minTime = unavailabileTimeIntervals[i][1];
+                interval.maxTime = unavailabileTimeIntervals[i + 1][0];
+            }
+            availableTimeIntervals.push(interval);
+        }
+    }
 });
 
 Template.shiftBasicTimeEditable.onRendered(function () {
     var self = this;
     var unavailabileTimeIntervals = self.getUserUnavailableTimeIntervals();
 
-    if (unavailabileTimeIntervals) {
-        //var availableTimeIntervals = self.getAvailableIntervals(unavailabileTimeIntervals);
+    if (unavailabileTimeIntervals.length > 0) {
+        var availableTimeIntervals = self.getAvailableIntervals(unavailabileTimeIntervals);
         console.log('unavailabileTimeIntervals:\n', unavailabileTimeIntervals);
-        //console.log('availableTimeIntervals:\n', availableTimeIntervals);
+        console.log('availableTimeIntervals:\n', availableTimeIntervals);
     }
 
     var DATE_TIME_PICKER_FORMAT = 'HH:mm';
