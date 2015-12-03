@@ -4,12 +4,18 @@
 # but you can also edit it by hand.
 
 meteor-platform
+http
+#force-ssl
+service-configuration
+jquery
+email
+underscore
+random
+micah:google-cloud
+jss:through
+votercircle:winston
 iron:router
 cmather:handlebars-server
-http
-micah:google-cloud
-votercircle:winston
-jss:through
 percolate:migrations
 
 meteorhacks:flow-components
@@ -17,7 +23,6 @@ meteorhacks:search-source
 accounts-ui
 accounts-google
 accounts-password
-service-configuration
 
 useraccounts:bootstrap
 meteorhacks:aggregate
@@ -26,10 +31,8 @@ konecty:autolinker
 less
 twbs:bootstrap
 zimme:iron-router-active
-jquery
 okgrow:iron-router-autoscroll
 dbarrett:dropzonejs
-email
 percolate:intercom
 tsega:bootstrap3-datetimepicker
 kevohagan:sweetalert
@@ -50,8 +53,6 @@ alonoslav:roles
 
 zephraph:namespace
 jss:meteor-google-prediction
-underscore
-random
 u2622:persistent-session
 deepwell:bootstrap-datepicker2
 percolate:synced-cron
@@ -66,4 +67,3 @@ fortawesome:fontawesome
 momentjs:moment
 jss:moment-timezone
 joshowens:timezone-picker
-force-ssl
