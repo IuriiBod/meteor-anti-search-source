@@ -1,6 +1,6 @@
 Migrations.add({
   version: 34,
-  name: "Move priceList to array",
+  name: "Add default details to old suppliers",
   up: function () {
     Suppliers.update({}, {
       $set: {
