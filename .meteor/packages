@@ -3,7 +3,6 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-platform
 http
 #force-ssl
 service-configuration
@@ -31,7 +30,7 @@ konecty:autolinker
 less
 twbs:bootstrap
 zimme:iron-router-active
-okgrow:iron-router-autoscroll
+okgrow:router-autoscroll
 dbarrett:dropzonejs
 percolate:intercom
 tsega:bootstrap3-datetimepicker
@@ -67,3 +66,15 @@ fortawesome:fontawesome
 momentjs:moment
 jss:moment-timezone
 joshowens:timezone-picker
+standard-minifiers
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+tracker
+logging
+reload
+ejson
+spacebars
+check
