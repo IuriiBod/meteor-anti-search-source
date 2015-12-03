@@ -1,3 +1,7 @@
+Template.createArea.onRendered(function() {
+  this.$("input[name='name']").focus();
+});
+
 Template.createArea.events({
   'change input[type="radio"]': function() {
     FlowComponents.callAction('changeEnabled');
