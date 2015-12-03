@@ -34,43 +34,31 @@ Template.shiftBasicTimeEditable.onCreated(function () {
         self.setDefaultValueInTimePicker(self.endTimePicker, 'endTime');
     };
 
-    self.getUserUnavailableTimeIntervals = function () {
+    self.getUnavailableTimeIntervalsForCurrentShift = function () {
         var assignedUserId = self.data.shift.assignedTo;
         if (!assignedUserId) {
-            return;
+            return [];
         }
 
-        // This checking should be in method assign user, and moving shift through days
-        //// find leave request, that overlays current shift
-        //var leaveRequests = LeaveRequests.find({
-        //    userId: assignedUserId,
-        //    startDate: {$lte: shiftStartOfDayDate},
-        //    endDate: {$gte: shiftEndOfDayDate}
-        //}).fetch();
-        //
-        //// if exist at least one approved leave request,
-        //if (leaveRequests.length > 0) {
-        //    unavailabileTimeIntervals.push({
-        //        startDate: shiftStartOfDayDate,
-        //        endDate: shiftEndOfDayDate
-        //    });
-        //    return unavailabileTimeIntervals;
-        //}
+        var unavailabilitiesForCurrentShift = self.getUnavailabilitiesForCurrentShiftAndAssignedUser(assignedUserId);
 
-        var unavailabilities = Meteor.users.findOne({_id: assignedUserId}).unavailabilities || [];
+        return self.getUnavailableIntervals(unavailabilitiesForCurrentShift);
+    };
 
-        var todayUnavailabilities = [];
-        unavailabilities.forEach(function (unavailabilityItem) {
-            if (self.checkIsUnavailabilityForToday(unavailabilityItem)) {
-                todayUnavailabilities.push(unavailabilityItem);
+    self.getUnavailabilitiesForCurrentShiftAndAssignedUser = function (assignedUserId) {
+        var unavailabilitiesForCurrentShift = [];
+
+        var allUnavailabilitiesForAssignedUser = Meteor.users.findOne({_id: assignedUserId}).unavailabilities || [];
+        allUnavailabilitiesForAssignedUser.forEach(function (unavailabilityItem) {
+            if (self.checkIsUnavailabilityForCurrentShift(unavailabilityItem)) {
+                unavailabilitiesForCurrentShift.push(unavailabilityItem);
             }
         });
 
-        return self.getUnavailableIntervals(todayUnavailabilities);
-
+        return unavailabilitiesForCurrentShift;
     };
 
-    self.checkIsUnavailabilityForToday = function (unavailability) {
+    self.checkIsUnavailabilityForCurrentShift = function (unavailability) {
         var shiftStartOfDayDate = moment(self.data.shift.startTime).startOf('day').toDate();
         var shiftEndOfDayDate = moment(shiftStartOfDayDate).endOf('day').toDate();
 
@@ -107,37 +95,15 @@ Template.shiftBasicTimeEditable.onCreated(function () {
         });
 
         if (isAllDayUnavailability) {
-            var shiftUnavailabilityStartMoment = moment(self.data.shift.startTime).startOf('day').toDate();
-            var shiftUnavailabilityEndMoment = moment(self.data.shift.endTime).endOf('day').toDate();
-            return [
-                shiftUnavailabilityStartMoment,
-                shiftUnavailabilityEndMoment
-            ];
+            return self.getUnavailabilityIntervalForAllDay();
         } else {
-            unavailabilities.sort(function (a, b) {
-                if (a.startDate == b.startDate) {
-                    return 0;
-                }
-                return a.startDate > b.startDate ? 1 : -1;
-            });
-            var intervals = [];
-
-            unavailabilities.forEach(function (unavailabilityItem) {
-                var intervalStartTime = self.setShiftDateToTime(unavailabilityItem.startDate);
-                var intervalEndTime = self.setShiftDateToTime(unavailabilityItem.endDate);
-                var interval = [
-                    intervalStartTime,
-                    intervalEndTime
-                ];
-                intervals.push(interval);
-            });
-            return intervals;
+            return self.partTimeUnavailabilityIntervals(unavailabilities);
         }
     };
 
     self.getAvailableIntervals = function (unavailabileTimeIntervals) {
-        var shiftStartOfDay = moment(self.data.shift.startTime).startOf('day').toDate();
-        var shiftEndOfDay = moment(shiftStartOfDay).endOf('day').toDate();
+        var shiftStartOfDay = moment(self.data.shift.startTime).startOf('day');
+        var shiftEndOfDay = moment(shiftStartOfDay).endOf('day');
         var availableTimeIntervals = [];
 
         for (var i = -1; i < unavailabileTimeIntervals.length; i++) {
@@ -161,19 +127,54 @@ Template.shiftBasicTimeEditable.onCreated(function () {
         return availableTimeIntervals;
     };
 
-    self.setShiftDateToTime = function (date) {
-        var shiftMoment = moment(self.data.shift.startTime).startOf('day');
+    self.sortUnavailabilities = function (unavailabilities) {
+        unavailabilities.sort(function (a, b) {
+            if (a.startDate == b.startDate) {
+                return 0;
+            }
+            return a.startDate > b.startDate ? 1 : -1;
+        });
+    };
+
+    self.getUnavailabilityIntervalForAllDay = function () {
+        var shiftUnavailabilityStartMoment = moment().startOf('day');
+        var shiftUnavailabilityEndMoment = moment().endOf('day');
+        return [[
+            shiftUnavailabilityStartMoment,
+            shiftUnavailabilityEndMoment
+        ]];
+    };
+
+    self.partTimeUnavailabilityIntervals = function (unavailabilities) {
+        self.sortUnavailabilities(unavailabilities);
+        var intervals = [];
+
+        unavailabilities.forEach(function (unavailabilityItem) {
+            var intervalStartTime = self.getIntervalFromUnavailabilityItem(unavailabilityItem.startDate);
+            var intervalEndTime = self.getIntervalFromUnavailabilityItem(unavailabilityItem.endDate);
+            var interval = [
+                moment(intervalStartTime),
+                moment(intervalEndTime)
+            ];
+            intervals.push(interval);
+        });
+        return intervals;
+    };
+
+    self.getIntervalFromUnavailabilityItem = function (date) {
+        var shiftMoment = moment().startOf('day');
         return moment(date).date(shiftMoment.date())
             .month(shiftMoment.month()).year(shiftMoment.year()).toDate();
-    }
+    };
 });
 
 Template.shiftBasicTimeEditable.onRendered(function () {
     var self = this;
-    var unavailabileTimeIntervals = self.getUserUnavailableTimeIntervals();
+    var unavailabileTimeIntervals = self.getUnavailableTimeIntervalsForCurrentShift();
 
     if (unavailabileTimeIntervals.length > 0) {
         var availableTimeIntervals = self.getAvailableIntervals(unavailabileTimeIntervals);
+        console.log('\n\n', Meteor.users.findOne({_id: self.data.shift.assignedTo}).username);
         console.log('unavailabileTimeIntervals:\n', unavailabileTimeIntervals);
         console.log('availableTimeIntervals:\n', availableTimeIntervals);
     }
@@ -185,14 +186,14 @@ Template.shiftBasicTimeEditable.onRendered(function () {
         format: DATE_TIME_PICKER_FORMAT,
         dayViewHeaderFormat: DATE_TIME_PICKER_FORMAT,
         stepping: DATE_TIME_PICKER_STEP,
-        defaultDate: self.data.shift.startTime,
+        defaultDate: moment(self.data.shift.startTime),
         disabledTimeIntervals: unavailabileTimeIntervals
     });
     self.$('.end-time').datetimepicker({
         format: DATE_TIME_PICKER_FORMAT,
         dayViewHeaderFormat: DATE_TIME_PICKER_FORMAT,
         stepping: DATE_TIME_PICKER_STEP,
-        defaultDate: self.data.shift.endTime,
+        defaultDate: moment(self.data.shift.endTime),
         disabledTimeIntervals: unavailabileTimeIntervals,
 
         useCurrent: false //Important! See issue #1075
@@ -246,3 +247,20 @@ Template.shiftBasicTimeEditable.events({
         tmpl.exitFromEditMode();
     }
 });
+
+// This checking should be in method assign user, and moving shift through days
+//// find leave request, that overlays current shift
+//var leaveRequests = LeaveRequests.find({
+//    userId: assignedUserId,
+//    startDate: {$lte: shiftStartOfDayDate},
+//    endDate: {$gte: shiftEndOfDayDate}
+//}).fetch();
+//
+//// if exist at least one approved leave request,
+//if (leaveRequests.length > 0) {
+//    unavailabileTimeIntervals.push({
+//        startDate: shiftStartOfDayDate,
+//        endDate: shiftEndOfDayDate
+//    });
+//    return unavailabileTimeIntervals;
+//}
