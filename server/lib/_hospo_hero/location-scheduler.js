@@ -9,7 +9,7 @@ var LocationScheduler = function () {
   SyncedCron.add({
     name: "Hourly locations' jobs",
     schedule: function (parser) {
-      return parser.text('every 60 minutes');
+      return parser.text('every 1 hour');
     },
     job: this._cronHourlyJob.bind(this)
   });
@@ -28,9 +28,11 @@ LocationScheduler.prototype._cronHourlyJob = function () {
 
     var isSameHour = function (timeResult) {
       if (_.isNumber(timeResult)) {
-        return localMoment.hour() === timeResult;
+        timeResult = moment().hours(timeResult);
+        var localTimeResult = HospoHero.dateUtils.getDateMomentForLocation(timeResult, location);
+        return localMoment.isSame(localTimeResult, 'hour');
       } else {
-        return localMoment.isSame(timeResult, 'hour');
+        return false;
       }
     };
 
@@ -58,8 +60,8 @@ LocationScheduler.prototype._cronHourlyJob = function () {
  * then `jobCallback` will be executed.
  *
  * @param {string} jobDescription
- * @param {function} timeCallback receives location document and should return date
- * or hour (Number, 24 hour format) when job should be executed for specified location
+ * @param {function} timeCallback receives location document and should return
+ * hour (Number, 24 hour format) when job should be executed for specified location
  * @param {function} jobCallback executes job itself, receives same parameters as `timeCallback`
  */
 LocationScheduler.prototype.addDailyJob = function (jobDescription, timeCallback, jobCallback) {
@@ -82,5 +84,3 @@ LocationScheduler.prototype.start = function () {
 
 
 Namespace('HospoHero.LocationScheduler', new LocationScheduler());
-
-
