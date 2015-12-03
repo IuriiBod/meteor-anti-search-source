@@ -59,13 +59,9 @@
     </div>
     <!-- Upload price list -->
     <div class="col-md-12 col-lg-4">
-      <table class="table">
-        <tr>
-          <td>
-            <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
-          </td>
-        </tr>
-        {{#if state$supplier.priceList}}
+      <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
+      {{#if state$supplier.priceList}}
+        <table class="table">
           <tr>
             <td>
               <ul>
@@ -75,8 +71,8 @@
               </ul>
             </td>
           </tr>
-        {{/if}}
-      </table>
+        </table>
+      {{/if}}
     </div>
   </div>
 </template>

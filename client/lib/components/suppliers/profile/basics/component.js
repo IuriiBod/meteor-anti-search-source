@@ -31,8 +31,12 @@ component.action.uploadPriceList = function () {
       if (_.isArray(blobs)) {
         var urlArray = [];
         blobs.forEach(function (doc) {
-          var url = doc.url;
-          urlArray.push(url);
+          var file = {
+            url: doc.url,
+            name: doc.filename,
+            uploadedAt: new Date()
+          };
+          urlArray.push(file);
         });
         Meteor.call('addPriceList', self.supplierId, urlArray, HospoHero.handleMethodResult());
       }

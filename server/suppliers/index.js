@@ -30,19 +30,14 @@ Meteor.methods({
     logger.info("Suppliers details updated", {"supplierId": updatedSupplier._id});
   },
 
-  addPriceList: function (supplierId, urls) {
+  addPriceList: function (supplierId, files) {
     if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    check(urls, Array);
-
-    urls.forEach(function (url) {
-      check(url, String);
-
-      Suppliers.update({_id: supplierId}, {$push: {priceList: url}});
-    });
+    check(files, HospoHero.checkers.PriceListsChecker);
+    Suppliers.update({_id: supplierId}, {$push: {priceList: {$each: files}}});
 
     logger.info("Supplier information updated", supplierId);
   },
