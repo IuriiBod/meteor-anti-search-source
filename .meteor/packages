@@ -3,13 +3,31 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-platform
+standard-minifiers
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+tracker
+logging
+reload
+ejson
+spacebars
+check
+http
+force-ssl
+service-configuration
+jquery
+email
+underscore
+random
+less
+micah:google-cloud
+jss:through
+votercircle:winston
 iron:router
 cmather:handlebars-server
-http
-micah:google-cloud
-votercircle:winston
-jss:through
 percolate:migrations
 
 meteorhacks:flow-components
@@ -17,19 +35,15 @@ meteorhacks:search-source
 accounts-ui
 accounts-google
 accounts-password
-service-configuration
 
 useraccounts:bootstrap
 meteorhacks:aggregate
 mizzao:autocomplete
 konecty:autolinker
-less
 twbs:bootstrap
 zimme:iron-router-active
-jquery
-okgrow:iron-router-autoscroll
+okgrow:router-autoscroll
 dbarrett:dropzonejs
-email
 percolate:intercom
 tsega:bootstrap3-datetimepicker
 kevohagan:sweetalert
@@ -50,8 +64,6 @@ alonoslav:roles
 
 zephraph:namespace
 jss:meteor-google-prediction
-underscore
-random
 u2622:persistent-session
 deepwell:bootstrap-datepicker2
 percolate:synced-cron
@@ -66,5 +78,3 @@ fortawesome:fontawesome
 momentjs:moment
 jss:moment-timezone
 joshowens:timezone-picker
-force-ssl
-natestrauser:filepicker-plus
