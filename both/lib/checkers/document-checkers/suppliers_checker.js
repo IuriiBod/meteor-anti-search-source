@@ -22,7 +22,8 @@ var SupplierChecker = Match.Where(function (supplier) {
         createdBy: HospoHero.checkers.OptionalNullableMongoId,
         relations: Match.Optional(HospoHero.checkers.Relations),
         active: Match.Optional(Boolean),
-        createdOn: Match.Optional(Date)
+        createdOn: Match.Optional(Date),
+        priceList: Match.Optional(String)
     });
 
     var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(supplier, Suppliers);

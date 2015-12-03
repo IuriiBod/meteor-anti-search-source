@@ -30,41 +30,58 @@ Meteor.methods({
         logger.info("Suppliers details updated", {"supplierId": updatedSupplier._id});
     },
 
-    updateSupplier: function (id, info) {
+    //updateSupplier: function (id, info) {
+    //    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    //        logger.error("User not permitted to create ingredients");
+    //        throw new Meteor.Error(403, "User not permitted to create ingredients");
+    //    }
+    //
+    //    check(id, HospoHero.checkers.MongoId);
+    //
+    //    if (!Suppliers.findOne(id)) {
+    //        logger.error("Supplier does not exist", id);
+    //        throw new Meteor.Error(404, "Supplier does not exist");
+    //    }
+    //    var updateQuery = {};
+    //    if (info.hasOwnProperty('name')) {
+    //        if (info.name && info.name.trim()) {
+    //            updateQuery['name'] = info.name;
+    //        }
+    //    }
+    //    if (info.hasOwnProperty('email')) {
+    //        if (info.email && info.email.trim()) {
+    //            updateQuery['email'] = info.email;
+    //        }
+    //    }
+    //    if (info.hasOwnProperty("phone")) {
+    //        if (info.phone && info.phone.trim()) {
+    //            updateQuery['phone'] = info.phone;
+    //        }
+    //    }
+    //    if (info.hasOwnProperty("priceList")) {
+    //        if (info.priceList && info.priceList.trim()) {
+    //            updateQuery['priceList'] = info.priceList;
+    //        }
+    //    }
+    //    Suppliers.update({"_id": id}, {$set: updateQuery});
+    //    logger.info("Supplier information updated", id);
+    //},
+
+    addPriceList: function (supplierId, urls) {
         if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
             logger.error("User not permitted to create ingredients");
             throw new Meteor.Error(403, "User not permitted to create ingredients");
         }
 
-        check(id, HospoHero.checkers.MongoId);
+        check(urls, Array);
 
-        if (!Suppliers.findOne(id)) {
-            logger.error("Supplier does not exist", id);
-            throw new Meteor.Error(404, "Supplier does not exist");
-        }
-        var updateQuery = {};
-        if (info.hasOwnProperty('name')) {
-            if (info.name && info.name.trim()) {
-                updateQuery['name'] = info.name;
-            }
-        }
-        if (info.hasOwnProperty('email')) {
-            if (info.email && info.email.trim()) {
-                updateQuery['email'] = info.email;
-            }
-        }
-        if (info.hasOwnProperty("phone")) {
-            if (info.phone && info.phone.trim()) {
-                updateQuery['phone'] = info.phone;
-            }
-        }
-        if (info.hasOwnProperty("priceList")) {
-            if (info.priceList && info.priceList.trim()) {
-                updateQuery['priceList'] = info.priceList;
-            }
-        }
-        Suppliers.update({"_id": id}, {$set: updateQuery});
-        logger.info("Supplier information updated", id);
+        urls.forEach(function (url) {
+            check(url, String);
+
+            Suppliers.update({_id: supplierId}, {$push: {priceList: url}});
+        });
+
+        logger.info("Supplier information updated", supplierId);
     },
 
     activateReactivateSuppliers: function (id) {

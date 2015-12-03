@@ -25,18 +25,41 @@ component.action.changeSupplierStatus = function () {
 
 component.action.uploadPriceList = function () {
     var self = this;
-    filepicker.pickAndStore({
-            mimetype: 'image/*', services: ['COMPUTER']
+    filepicker.pickMultiple({
+            mimetype: 'application/pdf', services: ['COMPUTER']
         },
-        {},
-        function (InkBlobs) {
-            var doc = (InkBlobs);
-            if (doc) {
-                var url = doc[0].url;
-                Meteor.call('updateSupplier', self.get('supplier')._id, {'priceList': url},
-                    HospoHero.handleMethodResult());
-                return true;
+        function (blobs) {
+            if (_.isArray(blobs)) {
+                var urlArray = [];
+                blobs.forEach(function (doc) {
+                    var url = doc.url;
+                    urlArray.push(url);
+                });
+                Meteor.call('addPriceList', self.supplierId, urlArray, function (err, res) {});
+            }
+        },
+        function (error) {
+            if (error) {
+                console.log(error);
             }
         }
     );
 };
+
+//component.action.uploadPriceList = function () {
+//    var self = this;
+//    filepicker.pickMultiple({
+//            mimetype: 'application/pdf', services: ['COMPUTER']
+//        },
+//        function (InkBlobs) {
+//            var doc = (InkBlobs);
+//            if (doc) {
+//                console.log(doc);
+//                //var url = doc[0].url;
+//                //Meteor.call('updateSupplier', self.get('supplier')._id, {'priceList': url},
+//                //    HospoHero.handleMethodResult());
+//                //return true;
+//            }
+//        }
+//    );
+//};
