@@ -71,7 +71,8 @@ Namespace('HospoHero.misc', {
   },
   getBackwardUrl: function () {
     var locationHref = location.href;
-    return locationHref.replace(Meteor.absoluteUrl(), "/");
+    var absoluteUrl = Meteor.isCordova ? 'http://meteor.local/' : Meteor.absoluteUrl();
+    return locationHref.replace(absoluteUrl, "/");
   },
   getCountries: function () {
     return [
