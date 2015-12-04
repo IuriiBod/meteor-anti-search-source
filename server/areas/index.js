@@ -25,7 +25,7 @@ Meteor.methods({
     }
 
     Areas.update({_id: updatedArea._id}, {$set: updatedArea});
-    logger.info('Area has been updated', {areaId: updatedArea._id});
+    logger.info('Area has been updated', {areaId: updatedArea._id, userId: Meteor.userId()});
   },
 
   deleteArea: function (areaId) {
