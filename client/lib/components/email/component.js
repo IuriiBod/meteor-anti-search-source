@@ -4,6 +4,10 @@ component.state.componentRendered = function () {
   var supplierId = Session.get("activeSupplier");
   var supplier = Suppliers.findOne(supplierId);
 
+  if (!supplier) {
+    return false;
+  }
+
   var receipt = OrderReceipts.findOne({"version": Session.get("thisVersion"), "supplier": supplierId});
   var total = 0;
   var data = StockOrders.find({
