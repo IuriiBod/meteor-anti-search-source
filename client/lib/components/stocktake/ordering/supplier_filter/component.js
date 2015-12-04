@@ -41,7 +41,7 @@ component.state.deliveryDate = function() {
     "supplier": this.get("activeSupplier")
   });
   if(receipt && receipt.expectedDeliveryDate) {
-    return receipt.expectedDeliveryDate;
+    return parseInt(receipt.expectedDeliveryDate);
   } else {
     return moment().add(1, 'day');
   }

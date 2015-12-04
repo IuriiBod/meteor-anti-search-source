@@ -4,7 +4,6 @@ Template.supplierFilter.onRendered(function () {
       var version = HospoHero.getParamsFromRoute(Router.current(), '_id');
       var address = null;
       var deliveryDate = moment().add(1, 'days').format('x');
-      deliveryDate = moment(deliveryDate).format("YYYY-MM-DD");
       var info = {
         "through": orderType,
         "details": address,

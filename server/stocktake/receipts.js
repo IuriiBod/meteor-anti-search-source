@@ -1,5 +1,8 @@
 Meteor.methods({
   generateReceipts: function (version, supplier, info) {
+
+    console.log('ARC', arguments);
+
     if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(403, "User not permitted to generate receipts");

@@ -26,7 +26,7 @@ component.state.replyToEmail = function () {
 
 
 component.action.sendEmail = function (mailBody, title, address) {
-  var supplier = this.get("activeSupplier");
+  var supplier = this.get("supplier")._id;
   var version = HospoHero.getParamsFromRoute(Router.current(), '_id');
   var deliveryDate = parseInt(moment().add(1, 'day').format('x'));
   var info = {
