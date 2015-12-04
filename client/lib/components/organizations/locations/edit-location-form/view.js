@@ -1,3 +1,7 @@
+Template.editLocationForm.onRendered(function() {
+  this.$("input[name='name']").focus();
+});
+
 Template.editLocationForm.helpers({
   countries: function () {
     return HospoHero.misc.getCountries();
