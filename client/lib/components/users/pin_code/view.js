@@ -1,3 +1,7 @@
+Template.pinCode.onRendered(function() {
+  this.$("input#pin-code").focus();
+});
+
 Template.pinCode.events({
   "submit form": function (event) {
     event.preventDefault();
