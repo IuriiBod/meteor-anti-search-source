@@ -14,10 +14,9 @@ component.state.list = function () {
     "version": this.get('version'),
     "supplier": this.get("activeSupplier")
   }).fetch();
-  var orderIds = _.map(data, function (doc) {
+  return _.map(data, function (doc) {
     return doc._id;
   });
-  return orderIds;
 };
 
 component.state.supplier = function () {
@@ -38,5 +37,66 @@ component.state.onSupplierChanged = function () {
   var self = this;
   return function (supplierId) {
     self.set('activeSupplier', supplierId);
+    self.getInitialHtml(supplierId);
+  }
+};
+
+component.prototype.getInitialHtml = function (supplierId) {
+  var supplier = Suppliers.findOne(supplierId);
+
+  if (supplier) {
+    var receipt = OrderReceipts.findOne({"version": this.get("thisVersion"), "supplier": supplierId});
+    var total = 0;
+    var data = StockOrders.find({
+      "version": this.get("thisVersion"),
+      "supplier": supplierId,
+      "relations.areaId": HospoHero.getCurrentAreaId(),
+      "countOrdered": {$gt: 0}
+    }, {
+      fields: {
+        countOrdered: 1,
+        unit: 1,
+        stockId: 1,
+        unitPrice: 1
+      }
+    }).fetch();
+
+    data = _.map(data, function (stock) {
+      var stockItem = Ingredients.findOne({_id: stock.stockId}, {fields: {code: 1, description: 1}});
+      var cost = stock.countOrdered * stock.unitPrice;
+      stockItem.cost = cost;
+
+      total += cost;
+
+      return _.extend(stock, stockItem);
+    });
+
+    var area = HospoHero.getCurrentArea();
+    var location = Locations.findOne({_id: area.locationId});
+
+    var deliveryDate = receipt && receipt.expectedDeliveryDate ? receipt.expectedDeliveryDate : moment().add(1, 'day');
+
+    var user = {
+      name: HospoHero.username(Meteor.userId()),
+      type: HospoHero.roles.getUserRoleName(Meteor.userId(), HospoHero.getCurrentAreaId())
+    };
+
+    var templateData = {
+      supplierName: supplier.name,
+      deliveryDate: HospoHero.dateUtils.dateFormat(deliveryDate),
+      orederNote: receipt && receipt.orderNote || '',
+      location: location,
+      areaName: area.name,
+      orderData: data,
+      total: total,
+      user: user
+    };
+
+    var self = this;
+    Meteor.call('renderSomeHandlebarsTemplate', 'supplier-email-text', templateData, HospoHero.handleMethodResult(function (text) {
+      self.set('initialHtml', text);
+    }));
+  } else {
+    this.set('initialHtml', '');
   }
 };

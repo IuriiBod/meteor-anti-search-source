@@ -43,7 +43,7 @@
 
   <!-- COMPOSE MAIL MODAL-->
   <div class="modal fade" id="composeMailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component = 'composeMail' name="composeMail" initialHtml="Email body"}}
+    {{> render component = 'composeMail' name="composeMail" initialHtml=state$initialHtml supplier=state$activeSupplier}}
   </div>
   <!-- /COMPOSE MAIL MODAL -->
 </template>
