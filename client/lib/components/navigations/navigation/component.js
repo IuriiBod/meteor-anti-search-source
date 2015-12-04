@@ -102,15 +102,6 @@ var menuEntries = [
             week: moment().week()
           }
         }
-      }, {
-        title: 'Daily stock',
-        route: 'currentStocks',
-        params: function () {
-          return {
-            year: moment().year(),
-            week: moment().week()
-          }
-        }
       }
     ]
   }
