@@ -66,7 +66,7 @@ var menuEntries = [
     title: 'Stock',
     icon: 'fa-list',
     permission: 'view stocks',
-    activeOnRoutes: ['ingredientsList', 'stocktakeList', 'orderReceiptsList', 'suppliersList', 'supplierProfile'],
+    activeOnRoutes: ['ingredientsList', 'stocktakeList', 'orderReceiptsList', 'suppliersList', 'supplierProfile', 'orderReceive'],
     subMenuEntries: [
       {
         title: 'List',
