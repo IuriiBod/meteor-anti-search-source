@@ -1,74 +1,71 @@
-var component = FlowComponents.define("basics", function(props) {
-  this.onRendered(this.onSupplierRendered);
+var component = FlowComponents.define('basics', function (props) {
+  this.supplierId = props.id;
 });
 
-component.state.basics = function() {
-  var id = Session.get("thisSupplier");
-  if(id) {
-    var supplier = Suppliers.findOne(id);
-    if(supplier) {
-      return supplier;
-    }
+component.prototype.updateSupplier = function (field, value) {
+  var supplier = this.get('supplier');
+  supplier[field] = value;
+  Meteor.call('editSupplier', supplier, HospoHero.handleMethodResult());
+};
+
+component.state.supplier = function () {
+  return Suppliers.findOne({_id: this.supplierId});
+};
+
+component.state.status = function () {
+  return this.get('supplier').active;
+};
+
+component.state.lastOrder = function () {
+  return OrderReceipts.findOne({'supplier': this.get('supplier')._id}, {sort: {'date': -1}, limit: 1});
+};
+
+component.state.deliveryDays = function () {
+  return [
+    {value: 'sunday', text: 'Sunday'},
+    {value: 'monday', text: 'Monday'},
+    {value: 'tuesday', text: 'Tuesday'},
+    {value: 'wednesday', text: 'Wednesday'},
+    {value: 'thursday', text: 'Thursday'},
+    {value: 'friday', text: 'Friday'},
+    {value: 'saturday', text: 'Saturday'}
+  ];
+};
+
+component.state.onDeliveryDayChanged = function () {
+  var self = this;
+  return function (value) {
+    self.updateSupplier('deliveryDay', value);
   }
 };
 
-component.state.status = function() {
-  var id = Session.get("thisSupplier");
-  if(id) {
-    var supplier = Suppliers.findOne(id);
-    if(supplier) {
-      if(supplier.active) {
-        return true;
-      }
-    } 
-  }
+component.action.changeSupplierStatus = function () {
+  var id = this.get('supplier').id;
+  Meteor.call('activateReactivateSuppliers', id, HospoHero.handleMethodResult());
 };
 
-component.state.lastOrder = function() {
-  var orders = OrderReceipts.find({"supplier": Session.get("thisSupplier")}, {sort: {"date": -1}, limit: 1}).fetch();
-  if(orders && orders.length > 0) {
-    if(orders[0].date) {
-      return orders[0].date;
+component.action.uploadPriceList = function () {
+  var self = this;
+  filepicker.pickMultiple({
+    services: ['COMPUTER']
+  }, function (blobs) {
+    if (_.isArray(blobs)) {
+      var urlArray = _.map(blobs, function (doc) {
+        return {
+          url: doc.url,
+          name: doc.filename,
+          uploadedAt: new Date()
+        };
+      });
+      Meteor.call('addPriceList', self.supplierId, urlArray, HospoHero.handleMethodResult());
     }
-  }
+  }, HospoHero.handleMethodResult());
 };
 
-component.prototype.onSupplierRendered = function() {
-  $("#supplierEmail").editable({
-    type: "text",
-    title: 'Edit supplier email',
-    showbuttons: false,
-    mode: 'inline',
-    autotext: 'auto',
-    success: function(response, newValue) {
-      if(newValue) {
-        var id = Session.get("thisSupplier");
-        var editDetail = {"email": newValue};
-        updateSupplierDetails(id, editDetail);
-      }
-    },
-    display: function(value, response) {
-    }
-  });
-
-  $("#supplierPhone").editable({
-    type: 'text',
-    title: 'Edit phone number',
-    showbuttons: false,
-    mode: 'inline',
-    autotext: 'auto',
-    display: function(value, response) {
-    },
-    success: function(response, newValue) {
-      if(newValue) {
-        var id = Session.get("thisSupplier");
-        var editDetail = {"phone": newValue};
-        updateSupplierDetails(id, editDetail);
-      }
-    }
-  });
+component.action.removePriceList = function (priceListObject) {
+  Meteor.call('removePriceList', this.supplierId, priceListObject, HospoHero.handleMethodResult());
 };
 
-function updateSupplierDetails(id, info) {
-  Meteor.call("updateSupplier", id, info, HospoHero.handleMethodResult());
-}
+component.action.updateSupplier = function (field, value) {
+  this.updateSupplier(field, value);
+};
