@@ -30,7 +30,12 @@
         <tr>
           <td>Delivery time:</td>
           <td>
-            Every <a class="delivery-day" data-type="select"></a> at
+            Every
+            {{>render component="ghostEditableSelect"
+                      values=state$deliveryDays
+                      selected=state$supplier.deliveryDay
+                      onValueChanged=state$onDeliveryDayChanged}}
+            at
             <a class="delivery-time">{{timeFormat state$supplier.deliveryTime}}</a>
           </td>
         </tr>
