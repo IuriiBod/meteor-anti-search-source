@@ -16,11 +16,11 @@
       <i class="fa fa-fw fa-check"></i>Status: {{state$orderSentDetails}}
       {{/if}}
     {{else}}
-      <a class="btn btn-primary setOrder" data-type="emailed">
-        <i class="fa fa-envelope-o fa-fw fa-lg"></i>Send email
+      <a class="btn btn-primary orderEmailed" data-type="emailed">
+        <i class="fa fa-envelope-o fa-fw fa-lg orderEmailed"></i>Send email
       </a>
-      <a class="btn btn-primary setOrder" data-type="phoned">
-        <i class="fa fa-fw fa-lg fa-phone"></i>Mark as phoned through
+      <a class="btn btn-primary orderPhoned" data-type="phoned">
+        <i class="fa fa-fw fa-lg fa-phone orderPhoned"></i>Mark as phoned through
       </a>
     {{/if}}
     </small>
