@@ -2,6 +2,12 @@ var component = FlowComponents.define('basics', function (props) {
   this.supplierId = props.id;
 });
 
+component.prototype.updateSupplier = function (field, value) {
+  var supplier = this.get('supplier');
+  supplier[field] = value;
+  Meteor.call('editSupplier', supplier, HospoHero.handleMethodResult());
+};
+
 component.state.supplier = function () {
   return Suppliers.findOne({_id: this.supplierId});
 };
@@ -29,9 +35,7 @@ component.state.deliveryDays = function () {
 component.state.onDeliveryDayChanged = function () {
   var self = this;
   return function (value) {
-    var supplier = self.get('supplier');
-    supplier.deliveryDay = value;
-    Meteor.call('editSupplier', supplier, HospoHero.handleMethodResult());
+    self.updateSupplier('deliveryDay', value);
   }
 };
 
@@ -63,7 +67,5 @@ component.action.removePriceList = function (priceListObject) {
 };
 
 component.action.updateSupplier = function (field, value) {
-  var supplier = this.get('supplier');
-  supplier[field] = value;
-  Meteor.call('editSupplier', supplier, HospoHero.handleMethodResult());
+  this.updateSupplier(field, value);
 };
