@@ -38,7 +38,9 @@
 
           <div class="clearfix"></div>
           {{state$componentRendered}}
-          {{> render component="textEditor" id='composeMailEditorSubmit' initialHtml=state$initialHTML}}
+          {{#if state$initialHTML}}
+            {{> render component="textEditor" id='composeMailEditorSubmit' initialHtml=state$initialHTML}}
+          {{/if}}
 
           <div class="mail-body text-right tooltip-demo">
             <a href="#" class="btn btn-white btn-sm" data-dismiss="modal" data-toggle="tooltip" data-placement="top"

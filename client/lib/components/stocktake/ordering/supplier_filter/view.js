@@ -1,11 +1,7 @@
 Template.supplierFilter.events({
   'click .activateSupplier': function(event) {
     event.preventDefault();
-    var supplier = $(event.target).attr("data-id");
-    if(supplier == "Non-assigned") {
-      supplier = null;
-    }
-    Session.set("activeSupplier", supplier);
+    FlowComponents.callAction('setActiveSupplier', this.toString());
   },
 
   'click .setOrder': function(event) {

@@ -1,48 +1,42 @@
-var component = FlowComponents.define("ordersList", function(props) {
+var component = FlowComponents.define("ordersList", function (props) {
+  this.set('version', HospoHero.getParamsFromRoute(Router.current(), '_id'));
 });
 
-component.state.isNull = function() {
+component.state.isNull = function () {
   var data = StockOrders.find({
-    "version": Session.get("thisVersion")
+    "version": this.get('version')
   }).fetch();
-  if(data && data.length > 0) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  return !!(data && data.length > 0);
+};
 
-component.state.list = function() {
+component.state.list = function () {
   var data = StockOrders.find({
-    "version": Session.get("thisVersion"),
-    "supplier": Session.get("activeSupplier")
+    "version": this.get('version'),
+    "supplier": this.get("activeSupplier")
+  }).fetch();
+  var orderIds = _.map(data, function (doc) {
+    return doc._id;
   });
-  var dataFetched = data.fetch();
-  var orderIds = [];
-  if(dataFetched.length > 0) {
-    dataFetched.forEach(function(doc) {
-      if(orderIds.indexOf(doc._id) < 0) {
-        orderIds.push(doc._id);
-      }
-    });
-  }
   return orderIds;
-}
+};
 
-component.state.version = function() {
-  return Session.get("thisVersion");
-}
+component.state.supplier = function () {
+  return this.get("activeSupplier");
+};
 
-component.state.supplier = function() {
-  return Session.get("activeSupplier");
-}
-
-component.state.orderNote = function() {
+component.state.orderNote = function () {
   var data = OrderReceipts.findOne({
-    "version": Session.get("thisVersion"),
-    "supplier": Session.get("activeSupplier")
+    "version": this.get('version'),
+    "supplier": this.get("activeSupplier")
   });
-  if(data && data.orderNote) {
+  if (data && data.orderNote) {
     return data.orderNote;
   }
-}
+};
+
+component.state.onSupplierChanged = function () {
+  var self = this;
+  return function (supplierId) {
+    self.set('activeSupplier', supplierId);
+  }
+};
