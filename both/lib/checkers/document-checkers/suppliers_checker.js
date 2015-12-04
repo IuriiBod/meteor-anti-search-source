@@ -2,6 +2,7 @@ var SupplierChecker = Match.Where(function (supplier) {
   check(supplier, {
     name: String,
     email: Match.Where(function (email) {
+      check(email, String);
       return /.+@(.+){2,}\.(.+){2,}/.test(email);
     }),
     minimumOrderAmount: Match.Where(function (amount) {
@@ -30,14 +31,11 @@ var SupplierChecker = Match.Where(function (supplier) {
 });
 
 var PriceListsChecker = Match.Where(function (priceList) {
-  check(priceList, [Object]);
-  priceList.forEach(function (list) {
-    check(list, {
-      url: String,
-      name: String,
-      uploadedAt: Date
-    });
-  });
+  check(priceList, [{
+    url: String,
+    name: String,
+    uploadedAt: Date
+  }]);
   return true;
 });
 

@@ -1,22 +1,13 @@
 Template.basics.onCreated(function () {
-  var self = this;
-  self.supplier = new ReactiveVar();
-
-  self.updateSupplierDetails = function (field, newValue) {
+  this.updateSupplierDetails = function (field, newValue) {
     if (newValue) {
-      var doc = self.supplier.get();
-      doc[field] = newValue;
-      Meteor.call('editSupplier', doc, HospoHero.handleMethodResult());
+      FlowComponents.callAction('updateSupplier', field, newValue);
     }
   };
 });
 
 Template.basics.onRendered(function () {
-  var self = this;
-  FlowComponents.callAction('getThisSupplier').then(function (res) {
-    self.supplier.set(res);
-    defineEditableComponents(self);
-  });
+  defineEditableComponents(this);
 });
 
 Template.basics.events({
@@ -47,8 +38,6 @@ var defineEditableComponents = function (tmpl) {
   tmpl.$('.supplier-email').editable({
     type: 'text',
     title: 'Edit supplier email',
-    display: function () {
-    },
     success: function (response, newValue) {
       tmpl.updateSupplierDetails('email', newValue);
     },
@@ -90,21 +79,21 @@ var defineEditableComponents = function (tmpl) {
     }
   });
 
-  tmpl.$('.delivery-day').editable({
-    success: function (response, newValue) {
-      tmpl.updateSupplierDetails('deliveryDay', newValue);
-    },
-    value: tmpl.supplier.get().deliveryDay,
-    source: [
-      {value: 'sunday', text: 'Sunday'},
-      {value: 'monday', text: 'Monday'},
-      {value: 'tuesday', text: 'Tuesday'},
-      {value: 'wednesday', text: 'Wednesday'},
-      {value: 'thursday', text: 'Thursday'},
-      {value: 'friday', text: 'Friday'},
-      {value: 'saturday', text: 'Saturday'}
-    ]
-  });
+  //tmpl.$('.delivery-day').editable({
+  //  success: function (response, newValue) {
+  //    tmpl.updateSupplierDetails('deliveryDay', newValue);
+  //  },
+  //  value: tmpl.supplier.get().deliveryDay,
+  //  source: [
+  //    {value: 'sunday', text: 'Sunday'},
+  //    {value: 'monday', text: 'Monday'},
+  //    {value: 'tuesday', text: 'Tuesday'},
+  //    {value: 'wednesday', text: 'Wednesday'},
+  //    {value: 'thursday', text: 'Thursday'},
+  //    {value: 'friday', text: 'Friday'},
+  //    {value: 'saturday', text: 'Saturday'}
+  //  ]
+  //});
 
   tmpl.$('.delivery-time').editable({
     type: 'combodate',
