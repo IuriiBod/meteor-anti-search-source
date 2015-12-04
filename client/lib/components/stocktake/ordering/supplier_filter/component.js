@@ -19,9 +19,11 @@ component.state.suppliers = function() {
   var suppliersList = _.groupBy(ordersList, 'supplier');
   suppliersList = _.keys(suppliersList);
 
-  this.set('activeSupplier', suppliersList[0]);
-  this.onSupplierChanged(suppliersList[0]);
-
+  if (!this.get('activeSupplier')) {
+    this.set('activeSupplier', suppliersList[0]);
+    this.onSupplierChanged(suppliersList[0]);
+  }
+  
   return suppliersList;
 };
 
@@ -71,6 +73,12 @@ component.state.receiptExists = function(supplier) {
   });
   return !!(receipt && receipt.orderedThrough && receipt.orderedThrough.through);
 };
+
+
+component.action.getSupplier = function () {
+  return this.get('activeSupplier');
+};
+
 
 component.prototype.onListRendered = function() {
   $(".expectedDeliveryDate")

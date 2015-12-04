@@ -41,14 +41,20 @@ component.state.onSupplierChanged = function () {
   }
 };
 
+
+component.action.getSupplier = function () {
+  return this.get('supplier');
+};
+
 component.prototype.getInitialHtml = function (supplierId) {
   var supplier = Suppliers.findOne(supplierId);
 
   if (supplier) {
-    var receipt = OrderReceipts.findOne({"version": this.get("thisVersion"), "supplier": supplierId});
+    var receipt = OrderReceipts.findOne({"version": this.get("version"), "supplier": supplierId});
     var total = 0;
+
     var data = StockOrders.find({
-      "version": this.get("thisVersion"),
+      "version": this.get("version"),
       "supplier": supplierId,
       "relations.areaId": HospoHero.getCurrentAreaId(),
       "countOrdered": {$gt: 0}

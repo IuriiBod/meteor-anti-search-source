@@ -23,3 +23,19 @@ component.state.replyToEmail = function () {
     return user.emails[0].address;
   }
 };
+
+
+component.action.sendEmail = function (mailBody, title, address) {
+  var supplier = this.get("activeSupplier");
+  var version = HospoHero.getParamsFromRoute(Router.current(), '_id');
+  var deliveryDate = parseInt(moment().add(1, 'day').format('x'));
+  var info = {
+    "through": 'emailed',
+    "details": address,
+    "deliveryDate": deliveryDate,
+    "to": address,
+    "title": title,
+    "emailText": mailBody
+  };
+  Meteor.call("generateReceipts", version, supplier, info, HospoHero.handleMethodResult());
+};
