@@ -1,9 +1,15 @@
 Template.basics.onCreated(function () {
-  this.updateSupplierDetails = function (field, newValue) {
-    if (newValue) {
-      FlowComponents.callAction('updateSupplier', field, newValue);
+  this.updateSupplierDetails = function (field, value) {
+    if (value) {
+      FlowComponents.callAction('updateSupplier', field, value);
     }
   };
+
+  this.triggerUpdateSupplier = function (field, value) {
+    this.data.field = field;
+    this.data.value = value;
+    $('.test-element').trigger('click');
+  }
 });
 
 Template.basics.onRendered(function () {
@@ -29,6 +35,12 @@ Template.basics.events({
   'click .delete-price-list': function (event) {
     event.preventDefault();
     FlowComponents.callAction('removePriceList', this);
+  },
+
+  'click .test-element': function (event, tmpl) {
+    if (tmpl.data.field) {
+      tmpl.updateSupplierDetails(tmpl.data.field, tmpl.data.value);
+    }
   }
 });
 
@@ -38,8 +50,9 @@ var defineEditableComponents = function (tmpl) {
   tmpl.$('.supplier-email').editable({
     type: 'text',
     title: 'Edit supplier email',
+    display: false,
     success: function (response, newValue) {
-      tmpl.updateSupplierDetails('email', newValue);
+      tmpl.triggerUpdateSupplier('email', newValue);
     },
     validate: function (value) {
       if (!/.+@(.+){2,}\.(.+){2,}/.test(value)) {
@@ -54,7 +67,7 @@ var defineEditableComponents = function (tmpl) {
     display: function () {
     },
     success: function (response, newValue) {
-      tmpl.updateSupplierDetails('phone', newValue);
+      tmpl.triggerUpdateSupplier('phone', newValue);
     },
     validate: function (value) {
       if (!/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(value)) {
@@ -70,7 +83,7 @@ var defineEditableComponents = function (tmpl) {
     },
     success: function (response, newValue) {
       newValue = parseInt(newValue);
-      tmpl.updateSupplierDetails('minimumOrderAmount', newValue);
+      tmpl.triggerUpdateSupplier('minimumOrderAmount', newValue);
     },
     validate: function (value) {
       if (!/\d+/.test(value)) {
@@ -78,22 +91,6 @@ var defineEditableComponents = function (tmpl) {
       }
     }
   });
-
-  //tmpl.$('.delivery-day').editable({
-  //  success: function (response, newValue) {
-  //    tmpl.updateSupplierDetails('deliveryDay', newValue);
-  //  },
-  //  value: tmpl.supplier.get().deliveryDay,
-  //  source: [
-  //    {value: 'sunday', text: 'Sunday'},
-  //    {value: 'monday', text: 'Monday'},
-  //    {value: 'tuesday', text: 'Tuesday'},
-  //    {value: 'wednesday', text: 'Wednesday'},
-  //    {value: 'thursday', text: 'Thursday'},
-  //    {value: 'friday', text: 'Friday'},
-  //    {value: 'saturday', text: 'Saturday'}
-  //  ]
-  //});
 
   tmpl.$('.delivery-time').editable({
     type: 'combodate',
@@ -105,7 +102,7 @@ var defineEditableComponents = function (tmpl) {
     mode: 'inline',
     success: function (response, newValue) {
       newValue = newValue.toDate();
-      tmpl.updateSupplierDetails('deliveryTime', newValue);
+      tmpl.triggerUpdateSupplier('deliveryTime', newValue);
     }
   });
 
@@ -115,7 +112,7 @@ var defineEditableComponents = function (tmpl) {
     display: function () {
     },
     success: function (response, newValue) {
-      tmpl.updateSupplierDetails('contactName', newValue);
+      tmpl.triggerUpdateSupplier('contactName', newValue);
     }
   });
 
@@ -125,7 +122,7 @@ var defineEditableComponents = function (tmpl) {
     display: function () {
     },
     success: function (response, newValue) {
-      tmpl.updateSupplierDetails('customerNumber', newValue);
+      tmpl.triggerUpdateSupplier('customerNumber', newValue);
     },
     validate: function (value) {
       if (!/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(value)) {
