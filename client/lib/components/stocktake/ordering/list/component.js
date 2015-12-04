@@ -41,6 +41,13 @@ component.state.onSupplierChanged = function () {
   }
 };
 
+component.state.onCountChange = function () {
+  var self = this;
+  return function () {
+    self.getInitialHtml(self.get('activeSupplier'));
+  }
+};
+
 
 component.action.getSupplier = function () {
   return this.get('supplier');

@@ -14,8 +14,16 @@ Template.orderingCount.onRendered(function () {
         var stockItemId = $row.attr('data-id');
 
         var count = parseFloat(newValue) ? parseFloat(newValue) : 0;
-        Meteor.call('editOrderingCount', stockItemId, count, HospoHero.handleMethodResult());
+        Meteor.call('editOrderingCount', stockItemId, count, HospoHero.handleMethodResult(function () {
+          $(".ordering_count").trigger('callFlowAction');
+        }));
       }
     }
   });
+});
+
+Template.orderingCount.events({
+  'callFlowAction .ordering_count': function () {
+    FlowComponents.callAction('countChange');
+  }
 });

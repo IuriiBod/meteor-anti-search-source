@@ -19,7 +19,7 @@
             </thead>
             <tbody>
               {{#each state$list}}
-                {{> render component="ordersListItem" itemId=this}}
+                {{> render component="ordersListItem" itemId=this onCountChange=state$onCountChange}}
               {{/each}}
             </tbody>
           </table>
