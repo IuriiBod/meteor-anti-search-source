@@ -21,7 +21,7 @@
 
     <div class="agile-detail">
       {{#if canEditRoster}}
-        {{> shiftBasicTimeEditable shift=this}}
+        {{> comboTimeEditable params=comboDateParams}}
       {{else}}
         <i class="fa fa-clock-o"></i> {{timeFormat startTime}} - {{timeFormat endTime}}
       {{/if}}
