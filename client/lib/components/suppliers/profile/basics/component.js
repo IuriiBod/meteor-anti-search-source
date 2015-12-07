@@ -13,11 +13,12 @@ component.state.supplier = function () {
 };
 
 component.state.status = function () {
-  return this.get('supplier').active;
+  var supplier = this.get('supplier');
+  return supplier && supplier.active;
 };
 
 component.state.lastOrder = function () {
-  return OrderReceipts.findOne({'supplier': this.get('supplier')._id}, {sort: {'date': -1}, limit: 1});
+  return OrderReceipts.findOne({'supplier': this.supplierId}, {sort: {'date': -1}});
 };
 
 component.state.deliveryDays = function () {
@@ -34,14 +35,13 @@ component.state.deliveryDays = function () {
 
 component.state.isSelectedDay = function (value) {
   var supplier = this.get('supplier');
-  if (supplier) {
-    return supplier.deliveryDays.indexOf(value) > -1;
-  }
+  return supplier && supplier.deliveryDays.indexOf(value) > -1;
 };
 
 component.action.changeSupplierStatus = function () {
-  var id = this.get('supplier').id;
-  Meteor.call('activateReactivateSuppliers', id, HospoHero.handleMethodResult());
+  Meteor.call('activateReactivateSuppliers', this.supplierId, HospoHero.handleMethodResult(function () {
+    Router.go('suppliersList');
+  }));
 };
 
 component.action.uploadPriceList = function () {
