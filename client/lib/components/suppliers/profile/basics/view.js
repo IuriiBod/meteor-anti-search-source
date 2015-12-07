@@ -68,11 +68,6 @@ var defineEditableComponents = function (tmpl) {
     },
     success: function (response, newValue) {
       tmpl.triggerUpdateSupplier('phone', newValue);
-    },
-    validate: function (value) {
-      if (!/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(value)) {
-        return 'Only phone number!'
-      }
     }
   });
 
@@ -123,11 +118,6 @@ var defineEditableComponents = function (tmpl) {
     },
     success: function (response, newValue) {
       tmpl.triggerUpdateSupplier('customerNumber', newValue);
-    },
-    validate: function (value) {
-      if (!/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(value)) {
-        return 'Only phone number!'
-      }
     }
   });
 };
