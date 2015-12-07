@@ -1,29 +1,29 @@
 var component = FlowComponents.define("ordersListItem", function(props) {
   this.orderId = props.itemId;
+  this.onCountChange = props.onCountChange;
 });
 
 component.state.order = function() {
-  var order = StockOrders.findOne(this.orderId);
+  var order = StockOrders.findOne({ _id: this.orderId });
   if(order) {
-    var stock = Ingredients.findOne({"_id": order.stockId});
+    var stock = Ingredients.findOne({_id: order.stockId});
     if(stock) {
       order.stockName = stock.description;
     }
     return order;
   }
-}
+};
 
 component.state.editable = function() {
-  var order = StockOrders.findOne(this.orderId);
+  var order = StockOrders.findOne({ _id: this.orderId });
   if(order) {
-    if(order.orderReceipt) {
-      return false;
-    } else {
-      return true;
-    }
+    return !order.orderReceipt;
   }
-}
+};
 
-component.state.supplier = function() {
-  return Session.get("activeSupplier");
-}
+component.state.onCountChange = function () {
+  var self = this;
+  return function () {
+    self.onCountChange();
+  }
+};

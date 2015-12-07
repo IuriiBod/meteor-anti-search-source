@@ -6,20 +6,6 @@ var fields = ['name'];
 
 JobItemsSearch = new SearchSource('jobItemsSearch', fields, options);
 
-var newSearchParams = function (dataHistory) {
-  var count = dataHistory.length;
-  var lastItem = dataHistory[count - 1]['name'];
-  var selector = {"type": Session.get("type"), "limit": count + 10, "endingAt": lastItem};
-  var archive = Router.current().params.type;
-  if(archive && archive == 'archive') {
-    selector.status = 'archived';
-  } else {
-    selector.status = {$ne: 'archived'};
-  }
-
-  return selector;
-};
-
 Template.jobItemsList.helpers({
   getJobItems: function() {
     return JobItemsSearch.getData({
@@ -51,19 +37,34 @@ Template.jobItemsList.events({
     JobItemsSearch.search(text, selector);
   }, 200),
 
-  'click #loadMoreJobItems': _.throttle(function(e) {
+  'click #loadMoreJobItems': _.throttle(function(e, t) {
     e.preventDefault();
     var text = $("#searchJobItemsBox").val().trim();
-    var params = _.keys(JobItemsSearch.history);
-    if(JobItemsSearch.history && JobItemsSearch.history[params]) {
-      var dataHistory = JobItemsSearch.history[params].data;
+    if(JobItemsSearch.history && JobItemsSearch.history[text]) {
+      var dataHistory = JobItemsSearch.history[text].data;
       if(dataHistory.length >= 9) {
         JobItemsSearch.cleanHistory();
-        var selector = newSearchParams(dataHistory);
+        var selector = t.newSearchParams(dataHistory);
         JobItemsSearch.search(text, selector);
       }
     }
   }, 200)
+});
+
+Template.jobItemsList.onCreated(function() {
+  this.newSearchParams = function (dataHistory) {
+    var count = dataHistory.length;
+    var lastItem = dataHistory[count - 1]['name'];
+    var selector = {"type": Session.get("type"), "limit": count + 10, "endingAt": lastItem};
+    var archive = Router.current().params.type;
+    if(archive && archive == 'archive') {
+      selector.status = 'archived';
+    } else {
+      selector.status = {$ne: 'archived'};
+    }
+
+    return selector;
+  };
 });
 
 Template.jobItemsList.onRendered(function() {

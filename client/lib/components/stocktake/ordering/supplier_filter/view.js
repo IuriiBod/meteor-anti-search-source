@@ -1,30 +1,36 @@
+Template.supplierFilter.onRendered(function () {
+  this.generateReceipts = function (orderType) {
+    FlowComponents.callAction('getSupplier').then(function(supplier) {
+      var version = HospoHero.getParamsFromRoute(Router.current(), '_id');
+      var address = null;
+      var deliveryDate = moment().add(1, 'days').format('x');
+      var info = {
+        "through": orderType,
+        "details": address,
+        "deliveryDate": deliveryDate
+      };
+      if(orderType == "emailed") {
+        $("#composeMailModal").modal();
+      } else {
+        Meteor.call("generateReceipts", version, supplier, info, HospoHero.handleMethodResult());
+      }
+    });
+  }
+});
+
 Template.supplierFilter.events({
   'click .activateSupplier': function(event) {
     event.preventDefault();
-    var supplier = $(event.target).attr("data-id");
-    if(supplier == "Non-assigned") {
-      supplier = null;
-    }
-    Session.set("activeSupplier", supplier);
+    FlowComponents.callAction('setActiveSupplier', this.toString());
   },
 
-  'click .setOrder': function(event) {
+  'click .orderEmailed': function(event, tmpl) {
     event.preventDefault();
-    var orderType = $(event.target).attr("data-type");
-    var supplier = Session.get("activeSupplier");
-    var version = Session.get("thisVersion");
-    var address = null;
-    var deliveryDate = moment().add(1, 'days');
-    deliveryDate = moment(deliveryDate).format("YYYY-MM-DD");
-    var info = {
-      "through": orderType,
-      "details": address,
-      "deliveryDate": new Date(deliveryDate).getTime()
-    };
-    if(orderType == "emailed") {
-      $("#composeMailModal").modal();
-    } else {
-      Meteor.call("generateReceipts", version, supplier, info, HospoHero.handleMethodResult());
-    }
+    tmpl.generateReceipts('emailed');
+  },
+
+  'click .orderPhoned': function(event, tmpl) {
+    event.preventDefault();
+    tmpl.generateReceipts('phoned');
   }
 });

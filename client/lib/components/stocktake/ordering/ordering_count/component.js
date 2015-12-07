@@ -1,6 +1,7 @@
 var component = FlowComponents.define("orderingCount", function(props) {
   this.id = props.id;
   this.unit = props.unit;
+  this.onCountChange = props.onCountChange;
 });
 
 component.state.orderingCount = function() {
@@ -12,4 +13,8 @@ component.state.orderingCount = function() {
 
 component.state.unit = function() {
   return this.unit;
+};
+
+component.action.countChange = function () {
+  this.onCountChange();
 };

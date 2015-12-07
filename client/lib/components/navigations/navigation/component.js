@@ -66,7 +66,7 @@ var menuEntries = [
     title: 'Stock',
     icon: 'fa-list',
     permission: 'view stocks',
-    activeOnRoutes: ['ingredientsList', 'stocktakeList', 'orderReceiptsList', 'suppliersList', 'supplierProfile'],
+    activeOnRoutes: ['ingredientsList', 'stocktakeList', 'orderReceiptsList', 'suppliersList', 'supplierProfile', 'orderReceive'],
     subMenuEntries: [
       {
         title: 'List',
@@ -96,15 +96,6 @@ var menuEntries = [
       {
         title: 'Team Hours',
         route: 'teamHours',
-        params: function () {
-          return {
-            year: moment().year(),
-            week: moment().week()
-          }
-        }
-      }, {
-        title: 'Daily stock',
-        route: 'currentStocks',
         params: function () {
           return {
             year: moment().year(),

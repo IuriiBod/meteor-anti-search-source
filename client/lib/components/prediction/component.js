@@ -15,7 +15,6 @@ var component = FlowComponents.define("salesPrediction", function (props) {
 });
 
 component.prototype.newParamsToSearchData = function(dataHistory, text) {
-  var text = text ? text : "";
   var count = dataHistory.length;
   var lastItem = dataHistory[count - 1]['name'];
   var category = Router.current().params.category;
@@ -64,10 +63,9 @@ component.state.allItemsLoaded = function () {
 
 component.action.loadMoreBtnClick = function (text) {
   var search = this.MenuItemsSearch;
-  var params = _.keys(search.history);
   this.clicks++;
-  if (search.history && search.history[params]) {
-    var dataHistory = search.history[params].data;
+  if (search.history && search.history[text]) {
+    var dataHistory = search.history[text].data;
     if (dataHistory.length >= this.maxHistoryLength) {
       search.cleanHistory();
       var searchParams = this.newParamsToSearchData(dataHistory, text);
