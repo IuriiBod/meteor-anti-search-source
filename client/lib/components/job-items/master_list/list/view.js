@@ -6,6 +6,20 @@ var fields = ['name'];
 
 JobItemsSearch = new SearchSource('jobItemsSearch', fields, options);
 
+var newSearchParams = function (dataHistory) {
+  var count = dataHistory.length;
+  var lastItem = dataHistory[count - 1]['name'];
+  var selector = {"type": Session.get("type"), "limit": count + 10, "endingAt": lastItem};
+  var archive = Router.current().params.type;
+  if(archive && archive == 'archive') {
+    selector.status = 'archived';
+  } else {
+    selector.status = {$ne: 'archived'};
+  }
+
+  return selector;
+};
+
 Template.jobItemsList.helpers({
   getJobItems: function() {
     return JobItemsSearch.getData({
@@ -40,22 +54,15 @@ Template.jobItemsList.events({
   'click #loadMoreJobItems': _.throttle(function(e) {
     e.preventDefault();
     var text = $("#searchJobItemsBox").val().trim();
-    if(JobItemsSearch.history && JobItemsSearch.history[text]) {
-    var dataHistory = JobItemsSearch.history[text].data;
-    if(dataHistory.length >= 9) {
-      JobItemsSearch.cleanHistory();
-      var count = dataHistory.length;
-      var lastItem = dataHistory[count - 1]['name'];
-      var selector = {"type": Session.get("type"), "limit": count + 10, "endingAt": lastItem};
-      var archive = Router.current().params.type;
-      if(archive && archive == 'archive') {
-        selector.status = 'archived';
-      } else {
-        selector.status = {$ne: 'archived'};
+    var params = _.keys(JobItemsSearch.history);
+    if(JobItemsSearch.history && JobItemsSearch.history[params]) {
+      var dataHistory = JobItemsSearch.history[params].data;
+      if(dataHistory.length >= 9) {
+        JobItemsSearch.cleanHistory();
+        var selector = newSearchParams(dataHistory);
+        JobItemsSearch.search(text, selector);
       }
-      JobItemsSearch.search(text, selector);
     }
-  }
   }, 200)
 });
 
@@ -65,7 +72,7 @@ Template.jobItemsList.onRendered(function() {
 
   var tpl = this;
   Meteor.defer(function() {
-    $(window).scroll(function(e){
+    $('#wrapper').scroll(function(e){
       var docHeight = $(document).height();
       var winHeight = $(window).height();
       var scrollTop = $(window).scrollTop();

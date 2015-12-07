@@ -19,6 +19,7 @@ Template.menuItemsList.helpers({
 
 Template.menuItemsList.events({
   'keyup #searchMenuItemsBox': function(event) {
+    console.log('keyup event');
     MenuItemsSearch.cleanHistory();
     var text = $("#searchMenuItemsBox").val().trim();
     var category = Router.current().params.category;
@@ -44,8 +45,9 @@ Template.menuItemsList.events({
   'click #loadMoreMenuItems': function(event) {
     event.preventDefault();
     var text = $("#searchMenuItemsBox").val().trim();
-    if(MenuItemsSearch.history && MenuItemsSearch.history[text]) {
-      var dataHistory = MenuItemsSearch.history[text].data;
+    var params = _.keys(MenuItemsSearch.history);
+    if(MenuItemsSearch.history && MenuItemsSearch.history[params]) {
+      var dataHistory = MenuItemsSearch.history[params].data;
       if(dataHistory.length >= 9) {
         MenuItemsSearch.cleanHistory();
         var count = dataHistory.length;
@@ -86,10 +88,13 @@ Template.menuItemsList.rendered = function() {
 Template.menuItemsList.onRendered(function() {
   var tpl = this;
   Meteor.defer(function() {
-    $(window).scroll(function(e){
+    $("#wrapper").on('scroll', function(e){
       var docHeight = $(document).height();
       var winHeight = $(window).height();
       var scrollTop = $(window).scrollTop();
+      console.log('docHeight = ', docHeight);
+      console.log('winHeight = ', winHeight);
+      console.log('scrollTop = ', scrollTop);
 
       if ((docHeight - winHeight) == scrollTop) {
         tpl.$('#loadMoreMenuItems').click();
