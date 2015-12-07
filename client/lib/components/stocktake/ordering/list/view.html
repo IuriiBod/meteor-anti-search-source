@@ -3,7 +3,7 @@
     <div class="ibox ">
       <div class="ibox-content">
         {{#if state$isNull}}
-          {{> render component="supplierFilter"}}
+          {{> render component="supplierFilter" onSupplierChanged=state$onSupplierChanged}}
           <table class="table table-condensed table-hover table-striped">
             <thead>
               <tr>
@@ -19,7 +19,7 @@
             </thead>
             <tbody>
               {{#each state$list}}
-                {{> render component="ordersListItem" itemId=this}}
+                {{> render component="ordersListItem" itemId=this onCountChange=state$onCountChange}}
               {{/each}}
             </tbody>
           </table>
@@ -43,7 +43,7 @@
 
   <!-- COMPOSE MAIL MODAL-->
   <div class="modal fade" id="composeMailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {{> render component = 'composeMail' name="composeMail" initialHtml="Email body"}}
+    {{> render component = 'composeMail' name="composeMail" initialHtml=state$initialHtml supplier=state$activeSupplier}}
   </div>
   <!-- /COMPOSE MAIL MODAL -->
 </template>

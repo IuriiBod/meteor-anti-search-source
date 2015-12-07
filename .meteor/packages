@@ -37,7 +37,6 @@ accounts-google
 accounts-password
 
 useraccounts:bootstrap
-meteorhacks:aggregate
 mizzao:autocomplete
 konecty:autolinker
 twbs:bootstrap
@@ -53,7 +52,6 @@ reactive-var
 ogourment:settings
 
 claudiojulio:blueimp-gallery
-summernote:standalone
 planettraining:jquery-fullcalendar
 thesabbir:jquery-nestable
 rochal:slimscroll
@@ -78,3 +76,4 @@ fortawesome:fontawesome
 momentjs:moment
 jss:moment-timezone
 joshowens:timezone-picker
+summernote:summernote
