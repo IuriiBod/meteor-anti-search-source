@@ -1,71 +1,45 @@
 Meteor.methods({
-  createSupplier: function (name, email, phone) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+  createSupplier: function (doc) {
+    if (!HospoHero.canUser('edit stocks', this.userId)) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    check(name, String);
+    check(doc, HospoHero.checkers.SupplierChecker);
 
-    var exist = Suppliers.findOne({
-      "name": name,
-      "relations.areaId": HospoHero.getCurrentAreaId()
-    });
+    doc.createdBy = this.userId;
+    doc.createdOn = new Date();
+    doc.active = true;
+    doc.relations = HospoHero.getRelationsObject();
 
-    if (exist) {
-      logger.error("Supplier's name should be unique");
-      throw new Meteor.Error(404, "Supplier's name should be unique");
-    }
-
-    var doc = {
-      "name": name,
-      "email": email,
-      "phone": phone,
-      "createdBy": this.userId,
-      "createdOn": Date.now(),
-      "active": true,
-      relations: HospoHero.getRelationsObject()
-    };
     var id = Suppliers.insert(doc);
+
     logger.info("New supplier inserted ", id);
     return id;
   },
 
-  updateSupplier: function (id, info) {
+  editSupplier: function (updatedSupplier) {
     if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    check(id, HospoHero.checkers.MongoId);
+    check(updatedSupplier, HospoHero.checkers.SupplierChecker);
 
-    if (!Suppliers.findOne(id)) {
-      logger.error("Supplier does not exist", id);
-      throw new Meteor.Error(404, "Supplier does not exist");
+    Suppliers.update({'_id': updatedSupplier._id}, {$set: updatedSupplier});
+    logger.info("Suppliers details updated", {"supplierId": updatedSupplier._id});
+  },
+
+  addPriceList: function (supplierId, files) {
+    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+      logger.error("User not permitted to create ingredients");
+      throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
-    var updateQuery = {};
-    if (info.hasOwnProperty('name')) {
-      if (info.name && info.name.trim()) {
-        updateQuery['name'] = info.name;
-      }
-    }
-    if (info.hasOwnProperty('email')) {
-      if (info.email && info.email.trim()) {
-        updateQuery['email'] = info.email;
-      }
-    }
-    if (info.hasOwnProperty("phone")) {
-      if (info.phone && info.phone.trim()) {
-        updateQuery['phone'] = info.phone;
-      }
-    }
-    if (info.hasOwnProperty("priceList")) {
-      if (info.priceList && info.priceList.trim()) {
-        updateQuery['priceList'] = info.priceList;
-      }
-    }
-    Suppliers.update({"_id": id}, {$set: updateQuery});
-    logger.info("Supplier information updated", id);
+
+    check(files, HospoHero.checkers.PriceListsChecker);
+    Suppliers.update({_id: supplierId}, {$push: {priceList: {$each: files}}});
+
+    logger.info("Supplier information updated", supplierId);
   },
 
   activateReactivateSuppliers: function (id) {
@@ -98,5 +72,19 @@ Meteor.methods({
       logger.error("There are no status of supplier ", id);
       throw new Meteor.Error("There are no status of supplier ");
     }
+  },
+
+  removePriceList: function (supplierId, priceListObject) {
+    check([priceListObject], HospoHero.checkers.PriceListsChecker);
+
+    Suppliers.update({
+      _id: supplierId
+    }, {
+      $pull: {
+        priceList: {
+          url: priceListObject.url
+        }
+      }
+    });
   }
 });

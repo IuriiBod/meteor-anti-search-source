@@ -43,6 +43,6 @@ Meteor.methods({
     }
 
     Locations.update({_id: updatedLocation._id}, {$set: updatedLocation});
-    logger.info('Location was updated', {locationId: updatedLocation._id});
+    logger.info('Location was updated', {locationId: updatedLocation._id, userId: Meteor.userId()});
   }
 });

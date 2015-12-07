@@ -42,9 +42,9 @@ component.prototype.renderTextEditor = function () {
       });
     }
   });
-  $(".summernote").code(this.initialHtml);
+  $(".summernote").summernote('code', this.initialHtml);
 };
 
 component.state.content = function () {
-  return $('.summernote').code();
-}
+  return $('.summernote').summernote('code');
+};

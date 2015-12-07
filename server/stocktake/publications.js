@@ -75,3 +75,9 @@ Meteor.publish("currentStocks", function (ids) {
   logger.info("Current stocks published ", ids);
   return CurrentStocks.find({"_id": {$in: ids}});
 });
+
+Meteor.publish('stocktakeList', function (areaId) {
+  return Stocktakes.find({
+    'relations.areaId': areaId
+  });
+});

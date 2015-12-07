@@ -56,6 +56,18 @@ Namespace('HospoHero', {
     } else {
       return userNameString;
     }
+  },
+
+  getParamsFromRoute: function (routeContext, params) {
+    if (_.isString(params)) {
+      return routeContext.params[params];
+    } else {
+      var result = {};
+      params.forEach(function (param) {
+        result[param] = routeContext.params[params];
+      });
+      return result;
+    }
   }
 });
 

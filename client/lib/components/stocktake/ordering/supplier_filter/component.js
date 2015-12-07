@@ -1,60 +1,47 @@
 var component = FlowComponents.define("supplierFilter", function(props) {
   this.onRendered(this.onListRendered);
+  this.onSupplierChanged = props.onSupplierChanged;
+  this.version = HospoHero.getParamsFromRoute(Router.current(), '_id');
 });
 
 component.state.suppliers = function() {
-  var ordersList = StockOrders.find({"version": Session.get("thisVersion")}, {sort: {"supplier": 1}}).fetch();
-  var supplierslist = [];
-  var activeSupplier = null;
-  if(ordersList) {
-    ordersList.forEach(function(order) {
-      var supplier = null;
-      if(order.supplier) {
-        supplier = order.supplier;
-      } else {
-        supplier = "Non-assigned";
-      }
-      if(supplierslist.indexOf(supplier) < 0) {
-        supplierslist.push(supplier);
-      }
-    });
-
-    if(supplierslist[0] == "Non-assigned") {
-      activeSupplier = null;
-    } else {
-      activeSupplier = supplierslist[0];
+  var ordersList = StockOrders.find({
+    version: Router.current().params._id
+  }, {
+    fields: {
+      supplier: 1
+    },
+    sort: {
+      supplier: 1
     }
-    if(!Session.get("activeSupplier")) {
-      Session.set("activeSupplier", activeSupplier)
-    }
-    return supplierslist;
-  }
-};
+  }).fetch();
 
-component.state.activeSupplier = function() {
-  var supplier = Session.get("activeSupplier");
-  if(supplier) {
-    return supplier;
-  } else {
-    return "Non-assigned";
+  var suppliersList = _.groupBy(ordersList, 'supplier');
+  suppliersList = _.keys(suppliersList);
+
+  if (!this.get('activeSupplier')) {
+    this.set('activeSupplier', suppliersList[0]);
+    this.onSupplierChanged(suppliersList[0]);
   }
+  
+  return suppliersList;
 };
 
 component.state.receipt = function() {
   return OrderReceipts.findOne({
-    "version": Session.get("thisVersion"),
-    "supplier": Session.get("activeSupplier"),
+    "version": this.version,
+    "supplier": this.get("activeSupplier"),
     "orderedThrough": {$ne: null}
   });
 };
 
 component.state.deliveryDate = function() {
   var receipt = OrderReceipts.findOne({
-    "version": Session.get("thisVersion"),
-    "supplier": Session.get("activeSupplier")
+    "version": this.version,
+    "supplier": this.get("activeSupplier")
   });
   if(receipt && receipt.expectedDeliveryDate) {
-    return receipt.expectedDeliveryDate;
+    return parseInt(receipt.expectedDeliveryDate);
   } else {
     return moment().add(1, 'day');
   }
@@ -62,8 +49,8 @@ component.state.deliveryDate = function() {
 
 component.state.orderSentDetails = function() {
   var receipt = OrderReceipts.findOne({
-    "version": Session.get("thisVersion"),
-    "supplier": Session.get("activeSupplier"),
+    "version": this.version,
+    "supplier": this.get("activeSupplier"),
     "orderedThrough": {$ne: null}
   });
   var text = null;
@@ -80,12 +67,18 @@ component.state.orderSentDetails = function() {
 
 component.state.receiptExists = function(supplier) {
   var receipt = OrderReceipts.findOne({
-    "version": Session.get("thisVersion"),
+    "version": this.version,
     "supplier": supplier,
     "orderedThrough": {$ne: null}
   });
   return !!(receipt && receipt.orderedThrough && receipt.orderedThrough.through);
 };
+
+
+component.action.getSupplier = function () {
+  return this.get('activeSupplier');
+};
+
 
 component.prototype.onListRendered = function() {
   $(".expectedDeliveryDate")
@@ -94,8 +87,8 @@ component.prototype.onListRendered = function() {
     'weekStart': 1
   })
   .on("changeDate", function(event) {
-    var supplier = Session.get("activeSupplier");
-    var version = Session.get("thisVersion");
+    var supplier = this.get("activeSupplier");
+    var version = this.version;
     var date = event.date;
     date = moment(date).format("YYYY-MM-DD");
     var id = null;
@@ -110,4 +103,10 @@ component.prototype.onListRendered = function() {
     }
     Meteor.call("updateReceipt", id, info, HospoHero.handleMethodResult());
   });
+};
+
+
+component.action.setActiveSupplier = function (supplierId) {
+  this.set('activeSupplier', supplierId);
+  this.onSupplierChanged(supplierId);
 };

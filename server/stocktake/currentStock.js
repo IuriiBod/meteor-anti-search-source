@@ -51,27 +51,4 @@ Meteor.methods({
     var id = CurrentStocks.insert(doc);
     logger.info("New current stock entry added", {"_id": id, "stockId": stockId});
   },
-
-  readDaily: function (start, end) {
-    var pipe = [
-      {
-        $match: {
-          "date": {
-            $gte: new Date(start),
-            $lte: new Date(end)
-          }
-        }
-      },
-      {$sort: {version: -1}},
-      {
-        $group: {
-          _id: {stockId: "$stockId", date: "$date"},
-          count: {$first: "$count"}
-        }
-      }
-    ];
-    var data = CurrentStocks.aggregate(pipe, {cursor: {batchSize: 0}});
-    logger.info("Current stock published");
-    return data;
-  }
 });

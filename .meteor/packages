@@ -3,18 +3,7 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-standard-minifiers
-meteor-base
-mobile-experience
-mongo
-blaze-html-templates
-session
-tracker
-logging
-reload
-ejson
-spacebars
-check
+meteor-platform
 http
 force-ssl
 service-configuration
@@ -22,7 +11,6 @@ jquery
 email
 underscore
 random
-less
 micah:google-cloud
 jss:through
 votercircle:winston
@@ -37,12 +25,12 @@ accounts-google
 accounts-password
 
 useraccounts:bootstrap
-meteorhacks:aggregate
 mizzao:autocomplete
 konecty:autolinker
+less
 twbs:bootstrap
 zimme:iron-router-active
-okgrow:router-autoscroll
+okgrow:iron-router-autoscroll
 dbarrett:dropzonejs
 percolate:intercom
 tsega:bootstrap3-datetimepicker
@@ -53,7 +41,7 @@ reactive-var
 ogourment:settings
 
 claudiojulio:blueimp-gallery
-summernote:standalone
+summernote:summernote
 planettraining:jquery-fullcalendar
 thesabbir:jquery-nestable
 rochal:slimscroll
