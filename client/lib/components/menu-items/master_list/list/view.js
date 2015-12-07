@@ -86,12 +86,13 @@ Template.menuItemsList.rendered = function() {
 Template.menuItemsList.onRendered(function() {
   var tpl = this;
   Meteor.defer(function() {
-    $(window).scroll(function(e){
-      var docHeight = $(document).height();
-      var winHeight = $(window).height();
-      var scrollTop = $(window).scrollTop();
+    $("#wrapper").on('scroll', function(e){
+      var wrapper = e.target;
+      var wrapperHeight = wrapper.clientHeight;
+      var wrapperScrollHeight = wrapper.scrollHeight;
+      var wrapperScrollTop = wrapper.scrollTop;
 
-      if ((docHeight - winHeight) == scrollTop) {
+      if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
         tpl.$('#loadMoreMenuItems').click();
       }
     });
