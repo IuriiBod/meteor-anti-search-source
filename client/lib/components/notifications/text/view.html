@@ -13,9 +13,9 @@
       <div>
         {{{state$notifi.text}}}
       </div>
-      <div class="actions">
-        {{> render component='notifiButtons' noti=state$notifi}}
-      </div>
+    </div>
+    <div class="mark-as-read text-warning">
+      <i class="fa fa-eye readNotification" data-id="{{state$notifi._id}}"></i>
     </div>
   </div>
 </template>
