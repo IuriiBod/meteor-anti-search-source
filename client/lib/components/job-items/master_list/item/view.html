@@ -5,7 +5,7 @@
         <i class="fa fa-eye"></i> View
       </button>
     </td>
-    <td>{{state$job.name}}</td>
+    <td>{{{state$job.name}}}</td>
     <td>{{secondsToMinutes state$job.activeTime}} mins</td>
     {{#if state$showSection}}
       <td>{{sectionById state$job.section}}</td>
