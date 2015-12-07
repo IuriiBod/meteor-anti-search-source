@@ -21,5 +21,11 @@ Template.notifiText.events({
         HospoHero.info("Shift claim rejected");
       }));
     }
+  },
+
+  'click .readNotification': function(event) {
+    event.preventDefault();
+    var id = $(event.target).attr("data-id");
+    Meteor.call("readNotifications", id, HospoHero.handleMethodResult());
   }
 });
