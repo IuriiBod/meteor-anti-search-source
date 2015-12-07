@@ -105,7 +105,7 @@ softwarerero:accounts-t9n@1.0.9
 spacebars@1.0.6
 spacebars-compiler@1.0.6
 srp@1.0.3
-summernote:standalone@0.6.16
+summernote:summernote@0.7.0
 templating@1.1.1
 thesabbir:jquery-nestable@0.0.1
 tracker@1.0.7
