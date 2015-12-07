@@ -1,4 +1,3 @@
-
 # Meteor packages used by this project, one per line.
 #
 # 'meteor add' and 'meteor remove' will edit this file for you,
@@ -26,7 +25,6 @@ accounts-google
 accounts-password
 
 useraccounts:bootstrap
-meteorhacks:aggregate
 mizzao:autocomplete
 konecty:autolinker
 less
