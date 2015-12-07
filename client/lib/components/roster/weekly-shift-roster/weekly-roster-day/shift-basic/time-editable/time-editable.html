@@ -1,19 +1,13 @@
 <template name="shiftBasicTimeEditable">
   <form class="time-range-selector {{timeRangeSelectorDisplayClass}}">
     <div class="form-group">
-      <div class='input-group date start-time'>
-        <input type='text' class="form-control"/>
-        <span class="input-group-addon">
-        <span class="glyphicon glyphicon-time"></span>
-      </span>
+      <div class='input-group date start-time-wrapper'>
+        <input class="start-time" type="text">
       </div>
     </div>
     <div class="form-group">
-      <div class='input-group date end-time'>
-        <input type='text' class="form-control"/>
-        <span class="input-group-addon">
-          <span class="glyphicon glyphicon-time"></span>
-        </span>
+      <div class='input-group date end-time-wrapper'>
+        <input class="end-time" type="text">
       </div>
     </div>
     <div class="form-group">
