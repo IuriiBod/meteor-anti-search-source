@@ -7,11 +7,6 @@
   "intercom": {
     "secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"
   },
-  "Revel": {
-    "HOST": "https://farmcafe.revelup.com",
-    "KEY": "a903d4c06d424a07ad3de99d3eec673c",
-    "SECRET": "a3f4b1f2b3a04d8fb7a277267b33086f0e0cbf2dafa444c7a387bf84cf63f034"
-  },
   "GoogleCloud": {
     "PROJECT_NAME": "HospoHero",
     "PROJECT_ID": "hospohero",
