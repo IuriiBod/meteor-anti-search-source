@@ -13,35 +13,35 @@ component.state.supplier = function () {
 };
 
 component.state.status = function () {
-  return this.get('supplier').active;
+  var supplier = this.get('supplier');
+  return supplier && supplier.active;
 };
 
 component.state.lastOrder = function () {
-  return OrderReceipts.findOne({'supplier': this.get('supplier')._id}, {sort: {'date': -1}, limit: 1});
+  return OrderReceipts.findOne({'supplier': this.supplierId}, {sort: {'date': -1}});
 };
 
 component.state.deliveryDays = function () {
   return [
-    {value: 'sunday', text: 'Sunday'},
     {value: 'monday', text: 'Monday'},
     {value: 'tuesday', text: 'Tuesday'},
     {value: 'wednesday', text: 'Wednesday'},
     {value: 'thursday', text: 'Thursday'},
     {value: 'friday', text: 'Friday'},
-    {value: 'saturday', text: 'Saturday'}
+    {value: 'saturday', text: 'Saturday'},
+    {value: 'sunday', text: 'Sunday'}
   ];
 };
 
-component.state.onDeliveryDayChanged = function () {
-  var self = this;
-  return function (value) {
-    self.updateSupplier('deliveryDay', value);
-  }
+component.state.isSelectedDay = function (value) {
+  var supplier = this.get('supplier');
+  return supplier && supplier.deliveryDays.indexOf(value) > -1;
 };
 
 component.action.changeSupplierStatus = function () {
-  var id = this.get('supplier').id;
-  Meteor.call('activateReactivateSuppliers', id, HospoHero.handleMethodResult());
+  Meteor.call('activateReactivateSuppliers', this.supplierId, HospoHero.handleMethodResult(function () {
+    Router.go('suppliersList');
+  }));
 };
 
 component.action.uploadPriceList = function () {

@@ -25,17 +25,24 @@
           <td><a class="supplier-phone">{{state$supplier.phone}}</a></td>
         </tr>
         <tr>
-          <td>Minimum order amount:</td>
-          <td><a class="minimum-order-amount">{{state$supplier.minimumOrderAmount}}</a></td>
+          <td>Minimum order:</td>
+          <td>$<a class="minimum-order-amount">{{state$supplier.minimumOrderAmount}}</a></td>
         </tr>
         <tr>
           <td>Delivery time:</td>
           <td>
             Every
-            {{>render component="ghostEditableSelect"
-                      values=state$deliveryDays
-                      selected=state$supplier.deliveryDay
-                      onValueChanged=state$onDeliveryDayChanged}}
+            <div>
+              {{#each state$deliveryDays}}
+                <p>
+                  {{#if state$isSelectedDay value}}
+                    <input class="delivery-day" type="checkbox" value="{{value}}" checked="checked"> {{text}}
+                  {{else}}
+                    <input class="delivery-day" type="checkbox" value="{{value}}"> {{text}}
+                  {{/if}}
+                </p>
+              {{/each}}
+            </div>
             at
             <a class="delivery-time">{{timeFormat state$supplier.deliveryTime}}</a>
           </td>
@@ -76,7 +83,7 @@
           {{#each state$supplier.priceList}}
             <tr>
               <td>
-                <a href="{{url}}" target="_blank">{{name}}</a>
+                <a href="{{url}}{{convertToPdfUrl}}" target="_blank">{{name}}</a>
               </td>
               <td>
                 {{dateFormat uploadedAt}}
