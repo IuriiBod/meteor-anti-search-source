@@ -3,6 +3,15 @@ Template.comboTimeEditable.onCreated(function () {
 
     self.isEditMode = new ReactiveVar(false);
 
+    self.submitTime = function () {
+        var firstTime = self.getTimeFromCombodate('.first-time');
+        var secondTime = self.isTimeRangeMode() ? self.getTimeFromCombodate('.second-time') : null;
+        if (secondTime && self.checkFirstSecondDate(firstTime, secondTime)) {
+            self.data.params.onSubmit(firstTime, secondTime);
+            self.exitFromEditMode();
+        }
+    };
+
     self.getTimeFromCombodate = function (selector) {
         var $combodate = self.$(selector);
 
@@ -19,6 +28,14 @@ Template.comboTimeEditable.onCreated(function () {
 
     self.isTimeRangeMode = function () {
         return !!self.data.params.secondTime;
+    };
+
+    self.checkFirstSecondDate = function (firstTime, secondTime) {
+        if (secondTime < firstTime) {
+            HospoHero.error('Start time should be less than end time!');
+            return false;
+        }
+        return true;
     };
 });
 
@@ -45,11 +62,7 @@ Template.comboTimeEditable.events({
     'submit .time-range-selector': function (e, tmpl) {
         e.preventDefault();
 
-        var firstTime = tmpl.getTimeFromCombodate('.first-time');
-        var secondTime = tmpl.isTimeRangeMode() ? tmpl.getTimeFromCombodate('.second-time') : null;
-
-        tmpl.data.params.onSubmit(firstTime, secondTime);
-        tmpl.exitFromEditMode();
+        tmpl.submitTime();
     },
     'click .cancel-button': function (e, tmpl) {
         tmpl.exitFromEditMode();
