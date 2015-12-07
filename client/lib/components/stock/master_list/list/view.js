@@ -35,24 +35,14 @@ Template.ingredientsList.events({
     IngredientsListSearch.search(text, selector);
   }, 200),
 
-  'click #loadMoreIngs': _.throttle(function(e) {
+  'click #loadMoreIngs': _.throttle(function(e, t) {
     e.preventDefault();
     var text = $("#searchIngBox").val().trim();
     if(IngredientsListSearch.history && IngredientsListSearch.history[text]) {
       var dataHistory = IngredientsListSearch.history[text].data;
       if(dataHistory.length >= 9) {
         IngredientsListSearch.cleanHistory();
-        var count = dataHistory.length;
-        var lastItem = dataHistory[count - 1]['code'];
-        var selector = {
-          "limit": count + 10,
-          "endingAt": lastItem
-        };
-        if(Router.current().params.type) {
-          selector.status = "archived";
-        } else {
-          selector.status = {$ne: "archived"};
-        }
+        var selector = t.newSearchParams(dataHistory);
         IngredientsListSearch.search(text, selector);
       }
     }
@@ -68,6 +58,22 @@ Template.ingredientsList.events({
 });
 
 Template.ingredientsList.onRendered(function() {
+  this.newSearchParams = function(dataHistory) {
+    var count = dataHistory.length;
+    var lastItem = dataHistory[count - 1]['code'];
+    var selector = {
+      "limit": count + 10,
+      "endingAt": lastItem
+    };
+
+    if(Router.current().params.type) {
+      selector.status = "archived";
+    } else {
+      selector.status = {$ne: "archived"};
+    }
+
+    return selector;
+  };
   IngredientsListSearch.cleanHistory();
   var selector = {
     limit: 30
@@ -81,12 +87,13 @@ Template.ingredientsList.onRendered(function() {
 
   var tpl = this;
   Meteor.defer(function() {
-    $(window).scroll(function(e){
-      var docHeight = $(document).height();
-      var winHeight = $(window).height();
-      var scrollTop = $(window).scrollTop();
+    $('#wrapper').scroll(function(e){
+      var wrapper = e.target;
+      var wrapperHeight = wrapper.clientHeight;
+      var wrapperScrollHeight = wrapper.scrollHeight;
+      var wrapperScrollTop = wrapper.scrollTop;
 
-      if ((docHeight - winHeight) == scrollTop) {
+      if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
         tpl.$('#loadMoreIngs').click();
       }
     });
