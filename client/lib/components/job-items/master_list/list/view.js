@@ -74,11 +74,12 @@ Template.jobItemsList.onRendered(function() {
   var tpl = this;
   Meteor.defer(function() {
     $('#wrapper').scroll(function(e){
-      var docHeight = $(document).height();
-      var winHeight = $(window).height();
-      var scrollTop = $(window).scrollTop();
+      var wrapper = e.target;
+      var wrapperHeight = wrapper.clientHeight;
+      var wrapperScrollHeight = wrapper.scrollHeight;
+      var wrapperScrollTop = wrapper.scrollTop;
 
-      if ((docHeight - winHeight) == scrollTop) {
+      if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
         tpl.$('#loadMoreJobItems').click();
       }
     });
