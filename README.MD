@@ -22,5 +22,5 @@ All pull requests should be reviewed by other team member before merging with `d
 
 `develop` branch should be deployed on testing server `hospoherotesting.herokuapp.com` at the end of day. After 24 hour in case if new code is stable it can be merged with `master` and deployed on `app.hospohero.com`.
 
-* 2015/12/7 *
+*2015/12/7*
 
