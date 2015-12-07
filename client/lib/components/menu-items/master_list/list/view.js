@@ -86,8 +86,8 @@ Template.menuItemsList.rendered = function() {
 Template.menuItemsList.onRendered(function() {
   var tpl = this;
   Meteor.defer(function() {
-    $("#wrapper").on('scroll', function(e){
-      var wrapper = e.target;
+    $("#wrapper").on('scroll', function(event){
+      var wrapper = event.target;
       var wrapperHeight = wrapper.clientHeight;
       var wrapperScrollHeight = wrapper.scrollHeight;
       var wrapperScrollTop = wrapper.scrollTop;
@@ -97,4 +97,8 @@ Template.menuItemsList.onRendered(function() {
       }
     });
   });
+});
+
+Template.menuItemsList.onDestroyed(function() {
+  $('#wrapper').off('scroll');
 });

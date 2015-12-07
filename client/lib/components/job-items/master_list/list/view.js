@@ -37,14 +37,14 @@ Template.jobItemsList.events({
     JobItemsSearch.search(text, selector);
   }, 200),
 
-  'click #loadMoreJobItems': _.throttle(function(e, t) {
-    e.preventDefault();
+  'click #loadMoreJobItems': _.throttle(function(event, tmpl) {
+    event.preventDefault();
     var text = $("#searchJobItemsBox").val().trim();
     if(JobItemsSearch.history && JobItemsSearch.history[text]) {
       var dataHistory = JobItemsSearch.history[text].data;
       if(dataHistory.length >= 9) {
         JobItemsSearch.cleanHistory();
-        var selector = t.newSearchParams(dataHistory);
+        var selector = tmpl.newSearchParams(dataHistory);
         JobItemsSearch.search(text, selector);
       }
     }
@@ -73,8 +73,8 @@ Template.jobItemsList.onRendered(function() {
 
   var tpl = this;
   Meteor.defer(function() {
-    $('#wrapper').scroll(function(e){
-      var wrapper = e.target;
+    $('#wrapper').scroll(function(event){
+      var wrapper = event.target;
       var wrapperHeight = wrapper.clientHeight;
       var wrapperScrollHeight = wrapper.scrollHeight;
       var wrapperScrollTop = wrapper.scrollTop;
@@ -97,4 +97,8 @@ Template.jobItemsList.onRendered(function() {
     selector.status = {$ne: 'archived'};
   }
   JobItemsSearch.search("", selector);
+});
+
+Template.jobItemsList.onDestroyed(function() {
+  $('#wrapper').off('scroll');
 });
