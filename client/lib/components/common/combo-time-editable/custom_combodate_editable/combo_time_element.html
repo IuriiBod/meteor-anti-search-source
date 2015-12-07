@@ -1,5 +1,5 @@
 <template name="comboTimeElement">
-  <div class="form-group">
+  <div class="form-group combo-time-element-wrapper">
     {{defaultValue}}
     <select class="form-control hours">
       {{#each hours}}
@@ -11,7 +11,6 @@
         <option value="{{value}}" {{selected}}>{{value}}</option>
       {{/each}}
     </select>
-
     <select class="form-control ampm">
       {{#each ampm}}
         <option value="{{value}}" {{selected}}>{{title}}</option>
