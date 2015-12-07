@@ -22,20 +22,20 @@ component.state.lastOrder = function () {
 
 component.state.deliveryDays = function () {
   return [
-    {value: 'sunday', text: 'Sunday'},
     {value: 'monday', text: 'Monday'},
     {value: 'tuesday', text: 'Tuesday'},
     {value: 'wednesday', text: 'Wednesday'},
     {value: 'thursday', text: 'Thursday'},
     {value: 'friday', text: 'Friday'},
-    {value: 'saturday', text: 'Saturday'}
+    {value: 'saturday', text: 'Saturday'},
+    {value: 'sunday', text: 'Sunday'}
   ];
 };
 
-component.state.onDeliveryDayChanged = function () {
-  var self = this;
-  return function (value) {
-    self.updateSupplier('deliveryDay', value);
+component.state.isSelectedDay = function (value) {
+  var supplier = this.get('supplier');
+  if (supplier) {
+    return supplier.deliveryDays.indexOf(value) > -1;
   }
 };
 

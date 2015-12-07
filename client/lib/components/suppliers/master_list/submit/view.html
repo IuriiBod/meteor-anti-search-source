@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-            class="sr-only">Close</span></button>
+          class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">Add New Supplier</h4>
       </div>
       <form class="form-horizontal" role="form">
@@ -50,15 +50,14 @@
             <label class="col-sm-4 control-label">Delivery times</label>
 
             <div class="col-sm-6 ">
-              <select class="delivery-day-of-week form-control">
-                <option value="sunday">Sunday</option>
-                <option value="monday">Monday</option>
-                <option value="tuesday">Tuesday</option>
-                <option value="wednesday">Wednesday</option>
-                <option value="thursday">Thursday</option>
-                <option value="friday">Friday</option>
-                <option value="saturday">Saturday</option>
-              </select>
+              <p><input name="deliveryDay" type="checkbox" value="monday"> Monday</p>
+              <p><input name="deliveryDay" type="checkbox" value="tuesday"> Tuesday</p>
+              <p><input name="deliveryDay" type="checkbox" value="wednesday"> Wednesday</p>
+              <p><input name="deliveryDay" type="checkbox" value="thursday"> Thursday</p>
+              <p><input name="deliveryDay" type="checkbox" value="friday"> Friday</p>
+              <p><input name="deliveryDay" type="checkbox" value="saturday"> Saturday</p>
+              <p><input name="deliveryDay" type="checkbox" value="sunday"> Sunday</p>
+
               <div class='input-group date delivery-time'>
                 <input type='text' class="form-control"/>
                   <span class="input-group-addon">

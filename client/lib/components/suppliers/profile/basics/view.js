@@ -47,6 +47,20 @@ Template.basics.events({
     if (tmpl.data.field) {
       tmpl.updateSupplierDetails(tmpl.data.field, tmpl.data.value);
     }
+  },
+
+  'change .delivery-day': function (event, tmpl) {
+    var supplierId = HospoHero.getParamsFromRoute(Router.current(), '_id');
+    var supplier = Suppliers.findOne({_id: supplierId});
+
+    var checkbox = event.target;
+    if (checkbox.checked) {
+      supplier.deliveryDays.push(checkbox.value);
+    } else {
+      var valueIndex = supplier.deliveryDays.indexOf(checkbox.value);
+      supplier.deliveryDays.splice(valueIndex, 1);
+    }
+    tmpl.updateSupplierDetails('deliveryDays', supplier.deliveryDays);
   }
 });
 

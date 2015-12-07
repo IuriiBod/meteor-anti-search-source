@@ -10,8 +10,7 @@ var SupplierChecker = Match.Where(function (supplier) {
 
       return amount > 0;
     }),
-    deliveryDay: Match.OneOf('sunday', 'monday', 'tuesday',
-      'wednesday', 'thursday', 'friday', 'saturday'),
+    deliveryDays: Array,
     deliveryTime: Date,
     contactName: String,
     customerNumber: String,
@@ -21,7 +20,7 @@ var SupplierChecker = Match.Where(function (supplier) {
     createdBy: HospoHero.checkers.OptionalNullableMongoId,
     relations: Match.Optional(HospoHero.checkers.Relations),
     active: Match.Optional(Boolean),
-    createdOn: Match.Optional(Date),
+    createdOn: Match.Optional(NullableDate),
     priceList: Match.Optional(PriceListsChecker)
   });
 
@@ -29,6 +28,8 @@ var SupplierChecker = Match.Where(function (supplier) {
 
   return true;
 });
+
+var NullableDate = Match.OneOf(Date, null);
 
 var PriceListsChecker = Match.Where(function (priceList) {
   check(priceList, [{
