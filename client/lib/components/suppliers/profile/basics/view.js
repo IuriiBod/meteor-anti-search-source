@@ -16,6 +16,12 @@ Template.basics.onRendered(function () {
   defineEditableComponents(this);
 });
 
+Template.basics.helpers({
+  convertToPdfUrl: function () {
+    return '/convert?format=pdf';
+  }
+});
+
 Template.basics.events({
   'click #uploadPriceList': function (e) {
     e.preventDefault();

@@ -76,7 +76,7 @@
           {{#each state$supplier.priceList}}
             <tr>
               <td>
-                <a href="{{url}}" target="_blank">{{name}}</a>
+                <a href="{{url}}{{convertToPdfUrl}}" target="_blank">{{name}}</a>
               </td>
               <td>
                 {{dateFormat uploadedAt}}
