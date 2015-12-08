@@ -1,23 +1,19 @@
-var component = FlowComponents.define('predictionSalesRow', function (props) {
-  this.currentWeekDate = props.currentWeekDate;
-  this.set('menuItem', props.menuItem);
+Template.predictionSalesRow.helpers({
+  weekPrediction: function () {
+    var menuItemId = this.menuItem;
+
+    var monday = moment(HospoHero.dateUtils.getDateByWeekDate(this.currentWeekDate));
+
+    var dates = HospoHero.dateUtils.getWeekDays(this.currentWeekDate);
+
+    var dailySales = DailySales.find({
+      date: TimeRangeQueryBuilder.forWeek(monday),
+      menuItemId: menuItemId
+    }, {sort: {date: 1}}).fetch();
+
+    return importMissingData(dates, dailySales, menuItemId);
+  }
 });
-
-
-component.state.weekPrediction = function () {
-  var menuItemId = this.get('menuItem')._id;
-
-  var monday = moment(HospoHero.dateUtils.getDateByWeekDate(this.currentWeekDate));
-
-  var dates = HospoHero.dateUtils.getWeekDays(this.currentWeekDate);
-
-  var dailySales = DailySales.find({
-    date: TimeRangeQueryBuilder.forWeek(monday),
-    menuItemId: menuItemId
-  }, {sort: {date: 1}}).fetch();
-
-  return importMissingData(dates, dailySales, menuItemId);
-};
 
 
 var importMissingData = function (dates, importArray, menuItemId) {
