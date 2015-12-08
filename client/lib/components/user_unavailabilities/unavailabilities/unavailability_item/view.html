@@ -1,0 +1,53 @@
+<template name="unavailabilityItem">
+  <div class="row item-wrapper">
+
+    <!-- Date -->
+    <div class="col-md-2 unavailability-item-date">
+      <div class="row">
+        <p>{{state$date}}</p>
+      </div>
+    </div>
+
+    <!-- Item details -->
+    <div class="col-md-9 item-details-wrapper">
+      <div class="row">
+        <div class="col-md-10 item-details">
+          <div>
+
+            <!-- Repeat -->
+            {{#if state$repeat}}
+              <div class="row">
+                <p>
+                  Every {{state$repeat}} since {{state$date}}
+                </p>
+              </div>
+            {{/if}}
+
+            <!-- Comment -->
+            <div class="row">
+              {{#if state$comment}}
+                <p class="text">{{state$comment}}</p>
+              {{else}}
+                <p class="text-muted">There are no comment</p>
+              {{/if}}
+            </div>
+
+            <!-- Start and end time -->
+            <div class="row">
+              {{#if state$isAllDay}}
+                <p>All day</p>
+              {{else}}
+                <p>{{state$time.startTime}} - {{state$time.endTime}}</p>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+
+        <!-- Delete button -->
+        <div class="col-md-1 col-md-offset-1 item-actions">
+          <i class="remove-unavailability-button fa fa-trash-o delete-icon pull-right" role="button"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
