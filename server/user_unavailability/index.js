@@ -68,20 +68,13 @@ var findLeaveRequest = function (leaveRequestId) {
 
 
 var sendNotification = function (insertedLeaveRequestId) {
-
   var currentLeaveRequest = LeaveRequests.findOne({_id: insertedLeaveRequestId});
-
-  var notificationSender = Meteor.users.findOne({_id: currentLeaveRequest.userId});
-  var notificationRecipient = Meteor.users.findOne({_id: currentLeaveRequest.notifyManagerId});
-
-  var notificationTitle = 'Leave request from ' + notificationSender.profile.name || notificationSender.username;
+  var notificationTitle = 'Leave request from ' + HospoHero.username(currentLeaveRequest.userId);
 
   var params = {
-    recipientName: notificationRecipient.profile.name || notificationRecipient.username,
-
+    recipientName: HospoHero.username(currentLeaveRequest.notifyManagerId),
     startDate: moment(currentLeaveRequest.startDate).format('ddd, DD MMM'),
     endDate: moment(currentLeaveRequest.endDate).format('ddd, DD MMM'),
-
     leaveRequestLink: Router.url('viewLeaveRequest', {id: insertedLeaveRequestId})
   };
 
@@ -100,9 +93,5 @@ var sendNotification = function (insertedLeaveRequestId) {
     }
   };
 
-
-  // // For testing
-  //new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationSender._id);
-
-  new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationRecipient._id);
+  new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(currentLeaveRequest.notifyManagerId);
 };
