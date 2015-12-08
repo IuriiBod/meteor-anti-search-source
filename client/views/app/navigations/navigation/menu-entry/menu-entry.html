@@ -1,0 +1,19 @@
+<template name="menuEntry">
+  {{#if permission}}
+    <li class="nav-first-level-item {{isActiveRoute regex=activeOnRoutes}}">
+      <a class="menu-entry-title" href="{{hrefPath}}">
+        {{#if icon}}
+          <i class="fa {{icon}}"></i>
+        {{/if}}
+        <span class="nav-label"> {{title}}</span>
+      </a>
+      {{#if subMenuItems}}
+        <ul class="nav nav-second-level slider slider-for-{{subMenuItemsCount}}-menu-item">
+          {{#each subMenuItems}}
+            {{> render component="menuEntry" menuEntry=this}}
+          {{/each}}
+        </ul>
+      {{/if}}
+    </li>
+  {{/if}}
+</template>

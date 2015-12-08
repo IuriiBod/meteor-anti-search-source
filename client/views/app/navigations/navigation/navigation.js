@@ -107,13 +107,12 @@ var menuEntries = [
   }
 ];
 
-var component = FlowComponents.define("navigation", function (props) {
+Template.navigation.helpers({
+  dashboardEntry: function () {
+    return dashboardEntry;
+  },
+
+  menuEntries: function () {
+    return menuEntries;
+  }
 });
-
-component.state.dashboardEntry = function () {
-  return dashboardEntry;
-};
-
-component.state.menuEntries = function () {
-  return menuEntries;
-};

@@ -9,12 +9,12 @@
           </div>
         </li>
 
-        {{> render component="menuEntry" menuEntry=state$dashboardEntry}}
+        {{> menuEntry dashboardEntry}}
 
         {{#if isInOrganization}}
           {{#if getCurrentAreaId}}
-            {{#each state$menuEntries}}
-              {{> render component="menuEntry" menuEntry=this}}
+            {{#each menuEntries}}
+              {{> menuEntry menuEntry=this}}
             {{/each}}
           {{/if}}
         {{/if}}
