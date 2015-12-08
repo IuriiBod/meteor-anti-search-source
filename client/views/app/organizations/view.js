@@ -1,12 +1,12 @@
 Template.organizationStructure.onCreated(function () {
   this.set('organization', HospoHero.getOrganization());
-});
 
-Template.organizationStructure.helpers({
-  locations: function () {
-    if (Template.instance().get('organization')) {
+  var self = this;
+
+  this.locations = function () {
+    if (self.get('organization')) {
       var selector = {
-        organizationId: Template.instance().get('organization')._id,
+        organizationId: self.get('organization')._id,
         archived: {$ne: true}
       };
 
@@ -19,11 +19,17 @@ Template.organizationStructure.helpers({
 
       return Locations.find(selector);
     }
+  };
+});
+
+Template.organizationStructure.helpers({
+  locations: function () {
+    return Template.instance().locations();
   },
 
   hasLocations: function () {
-    var locations = Template.instance().get('locations');
-    return locations ? locations.count() : false;
+    var locations = Template.instance().locations();
+    return locations && locations.count() > 0;
   },
 
   areas: function (locationId) {

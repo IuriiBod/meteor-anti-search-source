@@ -1,3 +1,7 @@
+Template.organizationButtons.onCreated(function () {
+  console.log('THIS', this);
+});
+
 Template.organizationButtons.events({
   'click .organization-details-flyout': function (event, tmpl) {
     FlyoutManager.open('organizationDetailsPage', {organizationId: tmpl.data.organizationId}, true);

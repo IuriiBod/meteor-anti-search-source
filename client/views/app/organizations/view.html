@@ -3,9 +3,10 @@
     <button class="close-flyout-button">
       <i class="fa fa-angle-right"></i>
     </button>
-    {{>organizationButtons isOwner=isOrganizationOwner
-      hasLocations=state$hasLocations
-      organizationId=state$organization._id}}
+    <div class="col-xs-11 col-xs-offset-1 text-center">
+      {{>organizationButtons hasLocations=hasLocations
+         organizationId=state$organization._id}}
+    </div>
   </div>
 
   <div class="flyout-content">
@@ -30,7 +31,7 @@
 
             {{#if isManager}}
               <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i
-                  class="fa fa-fw fa-cog"></i></span>
+                class="fa fa-fw fa-cog"></i></span>
             {{/if}}
           </li>
         {{/each}}
