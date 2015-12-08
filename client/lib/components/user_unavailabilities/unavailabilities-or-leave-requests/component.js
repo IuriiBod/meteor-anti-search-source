@@ -39,7 +39,7 @@ component.state.componentHeader = function () {
         return 'UNAVAILABILITY'
     } else if (this.get('isLeaveRequests')) {
         return 'LEAVE REQUESTS'
-    };
+    }
 };
 
 component.action.newItem = function () {
