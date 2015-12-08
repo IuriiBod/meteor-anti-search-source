@@ -1,26 +1,7 @@
 <template name="reportData">
   {{#if state$shift}}
     <!--Start Time-->
-    {{#if state$editStart}}
-      {{>render component='timepicker' shift=state$shift type="editStart" editCb=state$toggleEditStartTime}}
-    {{else}}
-      <a href="#" class="start-time">{{state$startedTime}}</a>
-    {{/if}}
-
-    <!--separator--> - <!--separator-->
-
-    <!--End Time-->
-    {{#if state$shift.startedAt}}
-      {{#if state$editEnd}}
-        {{>render component='timepicker' shift=state$shift type="editEnd" editCb=state$toggleEditEndTime}}
-      {{else}}
-        {{#if equal state$endedTime 'Now'}}
-          <a href="#" class="stopCurrentShift">Now</a>
-        {{else}}
-          <a href="#" class="end-time">{{state$endedTime}}</a>
-        {{/if}}
-      {{/if}}
-    {{/if}}
+    {{> comboTimeEditable params=state$startedTimeParams}}
   {{else}}
     -
   {{/if}}

@@ -1,4 +1,6 @@
 Template.viewLeaveRequest.onCreated(function () {
+  this.subscribe('leaveRequestsApprovers');
+
   this.getRequestValuesFromTemplate = function () {
     var startDate = this.$('.start-date-picker').data('DateTimePicker').date();
     var endDate = this.$('.end-date-picker').data('DateTimePicker').date();
@@ -54,9 +56,11 @@ Template.viewLeaveRequest.events({
     FlowComponents.callAction('saveLeaveRequest', values, tmpl.currentFlyout);
   },
   'click .approve-button': function () {
-    FlowComponents.callAction('approveLeaveRequest');
+    FlowComponents.callAction('changeLeaveRequestStatus', true);
+    Router.go('home');
   },
   'click .decline-button': function () {
-    FlowComponents.callAction('declineLeaveRequest');
+    FlowComponents.callAction('changeLeaveRequestStatus', false);
+    Router.go('home');
   }
 });

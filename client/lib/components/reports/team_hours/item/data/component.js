@@ -15,21 +15,46 @@ component.state.shift = function () {
 
 component.state.startedTime = function () {
   var shift = this.get('shift');
-  if (shift.startedAt) {
-    return moment(shift.startedAt).format("hh:mm A");
-  }
-  return 'Start';
+  return shift.startedAt || 'Start';
 };
 
 component.state.endedTime = function () {
   var shift = this.get('shift');
   if (shift.finishedAt) {
-    return moment(shift.finishedAt).format("hh:mm A");
+    return shift.finishedAt;
   }
   if (shift && moment(shift.shiftDate).isSame(new Date(), 'day')) {
     return 'Now';
   }
   return 'End';
+};
+
+component.state.startedTimeParams = function () {
+  var self = this;
+  var shift = self.get('shift');
+
+  return {
+    firstTime: this.get('startedTime'),
+    secondTime: this.get('endedTime'),
+    minuteStepping: 5,
+    onSubmit: function (startTime, endTime) {
+      var shift = self.get('shift');
+      startTime = moment(startTime);
+      endTime = moment(endTime);
+
+      shift.startedAt = moment(shift.startedAt)
+        .hours(startTime.hours())
+        .minutes(startTime.minutes())
+        .toDate();
+
+      shift.finishedAt = moment(shift.finishedAt)
+        .hours(endTime.hours())
+        .minutes(endTime.minutes())
+        .toDate();
+
+      Meteor.call("editShift", shift, HospoHero.handleMethodResult());
+    }
+  };
 };
 
 component.action.toggleEditStartTime = function () {

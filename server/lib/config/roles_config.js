@@ -21,7 +21,8 @@ var actions = {
   "All Rights": "all rights",
   "Edit users payrate": "edit user's payrate",
   "View Reports": "view reports",
-  "Receive Deliveries": "receive deliveries"
+  "Receive Deliveries": "receive deliveries",
+  "Approve leave requests": "approve leave requests"
 };
 
 var defaultRoles = [
@@ -53,7 +54,8 @@ var defaultRoles = [
       "be rosted",
       "edit user's payrate",
       "view reports",
-      "receive deliveries"
+      "receive deliveries",
+      "approve leave requests"
     ]
   },
 
