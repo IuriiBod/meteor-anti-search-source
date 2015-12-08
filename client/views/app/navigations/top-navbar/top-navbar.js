@@ -1,23 +1,4 @@
-Template.topNavbar.onCreated(function () {
-  this.showCreateOrgFlyout = new ReactiveVar();
-  this.autorun(_.bind(function () {
-    this.showCreateOrgFlyout.set(false);
-  }, this));
-});
-
-
 Template.topNavbar.helpers({
-  profileImage: function () {
-    var user = Meteor.user();
-    var image = '/images/user-image.jpeg';
-    if (user && user.services) {
-      if (user.services.google) {
-        image = user.services.google.picture;
-      }
-    }
-    return image;
-  },
-
   today: function () {
     return moment(new Date()).format("YYYY-MM-DD");
   },

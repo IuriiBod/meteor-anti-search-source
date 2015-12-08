@@ -9,14 +9,6 @@ Template.FilterByCategory.helpers({
     return categories;
   },
 
-  week: function () {
-    return Router.current().params.week;
-  },
-
-  year: function () {
-    return Router.current().params.year;
-  },
-
   currentCategory: function () {
     var category = Router.current().params.category;
     return category === "all" ? "All" : Categories.findOne({_id: category}).name;

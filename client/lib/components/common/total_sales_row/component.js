@@ -32,7 +32,6 @@ var getTotalPrice = function (array, propertyName) {
       if (menuItem && menuItem.salesPrice) {
         price = menuItem.salesPrice;
       }
-      ;
 
       total += quantity * price;
     });
