@@ -1,7 +1,6 @@
 <template name="revelLinkMenuItem">
-  <div class="col-md-6 ">
+  <div class="col-md-6">
     <div class="revel-link-menu-item-component">
-      {{#with state$menuItem}}
         <div class="menu-item-name">
           <b>{{name}}</b>
           <a href="#" class="pull-right text-info">
@@ -9,17 +8,16 @@
           </a>
         </div>
         <div>
-          {{#each state$posNames}}
-            {{>render component="posEditItem" name=this item=..}}
+          {{#each posNames}}
+            {{> posEditItem name=this item=..}}
           {{/each}}
         </div>
 
         <div>
           {{#if state$attachPosName}}
-            {{>render component='selectPos' item=this}}
+            {{> selectPos item=this}}
           {{/if}}
         </div>
-      {{/with}}
     </div>
   </div>
 </template>

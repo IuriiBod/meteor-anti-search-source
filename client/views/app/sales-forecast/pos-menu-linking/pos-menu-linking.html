@@ -1,7 +1,7 @@
 <template name="posMenuLinking">
   <div class="container-fluid pos-menu-link-component">
-    {{#each state$menuItems}}
-      {{> render component='revelLinkMenuItem' menuItem=this}}
+    {{#each menuItems}}
+      {{> revelLinkMenuItem}}
     {{/each}}
   </div>
 </template>
