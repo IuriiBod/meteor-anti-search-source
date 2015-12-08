@@ -1,18 +1,14 @@
-var component = FlowComponents.define('weatherForecast', function (props) {
-  this.set('forecast', WeatherForecast.findOne({date: TimeRangeQueryBuilder.forDay(props.date)}));
+Template.weatherForecast.helpers({
+  hasForecast: function () {
+    return !!this
+  },
+  roundedTemperature: function () {
+    return Math.round(this.temp);
+  },
+  iconClass: function () {
+    return WeatherIcons[this.main];
+  }
 });
-
-component.state.hasForecast = function () {
-  return !!this.get('forecast');
-};
-
-component.state.roundedTemperature = function () {
-  return Math.round(this.get('forecast').temp);
-};
-
-component.state.iconClass = function () {
-  return WeatherIcons[this.get('forecast').main];
-};
 
 var WeatherIcons = {
   "Moderate or heavy snow in area with thunder": 'wi wi-day-snow-thunderstorm',
