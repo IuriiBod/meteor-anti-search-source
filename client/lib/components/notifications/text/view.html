@@ -9,15 +9,17 @@
       {{{state$notifi.title}}}
       <br>
       <small class="text-muted">
-        <i class="fa fa-{{state$icon}}"></i> {{timeFormat state$notifi.createdOn}}
+        {{timeFormat state$notifi.createdOn}}
       </small>
       <div>
         {{{state$notifi.text}}}
       </div>
 
-      <div class="mark-as-read text-warning">
-        <button class="btn btn-xs btn-warning readNotification" data-id="{{state$notifi._id}}">Mark as read</button>
-      </div>
+      {{#unless state$notifi.interactive}}
+        <div class="mark-as-read text-warning">
+          <button class="btn btn-xs btn-warning readNotification" data-id="{{state$notifi._id}}">Mark as read</button>
+        </div>
+      {{/unless}}
     </div>
   </div>
 </template>

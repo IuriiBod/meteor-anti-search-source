@@ -41,40 +41,22 @@ Meteor.methods({
       throw new Meteor.Error('Permission denied', 'You can\' remove this leave request!');
     }
   },
-  approveLeaveRequest: function (leaveRequestId) {
-    if (!this.userId) {
-      throw new Meteor.Error('Permission denied', 'You are not logged in!');
-    }
-    check(leaveRequestId, HospoHero.checkers.MongoId);
+  changeLeaveRequestStatus: function (leaveRequestId, newStatus) {
+    var thisLeaveRequest = findLeaveRequest(leaveRequestId);
+    check(thisLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
 
-    changeLeaveRequestStatus(this.userId, leaveRequestId, 'approved');
-  },
-  declineLeaveRequest: function (leaveRequestId) {
-    if (!this.userId) {
-      throw new Meteor.Error('Permission denied', 'You are not logged in!');
+    if (thisLeaveRequest.status != 'awaiting') {
+      throw new Meteor.Error("'This request already approved/declined'");
     }
-    check(leaveRequestId, HospoHero.checkers.MongoId);
 
-    changeLeaveRequestStatus(this.userId, leaveRequestId, 'declined');
+    if (thisLeaveRequest.notifyManagerId != this.userId) {
+      throw new Meteor.Error("'You can't approve or decline this request'");
+    }
+
+    LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
+    Notifications.remove({'meta.leaveRequestId': leaveRequestId});
   }
 });
-
-
-var changeLeaveRequestStatus = function (currentUserId, leaveRequestId, newStatus) {
-  var thisLeaveRequest = findLeaveRequest(leaveRequestId);
-  check(thisLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
-
-  if (thisLeaveRequest.status != 'awaiting') {
-    throw new Meteor.Error("'This request already approved/declined'");
-  }
-
-  if (thisLeaveRequest.notifyManagerId != currentUserId) {
-    throw new Meteor.Error("'You can't approve or decline this request'");
-  }
-
-  LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
-  Notifications.remove({'meta.leaveRequestId': leaveRequestId});
-};
 
 var findLeaveRequest = function (leaveRequestId) {
   var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
@@ -107,10 +89,10 @@ var sendNotification = function (insertedLeaveRequestId) {
     interactive: true,
     helpers: {
       approveLeaveRequestUrl: function () {
-        return NotificationSender.actionUrlFor('approveLeaveRequest', insertedLeaveRequestId);
+        return NotificationSender.actionUrlFor('changeLeaveRequestStatus', insertedLeaveRequestId, 'approved');
       },
       declineLeaveRequestUrl: function () {
-        return NotificationSender.actionUrlFor('declineLeaveRequest', insertedLeaveRequestId);
+        return NotificationSender.actionUrlFor('changeLeaveRequestStatus', insertedLeaveRequestId, 'declined');
       }
     },
     meta: {
