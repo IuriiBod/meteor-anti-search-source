@@ -43,29 +43,34 @@ var ShiftDocument = Match.Where(function (shift) {
     var occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
 
     checkerHelper.checkPropertiesGroup(['startTime', 'endTime'], function () {
-      var findInTimeRanges = [{
-        startDate: occupiedTimeRange
-      }, {
-        endDate: occupiedTimeRange
-      }, {
-        startDate: {$lte: shift.startTime},
-        endDate: {$gte: shift.endTime}
-      }
-      ];
 
       var isUserHasUnavailability = !!Meteor.users.findOne({
         _id: assignedUserId,
-        unavailabilities: {
-          $elemMatch: {
-            $or: findInTimeRanges
+        $or: [
+          {
+            'unavailabilities.startDate': occupiedTimeRange
+          }, {
+            'unavailabilities.endDate': occupiedTimeRange
+          }, {
+            'unavailabilities.startDate': {$lte: shift.startTime},
+            'unavailabilities.endDate': {$gte: shift.endTime}
           }
-        }
+        ]
       });
 
       var isUserHasApprovedLeaveRequest = !!LeaveRequests.findOne({
         userId: assignedUserId,
         status: "approved",
-        $or: findInTimeRanges
+        $or: [
+          {
+            startDate: occupiedTimeRange
+          }, {
+            endDate: occupiedTimeRange
+          }, {
+            startDate: {$lte: shift.startTime},
+            endDate: {$gte: shift.endTime}
+          }
+        ]
       });
 
       if (isUserHasUnavailability || isUserHasApprovedLeaveRequest) {
