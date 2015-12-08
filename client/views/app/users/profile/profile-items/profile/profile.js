@@ -1,3 +1,66 @@
+Template.profile.onCreated(function () {
+  var id = this.data.id;
+  var user = Meteor.users.findOne({_id: id});
+  this.set('user', user);
+});
+
+Template.profile.onRendered(function () {
+  beforeRender();
+});
+
+Template.profile.helpers({
+  firstName: function() {
+    var user = Template.instance().get('user');
+    if (user && user.profile && user.profile.firstname) {
+      return user.profile.firstname;
+    } else {
+      return user.username;
+    }
+  },
+  lastName: function() {
+    var user = Template.instance().get('user');
+    if (user && user.profile && user.profile.lastname) {
+      return user.profile.lastname;
+    } else {
+      return "";
+    }
+  },
+  email: function() {
+    var user = Template.instance().get('user');
+    if (user && user.emails) {
+      return user.emails[0].address;
+    }
+  },
+  //permitted for profile owner and admins
+  isEditPermitted: function() {
+    var user = Template.instance().get('user');
+    return HospoHero.isManager() || HospoHero.isMe(user._id);
+  },
+  shiftsPerWeek: function() {
+    var user = Template.instance().get('user');
+    var shifts = [1, 2, 3, 4, 5, 6, 7];
+    var formattedShifts = [];
+
+    shifts.forEach(function (shift) {
+      var doc = {
+        "shift": shift
+      };
+      doc.selected = user && user.profile.shiftsPerWeek == shift;
+      formattedShifts.push(doc);
+    });
+    return formattedShifts;
+  },
+  hasResignDate: function() {
+    var user = Template.instance().get('user');
+    return !!user.profile.resignDate;
+  },
+  resignDate: function() {
+    var user = Template.instance().get('user');
+    var resignDate = user.profile.resignDate;
+    return resignDate ? moment(resignDate).format("MM/DD/YYYY") : null;
+  }
+});
+
 Template.profile.events({
   'change .shiftsPerWeek': function (event) {
     var id = $(event.target).attr("data-id");
@@ -52,9 +115,7 @@ Template.profile.events({
   }
 });
 
-Template.profile.rendered = function () {
-  $.fn.editable.defaults.mode = 'inline';
-
+function beforeRender() {
   $(".open-resigned-date-picker").datepicker({
     startDate: new Date(),
     todayHighlight: true
@@ -194,9 +255,9 @@ Template.profile.rendered = function () {
     display: function (value, sourceData) {
     }
   });
-
-};
+}
 
 function updateBasicDetails(id, updateDetails) {
   Meteor.call("editBasicDetails", id, updateDetails, HospoHero.handleMethodResult());
 }
+

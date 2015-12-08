@@ -5,32 +5,32 @@
         <h5>Profile Detail</h5>
       </div>
       <div>
-        {{> render component = "profileImage" id=state$basic._id}}
+        {{> profileImage id=state$user._id}}
         <div class="ibox-content profile-content">
           <h4>
             <strong>
-              {{#if state$isEditPermitted}}
-                <a href="" id="firstname">{{state$firstName}}</a>
-                <a href="" id="lastname">{{state$lastName}}</a>
+              {{#if isEditPermitted}}
+                <a href="" id="firstname">{{firstName}}</a>
+                <a href="" id="lastname">{{lastName}}</a>
               {{else}}
-                {{username state$basic._id}}
+                {{username state$user._id}}
               {{/if}}
             </strong>
           </h4>
 
           <p><i class="fa fa-mobile-phone m-r-xs"></i>
-            {{#if state$isEditPermitted}}
-              <a href="#" id="phone" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.phone}}</a>
+            {{#if isEditPermitted}}
+              <a href="#" id="phone" data-id="{{state$user._id}}" class="editable">{{state$user.profile.phone}}</a>
             {{else}}
-              {{state$basic.profile.phone}}
+              {{state$user.profile.phone}}
             {{/if}}
           </p>
 
           <p><i class="fa fa-envelope m-r-xs"></i>
-            {{#if state$isEditPermitted}}
-              <a href="#" id="email" data-id="{{state$basic._id}}" class="editable">{{state$email}}</a>
+            {{#if isEditPermitted}}
+              <a href="#" id="email" data-id="{{state$user._id}}" class="editable">{{email}}</a>
             {{else}}
-              {{state$email}}
+              {{email}}
             {{/if}}
           </p>
           <br>
@@ -55,11 +55,11 @@
 
           <p>Weekdays ($):
             {{#if isManager}}
-              <a href="#" id="weekdaysrate" data-id="{{state$basic._id}}"
-                 class="editable">{{state$basic.profile.payrates.weekdays}}</a>
+              <a href="#" id="weekdaysrate" data-id="{{state$user._id}}"
+                 class="editable">{{state$user.profile.payrates.weekdays}}</a>
             {{else}}
-              {{#if state$basic.profile.payrates.weekdays}}
-                {{state$basic.profile.payrates.weekdays}}
+              {{#if state$user.profile.payrates.weekdays}}
+                {{state$user.profile.payrates.weekdays}}
               {{else}}
                 Not added
               {{/if}}
@@ -68,11 +68,11 @@
 
           <p>Saturday ($):
             {{#if isManager}}
-              <a href="#" id="saturdayrate" data-id="{{state$basic._id}}"
-                 class="editable">{{state$basic.profile.payrates.saturday}}</a>
+              <a href="#" id="saturdayrate" data-id="{{state$user._id}}"
+                 class="editable">{{state$user.profile.payrates.saturday}}</a>
             {{else}}
-              {{#if state$basic.profile.payrates.saturday}}
-                {{state$basic.profile.payrates.saturday}}
+              {{#if state$user.profile.payrates.saturday}}
+                {{state$user.profile.payrates.saturday}}
               {{else}}
                 Not added
               {{/if}}
@@ -81,11 +81,11 @@
 
           <p>Sunday ($):
             {{#if isManager}}
-              <a href="#" id="sundayrate" data-id="{{state$basic._id}}"
-                 class="editable">{{state$basic.profile.payrates.sunday}}</a>
+              <a href="#" id="sundayrate" data-id="{{state$user._id}}"
+                 class="editable">{{state$user.profile.payrates.sunday}}</a>
             {{else}}
-              {{#if state$basic.profile.payrates.sunday}}
-                {{state$basic.profile.payrates.sunday}}
+              {{#if state$user.profile.payrates.sunday}}
+                {{state$user.profile.payrates.sunday}}
               {{else}}
                 Not added
               {{/if}}
@@ -96,14 +96,14 @@
 
           <h4>No. of shifts per week</h4>
           {{#if isManager}}
-            <select class="form-control shiftsPerWeek" data-id="{{state$basic._id}}">
-              {{#each state$shiftsPerWeek}}
+            <select class="form-control shiftsPerWeek" data-id="{{state$user._id}}">
+              {{#each shiftsPerWeek}}
                 <option selected="{{this.selected}}">{{this.shift}}</option>
               {{/each}}
             </select>
           {{else}}
-            {{#if state$basic.profile.shiftsPerWeek}}
-              {{state$basic.profile.shiftsPerWeek}}
+            {{#if state$user.profile.shiftsPerWeek}}
+              {{state$user.profile.shiftsPerWeek}}
             {{else}}
               Not added
             {{/if}}
@@ -111,12 +111,12 @@
 
           {{#if isManager}}
             {{#if isMe state$id}}
-              {{#if state$hasResignDate}}
+              {{#if hasResignDate}}
                 <br/>
                 <h4>Resigned date</h4>
 
                 <div>
-                  {{state$resignDate}}
+                  {{resignDate}}
                 </div>
               {{/if}}
             {{else}}
@@ -128,10 +128,10 @@
                        class="form-control open-resigned-date-picker"
                        placeholder="No resign date"
                        aria-describedby="user-resign-addon"
-                       value="{{state$resignDate}}">
+                       value="{{resignDate}}">
 
                   <span class="input-group-btn">
-                    {{#if state$hasResignDate}}
+                    {{#if hasResignDate}}
                       <button class="btn btn-warning" id="update-resign-date">
                         <i class="fa fa-user-times"></i>
                         Update Date
@@ -150,12 +150,12 @@
               </div>
             {{/if}}
           {{else}}
-            {{#if state$hasResignDate}}
+            {{#if hasResignDate}}
               <br/>
               <h4>Resigned date</h4>
 
               <div>
-                {{state$resignDate}}
+                {{resignDate}}
               </div>
             {{/if}}
           {{/if}}

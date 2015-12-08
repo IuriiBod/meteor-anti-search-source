@@ -6,16 +6,16 @@
       </div>
       <div class="ibox-content">
         <h4>Next Shifts</h4>
-        {{#each state$rosteredForShifts}}
-          {{> render component='rosteredShiftItem' shift=this}}
+        {{#each rosteredForShifts}}
+          {{> rosteredShiftItem shift=this}}
         {{else}}
           No shifts rostered yet.
         {{/each}}
         <br><br>
 
         <h4>Open Shifts</h4>
-        {{#each state$openedShifts}}
-          {{> render component='rosteredShiftItem' shift=this}}
+        {{#each openedShifts}}
+          {{> rosteredShiftItem shift=this}}
         {{else}}
           No shifts opened yet.
         {{/each}}

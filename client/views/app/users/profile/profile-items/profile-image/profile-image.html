@@ -1,8 +1,8 @@
 <template name="profileImage">
   <div class="ibox-content border-left-right profile-picture-div">
     <div class="box-wrapper pull-right" style="display: none; position: absolute;">
-      {{#if state$ifMe}}
-        {{#if state$imageExists}}
+      {{#if ifMe}}
+        {{#if imageExists}}
           <button class="btn btn-sm btn-info" id="uploadImage"><i class="fa fa-edit m-r-sm"></i>Edit Profile Picture
           </button>
         {{else}}
@@ -11,6 +11,6 @@
         {{/if}}
       {{/if}}
     </div>
-    <img alt="image" id="profilePicture" class="img-responsive" src="{{state$image}}">
+    <img alt="image" id="profilePicture" class="img-responsive" src="{{image}}">
   </div>
 </template>
