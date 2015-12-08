@@ -1,8 +1,6 @@
 Template.ingredientItemView.onCreated(function () {
-  console.log('ingredientItemView defined\n', this);
-  this.ingredient = this.data.ingredient;
-
-  this.ingredientItem = getIngredientItem(this.ingredient._id);
+  this.usedIngredient = this.data.ingredient;
+  this.ingredientItem = getIngredientItem(this.usedIngredient._id);
 });
 
 Template.ingredientItemView.helpers({
@@ -10,14 +8,12 @@ Template.ingredientItemView.helpers({
     return Template.instance().ingredientItem;
   },
   quantity: function () {
-    if (Template.instance().ingredient && Template.instance().ingredient.quantity) {
-      return Template.instance().ingredient.quantity;
-    }
+    return Template.instance().usedIngredient.quantity
   },
   cost: function () {
     var ing = Template.instance().ingredientItem;
     if (ing) {
-      var cost = ing.costPerPortionUsed * Template.instance().ingredient.quantity;
+      var cost = ing.costPerPortionUsed * Template.instance().usedIngredient.quantity;
       cost = Math.round(cost * 100) / 100;
       return cost;
     }
