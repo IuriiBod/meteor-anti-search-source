@@ -8,7 +8,7 @@
         {{#if isInOrganization}}
           <li>
             <span class="organization-structure-flyout">
-              <span class="area-color-icon" style="background-color: {{state$areaColor}};"></span>
+              <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
               {{getCurrentArea.name}}
             </span>
           </li>
@@ -23,13 +23,13 @@
           <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-user"></i>
           </a>
-          {{> settingsDropdownMenu menuItems=state$profileMenuItems}}
+          {{> settingsDropdownMenu menuItems=profileMenuItems}}
         </li>
         <li>
           <a class="count-info notifi-toggler" href="#">
             <i class="fa fa-bell"></i>
-            {{#if state$count}}
-              <span class="label label-primary">{{state$count}}</span>
+            {{#if count}}
+              <span class="label label-primary">{{count}}</span>
             {{/if}}
           </a>
         </li>
@@ -38,7 +38,7 @@
             <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fa fa-cog"></i>
             </a>
-            {{> settingsDropdownMenu menuItems=state$settingsMenuItems}}
+            {{> settingsDropdownMenu menuItems=settingsMenuItems}}
           </li>
         {{/if}}
       </ul>

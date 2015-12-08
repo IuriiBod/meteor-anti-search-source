@@ -25,7 +25,7 @@ Template.menuEntry.helpers({
 
   hrefPath: function () {
     var route = this.route;
-    var paramsFn = this.menuEntry.params;
+    var paramsFn = this.params;
     var params = _.isFunction(paramsFn) && paramsFn();
     return route && Router.path(route, params) || '#';
   },

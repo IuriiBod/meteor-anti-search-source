@@ -10,7 +10,7 @@
       {{#if subMenuItems}}
         <ul class="nav nav-second-level slider slider-for-{{subMenuItemsCount}}-menu-item">
           {{#each subMenuItems}}
-            {{> render component="menuEntry" menuEntry=this}}
+            {{> menuEntry}}
           {{/each}}
         </ul>
       {{/if}}

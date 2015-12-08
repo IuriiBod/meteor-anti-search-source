@@ -1,3 +1,72 @@
+Template.topNavbar.onCreated(function () {
+  this.showCreateOrgFlyout = new ReactiveVar();
+  this.autorun(_.bind(function () {
+    this.showCreateOrgFlyout.set(false);
+  }, this));
+});
+
+
+Template.topNavbar.helpers({
+  profileImage: function () {
+    var user = Meteor.user();
+    var image = '/images/user-image.jpeg';
+    if (user && user.services) {
+      if (user.services.google) {
+        image = user.services.google.picture;
+      }
+    }
+    return image;
+  },
+
+  today: function () {
+    return moment(new Date()).format("YYYY-MM-DD");
+  },
+
+  week: function () {
+    return moment().format("w");
+  },
+
+  settingsMenuItems: function () {
+    return settingsMenuItems;
+  },
+
+  profileMenuItems: function () {
+    return [
+      {
+        route: 'profile',
+        title: 'My Profile',
+        params: {
+          _id: Meteor.userId()
+        }
+      },
+      {
+        route: 'switchUser',
+        title: 'Switch User'
+      },
+      {
+        route: 'logout',
+        title: 'Logout'
+      }
+    ];
+  },
+
+  count: function () {
+    return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).count();
+  },
+
+  notifications: function () {
+    return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
+  },
+
+  areaColor: function () {
+    var area = HospoHero.getCurrentArea();
+    if (area) {
+      return area.color;
+    }
+  }
+});
+
+
 Template.topNavbar.events({
   'click #navbar-minimalize': function (event, tmpl) {
     var forceShow = 'force-show-sidebar ', forceHide = 'force-hide-sidebar';
@@ -7,11 +76,6 @@ Template.topNavbar.events({
     } else {
       body.removeClass(forceShow).addClass(forceHide);
     }
-  },
-
-  'click #signInButton': function (event) {
-    event.preventDefault();
-    Router.go("signIn");
   },
 
   'click #signOutButton': function (event) {
@@ -33,102 +97,34 @@ Template.topNavbar.events({
   }
 });
 
-Template.topNavbar.helpers({
-  'profileImage': function () {
-    var user = Meteor.user();
-    var image = '/images/user-image.jpeg';
-    if (user && user.services) {
-      if (user.services.google) {
-        image = user.services.google.picture;
-      }
-    }
-    return image;
+
+var settingsMenuItems = [
+  {
+    route: 'usersSettings',
+    title: 'Users'
   },
-
-  today: function () {
-    return moment(new Date()).format("YYYY-MM-DD");
+  {
+    route: 'rolesSettings',
+    title: 'Roles'
   },
-
-  week: function () {
-    return moment().format("w");
+  {
+    route: 'sectionsSettings',
+    title: 'Sections'
+  },
+  {
+    route: 'stockAreasSettings',
+    title: 'Stock Areas'
+  },
+  {
+    route: 'inactivityTimeoutSettings',
+    title: 'Inactivity Timeout'
+  },
+  {
+    route: 'posSettings',
+    title: 'POS / Menu Linking'
+  },
+  {
+    route: 'archivingSettings',
+    title: 'Locations/Areas archiving'
   }
-});
-
-Template.topNavbar.created = function () {
-  this.showCreateOrgFlyout = new ReactiveVar();
-  this.autorun(_.bind(function () {
-    this.showCreateOrgFlyout.set(false);
-  }, this));
-};
-
-var component = FlowComponents.define('topNavbar', function (props) {
-});
-
-component.state.count = function () {
-  var notifications = Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).fetch();
-  return notifications.length;
-};
-
-component.state.notifications = function () {
-  return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
-};
-
-component.state.areaColor = function () {
-  var area = HospoHero.getCurrentArea();
-  if (area) {
-    return area.color;
-  }
-};
-
-component.state.settingsMenuItems = function () {
-  return [
-    {
-      route: 'usersSettings',
-      title: 'Users'
-    },
-    {
-      route: 'rolesSettings',
-      title: 'Roles'
-    },
-    {
-      route: 'sectionsSettings',
-      title: 'Sections'
-    },
-    {
-      route: 'stockAreasSettings',
-      title: 'Stock Areas'
-    },
-    {
-      route: 'inactivityTimeoutSettings',
-      title: 'Inactivity Timeout'
-    },
-    {
-      route: 'posSettings',
-      title: 'POS / Menu Linking'
-    },
-    {
-      route: 'archivingSettings',
-      title: 'Locations/Areas archiving'
-    }
-  ];
-};
-
-component.state.profileMenuItems = function () {
-  return [
-    {
-      route: 'profile',
-      title: 'My Profile',
-      params: {
-        _id: Meteor.userId()
-      }
-    },
-    {
-      route: 'switchUser',
-      title: 'Switch User'
-    },
-    {
-      route: 'logout',
-      title: 'Logout'
-    }
-  ];
-};
+];
