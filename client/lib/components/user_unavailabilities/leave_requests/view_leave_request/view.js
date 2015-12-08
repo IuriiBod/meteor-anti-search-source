@@ -56,9 +56,11 @@ Template.viewLeaveRequest.events({
     FlowComponents.callAction('saveLeaveRequest', values, tmpl.currentFlyout);
   },
   'click .approve-button': function () {
-    FlowComponents.callAction('approveLeaveRequest');
+    FlowComponents.callAction('changeLeaveRequestStatus', true);
+    Router.go('home');
   },
   'click .decline-button': function () {
-    FlowComponents.callAction('declineLeaveRequest');
+    FlowComponents.callAction('changeLeaveRequestStatus', false);
+    Router.go('home');
   }
 });

@@ -1,4 +1,4 @@
 Template.userUnavailability.onCreated(function () {
-  this.subscribe('allLeaveRequests');
+  this.subscribe('userAllLeaveRequests');
   this.subscribe('userAllUnavailabilities');
 });

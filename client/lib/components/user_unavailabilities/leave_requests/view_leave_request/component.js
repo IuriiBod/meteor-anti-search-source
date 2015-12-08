@@ -41,9 +41,7 @@ component.action.saveLeaveRequest = function (newLeaveRequest, flyout) {
   }));
 };
 
-component.action.approveLeaveRequest = function () {
-  Meteor.call('approveLeaveRequest', this.get('leaveRequest')._id, HospoHero.handleMethodResult());
-};
-component.action.declineLeaveRequest = function () {
-  Meteor.call('declineLeaveRequest', this.get('leaveRequest')._id, HospoHero.handleMethodResult());
+component.action.changeLeaveRequestStatus = function (status) {
+  status = status ? 'approved' : 'declined';
+  Meteor.call('changeLeaveRequestStatus', this.get('leaveRequest')._id, status, HospoHero.handleMethodResult());
 };

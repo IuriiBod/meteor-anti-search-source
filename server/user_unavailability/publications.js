@@ -7,8 +7,8 @@ Meteor.publish('userAllLeaveRequests', function () {
   return LeaveRequests.find({userId: this.userId});
 });
 
-Meteor.publish('allLeaveRequests', function () {
-  return LeaveRequests.find();
+Meteor.publish('leaveRequestById', function (leaveRequestId) {
+  return LeaveRequests.find({_id: leaveRequestId});
 });
 
 Meteor.publish('leaveRequestsApprovers', function () {
