@@ -3,15 +3,15 @@
     <td>
       <div class="i-checks selected-Prep">
         <label>
-          <input type="checkbox" value="" data-id="{{state$item._id}}" data-type="{{state$item.type}}"
+          <input type="checkbox" value="" data-id="{{item._id}}" data-type="{{item.type}}"
                  class="selectedPrep">
         </label>
       </div>
     </td>
     <td>
-      <a href="" target="_blank" data-toggle="modal">{{{state$item.name}}}</a>
+      <a href="" target="_blank" data-toggle="modal">{{{item.name}}}</a>
     </td>
-    <td>{{secondsToMinutes state$item.activeTime}}</td>
-    <!-- <td>$ {{state$costPerPortion}}</td> -->
+    <td>{{secondsToMinutes item.activeTime}}</td>
+    <!-- <td>$ {{costPerPortion}}</td> -->
   </tr>
 </template>
