@@ -2,7 +2,7 @@
   <tr>
     <td>{{{menuItem.name}}}</td>
     {{#each weekPrediction}}
-      {{> render component="predictionSalesCell" displayItem=this itemId=menuItem._id }}
+      {{> predictionSalesCell this}}
     {{/each}}
   </tr>
 </template>

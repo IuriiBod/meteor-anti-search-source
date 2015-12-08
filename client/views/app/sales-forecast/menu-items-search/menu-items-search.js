@@ -1,7 +1,7 @@
 Template.menuItemsSearch.onCreated(function () {
   this.searchAndCleanHistory = function (text) {
-    this.data.MenuItemsSearch.cleanHistory();
-    this.data.MenuItemsSearch.search(text, getSelector());
+    this.data.searchSource.cleanHistory();
+    this.data.searchSource.search(text, getSelector());
   };
 });
 

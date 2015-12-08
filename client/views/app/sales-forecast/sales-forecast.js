@@ -63,13 +63,16 @@ Template.salesPredictionPage.helpers({
   getDayOfWeek: function (date) {
     return moment(date).format('dddd');
   },
+
   week: function () {
-    var currentWeekDate = this.get('currentWeekDate');
-    return HospoHero.dateUtils.getWeekDays(currentWeekDate);
+    var data = Template.instance().data;
+    return HospoHero.dateUtils.getWeekDays(data.date);
   },
+
   getSearchSource: function () {
     return Template.instance().MenuItemsSearch;
   },
+
   menuItems: function () {
     var foundMenuItems = Template.instance().MenuItemsSearch.getData({
       transform: function (matchText, regExp) {
@@ -79,6 +82,7 @@ Template.salesPredictionPage.helpers({
     });
     return foundMenuItems;
   },
+
   dailyWeatherForecast: function (date) {
     return WeatherForecast.findOne({date: TimeRangeQueryBuilder.forDay(date)});
   }
