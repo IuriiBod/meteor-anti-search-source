@@ -3,9 +3,9 @@
     <button class="close-flyout-button">
       <i class="fa fa-angle-right"></i>
     </button>
-    {{>organizationButtons  isOwner=isOrganizationOwner
-    hasLocations=state$hasLocations
-    organizationId=state$organization._id}}
+    {{>organizationButtons isOwner=isOrganizationOwner
+      hasLocations=state$hasLocations
+      organizationId=state$organization._id}}
   </div>
 
   <div class="flyout-content">

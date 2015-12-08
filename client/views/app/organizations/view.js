@@ -1,3 +1,9 @@
+Template.organizationStructure.onCreated(function () {
+  this.set('location', null);
+  this.set('area', null);
+  this.set('organization', HospoHero.getOrganization());
+});
+
 Template.organizationStructure.events({
   'click .location-settings': function () {
     FlyoutManager.open('locationSettings', {locationId: this._id}, true);
