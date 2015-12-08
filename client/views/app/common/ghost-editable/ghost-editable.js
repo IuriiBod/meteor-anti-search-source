@@ -7,7 +7,11 @@ Template.ghostEditable.onCreated(function () {
 
   this.submitValue = function () {
     var newValue = this.getInputValue();
-    FlowComponents.callAction('submitValue', newValue);
+    if (newValue.toString() !== this.value.toString()) {
+      if (_.isFunction(this.onValueChanged)) {
+        this.onValueChanged(newValue);
+      }
+    }
   };
 });
 
@@ -31,3 +35,5 @@ Template.ghostEditable.events({
     tmpl.submitValue();
   }
 });
+
+

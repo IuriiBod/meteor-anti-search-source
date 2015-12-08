@@ -83,8 +83,8 @@ Template.salesPredictionPage.helpers({
     return foundMenuItems;
   },
 
-  dailyWeatherForecast: function (date) {
-    return WeatherForecast.findOne({date: TimeRangeQueryBuilder.forDay(date)});
+  dailyWeatherForecast: function () {
+    return WeatherForecast.findOne({date: TimeRangeQueryBuilder.forDay(this)});
   }
 });
 
