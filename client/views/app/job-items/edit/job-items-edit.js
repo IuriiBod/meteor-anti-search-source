@@ -1,3 +1,4 @@
+// need to refactor all of this!
 Template.editJobItem.helpers({
   ingredientsList: function () {
     Ingredients.find().fetch();
