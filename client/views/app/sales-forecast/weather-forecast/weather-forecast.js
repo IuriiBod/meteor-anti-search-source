@@ -1,6 +1,7 @@
+console.log('test');
 Template.weatherForecast.helpers({
   hasForecast: function () {
-    return !!this
+    return !!Template.instance().data;
   },
   roundedTemperature: function () {
     return Math.round(this.temp);

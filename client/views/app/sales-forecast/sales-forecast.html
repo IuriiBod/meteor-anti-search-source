@@ -25,9 +25,7 @@
               <!--Weather-->
               <td></td>
               {{#each week}}
-                {{#with dailyWeatherForecast this}}
-                  {{> weatherForecast }}
-                {{/with}}
+                {{> weatherForecast dailyWeatherForecast}}
               {{/each}}
             </tr>
             <tr>

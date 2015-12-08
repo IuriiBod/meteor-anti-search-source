@@ -1,7 +1,7 @@
 <template name="predictionSalesCell">
   <td class="prediction-cell">
     {{#if isFuturePrediction}}
-      {{> render component="ghostEditable" value=predictionQuantity onValueChanged=onPredictedValueChangedCb}}
+      {{> ghostEditable value=predictionQuantity onValueChanged=onPredictedValueChangedCb}}
     {{else}}
       {{predictionQuantity}}
     {{/if}}
