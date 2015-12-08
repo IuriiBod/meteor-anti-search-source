@@ -1,3 +1,4 @@
+console.log('test');
 var headingComponentsMap = {
   //props.name : 'headerComponent',
   menulist: 'menuListHeader',
@@ -42,7 +43,7 @@ Template.pageHeading.helpers({
     return title;
   },
   headingToLoad: function () {
-    var type = this.type;
-    return headingComponentsMap.hasOwnProperty(type) ? headingComponentsMap[type] : false;
+    var name = this.name;
+    return headingComponentsMap.hasOwnProperty(name) ? headingComponentsMap[name] : false;
   }
 });
