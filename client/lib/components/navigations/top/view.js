@@ -21,15 +21,15 @@ Template.topNavbar.events({
   },
 
   'click .notifi-toggler': function () {
-    FlyoutManager.open('notifiFlyout', {}, true);
+    FlyoutManager.open('notifiFlyout');
   },
 
   'click .organization-structure-flyout': function () {
-    FlyoutManager.open('organizationStructure', {}, true);
+    FlyoutManager.open('organizationStructure');
   },
 
   'click .user-unavailabilities-flyout': function () {
-    FlyoutManager.open('userUnavailability', {}, true);
+    FlyoutManager.open('userUnavailability');
   }
 });
 

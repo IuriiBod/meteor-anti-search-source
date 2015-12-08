@@ -10,7 +10,7 @@
 
   <div class="flyout-content">
     <h1>{{state$organization.name}}</h1>
-    {{#each state$locations}}
+    {{#each locations}}
       <ul class="list-group" style="display: block;">
         {{#if isOrganizationOwner}}
           <li class="list-group-item lead location-settings"
@@ -23,10 +23,10 @@
             {{name}}
           </li>
         {{/if}}
-        {{#each state$areas _id}}
+        {{#each areas _id}}
           <li class="list-group-item area-color-border"
-              style="display: block; border-left-color: {{state$areaColor _id}};">
-            <a href="#" class="change-current-area{{#if state$currentArea _id}} active{{/if}}">{{name}}</a>
+              style="display: block; border-left-color: {{areaColor _id}};">
+            <a href="#" class="change-current-area{{#if isCurrentArea _id}} active{{/if}}">{{name}}</a>
 
             {{#if isManager}}
               <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i

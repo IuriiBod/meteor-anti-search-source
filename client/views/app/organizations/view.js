@@ -1,7 +1,57 @@
 Template.organizationStructure.onCreated(function () {
-  this.set('location', null);
-  this.set('area', null);
   this.set('organization', HospoHero.getOrganization());
+});
+
+Template.organizationStructure.helpers({
+  locations: function () {
+    if (Template.instance().get('organization')) {
+      var selector = {
+        organizationId: Template.instance().get('organization')._id,
+        archived: {$ne: true}
+      };
+
+      if (!HospoHero.isOrganizationOwner()) {
+        var user = Meteor.user();
+        if (user.relations && user.relations.locationIds) {
+          selector._id = {$in: user.relations.locationIds};
+        }
+      }
+
+      return Locations.find(selector);
+    }
+  },
+
+  hasLocations: function () {
+    var locations = Template.instance().get('locations');
+    return locations ? locations.count() : false;
+  },
+
+  areas: function (locationId) {
+    var selector = {
+      organizationId: Template.instance().get('organization')._id,
+      locationId: locationId,
+      archived: {$ne: true}
+    };
+
+    if (!HospoHero.isOrganizationOwner()) {
+      var user = Meteor.user();
+      if (user.relations && user.relations.areaIds) {
+        selector._id = {$in: user.relations.areaIds};
+      }
+    }
+    return Areas.find(selector);
+  },
+
+  isCurrentArea: function (id) {
+    return HospoHero.getCurrentAreaId() == id;
+  },
+
+  areaColor: function (areaId) {
+    var area = Areas.findOne({_id: areaId});
+    if (area) {
+      return area.color;
+    }
+  }
 });
 
 Template.organizationStructure.events({
@@ -16,7 +66,7 @@ Template.organizationStructure.events({
   'click .change-current-area': function (e) {
     e.preventDefault();
 
-    FlowComponents.callAction('changeDefaultArea', this._id);
+    Meteor.call('changeDefaultArea', this._id, HospoHero.handleMethodResult());
     var routerParams = Router.current().params;
 
     var paramsToRedirect = ['_id', 'id'];
