@@ -6,6 +6,13 @@ var processMthodResult = function (err, res) {
   }
 };
 
+
+Template.forceForecast.onCreated(function () {
+  console.log('oncreate', this);
+  this.set('test', 'initial value');
+});
+
+
 Template.forceForecast.events({
   'click .import-raw': function (event, tmpl) {
     if (confirm('It will remove old raw data.\nAre you sure?')) {
@@ -29,5 +36,9 @@ Template.forceForecast.events({
     if (confirm('Resetting forecast data... \nAre you sure?')) {
       Meteor.call('resetForecastData', processMthodResult);
     }
+  },
+
+  'click .test-btn': function (event, tmpl) {
+    tmpl.set('test', 'clicked');
   }
 });
