@@ -1,3 +1,4 @@
+// FC can't be removed now
 var component = FlowComponents.define('jobDetailsHeader', function (props) {
   this.set('id', Router.current().params._id);
 });

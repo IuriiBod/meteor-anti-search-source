@@ -14,7 +14,7 @@
           <th>Action</th>
           <th>Name</th>
           <th>Active Time (mins)</th>
-          {{#if state$showSection}}
+          {{#if showSection}}
             <th>Section</th>
             <th>Frequency</th>
           {{else}}
@@ -26,7 +26,7 @@
         </thead>
         <tbody>
         {{#each getJobItems}}
-          {{> render component='jobItemDetailed' jobitem=this type=state$type}}
+          {{> jobItemDetailed jobitem=this type=type}}
         {{/each}}
         </tbody>
       </table>

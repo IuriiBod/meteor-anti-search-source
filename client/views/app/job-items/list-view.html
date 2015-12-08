@@ -18,7 +18,7 @@
             {{#each jobTypes}}
               <div class="tab-pane jobtypepanes {{#if equal name "Prep"}}active{{/if}}" id="{{_id}}">
                 <div class="panel-body">
-                  {{> render component='jobItemsList' id=_id}}
+                  {{> jobItemsList id=_id}}
                 </div>
               </div>
             {{/each}}
