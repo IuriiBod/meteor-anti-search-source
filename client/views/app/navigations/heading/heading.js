@@ -1,4 +1,3 @@
-console.log('test');
 var headingComponentsMap = {
   //props.name : 'headerComponent',
   menulist: 'menuListHeader',
