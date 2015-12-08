@@ -1,6 +1,6 @@
 <template name="jobItemDetail">
   <!-- Page heading -->
-  {{>render component="pageHeading" title=state$job.name category='Jobs' id=state$job.id name="jobitemdetailed"}}
+  {{>render component="pageHeading" title=job.name category='Jobs' id=job.id name="jobitemdetailed"}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
@@ -8,44 +8,44 @@
         <div class="ibox-content">
           <div class="row">
             <div class="col-md-8">
-              {{#if state$isPrep}}
-                {{#if state$job.recipe}}
+              {{#if isPrep}}
+                {{#if job.recipe}}
                   <div class="form-group">
                     <label>Recipe</label>
 
                     <div class="panel panel-default">
                       <div class="panel-body">
-                        {{{state$job.recipe}}}
+                        {{{job.recipe}}}
                       </div>
                     </div>
                   </div>
                 {{/if}}
               {{/if}}
-              {{#if state$isRecurring}}
-                {{#if state$job.description}}
+              {{#if isRecurring}}
+                {{#if job.description}}
                   <div class="form-group">
                     <label>Description</label>
 
                     <div class="panel panel-default">
                       <div class="panel-body">
-                        {{{state$job.description}}}
+                        {{{job.description}}}
                       </div>
                     </div>
                   </div>
                 {{/if}}
-                {{#if state$isChecklist}}
+                {{#if isChecklist}}
                   <div class="form-group">
                     <label>Checklist</label>
                     <ol class="list-group">
-                      {{#each state$job.checklist}}
+                      {{#each job.checklist}}
                         <li class="list-group-item">{{this}}</li>
                       {{/each}}
                     </ol>
                   </div>
                 {{/if}}
               {{/if}}
-              {{#if state$isPrep}}
-                {{#if state$ingExists}}
+              {{#if isPrep}}
+                {{#if ingExists}}
                   <div class="form-group">
                     <label>
                       Ingredients used
@@ -61,7 +61,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {{#each state$job.ingredients}}
+                        {{#each job.ingredients}}
                           {{> ingredientItemView ingredient=this}}
                         {{/each}}
                         </tbody>
@@ -74,16 +74,16 @@
             <div class="col-md-3">
               <ul class="list-group clear-list m-t">
                 <li class="list-group-item">
-                  <span class="pull-right">{{jobTypeById state$job.type}}</span>Type
+                  <span class="pull-right">{{jobTypeById job.type}}</span>Type
                 </li>
                 <li class="list-group-item">
-                  <span class="pull-right">{{state$job.status}}</span>Status
+                  <span class="pull-right">{{job.status}}</span>Status
                 </li>
-                {{#if state$isRecurring}}
+                {{#if isRecurring}}
                   <li class="list-group-item">
                   <span class="pull-right">
-                    {{#if state$section}}
-                      {{state$section}}
+                    {{#if section}}
+                      {{section}}
                     {{else}}
                       Not assigned
                     {{/if}}
@@ -91,52 +91,52 @@
                   </li>
                 {{/if}}
                 <li class="list-group-item">
-                  <span class="pull-right">{{secondsToMinutes state$job.activeTime}} mins</span>Active Time
+                  <span class="pull-right">{{secondsToMinutes job.activeTime}} mins</span>Active Time
                 </li>
-                {{#if state$isRecurring}}
+                {{#if isRecurring}}
                   <li class="list-group-item">
-                    <span class="pull-right">{{state$frequency}}</span>Repeat Frequency
+                    <span class="pull-right">{{frequency}}</span>Repeat Frequency
                   </li>
-                  {{#unless state$isDaily}}
+                  {{#unless isDaily}}
                     <li class="list-group-item">
-                      <span class="pull-right">{{state$repeatOnDays}}</span>Repeat On
+                      <span class="pull-right">{{repeatOnDays}}</span>Repeat On
                     </li>
                   {{/unless}}
                   <li class="list-group-item">
-                    <span class="pull-right">{{state$repeatAt}}</span>Repeat At
+                    <span class="pull-right">{{repeatAt}}</span>Repeat At
                   </li>
-                  {{#if state$startsOn}}
+                  {{#if startsOn}}
                     <li class="list-group-item">
-                      <span class="pull-right">{{state$startsOn}}</span>Starts On
+                      <span class="pull-right">{{startsOn}}</span>Starts On
                     </li>
                   {{/if}}
-                  {{#if state$endsOn}}
+                  {{#if endsOn}}
                     <li class="list-group-item">
-                      <span class="pull-right">{{state$endsOn}}</span>Ends
+                      <span class="pull-right">{{endsOn}}</span>Ends
                     </li>
                   {{/if}}
                 {{/if}}
-                {{#if state$isPrep}}
+                {{#if isPrep}}
                   <li class="list-group-item">
-                    <span class="pull-right">{{state$job.portions}}</span>Portions
+                    <span class="pull-right">{{job.portions}}</span>Portions
                   </li>
                 {{/if}}
                 <li class="list-group-item">
-                  <span class="pull-right">{{state$job.labourCost}}</span>Labour Cost ($)
+                  <span class="pull-right">{{job.labourCost}}</span>Labour Cost ($)
                 </li>
-                {{#if state$isPrep}}
+                {{#if isPrep}}
                   <li class="list-group-item">
-                    <span class="pull-right">{{state$job.prepCostPerPortion}}</span>Cost per Portion ($)
+                    <span class="pull-right">{{job.prepCostPerPortion}}</span>Cost per Portion ($)
                   </li>
                   <li class="list-group-item">
-                    <span class="pull-right">{{state$job.shelfLife}} Days</span>Shelf Life
+                    <span class="pull-right">{{job.shelfLife}} Days</span>Shelf Life
                   </li>
                 {{/if}}
               </ul>
             </div>
           </div>
           
-          {{# if state$relatedMenus}}
+          {{# if relatedMenus}}
             <div class="row">
               <div class="col-lg-12">
                 <div class="ibox-content">
@@ -156,7 +156,7 @@
                             <th>Status</th>
                           </tr>
                           </thead>
-                          {{# each state$relatedMenus}}
+                          {{# each relatedMenus}}
                             <tbody>
                             <tr>
                               <td>
@@ -164,7 +164,7 @@
                                   {{name}}
                                 </a>
                               </td>
-                              <td>{{state$getCategory category}}</td>
+                              <td>{{getCategory category}}</td>
                               <td>{{salesPrice}}</td>
                               <td>{{status}}</td>
                             </tr>
@@ -181,7 +181,7 @@
 
         </div>
         <div class="row m-t-lg">
-          {{> render component='commentsPanel' id=state$job._id type='job'}}
+          {{> render component='commentsPanel' id=job._id type='job'}}
         </div>
       </div>
     </div>
