@@ -1,5 +1,3 @@
-console.log('hello client');
-
 Blaze.TemplateInstance.prototype.__stateKeyByName = function (stateName) {
   return '_' + stateName;
 };
