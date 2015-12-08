@@ -1,4 +1,6 @@
 Template.viewLeaveRequest.onCreated(function () {
+  this.subscribe('leaveRequestsApprovers');
+
   this.getRequestValuesFromTemplate = function () {
     var startDate = this.$('.start-date-picker').data('DateTimePicker').date();
     var endDate = this.$('.end-date-picker').data('DateTimePicker').date();

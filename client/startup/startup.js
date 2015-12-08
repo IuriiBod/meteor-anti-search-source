@@ -1,3 +1,3 @@
 Meteor.startup(function () {
-  return [Meteor.subscribe('organizationInfo'), Meteor.subscribe('userAllUnavailabilities')];
+  return Meteor.subscribe('organizationInfo');
 });
