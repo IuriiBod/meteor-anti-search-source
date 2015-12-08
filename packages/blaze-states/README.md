@@ -1,0 +1,1 @@
+Adds ability to do set/get in context of Blaze template. All values are reactive.

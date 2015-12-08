@@ -6,6 +6,7 @@ var processMthodResult = function (err, res) {
   }
 };
 
+
 Template.forceForecast.events({
   'click .import-raw': function (event, tmpl) {
     if (confirm('It will remove old raw data.\nAre you sure?')) {
