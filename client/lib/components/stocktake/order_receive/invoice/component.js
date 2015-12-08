@@ -1,11 +1,11 @@
-var component = FlowComponents.define("invoiceImage", function(props) {
+var component = FlowComponents.define("invoiceImage", function (props) {
   this.id = props.id;
   // this.onRendered(this.onImageRendered);
 });
 
-component.state.imageUrl = function() {
+component.state.imageUrl = function () {
   var receipt = OrderReceipts.findOne(this.id);
-  if(receipt && receipt.invoiceImage) {
+  if (receipt && receipt.invoiceImage) {
     return receipt.invoiceImage;
   }
 };

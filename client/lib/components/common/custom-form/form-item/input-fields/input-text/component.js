@@ -62,11 +62,11 @@ component.prototype.checkRegExp = function () {
 };
 
 component.prototype.setError = function () {
-  if(arguments && arguments.length) {
+  if (arguments && arguments.length) {
     var errorText = arguments[0];
     var self = this;
 
-    if(errorText === '') {
+    if (errorText === '') {
       return self.errorHandler('');
     } else {
       return function (errorParams) {

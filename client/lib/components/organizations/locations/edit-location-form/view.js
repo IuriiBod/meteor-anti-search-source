@@ -1,4 +1,4 @@
-Template.editLocationForm.onRendered(function() {
+Template.editLocationForm.onRendered(function () {
   this.$("input[name='name']").focus();
 });
 

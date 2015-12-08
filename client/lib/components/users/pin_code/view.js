@@ -1,4 +1,4 @@
-Template.pinCode.onRendered(function() {
+Template.pinCode.onRendered(function () {
   this.$("input#pin-code").focus();
 });
 

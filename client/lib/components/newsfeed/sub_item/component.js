@@ -1,4 +1,4 @@
-var component = FlowComponents.define("subNewsFeedPost", function(props) {
+var component = FlowComponents.define("subNewsFeedPost", function (props) {
   this.set('post', props.post);
 });
 
@@ -13,7 +13,7 @@ component.state.getLikesCountForPost = function () {
   };
 };
 
-component.action.likePost = function() {
+component.action.likePost = function () {
   var id = this.get('post')._id;
   Meteor.call("updateNewsfeed", id, Meteor.userId(), HospoHero.handleMethodResult());
 };

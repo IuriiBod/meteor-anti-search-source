@@ -1,4 +1,5 @@
-var component = FlowComponents.define('menuListHeader', function () {});
+var component = FlowComponents.define('menuListHeader', function () {
+});
 
 component.state.isArchived = function () {
   var archive = Router.current().params.status;

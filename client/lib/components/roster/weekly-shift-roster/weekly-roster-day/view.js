@@ -9,7 +9,7 @@ Template.weeklyRosterDay.events({
     FlowComponents.callAction("addShift");
   },
 
-  'click .manager-note-flyout': function() {
+  'click .manager-note-flyout': function () {
     FlowComponents.callAction('openManagerNotesFlyout');
   }
 });
@@ -56,7 +56,7 @@ SortableHelper.prototype._getOrder = function () {
     order = this._previousShift.order + 1;
   } else if (!this._previousShift && this._nextShift) {
     order = this._nextShift.order - 1;
-  } else if(this._nextShift && this._previousShift) {
+  } else if (this._nextShift && this._previousShift) {
     order = (this._nextShift.order + this._previousShift.order) / 2;
   }
 

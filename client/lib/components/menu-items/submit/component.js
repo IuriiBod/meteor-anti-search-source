@@ -1,18 +1,18 @@
-var component = FlowComponents.define('submitMenuItem', function(props) {
+var component = FlowComponents.define('submitMenuItem', function (props) {
   this.onRendered(this.onFormRendered);
 });
 
-component.state.initialHTML = function() {
+component.state.initialHTML = function () {
   return "Add instructions here";
 };
 
-component.action.submit = function(info) {
-  Meteor.call("createMenuItem", info, HospoHero.handleMethodResult(function(id) {
+component.action.submit = function (info) {
+  Meteor.call("createMenuItem", info, HospoHero.handleMethodResult(function (id) {
     Router.go("menuItemDetail", {"_id": id});
   }));
 };
 
-component.state.statuses = function() {
+component.state.statuses = function () {
   return Statuses.find({
     name: {
       $ne: 'archived'
@@ -20,11 +20,11 @@ component.state.statuses = function() {
   });
 };
 
-component.prototype.onFormRendered = function() {
+component.prototype.onFormRendered = function () {
   Session.set("localId", insertLocalMenuItem());
 };
 
-insertLocalMenuItem = function() {
+insertLocalMenuItem = function () {
   LocalMenuItem.remove({});
   return LocalMenuItem.insert({"ings": [], "preps": []});
 };

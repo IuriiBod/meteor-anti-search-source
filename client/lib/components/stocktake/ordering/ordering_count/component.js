@@ -1,17 +1,17 @@
-var component = FlowComponents.define("orderingCount", function(props) {
+var component = FlowComponents.define("orderingCount", function (props) {
   this.id = props.id;
   this.unit = props.unit;
   this.onCountChange = props.onCountChange;
 });
 
-component.state.orderingCount = function() {
+component.state.orderingCount = function () {
   var order = StockOrders.findOne(this.id);
-  if(order) {
+  if (order) {
     return order.countOrdered;
   }
 };
 
-component.state.unit = function() {
+component.state.unit = function () {
   return this.unit;
 };
 

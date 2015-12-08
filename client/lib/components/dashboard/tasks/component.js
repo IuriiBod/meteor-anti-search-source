@@ -1,1 +1,2 @@
-var component = FlowComponents.define("tasks", function(props) {});
+var component = FlowComponents.define("tasks", function (props) {
+});

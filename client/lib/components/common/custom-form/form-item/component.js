@@ -24,7 +24,7 @@ component.state.componentToRender = function () {
     'select': 'customFormInputSelect'
   };
 
-  if(item && item.type) {
+  if (item && item.type) {
     var type = item.type === 'select' ? 'select' : 'text';
     return availableComponents[type];
   } else {
@@ -34,7 +34,7 @@ component.state.componentToRender = function () {
 
 component.state.errorHandler = function () {
   var self = this;
-  return function(errors) {
+  return function (errors) {
     self.set('errors', errors);
 
     var errorState = errors !== '';

@@ -2,30 +2,33 @@
   <div class="modal-dialog">
     <div class="modal-content" style="width: 130%">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">Select Prep Items</h4>
       </div>
       <form class="form-horizontal" role="form" style="padding: 10px 20px">
         <div class="modal-body">
-            <input type="text" class="form-control input-lg" id="searchText-box" placeholder="Search for job item..."><br>
+          <input type="text" class="form-control input-lg" id="searchText-box" placeholder="Search for job item..."><br>
+
           <div class="row">
             <table class="table table-striped">
               <thead>
-                <tr>
-                  <th>Action</th>
-                  <th>Name</th>
-                  <th>Active Time (mins)</th>
-                  <!-- <th>Cost per Portion ($)</th> -->
-                </tr>
+              <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>Active Time (mins)</th>
+                <!-- <th>Cost per Portion ($)</th> -->
+              </tr>
               </thead>
-             <tbody>
-                {{#each state$getJobItems}}
-                  {{> render component='jobItemListed' jobitem=this name="addPrep"}}
-                {{/each}}
+              <tbody>
+              {{#each state$getJobItems}}
+                {{> render component='jobItemListed' jobitem=this name="addPrep"}}
+              {{/each}}
               </tbody>
             </table>
             <div class="alert alert-warning">If your job is not in the list,
-              <a href="#" id="addNewJobItem" class="alert-link">click here</a> to add it. Once you save it, it will appear next time you search.
+              <a href="#" id="addNewJobItem" class="alert-link">click here</a> to add it. Once you save it, it will
+              appear next time you search.
             </div>
           </div>
         </div>

@@ -1,11 +1,11 @@
 Template.profile.events({
-  'change .shiftsPerWeek': function(event) {
+  'change .shiftsPerWeek': function (event) {
     var id = $(event.target).attr("data-id");
     var value = $(event.target).val();
     Meteor.call("editBasicDetails", id, {"shiftsPerWeek": value}, HospoHero.handleMethodResult());
   },
 
-  'click #set-resign-date': function(e, tpl) {
+  'click #set-resign-date': function (e, tpl) {
     e.preventDefault();
     var id = Router.current().params._id;
     var val = tpl.$(".open-resigned-date-picker").val();
@@ -20,7 +20,7 @@ Template.profile.events({
     Meteor.call("resignDate", "set", id, val, HospoHero.handleMethodResult());
   },
 
-  'click #update-resign-date': function(e, tpl) {
+  'click #update-resign-date': function (e, tpl) {
     e.preventDefault();
     var id = Router.current().params._id;
     var val = tpl.$(".open-resigned-date-picker").val();
@@ -32,18 +32,18 @@ Template.profile.events({
       tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
     }
 
-    Meteor.call("resignDate", "update", id, val, HospoHero.handleMethodResult(function() {
+    Meteor.call("resignDate", "update", id, val, HospoHero.handleMethodResult(function () {
       tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
     }));
   },
 
-  'click #remove-resign-date': function(e, tpl) {
+  'click #remove-resign-date': function (e, tpl) {
     e.preventDefault();
     var id = Router.current().params._id;
     Meteor.call("resignDate", "remove", id, '', HospoHero.handleMethodResult());
   },
 
-  "submit form#change-pin": function(event) {
+  "submit form#change-pin": function (event) {
     event.preventDefault();
     var newPin = Template.instance().find("#new-pin").value;
     Meteor.call("changePinCode", newPin, HospoHero.handleMethodResult(function () {
@@ -52,7 +52,7 @@ Template.profile.events({
   }
 });
 
-Template.profile.rendered = function(){
+Template.profile.rendered = function () {
   $.fn.editable.defaults.mode = 'inline';
 
   $(".open-resigned-date-picker").datepicker({
@@ -68,12 +68,13 @@ Template.profile.rendered = function(){
   $('#firstname').editable({
     type: 'text',
     title: 'Edit first name',
-    display: function() {},
+    display: function () {
+    },
     showbuttons: true,
     mode: 'inline',
     placeholder: "Enter first name here",
-    success: function(response, newValue) {
-      if(newValue) {
+    success: function (response, newValue) {
+      if (newValue) {
         var id = Session.get("profileUser");
         var editDetail = {"firstname": newValue.trim()};
         updateBasicDetails(id, editDetail);
@@ -84,12 +85,13 @@ Template.profile.rendered = function(){
   $('#lastname').editable({
     type: 'text',
     title: 'Edit last name',
-    display: function() {},
+    display: function () {
+    },
     showbuttons: true,
     mode: 'inline',
     placeholder: "Enter last name here",
-    success: function(response, newValue) {
-      if(newValue) {
+    success: function (response, newValue) {
+      if (newValue) {
         var id = Session.get("profileUser");
         var editDetail = {"lastname": newValue.trim()};
         updateBasicDetails(id, editDetail);
@@ -103,15 +105,15 @@ Template.profile.rendered = function(){
     showbuttons: true,
     mode: 'inline',
     emptytext: 'Empty',
-    success: function(response, newValue) {
+    success: function (response, newValue) {
       var self = this;
-      if(newValue) {
+      if (newValue) {
         var id = $(self).attr("data-id");
         var editDetail = {"phone": newValue};
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function(value, sourceData) {
+    display: function (value, sourceData) {
     }
   });
 
@@ -121,15 +123,15 @@ Template.profile.rendered = function(){
     showbuttons: true,
     mode: 'inline',
     emptytext: 'Empty',
-    success: function(response, newValue) {
+    success: function (response, newValue) {
       var self = this;
-      if(newValue) {
+      if (newValue) {
         var id = $(self).attr("data-id");
         var editDetail = {"email": newValue};
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function(value, sourceData) {
+    display: function (value, sourceData) {
     }
   });
 
@@ -139,9 +141,9 @@ Template.profile.rendered = function(){
     showbuttons: true,
     mode: 'inline',
     emptytext: 'Empty',
-    success: function(response, newValue) {
+    success: function (response, newValue) {
       var self = this;
-      if(newValue) {
+      if (newValue) {
         var id = $(self).attr("data-id");
         var newRate = parseFloat(newValue);
         newRate = isNaN(newRate) ? 0 : newRate;
@@ -149,7 +151,7 @@ Template.profile.rendered = function(){
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function(value, sourceData) {
+    display: function (value, sourceData) {
     }
   });
 
@@ -159,9 +161,9 @@ Template.profile.rendered = function(){
     showbuttons: true,
     mode: 'inline',
     emptytext: 'Empty',
-    success: function(response, newValue) {
+    success: function (response, newValue) {
       var self = this;
-      if(newValue) {
+      if (newValue) {
         var id = $(self).attr("data-id");
         var newRate = parseFloat(newValue);
         newRate = isNaN(newRate) ? 0 : newRate;
@@ -169,7 +171,7 @@ Template.profile.rendered = function(){
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function(value, sourceData) {
+    display: function (value, sourceData) {
     }
   });
 
@@ -179,9 +181,9 @@ Template.profile.rendered = function(){
     showbuttons: true,
     mode: 'inline',
     emptytext: 'Empty',
-    success: function(response, newValue) {
+    success: function (response, newValue) {
       var self = this;
-      if(newValue) {
+      if (newValue) {
         var id = $(self).attr("data-id");
         var newRate = parseFloat(newValue);
         newRate = isNaN(newRate) ? 0 : newRate;
@@ -189,7 +191,7 @@ Template.profile.rendered = function(){
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function(value, sourceData) {
+    display: function (value, sourceData) {
     }
   });
 

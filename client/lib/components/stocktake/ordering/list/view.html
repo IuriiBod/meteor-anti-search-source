@@ -6,21 +6,21 @@
           {{> render component="supplierFilter" onSupplierChanged=state$onSupplierChanged}}
           <table class="table table-condensed table-hover table-striped">
             <thead>
-              <tr>
-                <th>Stock item</th>
-                <th>On hand</th>
-                <th>Needed</th>
-                <th>To order</th>
-                {{#if state$supplier}}
-                {{else}}
-                  <th>Action</th>
-                {{/if}}
-              </tr>
+            <tr>
+              <th>Stock item</th>
+              <th>On hand</th>
+              <th>Needed</th>
+              <th>To order</th>
+              {{#if state$supplier}}
+              {{else}}
+                <th>Action</th>
+              {{/if}}
+            </tr>
             </thead>
             <tbody>
-              {{#each state$list}}
-                {{> render component="ordersListItem" itemId=this onCountChange=state$onCountChange}}
-              {{/each}}
+            {{#each state$list}}
+              {{> render component="ordersListItem" itemId=this onCountChange=state$onCountChange}}
+            {{/each}}
             </tbody>
           </table>
 
@@ -28,13 +28,14 @@
           {{#if state$orderNote}}
             <div><p class="text-danger pull-left">Note: &nbsp;</p>{{state$orderNote}}</div>
           {{else}}
-            <textarea name="supplierOrderNote" id="supplierOrderNote" class="form-control message-input-post" placeholder="Add notes here and press enter to submit"></textarea>
+            <textarea name="supplierOrderNote" id="supplierOrderNote" class="form-control message-input-post"
+                      placeholder="Add notes here and press enter to submit"></textarea>
           {{/if}}
         {{else}}
           <h4>You haven't created any orders.</h4> <br>
-          <a href="#" class="gotoStocktake">Click here</a> to go to the stocktake and create orders. 
+          <a href="#" class="gotoStocktake">Click here</a> to go to the stocktake and create orders.
         {{/if}}
-        
+
       </div>
     </div>
   </div>
@@ -42,7 +43,8 @@
   {{> render component='commentsPanel' id=state$version type='stockOrders'}}
 
   <!-- COMPOSE MAIL MODAL-->
-  <div class="modal fade" id="composeMailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade" id="composeMailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
     {{> render component = 'composeMail' name="composeMail" initialHtml=state$initialHtml supplier=state$activeSupplier}}
   </div>
   <!-- /COMPOSE MAIL MODAL -->

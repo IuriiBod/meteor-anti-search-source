@@ -1,3 +1,1 @@
-Template.productItem.events({
-
-});
+Template.productItem.events({});

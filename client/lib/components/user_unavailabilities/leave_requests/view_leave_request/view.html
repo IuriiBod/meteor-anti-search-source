@@ -17,7 +17,8 @@
           <div class="row">
             <div class="col-md-9">
               {{#if state$isReviewMode}}
-                <input class="comment-input form-control" type="text" readonly value="{{state$formatDate state$leaveRequest.startDate}}">
+                <input class="comment-input form-control" type="text" readonly
+                       value="{{state$formatDate state$leaveRequest.startDate}}">
               {{else}}
                 <div class="start-date-picker input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
@@ -38,7 +39,8 @@
           <div class="row">
             <div class="col-md-9">
               {{#if state$isReviewMode}}
-                <input class="comment-input form-control" type="text" readonly value="{{state$formatDate state$leaveRequest.endDate}}">
+                <input class="comment-input form-control" type="text" readonly
+                       value="{{state$formatDate state$leaveRequest.endDate}}">
               {{else}}
                 <div class="end-date-picker input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>

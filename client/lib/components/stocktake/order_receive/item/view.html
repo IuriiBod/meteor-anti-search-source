@@ -13,7 +13,8 @@
         {{#if state$isEditable state$stock._id}}
           <a class="btn btn-sm btn-outline btn-danger wrongQuantity">Wrong Quantity</a>
           <a class="btn btn-sm btn-outline btn-danger wrongPrice">Wrong Price</a>
-          <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i></button>
+          <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i>
+          </button>
         {{else}}
           {{state$deliveryStatus}}
           {{#if state$isReceived}}
@@ -33,7 +34,8 @@
             <a class="btn btn-sm btn-outline btn-danger wrongQuantity">Wrong Quantity</a>
           {{/if}}
         {{/if}}
-        <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i></button>
+        <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i>
+        </button>
       {{/if}}
     </td>
   </tr>

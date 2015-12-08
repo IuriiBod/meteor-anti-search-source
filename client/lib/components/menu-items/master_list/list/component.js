@@ -1,1 +1,2 @@
-var component = FlowComponents.define('menuItemsList', function(props) {});
+var component = FlowComponents.define('menuItemsList', function (props) {
+});

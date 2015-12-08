@@ -90,7 +90,7 @@ component.prototype.getTotalTimeAndWage = function () {
 
   weekShifts.forEach(function (shift) {
     hasShifts = true;
-    if(shift.startedAt || shift.finishedAt) {
+    if (shift.startedAt || shift.finishedAt) {
       var locationStart = moment(shift.startedAt);
       var locationFinish = moment(shift.finishedAt);
       // I don't know why, but some shifts have startedAt in one day and finishedAt in another
@@ -108,7 +108,7 @@ component.prototype.getTotalTimeAndWage = function () {
     }
   });
 
-  if(hasShifts) {
+  if (hasShifts) {
     return {
       wage: this.roundNumber(totalWage),
       time: this.roundNumber(totalMinutes / 60), // convert to hours and round

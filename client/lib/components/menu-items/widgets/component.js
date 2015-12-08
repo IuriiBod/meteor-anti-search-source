@@ -1,9 +1,9 @@
-var component = FlowComponents.define("menuDetailWidgets", function(props) {
+var component = FlowComponents.define("menuDetailWidgets", function (props) {
   this.item = props.item;
 });
 
-component.state.item = function() {
-  if(this.item) {
+component.state.item = function () {
+  if (this.item) {
     var menu = this.item;
     menu['totalIngCost'] = 0;
     menu['totalPrepCost'] = 0;
@@ -37,6 +37,6 @@ component.state.item = function() {
   }
 };
 
-component.state.id = function() {
+component.state.id = function () {
   return this.item && this.item._id ? this.item._id : null;
 };

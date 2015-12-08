@@ -1,13 +1,13 @@
 Template.orderReceive.events({
-  'click .markDeliveryReceived': function(event) {
+  'click .markDeliveryReceived': function (event) {
     event.preventDefault();
     var receiptId = Session.get("thisReceipt");
     Meteor.call("receiveDelivery", receiptId, HospoHero.handleMethodResult());
   },
 
-  'keyup #orderReceiveNotes': function(event) {
+  'keyup #orderReceiveNotes': function (event) {
     event.preventDefault();
-    if(event.keyCode == 13) {
+    if (event.keyCode == 13) {
       var text = $(event.target).val();
       var info = {
         "receiveNote": text.trim()
@@ -16,29 +16,29 @@ Template.orderReceive.events({
     }
   },
 
-  'click .uploadInvoice': function(event) {
+  'click .uploadInvoice': function (event) {
     event.preventDefault();
     filepicker.pickAndStore(
       {
-        extensions:['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'], 
+        extensions: ['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'],
         services: ['COMPUTER'],
         multiple: true
-      }, 
+      },
       {},
-      function(InkBlobs){
+      function (InkBlobs) {
         var data = (InkBlobs);
 
-        if(data && data.length > 0) {
-          data.forEach(function(doc) {
+        if (data && data.length > 0) {
+          data.forEach(function (doc) {
             var urls = null;
-            if(doc) {
+            if (doc) {
               var type = null;
               var convertedUrl = null;
-              if(doc.mimetype == "application/pdf") {
+              if (doc.mimetype == "application/pdf") {
                 type = "pdf";
-              } else if(doc.mimetype == "text/csv") {
+              } else if (doc.mimetype == "text/csv") {
                 type = "csv";
-              } else if(doc.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || doc.mimetype == "application/msword") {
+              } else if (doc.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || doc.mimetype == "application/msword") {
                 type = "doc";
               } else {
                 type = "image";
@@ -48,7 +48,7 @@ Template.orderReceive.events({
                 "type": type
               }
 
-              if(type == "doc") {
+              if (type == "doc") {
                 urls['originalUrl'] = doc.url + "/convert?format=pdf";
               }
 
@@ -69,14 +69,14 @@ Template.orderReceive.events({
                   compress: true,
                   quality: 100
                 },
-                function(new_Blob){
+                function (new_Blob) {
                   urls['convertedUrl'] = new_Blob.url;
                   Meteor.call("uploadInvoice", Session.get("thisReceipt"), urls, HospoHero.handleMethodResult());
                 }
               );
             }
-          });          
+          });
         }
-    });
+      });
   }
 });

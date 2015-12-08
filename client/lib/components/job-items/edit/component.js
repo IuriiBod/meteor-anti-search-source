@@ -2,7 +2,7 @@ var component = FlowComponents.define('editJobItem', function (props) {
   var id = Router.current().params._id;
   if (id) {
     var item = JobItems.findOne(id);
-    if(item) {
+    if (item) {
       Session.set("jobType", item.type);
       this.item = item;
     }
@@ -18,14 +18,14 @@ component.state.initialHTML = function () {
   var item = JobItems.findOne(id);
   var type = item.type;
   var jobtype = JobTypes.findOne(type);
-  if(jobtype && jobtype.name === "Prep") {
-    if(item.recipe) {
+  if (jobtype && jobtype.name === "Prep") {
+    if (item.recipe) {
       return item.recipe;
     } else {
       return "Add recipe here";
     }
-  } else if(jobtype && jobtype.name === "Recurring") {
-    if(item.description) {
+  } else if (jobtype && jobtype.name === "Recurring") {
+    if (item.description) {
       return item.description;
     } else {
       return "Add description here";
@@ -33,24 +33,24 @@ component.state.initialHTML = function () {
   }
 };
 
-component.state.isPrep = function() {
+component.state.isPrep = function () {
   var type = this.item.type;
-  if(Session.get("jobType")) {
+  if (Session.get("jobType")) {
     type = Session.get("jobType");
   }
   var jobtype = JobTypes.findOne(type);
-  if(jobtype) {
+  if (jobtype) {
     return jobtype.name === "Prep";
   }
 };
 
-component.state.isRecurring = function() {
+component.state.isRecurring = function () {
   var type = this.item.type;
-  if(Session.get("jobType")) {
+  if (Session.get("jobType")) {
     type = Session.get("jobType");
   }
   var jobtype = JobTypes.findOne(type);
-  if(jobtype) {
+  if (jobtype) {
     return jobtype.name == "Recurring";
   }
 };
@@ -67,7 +67,7 @@ component.state.jobTypes = function () {
   return JobTypes.find({"_id": {$nin: [this.item.type]}});
 };
 
-component.state.frequencyWithSelected = function() {
+component.state.frequencyWithSelected = function () {
   var frequencies = [{
     index: "Daily",
     selected: false
@@ -113,7 +113,7 @@ component.state.checklist = function () {
 
 component.state.repeatAt = function () {
   var at = this.item.repeatAt;
-  if(!this.item.repeatAt) {
+  if (!this.item.repeatAt) {
     return "8:00 AM";
   } else {
     return moment(at).format("h:mm A");
@@ -206,43 +206,43 @@ component.state.wagePerHour = function () {
   return this.item.wagePerHour;
 };
 
-component.state.sectionsWithOutSelected = function() {
+component.state.sectionsWithOutSelected = function () {
   return Sections.find({"_id": {$nin: [this.item.section]}});
 };
 
 component.action.submit = function (id, info) {
-  Meteor.call("editJobItem", id, info, HospoHero.handleMethodResult(function() {
+  Meteor.call("editJobItem", id, info, HospoHero.handleMethodResult(function () {
     Router.go("jobItemDetailed", {"_id": id});
   }));
 };
 
-component.state.isArchive = function() {
+component.state.isArchive = function () {
   var id = Router.current().params._id;
   if (id) {
     var item = JobItems.findOne(id);
-    if(item) {
+    if (item) {
       return item.status == "archived";
     }
   }
 };
 
-component.prototype.onFormRendered = function() {
+component.prototype.onFormRendered = function () {
   Session.set("localId", updateLocalJobItem());
 };
 
-updateLocalJobItem = function() {
+updateLocalJobItem = function () {
   var jobItemId = Session.get("thisJobItem");
   LocalJobItem.remove({});
-  if(jobItemId) {
+  if (jobItemId) {
     var jobItem = JobItems.findOne(jobItemId);
-    if(jobItem) {
+    if (jobItem) {
       var type = jobItem.type;
       var itemType = JobTypes.findOne(type);
-      if(itemType && itemType.name == "Prep") {
+      if (itemType && itemType.name == "Prep") {
         var ings = [];
-        if(jobItem.ingredients && jobItem.ingredients.length > 0) {
-          jobItem.ingredients.forEach(function(item) {
-            if(ings.indexOf(item._id) < 0) {
+        if (jobItem.ingredients && jobItem.ingredients.length > 0) {
+          jobItem.ingredients.forEach(function (item) {
+            if (ings.indexOf(item._id) < 0) {
               ings.push(item._id);
             }
           });
@@ -253,23 +253,23 @@ updateLocalJobItem = function() {
   }
 };
 
-component.prototype.onFormRendered = function() {
+component.prototype.onFormRendered = function () {
   Session.set("localId", updateLocalJobItem());
 };
 
-updateLocalJobItem = function() {
+updateLocalJobItem = function () {
   var jobItemId = Session.get("thisJobItem");
   LocalJobItem.remove({});
-  if(jobItemId) {
+  if (jobItemId) {
     var jobItem = JobItems.findOne(jobItemId);
-    if(jobItem) {
+    if (jobItem) {
       var type = jobItem.type;
       var itemType = JobTypes.findOne(type);
-      if(itemType && itemType.name == "Prep") {
+      if (itemType && itemType.name == "Prep") {
         var ings = [];
-        if(jobItem.ingredients && jobItem.ingredients.length > 0) {
-          jobItem.ingredients.forEach(function(item) {
-            if(ings.indexOf(item._id) < 0) {
+        if (jobItem.ingredients && jobItem.ingredients.length > 0) {
+          jobItem.ingredients.forEach(function (item) {
+            if (ings.indexOf(item._id) < 0) {
               ings.push(item._id);
             }
           });

@@ -7,7 +7,7 @@ var component = FlowComponents.define("reportData", function (props) {
 });
 
 component.state.shift = function () {
-  return  Shifts.findOne({
+  return Shifts.findOne({
     "assignedTo": this.userId,
     "shiftDate": this.shiftDate
   });

@@ -1,8 +1,8 @@
 <template name="receiptItem">
   <tr>
-    <td> 
+    <td>
       {{#if state$received}}
-      <span class="label label-primary"><i class="fa fa-check"></i> Completed</span>
+        <span class="label label-primary"><i class="fa fa-check"></i> Completed</span>
       {{else}}
         {{#if state$pending}}
           <span class="label label-warning"><i class="fa fa-check"></i>Pending</span>

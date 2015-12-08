@@ -1,13 +1,13 @@
-var component = FlowComponents.define("ordersReceiptsList", function(props) {  
+var component = FlowComponents.define("ordersReceiptsList", function (props) {
 });
 
-component.state.list = function() {
+component.state.list = function () {
   var state = Session.get("thisState");
   var time = Session.get("thisTime");
   var data = null;
   var ids = [];
 
-  if(time == "week") {
+  if (time == "week") {
     data = OrderReceipts.find({
       "received": state,
       "expectedDeliveryDate": {
@@ -16,8 +16,8 @@ component.state.list = function() {
       }
     }, {sort: {"receivedDate": -1, "supplier": 1}});
 
-  } else if(time == "month") {
-    data =  OrderReceipts.find({
+  } else if (time == "month") {
+    data = OrderReceipts.find({
       "received": state,
       "expectedDeliveryDate": {
         $gte: moment().startOf("month").unix() * 1000,
@@ -25,22 +25,22 @@ component.state.list = function() {
       }
     }, {sort: {"receivedDate": -1, "supplier": 1}});
 
-  } else if(time == "all") {
+  } else if (time == "all") {
     data = OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1, "supplier": 1}});
   }
   data = data.fetch();
-  if(data && data.length > 0) {
+  if (data && data.length > 0) {
     var users = [];
     var suppliers = [];
-    if(data && data.length > 0) {
-      data.forEach(function(receipt) {
-        if(ids && ids.indexOf(receipt._id) < 0) {
+    if (data && data.length > 0) {
+      data.forEach(function (receipt) {
+        if (ids && ids.indexOf(receipt._id) < 0) {
           ids.push(receipt._id);
         }
-        if(receipt.receivedBy && users.indexOf(receipt.receivedBy) < 0) {
+        if (receipt.receivedBy && users.indexOf(receipt.receivedBy) < 0) {
           users.push(receipt.receivedBy);
         }
-        if(suppliers.indexOf(receipt.supplier) < 0) {
+        if (suppliers.indexOf(receipt.supplier) < 0) {
           suppliers.push(receipt.supplier);
         }
       });
@@ -49,25 +49,25 @@ component.state.list = function() {
   }
 };
 
-component.state.toBeReceived = function() {
+component.state.toBeReceived = function () {
   return !Session.get("thisState");
 };
 
-component.state.received = function() {
+component.state.received = function () {
   return !!Session.get("thisState");
 };
 
-component.state.week = function() {
+component.state.week = function () {
   var time = Session.get("thisTime");
   return time && time == "week";
 };
 
-component.state.month = function() {
+component.state.month = function () {
   var time = Session.get("thisTime");
   return time && time == "month";
 };
 
-component.state.allTime = function() {
+component.state.allTime = function () {
   var time = Session.get("thisTime");
   return time && time == "all";
 };

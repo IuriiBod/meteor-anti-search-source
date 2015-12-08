@@ -4,7 +4,7 @@ Template.submitIngredient.events({
     var $form = $(tmpl.find('#submitIngredientForm'));
     $form.submit();
   },
-  'click #cancel': function(e) {
+  'click #cancel': function (e) {
     e.preventDefault();
   }
 });

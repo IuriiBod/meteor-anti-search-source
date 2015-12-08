@@ -2,7 +2,8 @@
   <div class="modal-dialog">
     <div class="modal-content" style="width: 130%">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">Add new {{state$name}} area</h4>
       </div>
       <div class="modal-body">
@@ -10,12 +11,15 @@
           <form class="form-horizontal">
             <div class="form-group">
               <label class="col-sm-2 control-label">Name</label>
+
               <div class="col-sm-8">
-                <input type="text" class="form-control" name="areaName" placeholder="Add name for {{state$name}} area" id="{{state$name}}areaName">     
+                <input type="text" class="form-control" name="areaName" placeholder="Add name for {{state$name}} area"
+                       id="{{state$name}}areaName">
               </div>
-            </div> 
+            </div>
           </form>
           <br>
+
           <div class="pull-right">
             <button class="btn btn-small btn-primary" id="save{{state$name}}Area">Save</button>
             <button class="btn btn-small btn-default" data-dismiss="modal">Cancel</button>

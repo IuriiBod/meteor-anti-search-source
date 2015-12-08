@@ -1,16 +1,16 @@
-var component = FlowComponents.define("rosteredShiftItem", function(props) {
+var component = FlowComponents.define("rosteredShiftItem", function (props) {
   this.set("shift", props.shift);
 });
 
-component.state.item = function() {
+component.state.item = function () {
   return this.get("shift");
 }
 
-component.state.section = function() {
+component.state.section = function () {
   var shift = this.get("shift");
-  if(shift && shift.section) {
+  if (shift && shift.section) {
     var section = Sections.findOne(shift.section);
-    if(section) {
+    if (section) {
       return section.name;
     }
   }

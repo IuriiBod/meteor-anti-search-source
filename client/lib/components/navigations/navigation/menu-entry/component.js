@@ -17,8 +17,8 @@ component.state.subMenuItems = function () {
 component.state.subMenuItemsCount = function () {
   var subMenusItems = this.menuEntry.subMenuEntries;
 
-  if(subMenusItems) {
-    subMenusItems = subMenusItems.filter(function(item) {
+  if (subMenusItems) {
+    subMenusItems = subMenusItems.filter(function (item) {
       return checkPermission(item.permission);
     });
   }

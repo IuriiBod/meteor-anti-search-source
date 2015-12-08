@@ -1,2 +1,2 @@
-var component = FlowComponents.define("notifiModal", function(props) {
+var component = FlowComponents.define("notifiModal", function (props) {
 });

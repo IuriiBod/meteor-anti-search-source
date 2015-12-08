@@ -14,12 +14,13 @@
         <div class="row">
           <div class="col-xs-12 text-right">
             <span>Sale Price</span>
+
             <h2 class="font-bold">$
               {{#if canEditMenu}}
                 <a href="#"
-                  class="editMenuItem"
-                  data-id="{{state$id}}"
-                  style="color: #fff; border-color: #fff;">{{state$item.salesPrice}}
+                   class="editMenuItem"
+                   data-id="{{state$id}}"
+                   style="color: #fff; border-color: #fff;">{{state$item.salesPrice}}
                 </a>
               {{else}}
                 {{state$item.salesPrice}}
@@ -34,6 +35,7 @@
         <div class="row">
           <div class="col-xs-12 text-right">
             <span>Prep</span>
+
             <h2 class="font-bold">$ {{state$item.totalPrepCost}}</h2>
           </div>
         </div>
@@ -44,6 +46,7 @@
         <div class="row">
           <div class="col-xs-12 text-right">
             <span>Ingredient</span>
+
             <h2 class="font-bold">$ {{state$item.totalIngCost}}</h2>
           </div>
         </div>
@@ -54,6 +57,7 @@
         <div class="row">
           <div class="col-xs-12 text-right">
             <span>GST</span>
+
             <h2 class="font-bold">$ {{state$item.tax}}</h2>
           </div>
         </div>
@@ -67,7 +71,8 @@
           </div>
           <div class="col-xs-8 text-right">
             <span>Contribution</span>
-              <h2 class="font-bold">$ {{state$item.contribution}}</h2>
+
+            <h2 class="font-bold">$ {{state$item.contribution}}</h2>
           </div>
         </div>
       </div>

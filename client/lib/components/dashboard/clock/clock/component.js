@@ -1,7 +1,7 @@
-var component = FlowComponents.define("clock", function(props) {
+var component = FlowComponents.define("clock", function (props) {
 });
 
-component.state.clockInPermission = function() {
+component.state.clockInPermission = function () {
   var upplerLimit = moment().add(2, 'hours').toDate();
   var lowerLimit = moment().subtract(2, 'hours').toDate();
 
@@ -26,7 +26,7 @@ component.state.clockInPermission = function() {
   return !!shift;
 };
 
-component.state.clockOutPermission = function() {
+component.state.clockOutPermission = function () {
   var query = {
     assignedTo: Meteor.userId(),
     status: 'started'
@@ -36,33 +36,33 @@ component.state.clockOutPermission = function() {
   return !!shift;
 };
 
-component.state.clockIn = function() {
+component.state.clockIn = function () {
   var shift = this.get("inShift");
-  if(shift) {
+  if (shift) {
     return shift;
   }
 };
 
-component.state.subText = function() {
+component.state.subText = function () {
   var inshift = this.get("inShift");
-  if(inshift && inshift.startTime <= Date.now()) {
+  if (inshift && inshift.startTime <= Date.now()) {
     return "Today shift started ";
   } else {
     return "Today shift starts ";
   }
 };
 
-component.state.clockOut = function() {
+component.state.clockOut = function () {
   var shift = this.get("outShift");
-  if(shift) {
+  if (shift) {
     return shift;
   }
 };
 
-component.state.shiftEnded = function() {
+component.state.shiftEnded = function () {
   var shiftId = Session.get("newlyEndedShift");
   var shift = Shifts.findOne(shiftId);
-  if(shift) {
+  if (shift) {
     return shift;
   }
 };

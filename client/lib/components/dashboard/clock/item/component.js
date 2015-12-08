@@ -1,4 +1,4 @@
-var component = FlowComponents.define("clockItem", function(props) {
+var component = FlowComponents.define("clockItem", function (props) {
   this.item = props.item;
   this.item.text = props.text;
   this.item.class = props.class;
@@ -8,52 +8,52 @@ var component = FlowComponents.define("clockItem", function(props) {
   this.onRendered(this.onClockRendered);
 });
 
-component.state.item = function() {
-  if(this.item) {
+component.state.item = function () {
+  if (this.item) {
     return this.item;
   }
 };
 
-component.state.timeFromNow = function() {
-  if(this.item.text == "Clock In") {
+component.state.timeFromNow = function () {
+  if (this.item.text == "Clock In") {
     return this.get("timeLeft");
-  } else if(this.item.text == "Clock Out") {
+  } else if (this.item.text == "Clock Out") {
     return this.get("timeSpent");
-  } else if(this.item.text == "Clock Ended") {
+  } else if (this.item.text == "Clock Ended") {
     var shiftId = Session.get("newlyEndedShift");
     var shift = Shifts.findOne(shiftId);
     var time = 0;
-    if(shift) {
+    if (shift) {
       time = shift.finishedAt - shift.startedAt;
       return time;
     }
   }
 };
 
-component.state.clockIn = function() {
+component.state.clockIn = function () {
   return this.item.text == "Clock In";
 };
 
-component.state.clockOut = function() {
+component.state.clockOut = function () {
   return this.item.text == "Clock Out";
 };
 
 
-component.state.clockEnded = function() {
+component.state.clockEnded = function () {
   return this.item.text == "Clock Ended";
 };
 
-component.prototype.onClockRendered = function() {
+component.prototype.onClockRendered = function () {
   var self = this;
   var clock;
-  if(this.item) {
-    if(this.item.text == "Clock In") {
+  if (this.item) {
+    if (this.item.text == "Clock In") {
       var upplerLimit = new Date().getTime() + 5 * 3600 * 1000;
       var lowerLimit = new Date().getTime() - 2 * 3600 * 1000;
 
       clock = new Date(this.item.startTime).getTime();
-      var timeLeft = function() {
-        if(clock > lowerLimit && clock < upplerLimit) {
+      var timeLeft = function () {
+        if (clock > lowerLimit && clock < upplerLimit) {
           clock--;
           self.set("timeLeft", clock);
           return false;
@@ -62,10 +62,10 @@ component.prototype.onClockRendered = function() {
         }
       };
       var intervalleft = Meteor.setInterval(timeLeft, 1000);
-    } else if(this.item.text == "Clock Out") {
+    } else if (this.item.text == "Clock Out") {
       clock = this.item.startedAt.getTime();
-      var timeSpent = function() {
-        if(clock < new Date().getTime()) {
+      var timeSpent = function () {
+        if (clock < new Date().getTime()) {
           clock--;
           var spent = new Date().getTime() - clock;
           self.set("timeSpent", spent);

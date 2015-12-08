@@ -9,7 +9,7 @@
         {{#each state$rosteredForShifts}}
           {{> render component='rosteredShiftItem' shift=this}}
         {{else}}
-        No shifts rostered yet.
+          No shifts rostered yet.
         {{/each}}
         <br><br>
 
@@ -17,7 +17,7 @@
         {{#each state$openedShifts}}
           {{> render component='rosteredShiftItem' shift=this}}
         {{else}}
-        No shifts opened yet.
+          No shifts opened yet.
         {{/each}}
       </div>
     </div>

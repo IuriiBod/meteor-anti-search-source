@@ -3,7 +3,7 @@ Template.shiftBasicWorkerEditable.onRendered(function () {
 });
 
 Template.shiftBasicWorkerEditable.helpers({
-  assignedTo: function() {
+  assignedTo: function () {
     return this.assignedTo ? this.assignedTo : 'Open';
   }
 });
@@ -30,11 +30,11 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
     });
   };
 
-  var getTraindeWorkers = function() {
+  var getTraindeWorkers = function () {
     var shift = templateInstance.data;
     var shiftSection = shift.section;
 
-    if(shiftSection) {
+    if (shiftSection) {
       return Meteor.users.find({'profile.sections': shiftSection}).map(function (user) {
         return user._id;
       });
@@ -55,9 +55,9 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
 
     var assignedWorkers = getAlreadyAssignedWorkersIds();
     var trainedWorkers = getTraindeWorkers();
-    if(showTrainedWorkers) {
+    if (showTrainedWorkers) {
       assignedWorkers = _.difference(trainedWorkers, assignedWorkers);
-    } else if(getAvailableWorkers) {
+    } else if (getAvailableWorkers) {
       assignedWorkers = _.union(trainedWorkers, assignedWorkers);
     }
 
@@ -73,7 +73,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
     });
   };
 
-  editableConfig.source = function() {
+  editableConfig.source = function () {
     return [
       {text: '-- Available & Trained --', children: sourceFn(false, true)},
       {text: '-- Available --', children: sourceFn(true, false)},

@@ -6,8 +6,8 @@
     {{> render component='clockItem' item=state$clockOut text="Clock Out" subText='Record ' tag='red-bg' class='clockOut'}}
   {{/if}}
   <div style="display: none" class="tip">
-  {{#if state$shiftEnded}}
-    {{> render component='clockItem' item=state$shiftEnded text="Clock Ended" subText="Recorded " tag="lazur-bg" class='clockinfo'}}
-  {{/if}}
+    {{#if state$shiftEnded}}
+      {{> render component='clockItem' item=state$shiftEnded text="Clock Ended" subText="Recorded " tag="lazur-bg" class='clockinfo'}}
+    {{/if}}
   </div>
 </template>

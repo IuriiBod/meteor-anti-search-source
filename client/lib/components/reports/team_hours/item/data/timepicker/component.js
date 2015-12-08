@@ -22,8 +22,8 @@ component.action.submitTime = function (date) {
 
 component.action.getTime = function () {
   var shift = this.get('shift');
-  if(shift) {
-    if(this.type == 'editStart') {
+  if (shift) {
+    if (this.type == 'editStart') {
       return shift.startedAt ? moment(shift.startedAt) : moment();
     } else {
       return shift.finishedAt ? moment(shift.finishedAt) : moment();

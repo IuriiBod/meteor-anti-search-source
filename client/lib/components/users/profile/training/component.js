@@ -1,4 +1,4 @@
-var component = FlowComponents.define("training", function(props) {
+var component = FlowComponents.define("training", function (props) {
   this.userId = props.userId;
 });
 

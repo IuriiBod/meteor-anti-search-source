@@ -1,10 +1,10 @@
 <template name="profileMainView">
-   <!-- Page heading -->
-   {{#if me}}
-      {{> render component="pageHeading" title='My Profile'}}
-   {{else}}
-      {{> render component="pageHeading" title=name category="Settings"}}
-   {{/if}}
+  <!-- Page heading -->
+  {{#if me}}
+    {{> render component="pageHeading" title='My Profile'}}
+  {{else}}
+    {{> render component="pageHeading" title=name category="Settings"}}
+  {{/if}}
   <div class="wrapper wrapper-content">
     <div class="row animated">
       {{> render component="profile" id=id}}

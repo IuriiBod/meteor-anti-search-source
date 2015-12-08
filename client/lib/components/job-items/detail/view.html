@@ -10,36 +10,38 @@
             <div class="col-md-8">
               {{#if state$isPrep}}
                 {{#if state$job.recipe}}
-                <div class="form-group">
-                  <label>Recipe</label>
-                  <div class="panel panel-default">
-                    <div class="panel-body">
-                      {{{state$job.recipe}}}
+                  <div class="form-group">
+                    <label>Recipe</label>
+
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        {{{state$job.recipe}}}
+                      </div>
                     </div>
                   </div>
-                </div>
                 {{/if}}
               {{/if}}
               {{#if state$isRecurring}}
                 {{#if state$job.description}}
-                <div class="form-group">
-                  <label>Description</label>
-                  <div class="panel panel-default">
-                    <div class="panel-body">
-                      {{{state$job.description}}}
+                  <div class="form-group">
+                    <label>Description</label>
+
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        {{{state$job.description}}}
+                      </div>
                     </div>
                   </div>
-                </div>
                 {{/if}}
                 {{#if state$isChecklist}}
-                <div class="form-group">
-                  <label>Checklist</label>
-                  <ol class="list-group">
-                    {{#each state$job.checklist}}
-                      <li class="list-group-item">{{this}}</li>
-                    {{/each}}
-                  </ol>
-                </div>
+                  <div class="form-group">
+                    <label>Checklist</label>
+                    <ol class="list-group">
+                      {{#each state$job.checklist}}
+                        <li class="list-group-item">{{this}}</li>
+                      {{/each}}
+                    </ol>
+                  </div>
                 {{/if}}
               {{/if}}
               {{#if state$isPrep}}
@@ -48,19 +50,20 @@
                     <label>
                       Ingredients used
                     </label>
+
                     <div class="table-scrollable">
                       <table class="table table-hover thumbnail col-md-7">
                         <thead>
-                          <tr>
-                            <th>Quantity</th>
-                            <th>Description</th>
-                            <th>Cost ($)</th>
-                          </tr>
+                        <tr>
+                          <th>Quantity</th>
+                          <th>Description</th>
+                          <th>Cost ($)</th>
+                        </tr>
                         </thead>
                         <tbody>
-                          {{#each state$job.ingredients}}
-                            {{> render component='ingredientItemView' ingredient=this}}
-                          {{/each}}
+                        {{#each state$job.ingredients}}
+                          {{> render component='ingredientItemView' ingredient=this}}
+                        {{/each}}
                         </tbody>
                       </table>
                     </div>
@@ -77,7 +80,7 @@
                   <span class="pull-right">{{state$job.status}}</span>Status
                 </li>
                 {{#if state$isRecurring}}
-                <li class="list-group-item">
+                  <li class="list-group-item">
                   <span class="pull-right">
                     {{#if state$section}}
                       {{state$section}}
@@ -85,7 +88,7 @@
                       Not assigned
                     {{/if}}
                   </span>Section
-                </li>
+                  </li>
                 {{/if}}
                 <li class="list-group-item">
                   <span class="pull-right">{{secondsToMinutes state$job.activeTime}} mins</span>Active Time
@@ -114,20 +117,20 @@
                   {{/if}}
                 {{/if}}
                 {{#if state$isPrep}}
-                <li class="list-group-item">
-                  <span class="pull-right">{{state$job.portions}}</span>Portions
-                </li>
+                  <li class="list-group-item">
+                    <span class="pull-right">{{state$job.portions}}</span>Portions
+                  </li>
                 {{/if}}
                 <li class="list-group-item">
                   <span class="pull-right">{{state$job.labourCost}}</span>Labour Cost ($)
                 </li>
                 {{#if state$isPrep}}
-                <li class="list-group-item">
-                  <span class="pull-right">{{state$job.prepCostPerPortion}}</span>Cost per Portion ($)
-                </li>
-                <li class="list-group-item">
-                  <span class="pull-right">{{state$job.shelfLife}} Days</span>Shelf Life
-                </li>
+                  <li class="list-group-item">
+                    <span class="pull-right">{{state$job.prepCostPerPortion}}</span>Cost per Portion ($)
+                  </li>
+                  <li class="list-group-item">
+                    <span class="pull-right">{{state$job.shelfLife}} Days</span>Shelf Life
+                  </li>
                 {{/if}}
               </ul>
             </div>
@@ -142,28 +145,29 @@
                       <label class="col-sm-12">
                         Related menus
                       </label>
+
                       <div class="col-sm-12">
                         <table class="table">
                           <thead>
-                            <tr>
-                              <th>Name</th>
-                              <th>Category</th>
-                              <th>Sale Price</th>
-                              <th>Status</th>
-                            </tr>
+                          <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Sale Price</th>
+                            <th>Status</th>
+                          </tr>
                           </thead>
                           {{# each state$relatedMenus}}
                             <tbody>
-                              <tr>
-                                <td>
-                                  <a href="{{pathFor 'menuItemDetail' _id=_id}}" target="_blank">
-                                    {{name}}
-                                  </a>
-                                </td>
-                                <td>{{state$getCategory category}}</td>
-                                <td>{{salesPrice}}</td>
-                                <td>{{status}}</td>
-                              </tr>
+                            <tr>
+                              <td>
+                                <a href="{{pathFor 'menuItemDetail' _id=_id}}" target="_blank">
+                                  {{name}}
+                                </a>
+                              </td>
+                              <td>{{state$getCategory category}}</td>
+                              <td>{{salesPrice}}</td>
+                              <td>{{status}}</td>
+                            </tr>
                             </tbody>
                           {{/ each}}
                         </table>
@@ -174,7 +178,7 @@
               </div>
             </div>
           {{/ if}}
-          
+
         </div>
         <div class="row m-t-lg">
           {{> render component='commentsPanel' id=state$job._id type='job'}}

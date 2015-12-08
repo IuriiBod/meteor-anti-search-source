@@ -9,7 +9,8 @@
         {{else}}
           <span style="position: relative; top: 8px;">{{state$myCategory.name}}</span>
         {{/if}}
-        <select name="category" class="form-control text-capitalize hide my-editable-select" data-id="{{state$menu._id}}">
+        <select name="category" class="form-control text-capitalize hide my-editable-select"
+                data-id="{{state$menu._id}}">
           {{#each state$categoriesList}}
             {{# if equal _id state$myCategory._id}}
               <option value="{{state$myCategory._id}}" selected='selected'>{{state$myCategory.name}}</option>
@@ -23,16 +24,18 @@
 
     <div class="form-group">
       <label class="col-sm-2 control-label">Status</label>
+
       <div class="col-sm-9 pull-right">
         {{#if state$isArchived}}
-            <span style="position: relative; top: 8px;">archived</span>
+          <span style="position: relative; top: 8px;">archived</span>
         {{else}}
           {{#if canEditMenu}}
             <a href="#" data-name="status" class="my-editable-link">{{state$menu.status}}</a>
           {{else}}
             <span style="position: relative; top: 8px;">{{state$menu.status}}</span>
           {{/if}}
-          <select name="status" class="form-control text-capitalize hide my-editable-select" data-id="{{state$menu._id}}">
+          <select name="status" class="form-control text-capitalize hide my-editable-select"
+                  data-id="{{state$menu._id}}">
             {{#each state$statusList}}
               {{# if equal this.name state$menu.status}}
                 <option value="{{state$menu.status}}" selected="selected">{{state$menu.status}}</option>
@@ -40,7 +43,7 @@
                 <option value="{{this.name}}">{{this.name}}</option>
               {{/ if}}
             {{/each}}
-            </select>
+          </select>
         {{/if}}
       </div>
     </div>
@@ -60,11 +63,15 @@
             <div class="file uploadedImageDiv">
               {{# if canEditMenu}}
                 <div class="box-wrapper pull-right" style="display: none; position: absolute;">
-                  <button type="button" class="btn btn-sm btn-info" id="uploadMenuItem"><i class="fa fa-edit m-r-sm"></i>Edit Image</button><br>
+                  <button type="button" class="btn btn-sm btn-info" id="uploadMenuItem"><i
+                      class="fa fa-edit m-r-sm"></i>Edit Image
+                  </button>
+                  <br>
                 </div>
               {{/if}}
               <a href="#">
                 <span class="corner"></span>
+
                 <div class="image">
                   <img id="uploadedImageUrl" src="{{state$menu.image}}" class="img-responsive menu-item-image">
                 </div>
@@ -72,10 +79,13 @@
             </div>
           {{else}}
             {{# if canEditMenu}}
-              <button type="button" class="btn btn-sm btn-info" id="uploadMenuItem">Upload Image</button><br>
+              <button type="button" class="btn btn-sm btn-info" id="uploadMenuItem">Upload Image</button>
+              <br>
+
               <div class="file uploadedNewImageDiv hide">
                 <a href="#">
                   <span class="corner"></span>
+
                   <div class="image">
                     <img id="uploadedImageUrl" src="" class="img-responsive menu-item-image">
                   </div>
@@ -88,14 +98,16 @@
     </div>
     <!-- INGREDIENTS LIST-->
     {{#if canViewStock}}
-      <div class="modal fade" id="ingredientsListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal fade" id="ingredientsListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+           aria-hidden="true">
         {{> render component = 'stocksModalList' name="editJob"}}
       </div>
     {{/if}}
     <!-- /INGREDIENTS LIST -->
 
     <!-- JOB ITEMS LIST-->
-    <div class="modal fade" id="jobItemListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="jobItemListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
       {{> render component='jobItemsModalList' name="submitMenuItem"}}
     </div>
     <!-- /JOB ITEMS LIST -->

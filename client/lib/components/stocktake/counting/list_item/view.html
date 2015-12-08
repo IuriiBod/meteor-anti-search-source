@@ -1,20 +1,24 @@
 <template name="stockCountingListItem">
   {{#if state$item}}
-  <li class="list-group-item" data-id="{{state$item._id}}" data-stockRef="{{state$item.stockRef}}" data-place="{{state$item.place}}">
-    {{#if state$editable}}
-      <i class="fa fa-fw fa-reorder"></i>
-    {{/if}}
-    {{state$item.description}} <small>({{supplierName state$item.suppliers}})</small>
-    {{#if state$editable}}
-      <i class="fa fa-trash pull-right removeFromList"></i>
-    {{/if}}
-    <span class="pull-right">
-      {{#if state$countEditable state$item.stockRef}}
-        <a href="" class="counting">{{state$item.counting}}</a> &nbsp; [{{state$item.portionOrdered}}]
-      {{else}}
-      <p data-toggle="tooltip" data-placement="top" title="You have already placed an order for this stockItem. Can't edit now. Create a new stocktake to place another order.">{{state$item.counting}} &nbsp; [{{state$item.portionOrdered}}]</p>
+    <li class="list-group-item" data-id="{{state$item._id}}" data-stockRef="{{state$item.stockRef}}"
+        data-place="{{state$item.place}}">
+      {{#if state$editable}}
+        <i class="fa fa-fw fa-reorder"></i>
       {{/if}}
-    </span>
-  </li>
+      {{state$item.description}}
+      <small>({{supplierName state$item.suppliers}})</small>
+      {{#if state$editable}}
+        <i class="fa fa-trash pull-right removeFromList"></i>
+      {{/if}}
+      <span class="pull-right">
+        {{#if state$countEditable state$item.stockRef}}
+          <a href="" class="counting">{{state$item.counting}}</a> &nbsp; [{{state$item.portionOrdered}}]
+        {{else}}
+          <p data-toggle="tooltip" data-placement="top"
+             title="You have already placed an order for this stockItem. Can't edit now. Create a new stocktake to place another order.">{{state$item.counting}}
+            &nbsp; [{{state$item.portionOrdered}}]</p>
+        {{/if}}
+      </span>
+    </li>
   {{/if}}
 </template>

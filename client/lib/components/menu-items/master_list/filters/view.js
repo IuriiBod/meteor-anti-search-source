@@ -1,5 +1,5 @@
 Template.menuFilters.events({
-  'change .menuStatus': function(event) {
+  'change .menuStatus': function (event) {
     event.preventDefault();
     var category = Router.current().params.category;
     var status = $(event.target).val();
@@ -8,7 +8,7 @@ Template.menuFilters.events({
 });
 
 Template.menuFilters.helpers({
-  'notArchive': function() {
+  'notArchive': function () {
     return Router.current().params.status != "archived";
   }
 });

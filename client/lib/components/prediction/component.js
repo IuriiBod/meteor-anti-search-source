@@ -14,7 +14,7 @@ var component = FlowComponents.define("salesPrediction", function (props) {
 
 });
 
-component.prototype.newParamsToSearchData = function(dataHistory, text) {
+component.prototype.newParamsToSearchData = function (dataHistory, text) {
   var count = dataHistory.length;
   var lastItem = dataHistory[count - 1]['name'];
   var category = Router.current().params.category;

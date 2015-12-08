@@ -1,5 +1,5 @@
 Template.itemsSearch.events({
-  'keyup input': function(e) {
+  'keyup input': function (e) {
     FlowComponents.callAction('searchText', e.target.value);
   }
 });

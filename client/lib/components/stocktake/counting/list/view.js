@@ -1,51 +1,51 @@
 Template.stockCounting.events({
-  'click .saveStockTake': function(event) {
+  'click .saveStockTake': function (event) {
     event.preventDefault();
     Session.set("editStockTake", false);
     $(event.target).hide();
     $(".editStockTake").show();
   },
 
-  'click .addStock': function(event) {
+  'click .addStock': function (event) {
     event.preventDefault();
     $("#stocksListModal").modal("show");
   },
 
-  'click .editStockTake': function(event) {
+  'click .editStockTake': function (event) {
     event.preventDefault();
     Session.set("editStockTake", true);
     $(event.target).hide();
-    setTimeout(function() {
+    setTimeout(function () {
       $(".sarea").editable({
         type: "text",
         title: 'Edit Special area name',
         showbuttons: false,
         mode: 'inline',
-        success: function(response, newValue) {
+        success: function (response, newValue) {
           var self = this;
           var id = $(self).attr("data-id");
-          if(newValue) {
+          if (newValue) {
             Meteor.call("editSpecialArea", id, newValue, HospoHero.handleMethodResult());
           }
         }
-      });    
+      });
 
       $(".garea").editable({
         type: "text",
         title: 'Edit General area name',
         showbuttons: false,
         mode: 'inline',
-        success: function(response, newValue) {
+        success: function (response, newValue) {
           var self = this;
           var id = $(self).attr("data-id");
-          if(newValue) {
+          if (newValue) {
             Meteor.call("editGeneralArea", id, newValue, HospoHero.handleMethodResult());
           }
         }
       });
 
       $(".sortableStockItems").sortable({
-        stop: function(event, ui) {
+        stop: function (event, ui) {
           var stocktakeId = $(ui.item).attr("data-stockRef");
           var stockId = $(ui.item).attr("data-id");
           var itemPosition = $(ui.item).attr("data-place");
@@ -54,21 +54,21 @@ Template.stockCounting.events({
           var nextItemPosition = $($($(ui.item)[0]).next()).attr("data-place");
           var prevItemId = $($($(ui.item)[0]).prev()).attr("data-id");
           var prevItemPosition = $($($(ui.item)[0]).prev()).attr("data-place");
-          
+
           var sareaId = Session.get("activeSArea");
-          if(!prevItemPosition) {
+          if (!prevItemPosition) {
             prevItemPosition = 0;
-          } 
+          }
 
           var info = {
             "nextItemId": nextItemId,
             "prevItemId": prevItemId
           };
-          if(nextItemPosition) {
+          if (nextItemPosition) {
             info['nextItemPosition'] = nextItemPosition
           }
 
-          if(prevItemPosition) {
+          if (prevItemPosition) {
             info['prevItemPosition'] = prevItemPosition
           }
           Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, HospoHero.handleMethodResult());
@@ -78,12 +78,12 @@ Template.stockCounting.events({
 
   },
 
-  'click .generateOrders': function(event) {
+  'click .generateOrders': function (event) {
     event.preventDefault();
     Session.set("editStockTake", false);
     var version = Session.get("thisVersion");
-    if(version) {
-      Meteor.call("generateOrders", version, HospoHero.handleMethodResult(function() {
+    if (version) {
+      Meteor.call("generateOrders", version, HospoHero.handleMethodResult(function () {
         Router.go("stocktakeOrdering", {"_id": version})
       }));
     }

@@ -1,2 +1,2 @@
-var component = FlowComponents.define("newStocktakeModal", function() {
+var component = FlowComponents.define("newStocktakeModal", function () {
 });
