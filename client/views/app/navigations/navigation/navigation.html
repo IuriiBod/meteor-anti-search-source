@@ -1,0 +1,24 @@
+<template name="navigation">
+  <nav id="side-menu-nav-wrapper" class="navbar-default navbar-static-side hidden-print" role="navigation">
+    <div class="sidebar-collapse">
+
+      <ul class="nav" id="side-menu">
+        <li class="nav-header special_link">
+          <div class="profile-element">
+            Hospo Hero
+          </div>
+        </li>
+
+        {{> menuEntry dashboardEntry}}
+
+        {{#if isInOrganization}}
+          {{#if getCurrentAreaId}}
+            {{#each menuEntries}}
+              {{> menuEntry}}
+            {{/each}}
+          {{/if}}
+        {{/if}}
+      </ul>
+    </div>
+  </nav>
+</template>
