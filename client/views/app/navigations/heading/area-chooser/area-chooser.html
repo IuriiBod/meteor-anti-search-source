@@ -10,7 +10,7 @@
         <div class="modal-body">
           <div class="form-group">
             <select name="areaId" class="form-control">
-              {{#each state$areas}}
+              {{#each areas}}
                 {{#if equal _id getCurrentAreaId}}
                   <option value="{{_id}}" selected="selected">{{name}}</option>
                 {{else}}

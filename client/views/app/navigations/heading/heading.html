@@ -1,0 +1,11 @@
+<template name="pageHeading">
+  <div class="row wrapper border-bottom white-bg page-heading">
+    {{> breadcrumbs heading=heading id=id type=name title=title}}
+
+    <div class="col-sm-6">
+      {{#if headingToLoad}}
+        {{> Template.dynamic template=state$headingToLoad}}
+      {{/if}}
+    </div>
+  </div>
+</template>

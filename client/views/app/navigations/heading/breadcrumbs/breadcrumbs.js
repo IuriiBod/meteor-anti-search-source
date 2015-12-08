@@ -1,3 +1,12 @@
+Template.breadcrumbs.onCreated(function () {
+});
+
+Template.breadcrumbs.helpers({
+  isMenuDetailed: function () {
+    return this.type == 'menudetailed';
+  }
+});
+
 // TODO: Change this code
 Template.breadcrumbs.events({
   'click .breadcrumbCategory': function (event) {
