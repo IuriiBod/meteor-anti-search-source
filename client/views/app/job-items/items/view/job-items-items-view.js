@@ -1,22 +1,24 @@
-var component = FlowComponents.define('jobItemView', function (props) {
-  this.jobitem = getPrepItem(props.jobitem._id);
-  this.jobitem.quantity = props.jobitem.quantity;
+Template.jobItemView.onCreated(function () {
+  this.jobitem = getPrepItem(this.data.jobitem._id);
+  this.jobitem.quantity = this.data.jobitem.quantity;
 });
 
-component.state.id = function () {
-  return this.jobitem._id;
-};
+Template.jobItemView.helpers({
+  id: function () {
+    return Template.instance().jobitem._id;
+  },
 
-component.state.name = function () {
-  return this.jobitem.name;
-};
+  name: function () {
+    return Template.instance().jobitem.name;
+  },
 
-component.state.quantity = function () {
-  return this.jobitem.quantity;
-};
+  quantity: function () {
+    return Template.instance().jobitem.quantity;
+  },
 
-component.state.cost = function () {
-  var cost = this.jobitem.prepCostPerPortion * this.jobitem.quantity;
-  cost = Math.round(cost * 100) / 100;
-  return cost;
-};
+  cost: function () {
+    var cost = Template.instance().jobitem.prepCostPerPortion * Template.instance().jobitem.quantity;
+    cost = Math.round(cost * 100) / 100;
+    return cost;
+  }
+});

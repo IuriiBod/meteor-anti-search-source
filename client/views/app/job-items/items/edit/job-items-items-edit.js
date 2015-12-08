@@ -1,3 +1,12 @@
+Template.jobItemEdit.helpers({
+  item: function () {
+    return getPrepItem(Template.instance().data.id);
+  },
+  quantity: function () {
+    return 1;
+  }
+});
+
 Template.jobItemEdit.events({
   'click .removePrep': function (event) {
     event.preventDefault();

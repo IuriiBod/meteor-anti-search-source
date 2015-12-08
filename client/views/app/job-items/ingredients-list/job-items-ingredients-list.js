@@ -1,7 +1,3 @@
-Template.listOfIngredients.onCreated(function () {
-  console.log('created', this);
-});
-
 Template.listOfIngredients.helpers({
   ingredientsList: function () {
     var localId = Session.get("localId");

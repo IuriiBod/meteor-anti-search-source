@@ -10,7 +10,7 @@
       </thead>
       <tbody>
       {{#each state$jobItemsList}}
-        {{> render component='jobItemEdit' id=this name=state$name itemId=state$id}}
+        {{> jobItemEdit id=this name=state$name itemId=state$id}}
       {{/each}}
       </tbody>
       <br>
