@@ -3,8 +3,10 @@
     <td>{{dateFormat state$item.date}}</td>
     <td>${{roundCount state$item.totalStockValue}}</td>
     <td>
-      <a href="{{pathFor route="stocktakeCounting" _id=state$item._id}}" class="btn btn-primary"><i class="fa -o fa-fw fa-lg fa-eye"></i>View stocktake</a>
-      <a href="{{pathFor route="stocktakeOrdering" _id=state$item._id}}" class="btn btn-primary"><i class="fa -o fa-fw fa-lg fa-eye"></i>View orders placed</a>
+      <a href="{{pathFor route="stocktakeCounting" _id=state$item._id}}" class="btn btn-primary"><i
+          class="fa -o fa-fw fa-lg fa-eye"></i>View stocktake</a>
+      <a href="{{pathFor route="stocktakeOrdering" _id=state$item._id}}" class="btn btn-primary"><i
+          class="fa -o fa-fw fa-lg fa-eye"></i>View orders placed</a>
     </td>
   </tr>
 </template>

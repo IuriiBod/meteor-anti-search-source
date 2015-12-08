@@ -1,15 +1,15 @@
-var component = FlowComponents.define('areaSettings', function(props) {
+var component = FlowComponents.define('areaSettings', function (props) {
   this.set('areaId', props.areaId);
   this.set('addUser', false);
 });
 
-component.state.area = function() {
+component.state.area = function () {
   return Areas.findOne({_id: this.get('areaId')});
 };
 
-component.state.areaUsers = function() {
+component.state.areaUsers = function () {
   var area = this.get('area');
-  if(area) {
+  if (area) {
     return Meteor.users.find({
       $or: [
         {'relations.areaIds': this.get('areaId')},
@@ -29,26 +29,26 @@ component.state.areaUsers = function() {
 
 component.state.areaColor = function () {
   var area = this.get('area');
-  if(area) {
+  if (area) {
     return this.get('area').color;
   }
 };
 
 component.state.onColorChange = function () {
   var area = this.get('area');
-  return function(color) {
-    if(area) {
+  return function (color) {
+    if (area) {
       area.color = color;
       Meteor.call('editArea', area, HospoHero.handleMethodResult());
     }
   }
 };
 
-component.action.deleteArea = function(id) {
+component.action.deleteArea = function (id) {
   Meteor.call('deleteArea', id, HospoHero.handleMethodResult());
 };
 
-component.action.toggleAddUser = function() {
+component.action.toggleAddUser = function () {
   this.set('addUser', !this.get('addUser'));
 };
 

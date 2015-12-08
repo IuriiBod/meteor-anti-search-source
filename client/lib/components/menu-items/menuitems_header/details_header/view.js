@@ -28,7 +28,7 @@ Template.menuDetailsHeader.events({
   }
 });
 
-Template.menuDetailsHeader.onRendered(function() {
+Template.menuDetailsHeader.onRendered(function () {
   $('.editMenuItemName').editable({
     type: "text",
     title: 'Edit menu name',

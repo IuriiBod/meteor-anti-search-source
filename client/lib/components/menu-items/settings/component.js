@@ -1,47 +1,47 @@
-var component = FlowComponents.define('settingsMenuItem', function(props) {
+var component = FlowComponents.define('settingsMenuItem', function (props) {
   this.id = Session.get("thisMenuItem");
 });
 
-component.state.menu = function() {
+component.state.menu = function () {
   this.item = MenuItems.findOne(this.id);
-  if(this.item) {
+  if (this.item) {
     return this.item;
   }
 };
 
-component.state.myCategory = function() {
+component.state.myCategory = function () {
   this.item = MenuItems.findOne(this.id);
-  if(this.item) {
+  if (this.item) {
     var myCategory = this.item.category;
-    if(myCategory) {
+    if (myCategory) {
       return Categories.findOne(myCategory);
     }
   }
 };
 
-component.state.categoriesList = function() {
-  if(this.item) {
+component.state.categoriesList = function () {
+  if (this.item) {
     var myCategory = this.item.category;
-    if(myCategory) {
+    if (myCategory) {
       return Categories.find().fetch();
     }
   }
 };
 
-component.state.statusList = function() {
-  if(this.item) {
+component.state.statusList = function () {
+  if (this.item) {
     var myStatus = this.item.status;
     var list = null;
-    if(myStatus) {
+    if (myStatus) {
       return Statuses.find({
-        name: { $ne: 'archived' }
+        name: {$ne: 'archived'}
       }).fetch();
     }
     return list;
   }
 };
 
-component.state.isArchived = function() {
+component.state.isArchived = function () {
   var menu = MenuItems.findOne(this.id);
   return menu && menu.status ? menu.status == "archived" : true;
 };

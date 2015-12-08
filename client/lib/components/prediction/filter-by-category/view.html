@@ -8,7 +8,8 @@
     <ul class="dropdown-menu text-capitalize filter-menus">
       {{#each state$categories}}
         <li>
-          <a href="{{pathFor route="salesPrediction" year=state$year week=state$week category=this._id}}" class="">{{this.name}}</a>
+          <a href="{{pathFor route="salesPrediction" year=state$year week=state$week category=this._id}}"
+             class="">{{this.name}}</a>
         </li>
       {{/each}}
     </ul>

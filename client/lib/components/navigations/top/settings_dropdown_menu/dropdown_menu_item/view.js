@@ -1,5 +1,5 @@
 Template.dropdownMenuItem.helpers({
-  routeParams: function() {
+  routeParams: function () {
     var tpl = Template.instance();
     var params = tpl.data.item.params;
     return params ? params : {};

@@ -12,7 +12,7 @@ component.state.forecast = function () {
 };
 
 component.state.textClass = function () {
-  if(this.dailyStaff.actualWage != 0){
+  if (this.dailyStaff.actualWage != 0) {
     if (this.dailyStaff.actualWage <= this.dailyStaff.forecastedWage) {
       return "text-info";
     } else {

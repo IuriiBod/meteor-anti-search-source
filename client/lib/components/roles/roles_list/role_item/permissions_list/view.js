@@ -1,7 +1,7 @@
-Template.permissionsList.onRendered(function() {
+Template.permissionsList.onRendered(function () {
   var role = FlowComponents.callAction('getRole')._result;
 
-  $('#'+role._id+'-editable').editable({
+  $('#' + role._id + '-editable').editable({
     type: "checklist",
     title: 'Edit role permissions',
     showbuttons: true,
@@ -10,7 +10,7 @@ Template.permissionsList.onRendered(function() {
     toggle: 'click',
     source: HospoHero.roles.getActions(),
     value: role.actions,
-    success: function(response, newValue) {
+    success: function (response, newValue) {
       Meteor.call('editRole', role._id, {actions: newValue}, HospoHero.handleMethodResult());
     }
   });

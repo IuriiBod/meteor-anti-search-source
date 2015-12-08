@@ -11,5 +11,5 @@ Template.predictionSalesCell.events({
       FlowComponents.callAction('removeManualPrediction');
     }
   }
-  
+
 });

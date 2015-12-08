@@ -1,8 +1,9 @@
-var component = FlowComponents.define('menuFilters', function(props) {});
+var component = FlowComponents.define('menuFilters', function (props) {
+});
 
-component.state.categories = function() {
+component.state.categories = function () {
   var selected = Session.get("category");
-  if(selected != "all") {
+  if (selected != "all") {
     var categories = Categories.find({
       "_id": {$nin: [selected]},
       "relations.areaId": HospoHero.getCurrentAreaId()
@@ -16,9 +17,9 @@ component.state.categories = function() {
   }
 };
 
-component.state.statuses = function() {
+component.state.statuses = function () {
   var selected = Session.get("status");
-  if(selected != "all") {
+  if (selected != "all") {
     var statuses = Statuses.find({"name": {$nin: [selected, "archived"]}}).fetch();
     statuses.push({"name": "all", "_id": "all"});
     return statuses;
@@ -27,18 +28,18 @@ component.state.statuses = function() {
   }
 };
 
-component.state.selectedCategory = function() {
+component.state.selectedCategory = function () {
   var selected = Session.get("category");
-  if(selected != "all") {
+  if (selected != "all") {
     return Categories.findOne(selected);
   } else {
     return {"name": "All", "_id": "all"};
   }
 };
 
-component.state.selectedStatus = function() {
+component.state.selectedStatus = function () {
   var selected = Session.get("status");
-  if(selected != "all") {
+  if (selected != "all") {
     return Statuses.findOne({"name": selected});
   } else {
     return {"name": "All", "_id": "all"};

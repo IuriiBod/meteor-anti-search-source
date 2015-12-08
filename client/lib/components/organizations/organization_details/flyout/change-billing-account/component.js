@@ -1,1 +1,2 @@
-var component = FlowComponents.define("changeBillingAccount", function(props) {});
+var component = FlowComponents.define("changeBillingAccount", function (props) {
+});

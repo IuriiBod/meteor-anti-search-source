@@ -1,2 +1,2 @@
-var component = FlowComponents.define('addNewStatus', function(props) {
+var component = FlowComponents.define('addNewStatus', function (props) {
 });

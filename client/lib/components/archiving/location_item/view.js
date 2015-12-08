@@ -7,12 +7,12 @@ Template.locationItem.events({
 });
 
 Template.locationItem.helpers({
-  btnSettings: function (archived){
+  btnSettings: function (archived) {
     var settings = {
       btnClass: "btn-default",
       text: "archive"
     };
-    if(archived){
+    if (archived) {
       settings.btnClass = "btn-danger";
       settings.text = "unarchive";
     }

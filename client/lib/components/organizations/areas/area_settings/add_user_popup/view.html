@@ -15,7 +15,8 @@
 
         {{#if state$isSearchEmpty}}
           <p class="text-muted add-user-info">
-            Search for a person in organization by name or email address, or enter an email address to invite someone new.
+            Search for a person in organization by name or email address, or enter an email address to invite someone
+            new.
           </p>
         {{else}}
           {{> render component='searchMasterList' searchText=state$searchText areaId=state$areaId}}

@@ -1,7 +1,7 @@
 Template.locationSettings.events({
   'click .delete-location': function (event) {
     if (confirm("Are you sure, you want to delete this location?")) {
-      FlowComponents.callAction('deleteLocation',event);
+      FlowComponents.callAction('deleteLocation', event);
     }
   },
 

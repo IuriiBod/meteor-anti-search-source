@@ -4,23 +4,25 @@
       {{> render component="areaBox" item=this class="garea-filter" name="garea"}}
       <div class="collapse" id="{{this._id}}">
         <div class="well">
-        {{#each state$specialAreas this._id}}
-          {{> render component="areaBox" item=this class="sarea-filter" name="sarea"}}
-        {{else}}
-          No Special Areas
-          <br>
-        {{/each}}
-        {{#if state$editable}}
-          <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea" data-id="{{this._id}}">Add</a>
-          <br><br>
-        {{/if}}
+          {{#each state$specialAreas this._id}}
+            {{> render component="areaBox" item=this class="sarea-filter" name="sarea"}}
+          {{else}}
+            No Special Areas
+            <br>
+          {{/each}}
+          {{#if state$editable}}
+            <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea"
+               data-id="{{this._id}}">Add</a>
+            <br><br>
+          {{/if}}
         </div>
       </div>
     {{else}}
       No General Areas
     {{/each}}
     {{#if state$editable}}
-      <a href="#addNewGeneralAreaModal" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin">Add</a>
+      <a href="#addNewGeneralAreaModal" data-toggle="modal"
+         class="btn btn-outline btn-primary col-md-12 no-margin">Add</a>
     {{/if}}
-  </div>            
+  </div>
 </template>

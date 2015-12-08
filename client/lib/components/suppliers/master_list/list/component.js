@@ -1,6 +1,6 @@
-var component = FlowComponents.define("suppliersList", function(props) {
+var component = FlowComponents.define("suppliersList", function (props) {
 });
 
-component.state.list = function() {
+component.state.list = function () {
   return Suppliers.find({}, {sort: {"name": 1}});
 }

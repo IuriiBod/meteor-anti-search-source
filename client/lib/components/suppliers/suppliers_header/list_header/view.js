@@ -1,2 +1,1 @@
-Template.menuListHeader.events({
-});
+Template.menuListHeader.events({});

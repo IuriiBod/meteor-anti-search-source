@@ -1,4 +1,5 @@
-var component = FlowComponents.define("notifiFlyout", function () {});
+var component = FlowComponents.define("notifiFlyout", function () {
+});
 
 component.state.count = function () {
   return Notifications.find({"read": false, "to": Meteor.userId()}).count();

@@ -7,7 +7,7 @@ var fields = ['name'];
 MenuItemsSearch = new SearchSource('menuItemsSearch', fields, options);
 
 Template.menuItemsList.helpers({
-  'getMenuItems': function() {
+  'getMenuItems': function () {
     return MenuItemsSearch.getData({
       transform: function (matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>")
@@ -18,7 +18,7 @@ Template.menuItemsList.helpers({
 });
 
 Template.menuItemsList.events({
-  'keyup #searchMenuItemsBox': function(event) {
+  'keyup #searchMenuItemsBox': function (event) {
     MenuItemsSearch.cleanHistory();
     var text = $("#searchMenuItemsBox").val().trim();
     var category = Router.current().params.category;
@@ -27,26 +27,26 @@ Template.menuItemsList.events({
       'limit': 30
     };
     var filter = [];
-    if(category && category.toLowerCase() != "all") {
+    if (category && category.toLowerCase() != "all") {
       filter.push({"category": category});
     }
-    if(status && status.toLowerCase() != "all") {
+    if (status && status.toLowerCase() != "all") {
       filter.push({"status": status.toLowerCase()});
-    } else if(status && status.toLowerCase() == "all") {
+    } else if (status && status.toLowerCase() == "all") {
       filter.push({"status": {$ne: "archived"}});
     }
-    if(filter.length > 0) {
+    if (filter.length > 0) {
       selector.filter = filter;
     }
     MenuItemsSearch.search(text, selector);
   },
 
-  'click #loadMoreMenuItems': function(event) {
+  'click #loadMoreMenuItems': function (event) {
     event.preventDefault();
     var text = $("#searchMenuItemsBox").val().trim();
-    if(MenuItemsSearch.history && MenuItemsSearch.history[text]) {
+    if (MenuItemsSearch.history && MenuItemsSearch.history[text]) {
       var dataHistory = MenuItemsSearch.history[text].data;
-      if(dataHistory.length >= 9) {
+      if (dataHistory.length >= 9) {
         MenuItemsSearch.cleanHistory();
         var count = dataHistory.length;
         var lastItem = dataHistory[count - 1]['name'];
@@ -61,7 +61,7 @@ Template.menuItemsList.events({
   }
 });
 
-Template.menuItemsList.rendered = function() {
+Template.menuItemsList.rendered = function () {
   MenuItemsSearch.cleanHistory();
   var category = Router.current().params.category;
   var status = Router.current().params.status;
@@ -69,24 +69,24 @@ Template.menuItemsList.rendered = function() {
     'limit': 30
   };
   var filter = [];
-  if(category && category.toLowerCase() != "all") {
+  if (category && category.toLowerCase() != "all") {
     filter.push({"category": category});
   }
-  if(status && status.toLowerCase() != "all") {
+  if (status && status.toLowerCase() != "all") {
     filter.push({"status": status.toLowerCase()});
-  } else if(status && status.toLowerCase() == "all") {
+  } else if (status && status.toLowerCase() == "all") {
     filter.push({"status": {$ne: "archived"}});
   }
-  if(filter.length > 0) {
+  if (filter.length > 0) {
     selector.filter = filter;
   }
   MenuItemsSearch.search("", selector);
 };
 
-Template.menuItemsList.onRendered(function() {
+Template.menuItemsList.onRendered(function () {
   var tpl = this;
-  Meteor.defer(function() {
-    $("#wrapper").on('scroll', function(event){
+  Meteor.defer(function () {
+    $("#wrapper").on('scroll', function (event) {
       var wrapper = event.target;
       var wrapperHeight = wrapper.clientHeight;
       var wrapperScrollHeight = wrapper.scrollHeight;
@@ -99,6 +99,6 @@ Template.menuItemsList.onRendered(function() {
   });
 });
 
-Template.menuItemsList.onDestroyed(function() {
+Template.menuItemsList.onDestroyed(function () {
   $('#wrapper').off('scroll');
 });

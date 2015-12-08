@@ -7,7 +7,7 @@ var fields = ['code', 'description'];
 IngredientsListSearch = new SearchSource('ingredients', fields, options);
 
 Template.ingredientsList.helpers({
-  getIngredients: function() {
+  getIngredients: function () {
     return IngredientsListSearch.getData({
       transform: function (matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>")
@@ -16,17 +16,17 @@ Template.ingredientsList.helpers({
     });
   },
 
-  isLoading: function() {
+  isLoading: function () {
     return IngredientsListSearch.getStatus().loading;
   }
 });
 
 Template.ingredientsList.events({
-  "keyup #searchIngBox": _.throttle(function(e) {
+  "keyup #searchIngBox": _.throttle(function (e) {
     var selector = {
       limit: 30
     };
-    if(Router.current().params.type) {
+    if (Router.current().params.type) {
       selector.status = "archived";
     } else {
       selector.status = {$ne: "archived"};
@@ -35,12 +35,12 @@ Template.ingredientsList.events({
     IngredientsListSearch.search(text, selector);
   }, 200),
 
-  'click #loadMoreIngs': _.throttle(function(event, tmpl) {
+  'click #loadMoreIngs': _.throttle(function (event, tmpl) {
     event.preventDefault();
     var text = $("#searchIngBox").val().trim();
-    if(IngredientsListSearch.history && IngredientsListSearch.history[text]) {
+    if (IngredientsListSearch.history && IngredientsListSearch.history[text]) {
       var dataHistory = IngredientsListSearch.history[text].data;
-      if(dataHistory.length >= 9) {
+      if (dataHistory.length >= 9) {
         IngredientsListSearch.cleanHistory();
         var selector = tmpl.newSearchParams(dataHistory);
         IngredientsListSearch.search(text, selector);
@@ -48,7 +48,7 @@ Template.ingredientsList.events({
     }
   }, 200),
 
-  'click .editIngredient': function(event, tmpl) {
+  'click .editIngredient': function (event, tmpl) {
     event.preventDefault();
     var id = $(event.target).closest("tr").attr("data-id");
     Session.set("thisIngredientId", id);
@@ -57,8 +57,8 @@ Template.ingredientsList.events({
   }
 });
 
-Template.ingredientsList.onRendered(function() {
-  this.newSearchParams = function(dataHistory) {
+Template.ingredientsList.onRendered(function () {
+  this.newSearchParams = function (dataHistory) {
     var count = dataHistory.length;
     var lastItem = dataHistory[count - 1]['code'];
     var selector = {
@@ -66,7 +66,7 @@ Template.ingredientsList.onRendered(function() {
       "endingAt": lastItem
     };
 
-    if(Router.current().params.type) {
+    if (Router.current().params.type) {
       selector.status = "archived";
     } else {
       selector.status = {$ne: "archived"};
@@ -78,7 +78,7 @@ Template.ingredientsList.onRendered(function() {
   var selector = {
     limit: 30
   };
-  if(Router.current().params.type) {
+  if (Router.current().params.type) {
     selector.status = "archived";
   } else {
     selector.status = {$ne: "archived"};
@@ -86,8 +86,8 @@ Template.ingredientsList.onRendered(function() {
   IngredientsListSearch.search("", selector);
 
   var tpl = this;
-  Meteor.defer(function() {
-    $('#wrapper').scroll(function(event){
+  Meteor.defer(function () {
+    $('#wrapper').scroll(function (event) {
       var wrapper = event.target;
       var wrapperHeight = wrapper.clientHeight;
       var wrapperScrollHeight = wrapper.scrollHeight;
@@ -100,6 +100,6 @@ Template.ingredientsList.onRendered(function() {
   });
 });
 
-Template.ingredientsList.onDestroyed(function() {
+Template.ingredientsList.onDestroyed(function () {
   $('#wrapper').off('scroll');
 });

@@ -1,14 +1,14 @@
 Template.addUserPopup.events({
-  'keyup input[name="addUserName"]': function(e) {
+  'keyup input[name="addUserName"]': function (e) {
     var searchText = $(e.target).val();
     FlowComponents.callAction('onSearchTextChange', searchText);
   },
 
-  'click .search-user-info-content': function() {
+  'click .search-user-info-content': function () {
     FlowComponents.callAction('onUserSelect', this._id);
   },
 
-  'click .back-to-select-user': function() {
+  'click .back-to-select-user': function () {
     FlowComponents.callAction('onUserSelect', null);
     FlowComponents.callAction('clearSearchText');
   },

@@ -1,4 +1,5 @@
-var component = FlowComponents.define('stocktakeHeader', function () {});
+var component = FlowComponents.define('stocktakeHeader', function () {
+});
 
 component.action.startStocktake = function (tmpl) {
   var date = moment().format("YYYY-MM-DD");

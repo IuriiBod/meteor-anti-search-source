@@ -7,7 +7,7 @@ var fields = ['name'];
 JobItemsSearch = new SearchSource('jobItemsSearch', fields, options);
 
 Template.jobItemsList.helpers({
-  getJobItems: function() {
+  getJobItems: function () {
     return JobItemsSearch.getData({
       transform: function (matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>")
@@ -16,18 +16,18 @@ Template.jobItemsList.helpers({
     });
   },
 
-  isLoading: function() {
+  isLoading: function () {
     return JobItemsSearch.getStatus().loading;
   }
 });
 
 Template.jobItemsList.events({
-  'keyup #searchJobItemsBox': _.throttle(function(e) {
+  'keyup #searchJobItemsBox': _.throttle(function (e) {
     var selector = {
       "type": Session.get("type"),
       limit: 30
     };
-    if(Router.current().params.type) {
+    if (Router.current().params.type) {
       selector.status = 'archived';
     } else {
       selector.status = {$ne: 'archived'};
@@ -37,12 +37,12 @@ Template.jobItemsList.events({
     JobItemsSearch.search(text, selector);
   }, 200),
 
-  'click #loadMoreJobItems': _.throttle(function(event, tmpl) {
+  'click #loadMoreJobItems': _.throttle(function (event, tmpl) {
     event.preventDefault();
     var text = $("#searchJobItemsBox").val().trim();
-    if(JobItemsSearch.history && JobItemsSearch.history[text]) {
+    if (JobItemsSearch.history && JobItemsSearch.history[text]) {
       var dataHistory = JobItemsSearch.history[text].data;
-      if(dataHistory.length >= 9) {
+      if (dataHistory.length >= 9) {
         JobItemsSearch.cleanHistory();
         var selector = tmpl.newSearchParams(dataHistory);
         JobItemsSearch.search(text, selector);
@@ -51,13 +51,13 @@ Template.jobItemsList.events({
   }, 200)
 });
 
-Template.jobItemsList.onCreated(function() {
+Template.jobItemsList.onCreated(function () {
   this.newSearchParams = function (dataHistory) {
     var count = dataHistory.length;
     var lastItem = dataHistory[count - 1]['name'];
     var selector = {"type": Session.get("type"), "limit": count + 10, "endingAt": lastItem};
     var archive = Router.current().params.type;
-    if(archive && archive == 'archive') {
+    if (archive && archive == 'archive') {
       selector.status = 'archived';
     } else {
       selector.status = {$ne: 'archived'};
@@ -67,13 +67,13 @@ Template.jobItemsList.onCreated(function() {
   };
 });
 
-Template.jobItemsList.onRendered(function() {
-  var prepType = JobTypes.findOne({ name: 'Prep' });
+Template.jobItemsList.onRendered(function () {
+  var prepType = JobTypes.findOne({name: 'Prep'});
   Session.set('type', prepType._id);
 
   var tpl = this;
-  Meteor.defer(function() {
-    $('#wrapper').scroll(function(event){
+  Meteor.defer(function () {
+    $('#wrapper').scroll(function (event) {
       var wrapper = event.target;
       var wrapperHeight = wrapper.clientHeight;
       var wrapperScrollHeight = wrapper.scrollHeight;
@@ -91,7 +91,7 @@ Template.jobItemsList.onRendered(function() {
     limit: 30
   };
   var archive = Router.current().params.type;
-  if(archive && archive == 'archive') {
+  if (archive && archive == 'archive') {
     selector.status = 'archived';
   } else {
     selector.status = {$ne: 'archived'};
@@ -99,6 +99,6 @@ Template.jobItemsList.onRendered(function() {
   JobItemsSearch.search("", selector);
 });
 
-Template.jobItemsList.onDestroyed(function() {
+Template.jobItemsList.onDestroyed(function () {
   $('#wrapper').off('scroll');
 });

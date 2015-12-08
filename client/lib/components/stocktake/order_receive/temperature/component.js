@@ -1,1 +1,2 @@
-var component = FlowComponents.define("temperatureModal", function(props) {});
+var component = FlowComponents.define("temperatureModal", function (props) {
+});

@@ -1,5 +1,5 @@
 Template.settingsMenuItem.events({
-  'click #showIngredientsList': function(event, tmpl) {
+  'click #showIngredientsList': function (event, tmpl) {
     event.preventDefault();
     tmpl.$("#ingredientsListModal").modal("show");
   },
@@ -123,7 +123,7 @@ Template.settingsMenuItem.events({
       {},
       function (InkBlobs) {
         var doc = (InkBlobs);
-        if(doc) {
+        if (doc) {
           var url = doc[0].url;
           var id = $(event.target).closest("form").attr("data-id");
           Meteor.call("editMenuItem", id, {"image": url}, HospoHero.handleMethodResult());
@@ -133,7 +133,7 @@ Template.settingsMenuItem.events({
       });
   },
 
-  'click .remove-image': function() {
+  'click .remove-image': function () {
     var menuId = Router.current().params._id;
     Meteor.call('editMenuItem', menuId, {image: ''}, HospoHero.handleMethodResult());
   },
@@ -181,22 +181,22 @@ Template.settingsMenuItem.events({
     e.preventDefault();
     var name = e.target.dataset.name;
     $(e.target).addClass("hide");
-    $('[name="'+name+'"]').removeClass("hide");
+    $('[name="' + name + '"]').removeClass("hide");
   },
 
-  'mouseenter .menuImageDiv': function(event) {
+  'mouseenter .menuImageDiv': function (event) {
     event.preventDefault();
     $(event.target).find('.box-wrapper').show();
   },
 
-  'mouseleave .menuImageDiv': function(event) {
+  'mouseleave .menuImageDiv': function (event) {
     event.preventDefault();
     $(event.target).find('.box-wrapper').hide();
   }
 });
 
-Template.settingsMenuItem.rendered = function() {
-  $("body").on("click", function(e) {
+Template.settingsMenuItem.rendered = function () {
+  $("body").on("click", function (e) {
     var el = $(e.target);
     if (!el.hasClass("my-editable-link") && !el.hasClass("my-editable-select")) {
       $(".my-editable-select").addClass("hide");

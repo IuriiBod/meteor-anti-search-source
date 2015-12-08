@@ -10,7 +10,7 @@ component.state.note = function () {
 
 component.action.addManagerNote = function (text) {
   var note = this.get('note');
-  if(!note) {
+  if (!note) {
     note = {
       noteDate: this.date,
       createdAt: new Date(),

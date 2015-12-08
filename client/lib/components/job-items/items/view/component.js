@@ -1,22 +1,22 @@
-var component = FlowComponents.define('jobItemView', function(props) {
+var component = FlowComponents.define('jobItemView', function (props) {
   this.jobitem = getPrepItem(props.jobitem._id);
   this.jobitem.quantity = props.jobitem.quantity;
 });
 
-component.state.id = function() {
+component.state.id = function () {
   return this.jobitem._id;
 };
 
-component.state.name = function() {
+component.state.name = function () {
   return this.jobitem.name;
 };
 
-component.state.quantity = function() {
+component.state.quantity = function () {
   return this.jobitem.quantity;
 };
 
-component.state.cost = function() {
+component.state.cost = function () {
   var cost = this.jobitem.prepCostPerPortion * this.jobitem.quantity;
-  cost = Math.round(cost * 100)/100;
+  cost = Math.round(cost * 100) / 100;
   return cost;
 };

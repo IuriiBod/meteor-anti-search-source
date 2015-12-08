@@ -12,7 +12,7 @@ component.state.notifications = function () {
 
 component.state.areaColor = function () {
   var area = HospoHero.getCurrentArea();
-  if(area) {
+  if (area) {
     return area.color;
   }
 };

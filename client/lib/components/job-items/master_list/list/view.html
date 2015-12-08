@@ -1,37 +1,38 @@
 <template name="jobItemsList">
-    <div class="row">
-      <div class="col-sm-12">
-        <input type="text" name="searchJobItems"  id="searchJobItemsBox" class="form-control col-sm-8" placeholder="Search...">
-      </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <input type="text" name="searchJobItems" id="searchJobItemsBox" class="form-control col-sm-8"
+             placeholder="Search...">
     </div>
-    <hr>
-    <div class="ibox float-e-margins">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Action</th>
-              <th>Name</th>
-              <th>Active Time (mins) </th>
-              {{#if state$showSection}}
-                <th>Section</th>
-                <th>Frequency</th>
-              {{else}}
-                <th>Shelf Life (Days)</th>
-                <th>Portions</th>
-                <th>Cost per Portion ($)</th>
-              {{/if}}
-            </tr>
-          </thead>
-          <tbody>
-            {{#each getJobItems}}
-              {{> render component='jobItemDetailed' jobitem=this type=state$type}}
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-       <p>
-        <a href="#" class="btn btn-block btn-outline btn-primary hide" id="loadMoreJobItems">Load More</a>
-      </p>
+  </div>
+  <hr>
+  <div class="ibox float-e-margins">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Action</th>
+          <th>Name</th>
+          <th>Active Time (mins)</th>
+          {{#if state$showSection}}
+            <th>Section</th>
+            <th>Frequency</th>
+          {{else}}
+            <th>Shelf Life (Days)</th>
+            <th>Portions</th>
+            <th>Cost per Portion ($)</th>
+          {{/if}}
+        </tr>
+        </thead>
+        <tbody>
+        {{#each getJobItems}}
+          {{> render component='jobItemDetailed' jobitem=this type=state$type}}
+        {{/each}}
+        </tbody>
+      </table>
     </div>
+    <p>
+      <a href="#" class="btn btn-block btn-outline btn-primary hide" id="loadMoreJobItems">Load More</a>
+    </p>
+  </div>
 </template>

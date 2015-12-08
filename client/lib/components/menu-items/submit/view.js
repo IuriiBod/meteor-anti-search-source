@@ -1,5 +1,5 @@
 Template.submitMenuItem.helpers({
-  categoriesList: function() {
+  categoriesList: function () {
     return Categories.find({
       "relations.areaId": HospoHero.getCurrentAreaId()
     }).fetch();
@@ -7,29 +7,29 @@ Template.submitMenuItem.helpers({
 });
 
 Template.submitMenuItem.events({
-  'submit form': function(event) {
+  'submit form': function (event) {
     event.preventDefault();
-    var name = $(event.target).find('[name=name]').val().trim(); 
+    var name = $(event.target).find('[name=name]').val().trim();
     var category = $(event.target).find('[name=category]').val();
     var status = $(event.target).find('[name=status]').val();
     var instructions = FlowComponents.child('menuItemEditorSubmit').getState('content');
-    var salesPrice = $(event.target).find('[name=salesPrice]').val().trim(); 
+    var salesPrice = $(event.target).find('[name=salesPrice]').val().trim();
     var image = $("#uploadedImageUrl").attr("src");
     var preps = $(event.target).find("[name=prep_qty]").get();
     var ings = $(event.target).find("[name=ing_qty]").get();
-    if(!name) {
+    if (!name) {
       return alert("Add a unique name for the menu");
     }
-    if(instructions) {
-      if($('.note-editable').text() === "Add instructions here" || $('.note-editable').text() === "") {
+    if (instructions) {
+      if ($('.note-editable').text() === "Add instructions here" || $('.note-editable').text() === "") {
         instructions = ""
       }
     }
 
     var ing_doc = [];
-    ings.forEach(function(item) {
+    ings.forEach(function (item) {
       var dataid = $(item).attr("data-id");
-      if(dataid && !(ing_doc.hasOwnProperty(dataid))) {
+      if (dataid && !(ing_doc.hasOwnProperty(dataid))) {
         var quantity = parseFloat($(item).val());
         quantity = quantity ? quantity : 1;
         ing_doc.push({
@@ -40,9 +40,9 @@ Template.submitMenuItem.events({
     });
 
     var prep_doc = [];
-    preps.forEach(function(item) {
+    preps.forEach(function (item) {
       var dataid = $(item).attr("data-id");
-      if(dataid && !(prep_doc.hasOwnProperty(dataid))) {
+      if (dataid && !(prep_doc.hasOwnProperty(dataid))) {
         var quantity = parseFloat($(item).val());
         quantity = quantity ? quantity : 1;
         prep_doc.push({
@@ -61,23 +61,23 @@ Template.submitMenuItem.events({
       "status": status
     };
     salesPrice = parseFloat(salesPrice);
-    salesPrice = Math.round(salesPrice * 100)/100;
+    salesPrice = Math.round(salesPrice * 100) / 100;
 
     info.salesPrice = salesPrice ? salesPrice : 0;
     FlowComponents.callAction('submit', info);
   },
 
-  'click #uploadMenuItem': function(event) {
+  'click #uploadMenuItem': function (event) {
     event.preventDefault();
     filepicker.pickAndStore(
-      {mimetype:"image/*", services: ['COMPUTER']}, 
+      {mimetype: "image/*", services: ['COMPUTER']},
       {},
-      function(InkBlobs){
+      function (InkBlobs) {
         var doc = (InkBlobs);
-        if(doc) {
+        if (doc) {
           $(".uploadedImageDiv").removeClass("hide");
           $("#uploadedImageUrl").attr("src", doc[0].url);
         }
-    });
+      });
   }
 });

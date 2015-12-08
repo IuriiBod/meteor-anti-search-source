@@ -1,12 +1,12 @@
 Template.profileImage.events({
-  'click #uploadImage': function(event) {
+  'click #uploadImage': function (event) {
     event.preventDefault();
     filepicker.pickAndStore(
-      {mimetype:"image/*", services: ['COMPUTER']}, 
+      {mimetype: "image/*", services: ['COMPUTER']},
       {},
-      function(InkBlobs){
+      function (InkBlobs) {
         var doc = (InkBlobs);
-        if(doc) {
+        if (doc) {
           var url = doc[0].url;
           Meteor.call("editBasicDetails", Session.get("profileUser"), {"profileImage": url}, HospoHero.handleMethodResult());
         }
@@ -14,12 +14,12 @@ Template.profileImage.events({
     );
   },
 
-  'mouseenter .profile-picture-div': function(event) {
+  'mouseenter .profile-picture-div': function (event) {
     event.preventDefault();
     $(event.target).find('.box-wrapper').show();
   },
 
-  'mouseleave .profile-picture-div': function(event) {
+  'mouseleave .profile-picture-div': function (event) {
     event.preventDefault();
     $(event.target).find('.box-wrapper').hide();
   }

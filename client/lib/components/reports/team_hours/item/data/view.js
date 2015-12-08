@@ -1,9 +1,9 @@
 Template.reportData.events({
-  'click .start-time': function(event, tmpl){
+  'click .start-time': function (event, tmpl) {
     FlowComponents.callAction('toggleEditStartTime');
   },
 
-  'click .end-time': function(event, tmpl){
+  'click .end-time': function (event, tmpl) {
     FlowComponents.callAction('toggleEditEndTime');
   },
 

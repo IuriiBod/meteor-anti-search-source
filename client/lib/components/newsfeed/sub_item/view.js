@@ -18,7 +18,7 @@ Template.subNewsFeedPost.helpers({
 });
 
 Template.subNewsFeedPost.events({
-  'click .like-sub-post': function(event) {
+  'click .like-sub-post': function (event) {
     event.preventDefault();
     FlowComponents.callAction("likePost");
   }

@@ -8,7 +8,8 @@
         {{#if state$editable}}
           <a class="btn btn-link btn-sm pull-right saveStockTake"><i class="fa fa-fw fa-save"></i>Save</a>
         {{else}}
-          <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit Stocktake Template</a>
+          <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit Stocktake
+            Template</a>
         {{/if}}
       {{/if}}
       {{dateFormat state$stocktakeMain.stocktakeDate}}
@@ -48,19 +49,22 @@
   </div>
 
   <!-- STOCKS MODAL LIST-->
-  <div class="modal fade" id="stocksListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade" id="stocksListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
     {{> render component = 'stocksModalList' name="stockModal"}}
   </div>
   <!-- /STOCKS MODAL LIST -->
 
   <!-- ADD GENERAL AREA MODAL LIST-->
-  <div class="modal fade" id="addNewGeneralAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addNewGeneralAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
     {{> render component = 'newAreaModal' name="general"}}
   </div>
   <!-- /ADD GENERAL AREA MODAL LIST-->
 
-   <!-- ADD SPECIAL AREA MODAL LIST-->
-  <div class="modal fade" id="addNewSpecialAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <!-- ADD SPECIAL AREA MODAL LIST-->
+  <div class="modal fade" id="addNewSpecialAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
     {{> render component = 'newAreaModal' name="special"}}
   </div>
   <!-- /ADD SPECIAL AREA MODAL LIST-->

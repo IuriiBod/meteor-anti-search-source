@@ -5,8 +5,8 @@ var component = FlowComponents.define('managerNoteItem', function (props) {
 
 component.state.onSubmit = function () {
   var self = this;
-  return function(noteObject) {
-    Meteor.call('upsertManagerNote', noteObject, HospoHero.handleMethodResult(function() {
+  return function (noteObject) {
+    Meteor.call('upsertManagerNote', noteObject, HospoHero.handleMethodResult(function () {
       self.set('displayEditor', false);
     }));
   }

@@ -7,9 +7,9 @@
       <div class="col-xs-9 text-right">
         <h2 class="font-bold">{{state$item.text}}</h2>
         {{#if state$clockIn}}
-        <p>{{state$item.subText}} {{timeFromNow state$timeFromNow}}</p>
+          <p>{{state$item.subText}} {{timeFromNow state$timeFromNow}}</p>
         {{else}}
-        <p>{{state$item.subText}} {{timeDuration state$timeFromNow}}</p>
+          <p>{{state$item.subText}} {{timeDuration state$timeFromNow}}</p>
         {{/if}}
       </div>
     </div>

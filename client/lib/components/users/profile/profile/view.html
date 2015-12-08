@@ -51,21 +51,25 @@
           </form>
           <br>
 
-          <h4>Pay rates</h4>  
-          <p>Weekdays ($): 
-          {{#if isManager}}
-            <a href="#" id="weekdaysrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.weekdays}}</a>
-          {{else}}
-            {{#if state$basic.profile.payrates.weekdays}}
-              {{state$basic.profile.payrates.weekdays}}
+          <h4>Pay rates</h4>
+
+          <p>Weekdays ($):
+            {{#if isManager}}
+              <a href="#" id="weekdaysrate" data-id="{{state$basic._id}}"
+                 class="editable">{{state$basic.profile.payrates.weekdays}}</a>
             {{else}}
-              Not added
+              {{#if state$basic.profile.payrates.weekdays}}
+                {{state$basic.profile.payrates.weekdays}}
+              {{else}}
+                Not added
+              {{/if}}
             {{/if}}
-          {{/if}}
           </p>
-          <p>Saturday ($): 
-           {{#if isManager}}
-            <a href="#" id="saturdayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.saturday}}</a>
+
+          <p>Saturday ($):
+            {{#if isManager}}
+              <a href="#" id="saturdayrate" data-id="{{state$basic._id}}"
+                 class="editable">{{state$basic.profile.payrates.saturday}}</a>
             {{else}}
               {{#if state$basic.profile.payrates.saturday}}
                 {{state$basic.profile.payrates.saturday}}
@@ -74,10 +78,12 @@
               {{/if}}
             {{/if}}
           </p>
-          <p>Sunday ($):  
-           {{#if isManager}}
-            <a href="#" id="sundayrate" data-id="{{state$basic._id}}" class="editable">{{state$basic.profile.payrates.sunday}}</a>
-            {{else}} 
+
+          <p>Sunday ($):
+            {{#if isManager}}
+              <a href="#" id="sundayrate" data-id="{{state$basic._id}}"
+                 class="editable">{{state$basic.profile.payrates.sunday}}</a>
+            {{else}}
               {{#if state$basic.profile.payrates.sunday}}
                 {{state$basic.profile.payrates.sunday}}
               {{else}}
@@ -88,12 +94,12 @@
           <br>
           <br>
 
-          <h4>No. of shifts per week</h4>             
+          <h4>No. of shifts per week</h4>
           {{#if isManager}}
             <select class="form-control shiftsPerWeek" data-id="{{state$basic._id}}">
-            {{#each state$shiftsPerWeek}}
-              <option selected="{{this.selected}}">{{this.shift}}</option>
-            {{/each}}
+              {{#each state$shiftsPerWeek}}
+                <option selected="{{this.selected}}">{{this.shift}}</option>
+              {{/each}}
             </select>
           {{else}}
             {{#if state$basic.profile.shiftsPerWeek}}
@@ -105,22 +111,24 @@
 
           {{#if isManager}}
             {{#if isMe state$id}}
-                {{#if state$hasResignDate}}
-                    <br />
-                    <h4>Resigned date</h4>
-                    <div>
-                        {{state$resignDate}}
-                    </div>
-                {{/if}}
+              {{#if state$hasResignDate}}
+                <br/>
+                <h4>Resigned date</h4>
+
+                <div>
+                  {{state$resignDate}}
+                </div>
+              {{/if}}
             {{else}}
-              <br />
+              <br/>
               <h4>Resigned date</h4>
-                <div class="input-group">
-                  <input type="text"
-                         class="form-control open-resigned-date-picker"
-                         placeholder="No resign date"
-                         aria-describedby="user-resign-addon"
-                         value="{{state$resignDate}}">
+
+              <div class="input-group">
+                <input type="text"
+                       class="form-control open-resigned-date-picker"
+                       placeholder="No resign date"
+                       aria-describedby="user-resign-addon"
+                       value="{{state$resignDate}}">
 
                   <span class="input-group-btn">
                     {{#if state$hasResignDate}}
@@ -139,16 +147,17 @@
                       </button>
                     {{/if}}
                   </span>
-                </div>
+              </div>
             {{/if}}
           {{else}}
-              {{#if state$hasResignDate}}
-                  <br />
-                  <h4>Resigned date</h4>
-                  <div>
-                      {{state$resignDate}}
-                  </div>
-              {{/if}}
+            {{#if state$hasResignDate}}
+              <br/>
+              <h4>Resigned date</h4>
+
+              <div>
+                {{state$resignDate}}
+              </div>
+            {{/if}}
           {{/if}}
         </div>
       </div>

@@ -1,13 +1,13 @@
 Template.shiftsSummary.events({
-  'click .futureShifts': function() {
+  'click .futureShifts': function () {
     FlowComponents.callAction('changeShiftState', 'future');
   },
 
-  'click .pastShifts': function() {
+  'click .pastShifts': function () {
     FlowComponents.callAction('changeShiftState', 'past');
   },
 
-  'click .openShifts': function() {
+  'click .openShifts': function () {
     FlowComponents.callAction('changeShiftState', 'open');
   }
 });

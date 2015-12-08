@@ -17,8 +17,8 @@ component.state.isArchived = function () {
 
 component.state.onAreaSelected = function () {
   var jobItemId = this.get('id');
-  return function(areaId) {
-    Meteor.call("duplicateJobItem", jobItemId, areaId, HospoHero.handleMethodResult(function() {
+  return function (areaId) {
+    Meteor.call("duplicateJobItem", jobItemId, areaId, HospoHero.handleMethodResult(function () {
       HospoHero.success("Job item has successfully copied!");
       $('#areaChooser').modal('hide');
     }));
@@ -31,7 +31,7 @@ component.action.subscribe = function () {
 };
 
 component.action.archive = function () {
-  Meteor.call("archiveJobItem", this.get('id'), HospoHero.handleMethodResult(function(status) {
+  Meteor.call("archiveJobItem", this.get('id'), HospoHero.handleMethodResult(function (status) {
     return HospoHero.info("Job item " + status);
   }));
 };

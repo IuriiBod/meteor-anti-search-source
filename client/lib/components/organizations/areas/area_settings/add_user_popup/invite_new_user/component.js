@@ -1,1 +1,2 @@
-var component = FlowComponents.define('inviteNewUser', function(props) {});
+var component = FlowComponents.define('inviteNewUser', function (props) {
+});

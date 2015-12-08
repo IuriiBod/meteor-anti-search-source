@@ -1,2 +1,2 @@
-var component = FlowComponents.define('addNewCategory', function(props) {
+var component = FlowComponents.define('addNewCategory', function (props) {
 });

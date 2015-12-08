@@ -1,14 +1,14 @@
 Template.ordersList.events({
-  'click .gotoStocktake': function(event) {
+  'click .gotoStocktake': function (event) {
     event.preventDefault();
     var id = HospoHero.getParamsFromRoute(Router.current(), '_id');
     Router.go("stocktakeCounting", {"_id": id});
   },
 
-  'keyup #supplierOrderNote': function(event) {
+  'keyup #supplierOrderNote': function (event) {
     event.preventDefault();
-    if(event.keyCode == 13) {
-      FlowComponents.callAction('getSupplier').then(function(supplier) {
+    if (event.keyCode == 13) {
+      FlowComponents.callAction('getSupplier').then(function (supplier) {
         var version = HospoHero.getParamsFromRoute(Router.current(), '_id');
         var text = $(event.target).val();
         var id = null;
@@ -18,7 +18,7 @@ Template.ordersList.events({
           "version": version,
           "supplier": supplier
         };
-        if(receipt) {
+        if (receipt) {
           id = receipt._id;
         }
 

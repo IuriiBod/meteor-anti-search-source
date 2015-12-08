@@ -1,19 +1,19 @@
-var component = FlowComponents.define("orderReceiveItem", function(props) {
+var component = FlowComponents.define("orderReceiveItem", function (props) {
   this.item = props.item;
 });
 
-component.state.stock = function() {
+component.state.stock = function () {
   var ingredient = Ingredients.findOne(this.item.stockId);
-  if(ingredient) {
+  if (ingredient) {
     this.item['description'] = ingredient.description;
   }
   return this.item;
 }
 
-component.state.total = function() {
+component.state.total = function () {
   var total = 0;
   var quantity = this.item.countOrdered;
-  if(this.item.hasOwnProperty("countDelivered")) {
+  if (this.item.hasOwnProperty("countDelivered")) {
     quantity = this.item.countDelivered;
   }
   total = this.item.unitPrice * quantity;
@@ -21,54 +21,54 @@ component.state.total = function() {
 
 }
 
-component.state.deliveryStatus = function() {
+component.state.deliveryStatus = function () {
   var id = this.item._id;
   var order = StockOrders.findOne(id);
-  if(order && order.deliveryStatus) {
-    return order.deliveryStatus; 
+  if (order && order.deliveryStatus) {
+    return order.deliveryStatus;
   }
 }
 
-component.state.isDeliveredCorreclty = function() {
+component.state.isDeliveredCorreclty = function () {
   var id = this.item._id;
   var order = StockOrders.findOne(id);
-  if(order && order.deliveryStatus) {
-    if(order.deliveryStatus.length == 1 && order.deliveryStatus[0] == "Delivered Correctly") {
+  if (order && order.deliveryStatus) {
+    if (order.deliveryStatus.length == 1 && order.deliveryStatus[0] == "Delivered Correctly") {
       return true;
     }
   }
 }
 
-component.state.isWrongQuantity = function() {
+component.state.isWrongQuantity = function () {
   var id = this.item._id;
   var order = StockOrders.findOne(id);
-  if(order && order.deliveryStatus && order.deliveryStatus.length > 0) {
-    if(order.deliveryStatus.indexOf("Wrong Quantity") >= 0) {
+  if (order && order.deliveryStatus && order.deliveryStatus.length > 0) {
+    if (order.deliveryStatus.indexOf("Wrong Quantity") >= 0) {
       return true;
     }
   }
 }
 
-component.state.isWrongPrice = function() {
+component.state.isWrongPrice = function () {
   var id = this.item._id;
   var order = StockOrders.findOne(id);
-  if(order && order.deliveryStatus && order.deliveryStatus.length > 0) {
-    if(order.deliveryStatus.indexOf("Wrong Price") >= 0) {
+  if (order && order.deliveryStatus && order.deliveryStatus.length > 0) {
+    if (order.deliveryStatus.indexOf("Wrong Price") >= 0) {
       return true;
     }
   }
 }
 
-component.state.isEditable = function(id) {
+component.state.isEditable = function (id) {
   return Session.get("editable" + id);
 }
 
-component.state.isReceived = function() {
+component.state.isReceived = function () {
   var id = Session.get("thisReceipt")
   var data = OrderReceipts.findOne(id);
-  if(data) {
-    if(data.received) {
+  if (data) {
+    if (data.received) {
       return true;
-    } 
+    }
   }
 }

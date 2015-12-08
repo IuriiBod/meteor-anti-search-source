@@ -1,5 +1,6 @@
-var component = FlowComponents.define("supplierProfile", function(props) {});
+var component = FlowComponents.define("supplierProfile", function (props) {
+});
 
-component.state.supplierId = function() {
+component.state.supplierId = function () {
   return Session.get("thisSupplier");
 }

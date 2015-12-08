@@ -1,5 +1,5 @@
 Template.leaveRequestItem.events({
-    'click .remove-leave-request-button': function () {
-        FlowComponents.callAction('removeLeaveRequest');
-    }
+  'click .remove-leave-request-button': function () {
+    FlowComponents.callAction('removeLeaveRequest');
+  }
 });

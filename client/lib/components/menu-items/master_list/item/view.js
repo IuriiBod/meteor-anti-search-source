@@ -1,19 +1,19 @@
 Template.menuItem.events({
-  'click .menu-item-delete': function(event) {
+  'click .menu-item-delete': function (event) {
     event.preventDefault();
     var result = confirm("Are you sure, you want to delete this menu ?");
-    if(result) {
+    if (result) {
       var id = $(event.target).attr("data-id");
-      if(id) {
+      if (id) {
         Meteor.call("deleteMenuItem", id, HospoHero.handleMethodResult());
       }
     }
   },
 
-  'click .archiveMenuItem': function(e, tpl) {
+  'click .archiveMenuItem': function (e, tpl) {
     e.preventDefault();
     var i, id;
-    if($(e.target).hasClass('fa')) {
+    if ($(e.target).hasClass('fa')) {
       i = $(e.target);
     } else {
       i = $(e.target).find('.fa');

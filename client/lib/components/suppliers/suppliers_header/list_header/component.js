@@ -1,1 +1,2 @@
-var component = FlowComponents.define('suppliersListHeader', function () {});
+var component = FlowComponents.define('suppliersListHeader', function () {
+});

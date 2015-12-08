@@ -6,14 +6,16 @@
     <td>$ {{roundCount state$invoiceFaceValue}}</td>
     <td>
       {{#if state$receipt.received}}
-        <a class="btn btn-link receiveDelivery">Delivery received by {{username state$receipt.receivedBy}} @ {{fullDateFormat state$receipt.receivedDate}}</a>
+        <a class="btn btn-link receiveDelivery">Delivery received by {{username state$receipt.receivedBy}}
+          @ {{fullDateFormat state$receipt.receivedDate}}</a>
       {{else}}
-        <a href="#" class="btn btn-primary receiveDelivery"><i class="fa -o fa-fw fa-lg fa-check-square-o"></i>Receive this delivery now</a>
+        <a href="#" class="btn btn-primary receiveDelivery"><i class="fa -o fa-fw fa-lg fa-check-square-o"></i>Receive
+          this delivery now</a>
       {{/if}}
     </td>
     <td>
       {{#if state$isInvoiceUploaded}}
-      <a class="btn btn-link"><i class="-o -square-o fa fa-check fa-fw fa-lg text-primary"></i></a>
+        <a class="btn btn-link"><i class="-o -square-o fa fa-check fa-fw fa-lg text-primary"></i></a>
       {{else}}
       {{/if}}
     </td>

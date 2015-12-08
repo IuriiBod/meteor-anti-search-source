@@ -1,9 +1,9 @@
-var component = FlowComponents.define("menuInstructions", function(props) {
+var component = FlowComponents.define("menuInstructions", function (props) {
   this.id = props.id;
 });
 
-component.state.desc = function() {
-  if(this.id) {
+component.state.desc = function () {
+  if (this.id) {
     var menu = MenuItems.findOne(this.id);
     if (menu && menu.instructions) {
       return menu.instructions;
@@ -13,6 +13,6 @@ component.state.desc = function() {
   }
 };
 
-component.state.isPermitted = function() {
+component.state.isPermitted = function () {
   return managerPlusAdminPermission();
 };

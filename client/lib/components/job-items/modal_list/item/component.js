@@ -1,35 +1,35 @@
-var component = FlowComponents.define('jobItemListed', function(props) {
+var component = FlowComponents.define('jobItemListed', function (props) {
   this.jobitem = props.jobitem;
   this.name = props.name;
   this.onRendered(this.onItemRendered);
 });
 
-component.state.item = function() {
+component.state.item = function () {
   return this.jobitem;
 };
 
-component.state.costPerPortion = function() {  
+component.state.costPerPortion = function () {
   var prep = getPrepCost(this.jobitem._id);
-  if(prep) {
+  if (prep) {
     return prep.prepCostPerPortion;
   }
 };
 
-component.prototype.onItemRendered = function() {
+component.prototype.onItemRendered = function () {
   var self = this;
   $('.i-checks.selected-Prep').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
 
-  $('input.selectedPrep').on('ifChecked', function(){
+  $('input.selectedPrep').on('ifChecked', function () {
     var id = $(this).attr("data-id");
-    if(self.name == "addPrep") {
+    if (self.name == "addPrep") {
       var localId = Session.get("localId");
 
       var localMenuItem = LocalMenuItem.findOne(localId);
-      if(localMenuItem) {
+      if (localMenuItem) {
         LocalMenuItem.update({"_id": localId}, {$addToSet: {"preps": id}});
-      } 
+      }
     }
   });
 };
