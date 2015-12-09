@@ -1,8 +1,8 @@
 <template name="weeklyShiftRoster">
   <div class="row">
     <div class="col-lg-12">
-      {{#each state$datesOfWeek}}
-        {{> render component="weeklyRosterDay" currentDate=this type=state$type}}
+      {{#each datesOfWeek}}
+        {{> weeklyRosterDay currentDate=this type=../type}}
       {{/each}}
     </div>
   </div>

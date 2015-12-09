@@ -1,22 +1,22 @@
 <template name="managerNoteItem">
   <div class="col-xs-12 note-item">
     <div class="note-author">
-      {{username state$note.createdBy}}
+      {{username createdBy}}
     </div>
 
     {{#if state$displayEditor}}
-      {{> render component="managerNotesEditor" noteId=state$note._id date=state$note.noteDate onSubmit=state$onSubmit}}
+      {{> managerNotesEditor note=this onSubmit=onSubmit}}
     {{else}}
-      <div class="note-text">{{state$note.text}}</div>
+      <div class="note-text">{{text}}</div>
     {{/if}}
 
     {{#unless state$displayEditor}}
       <div class="note-action-bar">
         <span class="note-date">
-          {{fullDateFormat state$note.createdAt}}
+          {{fullDateFormat createdAt}}
         </span>
 
-        {{#if equal currentUser._id state$note.createdBy}}
+        {{#if equal currentUser._id createdBy}}
           <span class="note-actions">
             <a href="#" class="btn btn-link edit-note-item">Edit</a> -
             <a href="#" class="btn btn-link delete-note-item">Delete</a>

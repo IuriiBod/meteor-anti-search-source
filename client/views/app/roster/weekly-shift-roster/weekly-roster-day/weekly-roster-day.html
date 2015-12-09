@@ -2,15 +2,15 @@
   <div class="col-lg-13 weekly-roster-day-container">
     <!--head with date-->
     <h4>
-      {{weekDateName state$currentDate}}
+      {{weekDateName currentDate}}
 
-      {{#unless state$hasTemplateType}}
+      {{#unless hasTemplateType}}
         {{#if canViewRoster}}
           <span class="manager-note-flyout">
           <i class="fa fa-sticky-note"></i>
-            {{#if state$managerNotesCount}}
+            {{#if managerNotesCount}}
               <span class="manager-notes-count label label-primary">
-                {{state$managerNotesCount}}
+                {{managerNotesCount}}
               </span>
             {{/if}}
         </span>
@@ -18,8 +18,8 @@
       {{/unless}}
     </h4>
 
-    {{#unless state$hasTemplateType}}
-      <h4>{{dateFormat state$currentDate}}</h4>
+    {{#unless hasTemplateType}}
+      <h4>{{dateFormat currentDate}}</h4>
     {{/unless}}
 
     {{#if canEditRoster}}
@@ -32,9 +32,9 @@
       </div>
     {{/if}}
 
-    <ul class="sortable-list agile-list" data-current-date="{{state$currentDate}}">
-      {{#each state$shifts}}
-        {{> shiftBasic this}}
+    <ul class="sortable-list agile-list" data-current-date="{{currentDate}}">
+      {{#each shifts}}
+        {{> shiftBasic}}
       {{/each}}
     </ul>
   </div>

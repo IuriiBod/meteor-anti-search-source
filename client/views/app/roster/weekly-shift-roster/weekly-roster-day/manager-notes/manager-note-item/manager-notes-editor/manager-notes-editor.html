@@ -1,7 +1,7 @@
 <template name="managerNotesEditor">
   <div class="manager-notes-editor">
     <div class="form-group">
-      <textarea class="form-control" name="noteText">{{#if state$note}}{{state$note.text}}{{/if}}</textarea>
+      <textarea class="form-control" name="noteText">{{#if note}}{{note.text}}{{/if}}</textarea>
     </div>
     <div class="form-group">
       <button class="btn btn-primary create-manager-note">
