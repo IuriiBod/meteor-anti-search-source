@@ -1,0 +1,13 @@
+<template name="weeklyRosterMainView">
+  <!-- Page heading -->
+  {{> pageHeading title="Weekly Roster" category='Roster' name="weeklyroster"}}
+
+
+  {{#if canViewForecast}}
+    {{> weeklyFigures weekDate=weekDate}}
+  {{/if}}
+
+  <div class="wrapper wrapper-content animated">
+    {{> weeklyShiftRoster type=null weekDate=weekDate}}
+  </div>
+</template>

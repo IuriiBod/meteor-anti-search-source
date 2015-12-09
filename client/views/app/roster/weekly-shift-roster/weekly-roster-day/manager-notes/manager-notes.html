@@ -1,0 +1,37 @@
+<template name="managerNotes">
+  <div class="flyout-header">
+    <button class="close-flyout-button">
+      <i class="fa fa-angle-right"></i>
+    </button>
+    Notes on {{dayFormat date}}
+  </div>
+
+  <div class="flyout-content">
+    {{# if canEditRoster}}
+      <div class="text-center link-block manager-note-create-block">
+        {{#if notes.count}}
+          <button class="btn btn-link create-note-button">
+            <i class="fa fa-plus"></i>
+            Create a note
+          </button>
+        {{else}}
+          <strong>No notes for today, </strong>
+          <button class="btn btn-link create-note-button">
+            <i class="fa fa-plus"></i>
+            Create one
+          </button>
+        {{/if}}
+      </div>
+
+      {{#if state$displayEditor}}
+        {{> managerNotesEditor note=null onSubmit=addManagerNote date=date}}
+      {{/if}}
+    {{/if}}
+
+    {{#if notes.count}}
+      {{#each notes}}
+        {{> managerNoteItem}}
+      {{/each}}
+    {{/if}}
+  </div>
+</template>

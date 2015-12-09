@@ -23,7 +23,7 @@ var menuEntries = [
     title: 'Roster',
     icon: 'fa-calendar-o',
     permission: 'view roster',
-    activeOnRoutes: ['weeklyRoster', 'dailyRoster', 'templateWeeklyRoster'],
+    activeOnRoutes: ['weeklyRoster', 'templateWeeklyRoster'],
     subMenuEntries: [
       {
         title: 'Weekly',

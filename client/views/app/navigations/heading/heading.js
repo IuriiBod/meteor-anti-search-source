@@ -8,7 +8,6 @@ var headingComponentsMap = {
   teamHoursReport: 'reportsHeader',
   currentStocksReport: 'reportsHeader',
   weeklyroster: 'weeklyHeader',
-  dailyroster: 'dailyHeader',
   weeklyrostertemplate: 'weeklyTemplateHeader',
   salesPrediction: 'salesPredictionHeader',
   stocktakeList: 'stocktakeHeader',
