@@ -1,3 +1,58 @@
+Template.profile.onRendered(function () {
+  var userId = this.data._id;
+  makeInputsEditable(userId);
+});
+
+Template.profile.helpers({
+  user: function() {
+    return this;
+  },
+  firstName: function() {
+    if (this && this.profile && this.profile.firstname) {
+      return this.profile.firstname;
+    } else {
+      return this.username;
+    }
+  },
+  lastName: function() {
+    if (this && this.profile && this.profile.lastname) {
+      return this.profile.lastname;
+    } else {
+      return "";
+    }
+  },
+  email: function() {
+    if (this && this.emails) {
+      return this.emails[0].address;
+    }
+  },
+  //permitted for profile owner and admins
+  isEditPermitted: function() {
+    return HospoHero.isManager() || HospoHero.isMe(this._id);
+  },
+  shiftsPerWeek: function() {
+    var user = this;
+    var shifts = [1, 2, 3, 4, 5, 6, 7];
+    var formattedShifts = [];
+
+    shifts.forEach(function (shift) {
+      var doc = {
+        "shift": shift
+      };
+      doc.selected = user && user.profile.shiftsPerWeek == shift;
+      formattedShifts.push(doc);
+    });
+    return formattedShifts;
+  },
+  hasResignDate: function() {
+    return !!this.profile.resignDate;
+  },
+  resignDate: function() {
+    var resignDate = this.profile.resignDate;
+    return resignDate ? moment(resignDate).format("MM/DD/YYYY") : null;
+  }
+});
+
 Template.profile.events({
   'change .shiftsPerWeek': function (event) {
     var id = $(event.target).attr("data-id");
@@ -52,9 +107,7 @@ Template.profile.events({
   }
 });
 
-Template.profile.rendered = function () {
-  $.fn.editable.defaults.mode = 'inline';
-
+function makeInputsEditable(userId) {
   $(".open-resigned-date-picker").datepicker({
     startDate: new Date(),
     todayHighlight: true
@@ -75,9 +128,8 @@ Template.profile.rendered = function () {
     placeholder: "Enter first name here",
     success: function (response, newValue) {
       if (newValue) {
-        var id = Session.get("profileUser");
         var editDetail = {"firstname": newValue.trim()};
-        updateBasicDetails(id, editDetail);
+        updateBasicDetails(userId, editDetail);
       }
     }
   });
@@ -92,9 +144,8 @@ Template.profile.rendered = function () {
     placeholder: "Enter last name here",
     success: function (response, newValue) {
       if (newValue) {
-        var id = Session.get("profileUser");
         var editDetail = {"lastname": newValue.trim()};
-        updateBasicDetails(id, editDetail);
+        updateBasicDetails(userId, editDetail);
       }
     }
   });
@@ -194,9 +245,9 @@ Template.profile.rendered = function () {
     display: function (value, sourceData) {
     }
   });
-
-};
+}
 
 function updateBasicDetails(id, updateDetails) {
   Meteor.call("editBasicDetails", id, updateDetails, HospoHero.handleMethodResult());
 }
+

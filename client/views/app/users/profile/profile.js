@@ -1,6 +1,7 @@
 Template.profileMainView.helpers({
-  'id': function () {
-    return Router.current().params._id;
+  'user': function () {
+    var userId = Router.current().params._id;
+    return Meteor.users.findOne({_id: userId});
   },
 
   'name': function () {
