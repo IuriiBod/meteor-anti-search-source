@@ -15,6 +15,8 @@
           </div>
           <div class="ibox-content">
             <form method="get" class="form-horizontal">
+
+              <!-- Name -->
               <div class="form-group">
                 <label class="col-sm-2 control-label">Name</label>
 
@@ -22,6 +24,8 @@
                   <input type="text" name="name" class="form-control" placeholder="Enter Name for the job">
                 </div>
               </div>
+
+              <!-- Type -->
               <div class="form-group">
                 <label class="col-sm-2 control-label">Type</label>
 
@@ -33,6 +37,8 @@
                   </select>
                 </div>
               </div>
+
+              <!-- Sections -->
               {{#if isRecurring}}
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Sections</label>
@@ -47,17 +53,17 @@
                   </div>
                 </div>
               {{/if}}
+
+              <!-- Recipe/Description-->
               <div class="form-group">
                 {{#if isPrep}}
                   <label class="col-sm-2 control-label">Recipe</label>
-
                   <div class="col-sm-10">
                     {{> render component = 'textEditor' id='jobItemEditorSubmit'
                     initialHtml="Add recipe to job"}}
                   </div>
                 {{else}}
                   <label class="col-sm-2 control-label">Description</label>
-
                   <div class="col-sm-10">
                     {{> render component = 'textEditor' id='jobItemEditorSubmit'
                     initialHtml="Add description to job"}}
@@ -65,7 +71,10 @@
                 {{/if}}
               </div>
 
+              <!-- Fields for recurring -->
               {{#if isRecurring}}
+
+                <!-- Checklist -->
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Checklist</label>
 
@@ -77,8 +86,11 @@
                     {{initChecklist}}
                   </div>
                 </div>
+
+                <!-- Frequency -->
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Frequency</label>
+
                   <div class="col-sm-10">
                     <select name="frequency" class="form-control changeFrequency">
                       {{#each frequencies}}
@@ -87,9 +99,11 @@
                     </select>
                   </div>
                 </div>
-                {{#if equal selectedFrequency "daily"}}
-                {{else}}
+
+                {{#unless equal selectedFrequency "daily"}}
                   {{#if equal selectedFrequency "everyXWeeks"}}
+
+                    <!-- Repeat every X weeks -->
                     <div class="form-group">
                       <label class="col-sm-2 control-label"></label>
 
@@ -98,6 +112,8 @@
                       </div>
                     </div>
                   {{/if}}
+
+                  <!-- Repeat on -->
                   <div class="form-group">
                     <label class="col-sm-2 control-label">Repeat On</label>
 
@@ -112,7 +128,9 @@
                       {{/each}}
                     </div>
                   </div>
-                {{/if}}
+                {{/unless}}
+
+                <!-- Repeat at -->
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Repeat At</label>
 
@@ -122,18 +140,22 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- Starts on-->
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Starts On</label>
 
                   <div class="col-sm-10">
                     <div class="input-group">
-                      <input type="text" name="startsOn" class="form-control dateselecter" value="{{startsOn}}">
+                      <input type="text" name="startsOn" class="form-control dateSelect" value="{{startsOn}}">
                       <span class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </span>
                     </div>
                   </div>
                 </div>
+
+                <!-- Ends on -->
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Ends</label>
 
@@ -153,17 +175,21 @@
                     <div class="radio">
                       <input type="radio" id="radio" name="radioOption" data-doc="endsOn">
                       <label for="radio">
-                        On <input type="text" name="endsOn" class="dateselecter" value="{{endsOn}}">
+                        On <input type="text" name="endsOn" class="dateSelect" value="{{endsOn}}">
                       </label>
                     </div>
                   </div>
                 </div>
               {{else}}
+                <!-- fields for prep -->
+
+                <!-- Ingredients used -->
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Ingredients used</label>
                   {{> listOfIngredients}}
                 </div>
 
+                <!-- Portions -->
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Portions</label>
 
@@ -172,6 +198,7 @@
                   </div>
                 </div>
 
+                <!-- Shelf life -->
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Shelf Life</label>
 
@@ -184,6 +211,9 @@
                 </div>
               {{/if}}
 
+              <!-- common fields -->
+
+              <!-- Active time -->
               <div class="form-group">
                 <label class="col-sm-2 control-label">Active Time</label>
 
@@ -194,6 +224,8 @@
                   </div>
                 </div>
               </div>
+
+              <!-- labours wage -->
               <div class="form-group">
                 <label class="col-sm-2 control-label">Labours' Wage</label>
 
@@ -206,6 +238,8 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Buttons -->
               <div class="row">
                 <div class="col-sm-4 col-sm-offset-2">
                   <a href="{{pathFor route='jobItemsMaster'}}" class="btn btn-white" type="button">Cancel</a>
@@ -215,6 +249,7 @@
             </form>
             <br>
           </div>
+
           <!-- INGREDIENTS LIST-->
           {{#if canViewStock}}
             <div class="modal fade" id="ingredientsListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
