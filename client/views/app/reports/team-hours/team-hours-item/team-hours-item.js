@@ -1,5 +1,5 @@
 //context: user (User), tableViewMode ("shifts"/"hours"), weekDate (WeekDate)
-
+console.log('debug here');
 Template.teamHoursItem.onCreated(function () {
   this.getUserPayRate = function (date) {
     var user = this.data.user;
@@ -35,12 +35,6 @@ Template.teamHoursItem.onCreated(function () {
       if (shift.startedAt || shift.finishedAt) {
         var locationStart = moment(shift.startedAt);
         var locationFinish = moment(shift.finishedAt);
-        // I don't know why, but some shifts have startedAt in one day and finishedAt in another
-        locationFinish.set({
-          date: locationStart.date(),
-          month: locationStart.month(),
-          year: locationStart.year()
-        });
 
         var shiftDuration = locationFinish.diff(locationStart, 'minutes');
 
@@ -51,11 +45,13 @@ Template.teamHoursItem.onCreated(function () {
     });
 
     if (weekShifts.count() > 0) {
-      return {
+      var result = {
         wage: roundNumber(totalWage),
         time: roundNumber(totalMinutes / 60), // convert to hours and round
         dailyHours: dailyHoursManager.getHours()
-      }
+      };
+
+      return result;
     } else {
       return false;
     }
@@ -78,7 +74,7 @@ Template.teamHoursItem.helpers({
     return HospoHero.dateUtils.getWeekDays(this.weekDate);
   },
   hasWage: function (weeklyValues) {
-    return weeklyValues.wage >= 0;
+    return weeklyValues && weeklyValues.wage >= 0;
   },
   isShowShifts: function () {
     return this.tableViewMode === 'shifts';
