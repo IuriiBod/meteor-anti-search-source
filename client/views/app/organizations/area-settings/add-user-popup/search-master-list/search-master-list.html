@@ -1,10 +1,10 @@
 <template name="searchMasterList">
-  {{#if state$hasResults}}
+  {{#if searchUsers}}
     <div class="search-results">
       <b>Select to add</b>
       <hr/>
       <div class="search-users-container">
-        {{# each state$searchUsers}}
+        {{# each searchUsers}}
           {{> searchUserInfo}}
         {{/each}}
       </div>

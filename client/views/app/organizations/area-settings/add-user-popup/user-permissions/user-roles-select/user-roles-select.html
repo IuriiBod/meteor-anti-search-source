@@ -1,6 +1,6 @@
 <template name="userRolesSelect">
   <select name="userRole" class="form-control">
-    {{#each state$userRoles}}
+    {{#each userRoles}}
       <option value="{{_id}}">{{name}}</option>
     {{/each}}
   </select>
