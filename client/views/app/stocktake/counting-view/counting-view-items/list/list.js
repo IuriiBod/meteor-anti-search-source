@@ -1,3 +1,90 @@
+Template.stockCounting.helpers({
+  editable: function() {
+    return Session.get('editStockTake');
+  },
+
+  //ordersExist: function() {
+  //  var ordersExist = Stocktakes.findOne({
+  //    "version": Session.get("thisVersion"),
+  //    "status": true
+  //  });
+  //  return !!ordersExist;
+  //},
+
+  version: function() {
+    return Session.get('editStockTake');
+  },
+
+  specialArea: function() {
+    return Session.get("activeSArea");
+  },
+
+  generalArea: function() {
+    return Session.get("activeGArea");
+  },
+
+  stocktakeList: function() {
+    var thisVersion = Session.get("thisVersion");
+    var gareaId = Session.get("activeGArea");
+    var sareaId = Session.get("activeSArea");
+
+    if (gareaId && sareaId) {
+      var main = StocktakeMain.findOne(thisVersion);
+      if (main && main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
+        var stocktakes = Stocktakes.find({
+          "version": thisVersion,
+          "generalArea": gareaId,
+          "specialArea": sareaId
+        }, {sort: {"place": 1}});
+        if (stocktakes) {
+          return stocktakes;
+        }
+      }
+    }
+  },
+
+  ingredientsList: function() {
+    var thisVersion = Session.get("thisVersion");
+    var gareaId = Session.get("activeGArea");
+    var sareaId = Session.get("activeSArea");
+    if (gareaId && sareaId) {
+      var sarea = SpecialAreas.findOne(sareaId);
+      var ings = [];
+      if (sarea && sarea.stocks.length > 0) {
+        var ids = sarea.stocks;
+        ids.forEach(function (id) {
+          if (id) {
+            var item = Ingredients.findOne({"_id": id, "status": "active"});
+            if (item) {
+              ings.push(item);
+            }
+          }
+        });
+        return ings;
+      }
+    }
+  },
+
+  stocktakeMain: function() {
+    return StocktakeMain.findOne(Session.get("thisVersion"));
+  },
+
+  filtered: function() {
+    return Session.get("activeSArea");
+  },
+
+  notTemplate: function() {
+    var main = StocktakeMain.findOne(Session.get("thisVersion"));
+    var permitted = false;
+    if (main) {
+      if (main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
+        permitted = true;
+      }
+    }
+    return permitted;
+  }
+});
+
 Template.stockCounting.events({
   'click .saveStockTake': function (event) {
     event.preventDefault();

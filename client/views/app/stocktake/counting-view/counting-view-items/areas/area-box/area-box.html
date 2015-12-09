@@ -1,22 +1,22 @@
 <template name="areaBox">
-  <div class="areaBox" data-id="{{state$item._id}}">
-    {{#if state$editable}}
+  <div class="areaBox" data-id="{{item._id}}">
+    {{#if editable}}
       <div class="box-wrapper pull-right" style="display: none;">
-        <span class="box-remove glyphicon glyphicon-remove removeArea" data-id="{{state$item._id}}"
-              data-type="{{state$item.type}}" style="margin: 2px"></span>
+        <span class="box-remove glyphicon glyphicon-remove removeArea" data-id="{{item._id}}"
+              data-type="{{item.type}}" style="margin: 2px"></span>
       </div>
     {{/if}}
-    <a class="btn btn-block {{#if activeG state$item._id}} btn-info {{/if}} {{#if activeS state$item._id}} btn-info {{/if}} {{#if inActive state$item._id}} btn-default {{/if}} btn-sm {{state$item.class}} m-b-sm"
+    <a class="btn btn-block {{#if activeG item._id}} btn-info {{/if}} {{#if activeS item._id}} btn-info {{/if}} {{#if inActive item._id}} btn-default {{/if}} btn-sm {{item.class}} m-b-sm"
        role="button"
-       data-toggle="collapse" href="#{{state$item._id}}"
-       aria-expanded="false" aria-controls="{{state$item._id}}">
-      {{#if state$editable}}
-        <a href="#" class="{{state$item.type}}" data-id="{{state$item._id}}">{{state$item.name}}</a>
+       data-toggle="collapse" href="#{{item._id}}"
+       aria-expanded="false" aria-controls="{{item._id}}">
+      {{#if editable}}
+        <a href="#" class="{{item.type}}" data-id="{{item._id}}">{{item.name}}</a>
       {{else}}
-        {{state$item.name}}
+        {{item.name}}
       {{/if}}
       <div class="progress progress-mini">
-        <div class="progress-bar" style="width: {{state$widthofBar}}"></div>
+        <div class="progress-bar" style="width: {{widthOfBar}}"></div>
       </div>
     </a>
   </div>
