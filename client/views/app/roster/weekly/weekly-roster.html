@@ -4,10 +4,10 @@
 
 
   {{#if canViewForecast}}
-    {{> render component="weeklyFigures" weekDate=weekDate}}
+    {{> weeklyFigures weekDate=weekDate}}
   {{/if}}
 
   <div class="wrapper wrapper-content animated">
-    {{> render component="weeklyShiftRoster" type=null weekDate=weekDate}}
+    {{> weeklyShiftRoster type=null weekDate=weekDate}}
   </div>
 </template>

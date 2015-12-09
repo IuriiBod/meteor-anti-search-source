@@ -9,13 +9,13 @@
         {{/if}}
         Figures
       </button>
-      {{#if state$isPublished}}
+      {{#if isPublished}}
         <button class="btn btn-primary" disabled="disabled">Published Roster
           on {{dayFormat state$publishedOnDate}}</button>
       {{else}}
         <button class="btn btn-primary" id="publishRoster">Publish Roster</button>
       {{/if}}
     {{/if}}
-    {{>render component="weekPicker" year=state$currentDate.year week=state$currentDate.week onDateChanged=state$onDateChanged}}
+    {{>render component="weekPicker" year=state$currentDate.year week=state$currentDate.week onDateChanged=onDateChanged}}
   </div>
 </template>
