@@ -6,10 +6,10 @@
       </div>
       <div class="ibox-content">
 
-        {{#each state$sections}}
+        {{#each sections}}
           {{#if canEditUsers}}
             <div class="form-group">
-              {{#if state$userSelectedSections _id}}
+              {{#if userSelectedSections _id}}
                 <input type="checkbox" class="section-checker" value="{{_id}}" checked="checked">
               {{else}}
                 <input type="checkbox" class="section-checker" value="{{_id}}">
@@ -18,7 +18,7 @@
               {{name}}
             </div>
           {{else}}
-            {{#if state$userSelectedSections _id}}
+            {{#if userSelectedSections _id}}
               <div>
                 <i class="fa fa-check"></i>
                 {{name}}
