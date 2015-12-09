@@ -1,13 +1,9 @@
-Template.rosteredShiftItem.onCreated(function () {
-  this.set('shift', this.data.shift);
-})
-
 Template.rosteredShiftItem.helpers({
   item: function() {
-    return Template.instance().get('shift');
+    return Template.instance().data.shift;
   },
   section: function() {
-    var shift = Template.instance().get("shift");
+    var shift = Template.instance().data.shift;
     if (shift && shift.section) {
       var section = Sections.findOne(shift.section);
       if (section) {

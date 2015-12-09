@@ -1,7 +1,3 @@
-Template.training.onCreated(function() {
-  this.set('userId', this.data.userId);
-});
-
 Template.training.helpers({
   sections: function () {
     return Sections.find({
@@ -9,7 +5,7 @@ Template.training.helpers({
     });
   },
   userSelectedSections: function(sectionId) {
-    var userId = Template.instance().get('userId');
+    var userId = Template.instance().data.userId;
 
     return !!Meteor.users.findOne({
       _id: userId,
@@ -20,7 +16,8 @@ Template.training.helpers({
 
 Template.training.events({
   'click .section-checker': function (e) {
-    var userId = Template.instance().get('userId');
+    var userId = Template.instance().data.userId;
+
     Meteor.call('toggleUserTrainingSection', userId, this._id, e.target.checked);
   }
 });

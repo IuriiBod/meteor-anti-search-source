@@ -4,11 +4,10 @@ Template.switchUser.onCreated(function() {
 
 Template.switchUser.helpers({
   switchUserOnClick: function() {
-    var switchUser = function(userId) {
+    return function(userId) {
       Meteor.logout();
       Router.go('pinLock', {userId: userId});
     };
-    return switchUser;
   }
 });
 

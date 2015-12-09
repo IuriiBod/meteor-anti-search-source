@@ -1,11 +1,6 @@
-Template.userBio.onCreated(function() {
-  this.set('user', this.data.user);
-  this.set('onClick', this.data.onClick);
-});
-
 Template.userBio.helpers({
   userId: function () {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     if (user) {
       return user._id;
     }
@@ -13,9 +8,9 @@ Template.userBio.helpers({
 });
 Template.userBio.events({
   "click *": function (event, tmpl) {
-    if (_.isFunction(tmpl.get('onClick'))) {
-      var user = tmpl.get("user");
-      var switchUser = tmpl.get('onClick');
+    if (_.isFunction(tmpl.data.onClick)) {
+      var user = tmpl.data.user;
+      var switchUser = tmpl.data.onClick;
       switchUser(user._id);
     }
   }
