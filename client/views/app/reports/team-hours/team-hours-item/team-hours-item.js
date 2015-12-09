@@ -64,7 +64,7 @@ Template.teamHoursItem.onCreated(function () {
   var tmpl = this;
   this.autorun(function () {
     var data = Template.currentData();
-    var weeklyValues = this.getTotalTimeAndWage(data);
+    var weeklyValues = tmpl.getTotalTimeAndWage(data);
     tmpl.set('weeklyValues', weeklyValues);
   });
 });
