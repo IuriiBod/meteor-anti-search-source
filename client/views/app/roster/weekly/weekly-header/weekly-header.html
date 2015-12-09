@@ -16,6 +16,6 @@
         <button class="btn btn-primary" id="publishRoster">Publish Roster</button>
       {{/if}}
     {{/if}}
-    {{>render component="weekPicker" year=state$currentDate.year week=state$currentDate.week onDateChanged=onDateChanged}}
+    {{> weekPicker year=state$currentDate.year week=state$currentDate.week onDateChanged=onDateChanged}}
   </div>
 </template>
