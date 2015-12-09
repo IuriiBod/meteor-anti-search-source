@@ -1,27 +1,16 @@
 //context: year (number), week (number), onDateChanged (Function)
-
-Template.weekPicker.onRendered(function () {
-  this.init = function (weekDate) {
-    this.oldDateWeek = weekDate;
-    this.set('weekDate', weekDate);
-
-    var initialDate = moment(HospoHero.dateUtils.getDateByWeekDate(weekDate));
-    var datePickerElement = this.$(".date-picker-input");
-
-    datePickerElement.datetimepicker({
-      calendarWeeks: true,
-      format: 'YYYY-MM-DD'
-    });
-
-    this.datePicker = datePickerElement.data("DateTimePicker");
-    this.datePicker.date(initialDate);
-  };
-
-  this.init({
+Template.weekPicker.onCreated(function () {
+  var weekDate = {
     week: this.data.week,
     year: this.data.year
-  });
+  };
 
+  this.oldDateWeek = weekDate;
+  this.set('weekDate', weekDate);
+});
+
+
+Template.weekPicker.onRendered(function () {
   this.isSameAsOldWeekDate = function (newDateWeek) {
     return newDateWeek.week === this.oldDateWeek.week && newDateWeek.year === this.oldDateWeek.year;
   };
@@ -51,6 +40,19 @@ Template.weekPicker.onRendered(function () {
       this.oldDateWeek = weekDate;
     }
   };
+
+  //init bootstrap date picker
+
+  var initialPlainDate = HospoHero.dateUtils.getDateByWeekDate(this.get('weekDate'));
+  var datePickerElement = this.$(".date-picker-input");
+
+  datePickerElement.datetimepicker({
+    calendarWeeks: true,
+    format: 'YYYY-MM-DD'
+  });
+
+  this.datePicker = datePickerElement.data("DateTimePicker");
+  this.datePicker.date(moment(initialPlainDate));
 });
 
 
