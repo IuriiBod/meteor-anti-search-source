@@ -1,13 +1,13 @@
 <template name="teamHoursItem">
-  {{#if state$hasWage}}
+  {{#if hasWage state$weeklyValues}}
     <tr class="gradeX">
-      <td>{{username state$user._id}}</td>
+      <td>{{username user._id}}</td>
       <td>{{state$weeklyValues.time}}</td>
       <td>${{state$weeklyValues.wage}}</td>
-      {{#if state$isShowShifts}}
-        {{#each state$weekDays}}
+      {{#if isShowShifts}}
+        {{#each weekDays}}
           <td class="center activeTime">
-            {{> render component='reportData' date=this userId=state$user._id}}
+            {{> reportData date=this userId=../user._id}}
           </td>
         {{/each}}
       {{else}}
