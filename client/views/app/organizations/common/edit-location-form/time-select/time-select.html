@@ -3,10 +3,10 @@
     <label class="col-sm-2 control-label">{{state$label}}</label>
 
     <div class="col-sm-4">
-      {{> render component='selectComponent' values=hours selected=state$hours name=state$hoursName}}
+      {{> selectComponent values=hours selected=selectedHours name=state$hoursName}}
     </div>
     <div class="col-sm-4">
-      {{> render component='selectComponent' values=minutes selected=state$minutes name=state$minutesName}}
+      {{> selectComponent values=minutes selected=selectedMinutes name=state$minutesName}}
     </div>
   </div>
 </template>

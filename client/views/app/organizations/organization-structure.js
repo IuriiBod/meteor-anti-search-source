@@ -62,11 +62,11 @@ Template.organizationStructure.helpers({
 
 Template.organizationStructure.events({
   'click .location-settings': function () {
-    FlyoutManager.open('locationSettings', {locationId: this._id}, true);
+    FlyoutManager.open('locationSettings', {locationId: this._id});
   },
 
   'click .area-settings': function () {
-    FlyoutManager.open('areaSettings', {areaId: this._id}, true);
+    FlyoutManager.open('areaSettings', {areaId: this._id});
   },
 
   'click .change-current-area': function (e) {

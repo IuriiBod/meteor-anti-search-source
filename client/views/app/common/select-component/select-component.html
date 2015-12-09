@@ -1,7 +1,7 @@
 <template name="selectComponent">
-  <select name="{{state$name}}" class="form-control">
+  <select name="{{name}}" class="form-control">
     {{#each state$values}}
-      {{#if state$isSelected value}}
+      {{#if isSelected value}}
         <option value="{{value}}" selected="selected">
           {{text}}
         </option>
