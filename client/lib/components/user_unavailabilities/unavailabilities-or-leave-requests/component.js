@@ -40,7 +40,6 @@ component.state.componentHeader = function () {
   } else if (this.get('isLeaveRequests')) {
     return 'LEAVE REQUESTS'
   }
-  ;
 };
 
 component.action.newItem = function () {

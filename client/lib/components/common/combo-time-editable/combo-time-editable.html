@@ -20,9 +20,9 @@
     {{else}}
       <i class="fa fa-clock-o"></i>
       <a href="#" class="time">
-        {{timeFormat defaultTime.firstTime}}
+        {{firstTime}}
         {{#if isTimeRangeMode}}
-          - {{timeFormat defaultTime.secondTime}}
+          - {{secondTime}}
         {{/if}}
       </a>
     {{/if}}

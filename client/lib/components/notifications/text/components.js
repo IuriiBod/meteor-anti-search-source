@@ -9,21 +9,6 @@ component.state.notifi = function () {
   }
 };
 
-component.state.icon = function () {
-  if (this.notification) {
-    var type = this.notification.type;
-    if (type == "job") {
-      return "spoon";
-    } else if (type == "menu") {
-      return "cutlery";
-    } else if (type == "comment") {
-      return "comment";
-    } else if (type == "roster") {
-      return "calendar-o"
-    }
-  }
-};
-
 component.state.createdByImage = function () {
   var createdBy = this.notification.createdBy;
   var user = Meteor.users.findOne({_id: createdBy});

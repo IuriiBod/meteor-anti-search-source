@@ -41,40 +41,22 @@ Meteor.methods({
       throw new Meteor.Error('Permission denied', 'You can\' remove this leave request!');
     }
   },
-  approveLeaveRequest: function (leaveRequestId) {
-    if (!this.userId) {
-      throw new Meteor.Error('Permission denied', 'You are not logged in!');
-    }
-    check(leaveRequestId, HospoHero.checkers.MongoId);
+  changeLeaveRequestStatus: function (leaveRequestId, newStatus) {
+    var thisLeaveRequest = findLeaveRequest(leaveRequestId);
+    check(thisLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
 
-    changeLeaveRequestStatus(this.userId, leaveRequestId, 'approved');
-  },
-  declineLeaveRequest: function (leaveRequestId) {
-    if (!this.userId) {
-      throw new Meteor.Error('Permission denied', 'You are not logged in!');
+    if (thisLeaveRequest.status != 'awaiting') {
+      throw new Meteor.Error("'This request already approved/declined'");
     }
-    check(leaveRequestId, HospoHero.checkers.MongoId);
 
-    changeLeaveRequestStatus(this.userId, leaveRequestId, 'declined');
+    if (thisLeaveRequest.notifyManagerId != this.userId) {
+      throw new Meteor.Error("'You can't approve or decline this request'");
+    }
+
+    LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
+    Notifications.remove({'meta.leaveRequestId': leaveRequestId});
   }
 });
-
-
-var changeLeaveRequestStatus = function (currentUserId, leaveRequestId, newStatus) {
-  var thisLeaveRequest = findLeaveRequest(leaveRequestId);
-  check(thisLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
-
-  if (thisLeaveRequest.status != 'awaiting') {
-    throw new Meteor.Error("'This request already approved/declined'");
-  }
-
-  if (thisLeaveRequest.notifyManagerId != currentUserId) {
-    throw new Meteor.Error("'You can't approve or decline this request'");
-  }
-
-  LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
-  Notifications.remove({'meta.leaveRequestId': leaveRequestId});
-};
 
 var findLeaveRequest = function (leaveRequestId) {
   var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
@@ -86,20 +68,13 @@ var findLeaveRequest = function (leaveRequestId) {
 
 
 var sendNotification = function (insertedLeaveRequestId) {
-
   var currentLeaveRequest = LeaveRequests.findOne({_id: insertedLeaveRequestId});
-
-  var notificationSender = Meteor.users.findOne({_id: currentLeaveRequest.userId});
-  var notificationRecipient = Meteor.users.findOne({_id: currentLeaveRequest.notifyManagerId});
-
-  var notificationTitle = 'Leave request from ' + notificationSender.profile.name || notificationSender.username;
+  var notificationTitle = 'Leave request from ' + HospoHero.username(currentLeaveRequest.userId);
 
   var params = {
-    recipientName: notificationRecipient.profile.name || notificationRecipient.username,
-
+    recipientName: HospoHero.username(currentLeaveRequest.notifyManagerId),
     startDate: moment(currentLeaveRequest.startDate).format('ddd, DD MMM'),
     endDate: moment(currentLeaveRequest.endDate).format('ddd, DD MMM'),
-
     leaveRequestLink: Router.url('viewLeaveRequest', {id: insertedLeaveRequestId})
   };
 
@@ -107,10 +82,10 @@ var sendNotification = function (insertedLeaveRequestId) {
     interactive: true,
     helpers: {
       approveLeaveRequestUrl: function () {
-        return NotificationSender.actionUrlFor('approveLeaveRequest', insertedLeaveRequestId);
+        return NotificationSender.actionUrlFor('changeLeaveRequestStatus', insertedLeaveRequestId, 'approved');
       },
       declineLeaveRequestUrl: function () {
-        return NotificationSender.actionUrlFor('declineLeaveRequest', insertedLeaveRequestId);
+        return NotificationSender.actionUrlFor('changeLeaveRequestStatus', insertedLeaveRequestId, 'declined');
       }
     },
     meta: {
@@ -118,9 +93,5 @@ var sendNotification = function (insertedLeaveRequestId) {
     }
   };
 
-
-  // // For testing
-  //new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationSender._id);
-
-  new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(notificationRecipient._id);
+  new NotificationSender(notificationTitle, 'leave_request', params, options).sendBoth(currentLeaveRequest.notifyManagerId);
 };

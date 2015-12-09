@@ -27,8 +27,8 @@ Template.shiftBasic.helpers({
   comboDateParams: function () {
     var tmpl = Template.instance();
     return {
-      firstTime: Template.instance().data.startTime,
-      secondTime: Template.instance().data.endTime,
+      firstTime: tmpl.data.startTime,
+      secondTime: tmpl.data.endTime,
       minuteStepping: 10,
       onSubmit: function (startTime, endTime) {
         tmpl.editShiftTime(startTime, endTime);

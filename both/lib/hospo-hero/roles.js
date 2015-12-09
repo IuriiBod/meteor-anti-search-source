@@ -38,6 +38,7 @@ Namespace('HospoHero.roles', {
     "Edit Roster": "edit roster",
     "Can be rosted": "be rosted",
     "Roster Approver": "approves roster requests",
+    "Approve leave requests": "approve leave requests",
     "View Stocks": "view stocks",
     "Edit Stocks": "edit stocks",
     "Invite Users": "invite users",
@@ -50,7 +51,6 @@ Namespace('HospoHero.roles', {
     //"Billing Account": "edit billing account",
     "Edit Organization": "edit organization settings",
     "Edit users payrate": "edit user's payrate",
-    //"All Rights": "all rights",
     "View Reports": "view reports",
     "Receive Deliveries": "receive deliveries"
   },

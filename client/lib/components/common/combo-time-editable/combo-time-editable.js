@@ -43,7 +43,6 @@ Template.comboTimeEditable.helpers({
   isEditMode: function () {
     return Template.instance().isEditMode.get();
   },
-
   defaultTime: function () {
     return Template.instance().data.params;
   },
@@ -52,6 +51,14 @@ Template.comboTimeEditable.helpers({
   },
   minuteStepping: function () {
     return Template.instance().data.params.minuteStepping || 1;
+  },
+  firstTime: function () {
+    var firstTime = Template.instance().data.params.firstTime;
+    return _.isDate(firstTime) ? HospoHero.dateUtils.timeFormat(firstTime) : firstTime;
+  },
+  secondTime: function () {
+    var secondTime = Template.instance().data.params.secondTime;
+    return _.isDate(secondTime) ? HospoHero.dateUtils.timeFormat(secondTime) : secondTime;
   }
 });
 
