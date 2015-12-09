@@ -1,12 +1,6 @@
-Template.rosteredShifts.onCreated(function() {
-  var _id = this.data._id;
-  var user = Meteor.users.findOne({_id: _id});
-  this.set('user', user);
-});
-
 Template.rosteredShifts.helpers({
   rosteredForShifts: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     if (user) {
       return Shifts.find({
         "assignedTo": user._id,
@@ -15,7 +9,7 @@ Template.rosteredShifts.helpers({
     }
   },
   openedShifts: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     var currentUserId = Meteor.userId();
 
     if (user._id === currentUserId) {

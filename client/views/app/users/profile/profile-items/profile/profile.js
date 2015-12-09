@@ -1,16 +1,13 @@
-Template.profile.onCreated(function () {
-  var id = this.data.id;
-  var user = Meteor.users.findOne({_id: id});
-  this.set('user', user);
-});
-
 Template.profile.onRendered(function () {
-  beforeRender();
+  makeInputsEditable();
 });
 
 Template.profile.helpers({
+  user: function() {
+    return Template.instance().data.user;
+  },
   firstName: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     if (user && user.profile && user.profile.firstname) {
       return user.profile.firstname;
     } else {
@@ -18,7 +15,7 @@ Template.profile.helpers({
     }
   },
   lastName: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     if (user && user.profile && user.profile.lastname) {
       return user.profile.lastname;
     } else {
@@ -26,18 +23,18 @@ Template.profile.helpers({
     }
   },
   email: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     if (user && user.emails) {
       return user.emails[0].address;
     }
   },
   //permitted for profile owner and admins
   isEditPermitted: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     return HospoHero.isManager() || HospoHero.isMe(user._id);
   },
   shiftsPerWeek: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     var shifts = [1, 2, 3, 4, 5, 6, 7];
     var formattedShifts = [];
 
@@ -51,11 +48,11 @@ Template.profile.helpers({
     return formattedShifts;
   },
   hasResignDate: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     return !!user.profile.resignDate;
   },
   resignDate: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     var resignDate = user.profile.resignDate;
     return resignDate ? moment(resignDate).format("MM/DD/YYYY") : null;
   }
@@ -115,7 +112,7 @@ Template.profile.events({
   }
 });
 
-function beforeRender() {
+function makeInputsEditable() {
   $(".open-resigned-date-picker").datepicker({
     startDate: new Date(),
     todayHighlight: true
@@ -136,7 +133,7 @@ function beforeRender() {
     placeholder: "Enter first name here",
     success: function (response, newValue) {
       if (newValue) {
-        var id = Session.get("profileUser");
+        var id = Template.instance().data.user._id;
         var editDetail = {"firstname": newValue.trim()};
         updateBasicDetails(id, editDetail);
       }
@@ -153,7 +150,7 @@ function beforeRender() {
     placeholder: "Enter last name here",
     success: function (response, newValue) {
       if (newValue) {
-        var id = Session.get("profileUser");
+        var id = Template.instance().data.user._id;
         var editDetail = {"lastname": newValue.trim()};
         updateBasicDetails(id, editDetail);
       }

@@ -1,15 +1,10 @@
-Template.profileImage.onCreated(function() {
-  var id = this.data.id;
-  var user = Meteor.users.findOne({_id: id});
-  this.set('user', user);
-});
-
 Template.profileImage.helpers({
   ifMe: function() {
-    return Session.get("profileUser") == Meteor.userId();
+    var userId = Template.instance().data.user._id;
+    return userId === Meteor.userId();
   },
   image: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     if (user) {
       if (user.profile.image) {
         return user.profile.image;
@@ -21,7 +16,7 @@ Template.profileImage.helpers({
     }
   },
   imageExists: function() {
-    var user = Template.instance().get('user');
+    var user = Template.instance().data.user;
     if (user) {
       if (user.profile.image) {
         return true;
@@ -42,7 +37,8 @@ Template.profileImage.events({
         var doc = (InkBlobs);
         if (doc) {
           var url = doc[0].url;
-          Meteor.call("editBasicDetails", Session.get("profileUser"), {"profileImage": url}, HospoHero.handleMethodResult());
+          var userId = Template.instance().data.user._id;
+          Meteor.call("editBasicDetails", userId, {"profileImage": url}, HospoHero.handleMethodResult());
         }
       }
     );

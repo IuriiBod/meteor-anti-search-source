@@ -7,9 +7,9 @@
   {{/if}}
   <div class="wrapper wrapper-content">
     <div class="row animated">
-      {{> profile id=id}}
-      {{> rosteredShifts _id=id}}
-      {{> training userId=id}}
+      {{> profile user=user}}
+      {{> rosteredShifts user=user}}
+      {{> training userId=user._id}}
     </div>
   </div>
 </template>
