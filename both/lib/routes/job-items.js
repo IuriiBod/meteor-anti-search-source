@@ -50,7 +50,10 @@ Router.route('/jobItem/submit', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId)
+      Meteor.subscribe('ingredients', null, currentAreaId),
+
+
+      Meteor.subscribe('jobItem', 'BJxYSmJJSuHiN97Dc')
     ];
   },
   data: function () {
@@ -111,5 +114,9 @@ Router.route('/jobItem/:_id/edit', {
     }
     Session.set('thisJobItem', this.params._id);
     Session.set('editStockTake', false);
+
+    return {
+      jobItemId: this.params._id
+    }
   }
 });
