@@ -17,6 +17,15 @@ Template.submitEditJobItem.onRendered(function () {
 });
 
 Template.submitEditJobItem.helpers({
+  repeatAtComboEditableParams: function () {
+    return {
+      firstTime: moment().hours(8).minutes(0).toDate(),
+      onSubmit: function (time) {
+        console.log(time);
+      }
+    }
+  },
+
   isEditMode: function () {
     return Template.instance().data.mode == 'edit';
   },
@@ -56,9 +65,6 @@ Template.submitEditJobItem.helpers({
     return Template.instance().selectedFrequency.get();
   },
 
-  repeatAt: function () {
-    return "8:00 AM";
-  },
   startsOn: function () {
     return moment().format("YYYY-MM-DD");
   },
