@@ -66,7 +66,7 @@ Template.comboTimeEditable.events({
   'click .time': function (e, tmpl) {
     tmpl.isEditMode.set(true);
   },
-  'submit .time-range-selector': function (e, tmpl) {
+  'click .change-time-button': function (e, tmpl) {
     e.preventDefault();
 
     tmpl.submitTime();

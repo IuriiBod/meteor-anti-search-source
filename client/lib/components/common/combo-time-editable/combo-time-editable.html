@@ -1,7 +1,7 @@
 <template name="comboTimeEditable">
   <div class="time-editable-wrapper">
     {{#if isEditMode}}
-      <form class="time-range-selector">
+      <div class="time-range-selector">
         <div class="first-time">
           {{> comboTimeElement value=defaultTime.firstTime minuteStepping=minuteStepping}}
         </div>
@@ -13,10 +13,10 @@
           </div>
         {{/if}}
         <div class="control-group submit-cancel-buttons-wrapper">
-          <button type="submit" class="edit-shift-time-button btn btn-primary"><i class="fa fa-check"></i></button>
+          <button type="button" class="change-time-button btn btn-primary"><i class="fa fa-check"></i></button>
           <button type="button" class="cancel-button btn btn-default"><i class="fa fa-remove"></i></button>
         </div>
-      </form>
+      </div>
     {{else}}
       <i class="fa fa-clock-o"></i>
       <a href="#" class="time">
