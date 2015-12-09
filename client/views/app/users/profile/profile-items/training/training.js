@@ -15,9 +15,9 @@ Template.training.helpers({
 });
 
 Template.training.events({
-  'click .section-checker': function (e) {
-    var userId = Template.instance().data.userId;
+  'click .section-checker': function (event, tmpl) {
+    var userId = tmpl.data.userId;
 
-    Meteor.call('toggleUserTrainingSection', userId, this._id, e.target.checked);
+    Meteor.call('toggleUserTrainingSection', userId, this._id, event.target.checked);
   }
 });

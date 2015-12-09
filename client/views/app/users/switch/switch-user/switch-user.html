@@ -11,7 +11,7 @@
       </div>
       {{# each state$users}}
         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center">
-          {{> userBio user=this onClick=switchUserOnClick}}
+          {{> userBio userId=this._id onClick=switchUserOnClick}}
         </div>
       {{/ each}}
     </div>
