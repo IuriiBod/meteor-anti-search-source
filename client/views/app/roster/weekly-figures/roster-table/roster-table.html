@@ -6,7 +6,7 @@
           <thead data-pg-collapsed>
           <tr>
             <th></th>
-            {{#each state$weekDates}}
+            {{#each weekDates}}
               <th colspan="2">
                 {{weekDateName this}}
                 <h5>{{dateFormat this}}</h5>
@@ -17,25 +17,27 @@
           <thead data-pg-collapsed>
           <tr>
             <th></th>
-            {{#each state$weekDates}}
+            {{#each weekDates}}
               <th>Forecast</th>
               <th>Actual</th>
             {{/each}}
           </tr>
           </thead>
           <tbody>
-          <!--todo add weekdate here e.g. {year: number, week: number}-->
-          <!--{{>totalSalesRow weekDate=}}-->
+
+          {{>totalSalesRow weekDate=weekDate}}
+
           <tr>
             <td>Staff Cost ($)</td>
-            {{#each state$weekDates}}
-              {{> render component="staffCostTr" day=this figureBoxDataHelper=state$figureBoxDataHelper}}
+            {{#each weekDates}}
+              {{> staffCostTr day=this figureBoxDataHelper=../figureBoxDataHelper}}
             {{/each}}
           </tr>
+
           <tr>
             <td>Staff Cost (%)</td>
-            {{#each state$weekDates}}
-              {{> render component="staffCostPercentagesTr" day=this figureBoxDataHelper=state$figureBoxDataHelper}}
+            {{#each weekDates}}
+              {{> staffCostPercentagesTr day=this figureBoxDataHelper=../figureBoxDataHelper}}
             {{/each}}
           </tr>
           </tbody>

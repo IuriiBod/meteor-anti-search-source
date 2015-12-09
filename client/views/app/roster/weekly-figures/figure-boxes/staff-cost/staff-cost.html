@@ -8,15 +8,15 @@
         <h5>Staff Cost</h5>
 
         <h1 class="no-margins">
-          ${{state$weeklyStaffCost}}
+          ${{weeklyStaffCost}}
         </h1>
-        {{#with state$percent}}
+        {{#with percent}}
           <div class="stat-percent font-bold {{textColor}}">{{value}}%
             <i class="fa {{icon}}"></i>
           </div>
         {{/with}}
-        <small>Rostered:
-          ${{state$rosteredStaffCost}}
+        <small>
+          Rostered: ${{rosteredStaffCost}}
         </small>
       </div>
     </div>
