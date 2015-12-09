@@ -6,7 +6,7 @@ Template.comboTimeEditable.onCreated(function () {
   self.submitTime = function () {
     var firstTime = self.getTimeFromCombodate('.first-time');
     var secondTime = self.isTimeRangeMode() ? self.getTimeFromCombodate('.second-time') : null;
-    if (secondTime && self.checkFirstSecondDate(firstTime, secondTime)) {
+    if (!secondTime || secondTime && self.checkFirstSecondDate(firstTime, secondTime)) {
       self.data.params.onSubmit(firstTime, secondTime);
       self.exitFromEditMode();
     }
@@ -66,7 +66,7 @@ Template.comboTimeEditable.events({
   'click .time': function (e, tmpl) {
     tmpl.isEditMode.set(true);
   },
-  'submit .time-range-selector': function (e, tmpl) {
+  'click .change-time-button': function (e, tmpl) {
     e.preventDefault();
 
     tmpl.submitTime();
