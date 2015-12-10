@@ -12,7 +12,7 @@ Template.organizationStructure.onCreated(function () {
 
       if (!HospoHero.isOrganizationOwner()) {
         var user = Meteor.user();
-        if (user.relations && user.relations.locationIds) {
+        if (user && user.relations && user.relations.locationIds) {
           selector._id = {$in: user.relations.locationIds};
         }
       }
@@ -41,7 +41,7 @@ Template.organizationStructure.helpers({
 
     if (!HospoHero.isOrganizationOwner()) {
       var user = Meteor.user();
-      if (user.relations && user.relations.areaIds) {
+      if (user && user.relations && user.relations.areaIds) {
         selector._id = {$in: user.relations.areaIds};
       }
     }
