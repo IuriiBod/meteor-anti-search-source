@@ -1,1 +1,0 @@
-//Template.salesPredictionHeader.onRendered(function () {});
