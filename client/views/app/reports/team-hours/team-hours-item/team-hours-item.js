@@ -1,5 +1,4 @@
 //context: user (User), tableViewMode ("shifts"/"hours"), weekDate (WeekDate)
-console.log('debug here');
 Template.teamHoursItem.onCreated(function () {
   this.getUserPayRate = function (date) {
     var user = this.data.user;
