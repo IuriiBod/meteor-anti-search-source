@@ -18,15 +18,17 @@ Migrations.add({
 
         var startTime = convertToLocalMoment(shift.startTime);
         var endTime = convertToLocalMoment(shift.endTime);
+        var duration = endTime.diff(startTime, 'minutes');
 
         shift.startTime = applyDateToTime(shiftMoment, startTime).toDate();
-        shift.endTime = applyDateToTime(shiftMoment, endTime).toDate();
+        shift.endTime = applyDateToTime(shiftMoment, startTime).add(duration, 'minutes').toDate();
 
         var startedAt, finishedAt;
 
         if (shift.startedAt && shift.finishedAt) {
           startedAt = convertToLocalMoment(shift.startedAt);
           finishedAt = convertToLocalMoment(shift.finishedAt);
+          duration = finishedAt.diff(startedAt, 'minutes');
         }
 
         delete shift.startedAt;
@@ -34,7 +36,7 @@ Migrations.add({
 
         if (shift.startedAt && shift.finishedAt) {
           shift.startedAt = applyDateToTime(shiftDate, startedAt).toDate();
-          shift.finishedAt = applyDateToTime(shiftDate, finishedAt).toDate();
+          shift.finishedAt = applyDateToTime(shiftDate, startedAt).add(duration, 'minutes').toDate();
         }
 
         Shifts.update({_id: shift._id}, shift);
