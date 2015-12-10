@@ -22,7 +22,7 @@ Template.unavailabilitiesOrLeaveRequests.helpers({
 Template.unavailabilitiesOrLeaveRequests.events({
   'click .new-item-button': function (event, tmpl) {
     if (tmpl.get('isUnavailability')) {
-      FlyoutManager.open('addNewUnavailability', {}, true);
+      FlyoutManager.open('addNewUnavailability');
     } else {
       FlyoutManager.open('viewLeaveRequest', {}, true);
     }
