@@ -18,6 +18,8 @@ SearchSource.defineSource('usersSearch', function (searchText, options) {
     var regExp = buildRegExp(searchText);
     selector.$or = [
       {username: regExp},
+      {'profile.firstname': regExp},
+      {'profile.lastname': regExp},
       {'emails.0.address': regExp}
     ];
   }

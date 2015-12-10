@@ -1,0 +1,9 @@
+<template name="colorPicker">
+  {{#each areaColors}}
+    <span class="color-pick" style="background-color: {{this}};">
+      {{#if isCheckedColor this}}
+        <i class="fa fa-check color-checked"></i>
+      {{/if}}
+    </span>
+  {{/each}}
+</template>
