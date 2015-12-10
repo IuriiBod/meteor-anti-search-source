@@ -13,19 +13,17 @@
       </div>
     </div>
 
-    <div>
     <!-- List with items -->
-      {{#if items}}
-        {{#each items}}
-          {{#if state$isUnavailability}}
-            {{> unavailabilityItem item=this}}
-          {{else}}
-            {{> render component="leaveRequestItem" item=this}}
-          {{/if}}
-        {{/each}}
-      {{else}}
-        <p class="text-muted item-wrapper">No {{templateName}} to display</p>
-      {{/if}}
-    </div>
+    {{#if items}}
+      {{#each items}}
+        {{#if state$isUnavailability}}
+          {{> unavailabilityItem item=this}}
+        {{else}}
+          {{> leaveRequestItem item=this}}
+        {{/if}}
+      {{/each}}
+    {{else}}
+      <p class="text-muted item-wrapper">No {{templateName}} to display</p>
+    {{/if}}
   </div>
 </template>
