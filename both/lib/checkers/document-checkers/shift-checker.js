@@ -2,7 +2,6 @@ var ShiftDocument = Match.Where(function (shift) {
   check(shift, {
     startTime: Date,
     endTime: Date,
-    shiftDate: Date,
     type: Match.OneOf(String, null),
 
     //optional properties
@@ -102,7 +101,7 @@ var ShiftDocument = Match.Where(function (shift) {
         assignedTo: assignedUserId
       });
       if (existInShift) {
-        logger.error("User already exist in a shift", {"date": shift.shiftDate});
+        logger.error("User already exist in a shift", {"date": shift.startTime});
         throw new Meteor.Error(404, "Worker has already been assigned to a shift");
       }
     });
