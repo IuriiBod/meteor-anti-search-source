@@ -34,9 +34,9 @@ Migrations.add({
         delete shift.startedAt;
         delete shift.finishedAt;
 
-        if (shift.startedAt && shift.finishedAt) {
-          shift.startedAt = applyDateToTime(shiftDate, startedAt).toDate();
-          shift.finishedAt = applyDateToTime(shiftDate, startedAt).add(duration, 'minutes').toDate();
+        if (startedAt && finishedAt) {
+          shift.startedAt = applyDateToTime(shiftMoment, startedAt).toDate();
+          shift.finishedAt = applyDateToTime(shiftMoment, startedAt).add(duration, 'minutes').toDate();
         }
 
         Shifts.update({_id: shift._id}, shift);
