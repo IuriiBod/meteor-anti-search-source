@@ -1,25 +1,13 @@
 Template.shiftBasic.onCreated(function () {
   var self = this;
-  self.fixZeroYearComdateMoment = function (timeToFix) {
-    var momentToFix = moment(timeToFix);
-    var shitTimeMoment = moment().hours(momentToFix.hours());
-
-    shitTimeMoment.minutes(momentToFix.minutes());
-    shitTimeMoment.seconds(0);
-    return shitTimeMoment.toDate();
-  };
 
   self.editShiftTime = function (newStartTime, newEndTime) {
     var shift = this.data;
 
-    shift.startTime = self.fixZeroYearComdateMoment(newStartTime);
-    shift.endTime = self.fixZeroYearComdateMoment(newEndTime);
+    HospoHero.dateUtils.adjustShiftTime(shift, 'startTime', newStartTime);
+    HospoHero.dateUtils.adjustShiftTime(shift, 'endTime', newEndTime);
 
-    HospoHero.dateUtils.adjustShiftTimes(shift);
-
-    Meteor.call('editShift', shift, HospoHero.handleMethodResult(function () {
-
-    }));
+    Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
 });
 

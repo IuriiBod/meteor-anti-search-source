@@ -41,14 +41,14 @@ component.state.confirmed = function () {
 };
 
 component.state.isPermitted = function () {
-  if (this.shift && this.shift.shiftDate) {
-    return this.shift.shiftDate >= new Date().getTime();
+  if (this.shift && this.shift.startTime) {
+    return this.shift.startTime >= new Date().getTime();
   }
 };
 
 component.state.timeRecorded = function () {
-  if (this.shift && this.shift.shiftDate) {
-    if (this.shift.shiftDate < new Date().getTime()) {
+  if (this.shift && this.shift.startTime) {
+    if (this.shift.startTime < new Date().getTime()) {
       if (this.shift.startedAt && this.shift.finishedAt) {
         return this.shift.finishedAt - this.shift.startedAt;
       }

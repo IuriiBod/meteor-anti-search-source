@@ -17,7 +17,7 @@ Template.weeklyHeader.helpers({
 
     var shiftDateQuery = TimeRangeQueryBuilder.forWeek(tmpl.get('selectedWeekDate'));
     var shift = Shifts.findOne({
-      shiftDate: shiftDateQuery,
+      startTime: shiftDateQuery,
       published: true,
       'relations.areaId': HospoHero.getCurrentAreaId()
     });

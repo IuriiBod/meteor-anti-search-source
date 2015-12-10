@@ -1,4 +1,3 @@
-console.log('test');
 Template.weatherForecast.helpers({
   hasForecast: function () {
     return !!Template.instance().data;

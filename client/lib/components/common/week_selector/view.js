@@ -17,8 +17,14 @@ Template.weekSelector.events({
     });
 
     week.forEach(function (obj) {
-      var index = HospoHero.dateUtils.shiftDate(moment().day(obj.day));
-      var shifts = Shifts.find({"shiftDate": index, "type": "template"}, {sort: {"order": 1}}).fetch();
+      var index = HospoHero.dateUtils.shiftDate(moment().day(obj.day),true);
+      var shifts = Shifts.find({
+        startTime: TimeRangeQueryBuilder.forDay(index),
+        type: 'template'
+      }, {
+        sort: {order: 1}
+      }).fetch();
+
       if (shifts.length > 0) {
         shifts.forEach(function (shift) {
           var startHour = moment(shift.startTime).hour();
@@ -28,9 +34,8 @@ Template.weekSelector.events({
           var endMin = moment(shift.endTime).minute();
 
           var info = {
-            "startTime": new Date(moment(obj.date).set('hour', startHour).set("minute", startMin)),
-            "endTime": new Date(moment(obj.date).set('hour', endHour).set("minute", endMin)),
-            "shiftDate": moment(obj.date).format("YYYY-MM-DD"),
+            "startTime": moment(obj.date).hour(startHour).minute(startMin).toDate(),
+            "endTime": moment(obj.date).hour(endHour).minute(endMin).toDate(),
             "section": shift.section,
             "assignedTo": shift.assignedTo,
             "week": dates,

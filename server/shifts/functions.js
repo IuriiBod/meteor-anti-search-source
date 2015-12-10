@@ -40,7 +40,7 @@ Meteor.methods({
     }
 
     var shiftsToPublishQuery = {
-      shiftDate: shiftDateQuery,
+      startTime: shiftDateQuery,
       published: false,
       type: null,
       'relations.areaId': HospoHero.getCurrentAreaId()
@@ -54,7 +54,6 @@ Meteor.methods({
       fields: {
         assignedTo: 1,
         startTime: 1,
-        shiftDate: 1,
         endTime: 1,
         relations: 1
       }
@@ -142,7 +141,7 @@ Meteor.methods({
         'Shift claiming',
         'claim-shift',
         {
-          date: HospoHero.dateUtils.formatDateWithTimezone(shift.shiftDate, 'ddd, Do MMMM', shift.relations.locationId),
+          date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId),
           username: HospoHero.username(userId)
         },
         {
@@ -182,8 +181,8 @@ Meteor.methods({
       throw new Meteor.Error(404, "Shift has already been assigned");
     }
     var hasBeenAssigned = Shifts.findOne({
-      "shiftDate": TimeRangeQueryBuilder.forDay(shift.shiftDate),
-      "assignedTo": userId
+      startTime: TimeRangeQueryBuilder.forDay(shift.startTime),
+      assignedTo: userId
     });
     if (hasBeenAssigned) {
       logger.error("User already has a shift on this day");
@@ -196,7 +195,7 @@ Meteor.methods({
       'Claim confirmed',
       'claim-confirmed',
       {
-        date: HospoHero.dateUtils.formatDateWithTimezone(shift.shiftDate, 'ddd, Do MMMM', shift.relations.locationId)
+        date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId)
       }
     ).sendNotification(userId);
   },
@@ -223,7 +222,7 @@ Meteor.methods({
       'Claim rejected',
       'claim-rejected',
       {
-        date: HospoHero.dateUtils.formatDateWithTimezone(shift.shiftDate, 'ddd, Do MMMM', shift.relations.locationId)
+        date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId)
       }
     ).sendNotification(userId);
   }

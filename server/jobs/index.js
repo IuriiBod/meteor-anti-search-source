@@ -19,8 +19,8 @@ Meteor.methods({
       throw new Meteor.Error(404, "Shift not found");
     }
     if (shiftId) { //assign job
-      var new_shift = Shifts.findOne(shiftId);
-      if (!new_shift) {
+      var newShift = Shifts.findOne(shiftId);
+      if (!newShift) {
         logger.error("Shift not found");
         throw new Meteor.Error(404, "Shift not found");
       }
@@ -28,9 +28,9 @@ Meteor.methods({
         updateDoc.onshift = shiftId;
       }
       updateDoc.status = "assigned";
-      updateDoc.options = {"assigned": new Date().getTime()}
+      updateDoc.options = {assigned: new Date().getTime()};
       if (startAt) {
-        var newDate = new Date(new_shift.shiftDate);
+        var newDate = new Date(newShift.startTime);
 
         var startAtDate = new Date(startAt);
         var starting = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), startAtDate.getHours(), startAtDate.getMinutes());
