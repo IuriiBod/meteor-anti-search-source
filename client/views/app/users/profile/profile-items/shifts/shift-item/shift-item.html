@@ -2,7 +2,7 @@
   {{#if item}}
     <p>
       <a href="/roster/shift/{{item._id}}">
-        {{dayFormat item.shiftDate}}
+        {{dayFormat item.startTime}}
         {{timeFormat item.startTime}} -
         {{timeFormat item.endTime}}
         {{#if item.section}}

@@ -22,8 +22,8 @@ Template.teamHoursItem.onCreated(function () {
     var dateForWeek = HospoHero.dateUtils.getDateByWeekDate(templateData.weekDate);
 
     var weekShifts = Shifts.find({
-      "assignedTo": templateData.user._id,
-      "shiftDate": TimeRangeQueryBuilder.forWeek(dateForWeek)
+      assignedTo: templateData.user._id,
+      startTime: TimeRangeQueryBuilder.forWeek(dateForWeek)
     });
 
     var self = this;

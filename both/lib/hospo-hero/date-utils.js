@@ -93,7 +93,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   /**
-   * Ensures that all shift times have the same date
+   * Ensures that all shift times have the same date based on `startTime`
    *
    * @param shift shift to adjust
    * @param timePropertyName property should be adjusted

@@ -14,7 +14,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
     var shift = templateInstance.data;
     return Shifts.find({
       _id: {$ne: shift._id},
-      shiftDate: TimeRangeQueryBuilder.forDay(shift.shiftDate),
+      startTime: TimeRangeQueryBuilder.forDay(shift.startTime),
       'relations.areaId': HospoHero.getCurrentAreaId(),
       assignedTo: {$ne: null},
       type: shift.type
@@ -49,7 +49,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
       "isActive": true,
       $or: [
         {"profile.resignDate": null},
-        {"profile.resignDate": {$gt: shift.shiftDate}}
+        {"profile.resignDate": {$gt: shift.startTime}}
       ]
     };
 

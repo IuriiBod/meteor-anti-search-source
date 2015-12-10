@@ -4,7 +4,7 @@ Template.reportData.onCreated(function () {
   this.getCurrentShift = function () {
     return Shifts.findOne({
       assignedTo: this.data.userId,
-      shiftDate: TimeRangeQueryBuilder.forDay(this.data.date)
+      startTime: TimeRangeQueryBuilder.forDay(this.data.date)
     });
   };
 });

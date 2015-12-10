@@ -39,11 +39,11 @@ Template.weeklyRosterDay.helpers({
     var shiftDate = HospoHero.dateUtils.shiftDate(this.currentDate, isTemplate);
 
     return Shifts.find({
-      "shiftDate": TimeRangeQueryBuilder.forDay(shiftDate),
-      "type": this.type,
+      startTime: TimeRangeQueryBuilder.forDay(shiftDate),
+      type: this.type,
       "relations.areaId": HospoHero.getCurrentAreaId()
     }, {
-      sort: {"order": 1}
+      sort: {order: 1}
     });
   },
 
@@ -60,14 +60,12 @@ Template.weeklyRosterDay.events({
   'click .add-shift-button': function (event, tmpl) {
     var zeroMoment = moment(HospoHero.dateUtils.shiftDate(tmpl.data.currentDate, tmpl.hasTemplateType()));
 
-    var shiftDate = new Date(zeroMoment);
     var startHour = new Date(zeroMoment.hours(8));
     var endHour = new Date(zeroMoment.hours(17));
 
     var newShiftInfo = {
       startTime: startHour,
       endTime: endHour,
-      shiftDate: shiftDate,
       type: this.type
     };
 
@@ -110,11 +108,21 @@ SortableHelper.prototype._getOrder = function () {
 
 SortableHelper.prototype.getSortedShift = function () {
   if (this._draggedShift) {
-    this._draggedShift.order = this._getOrder();
-    this._draggedShift.shiftDate = this._draggedToDate;
+    var shift = this._draggedShift;
+    var oldStartTimeMoment = moment(shift.startTime);
+    var newStartMoment = moment(this._draggedToDate);
 
-    check(this._draggedShift, HospoHero.checkers.ShiftDocument);
+    newStartMoment.hours(oldStartTimeMoment.hours());
+    newStartMoment.minutes(oldStartTimeMoment.minutes());
 
-    return this._draggedShift;
+    shift.order = this._getOrder();
+    shift.startTime = newStartMoment.toDate();
+
+    //apply new date to end time
+    HospoHero.dateUtils.adjustShiftTime(shift, 'endTime', shift.endTime);
+
+    check(shift, HospoHero.checkers.ShiftDocument);
+
+    return shift;
   }
 };

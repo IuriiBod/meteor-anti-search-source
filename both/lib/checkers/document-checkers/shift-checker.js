@@ -81,7 +81,7 @@ var ShiftDocument = Match.Where(function (shift) {
       }
     });
 
-    checkerHelper.checkPropertiesGroup(['assignedTo', 'shiftDate'], function () {
+    checkerHelper.checkPropertiesGroup(['assignedTo', 'startTime', 'endTime'], function () {
       var assignedWorker = Meteor.users.findOne({_id: assignedUserId});
       if (!assignedWorker) {
         logger.error("Worker not found");
@@ -101,7 +101,7 @@ var ShiftDocument = Match.Where(function (shift) {
         assignedTo: assignedUserId
       });
       if (existInShift) {
-        logger.error("User already exist in a shift", {"date": shift.startTime});
+        logger.error("User already exist in a shift", {date: shift.startTime});
         throw new Meteor.Error(404, "Worker has already been assigned to a shift");
       }
     });
@@ -109,7 +109,7 @@ var ShiftDocument = Match.Where(function (shift) {
     if (shift.section) {
       checkerHelper.checkPropertiesGroup(['assignedTo', 'section'], function () {
         if (!Meteor.users.findOne({_id: shift.assignedTo, 'profile.sections': shift.section})) {
-          logger.error("User not trained for this section", {"sectionId": shift.section});
+          logger.error("User not trained for this section", {sectionId: shift.section});
           throw new Meteor.Error(404, "User not trained for this section");
         }
       });
