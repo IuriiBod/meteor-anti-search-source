@@ -249,22 +249,6 @@
             </form>
             <br>
           </div>
-
-          <!-- INGREDIENTS LIST-->
-          {{#if canViewStock}}
-            <div class="modal fade" id="ingredientsListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                 aria-hidden="true">
-              {{> render component = 'stocksModalList' name="editJob"}}
-            </div>
-          {{/if}}
-          <!-- /INGREDIENTS LIST -->
-
-          <!-- ADD INGREDIENT-->
-          <div class="modal fade" id="addIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-               aria-hidden="true">
-            {{> render component = 'submitIngredient' isModal=true}}
-          </div>
-          <!-- /ADD INGREDIENT -->
         </div>
       </div>
     </div>

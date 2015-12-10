@@ -76,8 +76,7 @@ Template.submitEditJobItem.helpers({
   week: function () {
     return ["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat", "Sun"];
   }
-})
-;
+});
 
 Template.submitEditJobItem.events({
   'change .changeType': function (e, tmpl) {
