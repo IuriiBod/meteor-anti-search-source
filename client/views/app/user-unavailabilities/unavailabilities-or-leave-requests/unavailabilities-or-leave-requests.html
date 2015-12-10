@@ -4,27 +4,27 @@
 
       <!-- Component name(unavailability or leave request) -->
       <div class="col-xs-6">
-        <h4 class="pull-left">{{templateName}}</h4>
+        <h4>{{templateName}}</h4>
       </div>
 
       <!-- Add new item button -->
-      <div class="col-xs-5">
-        <button class="new-item-button pull-right btn btn-primary btn-xs">Add new</button>
+      <div class="col-xs-6 text-right">
+        <button class="new-item-button btn btn-primary btn-xs">Add new</button>
       </div>
     </div>
 
-    <!-- List with items -->
     <div>
+    <!-- List with items -->
       {{#if items}}
         {{#each items}}
           {{#if state$isUnavailability}}
-            {{> render component="unavailabilityItem" item=this}}
+            {{> unavailabilityItem item=this}}
           {{else}}
             {{> render component="leaveRequestItem" item=this}}
           {{/if}}
         {{/each}}
       {{else}}
-        <p class="text-muted">No {{templateName}} to display</p>
+        <p class="text-muted item-wrapper">No {{templateName}} to display</p>
       {{/if}}
     </div>
   </div>

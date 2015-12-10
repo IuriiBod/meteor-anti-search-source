@@ -1,3 +1,8 @@
+.border-bottom() {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
 .user-unavailability {
   .user-info-wrapper {
     .users-image {
@@ -12,13 +17,17 @@
   .component-wrapper {
     margin-top: 20px;
     .component-header {
+      .border-bottom;
+
       .new-item-button {
         margin-right: -15px;
       }
     }
 
     .item-wrapper {
-      margin-bottom: 5px;
+      .border-bottom;
+      border-bottom: 1px solid #eee;
+      margin-top: 15px;
 
       .date-cell {
         margin-top: 16px;
@@ -49,13 +58,10 @@
         }
       }
       .item-details-wrapper {
-        border: 1px #e7eaec solid;
-        border-radius: 4px;
-
         .item-details {
           > div {
-            margin-top: 9px;
-            margin-left: 10px;
+            //margin-top: 9px;
+            //margin-left: 10px;
           }
         }
         .item-actions {
