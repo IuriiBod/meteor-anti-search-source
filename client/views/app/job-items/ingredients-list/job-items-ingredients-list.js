@@ -1,21 +1,11 @@
+Template.listOfIngredients.onCreated(function () {
+  this.addedStockItemsIds = new ReactiveVar([]);
+});
+
 Template.listOfIngredients.helpers({
-  ingredientsList: function () {
-    var localId = Session.get("localId");
-    var ids = [];
-    if (localId) {
-      if (this.id == "menuSubmit") {
-        var localMenuItem = LocalMenuItem.findOne(localId);
-        if (localMenuItem && localMenuItem.ings.length > 0) {
-          ids = localMenuItem.ings;
-        }
-      } else {
-        var localJobItem = LocalJobItem.findOne(localId);
-        if (localJobItem && localJobItem.ings.length > 0) {
-          ids = localJobItem.ings;
-        }
-      }
-    }
-    return ids;
+  ingredientsIds: function () {
+    console.log(Template.instance().addedStockItemsIds.get());
+    return Template.instance().addedStockItemsIds.get();
   },
 
   isMenu: function () {
@@ -28,6 +18,18 @@ Template.listOfIngredients.helpers({
 
   id: function () {
     return Session.get("thisJobItem");
+  },
+
+  modalStockListParams: function () {
+    var thisTmpl = Template.instance();
+    return {
+      onAddStockItem: function (itemId) {
+        var addedIds = thisTmpl.addedStockItemsIds.get();
+        addedIds.push(itemId)
+        thisTmpl.addedStockItemsIds.set(addedIds);
+      },
+      addedStockItemsIds: thisTmpl.addedStockItemsIds.get()
+    }
   }
 });
 

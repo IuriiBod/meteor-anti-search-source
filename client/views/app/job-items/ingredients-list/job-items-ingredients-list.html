@@ -11,7 +11,7 @@
       </tr>
       </thead>
       <tbody>
-      {{#each ingredientsList}}
+      {{#each ingredientsIds}}
         {{> render component='ingredientItemEdit' id=this name=name itemId=id}}
       {{/each}}
       </tbody>
@@ -30,7 +30,7 @@
   {{#if canViewStock}}
     <div class="modal fade" id="ingredientsListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
-      {{> render component = 'stocksModalList' name="editJob"}}
+      {{> stocksModalListNoShit name="editJob" modalStockListParams=modalStockListParams}}
     </div>
   {{/if}}
   <!-- /INGREDIENTS LIST -->
