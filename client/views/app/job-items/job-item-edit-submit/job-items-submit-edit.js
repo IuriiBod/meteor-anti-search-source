@@ -4,6 +4,7 @@ Template.submitEditJobItem.onCreated(function () {
   this.selectedJobTypeId = new ReactiveVar(JobTypes.findOne()._id);
   this.selectedFrequency = new ReactiveVar('daily');
   this.repeatAt = new ReactiveVar(moment().hours(8).minutes(0).toDate());
+  this.ingredients = [];
 
   if (this.data.mode == 'edit') {
     this.jobItem = JobItems.findOne();
@@ -26,6 +27,16 @@ Template.submitEditJobItem.helpers({
         thisTemplate.repeatAt.set(time);
       }
     }
+  },
+
+  ingredients: function () {
+    return Template.instance().ingredients;
+  },
+  editIngredientsListOnChange: function () {
+    var thisTemplate = Template.instance();
+    return function (ingredientsList) {
+      thisTemplate.ingredients = ingredientsList;
+    };
   },
 
   isEditMode: function () {

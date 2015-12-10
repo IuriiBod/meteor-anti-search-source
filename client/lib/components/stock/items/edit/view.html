@@ -1,13 +1,13 @@
 <template name="ingredientItemEdit">
-  <tr data-id="{{state$item._id}}">
-    <td>{{state$item.code}}</td>
-    <td>{{state$item.description}}</td>
-    <td>{{state$item.portionUsed}}</td>
-    <td>$ {{state$unitPrice}}</td>
-    <td><input name="ing_qty" data-id="{{state$item._id}}" value="{{state$quantity}}" class="ing-qty" type="text"/></td>
+  <tr data-id="{{item._id}}">
+    <td>{{item.code}}</td>
+    <td>{{item.description}}</td>
+    <td>{{item.portionUsed}}</td>
+    <td>$ {{unitPrice}}</td>
+    <td><input name="ing_qty" data-id="{{item._id}}" value="{{quantity}}" class="ing-qty" type="text"/></td>
     <td>
       <a href="">
-        <i class="fa fa-trash removeIng" data-id="{{state$item._id}}"></i>
+        <i class="fa fa-trash removeIng" data-id="{{item._id}}"></i>
       </a>
     </td>
   </tr>

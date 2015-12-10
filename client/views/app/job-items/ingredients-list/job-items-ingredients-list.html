@@ -11,8 +11,8 @@
       </tr>
       </thead>
       <tbody>
-      {{#each ingredientsIds}}
-        {{> render component='ingredientItemEdit' id=this name=name itemId=id}}
+      {{#each ingredients}}
+        {{> ingredientItemEditNoShit item=this onChange=onChangeStockItem}}
       {{/each}}
       </tbody>
       <br>
