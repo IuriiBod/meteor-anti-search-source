@@ -29,7 +29,7 @@ Template.topNavbar.events({
   },
 
   'click .user-unavailabilities-flyout': function () {
-    FlyoutManager.open('userUnavailability', {}, true);
+    FlyoutManager.open('userUnavailability');
   }
 });
 
