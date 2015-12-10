@@ -1,3 +1,19 @@
+Template.notifiFlyout.helpers({
+  count: function () {
+    return !!Notifications.findOne({read: false, to: Meteor.userId()});
+  },
+  notifications: function () {
+    return Notifications.find({
+      read: false,
+      to: Meteor.userId()
+    }, {
+      sort: {
+        createdOn: -1
+      }
+    });
+  }
+});
+
 Template.notifiFlyout.events({
   'click .markAllAsRead': function (event) {
     event.preventDefault();

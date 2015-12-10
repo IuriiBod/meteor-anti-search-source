@@ -7,12 +7,12 @@
   </div>
 
   <div class="flyout-content">
-    {{#if state$count}}
-      {{#each state$notifications}}
+    {{#if count}}
+      {{#each notifications}}
         <div class="ibox float-e-margins" style="margin-bottom: 0;">
           <div class="ibox-content" style="padding-bottom: 10px;">
             <div class="feed-activity-list">
-              {{> render component='notifiText' noti=this}}
+              {{> notifiText notification=this}}
             </div>
           </div>
         </div>
