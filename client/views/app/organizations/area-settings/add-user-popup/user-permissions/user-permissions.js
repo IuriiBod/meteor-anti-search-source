@@ -1,5 +1,5 @@
 Template.userPermissions.onCreated(function () {
-  this.set('selectPermissions', this.data.selectPermissions);
+  this.set('selectedUser', this.data.selectedUser);
 });
 
 Template.userPermissions.events({
@@ -12,11 +12,9 @@ Template.userPermissions.events({
       roleId: roleId
     };
 
-    Meteor.call('addUserToArea', addedUserInfo, HospoHero.handleMethodResult());
-    tmpl.set('selectPermissions', false);
-  },
-
-  'click .back-to-select-user': function (event, tmpl) {
-    tmpl.set('selectPermissions', false);
+    Meteor.call('addUserToArea', addedUserInfo, HospoHero.handleMethodResult(function () {
+      HospoHero.success('The user was notified');
+      tmpl.data.onPermissionSelect(null);
+    }));
   }
 });

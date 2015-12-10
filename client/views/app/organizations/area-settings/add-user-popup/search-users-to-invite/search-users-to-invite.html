@@ -1,23 +1,28 @@
 <template name="searchUsersToInvite">
   <form class="add-user-to-area-form">
-    <input type="text" class="form-control input-field" placeholder="e.g. john@gmail.com" name="addUserName">
+    <input type="text" class="form-control input-field" placeholder="e.g. john@gmail.com" name="addUserName" required="required">
+    {{#if state$isNewUserAdding}}
+      {{> inviteNewUser}}
+    {{/if}}
   </form>
 
   <div>
-    {{#if searchedUsers}}
-      <div class="search-results">
-        <b>Select to add</b>
-        <hr/>
-        <div class="search-users-container">
-          {{# each searchedUsers}}
-            {{> searchUserInfo}}
-          {{/each}}
+    {{#if state$displaySearchResults}}
+      {{#if searchedUsers}}
+        <div class="search-results">
+          <b>Select to add</b>
+          <hr/>
+          <div class="search-users-container">
+            {{# each searchedUsers}}
+              {{> searchUserInfo}}
+            {{/each}}
+          </div>
         </div>
-      </div>
-    {{else}}
-      <div class="text-muted text-center no-results">
-        <b>No results</b>
-      </div>
+      {{else}}
+        <div class="text-muted text-center no-results">
+          <b>No results</b>
+        </div>
+      {{/if}}
     {{/if}}
   </div>
 </template>

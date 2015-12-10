@@ -1,5 +1,5 @@
 <template name="userPermissions">
-  {{#if state$selectPermissions}}
+  {{#if state$selectedUser}}
     <div class="user-permissions">
       <div class="permission-title">
         Permission
@@ -9,14 +9,8 @@
       <br/>
 
       <div class="btn-group col-xs-12">
-        <button class="btn btn-primary col-xs-6 add-existing-user">Invite</button>
-        <button class="btn btn-default col-xs-6 back-to-select-user">Back</button>
+        <button class="btn btn-primary col-xs-12 add-existing-user">Invite</button>
       </div>
     </div>
-  {{else}}
-    <p class="text-info text-center add-user-by-email-success">
-      The user was notified
-      <button class="btn btn-default col-xs-12 back-to-select-user">Back</button>
-    </p>
   {{/if}}
 </template>
