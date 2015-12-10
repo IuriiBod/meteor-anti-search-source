@@ -25,8 +25,8 @@ Template.reportData.helpers({
     };
 
     return {
-      firstTime: shift.startedAt,
-      secondTime: shift.finishedAt,
+      firstTime: shift.startedAt || 'Start',
+      secondTime: shift.finishedAt || 'End',
       minuteStepping: 5,
       onSubmit: function (startTime, endTime) {
         shift.startedAt = restoreShiftDate(shift.startedAt, startTime);
