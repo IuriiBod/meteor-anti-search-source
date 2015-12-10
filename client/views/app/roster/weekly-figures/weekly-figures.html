@@ -1,0 +1,6 @@
+<template name="weeklyFigures">
+  <div class="collapse" id="collapse">
+    {{> figureBoxes figureBoxDataHelper=state$figureBoxDataHelper}}
+    {{> rosterTable weekDates=weekDates figureBoxDataHelper=state$figureBoxDataHelper}}
+  </div>
+</template>

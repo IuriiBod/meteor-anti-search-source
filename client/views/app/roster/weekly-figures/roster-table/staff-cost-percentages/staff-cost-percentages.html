@@ -1,0 +1,6 @@
+<template name="staffCostPercentagesTr">
+  {{#with state$dailyStaff}}
+    <td>{{roundCount forecast}}%</td>
+    <td class="{{textClass}}">{{roundCount actual}}%</td>
+  {{/with}}
+</template>

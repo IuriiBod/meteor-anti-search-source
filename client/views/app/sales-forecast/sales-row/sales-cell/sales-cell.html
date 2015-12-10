@@ -1,0 +1,14 @@
+<template name="predictionSalesCell">
+  <td class="prediction-cell">
+    {{#if isFuturePrediction}}
+      {{> ghostEditable value=predictionQuantity onValueChanged=onPredictedValueChangedCb}}
+    {{else}}
+      {{predictionQuantity}}
+    {{/if}}
+    {{#if isPredictionManual}}
+      <i class="fa fa-pencil-square manual-prediction-icon remove-manual-prediction-button"
+         title="This prediction is manual"></i>
+    {{/if}}
+  </td>
+  <td>{{actualQuantity}}</td>
+</template>
