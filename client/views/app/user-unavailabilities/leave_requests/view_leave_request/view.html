@@ -1,0 +1,118 @@
+<template name="viewLeaveRequest">
+  <!-- Flayout header -->
+  {{#unless state$isReviewMode}}
+    {{> render component="unavailabilitiesFlyoutHeader" title="Leave Request"}}
+  {{/unless}}
+  <div class="flyout-content">
+    <div class="panel-body view-leave-request">
+      <form class="form-horizontal leave-request-form">
+
+        <!-- Start Date -->
+        <div class="form-group col-xs-12">
+          <div class="row">
+            <div class="col-xs-12">
+              <label>Start date</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-9">
+              {{#if state$isReviewMode}}
+                <input class="comment-input form-control" type="text" readonly
+                       value="{{state$formatDate state$leaveRequest.startDate}}">
+              {{else}}
+                <div class="start-date-picker input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                  <input class="set-due-date form-control" type="text"/>
+                </div>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+
+        <!-- End Date -->
+        <div class="form-group col-xs-12">
+          <div class="row">
+            <div class="col-xs-12">
+              <label>End date</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-9">
+              {{#if state$isReviewMode}}
+                <input class="comment-input form-control" type="text" readonly
+                       value="{{state$formatDate state$leaveRequest.endDate}}">
+              {{else}}
+                <div class="end-date-picker input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                  <input class="set-due-date form-control" type="text"/>
+                </div>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="form-group col-xs-12">
+          <div class="row">
+            <div class="col-xs-12">
+              <label>Comment</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              {{#if state$isReviewMode}}
+                <input class="comment-input form-control" type="text" readonly value="{{state$leaveRequest.comment}}">
+              {{else}}
+                <input class="comment-input form-control" type="text">
+              {{/if}}
+            </div>
+          </div>
+        </div>
+
+        <!-- Approve/Decline -->
+        {{#if state$isReviewMode}}
+          {{#if state$canBeApprovedOrDeclined}}
+            <div class="form-group col-xs-12">
+              <div class="col-xs-6 approve-decline-btn-wrapper">
+                <button class="approve-button btn btn-primary" type="button">Approve</button>
+                <button class="decline-button btn btn-danger" type="button">Decline</button>
+              </div>
+            </div>
+          {{/if}}
+        {{else}}
+          <!-- Notify manager -->
+          <div class="form-group col-xs-12">
+            <div class="row">
+              <div class="col-xs-12">
+                <label>Notify manager</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <select class="notify-manager-select form-control">
+                  {{#each state$managers}}
+                    <option value={{this._id}}>{{username this._id}}</option>
+                  {{/each}}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit/cancel -->
+          <div class="form-group col-xs-12">
+            <div class="row">
+              <div class="col-xs-4 col-xs-offset-8">
+                <button type="submit" class="btn btn-primary">
+                  Add
+                </button>
+                <button type="button" class="cancel-button btn btn-white close-flyout-button">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+      </form>
+    </div>
+  </div>
+</template>

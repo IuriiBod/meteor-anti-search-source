@@ -1,0 +1,56 @@
+<template name="leaveRequestItem">
+  <div class="row item-wrapper">
+
+    <!-- Start and end dates -->
+    <div class="col-xs-4 leave-requests-item-date">
+      <div class="row">
+        <div class="col-xs-4 col-xs-offset-1">
+          <p>{{state$date.startDate}}</p>
+        </div>
+        <div class="col-xs-2">
+          <p>-</p>
+        </div>
+        <div class="col-xs-4">
+          <p>{{state$date.endDate}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item details -->
+    <div class="col-xs-7 item-details-wrapper">
+      <div class="row">
+
+        <!-- Comment -->
+        <div class="col-xs-9 item-details">
+          <div>
+            <div class="row">
+              {{#if state$comment}}
+                <p>{{state$comment}}</p>
+              {{else}}
+                <p class="text-muted">Leave Request</p>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+
+        <!-- Status and view button -->
+        <div class="col-xs-2 col-xs-offset-1 item-actions">
+          <div>
+
+            <!-- Leave request status -->
+            <div class="row">
+              <p class="status-{{state$status}} pull-right text-capitalize">
+                {{state$status}}
+              </p>
+            </div>
+
+            <!-- Delete button -->
+            <div class="row">
+              <i class="remove-leave-request-button fa fa-trash-o delete-icon pull-right" role="button"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
