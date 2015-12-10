@@ -7,5 +7,8 @@ Template.composeMail.events({
 
     FlowComponents.callAction('sendEmail', mailBody, title, to);
     $("#composeMailModal").modal("hide");
+  },
+  'shown.bs.modal #composeMailModal': function (event, tmpl) {
+    console.log('shown');
   }
 });

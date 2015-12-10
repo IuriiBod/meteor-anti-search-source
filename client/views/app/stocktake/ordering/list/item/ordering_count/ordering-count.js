@@ -15,6 +15,7 @@ Template.orderingCount.onRendered(function () {
 
         var count = parseFloat(newValue) ? parseFloat(newValue) : 0;
         Meteor.call('editOrderingCount', stockItemId, count, HospoHero.handleMethodResult(function () {
+          console.log('after ordering count');
           $(".ordering_count").trigger('callFlowAction');
         }));
       }
@@ -22,8 +23,21 @@ Template.orderingCount.onRendered(function () {
   });
 });
 
+Template.orderingCount.helpers({
+  orderingCount: function() {
+    var order = StockOrders.findOne(this.id);
+    if (order) {
+      return order.countOrdered;
+    }
+  },
+
+  unit: function() {
+    return this.unit;
+  }
+});
+
 Template.orderingCount.events({
-  'callFlowAction .ordering_count': function () {
-    FlowComponents.callAction('countChange');
+  'click .ordering_count': function (event, tmpl) {
+    tmpl.data.onCountChange();
   }
 });

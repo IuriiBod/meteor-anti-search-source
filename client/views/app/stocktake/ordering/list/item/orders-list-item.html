@@ -1,0 +1,19 @@
+<template name="ordersListItem">
+  {{#if order}}
+    <tr data-id="{{order._id}}">
+      <td>{{order.stockName}}</td>
+      <td>{{order.countOnHand}} [{{order.unit}}]</td>
+      <td>{{order.countNeeded}} [{{order.unit}}]</td>
+      {{#if editable}}
+        {{> orderingCount id=order._id unit=order.unit onCountChange=onCountChange}}
+      {{else}}
+        <td>{{order.countOrdered}} [{{order.unit}}]</td>
+      {{/if}}
+      <td>
+        {{#unless order.orderedOn}}
+          <a href="" class="removeStockOrder">Delete</a>
+        {{/unless}}
+      </td>
+    </tr>
+  {{/if}}
+</template>
