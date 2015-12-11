@@ -69,13 +69,17 @@ Namespace('HospoHero.dateUtils', {
     return day + ' ' + startTime + ' - ' + endTime;
   },
 
-  timeFormat: function (date, locationId) {
+  locationTimeFormat: function (date, locationId) {
     var dateFormat = 'h:mm A';
     if (locationId && _.isString(locationId)) {
       return HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
     } else {
       return HospoHero.dateUtils.formatDate(date, dateFormat);
     }
+  },
+
+  timeFormat: function (date) {
+    return date ? moment(date).format('hh:mm A') : '-';
   },
 
   shiftDate: function (date, isTemplate) {
@@ -139,10 +143,6 @@ Namespace('HospoHero.dateUtils', {
 
   dateFormat: function (date) {
     return date ? moment(date).format('ddd DD/MM/YYYY') : '-';
-  },
-
-  timeFormat: function (date) {
-    return date ? moment(date).format('hh:mm A') : '-';
   },
 
   fullDateFormat: function (date) {
