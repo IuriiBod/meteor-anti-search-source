@@ -1,14 +1,14 @@
 Meteor.methods({
-  createInvitation: function (email, name, areaId, roleId) {
-    var area = Areas.findOne({_id: areaId});
-    var senderInfo = Meteor.user();
+  createInvitation: function (invitationData) {
+    var area = Areas.findOne({_id: invitationData.areaId});
+    var senderId = Meteor.userId();
     var invitation = {
-      name: name,
-      email: email,
-      invitedBy: senderInfo._id,
-      areaId: areaId,
+      name: invitationData.name,
+      email: invitationData.email,
+      invitedBy: senderId,
+      areaId: invitationData.areaId,
       organizationId: area.organizationId,
-      roleId: roleId,
+      roleId: invitationData.roleId,
       accepted: false,
       createdAt: Date.now()
     };
@@ -19,12 +19,12 @@ Meteor.methods({
       'Added to the ' + area.name + ' area',
       'invitation-email',
       {
-        name: name,
+        name: invitationData.name,
         areaName: area.name,
         url: Router.url('invitationAccept', {_id: id}),
-        sender: HospoHero.username(Meteor.userId())
+        sender: HospoHero.username(senderId)
       }
-    ).sendEmail(email);
+    ).sendEmail(invitationData.email);
   },
 
   deleteInvitation: function (id) {

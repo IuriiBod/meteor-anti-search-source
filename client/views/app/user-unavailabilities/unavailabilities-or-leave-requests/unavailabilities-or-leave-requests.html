@@ -1,0 +1,29 @@
+<template name="unavailabilitiesOrLeaveRequests">
+  <div class="component-wrapper">
+    <div class="row component-header">
+
+      <!-- Component name(unavailability or leave request) -->
+      <div class="col-xs-6">
+        <h4>{{templateName}}</h4>
+      </div>
+
+      <!-- Add new item button -->
+      <div class="col-xs-6 text-right">
+        <button class="btn btn-primary btn-xs new-item-button">Add new</button>
+      </div>
+    </div>
+
+    <!-- List with items -->
+    {{#if items}}
+      {{#each items}}
+        {{#if state$isUnavailability}}
+          {{> unavailabilityItem item=this}}
+        {{else}}
+          {{> leaveRequestItem item=this}}
+        {{/if}}
+      {{/each}}
+    {{else}}
+      <p class="text-muted item-wrapper">No {{templateName}} to display</p>
+    {{/if}}
+  </div>
+</template>

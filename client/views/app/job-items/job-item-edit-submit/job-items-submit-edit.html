@@ -1,9 +1,9 @@
 <template name="submitEditJobItem">
   <!-- Page heading -->
   {{#if isEditMode}}
-    {{> render component="pageHeading" title='Edit Job' category='Jobs' name="jobedit" subCategory=jobItem.name id=jobItem._id}}
+    {{> pageHeading title='Edit Job' category='Jobs' name="jobedit" subCategory=jobItem.name id=jobItem._id}}
   {{else}}
-    {{> render component="pageHeading" title='Submit Job' category='Job' name="jobsubmit"}}
+    {{> pageHeading title='Submit Job' category='Job' name="jobsubmit"}}
   {{/if}}
 
   <div class="wrapper wrapper-content animated">
@@ -58,12 +58,14 @@
               <div class="form-group">
                 {{#if isPrep}}
                   <label class="col-sm-2 control-label">Recipe</label>
+
                   <div class="col-sm-10">
                     {{> render component = 'textEditor' id='jobItemEditorSubmit'
                     initialHtml="Add recipe to job"}}
                   </div>
                 {{else}}
                   <label class="col-sm-2 control-label">Description</label>
+
                   <div class="col-sm-10">
                     {{> render component = 'textEditor' id='jobItemEditorSubmit'
                     initialHtml="Add description to job"}}

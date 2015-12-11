@@ -1,0 +1,58 @@
+<template name="salesPredictionPage">
+  <!-- Page heading -->
+  {{> pageHeading title="Forecast" name="salesPrediction"}}
+
+  <div class="wrapper wrapper-content animated sales-prediction-content">
+    <div class="row">
+      {{> FilterByCategory}}
+      {{> menuItemsSearch searchSource=getSearchSource}}
+    </div>
+    <div class="prediction-component">
+      <div class="prediction-panel">
+        <div class="sales-per-menu-item-section table-scrollable">
+          <table class="table table-striped table-condensed white-bg">
+            <thead>
+            <tr>
+              <th></th>
+              {{#each week}}
+                <th colspan="2" class="prediction-table-head">
+                  {{getDayOfWeek this}}
+                  <h5>{{formatDate this}}</h5>
+                </th>
+              {{/each}}
+            </tr>
+            <tr>
+              <!--Weather-->
+              <td></td>
+              {{#each week}}
+                {{> weatherForecast dailyWeatherForecast}}
+              {{/each}}
+            </tr>
+            <tr>
+              <th></th>
+              {{#each week}}
+                <th>Forecast</th>
+                <th>Actual</th>
+              {{/each}}
+            </tr>
+            </thead>
+            <tbody>
+            {{> totalSalesRow weekDate=date}}
+
+            {{#each menuItems}}
+              {{> predictionSalesRow currentWeekDate=../date week=week menuItem=this}}
+            {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="load-more-button-wrapper">
+        {{#if state$allItemsLoaded}}
+          <h4><b>All menu items are loaded</b></h4>
+        {{else}}
+          <button id="loadMoreBtn" class="btn btn-white center-block" type="button">Load more</button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

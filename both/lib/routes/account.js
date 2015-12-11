@@ -80,7 +80,6 @@ Router.route('profile', {
     ];
   },
   data: function () {
-    Session.set('profileUser', this.params._id);
     Session.set('editStockTake', false);
   }
 });

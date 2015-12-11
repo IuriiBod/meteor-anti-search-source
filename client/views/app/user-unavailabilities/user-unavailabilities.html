@@ -1,0 +1,25 @@
+<template name="userUnavailability">
+  {{> unavailabilitiesFlyoutHeader title="Unavailabilities and leave requests"}}
+  <div class="flyout-content">
+    <div class="panel-body user-unavailability">
+      <!-- User info -->
+      <div class="row">
+        <div class="user-info-wrapper col-xs-12 text-center">
+          <div class="users-image">
+            <img alt="image" class="img-responsive" src="{{profilePicture currentUser}}">
+          </div>
+          <div class="col-xs-12">
+            <h4>
+              <strong>
+                {{username currentUser}}
+              </strong>
+            </h4>
+          </div>
+        </div>
+      </div>
+      <!-- Components with unavailables and leave requests -->
+      {{> unavailabilitiesOrLeaveRequests type="unavailabilities"}}
+      {{> unavailabilitiesOrLeaveRequests type="leaveRequests"}}
+    </div>
+  </div>
+</template>

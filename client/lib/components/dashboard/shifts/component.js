@@ -12,24 +12,24 @@ component.state.shifts = function () {
 
   if (state == "future") {
     shifts = Shifts.find({
-      "assignedTo": Meteor.userId(),
-      "published": true,
-      "shiftDate": {$gte: new Date()},
-      "relations.areaId": HospoHero.getCurrentAreaId()
-    }, {sort: {'shiftDate': 1}}).fetch();
+      assignedTo: Meteor.userId(),
+      published: true,
+      startTime: {$gte: new Date()},
+      'relations.areaId': HospoHero.getCurrentAreaId()
+    }, {sort: {startTime: 1}}).fetch();
   } else if (state == "past") {
     shifts = Shifts.find({
-      "assignedTo": Meteor.userId(),
-      "shiftDate": {$lte: HospoHero.dateUtils.shiftDate()},
+      assignedTo: Meteor.userId(),
+      startTime: {$lte: HospoHero.dateUtils.shiftDate()},
       "relations.areaId": HospoHero.getCurrentAreaId()
-    }, {sort: {'shiftDate': -1}}).fetch();
+    }, {sort: {startTime: -1}}).fetch();
   } else if (state == "open") {
     shifts = Shifts.find({
-      "assignedTo": {$in: [null, undefined]},
-      "published": true,
-      "shiftDate": {$gte: new Date()},
+      assignedTo: {$in: [null, undefined]},
+      published: true,
+      startTime: {$gte: new Date()},
       "relations.areaId": HospoHero.getCurrentAreaId()
-    }, {sort: {'shiftDate': 1}}).fetch();
+    }, {sort: {startTime: 1}}).fetch();
   }
   return shifts;
 };

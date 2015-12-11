@@ -1,9 +1,0 @@
-<template name="figureBoxes">
-  <div class="row">
-    {{#with state$getFigureBoxDataHelper}}
-      {{>render component="salesFigureBox" figureBox = this}}
-      {{>render component="staffCostFigureBox" figureBox = this}}
-      {{>render component="staffCostPercentageFigureBox" figureBox = this}}
-    {{/with}}
-  </div>
-</template>

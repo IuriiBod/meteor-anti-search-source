@@ -1,0 +1,33 @@
+<template name="training">
+  <div class="col-md-4">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h5>Training</h5>
+      </div>
+      <div class="ibox-content">
+
+        {{#each sections}}
+          {{#if canEditUsers}}
+            <div class="form-group">
+              {{#if userSelectedSections _id}}
+                <input type="checkbox" class="section-checker" value="{{_id}}" checked="checked">
+              {{else}}
+                <input type="checkbox" class="section-checker" value="{{_id}}">
+              {{/if}}
+
+              {{name}}
+            </div>
+          {{else}}
+            {{#if userSelectedSections _id}}
+              <div>
+                <i class="fa fa-check"></i>
+                {{name}}
+              </div>
+            {{/if}}
+          {{/if}}
+        {{/each}}
+
+      </div>
+    </div>
+  </div>
+</template>

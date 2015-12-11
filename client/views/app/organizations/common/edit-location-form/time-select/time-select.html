@@ -1,0 +1,12 @@
+<template name="locationTimeSelect">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">{{state$label}}</label>
+
+    <div class="col-sm-4">
+      {{> selectComponent values=hours selected=selectedHours name=state$hoursName}}
+    </div>
+    <div class="col-sm-4">
+      {{> selectComponent values=minutes selected=selectedMinutes name=state$minutesName}}
+    </div>
+  </div>
+</template>

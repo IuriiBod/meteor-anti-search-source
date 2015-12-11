@@ -69,13 +69,17 @@ Namespace('HospoHero.dateUtils', {
     return day + ' ' + startTime + ' - ' + endTime;
   },
 
-  timeFormat: function (date, locationId) {
+  locationTimeFormat: function (date, locationId) {
     var dateFormat = 'h:mm A';
     if (locationId && _.isString(locationId)) {
       return HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
     } else {
       return HospoHero.dateUtils.formatDate(date, dateFormat);
     }
+  },
+
+  timeFormat: function (date) {
+    return date ? moment(date).format('hh:mm A') : '-';
   },
 
   shiftDate: function (date, isTemplate) {
@@ -93,20 +97,20 @@ Namespace('HospoHero.dateUtils', {
   },
 
   /**
-   * Ensures that all shift times have the same date
+   * Ensures that all shift times have the same date based on `startTime`
    *
-   * @param updatedShift shift to adjust
+   * @param shift shift to adjust
+   * @param timePropertyName property should be adjusted
+   * @param newTime new time to apply
    */
-  adjustShiftTimes: function (updatedShift) {
-    // Returns new valid time based on shift's date
-    var shiftTime = function (time) {
-      var timeMoment = moment(time);
-      return moment(updatedShift.shiftDate).hours(timeMoment.hours()).minutes(timeMoment.minutes()).toDate();
-    };
+  adjustShiftTime: function (shift, timePropertyName, newTime) {
+    newTime = moment(newTime);
 
-    ['startTime', 'endTime'].forEach(function (propertyName) {
-      updatedShift[propertyName] = shiftTime(updatedShift[propertyName])
-    });
+    var adjustedMoment = moment(shift.startTime);
+    adjustedMoment.hours(newTime.hours());
+    adjustedMoment.minutes(newTime.minutes());
+
+    shift[timePropertyName] = adjustedMoment.toDate();
   },
 
   getDateByWeekDate: function (weekDate) {
@@ -139,10 +143,6 @@ Namespace('HospoHero.dateUtils', {
 
   dateFormat: function (date) {
     return date ? moment(date).format('ddd DD/MM/YYYY') : '-';
-  },
-
-  timeFormat: function (date) {
-    return date ? moment(date).format('hh:mm A') : '-';
   },
 
   fullDateFormat: function (date) {

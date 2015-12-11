@@ -146,7 +146,7 @@ Meteor.methods({
 
       Shifts.update({
         assignedTo: id,
-        shiftDate: {
+        startTime: {
           $gte: val
         }
       }, {
@@ -166,7 +166,7 @@ Meteor.methods({
         }
       });
     } else {
-      var nextShifts = Shifts.find({assignedTo: id, shiftDate: {$gte: val}}).fetch();
+      var nextShifts = Shifts.find({assignedTo: id, startTime: {$gte: val}}).fetch();
       if (nextShifts && nextShifts.length > 0) {
         return nextShifts;
       }

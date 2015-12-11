@@ -1,0 +1,9 @@
+<template name="figureBoxes">
+  <div class="row">
+    {{#with figureBoxDataHelper}}
+      {{> salesFigureBox figureBox=this}}
+      {{> staffCostFigureBox figureBox=this}}
+      {{> staffCostPercentageFigureBox figureBox=this}}
+    {{/with}}
+  </div>
+</template>

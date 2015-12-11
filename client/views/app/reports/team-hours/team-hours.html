@@ -1,0 +1,47 @@
+<template name="teamHoursMainView">
+  {{> pageHeading title="Team Recorded Hours Report" category='Reports' name="teamHoursReport"}}
+
+  <div class="wrapper wrapper-content">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content">
+            <div class="row">
+              <div class="col-xs-10">
+                {{> itemsSearch onKeyUp=onKeyUp}}
+              </div>
+              <div class="col-xs-2">
+                <div class="pull-right m-l-md m-t-xs">
+                  <span class="label label-warning shiftView">Shifts</span>
+                  <span class="label label-info hoursView">Hours</span>
+                </div>
+              </div>
+              <div class="col-xs-12 table-scrollable">
+                <table class="table table-hover table-striped table-scrollable team-hours-table" id="dataTablesEx">
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Total Hours</th>
+                    <th>Total Wage</th>
+                    {{#each weekDays state$weekDate}}
+                      <th>
+                        {{dayOfWeek this}}
+                        <div>{{formatDate this}}</div>
+                      </th>
+                    {{/each}}
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {{#each users state$searchText}}
+                    {{> teamHoursItem user=this tableViewMode=state$tableViewMode weekDate=state$weekDate}}
+                  {{/each}}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
