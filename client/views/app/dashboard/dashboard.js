@@ -1,4 +1,4 @@
-Template.home.helpers({
+Template.dashboard.helpers({
   'name': function () {
     var user = Meteor.user();
     if (user) {

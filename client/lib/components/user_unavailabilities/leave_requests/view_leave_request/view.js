@@ -57,10 +57,10 @@ Template.viewLeaveRequest.events({
   },
   'click .approve-button': function () {
     FlowComponents.callAction('changeLeaveRequestStatus', true);
-    Router.go('home');
+    Router.go('dashboard');
   },
   'click .decline-button': function () {
     FlowComponents.callAction('changeLeaveRequestStatus', false);
-    Router.go('home');
+    Router.go('dashboard');
   }
 });

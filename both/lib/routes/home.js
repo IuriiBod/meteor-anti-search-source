@@ -1,7 +1,7 @@
 //--------------------HOME
 Router.route('/', {
-  name: 'home',
-  template: 'home',
+  name: 'dashboard',
+  template: 'dashboard',
   path: '/',
   waitOn: function () {
     if (Meteor.userId()) {

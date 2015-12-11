@@ -79,7 +79,7 @@ Template.organizationStructure.events({
 
     paramsToRedirect.forEach(function (param) {
       if (routerParams[param]) {
-        Router.go('home');
+        Router.go('dashboard');
       }
     });
   }

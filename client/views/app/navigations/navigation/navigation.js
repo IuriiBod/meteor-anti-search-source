@@ -1,8 +1,8 @@
 var dashboardEntry = {
   title: 'Dashboard',
-  route: 'home',
+  route: 'dashboard',
   icon: 'fa-th-large',
-  activeOnRoutes: 'home'
+  activeOnRoutes: 'dashboard'
 };
 
 var menuEntries = [
