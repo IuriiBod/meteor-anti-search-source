@@ -41,7 +41,6 @@ Router.route('sectionsSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
       component: 'sections',
       title: 'Sections'
@@ -59,7 +58,6 @@ Router.route('stockAreasSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
       component: 'stockAreas',
       title: 'Stock Areas'

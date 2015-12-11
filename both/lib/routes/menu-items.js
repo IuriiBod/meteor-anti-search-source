@@ -18,7 +18,6 @@ Router.route('/menuItems/:category/:status', {
     }
     Session.set("category", this.params.category);
     Session.set("status", this.params.status.toLowerCase());
-    Session.set("editStockTake", false);
   }
 });
 
@@ -41,7 +40,6 @@ Router.route('/menuItems/submit', {
     if (!Meteor.userId() || !HospoHero.canUser('edit menus')()) {
       Router.go("/");
     }
-    Session.set("editStockTake", false);
   }
 });
 
@@ -64,7 +62,6 @@ Router.route('/menuItems/:type', {
     }
     Session.set("category", "all");
     Session.set("status", "all");
-    Session.set("editStockTake", false);
   }
 });
 
@@ -92,6 +89,5 @@ Router.route('/menuItem/:_id', {
     }
     //todo: get rid of sessions later
     Session.set("thisMenuItem", this.params._id);
-    Session.set("editStockTake", false);
   }
 });

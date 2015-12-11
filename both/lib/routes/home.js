@@ -20,6 +20,5 @@ Router.route('/', {
     }
   },
   data: function () {
-    Session.set('editStockTake', false);
   }
 });
