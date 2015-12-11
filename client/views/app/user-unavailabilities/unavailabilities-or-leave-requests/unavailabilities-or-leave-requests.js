@@ -24,7 +24,7 @@ Template.unavailabilitiesOrLeaveRequests.events({
     if (tmpl.get('isUnavailability')) {
       FlyoutManager.open('addNewUnavailability');
     } else {
-      FlyoutManager.open('viewLeaveRequest', {}, true);
+      FlyoutManager.open('viewLeaveRequest', {});
     }
   }
 });
