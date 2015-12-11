@@ -2,8 +2,8 @@
 //  this.item = props.item;
 //});
 
-Template.stocktakeItem.helpers({
-  item: function () {
-    return this.item;
-  }
-});
+//Template.stocktakeItem.helpers({
+//  item: function () {
+//    return this.item;
+//  }
+//});

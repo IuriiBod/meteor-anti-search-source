@@ -11,10 +11,10 @@
               <th>Action</th>
             </tr>
             </thead>
-            {{#if state$listOfDates}}
+            {{#if listOfDates}}
               <tbody>
-              {{#each state$listOfDates}}
-                {{> render component='stocktakeItem' item=this}}
+              {{#each listOfDates}}
+                {{> stocktakeItem this}}
               {{/each}}
               </tbody>
             {{else}}
