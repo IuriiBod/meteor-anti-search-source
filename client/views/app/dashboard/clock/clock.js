@@ -1,68 +1,40 @@
-var component = FlowComponents.define("clock", function (props) {
+Template.clock.helpers({
+  currentShift: function () {
+    var upplerLimit = moment().add(2, 'hours').toDate();
+    var lowerLimit = moment().subtract(2, 'hours').toDate();
+
+    var query = {
+      assignedTo: Meteor.userId(),
+      $or: [
+        {
+          status: 'draft',
+          $and: [{
+            "startTime": {
+              $gte: lowerLimit
+            }
+          }, {
+            "startTime": {
+              $lte: upplerLimit
+            }
+          }]
+        },
+        {
+          status: 'started'
+        },
+
+        //clock info stays visible 1 minutes after clock was finished
+        {
+          status: 'finished',
+          finishedAt: {
+            $lte: moment().add(1, 'minutes').toDate()
+          }
+        }
+      ]
+    };
+    query["relations.areaId"] = HospoHero.getCurrentAreaId();
+
+    return Shifts.findOne(query, {sort: {"startTime": 1}});
+  }
 });
 
-component.state.clockInPermission = function () {
-  var upplerLimit = moment().add(2, 'hours').toDate();
-  var lowerLimit = moment().subtract(2, 'hours').toDate();
 
-  var query = {
-    assignedTo: Meteor.userId(),
-    status: 'draft',
-    $and: [{
-      "startTime": {
-        $gte: lowerLimit
-      }
-    }, {
-      "startTime": {
-        $lte: upplerLimit
-      }
-    }]
-  };
-
-  query["relations.areaId"] = HospoHero.getCurrentAreaId();
-
-  var shift = Shifts.findOne(query, {sort: {"startTime": 1}});
-  this.set("inShift", shift);
-  return !!shift;
-};
-
-component.state.clockOutPermission = function () {
-  var query = {
-    assignedTo: Meteor.userId(),
-    status: 'started'
-  };
-  var shift = Shifts.findOne(query);
-  this.set("outShift", shift);
-  return !!shift;
-};
-
-component.state.clockIn = function () {
-  var shift = this.get("inShift");
-  if (shift) {
-    return shift;
-  }
-};
-
-component.state.subText = function () {
-  var inshift = this.get("inShift");
-  if (inshift && inshift.startTime <= Date.now()) {
-    return "Today shift started ";
-  } else {
-    return "Today shift starts ";
-  }
-};
-
-component.state.clockOut = function () {
-  var shift = this.get("outShift");
-  if (shift) {
-    return shift;
-  }
-};
-
-component.state.shiftEnded = function () {
-  var shiftId = Session.get("newlyEndedShift");
-  var shift = Shifts.findOne(shiftId);
-  if (shift) {
-    return shift;
-  }
-};
