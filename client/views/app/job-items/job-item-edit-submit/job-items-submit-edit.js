@@ -4,6 +4,16 @@ Template.submitEditJobItem.onCreated(function () {
   this.selectedFrequency = new ReactiveVar('daily');
   this.repeatAt = new ReactiveVar(moment().hours(8).minutes(0).toDate());
   this.ingredients = [];
+  this.checklistItems = new ReactiveVar([]);
+
+  this.isPrep = function () {
+    var selectedJobType = this.getSelectedJobType();
+    return selectedJobType.name == 'Prep';
+  };
+  this.isRecurring = function () {
+    var selectedJobType = this.getSelectedJobType();
+    return selectedJobType.name == 'Recurring';
+  };
 
   if (this.data.mode == 'edit') {
     this.jobItem = JobItems.findOne();
@@ -14,21 +24,109 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.saveJobItem = function () {
+    debugger;
+    var jobItemObject = {};
 
-    var jobTypeId = this.selectedJobTypeId.get();
-    var frequency = this.selectedFrequency.get();
-    var repeatAtTime = this.repeatAt.get();
-    var selectedIngredients = this.ingredients;
-    var text = this.$('.summernote').summernote('code');
+    // job item fields
+    // general fields
+    this.assignGeneralFields(jobItemObject);
 
-    console.log(jobTypeId, '\n',
-      frequency, '\n',
-      repeatAtTime, '\n',
-      selectedIngredients, '\n',
-      text
-    );
+    // for recurring
+    if (this.isRecurring()) {
+      this.assignFieldsForRecurring(jobItemObject);
+    }
+
+    // for prep
+    if (this.isPrep()) {
+      this.assignFieldsForPrep(jobItemObject);
+    }
+
+    console.log(jobItemObject);
+  };
+
+  this.assignGeneralFields = function (jobItemObject) {
+    debugger;
+    jobItemObject.name = this.$('.name-input').val();
+    jobItemObject.jobTypeId = this.selectedJobTypeId.get();
+    jobItemObject.recipeOrDesc = this.$('.summernote').summernote('code');
+    jobItemObject.activeTime = this.$('.active-time').val();
+    jobItemObject.laboursWage = this.$('.avg-wage-per-hour').val();
+  };
+
+  this.assignFieldsForRecurring = function (jobItemObject) {
+    debugger;
+    jobItemObject.sectionId = this.$('.sections-select').val();
+    jobItemObject.checklist; // ?
+    jobItemObject.frequency = this.selectedFrequency.get();
+
+    // if repeat every week
+    if (this.selectedFrequency.get() == 'weekly' || 'everyXWeeks') {
+      jobItemObject.repeatOnDays = this.getSelectedDays();
+
+      // if repeat every X weeks
+      if (this.selectedFrequency.get() == 'everyXWeeks') {
+        jobItemObject.repeatEveryXWeeks = this.$('.repeat-every-weeks-input').val();
+      }
+    }
+    jobItemObject.repeatAtTime = this.repeatAt.get();
+    jobItemObject.startsOn = this.startsOnDatePicker.date().toDate();
+    jobItemObject.endsOn;
+  };
+
+  this.assignFieldsForPrep = function (jobItemObject) {
+    debugger;
+    jobItemObject.selectedIngredients = this.ingredients;
+    jobItemObject.portions = this.$('.portions').val();
+    jobItemObject.shelfLife = this.$('.shelf-life').val();
+  };
+
+  this.getSelectedDays = function () {
+    var $selectedDays = this.$('.repeat-on-checkbox:checked');
+    return _.map($selectedDays, function (item) {
+      return $(item).val()
+    });
+  };
+
+  this.addCheckListItem = function (item) {
+    var items = this.checklistItems.get();
+    items.push(item);
+    this.checklistItems.set(items);
+  };
+  this.removeCheckListItem = function (itemToRemove) {
+    var items = this.checklistItems.get();
+    items = _.reject(items, function (item) {
+      return item == itemToRemove;
+    });
+    this.checklistItems.set(items);
   };
 });
+
+
+Template.submitEditJobItem.onRendered(function () {
+  var self = this;
+  self.$(".checklist").sortable({
+    cursor: "move",
+    opacity: 0.8,
+    delay: 50,
+    update: function () {
+      var items = [];
+      // sorry for this. I not found in docs method for getting data from sortable
+      var $list = $(this);
+      $list.find(".list-group-item").each(function () {
+        var $item = $(this);
+        var text = $item.text().trim();
+        items.push(text);
+      });
+      self.checklistItems.set(items);
+    }
+  }).disableSelection();
+
+  self.$('.starts-on-date-picker').datetimepicker({
+    format: 'YYYY-MM-DD'
+  });
+  self.startsOnDatePicker = self.$('.starts-on-date-picker').data('DateTimePicker');
+});
+
 
 Template.submitEditJobItem.helpers({
   repeatAtComboEditableParams: function () {
@@ -39,6 +137,10 @@ Template.submitEditJobItem.helpers({
         thisTemplate.repeatAt.set(time);
       }
     }
+  },
+
+  checkListItems: function () {
+    return Template.instance().checklistItems.get();
   },
 
   ingredients: function () {
@@ -55,12 +157,11 @@ Template.submitEditJobItem.helpers({
     return Template.instance().data.mode == 'edit';
   },
   isRecurring: function () {
-    var selectedJobType = Template.instance().getSelectedJobType();
-    return selectedJobType.name == 'Recurring';
+    return Template.instance().isRecurring();
+
   },
   isPrep: function () {
-    var selectedJobType = Template.instance().getSelectedJobType();
-    return selectedJobType.name == 'Prep';
+    return Template.instance().isPrep();
   },
 
   jobTypes: function () {
@@ -101,18 +202,38 @@ Template.submitEditJobItem.helpers({
   }
 });
 
+
 Template.submitEditJobItem.events({
   'change .type-select': function (e, tmpl) {
     var selectedVal = $(e.target).val();
     tmpl.selectedJobTypeId.set(selectedVal);
   },
+
   'change .frequency-select': function (e, tmpl) {
     var selectedVal = $(e.target).val();
     tmpl.selectedFrequency.set(selectedVal);
   },
+
   'submit .job-item-submit-edit-form': function (e, tmpl) {
     e.preventDefault();
 
     tmpl.saveJobItem();
+  },
+
+  'keypress .add-item-to-checklist': function (e, tmpl) {
+    if (event.keyCode == 10 || event.keyCode == 13) {
+      event.preventDefault();
+      var $input = $(event.target);
+      var item = $input.val().trim();
+      if (item) {
+        tmpl.addCheckListItem(item);
+      }
+      $input.val('');
+    }
+  },
+
+  'click .remove-check-list-item': function (e, tmpl) {
+    var itemToRemove = $(e.target).parent().text().trim(); // and sorry for that ^_^
+    tmpl.removeCheckListItem(itemToRemove);
   }
 });

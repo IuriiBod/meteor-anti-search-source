@@ -82,8 +82,15 @@
                     <input type="text" class="form-control add-item-to-checklist"
                            placeholder="Add an item to checklist and press enter">
                     <br/>
-                    <ol class="checklist list-group"></ol>
-                    {{initChecklist}}
+                    <ol class="checklist list-group">
+                      {{#each checkListItems}}
+                        <li class="list-group-item">
+                          <i class='fa fa-arrows-v text-muted small'></i>
+                          {{this}}
+                          <i class='fa fa-minus-circle m-l-lg right remove-check-list-item'></i>
+                        </li>
+                      {{/each}}
+                    </ol>
                   </div>
                 </div>
 
@@ -108,7 +115,8 @@
                       <label class="col-sm-2 control-label"></label>
 
                       <div class="col-sm-10">
-                        <p>Repeat every <input type="number" class="step-input" value="2" min="2"> weeks.</p>
+                        <p>Repeat every <input type="number" class="repeat-every-weeks-input" value="2" min="2"> weeks.
+                        </p>
                       </div>
                     </div>
                   {{/if}}
@@ -120,7 +128,7 @@
                     <div class="col-sm-10">
                       {{#each week}}
                         <div class="checkbox">
-                          <input type="checkbox" id="{{this}}" class="days-selected" value="{{this}}">
+                          <input type="checkbox" id="{{this}}" class="repeat-on-checkbox" value="{{this}}">
                           <label for="{{this}}">
                             {{this}}
                           </label>
@@ -146,11 +154,11 @@
                   <label class="col-sm-2 control-label">Starts On</label>
 
                   <div class="col-sm-10">
-                    <div class="input-group">
-                      <input type="text" class="form-control date-select" value="{{startsOn}}">
+                    <div class="input-group starts-on-date-picker">
                       <span class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </span>
+                      <input type="text" class="form-control" value="{{startsOn}}">
                     </div>
                   </div>
                 </div>
