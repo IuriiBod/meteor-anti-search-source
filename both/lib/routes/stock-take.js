@@ -25,10 +25,14 @@ Router.route('/stocktake/:_id', {
     ];
   },
   data: function () {
-    Session.set("activeSArea", null);
-    Session.set("activeGArea", null);
-    Session.set("thisVersion", this.params._id);
-    Session.set("editStockTake", false);
+    Session.set("activeSArea", null); //done
+    Session.set("activeGArea", null); //done
+    Session.set("thisVersion", this.params._id); //done
+    Session.set("editStockTake", false); //done
+
+    return {
+      stocktakeId: this.params._id
+    }
   }
 });
 

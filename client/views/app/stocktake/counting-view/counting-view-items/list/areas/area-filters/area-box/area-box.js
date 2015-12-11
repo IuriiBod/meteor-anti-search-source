@@ -1,3 +1,8 @@
+Template.areaBox.onCreated(function() {
+  this.activeGeneralArea = new ReactiveVar();
+  this.activeSpecialArea = new ReactiveVar();
+});
+
 Template.areaBox.helpers({
   activeG: function (id) {
     var garea = Session.get("activeGArea");

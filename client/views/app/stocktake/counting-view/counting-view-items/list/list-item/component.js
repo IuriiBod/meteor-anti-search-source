@@ -1,11 +1,11 @@
-var component = FlowComponents.define("stockCountingListItem", function (props) {
-  this.id = props.id;
-  this.stocktakeId = props.stocktakeId;
-  this.version = props.version;
-  this.garea = props.garea;
-  this.sarea = props.sarea;
-  this.onRendered(this.onItemRendered);
-});
+//var component = FlowComponents.define("stockCountingListItem", function (props) {
+//  this.id = props.id;
+//  this.stocktakeId = props.stocktakeId;
+//  this.version = props.version;
+//  this.garea = props.garea;
+//  this.sarea = props.sarea;
+//  this.onRendered(this.onItemRendered);
+//});
 
 //component.state.item = function () {
 //  var stock = Ingredients.findOne(this.id);

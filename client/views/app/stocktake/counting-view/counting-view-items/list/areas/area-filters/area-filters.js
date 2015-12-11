@@ -8,7 +8,7 @@ Template.areaFilters.onRendered(function() {
 
 Template.areaFilters.helpers({
   generalAreas: function() {
-    var main = StocktakeMain.findOne(Session.get("thisVersion"));
+    var main = StocktakeMain.findOne({_id: this.stocktakeId});
     if (main && main.orderReceipts && main.orderReceipts.length > 0) {
       var gareas = main.generalAreas;
       return GeneralAreas.find({"_id": {$in: gareas}}, {sort: {"createdAt": 1}});
@@ -26,7 +26,7 @@ Template.areaFilters.helpers({
   },
 
   specialAreas: function(gareaId) {
-    var main = StocktakeMain.findOne(Session.get("thisVersion"));
+    var main = StocktakeMain.findOne({_id: Template.instance().data.stocktakeId});
     if (main && main.orderReceipts && main.orderReceipts.length > 0) {
       var sareas = main.specialAreas;
       return SpecialAreas.find({"_id": {$in: sareas}, "generalArea": gareaId}, {sort: {"createdAt": 1}});

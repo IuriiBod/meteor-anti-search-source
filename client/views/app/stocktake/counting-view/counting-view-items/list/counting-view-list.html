@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-lg-12">
       {{#if notTemplate}}
-        <a class="btn btn-primary btn-sm pull-right" href="/stocktake/orders/{{version}}">View Orders<br></a>
+        <a class="btn btn-primary btn-sm pull-right" href="/stocktake/orders/{{stockTakeId}}">View Orders<br></a>
       {{else}}
         <a class="btn btn-primary btn-sm pull-right generateOrders">Save stocktake &amp; generate orders<br></a>
         {{#if editable}}
@@ -18,13 +18,13 @@
   </div>
   
   <div class="row">
-    {{> areaFilters}}
+    {{> areaFilters stocktakeId=stockTakeId}}
     {{#if filtered}}
       <div class="col-md-8">
         {{#if notTemplate}}
           <ul class="list-group sortableStockItems">
             {{#each stocktakeList}}
-              {{> stockCountingListItem id=this.stockId version=version garea=generalArea sarea=specialArea stocktakeId=this._id}}
+              {{> stockCountingListItem id=this.stockId version=stockTakeId garea=generalArea sarea=specialArea stocktakeId=this._id}}
             {{else}}
               No items on this list
             {{/each}}
@@ -32,7 +32,7 @@
         {{else}}
           <ul class="list-group sortableStockItems">
             {{#each ingredientsList}}
-              {{> stockCountingListItem id=this._id version=version garea=generalArea sarea=specialArea}}
+              {{> stockCountingListItem id=this._id version=stockTakeId garea=generalArea sarea=specialArea}}
             {{else}}
               No items on this list
             {{/each}}

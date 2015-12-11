@@ -40,7 +40,6 @@ Template.stockCountingListItem.onRendered(function() {
 
 Template.stockCountingListItem.helpers({
   item: function() {
-    console.log('stockCountingListItem this => ', this);
     var stock = Ingredients.findOne(this.id);
     var stocktake = Stocktakes.findOne({
       "version": this.version,
