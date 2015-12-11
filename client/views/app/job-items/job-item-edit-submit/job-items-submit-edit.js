@@ -24,12 +24,11 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.saveJobItem = function () {
-    debugger;
     var jobItemObject = {};
 
     // job item fields
-    // general fields
-    this.assignGeneralFields(jobItemObject);
+    // common fields
+    this.assignCommonFields(jobItemObject);
 
     // for recurring
     if (this.isRecurring()) {
@@ -44,8 +43,7 @@ Template.submitEditJobItem.onCreated(function () {
     console.log(jobItemObject);
   };
 
-  this.assignGeneralFields = function (jobItemObject) {
-    debugger;
+  this.assignCommonFields = function (jobItemObject) {
     jobItemObject.name = this.$('.name-input').val();
     jobItemObject.jobTypeId = this.selectedJobTypeId.get();
     jobItemObject.recipeOrDesc = this.$('.summernote').summernote('code');
@@ -54,7 +52,6 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.assignFieldsForRecurring = function (jobItemObject) {
-    debugger;
     jobItemObject.sectionId = this.$('.sections-select').val();
     jobItemObject.checklist; // ?
     jobItemObject.frequency = this.selectedFrequency.get();
@@ -70,11 +67,10 @@ Template.submitEditJobItem.onCreated(function () {
     }
     jobItemObject.repeatAtTime = this.repeatAt.get();
     jobItemObject.startsOn = this.startsOnDatePicker.date().toDate();
-    jobItemObject.endsOn;
+    jobItemObject.endsOn = this.getEndsOnDate();
   };
 
   this.assignFieldsForPrep = function (jobItemObject) {
-    debugger;
     jobItemObject.selectedIngredients = this.ingredients;
     jobItemObject.portions = this.$('.portions').val();
     jobItemObject.shelfLife = this.$('.shelf-life').val();
@@ -85,6 +81,28 @@ Template.submitEditJobItem.onCreated(function () {
     return _.map($selectedDays, function (item) {
       return $(item).val()
     });
+  };
+
+  this.getEndsOnDate = function () {
+    var $checkedButton = this.$('.ends-on-radio:checked');
+    var checkedButtonFor = $checkedButton.val();
+
+    if (checkedButtonFor == 'never') {
+      return {
+        on: 'endsNever'
+      }
+    } else if (checkedButtonFor == 'occurrences') {
+      var afterOccurrences = this.$('.occurrences-number-input').val();
+      return {
+        after: afterOccurrences
+      }
+
+    } else if (checkedButtonFor == 'on-date') {
+      var lastDate = this.endsOnDatePicker.date().toDate();
+      return {
+        lastDate: lastDate
+      }
+    }
   };
 
   this.addCheckListItem = function (item) {
@@ -99,32 +117,39 @@ Template.submitEditJobItem.onCreated(function () {
     });
     this.checklistItems.set(items);
   };
-});
 
-
-Template.submitEditJobItem.onRendered(function () {
   var self = this;
-  self.$(".checklist").sortable({
-    cursor: "move",
+  this.sortableParams = {
+    cursor: 'move',
     opacity: 0.8,
     delay: 50,
     update: function () {
       var items = [];
-      // sorry for this. I not found in docs method for getting data from sortable
+      // sorry for this. I couldn't found in docs method for getting data from sortable
       var $list = $(this);
-      $list.find(".list-group-item").each(function () {
+      $list.find('.list-group-item').each(function () {
         var $item = $(this);
         var text = $item.text().trim();
         items.push(text);
       });
       self.checklistItems.set(items);
     }
-  }).disableSelection();
+  };
+});
 
-  self.$('.starts-on-date-picker').datetimepicker({
+
+Template.submitEditJobItem.onRendered(function () {
+  this.$('.checklist').sortable(this.sortableParams).disableSelection();
+
+  this.$('.starts-on-date-picker').datetimepicker({
     format: 'YYYY-MM-DD'
   });
-  self.startsOnDatePicker = self.$('.starts-on-date-picker').data('DateTimePicker');
+  this.startsOnDatePicker = this.$('.starts-on-date-picker').data('DateTimePicker');
+
+  this.$('.ends-on-date-picker').datetimepicker({
+    format: 'YYYY-MM-DD'
+  });
+  this.endsOnDatePicker = this.$('.ends-on-date-picker').data('DateTimePicker');
 });
 
 
@@ -192,13 +217,13 @@ Template.submitEditJobItem.helpers({
   },
 
   startsOn: function () {
-    return moment().format("YYYY-MM-DD");
+    return moment().format('YYYY-MM-DD');
   },
   endsOn: function () {
-    return moment().add(7, 'days').format("YYYY-MM-DD");
+    return moment().add(7, 'days').format('YYYY-MM-DD');
   },
   week: function () {
-    return ["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat", "Sun"];
+    return ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
   }
 });
 
@@ -208,7 +233,6 @@ Template.submitEditJobItem.events({
     var selectedVal = $(e.target).val();
     tmpl.selectedJobTypeId.set(selectedVal);
   },
-
   'change .frequency-select': function (e, tmpl) {
     var selectedVal = $(e.target).val();
     tmpl.selectedFrequency.set(selectedVal);
@@ -216,13 +240,11 @@ Template.submitEditJobItem.events({
 
   'submit .job-item-submit-edit-form': function (e, tmpl) {
     e.preventDefault();
-
     tmpl.saveJobItem();
   },
 
   'keypress .add-item-to-checklist': function (e, tmpl) {
     if (event.keyCode == 10 || event.keyCode == 13) {
-      event.preventDefault();
       var $input = $(event.target);
       var item = $input.val().trim();
       if (item) {
@@ -231,7 +253,6 @@ Template.submitEditJobItem.events({
       $input.val('');
     }
   },
-
   'click .remove-check-list-item': function (e, tmpl) {
     var itemToRemove = $(e.target).parent().text().trim(); // and sorry for that ^_^
     tmpl.removeCheckListItem(itemToRemove);

@@ -1,9 +1,9 @@
 <template name="submitEditJobItem">
   <!-- Page heading -->
   {{#if isEditMode}}
-    {{> pageHeading title='Edit Job' category='Jobs' name="jobedit" subCategory=jobItem.name id=jobItem._id}}
+    {{> pageHeading title="Edit Job" category="Jobs" name="jobedit" subCategory=jobItem.name id=jobItem._id}}
   {{else}}
-    {{> pageHeading title='Submit Job' category='Job' name="jobsubmit"}}
+    {{> pageHeading title="Submit Job" category="Job" name="jobsubmit"}}
   {{/if}}
 
   <div class="wrapper wrapper-content animated">
@@ -21,7 +21,7 @@
                 <label class="col-sm-2 control-label">Name</label>
 
                 <div class="col-sm-10">
-                  <input type="text" class="form-control name-input" placeholder="Enter Name for the job">
+                  <input type="text" class="form-control name-input" placeholder="Enter Name for the job" required>
                 </div>
               </div>
 
@@ -45,7 +45,7 @@
 
                   <div class="col-sm-10">
                     <select class="form-control sections-select">
-                      <option value="" selected="selected">Select Section</option>
+                      <!--<option value="" selected="selected">Select Section</option>-->
                       {{#each sections}}
                         <option value="{{_id}}">{{name}}</option>
                       {{/each}}
@@ -85,9 +85,9 @@
                     <ol class="checklist list-group">
                       {{#each checkListItems}}
                         <li class="list-group-item">
-                          <i class='fa fa-arrows-v text-muted small'></i>
+                          <i class="fa fa-arrows-v text-muted small"></i>
                           {{this}}
-                          <i class='fa fa-minus-circle m-l-lg right remove-check-list-item'></i>
+                          <i class="fa fa-minus-circle m-l-lg right remove-check-list-item"></i>
                         </li>
                       {{/each}}
                     </ol>
@@ -170,12 +170,14 @@
                   <div class="col-sm-10">
 
                     <div class="radio">
-                      <input type="radio" id="radio" name="ends-radio-button" value="never" checked>
+                      <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
+                             value="never" checked>
                       <label for="radio">Never</label>
                     </div>
 
                     <div class="radio">
-                      <input type="radio" id="radio" name="ends-radio-button" value="occurrences">
+                      <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
+                             value="occurrences">
                       <label for="radio">
                         After
                         <input type="number" name="occurrences" class="occurrences-number-input" value="10">
@@ -184,9 +186,10 @@
                     </div>
 
                     <div class="radio">
-                      <input type="radio" id="radio" name="ends-radio-button" value="on-date">
+                      <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
+                             value="on-date">
                       <label for="radio">
-                        On <input type="text" name="endsOn" class="date-select" value="{{endsOn}}">
+                        On <input type="text" class="ends-on-date-picker form-control">
                       </label>
                     </div>
 
@@ -206,7 +209,7 @@
                   <label class="col-sm-2 control-label">Portions</label>
 
                   <div class="col-sm-10">
-                    <input type="text" class="form-control portions" placeholder="No. of Portions">
+                    <input type="number" class="form-control portions" placeholder="No. of Portions" required>
                   </div>
                 </div>
 
@@ -216,7 +219,7 @@
 
                   <div class="col-sm-10">
                     <div class="input-group m-b">
-                      <input type="text" class="form-control shelf-life" placeholder="Shelf Life">
+                      <input type="number" class="form-control shelf-life" placeholder="Shelf Life" required>
                       <span class="input-group-addon">Days</span>
                     </div>
                   </div>
@@ -231,7 +234,7 @@
 
                 <div class="col-sm-10">
                   <div class="input-group m-b">
-                    <input type="number" class="form-control active-time" placeholder="Active Time">
+                    <input type="number" class="form-control active-time" placeholder="Active Time" required>
                     <span class="input-group-addon">mins</span>
                   </div>
                 </div>
@@ -239,13 +242,13 @@
 
               <!-- labours wage -->
               <div class="form-group">
-                <label class="col-sm-2 control-label">Labours' Wage</label>
+                <label class="col-sm-2 control-label">Labours" Wage</label>
 
                 <div class="col-sm-10">
                   <div class="input-group m-b">
                     <span class="input-group-addon">$</span>
-                    <input type="text" class="form-control avg-wage-per-hour"
-                           placeholder="Average Wage of a Worker per Hour">
+                    <input type="number" class="form-control avg-wage-per-hour"
+                           placeholder="Average Wage of a Worker per Hour" required>
                     <span class="input-group-addon">/ hour</span>
                   </div>
                 </div>
@@ -254,7 +257,7 @@
               <!-- Buttons -->
               <div class="row">
                 <div class="col-sm-4 col-sm-offset-2">
-                  <a href="{{pathFor route='jobItemsMaster'}}" class="btn btn-white" type="button">Cancel</a>
+                  <a href="{{pathFor route="jobItemsMaster"}}" class="btn btn-white" type="button">Cancel</a>
                   <button class="btn btn-primary submit-button" type="submit">Save changes</button>
                 </div>
               </div>
