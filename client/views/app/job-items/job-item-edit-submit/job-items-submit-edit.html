@@ -170,12 +170,12 @@
                   <div class="col-sm-10">
 
                     <div class="radio">
-                      <input type="radio" id="radio" name="ends-radio-button" value="never" checked>
+                      <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio" value="never" checked>
                       <label for="radio">Never</label>
                     </div>
 
                     <div class="radio">
-                      <input type="radio" id="radio" name="ends-radio-button" value="occurrences">
+                      <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio" value="occurrences">
                       <label for="radio">
                         After
                         <input type="number" name="occurrences" class="occurrences-number-input" value="10">
@@ -184,9 +184,9 @@
                     </div>
 
                     <div class="radio">
-                      <input type="radio" id="radio" name="ends-radio-button" value="on-date">
+                      <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio" value="on-date">
                       <label for="radio">
-                        On <input type="text" name="endsOn" class="date-select" value="{{endsOn}}">
+                        On <input type="text" class="ends-on-date-picker form-control">
                       </label>
                     </div>
 

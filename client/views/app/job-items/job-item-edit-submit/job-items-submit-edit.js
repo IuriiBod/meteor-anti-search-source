@@ -24,7 +24,6 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.saveJobItem = function () {
-    debugger;
     var jobItemObject = {};
 
     // job item fields
@@ -45,7 +44,6 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.assignGeneralFields = function (jobItemObject) {
-    debugger;
     jobItemObject.name = this.$('.name-input').val();
     jobItemObject.jobTypeId = this.selectedJobTypeId.get();
     jobItemObject.recipeOrDesc = this.$('.summernote').summernote('code');
@@ -54,7 +52,6 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.assignFieldsForRecurring = function (jobItemObject) {
-    debugger;
     jobItemObject.sectionId = this.$('.sections-select').val();
     jobItemObject.checklist; // ?
     jobItemObject.frequency = this.selectedFrequency.get();
@@ -70,11 +67,10 @@ Template.submitEditJobItem.onCreated(function () {
     }
     jobItemObject.repeatAtTime = this.repeatAt.get();
     jobItemObject.startsOn = this.startsOnDatePicker.date().toDate();
-    jobItemObject.endsOn;
+    jobItemObject.endsOn = this.getEndsOnDate();
   };
 
   this.assignFieldsForPrep = function (jobItemObject) {
-    debugger;
     jobItemObject.selectedIngredients = this.ingredients;
     jobItemObject.portions = this.$('.portions').val();
     jobItemObject.shelfLife = this.$('.shelf-life').val();
@@ -85,6 +81,28 @@ Template.submitEditJobItem.onCreated(function () {
     return _.map($selectedDays, function (item) {
       return $(item).val()
     });
+  };
+
+  this.getEndsOnDate = function () {
+    var $checkedButton = this.$('.ends-on-radio:checked');
+    var checkedButtonFor = $checkedButton.val();
+
+    if (checkedButtonFor == 'never') {
+      return {
+        on: 'endsNever'
+      }
+    } else if (checkedButtonFor == 'occurrences') {
+      var afterOccurrences = this.$('.occurrences-number-input').val();
+      return {
+        after: afterOccurrences
+      }
+
+    } else if (checkedButtonFor == 'on-date') {
+      var lastDate = this.endsOnDatePicker.date().toDate();
+      return {
+        lastDate: lastDate
+      }
+    }
   };
 
   this.addCheckListItem = function (item) {
@@ -125,6 +143,11 @@ Template.submitEditJobItem.onRendered(function () {
     format: 'YYYY-MM-DD'
   });
   self.startsOnDatePicker = self.$('.starts-on-date-picker').data('DateTimePicker');
+
+  self.$('.ends-on-date-picker').datetimepicker({
+    format: 'YYYY-MM-DD'
+  });
+  self.endsOnDatePicker = self.$('.ends-on-date-picker').data('DateTimePicker');
 });
 
 
