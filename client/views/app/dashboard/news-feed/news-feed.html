@@ -7,9 +7,9 @@
         </div>
       </div>
     </div>
-    {{#if state$newsFeedsExist}}
-      {{#each state$newsFeedsList}}
-        {{> render component="newsFeedPost" post=this}}
+    {{#if newsFeedsList.count}}
+      {{#each newsFeedsList}}
+        {{> newsFeedPost}}
       {{/each}}
     {{else}}
       No NewsFeed
