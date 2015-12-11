@@ -1,6 +1,6 @@
 Migrations.utils = {
-  removeDatabase: function (dbName) {
-    Areas.rawDatabase().dropCollection(dbName, function () {
+  removeCollection: function (collName) {
+    Areas.rawDatabase().dropCollection(collName, function () {
     });
   }
 };

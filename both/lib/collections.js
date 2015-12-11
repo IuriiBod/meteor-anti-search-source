@@ -45,10 +45,6 @@ DailySales = new Mongo.Collection("dailySales");
 
 LeaveRequests = new Mongo.Collection('leaveRequests');
 
-// todo: Uncomment if we need shift updates sending
-//ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
-ShiftsUpdates = new Mongo.Collection("shiftsUpdates");
-
 //POS
 PosMenuItems = new Mongo.Collection('posMenuItems');
 

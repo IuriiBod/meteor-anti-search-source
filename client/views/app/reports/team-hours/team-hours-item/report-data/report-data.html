@@ -1,0 +1,9 @@
+<template name="reportData">
+  {{#if shift}}
+    {{#with startedTimeParams shift}}
+      {{> comboTimeEditable params=this}}
+    {{/with}}
+  {{else}}
+    -
+  {{/if}}
+</template>

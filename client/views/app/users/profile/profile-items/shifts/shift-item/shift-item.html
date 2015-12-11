@@ -1,0 +1,16 @@
+<template name="rosteredShiftItem">
+  {{#if item}}
+    <p>
+      <a href="/roster/shift/{{item._id}}">
+        {{dayFormat item.startTime}}
+        {{timeFormat item.startTime}} -
+        {{timeFormat item.endTime}}
+        {{#if item.section}}
+          [{{section}}]
+        {{else}}
+          [Open]
+        {{/if}}
+      </a>
+    </p>
+  {{/if}}
+</template>

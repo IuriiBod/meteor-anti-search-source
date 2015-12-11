@@ -75,7 +75,7 @@ Router.route('inactivityTimeoutSettings', {
       Router.go('/');
     }
     return {
-      component: 'inactivityTimeoutField',
+      template: 'inactivityTimeoutField',
       title: 'Inactivity Timeout'
     }
   }
