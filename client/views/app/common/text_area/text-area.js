@@ -6,7 +6,7 @@ var autolinker = new Autolinker({
 
 Template.textArea.onRendered(function () {
   this.sendNewsfeed = function () {
-    var textArea = this.$('.message-input');
+    var textArea = this.$('.message-area');
     var text = textArea.val();
     if (text) {
       textArea.val('');
@@ -85,11 +85,13 @@ Template.textArea.helpers({
 
 Template.textArea.events({
   'click .submit-comment-button': function (event, tmpl) {
+    event.preventDefault();
     tmpl.sendNewsfeed(event);
   },
 
-  'keypress .message-input-post': function (event, tmpl) {
+  'keypress .message-area': function (event, tmpl) {
     if (event.keyCode == 10 || event.keyCode == 13) {
+      event.preventDefault();
       tmpl.sendNewsfeed(event);
     }
   }
