@@ -21,7 +21,7 @@ Template.ingredientItemEditNoShit.events({
     tmpl.data.onChange({id: tmpl.data.item.id, quantity: 0});
   },
   'change .ing-qty': function (e, tmpl) {
-    var newQuantity = $(e.target).val();
+    var newQuantity = parseInt($(e.target).val());
     tmpl.data.onChange({id: tmpl.data.item.id, quantity: newQuantity});
   }
 });
