@@ -24,11 +24,6 @@ var JobItemDocument = Match.Where(function (jobItem) {
       repeatOn: Match.Optional([String]),
       repeatEvery: Match.Optional(Number)
     });
-    //check(jobItem.endsOn, {
-    //  on: Match.Optional('endsNever'),
-    //  lastDate: Match.Optional(Date),
-    //  after: Match.Optional(Number)
-    //});
   } else if (jobItemType == 'Prep') {
     check(jobItem, {
       name: String,
