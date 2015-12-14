@@ -38,7 +38,7 @@ Template.orderReceiptItem.helpers({
 Template.orderReceiptItem.events({
   'click .receiveDelivery': function (event) {
     event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
+    var id = this.item._id;
     if (id) {
       Router.go("orderReceive", {"_id": id});
     }

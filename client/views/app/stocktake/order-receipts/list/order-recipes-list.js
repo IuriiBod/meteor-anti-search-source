@@ -1,30 +1,36 @@
+Template.ordersReceiptsList.onCreated(function() {
+  this.thisState = new ReactiveVar(false);
+  this.thisTime = new ReactiveVar('week');
+  this.editStockTake = new ReactiveVar(false);
+});
+
 Template.ordersReceiptsList.helpers({
   toBeReceived: function() {
-    return !Session.get("thisState");
+    return !Template.instance().thisState.get();
   },
 
   received: function() {
-    return !!Session.get("thisState");
+    return !!Template.instance().thisState.get();
   },
 
   week: function() {
-    var time = Session.get("thisTime");
+    var time = Template.instance().thisTime.get();
     return time && time == "week";
   },
 
   month: function() {
-    var time = Session.get("thisTime");
+    var time = Template.instance().thisTime.get();
     return time && time == "month";
   },
 
   allTime: function() {
-    var time = Session.get("thisTime");
+    var time = Template.instance().thisTime.get();
     return time && time == "all";
   },
 
   list: function() {
-    var state = Session.get("thisState");
-    var time = Session.get("thisTime");
+    var state = Template.instance().thisState.get();
+    var time = Template.instance().thisTime.get();
     var data = null;
     var ids = [];
 
@@ -72,28 +78,28 @@ Template.ordersReceiptsList.helpers({
 });
 
 Template.ordersReceiptsList.events({
-  'click .toBeReceived': function (event) {
+  'click .toBeReceived': function (event, tmpl) {
     event.preventDefault();
-    Session.set("thisState", false);
+    tmpl.thisState.set(false);
   },
 
-  'click .received': function (event) {
+  'click .received': function (event, tmpl) {
     event.preventDefault();
-    Session.set("thisState", true);
+    tmpl.thisState.set(true);
   },
 
-  'click .thisWeekReceipts': function (event) {
+  'click .thisWeekReceipts': function (event, tmpl) {
     event.preventDefault();
-    Session.set("thisTime", "week");
+    tmpl.thisTime.set('week');
   },
 
-  'click .thisMonthReceipts': function (event) {
+  'click .thisMonthReceipts': function (event, tmpl) {
     event.preventDefault();
-    Session.set("thisTime", "month");
+    tmpl.thisTime.set('month');
   },
 
-  'click .allTimeReceipts': function (event) {
+  'click .allTimeReceipts': function (event, tmpl) {
     event.preventDefault();
-    Session.set("thisTime", "all");
+    tmpl.thisTime.set("all");
   }
 });

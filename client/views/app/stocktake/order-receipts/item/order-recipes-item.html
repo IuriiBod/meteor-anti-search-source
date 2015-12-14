@@ -1,5 +1,5 @@
 <template name="orderReceiptItem">
-  <tr data-id="{{receipt._id}}">
+  <tr>
     <td>{{dateFormat receipt.expectedDeliveryDate}}</td>
     <td>{{supplierName receipt.supplier}}</td>
     <td>$ {{roundCount orderedValue}}</td>
