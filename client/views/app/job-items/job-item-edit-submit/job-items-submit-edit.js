@@ -1,6 +1,6 @@
 Template.submitEditJobItem.onCreated(function () {
 
-  this.jobItem = {};
+  this.jobItem = JobItems.findOne({_id: this.data.jobItemId}) || {};
   this.selectedJobTypeId = new ReactiveVar(JobTypes.findOne()._id);
   this.selectedFrequency = new ReactiveVar('daily');
   this.repeatAt = new ReactiveVar(moment().hours(8).minutes(0).toDate());
@@ -15,10 +15,6 @@ Template.submitEditJobItem.onCreated(function () {
     var selectedJobType = this.getSelectedJobType();
     return selectedJobType.name == 'Recurring';
   };
-
-  if (this.data.mode == 'edit') {
-    this.jobItem = JobItems.findOne();
-  }
 
   this.getSelectedJobType = function () {
     return JobTypes.findOne({_id: Template.instance().selectedJobTypeId.get()});
