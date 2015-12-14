@@ -178,6 +178,7 @@ Template.submitEditJobItem.helpers({
   editIngredientsListOnChange: function () {
     var thisTemplate = Template.instance();
     return function (ingredientsList) {
+      console.log(ingredientsList);
       thisTemplate.ingredients = ingredientsList;
     };
   },
@@ -258,7 +259,7 @@ Template.submitEditJobItem.events({
     }
   },
   'click .remove-check-list-item': function (e, tmpl) {
-    var itemToRemove = $(e.target).parent().text().trim(); // and sorry for that ^_^
+    var itemToRemove = this.toString();
     tmpl.removeCheckListItem(itemToRemove);
   }
 });

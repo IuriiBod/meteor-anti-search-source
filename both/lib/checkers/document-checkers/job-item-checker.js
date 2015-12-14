@@ -9,16 +9,26 @@ var JobItemDocument = Match.Where(function (jobItem) {
       activeTime: Number,
       wagePerHour: Number,
 
-      section: HospoHero.checkers.OptionalMongoId,
-      description: Match.Optional(String),
-      checklist: Match.Optional(Array),
-      frequency: Match.Optional(Match.OneOf('daily', 'weekly', 'everyXWeeks')),
-      repeatAt: Match.Optional(Date),
-      repeatOn: Match.Optional(Array),
-      repeatEvery: Match.Optional(Number),
-      startsOn: Match.Optional(Date),
-      endsOn: Match.Optional(Object),
+      section: HospoHero.checkers.MongoId,
+      description: String,
+      frequency: Match.OneOf('daily', 'weekly', 'everyXWeeks'),
+      repeatAt: Date,
+      startsOn: Date,
+      endsOn: {
+        on: Match.Optional('endsNever'),
+        lastDate: Match.Optional(Date),
+        after: Match.Optional(Number)
+      },
+
+      checklist: Match.Optional([String]),
+      repeatOn: Match.Optional([String]),
+      repeatEvery: Match.Optional(Number)
     });
+    //check(jobItem.endsOn, {
+    //  on: Match.Optional('endsNever'),
+    //  lastDate: Match.Optional(Date),
+    //  after: Match.Optional(Number)
+    //});
   } else if (jobItemType == 'Prep') {
     check(jobItem, {
       name: String,
@@ -26,10 +36,13 @@ var JobItemDocument = Match.Where(function (jobItem) {
       activeTime: Number,
       wagePerHour: Number,
 
-      recipe: Match.Optional(String),
-      ingredients: Match.Optional(Array),
-      portions: Match.Optional(Number),
-      shelfLife: Match.Optional(Number)
+      recipe: String,
+      ingredients: [{
+        _id: HospoHero.checkers.MongoId,
+        quantity: Number
+      }],
+      portions: Number,
+      shelfLife: Number
     });
   }
 
