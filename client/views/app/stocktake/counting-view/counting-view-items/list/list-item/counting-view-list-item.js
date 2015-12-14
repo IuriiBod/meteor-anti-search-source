@@ -1,4 +1,5 @@
 Template.stockCountingListItem.onRendered(function() {
+  var self = this;
   $('[data-toggle="tooltip"]').tooltip();
 
   $(".counting").editable({
@@ -18,13 +19,13 @@ Template.stockCountingListItem.onRendered(function() {
         var count = parseFloat(newValue);
         count = isNaN(count) ? 0 : count;
         var info = {
-          "version": Session.get("thisVersion"),
-          "generalArea": Session.get("activeGArea"),
-          "specialArea": Session.get("activeSArea"),
+          "version": self.data.stocktakeId,
+          "generalArea": self.data.activeGeneralArea,
+          "specialArea": self.data.activeSpecialArea,
           "stockId": stockId,
           "counting": count
         };
-        var main = StocktakeMain.findOne(Session.get("thisVersion"));
+        var main = StocktakeMain.findOne({_id: self.data.stocktakeId});
         if (main) {
           Meteor.call("updateStocktake", id, info, HospoHero.handleMethodResult(function () {
             if ($(elem).next().length > 0) {
@@ -40,12 +41,12 @@ Template.stockCountingListItem.onRendered(function() {
 
 Template.stockCountingListItem.helpers({
   item: function() {
-    var stock = Ingredients.findOne(this.id);
+    var stock = Ingredients.findOne({_id: this.id});
     var stocktake = Stocktakes.findOne({
-      "version": this.version,
+      "version": this.stocktakeId,
       "stockId": this.id,
-      "generalArea": this.garea,
-      "specialArea": this.sarea
+      "generalArea": this.activeGeneralArea,
+      "specialArea": this.activeSpecialArea
     });
     if (stock) {
       if (stocktake) {
@@ -62,7 +63,7 @@ Template.stockCountingListItem.helpers({
   },
 
   editable: function() {
-    return Session.get("editStockTake");
+    return this.editStockTake;
   },
 
   deletable: function(id) {
@@ -98,12 +99,12 @@ Template.stockCountingListItem.helpers({
 });
 
 Template.stockCountingListItem.events({
-  'click .removeFromList': function (event) {
+  'click .removeFromList': function (event, tmpl) {
     event.preventDefault();
     var confrimDelete = confirm("This action will remove this stock item from this area. Are you sure you want to continue?");
     if (confrimDelete) {
-      var id = $(event.target).closest("li").attr("data-id");
-      var sareaId = Session.get("activeSArea");
+      var id = this.id;
+      var sareaId = tmpl.data.activeSpecialArea;
       var stockRefId = $(event.target).closest("li").attr("data-stockRef");
       var stocktake = Stocktakes.findOne(stockRefId);
       if (stocktake) {

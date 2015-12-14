@@ -6,29 +6,25 @@ Template.stockCounting.onCreated(function() {
 
 Template.stockCounting.helpers({
   editable: function() {
-    console.log('editStockTake reactiveVar -> ', Template.instance().editStockTake.get());
-    return Session.get('editStockTake');
+    return Template.instance().editStockTake.get();
   },
 
   stockTakeId: function() {
-    console.log('Template instance stockTakeId -> ', Template.instance().data.stocktakeId);
-    return Session.get("thisVersion");
+    return Template.instance().data.stocktakeId;
   },
 
-  specialArea: function() {
-    console.log('Template instance specialArea -> ', Template.instance().activeSpecialArea.get());
-    return Session.get("activeSArea");
+  activeSpecialArea: function() {
+    return Template.instance().activeSpecialArea.get();
   },
 
-  generalArea: function() {
-    console.log('Template instance generalArea -> ', Template.instance().activeGeneralArea.get());
-    return Session.get("activeGArea");
+  activeGeneralArea: function() {
+    return Template.instance().activeGeneralArea.get();
   },
 
   stocktakeList: function() {
     var thisVersion = this.stocktakeId;
-    var gareaId = Session.get("activeGArea");
-    var sareaId = Session.get("activeSArea");
+    var gareaId = Template.instance().activeGeneralArea.get();
+    var sareaId = Template.instance().activeSpecialArea.get();
     if (gareaId && sareaId) {
       var main = StocktakeMain.findOne(thisVersion);
       if (main && main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
@@ -45,11 +41,10 @@ Template.stockCounting.helpers({
   },
 
   ingredientsList: function() {
-    var thisVersion = this.stocktakeId;
-    var gareaId = Session.get("activeGArea");
-    var sareaId = Session.get("activeSArea");
+    var gareaId = Template.instance().activeGeneralArea.get();
+    var sareaId = Template.instance().activeSpecialArea.get();
     if (gareaId && sareaId) {
-      var sarea = SpecialAreas.findOne(sareaId);
+      var sarea = SpecialAreas.findOne({_id: sareaId});
       var ings = [];
       if (sarea && sarea.stocks.length > 0) {
         var ids = sarea.stocks;
@@ -71,7 +66,7 @@ Template.stockCounting.helpers({
   },
 
   filtered: function() {
-    return Session.get("activeSArea");
+    return Template.instance().activeSpecialArea.get();
   },
 
   notTemplate: function() {
@@ -85,14 +80,14 @@ Template.stockCounting.helpers({
     return permitted;
   },
 
-  activeSArea: function() {
+  activeSpecialAreaCallback: function() {
     var instance = Template.instance();
     return function(areaId) {
       instance.activeSpecialArea.set(areaId);
     }
   },
 
-  activeGArea: function() {
+  activeGeneralAreaCallback: function() {
     var instance = Template.instance();
     return function(areaId) {
       instance.activeGeneralArea.set(areaId);
@@ -111,8 +106,7 @@ Template.stockCounting.helpers({
 Template.stockCounting.events({
   'click .saveStockTake': function (event, tmpl) {
     event.preventDefault();
-    Session.set('editStockTake', false);
-    tmpl.editStockTake.set(false); // reactive var WILL BE USED SOON!
+    tmpl.editStockTake.set(false);
     $(event.target).hide();
     $(".editStockTake").show();
   },
@@ -124,8 +118,7 @@ Template.stockCounting.events({
 
   'click .editStockTake': function (event, tmpl) {
     event.preventDefault();
-    Session.set('editStockTake', true);
-    tmpl.editStockTake.set(true); // reactive var WILL BE USED SOON!
+    tmpl.editStockTake.set(true);
     $(event.target).hide();
     setTimeout(function () {
       $(".sarea").editable({
@@ -167,7 +160,7 @@ Template.stockCounting.events({
           var prevItemId = $($($(ui.item)[0]).prev()).attr("data-id");
           var prevItemPosition = $($($(ui.item)[0]).prev()).attr("data-place");
 
-          var sareaId = Session.get("activeSArea"); //needs to change to reactive var
+          var sareaId = tmpl.activeSpecialArea.get();
           if (!prevItemPosition) {
             prevItemPosition = 0;
           }
@@ -193,7 +186,6 @@ Template.stockCounting.events({
   'click .generateOrders': function (event, tmpl) {
     event.preventDefault();
     tmpl.editStockTake.set(false);
-    Session.set('editStockTake', false);
     var version = tmpl.data.stocktakeId;
     if (version) {
       Meteor.call("generateOrders", version, HospoHero.handleMethodResult(function () {

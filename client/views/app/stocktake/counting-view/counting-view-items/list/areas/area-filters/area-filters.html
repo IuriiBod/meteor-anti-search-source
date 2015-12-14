@@ -1,18 +1,33 @@
 <template name="areaFilters">
   <div class="col-md-4 no-margin areaFilering">
     {{#each generalAreas}}
-      {{> areaBox item=this class="garea-filter" name="garea"}}
+      {{> areaBox item=this
+                  class="garea-filter"
+                  name="garea"
+                  generalAreaExists=generalAreaExists
+                  specialAreaExists=specialAreaExists
+                  editStockTake=editable
+                  stocktakeId=stocktakeId
+                  activeGeneralArea=activeGeneralArea
+                  activeSpecialArea=activeSpecialArea}}
       <div class="collapse" id="{{this._id}}">
         <div class="well">
           {{#each specialAreas this._id}}
-            {{> areaBox item=this class="sarea-filter" name="sarea"}}
+            {{> areaBox item=this
+                        class="sarea-filter"
+                        name="sarea"
+                        generalAreaExists=generalAreaExists
+                        specialAreaExists=specialAreaExists
+                        editStockTake=editable
+                        stocktakeId=stocktakeId
+                        activeGeneralArea=activeGeneralArea
+                        activeSpecialArea=activeSpecialArea}}
           {{else}}
             No Special Areas
             <br>
           {{/each}}
           {{#if editable}}
-            <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea"
-               data-id="{{this._id}}">Add</a>
+            <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea">Add</a>
             <br><br>
           {{/if}}
         </div>

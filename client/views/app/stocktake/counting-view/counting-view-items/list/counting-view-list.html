@@ -18,13 +18,22 @@
   </div>
   
   <div class="row">
-    {{> areaFilters stocktakeId=stockTakeId}}
+    {{> areaFilters stocktakeId=stockTakeId
+                    editStockTake=editable
+                    generalArea=activeGeneralArea
+                    specialArea=activeSpecialArea
+                    activeSpecialArea=activeSpecialAreaCallback
+                    activeGeneralArea=activeGeneralAreaCallback}}
     {{#if filtered}}
       <div class="col-md-8">
         {{#if notTemplate}}
           <ul class="list-group sortableStockItems">
             {{#each stocktakeList}}
-              {{> stockCountingListItem id=this.stockId version=stockTakeId garea=generalArea sarea=specialArea stocktakeId=this._id}}
+              {{> stockCountingListItem id=this.stockId
+                                        activeGeneralArea=activeGeneralArea
+                                        activeSpecialArea=activeSpecialArea
+                                        stocktakeId=this._id
+                                        editStockTake=editable}}
             {{else}}
               No items on this list
             {{/each}}
@@ -32,7 +41,11 @@
         {{else}}
           <ul class="list-group sortableStockItems">
             {{#each ingredientsList}}
-              {{> stockCountingListItem id=this._id version=stockTakeId garea=generalArea sarea=specialArea}}
+              {{> stockCountingListItem id=this._id
+                                        activeGeneralArea=activeGeneralArea
+                                        activeSpecialArea=activeSpecialArea
+                                        stocktakeId=stockTakeId
+                                        editStockTake=editable}}
             {{else}}
               No items on this list
             {{/each}}
@@ -65,7 +78,7 @@
   <!-- ADD SPECIAL AREA MODAL LIST-->
   <div class="modal fade" id="addNewSpecialAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
-    {{> newAreaModal name="special"}}
+    {{> newAreaModal name="special" generalArea=activeGeneralArea}}
   </div>
   <!-- /ADD SPECIAL AREA MODAL LIST-->
 </template>

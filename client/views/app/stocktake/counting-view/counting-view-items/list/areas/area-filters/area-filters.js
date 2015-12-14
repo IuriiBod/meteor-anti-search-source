@@ -1,8 +1,8 @@
 Template.areaFilters.onRendered(function() {
   var garea = GeneralAreas.findOne({}, {sort: {"createdAt": 1}});
-  if (garea && !Session.get("activeGArea")) {
-    Session.set("activeGArea", garea._id);
-    Session.set("activeSArea", null);
+  if (garea && !this.data.generalArea) {
+    this.data.activeGeneralArea(garea._id);
+    this.data.activeSpecialArea(null);
   }
 });
 
@@ -17,12 +17,24 @@ Template.areaFilters.helpers({
     }
   },
 
-  ifGAreaExists: function() {
-    if (Session.get("activeGArea")) {
-      return true;
-    } else {
-      return false;
-    }
+  stocktakeId: function() {
+    return Template.instance().data.stocktakeId;
+  },
+
+  activeGeneralArea: function() {
+    return Template.instance().data.activeGeneralArea;
+  },
+
+  activeSpecialArea: function() {
+    return Template.instance().data.activeSpecialArea;
+  },
+
+  generalAreaExists: function() {
+    return Template.instance().data.generalArea;
+  },
+
+  specialAreaExists: function() {
+    return Template.instance().data.specialArea;
   },
 
   specialAreas: function(gareaId) {
@@ -36,15 +48,13 @@ Template.areaFilters.helpers({
   },
 
   editable: function() {
-    return Session.get("editStockTake");
+    return Template.instance().data.editStockTake;
   }
 });
 
 Template.areaFilters.events({
   'click .addNewSpecialArea': function (event) {
     event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    Session.set("thisGeneralArea", id);
     $("#addNewSpecialAreaModal").modal();
   }
 });
