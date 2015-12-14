@@ -3,16 +3,15 @@
     <hr>
     <div class="ibox chat-view">
       <div class="ibox-title">
-        <!-- <small class="pull-right text-muted">Last message:  Mon Jan 26 2015 - 18:39:23</small> -->
         Comments
       </div>
       <div class="ibox-content">
         <div class="row">
           <div class="col-md-12">
             <div class="chat-discussion">
-              {{#if state$commentsExist}}
-                {{#each state$commentsList}}
-                  {{> render component="comment" comment=this}}
+              {{#if commentsList.count}}
+                {{#each commentsList}}
+                  {{> comment}}
                 {{/each}}
               {{else}}
                 <div class="middle-box text-center">
@@ -20,7 +19,7 @@
                 </div>
               {{/if}}
             </div>
-            {{> render component="submitComment" id=state$id type=state$type}}
+            {{> submitComment}}
           </div>
         </div>
       </div>
