@@ -1,0 +1,11 @@
+<template name="comment">
+  <div class="chat-message">
+    <img class="message-avatar" src="{{profilePicture createdBy}}" alt="{{username createdBy}}">
+
+    <div class="message">
+      <a class="message-author" href="#">{{username createdBy}}</a>
+      <span class="message-date">{{timeFormattedWithDate createdOn}}</span>
+      <span class="message-content">{{{text}}}</span>
+    </div>
+  </div>
+</template>
