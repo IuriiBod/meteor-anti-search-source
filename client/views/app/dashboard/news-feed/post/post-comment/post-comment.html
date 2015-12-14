@@ -5,18 +5,16 @@
     </a>
 
     <div class="media-body">
-      <span>
-        <a href="#" class="pull-left">
-          {{username createdBy}}&nbsp;&nbsp;
-        </a>
+      <a href="#" class="pull-left">
+        {{username createdBy}}&nbsp;&nbsp;
+      </a>
 
-      </span>
+      {{{text}}}
 
-      <div>
-        {{{text}}}
+      <div class="comment-info">
+        {{> newsFeedLikeButton}}
+        <small class="text-muted comment-date">&nbsp; - &nbsp; {{timeFormattedWithDate createdOn}}</small>
       </div>
-      {{> newsFeedLikeButton}} -
-      <small class="text-muted">{{timeFormattedWithDate createdOn}}</small>
     </div>
   </div>
 </template>
