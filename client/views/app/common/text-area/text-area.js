@@ -43,10 +43,10 @@ Template.textArea.onRendered(function () {
 
       var linkedText = autolinker.link(textHtml);
 
-      if (this.type == "newsFeedMainTextBox" || this.type == "newsFeedSubTextBox") {
-        Meteor.call("createNewsfeed", linkedText, this.ref, matches, HospoHero.handleMethodResult());
-      } else if (this.type == "submitComment") {
-        Meteor.call("createComment", linkedText, this.ref, this.refType, matches, HospoHero.handleMethodResult());
+      if (this.data.type == "newsFeedMainTextBox" || this.data.type == "newsFeedSubTextBox") {
+        Meteor.call("createNewsfeed", linkedText, this.data.reference, matches, HospoHero.handleMethodResult());
+      } else if (this.data.type == "submitComment") {
+        Meteor.call("createComment", linkedText, this.data.reference, this.data.refType, matches, HospoHero.handleMethodResult());
       }
     }
   }
