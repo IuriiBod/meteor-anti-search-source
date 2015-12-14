@@ -1,4 +1,7 @@
 Template.addNewUnavailability.onCreated(function () {
+  this.set('timePickerVisibility', '');
+  this.set('isAllDay', false);
+
   this.getValuesFromTemplate = function () {
     var date = this.$('.date-picker').data('DateTimePicker').date();
     var startTime = this.$('.start-time-picker').data('DateTimePicker').date();
@@ -14,6 +17,10 @@ Template.addNewUnavailability.onCreated(function () {
       comment: comment
     };
   };
+
+  this.getDateFromDateAndTimePickers = function (date, time) {
+    return moment(date).hours(time.hours()).minutes(time.minutes()).toDate();
+  }
 });
 
 Template.addNewUnavailability.onRendered(function () {
@@ -48,7 +55,6 @@ Template.addNewUnavailability.onRendered(function () {
     if (endTimePicker.minDate() > endTimePicker.date()) {
       endTimePicker.date(endTimePicker.minDate());
     }
-    ;
   });
 });
 
@@ -57,10 +63,32 @@ Template.addNewUnavailability.events({
     e.preventDefault();
 
     var values = tmpl.getValuesFromTemplate();
-    FlowComponents.callAction('addUnavailability', values, tmpl.currentFlyout);
+    var startDate = tmpl.getDateFromDateAndTimePickers(values.date, values.startTime);
+    var endDate = tmpl.getDateFromDateAndTimePickers(values.date, values.endTime);
+
+    if (tmpl.get('isAllDay')) {
+      startDate = moment(startDate).startOf('day').toDate();
+      endDate = moment(endDate).endOf('day').toDate();
+    }
+
+    var unavailability = {
+      startDate: startDate,
+      endDate: endDate,
+      isAllDay: tmpl.get('isAllDay'),
+      repeat: values.repeat,
+      comment: values.comment
+    };
+
+    // close flyout, if success
+    Meteor.call('addUnavailability', unavailability, HospoHero.handleMethodResult(function () {
+      tmpl.currentFlyout.close();
+    }));
   },
-  'change .all-day-checkbox': function (e) {
-    var value = $(e.currentTarget).prop('checked');
-    FlowComponents.callAction('isAllDayChange', value);
+  'change .all-day-checkbox': function (event, tmpl) {
+    var value = $(event.currentTarget).prop('checked');
+
+    tmpl.set('isAllDay', value);
+    var timepickerVisibilityClass = value ? 'hide' : '';
+    tmpl.set('timePickerVisibility', timepickerVisibilityClass);
   }
 });

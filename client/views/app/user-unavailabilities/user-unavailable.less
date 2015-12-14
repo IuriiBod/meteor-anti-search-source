@@ -1,0 +1,85 @@
+.border-bottom() {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.user-unavailability {
+  .user-info-wrapper {
+    .users-image {
+      display: inline-block;
+
+      img {
+        width: 96px;
+      }
+    }
+  }
+
+  .component-wrapper {
+    margin-top: 20px;
+    .component-header {
+      .border-bottom;
+
+      .new-item-button {
+        margin-right: -15px;
+      }
+    }
+
+    .item-wrapper {
+      .border-bottom;
+      border-bottom: 1px solid #eee;
+      margin-top: 15px;
+
+      .date-cell {
+        margin-top: 16px;
+        text-align: center;
+      }
+
+      .unavailability-item-date {
+        > div {
+          padding: 0;
+          width: 50px;
+          margin: auto;
+        }
+      }
+
+      .leave-requests-item-date {
+        > div {
+          > div {
+            padding: 0;
+          }
+        }
+      }
+
+      .item-actions {
+        .delete-icon {
+          margin-top: 8px;
+        }
+        .status-approved {
+          color: green;
+          font-weight: bolder;
+        }
+        .status-declined {
+          color: red;
+          font-weight: bolder;
+        }
+        .status-awaiting {
+          color: #ec7f15;
+          font-weight: bolder;
+        }
+      }
+    }
+  }
+}
+
+.new-unavailability {
+  .end-time-picker {
+    margin-top: 5px;
+  }
+}
+
+.view-leave-request {
+  .approve-decline-btn-wrapper {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}

@@ -1,5 +1,5 @@
 Meteor.methods({
-  generateReceipts: function (version, supplier, info) {
+  generateReceipts: function (version, supplierId, info) {
     if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(403, "User not permitted to generate receipts");
@@ -13,7 +13,7 @@ Meteor.methods({
       logger.error("Stocktake main should exist");
       throw new Meteor.Error("Stocktake main should exist");
     }
-    if (!supplier) {
+    if (!supplierId) {
       logger.error("Supplier should exist");
       throw new Meteor.Error("Supplier should exist");
     }
@@ -29,7 +29,7 @@ Meteor.methods({
     var orderedMethod;
     var ordersExist = StockOrders.findOne({
       "version": version,
-      "supplier": supplier,
+      "supplier": supplierId,
       "countOrdered": {$gt: 0}
     });
     if (!ordersExist) {
@@ -38,7 +38,7 @@ Meteor.methods({
     }
 
     var ordersReceiptExist = OrderReceipts.findOne({
-      "supplier": supplier,
+      "supplier": supplierId,
       "version": version
     });
 
@@ -57,13 +57,22 @@ Meteor.methods({
           logger.error("Email text does not exist");
           throw new Meteor.Error(404, "Email text does not exist");
         }
+
+        var supplier = Suppliers.findOne({_id: supplierId}, {fields: {relations: 1}});
+
+        var queryOptions = {fields: {name: 1}};
+        var location = Locations.findOne({_id: supplier.relations.locationId}, queryOptions);
+        var area = Areas.findOne({_id: supplier.relations.areaId}, queryOptions);
+
+        var titleSuffix = location.name + ', ' + area.name;
+
         Email.send({
           "to": info.to,
           "from": Meteor.user().emails[0].address,
-          "subject": "Order from [Hospo Hero]",
+          "subject": "Order from " + titleSuffix,
           "html": info.emailText
         });
-        logger.info("Email sent to supplier", supplier);
+        logger.info("Email sent to supplier", supplierId);
       }
     }
 
@@ -102,7 +111,7 @@ Meteor.methods({
         "date": Date.now(),
         "version": version,
         "stocktakeDate": stocktakeMain.stocktakeDate,
-        "supplier": supplier,
+        "supplier": supplierId,
         "orderedThrough": orderedMethod,
         "orderPlacedBy": Meteor.userId(),
         "expectedDeliveryDate": info.deliveryDate,
@@ -115,7 +124,7 @@ Meteor.methods({
     }
     //update orders
     StockOrders.update(
-      {"version": version, "supplier": supplier},
+      {"version": version, "supplier": supplierId},
       {
         $set: {
           "orderedThrough": orderedMethod,
@@ -128,7 +137,7 @@ Meteor.methods({
       },
       {multi: true}
     );
-    logger.info("Orders updated", {"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplier});
+    logger.info("Orders updated", {"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplierId});
     StocktakeMain.update({"_id": version}, {$addToSet: {"orderReceipts": id}});
   },
 
