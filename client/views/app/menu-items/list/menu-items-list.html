@@ -4,9 +4,22 @@
 
   <div class="wrapper wrapper-content animated">
     {{> render component="menuFilters"}}
+
     <div class="row">
       <div class="col-lg-12">
-        {{> render component="menuItemsList"}}
+
+        <input type="text" name="searchMenuItems" id="searchMenuItemsBox" class="form-control col-sm-8"
+               placeholder="Search from Name">
+        <hr/>
+
+        <div class="list-group">
+          {{#each getMenuItems}}
+            {{> render component='menuItem' menuitem=this}}
+          {{/each}}
+        </div>
+        <p>
+          <a href="#" class="btn btn-block btn-outline btn-primary hide" id="loadMoreMenuItems">Load More</a>
+        </p>
       </div>
     </div>
   </div>

@@ -1,10 +1,43 @@
-var options = {
+var MenuItemsSearch = new SearchSource('menuItemsSearch', ['name'], {
   keepHistory: 1000 * 60 * 5,
   localSearch: true
-};
-var fields = ['name'];
+});
 
-MenuItemsSearch = new SearchSource('menuItemsSearch', fields, options);
+Template.menuItemsList.onRendered(function () {
+  MenuItemsSearch.cleanHistory();
+  var category = Router.current().params.category;
+  var status = Router.current().params.status;
+  var selector = {
+    'limit': 30
+  };
+  var filter = [];
+  if (category && category.toLowerCase() != "all") {
+    filter.push({"category": category});
+  }
+  if (status && status.toLowerCase() != "all") {
+    filter.push({"status": status.toLowerCase()});
+  } else if (status && status.toLowerCase() == "all") {
+    filter.push({"status": {$ne: "archived"}});
+  }
+  if (filter.length > 0) {
+    selector.filter = filter;
+  }
+  MenuItemsSearch.search("", selector);
+
+  var tpl = this;
+  Meteor.defer(function () {
+    $("#wrapper").on('scroll', function (event) {
+      var wrapper = event.target;
+      var wrapperHeight = wrapper.clientHeight;
+      var wrapperScrollHeight = wrapper.scrollHeight;
+      var wrapperScrollTop = wrapper.scrollTop;
+
+      if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
+        tpl.$('#loadMoreMenuItems').click();
+      }
+    });
+  });
+});
 
 Template.menuItemsList.helpers({
   'getMenuItems': function () {
@@ -61,43 +94,7 @@ Template.menuItemsList.events({
   }
 });
 
-Template.menuItemsList.rendered = function () {
-  MenuItemsSearch.cleanHistory();
-  var category = Router.current().params.category;
-  var status = Router.current().params.status;
-  var selector = {
-    'limit': 30
-  };
-  var filter = [];
-  if (category && category.toLowerCase() != "all") {
-    filter.push({"category": category});
-  }
-  if (status && status.toLowerCase() != "all") {
-    filter.push({"status": status.toLowerCase()});
-  } else if (status && status.toLowerCase() == "all") {
-    filter.push({"status": {$ne: "archived"}});
-  }
-  if (filter.length > 0) {
-    selector.filter = filter;
-  }
-  MenuItemsSearch.search("", selector);
-};
 
-Template.menuItemsList.onRendered(function () {
-  var tpl = this;
-  Meteor.defer(function () {
-    $("#wrapper").on('scroll', function (event) {
-      var wrapper = event.target;
-      var wrapperHeight = wrapper.clientHeight;
-      var wrapperScrollHeight = wrapper.scrollHeight;
-      var wrapperScrollTop = wrapper.scrollTop;
-
-      if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
-        tpl.$('#loadMoreMenuItems').click();
-      }
-    });
-  });
-});
 
 Template.menuItemsList.onDestroyed(function () {
   $('#wrapper').off('scroll');
