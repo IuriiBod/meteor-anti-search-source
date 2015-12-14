@@ -1,6 +1,3 @@
-var component = FlowComponents.define('menuItemDetail', function (props) {
-  this.id = Session.get("thisMenuItem");
-});
 
 component.state.menu = function () {
   this.menu = MenuItems.findOne(this.id);
