@@ -52,6 +52,9 @@ Template.weeklyRosterDay.helpers({
       noteDate: this.currentDate,
       'relations.areaId': HospoHero.getCurrentAreaId()
     }).count();
+  },
+  shiftDateFormat: function (date) {
+    return moment(date).format('YYYY-MM-DD');
   }
 });
 
