@@ -1,5 +1,18 @@
 Meteor.methods({
-  'createJobItem': function (info) {
+  'createJobItem': function (newJobItemInfo) {
+    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+      logger.error(403, "User not permitted to create jobs");
+    }
+
+    check(newJobItemInfo, HospoHero.checkers.JobItemDocument);
+  },
+  'editJobItem': function () {
+  },
+  'deleteJobItem': function () {
+  },
+
+
+  'createJobItemm': function (info) {
     if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");

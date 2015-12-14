@@ -1,5 +1,6 @@
 Template.submitEditJobItem.onCreated(function () {
 
+  this.jobItem = {};
   this.selectedJobTypeId = new ReactiveVar(JobTypes.findOne()._id);
   this.selectedFrequency = new ReactiveVar('daily');
   this.repeatAt = new ReactiveVar(moment().hours(8).minutes(0).toDate());
@@ -24,57 +25,61 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.saveJobItem = function () {
-    var jobItemObject = {};
 
     // job item fields
     // common fields
-    this.assignCommonFields(jobItemObject);
+    this.assignCommonFields();
 
     // for recurring
     if (this.isRecurring()) {
-      this.assignFieldsForRecurring(jobItemObject);
+      this.assignFieldsForRecurring();
     }
 
     // for prep
     if (this.isPrep()) {
-      this.assignFieldsForPrep(jobItemObject);
+      this.assignFieldsForPrep();
     }
 
-    console.log(jobItemObject);
+    console.log(this.jobItem);
+    Meteor.call('createJobItem', this.jobItem, HospoHero.handleMethodResult(function () {
+      console.log('ok');
+    }));
   };
 
-  this.assignCommonFields = function (jobItemObject) {
-    jobItemObject.name = this.$('.name-input').val();
-    jobItemObject.jobTypeId = this.selectedJobTypeId.get();
-    jobItemObject.recipeOrDesc = this.$('.summernote').summernote('code');
-    jobItemObject.activeTime = this.$('.active-time').val();
-    jobItemObject.laboursWage = this.$('.avg-wage-per-hour').val();
+  this.assignCommonFields = function () {
+    this.jobItem.name = this.$('.name-input').val();
+    this.jobItem.type = this.selectedJobTypeId.get();
+    this.jobItem.activeTime = parseInt(this.$('.active-time').val());
+    this.jobItem.wagePerHour = parseInt(this.$('.avg-wage-per-hour').val());
   };
 
-  this.assignFieldsForRecurring = function (jobItemObject) {
-    jobItemObject.sectionId = this.$('.sections-select').val();
-    jobItemObject.checklist; // ?
-    jobItemObject.frequency = this.selectedFrequency.get();
+  this.assignFieldsForRecurring = function () {
+    this.jobItem.description = this.$('.summernote').summernote('code');
+    this.jobItem.section = this.$('.sections-select').val();
+    this.jobItem.checklist = this.checklistItems.get();
+    this.jobItem.frequency = this.selectedFrequency.get();
 
     // if repeat every week
     if (this.selectedFrequency.get() == 'weekly' || 'everyXWeeks') {
-      jobItemObject.repeatOnDays = this.getSelectedDays();
+      this.jobItem.repeatOn = this.getSelectedDays();
 
       // if repeat every X weeks
       if (this.selectedFrequency.get() == 'everyXWeeks') {
-        jobItemObject.repeatEveryXWeeks = this.$('.repeat-every-weeks-input').val();
+        this.jobItem.repeatEvery = parseInt(this.$('.repeat-every-weeks-input').val());
       }
     }
-    jobItemObject.repeatAtTime = this.repeatAt.get();
-    jobItemObject.startsOn = this.startsOnDatePicker.date().toDate();
-    jobItemObject.endsOn = this.getEndsOnDate();
+    this.jobItem.repeatAt = this.repeatAt.get();
+    this.jobItem.startsOn = this.startsOnDatePicker.date().toDate();
+    this.jobItem.endsOn = this.getEndsOnDate();
   };
 
-  this.assignFieldsForPrep = function (jobItemObject) {
-    jobItemObject.selectedIngredients = this.ingredients;
-    jobItemObject.portions = this.$('.portions').val();
-    jobItemObject.shelfLife = this.$('.shelf-life').val();
+  this.assignFieldsForPrep = function () {
+    this.jobItem.recipe = this.$('.summernote').summernote('code');
+    this.jobItem.ingredients = this.ingredients;
+    this.jobItem.portions = parseInt(this.$('.portions').val());
+    this.jobItem.shelfLife = parseInt(this.$('.shelf-life').val());
   };
+
 
   this.getSelectedDays = function () {
     var $selectedDays = this.$('.repeat-on-checkbox:checked');
@@ -82,7 +87,6 @@ Template.submitEditJobItem.onCreated(function () {
       return $(item).val()
     });
   };
-
   this.getEndsOnDate = function () {
     var $checkedButton = this.$('.ends-on-radio:checked');
     var checkedButtonFor = $checkedButton.val();
@@ -92,7 +96,7 @@ Template.submitEditJobItem.onCreated(function () {
         on: 'endsNever'
       }
     } else if (checkedButtonFor == 'occurrences') {
-      var afterOccurrences = this.$('.occurrences-number-input').val();
+      var afterOccurrences = parseInt(this.$('.occurrences-number-input').val());
       return {
         after: afterOccurrences
       }
