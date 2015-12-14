@@ -17,7 +17,7 @@
               </thead>
               <tbody>
               {{#each list}}
-                {{> orderReceiveItem item=this}}
+                {{> orderReceiveItem item=this currentOrderCallback=currentOrderCallback}}
               {{/each}}
               <tr>
                 <td><b>Total</b></td>
@@ -95,14 +95,14 @@
   <!-- WRONG PRICE MODAL-->
   <div class="modal fade" id="wrongPriceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
-    {{> receiveModal name='wrongPrice'}}
+    {{> receiveModal name='wrongPrice' order=currentOrder receipt=this.currentReceipt}}
   </div>
   <!-- /WRONG PRICE MODAL -->
 
   <!-- WRONG QUANTITY MODAL-->
   <div class="modal fade" id="wrongQuantityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
-    {{> receiveModal name='wrongQuantity'}}
+    {{> receiveModal name='wrongQuantity' order=currentOrder receipt=this.currentReceipt}}
   </div>
   <!-- /WRONG QUANTITY MODAL -->
 

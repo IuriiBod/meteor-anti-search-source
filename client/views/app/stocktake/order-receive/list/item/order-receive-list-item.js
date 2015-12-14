@@ -19,7 +19,7 @@ Template.orderReceiveItem.helpers({
 
   deliveryStatus: function() {
     var id = this.item._id;
-    var order = StockOrders.findOne(id);
+    var order = StockOrders.findOne({_id: id});
     if (order && order.deliveryStatus) {
       return order.deliveryStatus;
     }
@@ -27,7 +27,7 @@ Template.orderReceiveItem.helpers({
 
   isDeliveredCorreclty: function () {
     var id = this.item._id;
-    var order = StockOrders.findOne(id);
+    var order = StockOrders.findOne({_id: id});
     if (order && order.deliveryStatus) {
       if (order.deliveryStatus.length == 1 && order.deliveryStatus[0] == "Delivered Correctly") {
         return true;
@@ -37,7 +37,7 @@ Template.orderReceiveItem.helpers({
 
   isWrongQuantity: function() {
     var id = this.item._id;
-    var order = StockOrders.findOne(id);
+    var order = StockOrders.findOne({_id: id});
     if (order && order.deliveryStatus && order.deliveryStatus.length > 0) {
       if (order.deliveryStatus.indexOf("Wrong Quantity") >= 0) {
         return true;
@@ -47,7 +47,7 @@ Template.orderReceiveItem.helpers({
 
   isWrongPrice: function() {
     var id = this.item._id;
-    var order = StockOrders.findOne(id);
+    var order = StockOrders.findOne({_id: id});
     if (order && order.deliveryStatus && order.deliveryStatus.length > 0) {
       if (order.deliveryStatus.indexOf("Wrong Price") >= 0) {
         return true;
@@ -60,8 +60,8 @@ Template.orderReceiveItem.helpers({
   },
 
   isReceived: function() {
-    var id = Session.get("thisReceipt");
-    var data = OrderReceipts.findOne(id);
+    var id = this.item.orderReceipt;
+    var data = OrderReceipts.findOne({_id: id});
     if (data) {
       if (data.received) {
         return true;
@@ -71,46 +71,46 @@ Template.orderReceiveItem.helpers({
 });
 
 Template.orderReceiveItem.events({
-  'click .deliveredCorrectly': function (event) {
+  'click .deliveredCorrectly': function (event, tmpl) {
     event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
-    var receiptId = Session.get("thisReceipt");
+    var id = tmpl.data.item._id;
+    var receiptId = tmpl.data.item.orderReceipt;
     var status = "Delivered Correctly";
     var info = {};
     receiveReceiptItems(id, receiptId, status, info);
   },
 
-  'click .wrongPrice': function (event) {
+  'click .wrongPrice': function (event, tmpl) {
     event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
-    Session.set("thisOrder", id);
+    var id = tmpl.data.item._id;
+    tmpl.data.currentOrderCallback(id);
     $("#wrongPriceModal").modal();
   },
 
-  'click .wrongQuantity': function (event) {
+  'click .wrongQuantity': function (event, tmpl) {
     event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
-    Session.set("thisOrder", id);
+    var id = tmpl.data.item._id;
+    tmpl.data.currentOrderCallback(id);
     $("#wrongQuantityModal").modal();
   },
 
-  'click .receiveOrderItem': function (event) {
+  'click .receiveOrderItem': function (event, tmpl) {
     event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
+    var id = this.item._id;
     Session.set("editable" + id, false);
-    var receiptId = Session.get("thisReceipt");
+    var receiptId = tmpl.data.item.orderReceipt;
     Meteor.call("receiveOrderItems", id, receiptId, {"received": true}, HospoHero.handleMethodResult());
   },
 
-  'click .editPermitted': function (event) {
+  'click .editPermitted': function (event, tmpl) {
     event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
+    var id = tmpl.data.item._id;
     Session.set("editable" + id, true);
   }
 });
 
 function receiveReceiptItems(id, receiptId, status, info) {
-  var order = StockOrders.findOne(id);
+  var order = StockOrders.findOne({_id: id});
   if (order) {
     Meteor.call("updateOrderItems", id, receiptId, status, info, HospoHero.handleMethodResult());
   }

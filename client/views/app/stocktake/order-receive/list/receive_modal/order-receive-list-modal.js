@@ -1,4 +1,5 @@
 Template.receiveModal.onRendered(function() {
+  console.log(this);
   $('[data-toggle="popover"]').popover();
   $('.i-checks').iCheck({
     checkboxClass: 'icheckbox_square-green'
@@ -20,12 +21,12 @@ Template.receiveModal.helpers({
 });
 
 Template.receiveModal.events({
-  'submit #priceForm': function (event) {
+  'submit #priceForm': function (event, tmpl) {
     event.preventDefault();
     var price = $(event.target).find('[name=price]').val();
     var doUpdate = $(event.target).find('[name=updateStockPrice]')[0].checked;
-    var receiptId = Session.get("thisReceipt");
-    var orderId = Session.get("thisOrder");
+    var receiptId = tmpl.data.receipt;
+    var orderId = tmpl.data.order;
     var info = {
       "price": parseFloat(price),
       "stockPriceUpdated": doUpdate
@@ -53,12 +54,11 @@ Template.receiveModal.events({
     $("#wrongPriceModal").modal("hide");
   },
 
-  'submit #quantityForm': function (event) {
+  'submit #quantityForm': function (event, tmpl) {
     event.preventDefault();
     var invoiceQuantity = $(event.target).find('[name=invoiceQuantity]').val();
-
-    var receiptId = Session.get("thisReceipt");
-    var orderId = Session.get("thisOrder");
+    var receiptId = tmpl.data.receipt;
+    var orderId = tmpl.data.order;
     var info = {
       "quantity": parseFloat(invoiceQuantity)
     };

@@ -1,6 +1,6 @@
 Template.invoiceImage.helpers({
   imageUrl: function() {
-    var receipt = OrderReceipts.findOne(this.id);
+    var receipt = OrderReceipts.findOne({_id: this.id});
     if (receipt && receipt.invoiceImage) {
       return receipt.invoiceImage;
     }

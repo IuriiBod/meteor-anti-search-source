@@ -46,8 +46,9 @@ Router.route('/stocktake/order/receive/:_id', {
     ];
   },
   data: function () {
-    Session.set("editStockTake", false);
-    Session.set("thisReceipt", this.params._id);
+    return {
+      currentReceipt: this.params._id
+    };
   }
 });
 
@@ -82,10 +83,5 @@ Router.route('orderReceiptsList', {
   template: 'orderReceiptsListMainView',
   waitOn: function () {
     return Meteor.subscribe('allOrderReceipts', HospoHero.getCurrentAreaId(Meteor.userId()));
-  },
-  data: function () {
-    Session.set("thisState", false);
-    Session.set("thisTime", "week");
-    Session.set("editStockTake", false);
   }
 });

@@ -1,7 +1,7 @@
 Template.temperatureModal.events({
-  'submit #temperatureForm': function (event) {
+  'submit #temperatureForm': function (event, tmpl) {
     event.preventDefault();
-    var receiptId = Session.get("thisReceipt");
+    var receiptId = tmpl.data.currentReceipt;
     var temp = $(event.target).find("[name=temperature]").val();
     if (temp) {
       var info = {"temperature": temp};
