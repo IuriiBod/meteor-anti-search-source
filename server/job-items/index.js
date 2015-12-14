@@ -5,6 +5,21 @@ Meteor.methods({
     }
 
     check(newJobItemInfo, HospoHero.checkers.JobItemDocument);
+
+    var defaultJobItemProperties = {
+      createdBy: Meteor.userId(),
+      relations: HospoHero.getRelationsObject()
+    };
+
+    var newJobItemInfo = _.extend(newJobItemInfo, defaultJobItemProperties);
+
+    var createdJobItemId = JobItems.insert(newJobItemInfo);
+
+    logger.info("JobItem inserted", {
+      jobItemId: createdJobItemId
+    });
+
+    return createdJobItemId;
   },
   'editJobItem': function () {
   },
