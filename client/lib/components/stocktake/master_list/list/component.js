@@ -10,7 +10,7 @@ component.state.listOfDates = function () {
       unitCost: 1,
       version: 1
     },
-    sort: {date: 1}
+    sort: {date: -1}
   }).fetch();
 
   stocktakes = _.groupBy(stocktakes, 'version');
