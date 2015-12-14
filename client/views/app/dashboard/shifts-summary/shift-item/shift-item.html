@@ -1,0 +1,35 @@
+<template name="shiftItem">
+  <tr class="{{confirmed}}">
+    <td class="text-left">
+      {{timeFormat shift.startTime}} - {{timeFormat shift.endTime}}
+    </td>
+    <td>{{dayFormat shift.startTime}}</td>
+    <td class="text-center">{{section}}</td>
+    {{#if open}}
+      <td class="text-center">
+        {{#if hasClaimed}}
+          <a href="#" class="btn btn-default btn-xs">Claimed</a>
+        {{else}}
+          {{#if hadBeenRejected}}
+            <a href="#" class="btn btn-danger btn-xs">Rejected</a>
+          {{else}}
+            <a href="#" class="btn btn-primary btn-xs claim-shift-button">Claim</a>
+          {{/if}}
+        {{/if}}
+      </td>
+    {{/if}}
+    {{#if past}}
+      <td class="text-center">
+        {{#if timeRecorded}}
+          {{timeDuration timeRecorded}} recorded
+        {{else}}
+          {{#if activeShift}}
+            <span class="label label-primary">Active</span>
+          {{else}}
+            No hours recorded
+          {{/if}}
+        {{/if}}
+      </td>
+    {{/if}}
+  </tr>
+</template>

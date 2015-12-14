@@ -1,0 +1,20 @@
+<template name="newsFeedPostComment">
+  <div class="social-comment">
+    <a class="pull-left" href="#">
+      <img src="{{profilePicture createdBy}}" alt="image"/>
+    </a>
+
+    <div class="media-body">
+      <a href="#" class="pull-left">
+        {{username createdBy}}&nbsp;&nbsp;
+      </a>
+
+      {{{text}}}
+
+      <div class="comment-info">
+        {{> newsFeedLikeButton}}
+        <small class="text-muted comment-date">&nbsp; - &nbsp; {{timeFormattedWithDate createdOn}}</small>
+      </div>
+    </div>
+  </div>
+</template>

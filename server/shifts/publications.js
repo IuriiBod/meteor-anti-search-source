@@ -24,22 +24,29 @@ Meteor.publishAuthorized('weeklyRosterTemplate', function (areaId) {
 Meteor.publishComposite('daily', function (date, areaId, worker) {
   return {
     find: function () {
-      if (this.userId) {
-        var area = Areas.findOne({_id: areaId});
-        var query = {
-          startTime: TimeRangeQueryBuilder.forDay(date, area.locationId),
-          type: null,
-          'relations.areaId': areaId
-        };
-
-        if (worker) {
-          query.assignedTo = worker;
-        }
-
-        return Shifts.find(query);
-      } else {
+      if (!this.userId) {
         this.ready();
+        return;
       }
+
+      var area = Areas.findOne({_id: areaId});
+
+      if (!area) {
+        this.ready();
+        return;
+      }
+
+      var query = {
+        startTime: TimeRangeQueryBuilder.forDay(date, area.locationId),
+        type: null,
+        'relations.areaId': areaId
+      };
+
+      if (worker) {
+        query.assignedTo = worker;
+      }
+
+      return Shifts.find(query);
     },
     children: [
       {

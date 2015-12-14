@@ -16,7 +16,6 @@ Router.route('/jobItems', {
     if (!Meteor.userId()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
   }
 });
 
@@ -36,7 +35,6 @@ Router.route('/jobItems/:type', {
     if (!Meteor.userId()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
   }
 });
 
@@ -62,7 +60,6 @@ Router.route('/jobItem/submit', {
       Session.set('jobType', prep._id);
     }
     Session.set('thisJobItem', null);
-    Session.set('editStockTake', false);
   }
 });
 
@@ -87,7 +84,6 @@ Router.route('/jobItem/:_id', {
       Router.go('/');
     }
     Session.set('thisJobItem', this.params._id);
-    Session.set('editStockTake', false);
   }
 });
 
@@ -110,6 +106,5 @@ Router.route('/jobItem/:_id/edit', {
       Router.go('/');
     }
     Session.set('thisJobItem', this.params._id);
-    Session.set('editStockTake', false);
   }
 });
