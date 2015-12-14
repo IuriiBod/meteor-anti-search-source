@@ -1,4 +1,16 @@
-<!-- Used for users list view at comment-->
+<template name="textArea">
+  {{#textareaAutocomplete settings=settings name="message" class="form-control message-input" placeholder=placeholder}}
+  {{/textareaAutocomplete}}
+  <button class="btn btn-sm btn-primary pull-right submit-comment-button">
+    {{buttonCaption}}
+  </button>
+</template>
+
+
+<!--
+  Below templates usages:
+   - text-area/text-area.js
+-->
 <template name="username">
   <td data-id="{{this._id}}">
     {{this.username}}
