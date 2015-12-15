@@ -45,7 +45,6 @@ PosMenuItems = new Mongo.Collection('posMenuItems');
 
 LeaveRequests = new Mongo.Collection('leaveRequests');
 
-
 // null collections
 LocalMenuItem = new Mongo.Collection(null);
 LocalJobItem = new Mongo.Collection(null);

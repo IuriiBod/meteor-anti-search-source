@@ -7,7 +7,7 @@
 //
 
 Migrations.add({
-  version: 38,
+  version: 39,
   name: 'Remove menu items statuses collection',
   up: function () {
     var Statuses = new Mongo.Collection("statuses");
