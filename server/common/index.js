@@ -24,31 +24,6 @@ Meteor.methods({
     return id;
   },
 
-  createStatus: function (name) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
-      logger.error("User not permitted to add statuses");
-      throw new Meteor.Error(403, "User not permitted to add statuses");
-    }
-    if (!name) {
-      logger.error("Status should have a name");
-      return new Meteor.Error(404, "Status should have a name");
-    }
-    var exist = Statuses.findOne({
-      name: name,
-      "relations.areaId": HospoHero.getCurrentAreaId()
-    });
-    if (exist) {
-      logger.error('Status name should be unique', exist);
-      throw new Meteor.Error(404, "Status name should be unique");
-    }
-    var id = Statuses.insert({
-      "name": name.toLowerCase(),
-      relations: HospoHero.getRelationsObject()
-    });
-    logger.info("New Status created", id);
-    return id;
-  },
-
   createSection: function (name) {
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User not permitted to add sections");

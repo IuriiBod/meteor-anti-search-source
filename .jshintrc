@@ -173,7 +173,6 @@
     "Categories": true,
     "JobTypes": true,
     "Sections": true,
-    "Statuses": true,
     "GeneralAreas": true,
     "SpecialAreas": true,
     "Payroll": true,

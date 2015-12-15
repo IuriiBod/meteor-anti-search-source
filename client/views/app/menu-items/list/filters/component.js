@@ -19,12 +19,12 @@ component.state.categories = function () {
 
 component.state.statuses = function () {
   var selected = Session.get("status");
+  var statuses = HospoHero.misc.getMenuItemsStatuses();
   if (selected != "all") {
-    var statuses = Statuses.find({"name": {$nin: [selected, "archived"]}}).fetch();
     statuses.push({"name": "all", "_id": "all"});
     return statuses;
   } else {
-    return Statuses.find({"name": {$ne: "archived"}}).fetch();
+    return statuses;
   }
 };
 
@@ -40,7 +40,7 @@ component.state.selectedCategory = function () {
 component.state.selectedStatus = function () {
   var selected = Session.get("status");
   if (selected != "all") {
-    return Statuses.findOne({"name": selected});
+    return selected;
   } else {
     return {"name": "All", "_id": "all"};
   }

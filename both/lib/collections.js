@@ -16,7 +16,6 @@ Subscriptions = new Mongo.Collection("subscriptions");
 Categories = new Mongo.Collection("categories");
 JobTypes = new Mongo.Collection("jobTypes");
 Sections = new Mongo.Collection("sections");
-Statuses = new Mongo.Collection("statuses");
 
 GeneralAreas = new Mongo.Collection("generalAreas");
 SpecialAreas = new Mongo.Collection("specialAreas");
@@ -42,11 +41,10 @@ Invitations = new Mongo.Collection("invitations");
 //new forecast functionality
 WeatherForecast = new Mongo.Collection("weatherForecast");
 DailySales = new Mongo.Collection("dailySales");
+PosMenuItems = new Mongo.Collection('posMenuItems');
 
 LeaveRequests = new Mongo.Collection('leaveRequests');
 
-//POS
-PosMenuItems = new Mongo.Collection('posMenuItems');
 
 // null collections
 LocalMenuItem = new Mongo.Collection(null);

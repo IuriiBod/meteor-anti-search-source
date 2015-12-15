@@ -29,16 +29,7 @@ component.state.categoriesList = function () {
 };
 
 component.state.statusList = function () {
-  if (this.item) {
-    var myStatus = this.item.status;
-    var list = null;
-    if (myStatus) {
-      return Statuses.find({
-        name: {$ne: 'archived'}
-      }).fetch();
-    }
-    return list;
-  }
+  return HospoHero.misc.getMenuItemsStatuses();
 };
 
 component.state.isArchived = function () {

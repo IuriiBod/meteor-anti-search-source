@@ -97,11 +97,7 @@ component.action.submit = function (info) {
 };
 
 component.state.statuses = function () {
-  return Statuses.find({
-    name: {
-      $ne: 'archived'
-    }
-  });
+  return HospoHero.misc.getMenuItemsStatuses();
 };
 
 component.prototype.onFormRendered = function () {
