@@ -15,6 +15,7 @@ var JobItemDocument = Match.Where(function (jobItem) {
       createdOn: Match.Optional(Date),
       editedBy: HospoHero.checkers.OptionalNullableMongoId,
       editedOn: Match.Optional(Date),
+      status: Match.Optional(String),
 
       section: HospoHero.checkers.MongoId,
       description: String,
@@ -44,6 +45,7 @@ var JobItemDocument = Match.Where(function (jobItem) {
       createdOn: Match.Optional(Date),
       editedBy: HospoHero.checkers.OptionalNullableMongoId,
       editedOn: Match.Optional(Date),
+      status: Match.Optional(String),
 
       recipe: String,
       ingredients: [{

@@ -9,7 +9,8 @@ Meteor.methods({
     var defaultJobItemProperties = {
       createdBy: Meteor.userId(),
       relations: HospoHero.getRelationsObject(),
-      createdOn: new Date()
+      createdOn: new Date(),
+      status: 'active'
     };
 
     var newJobItemInfo = _.extend(newJobItemInfo, defaultJobItemProperties);
