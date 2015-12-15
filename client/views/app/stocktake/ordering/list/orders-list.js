@@ -1,7 +1,6 @@
 Template.ordersList.onCreated(function() {
   this.getInitialHtml = function(supplierId) {
     var supplier = Suppliers.findOne(supplierId);
-    console.log(this);
     if (supplier) {
       var receipt = OrderReceipts.findOne({"version": this.data.orderId, "supplier": supplierId});
       var total = 0;
@@ -19,8 +18,6 @@ Template.ordersList.onCreated(function() {
           unitPrice: 1
         }
       }).fetch();
-      console.log('data in getInitialHtml -> ', data);
-      console.log('supplierID -> ', supplierId);
       data = _.map(data, function (stock) {
         var stockItem = Ingredients.findOne({_id: stock.stockId}, {fields: {code: 1, description: 1}});
         var cost = stock.countOrdered * stock.unitPrice;
@@ -53,10 +50,7 @@ Template.ordersList.onCreated(function() {
       };
 
       var self = this;
-      console.log('self -> ', self);
-      console.log('templateData -> ', templateData);
       Meteor.call('renderSomeHandlebarsTemplate', 'supplier-email-text', templateData, HospoHero.handleMethodResult(function (text) {
-        console.log('text after Meteor call => ', text);
         self.set('initialHtml', text);
       }));
     } else {
@@ -108,12 +102,12 @@ Template.ordersList.helpers({
   onCountChange: function() {
     var instance = Template.instance();
     return function () {
-      instance.getInitialHtml(Template.instance().get('activeSupplier'));
+      instance.getInitialHtml(instance.get('activeSupplier'));
     }
   },
 
-  getSupplier: function() {
-    return Template.instance().get('supplier');
+  initialHtml: function() {
+    return Template.instance().get('initialHtml');
   }
 });
 

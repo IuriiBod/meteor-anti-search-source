@@ -1,4 +1,5 @@
 Template.orderingCount.onRendered(function () {
+  var self = this;
   $('.orderingCount').editable({
     title: 'Edit count',
     showbuttons: false,
@@ -13,10 +14,9 @@ Template.orderingCount.onRendered(function () {
         var $row = $cell.closest('tr');
         var stockItemId = $row.attr('data-id');
 
-        var count = parseFloat(newValue) ? parseFloat(newValue) : 0;
+        var count = parseFloat(newValue) || 0;
         Meteor.call('editOrderingCount', stockItemId, count, HospoHero.handleMethodResult(function () {
-          console.log('after ordering count');
-          $(".ordering_count").trigger('callFlowAction');
+          self.data.onCountChange();
         }));
       }
     }
@@ -33,11 +33,5 @@ Template.orderingCount.helpers({
 
   unit: function() {
     return this.unit;
-  }
-});
-
-Template.orderingCount.events({
-  'click .ordering_count': function (event, tmpl) {
-    tmpl.data.onCountChange();
   }
 });

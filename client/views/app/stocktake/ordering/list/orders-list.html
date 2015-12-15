@@ -40,11 +40,10 @@
     </div>
   </div>
 
+  <!--TODO: NEEDS TO CHANGE TO TEMPLATE CALL WHEN STOCK FLOW COMPONENTS WILL BE DESTROYED-->
   {{> render component='commentsPanel' id=this.orderId type='stockOrders'}}
 
   <!-- COMPOSE MAIL MODAL-->
-
-    {{> render component = 'composeMail' name="composeMail" initialHtml=state$initialHtml supplier=state$activeSupplier}}
-
+    {{> composeMail name="composeMail" initialHtml=initialHtml supplier=supplier}}
   <!-- /COMPOSE MAIL MODAL -->
 </template>
