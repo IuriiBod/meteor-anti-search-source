@@ -76,7 +76,7 @@ Template.submitEditJobItem.onCreated(function () {
 
       // if repeat every X weeks
       if (this.selectedFrequency.get() == 'everyXWeeks') {
-        jobItem.repeatEvery = parseInt(this.$('.repeat-every-weeks-input').val());
+        jobItem.repeatEvery = parseInt(this.$('.repeat-every-weeks-input').val()) || 0;
       }
     }
     jobItem.repeatAt = this.repeatAt.get();
