@@ -1,3 +1,7 @@
+Template.orderReceiveItem.onCreated(function() {
+  this.editable = new ReactiveVar();
+});
+
 Template.orderReceiveItem.helpers({
   stock: function () {
     var ingredient = Ingredients.findOne(this.item.stockId);
@@ -8,12 +12,11 @@ Template.orderReceiveItem.helpers({
   },
 
   total: function () {
-    var total = 0;
     var quantity = this.item.countOrdered;
     if (this.item.hasOwnProperty("countDelivered")) {
       quantity = this.item.countDelivered;
     }
-    total = this.item.unitPrice * quantity;
+    var total = this.item.unitPrice * quantity;
     return total;
   },
 
@@ -25,7 +28,7 @@ Template.orderReceiveItem.helpers({
     }
   },
 
-  isDeliveredCorreclty: function () {
+  isDeliveredCorrectly: function () {
     var id = this.item._id;
     var order = StockOrders.findOne({_id: id});
     if (order && order.deliveryStatus) {
@@ -55,10 +58,6 @@ Template.orderReceiveItem.helpers({
     }
   },
 
-  isEditable: function(id) {
-    return Session.get("editable" + id);
-  },
-
   isReceived: function() {
     var id = this.item.orderReceipt;
     var data = OrderReceipts.findOne({_id: id});
@@ -67,6 +66,10 @@ Template.orderReceiveItem.helpers({
         return true;
       }
     }
+  },
+
+  isEditable: function() {
+    return Template.instance().editable.get();
   }
 });
 
@@ -88,6 +91,7 @@ Template.orderReceiveItem.events({
   },
 
   'click .wrongQuantity': function (event, tmpl) {
+    console.log(this);
     event.preventDefault();
     var id = tmpl.data.item._id;
     tmpl.data.currentOrderCallback(id);
@@ -97,15 +101,14 @@ Template.orderReceiveItem.events({
   'click .receiveOrderItem': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;
-    Session.set("editable" + id, false);
+    tmpl.editable.set(false);
     var receiptId = tmpl.data.item.orderReceipt;
     Meteor.call("receiveOrderItems", id, receiptId, {"received": true}, HospoHero.handleMethodResult());
   },
 
   'click .editPermitted': function (event, tmpl) {
     event.preventDefault();
-    var id = tmpl.data.item._id;
-    Session.set("editable" + id, true);
+    tmpl.editable.set(true);
   }
 });
 

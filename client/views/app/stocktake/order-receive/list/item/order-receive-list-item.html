@@ -1,5 +1,5 @@
 <template name="orderReceiveItem">
-  <tr data-id="{{stock._id}}">
+  <tr>
     <td>{{stock.description}}</td>
     {{#if isWrongQuantity}}
       <td>{{stock.countDelivered}} [{{stock.unit}}]</td>
@@ -10,7 +10,7 @@
     <td>$ {{roundCount total}}</td>
     <td>
       {{#if stock.received}}
-        {{#if isEditable stock._id}}
+        {{#if isEditable}}
           <a class="btn btn-sm btn-outline btn-danger wrongQuantity">Wrong Quantity</a>
           <a class="btn btn-sm btn-outline btn-danger wrongPrice">Wrong Price</a>
           <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i>
@@ -23,7 +23,7 @@
           {{/if}}
         {{/if}}
       {{else}}
-        {{#if isDeliveredCorreclty}}
+        {{#if isDeliveredCorrectly}}
         {{else}}
           {{#if isWrongPrice}}
           {{else}}

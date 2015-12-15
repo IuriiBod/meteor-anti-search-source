@@ -1,5 +1,4 @@
 Template.receiveModal.onRendered(function() {
-  console.log(this);
   $('[data-toggle="popover"]').popover();
   $('.i-checks').iCheck({
     checkboxClass: 'icheckbox_square-green'
