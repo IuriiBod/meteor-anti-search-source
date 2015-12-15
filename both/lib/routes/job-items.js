@@ -60,12 +60,6 @@ Router.route('/jobItem/submit', {
     if (!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
       Router.go('/');
     }
-    var prep = JobTypes.findOne({'name': 'Prep'});
-    if (prep) {
-      Session.set('jobType', prep._id);
-    }
-    Session.set('thisJobItem', null);
-    Session.set('editStockTake', false);
   }
 });
 
@@ -112,9 +106,6 @@ Router.route('/jobItem/:_id/edit', {
     if (!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
       Router.go('/');
     }
-    Session.set('thisJobItem', this.params._id);
-    Session.set('editStockTake', false);
-
     return {
       jobItemId: this.params._id
     }
