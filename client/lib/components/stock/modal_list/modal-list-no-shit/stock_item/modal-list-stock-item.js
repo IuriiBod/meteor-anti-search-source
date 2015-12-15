@@ -1,4 +1,4 @@
-Template.stockModalItemNoShit.onCreated(function () {
+Template.stockModalItem.onCreated(function () {
   this.getCostPerPortionUsed = function () {
     var costPerPortionUsed = 0;
     if ((this.data.stock.costPerPortion > 0) && (this.data.stock.unitSize > 0)) {
@@ -12,7 +12,7 @@ Template.stockModalItemNoShit.onCreated(function () {
   };
 });
 
-Template.stockModalItemNoShit.helpers({
+Template.stockModalItem.helpers({
   stockItem: function () {
     return Template.instance().data.stock;
   },
@@ -21,7 +21,7 @@ Template.stockModalItemNoShit.helpers({
   }
 });
 
-Template.stockModalItemNoShit.events({
+Template.stockModalItem.events({
   'click .add-ing-checkbox': function (e, tmpl) {
     tmpl.data.onAddStockItem(tmpl.data.stock._id)
   }

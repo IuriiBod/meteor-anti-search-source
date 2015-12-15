@@ -1,4 +1,4 @@
-<template name="stocksModalListNoShit">
+<template name="stocksModalList">
   <div class="modal-dialog">
     <div class="modal-content" style="width: 130%">
       <div class="modal-header">
@@ -30,7 +30,7 @@
                 </thead>
                 <tbody>
                 {{#each ingredients}}
-                  {{> stockModalItemNoShit stock=this onAddStockItem=onAddStockItem}}
+                  {{> stockModalItemComponent stock=this onAddStockItem=onAddStockItem}}
                 {{/each}}
                 </tbody>
               </table>

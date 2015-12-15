@@ -1,8 +1,8 @@
-Template.stocksModalListNoShit.onCreated(function () {
+Template.stocksModalList.onCreated(function () {
   this.showAddStockItemMenu = new ReactiveVar(false);
 });
 
-Template.stocksModalListNoShit.helpers({
+Template.stocksModalList.helpers({
   ingredients: function () {
     return Ingredients.find({_id: {$nin: Template.instance().data.modalStockListParams.stockItemsInListIds}}, {limit: 10});
   },
@@ -14,7 +14,7 @@ Template.stocksModalListNoShit.helpers({
   }
 });
 
-Template.stocksModalListNoShit.events({
+Template.stocksModalList.events({
   'click .add-new-ingredient': function (e, tmpl) {
     tmpl.showAddStockItemMenu.set(true);
   },
