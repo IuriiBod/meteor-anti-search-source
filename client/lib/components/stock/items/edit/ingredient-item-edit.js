@@ -1,7 +1,7 @@
-Template.ingredientItemEditNoShit.onRendered(function () {
+Template.ingredientItemEdit.onRendered(function () {
 });
 
-Template.ingredientItemEditNoShit.helpers({
+Template.ingredientItemEdit.helpers({
   item: function () {
     return getIngredientItem(Template.instance().data.item.id);
   },
@@ -16,7 +16,7 @@ Template.ingredientItemEditNoShit.helpers({
   }
 });
 
-Template.ingredientItemEditNoShit.events({
+Template.ingredientItemEdit.events({
   'click .remove-ing': function (e, tmpl) {
     tmpl.data.onChange({id: tmpl.data.item.id, quantity: 0});
   },
