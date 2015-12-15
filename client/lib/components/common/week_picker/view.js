@@ -28,7 +28,7 @@ Template.weekPicker.onRendered(function () {
   };
 
   this.updatePickedMoment = function (weekChange) {
-    var currentMoment = moment(this.datePicker.date().toDate());
+    var currentMoment = moment(this.datePicker.date().isoWeekday(1).toDate());
 
     var applyChangeToCurrentMoment = function () {
       var methodName = weekChange === 1 ? 'add' : 'subtract';
