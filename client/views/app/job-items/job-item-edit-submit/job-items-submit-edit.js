@@ -1,11 +1,12 @@
 Template.submitEditJobItem.onCreated(function () {
 
   this.jobItem = JobItems.findOne({_id: this.data.jobItemId}) || {};
-  this.selectedJobTypeId = new ReactiveVar(JobTypes.findOne()._id);
-  this.selectedFrequency = new ReactiveVar('daily');
-  this.repeatAt = new ReactiveVar(moment().hours(8).minutes(0).toDate());
-  this.ingredients = [];
-  this.checklistItems = new ReactiveVar([]);
+  console.log(this);
+  this.selectedJobTypeId = new ReactiveVar(this.jobItem.type || JobTypes.findOne()._id);
+  this.selectedFrequency = new ReactiveVar(this.jobItem.frequency || 'daily');
+  this.repeatAt = new ReactiveVar(this.jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
+  this.ingredients = this.jobItem.ingredients || [];
+  this.checklistItems = new ReactiveVar(this.jobItem.checklist || []);
 
   this.isPrep = function () {
     var selectedJobType = this.getSelectedJobType();
@@ -174,7 +175,6 @@ Template.submitEditJobItem.helpers({
   editIngredientsListOnChange: function () {
     var thisTemplate = Template.instance();
     return function (ingredientsList) {
-      console.log(ingredientsList);
       thisTemplate.ingredients = ingredientsList;
     };
   },

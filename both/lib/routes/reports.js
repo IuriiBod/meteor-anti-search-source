@@ -11,6 +11,5 @@ Router.route('/reports/:year/:week', {
     ];
   },
   data: function () {
-    Session.set("editStockTake", false);
   }
 });

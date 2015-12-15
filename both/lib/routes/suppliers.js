@@ -10,7 +10,6 @@ Router.route('/suppliers', {
     if (!Meteor.userId()) {
       Router.go("/");
     }
-    Session.set("editStockTake", false);
   }
 });
 
@@ -31,6 +30,5 @@ Router.route('/supplier/profile/:_id', {
       Router.go("/");
     }
     Session.set("thisSupplier", this.params._id);
-    Session.set("editStockTake", false);
   }
 });

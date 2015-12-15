@@ -110,7 +110,7 @@ component.state.onFormSubmit = function () {
   return function (response) {
     var invitationId = self.get('invitation')._id;
     Meteor.call('acceptInvitation', invitationId, response, HospoHero.handleMethodResult(function () {
-      Router.go('home');
+      Router.go('dashboard');
     }));
   };
 };

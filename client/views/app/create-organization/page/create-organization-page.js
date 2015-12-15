@@ -13,7 +13,7 @@ Template.createOrganizationPage.events({
     Meteor.call("createOrganization", orgName, HospoHero.handleMethodResult(function () {
       // ugly hack
       // fixes problem with organization flyout after organization creation
-      window.location = Router.url('home');
+      window.location = Router.url('dashboard');
     }));
   }
 });

@@ -17,7 +17,7 @@ Template.breadcrumbs.events({
     } else if (category == "Menus") {
       Router.go("menuItemsMaster", {"category": Session.get("category"), "status": Session.get("status")});
     } else if (category == "Settings") {
-      Router.go("home");
+      Router.go("dashboard");
     } else if (category == "Stocktake List") {
       Router.go("stocktakeList");
     } else if (category == "Stocktake") {

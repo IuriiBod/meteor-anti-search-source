@@ -1,0 +1,30 @@
+<template name="textArea">
+  {{#textareaAutocomplete settings=settings name="message" class="form-control message-area" placeholder=placeholder}}{{/textareaAutocomplete}}
+  <button class="btn btn-sm btn-primary pull-right submit-comment-button">
+    {{buttonCaption}}
+  </button>
+</template>
+
+<!--
+  Below templates usages:
+   - text-area/text-area.js
+-->
+<template name="username">
+  <td data-id="{{this._id}}">
+    {{this.username}}
+    <small>
+      {{#if this.profile.firstname}}
+        {{this.profile.firstname}}
+      {{/if}}
+      {{#if this.profile.lastname}}
+        {{this.profile.lastname}}
+      {{/if}}
+      {{#if this.username}}
+      {{/if}}
+    </small>
+  </td>
+</template>
+
+<template name="noMatchTemplate">
+  <td>No user found</td>
+</template>

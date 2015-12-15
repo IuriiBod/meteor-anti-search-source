@@ -3,7 +3,7 @@ Router.route('/createOrganization', {
   template: "createOrganization",
   onBeforeAction: function () {
     if (Meteor.userId() && Organizations.findOne({owner: Meteor.userId()})) {
-      Router.go('home');
+      Router.go('dashboard');
     } else {
       this.next();
     }

@@ -1,6 +1,6 @@
 <template name="menuItemDetail">
   <!-- Page heading -->
-  {{> render component="pageHeading" title=state$menu.name category='Menus' name="menudetailed" id=state$menu._id}}
+  {{> pageHeading title=state$menu.name category='Menus' name="menudetailed" id=state$menu._id}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
@@ -56,7 +56,7 @@
         {{/if}}
       </div>
       {{> render component='menuDetailWidgets' item=state$menu}}
-      {{> render component='commentsPanel' id=state$menu._id type='menu'}}
+      {{> commentsPanel id=state$menu._id type='menu'}}
     </div>
   </div>
 
