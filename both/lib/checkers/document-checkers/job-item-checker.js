@@ -9,6 +9,13 @@ var JobItemDocument = Match.Where(function (jobItem) {
       activeTime: Number,
       wagePerHour: Number,
 
+      _id: HospoHero.checkers.OptionalMongoId,
+      relations: Match.Optional(HospoHero.checkers.Relations),
+      createdBy: HospoHero.checkers.OptionalNullableMongoId,
+      createdOn: Match.Optional(Date),
+      editedBy: HospoHero.checkers.OptionalNullableMongoId,
+      editedOn: Match.Optional(Date),
+
       section: HospoHero.checkers.MongoId,
       description: String,
       frequency: Match.OneOf('daily', 'weekly', 'everyXWeeks'),
@@ -30,6 +37,13 @@ var JobItemDocument = Match.Where(function (jobItem) {
       type: HospoHero.checkers.MongoId,
       activeTime: Number,
       wagePerHour: Number,
+
+      _id: HospoHero.checkers.OptionalMongoId,
+      relations: Match.Optional(HospoHero.checkers.Relations),
+      createdBy: HospoHero.checkers.OptionalNullableMongoId,
+      createdOn: Match.Optional(Date),
+      editedBy: HospoHero.checkers.OptionalNullableMongoId,
+      editedOn: Match.Optional(Date),
 
       recipe: String,
       ingredients: [{

@@ -22,65 +22,81 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.getSelectedJobType = function () {
-    return JobTypes.findOne({_id: Template.instance().selectedJobTypeId.get()});
+    return JobTypes.findOne({_id: this.selectedJobTypeId.get()});
   };
 
   this.saveJobItem = function () {
+    var jobItem = {};
 
     // job item fields
     // common fields
-    this.assignCommonFields();
+    this.assignCommonFields(jobItem);
 
     // for recurring
     if (this.isRecurring()) {
-      this.assignFieldsForRecurring();
+      this.assignFieldsForRecurring(jobItem);
     }
 
     // for prep
     if (this.isPrep()) {
-      this.assignFieldsForPrep();
+      this.assignFieldsForPrep(jobItem);
     }
 
-    console.log(this.jobItem);
-    Meteor.call('createJobItem', this.jobItem, HospoHero.handleMethodResult(function () {
-      console.log('ok');
-    }));
+    if (this.jobItem._id) {
+      Meteor.call('editJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
+        Router.go('jobItemDetailed', {_id: jobItemId});
+      }));
+    } else {
+      Meteor.call('createJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
+        Router.go('jobItemDetailed', {_id: jobItemId});
+      }));
+    }
   };
 
-  this.assignCommonFields = function () {
-    this.jobItem.name = this.$('.name-input').val();
-    this.jobItem.type = this.selectedJobTypeId.get();
-    this.jobItem.activeTime = parseInt(this.$('.active-time').val());
-    this.jobItem.wagePerHour = parseInt(this.$('.avg-wage-per-hour').val());
+  this.assignCommonFields = function (jobItem) {
+    jobItem.name = this.$('.name-input').val();
+    jobItem.type = this.selectedJobTypeId.get();
+    jobItem.activeTime = parseInt(this.$('.active-time').val());
+    jobItem.wagePerHour = parseInt(this.$('.avg-wage-per-hour').val());
+
+    if (this.jobItem._id) {
+      this.assignOriginJobItemFields(jobItem);
+    }
   };
 
-  this.assignFieldsForRecurring = function () {
-    this.jobItem.description = this.$('.summernote').summernote('code');
-    this.jobItem.section = this.$('.sections-select').val();
-    this.jobItem.checklist = this.checklistItems.get();
-    this.jobItem.frequency = this.selectedFrequency.get();
+  this.assignFieldsForRecurring = function (jobItem) {
+    jobItem.description = this.$('.summernote').summernote('code');
+    jobItem.section = this.$('.sections-select').val();
+    jobItem.checklist = this.checklistItems.get();
+    jobItem.frequency = this.selectedFrequency.get();
 
     // if repeat every week
     if (this.selectedFrequency.get() == 'weekly' || 'everyXWeeks') {
-      this.jobItem.repeatOn = this.getSelectedDays();
+      jobItem.repeatOn = this.getSelectedDays();
 
       // if repeat every X weeks
       if (this.selectedFrequency.get() == 'everyXWeeks') {
-        this.jobItem.repeatEvery = parseInt(this.$('.repeat-every-weeks-input').val());
+        jobItem.repeatEvery = parseInt(this.$('.repeat-every-weeks-input').val());
       }
     }
-    this.jobItem.repeatAt = this.repeatAt.get();
-    this.jobItem.startsOn = this.startsOnDatePicker.date().toDate();
-    this.jobItem.endsOn = this.getEndsOnDate();
+    jobItem.repeatAt = this.repeatAt.get();
+    jobItem.startsOn = this.$('.starts-on-date-picker').data('DateTimePicker').date().toDate();
+    jobItem.endsOn = this.getEndsOnDate();
   };
 
-  this.assignFieldsForPrep = function () {
-    this.jobItem.recipe = this.$('.summernote').summernote('code');
-    this.jobItem.ingredients = this.ingredients;
-    this.jobItem.portions = parseInt(this.$('.portions').val());
-    this.jobItem.shelfLife = parseInt(this.$('.shelf-life').val());
+  this.assignFieldsForPrep = function (jobItem) {
+    jobItem.recipe = this.$('.summernote').summernote('code');
+    jobItem.ingredients = this.ingredients;
+    jobItem.portions = parseInt(this.$('.portions').val());
+    jobItem.shelfLife = parseInt(this.$('.shelf-life').val());
   };
 
+  this.assignOriginJobItemFields = function (jobItem) {
+    jobItem._id = this.jobItem._id;
+    jobItem.createdOn = this.jobItem.createdOn;
+    jobItem.createdBy = this.jobItem.createdBy;
+    jobItem.relations = this.jobItem.relations;
+  };
 
   this.getSelectedDays = function () {
     var $selectedDays = this.$('.repeat-on-checkbox:checked');
@@ -103,7 +119,7 @@ Template.submitEditJobItem.onCreated(function () {
       }
 
     } else if (checkedButtonFor == 'on-date') {
-      var lastDate = this.endsOnDatePicker.date().toDate();
+      var lastDate = this.$('.ends-on-date-picker').data('DateTimePicker').date().toDate();
       return {
         lastDate: lastDate
       }
@@ -123,6 +139,7 @@ Template.submitEditJobItem.onCreated(function () {
     this.checklistItems.set(items);
   };
 
+
   var self = this;
   this.sortableParams = {
     cursor: 'move',
@@ -141,25 +158,12 @@ Template.submitEditJobItem.onCreated(function () {
     }
   };
 
-
   this.initReactiveVars();
 });
 
-
 Template.submitEditJobItem.onRendered(function () {
   this.$('.checklist').sortable(this.sortableParams).disableSelection();
-
-  this.$('.starts-on-date-picker').datetimepicker({
-    format: 'YYYY-MM-DD'
-  });
-  this.startsOnDatePicker = this.$('.starts-on-date-picker').data('DateTimePicker');
-
-  this.$('.ends-on-date-picker').datetimepicker({
-    format: 'YYYY-MM-DD'
-  });
-  this.endsOnDatePicker = this.$('.ends-on-date-picker').data('DateTimePicker');
 });
-
 
 Template.submitEditJobItem.helpers({
   repeatAtComboEditableParams: function () {
