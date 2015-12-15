@@ -143,7 +143,6 @@ Template.submitEditJobItem.onCreated(function () {
 
 
   this.initReactiveVars();
-  console.log(this);
 });
 
 
@@ -229,17 +228,19 @@ Template.submitEditJobItem.helpers({
     return startsOn.format('YYYY-MM-DD');
   },
   endsOn: function () {
-    var endsOn = moment(Template.instance().jobItem.endsOn.lastDate)
-      || moment(Template.instance().jobItem.startsOn).add(1, 'days') || moment();
+    var endsOn = moment().add(1, 'days');
+    if (Template.instance().jobItem.endsOn) {
+      endsOn = moment(Template.instance().jobItem.endsOn.lastDate)
+        || moment(Template.instance().jobItem.startsOn).add(1, 'days');
+    }
     return endsOn.format('YYYY-MM-DD');
   },
   week: function () {
     var days = ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
 
-    var checkedDays = Template.instance().jobItem.repeatOn;
+    var checkedDays = Template.instance().jobItem ? Template.instance().jobItem.repeatOn : [];
 
     return _.map(days, function (day) {
-      debugger;
       if (_.findWhere(checkedDays, day)) {
         return {
           day: day,
