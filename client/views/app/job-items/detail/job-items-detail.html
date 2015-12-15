@@ -1,6 +1,6 @@
 <template name="jobItemDetail">
   <!-- Page heading -->
-  {{>render component="pageHeading" title=job.name category='Jobs' id=job.id name="jobitemdetailed"}}
+  {{> pageHeading title=job.name category="Jobs" id=job.id name="jobitemdetailed"}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
@@ -160,7 +160,7 @@
                             <tbody>
                             <tr>
                               <td>
-                                <a href="{{pathFor 'menuItemDetail' _id=_id}}" target="_blank">
+                                <a href="{{pathFor "menuItemDetail" _id=_id}}" target="_blank">
                                   {{name}}
                                 </a>
                               </td>
@@ -181,7 +181,7 @@
 
         </div>
         <div class="row m-t-lg">
-          {{> render component='commentsPanel' id=job._id type='job'}}
+          {{> commentsPanel id=job._id type="job"}}
         </div>
       </div>
     </div>

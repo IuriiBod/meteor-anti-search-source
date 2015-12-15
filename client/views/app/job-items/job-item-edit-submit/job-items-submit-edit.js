@@ -1,12 +1,16 @@
 Template.submitEditJobItem.onCreated(function () {
 
-  this.jobItem = JobItems.findOne({_id: this.data.jobItemId}) || {};
-  console.log(this);
-  this.selectedJobTypeId = new ReactiveVar(this.jobItem.type || JobTypes.findOne()._id);
-  this.selectedFrequency = new ReactiveVar(this.jobItem.frequency || 'daily');
-  this.repeatAt = new ReactiveVar(this.jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
-  this.ingredients = this.jobItem.ingredients || [];
-  this.checklistItems = new ReactiveVar(this.jobItem.checklist || []);
+  this.initFieldsAndVars();
+
+  this.initFieldsAndVars = function () {
+    this.jobItem = JobItems.findOne({_id: this.data.jobItemId}) || {};
+    console.log(this);
+    this.selectedJobTypeId = new ReactiveVar(this.jobItem.type || JobTypes.findOne()._id);
+    this.selectedFrequency = new ReactiveVar(this.jobItem.frequency || 'daily');
+    this.repeatAt = new ReactiveVar(this.jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
+    this.ingredients = this.jobItem.ingredients || [];
+    this.checklistItems = new ReactiveVar(this.jobItem.checklist || []);
+  };
 
   this.isPrep = function () {
     var selectedJobType = this.getSelectedJobType();
