@@ -1,15 +1,15 @@
 Template.submitEditJobItem.onCreated(function () {
+  this.jobItem = {};
 
-  this.initFieldsAndVars();
-
-  this.initFieldsAndVars = function () {
+  this.initReactiveVars = function () {
     this.jobItem = JobItems.findOne({_id: this.data.jobItemId}) || {};
-    console.log(this);
+
+    // Write data into reactive var
     this.selectedJobTypeId = new ReactiveVar(this.jobItem.type || JobTypes.findOne()._id);
     this.selectedFrequency = new ReactiveVar(this.jobItem.frequency || 'daily');
     this.repeatAt = new ReactiveVar(this.jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
-    this.ingredients = this.jobItem.ingredients || [];
     this.checklistItems = new ReactiveVar(this.jobItem.checklist || []);
+    this.ingredients = this.jobItem.ingredients || [];
   };
 
   this.isPrep = function () {
@@ -140,6 +140,10 @@ Template.submitEditJobItem.onCreated(function () {
       self.checklistItems.set(items);
     }
   };
+
+
+  this.initReactiveVars();
+  console.log(this);
 });
 
 
@@ -188,7 +192,6 @@ Template.submitEditJobItem.helpers({
   },
   isRecurring: function () {
     return Template.instance().isRecurring();
-
   },
   isPrep: function () {
     return Template.instance().isPrep();
@@ -222,13 +225,35 @@ Template.submitEditJobItem.helpers({
   },
 
   startsOn: function () {
-    return moment().format('YYYY-MM-DD');
+    var startsOn = moment(Template.instance().jobItem.startsOn) || moment();
+    return startsOn.format('YYYY-MM-DD');
   },
   endsOn: function () {
-    return moment().add(7, 'days').format('YYYY-MM-DD');
+    var endsOn = moment(Template.instance().jobItem.endsOn.lastDate)
+      || moment(Template.instance().jobItem.startsOn).add(1, 'days') || moment();
+    return endsOn.format('YYYY-MM-DD');
   },
   week: function () {
-    return ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
+    var days = ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
+
+    var checkedDays = Template.instance().jobItem.repeatOn;
+
+    return _.map(days, function (day) {
+      debugger;
+      if (_.findWhere(checkedDays, day)) {
+        return {
+          day: day,
+          checked: true
+        }
+      }
+      return {
+        day: day
+      }
+    });
+  },
+
+  jobItem: function () {
+    return Template.instance().jobItem;
   }
 });
 

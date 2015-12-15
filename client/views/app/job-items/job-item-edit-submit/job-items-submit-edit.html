@@ -21,7 +21,8 @@
                 <label class="col-sm-2 control-label">Name</label>
 
                 <div class="col-sm-10">
-                  <input type="text" class="form-control name-input" placeholder="Enter Name for the job" required>
+                  <input type="text" class="form-control name-input" placeholder="Enter Name for the job" required
+                         value="{{jobItem.name}}">
                 </div>
               </div>
 
@@ -32,7 +33,11 @@
                 <div class="col-sm-10">
                   <select class="form-control type-select">
                     {{#each jobTypes}}
-                      <option value="{{_id}}">{{name}}</option>
+                      {{#if equal jobItem.type _id}}
+                        <option value="{{_id}}" selected>{{name}}</option>
+                      {{else}}
+                        <option value="{{_id}}">{{name}}</option>
+                      {{/if}}
                     {{/each}}
                   </select>
                 </div>
@@ -45,9 +50,12 @@
 
                   <div class="col-sm-10">
                     <select class="form-control sections-select">
-                      <!--<option value="" selected="selected">Select Section</option>-->
                       {{#each sections}}
-                        <option value="{{_id}}">{{name}}</option>
+                        {{#if equal jobItem.section _id}}
+                          <option value="{{_id}}" selected>{{name}}</option>
+                        {{else}}
+                          <option value="{{_id}}">{{name}}</option>
+                        {{/if}}
                       {{/each}}
                     </select>
                   </div>
@@ -60,13 +68,13 @@
                   <label class="col-sm-2 control-label">Recipe</label>
 
                   <div class="col-sm-10">
-                    {{> textEditor initialHtml="Add recipe to job"}}
+                    {{> textEditor initialHtml= jobItem.recipe}} <!--  "Add recipe to job" -->
                   </div>
                 {{else}}
                   <label class="col-sm-2 control-label">Description</label>
 
                   <div class="col-sm-10">
-                    {{> textEditor initialHtml="Add description to job"}}
+                    {{> textEditor initialHtml=jobItem.description}} <!-- "Add description to job" -->
                   </div>
                 {{/if}}
               </div>
@@ -101,7 +109,11 @@
                   <div class="col-sm-10">
                     <select class="form-control frequency-select">
                       {{#each frequencies}}
-                        <option value="{{value}}">{{title}}</option>
+                        {{#if equal jobItem.frequency value}}
+                          <option value="{{value}}" selected>{{title}}</option>
+                        {{else}}
+                          <option value="{{value}}">{{title}}</option>
+                        {{/if}}
                       {{/each}}
                     </select>
                   </div>
@@ -115,7 +127,8 @@
                       <label class="col-sm-2 control-label"></label>
 
                       <div class="col-sm-10">
-                        <p>Repeat every <input type="number" class="repeat-every-weeks-input" value="2" min="2"> weeks.
+                        <p>Repeat every <input type="number" class="repeat-every-weeks-input" min="2"
+                                               value="{{jobItem.repeatEvery}}"> weeks.
                         </p>
                       </div>
                     </div>
@@ -128,9 +141,13 @@
                     <div class="col-sm-10">
                       {{#each week}}
                         <div class="checkbox">
-                          <input type="checkbox" id="{{this}}" class="repeat-on-checkbox" value="{{this}}">
-                          <label for="{{this}}">
-                            {{this}}
+                          {{#if checked}}
+                            <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}" checked>
+                          {{else }}
+                            <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}">
+                          {{/if}}
+                          <label for="{{day}}">
+                            {{day}}
                           </label>
                         </div>
                       {{/each}}
@@ -170,26 +187,42 @@
                   <div class="col-sm-10">
 
                     <div class="radio">
-                      <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
-                             value="never" checked>
+                      {{#if jobItem.endsOn.on}}
+                        <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
+                               value="never" checked>
+                      {{else}}
+                        <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
+                               value="never">
+                      {{/if}}
                       <label for="radio">Never</label>
                     </div>
 
                     <div class="radio">
-                      <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
-                             value="occurrences">
+                      {{#if jobItem.endsOn.after}}
+                        <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
+                               value="occurrences" checked>
+                      {{else}}
+                        <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
+                               value="occurrences">
+                      {{/if}}
                       <label for="radio">
                         After
-                        <input type="number" name="occurrences" class="occurrences-number-input" value="10">
+                        <input type="number" name="occurrences" class="occurrences-number-input"
+                               value="{{jobItem.endsOn.after}}">
                         occurrences
                       </label>
                     </div>
 
                     <div class="radio">
-                      <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
-                             value="on-date">
+                      {{#if jobItem.endsOn.lastDate}}
+                        <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
+                               value="on-date" checked>
+                      {{else}}
+                        <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
+                               value="on-date">
+                      {{/if}}
                       <label for="radio">
-                        On <input type="text" class="ends-on-date-picker form-control">
+                        On <input type="text" class="ends-on-date-picker form-control" value="{{endsOn}}">
                       </label>
                     </div>
 
@@ -234,7 +267,8 @@
 
                 <div class="col-sm-10">
                   <div class="input-group m-b">
-                    <input type="number" class="form-control active-time" placeholder="Active Time" required>
+                    <input type="number" class="form-control active-time" placeholder="Active Time"
+                           value="{{jobItem.activeTime}}" required>
                     <span class="input-group-addon">mins</span>
                   </div>
                 </div>
@@ -248,7 +282,7 @@
                   <div class="input-group m-b">
                     <span class="input-group-addon">$</span>
                     <input type="number" class="form-control avg-wage-per-hour"
-                           placeholder="Average Wage of a Worker per Hour" required>
+                           placeholder="Average Wage of a Worker per Hour" value="{{jobItem.wagePerHour}}" required>
                     <span class="input-group-addon">/ hour</span>
                   </div>
                 </div>

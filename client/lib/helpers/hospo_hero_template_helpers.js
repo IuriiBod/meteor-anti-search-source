@@ -3,6 +3,14 @@ Namespace('HospoHero.template', {
     return (a === b);
   },
 
+  or: function () {
+    var res = null;
+    for (var i = 0; i < arguments.length; i++) {
+      res = res || arguments[i];
+    }
+    return res;
+  },
+
   profilePicture: function (user) {
     user = user || Meteor.userId();
     if (_.isString(user)) {
