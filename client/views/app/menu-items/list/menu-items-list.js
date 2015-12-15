@@ -1,30 +1,31 @@
-var MenuItemsSearch = new SearchSource('menuItemsSearch', ['name'], {
-  keepHistory: 1000 * 60 * 5,
-  localSearch: true
+//todo: add security check on server side for search sub and use transform feature
+
+Template.menuItemsListMainView.onCreated(function () {
+  var category = this.data.category;
+  var status = this.data.status;
+
+  var mongoQuery = {};
+
+  if (category && category != 'all') {
+    mongoQuery.category = category
+  }
+
+  mongoQuery.status = status === "all" ? {$ne: "archived"} : status;
+
+  this.limit = 30;
+  this.step = 30;
+
+  this.searchSource = this.AntiSearchSource({
+    collection: 'menuItems',
+    fields: ['name'],
+    mongoQuery: mongoQuery,
+    limit: this.limit
+  });
 });
 
-Template.menuItemsList.onRendered(function () {
-  MenuItemsSearch.cleanHistory();
-  var category = Router.current().params.category;
-  var status = Router.current().params.status;
-  var selector = {
-    'limit': 30
-  };
-  var filter = [];
-  if (category && category.toLowerCase() != "all") {
-    filter.push({"category": category});
-  }
-  if (status && status.toLowerCase() != "all") {
-    filter.push({"status": status.toLowerCase()});
-  } else if (status && status.toLowerCase() == "all") {
-    filter.push({"status": {$ne: "archived"}});
-  }
-  if (filter.length > 0) {
-    selector.filter = filter;
-  }
-  MenuItemsSearch.search("", selector);
 
-  var tpl = this;
+Template.menuItemsListMainView.onRendered(function () {
+  var tmpl = this;
   Meteor.defer(function () {
     $("#wrapper").on('scroll', function (event) {
       var wrapper = event.target;
@@ -33,69 +34,35 @@ Template.menuItemsList.onRendered(function () {
       var wrapperScrollTop = wrapper.scrollTop;
 
       if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
-        tpl.$('#loadMoreMenuItems').click();
+        tmpl.$('#loadMoreMenuItems').click();
       }
     });
   });
 });
 
-Template.menuItemsList.helpers({
-  'getMenuItems': function () {
-    return MenuItemsSearch.getData({
-      transform: function (matchText, regExp) {
-        return matchText.replace(regExp, "<b>$&</b>")
-      },
+
+Template.menuItemsListMainView.helpers({
+  menuItems: function () {
+    return Template.instance().searchSource.searchResult({
       sort: {'name': 1}
     });
   }
 });
 
-Template.menuItemsList.events({
-  'keyup #searchMenuItemsBox': function (event) {
-    MenuItemsSearch.cleanHistory();
+
+Template.menuItemsListMainView.events({
+  'keyup #searchMenuItemsBox': function (event, tmpl) {
     var text = $("#searchMenuItemsBox").val().trim();
-    var category = Router.current().params.category;
-    var status = Router.current().params.status;
-    var selector = {
-      'limit': 30
-    };
-    var filter = [];
-    if (category && category.toLowerCase() != "all") {
-      filter.push({"category": category});
-    }
-    if (status && status.toLowerCase() != "all") {
-      filter.push({"status": status.toLowerCase()});
-    } else if (status && status.toLowerCase() == "all") {
-      filter.push({"status": {$ne: "archived"}});
-    }
-    if (filter.length > 0) {
-      selector.filter = filter;
-    }
-    MenuItemsSearch.search(text, selector);
+    tmpl.searchSource.search(text);
   },
 
-  'click #loadMoreMenuItems': function (event) {
-    event.preventDefault();
-    var text = $("#searchMenuItemsBox").val().trim();
-    if (MenuItemsSearch.history && MenuItemsSearch.history[text]) {
-      var dataHistory = MenuItemsSearch.history[text].data;
-      if (dataHistory.length >= 9) {
-        MenuItemsSearch.cleanHistory();
-        var count = dataHistory.length;
-        var lastItem = dataHistory[count - 1]['name'];
-
-        var selector = {
-          "limit": count + 10,
-          "endingAt": lastItem
-        };
-        MenuItemsSearch.search(text, selector);
-      }
-    }
+  'click #loadMoreMenuItems': function (event, tmpl) {
+    tmpl.limit += tmpl.step;
+    tmpl.searchSource.setLimit(tmpl.limit);
   }
 });
 
 
-
-Template.menuItemsList.onDestroyed(function () {
+Template.menuItemsListMainView.onDestroyed(function () {
   $('#wrapper').off('scroll');
 });

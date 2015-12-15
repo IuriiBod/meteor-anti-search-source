@@ -1,6 +1,7 @@
 <template name="menuItem">
-  <a class="list-group-item" href="/menuItem/{{state$item._id}}">
-    {{{state$item.name}}}
+  <a class="list-group-item" href="{{pathFor 'menuItemDetail'}}">
+
+    {{{name}}}
 
     <span class="badge">
       <i class="fa fa-fw fa-angle-right"></i>

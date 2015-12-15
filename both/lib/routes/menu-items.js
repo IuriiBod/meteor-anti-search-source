@@ -1,6 +1,4 @@
-//--------------------MENU ITEMS
-Router.route('/menuItems/:category/:status', {
-  name: "menuItemsMaster",
+Router.route('menuItemsMaster', {
   path: '/menuItems/:category/:status',
   template: "menuItemsListMainView",
   waitOn: function () {
@@ -12,11 +10,14 @@ Router.route('/menuItems/:category/:status', {
     ];
   },
   data: function () {
+    return {
+      category: this.params.category.toLowerCase(),
+      status: this.params.status.toLowerCase()
+    }
   }
 });
 
-Router.route('/menuItems/submit', {
-  name: "submitMenuItem",
+Router.route('submitMenuItem', {
   path: '/menuItems/submit',
   template: "menuItemSubmitMainView",
   waitOn: function () {
@@ -31,14 +32,13 @@ Router.route('/menuItems/submit', {
   }
 });
 
-Router.route('/menuItem/:_id', {
-  name: "menuItemDetail",
+Router.route('menuItemDetail', {
   path: '/menuItem/:_id',
   template: "menuItemDetailedMainView",
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe("menuItem", this.params._id),
+      Meteor.subscribe('menuItem', this.params._id),
       Meteor.subscribe('comments', this.params._id, currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('allCategories', currentAreaId),
