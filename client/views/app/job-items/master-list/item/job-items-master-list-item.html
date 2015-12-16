@@ -9,7 +9,7 @@
     <td>{{secondsToMinutes job.activeTime}} mins</td>
     {{#if showSection}}
       <td>{{sectionById job.section}}</td>
-      <td>{{job.frequency}}</td>
+      <td>{{jobFrequency}}</td>
     {{else}}
       <td>{{#if job.shelfLife}}{{job.shelfLife}} days {{else}} -NA- {{/if}}</td>
       <td>{{#if job.portions}} {{job.portions}} {{else}} -NA- {{/if}}</td>

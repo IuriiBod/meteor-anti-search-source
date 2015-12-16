@@ -9,6 +9,24 @@ Template.jobItemDetailed.helpers({
     return Template.instance().data.jobitem;
   },
 
+  jobFrequency: function () {
+    var jobItem = Template.instance().data.jobitem;
+    var frequency = jobItem.frequency;
+    switch (frequency) {
+      case 'daily':
+        return 'Daily';
+        break;
+      case 'weekly':
+        return 'Weekly';
+        break;
+      case 'everyXWeeks':
+        return 'Every ' + jobItem.repeatEvery + ' weeks';
+        break;
+      default :
+        false;
+    }
+  },
+
   isPrep: function () {
     var id = Template.instance().data.type;
     var type = JobTypes.findOne({_id: id});
