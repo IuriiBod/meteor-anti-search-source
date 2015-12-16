@@ -12,7 +12,12 @@ Template.weekPicker.onCreated(function () {
 
 Template.weekPicker.onRendered(function () {
   this.isSameAsOldWeekDate = function (newDateWeek) {
-    return newDateWeek.week === this.oldDateWeek.week && newDateWeek.year === this.oldDateWeek.year;
+    var newDateMoment = getMomentByWeekDate(newDateWeek);
+    var oldDateMoment = getMomentByWeekDate(this.oldDateWeek);
+    newDateMoment = newDateMoment.isoWeekday(1);
+    oldDateMoment = oldDateMoment.isoWeekday(1);
+
+    return newDateMoment.week() === oldDateMoment.week() && newDateMoment.year() === oldDateMoment.year();
   };
 
   this.updatePickedMoment = function (weekChange) {
@@ -108,4 +113,8 @@ var getWeekDateByMoment = function (dateMoment) {
     year: dateMoment.year(),
     week: dateMoment.week()
   };
+};
+
+var getMomentByWeekDate = function (weekDate) {
+  return moment().set(weekDate);
 };
