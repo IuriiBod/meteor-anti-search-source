@@ -50,7 +50,9 @@ Template.newSupplier.events({
 
     var doc = tmpl.getValuesFromForm($form);
 
-    FlowComponents.callAction('createSupplier', doc);
-    tmpl.closeModal("#addNewSupplierModal");
+    Meteor.call("createSupplier", doc, HospoHero.handleMethodResult(function (supplierId) {
+      tmpl.closeModal("#addNewSupplierModal");
+      Router.go("supplierProfile", {"_id": supplierId});
+    }));
   }
 });
