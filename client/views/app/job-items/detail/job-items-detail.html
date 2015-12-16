@@ -97,11 +97,11 @@
                   <li class="list-group-item">
                     <span class="pull-right">{{frequency}}</span>Repeat Frequency
                   </li>
-                  {{#unless isDaily}}
+                  {{#if isWeekly}}
                     <li class="list-group-item">
                       <span class="pull-right">{{repeatOnDays}}</span>Repeat On
                     </li>
-                  {{/unless}}
+                  {{/if}}
                   <li class="list-group-item">
                     <span class="pull-right">{{repeatAt}}</span>Repeat At
                   </li>

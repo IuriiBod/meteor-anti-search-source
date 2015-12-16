@@ -84,36 +84,32 @@ Template.jobItemDetail.helpers({
 
   isWeekly: function () {
     var item = Template.instance().job;
-    return item ? item.frequency === 'Weekly' : false;
-  },
-
-  isDaily: function () {
-    var item = Template.instance().job;
-    return item ? item.frequency === 'Daily' : false;
+    return item ? item.frequency == 'weekly' : false;
   },
 
   frequency: function () {
     var item = Template.instance().job;
-    var frequency = item.frequency;
-    if (frequency === 'Every X Weeks') {
-      frequency = frequency.replace('X', item.step);
+    switch (item.frequency) {
+      case 'everyXWeeks':
+        return 'Every ' + item.repeatEvery + ' weeks';
+        break;
+      case 'weekly':
+        return 'Weekly';
+        break;
+      case 'daily':
+        return 'Daily';
     }
-    return frequency;
   },
 
   repeatOnDays: function () {
     var item = Template.instance().job;
-    var repeat = null;
-    if (item) {
-      if (_.contains(['Every X Weeks', 'Weekly'], item.frequency)) {
-        if (item.repeatOn.length > 0) {
-          if (item.repeatOn.length == 7) {
-            repeat = 'Everyday';
-          } else {
-            repeat = 'Every ' + item.repeatOn;
-          }
-        }
-        return repeat;
+
+    var repeatOnDays = item.repeatOn;
+    if (_.isArray(repeatOnDays)) {
+      if (repeatOnDays.length == 7) {
+        return 'Every Day'
+      } else if (repeatOnDays.length > 0) {
+        return repeatOnDays.join(', ');
       }
     }
   },
