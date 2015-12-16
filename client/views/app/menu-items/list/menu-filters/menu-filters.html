@@ -1,14 +1,15 @@
 <template name="menuFilters">
-  {{# if notArchive}}
-    <div class="row m-b">
+  {{#unless isArchived}}
+    <div class="row m-b menu-filters">
       <div class="col-md-3">
-        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize"
-                style="text-align: left">{{state$selectedCategory.name}}
+        <button data-toggle="dropdown"
+                class="btn btn-white dropdown-toggle form-control text-capitalize text-align-left">
+          {{selectedCategory.name}}
         </button>
         <span class="caret caret-pulled-right pull-right"></span>
         <ul class="dropdown-menu text-capitalize filter-menus">
-          {{#each state$categories}}
-            <li><a href="/menuItems/{{this._id}}/{{state$selectedStatus.name}}" class="">{{this.name}}</a></li>
+          {{#each categories}}
+            <li><a href="{{pathFor route='menuItemsMaster' category=_id status=../status}}">{{name}}</a></li>
           {{/each}}
           {{#if canEditMenu}}
             <li class="divider"></li>
@@ -16,21 +17,26 @@
           {{/if}}
         </ul>
       </div>
-      <div class="col-md-6">
-      </div>
-      <div class="col-md-3">
-        {{# if notArchive}}
-          <button data-toggle="dropdown" class="btn btn-white dropdown-toggle form-control text-capitalize"
-                  style="text-align: left">{{state$selectedStatus.name}}
+      <div class="col-md-3 col-md-offset-6">
+        {{#unless isArchived}}
+          <button data-toggle="dropdown"
+                  class="btn btn-white dropdown-toggle form-control text-capitalize text-align-left">
+            {{status}}
           </button>
           <span class="caret caret-pulled-right pull-right"></span>
           <ul class="dropdown-menu text-capitalize filter-menus">
-            {{#each state$statuses}}
-              <li><a href="/menuItems/{{state$selectedCategory._id}}/{{this.name}}" class="">{{this.name}}</a></li>
+            {{#each statuses}}
+              <li>
+                <a href="{{pathFor route='menuItemsMaster' category=selectedCategory._id status=this}}">{{this}}</a>
+              </li>
             {{/each}}
           </ul>
-        {{/if}}
+        {{/unless}}
       </div>
     </div>
-  {{/ if}}
+
+    <!-- ADD CATEGORY MODAL -->
+    {{> addNewCategory}}
+    <!-- /ADD CATEGORY MODAL -->
+  {{/unless}}
 </template>

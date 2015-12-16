@@ -1,5 +1,5 @@
 <template name="menuListHeader">
-  <div class="title-action">
+  <div class="title-action menu-list-header">
     <a class="btn btn-primary" href="{{pathFor route='submitMenuItem'}}">Add new menu</a>
     {{#if state$isArchived}}
       {{#linkTo route="menuItemsMaster" category="all" status="all" class="btn btn-info"}}
@@ -13,7 +13,7 @@
           Settings
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" style="margin-left: -56px;">
+        <ul class="dropdown-menu list-header-dropdown">
           {{#if canEditMenu}}
             <li>
               {{#linkTo route="menuItemsMaster" category="all" status="archived"}}
@@ -21,7 +21,7 @@
               {{/linkTo}}
             </li>
           {{/if}}
-          <li><a href="#" class="subscribeMenuList"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a></li>
+          <li><a href="#" class="subscribe-menu-list"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a></li>
         </ul>
       </div>
     {{/if}}
