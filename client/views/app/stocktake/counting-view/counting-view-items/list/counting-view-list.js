@@ -56,6 +56,7 @@ Template.stockCounting.helpers({
             }
           }
         });
+        console.log('ings -> ', ings);
         return ings;
       }
     }

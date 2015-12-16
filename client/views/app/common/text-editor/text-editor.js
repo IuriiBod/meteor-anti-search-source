@@ -23,21 +23,21 @@ Template.textEditor.onRendered(function() {
       // Button events
       $('#uploadImage').click(function (event) {
         filepicker.pickAndStore(
-            {
-              extensions: ['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'],
-              services: ['COMPUTER'],
-              multiple: true
-            },
-            {},
-            function (InkBlobs) {
-              var doc = (InkBlobs);
-              if (doc && doc[0].url) {
-                var image = "<img src='" + doc[0].url + "' alt='uploaded image'>";
-                if (image) {
-                  $(image).appendTo($(".note-editable"));
-                }
+          {
+            extensions: ['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'],
+            services: ['COMPUTER'],
+            multiple: true
+          },
+          {},
+          function (InkBlobs) {
+            var doc = (InkBlobs);
+            if (doc && doc[0].url) {
+              var image = "<img src='" + doc[0].url + "' alt='uploaded image'>";
+              if (image) {
+                $(image).appendTo($(".note-editable"));
               }
-            });
+            }
+          });
       });
     }
   });

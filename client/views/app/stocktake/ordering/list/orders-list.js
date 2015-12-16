@@ -21,7 +21,7 @@ Template.ordersList.onCreated(function() {
       data = _.map(data, function (stock) {
         var stockItem = Ingredients.findOne({_id: stock.stockId}, {fields: {code: 1, description: 1}});
         var cost = stock.countOrdered * stock.unitPrice;
-        stockItem.cost = cost;
+        stockItem.cost = cost.toFixed(2);
 
         total += cost;
 

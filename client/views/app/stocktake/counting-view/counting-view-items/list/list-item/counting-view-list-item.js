@@ -1,8 +1,7 @@
 Template.stockCountingListItem.onRendered(function() {
-  var self = this;
-  $('[data-toggle="tooltip"]').tooltip();
-
-  $(".counting").editable({
+  var instance= this;
+  this.$('[data-toggle="tooltip"]').tooltip();
+  this.$(".counting").editable({
     type: "text",
     title: 'Edit count',
     showbuttons: false,
@@ -12,24 +11,23 @@ Template.stockCountingListItem.onRendered(function() {
     display: function (value, response) {
     },
     success: function (response, newValue) {
-      var elem = $(this).closest("li");
-      var stockId = $(elem).closest("li").attr("data-id");
-      var id = $(elem).closest("li").attr("data-stockRef");
+      var self = this;
+      var elemId = $(self).closest("li").attr("data-stockRef");
+      var stockId = instance.data.id;
       if (newValue) {
-        var count = parseFloat(newValue);
-        count = isNaN(count) ? 0 : count;
+        var count = isNaN(newValue) ? 0 : parseFloat(newValue);
         var info = {
-          "version": self.data.stocktakeId,
-          "generalArea": self.data.activeGeneralArea,
-          "specialArea": self.data.activeSpecialArea,
+          "version": instance.data.stocktakeId,
+          "generalArea": instance.data.activeGeneralArea,
+          "specialArea": instance.data.activeSpecialArea,
           "stockId": stockId,
           "counting": count
         };
-        var main = StocktakeMain.findOne({_id: self.data.stocktakeId});
+        var main = StocktakeMain.findOne({_id: instance.data.stocktakeId});
         if (main) {
-          Meteor.call("updateStocktake", id, info, HospoHero.handleMethodResult(function () {
-            if ($(elem).next().length > 0) {
-              $(elem).next().find("a").click();
+          Meteor.call("updateStocktake", elemId, info, HospoHero.handleMethodResult(function () {
+            if ($(self).closest('li').next().length > 0) {
+              $(self).closest('li').next().find('a').click();
             }
             Meteor.call("resetCurrentStock", stockId, "New stock count", newValue, main.stocktakeDate, HospoHero.handleMethodResult());
           }));

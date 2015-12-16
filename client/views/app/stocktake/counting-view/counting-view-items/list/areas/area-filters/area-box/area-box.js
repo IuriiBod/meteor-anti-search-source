@@ -66,7 +66,7 @@ Template.areaBox.helpers({
         }
       }
 
-      var stocktakes = Stocktakes.find({"version": Template.instance().data.stocktakeId, "generalArea": id}).fetch();
+      stocktakes = Stocktakes.find({"version": Template.instance().data.stocktakeId, "generalArea": id}).fetch();
       if (stocktakes && stocktakes.length > 0) {
         gProgress = (stocktakes.length / totalCount) * 100;
       }
@@ -79,7 +79,6 @@ Template.areaBox.events({
   'click .garea-filter': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;
-    console.log('garea-filter ', id);
     tmpl.data.activeGeneralArea(id);
     $(".areaFilering .collapse").removeClass("in");
     var sarea = $(event.target).parent().next().find(".areaBox")[0];

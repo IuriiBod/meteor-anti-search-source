@@ -1,6 +1,7 @@
 Template.orderingCount.onRendered(function () {
   var self = this;
-  $('.orderingCount').editable({
+  console.log('ordering count -> ', this);
+  this.$('.orderingCount').editable({
     title: 'Edit count',
     showbuttons: false,
     mode: 'inline',
@@ -10,11 +11,9 @@ Template.orderingCount.onRendered(function () {
     },
     success: function (response, newValue) {
       if (newValue) {
-        var $cell = $(this);
-        var $row = $cell.closest('tr');
-        var stockItemId = $row.attr('data-id');
-
+        var stockItemId = self.data.id;
         var count = parseFloat(newValue) || 0;
+
         Meteor.call('editOrderingCount', stockItemId, count, HospoHero.handleMethodResult(function () {
           self.data.onCountChange();
         }));
@@ -25,10 +24,7 @@ Template.orderingCount.onRendered(function () {
 
 Template.orderingCount.helpers({
   orderingCount: function() {
-    var order = StockOrders.findOne(this.id);
-    if (order) {
-      return order.countOrdered;
-    }
+    return StockOrders.findOne(this.id).countOrdered;
   },
 
   unit: function() {

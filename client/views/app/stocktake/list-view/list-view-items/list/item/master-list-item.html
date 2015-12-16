@@ -1,11 +1,11 @@
 <template name="stocktakeItem">
-  <tr data-id="{{this._id}}">
-    <td>{{dateFormat this.date}}</td>
-    <td>${{roundCount this.totalStockValue}}</td>
+  <tr data-id="{{item._id}}">
+    <td>{{dateFormat item.date}}</td>
+    <td>${{roundCount item.totalStockValue}}</td>
     <td>
-      <a href="{{pathFor route="stocktakeCounting" _id=this._id}}" class="btn btn-primary"><i
+      <a href="{{pathFor route="stocktakeCounting" _id=item._id}}" class="btn btn-primary"><i
           class="fa -o fa-fw fa-lg fa-eye"></i>View stocktake</a>
-      <a href="{{pathFor route="stocktakeOrdering" _id=this._id}}" class="btn btn-primary"><i
+      <a href="{{pathFor route="stocktakeOrdering" _id=item._id}}" class="btn btn-primary"><i
           class="fa -o fa-fw fa-lg fa-eye"></i>View orders placed</a>
     </td>
   </tr>

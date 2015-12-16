@@ -1,6 +1,6 @@
 <template name="ordersListItem">
   {{#if order}}
-    <tr data-id="{{order._id}}">
+    <tr>
       <td>{{order.stockName}}</td>
       <td>{{order.countOnHand}} [{{order.unit}}]</td>
       <td>{{order.countNeeded}} [{{order.unit}}]</td>

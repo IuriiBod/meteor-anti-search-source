@@ -18,9 +18,9 @@ Template.ordersListItem.helpers({
   },
 
   onCountChange: function() {
-    var self = this;
+    var currentData = Template.currentData();
     return function () {
-      self.onCountChange();
+      currentData.onCountChange();
     }
   }
 });
