@@ -2,12 +2,12 @@
   <div class="ghost-editable-component">
     {{#if state$isInline}}
       <a href="#" class="ghost-editable-select-trigger">
-        {{state$selectedText}}
+        {{selectedText}}
       </a>
     {{else}}
       <select class="ghost-editable-select">
         {{# each state$values}}
-          {{# if state$isSelected value}}
+          {{# if isSelected value}}
             <option value="{{value}}" selected>{{text}}</option>
           {{else}}
             <option value="{{value}}">{{text}}</option>
