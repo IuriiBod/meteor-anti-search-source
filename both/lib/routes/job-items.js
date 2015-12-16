@@ -43,7 +43,7 @@ Router.route('/jobItems/:type', {
 Router.route('/jobItem/submit', {
   name: 'submitJobItem',
   path: '/jobItem/submit',
-  template: 'submitJobItemMainView',
+  template: 'submitEditJobItem',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
@@ -57,8 +57,8 @@ Router.route('/jobItem/submit', {
     ];
   },
   data: function () {
-    if (!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
-      Router.go('/');
+    return {
+      mode: 'submit'
     }
   }
 });
@@ -89,7 +89,7 @@ Router.route('/jobItem/:_id', {
 Router.route('/jobItem/:_id/edit', {
   name: 'jobItemEdit',
   path: '/jobItem/:_id/edit',
-  template: 'jobItemEditView',
+  template: 'submitEditJobItem',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
@@ -101,11 +101,8 @@ Router.route('/jobItem/:_id/edit', {
     ];
   },
   data: function () {
-    if (!Meteor.userId() || !HospoHero.canUser('edit jobs')()) {
-      Router.go('/');
-    }
     return {
-      jobItemId: this.params._id
+      jobItem: JobItems.findOne({_id: this.params._id})
     }
   }
 });

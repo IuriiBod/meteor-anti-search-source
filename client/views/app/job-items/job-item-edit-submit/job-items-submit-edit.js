@@ -1,15 +1,13 @@
 Template.submitEditJobItem.onCreated(function () {
-  this.jobItem = {};
-
   this.initReactiveVars = function () {
-    this.jobItem = JobItems.findOne({_id: this.data.jobItemId}) || {};
+    this.data.jobItem = this.data.jobItem || {};
 
     // Write data into reactive var
-    this.selectedJobTypeId = new ReactiveVar(this.jobItem.type || JobTypes.findOne()._id);
-    this.selectedFrequency = new ReactiveVar(this.jobItem.frequency || 'daily');
-    this.repeatAt = new ReactiveVar(this.jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
-    this.checklistItems = new ReactiveVar(this.jobItem.checklist || []);
-    this.ingredients = this.jobItem.ingredients || [];
+    this.selectedJobTypeId = new ReactiveVar(this.data.jobItem.type || JobTypes.findOne()._id);
+    this.selectedFrequency = new ReactiveVar(this.data.jobItem.frequency || 'daily');
+    this.repeatAt = new ReactiveVar(this.data.jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
+    this.checklistItems = new ReactiveVar(this.data.jobItem.checklist || []);
+    this.ingredients = this.data.jobItem.ingredients || [];
   };
 
   this.isPrep = function () {
@@ -42,7 +40,7 @@ Template.submitEditJobItem.onCreated(function () {
       this.assignFieldsForPrep(jobItem);
     }
 
-    if (this.jobItem._id) {
+    if (this.data.jobItem._id) {
       Meteor.call('editJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
         Router.go('jobItemDetailed', {_id: jobItemId});
       }));
@@ -59,7 +57,7 @@ Template.submitEditJobItem.onCreated(function () {
     jobItem.activeTime = parseInt(this.$('.active-time').val());
     jobItem.wagePerHour = parseInt(this.$('.avg-wage-per-hour').val());
 
-    if (this.jobItem._id) {
+    if (this.data.jobItem._id) {
       this.assignOriginJobItemFields(jobItem);
     }
   };
@@ -92,10 +90,10 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.assignOriginJobItemFields = function (jobItem) {
-    jobItem._id = this.jobItem._id;
-    jobItem.createdOn = this.jobItem.createdOn;
-    jobItem.createdBy = this.jobItem.createdBy;
-    jobItem.relations = this.jobItem.relations;
+    jobItem._id = this.data.jobItem._id;
+    jobItem.createdOn = this.data.jobItem.createdOn;
+    jobItem.createdBy = this.data.jobItem.createdBy;
+    jobItem.relations = this.data.jobItem.relations;
   };
 
   this.getSelectedDays = function () {
@@ -228,21 +226,21 @@ Template.submitEditJobItem.helpers({
   },
 
   startsOn: function () {
-    var startsOn = moment(Template.instance().jobItem.startsOn) || moment();
+    var startsOn = moment(Template.instance().data.jobItem.startsOn) || moment();
     return startsOn.format('YYYY-MM-DD');
   },
   endsOn: function () {
     var endsOn = moment().add(1, 'days');
-    if (Template.instance().jobItem.endsOn) {
-      endsOn = moment(Template.instance().jobItem.endsOn.lastDate)
-        || moment(Template.instance().jobItem.startsOn).add(1, 'days');
+    if (Template.instance().data.jobItem.endsOn) {
+      endsOn = moment(Template.instance().data.jobItem.endsOn.lastDate)
+        || moment(Template.instance().data.jobItem.startsOn).add(1, 'days');
     }
     return endsOn.format('YYYY-MM-DD');
   },
   week: function () {
     var days = ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
 
-    var checkedDays = Template.instance().jobItem ? Template.instance().jobItem.repeatOn : [];
+    var checkedDays = Template.instance().data.jobItem ? Template.instance().data.jobItem.repeatOn : [];
 
     return _.map(days, function (day) {
       if (_.findWhere(checkedDays, day)) {
@@ -258,7 +256,7 @@ Template.submitEditJobItem.helpers({
   },
 
   jobItem: function () {
-    return Template.instance().jobItem;
+    return Template.instance().data.jobItem;
   }
 });
 
