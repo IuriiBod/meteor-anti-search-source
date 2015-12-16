@@ -182,13 +182,19 @@
                   <div class="col-sm-10">
 
                     <div class="radio">
-                      {{#if jobItem.endsOn.on}}
-                        <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="never" checked>
+                      {{#if isEditMode}}
+                        {{#if jobItem.endsOn.on}}
+                          <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="never" checked>
+                        {{else}}
+                          <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="never">
+                        {{/if}}
                       {{else}}
                         <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="never">
+                               value="never" checked>
                       {{/if}}
+
                       <label for="radio">Never</label>
                     </div>
 
