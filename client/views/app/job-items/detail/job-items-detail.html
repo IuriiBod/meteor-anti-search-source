@@ -33,7 +33,7 @@
                     </div>
                   </div>
                 {{/if}}
-                {{#if isChecklist}}
+                {{#if job.checklist}}
                   <div class="form-group">
                     <label>Checklist</label>
                     <ol class="list-group">
@@ -45,7 +45,7 @@
                 {{/if}}
               {{/if}}
               {{#if isPrep}}
-                {{#if ingExists}}
+                {{#if job.ingredients}}
                   <div class="form-group">
                     <label>
                       Ingredients used
@@ -103,18 +103,15 @@
                     </li>
                   {{/if}}
                   <li class="list-group-item">
-                    <span class="pull-right">{{repeatAt}}</span>Repeat At
+                    <span class="pull-right">{{formatDate job.repeatAt "hh:mm A"}}</span>Repeat At
                   </li>
-                  {{#if startsOn}}
-                    <li class="list-group-item">
-                      <span class="pull-right">{{startsOn}}</span>Starts On
-                    </li>
-                  {{/if}}
-                  {{#if endsOn}}
-                    <li class="list-group-item">
-                      <span class="pull-right">{{endsOn}}</span>Ends
-                    </li>
-                  {{/if}}
+                  <li class="list-group-item">
+                    <span class="pull-right">{{formatDate job.startsOn "YYYY-MM-DD"}}</span>
+                    Starts On
+                  </li>
+                  <li class="list-group-item">
+                    <span class="pull-right">{{endsOn}}</span>Ends
+                  </li>
                 {{/if}}
                 {{#if isPrep}}
                   <li class="list-group-item">
@@ -122,11 +119,11 @@
                   </li>
                 {{/if}}
                 <li class="list-group-item">
-                  <span class="pull-right">{{job.labourCost}}</span>Labour Cost ($)
+                  <span class="pull-right">{{labourCost}}</span>Labour Cost ($)
                 </li>
                 {{#if isPrep}}
                   <li class="list-group-item">
-                    <span class="pull-right">{{job.prepCostPerPortion}}</span>Cost per Portion ($)
+                    <span class="pull-right">{{prepCostPerPortion}}</span>Cost per Portion ($)
                   </li>
                   <li class="list-group-item">
                     <span class="pull-right">{{job.shelfLife}} Days</span>Shelf Life
@@ -135,7 +132,7 @@
               </ul>
             </div>
           </div>
-          
+
           {{# if relatedMenus}}
             <div class="row">
               <div class="col-lg-12">

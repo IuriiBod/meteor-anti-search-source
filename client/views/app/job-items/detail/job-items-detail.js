@@ -1,15 +1,31 @@
 Template.jobItemDetail.onCreated(function () {
-  this.id = Router.current().params._id;
-  this.job = getPrepItem(this.id);
+  console.log(this.data.jobItem);
+
+  this.getLabourCost = function () {
+    var jobItem = this.data.jobItem;
+    var activeTimeInMins = parseInt(jobItem.activeTime / 60);
+    return (parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins;
+  };
+  this.getTotalIngredientCost = function () {
+    var totalIngCost = 0;
+    this.data.jobItem.ingredients.forEach(function (ing) {
+      var ingItem = getIngredientItem(ing._id);
+      if (ingItem) {
+        totalIngCost += parseFloat(ingItem.costPerPortionUsed) * parseFloat(ing.quantity);
+      }
+    });
+    return totalIngCost;
+  };
+  this.getPrepCostPerPortion = function () {
+    var totalCost = (this.getLabourCost() + this.getTotalIngredientCost());
+    return Math.round((totalCost / this.data.jobItem.portions) * 100) / 100;
+  };
 });
 
 Template.jobItemDetail.helpers({
-  job: function () {
-    return Template.instance().job;
-  },
 
   section: function () {
-    var item = Template.instance().job;
+    var item = Template.instance().data.jobItem;
     if (item && item.section) {
       var section = Sections.findOne(item.section);
       return section ? section.name : false;
@@ -18,55 +34,27 @@ Template.jobItemDetail.helpers({
   },
 
   isPrep: function () {
-    var item = Template.instance().job;
+    var item = Template.instance().data.jobItem;
     if (item) {
       if (item.type) {
         var type = JobTypes.findOne(item.type);
-        return !!(type && type.name == 'Prep');
+        return type && type.name == 'Prep';
       }
     }
   },
 
   isRecurring: function () {
-    var item = Template.instance().job;
+    var item = Template.instance().data.jobItem;
     if (item) {
       if (item.type) {
         var type = JobTypes.findOne(item.type);
-        return !!(type && type.name == 'Recurring');
+        return type && type.name == 'Recurring';
       }
     }
   },
 
-  ingExists: function () {
-    var item = Template.instance().job;
-    return !!(item.ingredients && item.ingredients.length > 0);
-  },
-
-
-  isChecklist: function () {
-    var item = Template.instance().job;
-    return item && item.checklist && item.checklist.length > 0;
-  },
-
-  checklist: function () {
-    var item = Template.instance().job;
-    return item && item.checklist ? item.checklist : '';
-  },
-
-  startsOn: function () {
-    var item = Template.instance().job;
-    if (item && item.startsOn) {
-      return moment(item.startsOn).format('YYYY-MM-DD');
-    }
-  },
-
-  repeatAt: function () {
-    var item = Template.instance().job;
-    return item && item.repeatAt ? moment(item.repeatAt).format('hh:mm A') : false;
-  },
-
   endsOn: function () {
-    var item = Template.instance().job;
+    var item = Template.instance().data.jobItem;
     var ends = null;
     if (item) {
       if (item.endsOn) {
@@ -83,12 +71,12 @@ Template.jobItemDetail.helpers({
   },
 
   isWeekly: function () {
-    var item = Template.instance().job;
+    var item = Template.instance().data.jobItem;
     return item ? item.frequency == 'weekly' : false;
   },
 
   frequency: function () {
-    var item = Template.instance().job;
+    var item = Template.instance().data.jobItem;
     switch (item.frequency) {
       case 'everyXWeeks':
         return 'Every ' + item.repeatEvery + ' weeks';
@@ -102,7 +90,7 @@ Template.jobItemDetail.helpers({
   },
 
   repeatOnDays: function () {
-    var item = Template.instance().job;
+    var item = Template.instance().data.jobItem;
 
     var repeatOnDays = item.repeatOn;
     if (_.isArray(repeatOnDays)) {
@@ -114,20 +102,12 @@ Template.jobItemDetail.helpers({
     }
   },
 
-
-  description: function () {
-    var item = Template.instance().job;
-    return item ? item.description : '';
-  },
-
   labourCost: function () {
-    var item = Template.instance().job;
-    return item ? item.labourCost : 0;
+    return Template.instance().getLabourCost();
   },
 
   prepCostPerPortion: function () {
-    var item = Template.instance().job;
-    return item ? item.prepCostPerPortion : 0;
+    return Template.instance().getPrepCostPerPortion();
   },
 
   relatedMenus: function () {
@@ -143,7 +123,7 @@ Template.jobItemDetail.helpers({
 Template.jobItemDetail.events({
   'click .editJobItemBtn': function (event, template) {
     event.preventDefault();
-    Router.go("jobItemEdit", {'_id': template.id});
+    Router.go("jobItemEdit", {'_id': template.data.jobItem._id});
   },
 
   'click .printJobItemBtn': function (event) {

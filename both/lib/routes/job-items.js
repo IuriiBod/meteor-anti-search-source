@@ -80,11 +80,9 @@ Router.route('/jobItem/:_id', {
     ];
   },
   data: function () {
-    if (!Meteor.userId()) {
-      Router.go('/');
+    return {
+      jobItem: JobItems.findOne({_id: this.params._id})
     }
-    Session.set('thisJobItem', this.params._id);
-    Session.set('editStockTake', false);
   }
 });
 
