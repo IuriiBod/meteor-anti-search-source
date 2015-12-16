@@ -50,10 +50,7 @@ Router.route('/jobItem/submit', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId),
-
-
-      Meteor.subscribe('jobItem', 'BJxYSmJJSuHiN97Dc')
+      Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
   data: function () {
@@ -66,7 +63,7 @@ Router.route('/jobItem/submit', {
 Router.route('/jobItem/:_id', {
   name: 'jobItemDetailed',
   path: '/jobItem/:_id',
-  template: 'jobItemDetailedMainView',
+  template: 'jobItemDetail',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
@@ -76,6 +73,7 @@ Router.route('/jobItem/:_id', {
       Meteor.subscribe('usersList', currentAreaId),
       Meteor.subscribe('userSubscriptions', currentAreaId),
       Meteor.subscribe('allCategories', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId),
       Meteor.subscribe('jobsRelatedMenus', this.params._id)
     ];
   },

@@ -1,6 +1,6 @@
 <template name="jobItemDetail">
   <!-- Page heading -->
-  {{> pageHeading title=job.name category="Jobs" id=job.id name="jobitemdetailed"}}
+  {{> pageHeading title=jobItem.name category="Jobs" id=jobItem.id name="jobitemdetailed"}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
@@ -9,35 +9,35 @@
           <div class="row">
             <div class="col-md-8">
               {{#if isPrep}}
-                {{#if job.recipe}}
+                {{#if jobItem.recipe}}
                   <div class="form-group">
                     <label>Recipe</label>
 
                     <div class="panel panel-default">
                       <div class="panel-body">
-                        {{{job.recipe}}}
+                        {{{jobItem.recipe}}}
                       </div>
                     </div>
                   </div>
                 {{/if}}
               {{/if}}
               {{#if isRecurring}}
-                {{#if job.description}}
+                {{#if jobItem.description}}
                   <div class="form-group">
                     <label>Description</label>
 
                     <div class="panel panel-default">
                       <div class="panel-body">
-                        {{{job.description}}}
+                        {{{jobItem.description}}}
                       </div>
                     </div>
                   </div>
                 {{/if}}
-                {{#if job.checklist}}
+                {{#if jobItem.checklist}}
                   <div class="form-group">
                     <label>Checklist</label>
                     <ol class="list-group">
-                      {{#each job.checklist}}
+                      {{#each jobItem.checklist}}
                         <li class="list-group-item">{{this}}</li>
                       {{/each}}
                     </ol>
@@ -45,7 +45,7 @@
                 {{/if}}
               {{/if}}
               {{#if isPrep}}
-                {{#if job.ingredients}}
+                {{#if jobItem.ingredients}}
                   <div class="form-group">
                     <label>
                       Ingredients used
@@ -61,7 +61,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {{#each job.ingredients}}
+                        {{#each jobItem.ingredients}}
                           {{> ingredientItemView ingredient=this}}
                         {{/each}}
                         </tbody>
@@ -74,10 +74,10 @@
             <div class="col-md-3">
               <ul class="list-group clear-list m-t">
                 <li class="list-group-item">
-                  <span class="pull-right">{{jobTypeById job.type}}</span>Type
+                  <span class="pull-right">{{jobTypeById jobItem.type}}</span>Type
                 </li>
                 <li class="list-group-item">
-                  <span class="pull-right">{{job.status}}</span>Status
+                  <span class="pull-right">{{jobItem.status}}</span>Status
                 </li>
                 {{#if isRecurring}}
                   <li class="list-group-item">
@@ -91,7 +91,7 @@
                   </li>
                 {{/if}}
                 <li class="list-group-item">
-                  <span class="pull-right">{{secondsToMinutes job.activeTime}} mins</span>Active Time
+                  <span class="pull-right">{{secondsToMinutes jobItem.activeTime}} mins</span>Active Time
                 </li>
                 {{#if isRecurring}}
                   <li class="list-group-item">
@@ -103,10 +103,10 @@
                     </li>
                   {{/if}}
                   <li class="list-group-item">
-                    <span class="pull-right">{{formatDate job.repeatAt "hh:mm A"}}</span>Repeat At
+                    <span class="pull-right">{{formatDate jobItem.repeatAt "hh:mm A"}}</span>Repeat At
                   </li>
                   <li class="list-group-item">
-                    <span class="pull-right">{{formatDate job.startsOn "YYYY-MM-DD"}}</span>
+                    <span class="pull-right">{{formatDate jobItem.startsOn "YYYY-MM-DD"}}</span>
                     Starts On
                   </li>
                   <li class="list-group-item">
@@ -115,7 +115,7 @@
                 {{/if}}
                 {{#if isPrep}}
                   <li class="list-group-item">
-                    <span class="pull-right">{{job.portions}}</span>Portions
+                    <span class="pull-right">{{jobItem.portions}}</span>Portions
                   </li>
                 {{/if}}
                 <li class="list-group-item">
@@ -126,7 +126,7 @@
                     <span class="pull-right">{{prepCostPerPortion}}</span>Cost per Portion ($)
                   </li>
                   <li class="list-group-item">
-                    <span class="pull-right">{{job.shelfLife}} Days</span>Shelf Life
+                    <span class="pull-right">{{jobItem.shelfLife}} Days</span>Shelf Life
                   </li>
                 {{/if}}
               </ul>
@@ -178,7 +178,7 @@
 
         </div>
         <div class="row m-t-lg">
-          {{> commentsPanel id=job._id type="job"}}
+          {{> commentsPanel id=jobItem._id type="job"}}
         </div>
       </div>
     </div>
