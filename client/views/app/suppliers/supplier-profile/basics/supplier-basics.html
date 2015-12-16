@@ -1,5 +1,5 @@
 <template name="basics">
-  <button class="hide test-element"></button>
+  <span class="hide test-element"></span>
   <div class="row">
     <!-- Supplier editable information -->
     <div class="col-md-6 col-lg-4">
@@ -8,7 +8,7 @@
           <td>Status:</td>
           <td>
             <span class="label label-primary supplierStatus">
-              {{#if state$status}}
+              {{#if status}}
                 Active
               {{else}}
                 Archived
@@ -18,24 +18,24 @@
         </tr>
         <tr>
           <td>Email address:</td>
-          <td><a class="supplier-email">{{state$supplier.email}}</a></td>
+          <td><a class="supplier-email">{{supplier.email}}</a></td>
         </tr>
         <tr>
           <td>Phone number:</td>
-          <td><a class="supplier-phone">{{state$supplier.phone}}</a></td>
+          <td><a class="supplier-phone">{{supplier.phone}}</a></td>
         </tr>
         <tr>
           <td>Minimum order:</td>
-          <td>$<a class="minimum-order-amount">{{state$supplier.minimumOrderAmount}}</a></td>
+          <td>$<a class="minimum-order-amount">{{supplier.minimumOrderAmount}}</a></td>
         </tr>
         <tr>
           <td>Delivery time:</td>
           <td>
             Every
             <div>
-              {{#each state$deliveryDays}}
+              {{#each deliveryDays}}
                 <p>
-                  {{#if state$isSelectedDay value}}
+                  {{#if isSelectedDay value}}
                     <input class="delivery-day" type="checkbox" value="{{value}}" checked="checked"> {{text}}
                   {{else}}
                     <input class="delivery-day" type="checkbox" value="{{value}}"> {{text}}
@@ -44,16 +44,16 @@
               {{/each}}
             </div>
             at
-            <a class="delivery-time">{{timeFormat state$supplier.deliveryTime}}</a>
+            <a class="delivery-time">{{timeFormat supplier.deliveryTime}}</a>
           </td>
         </tr>
         <tr>
           <td>Contact name:</td>
-          <td><a class="contact-name">{{state$supplier.contactName}}</a></td>
+          <td><a class="contact-name">{{supplier.contactName}}</a></td>
         </tr>
         <tr>
           <td>Customer number:</td>
-          <td><a class="customer-number">{{state$supplier.customerNumber}}</a></td>
+          <td><a class="customer-number">{{supplier.customerNumber}}</a></td>
         </tr>
       </table>
     </div>
@@ -62,25 +62,25 @@
       <table class="table suppliers-table">
         <tr>
           <td>Last order on:</td>
-          <td>{{dateFormat state$lastOrder.date}}</td>
+          <td>{{dateFormat lastOrder.date}}</td>
         </tr>
         <tr>
           <td>Created on:</td>
-          <td>{{dateFormat state$supplier.createdOn}}</td>
+          <td>{{dateFormat supplier.createdOn}}</td>
         </tr>
       </table>
     </div>
     <!-- Upload price list -->
     <div class="col-md-12 col-lg-4">
       <a href="" id="uploadPriceList" class="btn btn-sm btn-primary">Upload price list</a>
-      {{#if state$supplier.priceList}}
+      {{#if supplier.priceList}}
         <table class="table suppliers-table text-center">
           <tr>
             <th>Name</th>
             <th>Uploaded at</th>
             <th>Actions</th>
           </tr>
-          {{#each state$supplier.priceList}}
+          {{#each supplier.priceList}}
             <tr>
               <td>
                 <a href="{{url}}{{convertToPdfUrl}}" target="_blank">{{name}}</a>
