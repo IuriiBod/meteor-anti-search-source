@@ -33,21 +33,26 @@ Template.weekSelector.events({
     var selectedWeek = tmpl.get('selectedWeek');
 
     if (selectedWeek) {
-      // new Date(selectedWeek) for overcoming moment js deprecated error
-      var templateSelectedWeek = moment(0).week(2).startOf('isoweek').day(moment(new Date(selectedWeek)).day());
-
-      var timeRangeForWeek = TimeRangeQueryBuilder.forWeek(templateSelectedWeek, HospoHero.getCurrentArea().locationId);
       var shifts = Shifts.find({
-        startTime: timeRangeForWeek,
         type: 'template'
       });
 
       var toCurrentDayMoment = function (date) {
+        date = moment(date);
+        // new Date(selectedWeek) for overcoming moment js deprecated error
         var selectedWeekMoment = moment(new Date(selectedWeek));
-        return moment(date).set({
-          year: selectedWeekMoment.year(),
-          week: selectedWeekMoment.week()
-        }).toDate();
+        selectedWeekMoment.set({
+          hours: date.hour(),
+          minutes: date.minutes(),
+          seconds: 0,
+          day: date.day()
+        });
+
+        // The Crutch. Because of moment defaults week starts from Sunday
+        if (date.day() === 0) {
+          selectedWeekMoment.add(1, 'week');
+        }
+        return selectedWeekMoment.toDate();
       };
 
       shifts.forEach(function (shift) {
@@ -59,7 +64,7 @@ Template.weekSelector.events({
         Meteor.call("createShift", shift, HospoHero.handleMethodResult());
       });
 
-      HospoHero.success('Template was copied to the week number ', moment(new Date(selectedWeek)).week());
+      HospoHero.success('Template was copied to the selected week');
     } else {
       HospoHero.error('You should select week at first');
     }
