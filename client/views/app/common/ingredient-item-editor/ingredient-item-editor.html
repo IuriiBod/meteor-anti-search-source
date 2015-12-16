@@ -10,7 +10,7 @@
             <h4 class="modal-title" id="myModalLabel">Add Stocks</h4>
           </div>
           <div class="modal-body">
-            {{> ingredientItemEditorBody isModal=isModal}}
+            {{> ingredientItemEditorBody}}
           </div>
           <div class="modal-footer">
             {{> ingredientItemEditorButtons}}
@@ -19,6 +19,6 @@
       </div>
     </div>
   {{else}}
-    {{> ingredientItemEditorBody isModal=isModal}}
+    {{> ingredientItemEditorBody}}
   {{/if}}
 </template>

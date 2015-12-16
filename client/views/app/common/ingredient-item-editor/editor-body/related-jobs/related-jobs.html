@@ -1,0 +1,38 @@
+<template name="ingredientEditorRelatedJobs">
+  {{#if this}}
+    {{#if relatedJobs.count}}
+      <div class="form-group">
+        <label class="col-sm-12 text-center">
+          Related jobs
+        </label>
+
+        <div class="col-sm-12">
+          <table class="table">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Active Time (mins)</th>
+              <th>Portions</th>
+              <th>Shelf Life</th>
+            </tr>
+            </thead>
+            {{# each state$relatedJobs}}
+              <tbody>
+              <tr>
+                <td>
+                  <a href="{{pathFor 'jobItemDetailed' _id=_id}}" target="_blank">
+                    {{name}}
+                  </a>
+                </td>
+                <td>{{state$convertTime activeTime}}</td>
+                <td>{{portions}}</td>
+                <td>{{shelfLife}}</td>
+              </tr>
+              </tbody>
+            {{/ each}}
+          </table>
+        </div>
+      </div>
+    {{/if}}
+  {{/if}}
+</template>

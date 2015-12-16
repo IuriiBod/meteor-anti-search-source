@@ -1,3 +1,19 @@
+//context: ingredient (Ingredient/undefined), isModal (boolean)
+Template.submitIngredientBody.onCreated(function () {
+  this.updateUnitOrderedState = function (value) {
+    this.set('unitOrdered', value || '[unit ordered]');
+  };
+
+  this.updateUnitUsedState = function (value) {
+    this.set('unitUsed', value || '[unit used]');
+  };
+
+  //initialize states
+  this.updateUnitOrderedState();
+  this.updateUnitUsedState();
+});
+
+
 Template.submitIngredientBody.onRendered(function () {
   this.$('.unit-ordered-popover').popover({
     content: "Put the amount that you usually order in here. If it's a 20kg bag of flour, put '20kg bag'. If it's a 1lt bottle, put '1lt Bottle."
@@ -10,90 +26,79 @@ Template.submitIngredientBody.onRendered(function () {
   });
 });
 
+
+Template.submitIngredientBody.helpers({
+  suppliers: function () {
+    return Suppliers.find({}, {sort: {"name": 1}});
+  }
+});
+
+
 Template.submitIngredientBody.events({
-  'submit #submitIngredientForm': function (event) {
+  'submit #submitIngredientForm': function (event, tmpl) {
     event.preventDefault();
 
-    FlowComponents.callAction('submit', event).catch(function () {
-    }).then(function () {
+    var info = HospoHero.misc.getValuesFromEvent(event, submitIngredientFormFields, true);
+
+    if (!info.code) {
+      return HospoHero.error("You need to add a code");
+    }
+
+    if (!info.description) {
+      return HospoHero.error("You need to a description");
+    }
+
+    info.costPerPortion = Math.round(info.costPerPortion * 100) / 100;
+
+    var handleMethodResultCb = HospoHero.handleMethodResult(function () {
       $(event.target).find('[type=text]').val('');
       $('#ingredientItemEditor').modal('hide');
     });
-  },
-  'change [name="unitOrdered"]': function (event) {
-    FlowComponents.callAction('changeUnitOrdered', event.currentTarget.value);
-  },
-  'change [name="unitUsed"]': function (event) {
-    FlowComponents.callAction('changeUnitUsed', event.currentTarget.value);
-  }
-});
 
-var component = FlowComponents.define('submitIngredientBody', function (props) {
-  var isModal = props.isModal || false;
-  this.set('isModal', isModal);
-
-  this.set('unitOrdered', '[unit ordered]');
-  this.set('unitUsed', '[unit used]');
-});
-
-component.action.changeUnitOrdered = function (unitOrderedNewVal) {
-  this.set('unitOrdered', unitOrderedNewVal);
-};
-
-component.action.changeUnitUsed = function (unitUsedNewVal) {
-  this.set('unitUsed', unitUsedNewVal);
-};
-
-component.action.submit = function (event) {
-
-  var fields = [
-    'code',
-    {
-      name: 'name',
-      newName: 'description'
-    },
-    {
-      name: 'supplier',
-      newName: 'suppliers'
-    },
-    {
-      name: 'unitOrdered',
-      newName: 'portionOrdered'
-    },
-    {
-      name: 'unitUsed',
-      newName: 'portionUsed'
-    },
-    {
-      name: 'costPerPortion',
-      parse: 'float',
-      type: 'number'
-    },
-    {
-      name: 'unitSize',
-      parse: 'float',
-      type: 'number'
+    var oldIngredient = tmpl.data.ingredient;
+    if (oldIngredient) {
+      Meteor.call("editIngredient", oldIngredient._id, info, handleMethodResultCb);
+    } else {
+      Meteor.call("createIngredients", info, handleMethodResultCb);
     }
-  ];
+  },
 
-  var info = HospoHero.misc.getValuesFromEvent(event, fields, true);
+  'change [name="unitOrdered"]': function (event, tmpl) {
+    tmpl.updateUnitOrderedState(event.currentTarget.value);
+  },
 
-  if (!info.code) {
-    return HospoHero.error("You need to add a code");
+  'change [name="unitUsed"]': function (event, tmpl) {
+    tmpl.updateUnitUsedState(event.currentTarget.value);
   }
+});
 
-  if (!info.description) {
-    return HospoHero.error("You need to a description");
+
+var submitIngredientFormFields = [
+  'code',
+  {
+    name: 'name',
+    newName: 'description'
+  },
+  {
+    name: 'supplier',
+    newName: 'suppliers'
+  },
+  {
+    name: 'unitOrdered',
+    newName: 'portionOrdered'
+  },
+  {
+    name: 'unitUsed',
+    newName: 'portionUsed'
+  },
+  {
+    name: 'costPerPortion',
+    parse: 'float',
+    type: 'number'
+  },
+  {
+    name: 'unitSize',
+    parse: 'float',
+    type: 'number'
   }
-
-  info.costPerPortion = Math.round(info.costPerPortion * 100) / 100;
-
-  Meteor.call("createIngredients", info, HospoHero.handleMethodResult(function () {
-    IngredientsListSearch.cleanHistory();
-    IngredientsListSearch.search("", {"limit": 10});
-  }));
-};
-
-component.state.suppliers = function () {
-  return Suppliers.find({}, {sort: {"name": 1}});
-};
+];

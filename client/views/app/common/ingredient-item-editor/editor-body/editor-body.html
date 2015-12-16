@@ -23,7 +23,7 @@
       <div class="col-sm-6 ">
         <select name="supplier" class="form-control">
           <option value="">Select a supplier</option>
-          {{#each state$suppliers}}
+          {{#each suppliers}}
             <option value="{{_id}}">{{name}}</option>
           {{/each}}
         </select>
@@ -78,9 +78,8 @@
       </div>
     </div>
 
-    {{#unless state$isModal}}
-      <button id="addIngredientBtn" type="submit" class="btn btn-primary">Add ingredient</button>
-      <button id="cancel" class="btn btn-primary">Cancel</button>
+    {{#unless isModal}}
+      {{> ingredientItemEditorButtons}}
     {{/unless}}
   </form>
 </template>
