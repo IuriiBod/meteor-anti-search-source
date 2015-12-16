@@ -13,13 +13,13 @@
                 <h3 class="panel-title">Settings</h3>
               </div>
               <div class="panel-body">
-                {{> render component="settingsMenuItem"}}
+                {{> settingsMenuItem}}
               </div>
             </div>
           </div>
 
           <div class="col-lg-8 col-xs-12">
-            {{> render component="menuInstructions" id=state$menu._id}}
+            {{> menuInstructions}}
           </div>
         </div>
         <hr>
@@ -43,11 +43,11 @@
           </tr>
           </thead>
           <tbody>
-          {{#each state$jobItems}}
-            {{> render component="ingsAndPreps" item=this type="prep"}}
+          {{#each jobItems}}
+            {{> ingsAndPreps item=this type="prep"}}
           {{/each}}
-          {{#each state$ings}}
-            {{> render component="ingsAndPreps" item=this type="ings"}}
+          {{#each ings}}
+            {{> ingsAndPreps item=this type="ings"}}
           {{/each}}
           </tbody>
         </table>
@@ -55,17 +55,14 @@
           <a class="btn btn-primary" href="#showListOfIngs" data-toggle="modal">Add prep or stock</a>
         {{/if}}
       </div>
-      {{> render component='menuDetailWidgets' item=state$menu}}
-      {{> commentsPanel id=state$menu._id type='menu'}}
+      {{> menuDetailWidgets}}
+      {{> commentsPanel id=_id type='menu'}}
     </div>
   </div>
 
   <!-- EDIT INGREDIENT-->
   {{#if canViewStock}}
-    <div class="modal fade" id="editIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-      {{> render component = 'editIngredientItem'}}
-    </div>
+    {{> ingredientItemEditor isModal=true ingredient=state$thisIngredient}}
   {{/if}}
   <!-- /EDIT INGREDIENT -->
 

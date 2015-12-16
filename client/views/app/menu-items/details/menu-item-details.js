@@ -1,4 +1,3 @@
-
 component.state.menu = function () {
   this.menu = MenuItems.findOne(this.id);
   if (this.menu) {

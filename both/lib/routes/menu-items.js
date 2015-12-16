@@ -17,21 +17,6 @@ Router.route('menuItemsMaster', {
   }
 });
 
-Router.route('submitMenuItem', {
-  path: '/menuItems/submit',
-  template: "menuItemSubmitMainView",
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('allCategories', currentAreaId),
-      Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('jobItems', null, currentAreaId)
-    ];
-  }
-});
-
 Router.route('menuItemDetail', {
   path: '/menuItem/:_id',
   template: "menuItemDetailedMainView",
@@ -52,3 +37,19 @@ Router.route('menuItemDetail', {
     return MenuItems.findOne({_id: this.params._id});
   }
 });
+
+Router.route('submitMenuItem', {
+  path: '/menuItems/submit',
+  template: "menuItemSubmitMainView",
+  waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return [
+      Meteor.subscribe('allCategories', currentAreaId),
+      Meteor.subscribe('allSuppliers', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('jobTypes'),
+      Meteor.subscribe('jobItems', null, currentAreaId)
+    ];
+  }
+});
+

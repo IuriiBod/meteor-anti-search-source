@@ -56,7 +56,7 @@ Template.submitJobItem.events({
 
   'click #addNewIngredient': function (event, tmpl) {
     event.preventDefault();
-    tmpl.$("#addIngredientModal").modal('show');
+    tmpl.$("#ingredientItemEditor").modal('show');
   },
 
   'submit form': function (event) {

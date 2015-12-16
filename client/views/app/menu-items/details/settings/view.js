@@ -6,7 +6,7 @@ Template.settingsMenuItem.events({
 
   'click #addNewIngredient': function (event, tmpl) {
     event.preventDefault();
-    tmpl.$("#addIngredientModal").modal('show');
+    tmpl.$("#ingredientItemEditor").modal('show');
   },
 
   'click #addNewJobItem': function (event) {

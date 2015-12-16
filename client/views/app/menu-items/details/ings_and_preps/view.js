@@ -33,6 +33,8 @@ Template.ingsAndPreps.events({
   'click .view-ings': function (event) {
     event.preventDefault();
     var id = event.target.dataset.id;
+    //todo: use new ingredientEditor API here
+    //see: https://trello.com/c/OKnGRuGb/431-editingredientitem-submitingredientbody-submitingredient-will-be-replaced-with-ingredientitemeditor
     Session.set("thisIngredientId", id);
     $("#editIngredientModal").modal("show");
   }
