@@ -13,8 +13,8 @@
         </tr>
         </thead>
         <tbody>
-        {{#each state$list}}
-          {{> render component="suppliersItem" supplier=this}}
+        {{#each list}}
+          {{> suppliersItem supplier=this}}
         {{else}}
           No suppliers
         {{/each}}

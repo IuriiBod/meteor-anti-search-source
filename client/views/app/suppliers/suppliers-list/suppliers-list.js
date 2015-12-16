@@ -1,6 +1,5 @@
-var component = FlowComponents.define("suppliersList", function (props) {
+Template.suppliersList.helpers({
+  list: function () {
+    return Suppliers.find({}, {sort: {"name": 1}});
+  }
 });
-
-component.state.list = function () {
-  return Suppliers.find({}, {sort: {"name": 1}});
-}
