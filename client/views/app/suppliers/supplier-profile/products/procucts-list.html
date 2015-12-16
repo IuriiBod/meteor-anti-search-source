@@ -11,8 +11,8 @@
       </tr>
       </thead>
       <tbody>
-      {{#each state$products}}
-        {{> render component="productItem" item=this}}
+      {{#each products}}
+        {{> productItem item=this}}
       {{else}}
         No products
       {{/each}}

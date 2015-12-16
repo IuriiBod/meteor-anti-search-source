@@ -1,8 +1,13 @@
+Template.productsList.helpers({
+  products: function () {
+    return Ingredients.find({suppliers: this.id});
+  }
+});
+
 Template.productsList.events({
   'click .editProduct': function (event, tmpl) {
     event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
-    Session.set("thisIngredientId", id);
+    var id = this.item._id;
     tmpl.$("#editIngredientModal").modal("show");
   }
 });
