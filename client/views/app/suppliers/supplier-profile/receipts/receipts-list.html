@@ -14,8 +14,8 @@
       </tr>
       </thead>
       <tbody>
-      {{#each state$receipts}}
-        {{> render component="receiptItem" receipt=this}}
+      {{#each receipts}}
+        {{> receiptItem receipt=this}}
       {{else}}
         No receipts
       {{/each}}
