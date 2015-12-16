@@ -1,5 +1,3 @@
-//todo: add security check on server side for search sub and use transform feature
-
 Template.menuItemsListMainView.onCreated(function () {
   var category = this.data.category;
   var status = this.data.status;
