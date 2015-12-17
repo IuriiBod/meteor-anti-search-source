@@ -1,4 +1,5 @@
 //todo: !!! Don't use functions from this file. Use HospoHero functions instead.
+
 getDaysOfMonth = function (date) {
   var month_startDate = moment(date).startOf('month').format("YYYY-MM-DD");
   var month_endDate = moment(date).endOf('month').format("YYYY-MM-DD");

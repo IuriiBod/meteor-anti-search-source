@@ -44,10 +44,10 @@
           </thead>
           <tbody>
           {{#each jobItems}}
-            {{> menuItemIngredientRow item=jobItem type="prep"}}
+            {{> menuItemIngredientRow item=jobItem quantity=quantity type="prep" setCurrentEditedIngredient=setCurrentEditedIngredient}}
           {{/each}}
           {{#each ingredients}}
-            {{> menuItemIngredientRow item=ingredient type="ings"}}
+            {{> menuItemIngredientRow item=ingredient quantity=quantity type="ings" setCurrentEditedIngredient=setCurrentEditedIngredient}}
           {{/each}}
           </tbody>
         </table>

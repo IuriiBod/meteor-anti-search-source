@@ -2,7 +2,7 @@
   <tr>
     {{#if canEditMenu}}
       <td>
-        <a class="btn btn-primary btn-xs view-{{type}}" href="#">
+        <a class="btn btn-primary btn-xs view-button" href="#">
           <i class="fa fa-edit fa-fw"></i>
           Edit
         </a>
@@ -12,24 +12,20 @@
     <td>{{type}}</td>
     <td>
       {{#if canEditMenu}}
-        {{> render component="quantity" id=state$item._id type=state$type quantity=state$quantity}}
+        {{> quantity quantity=quantity}}
       {{else}}
-        {{state$quantity}}
+        {{quantity}}
       {{/if}}
     </td>
     <td>
-      {{#if state$measure}}
-        {{state$measure}}
-      {{else}}
-        -NA-
-      {{/if}}
+      {{#if itemMeasure}} {{itemMeasure}} {{else}} -NA- {{/if}}
     </td>
     <td>
       $ {{price}}
     </td>
     {{#if canEditMenu}}
       <td>
-        <i class="fa fa-trash remove-{{type}} text-danger" style="cursor: pointer;"></i>
+        <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>
       </td>
     {{/if}}
   </tr>

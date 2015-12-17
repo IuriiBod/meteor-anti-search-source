@@ -11,5 +11,12 @@ Template.menuItemDetailedMainView.helpers({
 
   jobItem: function () {
     return JobItems.findOne({_id: this._id});
+  },
+
+  setCurrentEditedIngredient: function () {
+    var tmpl = Template.instance();
+    return function (ingredient) {
+      tmpl.set('currentEditedIngredient', ingredient);
+    }
   }
 });
