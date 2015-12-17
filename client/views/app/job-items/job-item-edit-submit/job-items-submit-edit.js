@@ -52,9 +52,11 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.assignCommonFields = function (jobItem) {
+    var MINUTE = 60;
+
     jobItem.name = this.$('.name-input').val();
     jobItem.type = this.selectedJobTypeId.get();
-    jobItem.activeTime = parseInt(this.$('.active-time').val());
+    jobItem.activeTime = parseInt(this.$('.active-time').val()) * MINUTE;
     jobItem.wagePerHour = parseInt(this.$('.avg-wage-per-hour').val());
 
     if (this.data.jobItem._id) {
@@ -255,6 +257,11 @@ Template.submitEditJobItem.helpers({
         day: day
       }
     });
+  },
+
+  activeTime: function () {
+    var activeTime = Template.instance().data.jobItem.activeTime;
+    return activeTime ? activeTime / 60 : false;
   },
 
   jobItem: function () {
