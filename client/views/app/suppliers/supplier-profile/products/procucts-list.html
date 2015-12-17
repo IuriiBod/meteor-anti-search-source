@@ -1,0 +1,30 @@
+<template name="productsList">
+  <div class="tab-pane active" id="tab_1">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th>Date added</th>
+        <th>Unit</th>
+        <th>Cost per unit</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each products}}
+        {{> productItem item=this}}
+      {{else}}
+        No products
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <!-- EDIT INGREDIENT-->
+  {{#if canViewStock}}
+    <div class="modal fade" id="editIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      {{> render component = 'editIngredientItem'}}
+    </div>
+  {{/if}}
+  <!-- /EDIT INGREDIENT -->
+</template>
