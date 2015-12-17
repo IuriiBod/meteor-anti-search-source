@@ -1,6 +1,6 @@
 Migrations.add({
   version: 39,
-  name: "Change property name in list of ingredients in jobItemsSubmitEdit",
+  name: "Improve JobItems collection",
   up: function () {
     JobItems.find().forEach(function (jobItem) {
       if (jobItem.ingredients) {
