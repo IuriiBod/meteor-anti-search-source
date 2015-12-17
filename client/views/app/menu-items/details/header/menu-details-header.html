@@ -3,12 +3,11 @@
     <div class="btn-group">
       <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
-        <i class="fa fa-cog"></i>
-        Settings
+        <i class="fa fa-cog"></i> Settings
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" style="margin-left: -56px;">
-        {{#if state$isSubscribed}}
+        {{#if isSubscribed}}
           <li class="text-info">
             <a href="#" class="hidden-print subscribeButton"><i class="fa fa-lg fa-rss"></i> Unsubscribe</a>
           </li>
@@ -19,38 +18,33 @@
         {{/if}}
         {{#if canEditMenu}}
           <li>
-            <a href="" class="hidden-print copyMenuItemBtn" data-id="{{state$id}}">
-              <i class="fa fa-copy" data-id="{{state$id}}"></i>
-              Copy
+            <a href="" class="hidden-print copyMenuItemBtn">
+              <i class="fa fa-copy"></i> Copy
             </a>
           </li>
         {{/if}}
         <li>
-          <a href="" class="hidden-print printMenuItemBtn" data-id="{{state$id}}">
-            <i class="fa fa-print"></i>
-            Print
+          <a href="" class="hidden-print printMenuItemBtn">
+            <i class="fa fa-print"></i> Print
           </a>
         </li>
         {{#if canEditMenu}}
           <li role="separator" class="divider"></li>
-          {{#if state$isArchived}}
+          {{#if isArchived}}
             <li>
-              <a href="#" class="hidden-print archiveMenuItemBtn" data-id="{{state$id}}">
-                <i class="fa fa-dropbox" data-id="{{state$id}}"></i>
-                Restore
+              <a href="#" class="hidden-print archiveMenuItemBtn">
+                <i class="fa fa-dropbox"></i> Restore
               </a>
             </li>
             <li>
-              <a href="#" class="hidden-print deleteMenuItemBtn" data-id="{{state$id}}">
-                <i class="fa fa-trash-o" data-id="{{state$id}}"></i>
-                Delete
+              <a href="#" class="hidden-print deleteMenuItemBtn">
+                <i class="fa fa-trash-o"></i> Delete
               </a>
             </li>
           {{else}}
             <li>
-              <a href="#" class="hidden-print archiveMenuItemBtn" data-id="{{state$id}}">
-                <i class="fa fa-archive" data-id="{{state$id}}"></i>
-                Archive
+              <a href="#" class="hidden-print archiveMenuItemBtn">
+                <i class="fa fa-archive"></i> Archive
               </a>
             </li>
           {{/ if}}

@@ -1,7 +1,7 @@
 var headingComponentsMap = {
   //props.name : 'headerComponent',
   menulist: 'menuListHeader',
-  menudetailed: 'menuDetailsHeader',
+  menuDetails: 'menuDetailsHeader',
   jobslist: 'jobListHeader',
   jobitemdetailed: 'jobDetailsHeader',
   ingredientslist: 'stockHeader',
