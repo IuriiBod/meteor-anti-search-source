@@ -1,4 +1,10 @@
-Template.settingsMenuItem.events({
+
+
+Template.menuItemSettings.helpers({
+
+});
+
+Template.menuItemSettings.events({
   'click #showIngredientsList': function (event, tmpl) {
     event.preventDefault();
     tmpl.$("#ingredientsListModal").modal("show");
@@ -195,12 +201,36 @@ Template.settingsMenuItem.events({
   }
 });
 
-Template.settingsMenuItem.rendered = function () {
-  $("body").on("click", function (e) {
-    var el = $(e.target);
-    if (!el.hasClass("my-editable-link") && !el.hasClass("my-editable-select")) {
-      $(".my-editable-select").addClass("hide");
-      $(".my-editable-link").removeClass("hide");
+
+Template.menuItemSettings.onDestroyed(function () {
+
+});
+
+
+component.state.myCategory = function () {
+  this.item = MenuItems.findOne(this.id);
+  if (this.item) {
+    var myCategory = this.item.category;
+    if (myCategory) {
+      return Categories.findOne(myCategory);
     }
-  });
+  }
+};
+
+component.state.categoriesList = function () {
+  if (this.item) {
+    var myCategory = this.item.category;
+    if (myCategory) {
+      return Categories.find().fetch();
+    }
+  }
+};
+
+component.state.statusList = function () {
+  return HospoHero.misc.getMenuItemsStatuses();
+};
+
+component.state.isArchived = function () {
+  var menu = MenuItems.findOne(this.id);
+  return menu && menu.status ? menu.status == "archived" : true;
 };

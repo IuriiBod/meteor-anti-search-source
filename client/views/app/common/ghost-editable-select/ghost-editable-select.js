@@ -7,6 +7,22 @@ Template.ghostEditableSelect.onCreated(function () {
   this.onValueChanged = this.data.onValueChanged;
 });
 
+
+Template.menuItemSettings.onRendered(function () {
+  var self = this;
+
+  this.onBodyClick = function (event) {
+    var eventTarget = $(event.target);
+    var targetIsntChildOfSelect = !$.contains(self.$('.ghost-editable-select'), eventTarget);
+    if (!eventTarget.hasClass('ghost-editable-select') && targetIsntChildOfSelect) {
+      self.set('isInline', false);
+    }
+  };
+
+  $("body").click(onBodyClick);
+});
+
+
 Template.ghostEditableSelect.helpers({
   isSelected: function (value) {
     return value === this.selected;
@@ -24,6 +40,7 @@ Template.ghostEditableSelect.helpers({
   }
 });
 
+
 Template.ghostEditableSelect.events({
   'click .ghost-editable-select-trigger': function (event, tmpl) {
     event.preventDefault();
@@ -36,4 +53,9 @@ Template.ghostEditableSelect.events({
     }
     tmpl.set('isInline', true);
   }
+});
+
+
+Template.ghostEditable.onDestroyed(function () {
+  $('body').off('click', this.onBodyClick);
 });

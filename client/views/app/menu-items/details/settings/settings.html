@@ -1,4 +1,4 @@
-<template name="settingsMenuItem">
+<template name="menuItemSettings">
   <form method="get" class="form-horizontal" data-id="{{state$menu._id}}">
     <div class="form-group">
       <label class="col-sm-2 control-label">Category</label>
@@ -108,7 +108,7 @@
     <!-- JOB ITEMS LIST-->
     <div class="modal fade" id="jobItemListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
-      {{> render component='jobItemsModalList' name="submitMenuItem"}}
+      {{> jobItemsModalList name="submitMenuItem"}}
     </div>
     <!-- /JOB ITEMS LIST -->
   </form>
