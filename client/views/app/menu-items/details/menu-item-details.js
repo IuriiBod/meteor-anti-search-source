@@ -1,23 +1,15 @@
 //context: MenuItem
-Template.menuItemDetailedMainView.helpers({
-  ingredients: function () {
-    return this.ingredients || [];
-  }
+Template.menuItemDetailedMainView.onCreated(function () {
+  this.set('currentEditedIngredient', false);
 });
 
 
-component.state.menu = function () {
-  this.menu = MenuItems.findOne(this.id);
-  if (this.menu) {
-    return this.menu;
-  }
-};
+Template.menuItemDetailedMainView.helpers({
+  ingredient: function () {
+    return Ingredients.findOne({_id: this._id});
+  },
 
-component.state.jobItems = function () {
-  if (this.get('menu') && this.get('menu').jobItems) {
-    var jobItems = this.get('menu').jobItems;
-    return jobItems;
-  } else {
-    return [];
+  jobItem: function () {
+    return JobItems.findOne({_id: this._id});
   }
-};
+});
