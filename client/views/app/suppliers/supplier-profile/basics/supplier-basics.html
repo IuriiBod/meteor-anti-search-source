@@ -44,7 +44,9 @@
               {{/each}}
             </div>
             at
-            <a class="delivery-time">{{timeFormat supplier.deliveryTime}}</a>
+            <a class="delivery-time">
+              {{> comboTimeEditable params=timepickerParams}}
+            </a>
           </td>
         </tr>
         <tr>

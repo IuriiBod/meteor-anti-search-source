@@ -45,6 +45,17 @@ Template.basics.helpers({
   },
   convertToPdfUrl: function () {
     return '/convert?format=pdf';
+  },
+  timepickerParams: function () {
+    var tmpl = Template.instance();
+
+    return {
+      firstTime: tmpl.supplier().deliveryTime,
+      minuteStepping: 5,
+      onSubmit: function (startTime) {
+        tmpl.triggerUpdateSupplier('deliveryTime', startTime);
+      }
+    };
   }
 });
 
