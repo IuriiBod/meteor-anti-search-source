@@ -1,5 +1,5 @@
 //context: ingredient (Ingredient/undefined), isModal (boolean)
-Template.submitIngredientBody.onCreated(function () {
+Template.ingredientItemEditorBody.onCreated(function () {
   this.updateUnitOrderedState = function (value) {
     this.set('unitOrdered', value || '[unit ordered]');
   };
@@ -14,7 +14,7 @@ Template.submitIngredientBody.onCreated(function () {
 });
 
 
-Template.submitIngredientBody.onRendered(function () {
+Template.ingredientItemEditorBody.onRendered(function () {
   this.$('.unit-ordered-popover').popover({
     content: "Put the amount that you usually order in here. If it's a 20kg bag of flour, put '20kg bag'. If it's a 1lt bottle, put '1lt Bottle."
   });
@@ -27,7 +27,7 @@ Template.submitIngredientBody.onRendered(function () {
 });
 
 
-Template.submitIngredientBody.helpers({
+Template.ingredientItemEditorBody.helpers({
   supplierOptions: function () {
     var suppliers = Suppliers.find({}, {sort: {"name": 1}}).fetch();
     suppliers.unshift({
@@ -55,7 +55,7 @@ Template.submitIngredientBody.helpers({
 });
 
 
-Template.submitIngredientBody.events({
+Template.ingredientItemEditorBody.events({
   'submit #submitIngredientForm': function (event, tmpl) {
     event.preventDefault();
 

@@ -1,11 +1,12 @@
+Template.ingredientItemDetailed.onCreated(function () {
+  this.set('item', this.data.ingredient);
+});
+
 Template.ingredientItemDetailed.events({
   'click .editIngredient': function (event) {
     event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
-    //todo: use new ingredientEditor API here
-    //see: https://trello.com/c/OKnGRuGb/431-editingredientitem-submitingredientbody-submitingredient-will-be-replaced-with-ingredientitemeditor
-    Session.set("thisIngredientId", id);
-    $("#editIngredientModal").modal("show");
+    this.onIngredientIdChange(this.ingredient._id);
+    $("#ingredientItemEditor").modal('show');
   },
 
   'click .archiveIngredient': function (e, tpl) {

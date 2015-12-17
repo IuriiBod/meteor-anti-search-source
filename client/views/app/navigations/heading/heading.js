@@ -43,5 +43,9 @@ Template.pageHeading.helpers({
   headingToLoad: function () {
     var name = this.name;
     return headingComponentsMap.hasOwnProperty(name) ? headingComponentsMap[name] : false;
+  },
+
+  templateData: function () {
+    return this.templateData || {};
   }
 });

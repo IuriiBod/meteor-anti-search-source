@@ -6,6 +6,10 @@ var fields = ['code', 'description'];
 
 IngredientsListSearch = new SearchSource('ingredients', fields, options);
 
+Template.ingredientsList.onCreated(function () {
+  this.set('ingredientId', null);
+});
+
 Template.ingredientsList.helpers({
   getIngredients: function () {
     return IngredientsListSearch.getData({
@@ -16,8 +20,11 @@ Template.ingredientsList.helpers({
     });
   },
 
-  isLoading: function () {
-    return IngredientsListSearch.getStatus().loading;
+  onIngredientIdChange: function () {
+    var self = Template.instance();
+    return function (ingredientId) {
+      self.set('ingredientId', ingredientId);
+    }
   }
 });
 
@@ -46,17 +53,7 @@ Template.ingredientsList.events({
         IngredientsListSearch.search(text, selector);
       }
     }
-  }, 200),
-
-  'click .editIngredient': function (event, tmpl) {
-    event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
-    //todo: use new ingredientEditor API here
-    //see: https://trello.com/c/OKnGRuGb/431-editingredientitem-submitingredientbody-submitingredient-will-be-replaced-with-ingredientitemeditor
-    tmpl.set("thisIngredient", Ingredients.find({_id: id}));
-    Meteor.subscribe('ingredients', [id], HospoHero.getCurrentAreaId(Meteor.userId()));
-    tmpl.$("#editIngredientModal").modal("show");
-  }
+  }, 200)
 });
 
 Template.ingredientsList.onRendered(function () {

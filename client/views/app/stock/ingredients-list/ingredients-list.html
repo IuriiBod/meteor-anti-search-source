@@ -24,13 +24,13 @@
           </thead>
           <tbody>
           {{#each getIngredients}}
-            {{> render component = 'ingredientItemDetailed' ingredient=this}}
+            {{> ingredientItemDetailed ingredient=this onIngredientIdChange=onIngredientIdChange}}
           {{/each}}
           </tbody>
         </table>
         <!-- EDIT INGREDIENT-->
         {{#if canViewStock}}
-            {{> ingredientItemEditor isModal=true ingredient=state$thisIngredient}}
+            {{> ingredientItemEditor isModal=true ingredient=state$ingredient}}
         {{/if}}
         <!-- /EDIT INGREDIENT -->
       </div>
