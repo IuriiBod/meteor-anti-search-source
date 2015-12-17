@@ -115,6 +115,8 @@ SortableHelper.prototype.getSortedShift = function () {
     var oldStartTimeMoment = moment(shift.startTime);
     var newStartMoment = moment(this._draggedToDate);
 
+    newStartMoment.year(oldStartTimeMoment.year());
+    newStartMoment.week(oldStartTimeMoment.week());
     newStartMoment.hours(oldStartTimeMoment.hours());
     newStartMoment.minutes(oldStartTimeMoment.minutes());
 
