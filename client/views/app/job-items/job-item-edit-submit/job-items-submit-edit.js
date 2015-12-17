@@ -90,10 +90,12 @@ Template.submitEditJobItem.onCreated(function () {
   };
 
   this.assignOriginJobItemFields = function (jobItem) {
-    jobItem._id = this.data.jobItem._id;
-    jobItem.createdOn = this.data.jobItem.createdOn;
-    jobItem.createdBy = this.data.jobItem.createdBy;
-    jobItem.relations = this.data.jobItem.relations;
+    var originJobItem = this.data.jobItem;
+    jobItem._id = originJobItem._id;
+    jobItem.createdOn = originJobItem.createdOn;
+    jobItem.createdBy = originJobItem.createdBy;
+    jobItem.relations = originJobItem.relations;
+    jobItem.status = originJobItem.status;
   };
 
   this.getSelectedDays = function () {
