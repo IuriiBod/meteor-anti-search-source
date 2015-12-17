@@ -5,7 +5,7 @@ Template.ordersReceiptsList.onCreated(function() {
 });
 
 Template.ordersReceiptsList.helpers({
-  toBeReceived: function() {
+  orderToBeReceived: function() {
     return !Template.instance().thisState.get();
   },
 
@@ -15,17 +15,17 @@ Template.ordersReceiptsList.helpers({
 
   week: function() {
     var time = Template.instance().thisTime.get();
-    return time && time == "week";
+    return time && time === "week";
   },
 
   month: function() {
     var time = Template.instance().thisTime.get();
-    return time && time == "month";
+    return time && time === "month";
   },
 
   allTime: function() {
     var time = Template.instance().thisTime.get();
-    return time && time == "all";
+    return time && time === "all";
   },
 
   list: function() {
@@ -34,7 +34,7 @@ Template.ordersReceiptsList.helpers({
     var data = null;
     var ids = [];
 
-    if (time == "week") {
+    if (time === "week") {
       data = OrderReceipts.find({
         "received": state,
         "expectedDeliveryDate": {

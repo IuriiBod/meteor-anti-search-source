@@ -1,17 +1,17 @@
 Template.areaBox.helpers({
   activeGeneralArea: function (id) {
-    var garea = Template.instance().data.generalAreaExists;
+    var garea = this.stockTakeData.activeGeneralArea;
     return garea == id;
   },
 
   activeSpecialArea: function (id) {
-    var sarea = Template.instance().data.specialAreaExists;
+    var sarea = this.stockTakeData.activeSpecialArea;
     return sarea == id;
   },
 
   inActiveArea: function (id) {
-    var sarea = Template.instance().data.specialAreaExists;
-    var garea = Template.instance().data.generalAreaExists;
+    var sarea = this.stockTakeData.activeSpecialArea;
+    var garea = this.stockTakeData.activeGeneralArea;
     return !!((sarea != id) && (garea != id));
   },
 
@@ -23,22 +23,22 @@ Template.areaBox.helpers({
   },
 
   editable: function() {
-    return Template.instance().data.editStockTake;
+    return this.stockTakeData.editableStockTake;
   },
 
   widthOfBar: function() {
     var id = this.item._id;
     if (this.class == "sarea-filter") {
       var sProgress = 0;
-      var specialArea = SpecialAreas.findOne(id);
+      var specialArea = SpecialAreas.findOne({_id: id});
       if (specialArea && specialArea.stocks) {
         if (specialArea.stocks.length > 0) {
           var stocktakes = Stocktakes.find({
             $and: [
               {"stockId": {$in: specialArea.stocks}},
-              {"version": Template.instance().data.stocktakeId},
+              {"version": this.stockTakeData.stockTakeId},
               {"specialArea": id},
-              {'generalArea': Template.instance().data.generalAreaExists}
+              {'generalArea': this.stockTakeData.activeGeneralArea}
             ]
           }).fetch();
           var stocks = Ingredients.find({"_id": {$in: specialArea.stocks}, "status": "active"}).fetch();
@@ -51,7 +51,7 @@ Template.areaBox.helpers({
     } else if (this.class == "garea-filter") {
       var gProgress = 0;
       var totalCount = 0;
-      var generalArea = GeneralAreas.findOne(id);
+      var generalArea = GeneralAreas.findOne({_id: id});
       if (generalArea) {
         var specialAreas = SpecialAreas.find({"generalArea": id}).fetch();
         if (specialAreas && specialAreas.length > 0) {
@@ -66,7 +66,7 @@ Template.areaBox.helpers({
         }
       }
 
-      stocktakes = Stocktakes.find({"version": Template.instance().data.stocktakeId, "generalArea": id}).fetch();
+      stocktakes = Stocktakes.find({"version": this.stockTakeData.stockTakeId, "generalArea": id}).fetch();
       if (stocktakes && stocktakes.length > 0) {
         gProgress = (stocktakes.length / totalCount) * 100;
       }
@@ -79,21 +79,21 @@ Template.areaBox.events({
   'click .garea-filter': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;
-    tmpl.data.activeGeneralArea(id);
+    tmpl.data.makeGeneralAreaActive(id);
     $(".areaFilering .collapse").removeClass("in");
     var sarea = $(event.target).parent().next().find(".areaBox")[0];
     if (sarea) {
       var sId = $(sarea).attr("data-id");
-      tmpl.data.activeSpecialArea(sId);
+      tmpl.data.makeSpecialAreaActive(sId);
     } else {
-      tmpl.data.activeSpecialArea(null);
+      tmpl.data.makeSpecialAreaActive(null);
     }
   },
 
   'click .sarea-filter': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;
-    tmpl.data.activeSpecialArea(id);
+    tmpl.data.makeSpecialAreaActive(id);
   },
 
   'mouseenter .areaBox': function (event) {

@@ -4,10 +4,7 @@ Template.orderReceive.onCreated(function() {
 
 Template.orderReceive.helpers({
   list: function() {
-    var data = StockOrders.find({"orderReceipt": this.currentReceipt, "countOrdered": {$gt: 0}});
-    if (data) {
-      return data;
-    }
+    return StockOrders.find({"orderReceipt": this.currentReceipt, "countOrdered": {$gt: 0}});
   },
 
   total: function() {
@@ -22,24 +19,19 @@ Template.orderReceive.helpers({
   },
 
   receipt: function() {
-    var data = OrderReceipts.findOne({_id: this.currentReceipt});
-    if (data) {
-      return data;
-    }
+    return OrderReceipts.findOne({_id: this.currentReceipt});
   },
 
   isReceived: function() {
     var data = OrderReceipts.findOne({_id: this.currentReceipt});
-    if (data) {
-      if (data.received) {
+    if (data && data.received) {
         return true;
-      }
     }
   },
 
   receivedNote: function() {
     var receipt = OrderReceipts.findOne({_id: this.currentReceipt});
-    if (receipt) {
+    if (receipt && receipt.receiveNote) {
       return receipt.receiveNote;
     }
   },

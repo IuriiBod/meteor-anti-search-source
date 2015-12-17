@@ -1,7 +1,6 @@
 <template name="supplierFilter">
   {{#each suppliers}}
-    <a class="btn {{#if receiptExists this}} btn-primary {{else}} btn-default {{/if}} activateSupplier"
-       data-id="{{this}}">
+    <a class="btn {{#if receiptExists this}} btn-primary {{else}} btn-default {{/if}} activateSupplier">
       {{supplierName this}}
     </a>
   {{/each}}

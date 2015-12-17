@@ -1,5 +1,6 @@
 var component = FlowComponents.define('stocksModalList', function (props) {
   this.name = props.name;
+  this.activeSpecialArea = props.activeSpecialArea;
   this.onRendered(this.renderShowIngList);
 
   var options = {
@@ -17,6 +18,9 @@ component.state.name = function () {
   return this.name;
 };
 
+component.state.activeSpecialArea = function() {
+  return this.activeSpecialArea;
+};
 component.prototype.setIds = function () {
   var ids = [];
   if (this.name == "stockModal") {
@@ -53,7 +57,7 @@ component.prototype.renderShowIngList = function () {
       } else if (self.name == "editMenu") {
         self.item = MenuItems.findOne(id);
       } else if (self.name == "stockModal") {
-        self.item = SpecialAreas.findOne(Session.get("activeSArea"));
+        self.item = SpecialAreas.findOne(this.activeSpecialArea);
       }
     }
 

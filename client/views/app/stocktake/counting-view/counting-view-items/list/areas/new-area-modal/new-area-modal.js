@@ -27,7 +27,6 @@ function submit(name) {
         $("#addNewGeneralAreaModal").modal("hide");
       }));
     } else if (this.name == "special") {
-      console.log(this.generalArea);
       var gareaId = this.generalArea;
       if (gareaId) {
         Meteor.call("createSpecialArea", name, gareaId, HospoHero.handleMethodResult(function () {

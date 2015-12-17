@@ -1,6 +1,5 @@
 Template.orderingCount.onRendered(function () {
   var self = this;
-  console.log('ordering count -> ', this);
   this.$('.orderingCount').editable({
     title: 'Edit count',
     showbuttons: false,

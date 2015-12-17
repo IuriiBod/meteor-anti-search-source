@@ -1,6 +1,7 @@
 var component = FlowComponents.define('stockModalItem', function (props) {
   this.stock = props.stock;
   this.name = props.name;
+  this.set('activeSpecialArea', props.activeSpecialArea);
   this.onRendered(this.onItemRendered);
 });
 
@@ -30,7 +31,8 @@ component.prototype.onItemRendered = function () {
     var id = $(this).attr("data-id");
 
     if (self.name == "stockModal") {
-      var sareaId = Session.get("activeSArea");
+      var sareaId = self.get('activeSpecialArea');
+      console.log('this.activeSpecialArea -> ', sareaId);
       Meteor.call("assignStocksToAreas", id, sareaId, HospoHero.handleMethodResult());
     } else if (self.name == "editJob") {
       var localId = Session.get("localId");

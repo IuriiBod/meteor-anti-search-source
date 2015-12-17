@@ -2,10 +2,10 @@
   <div class="row">
     <div class="col-lg-12">
       {{#if notTemplate}}
-        <a class="btn btn-primary btn-sm pull-right" href="/stocktake/orders/{{stockTakeId}}">View Orders<br></a>
+        <a class="btn btn-primary btn-sm pull-right" href="/stocktake/orders/{{stockTakeCountingContext.stockTakeId}}">View Orders<br></a>
       {{else}}
         <a class="btn btn-primary btn-sm pull-right generateOrders">Save stocktake &amp; generate orders<br></a>
-        {{#if editable}}
+        {{#if stockTakeCountingContext.editableStockTake}}
           <a class="btn btn-link btn-sm pull-right saveStockTake"><i class="fa fa-fw fa-save"></i>Save</a>
         {{else}}
           <a class="btn btn-link btn-sm pull-right editStockTake"><i class="fa fa-fw fa-edit"></i>Edit Stocktake
@@ -18,23 +18,17 @@
   </div>
   
   <div class="row">
-    {{> areaFilters stocktakeId=stockTakeId
-                    editStockTake=editable
-                    generalArea=activeGeneralArea
-                    specialArea=activeSpecialArea
-                    activeSpecialArea=activeSpecialAreaCallback
-                    activeGeneralArea=activeGeneralAreaCallback}}
+    {{> areaFilters stockTakeData=stockTakeCountingContext
+                    makeSpecialAreaActive=makeSpecialAreaActive
+                    makeGeneralAreaActive=makeGeneralAreaActive}}
     {{#if filtered}}
       <div class="col-md-8">
         {{#if notTemplate}}
           <ul class="list-group sortableStockItems">
             {{#each stocktakeList}}
-              StockTakeList
-              {{> stockCountingListItem id=this.stockId
-                                        activeGeneralArea=activeGeneralArea
-                                        activeSpecialArea=activeSpecialArea
-                                        stocktakeId=stockTakeId
-                                        editStockTake=editable}}
+              StockTake
+              {{> stockCountingListItem id=this
+                                        stockTakeData=stockTakeCountingContext}}
             {{else}}
               No items on this list
             {{/each}}
@@ -42,19 +36,16 @@
         {{else}}
           <ul class="list-group sortableStockItems">
             {{#each ingredientsList}}
-              Ingredients list
-              {{> stockCountingListItem id=this._id
-                                        activeGeneralArea=activeGeneralArea
-                                        activeSpecialArea=activeSpecialArea
-                                        stocktakeId=stockTakeId
-                                        editStockTake=editable}}
+              Ingredients
+              {{> stockCountingListItem id=this
+                                        stockTakeData=stockTakeCountingContext}}
             {{else}}
               No items on this list
             {{/each}}
           </ul>
         {{/if}}
         
-        {{#if editable}}
+        {{#if stockTakeCountingContext.editableStockTake}}
           <a class="btn btn-block btn-default btn-outline addStock">Add stock items to this area<br></a>
         {{/if}}
       </div>
@@ -66,7 +57,7 @@
   <!-- STOCKS MODAL LIST-->
   <div class="modal fade" id="stocksListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
-    {{> render component = 'stocksModalList' name="stockModal" activeSpecialArea=activeSpecialArea}}
+    {{> render component = 'stocksModalList' name="stockModal" activeSpecialArea=stockTakeCountingContext.activeSpecialArea}}
   </div>
   <!-- /STOCKS MODAL LIST -->
 
@@ -80,7 +71,7 @@
   <!-- ADD SPECIAL AREA MODAL LIST-->
   <div class="modal fade" id="addNewSpecialAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
-    {{> newAreaModal name="special" generalArea=activeGeneralArea}}
+    {{> newAreaModal name="special" generalArea=stockTakeCountingContext.activeGeneralArea}}
   </div>
   <!-- /ADD SPECIAL AREA MODAL LIST-->
 </template>

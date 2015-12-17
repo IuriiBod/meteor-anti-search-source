@@ -1,8 +1,8 @@
 Template.areaFilters.onRendered(function() {
   var garea = GeneralAreas.findOne({}, {sort: {"createdAt": 1}});
   if (garea && !this.data.generalArea) {
-    this.data.activeGeneralArea(garea._id);
-    this.data.activeSpecialArea(null);
+    this.data.makeGeneralAreaActive(garea._id);
+    this.data.makeSpecialAreaActive(null);
   }
 });
 
@@ -17,24 +17,16 @@ Template.areaFilters.helpers({
     }
   },
 
-  stocktakeId: function() {
-    return Template.instance().data.stocktakeId;
+  stockTakeData: function() {
+    return Template.instance().data.stockTakeData;
   },
 
-  activeGeneralArea: function() {
-    return Template.instance().data.activeGeneralArea;
+  makeGeneralAreaActive: function() {
+    return Template.instance().data.makeGeneralAreaActive;
   },
 
-  activeSpecialArea: function() {
-    return Template.instance().data.activeSpecialArea;
-  },
-
-  generalAreaExists: function() {
-    return Template.instance().data.generalArea;
-  },
-
-  specialAreaExists: function() {
-    return Template.instance().data.specialArea;
+  makeSpecialAreaActive: function() {
+    return Template.instance().data.makeSpecialAreaActive;
   },
 
   specialAreas: function(gareaId) {
@@ -45,10 +37,6 @@ Template.areaFilters.helpers({
     } else {
       return SpecialAreas.find({"generalArea": gareaId, "active": true}, {sort: {"name": 1}});
     }
-  },
-
-  editable: function() {
-    return Template.instance().data.editStockTake;
   }
 });
 

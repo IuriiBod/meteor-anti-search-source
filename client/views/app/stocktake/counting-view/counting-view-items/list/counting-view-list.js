@@ -5,20 +5,13 @@ Template.stockCounting.onCreated(function() {
 });
 
 Template.stockCounting.helpers({
-  editable: function() {
-    return Template.instance().editStockTake.get();
-  },
-
-  stockTakeId: function() {
-    return Template.instance().data.stocktakeId;
-  },
-
-  activeSpecialArea: function() {
-    return Template.instance().activeSpecialArea.get();
-  },
-
-  activeGeneralArea: function() {
-    return Template.instance().activeGeneralArea.get();
+  stockTakeCountingContext: function() {
+    return {
+      editableStockTake: Template.instance().editStockTake.get(),
+      stockTakeId: Template.instance().data.stocktakeId,
+      activeSpecialArea: Template.instance().activeSpecialArea.get(),
+      activeGeneralArea: Template.instance().activeGeneralArea.get()
+    };
   },
 
   stocktakeList: function() {
@@ -56,7 +49,6 @@ Template.stockCounting.helpers({
             }
           }
         });
-        console.log('ings -> ', ings);
         return ings;
       }
     }
@@ -81,14 +73,14 @@ Template.stockCounting.helpers({
     return permitted;
   },
 
-  activeSpecialAreaCallback: function() {
+  makeSpecialAreaActive: function() {
     var instance = Template.instance();
     return function(areaId) {
       instance.activeSpecialArea.set(areaId);
     }
   },
 
-  activeGeneralAreaCallback: function() {
+  makeGeneralAreaActive: function() {
     var instance = Template.instance();
     return function(areaId) {
       instance.activeGeneralArea.set(areaId);
@@ -97,7 +89,7 @@ Template.stockCounting.helpers({
 
   //ordersExist: function() {
   //  var ordersExist = Stocktakes.findOne({
-  //    "version": Session.get("thisVersion"),
+  //    "version": this.stocktakeId,
   //    "status": true
   //  });
   //  return !!ordersExist;
@@ -130,6 +122,8 @@ Template.stockCounting.events({
         success: function (response, newValue) {
           var self = this;
           var id = $(self).attr("data-id");
+          console.log(id);
+          console.log(tmpl);
           if (newValue) {
             Meteor.call("editSpecialArea", id, newValue, HospoHero.handleMethodResult());
           }
@@ -152,32 +146,33 @@ Template.stockCounting.events({
 
       $(".sortableStockItems").sortable({
         stop: function (event, ui) {
-          var stocktakeId = $(ui.item).attr("data-stockRef");
-          var stockId = $(ui.item).attr("data-id");
-          var itemPosition = $(ui.item).attr("data-place");
-
-          var nextItemId = $($($(ui.item)[0]).next()).attr("data-id");
-          var nextItemPosition = $($($(ui.item)[0]).next()).attr("data-place");
-          var prevItemId = $($($(ui.item)[0]).prev()).attr("data-id");
-          var prevItemPosition = $($($(ui.item)[0]).prev()).attr("data-place");
-
-          var sareaId = tmpl.activeSpecialArea.get();
-          if (!prevItemPosition) {
-            prevItemPosition = 0;
-          }
-
-          var info = {
-            "nextItemId": nextItemId,
-            "prevItemId": prevItemId
-          };
-          if (nextItemPosition) {
-            info['nextItemPosition'] = nextItemPosition
-          }
-
-          if (prevItemPosition) {
-            info['prevItemPosition'] = prevItemPosition
-          }
-          Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, HospoHero.handleMethodResult());
+          var sortedStockItems = new SortableHelper(ui).getSortedItems();
+          console.log(sortedStockItems);
+          //var stocktakeId = $(ui.item).attr("data-stockRef");
+          //var stockId = $(ui.item).attr("data-id");
+          //
+          //var nextItemId = $($($(ui.item)[0]).next()).attr("data-id");
+          //var nextItemPosition = $($($(ui.item)[0]).next()).attr("data-place");
+          //var prevItemId = $($($(ui.item)[0]).prev()).attr("data-id");
+          //var prevItemPosition = $($($(ui.item)[0]).prev()).attr("data-place");
+          //
+          //var sareaId = tmpl.activeSpecialArea.get();
+          //if (!prevItemPosition) {
+          //  prevItemPosition = 0;
+          //}
+          //
+          //var info = {
+          //  "nextItemId": nextItemId,
+          //  "prevItemId": prevItemId
+          //};
+          //if (nextItemPosition) {
+          //  info['nextItemPosition'] = nextItemPosition
+          //}
+          //
+          //if (prevItemPosition) {
+          //  info['prevItemPosition'] = prevItemPosition
+          //}
+          //Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, HospoHero.handleMethodResult());
         }
       });
     }, 10);
@@ -195,3 +190,38 @@ Template.stockCounting.events({
     }
   }
 });
+
+
+var SortableHelper = function (ui) {
+  console.log(ui.item.prev());
+  //this._draggedItem = new Date(ui.item.parent().data('current-date'));
+  this._draggedShift = _.clone(this._getDataByItem(ui.item)); //clone it just in case
+  this._previousShift = this._getDataByItem(ui.item.prev());
+  this._nextShift = this._getDataByItem(ui.item.next());
+};
+
+
+SortableHelper.prototype._getDataByItem = function (item) {
+  var element = item[0];
+  return element ? Blaze.getData(element) : null;
+};
+
+SortableHelper.prototype._getOrder = function () {
+  var order = 0;
+  console.log(this._previousShift);
+  if (!this._nextShift && this._previousShift) {
+    order = this._previousShift.order + 1;
+  } else if (!this._previousShift && this._nextShift) {
+    order = this._nextShift.order - 1;
+  } else if (this._nextShift && this._previousShift) {
+    order = (this._nextShift.order + this._previousShift.order) / 2;
+  }
+
+  return order;
+};
+
+SortableHelper.prototype.getSortedItems = function() {
+  var item = this._draggedShift;
+  item.order = this._getOrder();
+  return item;
+};

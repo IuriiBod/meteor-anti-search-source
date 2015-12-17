@@ -4,7 +4,7 @@ Template.orderReceiveItem.onCreated(function() {
 
 Template.orderReceiveItem.helpers({
   stock: function () {
-    var ingredient = Ingredients.findOne(this.item.stockId);
+    var ingredient = Ingredients.findOne({_id: this.item.stockId});
     if (ingredient) {
       this.item['description'] = ingredient.description;
     }
@@ -12,25 +12,19 @@ Template.orderReceiveItem.helpers({
   },
 
   total: function () {
-    var quantity = this.item.countOrdered;
-    if (this.item.hasOwnProperty("countDelivered")) {
-      quantity = this.item.countDelivered;
-    }
-    var total = this.item.unitPrice * quantity;
-    return total;
+    var quantity = this.item.hasOwnProperty("countDelivered") ? this.item.countDelivered : this.item.countOrdered;
+    return this.item.unitPrice * quantity;
   },
 
   deliveryStatus: function() {
-    var id = this.item._id;
-    var order = StockOrders.findOne({_id: id});
+    var order = StockOrders.findOne({_id: this.item._id});
     if (order && order.deliveryStatus) {
       return order.deliveryStatus;
     }
   },
 
   isDeliveredCorrectly: function () {
-    var id = this.item._id;
-    var order = StockOrders.findOne({_id: id});
+    var order = StockOrders.findOne({_id: this.item._id});
     if (order && order.deliveryStatus) {
       if (order.deliveryStatus.length == 1 && order.deliveryStatus[0] == "Delivered Correctly") {
         return true;
@@ -39,8 +33,7 @@ Template.orderReceiveItem.helpers({
   },
 
   isWrongQuantity: function() {
-    var id = this.item._id;
-    var order = StockOrders.findOne({_id: id});
+    var order = StockOrders.findOne({_id: this.item._id});
     if (order && order.deliveryStatus && order.deliveryStatus.length > 0) {
       if (order.deliveryStatus.indexOf("Wrong Quantity") >= 0) {
         return true;
@@ -49,8 +42,7 @@ Template.orderReceiveItem.helpers({
   },
 
   isWrongPrice: function() {
-    var id = this.item._id;
-    var order = StockOrders.findOne({_id: id});
+    var order = StockOrders.findOne({_id: this.item._id});
     if (order && order.deliveryStatus && order.deliveryStatus.length > 0) {
       if (order.deliveryStatus.indexOf("Wrong Price") >= 0) {
         return true;
@@ -59,12 +51,9 @@ Template.orderReceiveItem.helpers({
   },
 
   isReceived: function() {
-    var id = this.item.orderReceipt;
-    var data = OrderReceipts.findOne({_id: id});
-    if (data) {
-      if (data.received) {
+    var data = OrderReceipts.findOne({_id: this.item.orderReceipt});
+    if (data && data.received) {
         return true;
-      }
     }
   },
 
@@ -91,7 +80,6 @@ Template.orderReceiveItem.events({
   },
 
   'click .wrongQuantity': function (event, tmpl) {
-    console.log(this);
     event.preventDefault();
     var id = tmpl.data.item._id;
     tmpl.data.currentOrderCallback(id);

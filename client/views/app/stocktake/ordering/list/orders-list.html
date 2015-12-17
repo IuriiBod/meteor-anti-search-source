@@ -2,7 +2,7 @@
   <div class="col-lg-12">
     <div class="ibox ">
       <div class="ibox-content">
-        {{#if isNull}}
+        {{#if isNotEmpty}}
           {{> supplierFilter onSupplierChanged=onSupplierChanged orderId=this.orderId}}
           <table class="table table-condensed table-hover table-striped">
             <thead>
@@ -19,7 +19,7 @@
             </thead>
             <tbody>
             {{#each list}}
-              {{> ordersListItem itemId=this onCountChange=onCountChange}}
+              {{> ordersListItem itemId=this._id onCountChange=onCountChange}}
             {{/each}}
             </tbody>
           </table>
