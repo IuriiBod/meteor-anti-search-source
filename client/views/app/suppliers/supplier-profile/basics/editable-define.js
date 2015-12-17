@@ -43,20 +43,6 @@ var defineEditableComponents = function (tmpl) {
     }
   });
 
-  //tmpl.$('.delivery-time').editable({
-  //  type: 'combodate',
-  //  template: "h:mm A",
-  //  viewformat: "h:mm A",
-  //  display: false,
-  //  showbuttons: true,
-  //  inputclass: "editableTime",
-  //  mode: 'inline',
-  //  success: function (response, newValue) {
-  //    newValue = newValue.toDate();
-  //    tmpl.triggerUpdateSupplier('deliveryTime', newValue);
-  //  }
-  //});
-
   tmpl.$('.contact-name').editable({
     type: 'text',
     title: 'Minimum order amount',
