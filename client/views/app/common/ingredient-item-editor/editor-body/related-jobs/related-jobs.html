@@ -16,15 +16,13 @@
               <th>Shelf Life</th>
             </tr>
             </thead>
-            {{# each state$relatedJobs}}
+            {{# each relatedJobs}}
               <tbody>
               <tr>
                 <td>
-                  <a href="{{pathFor 'jobItemDetailed' _id=_id}}" target="_blank">
-                    {{name}}
-                  </a>
+                  <a href="{{pathFor 'jobItemDetailed' _id=_id}}" target="_blank">{{name}}</a>
                 </td>
-                <td>{{state$convertTime activeTime}}</td>
+                <td>{{secondsToMinutes activeTime}}</td>
                 <td>{{portions}}</td>
                 <td>{{shelfLife}}</td>
               </tr>
