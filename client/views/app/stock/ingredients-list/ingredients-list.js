@@ -7,7 +7,7 @@ var fields = ['code', 'description'];
 IngredientsListSearch = new SearchSource('ingredients', fields, options);
 
 Template.ingredientsList.onCreated(function () {
-  this.set('ingredientId', null);
+  this.set('ingredient', null);
 });
 
 Template.ingredientsList.helpers({
@@ -23,7 +23,8 @@ Template.ingredientsList.helpers({
   onIngredientIdChange: function () {
     var self = Template.instance();
     return function (ingredientId) {
-      self.set('ingredientId', ingredientId);
+      var ingredient = Ingredients.findOne({_id: ingredientId});
+      self.set('ingredient', ingredient);
     }
   }
 });

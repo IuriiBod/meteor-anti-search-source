@@ -3,9 +3,9 @@ Template.ingredientItemDetailed.onCreated(function () {
 });
 
 Template.ingredientItemDetailed.events({
-  'click .editIngredient': function (event) {
+  'click .editIngredient': function (event, tmpl) {
     event.preventDefault();
-    this.onIngredientIdChange(this.ingredient._id);
+    tmpl.data.onIngredientIdChange(tmpl.data.ingredient._id);
     $("#ingredientItemEditor").modal('show');
   },
 

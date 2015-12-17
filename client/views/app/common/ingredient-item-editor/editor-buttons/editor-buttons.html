@@ -1,5 +1,5 @@
 <template name="ingredientItemEditorButtons">
-  {{#if ingredient}} <!-- is edit mode -->
+  {{#if isIngredientSet}} <!-- is edit mode -->
     <button class="btn btn-primary submit-ingredient-button">Save changes</button>
 
     {{#if state$isArchive}}
