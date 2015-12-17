@@ -1,7 +1,25 @@
-
-
 Template.menuItemSettings.helpers({
+  currentCategory: function () {
+    return Categories.findOne({_id: this.category});
+  },
 
+  categoriesList: function () {
+    if (this.item) {
+      var myCategory = this.item.category;
+      if (myCategory) {
+        return Categories.find().fetch();
+      }
+    }
+  },
+
+  statusList: function () {
+    return HospoHero.misc.getMenuItemsStatuses();
+  },
+
+  isArchived: function () {
+    var menu = MenuItems.findOne(this.id);
+    return menu && menu.status ? menu.status == "archived" : true;
+  }
 });
 
 Template.menuItemSettings.events({
@@ -202,35 +220,3 @@ Template.menuItemSettings.events({
 });
 
 
-Template.menuItemSettings.onDestroyed(function () {
-
-});
-
-
-component.state.myCategory = function () {
-  this.item = MenuItems.findOne(this.id);
-  if (this.item) {
-    var myCategory = this.item.category;
-    if (myCategory) {
-      return Categories.findOne(myCategory);
-    }
-  }
-};
-
-component.state.categoriesList = function () {
-  if (this.item) {
-    var myCategory = this.item.category;
-    if (myCategory) {
-      return Categories.find().fetch();
-    }
-  }
-};
-
-component.state.statusList = function () {
-  return HospoHero.misc.getMenuItemsStatuses();
-};
-
-component.state.isArchived = function () {
-  var menu = MenuItems.findOne(this.id);
-  return menu && menu.status ? menu.status == "archived" : true;
-};

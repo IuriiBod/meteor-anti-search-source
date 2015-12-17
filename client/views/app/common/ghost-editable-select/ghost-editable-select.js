@@ -1,10 +1,6 @@
-Template.ghostEditableSelect.onCreated(function () {
-  // this.data.values is an array of objects {text: 'Text', value: '0'}
-  this.set('values', this.data.values || []);
-  this.set('isInline', this.data.isInline || true);
+//context: values ([{text: String, value: any}]), onValueChanged (function), selected (any)
 
-  this.selected = this.data.selected;
-  this.onValueChanged = this.data.onValueChanged;
+Template.ghostEditableSelect.onCreated(function () {
 });
 
 
@@ -24,19 +20,23 @@ Template.menuItemSettings.onRendered(function () {
 
 
 Template.ghostEditableSelect.helpers({
-  isSelected: function (value) {
-    return value === this.selected;
+  optionAttrs: function () {
+    var parentData = Template.parentData(1);
+    var attributes = {
+      value: this.value
+    };
+
+    if (parentData.selected === this.value) {
+      attributes.selected = 'selected';
+    }
+
+    return attributes;
   },
   selectedText: function () {
     var self = this;
-    var values = Template.instance().get('values');
-    var text = '- select -';
-    values.forEach(function (item) {
-      if (self.selected === item.value) {
-        text = item.text;
-      }
-    });
-    return text;
+    return _.find(this.values, function (valueEntry) {
+        return valueEntry.value === self.selected;
+      }) || '- select -';
   }
 });
 
@@ -48,8 +48,8 @@ Template.ghostEditableSelect.events({
   },
 
   'change .ghost-editable-select': function (event, tmpl) {
-    if (_.isFunction(tmpl.onValueChanged)) {
-      tmpl.onValueChanged(event.target.value);
+    if (_.isFunction(tmpl.data.onValueChanged)) {
+      tmpl.data.onValueChanged(event.target.value);
     }
     tmpl.set('isInline', true);
   }

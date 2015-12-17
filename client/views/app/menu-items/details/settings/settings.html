@@ -1,16 +1,16 @@
+<!-- todo: rewrite this using ghost-editable-select -->
 <template name="menuItemSettings">
-  <form method="get" class="form-horizontal" data-id="{{state$menu._id}}">
+  <form method="get" class="form-horizontal">
     <div class="form-group">
       <label class="col-sm-2 control-label">Category</label>
 
       <div class="col-sm-9 pull-right">
         {{#if canEditMenu}}
-          <a href="#" data-name="category" class="my-editable-link">{{state$myCategory.name}}</a>
+          <a href="#" data-name="category">{{currentCategory.name}}</a>
         {{else}}
-          <span style="position: relative; top: 8px;">{{state$myCategory.name}}</span>
+          <p>{{currentCategory.name}}</p>
         {{/if}}
-        <select name="category" class="form-control text-capitalize hide my-editable-select"
-                data-id="{{state$menu._id}}">
+        <select name="category" class="form-control text-capitalize hide my-editable-select">
           {{#each state$categoriesList}}
             {{# if equal _id state$myCategory._id}}
               <option value="{{state$myCategory._id}}" selected='selected'>{{state$myCategory.name}}</option>
