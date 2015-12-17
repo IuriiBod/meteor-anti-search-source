@@ -4,53 +4,47 @@ Template.newSupplier.onCreated(function () {
     $('.modal-backdrop').remove();
   };
 
-  this.getValuesFromForm = function ($form) {
-    var name = $form.find('.supplier-name').val();
-    var email = $form.find('.email').val();
-    var phone = $form.find('.phone-number').val();
-    var minimumOrderAmount = $form.find('.minimum-order-amount').val();
-    var deliveryTime = $form.find('.delivery-time').data('DateTimePicker').date().toDate();
-    var contactName = $form.find('.contact-name').val();
-    var customerNumber = $form.find('.customer-number').val();
-
-    minimumOrderAmount = parseInt(minimumOrderAmount);
-
-    var deliveryDayCheckboxes = $form.find('[name="deliveryDay"]');
-    deliveryDayCheckboxes = _.map(deliveryDayCheckboxes, function (checkbox) {
-      return checkbox.checked ? checkbox.value : false;
-    });
-    var deliveryDays = _.compact(deliveryDayCheckboxes);
-
-    return {
-      name: name,
-      email: email,
-      phone: phone,
-      minimumOrderAmount: minimumOrderAmount,
-      deliveryDays: deliveryDays,
-      deliveryTime: deliveryTime,
-      contactName: contactName,
-      customerNumber: customerNumber
-    };
-  };
+  this.set('deliveryTime', new Date());
 });
 
-Template.newSupplier.onRendered(function () {
-  $('.delivery-time').datetimepicker({
-    defaultDate: moment(),
-    format: 'hh:mm',
-    dayViewHeaderFormat: 'hh:mm',
-    stepping: 10
-  });
+Template.newSupplier.helpers({
+  timepickerParams: function () {
+    var tmpl = Template.instance();
+
+    return {
+      firstTime: tmpl.get('deliveryTime'),
+      minuteStepping: 5,
+      onSubmit: function (startTime) {
+        tmpl.set('deliveryTime', startTime);
+      }
+    };
+  }
 });
 
 Template.newSupplier.events({
   'submit form': function (e, tmpl) {
     e.preventDefault();
-    var $form = $(e.target);
+    var fields = [
+      'name',
+      'email',
+      'phone',
+      {
+        name: 'minimumOrderAmount',
+        parse: 'int'
+      },
+      'contactName',
+      'customerNumber'
+    ];
+    var values = HospoHero.misc.getValuesFromEvent(e, fields, true);
+    values.deliveryTime = tmpl.get('deliveryTime');
 
-    var doc = tmpl.getValuesFromForm($form);
+    var deliveryDayCheckboxes = tmpl.$(e.target).find('[name="deliveryDay"]');
+    deliveryDayCheckboxes = _.map(deliveryDayCheckboxes, function (checkbox) {
+      return checkbox.checked ? checkbox.value : false;
+    });
+    values.deliveryDays = _.compact(deliveryDayCheckboxes);
 
-    Meteor.call("createSupplier", doc, HospoHero.handleMethodResult(function (supplierId) {
+    Meteor.call("createSupplier", values, HospoHero.handleMethodResult(function (supplierId) {
       tmpl.closeModal("#addNewSupplierModal");
       Router.go("supplierProfile", {"_id": supplierId});
     }));
