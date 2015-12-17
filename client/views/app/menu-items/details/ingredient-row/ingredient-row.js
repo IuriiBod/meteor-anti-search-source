@@ -17,6 +17,26 @@ Template.menuItemIngredientRow.helpers({
     var analyzeResult = HospoHero.analyze[isPrep ? 'jobItem' : 'ingredient'](this.item);
     var targetValue = analyzeResult[isPrep ? 'prepCostPerPortion' : 'costPerPortionUsed'];
     return Math.round(targetValue * this.quantity * 100) / 100;
+  },
+
+  getOnQuantityEditableSuccess: function () {
+    var tmpl = Template.instance();
+
+    return function (response, newValue) {
+      var menuItemId = Router.current().params._id;
+
+      if (newValue) {
+        newValue = parseFloat(newValue);
+        newValue = !isNaN(newValue) ? newValue : 0;
+
+        var type = tmpl.data.type === 'prep' ? 'jobItems' : 'ingredients';
+
+        Meteor.call('editMenuIngredientsOrJobItems', menuItemId, {
+          _id: tmpl.data.item._id,
+          quantity: newValue
+        }, type, HospoHero.handleMethodResult());
+      }
+    };
   }
 });
 
