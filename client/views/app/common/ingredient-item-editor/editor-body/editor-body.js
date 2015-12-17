@@ -28,8 +28,29 @@ Template.submitIngredientBody.onRendered(function () {
 
 
 Template.submitIngredientBody.helpers({
-  suppliers: function () {
-    return Suppliers.find({}, {sort: {"name": 1}});
+  supplierOptions: function () {
+    var suppliers = Suppliers.find({}, {sort: {"name": 1}}).fetch();
+    suppliers.unshift({
+      _id: '',
+      name: 'Not assigned'
+    });
+    return suppliers;
+  },
+
+  suppliersOptionAttrs: function () {
+    var attributes = {
+      value: this._id
+    };
+
+    var selectedSupplierId = Template.parentData(1).suppliers;
+    if (selectedSupplierId === this._id) {
+      attributes.selected = 'selected';
+    }
+    return attributes;
+  },
+
+  defaultValue: function (value, defaultValue) {
+    return value || defaultValue;
   }
 });
 
