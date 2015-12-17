@@ -14,7 +14,7 @@
           <th>Action</th>
           <th>Name</th>
           <th>Active Time (mins)</th>
-          {{#if showSection}}
+          {{#if isRecurring}}
             <th>Section</th>
             <th>Frequency</th>
           {{else}}
@@ -25,7 +25,7 @@
         </tr>
         </thead>
         <tbody>
-        {{#each getJobItems}}
+        {{#each jobItems}}
           {{> jobItemDetailed jobitem=this type=type}}
         {{/each}}
         </tbody>
