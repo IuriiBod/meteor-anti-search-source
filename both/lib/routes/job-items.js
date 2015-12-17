@@ -19,26 +19,6 @@ Router.route('/jobItems', {
   }
 });
 
-//Router.route('/jobItems/:type', {
-//  name: 'jobItemsMasterType',
-//  path: '/jobItems/:type',
-//  template: 'jobItemsListMainView',
-//  waitOn: function () {
-//    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-//    return [
-//      Meteor.subscribe('jobItems', null, currentAreaId, 'archived'),
-//      Meteor.subscribe('sections', currentAreaId),
-//      Meteor.subscribe('userSubscriptions', currentAreaId)
-//    ];
-//  },
-//  data: function () {
-//    if (!Meteor.userId()) {
-//      Router.go('/');
-//    }
-//    Session.set('editStockTake', false);
-//  }
-//});
-
 Router.route('/jobItem/submit', {
   name: 'submitJobItem',
   path: '/jobItem/submit',
