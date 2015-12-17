@@ -20,7 +20,7 @@ Template.jobItemsList.helpers({
     return Template.instance().getTypeId();
   },
   isRecurring: function () {
-    return Template.instance().data.type == 'recurring';
+    return Template.instance().data.type == 'Recurring';
   }
 });
 

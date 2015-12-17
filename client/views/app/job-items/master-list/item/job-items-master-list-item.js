@@ -1,5 +1,5 @@
 Template.jobItemDetailed.helpers({
-  showSection: function () {
+  isRecurring: function () {
     var id = Template.instance().data.type;
     var type = JobTypes.findOne({_id: id});
     return !!type && type.name == "Recurring";
@@ -25,12 +25,6 @@ Template.jobItemDetailed.helpers({
       default :
         false;
     }
-  },
-
-  isPrep: function () {
-    var id = Template.instance().data.type;
-    var type = JobTypes.findOne({_id: id});
-    return !!type && type.name == "Prep";
   },
 
   cost: function () {
