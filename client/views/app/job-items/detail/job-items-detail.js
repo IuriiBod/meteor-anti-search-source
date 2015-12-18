@@ -1,5 +1,4 @@
 Template.jobItemDetail.onCreated(function () {
-  console.log(this.data.jobItem);
 
   this.getLabourCost = function () {
     var jobItem = this.data.jobItem;

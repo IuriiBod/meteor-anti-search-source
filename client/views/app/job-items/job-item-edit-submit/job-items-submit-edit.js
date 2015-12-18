@@ -188,7 +188,6 @@ Template.submitEditJobItem.helpers({
   editIngredientsListOnChange: function () {
     var thisTemplate = Template.instance();
     return function (ingredientsList) {
-      console.log(ingredientsList);
       thisTemplate.ingredients = ingredientsList;
     };
   },
