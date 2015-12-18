@@ -1,6 +1,6 @@
 <template name="menuItemDetailedMainView">
   <!-- Page heading -->
-  {{> pageHeading title=state$menu.name category='Menus' name="menudetailed" id=state$menu._id}}
+  {{> pageHeading title=name category='Menus' name="menuDetails" id=_id}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
@@ -44,10 +44,10 @@
           </thead>
           <tbody>
           {{#each jobItems}}
-            {{> ingsAndPreps item=this type="prep"}}
+            {{> menuItemIngredientRow item=jobItem quantity=quantity type="prep" setCurrentEditedIngredient=setCurrentEditedIngredient}}
           {{/each}}
-          {{#each ings}}
-            {{> ingsAndPreps item=this type="ings"}}
+          {{#each ingredients}}
+            {{> menuItemIngredientRow item=ingredient quantity=quantity type="ings" setCurrentEditedIngredient=setCurrentEditedIngredient}}
           {{/each}}
           </tbody>
         </table>
@@ -62,7 +62,7 @@
 
   <!-- EDIT INGREDIENT-->
   {{#if canViewStock}}
-    {{> ingredientItemEditor isModal=true ingredient=state$thisIngredient}}
+    {{> ingredientItemEditor isModal=true ingredient=currentEditedIngredient}}
   {{/if}}
   <!-- /EDIT INGREDIENT -->
 
