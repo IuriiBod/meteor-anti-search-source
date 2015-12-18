@@ -75,8 +75,12 @@ Namespace('HospoHero.misc', {
     return locationHref.replace(absoluteUrl, "/");
   },
 
-  getMenuItemsStatuses: function () {
-    return ['ideas', 'archived', 'active'];
+  getMenuItemsStatuses: function (includeArchived) {
+    var statuses = ['ideas', 'active'];
+    if (includeArchived) {
+      statuses.push('archived');
+    }
+    return statuses;
   },
 
   getCountries: function () {

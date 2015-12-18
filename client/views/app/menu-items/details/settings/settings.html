@@ -1,24 +1,14 @@
-<!-- todo: rewrite this using ghost-editable-select -->
 <template name="menuItemSettings">
-  <form method="get" class="form-horizontal">
+  <form class="form-horizontal">
     <div class="form-group">
       <label class="col-sm-2 control-label">Category</label>
 
       <div class="col-sm-9 pull-right">
         {{#if canEditMenu}}
-          <a href="#" data-name="category">{{currentCategory.name}}</a>
+          {{> ghostEditableSelect values=categoryOptions selected=currentCategory onValueChanged=getOnCategoryChanged}}
         {{else}}
           <p>{{currentCategory.name}}</p>
         {{/if}}
-        <select name="category" class="form-control text-capitalize hide my-editable-select">
-          {{#each state$categoriesList}}
-            {{# if equal _id state$myCategory._id}}
-              <option value="{{state$myCategory._id}}" selected='selected'>{{state$myCategory.name}}</option>
-            {{else}}
-              <option value="{{_id}}">{{name}}</option>
-            {{/ if}}
-          {{/each}}
-        </select>
       </div>
     </div>
 
@@ -26,90 +16,44 @@
       <label class="col-sm-2 control-label">Status</label>
 
       <div class="col-sm-9 pull-right">
-        {{#if state$isArchived}}
-          <span style="position: relative; top: 8px;">archived</span>
+        {{#if isArchived}}
+          <p>archived</p>
         {{else}}
           {{#if canEditMenu}}
-            <a href="#" data-name="status" class="my-editable-link">{{state$menu.status}}</a>
+            {{> ghostEditableSelect values=statusOptions selected=status onValueChanged=getOnStatusChanged}}
           {{else}}
-            <span style="position: relative; top: 8px;">{{state$menu.status}}</span>
+            <p>{{status}}</p>
           {{/if}}
-          <select name="status" class="form-control text-capitalize hide my-editable-select"
-                  data-id="{{state$menu._id}}">
-            {{#each state$statusList}}
-              {{# if equal this.name state$menu.status}}
-                <option value="{{state$menu.status}}" selected="selected">{{state$menu.status}}</option>
-              {{else}}
-                <option value="{{this.name}}">{{this.name}}</option>
-              {{/ if}}
-            {{/each}}
-          </select>
         {{/if}}
       </div>
     </div>
 
     <div class="form-group">
-      {{#if canEditMenu}}
-        <label class="col-sm-2 control-label">Image</label>
-      {{else}}
-        {{#if state$menu.image}}
-          <label class="col-sm-2 control-label">Image</label>
-        {{/if}}
-      {{/if}}
+      <label class="col-sm-2 control-label">Image</label>
 
       <div class="col-sm-9 pull-right">
         <div class="menuImageDiv">
-          {{#if state$menu.image}}
-            <div class="file uploadedImageDiv">
-              {{# if canEditMenu}}
-                <div class="box-wrapper pull-right" style="display: none; position: absolute;">
-                  <button type="button" class="btn btn-sm btn-info" id="uploadMenuItem"><i
-                      class="fa fa-edit m-r-sm"></i>Edit Image
-                  </button>
-                  <br>
-                </div>
-              {{/if}}
+          <div class="file uploadedImageDiv">
+            {{#if canEditMenu}}
+              <div class="box-wrapper pull-right">
+                <button type="button" class="btn btn-sm btn-info upload-image-button">
+                  <i class="fa fa-edit m-r-sm"></i>
+                  {{#if image}} Change Image {{else}} Add Image {{/if}}
+                </button>
+              </div>
+            {{/if}}
+            {{#if image}}
               <a href="#">
                 <span class="corner"></span>
 
                 <div class="image">
-                  <img id="uploadedImageUrl" src="{{state$menu.image}}" class="img-responsive menu-item-image">
+                  <img src="{{image}}" class="img-responsive menu-item-image">
                 </div>
               </a>
-            </div>
-          {{else}}
-            {{# if canEditMenu}}
-              <button type="button" class="btn btn-sm btn-info" id="uploadMenuItem">Upload Image</button>
-              <br>
-
-              <div class="file uploadedNewImageDiv hide">
-                <a href="#">
-                  <span class="corner"></span>
-
-                  <div class="image">
-                    <img id="uploadedImageUrl" src="" class="img-responsive menu-item-image">
-                  </div>
-                </a>
-              </div>
             {{/if}}
-          {{/if}}
+          </div>
         </div>
       </div>
     </div>
-    <!-- INGREDIENTS LIST-->
-    {{#if canViewStock}}
-      <div class="modal fade" id="ingredientsListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-           aria-hidden="true">
-        {{> render component = 'stocksModalList' name="editJob"}}
-      </div>
-    {{/if}}
-    <!-- /INGREDIENTS LIST -->
-
-    <!-- JOB ITEMS LIST-->
-    <div class="modal fade" id="jobItemListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-      {{> jobItemsModalList name="submitMenuItem"}}
-    </div>
-    <!-- /JOB ITEMS LIST -->
   </form>
 </template>

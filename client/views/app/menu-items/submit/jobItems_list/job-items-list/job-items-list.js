@@ -1,3 +1,17 @@
+Template.jobItemsModalList.events({
+  'keyup #searchText-box': function (event) {
+    var text = $(event.target).val().trim();
+    FlowComponents.callAction('keyup', text);
+  },
+
+  'click #addNewJobItem': function (event) {
+    event.preventDefault();
+    $("#jobItemListModal").modal("hide");
+    Router.go("submitJobItem");
+  }
+});
+
+
 var component = FlowComponents.define('jobItemsModalList', function (props) {
   this.onRendered(this.onJobLitsRendered);
   this.name = props.name;
