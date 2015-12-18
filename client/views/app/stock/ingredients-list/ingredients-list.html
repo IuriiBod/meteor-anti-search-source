@@ -28,11 +28,6 @@
           {{/each}}
           </tbody>
         </table>
-        <!-- EDIT INGREDIENT-->
-        {{#if canViewStock}}
-            {{> ingredientItemEditor isModal=true ingredient=state$ingredient}}
-        {{/if}}
-        <!-- /EDIT INGREDIENT -->
       </div>
       <p>
         <a href="#" class="btn btn-block btn-outline btn-primary hide" id="loadMoreIngs">Load More</a>

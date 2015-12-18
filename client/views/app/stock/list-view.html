@@ -1,10 +1,16 @@
 <template name="listOfStocksMasterMainView">
   <!-- Page heading -->
-  {{> pageHeading title='Stock List' category="Stocks" name="ingredientslist"}}
+  {{> pageHeading title='Stock List' category="Stocks" name="ingredientslist" templateData=templateData}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
-      {{> ingredientsList}}
+      {{> ingredientsList onIngredientIdChange=onIngredientIdChange}}
     </div>
   </div>
+
+  <!-- INGREDIENTS EDITOR -->
+  {{#if canViewStock}}
+    <div id="ingredientItemEditorPlaceHolder"></div>
+  {{/if}}
+  <!-- /INGREDIENTS EDITOR -->
 </template>

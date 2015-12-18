@@ -6,58 +6,9 @@ var fields = ['code', 'description'];
 
 IngredientsListSearch = new SearchSource('ingredients', fields, options);
 
-Template.ingredientsList.onCreated(function () {
-  this.set('ingredient', null);
-});
-
-Template.ingredientsList.helpers({
-  getIngredients: function () {
-    return IngredientsListSearch.getData({
-      transform: function (matchText, regExp) {
-        return matchText.replace(regExp, "<b>$&</b>")
-      },
-      sort: {'code': 1}
-    });
-  },
-
-  onIngredientIdChange: function () {
-    var self = Template.instance();
-    return function (ingredientId) {
-      var ingredient = Ingredients.findOne({_id: ingredientId});
-      self.set('ingredient', ingredient);
-    }
-  }
-});
-
-Template.ingredientsList.events({
-  "keyup #searchIngBox": _.throttle(function (e) {
-    var selector = {
-      limit: 30
-    };
-    if (Router.current().params.type) {
-      selector.status = "archived";
-    } else {
-      selector.status = {$ne: "archived"};
-    }
-    var text = $(e.target).val().trim();
-    IngredientsListSearch.search(text, selector);
-  }, 200),
-
-  'click #loadMoreIngs': _.throttle(function (event, tmpl) {
-    event.preventDefault();
-    var text = $("#searchIngBox").val().trim();
-    if (IngredientsListSearch.history && IngredientsListSearch.history[text]) {
-      var dataHistory = IngredientsListSearch.history[text].data;
-      if (dataHistory.length >= 9) {
-        IngredientsListSearch.cleanHistory();
-        var selector = tmpl.newSearchParams(dataHistory);
-        IngredientsListSearch.search(text, selector);
-      }
-    }
-  }, 200)
-});
-
 Template.ingredientsList.onRendered(function () {
+  this.onIngredientIdChange = this.data.onIngredientIdChange;
+
   this.newSearchParams = function (dataHistory) {
     var count = dataHistory.length;
     var lastItem = dataHistory[count - 1]['code'];
@@ -98,6 +49,48 @@ Template.ingredientsList.onRendered(function () {
       }
     });
   });
+});
+
+Template.ingredientsList.helpers({
+  getIngredients: function () {
+    return IngredientsListSearch.getData({
+      transform: function (matchText, regExp) {
+        return matchText.replace(regExp, "<b>$&</b>")
+      },
+      sort: {'code': 1}
+    });
+  },
+  onIngredientIdChange: function () {
+    return Template.instance().onIngredientIdChange;
+  }
+});
+
+Template.ingredientsList.events({
+  'keyup #searchIngBox': _.throttle(function (e) {
+    var selector = {
+      limit: 30
+    };
+    if (Router.current().params.type) {
+      selector.status = "archived";
+    } else {
+      selector.status = {$ne: "archived"};
+    }
+    var text = $(e.target).val().trim();
+    IngredientsListSearch.search(text, selector);
+  }, 200),
+
+  'click #loadMoreIngs': _.throttle(function (event, tmpl) {
+    event.preventDefault();
+    var text = $("#searchIngBox").val().trim();
+    if (IngredientsListSearch.history && IngredientsListSearch.history[text]) {
+      var dataHistory = IngredientsListSearch.history[text].data;
+      if (dataHistory.length >= 9) {
+        IngredientsListSearch.cleanHistory();
+        var selector = tmpl.newSearchParams(dataHistory);
+        IngredientsListSearch.search(text, selector);
+      }
+    }
+  }, 200)
 });
 
 Template.ingredientsList.onDestroyed(function () {

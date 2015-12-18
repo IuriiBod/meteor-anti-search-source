@@ -4,3 +4,9 @@ Template.stockHeader.helpers({
     return archive && archive === 'archive';
   }
 });
+
+Template.stockHeader.events({
+  'click .add-new-ingredient': function (event, tmpl) {
+    tmpl.data.onIngredientIdChange(null);
+  }
+});

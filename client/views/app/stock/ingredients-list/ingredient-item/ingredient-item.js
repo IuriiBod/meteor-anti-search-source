@@ -6,9 +6,9 @@ Template.ingredientItemDetailed.events({
   'click .editIngredient': function (event, tmpl) {
     event.preventDefault();
     tmpl.data.onIngredientIdChange(tmpl.data.ingredient._id);
-    $("#ingredientItemEditor").modal('show');
   },
 
+  // todo: kill myself...
   'click .archiveIngredient': function (e, tpl) {
     e.preventDefault();
     var button, i, id;
