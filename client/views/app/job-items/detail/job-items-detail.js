@@ -55,18 +55,16 @@ Template.jobItemDetail.helpers({
   endsOn: function () {
     var item = Template.instance().data.jobItem;
     var ends = null;
-    if (item) {
-      if (item.endsOn) {
-        if (item.endsOn.on == 'endsNever') {
-          ends = 'Never';
-        } else if (item.endsOn.on == 'endsAfter') {
-          ends = 'After ' + item.endsOn.after + ' occurrences';
-        } else if (item.endsOn.on == 'endsOn') {
-          ends = 'On ' + moment(item.endsOn.lastDate).format('YYYY-MM-DD');
-        }
+    if (item.endsOn) {
+      if (item.endsOn.on == 'endsNever') {
+        ends = 'Never';
+      } else if (item.endsOn.after) {
+        ends = 'After ' + item.endsOn.after + ' occurrences';
+      } else if (item.endsOn.lastDate) {
+        ends = moment(item.endsOn.lastDate).format('YYYY-MM-DD');
       }
-      return ends;
     }
+    return ends;
   },
 
   isWeekly: function () {
