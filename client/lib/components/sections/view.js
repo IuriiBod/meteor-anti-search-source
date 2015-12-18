@@ -2,7 +2,7 @@ Template.sections.events({
   'submit form': function (event) {
     event.preventDefault();
 
-    var name = HospoHero.misc.getValuesFromEvent(event, 'sectionName', true);
+    var name = HospoHero.misc.getValuesFromEvent(event, ['sectionName'], true);
     if (name) {
       Meteor.call("createSection", name, HospoHero.handleMethodResult(function () {
         event.target.sectionName.value = '';

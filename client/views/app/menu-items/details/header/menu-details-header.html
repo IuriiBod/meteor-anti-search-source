@@ -1,0 +1,64 @@
+<template name="menuDetailsHeader">
+  <div class="title-action">
+    <div class="btn-group">
+      <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+        <i class="fa fa-cog"></i> Settings
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" style="margin-left: -56px;">
+        {{#if isSubscribed}}
+          <li class="text-info">
+            <a href="#" class="hidden-print subscribeButton"><i class="fa fa-lg fa-rss"></i> Unsubscribe</a>
+          </li>
+        {{else}}
+          <li class="text-muted">
+            <a href="#" class="hidden-print subscribeButton"><i class="fa fa-lg fa-rss"></i> Subscribe</a>
+          </li>
+        {{/if}}
+        {{#if canEditMenu}}
+          <li>
+            <a href="" class="hidden-print copyMenuItemBtn">
+              <i class="fa fa-copy"></i> Copy
+            </a>
+          </li>
+        {{/if}}
+        <li>
+          <a href="" class="hidden-print printMenuItemBtn">
+            <i class="fa fa-print"></i> Print
+          </a>
+        </li>
+        {{#if canEditMenu}}
+          <li role="separator" class="divider"></li>
+          {{#if isArchived}}
+            <li>
+              <a href="#" class="hidden-print archiveMenuItemBtn">
+                <i class="fa fa-dropbox"></i> Restore
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hidden-print deleteMenuItemBtn">
+                <i class="fa fa-trash-o"></i> Delete
+              </a>
+            </li>
+          {{else}}
+            <li>
+              <a href="#" class="hidden-print archiveMenuItemBtn">
+                <i class="fa fa-archive"></i> Archive
+              </a>
+            </li>
+          {{/ if}}
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+
+  {{#if canEditMenu}}
+    <!--AREA CHOOSER-->
+    <div class="modal fade" id="areaChooser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      {{> areaChooser onAreaSelected=state$onAreaSelected}}
+    </div>
+    <!--AREA CHOOSER-->
+  {{/if}}
+</template>

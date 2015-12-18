@@ -47,7 +47,7 @@ var menuEntries = [
     route: 'menuItemsMaster',
     icon: 'fa-cutlery',
     permission: 'view menus',
-    activeOnRoutes: ['menuItemsMaster', 'submitMenuItem', 'menuItemsMasterType', 'menuItemDetail'],
+    activeOnRoutes: ['menuItemsMaster', 'submitMenuItem', 'menuItemDetail'],
     params: function () {
       return {
         category: 'all',

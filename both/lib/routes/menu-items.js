@@ -1,82 +1,32 @@
-//--------------------MENU ITEMS
-Router.route('/menuItems/:category/:status', {
-  name: "menuItemsMaster",
+Router.route('menuItemsMaster', {
   path: '/menuItems/:category/:status',
   template: "menuItemsListMainView",
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allCategories', currentAreaId),
-      Meteor.subscribe('allStatuses'),
-      Meteor.subscribe('menuList', currentAreaId, this.params.category, this.params.status.toLowerCase()),
+      //Meteor.subscribe('menuList', currentAreaId, this.params.category, this.params.status.toLowerCase()),
       Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },
   data: function () {
-    if (!Meteor.userId()) {
-      Router.go("/");
-    }
-    Session.set("category", this.params.category);
-    Session.set("status", this.params.status.toLowerCase());
-  }
-});
-
-Router.route('/menuItems/submit', {
-  name: "submitMenuItem",
-  path: '/menuItems/submit',
-  template: "menuItemSubmitMainView",
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('allCategories', currentAreaId),
-      Meteor.subscribe('allStatuses'),
-      Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('jobItems', null, currentAreaId)
-    ];
-  },
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.canUser('edit menus')()) {
-      Router.go("/");
+    return {
+      category: this.params.category.toLowerCase(),
+      status: this.params.status.toLowerCase()
     }
   }
 });
 
-Router.route('/menuItems/:type', {
-  name: "menuItemsMasterType",
-  path: '/menuItems/:type',
-  template: "menuItemsListMainView",
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('allCategories', currentAreaId),
-      Meteor.subscribe('allStatuses'),
-      Meteor.subscribe('menuList', currentAreaId, 'all', 'all'),
-      Meteor.subscribe('userSubscriptions', currentAreaId)
-    ];
-  },
-  data: function () {
-    if (!Meteor.userId()) {
-      Router.go("/");
-    }
-    Session.set("category", "all");
-    Session.set("status", "all");
-  }
-});
-
-Router.route('/menuItem/:_id', {
-  name: "menuItemDetail",
+Router.route('menuItemDetail', {
   path: '/menuItem/:_id',
   template: "menuItemDetailedMainView",
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe("menuItem", this.params._id),
+      Meteor.subscribe('menuItem', this.params._id),
       Meteor.subscribe('comments', this.params._id, currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('allCategories', currentAreaId),
-      Meteor.subscribe('allStatuses'),
       Meteor.subscribe('userSubscriptions', currentAreaId),
       Meteor.subscribe('usersList', currentAreaId),
       Meteor.subscribe('jobTypes'),
@@ -84,10 +34,22 @@ Router.route('/menuItem/:_id', {
     ];
   },
   data: function () {
-    if (!Meteor.userId()) {
-      Router.go("/");
-    }
-    //todo: get rid of sessions later
-    Session.set("thisMenuItem", this.params._id);
+    return MenuItems.findOne({_id: this.params._id});
   }
 });
+
+Router.route('submitMenuItem', {
+  path: '/menuItems/submit',
+  template: "menuItemSubmitMainView",
+  waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return [
+      Meteor.subscribe('allCategories', currentAreaId),
+      Meteor.subscribe('allSuppliers', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('jobTypes'),
+      Meteor.subscribe('jobItems', null, currentAreaId)
+    ];
+  }
+});
+

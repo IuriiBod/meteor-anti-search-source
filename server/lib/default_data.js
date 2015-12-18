@@ -17,10 +17,6 @@ Meteor.startup(function () {
       data: ['Main Menu', 'Kids Menu']
     },
     {
-      collection: Statuses,
-      data: ['active', 'ideas', 'archived']
-    },
-    {
       collection: Sections,
       data: ["Kitchen hand", "Larder", "Hot section", "Baking", "Pass"]
     }

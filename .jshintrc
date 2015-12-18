@@ -155,28 +155,20 @@
     "T9n": false,                   // softwarerero:accounts-t9n
 
     // Collections
-    "Menus": true,
     "MenuItems": true,
     "Ingredients": true,
     "JobItems": true,
     "Jobs": true,
     "Shifts": true,
-    "SalesForecast": true,
-    "ActualSales": true,
-    "Sales": true,
-    "SalesCalibration": true,
-    "ForecastCafe": true,
-    "ForecastCatering": true,
+    "DailySales": true,
     "Comments": true,
     "Notifications": true,
     "Subscriptions": true,
     "Categories": true,
     "JobTypes": true,
     "Sections": true,
-    "Statuses": true,
     "GeneralAreas": true,
     "SpecialAreas": true,
-    "Payroll": true,
     "Posts": true,
     "StocktakeMain": true,
     "Stocktakes": true,
@@ -187,6 +179,7 @@
     "Suppliers": true,
 
     // Other global variables
-    "logger": true
+    "logger": true,
+    "HospoHero": true
   }
 }

@@ -1,7 +1,7 @@
 var headingComponentsMap = {
   //props.name : 'headerComponent',
-  menulist: 'menuListHeader',
-  menudetailed: 'menuDetailsHeader',
+  menuList: 'menuListHeader',
+  menuDetails: 'menuDetailsHeader',
   jobslist: 'jobListHeader',
   jobitemdetailed: 'jobDetailsHeader',
   ingredientslist: 'stockHeader',
@@ -43,5 +43,9 @@ Template.pageHeading.helpers({
   headingToLoad: function () {
     var name = this.name;
     return headingComponentsMap.hasOwnProperty(name) ? headingComponentsMap[name] : false;
+  },
+
+  templateData: function () {
+    return this.templateData || {};
   }
 });
