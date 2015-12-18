@@ -1,31 +1,35 @@
-Template.submitMenuItem.helpers({
+Template.menuItemSubmitMainView.onCreated(function () {
+  this.set('image', false);
+});
+
+
+Template.menuItemSubmitMainView.helpers({
+  statuses: function () {
+    return HospoHero.misc.getMenuItemsStatuses(false);
+  },
+
   categoriesList: function () {
-    return Categories.find({
-      "relations.areaId": HospoHero.getCurrentAreaId()
-    }).fetch();
+    var currentAreaId = HospoHero.getCurrentAreaId();
+    return Categories.find({"relations.areaId": currentAreaId});
+  },
+
+  initialHTML: function () {
+    return "Add instructions here";
   }
 });
 
-Template.submitMenuItem.events({
-  'submit form': function (event) {
+Template.menuItemSubmitMainView.events({
+  'submit form': function (event, tmpl) {
     event.preventDefault();
-    var name = $(event.target).find('[name=name]').val().trim();
-    var category = $(event.target).find('[name=category]').val();
-    var status = $(event.target).find('[name=status]').val();
-    var instructions = FlowComponents.child('menuItemEditorSubmit').getState('content');
-    var salesPrice = $(event.target).find('[name=salesPrice]').val().trim();
-    var image = $("#uploadedImageUrl").attr("src");
-    var preps = $(event.target).find("[name=prep_qty]").get();
-    var ings = $(event.target).find("[name=ing_qty]").get();
-    if (!name) {
-      return alert("Add a unique name for the menu");
-    }
-    if (instructions) {
-      if ($('.note-editable').text() === "Add instructions here" || $('.note-editable').text() === "") {
-        instructions = ""
-      }
+
+    var instructions = tmpl.$('.summernote').summernote('code');
+    if (instructions === "Add instructions here") {
+      instructions = '';
     }
 
+    //todo: get rid of this mess too
+    var preps = $(event.target).find("[name=prep_qty]").get();
+    var ings = $(event.target).find("[name=ing_qty]").get();
     var ing_doc = [];
     ings.forEach(function (item) {
       var dataid = $(item).attr("data-id");
@@ -38,7 +42,6 @@ Template.submitMenuItem.events({
         });
       }
     });
-
     var prep_doc = [];
     preps.forEach(function (item) {
       var dataid = $(item).attr("data-id");
@@ -51,60 +54,42 @@ Template.submitMenuItem.events({
         });
       }
     });
-    var info = {
-      "name": name,
-      "instructions": instructions,
-      "image": image,
-      "ingredients": ing_doc,
-      "prepItems": prep_doc,
-      "category": category,
-      "status": status
-    };
-    salesPrice = parseFloat(salesPrice);
-    salesPrice = Math.round(salesPrice * 100) / 100;
 
-    info.salesPrice = salesPrice ? salesPrice : 0;
-    FlowComponents.callAction('submit', info);
+
+    var menuItemFieldsConfig = [
+      'name', 'category', 'status', {
+        name: 'salesPrice',
+        transform: function (salesPrice) {
+          return Math.round(parseFloat(salesPrice) * 100) / 100;
+        }
+      }
+    ];
+
+    var info = HospoHero.misc.getValuesFromEvent(event, menuItemFieldsConfig, true);
+
+    _.extend(info, {
+      image: tmpl.get('image') || '',
+      instructions: instructions,
+      ingredients: ing_doc,
+      prepItems: prep_doc
+    });
+
+    if (!info.name) {
+      return alert("Add a unique name for the menu");
+    }
+
+    Meteor.call("createMenuItem", info, HospoHero.handleMethodResult(function (id) {
+      Router.go("menuItemDetail", {_id: id});
+    }));
   },
 
-  'click #uploadMenuItem': function (event) {
+  'click .upload-image-button': function (event, tmpl) {
     event.preventDefault();
-    filepicker.pickAndStore(
-      {mimetype: "image/*", services: ['COMPUTER']},
-      {},
+    filepicker.pickAndStore({mimetype: "image/*", services: ['COMPUTER']}, {},
       function (InkBlobs) {
-        var doc = (InkBlobs);
-        if (doc) {
-          $(".uploadedImageDiv").removeClass("hide");
-          $("#uploadedImageUrl").attr("src", doc[0].url);
+        if (_.isArray(InkBlobs) && InkBlobs[0]) {
+          tmpl.set('image', InkBlobs[0].url);
         }
       });
   }
 });
-
-var component = FlowComponents.define('submitMenuItem', function (props) {
-  this.onRendered(this.onFormRendered);
-});
-
-component.state.initialHTML = function () {
-  return "Add instructions here";
-};
-
-component.action.submit = function (info) {
-  Meteor.call("createMenuItem", info, HospoHero.handleMethodResult(function (id) {
-    Router.go("menuItemDetail", {"_id": id});
-  }));
-};
-
-component.state.statuses = function () {
-  return HospoHero.misc.getMenuItemsStatuses();
-};
-
-component.prototype.onFormRendered = function () {
-  Session.set("localId", insertLocalMenuItem());
-};
-
-insertLocalMenuItem = function () {
-  LocalMenuItem.remove({});
-  return LocalMenuItem.insert({"ings": [], "preps": []});
-};
