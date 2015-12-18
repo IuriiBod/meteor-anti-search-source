@@ -35,7 +35,13 @@ Template.ingredientsList.helpers({
     return Template.instance().searchSource.searchResult({sort: {code: 1}});
   },
   onIngredientIdChange: function () {
-    return Template.instance().onIngredientIdChange;
+    var tmpl = Template.instance();
+
+    return function (ingredientId) {
+      tmpl.onIngredientIdChange(ingredientId);
+      var text = tmpl.$("#searchIngBox").val().trim();
+      tmpl.searchSource.search(text);
+    }
   }
 });
 
@@ -47,7 +53,7 @@ Template.ingredientsList.events({
 
   'click #loadMoreIngs': function (event, tmpl) {
     event.preventDefault();
-    var text = $("#searchIngBox").val().trim();
+    var text = tmpl.$("#searchIngBox").val().trim();
     tmpl.searchLimit += 10;
     tmpl.searchSource.setLimit(tmpl.searchLimit);
     tmpl.searchSource.search(text);
