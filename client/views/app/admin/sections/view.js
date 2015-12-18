@@ -1,3 +1,27 @@
+Template.sections.onRendered(function () {
+  $('.editSection').editable({
+    type: "text",
+    title: 'Edit section name',
+    showbuttons: true,
+    display: false,
+    mode: 'inline',
+    success: function (response, newValue) {
+      var id = $(this).attr("data-id");
+      if (id) {
+        Meteor.call("editSection", id, newValue, HospoHero.handleMethodResult());
+      }
+    }
+  });
+});
+
+Template.sections.helpers({
+  sections: function () {
+    return Sections.find({
+      'relations.areaId': HospoHero.getCurrentAreaId()
+    });
+  }
+});
+
 Template.sections.events({
   'submit form': function (event) {
     event.preventDefault();
@@ -18,19 +42,3 @@ Template.sections.events({
     }
   }
 });
-
-Template.sections.rendered = function () {
-  $('.editSection').editable({
-    type: "text",
-    title: 'Edit section name',
-    showbuttons: true,
-    display: false,
-    mode: 'inline',
-    success: function (response, newValue) {
-      var id = $(this).attr("data-id");
-      if (id) {
-        Meteor.call("editSection", id, newValue, HospoHero.handleMethodResult());
-      }
-    }
-  });
-};
