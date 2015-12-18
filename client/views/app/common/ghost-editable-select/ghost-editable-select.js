@@ -4,7 +4,7 @@ Template.ghostEditableSelect.onCreated(function () {
 });
 
 
-Template.menuItemSettings.onRendered(function () {
+Template.ghostEditableSelect.onRendered(function () {
   var self = this;
 
   this.onBodyClick = function (event) {

@@ -1,6 +1,5 @@
 <template name="menuItemSubmitMainView">
-  <!-- Page heading -->
-  {{> pageHeading title='Submit Menu' category='Menus' name="menusubmit"}}
+  {{> pageHeading title='Submit Menu' category='Menus' name="menuSubmit"}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
@@ -11,7 +10,7 @@
           </div>
           <div class="ibox-content">
 
-            <form class="form-horizontal" id="submitNewMenu">
+            <form class="form-horizontal">
               <div class="form-group">
                 <label class="col-sm-2 control-label">Name</label>
 
@@ -35,8 +34,8 @@
 
                 <div class="col-sm-10">
                   <select name="status" class="form-control text-capitalize">
-                    {{#each state$statuses}}
-                      <option value="{{this.name}}">{{this.name}}</option>
+                    {{#each statuses}}
+                      <option value="{{this}}">{{this}}</option>
                     {{/each}}
                   </select>
                 </div>
@@ -45,18 +44,17 @@
                 <label class="col-sm-2 control-label">Instructions</label>
 
                 <div class="col-sm-10">
-                  {{> render component = 'textEditor' id='menuItemEditorSubmit'
-                  initialHtml=state$initialHTML}}
+                  {{> textEditor initialHtml=initialHTML}}
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label">Prep items used</label>
-                {{> render component="listOfJobItems" id="menuSubmit" name="menuSubmit"}}
+                {{> listOfJobItems}}
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label">Ingredients used</label>
-                {{> render component="listOfIngredients" id="menuSubmit" name="menuSubmit"}}
+                {{> listOfIngredients id="menuSubmit" name="menuSubmit"}}
               </div>
 
               <div class="form-group">
@@ -73,28 +71,29 @@
                 <label class="col-sm-2 control-label">Image</label>
 
                 <div class="col-sm-10">
-                  <button type="button" class="btn btn-sm btn-info" id="uploadMenuItem">Upload Image</button>
-                  <br>
+                  <button type="button" class="btn btn-sm btn-info upload-image-button">Upload Image</button>
 
-                  <div class="file col-sm-2 uploadedImageDiv hide">
-                    <a href="#">
-                      <span class="corner"></span>
+                  {{#if state$image}}
+                    <div class="file col-sm-2 uploadedImageDiv">
+                      <a href="#">
+                        <span class="corner"></span>
 
-                      <div class="image">
-                        <img id="uploadedImageUrl" src="" class="img-responsive menu-item-image">
-                      </div>
-                    </a>
-                  </div>
+                        <div class="image">
+                          <img id="uploadedImageUrl" src="" class="img-responsive menu-item-image">
+                        </div>
+                      </a>
+                    </div>
+                  {{/if}}
                 </div>
               </div>
               <div class="row">
-                <div class="col-sm-4 col-sm-offset-2">
-                  <a href="{{pathFor route='menuItemsMaster' category='all' status='all'}}" class="btn btn-white">Cancel</a>
+                <div class="col-xs-12 col-sm-4 col-sm-offset-2">
+                  <a href="{{pathFor route='menuItemsMaster' category='all' status='all'}}"
+                     class="btn btn-white">Cancel</a>
                   <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
               </div>
             </form>
-
           </div>
         </div>
       </div>
