@@ -25,4 +25,4 @@ Template.stockModalItem.events({
   'click .add-ing-checkbox': function (e, tmpl) {
     tmpl.data.onAddStockItem(tmpl.data.stock._id)
   }
-})
+});

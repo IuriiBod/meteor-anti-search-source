@@ -20,10 +20,11 @@ Template.stocksModalList.events({
   },
 
   //event for submitIngredient template
-  'click #addIngredientBtn': function (e, tmpl) {
+  'click .submit-ingredient-button': function (e, tmpl) {
     tmpl.showAddStockItemMenu.set(false);
   },
-  'click #cancel': function (e, tmpl) {
+  'click .ingredient-editor-cancel': function (e, tmpl) {
+    e.preventDefault();
     tmpl.showAddStockItemMenu.set(false);
   }
 });

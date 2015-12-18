@@ -11,7 +11,7 @@
       <form class="form-horizontal" role="form" style="padding: 10px 20px">
         <div class="modal-body">
           {{#if showAddStockItemMenu}}
-            {{> render component = "submitIngredient" isModal=false}}
+            {{> ingredientItemEditor isModal=false}}
           {{else}}
             <input type="text" class="form-control input-lg" id="searchText-box"
                    placeholder="Search for stocks..."><br>
