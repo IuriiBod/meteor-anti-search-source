@@ -24,7 +24,8 @@ Template.menuItemSettings.helpers({
   getOnCategoryChanged: function () {
     var tmpl = Template.instance();
     return function (newCategory) {
-      Meteor.call("editMenuItem", tmpl.data._id, {category: newCategory}, HospoHero.handleMethodResult());
+      console.log('newCategory', newCategory);
+      //Meteor.call("editMenuItem", tmpl.data._id, {category: newCategory}, HospoHero.handleMethodResult());
     };
   },
 
@@ -37,8 +38,7 @@ Template.menuItemSettings.helpers({
   },
 
   isArchived: function () {
-    var menu = MenuItems.findOne(this.id);
-    return menu && menu.status ? menu.status == "archived" : true;
+    return this.status == "archived";
   }
 });
 

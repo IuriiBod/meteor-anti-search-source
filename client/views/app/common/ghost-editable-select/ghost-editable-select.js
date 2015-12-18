@@ -1,16 +1,16 @@
 //context: values ([{text: String, value: any}]), onValueChanged (function), selected (any)
-
 Template.ghostEditableSelect.onCreated(function () {
+  this.set('isInline', true);
+  this.set('selectedValue', this.data.selected);
 });
 
 
 Template.ghostEditableSelect.onRendered(function () {
   var self = this;
   this.onBodyClick = function (event) {
-    var eventTarget = $(event.target);
-    var targetIsntChildOfSelect = !$.contains(self.$('.ghost-editable-select'), eventTarget);
-    if (!eventTarget.hasClass('ghost-editable-select') && targetIsntChildOfSelect) {
-      self.set('isInline', false);
+    var isClickOnEditable = $.contains(self.$('.ghost-editable-component')[0], event.target);
+    if (!isClickOnEditable) {
+      self.set('isInline', true);
     }
   };
 
@@ -20,22 +20,23 @@ Template.ghostEditableSelect.onRendered(function () {
 
 Template.ghostEditableSelect.helpers({
   optionAttrs: function () {
-    var parentData = Template.parentData(1);
+    var selectedValue = Template.instance().get('selectedValue');
     var attributes = {
       value: this.value
     };
 
-    if (parentData.selected === this.value) {
+    if (this.value === selectedValue) {
       attributes.selected = 'selected';
     }
 
     return attributes;
   },
   selectedText: function () {
-    var self = this;
-    return _.find(this.values, function (valueEntry) {
-        return valueEntry.value === self.selected;
-      }) || '- select -';
+    var selectedValue = Template.instance().get('selectedValue');
+    var selectedOption = _.find(this.values, function (valueEntry) {
+      return valueEntry.value === selectedValue;
+    });
+    return selectedOption && selectedOption.text || '- select -';
   }
 });
 
@@ -47,10 +48,13 @@ Template.ghostEditableSelect.events({
   },
 
   'change .ghost-editable-select': function (event, tmpl) {
-    if (_.isFunction(tmpl.data.onValueChanged)) {
-      tmpl.data.onValueChanged(event.target.value);
-    }
+    var selectedValue = event.target.value;
+    tmpl.set('selectedValue', selectedValue);
     tmpl.set('isInline', true);
+
+    if (_.isFunction(tmpl.data.onValueChanged)) {
+      tmpl.data.onValueChanged(selectedValue);
+    }
   }
 });
 
