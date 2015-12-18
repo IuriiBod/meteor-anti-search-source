@@ -1,41 +1,20 @@
-var options = {
-  keepHistory: 1000 * 60 * 5,
-  localSearch: true
-};
-var fields = ['code', 'description'];
-
-IngredientsListSearch = new SearchSource('ingredients', fields, options);
-
-Template.ingredientsList.onRendered(function () {
+Template.ingredientsList.onCreated(function () {
   this.onIngredientIdChange = this.data.onIngredientIdChange;
 
-  this.newSearchParams = function (dataHistory) {
-    var count = dataHistory.length;
-    var lastItem = dataHistory[count - 1]['code'];
-    var selector = {
-      "limit": count + 10,
-      "endingAt": lastItem
-    };
+  this.searchLimit = 20;
+  var status = HospoHero.getParamsFromRoute(Router.current(), 'type') ? 'archived' : {$ne: 'archived'};
 
-    if (Router.current().params.type) {
-      selector.status = "archived";
-    } else {
-      selector.status = {$ne: "archived"};
-    }
+  this.searchSource = this.AntiSearchSource({
+    collection: 'ingredients',
+    fields: ['code', 'description'],
+    mongoQuery: {
+      status: status
+    },
+    limit: this.searchLimit
+  });
+});
 
-    return selector;
-  };
-  IngredientsListSearch.cleanHistory();
-  var selector = {
-    limit: 30
-  };
-  if (Router.current().params.type) {
-    selector.status = "archived";
-  } else {
-    selector.status = {$ne: "archived"};
-  }
-  IngredientsListSearch.search("", selector);
-
+Template.ingredientsList.onRendered(function () {
   var tpl = this;
   Meteor.defer(function () {
     $('#wrapper').scroll(function (event) {
@@ -53,12 +32,7 @@ Template.ingredientsList.onRendered(function () {
 
 Template.ingredientsList.helpers({
   getIngredients: function () {
-    return IngredientsListSearch.getData({
-      transform: function (matchText, regExp) {
-        return matchText.replace(regExp, "<b>$&</b>")
-      },
-      sort: {'code': 1}
-    });
+    return Template.instance().searchSource.searchResult({sort: {code: 1}});
   },
   onIngredientIdChange: function () {
     return Template.instance().onIngredientIdChange;
@@ -66,31 +40,18 @@ Template.ingredientsList.helpers({
 });
 
 Template.ingredientsList.events({
-  'keyup #searchIngBox': _.throttle(function (e) {
-    var selector = {
-      limit: 30
-    };
-    if (Router.current().params.type) {
-      selector.status = "archived";
-    } else {
-      selector.status = {$ne: "archived"};
-    }
-    var text = $(e.target).val().trim();
-    IngredientsListSearch.search(text, selector);
+  'keyup #searchIngBox': _.throttle(function (event, tmpl) {
+    var text = event.target.value.trim();
+    tmpl.searchSource.search(text);
   }, 200),
 
-  'click #loadMoreIngs': _.throttle(function (event, tmpl) {
+  'click #loadMoreIngs': function (event, tmpl) {
     event.preventDefault();
     var text = $("#searchIngBox").val().trim();
-    if (IngredientsListSearch.history && IngredientsListSearch.history[text]) {
-      var dataHistory = IngredientsListSearch.history[text].data;
-      if (dataHistory.length >= 9) {
-        IngredientsListSearch.cleanHistory();
-        var selector = tmpl.newSearchParams(dataHistory);
-        IngredientsListSearch.search(text, selector);
-      }
-    }
-  }, 200)
+    tmpl.searchLimit += 10;
+    tmpl.searchSource.setLimit(tmpl.searchLimit);
+    tmpl.searchSource.search(text);
+  }
 });
 
 Template.ingredientsList.onDestroyed(function () {
