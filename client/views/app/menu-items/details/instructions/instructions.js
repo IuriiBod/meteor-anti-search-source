@@ -1,16 +1,16 @@
-Template.menuInstructions.onCreated(function () {
+Template.menuItemInstructions.onCreated(function () {
   this.set('isEditMode', false);
 });
 
 
-Template.menuInstructions.helpers({
+Template.menuItemInstructions.helpers({
   instructionsStr: function () {
     return this.instructions || "Add instructions here";
   }
 });
 
 
-Template.menuInstructions.events({
+Template.menuItemInstructions.events({
   'click .edit-save-button': function (event, tmpl) {
     event.preventDefault();
     var isEditMode = this.get('isEditMode');

@@ -13,15 +13,16 @@
                 <h3 class="panel-title">Settings</h3>
               </div>
               <div class="panel-body">
-                {{> settingsMenuItem}}
+                {{> menuItemSettings}}
               </div>
             </div>
           </div>
 
           <div class="col-lg-8 col-xs-12">
-            {{> menuInstructions}}
+            {{> menuItemInstructions}}
           </div>
         </div>
+
         <hr>
         <h1>Ingredients</h1>
 
@@ -62,11 +63,11 @@
 
   <!-- EDIT INGREDIENT-->
   {{#if canViewStock}}
-    {{> ingredientItemEditor isModal=true ingredient=currentEditedIngredient}}
+    {{> ingredientItemEditor isModal=true ingredient=state$currentEditedIngredient}}
   {{/if}}
   <!-- /EDIT INGREDIENT -->
 
   <!-- SHOW LIST OF INGS AND PREPS -->
-  {{> showListOfIngs}}
+  {{> addPrepStockModal}}
   <!-- /SHOW LIST OF INGS AND PREPS -->
 </template>
