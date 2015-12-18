@@ -1,0 +1,103 @@
+<template name="menuItemSubmitMainView">
+  <!-- Page heading -->
+  {{> pageHeading title='Submit Menu' category='Menus' name="menusubmit"}}
+
+  <div class="wrapper wrapper-content animated">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Create a new menu</h5>
+          </div>
+          <div class="ibox-content">
+
+            <form class="form-horizontal" id="submitNewMenu">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Name</label>
+
+                <div class="col-sm-10">
+                  <input type="text" name="name" class="form-control" placeholder="Enter Name for the menu">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Category</label>
+
+                <div class="col-sm-10">
+                  <select name="category" class="form-control">
+                    {{#each categoriesList}}
+                      <option value="{{_id}}">{{name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Status</label>
+
+                <div class="col-sm-10">
+                  <select name="status" class="form-control text-capitalize">
+                    {{#each state$statuses}}
+                      <option value="{{this.name}}">{{this.name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Instructions</label>
+
+                <div class="col-sm-10">
+                  {{> render component = 'textEditor' id='menuItemEditorSubmit'
+                  initialHtml=state$initialHTML}}
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Prep items used</label>
+                {{> render component="listOfJobItems" id="menuSubmit" name="menuSubmit"}}
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Ingredients used</label>
+                {{> render component="listOfIngredients" id="menuSubmit" name="menuSubmit"}}
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Sale price</label>
+
+                <div class="col-sm-10">
+                  <div class="input-group m-b">
+                    <div class="input-group-addon">$</div>
+                    <input type="text" class="form-control" name="salesPrice" placeholder="Sale price">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Image</label>
+
+                <div class="col-sm-10">
+                  <button type="button" class="btn btn-sm btn-info" id="uploadMenuItem">Upload Image</button>
+                  <br>
+
+                  <div class="file col-sm-2 uploadedImageDiv hide">
+                    <a href="#">
+                      <span class="corner"></span>
+
+                      <div class="image">
+                        <img id="uploadedImageUrl" src="" class="img-responsive menu-item-image">
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                  <a href="{{pathFor route='menuItemsMaster' category='all' status='all'}}" class="btn btn-white">Cancel</a>
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,16 @@
+<template name="ingredientItemDetailed">
+  <tr>
+    <td>
+      <a data-toggle="modal" class="btn btn-primary btn-sm editIngredient">View Item</a>
+    </td>
+    <td>{{{state$item.code}}}</td>
+    <td>{{{state$item.description}}}</td>
+    <td>{{supplierName state$item.suppliers}}</td>
+    <td>{{state$item.portionOrdered}}</td>
+    <td>${{state$item.costPerPortion}}</td>
+    <td>{{state$item.portionUsed}}</td>
+    <td><p data-toggle="tooltip" data-placement="top"
+           title="How many {{state$item.portionUsed}}s in a {{state$item.portionOrdered}}">{{state$item.unitSize}}</p>
+    </td>
+  </tr>
+</template>

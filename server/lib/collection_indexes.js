@@ -3,8 +3,6 @@ Meteor.startup(function () {
 
   Categories._ensureIndex({name: 1});
 
-  Statuses._ensureIndex({name: 1});
-
   Ingredients._ensureIndex({code: 1, status: 1});
   Ingredients._ensureIndex({code: 1, suppliers: 1, description: 1});
 
