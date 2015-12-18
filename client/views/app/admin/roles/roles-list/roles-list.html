@@ -8,8 +8,8 @@
     </tr>
     </thead>
     <tbody>
-    {{#each state$roles}}
-      {{>render component='roleItem' role=this}}
+    {{#each roles}}
+      {{> roleItem role=this}}
     {{/each}}
     </tbody>
   </table>
