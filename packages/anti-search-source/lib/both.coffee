@@ -15,12 +15,14 @@ class AntiSearchSourceClient
     if searchString or searchString is ''
       @_searchConfig.searchString = searchString
       @_stateChanged()
-    @_searchSubscribtion = @_subscriptionContext.subscribe AntiSearchSource._publisherName, @_searchConfig, @_onSubscriptionReady
+
+    if @_searchConfig.searchMode is 'subscription'
+      @_searchSubscribtion = @_subscriptionContext.subscribe AntiSearchSource._publisherName, @_searchConfig, @_onSubscriptionReady
 
   setMongoQuery: (newMongoQuery) ->
     @_searchConfig.mongoQuery = newMongoQuery
     @_stateChanged()
-    @_search()
+    @search()
 
 # May be used for infinite scroll or something like that
   setLimit: (newLimit) ->
@@ -31,9 +33,9 @@ class AntiSearchSourceClient
 
 
 # Reactive data source
-  searchResult: (options) ->
+  searchResult: (options = {}) ->
     @_stateFlag.get()
-    if @_searchSubscribtion and @_searchSubscribtion.ready()
+    if @_searchConfig.searchMode is 'local' or @_searchSubscribtion and @_searchSubscribtion.ready()
       query = AntiSearchSource._buildSearchQuery(@_searchConfig)
       _.extend options, {limit: @_searchConfig.limit}
       return @_collection.find(query, options)

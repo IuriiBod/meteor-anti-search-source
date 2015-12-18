@@ -68,4 +68,5 @@ momentjs:moment
 jss:moment-timezone
 joshowens:timezone-picker
 jss:blaze-states
+jss:anti-search-source
 natestrauser:animate-css
