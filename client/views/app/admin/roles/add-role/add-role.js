@@ -3,7 +3,7 @@ Template.addRole.events({
     e.preventDefault();
     var name = $(e.target.name).val();
     var permissionsCheckbox = $('[name="permissions"]:checked');
-    if (permissionsCheckbox.length == 0) {
+    if (permissionsCheckbox.length === 0) {
       return HospoHero.error("You must select at least one permission");
     }
 
@@ -11,7 +11,9 @@ Template.addRole.events({
       return permissionInput.value;
     });
 
-    FlowComponents.callAction('addRole', name, actions);
-    e.target.reset();
+    Meteor.call('addRole', name, actions, HospoHero.handleMethodResult(function () {
+      HospoHero.success('The role was created');
+      e.target.reset();
+    }));
   }
 });

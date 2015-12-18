@@ -10,7 +10,7 @@ Router.route('usersSettings', {
       Router.go('/');
     }
     return {
-      component: 'usersList',
+      template: 'usersList',
       title: 'Users'
     }
   }
@@ -25,7 +25,7 @@ Router.route('rolesSettings', {
     }
 
     return {
-      component: 'rolesSettings',
+      template: 'rolesSettings',
       title: 'Roles'
     }
   }
@@ -42,7 +42,7 @@ Router.route('sectionsSettings', {
       Router.go('/');
     }
     return {
-      component: 'sections',
+      template: 'sections',
       title: 'Sections'
     }
   }
@@ -59,7 +59,7 @@ Router.route('stockAreasSettings', {
       Router.go('/');
     }
     return {
-      component: 'stockAreas',
+      template: 'stockAreas',
       title: 'Stock Areas'
     }
   }
@@ -94,7 +94,7 @@ Router.route('posSettings', {
       Router.go('/');
     }
     return {
-      component: 'posMenuLinking',
+      template: 'posMenuLinking',
       title: 'POS / Menu Linking'
     }
   }
@@ -114,7 +114,7 @@ Router.route('archivingSettings', {
       Router.go('/');
     }
     return {
-      component: 'locationAreaArchiving',
+      template: 'locationAreaArchiving',
       title: 'Locations/Areas archiving'
     }
   }
