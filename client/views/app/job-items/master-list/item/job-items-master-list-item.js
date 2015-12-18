@@ -1,6 +1,6 @@
 Template.jobItemDetailed.helpers({
   isRecurring: function () {
-    var id = Template.instance().data.type;
+    var id = Template.instance().data.jobitem.type;
     var type = JobTypes.findOne({_id: id});
     return !!type && type.name == "Recurring";
   },
