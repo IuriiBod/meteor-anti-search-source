@@ -12,8 +12,10 @@ Template.stockCountingListItem.onRendered(function() {
     },
     success: function (response, newValue) {
       var self = this;
-      var elemId = $(self).closest("li").attr("data-stockRef");
-      var stockId = instance.data.id._id;
+      var elemId = instance.data.item.stockRef || instance.data.item._id;
+      console.log(elemId);
+      var stockId = instance.data.item.stockId || instance.data.item._id;
+      console.log(stockId);
       if (newValue) {
         var count = isNaN(newValue) ? 0 : parseFloat(newValue);
         var info = {
@@ -39,30 +41,21 @@ Template.stockCountingListItem.onRendered(function() {
 
 Template.stockCountingListItem.helpers({
   item: function() {
-    var stock = Ingredients.findOne({_id: this.id._id});
-    var stocktake = Stocktakes.findOne({
-      "version": this.stockTakeData.stockTakeId,
-      "stockId": this.id._id,
-      "generalArea": this.stockTakeData.activeGeneralArea,
-      "specialArea": this.stockTakeData.activeSpecialArea
-    });
-    if (stock) {
-      if (stocktake) {
-        stock['stockRef'] = stocktake._id;
-        stock['counting'] = stocktake.counting;
-        stock['status'] = stocktake.status;
-        stock['place'] = stocktake.place;
-      } else {
-        stock['stockRef'] = null;
-        stock['counting'] = null;
+    var item = this.item;
+    if(item.stockId) {
+      var ingredient = Ingredients.findOne({_id: item.stockId});
+      if(ingredient) {
+        item['description'] = ingredient.description;
+        item['suppliers'] = ingredient.suppliers;
+        item['portionOrdered'] = ingredient.portionOrdered;
       }
-      return stock;
     }
+    return item;
 
   },
 
   editable: function() {
-    return this.stockTakeData.editStockTake;
+    return this.stockTakeData.editableStockTake;
   },
 
   deletable: function(id) {
@@ -102,9 +95,10 @@ Template.stockCountingListItem.events({
     event.preventDefault();
     var confrimDelete = confirm("This action will remove this stock item from this area. Are you sure you want to continue?");
     if (confrimDelete) {
-      var id = this.id._id;
+      console.log(this);
+      var id = this.item._id;
       var sareaId = tmpl.data.stockTakeData.activeSpecialArea;
-      var stockRefId = $(event.target).closest("li").attr("data-stockRef");
+      var stockRefId = this.item.stockRef;
       var stocktake = Stocktakes.findOne(stockRefId);
       if (stocktake) {
         if (stocktake.status || stocktake.orderRef) {

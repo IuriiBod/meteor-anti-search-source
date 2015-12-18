@@ -26,8 +26,7 @@
         {{#if notTemplate}}
           <ul class="list-group sortableStockItems">
             {{#each stocktakeList}}
-              StockTake
-              {{> stockCountingListItem id=this
+              {{> stockCountingListItem item=this
                                         stockTakeData=stockTakeCountingContext}}
             {{else}}
               No items on this list
@@ -36,8 +35,7 @@
         {{else}}
           <ul class="list-group sortableStockItems">
             {{#each ingredientsList}}
-              Ingredients
-              {{> stockCountingListItem id=this
+              {{> stockCountingListItem item=this
                                         stockTakeData=stockTakeCountingContext}}
             {{else}}
               No items on this list

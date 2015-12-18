@@ -6,23 +6,23 @@ Template.stockCounting.onCreated(function() {
 
 Template.stockCounting.helpers({
   stockTakeCountingContext: function() {
+    var instance = Template.instance();
     return {
       editableStockTake: Template.instance().editStockTake.get(),
       stockTakeId: Template.instance().data.stocktakeId,
       activeSpecialArea: Template.instance().activeSpecialArea.get(),
-      activeGeneralArea: Template.instance().activeGeneralArea.get()
+      activeGeneralArea: Template.instance().activeGeneralArea.get(),
     };
   },
 
   stocktakeList: function() {
-    var thisVersion = this.stocktakeId;
     var gareaId = Template.instance().activeGeneralArea.get();
     var sareaId = Template.instance().activeSpecialArea.get();
     if (gareaId && sareaId) {
-      var main = StocktakeMain.findOne(thisVersion);
+      var main = StocktakeMain.findOne({_id: this.stocktakeId});
       if (main && main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
         var stocktakes = Stocktakes.find({
-          "version": thisVersion,
+          "version": this.stocktakeId,
           "generalArea": gareaId,
           "specialArea": sareaId
         }, {sort: {"place": 1}});
@@ -41,10 +41,26 @@ Template.stockCounting.helpers({
       var ings = [];
       if (sarea && sarea.stocks.length > 0) {
         var ids = sarea.stocks;
+        var self = this;
         ids.forEach(function (id) {
           if (id) {
             var item = Ingredients.findOne({"_id": id, "status": "active"});
+            var stocktake = Stocktakes.findOne({
+              "version": self.stocktakeId,
+              "stockId": id,
+              "generalArea": Template.instance().activeGeneralArea.get(),
+              "specialArea": Template.instance().activeSpecialArea.get()
+            });
             if (item) {
+              if (stocktake) {
+                item['stockRef'] = stocktake._id;
+                item['counting'] = stocktake.counting;
+                item['status'] = stocktake.status;
+                item['place'] = stocktake.place
+              } else {
+                item['stockRef'] = null;
+                item['counting'] = null
+              }
               ings.push(item);
             }
           }
@@ -120,10 +136,7 @@ Template.stockCounting.events({
         showbuttons: false,
         mode: 'inline',
         success: function (response, newValue) {
-          var self = this;
-          var id = $(self).attr("data-id");
-          console.log(id);
-          console.log(tmpl);
+          var id = tmpl.activeSpecialArea.get();
           if (newValue) {
             Meteor.call("editSpecialArea", id, newValue, HospoHero.handleMethodResult());
           }
@@ -136,8 +149,7 @@ Template.stockCounting.events({
         showbuttons: false,
         mode: 'inline',
         success: function (response, newValue) {
-          var self = this;
-          var id = $(self).attr("data-id");
+          var id = tmpl.activeGeneralArea.get();
           if (newValue) {
             Meteor.call("editGeneralArea", id, newValue, HospoHero.handleMethodResult());
           }
@@ -147,32 +159,10 @@ Template.stockCounting.events({
       $(".sortableStockItems").sortable({
         stop: function (event, ui) {
           var sortedStockItems = new SortableHelper(ui).getSortedItems();
-          console.log(sortedStockItems);
-          //var stocktakeId = $(ui.item).attr("data-stockRef");
-          //var stockId = $(ui.item).attr("data-id");
-          //
-          //var nextItemId = $($($(ui.item)[0]).next()).attr("data-id");
-          //var nextItemPosition = $($($(ui.item)[0]).next()).attr("data-place");
-          //var prevItemId = $($($(ui.item)[0]).prev()).attr("data-id");
-          //var prevItemPosition = $($($(ui.item)[0]).prev()).attr("data-place");
-          //
-          //var sareaId = tmpl.activeSpecialArea.get();
-          //if (!prevItemPosition) {
-          //  prevItemPosition = 0;
-          //}
-          //
-          //var info = {
-          //  "nextItemId": nextItemId,
-          //  "prevItemId": prevItemId
-          //};
-          //if (nextItemPosition) {
-          //  info['nextItemPosition'] = nextItemPosition
-          //}
-          //
-          //if (prevItemPosition) {
-          //  info['prevItemPosition'] = prevItemPosition
-          //}
-          //Meteor.call("stocktakePositionUpdate", stocktakeId, stockId, sareaId, info, HospoHero.handleMethodResult());
+          if(sortedStockItems) {
+            console.log(sortedStockItems);
+            //Meteor.call("stocktakePositionUpdate", sortedStockItems, HospoHero.handleMethodResult());
+          }
         }
       });
     }, 10);
@@ -193,11 +183,9 @@ Template.stockCounting.events({
 
 
 var SortableHelper = function (ui) {
-  console.log(ui.item.prev());
-  //this._draggedItem = new Date(ui.item.parent().data('current-date'));
-  this._draggedShift = _.clone(this._getDataByItem(ui.item)); //clone it just in case
-  this._previousShift = this._getDataByItem(ui.item.prev());
-  this._nextShift = this._getDataByItem(ui.item.next());
+  this._draggedItem = this._getDataByItem(ui.item);
+  this._previousItem = this._getDataByItem(ui.item.prev());
+  this._nextItem = this._getDataByItem(ui.item.next());
 };
 
 
@@ -207,21 +195,48 @@ SortableHelper.prototype._getDataByItem = function (item) {
 };
 
 SortableHelper.prototype._getOrder = function () {
-  var order = 0;
-  console.log(this._previousShift);
-  if (!this._nextShift && this._previousShift) {
-    order = this._previousShift.order + 1;
-  } else if (!this._previousShift && this._nextShift) {
-    order = this._nextShift.order - 1;
-  } else if (this._nextShift && this._previousShift) {
-    order = (this._nextShift.order + this._previousShift.order) / 2;
+  var place = 0;
+  if (!this._nextItem && this._previousItem) {
+    place = this._previousItem.item.place + 1;
+  } else if (!this._previousItem && this._nextItem) {
+    place = this._nextItem.item.place - 1;
+  } else if (this._nextItem && this._previousItem) {
+    place = (this._nextItem.item.place + this._previousItem.item.place) / 2;
   }
 
-  return order;
+  return place;
 };
 
 SortableHelper.prototype.getSortedItems = function() {
-  var item = this._draggedShift;
-  item.order = this._getOrder();
-  return item;
+  var draggedItem, nextItem, previousItem;
+
+  if(!this._draggedItem.item.place) {
+    draggedItem = {_id: this._draggedItem.item._id}
+  } else {
+    draggedItem = {_id: this._draggedItem.item.stockRef,
+                    place: this._draggedItem.item.place}
+  }
+
+  if(!this._nextItem) {
+    nextItem = null;
+  } else if(!this._nextItem.item.stockRef) {
+    nextItem = this._nextItem.item._id;
+  } else {
+    nextItem = this._nextItem.item.stockRef;
+  }
+
+  if(!this._previousItem) {
+    previousItem = null;
+  } else if(!this._previousItem.item.stockRef) {
+    previousItem = this._previousItem.item._id;
+  } else {
+    previousItem = this._previousItem.item.stockRef;
+  }
+
+  return {
+    draggedItem: draggedItem,
+    previousItemId: previousItem,
+    nextItemId: nextItem,
+    activeSpecialArea: this._draggedItem.stockTakeData.activeSpecialArea
+  };
 };
