@@ -1,6 +1,7 @@
 Template.menuDetailWidgets.onRendered(function () {
-  this.onPriceEditSuccess = function (response, newValue) {
-    Meteor.call("editMenuItem", this.data._id, {salesPrice: newValue}, HospoHero.handleMethodResult());
+  var self = this;
+  var onPriceEditSuccess = function (response, newValue) {
+    Meteor.call("editMenuItem", self.data._id, {salesPrice: newValue}, HospoHero.handleMethodResult());
   };
 
   $('.edit-item-price').editable({
@@ -44,7 +45,7 @@ Template.menuDetailWidgets.helpers({
       tax: round(menu.salesPrice * 0.1)
     };
 
-    menu.contribution = menu.salesPrice - (result.totalPrepCost + result.totalIngCost + result.tax);
-    return menu;
+    result.contribution = round(menu.salesPrice - result.totalPrepCost - result.totalIngCost - result.tax);
+    return result;
   }
 });

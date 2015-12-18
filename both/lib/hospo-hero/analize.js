@@ -21,7 +21,7 @@ Namespace('HospoHero.analyze', {
       return totalCost;
     }, 0);
 
-    var labourCost = jobItem.wagePerHour && ((jobItem.wagePerHour * jobItem.activeTime) / 60) || 0;
+    var labourCost = jobItem.wagePerHour && ((jobItem.wagePerHour * jobItem.activeTime) / 3600) || 0;
 
     var totalCost = totalIngredientCost + labourCost;
 

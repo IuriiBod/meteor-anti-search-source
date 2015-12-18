@@ -6,7 +6,6 @@ Template.ghostEditableSelect.onCreated(function () {
 
 Template.ghostEditableSelect.onRendered(function () {
   var self = this;
-
   this.onBodyClick = function (event) {
     var eventTarget = $(event.target);
     var targetIsntChildOfSelect = !$.contains(self.$('.ghost-editable-select'), eventTarget);
@@ -15,7 +14,7 @@ Template.ghostEditableSelect.onRendered(function () {
     }
   };
 
-  $("body").click(onBodyClick);
+  $("body").click(this.onBodyClick);
 });
 
 
