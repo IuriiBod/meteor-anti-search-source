@@ -1,7 +1,7 @@
 <template name="customFormItem">
   <div class="form-group{{#if state$errors}} has-error{{/if}}">
     <label for="{{state$item.name}}">{{state$item.label}}</label>
-    {{> UI.dynamic template=componentToRender data=templateData}}
+    {{> Template.dynamic template=componentToRender data=templateData}}
 
     {{#if state$errors}}
       <span class="help-block">{{state$errors}}</span>
