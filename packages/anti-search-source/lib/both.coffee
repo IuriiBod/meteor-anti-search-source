@@ -1,5 +1,7 @@
 class AntiSearchSourceClient
   constructor: (@_searchConfig, @_subscriptionContext = Meteor) ->
+    @_searchConfig.limit = @_searchConfig.limit || 21
+
     @_collection = Mongo.Collection.get(@_searchConfig.collection)
     @_stateFlag = new ReactiveVar(false);
     #make dummy subscription after creating
