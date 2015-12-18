@@ -31,17 +31,9 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Image</label>
 
-      <div class="col-sm-9 pull-right">
+      <div class="col-sm-9">
         <div class="menuImageDiv">
           <div class="file uploadedImageDiv">
-            {{#if canEditMenu}}
-              <div class="box-wrapper pull-right">
-                <button type="button" class="btn btn-sm btn-info upload-image-button">
-                  <i class="fa fa-edit m-r-sm"></i>
-                  {{#if image}} Change Image {{else}} Add Image {{/if}}
-                </button>
-              </div>
-            {{/if}}
             {{#if image}}
               <a href="#">
                 <span class="corner"></span>
@@ -53,6 +45,12 @@
             {{/if}}
           </div>
         </div>
+        {{#if canEditMenu}}
+          <button type="button" class="btn btn-sm btn-info upload-image-button">
+            <i class="fa fa-edit m-r-sm"></i>
+            {{#if image}} Change Image {{else}} Add Image {{/if}}
+          </button>
+        {{/if}}
       </div>
     </div>
   </form>

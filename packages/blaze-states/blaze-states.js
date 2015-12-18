@@ -23,10 +23,10 @@ var originalLookup = Blaze.View.prototype.lookup;
 
 Blaze.View.prototype.lookup = function (name, options) {
   if (/^state\$/.test(name)) {
-    var stateName = name.replace(/^state\$/, "");
+    var stateName = name.replace(/^state\$/, '');
     var templateInstance = this.templateInstance();
     var value = templateInstance.get(stateName);
-    if (value) {
+    if (value !== undefined) {
       return value;
     } else {
       return originalLookup.call(this, name, options);
