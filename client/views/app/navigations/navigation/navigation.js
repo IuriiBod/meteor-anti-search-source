@@ -60,7 +60,7 @@ var menuEntries = [
     route: 'jobItemsMaster',
     icon: 'fa-spoon',
     permission: 'view jobs',
-    activeOnRoutes: ['jobItemsMaster', 'jobItemsMasterType', 'submitJobItem', 'jobItemDetailed', 'jobItemEdit']
+    activeOnRoutes: ['jobItemsMaster', 'jobItemsMaster', 'submitJobItem', 'jobItemDetailed', 'jobItemEdit']
   },
   {
     title: 'Stock',
