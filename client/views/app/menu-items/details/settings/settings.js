@@ -24,8 +24,7 @@ Template.menuItemSettings.helpers({
   getOnCategoryChanged: function () {
     var tmpl = Template.instance();
     return function (newCategory) {
-      console.log('newCategory', newCategory);
-      //Meteor.call("editMenuItem", tmpl.data._id, {category: newCategory}, HospoHero.handleMethodResult());
+      Meteor.call("editMenuItem", tmpl.data._id, {category: newCategory}, HospoHero.handleMethodResult());
     };
   },
 
