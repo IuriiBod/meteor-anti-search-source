@@ -42,7 +42,7 @@ Template.ingredientItemEditorBody.helpers({
       value: this._id
     };
 
-    var selectedSupplierId = Template.parentData(1).suppliers;
+    var selectedSupplierId = Template.parentData(1).ingredient.suppliers;
     if (selectedSupplierId === this._id) {
       attributes.selected = 'selected';
     }
