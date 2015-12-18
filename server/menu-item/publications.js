@@ -91,3 +91,10 @@ Meteor.publishAuthorized("areaMenuItems", function (areaId, categoryId) {
     this.ready();
   }
 });
+
+
+AntiSearchSource.queryTransform('menuItems', function (userId, query) {
+  return _.extend(query, {
+    'relations.areaId': HospoHero.getCurrentAreaId(userId)
+  });
+});

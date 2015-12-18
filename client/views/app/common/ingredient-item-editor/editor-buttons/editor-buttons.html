@@ -1,0 +1,21 @@
+<template name="ingredientItemEditorButtons">
+  {{#if ingredient}} <!-- is edit mode -->
+    <button class="btn btn-primary submit-ingredient-button">Save changes</button>
+
+    {{#if state$isArchive}}
+      <button type="button" class="btn btn-warning restore-button">Restore</button>
+      <button type="button" class="btn btn-danger delete-button">Delete</button>
+    {{else}}
+      <button type="button" class="btn btn-warning archive-button">Archive</button>
+    {{/if}}
+  {{else}} <!-- create mode -->
+    <button class="btn btn-primary submit-ingredient-button">Add ingredient</button>
+  {{/if}}
+
+  {{#if isModal}}
+    <button class="btn btn-default" data-dismiss="modal">Close</button>
+  {{else}}
+    <!-- ingredient-editor-cancel may be used to provide custom actions on cancel action -->
+    <button class="btn btn-default ingredient-editor-cancel">Cancel</button>
+  {{/if}}
+</template>

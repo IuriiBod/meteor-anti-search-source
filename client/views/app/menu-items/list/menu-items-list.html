@@ -1,0 +1,27 @@
+<template name="menuItemsListMainView">
+  <!-- Page heading -->
+  {{> pageHeading title="Menus List" category='Menus' name="menulist"}}
+
+  <div class="wrapper wrapper-content animated">
+    {{> menuFilters}}
+
+    <div class="row">
+      <div class="col-lg-12">
+
+        <input type="text" name="searchMenuItems" id="searchMenuItemsBox" class="form-control col-sm-8"
+               placeholder="Search from Name">
+
+        <hr/>
+
+        <div class="list-group">
+          {{#each menuItems}}
+            {{> menuItem}}
+          {{/each}}
+        </div>
+        <p>
+          <a href="#" class="btn btn-block btn-outline btn-primary hide" id="loadMoreMenuItems">Load More</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
