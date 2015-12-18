@@ -1,13 +1,5 @@
-Template.roleItem.events({
-  'click .delete-role': function (e) {
-    if (confirm('Are you sure to delete this role? All users with this role will be changed on Worker role.')) {
-      FlowComponents.callAction('deleteRole');
-    }
-  }
-});
-
 Template.roleItem.onRendered(function () {
-  var role = FlowComponents.callAction('getRole')._result;
+  var role = this.data.role;
 
   $('.editable-role-name').editable({
     type: "text",
@@ -20,4 +12,12 @@ Template.roleItem.onRendered(function () {
       Meteor.call('editRole', role._id, {name: newValue}, HospoHero.handleMethodResult());
     }
   });
+});
+
+Template.roleItem.events({
+  'click .delete-role': function (event, tmpl) {
+    if (confirm('Are you sure to delete this role? All users with this role will be changed on Worker role.')) {
+      Meteor.call('deleteRole', tmpl.data.role._id, HospoHero.handleMethodResult());
+    }
+  }
 });

@@ -22,15 +22,8 @@
         </tr>
         </thead>
         <tbody>
-        {{#each state$sections}}
-          <tr>
-            <td>
-              <a href="#" class="editSection" data-id="{{_id}}">{{name}}</a>
-            </td>
-            <td>
-              <i class="fa fa-trash deleteSection"></i>
-            </td>
-          </tr>
+        {{#each sections}}
+          {{> sectionItem section=this}}
         {{/each}}
         </tbody>
       </table>

@@ -1,5 +1,5 @@
 Template.permissionsList.onRendered(function () {
-  var role = FlowComponents.callAction('getRole')._result;
+  var role = this.data.role;
 
   $('#' + role._id + '-editable').editable({
     type: "checklist",

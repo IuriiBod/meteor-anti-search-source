@@ -1,19 +1,19 @@
 <template name="roleItem">
   <tr>
     <td>
-      {{#unless state$role.default}}
+      {{#unless role.default}}
         <a href="#" class="editable-role-name">
-          {{state$role.name}}
+          {{role.name}}
         </a>
       {{else}}
-        {{state$role.name}}
+        {{role.name}}
       {{/unless}}
     </td>
     <td>
-      {{> render component="permissionsList" role=state$role}}
+      {{> permissionsList role=role}}
     </td>
     <td>
-      {{#unless state$role.default}}
+      {{#unless role.default}}
         <a href="#" class="text-danger delete-role">
           <i class="fa fa-trash"></i>
         </a>

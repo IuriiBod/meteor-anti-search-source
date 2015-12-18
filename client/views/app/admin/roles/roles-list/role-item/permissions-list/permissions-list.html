@@ -1,10 +1,10 @@
 <template name="permissionsList">
-  {{# unless state$role.default}}
-    <a href="#" id="{{state$role._id}}-editable">edit permissions</a>
+  {{# unless role.default}}
+    <a href="#" id="{{role._id}}-editable">edit permissions</a>
   {{/ unless}}
 
   <ul style="padding-left: 16px;">
-    {{#each state$role.actions}}
+    {{#each role.actions}}
       <li>
         {{this}}
       </li>
