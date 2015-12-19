@@ -1,0 +1,9 @@
+<template name="customForm">
+  <form>
+    {{#each fields}}
+      {{> customFormItem item=this errorHandler=errorHandler}}
+    {{/each}}
+
+    <button type="submit" class="btn btn-lg btn-block btn-default">{{submitCaption}}</button>
+  </form>
+</template>

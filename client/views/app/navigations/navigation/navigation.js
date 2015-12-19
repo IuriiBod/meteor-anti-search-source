@@ -1,8 +1,8 @@
 var dashboardEntry = {
   title: 'Dashboard',
-  route: 'home',
+  route: 'dashboard',
   icon: 'fa-th-large',
-  activeOnRoutes: 'home'
+  activeOnRoutes: 'dashboard'
 };
 
 var menuEntries = [
@@ -23,7 +23,7 @@ var menuEntries = [
     title: 'Roster',
     icon: 'fa-calendar-o',
     permission: 'view roster',
-    activeOnRoutes: ['weeklyRoster', 'dailyRoster', 'templateWeeklyRoster'],
+    activeOnRoutes: ['weeklyRoster', 'templateWeeklyRoster'],
     subMenuEntries: [
       {
         title: 'Weekly',
@@ -47,7 +47,7 @@ var menuEntries = [
     route: 'menuItemsMaster',
     icon: 'fa-cutlery',
     permission: 'view menus',
-    activeOnRoutes: ['menuItemsMaster', 'submitMenuItem', 'menuItemsMasterType', 'menuItemDetail'],
+    activeOnRoutes: ['menuItemsMaster', 'submitMenuItem', 'menuItemDetail'],
     params: function () {
       return {
         category: 'all',

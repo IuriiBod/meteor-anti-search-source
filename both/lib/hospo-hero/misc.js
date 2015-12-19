@@ -1,40 +1,54 @@
 Namespace('HospoHero.misc', {
   /**
    * Returns a string or an object with form field values
+   *
    * @param {Object} event
-   * @param {String|Array} fields - the name of needed field or array of field names
-   * @param {Boolean} trim
-   * @returns {String|Object}
+   * @param {string|Array} fields - the name of needed field or array of field names
+   * @param {string} fields[].name - name should be extracted from form
+   * @param {string} [fields[].newName] - save specified value with `newName` key
+   * @param {function} [fields[].transform] - should return transformed value based on argument
+   * @param {boolean} trim - trims all values if true
+   * @returns {string|Object}
    */
   getValuesFromEvent: function (event, fields, trim) {
-    var getValue = function (value, trim) {
-      return trim ? value.trim() : value;
+    var getValue = function (field) {
+      var value = event.target[_.isString(field) ? field : field.name].value;
+      return _.isString(value) && trim ? value.trim() : value;
     };
 
-    if (_.isString(fields)) {
-      return getValue(event.target[fields].value, trim);
-    } else if (_.isArray(fields)) {
-      var values = {};
-      fields.forEach(function (field) {
-        if (_.isObject(field)) {
-          var value = getValue(event.target[field.name].value, trim);
-          if (field.parse) {
-            value = field.parse == 'int' ? parseInt(value) : parseFloat(value);
-          }
+    var values = {};
 
-          if (field.type && field.type == 'number') {
-            value = isNaN(value) ? 0 : value;
-          }
+    var saveValue = function (field, value) {
+      values[_.isString(field) ? field : field.newName || field.name] = value;
+    };
 
-          var name = field.newName || field.name;
-          values[name] = value;
-        } else {
-          values[field] = getValue(event.target[field].value, trim);
+    var processField = function (field) {
+      var value = getValue(field);
+
+      if (!_.isString(field)) {
+        if (field.parse) {
+          value = field.parse == 'int' ? parseInt(value) : parseFloat(value);
         }
 
-      });
-      return values;
+        if (field.type && field.type == 'number') {
+          value = isNaN(value) ? 0 : value;
+        }
+
+        if (_.isFunction(field.transform)) {
+          value = field.transform(value, field);
+        }
+      }
+
+      saveValue(field, value);
+    };
+
+    if (_.isArray(fields)) {
+      fields.forEach(processField);
+    } else {
+      processField(fields);
     }
+
+    return values;
   },
 
   getWeekRangeQueryByRouter: function (router) {
@@ -74,6 +88,15 @@ Namespace('HospoHero.misc', {
     var absoluteUrl = Meteor.isCordova ? 'http://meteor.local/' : Meteor.absoluteUrl();
     return locationHref.replace(absoluteUrl, "/");
   },
+
+  getMenuItemsStatuses: function (includeArchived) {
+    var statuses = ['ideas', 'active'];
+    if (includeArchived) {
+      statuses.push('archived');
+    }
+    return statuses;
+  },
+
   getCountries: function () {
     return [
       {

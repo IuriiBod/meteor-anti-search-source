@@ -5,8 +5,8 @@ Meteor.publishAuthorized('weeklyRoster', function (weekRange, areaId) {
 
   //get shifts
   return Shifts.find({
-    "relations.areaId": areaId,
-    shiftDate: weekRange
+    'relations.areaId': areaId,
+    startTime: weekRange
   });
 });
 
@@ -24,21 +24,29 @@ Meteor.publishAuthorized('weeklyRosterTemplate', function (areaId) {
 Meteor.publishComposite('daily', function (date, areaId, worker) {
   return {
     find: function () {
-      if (this.userId) {
-        var query = {
-          shiftDate: moment(date).startOf('day'),
-          type: null,
-          'relations.areaId': areaId
-        };
-
-        if (worker) {
-          query.assignedTo = worker;
-        }
-
-        return Shifts.find(query);
-      } else {
+      if (!this.userId) {
         this.ready();
+        return;
       }
+
+      var area = Areas.findOne({_id: areaId});
+
+      if (!area) {
+        this.ready();
+        return;
+      }
+
+      var query = {
+        startTime: TimeRangeQueryBuilder.forDay(date, area.locationId),
+        type: null,
+        'relations.areaId': areaId
+      };
+
+      if (worker) {
+        query.assignedTo = worker;
+      }
+
+      return Shifts.find(query);
     },
     children: [
       {
@@ -70,19 +78,19 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
 
   var todayDate = new Date();
   if (type == 'future' || type == 'opened') {
-    query.shiftDate = {$gte: todayDate};
+    query.startTime = {$gte: todayDate};
     if (type == 'opened') {
       query.assignedTo = {$in: [null, undefined]};
       query.published = true;
     }
   } else if (type == 'past') {
-    query.shiftDate = {$lte: todayDate};
+    query.startTime = {$lte: todayDate};
     query.endTime = {$lte: todayDate};
   } else if (type == 'today') {
     var currentArea = Areas.findOne({_id: areaId});
     if (currentArea) {
       var locationId = currentArea.locationId;
-      query.shiftDate = TimeRangeQueryBuilder.forDay(todayDate, locationId);
+      query.startTime = TimeRangeQueryBuilder.forDay(todayDate, locationId);
     }
   } else {
     this.ready();

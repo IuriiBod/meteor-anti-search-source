@@ -1,0 +1,37 @@
+<template name="newsFeedPost">
+  <div class="social-feed-box post-element">
+    <div class="social-avatar">
+      <a class="pull-left" href="#">
+        <img src="{{profilePicture createdBy}}" alt="image">
+      </a>
+
+      <div class="media-body">
+        <a href="#">{{username createdBy}}</a>
+        {{> newsFeedLikeButton}}
+        <small class="text-muted pull-left">&nbsp; - &nbsp;{{timeFormattedWithDate createdOn}}</small>
+      </div>
+    </div>
+
+    <div class="social-body">
+      {{{text}}}
+    </div>
+
+    <div class="social-footer">
+      {{#each comments}}
+        {{> newsFeedPostComment}}
+      {{/each}}
+
+      <div class="social-comment">
+
+        <a class="pull-left" href="#">
+          <img src="{{profilePicture}}" alt="image">
+        </a>
+
+        <div class="media-body">
+          {{> textArea placeholder="Write comment..." type="newsFeedSubTextBox" reference=_id}}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</template>

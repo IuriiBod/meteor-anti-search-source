@@ -1,0 +1,27 @@
+<template name="productsList">
+  <div class="tab-pane active" id="tab_1">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th>Date added</th>
+        <th>Unit</th>
+        <th>Cost per unit</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each products}}
+        {{> productItem item=this}}
+      {{else}}
+        No products
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <!-- EDIT INGREDIENT-->
+  {{#if canViewStock}}
+      {{> ingredientItemEditor isModal=true ingredient=state$ingredient}}
+  {{/if}}
+  <!-- /EDIT INGREDIENT -->
+</template>

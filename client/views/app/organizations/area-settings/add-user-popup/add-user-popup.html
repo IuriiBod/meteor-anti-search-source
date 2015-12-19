@@ -1,0 +1,18 @@
+<template name="addUserPopup">
+  <div class="panel panel-default add-user-popup">
+    <div class="panel-heading text-center">
+      <b>Users</b>
+    </div>
+    <div class="panel-body">
+      {{#unless state$selectedUser}}
+        <p class="text-muted add-user-info">
+          Search for a person in organization by name or email address, or enter an email address to invite someone
+          new.
+        </p>
+        {{> searchUsersToInvite areaId=state$areaId}}
+      {{else}}
+        {{> userPermissions selectedUser=state$selectedUser areaId=state$areaId onPermissionSelect=onPermissionSelect}}
+      {{/unless}}
+    </div>
+  </div>
+</template>

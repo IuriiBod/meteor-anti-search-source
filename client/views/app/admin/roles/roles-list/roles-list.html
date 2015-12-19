@@ -1,0 +1,16 @@
+<template name="rolesList">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Role Name</th>
+      <th>Permissions</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each roles}}
+      {{> roleItem role=this}}
+    {{/each}}
+    </tbody>
+  </table>
+</template>

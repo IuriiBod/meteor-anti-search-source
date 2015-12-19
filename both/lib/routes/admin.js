@@ -10,7 +10,7 @@ Router.route('usersSettings', {
       Router.go('/');
     }
     return {
-      component: 'usersList',
+      template: 'usersList',
       title: 'Users'
     }
   }
@@ -25,7 +25,7 @@ Router.route('rolesSettings', {
     }
 
     return {
-      component: 'rolesSettings',
+      template: 'rolesSettings',
       title: 'Roles'
     }
   }
@@ -41,9 +41,8 @@ Router.route('sectionsSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
-      component: 'sections',
+      template: 'sections',
       title: 'Sections'
     }
   }
@@ -59,9 +58,8 @@ Router.route('stockAreasSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
-      component: 'stockAreas',
+      template: 'stockAreas',
       title: 'Stock Areas'
     }
   }
@@ -96,7 +94,7 @@ Router.route('posSettings', {
       Router.go('/');
     }
     return {
-      component: 'posMenuLinking',
+      template: 'posMenuLinking',
       title: 'POS / Menu Linking'
     }
   }
@@ -116,7 +114,7 @@ Router.route('archivingSettings', {
       Router.go('/');
     }
     return {
-      component: 'locationAreaArchiving',
+      template: 'locationAreaArchiving',
       title: 'Locations/Areas archiving'
     }
   }

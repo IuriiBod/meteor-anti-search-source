@@ -1,34 +1,33 @@
 Template.profileImage.helpers({
-  ifMe: function() {
-    var userId = Template.instance().data.user._id;
-    return userId === Meteor.userId();
+  isMe: function() {
+    return HospoHero.isMe(this._id);
   },
+
   image: function() {
-    var user = Template.instance().data.user;
-    if (user) {
-      if (user.profile.image) {
-        return user.profile.image;
-      } else if (user.services && user.services.google) {
-        return user.services.google.picture;
+    if (this) {
+      if (this.profile.image) {
+        return this.profile.image;
+      } else if (this.services && this.services.google) {
+        return this.services.google.picture;
       } else {
         return "/images/user-image.jpeg";
       }
     }
   },
+
   imageExists: function() {
-    var user = Template.instance().data.user;
-    if (user) {
-      if (user.profile.image) {
+    if (this) {
+      if (this.profile.image) {
         return true;
       } else {
-        return !!(user.services && user.services.google);
+        return !!(this.services && this.services.google);
       }
     }
   }
 });
 
 Template.profileImage.events({
-  'click #uploadImage': function (event) {
+  'click #uploadImage': function (event, tmpl) {
     event.preventDefault();
     filepicker.pickAndStore(
       {mimetype: "image/*", services: ['COMPUTER']},
@@ -37,7 +36,7 @@ Template.profileImage.events({
         var doc = (InkBlobs);
         if (doc) {
           var url = doc[0].url;
-          var userId = Template.instance().data.user._id;
+          var userId = tmpl.data._id;
           Meteor.call("editBasicDetails", userId, {"profileImage": url}, HospoHero.handleMethodResult());
         }
       }

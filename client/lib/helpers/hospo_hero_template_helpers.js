@@ -3,9 +3,12 @@ Namespace('HospoHero.template', {
     return (a === b);
   },
 
-  profilePicture: function (userId) {
-    userId = userId ? userId : Meteor.userId();
-    var user = Meteor.users.findOne(userId);
+  profilePicture: function (user) {
+    user = user || Meteor.userId();
+    if (_.isString(user)) {
+      user = Meteor.users.findOne({_id: user});
+    }
+
     if (user) {
       if (user.profile && user.profile.image) {
         return user.profile.image;

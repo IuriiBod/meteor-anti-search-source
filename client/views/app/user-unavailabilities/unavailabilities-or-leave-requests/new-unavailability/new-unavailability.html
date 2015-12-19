@@ -1,0 +1,86 @@
+<template name="addNewUnavailability">
+  {{> unavailabilitiesFlyoutHeader title="Unavailability"}}
+  <div class="flyout-content">
+    <div class="panel-body new-unavailability">
+      <form class="form-horizontal unavailability-form">
+
+        <!-- Date -->
+        <div class="form-group col-xs-12">
+          <div class="row">
+            <div class="col-xs-12">
+              <label>Date</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-9">
+              <div class="date-picker input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <input class="set-due-date form-control" type="text"/>
+              </div>
+            </div>
+            <div class="col-xs-3">
+              <div class="col-xs-6">
+                <input type="checkbox" class="all-day-checkbox">
+              </div>
+              <div class="col-xs-6">
+                <label>All day?</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time -->
+        <div class="form-group col-xs-12 {{state$timePickerVisibility}}">
+          <div class="start-time-picker input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+            <input class="set-due-date form-control" type="text"/>
+          </div>
+          <div class="end-time-picker input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+            <input class="set-due-date form-control" type="text"/>
+          </div>
+        </div>
+
+        <!-- Repeats -->
+        <div class="form-group col-xs-12">
+          <div class="row">
+            <div class="col-xs-12">
+              <label>Repeat</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <select class="repeat-select form-control">
+                <option value="never">Never</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="form-group col-xs-12">
+          <div class="row">
+            <div class="col-xs-12">
+              <label>Comment</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <input class="comment-input form-control" type="text">
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit/cancel -->
+        <div class="form-group col-xs-12 text-right">
+          <button type="submit" class="btn btn-primary">Add</button>
+          <button type="button" class="cancel-button btn btn-white close-flyout-button">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

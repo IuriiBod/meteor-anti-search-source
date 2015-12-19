@@ -1,0 +1,14 @@
+<template name="clockInfo">
+  <div class="widget {{backgroundClassByStatus clockStatus}} {{clockStatus}}">
+    <div class="row vertical-align">
+      <div class="col-xs-3">
+        <i class="fa umbs-up fa-3x fa-clock-o"></i>
+      </div>
+      <div class="col-xs-9 text-right">
+        <h2 class="font-bold">{{titleByStatus clockStatus}}</h2>
+
+        <p>{{clockInfoByStatus clockStatus}}</p>
+      </div>
+    </div>
+  </div>
+</template>

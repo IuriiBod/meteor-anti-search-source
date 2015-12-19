@@ -1,0 +1,62 @@
+<template name="menuDetailWidgets">
+  <div class="col-md-6 col-md-offset-6">
+    <div class="widget style1 lazur-bg">
+      <div class="row">
+        <div class="col-xs-12 text-right">
+          <span>Sale Price</span>
+
+          <h2 class="font-bold">
+            $ {{#if canEditMenu}} <a href="#" class="edit-item-price">{{salesPrice}}</a> {{else}} {{salesPrice}} {{/if}}
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="widget style1 red-bg">
+      <div class="row">
+        <div class="col-xs-12 text-right">
+          <span>Prep</span>
+
+          <h2 class="font-bold">$ {{menuItemStats.totalPrepCost}}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="widget style1 red-bg">
+      <div class="row">
+        <div class="col-xs-12 text-right">
+          <span>Ingredient</span>
+
+          <h2 class="font-bold">$ {{menuItemStats.totalIngCost}}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="widget style1 red-bg">
+      <div class="row">
+        <div class="col-xs-12 text-right">
+          <span>GST</span>
+
+          <h2 class="font-bold">$ {{menuItemStats.tax}}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="widget style1 navy-bg">
+      <div class="row">
+        <div class="col-xs-4">
+          <i class="fa fa-check fa-4x"></i>
+        </div>
+        <div class="col-xs-8 text-right">
+          <span>Contribution</span>
+
+          <h2 class="font-bold">$ {{menuItemStats.contribution}}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

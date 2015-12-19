@@ -1,0 +1,42 @@
+<template name="leaveRequestItem">
+  <div class="item-wrapper row">
+    <!-- Start and end dates -->
+    <div class="col-xs-3 leave-requests-item-date">
+      <div class="row">
+        <div class="col-xs-5">
+          {{date.startDate}}
+        </div>
+        <div class="col-xs-2">
+          -
+        </div>
+        <div class="col-xs-5">
+          {{date.endDate}}
+        </div>
+      </div>
+    </div>
+
+    <!-- Item details -->
+    <div class="col-xs-7 item-details-wrapper">
+      <div class="row">
+        <!-- Comment -->
+        <div class="col-xs-9 item-details">
+          {{#if comment}}
+            <p>{{comment}}</p>
+          {{else}}
+            <p class="text-muted">Leave request</p>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    <!-- Status and view button -->
+    <div class="col-xs-2 item-actions text-right">
+      <p class="status-{{status}} text-capitalize">
+        {{status}}
+      </p>
+
+      <!-- Delete button -->
+      <i class="remove-leave-request-button fa fa-trash-o delete-icon" role="button"></i>
+    </div>
+  </div>
+</template>

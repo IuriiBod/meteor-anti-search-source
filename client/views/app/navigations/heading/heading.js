@@ -1,14 +1,13 @@
 var headingComponentsMap = {
   //props.name : 'headerComponent',
-  menulist: 'menuListHeader',
-  menudetailed: 'menuDetailsHeader',
+  menuList: 'menuListHeader',
+  menuDetails: 'menuDetailsHeader',
   jobslist: 'jobListHeader',
   jobitemdetailed: 'jobDetailsHeader',
   ingredientslist: 'stockHeader',
   teamHoursReport: 'reportsHeader',
   currentStocksReport: 'reportsHeader',
   weeklyroster: 'weeklyHeader',
-  dailyroster: 'dailyHeader',
   weeklyrostertemplate: 'weeklyTemplateHeader',
   salesPrediction: 'salesPredictionHeader',
   stocktakeList: 'stocktakeHeader',
@@ -44,5 +43,9 @@ Template.pageHeading.helpers({
   headingToLoad: function () {
     var name = this.name;
     return headingComponentsMap.hasOwnProperty(name) ? headingComponentsMap[name] : false;
+  },
+
+  templateData: function () {
+    return this.templateData || {};
   }
 });

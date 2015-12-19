@@ -6,7 +6,6 @@ Router.route('signIn', {
     if (Meteor.userId()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
   }
 });
 
@@ -50,7 +49,6 @@ Router.route('invitationAccept', {
     if (Meteor.userId()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
   }
 });
 
@@ -80,6 +78,5 @@ Router.route('profile', {
     ];
   },
   data: function () {
-    Session.set('editStockTake', false);
   }
 });

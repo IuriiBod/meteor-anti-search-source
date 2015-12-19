@@ -15,16 +15,12 @@
         {{> render component='ingredientItemEdit' id=this name=state$name itemId=state$id}}
       {{/each}}
       </tbody>
-      <br>
-      <button id="showIngredientsList" class="btn btn-block btn-outline btn-primary" type="button">
-        <i class="fa fa-plus"></i>
-        {{#if state$isMenu}}
-          Add ingredients to menu item
-        {{else}}
-          Add ingredients to prep item
-        {{/if}}
-      </button>
     </table>
+
+    <button id="showIngredientsList" class="btn btn-block btn-outline btn-primary" type="button">
+      <i class="fa fa-plus"></i>
+      Add ingredients to {{#if state$isMenu}} menu item {{else}} prep item {{/if}}
+    </button>
   </div>
   <!-- INGREDIENTS LIST-->
   {{#if canViewStock}}

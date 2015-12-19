@@ -48,7 +48,7 @@ var requireLogIn = function () {
       if (permissionChecker.checkRoutePermissions()) {
         return this.next();
       } else {
-        Router.go("home");
+        Router.go("dashboard");
         return this.next();
       }
     } else {

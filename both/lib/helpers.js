@@ -1,9 +1,12 @@
+//todo: !!! Don't use functions from this file. Use HospoHero functions instead.
+
 getDaysOfMonth = function (date) {
   var month_startDate = moment(date).startOf('month').format("YYYY-MM-DD");
   var month_endDate = moment(date).endOf('month').format("YYYY-MM-DD");
   return {"start": month_startDate, "end": month_endDate};
 };
 
+//todo: DEPRECATED remove it in future (use it's analog in HospoHero.analyze)
 getPrepItem = function (id) {
   if (id) {
     var jobItem = JobItems.findOne(id);
@@ -38,6 +41,7 @@ getPrepItem = function (id) {
   }
 };
 
+//todo: DEPRECATED remove it in future (use it's analog in HospoHero.analyze)
 getIngredientItem = function (id) {
   if (id) {
     var item = Ingredients.findOne(id);

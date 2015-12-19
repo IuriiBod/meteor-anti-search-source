@@ -1,40 +1,37 @@
 Template.profile.onRendered(function () {
-  makeInputsEditable();
+  var userId = this.data._id;
+  makeInputsEditable(userId);
 });
 
 Template.profile.helpers({
   user: function() {
-    return Template.instance().data.user;
+    return this;
   },
   firstName: function() {
-    var user = Template.instance().data.user;
-    if (user && user.profile && user.profile.firstname) {
-      return user.profile.firstname;
+    if (this && this.profile && this.profile.firstname) {
+      return this.profile.firstname;
     } else {
-      return user.username;
+      return this.username;
     }
   },
   lastName: function() {
-    var user = Template.instance().data.user;
-    if (user && user.profile && user.profile.lastname) {
-      return user.profile.lastname;
+    if (this && this.profile && this.profile.lastname) {
+      return this.profile.lastname;
     } else {
       return "";
     }
   },
   email: function() {
-    var user = Template.instance().data.user;
-    if (user && user.emails) {
-      return user.emails[0].address;
+    if (this && this.emails) {
+      return this.emails[0].address;
     }
   },
   //permitted for profile owner and admins
   isEditPermitted: function() {
-    var user = Template.instance().data.user;
-    return HospoHero.isManager() || HospoHero.isMe(user._id);
+    return HospoHero.isManager() || HospoHero.isMe(this._id);
   },
   shiftsPerWeek: function() {
-    var user = Template.instance().data.user;
+    var user = this;
     var shifts = [1, 2, 3, 4, 5, 6, 7];
     var formattedShifts = [];
 
@@ -48,12 +45,10 @@ Template.profile.helpers({
     return formattedShifts;
   },
   hasResignDate: function() {
-    var user = Template.instance().data.user;
-    return !!user.profile.resignDate;
+    return !!this.profile.resignDate;
   },
   resignDate: function() {
-    var user = Template.instance().data.user;
-    var resignDate = user.profile.resignDate;
+    var resignDate = this.profile.resignDate;
     return resignDate ? moment(resignDate).format("MM/DD/YYYY") : null;
   }
 });
@@ -112,7 +107,7 @@ Template.profile.events({
   }
 });
 
-function makeInputsEditable() {
+function makeInputsEditable(userId) {
   $(".open-resigned-date-picker").datepicker({
     startDate: new Date(),
     todayHighlight: true
@@ -133,9 +128,8 @@ function makeInputsEditable() {
     placeholder: "Enter first name here",
     success: function (response, newValue) {
       if (newValue) {
-        var id = Template.instance().data.user._id;
         var editDetail = {"firstname": newValue.trim()};
-        updateBasicDetails(id, editDetail);
+        updateBasicDetails(userId, editDetail);
       }
     }
   });
@@ -150,9 +144,8 @@ function makeInputsEditable() {
     placeholder: "Enter last name here",
     success: function (response, newValue) {
       if (newValue) {
-        var id = Template.instance().data.user._id;
         var editDetail = {"lastname": newValue.trim()};
-        updateBasicDetails(id, editDetail);
+        updateBasicDetails(userId, editDetail);
       }
     }
   });

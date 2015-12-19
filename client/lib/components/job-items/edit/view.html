@@ -1,6 +1,6 @@
 <template name="editJobItem">
   <!-- Page heading -->
-  {{> render component="pageHeading" title='Edit Job' category='Jobs' name="jobedit" subCategory=state$item.name id=state$item._id}}
+  {{> pageHeading title='Edit Job' category='Jobs' name="jobedit" subCategory=state$item.name id=state$item._id}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
@@ -263,9 +263,8 @@
   <!-- /INGREDIENTS LIST -->
 
   <!-- ADD INGREDIENT-->
-  <div class="modal fade" id="addIngredientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-       aria-hidden="true">
+
     {{> render component = 'submitIngredient' isModal=true}}
-  </div>
+
   <!-- /ADD INGREDIENT -->
 </template>

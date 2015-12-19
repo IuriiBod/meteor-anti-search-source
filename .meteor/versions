@@ -21,6 +21,7 @@ cosmos:browserify@0.1.4
 dandv:caret-position@2.1.1
 dbarrett:dropzonejs@4.0.2
 dbernhard:jquery-ui-draggable@0.1.2
+dburles:mongo-collection-instances@0.1.3
 ddp@1.1.0
 deepwell:bootstrap-datepicker2@1.3.0
 deps@1.0.7
@@ -48,6 +49,7 @@ iron:url@1.0.9
 joshowens:timezone-picker@0.1.2
 jquery@1.11.3_2
 json@1.0.3
+jss:anti-search-source@0.2.1
 jss:blaze-states@0.0.1
 jss:meteor-google-prediction@0.2.2
 jss:moment-timezone@0.4.1
@@ -76,6 +78,7 @@ mongo-livedata@1.0.8
 mrt:jquery-ui-sortable@1.10.3
 mrt:moment@2.8.1
 mrt:moment-timezone@0.2.1
+natestrauser:animate-css@3.4.0
 natestrauser:select2@4.0.0_1
 natestrauser:x-editable-bootstrap@1.5.2_2
 npm-bcrypt@0.7.8_2

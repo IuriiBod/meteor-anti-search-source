@@ -3,17 +3,15 @@
  */
 var ShiftPropertyChangeLogger = {
   trackedProperties: {
-    startTime: 'start time',
+    startTime: 'start date and time',
     endTime: 'end time',
-    shiftDate: 'shift date',
     assignedTo: 'assignment'
   },
 
   _formatProperty: function (shift, property) {
     var propertiesFormatters = {
-      startTime: HospoHero.dateUtils.timeFormat,
+      startTime: HospoHero.dateUtils.fullDateFormat,
       endTime: HospoHero.dateUtils.timeFormat,
-      shiftDate: HospoHero.dateUtils.shortDateFormat,
       assignedTo: HospoHero.username
     };
 
@@ -112,21 +110,21 @@ Meteor.methods({
 
     check(newShiftInfo, HospoHero.checkers.ShiftDocument);
 
-    var shiftsCount = Shifts.find({"shiftDate": TimeRangeQueryBuilder.forWeek(newShiftInfo.shiftDate)}).count();
+    var shiftsCount = Shifts.find({startTime: TimeRangeQueryBuilder.forWeek(newShiftInfo.startTime)}).count();
 
     // publish new shift if other shifts of this week are published
     var isRosterPublished = !!Shifts.findOne({
-      "shiftDate": TimeRangeQueryBuilder.forWeek(newShiftInfo.shiftDate),
-      "published": true,
+      startTime: TimeRangeQueryBuilder.forWeek(newShiftInfo.startTime),
+      published: true,
       "relations.areaId": HospoHero.getCurrentAreaId()
     });
 
     var defaultShiftProperties = {
-      "createdBy": Meteor.userId(),
-      "jobs": [],
-      "status": "draft",
-      "published": isRosterPublished,
-      "order": shiftsCount,
+      createdBy: Meteor.userId(),
+      jobs: [],
+      status: "draft",
+      published: isRosterPublished,
+      order: shiftsCount,
       relations: HospoHero.getRelationsObject()
     };
 
@@ -139,8 +137,8 @@ Meteor.methods({
     var createdShiftId = Shifts.insert(newShiftDocument);
 
     logger.info("Shift inserted", {
-      "shiftId": createdShiftId,
-      "date": newShiftInfo.shiftDate
+      shiftId: createdShiftId,
+      date: newShiftInfo.startTime
     });
 
     return createdShiftId;

@@ -5,7 +5,7 @@
         <h5>Profile Detail</h5>
       </div>
       <div>
-        {{> profileImage user=user}}
+        {{> profileImage user}}
         <div class="ibox-content profile-content">
           <h4>
             <strong>
@@ -98,7 +98,7 @@
           {{#if isManager}}
             <select class="form-control shiftsPerWeek" data-id="{{user._id}}">
               {{#each shiftsPerWeek}}
-                <option selected="{{this.selected}}">{{this.shift}}</option>
+                <option selected="{{user.selected}}">{{user.shift}}</option>
               {{/each}}
             </select>
           {{else}}

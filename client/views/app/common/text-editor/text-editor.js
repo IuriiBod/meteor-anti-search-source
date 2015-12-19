@@ -1,4 +1,4 @@
-Template.textEditor.onRendered(function() {
+Template.textEditor.onRendered(function () {
   this.autorun(function () {
     $(".summernote").summernote('code', Template.currentData().initialHtml);
   });
