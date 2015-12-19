@@ -5,11 +5,11 @@ var SupplierChecker = Match.Where(function (supplier) {
       check(email, String);
       return /.+@(.+){2,}\.(.+){2,}/.test(email);
     }),
-    minimumOrderAmount: Match.Where(function (amount) {
-      check(amount, Number);
 
-      return amount > 0;
-    }),
+    minimumOrderAmount: Match.Optional(Match.Where(function (amount) {
+      check(amount, Number);
+      return amount >= 0;
+    })),
     deliveryDays: Array,
     deliveryTime: Date,
     contactName: String,
@@ -24,7 +24,7 @@ var SupplierChecker = Match.Where(function (supplier) {
     priceList: Match.Optional(PriceListsChecker)
   });
 
-  var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(supplier, Suppliers);
+  //var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(supplier, Suppliers);
 
   return true;
 });

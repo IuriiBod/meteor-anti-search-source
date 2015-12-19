@@ -16,7 +16,12 @@ Template.weekPicker.onRendered(function () {
   });
 
   this.isSameAsOldWeekDate = function (newDateWeek) {
-    return newDateWeek.week === this.oldDateWeek.week && newDateWeek.year === this.oldDateWeek.year;
+    var newDateMoment = getMomentByWeekDate(newDateWeek);
+    var oldDateMoment = getMomentByWeekDate(this.oldDateWeek);
+    newDateMoment = newDateMoment.isoWeekday(1);
+    oldDateMoment = oldDateMoment.isoWeekday(1);
+
+    return newDateMoment.week() === oldDateMoment.week() && newDateMoment.year() === oldDateMoment.year();
   };
 
 
@@ -76,3 +81,7 @@ Template.weekPicker.events({
     $('.day.active').siblings('.day').addClass('week');
   }
 });
+
+var getMomentByWeekDate = function (weekDate) {
+  return moment().set(weekDate);
+};

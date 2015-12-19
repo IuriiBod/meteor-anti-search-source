@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "through": {
-      "version": "2.3.8"
+      "version": "http://registry.npmjs.org/through/-/through-2.3.8.tgz"
     }
   }
 }
