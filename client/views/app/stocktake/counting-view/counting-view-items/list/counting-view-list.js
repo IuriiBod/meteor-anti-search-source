@@ -158,10 +158,10 @@ Template.stockCounting.events({
 
       $(".sortableStockItems").sortable({
         stop: function (event, ui) {
-          var sortedStockItems = new SortableHelper(ui).getSortedItems();
+          var sortedStockItems = new SortableItemsHelper(ui).getSortedItems();
           if(sortedStockItems) {
             console.log(sortedStockItems);
-            //Meteor.call("stocktakePositionUpdate", sortedStockItems, HospoHero.handleMethodResult());
+            Meteor.call("stocktakePositionUpdate", sortedStockItems, HospoHero.handleMethodResult());
           }
         }
       });
@@ -181,20 +181,19 @@ Template.stockCounting.events({
   }
 });
 
-
-var SortableHelper = function (ui) {
+var SortableItemsHelper = function (ui) {
   this._draggedItem = this._getDataByItem(ui.item);
   this._previousItem = this._getDataByItem(ui.item.prev());
   this._nextItem = this._getDataByItem(ui.item.next());
 };
 
 
-SortableHelper.prototype._getDataByItem = function (item) {
+SortableItemsHelper.prototype._getDataByItem = function (item) {
   var element = item[0];
   return element ? Blaze.getData(element) : null;
 };
 
-SortableHelper.prototype._getOrder = function () {
+SortableItemsHelper.prototype._getOrder = function () {
   var place = 0;
   if (!this._nextItem && this._previousItem) {
     place = this._previousItem.item.place + 1;
@@ -207,36 +206,42 @@ SortableHelper.prototype._getOrder = function () {
   return place;
 };
 
-SortableHelper.prototype.getSortedItems = function() {
-  var draggedItem, nextItem, previousItem;
+SortableItemsHelper.prototype.getSortedItems = function() {
+  var draggedItem = this._draggedItem.item._id;
+  var nextItem = this._nextItem ? this._nextItem.item._id : null;
+  var previousItem = this._previousItem ? this._previousItem.item._id : null;
 
-  if(!this._draggedItem.item.place) {
-    draggedItem = {_id: this._draggedItem.item._id}
-  } else {
-    draggedItem = {_id: this._draggedItem.item.stockRef,
-                    place: this._draggedItem.item.place}
+  var specialArea = SpecialAreas.findOne({_id: this._draggedItem.stockTakeData.activeSpecialArea});
+  if(specialArea) {
+    var stocks = specialArea.stocks;
+    var stockOldPosition = stocks.indexOf(draggedItem);
+    var newPosition = 0;
+    if (!previousItem && nextItem && stocks.indexOf(nextItem) > 0) {
+      newPosition = (stocks.indexOf(nextItem) - 1);
+    }
+    if (!nextItem && previousItem) {
+      newPosition = (stocks.indexOf(previousItem) + 1);
+    }
+    if (nextItem && previousItem) {
+      if (stocks.indexOf(draggedItem) > stocks.indexOf(previousItem)) {
+        newPosition = stocks.indexOf(previousItem) + 1;
+      } else {
+        newPosition = stocks.indexOf(previousItem);
+      }
+    }
   }
 
-  if(!this._nextItem) {
-    nextItem = null;
-  } else if(!this._nextItem.item.stockRef) {
-    nextItem = this._nextItem.item._id;
-  } else {
-    nextItem = this._nextItem.item.stockRef;
-  }
+  stocks.splice(newPosition, 0, stocks.splice(stockOldPosition, 1)[0]);
 
-  if(!this._previousItem) {
-    previousItem = null;
-  } else if(!this._previousItem.item.stockRef) {
-    previousItem = this._previousItem.item._id;
-  } else {
-    previousItem = this._previousItem.item.stockRef;
+  if (this._draggedItem.item.place) {
+    draggedItem = {
+      id: this._draggedItem.item._id,
+      place: this._draggedItem.item.place
+    }
   }
-
   return {
-    draggedItem: draggedItem,
-    previousItemId: previousItem,
-    nextItemId: nextItem,
-    activeSpecialArea: this._draggedItem.stockTakeData.activeSpecialArea
+    activeSpecialArea: this._draggedItem.stockTakeData.activeSpecialArea,
+    stocks: stocks,
+    draggedItem: draggedItem
   };
 };

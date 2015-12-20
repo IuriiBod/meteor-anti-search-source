@@ -199,70 +199,20 @@ Meteor.methods({
     }
 
     check(sortedStockItems, {
-      draggedItem: {
-        _id: Match.Optional(String),
+      draggedItem: Match.OneOf(String, {
+        id: Match.Optional(String),
         place: Match.Optional(Number)
-      },
-      previousItemId: Match.OneOf(String, null),
-      nextItemId: Match.OneOf(String, null),
+      }),
+      stocks: Match.Optional(Array),
       activeSpecialArea: Match.Optional(String)
     });
 
-    //var stocktake = Stocktakes.findOne(stocktakeId);
-    ////update stocktakes places
-    //if (stocktake) {
-    //  var nextPosition = 0;
-    //  var prevPosition = 0;
-    //  var newPosition;
-    //
-    //  if (info.hasOwnProperty("nextItemPosition")) {
-    //    nextPosition = info.nextItemPosition;
-    //  }
-    //  if (info.hasOwnProperty("prevItemPosition")) {
-    //    prevPosition = info.prevItemPosition;
-    //  }
-    //
-    //  newPosition = (parseFloat(nextPosition) + parseFloat(prevPosition)) / 2;
     if(sortedStockItems.draggedItem.place) {
-      Stocktakes.update({"_id": sortedStockItems.draggedItem._id}, {$set: {"place": sortedStockItems.draggedItem.place}});
+      Stocktakes.update({"_id": sortedStockItems.draggedItem.id}, {$set: {"place": sortedStockItems.draggedItem.place}});
       logger.info("Stocktake position updated");
     }
-    //}
 
-    var specialArea = SpecialAreas.findOne({_id: sortedStockItems.activeSpecialArea});
-    if(specialArea) {
-      var stocks = specialArea.stocks;
-      var stockOldPosition = stocks.indexOf(sortedStockItems.draggedItem._id);
-      var newPosition = 0;
-      if (!sortedStockItems.previousItemId && sortedStockItems.nextItemId) {
-        newPosition = (stocks.indexOf(sortedStockItems.nextItemId) - 1);
-      }
-      if (!sortedStockItems.nextItemId && sortedStockItems.previousItemId) {
-        newPosition = (stocks.indexOf(sortedStockItems.previousItemId) + 1);
-      } else {
-        newPosition = (stocks.indexOf(sortedStockItems.previousItemId) + 1);
-      }
-    }
+    SpecialAreas.update({"_id": sortedStockItems.activeSpecialArea}, {$set: {"stocks": sortedStockItems.stocks}});
 
-    stocks.splice(newPosition, 0, stocks.splice(stockOldPosition, 1)[0]);
-    SpecialAreas.update({"_id": sortedStockItems.activeSpecialArea}, {$set: {"stocks": stocks}});
-    //update special area original places
-    //var specialArea = SpecialAreas.findOne(sAreaId);
-    //if (specialArea) {
-    //  var array = specialArea.stocks;
-    //  var oldPosition = array.indexOf(stockId);
-    //  newPosition = null;
-    //  if (info.hasOwnProperty("nextItemId")) {
-    //    newPosition = (array.indexOf(info.nextItemId) - 1);
-    //  } else if (info.hasOwnProperty("prevItemId")) {
-    //    newPosition = (array.indexOf(info.prevItemId) + 1);
-    //  }
-    //
-    //  SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": []}});
-    //  array.splice(newPosition, 0, array.splice(oldPosition, 1)[0]);
-    //
-    //  SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": array}});
-    //  logger.info("Stock item position update at special area");
-    //}
   }
 });
