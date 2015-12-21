@@ -55,7 +55,7 @@ Meteor.methods({
       "category": info.category,
       "instructions": info.instructions,
       "ingredients": info.ingredients,
-      "jobItems": info.prepItems,
+      "jobItems": info.jobItems,
       "salesPrice": parseFloat(info.salesPrice),
       "image": info.image,
       "createdOn": Date.now(),

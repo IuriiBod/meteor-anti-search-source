@@ -49,12 +49,12 @@
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label">Prep items used</label>
-                {{> listOfJobItems}}
+                {{> menuItemJobsList jobs=state$menuItemJobs onChange=getOnJobItemsListChanged}}
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label">Ingredients used</label>
-                {{> listOfIngredients id="menuSubmit" name="menuSubmit"}}
+                {{> listOfIngredients ingredients=state$menuItemIngredients onChange=getOnIngredientsListChanged}}
               </div>
 
               <div class="form-group">
@@ -79,7 +79,7 @@
                         <span class="corner"></span>
 
                         <div class="image">
-                          <img id="uploadedImageUrl" src="" class="img-responsive menu-item-image">
+                          <img id="uploadedImageUrl" src="{{state$image}}" class="img-responsive menu-item-image">
                         </div>
                       </a>
                     </div>

@@ -1,5 +1,7 @@
 Template.menuItemSubmitMainView.onCreated(function () {
   this.set('image', false);
+  this.set('menuItemIngredients', []);
+  this.set('menuItemJobs', []);
 });
 
 
@@ -15,8 +17,23 @@ Template.menuItemSubmitMainView.helpers({
 
   initialHTML: function () {
     return "Add instructions here";
+  },
+
+  getOnIngredientsListChanged: function () {
+    var tmpl = Template.instance();
+    return function (newIngredientsList) {
+      tmpl.set('menuItemIngredients', newIngredientsList);
+    };
+  },
+
+  getOnJobItemsListChanged: function () {
+    var tmpl = Template.instance();
+    return function (newJobItemsList) {
+      tmpl.set('menuItemJobs', newJobItemsList);
+    };
   }
 });
+
 
 Template.menuItemSubmitMainView.events({
   'submit form': function (event, tmpl) {
@@ -26,35 +43,6 @@ Template.menuItemSubmitMainView.events({
     if (instructions === "Add instructions here") {
       instructions = '';
     }
-
-    //todo: get rid of this mess too
-    var preps = $(event.target).find("[name=prep_qty]").get();
-    var ings = $(event.target).find("[name=ing_qty]").get();
-    var ing_doc = [];
-    ings.forEach(function (item) {
-      var dataid = $(item).attr("data-id");
-      if (dataid && !(ing_doc.hasOwnProperty(dataid))) {
-        var quantity = parseFloat($(item).val());
-        quantity = quantity ? quantity : 1;
-        ing_doc.push({
-          "_id": dataid,
-          "quantity": quantity
-        });
-      }
-    });
-    var prep_doc = [];
-    preps.forEach(function (item) {
-      var dataid = $(item).attr("data-id");
-      if (dataid && !(prep_doc.hasOwnProperty(dataid))) {
-        var quantity = parseFloat($(item).val());
-        quantity = quantity ? quantity : 1;
-        prep_doc.push({
-          "_id": dataid,
-          "quantity": quantity
-        });
-      }
-    });
-
 
     var menuItemFieldsConfig = [
       'name', 'category', 'status', {
@@ -70,8 +58,8 @@ Template.menuItemSubmitMainView.events({
     _.extend(info, {
       image: tmpl.get('image') || '',
       instructions: instructions,
-      ingredients: ing_doc,
-      prepItems: prep_doc
+      ingredients: tmpl.get('menuItemIngredients'),
+      jobItems: tmpl.get('menuItemJobs')
     });
 
     if (!info.name) {
