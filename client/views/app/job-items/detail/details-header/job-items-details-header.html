@@ -1,7 +1,8 @@
 <template name="jobDetailsHeader">
   <div class="title-action">
     <button class="btn btn-primary hidden-print editJobItemBtn">
-      <i class="fa fa-edit" data-id="{{state$id}}"></i> Edit Job
+      <i class="fa fa-edit"></i>
+      Edit Job
     </button>
     <div class="btn-group">
       <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -12,7 +13,7 @@
       </button>
       <ul class="dropdown-menu" style="margin-left: -56px;">
         <li>
-          {{#if state$isSubscribed}}
+          {{#if isSubscribed}}
             <a href="#" class="hidden-print subscribeButton">
               <i class="fa fa-lg fa-rss text-info"></i> Unsubscribe
             </a>
@@ -24,35 +25,35 @@
         </li>
         {{#if canEditJob}}
           <li>
-            <a href="" class="hidden-print copyJobItemBtn" data-id="{{state$id}}">
-              <i class="fa fa-copy" data-id="{{state$id}}"></i> Copy
+            <a href="" class="hidden-print copyJobItemBtn">
+              <i class="fa fa-copy"></i> Copy
             </a>
           </li>
         {{/if}}
         <li>
-          <a href="" class="hidden-print printJobItemBtn" data-id="{{state$id}}">
+          <a href="" class="hidden-print printJobItemBtn">
             <i class="fa fa-print"></i> Print
           </a>
         </li>
         {{#if canEditJob}}
           <li role="separator" class="divider"></li>
-          {{#if state$isArchived}}
+          {{#if isArchived}}
             <li>
-              <a href="#" class="hidden-print archiveJobItem" data-id="{{state$id}}">
-                <i class="fa fa-dropbox" data-id="{{state$id}}"></i>
+              <a href="#" class="hidden-print archiveJobItem">
+                <i class="fa fa-dropbox"></i>
                 Restore
               </a>
             </li>
             <li>
-              <a href="#" class="hidden-print deleteJobItem" data-id="{{state$id}}">
-                <i class="fa fa-trash-o" data-id="{{state$id}}"></i>
+              <a href="#" class="hidden-print deleteJobItem">
+                <i class="fa fa-trash-o"></i>
                 Delete
               </a>
             </li>
           {{else}}
             <li>
-              <a href="#" class="hidden-print archiveJobItem" data-id="{{state$id}}">
-                <i class="fa fa-archive" data-id="{{state$id}}"></i>
+              <a href="#" class="hidden-print archiveJobItem">
+                <i class="fa fa-archive"></i>
                 Archive
               </a>
             </li>
@@ -66,7 +67,7 @@
     <!--AREA CHOOSER-->
     <div class="modal fade" id="areaChooser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
-      {{> areaChooser onAreaSelected=state$onAreaSelected}}
+      {{> areaChooser onAreaSelected=onAreaSelected}}
     </div>
     <!--AREA CHOOSER-->
   {{/if}}
