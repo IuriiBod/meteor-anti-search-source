@@ -17,5 +17,9 @@ Template.locationItem.helpers({
       settings.text = "unarchive";
     }
     return settings;
+  },
+
+  isCurrentLocation: function (locationId) {
+    return HospoHero.getCurrentArea().locationId === locationId
   }
 });

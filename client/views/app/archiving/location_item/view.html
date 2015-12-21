@@ -1,5 +1,5 @@
 <template name="locationItem">
-  {{#with state$getLocation}}
+  {{#with location}}
     <div class="panel-heading" role="button" id="heading-{{_id}}" data-toggle="collapse" data-parent="#accordion"
          href="#body-{{_id}}" aria-expanded="false" aria-controls="body-{{_id}}">
       <h4 class="panel-title">
@@ -7,7 +7,7 @@
            aria-expanded="false" aria-controls="body-{{_id}}">
           {{name}}
         </a>
-        {{#unless state$isCurrentLocation this._id}}
+        {{#unless isCurrentLocation this._id}}
           {{#with btnSettings this.archived}}
             <button class="btn btn-xs {{btnClass}} pull-right archive-loc-btn">{{text}}</button>
           {{/with}}

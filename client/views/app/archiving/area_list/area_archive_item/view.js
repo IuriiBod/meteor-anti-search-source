@@ -1,12 +1,15 @@
 Template.areaArchiveItem.events({
-  "click .archive-loc-btn": function (e) {
+  "click .archive-loc-btn": function (e, tmpl) {
     e.stopPropagation();
-    var area = FlowComponents.callAction("getArea")._result;
+    var area = tmpl.data.area;
     Meteor.call("switchArchiveArea", area);
   }
 });
 
 Template.areaArchiveItem.helpers({
+  isCurrentArea: function (areaId) {
+    HospoHero.getCurrentAreaId() === areaId;
+  },
   btnSettings: function (archived) {
     var settings = {
       btnClass: "btn-default",

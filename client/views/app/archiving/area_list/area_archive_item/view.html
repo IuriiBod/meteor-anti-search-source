@@ -1,8 +1,8 @@
 <template name="areaArchiveItem">
-  {{#with state$getArea}}
+  {{#with area}}
     <li class="list-group-item">
       {{name}}
-      {{#unless state$isCurrentArea this._id}}
+      {{#unless isCurrentArea this._id}}
         {{#with btnSettings this.archived}}
           <button class="btn btn-xs {{btnClass}} pull-right archive-loc-btn">{{text}}</button>
         {{/with}}
