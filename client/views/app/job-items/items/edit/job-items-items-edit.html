@@ -1,0 +1,13 @@
+<template name="jobItemEdit">
+  <tr>
+    <td>{{item.name}}</td>
+    <td>$ {{item.prepCostPerPortion}}</td>
+    <td><input type="text" name="prep_qty" class="prep-qty" data-id="{{item._id}}" value="{{quantity}}"/>
+    </td>
+    <td>
+      <a href="">
+        <i class="fa fa-trash removePrep" data-id="{{item._id}}"></i>
+      </a>
+    </td>
+  </tr>
+</template>
