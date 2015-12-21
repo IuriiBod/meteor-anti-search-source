@@ -1,5 +1,5 @@
 Template.productsList.onCreated(function () {
-  this.set('ingredient', null);
+  this.set('ingredientItemEditorExist', false);
 });
 
 Template.productsList.helpers({
@@ -11,8 +11,19 @@ Template.productsList.helpers({
 Template.productsList.events({
   'click .editProduct': function (event, tmpl) {
     event.preventDefault();
+
+    if (tmpl.get('ingredientItemEditorExist')) {
+      Blaze.remove(tmpl.get('ingredientItemEditorExist'));
+    }
+
     var ingredient = Ingredients.findOne({_id: this.item._id});
-    tmpl.set('ingredient', ingredient);
+
+    var ingredientEditorBlazeView = Blaze.renderWithData(Template.ingredientItemEditor, {
+      isModal: true,
+      ingredient: ingredient
+    }, document.getElementById('ingredientItemEditorPlaceHolder'));
+
+    tmpl.set('ingredientItemEditorExist', ingredientEditorBlazeView);
     tmpl.$("#ingredientItemEditor").modal("show");
   }
 });
