@@ -29,12 +29,6 @@ Template.addNewUnavailability.onRendered(function () {
   // Get current flyout
   self.currentFlyout = FlyoutManager.getInstanceByElement(self.$('.new-unavailability'));
 
-  // Define a dateTimePickers
-  self.$('.date-picker').datetimepicker({
-    format: 'YYYY MMM Do',
-    minDate: moment(),
-    defaultDate: moment()
-  });
   self.$('.start-time-picker').datetimepicker({
     format: 'HH:mm',
     stepping: 10,

@@ -20,10 +20,7 @@
                 <input class="comment-input form-control" type="text" readonly
                        value="{{formatDate leaveRequest.startDate}}">
               {{else}}
-                <div class="start-date-picker input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                  <input class="set-due-date form-control" type="text"/>
-                </div>
+                {{> unavailabiliiesDatepicker datepickerClass='start-date-picker'}}
               {{/if}}
             </div>
           </div>
@@ -42,10 +39,7 @@
                 <input class="comment-input form-control" type="text" readonly
                        value="{{formatDate leaveRequest.endDate}}">
               {{else}}
-                <div class="end-date-picker input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                  <input class="set-due-date form-control" type="text"/>
-                </div>
+                {{> unavailabiliiesDatepicker datepickerClass='end-date-picker' defaultDate=defaultEndDate}}
               {{/if}}
             </div>
           </div>
