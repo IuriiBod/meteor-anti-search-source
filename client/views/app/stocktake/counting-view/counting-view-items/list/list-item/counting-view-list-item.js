@@ -58,19 +58,6 @@ Template.stockCountingListItem.helpers({
     return this.stockTakeData.editableStockTake;
   },
 
-  deletable: function(id) {
-    if (id) {
-      var stocktake = Stocktakes.findOne({_id: id});
-      if (stocktake) {
-        return !!(!stocktake.status && !stocktake.orderRef);
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
-  },
-
   countEditable: function(id) {
     var permitted = true;
     var stocktake = Stocktakes.findOne({_id: id});
@@ -95,7 +82,6 @@ Template.stockCountingListItem.events({
     event.preventDefault();
     var confrimDelete = confirm("This action will remove this stock item from this area. Are you sure you want to continue?");
     if (confrimDelete) {
-      console.log(this);
       var id = this.item._id;
       var sareaId = tmpl.data.stockTakeData.activeSpecialArea;
       var stockRefId = this.item.stockRef;

@@ -12,6 +12,12 @@ Template.stockCounting.helpers({
       stockTakeId: Template.instance().data.stocktakeId,
       activeSpecialArea: Template.instance().activeSpecialArea.get(),
       activeGeneralArea: Template.instance().activeGeneralArea.get(),
+      makeGeneralAreaActive: function(areaId) {
+        return instance.activeGeneralArea.set(areaId);
+      },
+      makeSpecialAreaActive: function(areaId) {
+        return instance.activeSpecialArea.set(areaId);
+      }
     };
   },
 
@@ -87,20 +93,6 @@ Template.stockCounting.helpers({
       }
     }
     return permitted;
-  },
-
-  makeSpecialAreaActive: function() {
-    var instance = Template.instance();
-    return function(areaId) {
-      instance.activeSpecialArea.set(areaId);
-    }
-  },
-
-  makeGeneralAreaActive: function() {
-    var instance = Template.instance();
-    return function(areaId) {
-      instance.activeGeneralArea.set(areaId);
-    }
   }
 
   //ordersExist: function() {
@@ -134,6 +126,7 @@ Template.stockCounting.events({
         type: "text",
         title: 'Edit Special area name',
         showbuttons: false,
+        display: false,
         mode: 'inline',
         success: function (response, newValue) {
           var id = tmpl.activeSpecialArea.get();
@@ -147,6 +140,7 @@ Template.stockCounting.events({
         type: "text",
         title: 'Edit General area name',
         showbuttons: false,
+        display: false,
         mode: 'inline',
         success: function (response, newValue) {
           var id = tmpl.activeGeneralArea.get();
@@ -160,7 +154,6 @@ Template.stockCounting.events({
         stop: function (event, ui) {
           var sortedStockItems = new SortableItemsHelper(ui).getSortedItems();
           if(sortedStockItems) {
-            console.log(sortedStockItems);
             Meteor.call("stocktakePositionUpdate", sortedStockItems, HospoHero.handleMethodResult());
           }
         }

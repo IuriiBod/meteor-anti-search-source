@@ -40,8 +40,7 @@
     </div>
   </div>
 
-  <!--TODO: NEEDS TO CHANGE TO TEMPLATE CALL WHEN STOCK FLOW COMPONENTS WILL BE DESTROYED-->
-  {{> render component='commentsPanel' id=this.orderId type='stockOrders'}}
+  {{> commentsPanel id=this.orderId type='stockOrders'}}
 
   <!-- COMPOSE MAIL MODAL-->
     {{> composeMail name="composeMail" initialHtml=initialHtml supplier=supplier}}

@@ -79,21 +79,21 @@ Template.areaBox.events({
   'click .garea-filter': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;
-    tmpl.data.makeGeneralAreaActive(id);
+    tmpl.data.stockTakeData.makeGeneralAreaActive(id);
     $(".areaFilering .collapse").removeClass("in");
     var sarea = $(event.target).parent().next().find(".areaBox")[0];
     if (sarea) {
       var sId = $(sarea).attr("data-id");
-      tmpl.data.makeSpecialAreaActive(sId);
+      tmpl.data.stockTakeData.makeSpecialAreaActive(sId);
     } else {
-      tmpl.data.makeSpecialAreaActive(null);
+      tmpl.data.stockTakeData.makeSpecialAreaActive(null);
     }
   },
 
   'click .sarea-filter': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;
-    tmpl.data.makeSpecialAreaActive(id);
+    tmpl.data.stockTakeData.makeSpecialAreaActive(id);
   },
 
   'mouseenter .areaBox': function (event) {

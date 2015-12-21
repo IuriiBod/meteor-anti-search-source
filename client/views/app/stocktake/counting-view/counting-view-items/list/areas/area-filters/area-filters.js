@@ -1,8 +1,8 @@
 Template.areaFilters.onRendered(function() {
   var garea = GeneralAreas.findOne({}, {sort: {"createdAt": 1}});
   if (garea && !this.data.generalArea) {
-    this.data.makeGeneralAreaActive(garea._id);
-    this.data.makeSpecialAreaActive(null);
+    this.data.stockTakeData.makeGeneralAreaActive(garea._id);
+    this.data.stockTakeData.makeSpecialAreaActive(null);
   }
 });
 
@@ -19,14 +19,6 @@ Template.areaFilters.helpers({
 
   stockTakeData: function() {
     return Template.instance().data.stockTakeData;
-  },
-
-  makeGeneralAreaActive: function() {
-    return Template.instance().data.makeGeneralAreaActive;
-  },
-
-  makeSpecialAreaActive: function() {
-    return Template.instance().data.makeSpecialAreaActive;
   },
 
   specialAreas: function(gareaId) {
