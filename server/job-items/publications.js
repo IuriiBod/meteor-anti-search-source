@@ -1,7 +1,6 @@
 Meteor.publish('jobItems', function (ids, areaId, status) {
   if (this.userId) {
     var query = {
-      status: 'active',
       'relations.areaId': areaId
     };
 

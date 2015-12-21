@@ -10,7 +10,7 @@
       </thead>
       <tbody>
       {{#each state$jobItemsList}}
-        {{> render component='jobItemEdit' id=this name=state$name itemId=state$id}}
+        {{> jobItemEdit id=this name=state$name itemId=state$id}}
       {{/each}}
       </tbody>
       <br>
@@ -22,7 +22,7 @@
   <!-- JOB ITEMS LIST-->
   <div class="modal fade" id="jobItemListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
-    {{> render component='jobItemsModalList' name="submitMenuItem"}}
+    {{> jobItemsModalList name="submitMenuItem"}}
   </div>
   <!-- /JOB ITEMS LIST -->
 </template>

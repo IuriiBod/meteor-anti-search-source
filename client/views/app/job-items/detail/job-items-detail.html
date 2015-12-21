@@ -1,0 +1,186 @@
+<template name="jobItemDetail">
+  <!-- Page heading -->
+  {{> pageHeading title=jobItem.name category="Jobs" id=jobItem.id name="jobitemdetailed"}}
+
+  <div class="wrapper wrapper-content animated">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox-content">
+          <div class="row">
+            <div class="col-md-8">
+              {{#if isPrep}}
+                {{#if jobItem.recipe}}
+                  <div class="form-group">
+                    <label>Recipe</label>
+
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        {{{jobItem.recipe}}}
+                      </div>
+                    </div>
+                  </div>
+                {{/if}}
+              {{/if}}
+              {{#if isRecurring}}
+                {{#if jobItem.description}}
+                  <div class="form-group">
+                    <label>Description</label>
+
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        {{{jobItem.description}}}
+                      </div>
+                    </div>
+                  </div>
+                {{/if}}
+                {{#if jobItem.checklist}}
+                  <div class="form-group">
+                    <label>Checklist</label>
+                    <ol class="list-group">
+                      {{#each jobItem.checklist}}
+                        <li class="list-group-item">{{this}}</li>
+                      {{/each}}
+                    </ol>
+                  </div>
+                {{/if}}
+              {{/if}}
+              {{#if isPrep}}
+                {{#if jobItem.ingredients}}
+                  <div class="form-group">
+                    <label>
+                      Ingredients used
+                    </label>
+
+                    <div class="table-scrollable">
+                      <table class="table table-hover thumbnail col-md-7">
+                        <thead>
+                        <tr>
+                          <th>Quantity</th>
+                          <th>Description</th>
+                          <th>Cost ($)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each jobItem.ingredients}}
+                          {{> ingredientItemView ingredient=this}}
+                        {{/each}}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                {{/if}}
+              {{/if}}
+            </div>
+            <div class="col-md-3">
+              <ul class="list-group clear-list m-t">
+                <li class="list-group-item">
+                  <span class="pull-right">{{jobTypeById jobItem.type}}</span>Type
+                </li>
+                <li class="list-group-item">
+                  <span class="pull-right">{{jobItem.status}}</span>Status
+                </li>
+                {{#if isRecurring}}
+                  <li class="list-group-item">
+                  <span class="pull-right">
+                    {{#if section}}
+                      {{section}}
+                    {{else}}
+                      Not assigned
+                    {{/if}}
+                  </span>Section
+                  </li>
+                {{/if}}
+                <li class="list-group-item">
+                  <span class="pull-right">{{secondsToMinutes jobItem.activeTime}} mins</span>Active Time
+                </li>
+                {{#if isRecurring}}
+                  <li class="list-group-item">
+                    <span class="pull-right">{{frequency}}</span>Repeat Frequency
+                  </li>
+                  {{#if isWeekly}}
+                    <li class="list-group-item">
+                      <span class="pull-right">{{repeatOnDays}}</span>Repeat On
+                    </li>
+                  {{/if}}
+                  <li class="list-group-item">
+                    <span class="pull-right">{{formatDate jobItem.repeatAt "hh:mm A"}}</span>Repeat At
+                  </li>
+                  <li class="list-group-item">
+                    <span class="pull-right">{{formatDate jobItem.startsOn "YYYY-MM-DD"}}</span>
+                    Starts On
+                  </li>
+                  <li class="list-group-item">
+                    <span class="pull-right">{{endsOn}}</span>Ends
+                  </li>
+                {{/if}}
+                {{#if isPrep}}
+                  <li class="list-group-item">
+                    <span class="pull-right">{{jobItem.portions}}</span>Portions
+                  </li>
+                {{/if}}
+                <li class="list-group-item">
+                  <span class="pull-right">{{labourCost}}</span>Labour Cost ($)
+                </li>
+                {{#if isPrep}}
+                  <li class="list-group-item">
+                    <span class="pull-right">{{prepCostPerPortion}}</span>Cost per Portion ($)
+                  </li>
+                  <li class="list-group-item">
+                    <span class="pull-right">{{jobItem.shelfLife}} Days</span>Shelf Life
+                  </li>
+                {{/if}}
+              </ul>
+            </div>
+          </div>
+
+          {{# if relatedMenus}}
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-sm-12">
+                        Related menus
+                      </label>
+
+                      <div class="col-sm-12">
+                        <table class="table">
+                          <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Sale Price</th>
+                            <th>Status</th>
+                          </tr>
+                          </thead>
+                          {{# each relatedMenus}}
+                            <tbody>
+                            <tr>
+                              <td>
+                                <a href="{{pathFor "menuItemDetail" _id=_id}}" target="_blank">
+                                  {{name}}
+                                </a>
+                              </td>
+                              <td>{{getCategory category}}</td>
+                              <td>{{salesPrice}}</td>
+                              <td>{{status}}</td>
+                            </tr>
+                            </tbody>
+                          {{/ each}}
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {{/ if}}
+
+        </div>
+        <div class="row m-t-lg">
+          {{> commentsPanel id=jobItem._id type="job"}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

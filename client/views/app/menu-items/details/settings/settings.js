@@ -37,8 +37,7 @@ Template.menuItemSettings.helpers({
   },
 
   isArchived: function () {
-    var menu = MenuItems.findOne(this.id);
-    return menu && menu.status ? menu.status == "archived" : true;
+    return this.status == "archived";
   }
 });
 

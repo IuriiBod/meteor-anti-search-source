@@ -93,6 +93,17 @@ Template.stockCounting.helpers({
       }
     }
     return permitted;
+  },
+
+  modalStockListParams: function() {
+    var currentSpecialArea = Template.instance().activeSpecialArea.get();
+    if(currentSpecialArea) {
+      var stocks = SpecialAreas.findOne({_id: currentSpecialArea}).stocks;
+      return {
+        activeSpecialArea: currentSpecialArea,
+        stockItemsInListIds: stocks
+      }
+    }
   }
 
   //ordersExist: function() {

@@ -49,10 +49,12 @@
   </div>
 
   <!-- STOCKS MODAL LIST-->
+  {{#if stockTakeCountingContext.activeSpecialArea}}
   <div class="modal fade" id="stocksListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
-    {{> render component = 'stocksModalList' name="stockModal" activeSpecialArea=stockTakeCountingContext.activeSpecialArea}}
+    {{> stocksModalList name="stockModal" modalStockListParams=modalStockListParams}}
   </div>
+  {{/if}}
   <!-- /STOCKS MODAL LIST -->
 
   <!-- ADD GENERAL AREA MODAL LIST-->
