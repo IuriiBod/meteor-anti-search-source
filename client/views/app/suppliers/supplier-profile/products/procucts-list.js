@@ -4,7 +4,7 @@ Template.productsList.onCreated(function () {
 
 Template.productsList.helpers({
   products: function () {
-    return Ingredients.find({suppliers: this.id});
+    return Ingredients.find({suppliers: this.id}, {fields: {_id: 1}});
   }
 });
 
@@ -16,7 +16,7 @@ Template.productsList.events({
       Blaze.remove(tmpl.get('ingredientItemEditorExist'));
     }
 
-    var ingredient = Ingredients.findOne({_id: this.item._id});
+    var ingredient = Ingredients.findOne({_id: this.ingredientId});
 
     var ingredientEditorBlazeView = Blaze.renderWithData(Template.ingredientItemEditor, {
       isModal: true,
