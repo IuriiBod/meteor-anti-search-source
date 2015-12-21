@@ -1,4 +1,4 @@
-var component = FlowComponents.define('stockModalItem', function (props) {
+var component = FlowComponents.define('stockModalItemComponent', function (props) {
   this.stock = props.stock;
   this.name = props.name;
   this.onRendered(this.onItemRendered);
