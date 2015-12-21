@@ -1,25 +1,13 @@
-Template.locationItem.events({
-  "click .archive-loc-btn": function (e) {
-    e.stopPropagation();
-    var location = FlowComponents.callAction("getLocation")._result;
-    Meteor.call("switchArchiveLocation", location);
+Template.locationItem.helpers({
+  isCurrentLocation: function (locationId) {
+    return HospoHero.getCurrentArea().locationId === locationId
   }
 });
 
-Template.locationItem.helpers({
-  btnSettings: function (archived) {
-    var settings = {
-      btnClass: "btn-default",
-      text: "archive"
-    };
-    if (archived) {
-      settings.btnClass = "btn-danger";
-      settings.text = "unarchive";
-    }
-    return settings;
-  },
-
-  isCurrentLocation: function (locationId) {
-    return HospoHero.getCurrentArea().locationId === locationId
+Template.locationItem.events({
+  'click .archive-loc-btn': function (e, tmpl) {
+    e.stopPropagation();
+    var location = tmpl.data.location;
+    Meteor.call('switchArchiveLocation', location);
   }
 });
