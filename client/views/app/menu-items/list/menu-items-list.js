@@ -17,6 +17,7 @@ Template.menuItemsListMainView.onCreated(function () {
     collection: 'menuItems',
     fields: ['name'],
     mongoQuery: mongoQuery,
+    searchMode: 'local',
     limit: this.limit
   });
 });
