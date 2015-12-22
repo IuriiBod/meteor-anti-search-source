@@ -4,7 +4,7 @@ Template.orderReceiptItem.helpers({
   },
 
   isInvoiceUploaded: function() {
-    return !!this.item.hasOwnProperty("invoiceImage");
+    return this.item.hasOwnProperty("invoiceImage");
   },
 
   orderedValue: function() {
@@ -24,7 +24,7 @@ Template.orderReceiptItem.helpers({
       orders.forEach(function (order) {
         if (order.received) {
           var quantity = order.countOrdered;
-          if (order.hasOwnProperty("countDelivered")) {
+          if (order.countDelivered) {
             quantity = order.countDelivered;
           }
           cost += parseFloat(quantity) * parseFloat(order.unitPrice)

@@ -5,9 +5,6 @@ Router.route('/stocktake', {
   template: "stockListMainView",
   waitOn: function () {
     return Meteor.subscribe('stocktakeList', HospoHero.getCurrentAreaId());
-  },
-  data: function () {
-    Session.set("editStockTake", false);
   }
 });
 
@@ -68,9 +65,6 @@ Router.route('/stocktake/orders/:_id', {
     ];
   },
   data: function () {
-    Session.set("thisVersion", this.params._id);
-    Session.set("editStockTake", false);
-
     return {
       orderId: this.params._id
     };

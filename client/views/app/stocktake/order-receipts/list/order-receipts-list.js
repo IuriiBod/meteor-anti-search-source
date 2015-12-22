@@ -59,19 +59,17 @@ Template.ordersReceiptsList.helpers({
     if (data && data.length > 0) {
       var users = [];
       var suppliers = [];
-      if (data && data.length > 0) {
-        data.forEach(function (receipt) {
-          if (ids && ids.indexOf(receipt._id) < 0) {
-            ids.push(receipt._id);
-          }
-          if (receipt.receivedBy && users.indexOf(receipt.receivedBy) < 0) {
-            users.push(receipt.receivedBy);
-          }
-          if (suppliers.indexOf(receipt.supplier) < 0) {
-            suppliers.push(receipt.supplier);
-          }
-        });
-      }
+      data.forEach(function (receipt) {
+        if (ids && ids.indexOf(receipt._id) < 0) {
+          ids.push(receipt._id);
+        }
+        if (receipt.receivedBy && users.indexOf(receipt.receivedBy) < 0) {
+          users.push(receipt.receivedBy);
+        }
+        if (suppliers.indexOf(receipt.supplier) < 0) {
+          suppliers.push(receipt.supplier);
+        }
+      });
       return data;
     }
   }

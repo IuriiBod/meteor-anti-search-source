@@ -26,8 +26,8 @@ Template.stocksModalList.helpers({
     return Template.instance().showAddStockItemMenu.get();
   },
   onAddStockItem: function () {
-    var modalStockListParams = Template.instance().data.modalStockListParams;
-    return modalStockListParams.onAddStockItem ? modalStockListParams.onAddStockItem : modalStockListParams.activeSpecialArea;
+    var modalStockListParams = Template.parentData().modalStockListParams;
+    return modalStockListParams.onAddStockItem || modalStockListParams.activeSpecialArea;
   }
 });
 

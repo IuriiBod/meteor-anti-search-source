@@ -1,5 +1,5 @@
 Template.orderReceiveItem.onCreated(function() {
-  this.editable = new ReactiveVar();
+  this.set('isEditable', false);
 });
 
 Template.orderReceiveItem.helpers({
@@ -11,43 +11,26 @@ Template.orderReceiveItem.helpers({
     return this.item;
   },
 
-  total: function () {
-    var quantity = this.item.hasOwnProperty("countDelivered") ? this.item.countDelivered : this.item.countOrdered;
+  unitTotalPrice: function () {
+    var quantity = this.item.countDelivered || this.item.countOrdered;
     return this.item.unitPrice * quantity;
   },
 
-  deliveryStatus: function() {
+  delivery: function() {
     var order = StockOrders.findOne({_id: this.item._id});
-    if (order && order.deliveryStatus) {
-      return order.deliveryStatus;
+    var deliveredCorrectly, wrongQuantity, wrongPrice, status;
+    if(order && order.deliveryStatus) {
+      deliveredCorrectly = order.deliveryStatus.indexOf('Delivered Correctly') >= 0;
+      wrongQuantity = order.deliveryStatus.indexOf('Wrong Quantity') >= 0;
+      wrongPrice = order.deliveryStatus.indexOf('Wrong Price') >= 0;
+      status = order.deliveryStatus;
     }
-  },
-
-  isDeliveredCorrectly: function () {
-    var order = StockOrders.findOne({_id: this.item._id});
-    if (order && order.deliveryStatus) {
-      if (order.deliveryStatus.length == 1 && order.deliveryStatus[0] == "Delivered Correctly") {
-        return true;
-      }
-    }
-  },
-
-  isWrongQuantity: function() {
-    var order = StockOrders.findOne({_id: this.item._id});
-    if (order && order.deliveryStatus && order.deliveryStatus.length > 0) {
-      if (order.deliveryStatus.indexOf("Wrong Quantity") >= 0) {
-        return true;
-      }
-    }
-  },
-
-  isWrongPrice: function() {
-    var order = StockOrders.findOne({_id: this.item._id});
-    if (order && order.deliveryStatus && order.deliveryStatus.length > 0) {
-      if (order.deliveryStatus.indexOf("Wrong Price") >= 0) {
-        return true;
-      }
-    }
+    return {
+      status: status,
+      deliveredCorrectly: deliveredCorrectly,
+      wrongQuantity: wrongQuantity,
+      wrongPrice: wrongPrice
+    };
   },
 
   isReceived: function() {
@@ -55,10 +38,6 @@ Template.orderReceiveItem.helpers({
     if (data && data.received) {
         return true;
     }
-  },
-
-  isEditable: function() {
-    return Template.instance().editable.get();
   }
 });
 
@@ -89,14 +68,14 @@ Template.orderReceiveItem.events({
   'click .receiveOrderItem': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;
-    tmpl.editable.set(false);
+    tmpl.set('isEditable', false);
     var receiptId = tmpl.data.item.orderReceipt;
     Meteor.call("receiveOrderItems", id, receiptId, {"received": true}, HospoHero.handleMethodResult());
   },
 
   'click .editPermitted': function (event, tmpl) {
     event.preventDefault();
-    tmpl.editable.set(true);
+    tmpl.set('isEditable', true);
   }
 });
 

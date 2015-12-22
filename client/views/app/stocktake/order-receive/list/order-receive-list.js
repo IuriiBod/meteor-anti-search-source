@@ -24,16 +24,12 @@ Template.orderReceive.helpers({
 
   isReceived: function() {
     var data = OrderReceipts.findOne({_id: this.currentReceipt});
-    if (data && data.received) {
-        return true;
-    }
+    return data && data.received;
   },
 
   receivedNote: function() {
     var receipt = OrderReceipts.findOne({_id: this.currentReceipt});
-    if (receipt && receipt.receiveNote) {
-      return receipt.receiveNote;
-    }
+    return receipt && receipt.receiveNote;
   },
 
   currentOrderCallback: function() {

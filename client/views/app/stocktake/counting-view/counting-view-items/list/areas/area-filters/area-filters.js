@@ -17,9 +17,9 @@ Template.areaFilters.helpers({
     }
   },
 
-  stockTakeData: function() {
-    return Template.instance().data.stockTakeData;
-  },
+  //stockTakeData: function() {
+  //  return Template.instance().data.stockTakeData;
+  //},
 
   specialAreas: function(gareaId) {
     var main = StocktakeMain.findOne({_id: Template.instance().data.stocktakeId});

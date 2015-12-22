@@ -8,10 +8,10 @@ Template.stockCounting.helpers({
   stockTakeCountingContext: function() {
     var instance = Template.instance();
     return {
-      editableStockTake: Template.instance().editStockTake.get(),
-      stockTakeId: Template.instance().data.stocktakeId,
-      activeSpecialArea: Template.instance().activeSpecialArea.get(),
-      activeGeneralArea: Template.instance().activeGeneralArea.get(),
+      editableStockTake: instance.editStockTake.get(),
+      stockTakeId: instance.data.stocktakeId,
+      activeSpecialArea: instance.activeSpecialArea.get(),
+      activeGeneralArea: instance.activeGeneralArea.get(),
       makeGeneralAreaActive: function(areaId) {
         return instance.activeGeneralArea.set(areaId);
       },
@@ -26,7 +26,7 @@ Template.stockCounting.helpers({
     var sareaId = Template.instance().activeSpecialArea.get();
     if (gareaId && sareaId) {
       var main = StocktakeMain.findOne({_id: this.stocktakeId});
-      if (main && main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
+      if (main && main.orderReceipts && main.orderReceipts.length > 0) {
         var stocktakes = Stocktakes.find({
           "version": this.stocktakeId,
           "generalArea": gareaId,
@@ -49,28 +49,25 @@ Template.stockCounting.helpers({
         var ids = sarea.stocks;
         var self = this;
         ids.forEach(function (id) {
-          if (id) {
-            var item = Ingredients.findOne({"_id": id, "status": "active"});
-            var stocktake = Stocktakes.findOne({
-              "version": self.stocktakeId,
-              "stockId": id,
-              "generalArea": Template.instance().activeGeneralArea.get(),
-              "specialArea": Template.instance().activeSpecialArea.get()
-            });
-            if (item) {
-              if (stocktake) {
-                item['stockRef'] = stocktake._id;
-                item['counting'] = stocktake.counting;
-                item['status'] = stocktake.status;
-                item['place'] = stocktake.place
-              } else {
-                item['stockRef'] = null;
-                item['counting'] = null
-              }
-              ings.push(item);
+          var item = Ingredients.findOne({"_id": id, "status": "active"});
+          var stocktake = Stocktakes.findOne({
+            "version": self.stocktakeId,
+            "stockId": id,
+            "generalArea": Template.instance().activeGeneralArea.get(),
+            "specialArea": Template.instance().activeSpecialArea.get()
+          });
+          if (item) {
+            if (stocktake) {
+              _.extend(item, {
+                stockRef: stocktake._id,
+                counting: stocktake.counting,
+                status: stocktake.status,
+                place: stocktake.place
+              });
             }
+            ings.push(item);
           }
-        });
+      });
         return ings;
       }
     }
@@ -80,19 +77,9 @@ Template.stockCounting.helpers({
     return StocktakeMain.findOne({_id: this.stocktakeId});
   },
 
-  filtered: function() {
-    return Template.instance().activeSpecialArea.get();
-  },
-
   notTemplate: function() {
     var main = StocktakeMain.findOne({_id: this.stocktakeId});
-    var permitted = false;
-    if (main) {
-      if (main.hasOwnProperty("orderReceipts") && main.orderReceipts.length > 0) {
-        permitted = true;
-      }
-    }
-    return permitted;
+    return main && main.orderReceipts && main.orderReceipts.length > 0;
   },
 
   modalStockListParams: function() {
@@ -105,14 +92,6 @@ Template.stockCounting.helpers({
       }
     }
   }
-
-  //ordersExist: function() {
-  //  var ordersExist = Stocktakes.findOne({
-  //    "version": this.stocktakeId,
-  //    "status": true
-  //  });
-  //  return !!ordersExist;
-  //},
 });
 
 Template.stockCounting.events({
@@ -132,7 +111,8 @@ Template.stockCounting.events({
     event.preventDefault();
     tmpl.editStockTake.set(true);
     $(event.target).hide();
-    setTimeout(function () {
+    //setTimeout(function () {
+    console.log($('.sarea'));
       $(".sarea").editable({
         type: "text",
         title: 'Edit Special area name',
@@ -169,7 +149,7 @@ Template.stockCounting.events({
           }
         }
       });
-    }, 10);
+    //}, 10);
 
   },
 

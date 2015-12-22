@@ -1,8 +1,4 @@
 Template.composeMail.helpers({
-  initialHtml: function() {
-    return this.initialHtml;
-  },
-
   supplier: function() {
     return Suppliers.findOne({_id: this.supplier});
   },

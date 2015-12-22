@@ -23,7 +23,7 @@ Template.stockModalItem.helpers({
 
 Template.stockModalItem.events({
   'click .add-ing-checkbox': function (event, tmpl) {
-    if (typeof tmpl.data.onAddStockItem === 'string') {
+    if (_.isString(tmpl.data.onAddStockItem)) {
       var specialArea = tmpl.data.onAddStockItem;
       Meteor.call("assignStocksToAreas", tmpl.data.stock._id, specialArea, HospoHero.handleMethodResult());
     } else {

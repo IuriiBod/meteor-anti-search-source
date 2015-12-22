@@ -13,9 +13,7 @@ Template.stockCountingListItem.onRendered(function() {
     success: function (response, newValue) {
       var self = this;
       var elemId = instance.data.item.stockRef || instance.data.item._id;
-      console.log(elemId);
       var stockId = instance.data.item.stockId || instance.data.item._id;
-      console.log(stockId);
       if (newValue) {
         var count = isNaN(newValue) ? 0 : parseFloat(newValue);
         var info = {
@@ -27,7 +25,7 @@ Template.stockCountingListItem.onRendered(function() {
         };
         var main = StocktakeMain.findOne({_id: instance.data.stockTakeData.stockTakeId});
         if (main) {
-          Meteor.call("updateStocktake", elemId, info, HospoHero.handleMethodResult(function () {
+          Meteor.call("updateStocktake", elemId, info, HospoHero.handleMethodResult(function (result) {
             if ($(self).closest('li').next().length > 0) {
               $(self).closest('li').next().find('a').click();
             }
@@ -61,17 +59,9 @@ Template.stockCountingListItem.helpers({
   countEditable: function(id) {
     var permitted = true;
     var stocktake = Stocktakes.findOne({_id: id});
-    if (stocktake) {
-      if (stocktake.hasOwnProperty("orderRef")) {
-        if (stocktake.orderRef) {
-          var order = StockOrders.findOne(stocktake.orderRef);
-          if (order) {
-            if (order.hasOwnProperty("orderReceipt") && order.orderReceipt) {
-              permitted = false;
-            }
-          }
-        }
-      }
+    if (stocktake && stocktake.orderRef) {
+      var order = StockOrders.findOne(stocktake.orderRef);
+      permitted = order && order.orderReceipt;
     }
     return permitted;
   }

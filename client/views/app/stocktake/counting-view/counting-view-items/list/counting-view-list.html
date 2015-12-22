@@ -19,7 +19,7 @@
   
   <div class="row">
     {{> areaFilters stockTakeData=stockTakeCountingContext}}
-    {{#if filtered}}
+    {{#if stockTakeCountingContext.activeSpecialArea}}
       <div class="col-md-8">
         {{#if notTemplate}}
           <ul class="list-group sortableStockItems">

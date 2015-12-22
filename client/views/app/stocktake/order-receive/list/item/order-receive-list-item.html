@@ -1,39 +1,35 @@
 <template name="orderReceiveItem">
   <tr>
     <td>{{stock.description}}</td>
-    {{#if isWrongQuantity}}
+    {{#if delivery.wrongQuantity}}
       <td>{{stock.countDelivered}} [{{stock.unit}}]</td>
     {{else}}
       <td>{{stock.countOrdered}} [{{stock.unit}}]</td>
     {{/if}}
     <td>$ {{roundCount stock.unitPrice}}</td>
-    <td>$ {{roundCount total}}</td>
+    <td>$ {{roundCount unitTotalPrice}}</td>
     <td>
       {{#if stock.received}}
-        {{#if isEditable}}
+        {{#if state$isEditable}}
           <a class="btn btn-sm btn-outline btn-danger wrongQuantity">Wrong Quantity</a>
           <a class="btn btn-sm btn-outline btn-danger wrongPrice">Wrong Price</a>
           <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i>
           </button>
         {{else}}
-          {{deliveryStatus}}
-          {{#if isReceived}}
-          {{else}}
+          {{delivery.status}}
+          {{#unless isReceived}}
             <a href="#" class="editPermitted">[Edit]</a>
-          {{/if}}
+          {{/unless}}
         {{/if}}
       {{else}}
-        {{#if isDeliveredCorrectly}}
-        {{else}}
-          {{#if isWrongPrice}}
-          {{else}}
+        {{#unless delivery.deliveredCorrectly}}
+          {{#unless delivery.wrongPrice}}
             <a class="btn btn-sm btn-outline btn-danger wrongPrice">Wrong Price</a>
-          {{/if}}
-          {{#if isWrongQuantity}}
-          {{else}}
+          {{/unless}}
+          {{#unless delivery.wrongQuantity}}
             <a class="btn btn-sm btn-outline btn-danger wrongQuantity">Wrong Quantity</a>
-          {{/if}}
-        {{/if}}
+          {{/unless}}
+        {{/unless}}
         <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i>
         </button>
       {{/if}}
