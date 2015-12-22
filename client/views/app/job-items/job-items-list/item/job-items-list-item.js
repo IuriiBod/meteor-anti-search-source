@@ -40,11 +40,13 @@ Template.jobItemDetailed.helpers({
       }
       if (jobItem.ingredients) {
         if (jobItem.ingredients.length > 0) {
-          jobItem.ingredients.forEach(function (ing) {
-            var ingItem = getIngredientItem(ing._id);
-            if (ingItem) {
-              ingItem.totalCost = parseFloat(ingItem.costPerPortionUsed) * parseFloat(ing.quantity);
-              jobItem.totalIngCost += parseFloat(ingItem.totalCost);
+          jobItem.ingredients.forEach(function (jobIngredient) {
+
+            var ingredient = Ingredients.findOne({_id: jobIngredient.id});
+            if (ingredient) {
+              var analyzedIngredient = HospoHero.analyze.ingredient(ingredient);
+              analyzedIngredient.totalCost = parseFloat(analyzedIngredient.costPerPortionUsed) * parseFloat(jobIngredient.quantity);
+              jobItem.totalIngCost += parseFloat(analyzedIngredient.totalCost);
             }
           });
         }
@@ -58,10 +60,6 @@ Template.jobItemDetailed.helpers({
       jobItem.labourCost = Math.round(jobItem.labourCost * 100) / 100;
       return jobItem.prepCostPerPortion;
     }
-  },
-
-  isArchive: function () {
-    return Template.instance().data.jobitem.status == "archived";
   }
 });
 

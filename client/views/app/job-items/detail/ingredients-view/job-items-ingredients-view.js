@@ -6,8 +6,9 @@ Template.ingredientItemView.helpers({
     return Ingredients.findOne({_id: this.ingredient.id});
   },
   cost: function () {
-    var ing = getIngredientItem(this.ingredient.id);
-    var cost = ing.costPerPortionUsed * this.ingredient.quantity;
+    var ingredient = Ingredients.findOne({_id: this.ingredient.id});
+    var analyzedIngredient = HospoHero.analyze.ingredient(ingredient);
+    var cost = analyzedIngredient.costPerPortionUsed * this.ingredient.quantity;
     cost = Math.round(cost * 100) / 100;
     return cost;
   }

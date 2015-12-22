@@ -9,7 +9,8 @@ Router.route('/jobItems', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('userSubscriptions', currentAreaId),
-      Meteor.subscribe('jobItems', null, currentAreaId)
+      Meteor.subscribe('jobItems', null, currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
   data: function () {
