@@ -9,11 +9,7 @@ var UnavailabilityObject = Match.Where(function (unavailability) {
     comment: Match.Optional(String)
   });
 
-  if (unavailability.startDate > unavailability.endDate) {
-    return false;
-  }
-
-  return true;
+  return unavailability.startDate <= unavailability.endDate;
 });
 
 var LeaveRequestDocument = Match.Where(function (leaveRequest) {

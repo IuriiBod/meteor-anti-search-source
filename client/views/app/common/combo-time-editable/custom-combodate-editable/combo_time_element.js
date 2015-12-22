@@ -23,8 +23,8 @@ Template.comboTimeElement.onCreated(function () {
   var minuteStepping = this.data.minuteStepping || 1;
   var minutesRounded = this.roundToNearestNumber(minutes, minuteStepping);
 
-  // Need for correct minutes rounding (if it was 57 minutes and it was rounded to the 00, we must add 1 hour too)
-  var hoursFixer = minutes !== 0 && minutesRounded === 0 ? 1 : 0;
+  // Need for correct minutes rounding (if it was 57 minutes and it was rounded to the 60, we must add 1 hour too)
+  var hoursFixer = minutes !== 0 && minutesRounded === 60 ? 1 : 0;
   hours = parseInt(hours) + hoursFixer;
 
   this.timeObject = {

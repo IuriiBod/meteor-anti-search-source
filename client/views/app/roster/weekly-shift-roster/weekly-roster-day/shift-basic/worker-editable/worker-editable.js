@@ -12,15 +12,50 @@ Template.shiftBasicWorkerEditable.helpers({
 var workersSourceMixin = function (editableConfig, templateInstance) {
   var getAlreadyAssignedWorkersIds = function () {
     var shift = templateInstance.data;
-    return Shifts.find({
+    var occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
+
+    var assignedUserIds = Shifts.find({
       _id: {$ne: shift._id},
-      startTime: TimeRangeQueryBuilder.forDay(shift.startTime),
+      startTime: occupiedTimeRange,
       'relations.areaId': HospoHero.getCurrentAreaId(),
       assignedTo: {$ne: null},
       type: shift.type
     }).map(function (shiftEntry) {
       return shiftEntry.assignedTo;
     });
+
+    var unavailableUserIds = Meteor.users.find({
+      $or: [
+        {
+          'unavailabilities.startDate': occupiedTimeRange
+        }, {
+          'unavailabilities.endDate': occupiedTimeRange
+        }, {
+          'unavailabilities.startDate': {$lte: shift.startTime},
+          'unavailabilities.endDate': {$gte: shift.endTime}
+        }
+      ]
+    }).map(function (user) {
+      return user._id;
+    });
+
+    var leaveRequestsUserIds = LeaveRequests.find({
+      status: "approved",
+      $or: [
+        {
+          startDate: occupiedTimeRange
+        }, {
+          endDate: occupiedTimeRange
+        }, {
+          startDate: {$lte: shift.startTime},
+          endDate: {$gte: shift.endTime}
+        }
+      ]
+    }).map(function (leaveRequest) {
+      return leaveRequest.userId;
+    });
+
+    return _.union(assignedUserIds, unavailableUserIds, leaveRequestsUserIds);
   };
 
   // Get roles which can be rosted
