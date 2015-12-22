@@ -52,8 +52,4 @@ Template.menuItemJobsList.helpers({
 
 
 Template.menuItemJobsList.events({
-  'click #showJobItemsList': function (event, tmpl) {
-    event.preventDefault();
-    tmpl.$("#jobItemListModal").modal("show");
-  }
 });
