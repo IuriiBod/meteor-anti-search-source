@@ -8,9 +8,11 @@ Template.ghostEditableSelect.onCreated(function () {
 Template.ghostEditableSelect.onRendered(function () {
   var self = this;
   this.onBodyClick = function (event) {
-    var isClickOnEditable = $.contains(self.$('.ghost-editable-component')[0], event.target);
-    if (!isClickOnEditable) {
-      self.set('isInline', true);
+    if (self.$('.ghost-editable-component').length) {
+      var isClickOnEditable = $.contains(self.$('.ghost-editable-component')[0], event.target);
+      if (!isClickOnEditable) {
+        self.set('isInline', true);
+      }
     }
   };
 

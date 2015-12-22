@@ -16,7 +16,7 @@ Namespace('HospoHero.analyze', {
     };
 
     var totalIngredientCost = _.reduce(jobItem.ingredients || [], function (totalCost, ingredientItem) {
-      var ingredientProps = HospoHero.analyze.ingredient(Ingredients.findOne(ingredientItem._id));
+      var ingredientProps = HospoHero.analyze.ingredient(Ingredients.findOne(ingredientItem.id));
       totalCost += ingredientProps.costPerPortionUsed * ingredientItem.quantity;
       return totalCost;
     }, 0);
