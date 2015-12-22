@@ -28,14 +28,7 @@
 
         <!-- Time -->
         <div class="form-group col-xs-12 {{state$timePickerVisibility}}">
-          <div class="start-time-picker input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-            <input class="set-due-date form-control" type="text"/>
-          </div>
-          <div class="end-time-picker input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-            <input class="set-due-date form-control" type="text"/>
-          </div>
+          {{> comboTimeEditable params=timeComboEditableParams}}
         </div>
 
         <!-- Repeats -->
