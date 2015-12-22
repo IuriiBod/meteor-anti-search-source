@@ -1,7 +1,7 @@
 Template.jobDetailsHeader.onCreated(function () {
   var self = this;
+  console.log(self);
   // should be replaced by router param
-  self.data.id = Router.current().params._id;
 
   self.isSubscribed = function () {
     return !!Subscriptions.findOne({
@@ -14,7 +14,11 @@ Template.jobDetailsHeader.onCreated(function () {
 
 Template.jobDetailsHeader.helpers({
   isSubscribed: function () {
-    return Template.instance().isSubscribed();
+    return !!Subscriptions.findOne({
+      type: 'job',
+      subscriber: Meteor.userId(),
+      itemIds: this.id
+    });
   },
   isArchived: function () {
     var job = JobItems.findOne({_id: this.id});
@@ -32,30 +36,48 @@ Template.jobDetailsHeader.helpers({
 });
 
 Template.jobDetailsHeader.events({
-  'click .copyJobItemBtn': function (e, tmpl) {
+  'click .edit-job-item': function (e, tmpl) {
+    e.preventDefault();
+    var jobItemId = tmpl.data.id;
+    Router.go("jobItemEdit", {'_id': jobItemId});
+  },
+
+  'click .print-job-item-button': function (e) {
+    e.preventDefault();
+    print();
+  },
+
+  'click .subscribe-button': function (e, tmpl) {
+    e.preventDefault();
+    var jobItemId = tmpl.data.id;
+    Meteor.call("subscribe", jobItemId, HospoHero.handleMethodResult());
+  },
+  'click .unsubscribe-button': function (e, tmpl) {
+    e.preventDefault();
+    var jobItemId = tmpl.data.id;
+    Meteor.call("subscribe", jobItemId, true, HospoHero.handleMethodResult());
+  },
+
+  'click .copy-job-item-button': function (e, tmpl) {
     e.preventDefault();
     tmpl.$("#areaChooser").modal("show");
   },
 
-  'click .subscribeButton': function (e, tmpl) {
+  'click .archive-job-item': function (e, tmpl) {
     e.preventDefault();
-    var subscription = HospoHero.misc.getSubscriptionDocument('job', tmpl.data.id);
-    Meteor.call('subscribe', subscription, tmpl.isSubscribed(), HospoHero.handleMethodResult());
-  },
-
-  'click .archiveJobItem': function (e, tmpl) {
-    e.preventDefault();
-    Meteor.call("archiveJobItem", tmpl.data.id, HospoHero.handleMethodResult(function (status) {
+    var jobItemId = tmpl.data.id;
+    Meteor.call("archiveJobItem", jobItemId, HospoHero.handleMethodResult(function (status) {
       return HospoHero.info("Job item " + status);
     }));
   },
 
-  'click .deleteJobItem': function (e, tmpl) {
+  'click .delete-job-item': function (e, tmpl) {
     e.preventDefault();
 
     var result = confirm("Are you sure you want to delete this job ?");
     if (result) {
-      Meteor.call("deleteJobItem", tmpl.data.id, HospoHero.handleMethodResult(function () {
+      var jobItemId = tmpl.data.id;
+      Meteor.call("deleteJobItem", jobItemId, HospoHero.handleMethodResult(function () {
         Router.go("jobItemsMaster");
       }));
     }

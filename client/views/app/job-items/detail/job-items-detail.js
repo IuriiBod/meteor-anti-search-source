@@ -116,27 +116,3 @@ Template.jobItemDetail.helpers({
     return category ? category.name : '';
   }
 });
-
-Template.jobItemDetail.events({
-  'click .editJobItemBtn': function (event, template) {
-    event.preventDefault();
-    Router.go("jobItemEdit", {'_id': template.data.jobItem._id});
-  },
-
-  'click .printJobItemBtn': function (event) {
-    event.preventDefault();
-    print();
-  },
-
-  // This events seems not used
-  'click .subscribeJobItemBtn': function (event) {
-    event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    Meteor.call("subscribe", id, HospoHero.handleMethodResult());
-  },
-  'click .unSubscribeJobItemBtn': function (event) {
-    event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    Meteor.call("unSubscribe", id, HospoHero.handleMethodResult());
-  }
-});
