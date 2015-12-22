@@ -22,18 +22,6 @@ Template.viewLeaveRequest.onRendered(function () {
   // Get a current flyout
   self.currentFlyout = FlyoutManager.getInstanceByElement(self.$('.view-leave-request'));
 
-  // Define a dateTimePickers
-  self.$('.start-date-picker').datetimepicker({
-    format: 'YYYY MMM Do',
-    minDate: moment(),
-    defaultDate: moment()
-  });
-  self.$('.end-date-picker').datetimepicker({
-    format: 'YYYY MMM Do',
-    minDate: moment().add(1, 'day'),
-    defaultDate: moment().add(1, 'day')
-  });
-
   // Events for dateTimePicker
   // Set minDate for end-date-picker, that equals date of start-date-picker,
   // and change date on end-time-picker, if current date less than minDate
@@ -73,6 +61,10 @@ Template.viewLeaveRequest.helpers({
 
   formatDate: function (date) {
     return moment(date).format('ddd D MMM');
+  },
+
+  defaultEndDate: function () {
+    return moment().add(1, 'day');
   }
 });
 

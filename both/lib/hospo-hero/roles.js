@@ -9,7 +9,9 @@ Namespace('HospoHero.roles', {
       return role._id;
     });
 
-    var query = {};
+    var query = {
+      isActive: true
+    };
     query['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
 
     return Meteor.users.find(query).map(function (user) {
