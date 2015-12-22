@@ -7,6 +7,7 @@ Template.ingredientsList.onCreated(function () {
   this.searchSource = this.AntiSearchSource({
     collection: 'ingredients',
     fields: ['code', 'description'],
+    searchMode: 'local',
     mongoQuery: {
       status: status
     },
@@ -49,14 +50,11 @@ Template.ingredientsList.events({
   'keyup #searchIngBox': _.throttle(function (event, tmpl) {
     var text = event.target.value.trim();
     tmpl.searchSource.search(text);
-  }, 200),
+  }, 500),
 
   'click #loadMoreIngs': function (event, tmpl) {
     event.preventDefault();
-    var text = tmpl.$("#searchIngBox").val().trim();
-    tmpl.searchLimit += 10;
-    tmpl.searchSource.setLimit(tmpl.searchLimit);
-    tmpl.searchSource.search(text);
+    tmpl.searchSource.incrementLimit(10);
   }
 });
 
