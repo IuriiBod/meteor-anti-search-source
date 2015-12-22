@@ -27,6 +27,10 @@ Template.topNavbar.helpers({
       {
         route: 'logout',
         title: 'Logout'
+      },
+      {
+        title: 'Unavailabilities',
+        class: 'user-unavailabilities-flyout'
       }
     ];
   },
