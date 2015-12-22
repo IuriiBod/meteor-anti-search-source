@@ -8,3 +8,10 @@ Template.unavailabiliiesDatepicker.onRendered(function () {
     defaultDate: this.defaultDate
   });
 });
+
+Template.unavailabiliiesDatepicker.events({
+  'click .open-datetimepicker': function () {
+    var tmpl = Template.instance();
+    tmpl.$('.' + this.datepickerClass).data("DateTimePicker").show();
+  }
+});
