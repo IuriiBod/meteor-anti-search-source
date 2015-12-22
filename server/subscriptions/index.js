@@ -11,6 +11,7 @@ Meteor.methods({
    * @param {boolean} unsubscribeTrigger - If true - unsubscribes user from itemIds. Otherwise - subscribes on it
    */
   subscribe: function (subscription, unsubscribeTrigger) {
+    debugger;
     check(subscription, HospoHero.checkers.SubscriptionDocument);
     var userId = subscription.subscriber || Meteor.userId();
 
@@ -34,7 +35,6 @@ Meteor.methods({
       var updateQuery = getUpdateQuery(itemIds, unsubscribeTrigger);
       Subscriptions.update({_id: subscriptionExists._id}, updateQuery);
     }
-
   }
 });
 

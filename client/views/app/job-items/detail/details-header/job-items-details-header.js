@@ -1,19 +1,6 @@
-Template.jobDetailsHeader.onCreated(function () {
-  var self = this;
-  // should be replaced by router param
-
-  self.isSubscribed = function () {
-    return !!Subscriptions.findOne({
-      type: 'job',
-      subscriber: Meteor.userId(),
-      itemIds: self.id
-    });
-  };
-});
-
 Template.jobDetailsHeader.helpers({
   isSubscribed: function () {
-    return !!Subscriptions.findOne({
+    return Subscriptions.findOne({
       type: 'job',
       subscriber: Meteor.userId(),
       itemIds: this.id
@@ -48,13 +35,17 @@ Template.jobDetailsHeader.events({
 
   'click .subscribe-button': function (e, tmpl) {
     e.preventDefault();
+
     var jobItemId = tmpl.data.id;
-    Meteor.call("subscribe", jobItemId, HospoHero.handleMethodResult());
+    var subscription = HospoHero.misc.getSubscriptionDocument('job', jobItemId);
+    Meteor.call("subscribe", subscription, HospoHero.handleMethodResult());
   },
   'click .unsubscribe-button': function (e, tmpl) {
     e.preventDefault();
+
     var jobItemId = tmpl.data.id;
-    Meteor.call("subscribe", jobItemId, true, HospoHero.handleMethodResult());
+    var subscription = HospoHero.misc.getSubscriptionDocument('job', jobItemId);
+    Meteor.call("subscribe", subscription, true, HospoHero.handleMethodResult());
   },
 
   'click .copy-job-item-button': function (e, tmpl) {
