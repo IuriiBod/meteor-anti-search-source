@@ -1,8 +1,7 @@
 Template.ingredientItemEditorButtons.onCreated(function () {
   this.changeIngredientState = function (newState) {
-    // TODO: Check this method
     Meteor.call("archiveIngredient", this.data.ingredient._id, newState, HospoHero.handleMethodResult(function () {
-      $("#editIngredientModal").modal("hide");
+      $("#ingredientItemEditor").modal("hide");
 
       var text = "Stock item";
       if (newState == "restore") {

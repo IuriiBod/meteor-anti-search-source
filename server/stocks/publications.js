@@ -30,8 +30,8 @@ Meteor.publish('ingredientsRelatedJobs', function (id) {
   }
 });
 
-AntiSearchSource.queryTransform('menuItems', function (userId, query) {
-  return _.extend(query, {
-    'relations.areaId': HospoHero.getCurrentAreaId(userId)
-  });
-});
+//AntiSearchSource.queryTransform('menuItems', function (userId, query) {
+//  return _.extend(query, {
+//    'relations.areaId': HospoHero.getCurrentAreaId(userId)
+//  });
+//});

@@ -5,7 +5,7 @@ Router.route('menuItemsMaster', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allCategories', currentAreaId),
-      //Meteor.subscribe('menuList', currentAreaId, this.params.category, this.params.status.toLowerCase()),
+      Meteor.subscribe('menuList', currentAreaId, this.params.category, this.params.status.toLowerCase()),
       Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },

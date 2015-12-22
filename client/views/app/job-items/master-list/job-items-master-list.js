@@ -20,11 +20,12 @@ Template.jobItemsList.onRendered(function () {
   // for infinite scroll
   var tmpl = this;
   $('#wrapper').scroll(function (e) {
-    var docHeight = $(document).height();
-    var winHeight = $(window).height();
-    var scrollTop = $(window).scrollTop();
+    var wrapper = event.target;
+    var wrapperHeight = wrapper.clientHeight;
+    var wrapperScrollHeight = wrapper.scrollHeight;
+    var wrapperScrollTop = wrapper.scrollTop;
 
-    if ((docHeight - winHeight) == scrollTop) {
+    if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
       tmpl.$('.load-more-items').click();
     }
   });
