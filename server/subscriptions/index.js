@@ -34,6 +34,8 @@ Meteor.methods({
     } else {
       var updateQuery = getUpdateQuery(itemIds, unsubscribeTrigger);
       Subscriptions.update({_id: subscriptionExists._id}, updateQuery);
+      var res = Subscriptions.findOne({_id: subscriptionExists._id});
+      console.log(res)
     }
   }
 });
@@ -51,14 +53,17 @@ var getItemIds = function (itemIds, type) {
       job: JobItems
     };
 
-    itemIds = subscriptonCollections[type].find({
+    return subscriptonCollections[type].find({
       'relations.areaId': HospoHero.getCurrentAreaId(Meteor.userId())
     }).map(function (item) {
       return item._id;
     });
-  }
 
-  return itemIds;
+  } else if (_.isArray(itemIds)) {
+    return itemIds
+  } else {
+    return [itemIds];
+  }
 };
 
 /**
@@ -71,7 +76,7 @@ var getUpdateQuery = function (itemIds, unsubscribeTrigger) {
 
   if (unsubscribeTrigger) {
     updateQuery.$pull = {
-      itemIds: itemIds
+      itemIds: {$in: itemIds}
     };
   } else {
     if (_.isArray(itemIds)) {

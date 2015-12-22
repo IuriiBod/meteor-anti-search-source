@@ -59,7 +59,6 @@ Meteor.methods({
       {
         itemName: job.name,
         username: HospoHero.username(Meteor.userId())
-        //linkToItem: Router.url(routeName, {_id: id}) TODO
       }
     );
 

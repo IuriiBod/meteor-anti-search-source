@@ -11,7 +11,15 @@ Template.jobItemsList.onCreated(function () {
   this.autorun(function () {
     var type = Template.currentData().type;
     var typeId = JobTypes.findOne({name: type})._id;
-    self.searchSource.setMongoQuery({type: typeId});
+    var query = {type: typeId};
+
+    var status = Template.currentData().status;
+    if (status) {
+      query.status = status;
+    } else {
+      query.status = {$ne: 'archived'};
+    }
+    self.searchSource.setMongoQuery(query);
   });
   this.searchSource.search('');
 });

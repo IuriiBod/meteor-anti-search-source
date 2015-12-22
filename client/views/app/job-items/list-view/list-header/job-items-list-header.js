@@ -1,6 +1,22 @@
+Template.jobListHeader.onCreated(function () {
+  console.log(this);
+});
+
+Template.jobListHeader.helpers({
+  isArchived: function () {
+    return this.status == 'archived';
+  }
+});
+
 Template.jobListHeader.events({
-  'click .subscribeJobsList': function (e) {
+  'click .subscribe-jobs-list': function (e) {
     e.preventDefault();
-    FlowComponents.callAction('subscribe');
+    var subscription = HospoHero.misc.getSubscriptionDocument('job', 'all');
+    Meteor.call('subscribe', subscription, false, HospoHero.handleMethodResult());
+  },
+  'click .unsubscribe-jobs-list': function (e) {
+    e.preventDefault();
+    var subscription = HospoHero.misc.getSubscriptionDocument('job', 'all');
+    Meteor.call('subscribe', subscription, true, HospoHero.handleMethodResult());
   }
 });
