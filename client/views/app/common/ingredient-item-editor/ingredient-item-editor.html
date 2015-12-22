@@ -1,5 +1,4 @@
 <template name="ingredientItemEditor">
-  {{#if isModal}}
     <div class="modal fade" id="ingredientItemEditor" tabindex="-1" role="dialog" aria-labelledby="ingredientItemEditor"
          aria-hidden="true">
       <div class="modal-dialog">
@@ -25,7 +24,4 @@
         </div>
       </div>
     </div>
-  {{else}}
-    {{> ingredientItemEditorBody}}
-  {{/if}}
 </template>
