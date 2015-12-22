@@ -3,7 +3,6 @@ Template.listOfIngredients.onCreated(function () {
 
   var self = this;
   this.onChangeStockItemsList = function (changedItem) {
-
     var stockItems = self.stockItemsInList.get();
     var changedStockItems = [];
     if (changedItem.quantity == 0) {
@@ -21,40 +20,41 @@ Template.listOfIngredients.onCreated(function () {
       })
     }
     self.stockItemsInList.set(changedStockItems);
-  }
+  };
 });
+
 
 Template.listOfIngredients.helpers({
   ingredients: function () {
-    var stockItemsInList = Template.instance().stockItemsInList.get();
-    Template.instance().data.onChange(stockItemsInList);
-    return stockItemsInList;
-  },
+    var tmpl = Template.instance();
+    var stockItemsInList = tmpl.stockItemsInList.get();
 
-  isMenu: function () {
-    return Template.instance().data.id == "menuSubmit";
+    return stockItemsInList.map(function (stockEntry) {
+      return {
+        item: Ingredients.findOne({_id: stockEntry.id}),
+        quantity: stockEntry.quantity,
+        onChangeStockItem: tmpl.onChangeStockItemsList
+      };
+    });
   },
 
   modalStockListParams: function () {
-    var thisTmpl = Template.instance();
+    var tmpl = Template.instance();
 
-    var stockItemsInListIds = _.map(thisTmpl.stockItemsInList.get(), function (item) {
+    var stockItemsInListIds = _.map(tmpl.stockItemsInList.get(), function (item) {
       return item.id;
     });
     return {
       onAddStockItem: function (itemId) {
-        var addedIds = thisTmpl.stockItemsInList.get();
+        var addedIds = tmpl.stockItemsInList.get();
         addedIds.push({id: itemId, quantity: 1});
-        thisTmpl.stockItemsInList.set(addedIds);
+        tmpl.stockItemsInList.set(addedIds);
       },
       stockItemsInListIds: stockItemsInListIds
     }
-  },
-
-  onChangeStockItem: function () {
-    return Template.instance().onChangeStockItemsList;
   }
 });
+
 
 Template.listOfIngredients.events({
   'click #showIngredientsList': function (event, tmpl) {

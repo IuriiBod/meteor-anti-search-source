@@ -13,19 +13,13 @@
         </thead>
         <tbody>
         {{#each ingredients}}
-          {{> ingredientItemEdit item=this onChange=onChangeStockItem}}
+          {{> ingredientItemEdit}}
         {{/each}}
         </tbody>
-
       </table>
 
       <button id="showIngredientsList" class="btn btn-block btn-outline btn-primary" type="button">
-        <i class="fa fa-plus"></i>
-        {{#if isMenu}}
-          Add ingredients to menu item
-        {{else}}
-          Add ingredients to prep item
-        {{/if}}
+        <i class="fa fa-plus"></i> Add ingredients
       </button>
     </div>
   </div>
@@ -33,7 +27,7 @@
   {{#if canViewStock}}
     <div class="modal fade" id="ingredientsListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
-      {{> stocksModalList name="editJob" modalStockListParams=modalStockListParams}}
+      {{> stocksModalList modalStockListParams=modalStockListParams}}
     </div>
   {{/if}}
   <!-- /INGREDIENTS LIST -->

@@ -63,7 +63,11 @@ Template.menuItemSubmitMainView.events({
     });
 
     if (!info.name) {
-      return alert("Add a unique name for the menu");
+      return HospoHero.error("Add a unique name for the menu");
+    }
+
+    if (isNaN(info.price)) {
+      return HospoHero.error("Price should be a number");
     }
 
     Meteor.call("createMenuItem", info, HospoHero.handleMethodResult(function (id) {

@@ -22,7 +22,7 @@ Template.textEditor.onRendered(function () {
         function (InkBlobs) {
           var doc = (InkBlobs);
           if (doc && doc[0].url) {
-            var image = "<img src='" + doc[0].url + "' alt='uploaded image'>";
+            var image = '<img src="' + doc[0].url + '" alt="uploaded image">';
             if (image) {
               $(image).appendTo($(".note-editable"));
             }

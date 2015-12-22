@@ -9,7 +9,6 @@
             <h5>Create a new menu</h5>
           </div>
           <div class="ibox-content">
-
             <form class="form-horizontal">
               <div class="form-group">
                 <label class="col-sm-2 control-label">Name</label>
@@ -18,6 +17,7 @@
                   <input type="text" name="name" class="form-control" placeholder="Enter Name for the menu">
                 </div>
               </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label">Category</label>
 
@@ -29,6 +29,7 @@
                   </select>
                 </div>
               </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label">Status</label>
 
@@ -40,6 +41,7 @@
                   </select>
                 </div>
               </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label">Instructions</label>
 
@@ -47,6 +49,7 @@
                   {{> textEditor initialHtml=initialHTML}}
                 </div>
               </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label">Prep items used</label>
                 {{> menuItemJobsList jobs=state$menuItemJobs onChange=getOnJobItemsListChanged}}
@@ -54,7 +57,7 @@
 
               <div class="form-group">
                 <label class="col-sm-2 control-label">Ingredients used</label>
-                {{> listOfIngredients isMenu=true ingredients=state$menuItemIngredients onChange=getOnIngredientsListChanged}}
+                {{> listOfIngredients ingredients=state$menuItemIngredients onChange=getOnIngredientsListChanged}}
               </div>
 
               <div class="form-group">
