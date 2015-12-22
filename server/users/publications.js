@@ -10,7 +10,8 @@ Meteor.publish(null, function () {
       relations: 1,
       createdAt: 1,
       currentAreaId: 1,
-      roles: 1
+      roles: 1,
+      unavailabilities: 1
     };
 
     return Meteor.users.find({
