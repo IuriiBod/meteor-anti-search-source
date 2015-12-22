@@ -1,3 +1,7 @@
+console.log('test');
+
+var DEFAULT_INSTRUCTIONS = 'Add instructions here';
+
 Template.menuItemSubmitMainView.onCreated(function () {
   this.set('image', false);
   this.set('menuItemIngredients', []);
@@ -16,12 +20,13 @@ Template.menuItemSubmitMainView.helpers({
   },
 
   initialHTML: function () {
-    return "Add instructions here";
+    return DEFAULT_INSTRUCTIONS;
   },
 
   getOnIngredientsListChanged: function () {
     var tmpl = Template.instance();
     return function (newIngredientsList) {
+      console.log('ing', newIngredientsList);
       tmpl.set('menuItemIngredients', newIngredientsList);
     };
   },
@@ -29,6 +34,7 @@ Template.menuItemSubmitMainView.helpers({
   getOnJobItemsListChanged: function () {
     var tmpl = Template.instance();
     return function (newJobItemsList) {
+      console.log('JOBS', newJobItemsList);
       tmpl.set('menuItemJobs', newJobItemsList);
     };
   }
@@ -40,7 +46,7 @@ Template.menuItemSubmitMainView.events({
     event.preventDefault();
 
     var instructions = tmpl.$('.summernote').summernote('code');
-    if (instructions === "Add instructions here") {
+    if (instructions === DEFAULT_INSTRUCTIONS) {
       instructions = '';
     }
 

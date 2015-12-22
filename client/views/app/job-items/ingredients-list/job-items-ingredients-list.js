@@ -1,25 +1,27 @@
+console.log('test');
 Template.listOfIngredients.onCreated(function () {
   this.stockItemsInList = new ReactiveVar(this.data.ingredients || []);
 
-  var self = this;
-  this.onChangeStockItemsList = function (changedItem) {
-    var stockItems = self.stockItemsInList.get();
-    var changedStockItems = [];
-    if (changedItem.quantity == 0) {
-      stockItems.forEach(function (item) {
-        if (item.id != changedItem.id) {
-          changedStockItems.push(item);
-        }
-      });
-    } else {
+  var tmpl = this;
+  this.onChangeStockItemsList = function (action, changedItem) {
+    var stockItems = tmpl.stockItemsInList.get();
+    var changedStockItems;
+
+    if (action === 'added') {
+      stockItems.push(changedItem);
+      changedStockItems = stockItems;
+    } else if (action === 'changed') {
       changedStockItems = _.map(stockItems, function (item) {
-        if (item.id == changedItem.id) {
-          return changedItem;
-        }
-        return item;
-      })
+        return item.id === changedItem.id ? changedItem : item;
+      });
+    } else if (action === 'removed') {
+      changedStockItems = _.filter(stockItems, function (item) {
+        return item.id !== changedItem.id;
+      });
     }
-    self.stockItemsInList.set(changedStockItems);
+
+    tmpl.stockItemsInList.set(changedStockItems);
+    tmpl.data.onChange(changedStockItems);
   };
 });
 
@@ -33,7 +35,7 @@ Template.listOfIngredients.helpers({
       return {
         item: Ingredients.findOne({_id: stockEntry.id}),
         quantity: stockEntry.quantity,
-        onChangeStockItem: tmpl.onChangeStockItemsList
+        onChange: tmpl.onChangeStockItemsList
       };
     });
   },
@@ -46,12 +48,10 @@ Template.listOfIngredients.helpers({
     });
     return {
       onAddStockItem: function (itemId) {
-        var addedIds = tmpl.stockItemsInList.get();
-        addedIds.push({id: itemId, quantity: 1});
-        tmpl.stockItemsInList.set(addedIds);
+        tmpl.onChangeStockItemsList('added', {id: itemId, quantity: 1});
       },
       stockItemsInListIds: stockItemsInListIds
-    }
+    };
   }
 });
 
