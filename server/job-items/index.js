@@ -72,11 +72,10 @@ Meteor.methods({
       Meteor.call('subscribe', subscription, true);
     });
 
-    logger.info("Job Item removed", {"id": id});
     JobItems.remove({'_id': id});
+    logger.info("Job Item removed", {"id": id});
   },
 
-  // TODO: I'm not sure that above methods work correctly
   duplicateJobItem: function (jobItemId, areaId, quantity) {
     if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
       logger.error("User not permitted to duplicate job items");

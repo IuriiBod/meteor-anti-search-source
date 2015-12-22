@@ -1,6 +1,5 @@
 Template.jobDetailsHeader.onCreated(function () {
   var self = this;
-  console.log(self);
   // should be replaced by router param
 
   self.isSubscribed = function () {
