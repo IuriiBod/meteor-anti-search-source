@@ -13,7 +13,7 @@ Template.menuItemInstructions.helpers({
 Template.menuItemInstructions.events({
   'click .edit-save-button': function (event, tmpl) {
     event.preventDefault();
-    var isEditMode = this.get('isEditMode');
+    var isEditMode = tmpl.get('isEditMode');
 
     var toggleEditMode = function () {
       tmpl.set('isEditMode', !isEditMode);

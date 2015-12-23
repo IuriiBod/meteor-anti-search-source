@@ -10,7 +10,7 @@
         </tr>
         </thead>
         <tbody>
-        {{#each jobs}}
+        {{#each jobItems}}
           {{> menuItemJobsListItem jobEntry}}
         {{/each}}
         </tbody>
@@ -24,6 +24,6 @@
   </div>
 
   <!-- JOB ITEMS LIST-->
-  {{> addJobItemModal idsToExclude=alreadyAddedJobItemsIds onItemsAdded=getOnJobItemsAdded}}
+  {{> addJobItemModal idsToExclude=idsToExclude onItemsAdded=getOnJobItemsAdded}}
   <!-- /JOB ITEMS LIST -->
 </template>

@@ -49,8 +49,7 @@ Router.route('submitMenuItem', {
       Meteor.subscribe('allCategories', currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('jobItems', null, currentAreaId)
+      Meteor.subscribe('jobTypes')
     ];
   }
 });

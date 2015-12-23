@@ -11,11 +11,11 @@ Template.listOfIngredients.onCreated(function () {
       changedStockItems = stockItems;
     } else if (action === 'changed') {
       changedStockItems = _.map(stockItems, function (item) {
-        return item.id === changedItem.id ? changedItem : item;
+        return item._id === changedItem._id ? changedItem : item;
       });
     } else if (action === 'removed') {
       changedStockItems = _.filter(stockItems, function (item) {
-        return item.id !== changedItem.id;
+        return item._id !== changedItem._id;
       });
     }
 
@@ -32,7 +32,7 @@ Template.listOfIngredients.helpers({
 
     return stockItemsInList.map(function (stockEntry) {
       return {
-        item: Ingredients.findOne({_id: stockEntry.id}),
+        item: Ingredients.findOne({_id: stockEntry._id}),
         quantity: stockEntry.quantity,
         onChange: tmpl.onChangeStockItemsList
       };
@@ -43,11 +43,11 @@ Template.listOfIngredients.helpers({
     var tmpl = Template.instance();
 
     var stockItemsInListIds = _.map(tmpl.stockItemsInList.get(), function (item) {
-      return item.id;
+      return item._id;
     });
     return {
       onAddStockItem: function (itemId) {
-        tmpl.onChangeStockItemsList('added', {id: itemId, quantity: 1});
+        tmpl.onChangeStockItemsList('added', {_id: itemId, quantity: 1});
       },
       stockItemsInListIds: stockItemsInListIds
     };

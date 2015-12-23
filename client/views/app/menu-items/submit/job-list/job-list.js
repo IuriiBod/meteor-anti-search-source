@@ -1,21 +1,27 @@
 //context: jobs ([{_id: ID,quantity: Number}]), onChange (function)
 Template.menuItemJobsList.onCreated(function () {
+  this.subscribe('jobItems', null, HospoHero.getCurrentAreaId());
+
   var tmpl = this;
   this.onJobItemUpdate = function (action, jobItemId, newQuantity) {
-    var newJobsList;
-    if (action === 'remove') {
-      newJobsList = _.filter(tmpl.data.jobs, function (jobItem) {
-        return jobItem !== jobItemId;
+    var jobItemsList = tmpl.data.jobItems;
+
+    if (action === 'add') {
+      jobItemsList.push({
+        _id: jobItemId,
+        quantity: 1
       });
-    } else if (action === 'change') {
-      newJobsList = _.map(tmpl.data.jobs, function (jobItem) {
-        if (jobItem === jobItemId) {
-          jobItem.quantity = newQuantity;
-        }
+    } else if (action === 'update') {
+      jobItemsList = _.map(jobItemsList, function (jobItem) {
+        jobItem.quantity = jobItem._id === jobItemId ? newQuantity : jobItem.quantity;
         return jobItem;
       });
+    } else if (action === 'remove') {
+      jobItemsList = _.filter(stockItems, function (jobItem) {
+        return jobItem._id !== jobItemId;
+      });
     }
-    tmpl.data.onChange(newJobsList);
+    tmpl.data.onChange(jobItemsList);
   };
 });
 
@@ -29,27 +35,14 @@ Template.menuItemJobsList.helpers({
     };
   },
 
-  alreadyAddedJobItemsIds: function () {
-    return this.jobs.map(function (jobEntry) {
-      return jobEntry._id;
-    });
+  idsToExclude: function () {
+    return _.pluck(this.jobItems, '_id');
   },
 
   getOnJobItemsAdded: function () {
     var tmpl = Template.instance();
-    return function (jobItemsIdsToAdd) {
-      var newJobsList = _.map(jobItemsIdsToAdd, function (jobItemId) {
-        return {
-          _id: jobItemId,
-          quantity: 1
-        };
-      });
-      var allItems = tmpl.data.jobs.concat(newJobsList.concat);
-      tmpl.data.onChange(allItems);
+    return function (jobItemId) {
+      tmpl.onJobItemUpdate('add', jobItemId);
     };
   }
-});
-
-
-Template.menuItemJobsList.events({
 });

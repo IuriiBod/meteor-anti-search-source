@@ -20,7 +20,6 @@ Template.stocksModalList.onCreated(function () {
 Template.stocksModalList.helpers({
   ingredients: function () {
     return Template.instance().searchSource.searchResult();
-    //return Ingredients.find({_id: {$nin: Template.instance().data.modalStockListParams.stockItemsInListIds}}, {limit: 10});
   },
   showAddStockItemMenu: function () {
     return Template.instance().showAddStockItemMenu.get();
