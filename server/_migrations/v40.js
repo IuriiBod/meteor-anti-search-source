@@ -4,6 +4,10 @@ Migrations.add({
   up: function () {
     JobItems.find().forEach(function (jobItem) {
 
+      if (!jobItem.status) {
+        jobItem.status = 'active';
+      }
+
       if (jobItem.startsOn) {
         var startsOn = new Date(jobItem.startsOn);
         jobItem.startsOn = startsOn;

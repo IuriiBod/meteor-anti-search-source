@@ -3,7 +3,7 @@ Template.jobItemDetail.onCreated(function () {
   this.getLabourCost = function () {
     var jobItem = this.data.jobItem;
     var activeTimeInMins = parseInt(jobItem.activeTime / 60);
-    return (parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins;
+    return Math.round((parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins * 100) / 100;
   };
   this.getTotalIngredientCost = function () {
     var totalIngCost = 0;
