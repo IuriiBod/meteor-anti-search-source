@@ -1,7 +1,3 @@
-Template.jobListHeader.onCreated(function () {
-  console.log(this);
-});
-
 Template.jobListHeader.helpers({
   isArchived: function () {
     return this.status == 'archived';
