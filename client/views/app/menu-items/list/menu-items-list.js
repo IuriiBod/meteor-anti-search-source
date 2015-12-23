@@ -39,22 +39,21 @@ Template.menuItemsListMainView.onRendered(function () {
 
 Template.menuItemsListMainView.helpers({
   menuItems: function () {
-    var searchResult = Template.instance().menuItemsSearch.searchResult({
+    return Template.instance().menuItemsSearch.searchResult({
       sort: {'name': 1},
       transform: function (value, regExp) {
         return value.replace(regExp, "<b>$&</b>");
       }
     });
-    return searchResult;
   }
 });
 
 
 Template.menuItemsListMainView.events({
-  'keyup #searchMenuItemsBox': function (event, tmpl) {
+  'keyup #searchMenuItemsBox': _.throttle(function (event, tmpl) {
     var text = $("#searchMenuItemsBox").val().trim();
     tmpl.menuItemsSearch.search(text);
-  },
+  }, 200),
 
   'click #loadMoreMenuItems': function (event, tmpl) {
     tmpl.menuItemsSearch.incrementLimit();
