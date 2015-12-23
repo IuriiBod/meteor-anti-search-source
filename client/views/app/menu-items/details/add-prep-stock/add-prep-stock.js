@@ -8,37 +8,41 @@ Template.addPrepStockModal.onCreated(function () {
       }) || [];
   };
 
-  //todo: replace it with anti-search-source
-  var options = {
-    keepHistory: 1000 * 60 * 5,
-    localSearch: true
-  };
-  this.JobItemsSearch = new SearchSource('jobItemsSearch', ['name'], options);
-
-  this.IngredientsSearch = new SearchSource('ingredients', ['code', 'description'], options);
-
   var prepJobType = JobTypes.findOne({name: 'Prep'});
 
-  this.doSearch = function (text) {
-    var defaultLimit = 5;
-    this.JobItemsSearch.search(text, {
+  var defaultLimit = 5;
+  this.jobItemsSearch = this.AntiSearchSource({
+    collection: 'jobItems',
+    fields: ['name'],
+    searchMode: 'local',
+    mongoQuery: {
       _id: {$nin: mapMenuItemEntryIds('jobItems')},
-      type: prepJobType._id,
-      limit: defaultLimit
-    });
+      type: prepJobType._id
+    },
+    limit: defaultLimit
+  });
 
-    this.IngredientsSearch.search(text, {
-      _id: {$nin: mapMenuItemEntryIds('ingredients')},
-      limit: defaultLimit
-    });
+  this.ingredientsSearch = this.AntiSearchSource({
+    collection: 'ingredients',
+    fields: ['code', 'description'],
+    searchMode: 'local',
+    mongoQuery: {
+      _id: {$nin: mapMenuItemEntryIds('ingredients')}
+    },
+    limit: defaultLimit
+  });
+
+
+  this.doSearch = function (text) {
+    this.jobItemsSearch.search(text);
+    this.ingredientsSearch.search(text);
   };
-
-  this.doSearch('');
 });
+
 
 Template.addPrepStockModal.helpers({
   getJobItems: function () {
-    return Template.instance().JobItemsSearch.getData({
+    return Template.instance().jobItemsSearch.searchResult({
       transform: function (matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>")
       },
@@ -47,7 +51,7 @@ Template.addPrepStockModal.helpers({
   },
 
   getIngredients: function () {
-    return Template.instance().IngredientsSearch.getData({
+    return Template.instance().ingredientsSearch.searchResult({
       transform: function (matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>")
       },
@@ -56,9 +60,10 @@ Template.addPrepStockModal.helpers({
   }
 });
 
+
 Template.addPrepStockModal.events({
   'keyup .prep-stock-search': _.throttle(function (event, tmpl) {
-    var text = $(e.target).val().trim();
+    var text = $(event.target).val().trim();
     tmpl.doSearch(text);
   }, 200)
 });
