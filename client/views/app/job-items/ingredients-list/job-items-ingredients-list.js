@@ -47,7 +47,7 @@ Template.listOfIngredients.helpers({
     });
     return {
       onAddStockItem: function (itemId) {
-        tmpl.onChangeStockItemsList('added', {id: itemId, quantity: 1});
+        tmpl.onChangeStockItemsList('added', {_id: itemId, quantity: 1});
       },
       stockItemsInListIds: stockItemsInListIds
     };
