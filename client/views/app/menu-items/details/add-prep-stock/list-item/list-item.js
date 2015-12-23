@@ -21,14 +21,14 @@ Template.addPrepStockListItem.helpers({
 Template.addPrepStockListItem.events({
   'ifChecked .prep-stock-select': function (event, tmpl) {
     var query = {};
-    query[type === 'prep' ? 'jobItems' : 'ingredients'] = {
-      _id: id,
+    query[this.type === 'prep' ? 'jobItems' : 'ingredients'] = {
+      _id: this.item.id,
       quantity: 1
     };
 
-    var menuItem = Template.parentData(1);
+    var menuItemId = HospoHero.getParamsFromRoute(Router.current(), '_id');
 
-    Meteor.call("addItemToMenu", menuItem._id, query, HospoHero.handleMethodResult());
+    Meteor.call("addItemToMenu", menuItemId, query, HospoHero.handleMethodResult());
   }
 });
 
