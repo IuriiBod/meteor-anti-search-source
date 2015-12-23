@@ -9,7 +9,7 @@ Template.menuItemJobsListItem.events({
     tmpl.data.onJobItemUpdate('remove', tmpl.data.jobItem._id);
   },
 
-  'keyup .job-quantity': function (event, tmpl) {
+  'keyup .job-quantity, change .job-quantity': function (event, tmpl) {
     var text = event.target.value.trim();
     tmpl.data.onJobItemUpdate('update', tmpl.data.jobItem._id, text);
   }

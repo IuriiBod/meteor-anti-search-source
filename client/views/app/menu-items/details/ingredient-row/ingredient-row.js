@@ -5,11 +5,11 @@ Template.menuItemIngredientRow.onCreated(function () {
 
 Template.menuItemIngredientRow.helpers({
   itemName: function () {
-    return this.type == 'prep' && this.item.name || this.item.description;
+    return this.item && (this.type == 'prep' && this.item.name || this.item.description);
   },
 
   itemMeasure: function () {
-    return this.type == "prep" && this.item.measure || this.item.portionUsed;
+    return this.item && (this.type == "prep" && this.item.measure || this.item.portionUsed);
   },
 
   price: function () {
@@ -44,7 +44,7 @@ Template.menuItemIngredientRow.helpers({
 Template.menuItemIngredientRow.events({
   'click .remove-button': function (event, tmpl) {
     event.preventDefault();
-    var menuItemId = Template.parentData(1)._id;
+    var menuItemId = HospoHero.getParamsFromRoute(Router.current(), '_id');
 
     var confirmRemove = confirm("Are you sure you want to remove this item?");
     if (confirmRemove) {
