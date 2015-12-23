@@ -24,7 +24,6 @@ Template.menuItemSubmitMainView.helpers({
   getOnIngredientsListChanged: function () {
     var tmpl = Template.instance();
     return function (newIngredientsList) {
-      console.log('ing', newIngredientsList);
       tmpl.set('menuItemIngredients', newIngredientsList);
     };
   },
