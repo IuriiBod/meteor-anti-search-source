@@ -9,20 +9,18 @@ Template.menuItemJobsList.onCreated(function () {
     if (action === 'add') {
       jobItemsList.push({
         _id: jobItemId,
-        quantity: newQuantity
+        quantity: 1
       });
     } else if (action === 'update') {
       jobItemsList.every(function (jobItem, key) {
         if (jobItem._id === jobItemId) {
-          newQuantity = newQuantity || 0;
+          newQuantity = newQuantity || 1;
           jobItemsList[key].quantity = newQuantity;
         }
       });
     } else if (action === 'remove') {
-      jobItemsList.every(function (jobItem, key) {
-        if (jobItem._id === jobItemId) {
-          jobItemsList.splice(key, 1);
-        }
+      jobItemsList = _.filter(stockItems, function (jobItem) {
+        return jobItem._id !== jobItemId;
       });
     }
     tmpl.data.onChange(jobItemsList);
@@ -46,7 +44,7 @@ Template.menuItemJobsList.helpers({
   getOnJobItemsAdded: function () {
     var tmpl = Template.instance();
     return function (jobItemId) {
-      tmpl.onJobItemUpdate('add', jobItemId, 1);
+      tmpl.onJobItemUpdate('add', jobItemId);
     };
   }
 });

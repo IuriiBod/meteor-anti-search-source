@@ -1,5 +1,5 @@
 Template.ingredientItemView.onCreated(function () {
-  this.data.ingredientItem = getIngredientItem(this.data.ingredient.id);
+  this.data.ingredientItem = getIngredientItem(this.data.ingredient._id);
 });
 
 Template.ingredientItemView.helpers({
