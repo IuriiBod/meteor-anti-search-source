@@ -5,7 +5,7 @@
 
       <div class="col-sm-9 pull-right">
         {{#if canEditMenu}}
-          {{> ghostEditableSelect values=categoryOptions selected=currentCategory onValueChanged=getOnCategoryChanged}}
+          {{> ghostEditableSelect values=categoryOptions selected=category onValueChanged=getOnCategoryChanged}}
         {{else}}
           <p>{{currentCategory.name}}</p>
         {{/if}}

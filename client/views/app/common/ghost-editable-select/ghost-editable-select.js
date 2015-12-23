@@ -4,7 +4,6 @@ Template.ghostEditableSelect.onCreated(function () {
   this.set('selectedValue', this.data.selected);
 });
 
-
 Template.ghostEditableSelect.onRendered(function () {
   var self = this;
   this.onBodyClick = function (event) {
@@ -16,7 +15,7 @@ Template.ghostEditableSelect.onRendered(function () {
     }
   };
 
-  $("body").click(this.onBodyClick);
+  $("body").bind('click', this.onBodyClick);
 });
 
 
@@ -33,6 +32,7 @@ Template.ghostEditableSelect.helpers({
 
     return attributes;
   },
+
   selectedText: function () {
     var selectedValue = Template.instance().get('selectedValue');
     var selectedOption = _.find(this.values, function (valueEntry) {
@@ -61,6 +61,6 @@ Template.ghostEditableSelect.events({
 });
 
 
-Template.ghostEditable.onDestroyed(function () {
-  $('body').off('click', this.onBodyClick);
+Template.ghostEditableSelect.onDestroyed(function () {
+  $('body').unbind('click', this.onBodyClick);
 });
