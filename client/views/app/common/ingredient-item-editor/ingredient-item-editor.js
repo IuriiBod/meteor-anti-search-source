@@ -1,5 +1,4 @@
 //context: ingredient (Ingredient/undefined)
-console.log('test');
 Template.ingredientItemEditor.onCreated(function () {
   this.changeIngredientState = function (newState) {
     var self = this;
