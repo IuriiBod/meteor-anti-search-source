@@ -12,11 +12,9 @@ Template.menuItemJobsList.onCreated(function () {
         quantity: 1
       });
     } else if (action === 'update') {
-      jobItemsList.every(function (jobItem, key) {
-        if (jobItem._id === jobItemId) {
-          newQuantity = newQuantity || 1;
-          jobItemsList[key].quantity = newQuantity;
-        }
+      jobItemsList = _.map(jobItemsList, function (jobItem) {
+        jobItem.quantity = jobItem._id === jobItemId ? newQuantity : jobItem.quantity;
+        return jobItem;
       });
     } else if (action === 'remove') {
       jobItemsList = _.filter(stockItems, function (jobItem) {

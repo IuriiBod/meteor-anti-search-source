@@ -11,6 +11,6 @@ Template.menuItemJobsListItem.events({
 
   'keyup .job-quantity': function (event, tmpl) {
     var text = event.target.value.trim();
-    tmpl.data.onJobItemUpdate('update', tmpl.data.jobItem._id, parseInt(text));
+    tmpl.data.onJobItemUpdate('update', tmpl.data.jobItem._id, text);
   }
 });
