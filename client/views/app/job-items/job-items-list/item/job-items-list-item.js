@@ -42,7 +42,7 @@ Template.jobItemDetailed.helpers({
         if (jobItem.ingredients.length > 0) {
           jobItem.ingredients.forEach(function (jobIngredient) {
 
-            var ingredient = Ingredients.findOne({_id: jobIngredient.id});
+            var ingredient = Ingredients.findOne({_id: jobIngredient._id});
             if (ingredient) {
               var analyzedIngredient = HospoHero.analyze.ingredient(ingredient);
               analyzedIngredient.totalCost = parseFloat(analyzedIngredient.costPerPortionUsed) * parseFloat(jobIngredient.quantity);
@@ -64,9 +64,9 @@ Template.jobItemDetailed.helpers({
 });
 
 Template.jobItemDetailed.events({
-  'click .viewDetail': function (event) {
+  'click .viewDetail': function (event, tmpl) {
     event.preventDefault();
-    var id = $(event.target).closest("tr").attr("data-id");
+    var id = tmpl.data.jobitem._id;
     Router.go("jobItemDetailed", {_id: id});
   }
 });

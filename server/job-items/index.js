@@ -95,7 +95,7 @@ Meteor.methods({
 
       jobItem.ingredients = HospoHero.misc.itemsMapperWithCallback(jobItem.ingredients, function (item) {
         console.log(item);
-        return Meteor.call('duplicateIngredient', item.id, areaId, item.quantity);
+        return Meteor.call('duplicateIngredient', item._id, areaId, item.quantity);
       });
       jobItem.name = HospoHero.misc.copyingItemName(jobItem.name, JobItems, areaId);
       jobItemId = JobItems.insert(jobItem);

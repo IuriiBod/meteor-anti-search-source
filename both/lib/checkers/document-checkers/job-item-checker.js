@@ -49,7 +49,7 @@ var JobItemDocument = Match.Where(function (jobItem) {
 
       recipe: String,
       ingredients: [{
-        id: HospoHero.checkers.MongoId,
+        _id: HospoHero.checkers.MongoId,
         quantity: Number
       }],
       portions: Number,

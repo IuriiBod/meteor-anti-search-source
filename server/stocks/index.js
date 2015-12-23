@@ -185,7 +185,7 @@ Meteor.methods({
     }
     console.log(ingredientId);
 
-    return quantity === false ? ingredientId : {id: ingredientId, quantity: quantity};
+    return quantity === false ? ingredientId : {_id: ingredientId, quantity: quantity};
   }
 });
 

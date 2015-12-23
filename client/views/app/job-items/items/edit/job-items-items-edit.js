@@ -1,6 +1,6 @@
 Template.jobItemEdit.helpers({
   item: function () {
-    return getPrepItem(Template.instance().data.id);
+    return getPrepItem(Template.instance().data._id);
   },
   quantity: function () {
     return 1;

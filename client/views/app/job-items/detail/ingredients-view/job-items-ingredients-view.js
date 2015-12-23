@@ -3,10 +3,10 @@ Template.ingredientItemView.helpers({
     return this.ingredient.quantity;
   },
   ingredient: function () {
-    return Ingredients.findOne({_id: this.ingredient.id});
+    return Ingredients.findOne({_id: this.ingredient._id});
   },
   cost: function () {
-    var ingredient = Ingredients.findOne({_id: this.ingredient.id});
+    var ingredient = Ingredients.findOne({_id: this.ingredient._id});
     var analyzedIngredient = HospoHero.analyze.ingredient(ingredient);
     var cost = analyzedIngredient.costPerPortionUsed * this.ingredient.quantity;
     cost = Math.round(cost * 100) / 100;

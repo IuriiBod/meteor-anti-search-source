@@ -8,13 +8,13 @@ Template.listOfIngredients.onCreated(function () {
     var changedStockItems = [];
     if (changedItem.quantity == 0) {
       stockItems.forEach(function (item) {
-        if (item.id != changedItem.id) {
+        if (item._id != changedItem._id) {
           changedStockItems.push(item);
         }
       });
     } else {
       changedStockItems = _.map(stockItems, function (item) {
-        if (item.id == changedItem.id) {
+        if (item._id == changedItem._id) {
           return changedItem;
         }
         return item;
@@ -39,12 +39,12 @@ Template.listOfIngredients.helpers({
     var thisTmpl = Template.instance();
 
     var stockItemsInListIds = _.map(thisTmpl.stockItemsInList.get(), function (item) {
-      return item.id;
+      return item._id;
     });
     return {
       onAddStockItem: function (itemId) {
         var addedIds = thisTmpl.stockItemsInList.get();
-        addedIds.push({id: itemId, quantity: 1});
+        addedIds.push({_id: itemId, quantity: 1});
         thisTmpl.stockItemsInList.set(addedIds);
       },
       stockItemsInListIds: stockItemsInListIds
