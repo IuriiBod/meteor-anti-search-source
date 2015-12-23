@@ -42,7 +42,6 @@ Template.menuItemsListMainView.helpers({
     var searchResult = Template.instance().menuItemsSearch.searchResult({
       sort: {'name': 1}
     });
-    console.log('new search result', searchResult.fetch());
     return searchResult;
   }
 });

@@ -1,5 +1,4 @@
 //context: values ([{text: String, value: any}]), onValueChanged (function), selected (any)
-console.log('test');
 Template.ghostEditableSelect.onCreated(function () {
   this.set('isInline', true);
   this.set('selectedValue', this.data.selected);
@@ -31,6 +30,7 @@ Template.ghostEditableSelect.helpers({
 
     return attributes;
   },
+
   selectedText: function () {
     var selectedValue = Template.instance().get('selectedValue');
     var selectedOption = _.find(this.values, function (valueEntry) {
