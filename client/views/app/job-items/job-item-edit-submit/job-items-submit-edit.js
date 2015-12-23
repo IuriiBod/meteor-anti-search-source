@@ -169,7 +169,7 @@ Template.submitEditJobItem.onRendered(function () {
 
 Template.submitEditJobItem.helpers({
   repeatAtComboEditableParams: function () {
-    var thisTemplate = Template.instance()
+    var thisTemplate = Template.instance();
     return {
       firstTime: thisTemplate.repeatAt.get(),
       onSubmit: function (time) {
