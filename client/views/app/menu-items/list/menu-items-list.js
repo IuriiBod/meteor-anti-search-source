@@ -40,7 +40,10 @@ Template.menuItemsListMainView.onRendered(function () {
 Template.menuItemsListMainView.helpers({
   menuItems: function () {
     var searchResult = Template.instance().menuItemsSearch.searchResult({
-      sort: {'name': 1}
+      sort: {'name': 1},
+      transform: function (value, regExp) {
+        return value.replace(regExp, "<b>$&</b>");
+      }
     });
     return searchResult;
   }
