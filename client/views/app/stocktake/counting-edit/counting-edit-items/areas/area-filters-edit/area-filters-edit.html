@@ -1,0 +1,23 @@
+<template name="areaFiltersEdit">
+  <div class="col-md-4 no-margin areaFilering">
+    {{#each generalAreas}}
+      {{> areaBoxEdit item=this itemClass="garea-filter" itemName="garea" stockTakeData=../stockTakeData}}
+      <div class="collapse {{#if activeGeneralArea this._id}} in {{/if}}" id="{{this._id}}">
+        <div class="well">
+          {{#each specialAreas this._id}}
+            {{> areaBoxEdit item=this itemClass="sarea-filter" itemName="sarea" stockTakeData=../../stockTakeData}}
+          {{else}}
+            No Special Areas
+            <br>
+          {{/each}}
+            <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea">Add</a>
+            <br><br>
+        </div>
+      </div>
+    {{else}}
+      No General Areas
+    {{/each}}
+      <a href="#addNewGeneralAreaModal" data-toggle="modal"
+         class="btn btn-outline btn-primary col-md-12 no-margin">Add</a>
+  </div>
+</template>

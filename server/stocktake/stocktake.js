@@ -95,7 +95,7 @@ Meteor.methods({
     }
   },
 
-  'updateStocktake': function (id, info) {
+  'updateStocktake': function (id, info, newValue) {
     if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to update stocktakes");
       throw new Meteor.Error(403, "User not permitted to update stocktakes");
@@ -172,6 +172,7 @@ Meteor.methods({
       });
       logger.info("Stocktake main updated with areas", info.version);
     }
+    Meteor.call("resetCurrentStock",info.stockId, "New stock count", newValue, main.stocktakeDate)
   },
 
   removeStocktake: function (stocktakeId) {
@@ -203,7 +204,7 @@ Meteor.methods({
         id: Match.Optional(String),
         place: Match.Optional(Number)
       }),
-      stocks: Match.Optional(Array),
+      stocks: Match.OneOf(Array, null),
       activeSpecialArea: Match.Optional(String)
     });
 
@@ -212,7 +213,9 @@ Meteor.methods({
       logger.info("Stocktake position updated");
     }
 
-    SpecialAreas.update({"_id": sortedStockItems.activeSpecialArea}, {$set: {"stocks": sortedStockItems.stocks}});
+    if(sortedStockItems.stocks) {
+      SpecialAreas.update({"_id": sortedStockItems.activeSpecialArea}, {$set: {"stocks": sortedStockItems.stocks}});
+    }
 
   }
 });

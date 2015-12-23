@@ -28,6 +28,26 @@ Router.route('/stocktake/:_id', {
   }
 });
 
+Router.route('/stocktake/edit/:_id', {
+  name: "stocktakeCountingEdit",
+  template: "stocktakeCountingMainEdit",
+  waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return [
+      Meteor.subscribe('allAreas', currentAreaId),
+      Meteor.subscribe("stocktakes", this.params._id),
+      Meteor.subscribe('ordersPlaced', this.params._id),
+      Meteor.subscribe('allSuppliers', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId)
+    ];
+  },
+  data: function () {
+    return {
+      stocktakeId: this.params._id
+    }
+  }
+});
+
 
 Router.route('/stocktake/order/receive/:_id', {
   name: "orderReceive",
