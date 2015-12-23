@@ -7,7 +7,6 @@ Namespace('HospoHero.analyze', {
     return {
       costPerPortionUsed: hasRequiredValues && calculateCost() || 0
     };
-
   },
 
   jobItem: function (jobItem) {

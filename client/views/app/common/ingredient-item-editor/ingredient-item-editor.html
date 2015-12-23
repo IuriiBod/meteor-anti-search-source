@@ -1,31 +1,29 @@
 <template name="ingredientItemEditor">
-  {{#if isModal}}
-    <div class="modal fade" id="ingredientItemEditor" tabindex="-1" role="dialog" aria-labelledby="ingredientItemEditor"
-         aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                class="sr-only">Close</span></button>
-            <h4 class="modal-title text-left" id="ingredientItemEditor">
-              {{#if ingredient}}
-                {{#if canEditStock}} Edit {{/if}}
-              {{else}}
-                Add
-              {{/if}}
-              Stocks
-            </h4>
-          </div>
-          <div class="modal-body">
-            {{> ingredientItemEditorBody}}
-          </div>
-          <div class="modal-footer">
-            {{> ingredientItemEditorButtons}}
-          </div>
+  <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ingredientItemEditor"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close close-modal-button">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title text-left" id="ingredientItemEditor">
+            {{#if ingredient}}
+              {{#if canEditStock}} Edit {{/if}}
+            {{else}}
+              Add
+            {{/if}}
+            Stocks
+          </h4>
+        </div>
+        <div class="modal-body">
+          {{> ingredientItemEditorBody}}
+        </div>
+        <div class="modal-footer">
+          {{> ingredientItemEditorButtons}}
         </div>
       </div>
     </div>
-  {{else}}
-    {{> ingredientItemEditorBody}}
-  {{/if}}
+  </div>
 </template>

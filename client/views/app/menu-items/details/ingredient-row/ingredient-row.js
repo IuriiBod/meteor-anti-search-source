@@ -61,8 +61,7 @@ Template.menuItemIngredientRow.events({
     if (tmpl.data.type == 'prep') {
       Router.go('jobItemEdit', {_id: tmpl.data.item._id});
     } else {
-      tmpl.data.setCurrentEditedIngredient(tmpl.data.item);
-      $("#editIngredientModal").modal("show");
+      tmpl.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', tmpl.data.item);
     }
   }
 });
