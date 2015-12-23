@@ -4,22 +4,6 @@ Template.menuDetailsHeader.onCreated(function () {
   };
 });
 
-
-Template.menuDetailsHeader.onRendered(function () {
-  var self = this;
-  $('.editMenuItemName').editable({
-    type: "text",
-    title: 'Edit menu name',
-    showbuttons: true,
-    display: false,
-    mode: 'inline',
-    success: function (response, newValue) {
-      Meteor.call("editMenuItem", self.getMenuItemId(), {name: newValue}, HospoHero.handleMethodResult());
-    }
-  });
-});
-
-
 Template.menuDetailsHeader.helpers({
   isSubscribed: function () {
     return !!Subscriptions.findOne({
