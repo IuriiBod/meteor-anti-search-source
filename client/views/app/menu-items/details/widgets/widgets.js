@@ -29,7 +29,7 @@ Template.menuDetailWidgets.helpers({
 
     var result = {
       totalIngCost: processMenuEntry('ingredients', function (total, ingredientEntry) {
-        var ingredient = Ingredients.findOne({_id: ingredientEntry._id});
+        var ingredient = Ingredients.findOne({_id: ingredientEntry.id});
         var ingredientProps = HospoHero.analyze.ingredient(ingredient);
         total += ingredientProps.costPerPortionUsed * ingredientEntry.quantity;
         return total;

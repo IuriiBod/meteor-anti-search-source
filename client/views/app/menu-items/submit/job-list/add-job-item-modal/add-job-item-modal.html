@@ -25,7 +25,7 @@
                 </thead>
                 <tbody>
                 {{#each availableJobItems}}
-                  {{> jobItemsModalListItem item=this onSelectionStateChanged=getOnSelectionStateChanged isSelected=isJobItemSelected}}
+                  {{> jobItemsModalListItem item=this onJobItemSelect=onJobItemSelect}}
                 {{/each}}
                 </tbody>
               </table>

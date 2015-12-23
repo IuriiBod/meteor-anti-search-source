@@ -31,7 +31,6 @@ Template.menuItemSubmitMainView.helpers({
   getOnJobItemsListChanged: function () {
     var tmpl = Template.instance();
     return function (newJobItemsList) {
-      console.log('JOBS', newJobItemsList);
       tmpl.set('menuItemJobs', newJobItemsList);
     };
   }
@@ -69,7 +68,7 @@ Template.menuItemSubmitMainView.events({
       return HospoHero.error("Add a unique name for the menu");
     }
 
-    if (isNaN(info.price)) {
+    if (isNaN(info.salesPrice)) {
       return HospoHero.error("Price should be a number");
     }
 
