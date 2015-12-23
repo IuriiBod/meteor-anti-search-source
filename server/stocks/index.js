@@ -167,7 +167,6 @@ Meteor.methods({
   },
 
   duplicateIngredient: function (ingredientId, areaId, quantity) {
-    debugger;
     var ingredient = Ingredients.findOne({_id: ingredientId});
 
     if (ingredient && ingredient.relations.areaId != areaId) {

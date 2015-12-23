@@ -1,4 +1,9 @@
 Template.jobListHeader.helpers({
+  isSubscribed: function () {
+    return !!Subscriptions.findOne({
+      itemIds: 'all'
+    });
+  },
   isArchived: function () {
     return this.status == 'archived';
   }

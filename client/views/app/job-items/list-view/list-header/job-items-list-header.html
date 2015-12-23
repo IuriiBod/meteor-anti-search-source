@@ -21,8 +21,11 @@
             </li>
           {{/if}}
           <li>
-            <a href="#" class="subscribe-jobs-list"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
-            <a href="#" class="unsubscribe-jobs-list"><i class="fa fa-lg fa-rss text-info"></i> Unsubscribe</a>
+            {{#if isSubscribed}}
+              <a href="#" class="unsubscribe-jobs-list"><i class="fa fa-lg fa-rss text-info"></i> Unsubscribe</a>
+            {{else}}
+              <a href="#" class="subscribe-jobs-list"><i class="fa fa-lg fa-rss text-muted"></i> Subscribe</a>
+            {{/if}}
           </li>
         </ul>
       </div>

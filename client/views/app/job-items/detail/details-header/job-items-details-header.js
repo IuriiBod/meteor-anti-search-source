@@ -3,7 +3,7 @@ Template.jobDetailsHeader.helpers({
     return Subscriptions.findOne({
       type: 'job',
       subscriber: Meteor.userId(),
-      itemIds: this.id
+      itemIds: {$in: [this.id, 'all']}
     });
   },
   isArchived: function () {
@@ -45,7 +45,7 @@ Template.jobDetailsHeader.events({
 
     var jobItemId = tmpl.data.id;
     var subscription = HospoHero.misc.getSubscriptionDocument('job', jobItemId);
-    Meteor.call("subscribe", subscription, true, HospoHero.handleMethodResult());
+    Meteor.call("unsubscribe", subscription, HospoHero.handleMethodResult());
   },
 
   'click .copy-job-item-button': function (e, tmpl) {
