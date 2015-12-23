@@ -10,59 +10,56 @@ Meteor.methods({
    * @param {Object} subscription.relations - HospoHero relations object
    * @param {boolean} unsubscribeTrigger - If true - unsubscribes user from itemIds. Otherwise - subscribes on it
    */
-  subscribe: function (subscription, unsubscribeTrigger) {
-    check(subscription, HospoHero.checkers.SubscriptionDocument);
-    var userId = subscription.subscriber || Meteor.userId();
-
-    // Find what do we want to change
-    var itemIds = getItemIds(subscription.itemIds, subscription.type);
-
-    // Check existing of subscription
-    var subscriptionExists = Subscriptions.findOne({
-      subscriber: userId,
-      type: subscription.type,
-      'relations.areaId': HospoHero.getCurrentAreaId(userId)
-    });
-
-    if (!subscriptionExists) {
-      if (_.isString(itemIds)) {
-        itemIds = [itemIds];
-      }
-      subscription.itemIds = itemIds;
-      Subscriptions.insert(subscription);
-    } else {
-      var updateQuery = getUpdateQuery(itemIds, unsubscribeTrigger);
-      Subscriptions.update({_id: subscriptionExists._id}, updateQuery);
-      var res = Subscriptions.findOne({_id: subscriptionExists._id});
-      console.log(res)
-    }
+  subscribe: function (subscription) {
+    updateSubscription(subscription, false);
+  },
+  unsubscribe: function (subscription) {
+    updateSubscription(subscription, true);
   }
 });
 
-/**
- * Returns ID of items to subscribe/unsubscribe
- * @param {string} itemIds - Item ID or 'all'
- * @param {string} type - Type of subscription (menu|job)
- * @returns {string|Array}
- */
-var getItemIds = function (itemIds, type) {
-  if (itemIds === 'all') {
-    var subscriptonCollections = {
-      menu: MenuItems,
-      job: JobItems
-    };
+var updateSubscription = function (subscription, unsubscribeTrigger) {
 
-    return subscriptonCollections[type].find({
-      'relations.areaId': HospoHero.getCurrentAreaId(Meteor.userId())
-    }).map(function (item) {
-      return item._id;
-    });
+  debugger;
+  check(subscription, HospoHero.checkers.SubscriptionDocument);
+  subscription.subscriber = subscription.subscriber || Meteor.userId();
 
-  } else if (_.isArray(itemIds)) {
-    return itemIds
+  // Check existing of subscription
+  var subscriptionExists = Subscriptions.findOne({
+    subscriber: subscription.subscriber,
+    type: subscription.type,
+    'relations.areaId': HospoHero.getCurrentAreaId(subscription.subscriber)
+  });
+
+  if (unsubscribeTrigger) {
+    // unsubscribe
+
+    if (subscription.itemIds == 'all') {
+      // delete subscription
+      Subscriptions.remove({_id: subscriptionExists._id})
+    } else {
+      updateSubscriptionItems(subscriptionExists._id, subscription.itemIds, unsubscribeTrigger);
+    }
   } else {
-    return [itemIds];
+    // subscribe
+
+    if (!subscriptionExists) {
+      Subscriptions.insert(subscription);
+    } else {
+      updateSubscriptionItems(subscriptionExists._id, subscription.itemIds, subscriptionExists.type, unsubscribeTrigger);
+    }
   }
+};
+
+var updateSubscriptionItems = function (subscriptionToUpdateId, itemIds, subscriptionType, unsubscribeTrigger) {
+  if (itemIds == 'all') {
+    itemIds = getItemIds(itemIds, subscriptionType);
+  }
+
+  var updateQuery = getUpdateQuery(itemIds, unsubscribeTrigger);
+  Subscriptions.update({_id: subscriptionToUpdateId}, updateQuery);
+  var res = Subscriptions.findOne({_id: subscriptionToUpdateId});
+  console.log(res);
 };
 
 /**
@@ -71,24 +68,49 @@ var getItemIds = function (itemIds, type) {
  * @param {boolean} unsubscribeTrigger - If true - unsubscribes user from itemIds. Otherwise - subscribes on it
  */
 var getUpdateQuery = function (itemIds, unsubscribeTrigger) {
-  var updateQuery = {};
-
-  if (unsubscribeTrigger) {
-    updateQuery.$pull = {
-      itemIds: {$in: itemIds}
-    };
-  } else {
-    if (_.isArray(itemIds)) {
-      updateQuery.$addToSet = {
-        itemIds: {
-          $each: itemIds
-        }
-      };
-    } else {
-      updateQuery.$addToSet = {
-        itemIds: itemIds
-      };
+  if (itemIds == 'all') {
+    return {
+      $set: {
+        itemIds: 'all'
+      }
     }
   }
-  return updateQuery;
+
+  if (!_.isArray(itemIds)) {
+    itemIds = [itemIds];
+  }
+
+  if (unsubscribeTrigger) {
+    return {
+      $pull: {
+        itemIds: {$in: itemIds}
+      }
+    }
+  } else {
+    return {
+      $push: {
+        itemIds: {$each: itemIds}
+      }
+    }
+  }
+};
+
+
+/**
+ * Returns ID of items to subscribe/unsubscribe
+ * @param {string} itemIds - Item ID or 'all'
+ * @param {string} type - Type of subscription (menu|job)
+ * @returns {string|Array}
+ */
+var getItemIds = function (itemIds, type) {
+  var subscriptionCollections = {
+    menu: MenuItems,
+    job: JobItems
+  };
+
+  return subscriptionCollections[type].find({
+    'relations.areaId': HospoHero.getCurrentAreaId(Meteor.userId())
+  }).map(function (item) {
+    return item._id;
+  });
 };

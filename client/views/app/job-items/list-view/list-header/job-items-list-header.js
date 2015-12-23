@@ -8,11 +8,11 @@ Template.jobListHeader.events({
   'click .subscribe-jobs-list': function (e) {
     e.preventDefault();
     var subscription = HospoHero.misc.getSubscriptionDocument('job', 'all');
-    Meteor.call('subscribe', subscription, false, HospoHero.handleMethodResult());
+    Meteor.call('subscribe', subscription, HospoHero.handleMethodResult());
   },
   'click .unsubscribe-jobs-list': function (e) {
     e.preventDefault();
     var subscription = HospoHero.misc.getSubscriptionDocument('job', 'all');
-    Meteor.call('subscribe', subscription, true, HospoHero.handleMethodResult());
+    Meteor.call('unsubscribe', subscription, HospoHero.handleMethodResult());
   }
 });
