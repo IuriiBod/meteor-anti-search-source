@@ -1,16 +1,21 @@
 Template.ordersReceiptsList.onCreated(function() {
-  this.thisState = new ReactiveVar(false);
+  // this.thisState = new ReactiveVar(false);
+  this.orderIsReceived = new ReactiveVar(false);
   this.thisTime = new ReactiveVar('week');
   this.editStockTake = new ReactiveVar(false);
 });
 
 Template.ordersReceiptsList.helpers({
-  orderToBeReceived: function() {
-    return !Template.instance().thisState.get();
-  },
+  // orderToBeReceived: function() {
+  //   return !Template.instance().thisState.get();
+  // },
 
-  received: function() {
-    return !!Template.instance().thisState.get();
+  // received: function() {
+  //   return !!Template.instance().thisState.get();
+  // },
+
+  orderIsReceived: function() {
+    return Template.instance().orderIsReceived.get();
   },
 
   week: function() {
@@ -29,14 +34,16 @@ Template.ordersReceiptsList.helpers({
   },
 
   list: function() {
-    var state = Template.instance().thisState.get();
+    // var state = Template.instance().thisState.get();
+    var received = Template.instance().orderIsReceived.get();
     var time = Template.instance().thisTime.get();
     var data = null;
     var ids = [];
 
     if (time === "week") {
       data = OrderReceipts.find({
-        "received": state,
+        // "received": state,
+        "received": received,
         "expectedDeliveryDate": {
           $gte: moment().startOf("week").unix() * 1000,
           $lte: moment().endOf("week").unix() * 1000
@@ -45,7 +52,8 @@ Template.ordersReceiptsList.helpers({
 
     } else if (time == "month") {
       data = OrderReceipts.find({
-        "received": state,
+        // "received": state,
+        "received": received,
         "expectedDeliveryDate": {
           $gte: moment().startOf("month").unix() * 1000,
           $lte: moment().endOf("month").unix() * 1000
@@ -53,7 +61,8 @@ Template.ordersReceiptsList.helpers({
       }, {sort: {"receivedDate": -1, "supplier": 1}});
 
     } else if (time == "all") {
-      data = OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1, "supplier": 1}});
+      // data = OrderReceipts.find({"received": state}, {sort: {"receivedDate": -1, "supplier": 1}});
+      data = OrderReceipts.find({"received": received}, {sort: {"receivedDate": -1, "supplier": 1}});
     }
     data = data.fetch();
     if (data && data.length > 0) {
@@ -78,12 +87,14 @@ Template.ordersReceiptsList.helpers({
 Template.ordersReceiptsList.events({
   'click .toBeReceived': function (event, tmpl) {
     event.preventDefault();
-    tmpl.thisState.set(false);
+    // tmpl.thisState.set(false);
+    tmpl.orderIsReceived.set(false);
   },
 
   'click .received': function (event, tmpl) {
     event.preventDefault();
-    tmpl.thisState.set(true);
+    // tmpl.thisState.set(true);
+    tmpl.orderIsReceived.set(true);
   },
 
   'click .thisWeekReceipts': function (event, tmpl) {
