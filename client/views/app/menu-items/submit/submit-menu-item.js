@@ -1,5 +1,3 @@
-console.log('test');
-
 var DEFAULT_INSTRUCTIONS = 'Add instructions here';
 
 Template.menuItemSubmitMainView.onCreated(function () {

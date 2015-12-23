@@ -1,4 +1,3 @@
-console.log('test');
 Template.listOfIngredients.onCreated(function () {
   this.stockItemsInList = new ReactiveVar(this.data.ingredients || []);
 

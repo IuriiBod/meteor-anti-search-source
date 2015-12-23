@@ -11,11 +11,12 @@ Router.route('menuItemsMaster', {
   },
   data: function () {
     return {
-      category: this.params.category.toLowerCase(),
+      category: this.params.category,
       status: this.params.status.toLowerCase()
     }
   }
 });
+
 
 Router.route('menuItemDetail', {
   path: '/menuItem/:_id',
@@ -37,6 +38,7 @@ Router.route('menuItemDetail', {
     return MenuItems.findOne({_id: this.params._id});
   }
 });
+
 
 Router.route('submitMenuItem', {
   path: '/menuItems/submit',

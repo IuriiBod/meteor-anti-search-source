@@ -1,9 +1,9 @@
 //context: values ([{text: String, value: any}]), onValueChanged (function), selected (any)
+console.log('test');
 Template.ghostEditableSelect.onCreated(function () {
   this.set('isInline', true);
   this.set('selectedValue', this.data.selected);
 });
-
 
 Template.ghostEditableSelect.onRendered(function () {
   var self = this;
@@ -14,7 +14,7 @@ Template.ghostEditableSelect.onRendered(function () {
     }
   };
 
-  $("body").click(this.onBodyClick);
+  $("body").bind('click', this.onBodyClick);
 });
 
 
@@ -59,6 +59,6 @@ Template.ghostEditableSelect.events({
 });
 
 
-Template.ghostEditable.onDestroyed(function () {
-  $('body').off('click', this.onBodyClick);
+Template.ghostEditableSelect.onDestroyed(function () {
+  $('body').unbind('click', this.onBodyClick);
 });
