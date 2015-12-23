@@ -187,14 +187,15 @@ Meteor.methods({
       }
     );
 
-    var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('menu', id);
-    subscriberIds.forEach(function (subscription) {
-      if (subscription.subscriber != Meteor.userId()) {
-        notificationSender.sendNotification(subscription.subscriber);
-      }
-      subscription.itemIds = id;
-      Meteor.call('subscribe', subscription, true);
-    });
+    // todo: Uncomment after subscriptions will be fixed
+    //var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('menu', id);
+    //subscriberIds.forEach(function (subscription) {
+    //  if (subscription.subscriber != Meteor.userId()) {
+    //    notificationSender.sendNotification(subscription.subscriber);
+    //  }
+    //  subscription.itemIds = id;
+    //  Meteor.call('subscribe', subscription, true);
+    //});
 
     logger.info("Menu item deleted", id);
     MenuItems.remove(id);
