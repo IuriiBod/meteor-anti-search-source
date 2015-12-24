@@ -8,6 +8,6 @@ Template.areaArchiveItem.events({
 
 Template.areaArchiveItem.helpers({
   isCurrentArea: function (areaId) {
-    HospoHero.getCurrentAreaId() === areaId;
+    return HospoHero.getCurrentAreaId() === areaId;
   }
 });
