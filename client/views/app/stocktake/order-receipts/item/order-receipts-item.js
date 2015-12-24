@@ -1,15 +1,11 @@
 Template.orderReceiptItem.helpers({
-  receipt: function() {
-    return this.item;
-  },
-
   isInvoiceUploaded: function() {
-    return this.item.hasOwnProperty("invoiceImage");
+    return this.hasOwnProperty("invoiceImage");
   },
 
   orderedValue: function() {
     var cost = 0;
-    var id = this.item._id;
+    var id = this._id;
     StockOrders.find({"orderReceipt": id}).forEach(function (order) {
       cost += parseFloat(order.countOrdered) * parseFloat(order.unitPrice);
     });
@@ -18,7 +14,7 @@ Template.orderReceiptItem.helpers({
 
   invoiceFaceValue: function() {
     var cost = 0;
-    var id = this.item._id;
+    var id = this._id;
     var orders = StockOrders.find({"orderReceipt": id}).fetch();
     if (orders.length > 0) {
       orders.forEach(function (order) {
@@ -36,9 +32,10 @@ Template.orderReceiptItem.helpers({
 });
 
 Template.orderReceiptItem.events({
-  'click .receiveDelivery': function (event) {
+  'click .receive-delivery': function (event) {
     event.preventDefault();
-    var id = this.item._id;
+    
+    var id = this._id;
     if (id) {
       Router.go("orderReceive", {"_id": id});
     }
