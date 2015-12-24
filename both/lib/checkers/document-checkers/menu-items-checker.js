@@ -17,7 +17,8 @@ var MenuItemDocument = Match.Where(function (menuItem) {
     createdOn: Match.Optional(Number),
     editedOn: Match.Optional(Number),
     relations: Match.Optional(HospoHero.checkers.Relations),
-    posNames: Match.Optional([String])
+    posNames: Match.Optional([String]),
+    isNotSyncedWithPos: Match.Optional(Boolean)
   });
 
   var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(menuItem, MenuItems);

@@ -31,10 +31,10 @@ Template.menuItemIngredientRow.helpers({
 
         var type = tmpl.data.type === 'prep' ? 'jobItems' : 'ingredients';
 
-        Meteor.call('editMenuIngredientsOrJobItems', menuItemId, {
+        Meteor.call('editItemOfMenu', menuItemId, {
           _id: tmpl.data.item._id,
           quantity: newValue
-        }, type, HospoHero.handleMethodResult());
+        }, 'updateQuantity', type, HospoHero.handleMethodResult());
       }
     };
   }
@@ -52,7 +52,7 @@ Template.menuItemIngredientRow.events({
       var query = {};
       query[queryProperty] = {_id: tmpl.data.item._id};
 
-      Meteor.call("removeItemFromMenu", menuItemId, query, HospoHero.handleMethodResult());
+      Meteor.call("editItemOfMenu", menuItemId, query, 'remove', HospoHero.handleMethodResult());
     }
   },
 
