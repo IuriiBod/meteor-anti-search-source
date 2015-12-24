@@ -3,8 +3,8 @@
     <td>{{item.code}}</td>
     <td>{{item.description}}</td>
     <td>{{item.portionUsed}}</td>
-    <td>$ {{unitPrice}}</td>
-    <td><input value="{{quantity}}" class="ing-qty" type="text"/></td>
+    <td>${{ingredientStatistics.costPerPortionUsed}}</td>
+    <td><input value="{{item.quantity}}" class="ing-qty" type="number" min="1"/></td>
     <td>
       <a href="">
         <i class="fa fa-trash remove-ing"></i>

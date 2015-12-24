@@ -11,11 +11,12 @@ Router.route('menuItemsMaster', {
   },
   data: function () {
     return {
-      category: this.params.category.toLowerCase(),
+      category: this.params.category,
       status: this.params.status.toLowerCase()
     }
   }
 });
+
 
 Router.route('menuItemDetail', {
   path: '/menuItem/:_id',
@@ -30,13 +31,15 @@ Router.route('menuItemDetail', {
       Meteor.subscribe('userSubscriptions', currentAreaId),
       Meteor.subscribe('usersList', currentAreaId),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('ingredients', null, currentAreaId)
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('jobItems', null, currentAreaId)
     ];
   },
   data: function () {
     return MenuItems.findOne({_id: this.params._id});
   }
 });
+
 
 Router.route('submitMenuItem', {
   path: '/menuItems/submit',
@@ -47,8 +50,7 @@ Router.route('submitMenuItem', {
       Meteor.subscribe('allCategories', currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('jobItems', null, currentAreaId)
+      Meteor.subscribe('jobTypes')
     ];
   }
 });

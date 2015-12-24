@@ -7,12 +7,12 @@ Template.submitEditJobItem.onCreated(function () {
     // Write data into reactive var
     self.selectedJobTypeId = new ReactiveVar(self.data.jobItem.type || JobTypes.findOne()._id);
     self.selectedFrequency = new ReactiveVar(self.data.jobItem.frequency || 'daily');
+    self.addedIngredientsToThisJob = new ReactiveVar(self.data.jobItem.ingredients || []);
     self.repeatAt = new ReactiveVar(self.data.jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
     self.checklistItems = new ReactiveVar(self.data.jobItem.checklist || []);
   };
 
   initReactiveVars();
-  this.addedIngredientsToThisJob = this.data.jobItem.ingredients || [];
 
   var getSelectedJobType = function () {
     return JobTypes.findOne({_id: self.selectedJobTypeId.get()});
@@ -28,6 +28,7 @@ Template.submitEditJobItem.onCreated(function () {
 });
 
 Template.submitEditJobItem.onRendered(function () {
+  var tmpl = this;
   var sortableParams = {
     cursor: 'move',
     opacity: 0.8,
@@ -41,19 +42,19 @@ Template.submitEditJobItem.onRendered(function () {
         var text = $item.text().trim();
         items.push(text);
       });
-      self.checklistItems.set(items);
+      tmpl.checklistItems.set(items);
     }
   };
-  this.$('.checklist').sortable(sortableParams).disableSelection();
+  tmpl.$('.checklist').sortable(sortableParams).disableSelection();
 });
 
 Template.submitEditJobItem.helpers({
   repeatAtComboEditableParams: function () {
-    var thisTemplate = Template.instance();
+    var tmpl = Template.instance();
     return {
-      firstTime: thisTemplate.repeatAt.get(),
+      firstTime: tmpl.repeatAt.get(),
       onSubmit: function (time) {
-        thisTemplate.repeatAt.set(time);
+        tmpl.repeatAt.set(time);
       }
     }
   },
@@ -63,12 +64,12 @@ Template.submitEditJobItem.helpers({
   },
 
   ingredients: function () {
-    return Template.instance().addedIngredientsToThisJob;
+    return Template.instance().addedIngredientsToThisJob.get();
   },
   editIngredientsListOnChange: function () {
-    var thisTemplate = Template.instance();
+    var tmpl = Template.instance();
     return function (ingredientsList) {
-      thisTemplate.addedIngredientsToThisJob = ingredientsList;
+      tmpl.addedIngredientsToThisJob.set(ingredientsList);
     };
   },
 
@@ -223,7 +224,7 @@ Template.submitEditJobItem.events({
 
       var assignFieldsForPrep = function (jobItem) {
         jobItem.recipe = tmpl.$('.summernote').summernote('code');
-        jobItem.ingredients = tmpl.addedIngredientsToThisJob;
+        jobItem.ingredients = tmpl.addedIngredientsToThisJob.get();
         jobItem.portions = parseInt(tmpl.$('.portions').val());
         jobItem.shelfLife = parseInt(tmpl.$('.shelf-life').val());
       };
@@ -292,7 +293,7 @@ Template.submitEditJobItem.events({
       });
       tmpl.checklistItems.set(items);
     };
-    var itemToRemove = tmpl.toString();
+    var itemToRemove = this.toString();
     removeCheckListItem(itemToRemove);
   }
 });

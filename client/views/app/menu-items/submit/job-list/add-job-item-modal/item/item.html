@@ -1,0 +1,15 @@
+<template name="jobItemsModalListItem">
+  <tr>
+    <td>
+      <div class="i-checks selected-prep">
+        <label>
+          <input type="checkbox" class="job-select-checkbox">
+        </label>
+      </div>
+    </td>
+    <td>
+      {{{item.name}}}
+    </td>
+    <td>{{secondsToMinutes item.activeTime}}</td>
+  </tr>
+</template>

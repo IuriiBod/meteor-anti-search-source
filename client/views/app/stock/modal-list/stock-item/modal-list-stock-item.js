@@ -1,15 +1,22 @@
 Template.stockModalItem.onCreated(function () {
   this.getCostPerPortionUsed = function () {
     var costPerPortionUsed = 0;
-    if ((this.data.stock.costPerPortion > 0) && (this.data.stock.unitSize > 0)) {
-      costPerPortionUsed = this.data.stock.costPerPortion / this.data.stock.unitSize;
-      costPerPortionUsed = Math.round(costPerPortionUsed * 100) / 100;
+    var stock = this.data.stock;
+    if ((stock.costPerPortion > 0) && (stock.unitSize > 0)) {
+      costPerPortionUsed = stock.costPerPortion / stock.unitSize;
+      costPerPortionUsed = HospoHero.misc.rounding(costPerPortionUsed);
       if (costPerPortionUsed === 0) {
         costPerPortionUsed = 0.001;
       }
     }
     return costPerPortionUsed;
   };
+});
+
+Template.stockModalItem.onRendered(function () {
+  this.$('.i-checks').iCheck({
+    checkboxClass: 'icheckbox_square-green'
+  });
 });
 
 Template.stockModalItem.helpers({
@@ -22,7 +29,11 @@ Template.stockModalItem.helpers({
 });
 
 Template.stockModalItem.events({
-  'click .add-ing-checkbox': function (e, tmpl) {
+  'ifChecked .add-ing-checkbox': function (event, tmpl) {
     tmpl.data.onAddStockItem(tmpl.data.stock._id)
   }
+});
+
+Template.stockModalItem.onDestroyed(function () {
+  this.$('.i-checks').iCheck('destroy');
 });

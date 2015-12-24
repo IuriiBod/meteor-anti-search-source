@@ -1,34 +1,35 @@
-Template.listOfIngredients.onCreated(function () {
-  this.stockItemsInList = new ReactiveVar(this.data.ingredients || []);
-
-  var self = this;
-  this.onChangeStockItemsList = function (changedItem) {
-
-    var stockItems = self.stockItemsInList.get();
-    var changedStockItems = [];
-    if (changedItem.quantity == 0) {
-      stockItems.forEach(function (item) {
-        if (item._id != changedItem._id) {
-          changedStockItems.push(item);
-        }
-      });
-    } else {
-      changedStockItems = _.map(stockItems, function (item) {
-        if (item._id == changedItem._id) {
-          return changedItem;
-        }
-        return item;
-      })
-    }
-    self.stockItemsInList.set(changedStockItems);
-  }
-});
-
 Template.listOfIngredients.helpers({
+  onChangeItemInList: function () {
+    var tmpl = Template.instance();
+    var onChangeStockItemsList = function (operationType, changedItem) {
+      var stockItems = tmpl.data.ingredients;
+      if (operationType == 'removed') {
+        stockItems = _.reject(stockItems, function (item) {
+          return item._id == changedItem._id;
+        });
+      } else if (operationType == 'changed') {
+        return _.map(stockItems, function (item) {
+          item.quantity = item._id == changedItem._id ? item.quantity = changedItem.quantity : item.quantity;
+          return item;
+        });
+      }
+      tmpl.data.onChange(stockItems);
+    };
+
+    return onChangeStockItemsList;
+  },
+
   ingredients: function () {
-    var stockItemsInList = Template.instance().stockItemsInList.get();
-    Template.instance().data.onChange(stockItemsInList);
-    return stockItemsInList;
+    var ingredientObjectsWithQuantity = [];
+
+    var itemsInList = this.ingredients;
+    itemsInList.forEach(function (item) {
+      var ingredient = Ingredients.findOne({_id: item._id});
+      ingredient.quantity = item.quantity;
+      ingredientObjectsWithQuantity.push(ingredient);
+    });
+
+    return ingredientObjectsWithQuantity;
   },
 
   isMenu: function () {
@@ -38,21 +39,17 @@ Template.listOfIngredients.helpers({
   modalStockListParams: function () {
     var thisTmpl = Template.instance();
 
-    var stockItemsInListIds = _.map(thisTmpl.stockItemsInList.get(), function (item) {
+    var stockItemsInListIds = _.map(thisTmpl.data.ingredients, function (item) {
       return item._id;
     });
     return {
       onAddStockItem: function (itemId) {
-        var addedIds = thisTmpl.stockItemsInList.get();
+        var addedIds = thisTmpl.data.ingredients;
         addedIds.push({_id: itemId, quantity: 1});
-        thisTmpl.stockItemsInList.set(addedIds);
+        thisTmpl.data.onChange(addedIds);
       },
       stockItemsInListIds: stockItemsInListIds
     }
-  },
-
-  onChangeStockItem: function () {
-    return Template.instance().onChangeStockItemsList;
   }
 });
 

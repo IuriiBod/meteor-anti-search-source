@@ -1,8 +1,5 @@
 Template.textEditor.onRendered(function () {
-  this.autorun(function () {
-    $(".summernote").summernote('code', Template.currentData().initialHtml);
-  });
-
+  var tmpl = this;
   var onSummernoteInit = function () {
     // Add "open" - "save" buttons
     var imageButton = '<button id="uploadImage" type="button" class="btn btn-default btn-sm btn-small" ' +
@@ -11,10 +8,10 @@ Template.textEditor.onRendered(function () {
     $(imageButton).appendTo($('.note-insert')[1]);
 
     // Button tooltips
-    $('#uploadImage').tooltip({container: 'body', placement: 'bottom'});
+    tmpl.$('#uploadImage').tooltip({container: 'body', placement: 'bottom'});
 
     // Button events
-    $('#uploadImage').click(function (event) {
+    tmpl.$('#uploadImage').click(function (event) {
       filepicker.pickAndStore(
         {
           extensions: ['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'],
@@ -25,7 +22,7 @@ Template.textEditor.onRendered(function () {
         function (InkBlobs) {
           var doc = (InkBlobs);
           if (doc && doc[0].url) {
-            var image = "<img src='" + doc[0].url + "' alt='uploaded image'>";
+            var image = '<img src="' + doc[0].url + '" alt="uploaded image">';
             if (image) {
               $(image).appendTo($(".note-editable"));
             }
@@ -34,7 +31,7 @@ Template.textEditor.onRendered(function () {
     });
   };
 
-  $('.summernote').summernote({
+  tmpl.$('.summernote').summernote({
     focus: false,
     toolbar: [['style', ['bold', 'italic', 'underline', 'clear']],
       ['fontsize', ['fontsize']],
@@ -45,5 +42,9 @@ Template.textEditor.onRendered(function () {
       ['insert', ['link']]
     ],
     oninit: onSummernoteInit
+  });
+
+  this.autorun(function () {
+    tmpl.$(".summernote").summernote('code', Template.currentData().initialHtml);
   });
 });
