@@ -32,7 +32,6 @@ Template.ordersReceiptsList.helpers({
       }, {sort: {'receivedDate': -1, 'supplier': 1}});
     }
 
-    console.log(receipts.fetch());
     return receipts.fetch();
   }
 });
