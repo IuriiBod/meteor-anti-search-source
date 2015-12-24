@@ -22,12 +22,11 @@ Template.addPrepStockListItem.events({
   'ifChecked .prep-stock-select': function (event, tmpl) {
     var query = {};
     query[this.type === 'prep' ? 'jobItems' : 'ingredients'] = {
-      _id: this.item.id,
+      _id: this.item._id,
       quantity: 1
     };
 
     var menuItemId = HospoHero.getParamsFromRoute(Router.current(), '_id');
-
     Meteor.call("addItemToMenu", menuItemId, query, HospoHero.handleMethodResult());
   }
 });

@@ -1,36 +1,48 @@
 //context: MenuItem
 Template.addPrepStockModal.onCreated(function () {
   var self = this;
-  var mapMenuItemEntryIds = function (entryName) {
-    var entry = self.data[entryName];
-    return _.isArray(entry) && entry.map(function (item) {
-        return item._id
-      }) || [];
+  var menuItemEntryIds = function (entry) {
+    return _.pluck(entry, '_id');
   };
 
-  //todo: replace it with anti-search-source
-  var options = {
-    keepHistory: 1000 * 60 * 5,
-    localSearch: true
-  };
-  this.JobItemsSearch = new SearchSource('jobItemsSearch', ['name'], options);
+  var itemsLimit = 5;
+  this.ingredientSearchSource = this.AntiSearchSource({
+    collection: 'ingredients',
+    fields: ['code', 'description'],
+    searchMode: 'local',
+    limit: itemsLimit
+  });
 
-  this.IngredientsSearch = new SearchSource('ingredients', ['code', 'description'], options);
+  this.jobItemsSearchSource = this.AntiSearchSource({
+    collection: 'jobItems',
+    fields: ['name'],
+    searchMode: 'local',
+    limit: itemsLimit
+  });
 
   var prepJobType = JobTypes.findOne({name: 'Prep'});
+  this.autorun(function () {
+    var ingredientQuery = {
+      _id: {
+        $nin: menuItemEntryIds(Template.currentData().ingredients)
+      },
+      status: 'active'
+    };
+    self.ingredientSearchSource.setMongoQuery(ingredientQuery);
+
+    var jobItemsQuery = {
+      _id: {
+        $nin: menuItemEntryIds(Template.currentData().jobItems)
+      },
+      status: 'active',
+      type: prepJobType._id
+    };
+    self.jobItemsSearchSource.setMongoQuery(jobItemsQuery);
+  });
 
   this.doSearch = function (text) {
-    var defaultLimit = 5;
-    this.JobItemsSearch.search(text, {
-      _id: {$nin: mapMenuItemEntryIds('jobItems')},
-      type: prepJobType._id,
-      limit: defaultLimit
-    });
-
-    this.IngredientsSearch.search(text, {
-      _id: {$nin: mapMenuItemEntryIds('ingredients')},
-      limit: defaultLimit
-    });
+    this.ingredientSearchSource.search(text);
+    this.jobItemsSearchSource.search(text);
   };
 
   this.doSearch('');
@@ -38,29 +50,19 @@ Template.addPrepStockModal.onCreated(function () {
 
 Template.addPrepStockModal.helpers({
   getJobItems: function () {
-    return Template.instance().JobItemsSearch.getData({
-      transform: function (matchText, regExp) {
-        return matchText.replace(regExp, "<b>$&</b>")
-      },
-      sort: {'name': 1}
-    });
+    return Template.instance().jobItemsSearchSource.searchResult({sort: {name: 1}});
   },
 
   getIngredients: function () {
-    return Template.instance().IngredientsSearch.getData({
-      transform: function (matchText, regExp) {
-        return matchText.replace(regExp, "<b>$&</b>")
-      },
-      sort: {'code': 1}
-    });
+    return Template.instance().ingredientSearchSource.searchResult({sort: {code: 1}});
   }
 });
 
 Template.addPrepStockModal.events({
   'keyup .prep-stock-search': _.throttle(function (event, tmpl) {
-    var text = $(e.target).val().trim();
+    var text = event.target.value.trim();
     tmpl.doSearch(text);
-  }, 200)
+  }, 500)
 });
 
 

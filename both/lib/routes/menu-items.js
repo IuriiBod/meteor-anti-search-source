@@ -31,7 +31,8 @@ Router.route('menuItemDetail', {
       Meteor.subscribe('userSubscriptions', currentAreaId),
       Meteor.subscribe('usersList', currentAreaId),
       Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('ingredients', null, currentAreaId)
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('jobItems', null, currentAreaId)
     ];
   },
   data: function () {
