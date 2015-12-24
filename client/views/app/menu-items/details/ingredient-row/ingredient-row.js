@@ -5,18 +5,18 @@ Template.menuItemIngredientRow.onCreated(function () {
 
 Template.menuItemIngredientRow.helpers({
   itemName: function () {
-    return this.type == 'prep' && this.item.name || this.item.description;
+    return this.item && (this.type == 'prep' && this.item.name || this.item.description);
   },
 
   itemMeasure: function () {
-    return this.type == "prep" && this.item.measure || this.item.portionUsed;
+    return this.item && (this.type == "prep" && this.item.measure || this.item.portionUsed);
   },
 
   price: function () {
     var isPrep = this.type === 'prep';
     var analyzeResult = HospoHero.analyze[isPrep ? 'jobItem' : 'ingredient'](this.item);
     var targetValue = analyzeResult[isPrep ? 'prepCostPerPortion' : 'costPerPortionUsed'];
-    return Math.round(targetValue * this.quantity * 100) / 100;
+    return HospoHero.misc.rounding(targetValue * this.quantity);
   },
 
   getOnQuantityEditableSuccess: function () {
@@ -44,7 +44,7 @@ Template.menuItemIngredientRow.helpers({
 Template.menuItemIngredientRow.events({
   'click .remove-button': function (event, tmpl) {
     event.preventDefault();
-    var menuItemId = Template.parentData(1)._id;
+    var menuItemId = HospoHero.getParamsFromRoute(Router.current(), '_id');
 
     var confirmRemove = confirm("Are you sure you want to remove this item?");
     if (confirmRemove) {
@@ -61,8 +61,7 @@ Template.menuItemIngredientRow.events({
     if (tmpl.data.type == 'prep') {
       Router.go('jobItemEdit', {_id: tmpl.data.item._id});
     } else {
-      tmpl.data.setCurrentEditedIngredient(tmpl.data.item);
-      $("#editIngredientModal").modal("show");
+      tmpl.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', {ingredient: tmpl.data.item});
     }
   }
 });

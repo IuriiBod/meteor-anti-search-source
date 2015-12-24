@@ -3,16 +3,6 @@ Migrations.add({
   name: "Improve JobItems collection",
   up: function () {
     JobItems.find().forEach(function (jobItem) {
-      if (jobItem.ingredients) {
-        var ingredients = _.map(jobItem.ingredients, function (ingredient) {
-          return {
-            id: ingredient._id,
-            quantity: ingredient.quantity
-          }
-        });
-        jobItem.ingredients = ingredients;
-      }
-
       if (jobItem.startsOn) {
         var startsOn = new Date(jobItem.startsOn);
         jobItem.startsOn = startsOn;

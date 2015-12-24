@@ -2,31 +2,19 @@ Template.menuDetailsHeader.onCreated(function () {
   this.getMenuItemId = function () {
     return Router.current().params._id;
   };
-});
 
-
-Template.menuDetailsHeader.onRendered(function () {
-  var self = this;
-  $('.editMenuItemName').editable({
-    type: "text",
-    title: 'Edit menu name',
-    showbuttons: true,
-    display: false,
-    mode: 'inline',
-    success: function (response, newValue) {
-      Meteor.call("editMenuItem", self.getMenuItemId(), {name: newValue}, HospoHero.handleMethodResult());
-    }
-  });
-});
-
-
-Template.menuDetailsHeader.helpers({
-  isSubscribed: function () {
+  this.isSubscribed = function () {
     return !!Subscriptions.findOne({
       type: 'menu',
       subscriber: Meteor.userId(),
-      itemIds: Template.instance().getMenuItemId()
+      itemIds: this.getMenuItemId()
     });
+  };
+});
+
+Template.menuDetailsHeader.helpers({
+  isSubscribed: function () {
+    return Template.instance().isSubscribed();
   },
 
   isArchived: function () {
@@ -49,8 +37,8 @@ Template.menuDetailsHeader.helpers({
 Template.menuDetailsHeader.events({
   'click .subscribeButton': function (event, tmpl) {
     event.preventDefault();
-    var subscription = HospoHero.misc.getSubscriptionDocument('menu', this.get('id'));
-    Meteor.call('subscribe', subscription, this.get('isSubscribed'), HospoHero.handleMethodResult());
+    var subscription = HospoHero.misc.getSubscriptionDocument('menu', tmpl.getMenuItemId());
+    Meteor.call('subscribe', subscription, tmpl.isSubscribed(), HospoHero.handleMethodResult());
   },
 
   'click .copyMenuItemBtn': function (event, tmpl) {
@@ -63,12 +51,12 @@ Template.menuDetailsHeader.events({
     var result = confirm("Are you sure, you want to delete this menu ?");
     if (result) {
       Meteor.call("deleteMenuItem", tmpl.getMenuItemId(), HospoHero.handleMethodResult(function () {
-        Router.go("menuItemsMaster", {"category": "all", "status": "all"});
+        Router.go("menuItemsMaster", {category: 'all', status: 'all'});
       }));
     }
   },
 
-  'click .printMenuItemBtn': function (event, tmpl) {
+  'click .printMenuItemBtn': function (event) {
     event.preventDefault();
     print();
   },

@@ -17,7 +17,7 @@ Template.jobItemDetail.onCreated(function () {
   };
   this.getPrepCostPerPortion = function () {
     var totalCost = (this.getLabourCost() + this.getTotalIngredientCost());
-    return Math.round((totalCost / this.data.jobItem.portions) * 100) / 100;
+    return HospoHero.misc.rounding(totalCost / this.data.jobItem.portions);
   };
 });
 

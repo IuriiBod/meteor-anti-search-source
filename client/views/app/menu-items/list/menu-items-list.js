@@ -5,20 +5,17 @@ Template.menuItemsListMainView.onCreated(function () {
   var mongoQuery = {};
 
   if (category && category != 'all') {
-    mongoQuery.category = category
+    mongoQuery.category = category;
   }
 
-  mongoQuery.status = status === "all" ? {$ne: "archived"} : status;
+  mongoQuery.status = status === 'all' ? {$ne: 'archived'} : status;
 
-  this.limit = 30;
-  this.step = 30;
-
-  this.searchSource = this.AntiSearchSource({
+  this.menuItemsSearch = this.AntiSearchSource({
     collection: 'menuItems',
     fields: ['name'],
     mongoQuery: mongoQuery,
     searchMode: 'local',
-    limit: this.limit
+    limit: 30
   });
 });
 
@@ -42,22 +39,24 @@ Template.menuItemsListMainView.onRendered(function () {
 
 Template.menuItemsListMainView.helpers({
   menuItems: function () {
-    return Template.instance().searchSource.searchResult({
-      sort: {'name': 1}
+    return Template.instance().menuItemsSearch.searchResult({
+      sort: {'name': 1},
+      transform: function (value, regExp) {
+        return value.replace(regExp, "<b>$&</b>");
+      }
     });
   }
 });
 
 
 Template.menuItemsListMainView.events({
-  'keyup #searchMenuItemsBox': function (event, tmpl) {
+  'keyup #searchMenuItemsBox': _.throttle(function (event, tmpl) {
     var text = $("#searchMenuItemsBox").val().trim();
-    tmpl.searchSource.search(text);
-  },
+    tmpl.menuItemsSearch.search(text);
+  }, 200),
 
   'click #loadMoreMenuItems': function (event, tmpl) {
-    tmpl.limit += tmpl.step;
-    tmpl.searchSource.setLimit(tmpl.limit);
+    tmpl.menuItemsSearch.incrementLimit();
   }
 });
 
