@@ -13,7 +13,9 @@ Template.menuItemJobsList.onCreated(function () {
       });
     } else if (action === 'update') {
       jobItemsList = _.map(jobItemsList, function (jobItem) {
-        jobItem.quantity = jobItem._id === jobItemId ? newQuantity : jobItem.quantity;
+        newQuantity = parseInt(newQuantity);
+        newQuantity = newQuantity <= 0 ? 1 : newQuantity;
+        jobItem.quantity = jobItem._id === jobItemId ? parseInt(newQuantity) : jobItem.quantity;
         return jobItem;
       });
     } else if (action === 'remove') {

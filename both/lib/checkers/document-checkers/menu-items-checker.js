@@ -4,7 +4,6 @@ var MenuItemDocument = Match.Where(function (menuItem) {
     name: String,
     category: HospoHero.checkers.MongoId,
     salesPrice: Number,
-    createdOn: Number,
     status: Match.OneOf('archived', 'active', 'ideas'),
 
     //optional properties
@@ -15,6 +14,7 @@ var MenuItemDocument = Match.Where(function (menuItem) {
     image: Match.Optional(String),
     createdBy: HospoHero.checkers.OptionalNullableMongoId,
     editedBy: HospoHero.checkers.OptionalNullableMongoId,
+    createdOn: Match.Optional(Number),
     editedOn: Match.Optional(Number),
     relations: Match.Optional(HospoHero.checkers.Relations),
     posNames: Match.Optional([String])

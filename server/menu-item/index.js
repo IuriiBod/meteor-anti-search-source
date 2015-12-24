@@ -24,51 +24,22 @@ Meteor.methods({
     });
   },
 
-  createMenuItem: function (info) {
+  createMenuItem: function (menuItem) {
     if (!HospoHero.canUser('edit menus', Meteor.userId())) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    check(info, Object);
+    check(menuItem, HospoHero.checkers.MenuItemDocument);
 
-    if (!info.name) {
-      logger.error("Menu item should have a name");
-      throw new Meteor.Error("Menu item should have a name");
-    }
-    if (!info.category) {
-      logger.error("Menu item should have a category");
-      throw new Meteor.Error("Menu item should have a category");
-    }
-
-    var exist = MenuItems.findOne({
-      "name": info.name,
-      "relations.areaId": HospoHero.getCurrentAreaId()
-    });
-    if (exist) {
-      logger.error("Duplicate entry");
-      throw new Meteor.Error("Duplicate entry, change name and try again");
-    }
-
-    var doc = {
-      "name": info.name,
-      "category": info.category,
-      "instructions": info.instructions,
-      "ingredients": info.ingredients,
-      "jobItems": info.jobItems,
-      "salesPrice": parseFloat(info.salesPrice),
-      "image": info.image,
-      "createdOn": Date.now(),
-      "createdBy": Meteor.userId(),
-      relations: HospoHero.getRelationsObject()
+    var menuItemInfo = {
+      createdOn: Date.now(),
+      createdBy: Meteor.userId()
     };
-    if (info.status) {
-      doc.status = info.status
-    } else {
-      doc.status = "active"
-    }
 
-    var menuId = MenuItems.insert(doc);
+    menuItem = _.extend(menuItem, menuItemInfo);
+
+    var menuId = MenuItems.insert(menuItem);
     logger.info("Menu items added ", menuId);
 
     var notificationSender = new NotificationSender(
@@ -90,75 +61,21 @@ Meteor.methods({
     return menuId;
   },
 
-  editMenuItem: function (id, info) {
-    var item = checkMenuItem(id);
-    var updateDoc = {};
-    if (info.name) {
-      if (info.name != item.name) {
-        updateDoc.name = info.name;
-      }
-    }
-    if (info.category) {
-      if (info.category != item.category) {
-        updateDoc.category = info.category;
-      }
-    }
-    if (info.status) {
-      if (info.status != item.status) {
-        updateDoc.status = info.status;
-      }
-    }
-    if (info.salesPrice || (info.salesPrice >= 0)) {
-      if (info.salesPrice != item.salesPrice) {
-        updateDoc.salesPrice = info.salesPrice;
-      }
-    }
-    if (info.instructions) {
-      if (info.instructions != item.instructions) {
-        updateDoc.instructions = info.instructions;
-      }
+  editMenuItem: function (menuItem) {
+    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+      logger.error("User not permitted to create menu items");
+      throw new Meteor.Error(403, "User not permitted to create menu");
     }
 
-    if (info.ingredients) {
-      updateDoc.ingredients = [];
-      if (info.ingredients.length > 0) {
-        var ingIds = [];
-        info.ingredients.forEach(function (item) {
-          if (ingIds.indexOf(item._id) < 0) {
-            ingIds.push(item._id);
-            updateDoc.ingredients.push(item);
-          }
-        });
-      }
-    }
-    if (info.jobItems) {
-      updateDoc.jobItems = [];
-      if (info.jobItems.length > 0) {
-        var jobIds = [];
-        info.jobItems.forEach(function (item) {
-          if (jobIds.indexOf(item._id) < 0) {
-            jobIds.push(item._id);
-            updateDoc.jobItems.push(item);
-          }
-        });
-      }
-    }
+    check(menuItem, HospoHero.checkers.MenuItemDocument);
 
-    if (info.image || info.image == '') {
-      updateDoc.image = info.image;
-    }
-    var updateQuery = {};
-    if (Object.keys(updateDoc).length > 0) {
-      updateDoc['editedBy'] = Meteor.userId();
-      updateDoc['editedOn'] = Date.now();
-      updateQuery = {$set: updateDoc}
-    }
+    var id = menuItem._id;
 
     var notificationSender = new NotificationSender(
       'Menu item updated',
       'menu-item-updated',
       {
-        itemName: updateDoc.name,
+        itemName: menuItem.name,
         username: HospoHero.username(Meteor.userId()),
         linkToItem: Router.url('menuItemDetail', {_id: id})
       }
@@ -172,7 +89,7 @@ Meteor.methods({
     });
 
     logger.info("Menu item updated ", id);
-    return MenuItems.update({"_id": id}, updateQuery);
+    return MenuItems.update({"_id": id}, {$set: menuItem});
   },
 
   deleteMenuItem: function (id) {

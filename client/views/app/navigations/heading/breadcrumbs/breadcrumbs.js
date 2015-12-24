@@ -8,7 +8,9 @@ Template.breadcrumbs.onRendered(function () {
       display: false,
       mode: 'inline',
       success: function (response, newValue) {
-        Meteor.call("editMenuItem", menuId, {name: newValue}, HospoHero.handleMethodResult());
+        var menuItem = MenuItems.findOne({_id: menuId});
+        menuItem.name = newValue;
+        Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
       }
     });
   }
