@@ -5,7 +5,7 @@ Namespace('HospoHero.analyze', {
     } else {
       var hasRequiredValues = ingredient.costPerPortion > 0 && ingredient.unitSize > 0;
       var calculateCost = function () {
-        return Math.round(ingredient.costPerPortion / ingredient.unitSize * 10000) / 10000;
+        return HospoHero.misc.rounding(ingredient.costPerPortion / ingredient.unitSize, 10000);
       };
       return {
         costPerPortionUsed: hasRequiredValues && calculateCost() || 0
@@ -18,7 +18,7 @@ Namespace('HospoHero.analyze', {
       return false;
     } else {
       var round = function (value) {
-        return Math.round(value * 100) / 100;
+        return HospoHero.misc.rounding(value);
       };
 
       var totalIngredientCost = _.reduce(jobItem.ingredients || [], function (totalCost, ingredientItem) {

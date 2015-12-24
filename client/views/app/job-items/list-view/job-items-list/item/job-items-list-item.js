@@ -51,11 +51,11 @@ Template.jobItemDetailed.helpers({
       }
       var totalCost = (jobItem.labourCost + jobItem.totalIngCost);
       if (totalCost > 0 && jobItem.portions > 0) {
-        jobItem.prepCostPerPortion = Math.round((totalCost / jobItem.portions) * 100) / 100;
+        jobItem.prepCostPerPortion = HospoHero.misc.rounding(totalCost / jobItem.portions);
       } else {
         jobItem.prepCostPerPortion = 0;
       }
-      jobItem.labourCost = Math.round(jobItem.labourCost * 100) / 100;
+      jobItem.labourCost = HospoHero.misc.rounding(jobItem.labourCost);
       return jobItem.prepCostPerPortion;
     }
   },

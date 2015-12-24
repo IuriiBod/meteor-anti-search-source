@@ -1,7 +1,7 @@
 Template.breadcrumbs.onRendered(function () {
   if (this.data.type == 'menuDetails') {
     var menuId = HospoHero.getParamsFromRoute(Router.current(), '_id');
-    $('.editMenuItemName').editable({
+    this.$('.editMenuItemName').editable({
       type: "text",
       title: 'Edit menu name',
       showbuttons: true,

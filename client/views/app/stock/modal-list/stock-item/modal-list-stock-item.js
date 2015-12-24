@@ -4,7 +4,7 @@ Template.stockModalItem.onCreated(function () {
     var stock = this.data.stock;
     if ((stock.costPerPortion > 0) && (stock.unitSize > 0)) {
       costPerPortionUsed = stock.costPerPortion / stock.unitSize;
-      costPerPortionUsed = Math.round(costPerPortionUsed * 100) / 100;
+      costPerPortionUsed = HospoHero.misc.rounding(costPerPortionUsed);
       if (costPerPortionUsed === 0) {
         costPerPortionUsed = 0.001;
       }

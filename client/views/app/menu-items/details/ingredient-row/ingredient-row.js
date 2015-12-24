@@ -16,7 +16,7 @@ Template.menuItemIngredientRow.helpers({
     var isPrep = this.type === 'prep';
     var analyzeResult = HospoHero.analyze[isPrep ? 'jobItem' : 'ingredient'](this.item);
     var targetValue = analyzeResult[isPrep ? 'prepCostPerPortion' : 'costPerPortionUsed'];
-    return Math.round(targetValue * this.quantity * 100) / 100;
+    return HospoHero.misc.rounding(targetValue * this.quantity);
   },
 
   getOnQuantityEditableSuccess: function () {

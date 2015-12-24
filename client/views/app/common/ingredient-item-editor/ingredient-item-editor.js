@@ -101,7 +101,7 @@ Template.ingredientItemEditor.events({
       return HospoHero.error("You need to a description");
     }
 
-    info.costPerPortion = Math.round(info.costPerPortion * 100) / 100;
+    info.costPerPortion = HospoHero.misc.rounding(info.costPerPortion);
 
     var handleMethodResultCb = HospoHero.handleMethodResult(function () {
       tmpl.modalInstance.close();

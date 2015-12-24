@@ -50,7 +50,7 @@ Template.menuItemSubmitMainView.events({
       'name', 'category', 'status', {
         name: 'salesPrice',
         transform: function (salesPrice) {
-          return Math.round(parseFloat(salesPrice) * 100) / 100;
+          return HospoHero.misc.rounding(parseFloat(salesPrice));
         }
       }
     ];
