@@ -44,17 +44,25 @@ Template.addPrepStockModal.onCreated(function () {
     this.ingredientSearchSource.search(text);
     this.jobItemsSearchSource.search(text);
   };
-
-  this.doSearch('');
 });
 
 Template.addPrepStockModal.helpers({
   getJobItems: function () {
-    return Template.instance().jobItemsSearchSource.searchResult({sort: {name: 1}});
+    return Template.instance().jobItemsSearchSource.searchResult({
+      transform: function (matchText, regExp) {
+        return matchText.replace(regExp, "<b>$&</b>")
+      },
+      sort: {name: 1}
+    });
   },
 
   getIngredients: function () {
-    return Template.instance().ingredientSearchSource.searchResult({sort: {code: 1}});
+    return Template.instance().ingredientSearchSource.searchResult({
+      transform: function (matchText, regExp) {
+        return matchText.replace(regExp, "<b>$&</b>")
+      },
+      sort: {code: 1}
+    });
   }
 });
 
