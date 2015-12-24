@@ -1,22 +1,21 @@
 <template name="orderReceiptItem">
   <tr>
-    <td>{{dateFormat receipt.expectedDeliveryDate}}</td>
-    <td>{{supplierName receipt.supplier}}</td>
+    <td>{{dateFormat expectedDeliveryDate}}</td>
+    <td>{{supplierName supplier}}</td>
     <td>$ {{roundCount orderedValue}}</td>
     <td>$ {{roundCount invoiceFaceValue}}</td>
     <td>
-      {{#if receipt.received}}
-        <a class="btn btn-link receiveDelivery">Delivery received by {{username receipt.receivedBy}}
-          @ {{fullDateFormat receipt.receivedDate}}</a>
-      {{else}}
-        <a href="#" class="btn btn-primary receiveDelivery"><i class="fa -o fa-fw fa-lg fa-check-square-o"></i>Receive
-          this delivery now</a>
+      {{#if received}}
+        <a class="btn btn-link receive-delivery">Delivery received by {{username receivedBy}}
+          @ {{fullDateFormat receivedDate}}</a>
+      {{else}}      
+        <a href="#" class="btn btn-primary receive-delivery">
+          <i class="fa -o fa-fw fa-lg fa-check-square-o"></i>Receive this delivery now</a>
       {{/if}}
     </td>
     <td>
       {{#if isInvoiceUploaded}}
         <a class="btn btn-link"><i class="-o -square-o fa fa-check fa-fw fa-lg text-primary"></i></a>
-      {{else}}
       {{/if}}
     </td>
   </tr>
