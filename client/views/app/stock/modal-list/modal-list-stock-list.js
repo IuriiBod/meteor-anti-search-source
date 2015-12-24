@@ -19,7 +19,11 @@ Template.stocksModalList.onCreated(function () {
 
 Template.stocksModalList.helpers({
   ingredients: function () {
-    return Template.instance().searchSource.searchResult();
+    return Template.instance().searchSource.searchResult({
+      transform: function (matchText, regExp) {
+        return matchText.replace(regExp, "<b>$&</b>");
+      }
+    });
   },
   showAddStockItemMenu: function () {
     return Template.instance().showAddStockItemMenu.get();
@@ -46,9 +50,6 @@ Template.stocksModalList.events({
   'keyup .search-input': _.throttle(function (e, tmpl) {
     var value = $(e.target).val();
     tmpl.searchSource.search(value);
-  }, 500),
-  'click .load-more-items': function (e, tmpl) {
-    tmpl.searchSource.incrementLimit(10);
-  }
+  }, 500)
 });
 

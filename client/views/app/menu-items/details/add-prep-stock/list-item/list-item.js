@@ -4,7 +4,6 @@ Template.addPrepStockListItem.onRendered(function () {
   });
 });
 
-
 Template.addPrepStockListItem.helpers({
   isPrepJob: function () {
     return this.type === 'prep';
