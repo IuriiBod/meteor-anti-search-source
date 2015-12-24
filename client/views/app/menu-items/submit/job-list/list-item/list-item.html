@@ -1,0 +1,10 @@
+<template name="menuItemJobsListItem">
+  <tr>
+    <td>{{jobItem.name}}</td>
+    <td>${{jobItemStatistics.prepCostPerPortion}}</td>
+    <td><input type="number" name="job-quantity" class="job-quantity" value="{{quantity}}"/></td>
+    <td>
+      <i class="fa fa-trash remove-job-item"></i>
+    </td>
+  </tr>
+</template>

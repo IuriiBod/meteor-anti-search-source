@@ -31,11 +31,11 @@ getPrepItem = function (id) {
       }
       var totalCost = (jobItem.labourCost + jobItem.totalIngCost);
       if (totalCost > 0 && jobItem.portions > 0) {
-        jobItem.prepCostPerPortion = Math.round((totalCost / jobItem.portions) * 100) / 100;
+        jobItem.prepCostPerPortion = HospoHero.misc.rounding(totalCost / jobItem.portions);
       } else {
         jobItem.prepCostPerPortion = 0;
       }
-      jobItem.labourCost = Math.round(jobItem.labourCost * 100) / 100;
+      jobItem.labourCost = HospoHero.misc.rounding(jobItem.labourCost);
       return jobItem;
     }
   }
@@ -48,7 +48,7 @@ getIngredientItem = function (id) {
     if (item) {
       if ((item.costPerPortion > 0) && (item.unitSize > 0)) {
         item.costPerPortionUsed = item.costPerPortion / item.unitSize;
-        item.costPerPortionUsed = Math.round(item.costPerPortionUsed * 10000) / 10000;
+        item.costPerPortionUsed = HospoHero.misc.rounding(item.costPerPortionUsed, 10000);
       } else {
         item.costPerPortion = 0;
         item.costPerPortionUsed = 0;

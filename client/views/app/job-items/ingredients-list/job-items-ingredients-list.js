@@ -1,60 +1,59 @@
 Template.listOfIngredients.onCreated(function () {
   this.stockItemsInList = new ReactiveVar(this.data.ingredients || []);
 
-  var self = this;
-  this.onChangeStockItemsList = function (changedItem) {
+  var tmpl = this;
+  this.onChangeStockItemsList = function (action, changedItem) {
+    var stockItems = tmpl.stockItemsInList.get();
+    var changedStockItems;
 
-    var stockItems = self.stockItemsInList.get();
-    var changedStockItems = [];
-    if (changedItem.quantity == 0) {
-      stockItems.forEach(function (item) {
-        if (item.id != changedItem.id) {
-          changedStockItems.push(item);
-        }
-      });
-    } else {
+    if (action === 'added') {
+      stockItems.push(changedItem);
+      changedStockItems = stockItems;
+    } else if (action === 'changed') {
       changedStockItems = _.map(stockItems, function (item) {
-        if (item.id == changedItem.id) {
-          return changedItem;
-        }
-        return item;
-      })
+        return item._id === changedItem._id ? changedItem : item;
+      });
+    } else if (action === 'removed') {
+      changedStockItems = _.filter(stockItems, function (item) {
+        return item._id !== changedItem._id;
+      });
     }
-    self.stockItemsInList.set(changedStockItems);
-  }
+
+    tmpl.stockItemsInList.set(changedStockItems);
+    tmpl.data.onChange(changedStockItems);
+  };
 });
+
 
 Template.listOfIngredients.helpers({
   ingredients: function () {
-    var stockItemsInList = Template.instance().stockItemsInList.get();
-    Template.instance().data.onChange(stockItemsInList);
-    return stockItemsInList;
-  },
+    var tmpl = Template.instance();
+    var stockItemsInList = tmpl.stockItemsInList.get();
 
-  isMenu: function () {
-    return Template.instance().data.id == "menuSubmit";
+    return stockItemsInList.map(function (stockEntry) {
+      return {
+        item: Ingredients.findOne({_id: stockEntry._id}),
+        quantity: stockEntry.quantity,
+        onChange: tmpl.onChangeStockItemsList
+      };
+    });
   },
 
   modalStockListParams: function () {
-    var thisTmpl = Template.instance();
+    var tmpl = Template.instance();
 
-    var stockItemsInListIds = _.map(thisTmpl.stockItemsInList.get(), function (item) {
-      return item.id;
+    var stockItemsInListIds = _.map(tmpl.stockItemsInList.get(), function (item) {
+      return item._id;
     });
     return {
       onAddStockItem: function (itemId) {
-        var addedIds = thisTmpl.stockItemsInList.get();
-        addedIds.push({id: itemId, quantity: 1});
-        thisTmpl.stockItemsInList.set(addedIds);
+        tmpl.onChangeStockItemsList('added', {_id: itemId, quantity: 1});
       },
       stockItemsInListIds: stockItemsInListIds
-    }
-  },
-
-  onChangeStockItem: function () {
-    return Template.instance().onChangeStockItemsList;
+    };
   }
 });
+
 
 Template.listOfIngredients.events({
   'click #showIngredientsList': function (event, tmpl) {

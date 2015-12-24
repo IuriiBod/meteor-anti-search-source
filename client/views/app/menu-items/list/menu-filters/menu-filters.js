@@ -1,15 +1,15 @@
 //context: category (string), status (string)
 Template.menuFilters.helpers({
   categories: function () {
-    var selectedCategory = this.category;
+    var selectedCategoryId = this.category;
 
     var categories = Categories.find({
-      "_id": {$ne: selectedCategory},
-      "relations.areaId": HospoHero.getCurrentAreaId()
+      _id: {$ne: selectedCategoryId},
+      'relations.areaId': HospoHero.getCurrentAreaId()
     }).fetch();
 
-    if (selectedCategory !== "all") {
-      categories.push({"name": "All", "_id": "all"});
+    if (selectedCategoryId !== 'all') {
+      categories.push({name: 'All', _id: 'all'});
     }
 
     return categories;
@@ -17,7 +17,7 @@ Template.menuFilters.helpers({
 
   statuses: function () {
     var selectedStatus = this.status;
-    var statuses = HospoHero.misc.getMenuItemsStatuses();
+    var statuses = HospoHero.misc.getMenuItemsStatuses(true);
 
     if (selectedStatus !== 'all') {
       statuses.push('all');
@@ -27,9 +27,9 @@ Template.menuFilters.helpers({
   },
 
   selectedCategory: function () {
-    var selectedCategoryName = Template.currentData().category;
-    if (selectedCategoryName != 'all') {
-      return Categories.findOne({_id: selectedCategoryName});
+    var selectedCategoryId = this.category;
+    if (selectedCategoryId != 'all') {
+      return Categories.findOne({_id: selectedCategoryId});
     } else {
       return {name: 'All', _id: 'all'};
     }

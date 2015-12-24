@@ -1,5 +1,5 @@
 Template.ingredientItemView.onCreated(function () {
-  this.data.ingredientItem = getIngredientItem(this.data.ingredient.id);
+  this.data.ingredientItem = getIngredientItem(this.data.ingredient._id);
 });
 
 Template.ingredientItemView.helpers({
@@ -9,7 +9,7 @@ Template.ingredientItemView.helpers({
   cost: function () {
     var ing = Template.instance().data.ingredientItem;
     var cost = ing.costPerPortionUsed * Template.instance().data.ingredient.quantity;
-    cost = Math.round(cost * 100) / 100;
+    cost = HospoHero.misc.rounding(cost);
     return cost;
   }
 });

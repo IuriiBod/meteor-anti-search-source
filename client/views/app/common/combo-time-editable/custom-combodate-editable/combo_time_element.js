@@ -12,7 +12,7 @@ Template.comboTimeElement.onCreated(function () {
     // get the sign of round operation (2 / 5 ~ 0; 3 / 5 ~ 1)
     // if 0 - the sign of operation will be -; otherwise +
     var roundingSign = Math.round(remainder / persistence);
-    return roundingSign ? numberToRound + remainder : numberToRound - remainder;
+    return roundingSign ? numberToRound + persistence - remainder : numberToRound - remainder;
   };
 
   var defaultMoment = _.isDate(this.data.value) ? moment(this.data.value) : moment();
@@ -21,11 +21,15 @@ Template.comboTimeElement.onCreated(function () {
   var minutes = moment(defaultMoment).minutes();
 
   var minuteStepping = this.data.minuteStepping || 1;
-  minutes = this.roundToNearestNumber(minutes, minuteStepping);
+  var minutesRounded = this.roundToNearestNumber(minutes, minuteStepping);
+
+  // Need for correct minutes rounding (if it was 57 minutes and it was rounded to the 60, we must add 1 hour too)
+  var hoursFixer = minutes !== 0 && minutesRounded === 60 ? 1 : 0;
+  hours = parseInt(hours) + hoursFixer;
 
   this.timeObject = {
     hours: hours,
-    minutes: minutes,
+    minutes: minutesRounded,
     ampm: ampm
   };
 });

@@ -19,7 +19,7 @@ Template.menuDetailWidgets.helpers({
     var menu = this;
 
     var round = function (value) {
-      return Math.round(value * 100) / 100;
+      return HospoHero.misc.rounding(value);
     };
 
     var processMenuEntry = function (propertyName, predicate) {
