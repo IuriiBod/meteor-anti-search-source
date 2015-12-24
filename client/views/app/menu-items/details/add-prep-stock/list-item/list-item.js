@@ -26,7 +26,7 @@ Template.addPrepStockListItem.events({
     };
 
     var menuItemId = HospoHero.getParamsFromRoute(Router.current(), '_id');
-    Meteor.call("addItemToMenu", menuItemId, query, HospoHero.handleMethodResult());
+    Meteor.call("editItemOfMenu", menuItemId, query, 'add', HospoHero.handleMethodResult());
   }
 });
 

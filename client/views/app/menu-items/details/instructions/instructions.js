@@ -20,9 +20,9 @@ Template.menuItemInstructions.events({
     };
 
     if (isEditMode) {
-      var info = {};
-      info.instructions = tmpl.$('.summernote').summernote('code');
-      Meteor.call("editMenuItem", tmpl.data._id, info, HospoHero.handleMethodResult(function () {
+      var menuItem = MenuItems.findOne({_id: tmpl.data._id});
+      menuItem.instructions = tmpl.$('.summernote').summernote('code');
+      Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult(function () {
         toggleEditMode();
       }));
     } else {
