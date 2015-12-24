@@ -9,6 +9,13 @@ Template.sortableStockItems.onRendered(function() {
   })
 });
 
+Template.sortableStockItems.events({
+  'click .addStock': function (event) {
+    event.preventDefault();
+    $("#stocksListModal").modal("show");
+  }
+});
+
 var SortableItemsHelper = function (ui) {
   this._draggedItem = this._getDataByItem(ui.item);
   this._previousItem = this._getDataByItem(ui.item.prev());
@@ -35,12 +42,13 @@ SortableItemsHelper.prototype._getOrder = function () {
 };
 
 SortableItemsHelper.prototype._draggedItemData = function() {
+  var draggedItem = {};
+  draggedItem.id = this._draggedItem.item._id;
   if (this._draggedItem.item.place) {
-    return {
-      id: this._draggedItem.item._id,
-      place: this._draggedItem.item.place
-    }
+      draggedItem.place = this._draggedItem.item.place;
   }
+
+  return draggedItem;
 };
 
 SortableItemsHelper.prototype._draggedItemNewPosition = function(stocks, previousItem, nextItem, draggedItem) {

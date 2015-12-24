@@ -1,38 +1,4 @@
-Template.areaBoxEdit.onRendered(function() {
-  var self = this.data;
-  if (self.itemName === 'sarea') {
-    this.$(".sarea").editable({
-      type: "text",
-      title: 'Edit Special area name',
-      showbuttons: false,
-      display: false,
-      mode: 'inline',
-      success: function (response, newValue) {
-        var id = self.item._id;
-        if (newValue) {
-          Meteor.call("editSpecialArea", id, newValue, HospoHero.handleMethodResult());
-        }
-      }
-    });
-  }
-  if (self.itemName === 'garea') {
-    this.$(".garea").editable({
-      type: "text",
-      title: 'Edit General area name',
-      showbuttons: false,
-      display: false,
-      mode: 'inline',
-      success: function (response, newValue) {
-        var id = self.item._id;
-        if (newValue) {
-          Meteor.call("editGeneralArea", id, newValue, HospoHero.handleMethodResult());
-        }
-      }
-    });
-  }
-});
-
-Template.areaBoxEdit.helpers({
+Template.areaBox.helpers({
   activeGeneralArea: function (id) {
     return this.stockTakeData.activeGeneralArea === id;
   },
@@ -49,7 +15,6 @@ Template.areaBoxEdit.helpers({
 
   widthOfBar: function() {
     var progress, self = this, itemId = this.item._id;
-    //Init helper functions
     var getSpecialArea = function() {
       return self.itemClass === 'garea-filter' ? SpecialAreas.find({"generalArea": itemId}) : SpecialAreas.findOne({_id: itemId});
     };
@@ -78,8 +43,7 @@ Template.areaBoxEdit.helpers({
 
     var generalAreaProgressBar = function() {
       var totalCount = 0, progressBar = 0;
-      var generalArea = GeneralAreas.findOne({_id: itemId});
-      if (generalArea) {
+      var getStocks = function() {
         var specialAreas = getSpecialArea();
         if (specialAreas.count() > 0) {
           specialAreas.forEach(function (doc) {
@@ -91,6 +55,11 @@ Template.areaBoxEdit.helpers({
             }
           });
         }
+      };
+
+      var generalArea = GeneralAreas.findOne({_id: itemId});
+      if (generalArea) {
+        getStocks();
       }
       var stocktakes = Stocktakes.find({"version": self.stockTakeData.stockTakeId, "generalArea": itemId}).count();
       if (stocktakes > 0) {
@@ -109,14 +78,14 @@ Template.areaBoxEdit.helpers({
   }
 });
 
-Template.areaBoxEdit.events({
+Template.areaBox.events({
   'click .garea-filter': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;
     tmpl.data.stockTakeData.makeGeneralAreaActive(id);
-    var sarea = SpecialAreas.findOne({generalArea: id}, {sort: {name: 1}})._id;
+    var sarea = SpecialAreas.findOne({generalArea: id}, {sort: {name: 1}});
     if (sarea) {
-      tmpl.data.stockTakeData.makeSpecialAreaActive(sarea);
+      tmpl.data.stockTakeData.makeSpecialAreaActive(sarea._id);
     } else {
       tmpl.data.stockTakeData.makeSpecialAreaActive(null);
     }
@@ -126,26 +95,5 @@ Template.areaBoxEdit.events({
     event.preventDefault();
     var id = this.item._id;
     tmpl.data.stockTakeData.makeSpecialAreaActive(id);
-  },
-
-  'mouseenter .areaBox': function (event, tmpl) {
-    event.preventDefault();
-    tmpl.$(event.target).find('.box-wrapper').show();
-  },
-
-  'mouseleave .areaBox': function (event, tmpl) {
-    event.preventDefault();
-    tmpl.$(event.target).find('.box-wrapper').hide();
-  },
-
-  'click .removeArea': function (event) {
-    event.preventDefault();
-    var id = this.item._id;
-    var type = this.item.type;
-    if (type === "garea") {
-      Meteor.call("deleteGeneralArea", id, HospoHero.handleMethodResult());
-    } else if (type === "sarea") {
-      Meteor.call("deleteSpecialArea", id, HospoHero.handleMethodResult());
-    }
   }
 });

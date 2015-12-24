@@ -1,6 +1,13 @@
+Template.stockCountingListItemEdit.onCreated(function() {
+  this.getIngredientFromStock = function() {
+    return Stocktakes.findOne({stockId: this.data.item._id});
+  };
+});
+
 Template.stockCountingListItemEdit.onRendered(function() {
-  var tmplData = this.data;
   this.$('[data-toggle="tooltip"]').tooltip();
+  var self = this;
+
   this.$(".counting").editable({
     type: "text",
     title: 'Edit count',
@@ -12,20 +19,20 @@ Template.stockCountingListItemEdit.onRendered(function() {
     },
     success: function (response, newValue) {
       var element = this;
-      var elemId = tmplData.item.stockRef || tmplData.item._id;
-      var stockId = tmplData.item.stockId || tmplData.item._id;
+      var stockRefId = self.getIngredientFromStock() ? self.getIngredientFromStock()._id : null;
+      var stockId = self.data.item._id;
       if (newValue) {
         var count = isNaN(newValue) ? 0 : parseFloat(newValue);
         var info = {
-          "version": tmplData.stockTakeData.stockTakeId,
-          "generalArea": tmplData.stockTakeData.activeGeneralArea,
-          "specialArea": tmplData.stockTakeData.activeSpecialArea,
+          "version": self.data.stockTakeData.stockTakeId,
+          "generalArea": self.data.stockTakeData.activeGeneralArea,
+          "specialArea": self.data.stockTakeData.activeSpecialArea,
           "stockId": stockId,
           "counting": count
         };
-        var main = StocktakeMain.findOne({_id: tmplData.stockTakeData.stockTakeId});
+        var main = StocktakeMain.findOne({_id: self.data.stockTakeData.stockTakeId});
         if (main) {
-          Meteor.call("updateStocktake", elemId, info, newValue, HospoHero.handleMethodResult(function () {
+          Meteor.call("updateStocktake", stockRefId, info, newValue, HospoHero.handleMethodResult(function () {
             if ($(element).closest('li').next().length > 0) {
               $(element).closest('li').next().find('a').click();
             }
@@ -37,7 +44,16 @@ Template.stockCountingListItemEdit.onRendered(function() {
 });
 
 Template.stockCountingListItemEdit.helpers({
-   canEditIngredientsItem: function(id) {
+  ingredient: function() {
+    if (this.item) {
+      return {
+        inStock: Template.instance().getIngredientFromStock(),
+        data: this.item
+      }
+    }
+  },
+
+  canEditIngredientsItem: function(id) {
     var permitted = true;
     var stocktake = Stocktakes.findOne({_id: id});
     if (stocktake && stocktake.orderRef) {
@@ -55,8 +71,8 @@ Template.stockCountingListItemEdit.events({
     if (confrimDelete) {
       var id = this.item._id;
       var sareaId = tmpl.data.stockTakeData.activeSpecialArea;
-      var stockRefId = this.item.stockRef;
-      var stocktake = Stocktakes.findOne(stockRefId);
+      var stockRefId = tmpl.getIngredientFromStock() ? tmpl.getIngredientFromStock()._id : null;
+      var stocktake = Stocktakes.findOne({_id: stockRefId});
       if (stocktake) {
         if (stocktake.status || stocktake.orderRef) {
           return alert("Order has been created. You can't delete this stocktake item.")

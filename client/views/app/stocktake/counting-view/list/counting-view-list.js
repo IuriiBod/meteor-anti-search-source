@@ -1,12 +1,14 @@
-Template.stockCountingEdit.onCreated(function() {
+Template.stockCounting.onCreated(function() {
+  this.set('editStockTake', false);
   this.set('activeSpecialArea', null);
   this.set('activeGeneralArea', null);
 });
 
-Template.stockCountingEdit.helpers({
+Template.stockCounting.helpers({
   stockTakeCountingContext: function() {
     var instance = Template.instance();
     return {
+      editableStockTake: instance.get('editStockTake'),
       stockTakeId: instance.data.stocktakeId,
       activeSpecialArea: instance.get('activeSpecialArea'),
       activeGeneralArea: instance.get('activeGeneralArea'),
@@ -19,33 +21,35 @@ Template.stockCountingEdit.helpers({
     };
   },
 
+  stocktakeList: function() {
+    var gareaId = Template.instance().get('activeGeneralArea');
+    var sareaId = Template.instance().get('activeSpecialArea');
+    if (gareaId && sareaId) {
+      var main = StocktakeMain.findOne({_id: this.stocktakeId});
+      if (main && main.orderReceipts && main.orderReceipts.length > 0) {
+        var stocktakes = Stocktakes.find({
+          "version": this.stocktakeId,
+          "generalArea": gareaId,
+          "specialArea": sareaId
+        }, {sort: {"place": 1}});
+        if (stocktakes) {
+          return stocktakes;
+        }
+      }
+    }
+  },
+
   ingredientsList: function() {
-    var instance = Template.instance();
-    var gareaId = instance.get('activeGeneralArea');
-    var sareaId = instance.get('activeSpecialArea');
+    var gareaId = Template.instance().get('activeGeneralArea');
+    var sareaId = Template.instance().get('activeSpecialArea');
     if (gareaId && sareaId) {
       var sarea = SpecialAreas.findOne({_id: sareaId});
       var ings = [];
       if (sarea && sarea.stocks.length > 0) {
         var ids = sarea.stocks;
-        var self = this;
         ids.forEach(function (id) {
           var item = Ingredients.findOne({"_id": id, "status": "active"});
-          var stocktake = Stocktakes.findOne({
-            "version": self.stocktakeId,
-            "stockId": id,
-            "generalArea": gareaId,
-            "specialArea": sareaId
-          });
           if (item) {
-            if (stocktake) {
-              _.extend(item, {
-                stockRef: stocktake._id,
-                counting: stocktake.counting,
-                status: stocktake.status,
-                place: stocktake.place
-              });
-            }
             ings.push(item);
           }
         });
@@ -54,8 +58,13 @@ Template.stockCountingEdit.helpers({
     }
   },
 
-  stockTakeDate: function() {
-    return StocktakeMain.findOne({_id: this.stocktakeId}).stocktakeDate;
+  stockTakeMain: function() {
+    return StocktakeMain.findOne({_id: this.stocktakeId});
+  },
+
+  notTemplate: function() {
+    var main = StocktakeMain.findOne({_id: this.stocktakeId});
+    return main && main.orderReceipts && main.orderReceipts.length > 0;
   },
 
   modalStockListParams: function() {
@@ -70,19 +79,33 @@ Template.stockCountingEdit.helpers({
   }
 });
 
-Template.stockCountingEdit.events({
-  'click .addStock': function (event) {
+Template.stockCounting.events({
+  'click .saveStockTake': function (event, tmpl) {
     event.preventDefault();
-    $("#stocksListModal").modal("show");
+    tmpl.set('editStockTake', false);
+    $(event.target).hide();
+    $(".editStockTake").show();
+  },
+
+  'click .editStockTake': function (event, tmpl) {
+    event.preventDefault();
+    tmpl.set('editStockTake', true);
+    $(event.target).hide();
   },
 
   'click .generateOrders': function (event, tmpl) {
     event.preventDefault();
+    tmpl.set('editStockTake', false);
     var version = tmpl.data.stocktakeId;
     if (version) {
       Meteor.call("generateOrders", version, HospoHero.handleMethodResult(function () {
         Router.go("stocktakeOrdering", {"_id": version})
       }));
     }
+  },
+
+  'click .addStock': function (event, tmpl) {
+    event.preventDefault();
+    tmpl.$("#stocksListModal").modal("show");
   }
 });
