@@ -1,15 +1,4 @@
 Meteor.methods({
-  /**
-   * Subscribe or unsubscribe user from items
-   *
-   * @param {Object} subscription - The subscription parameters
-   * @param {string} [subscription._id] - ID of subscription
-   * @param {string} subscription.type - Type of subscription (menu|job)
-   * @param {string} subscription.itemIds - 'all' or item ID
-   * @param {string} subscription.subscriber - ID of subscriber
-   * @param {Object} subscription.relations - HospoHero relations object
-   * @param {boolean} unsubscribeTrigger - If true - unsubscribes user from itemIds. Otherwise - subscribes on it
-   */
   subscribe: function (subscription) {
     updateSubscription(subscription, false);
   },
@@ -18,8 +7,75 @@ Meteor.methods({
   }
 });
 
-
+/**
+ * Subscribe or unsubscribe user from items
+ *
+ * @param {Object} subscriptionParams - The subscription parameters
+ * @param {string} [subscriptionParams._id] - ID of subscription
+ * @param {string} subscriptionParams.type - Type of subscription (menu|job)
+ * @param {string} subscriptionParams.itemIds - 'all' or item ID
+ * @param {string} subscriptionParams.subscriber - ID of subscriber
+ * @param {Object} subscriptionParams.relations - HospoHero relations object
+ * @param, {boolean} unsubscribeTrigger - if true - do unsubscription
+ */
 var updateSubscription = function (subscriptionParams, unsubscribeTrigger) {
+  /**
+   * Remove certain items from subscription
+   *
+   * @param {Object} existingSubscription - Subscription object that will be updated
+   * @param, {Array} itemToRemoveIds - can be array with item id's, that should be removed from existing subscription
+   */
+  var removeItemsFromSubscription = function (existingSubscription, itemToRemoveIds) {
+    /**
+     * returns id's of items that can be included to subscription
+     *
+     * @param {String} itemType - Type of subscription. Can be 'job' or 'menu'
+     */
+    var getItemIdsForSubscription = function (itemType) {
+      var subscriptionCollections = {
+        menu: MenuItems,
+        job: JobItems
+      };
+
+      return subscriptionCollections[itemType].find({
+        'relations.areaId': HospoHero.getCurrentAreaId(Meteor.userId())
+      }).map(function (item) {
+        return item._id;
+      });
+    };
+
+    //// removeItemsFromSubscription implementation
+    //
+    if (existingSubscription.itemIds == 'all') {
+      var allSubscribedItemIds = getItemIdsForSubscription(existingSubscription.type);
+      var itemsWithoutUnsubscribed = _.difference(allSubscribedItemIds, itemToRemoveIds);
+      Subscriptions.update({_id: existingSubscription._id}, {$set: {itemIds: itemsWithoutUnsubscribed}});
+    } else if (existingSubscription.itemIds.length > 1) {
+      Subscriptions.update({_id: existingSubscription._id}, {$pull: {itemIds: {$in: itemToRemoveIds}}});
+    } else {
+      Subscriptions.remove({_id: existingSubscription._id});
+    }
+  };
+  /**
+   * Add certain items(or all) from subscription
+   *
+   * @param {Object} existingSubscription - Subscription object that will be updated
+   * @param, {Array|String} itemToRemoveIds - array with items id's, that should be added to existing subscription
+   */
+  var addItemsToSubscription = function (existingSubscription, itemToAddIds) {
+    if (existingSubscription.itemIds == 'all') {
+      throw new Meteor.Error('This item already subscribed');
+    } else {
+      if (itemToAddIds == 'all') {
+        Subscriptions.update({_id: existingSubscription._id}, {$set: {itemIds: 'all'}});
+      } else {
+        Subscriptions.update({_id: existingSubscription._id}, {$addToSet: {itemIds: {$each: itemToAddIds}}});
+      }
+    }
+  };
+
+  //// Start of updateSubscription implementation
+  //
   check(subscriptionParams, HospoHero.checkers.SubscriptionDocument);
   subscriptionParams.subscriber = subscriptionParams.subscriber || Meteor.userId();
 
@@ -35,8 +91,8 @@ var updateSubscription = function (subscriptionParams, unsubscribeTrigger) {
   });
 
   if (unsubscribeTrigger) {
-    // unsubscribe
 
+    // unsubscribe
     if (existingSubscription) {
       if (subscriptionParams.itemIds == 'all') {
         // delete subscription
@@ -47,48 +103,12 @@ var updateSubscription = function (subscriptionParams, unsubscribeTrigger) {
     }
 
   } else {
-    // subscribe
 
+    // subscribe
     if (!existingSubscription) {
       Subscriptions.insert(subscriptionParams);
     } else {
       addItemsToSubscription(existingSubscription, subscriptionParams.itemIds);
     }
   }
-};
-
-var removeItemsFromSubscription = function (existingSubscription, itemToRemoveIds) {
-  if (existingSubscription.itemIds == 'all') {
-    var allSubscribedItemIds = getItemIds(existingSubscription.type);
-    allSubscribedItemIds = _.difference(allSubscribedItemIds, itemToRemoveIds);
-    Subscriptions.update({_id: existingSubscription._id}, {$set: {itemIds: allSubscribedItemIds}});
-  } else {
-    Subscriptions.update({_id: existingSubscription._id}, {$pull: {itemIds: {$in: itemToRemoveIds}}});
-  }
-};
-
-var addItemsToSubscription = function (existingSubscription, itemToAddIds) {
-  if (existingSubscription.itemIds == 'all') {
-    throw new Meteor.Error('This item already subscribed');
-  } else {
-    if (itemToAddIds == 'all') {
-      Subscriptions.update({_id: existingSubscription._id}, {$set: {itemIds: 'all'}});
-    } else {
-      Subscriptions.update({_id: existingSubscription._id}, {$addToSet: {itemIds: {$each: itemToAddIds}}});
-    }
-  }
-};
-
-// Get all items ids for subscriptions for all items
-var getItemIds = function (itemType) {
-  var subscriptionCollections = {
-    menu: MenuItems,
-    job: JobItems
-  };
-
-  return subscriptionCollections[itemType].find({
-    'relations.areaId': HospoHero.getCurrentAreaId(Meteor.userId())
-  }).map(function (item) {
-    return item._id;
-  });
 };
