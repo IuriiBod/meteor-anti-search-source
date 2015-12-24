@@ -1,3 +1,4 @@
+// should be removed/replaced after merge
 Template.jobItemEdit.helpers({
   item: function () {
     return getPrepItem(Template.instance().data._id);

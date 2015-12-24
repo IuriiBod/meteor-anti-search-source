@@ -1,23 +1,8 @@
 Template.jobItemDetail.onCreated(function () {
-
   this.getLabourCost = function () {
     var jobItem = this.data.jobItem;
     var activeTimeInMins = parseInt(jobItem.activeTime / 60);
     return Math.round((parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins * 100) / 100;
-  };
-  this.getTotalIngredientCost = function () {
-    var totalIngCost = 0;
-    this.data.jobItem.ingredients.forEach(function (ing) {
-      var ingItem = getIngredientItem(ing._id);
-      if (ingItem) {
-        totalIngCost += parseFloat(ingItem.costPerPortionUsed) * parseFloat(ing.quantity);
-      }
-    });
-    return totalIngCost;
-  };
-  this.getPrepCostPerPortion = function () {
-    var totalCost = (this.getLabourCost() + this.getTotalIngredientCost());
-    return Math.round((totalCost / this.data.jobItem.portions) * 100) / 100;
   };
 });
 
@@ -104,7 +89,24 @@ Template.jobItemDetail.helpers({
   },
 
   prepCostPerPortion: function () {
-    return Template.instance().getPrepCostPerPortion();
+    var self = this;
+    var getPrepCostPerPortion = function () {
+      var getTotalIngredientCost = function () {
+        var totalIngCost = 0;
+        self.jobItem.ingredients.forEach(function (ing) {
+          var ingItem = getIngredientItem(ing._id);
+          if (ingItem) {
+            totalIngCost += parseFloat(ingItem.costPerPortionUsed) * parseFloat(ing.quantity);
+          }
+        });
+        return totalIngCost;
+      };
+
+      var totalCost = (Template.instance().getLabourCost() + getTotalIngredientCost());
+      return Math.round((totalCost / self.jobItem.portions) * 100) / 100;
+    };
+
+    return getPrepCostPerPortion();
   },
 
   relatedMenus: function () {

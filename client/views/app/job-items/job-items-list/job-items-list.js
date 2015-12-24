@@ -41,7 +41,7 @@ Template.jobItemsList.onRendered(function () {
 
 Template.jobItemsList.helpers({
   jobItems: function () {
-    return Template.instance().searchSource.searchResult();
+    return Template.instance().searchSource.searchResult({sort: {name: 1}});
   },
   isRecurring: function () {
     return Template.instance().data.type == 'Recurring';
