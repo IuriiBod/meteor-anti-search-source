@@ -3,7 +3,7 @@ Template.jobDetailsHeader.helpers({
     return Subscriptions.findOne({
       type: 'job',
       subscriber: Meteor.userId(),
-      itemIds: {$in: [this._id, 'all']}
+      itemIds: {$in: [this.id, 'all']}
     });
   },
   isArchived: function () {
