@@ -19,14 +19,14 @@
                   <th>On hand</th>
                   <th>Needed</th>
                   <th>To order</th>
-                  {{#unless supplier}}
+                  {{#unless state$activeSupplierId}}
                     <th>Action</th>
                   {{/unless}}
                 </tr>
                 </thead>
                 <tbody>
                 {{#each stockOrdersList state$activeSupplierId}}
-                  {{> ordersListItem itemId=_id onCountChange=onCountChange}}
+                  {{> stockOrderItem}}
                 {{/each}}
                 </tbody>
               </table>
@@ -54,8 +54,4 @@
       {{> commentsPanel id=stocktakeMainId type='stockOrders'}}
     </div>
   </div>
-
-  <!-- COMPOSE MAIL MODAL-->
-  {{> composeMail name="composeMail" initialHtml=initialHtml supplier=supplier}}
-  <!-- /COMPOSE MAIL MODAL -->
 </template>
