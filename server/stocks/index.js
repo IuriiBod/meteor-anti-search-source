@@ -183,7 +183,6 @@ Meteor.methods({
         ingredientId = Ingredients.insert(ingredient);
       }
     }
-    console.log(ingredientId);
 
     return quantity === false ? ingredientId : {_id: ingredientId, quantity: quantity};
   }

@@ -94,7 +94,6 @@ Meteor.methods({
       jobItem = HospoHero.misc.omitAndExtend(jobItem, ['_id', 'editedOn', 'editedBy', 'relations'], areaId);
 
       jobItem.ingredients = HospoHero.misc.itemsMapperWithCallback(jobItem.ingredients, function (item) {
-        console.log(item);
         return Meteor.call('duplicateIngredient', item._id, areaId, item.quantity);
       });
       jobItem.name = HospoHero.misc.copyingItemName(jobItem.name, JobItems, areaId);
