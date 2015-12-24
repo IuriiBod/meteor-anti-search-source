@@ -37,16 +37,16 @@ Template.listOfIngredients.helpers({
   },
 
   modalStockListParams: function () {
-    var thisTmpl = Template.instance();
+    var tmpl = Template.instance();
 
-    var stockItemsInListIds = _.map(thisTmpl.data.ingredients, function (item) {
+    var stockItemsInListIds = _.map(tmpl.data.ingredients, function (item) {
       return item._id;
     });
     return {
       onAddStockItem: function (itemId) {
-        var addedIds = thisTmpl.data.ingredients;
+        var addedIds = tmpl.data.ingredients;
         addedIds.push({_id: itemId, quantity: 1});
-        thisTmpl.data.onChange(addedIds);
+        tmpl.data.onChange(addedIds);
       },
       stockItemsInListIds: stockItemsInListIds
     }

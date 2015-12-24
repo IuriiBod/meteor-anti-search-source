@@ -2,8 +2,10 @@ Template.jobItemDetail.onCreated(function () {
   this.getLabourCost = function () {
     var jobItem = this.data.jobItem;
     var activeTimeInMins = parseInt(jobItem.activeTime / 60);
-    return Math.round((parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins * 100) / 100;
+    return HospoHero.misc.rounding((parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins);
   };
+
+  this.jobType = JobTypes.findOne(this.data.type);
 });
 
 Template.jobItemDetail.helpers({
@@ -18,23 +20,13 @@ Template.jobItemDetail.helpers({
   },
 
   isPrep: function () {
-    var item = Template.instance().data.jobItem;
-    if (item) {
-      if (item.type) {
-        var type = JobTypes.findOne(item.type);
-        return type && type.name == 'Prep';
-      }
-    }
+    var type = Template.instance().jobType;
+    return type && type.name == 'Prep';
   },
 
   isRecurring: function () {
-    var item = Template.instance().data.jobItem;
-    if (item) {
-      if (item.type) {
-        var type = JobTypes.findOne(item.type);
-        return type && type.name == 'Recurring';
-      }
-    }
+    var type = Template.instance().jobType;
+    return type && type.name == 'Recurring';
   },
 
   endsOn: function () {
