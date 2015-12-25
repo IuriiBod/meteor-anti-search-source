@@ -1,11 +1,3 @@
-Template.areaChooser.events({
-  'submit form': function (e, tmpl) {
-    e.preventDefault();
-    var areaId = tmpl.$('[name="areaId"]').val();
-    tmpl.data.onAreaSelected(areaId);
-  }
-});
-
 Template.areaChooser.helpers({
   areas: function () {
     var user = Meteor.user();
@@ -26,6 +18,17 @@ Template.areaChooser.helpers({
       return Areas.find(query, {fields: {name: 1}}).fetch();
     } else {
       return [];
+    }
+  }
+});
+
+Template.areaChooser.events({
+  'submit form': function (event, tmpl) {
+    event.preventDefault();
+    var areaId = event.target.areaId.value;
+
+    if (_.isFunction(tmpl.data.onAreaSelected)) {
+      tmpl.data.onAreaSelected(areaId);
     }
   }
 });

@@ -1,58 +1,53 @@
-Template.listOfIngredients.onCreated(function () {
-  this.stockItemsInList = new ReactiveVar(this.data.ingredients || []);
-
-  var self = this;
-  this.onChangeStockItemsList = function (changedItem) {
-
-    var stockItems = self.stockItemsInList.get();
-    var changedStockItems = [];
-    if (changedItem.quantity == 0) {
-      stockItems.forEach(function (item) {
-        if (item.id != changedItem.id) {
-          changedStockItems.push(item);
-        }
-      });
-    } else {
-      changedStockItems = _.map(stockItems, function (item) {
-        if (item.id == changedItem.id) {
-          return changedItem;
-        }
-        return item;
-      })
-    }
-    self.stockItemsInList.set(changedStockItems);
-  }
-});
-
 Template.listOfIngredients.helpers({
+  onChangeItemInList: function () {
+    var tmpl = Template.instance();
+    return function (operationType, changedItem) {
+      var stockItems = tmpl.data.ingredients;
+      if (operationType == 'removed') {
+        stockItems = _.reject(stockItems, function (item) {
+          return item._id == changedItem._id;
+        });
+      } else if (operationType == 'changed') {
+        return _.map(stockItems, function (item) {
+          item.quantity = item._id == changedItem._id ? item.quantity = changedItem.quantity : item.quantity;
+          return item;
+        });
+      }
+      tmpl.data.onChange(stockItems);
+    };
+  },
+
   ingredients: function () {
-    var stockItemsInList = Template.instance().stockItemsInList.get();
-    Template.instance().data.onChange(stockItemsInList);
-    return stockItemsInList;
+    var ingredientObjectsWithQuantity = [];
+
+    var itemsInList = this.ingredients;
+    itemsInList.forEach(function (item) {
+      var ingredient = Ingredients.findOne({_id: item._id});
+      ingredient.quantity = item.quantity;
+      ingredientObjectsWithQuantity.push(ingredient);
+    });
+
+    return ingredientObjectsWithQuantity;
   },
 
   isMenu: function () {
-    return Template.instance().data.id == "menuSubmit";
+    return this.id === "menuSubmit";
   },
 
   modalStockListParams: function () {
-    var thisTmpl = Template.instance();
+    var tmpl = Template.instance();
 
-    var stockItemsInListIds = _.map(thisTmpl.stockItemsInList.get(), function (item) {
-      return item.id;
+    var stockItemsInListIds = _.map(tmpl.data.ingredients, function (item) {
+      return item._id;
     });
     return {
       onAddStockItem: function (itemId) {
-        var addedIds = thisTmpl.stockItemsInList.get();
-        addedIds.push({id: itemId, quantity: 1});
-        thisTmpl.stockItemsInList.set(addedIds);
+        var addedIds = tmpl.data.ingredients;
+        addedIds.push({_id: itemId, quantity: 1});
+        tmpl.data.onChange(addedIds);
       },
       stockItemsInListIds: stockItemsInListIds
     }
-  },
-
-  onChangeStockItem: function () {
-    return Template.instance().onChangeStockItemsList;
   }
 });
 

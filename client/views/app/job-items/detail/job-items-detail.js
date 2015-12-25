@@ -1,24 +1,11 @@
 Template.jobItemDetail.onCreated(function () {
-
   this.getLabourCost = function () {
     var jobItem = this.data.jobItem;
     var activeTimeInMins = parseInt(jobItem.activeTime / 60);
-    return (parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins;
+    return HospoHero.misc.rounding((parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins);
   };
-  this.getTotalIngredientCost = function () {
-    var totalIngCost = 0;
-    this.data.jobItem.ingredients.forEach(function (ing) {
-      var ingItem = getIngredientItem(ing._id);
-      if (ingItem) {
-        totalIngCost += parseFloat(ingItem.costPerPortionUsed) * parseFloat(ing.quantity);
-      }
-    });
-    return totalIngCost;
-  };
-  this.getPrepCostPerPortion = function () {
-    var totalCost = (this.getLabourCost() + this.getTotalIngredientCost());
-    return Math.round((totalCost / this.data.jobItem.portions) * 100) / 100;
-  };
+
+  this.jobType = JobTypes.findOne({_id: this.data.jobItem.type});
 });
 
 Template.jobItemDetail.helpers({
@@ -33,23 +20,13 @@ Template.jobItemDetail.helpers({
   },
 
   isPrep: function () {
-    var item = Template.instance().data.jobItem;
-    if (item) {
-      if (item.type) {
-        var type = JobTypes.findOne(item.type);
-        return type && type.name == 'Prep';
-      }
-    }
+    var type = Template.instance().jobType;
+    return type && type.name == 'Prep';
   },
 
   isRecurring: function () {
-    var item = Template.instance().data.jobItem;
-    if (item) {
-      if (item.type) {
-        var type = JobTypes.findOne(item.type);
-        return type && type.name == 'Recurring';
-      }
-    }
+    var type = Template.instance().jobType;
+    return type && type.name == 'Recurring';
   },
 
   endsOn: function () {
@@ -104,7 +81,24 @@ Template.jobItemDetail.helpers({
   },
 
   prepCostPerPortion: function () {
-    return Template.instance().getPrepCostPerPortion();
+    var self = this;
+    var getPrepCostPerPortion = function () {
+      var getTotalIngredientCost = function () {
+        var totalIngCost = 0;
+        self.jobItem.ingredients.forEach(function (ing) {
+          var ingItem = getIngredientItem(ing._id);
+          if (ingItem) {
+            totalIngCost += parseFloat(ingItem.costPerPortionUsed) * parseFloat(ing.quantity);
+          }
+        });
+        return totalIngCost;
+      };
+
+      var totalCost = (Template.instance().getLabourCost() + getTotalIngredientCost());
+      return HospoHero.misc.rounding(totalCost / self.jobItem.portions);
+    };
+
+    return getPrepCostPerPortion();
   },
 
   relatedMenus: function () {
@@ -114,29 +108,5 @@ Template.jobItemDetail.helpers({
   getCategory: function (id) {
     var category = Categories.findOne({_id: id});
     return category ? category.name : '';
-  }
-});
-
-Template.jobItemDetail.events({
-  'click .editJobItemBtn': function (event, template) {
-    event.preventDefault();
-    Router.go("jobItemEdit", {'_id': template.data.jobItem._id});
-  },
-
-  'click .printJobItemBtn': function (event) {
-    event.preventDefault();
-    print();
-  },
-
-  // This events seems not used
-  'click .subscribeJobItemBtn': function (event) {
-    event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    Meteor.call("subscribe", id, HospoHero.handleMethodResult());
-  },
-  'click .unSubscribeJobItemBtn': function (event) {
-    event.preventDefault();
-    var id = $(event.target).attr("data-id");
-    Meteor.call("unSubscribe", id, HospoHero.handleMethodResult());
   }
 });

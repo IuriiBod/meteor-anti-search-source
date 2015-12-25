@@ -11,8 +11,6 @@ Template.selectPos.helpers({
 Template.selectPos.events({
   'click .add-pos-btn': function (event, tmpl) {
     var name = tmpl.$('.selectPosName').val();
-    Meteor.call('addPosNameToMenuItem', tmpl.data.menuItem._id, name, HospoHero.handleMethodResult());
+    Meteor.call('togglePosNameToMenuItem', tmpl.data.item._id, name, 'add', HospoHero.handleMethodResult());
   }
 });
-
-

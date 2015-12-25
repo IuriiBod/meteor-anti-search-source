@@ -198,7 +198,7 @@ Meteor.methods({
       logger.error("User not permitted to update stocktake position");
       throw new Meteor.Error(403, "User not permitted to update stocktake position");
     }
-
+    console.log();
     check(sortedStockItems, {
       draggedItem: Match.OneOf(String, {
         id: Match.Optional(String),

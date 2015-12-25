@@ -1,8 +1,5 @@
 <template name="addPrepStockListItem">
   <tr>
-    <td>{{{itemName}}}</td>
-    <td>{{type}}</td>
-    <td> {{#if isPrepJob}} {{activeTime}} {{else}} -N/A- {{/if}} </td>
     <td>
       <div class="i-checks">
         <label>
@@ -10,5 +7,8 @@
         </label>
       </div>
     </td>
+    <td>{{{itemName}}}</td>
+    <td>{{type}}</td>
+    <td> {{#if isPrepJob}} {{activeTime}} {{else}} -N/A- {{/if}} </td>
   </tr>
 </template>

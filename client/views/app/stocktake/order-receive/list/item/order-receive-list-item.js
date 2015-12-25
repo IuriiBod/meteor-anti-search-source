@@ -17,20 +17,15 @@ Template.orderReceiveItem.helpers({
   },
 
   delivery: function() {
+    var delivery = {};
     var order = this.item;
-    var deliveredCorrectly, wrongQuantity, wrongPrice, status;
     if(order && order.deliveryStatus) {
-      deliveredCorrectly = order.deliveryStatus.indexOf('Delivered Correctly') >= 0;
-      wrongQuantity = order.deliveryStatus.indexOf('Wrong Quantity') >= 0;
-      wrongPrice = order.deliveryStatus.indexOf('Wrong Price') >= 0;
-      status = order.deliveryStatus;
+      delivery.deliveredCorrectly = order.deliveryStatus.indexOf('Delivered Correctly') >= 0;
+      delivery.wrongQuantity = order.deliveryStatus.indexOf('Wrong Quantity') >= 0;
+      delivery.wrongPrice = order.deliveryStatus.indexOf('Wrong Price') >= 0;
+      delivery.status = order.deliveryStatus;
     }
-    return {
-      status: status,
-      deliveredCorrectly: deliveredCorrectly,
-      wrongQuantity: wrongQuantity,
-      wrongPrice: wrongPrice
-    };
+    return delivery;
   },
 
   isReceived: function() {
