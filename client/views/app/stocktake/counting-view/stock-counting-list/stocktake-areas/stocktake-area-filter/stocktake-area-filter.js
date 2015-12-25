@@ -1,4 +1,4 @@
-Template.areaFilters.onRendered(function() {
+Template.stocktakeAreaFilter.onRendered(function() {
   var garea = GeneralAreas.findOne({}, {sort: {"createdAt": 1}});
   if (garea && !this.data.stockTakeData.activeGeneralArea) {
     this.data.stockTakeData.makeGeneralAreaActive(garea._id);
@@ -6,7 +6,7 @@ Template.areaFilters.onRendered(function() {
   }
 });
 
-Template.areaFilters.helpers({
+Template.stocktakeAreaFilter.helpers({
   generalAreas: function() {
     var main = StocktakeMain.findOne({_id: this.stocktakeId});
     if (main && main.orderReceipts && main.orderReceipts.length > 0) {
@@ -32,7 +32,7 @@ Template.areaFilters.helpers({
   }
 });
 
-Template.areaFilters.events({
+Template.stocktakeAreaFilter.events({
   'click .addNewSpecialArea': function (event) {
     event.preventDefault();
     $("#addNewSpecialAreaModal").modal();

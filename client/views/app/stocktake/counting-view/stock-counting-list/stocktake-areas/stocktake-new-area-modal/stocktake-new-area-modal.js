@@ -17,12 +17,6 @@ Template.newAreaModal.onCreated(function() {
   }
 });
 
-Template.newAreaModal.helpers({
-  name: function() {
-    return this.name;
-  }
-});
-
 Template.newAreaModal.events({
   'click #savegeneralArea': function (event, tmpl) {
     event.preventDefault();
