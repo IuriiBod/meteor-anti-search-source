@@ -6,7 +6,7 @@ meteor reset
 
 #run app without migrations
 export DATABASE_IMPORT_MODE=1
-meteor --port 9999 --settings ./.mupx-deploy/settings.json & sleep 60
+meteor --port 9999 --settings ./.mupx-deploy/settings-dev.json & sleep 80
 
 mongorestore --db meteor -h localhost --port 10000 --drop  "${DEST_DIR}/${MONGO_DB}"
 kill $!
