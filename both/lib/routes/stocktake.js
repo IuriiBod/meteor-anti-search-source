@@ -1,4 +1,3 @@
-// ---------------------STOCKTAKE
 Router.route('stocktakeList', {
   path: '/stocktake',
   template: 'stockListMainView',
@@ -62,7 +61,7 @@ Router.route('orderReceive', {
   },
   data: function () {
     return {
-      currentReceipt: this.params._id
+      currentReceipt: OrderReceipts.findOne({_id: this.params._id})
     };
   }
 });

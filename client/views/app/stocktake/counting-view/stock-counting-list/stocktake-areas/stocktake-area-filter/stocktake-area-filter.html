@@ -1,0 +1,38 @@
+<template name="stocktakeAreaFilter">
+  <div class="col-md-4 no-margin areaFilering">
+    {{#each generalAreas}}
+      {{#if ../stockTakeData.editableStockTake}}
+        {{> areaItemEdit item=this itemClass="garea-filter" itemType="garea" stockTakeData=../stockTakeData}}
+        <div class="collapse {{#if activeGeneralArea this._id}} in {{/if}}" id="{{this._id}}">
+          <div class="well">
+            {{#each specialAreas this._id}}
+              {{> areaItemEdit item=this itemClass="sarea-filter" itemType="sarea" stockTakeData=../../stockTakeData}}
+            {{else}}
+              No Special Areas
+            {{/each}}
+            <div class="button-wrapper" style="height: 30px">
+              <a href="#" data-toggle="modal" class="btn btn-outline btn-primary col-md-12 no-margin addNewSpecialArea" style="margin-bottom: 20px">Add</a>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        {{> areaItemView item=this itemClass="garea-filter" itemType="garea" stockTakeData=../stockTakeData}}
+        <div class="collapse {{#if activeGeneralArea this._id}} in {{/if}}" id="{{this._id}}">
+          <div class="well">
+            {{#each specialAreas this._id}}
+              {{> areaItemView item=this itemClass="sarea-filter" itemType="sarea" stockTakeData=../../stockTakeData}}
+            {{else}}
+              No Special Areas
+            {{/each}}
+          </div>
+        </div>
+      {{/if}}
+    {{else}}
+      No General Areas
+    {{/each}}
+    {{#if stockTakeData.editableStockTake}}
+      <a href="#addNewGeneralAreaModal" data-toggle="modal"
+         class="btn btn-outline btn-primary col-md-12 no-margin">Add</a>
+    {{/if}}
+  </div>
+</template>
