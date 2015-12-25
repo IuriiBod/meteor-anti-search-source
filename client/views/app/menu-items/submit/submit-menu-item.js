@@ -61,7 +61,8 @@ Template.menuItemSubmitMainView.events({
       image: tmpl.get('image') || '',
       instructions: instructions,
       ingredients: tmpl.get('menuItemIngredients'),
-      jobItems: tmpl.get('menuItemJobs')
+      jobItems: tmpl.get('menuItemJobs'),
+      relations: HospoHero.getRelationsObject()
     });
 
     if (!info.name) {

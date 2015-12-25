@@ -24,8 +24,9 @@ Template.menuDetailsHeader.helpers({
 
   onAreaSelected: function () {
     var menuItemId = Template.instance().getMenuItemId();
+    var menuItem = MenuItems.findOne({_id: menuItemId});
     return function (areaId) {
-      Meteor.call("duplicateMenuItem", menuItemId, areaId, HospoHero.handleMethodResult(function () {
+      Meteor.call("duplicateMenuItem", menuItem, areaId, HospoHero.handleMethodResult(function () {
         HospoHero.success("Menu item has successfully copied!");
         $('#areaChooser').modal('hide');
       }));
@@ -50,7 +51,8 @@ Template.menuDetailsHeader.events({
     event.preventDefault();
     var result = confirm("Are you sure, you want to delete this menu ?");
     if (result) {
-      Meteor.call("deleteMenuItem", tmpl.getMenuItemId(), HospoHero.handleMethodResult(function () {
+      var menuItem = MenuItems.findOne({_id: tmpl.getMenuItemId()});
+      Meteor.call("deleteMenuItem", menuItem, HospoHero.handleMethodResult(function () {
         Router.go("menuItemsMaster", {category: 'all', status: 'all'});
       }));
     }
@@ -63,8 +65,10 @@ Template.menuDetailsHeader.events({
 
   'click .archiveMenuItemBtn': function (event, tmpl) {
     event.preventDefault();
-    Meteor.call("archiveMenuItem", tmpl.getMenuItemId(), HospoHero.handleMethodResult(function (status) {
-      HospoHero.info("Menu item " + status);
+    var menuItem = MenuItems.findOne({_id: tmpl.getMenuItemId()});
+    menuItem.status = menuItem.status === 'archived' ? 'active' : 'archived';
+    Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult(function (status) {
+      HospoHero.info("Menu item " + menuItem.status);
     }));
   }
 });
