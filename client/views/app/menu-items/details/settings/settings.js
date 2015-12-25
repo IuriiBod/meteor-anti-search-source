@@ -24,15 +24,18 @@ Template.menuItemSettings.helpers({
   getOnCategoryChanged: function () {
     var tmpl = Template.instance();
     return function (newCategory) {
-      Meteor.call("editMenuItem", tmpl.data._id, {category: newCategory}, HospoHero.handleMethodResult());
+      var menuItem = MenuItems.findOne({_id: tmpl.data._id});
+      menuItem.category = newCategory;
+      Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
     };
   },
 
   getOnStatusChanged: function () {
     var tmpl = Template.instance();
     return function (newStatus) {
-      Meteor.call("editMenuItem", tmpl.data._id, {status: newStatus}, HospoHero.handleMethodResult());
-
+      var menuItem = MenuItems.findOne({_id: tmpl.data._id});
+      menuItem.status = newStatus;
+      Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
     }
   },
 
@@ -48,15 +51,18 @@ Template.menuItemSettings.events({
       {},
       function (InkBlobs) {
         var doc = (InkBlobs);
-        if (doc) {
-          var url = doc[0].url;
-          Meteor.call("editMenuItem", tmpl.data._id, {"image": url}, HospoHero.handleMethodResult());
+        if (doc && doc.length) {
+          var menuItem = MenuItems.findOne({_id: tmpl.data._id});
+          menuItem.image = doc[0].url;
+          Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
         }
       });
   },
 
   'click .remove-image': function (event, tmpl) {
-    Meteor.call('editMenuItem', tmpl.data._id, {image: ''}, HospoHero.handleMethodResult());
+    var menuItem = MenuItems.findOne({_id: tmpl.data._id});
+    menuItem.image = '';
+    Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
   }
 });
 

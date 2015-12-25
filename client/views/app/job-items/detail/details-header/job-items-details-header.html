@@ -1,0 +1,74 @@
+<template name="jobDetailsHeader">
+  <div class="title-action">
+    <button class="btn btn-primary hidden-print edit-job-item">
+      <i class="fa fa-edit"></i>
+      Edit Job
+    </button>
+    <div class="btn-group">
+      <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+        <i class="fa fa-cog"></i>
+        Settings
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" style="margin-left: -56px;">
+        <li>
+          {{#if isSubscribed}}
+            <a href="#" class="hidden-print unsubscribe-button">
+              <i class="fa fa-lg fa-rss text-info"></i> Unsubscribe
+            </a>
+          {{else}}
+            <a href="#" class="hidden-print subscribe-button">
+              <i class="fa fa-lg fa-rss text-muted"></i> Subscribe
+            </a>
+          {{/if}}
+        </li>
+        {{#if canEditJob}}
+          <li>
+            <a href="" class="hidden-print copy-job-item-button">
+              <i class="fa fa-copy"></i> Copy
+            </a>
+          </li>
+        {{/if}}
+        <li>
+          <a href="" class="hidden-print print-job-item-button">
+            <i class="fa fa-print"></i> Print
+          </a>
+        </li>
+        {{#if canEditJob}}
+          <li role="separator" class="divider"></li>
+          {{#if isArchived}}
+            <li>
+              <a href="#" class="hidden-print archive-job-item">
+                <i class="fa fa-dropbox"></i>
+                Restore
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hidden-print delete-job-item">
+                <i class="fa fa-trash-o"></i>
+                Delete
+              </a>
+            </li>
+          {{else}}
+            <li>
+              <a href="#" class="hidden-print archive-job-item">
+                <i class="fa fa-archive"></i>
+                Archive
+              </a>
+            </li>
+          {{/ if}}
+        {{/ if}}
+      </ul>
+    </div>
+  </div>
+
+  {{#if canEditJob}}
+    <!--AREA CHOOSER-->
+    <div class="modal fade" id="areaChooser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      {{> areaChooser onAreaSelected=onAreaSelected}}
+    </div>
+    <!--AREA CHOOSER-->
+  {{/if}}
+</template>

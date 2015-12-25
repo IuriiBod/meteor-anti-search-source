@@ -3,11 +3,6 @@ Template.jobItemsListMainView.onCreated(function (){
 });
 
 Template.jobItemsListMainView.events({
-  'click #submitJobItem': function (e) {
-    e.preventDefault();
-    Router.go("submitJobItem");
-  },
-
   'click .job-types-panel-item': function (e, tmpl) {
     var selectedType = $(e.currentTarget).attr('id');
     tmpl.selectedType.set(selectedType);
