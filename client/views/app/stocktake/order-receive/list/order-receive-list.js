@@ -1,64 +1,64 @@
-Template.orderReceive.onCreated(function() {
-  this.currentOrder = new ReactiveVar(null);
+Template.orderReceive.onCreated(function () {
+  this.currentOrderId = new ReactiveVar(null);
 });
 
 Template.orderReceive.helpers({
-  list: function() {
-    return StockOrders.find({"orderReceipt": this.currentReceipt, "countOrdered": {$gt: 0}});
+  list: function () {
+    return StockOrders.find({"orderReceipt": this.currentReceipt._id, "countOrdered": {$gt: 0}});
   },
 
-  total: function() {
-    var orders = StockOrders.find({"orderReceipt": this.currentReceipt}).fetch();
+  total: function () {
+    var orders = StockOrders.find({"orderReceipt": this.currentReceipt._id}).fetch();
     var cost = 0;
     if (orders.length > 0) {
       orders.forEach(function (order) {
-        cost += parseFloat(order.countOrdered) * parseFloat(order.unitPrice)
+        cost += parseInt(order.countOrdered) * parseFloat(order.unitPrice)
       });
     }
     return cost;
   },
 
-  receipt: function() {
-    return OrderReceipts.findOne({_id: this.currentReceipt});
+  receipt: function () {
+    return this.currentReceipt;
   },
 
-  isReceived: function() {
-    var data = OrderReceipts.findOne({_id: this.currentReceipt});
-    return data && data.received;
+  isReceived: function () {
+    return !!this.currentReceipt.received;
   },
 
-  receivedNote: function() {
-    var receipt = OrderReceipts.findOne({_id: this.currentReceipt});
-    return receipt && receipt.receiveNote;
+  receivedNote: function () {
+    return !!this.currentReceipt.receiveNote;
   },
 
-  currentOrderCallback: function() {
+  currentOrderCallback: function () {
     var instance = Template.instance();
     return function (orderId) {
-      instance.currentOrder.set(orderId);
+      instance.currentOrderId.set(orderId);
     }
   },
 
-  currentOrder: function() {
-    return Template.instance().currentOrder.get();
+  currentOrder: function () {
+    var orderId = Template.instance().currentOrderId.get();
+    return StockOrders.findOne({_id: orderId});
   }
 });
 
 Template.orderReceive.events({
   'click .markDeliveryReceived': function (event, tmpl) {
     event.preventDefault();
-    var receiptId = tmpl.data.currentReceipt;
+    var receiptId = tmpl.data.currentReceipt._id;
     Meteor.call("receiveDelivery", receiptId, HospoHero.handleMethodResult());
   },
 
   'keyup #orderReceiveNotes': function (event, tmpl) {
     event.preventDefault();
     if (event.keyCode == 13) {
+      var receiptId = tmpl.data.currentReceipt._id;
       var text = $(event.target).val();
       var info = {
         "receiveNote": text.trim()
       };
-      Meteor.call("updateReceipt", tmpl.data.currentReceipt, info, HospoHero.handleMethodResult());
+      Meteor.call("updateReceipt", receiptId, info, HospoHero.handleMethodResult());
     }
   },
 
@@ -116,8 +116,9 @@ Template.orderReceive.events({
                   quality: 100
                 },
                 function (new_Blob) {
+                  var receiptId = tmpl.data.currentReceipt._id;
                   urls['convertedUrl'] = new_Blob.url;
-                  Meteor.call("uploadInvoice", tmpl.data.currentReceipt, urls, HospoHero.handleMethodResult());
+                  Meteor.call("uploadInvoice", receiptId, urls, HospoHero.handleMethodResult());
                 }
               );
             }

@@ -64,7 +64,7 @@ Router.route('/stocktake/order/receive/:_id', {
   },
   data: function () {
     return {
-      currentReceipt: this.params._id
+      currentReceipt: OrderReceipts.findOne({_id: this.params._id})
     };
   }
 });
