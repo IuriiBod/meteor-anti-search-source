@@ -7,6 +7,7 @@ Template.orderingStatus.onRendered(function () {
   this.generateReceipts = function (orderType) {
     var supplierId = this.data.activeSupplierId;
     if (orderType == 'emailed') {
+      console.log('generate: ', orderType);
       ModalManager.open('composeStocktakeOrderingEmail', {
         stocktakeMainId: this.data.stocktakeMainId,
         supplier: Suppliers.findOne({_id: supplierId})

@@ -6,14 +6,6 @@ Template.composeStocktakeOrderingEmail.onCreated(function () {
     var version = self.data.stocktakeMainId;
     var supplierId = self.data.supplier._id;
 
-    var getOrderNote = function () {
-      var receipt = OrderReceipts.findOne({
-        version: version,
-        supplier: supplierId
-      });
-      return receipt && receipt.orderNote || '';
-    };
-
     var convertStockOrder = function (stockOrder) {
       var stockItem = Ingredients.findOne({_id: stockOrder.stockId}, {fields: {code: 1, description: 1}});
       var cost = stockOrder.countOrdered * stockOrder.unitPrice;
@@ -40,17 +32,22 @@ Template.composeStocktakeOrderingEmail.onCreated(function () {
     var area = HospoHero.getCurrentArea();
     var location = Locations.findOne({_id: area.locationId});
 
-    var deliveryDate = receipt && receipt.expectedDeliveryDate ? receipt.expectedDeliveryDate : moment().add(1, 'day');
-
     var user = {
       name: HospoHero.username(Meteor.userId()),
       type: HospoHero.roles.getUserRoleName(Meteor.userId(), HospoHero.getCurrentAreaId())
     };
 
+    var receipt = OrderReceipts.findOne({
+      version: version,
+      supplier: supplierId
+    });
+
+    var deliveryDate = receipt && receipt.expectedDeliveryDate ? receipt.expectedDeliveryDate : moment().add(1, 'day');
+
     return {
-      supplierName: supplier.name,
+      supplierName: self.data.supplier.name,
       deliveryDate: HospoHero.dateUtils.dateFormat(deliveryDate),
-      orderNote: getOrderNote(),
+      orderNote: receipt && receipt.orderNote || '',
       location: location,
       areaName: area.name,
       orderData: ordersData,
