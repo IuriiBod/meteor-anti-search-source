@@ -33,7 +33,7 @@
                 <div class="col-sm-10">
                   <select class="form-control type-select">
                     {{#each jobTypes}}
-                      {{#if equal jobItem.type _id}}
+                      {{#if equal ../jobItem.type _id}}
                         <option value="{{_id}}" selected>{{name}}</option>
                       {{else}}
                         <option value="{{_id}}">{{name}}</option>
@@ -51,7 +51,7 @@
                   <div class="col-sm-10">
                     <select class="form-control sections-select">
                       {{#each sections}}
-                        {{#if equal jobItem.section _id}}
+                        {{#if equal ../jobItem.section _id}}
                           <option value="{{_id}}" selected>{{name}}</option>
                         {{else}}
                           <option value="{{_id}}">{{name}}</option>
@@ -109,7 +109,7 @@
                   <div class="col-sm-10">
                     <select class="form-control frequency-select">
                       {{#each frequencies}}
-                        {{#if equal jobItem.frequency value}}
+                        {{#if equal ../jobItem.frequency value}}
                           <option value="{{value}}" selected>{{title}}</option>
                         {{else}}
                           <option value="{{value}}">{{title}}</option>
@@ -128,7 +128,7 @@
 
                       <div class="col-sm-10">
                         <p>Repeat every <input type="number" class="repeat-every-weeks-input" min="2"
-                                               value="{{jobItem.repeatEvery}}"> weeks.
+                                               value="{{../jobItem.repeatEvery}}"> weeks.
                         </p>
                       </div>
                     </div>

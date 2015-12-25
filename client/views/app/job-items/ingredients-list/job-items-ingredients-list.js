@@ -1,59 +1,55 @@
-Template.listOfIngredients.onCreated(function () {
-  this.stockItemsInList = new ReactiveVar(this.data.ingredients || []);
-
-  var tmpl = this;
-  this.onChangeStockItemsList = function (action, changedItem) {
-    var stockItems = tmpl.stockItemsInList.get();
-    var changedStockItems;
-
-    if (action === 'added') {
-      stockItems.push(changedItem);
-      changedStockItems = stockItems;
-    } else if (action === 'changed') {
-      changedStockItems = _.map(stockItems, function (item) {
-        return item._id === changedItem._id ? changedItem : item;
-      });
-    } else if (action === 'removed') {
-      changedStockItems = _.filter(stockItems, function (item) {
-        return item._id !== changedItem._id;
-      });
-    }
-
-    tmpl.stockItemsInList.set(changedStockItems);
-    tmpl.data.onChange(changedStockItems);
-  };
-});
-
-
 Template.listOfIngredients.helpers({
-  ingredients: function () {
+  onChangeItemInList: function () {
     var tmpl = Template.instance();
-    var stockItemsInList = tmpl.stockItemsInList.get();
+    return function (operationType, changedItem) {
+      var stockItems = tmpl.data.ingredients;
+      if (operationType == 'removed') {
+        stockItems = _.reject(stockItems, function (item) {
+          return item._id == changedItem._id;
+        });
+      } else if (operationType == 'changed') {
+        return _.map(stockItems, function (item) {
+          item.quantity = item._id == changedItem._id ? item.quantity = changedItem.quantity : item.quantity;
+          return item;
+        });
+      }
+      tmpl.data.onChange(stockItems);
+    };
+  },
 
-    return stockItemsInList.map(function (stockEntry) {
-      return {
-        item: Ingredients.findOne({_id: stockEntry._id}),
-        quantity: stockEntry.quantity,
-        onChange: tmpl.onChangeStockItemsList
-      };
+  ingredients: function () {
+    var ingredientObjectsWithQuantity = [];
+
+    var itemsInList = this.ingredients;
+    itemsInList.forEach(function (item) {
+      var ingredient = Ingredients.findOne({_id: item._id});
+      ingredient.quantity = item.quantity;
+      ingredientObjectsWithQuantity.push(ingredient);
     });
+
+    return ingredientObjectsWithQuantity;
+  },
+
+  isMenu: function () {
+    return this.id === "menuSubmit";
   },
 
   modalStockListParams: function () {
     var tmpl = Template.instance();
 
-    var stockItemsInListIds = _.map(tmpl.stockItemsInList.get(), function (item) {
+    var stockItemsInListIds = _.map(tmpl.data.ingredients, function (item) {
       return item._id;
     });
     return {
       onAddStockItem: function (itemId) {
-        tmpl.onChangeStockItemsList('added', {_id: itemId, quantity: 1});
+        var addedIds = tmpl.data.ingredients;
+        addedIds.push({_id: itemId, quantity: 1});
+        tmpl.data.onChange(addedIds);
       },
       stockItemsInListIds: stockItemsInListIds
-    };
+    }
   }
 });
-
 
 Template.listOfIngredients.events({
   'click #showIngredientsList': function (event, tmpl) {
