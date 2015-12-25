@@ -10,17 +10,6 @@ Template.menuDetailsHeader.onCreated(function () {
       itemIds: this.getMenuItemId()
     });
   };
-
-  var self = this;
-  this.onAreaSelected = function () {
-    var menuItemId = self.getMenuItemId();
-    var menuItem = MenuItems.findOne({_id: menuItemId});
-    return function (areaId) {
-      Meteor.call("duplicateMenuItem", menuItem, areaId, HospoHero.handleMethodResult(function () {
-        HospoHero.success("Menu item has successfully copied!");
-      }));
-    };
-  }
 });
 
 Template.menuDetailsHeader.helpers({
@@ -50,8 +39,18 @@ Template.menuDetailsHeader.events({
 
   'click .copy-item-modal-opener': function (event, tmpl) {
     event.preventDefault();
+
+    var onAreaSelected = function () {
+      var menuItemId = tmpl.getMenuItemId();
+      var menuItem = MenuItems.findOne({_id: menuItemId});
+      return function (areaId) {
+        Meteor.call("duplicateMenuItem", menuItem, areaId, HospoHero.handleMethodResult(function () {
+          HospoHero.success("Menu item has successfully copied!");
+        }));
+      }
+    };
     ModalManager.open('areaChooser', {
-      onAreaSelected: tmpl.onAreaSelected()
+      onAreaSelected: onAreaSelected()
     });
   },
 
