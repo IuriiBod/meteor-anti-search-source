@@ -4,8 +4,8 @@
     <td>{{countOnHand}} [{{unit}}]</td>
     <td>{{countNeeded}} [{{unit}}]</td>
     <td>
-      {{#if editable}}
-        <a href="#" class="ordering-count">{{countOrdered}}</a> [{{unit}}]
+      {{#if isEditable}}
+        <a href="#" class="ordering-count"></a> [{{unit}}]
       {{else}}
         {{countOrdered}} [{{unit}}]
       {{/if}}

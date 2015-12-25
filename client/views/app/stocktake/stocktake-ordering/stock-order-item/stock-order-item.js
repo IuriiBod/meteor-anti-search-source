@@ -1,4 +1,5 @@
 //context: StockOrder
+console.log('test');
 Template.stockOrderItem.onRendered(function () {
   var tmpl = this;
   var onCountChanged = function (response, newValue) {
@@ -14,6 +15,7 @@ Template.stockOrderItem.onRendered(function () {
     showbuttons: false,
     mode: 'inline',
     autotext: 'auto',
+    value: this.data.countOrdered,
     success: onCountChanged
   });
 });
