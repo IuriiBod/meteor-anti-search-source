@@ -64,7 +64,7 @@ Template.composeStocktakeOrderingEmail.onCreated(function () {
   }));
 });
 
-Template.composeStocktakeOrderingEmail.helpers({git
+Template.composeStocktakeOrderingEmail.helpers({
   subject: function () {
     var location = Locations.findOne({_id: this.supplier.relations.locationId});
     var area = Areas.findOne({_id: this.supplier.relations.areaId});
