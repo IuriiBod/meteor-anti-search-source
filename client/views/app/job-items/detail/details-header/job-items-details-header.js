@@ -22,38 +22,38 @@ Template.jobDetailsHeader.helpers({
 });
 
 Template.jobDetailsHeader.events({
-  'click .edit-job-item': function (e, tmpl) {
-    e.preventDefault();
+  'click .edit-job-item': function (event, tmpl) {
+    event.preventDefault();
     var jobItemId = tmpl.data.id;
     Router.go("jobItemEdit", {'_id': jobItemId});
   },
 
-  'click .print-job-item-button': function (e) {
-    e.preventDefault();
+  'click .print-job-item-button': function (event) {
+    event.preventDefault();
     print();
   },
 
-  'click .subscribe-button': function (e, tmpl) {
-    e.preventDefault();
+  'click .subscribe-button': function (event, tmpl) {
+    event.preventDefault();
 
     var jobItemId = tmpl.data.id;
     var subscription = HospoHero.misc.getSubscriptionDocument('job', jobItemId);
     Meteor.call("subscribe", subscription, HospoHero.handleMethodResult());
   },
-  'click .unsubscribe-button': function (e, tmpl) {
-    e.preventDefault();
+  'click .unsubscribe-button': function (event, tmpl) {
+    event.preventDefault();
 
     var jobItemId = tmpl.data.id;
     var subscription = HospoHero.misc.getSubscriptionDocument('job', jobItemId);
     Meteor.call("unsubscribe", subscription, HospoHero.handleMethodResult());
   },
 
-  'click .copy-job-item-button': function (e, tmpl) {
-    e.preventDefault();
+  'click .copy-job-item-button': function (event, tmpl) {
+    event.preventDefault();
     tmpl.$("#areaChooser").modal("show");
   },
 
-  'click .archive-job-item': function (e, tmpl) {
+  'click .archive-job-item': function (event, tmpl) {
     e.preventDefault();
     var jobItemId = tmpl.data.id;
     Meteor.call("archiveJobItem", jobItemId, HospoHero.handleMethodResult(function (status) {
@@ -61,8 +61,8 @@ Template.jobDetailsHeader.events({
     }));
   },
 
-  'click .delete-job-item': function (e, tmpl) {
-    e.preventDefault();
+  'click .delete-job-item': function (event, tmpl) {
+    event.preventDefault();
 
     var result = confirm("Are you sure you want to delete this job ?");
     if (result) {
