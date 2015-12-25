@@ -29,9 +29,3 @@ Meteor.publish('ingredientsRelatedJobs', function (id) {
     this.ready();
   }
 });
-
-AntiSearchSource.queryTransform('menuItems', function (userId, query) {
-  return _.extend(query, {
-    'relations.areaId': HospoHero.getCurrentAreaId(userId)
-  });
-});

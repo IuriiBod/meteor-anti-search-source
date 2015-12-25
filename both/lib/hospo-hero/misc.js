@@ -176,5 +176,16 @@ Namespace('HospoHero.misc', {
         value: "United States of America"
       }
     ]
+  },
+
+  /**
+   * Rounding to a specified increment
+   * @param {number} number - number for rounding
+   * @param {number} [increment=100] - a decimal increment
+   * @returns {number}
+   */
+  rounding: function (number, increment) {
+    increment = increment || 100;
+    return Math.round(number * increment) / increment;
   }
 });

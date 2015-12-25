@@ -1,7 +1,7 @@
 var SubscriptionDocument = Match.Where(function (subscription) {
   check(subscription, {
     type: Match.OneOf('menu', 'job'),
-    itemIds: Match.OneOf(HospoHero.checkers.MongoId, 'all'),
+    itemIds: Match.OneOf(HospoHero.checkers.MongoId, [HospoHero.checkers.MongoId], 'all'),
     subscriber: HospoHero.checkers.MongoId,
     relations: HospoHero.checkers.Relations,
 
