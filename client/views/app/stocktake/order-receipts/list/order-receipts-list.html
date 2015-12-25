@@ -3,13 +3,23 @@
     <div class="ibox ">
       <div class="ibox-content">
         <div class="btn-group">
-          <a href="#" class="btn btn-white toBeReceived {{#if orderToBeReceived}} active {{/if}}">To be received</a>
-          <a href="#" class="btn btn-white received {{#if received}} active {{/if}}">Received</a>
+          <a href="#" 
+            class="btn btn-white orders-status {{#unless showsReceivedOrders}} active {{/unless}}" 
+            data-orders-status="toBeReceived">To be received</a>
+          <a href="#" 
+            class="btn btn-white orders-status {{#if showsReceivedOrders}} active {{/if}}" 
+            data-orders-status="received">Received</a>
         </div>
         <div class="btn-group">
-          <a href="#" class="btn btn-white thisWeekReceipts {{#if week}} active {{/if}}">This week</a>
-          <a href="#" class="btn btn-white thisMonthReceipts {{#if month}} active {{/if}}">This month</a>
-          <a href="#" class="btn btn-white allTimeReceipts {{#if allTime}} active {{/if}}">All time</a>
+          <a href="#" 
+            class="btn btn-white period-of-orders {{#if isCurrentPeriodOfOrders 'week'}} active {{/if}}"
+            data-period-of-orders="week">This week</a>
+          <a href="#" 
+            class="btn btn-white period-of-orders {{#if isCurrentPeriodOfOrders 'month'}} active {{/if}}"
+            data-period-of-orders="month">This month</a>
+          <a href="#" 
+            class="btn btn-white period-of-orders {{#if isCurrentPeriodOfOrders 'allTime'}} active {{/if}}"
+            data-period-of-orders="allTime">All time</a>
         </div>
         <hr>
         <div class="table-responsive">
@@ -26,8 +36,8 @@
             </tr>
             </thead>
             <tbody>
-            {{#each list}}
-              {{> orderReceiptItem item=this}}
+            {{#each receipts}}
+              {{> orderReceiptItem}}
             {{else}}
               No entries to show
             {{/each}}

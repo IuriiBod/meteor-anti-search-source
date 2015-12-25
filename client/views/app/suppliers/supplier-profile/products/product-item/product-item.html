@@ -1,9 +1,9 @@
 <template name="productItem">
   <tr>
-    <td><a href="#" class="editProduct">{{state$product.code}}</a></td>
-    <td>{{state$product.description}}</td>
-    <td>{{dateFormat state$product.createdOn}}</td>
-    <td>{{state$product.portionOrdered}}</td>
-    <td>${{state$product.costPerPortion}}</td>
+    <td><a href="#" class="editProduct">{{ingredient.code}}</a></td>
+    <td>{{ingredient.description}}</td>
+    <td>{{dateFormat ingredient.createdOn}}</td>
+    <td>{{ingredient.portionOrdered}}</td>
+    <td>${{ingredient.costPerPortion}}</td>
   </tr>
 </template>

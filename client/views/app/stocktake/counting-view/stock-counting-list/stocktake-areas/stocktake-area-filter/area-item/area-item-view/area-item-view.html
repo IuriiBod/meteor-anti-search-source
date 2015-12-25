@@ -1,0 +1,24 @@
+<template name="areaItemView">
+  <div class="areaBox">
+    {{#if activeGeneralArea item._id}}
+      <div class="box-wrapper pull-right" style="display: none;">
+        <span class="box-remove glyphicon glyphicon-remove removeArea" style="margin: 2px"></span>
+      </div>
+    {{/if}}
+    {{#if activeSpecialArea item._id}}
+      <div class="box-wrapper pull-right" style="display: none;">
+        <span class="box-remove glyphicon glyphicon-remove removeArea" style="margin: 2px"></span>
+      </div>
+    {{/if}}
+    <a class="btn btn-block {{#if activeGeneralArea item._id}} btn-info {{/if}} {{#if activeSpecialArea item._id}} btn-info {{/if}}
+      {{#if inActiveArea item._id}} btn-default {{/if}} btn-sm {{itemClass}} m-b-sm"
+       role="button"
+       data-toggle="collapse" href="#{{item._id}}"
+       aria-expanded="false" aria-controls="{{item._id}}">
+      {{item.name}}
+      <div class="progress progress-mini">
+        <div class="progress-bar" style="width: {{widthOfBar}}"></div>
+      </div>
+    </a>
+  </div>
+</template>

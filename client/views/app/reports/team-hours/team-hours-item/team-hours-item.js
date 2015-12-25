@@ -44,13 +44,11 @@ Template.teamHoursItem.onCreated(function () {
     });
 
     if (weekShifts.count() > 0) {
-      var result = {
-        wage: roundNumber(totalWage),
-        time: roundNumber(totalMinutes / 60), // convert to hours and round
+      return {
+        wage: HospoHero.misc.rounding(totalWage),
+        time: HospoHero.misc.rounding(totalMinutes / 60), // convert to hours and round
         dailyHours: dailyHoursManager.getHours()
       };
-
-      return result;
     } else {
       return false;
     }
@@ -80,10 +78,6 @@ Template.teamHoursItem.helpers({
   }
 });
 
-var roundNumber = function (number) {
-  return Math.round(number * 100) / 100;
-};
-
 var getDailyHoursManager = function () {
   var res = [];
   for (var i = 0; i < 7; i++) {
@@ -98,7 +92,7 @@ var getDailyHoursManager = function () {
     },
     getHours: function () {
       return this._minutes.map(function (minutesValue) {
-        return roundNumber(minutesValue / 60);
+        return HospoHero.misc.rounding(minutesValue / 60);
       })
     }
   };

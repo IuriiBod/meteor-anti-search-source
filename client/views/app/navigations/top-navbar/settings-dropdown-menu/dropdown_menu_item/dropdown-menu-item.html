@@ -1,7 +1,13 @@
 <template name="dropdownMenuItem">
   <li>
-    <a href="{{pathFor route=item.route data=routeParams}}">
-      {{item.title}}
-    </a>
+    {{# if item.route}}
+      <a href="{{pathFor route=item.route data=routeParams}}" class="{{item.class}}">
+        {{item.title}}
+      </a>
+    {{else}}
+      <a href="#" class="{{item.class}}">
+        {{item.title}}
+      </a>
+    {{/if}}
   </li>
 </template>

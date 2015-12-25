@@ -9,7 +9,8 @@ Template.unavailabilitiesOrLeaveRequests.helpers({
   // Can be leave requests or unavailables
   items: function () {
     if (Template.instance().get('isUnavailability')) {
-      var unavailabilities = Meteor.user().unavailabilities || [];
+      var user = Meteor.user();
+      var unavailabilities = user && user.unavailabilities || [];
       return _.sortBy(unavailabilities, 'startDate');
     } else {
       return LeaveRequests.find({

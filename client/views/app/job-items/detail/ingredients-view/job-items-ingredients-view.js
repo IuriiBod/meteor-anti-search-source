@@ -1,15 +1,18 @@
 Template.ingredientItemView.onCreated(function () {
-  this.data.ingredientItem = getIngredientItem(this.data.ingredient.id);
+  this.ingredient = Ingredients.findOne({_id: this.data.ingredient._id});
 });
 
 Template.ingredientItemView.helpers({
   quantity: function () {
-    return Template.instance().data.ingredient.quantity
+    return this.ingredient.quantity;
+  },
+  ingredient: function () {
+    return Template.instance().ingredient;
   },
   cost: function () {
-    var ing = Template.instance().data.ingredientItem;
-    var cost = ing.costPerPortionUsed * Template.instance().data.ingredient.quantity;
-    cost = Math.round(cost * 100) / 100;
-    return cost;
+    var ingredient = Template.instance().ingredient;
+    var analyzedIngredient = HospoHero.analyze.ingredient(ingredient);
+    var cost = analyzedIngredient.costPerPortionUsed * this.ingredient.quantity;
+    return HospoHero.misc.rounding(cost);
   }
 });

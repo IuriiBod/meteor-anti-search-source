@@ -1,0 +1,14 @@
+<template name="ingredientItemEdit">
+  <tr>
+    <td>{{item.code}}</td>
+    <td>{{item.description}}</td>
+    <td>{{item.portionUsed}}</td>
+    <td>${{ingredientStatistics.costPerPortionUsed}}</td>
+    <td><input value="{{item.quantity}}" class="ing-qty" type="number" min="1"/></td>
+    <td>
+      <a href="">
+        <i class="fa fa-trash remove-ing"></i>
+      </a>
+    </td>
+  </tr>
+</template>

@@ -10,27 +10,27 @@
     <td>$ {{roundCount unitTotalPrice}}</td>
     <td>
       {{#if stock.received}}
-        {{#if state$isEditable}}
-          <a class="btn btn-sm btn-outline btn-danger wrongQuantity">Wrong Quantity</a>
-          <a class="btn btn-sm btn-outline btn-danger wrongPrice">Wrong Price</a>
-          <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i>
+        {{#if isEditable}}
+          <a class="btn btn-sm btn-outline btn-danger wrong-quantity-button">Wrong Quantity</a>
+          <a class="btn btn-sm btn-outline btn-danger wrong-price-button">Wrong Price</a>
+          <button class="btn btn-info btn-circle btn-outline receive-order-item-button" type="button"><i class="fa fa-check"></i>
           </button>
         {{else}}
           {{delivery.status}}
           {{#unless isReceived}}
-            <a href="#" class="editPermitted">[Edit]</a>
+            <a href="#" class="edit-permitted-button">[Edit]</a>
           {{/unless}}
         {{/if}}
       {{else}}
         {{#unless delivery.deliveredCorrectly}}
           {{#unless delivery.wrongPrice}}
-            <a class="btn btn-sm btn-outline btn-danger wrongPrice">Wrong Price</a>
+            <a class="btn btn-sm btn-outline btn-danger wrong-price-button">Wrong Price</a>
           {{/unless}}
           {{#unless delivery.wrongQuantity}}
-            <a class="btn btn-sm btn-outline btn-danger wrongQuantity">Wrong Quantity</a>
+            <a class="btn btn-sm btn-outline btn-danger wrong-quantity-button">Wrong Quantity</a>
           {{/unless}}
         {{/unless}}
-        <button class="btn btn-info btn-circle btn-outline receiveOrderItem" type="button"><i class="fa fa-check"></i>
+        <button class="btn btn-info btn-circle btn-outline receive-order-item-button" type="button"><i class="fa fa-check"></i>
         </button>
       {{/if}}
     </td>
