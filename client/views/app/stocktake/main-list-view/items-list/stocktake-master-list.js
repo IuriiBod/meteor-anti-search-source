@@ -13,7 +13,6 @@ Template.stockTakeMasterList.helpers({
 
     stocktakes = _.groupBy(stocktakes, 'version');
 
-
     Object.keys(stocktakes).forEach(function (stocktakeId) {
       var stocktakeCost = _.reduce(stocktakes[stocktakeId], function (memo, stocktake) {
         return memo + stocktake.counting * stocktake.unitCost;
