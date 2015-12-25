@@ -4,7 +4,6 @@ Template.orderReceiveItem.onCreated(function() {
 
 Template.orderReceiveItem.helpers({
   stock: function () {
-    debugger;
     var ingredient = Ingredients.findOne({_id: this.item.stockId});
     if (ingredient) {
       this.item['description'] = ingredient.description;
