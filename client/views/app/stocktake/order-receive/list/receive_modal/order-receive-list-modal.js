@@ -1,4 +1,4 @@
-Template.receiveModal.onRendered(function() {
+Template.receiveModal.onRendered(function () {
   $('[data-toggle="popover"]').popover();
   $('.i-checks').iCheck({
     checkboxClass: 'icheckbox_square-green'
@@ -6,65 +6,71 @@ Template.receiveModal.onRendered(function() {
 });
 
 Template.receiveModal.helpers({
-  isWrongPrice: function() {
-    if (this.name == "wrongPrice") {
+  isWrongPrice: function () {
+    if (this.name == 'wrongPrice') {
       return true;
     }
   },
 
-  isWrongQuantity: function() {
-    if (this.name == "wrongQuantity") {
+  isWrongQuantity: function () {
+    if (this.name == 'wrongQuantity') {
       return true;
     }
   }
 });
 
 Template.receiveModal.events({
-  'submit #priceForm': function (event, tmpl) {
+  'submit .price-form': function (event, tmpl) {
     event.preventDefault();
-    var price = $(event.target).find('[name=price]').val();
-    var doUpdate = $(event.target).find('[name=updateStockPrice]')[0].checked;
-    var receiptId = tmpl.data.receipt;
-    var orderId = tmpl.data.order;
+    var $form = $(event.target);
+    var $priceInput = $form.find('.price-input');
+
+    var price = $priceInput.val();
+    var doUpdate = $form.find('.update-stock-price-input')[0].checked;
+
+    var receipt = tmpl.data.receipt;
+    var order = tmpl.data.order;
     var info = {
-      "price": parseFloat(price),
-      "stockPriceUpdated": doUpdate
+      'price': parseFloat(price),
+      'stockPriceUpdated': doUpdate
     };
-    if (price && price > 0.00) {
-      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Price", info, HospoHero.handleMethodResult());
+
+    if (price && price > 0) {
+      Meteor.call('updateOrderItems', order._id, receipt._id, 'Wrong Price', info, HospoHero.handleMethodResult());
     }
 
-    var stockId = null;
-    var order = StockOrders.findOne(orderId);
-    if (order) {
-      stockId = order.stockId;
-    }
+    var stockId = order ? order.stockId : null;
     if (doUpdate) {
       info = {
-        "costPerPortion": parseFloat(price)
+        'costPerPortion': parseFloat(price)
       };
-      if (price && price > 0.00) {
-        Meteor.call("editIngredient", stockId, info, HospoHero.handleMethodResult());
+      if (price && price > 0) {
+        Meteor.call('editIngredient', stockId, info, HospoHero.handleMethodResult());
       }
-
     }
 
-    $(event.target).find('[name=price]').val("");
-    $("#wrongPriceModal").modal("hide");
+    $priceInput.val('');
+    $('#wrongPriceModal').modal('hide');
   },
 
-  'submit #quantityForm': function (event, tmpl) {
+  'submit .quantity-form': function (event, tmpl) {
     event.preventDefault();
-    var invoiceQuantity = $(event.target).find('[name=invoiceQuantity]').val();
-    var receiptId = tmpl.data.receipt;
-    var orderId = tmpl.data.order;
+    var $form =$(event.target);
+    var $invoiceQuantityInput = $form.find('.invoice-quantity-input');
+    
+    var invoiceQuantity = $invoiceQuantityInput.val();
+
+    var receipt = tmpl.data.receipt;
+    var order = tmpl.data.order;
     var info = {
-      "quantity": parseFloat(invoiceQuantity)
+      'quantity': parseInt(invoiceQuantity)
     };
-    if (invoiceQuantity && receiptId && orderId) {
-      Meteor.call("updateOrderItems", orderId, receiptId, "Wrong Quantity", info, HospoHero.handleMethodResult());
+
+    if (invoiceQuantity && order._id && receipt._id) {
+      Meteor.call('updateOrderItems', order._id, receipt._id, 'Wrong Quantity', info, HospoHero.handleMethodResult());
     }
-    $(event.target).find('[name=invoiceQuantity]').val("");
-    $("#wrongQuantityModal").modal("hide");
+
+    $invoiceQuantityInput.val('');
+    $('#wrongQuantityModal').modal('hide');
   }
 });
