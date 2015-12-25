@@ -1,7 +1,9 @@
 Template.menuDetailWidgets.onRendered(function () {
   var self = this;
   var onPriceEditSuccess = function (response, newValue) {
-    Meteor.call("editMenuItem", self.data._id, {salesPrice: newValue}, HospoHero.handleMethodResult());
+    var menuItem = MenuItems.findOne({_id: self.data._id});
+    menuItem.salesPrice = parseFloat(newValue);
+    Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
   };
 
   $('.edit-item-price').editable({

@@ -6,11 +6,11 @@ Template.ingredientItemEdit.helpers({
 
 Template.ingredientItemEdit.events({
   'click .remove-ing': function (event, tmpl) {
-    tmpl.data.onChange('removed', {id: tmpl.data.item._id});
+    tmpl.data.onChange('removed', {_id: tmpl.data.item._id});
   },
 
   'change .ing-qty': function (event, tmpl) {
     var newQuantity = parseInt($(event.target).val());
-    tmpl.data.onChange('changed', {id: tmpl.data.item._id, quantity: newQuantity});
+    tmpl.data.onChange('changed', {_id: tmpl.data.item._id, quantity: newQuantity});
   }
 });
