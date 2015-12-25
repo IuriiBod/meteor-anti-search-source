@@ -1,5 +1,5 @@
 Template.stockTakeMasterList.helpers({
-  listOfDates: function() {
+  stocktakes: function() {
     var stocktakeList = [];
     var stocktakes = Stocktakes.find({}, {
       fields: {
@@ -11,16 +11,16 @@ Template.stockTakeMasterList.helpers({
       sort: {date: -1}
     }).fetch();
 
-    stocktakes = _.groupBy(stocktakes, 'version');
+    var stocktakesGroupedByVersionId = _.groupBy(stocktakes, 'version');
 
-    Object.keys(stocktakes).forEach(function (stocktakeId) {
-      var stocktakeCost = _.reduce(stocktakes[stocktakeId], function (memo, stocktake) {
+    _.keys(stocktakesGroupedByVersionId).forEach(function (versionId) {
+      var stocktakeCost = _.reduce(stocktakesGroupedByVersionId[versionId], function (memo, stocktake) {
         return memo + stocktake.counting * stocktake.unitCost;
       }, 0);
 
       stocktakeList.push({
-        _id: stocktakeId,
-        date: stocktakes[stocktakeId][0].date,
+        _id: versionId,
+        date: stocktakesGroupedByVersionId[versionId][0].date,
         totalStockValue: stocktakeCost
       });
     });

@@ -11,9 +11,9 @@
               <th>Action</th>
             </tr>
             </thead>
-            {{#if listOfDates}}
+            {{#if stocktakes}}
               <tbody>
-              {{#each listOfDates}}
+              {{#each stocktakes}}
                 {{> stocktakeItem item=this}}
               {{/each}}
               </tbody>
