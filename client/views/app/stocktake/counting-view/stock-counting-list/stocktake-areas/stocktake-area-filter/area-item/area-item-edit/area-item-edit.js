@@ -1,4 +1,4 @@
-Template.areaBoxEdit.onRendered(function() {
+Template.areaItemEdit.onRendered(function() {
   var self = this.data;
   this.$(".area").editable({
     type: "text",
@@ -19,7 +19,7 @@ Template.areaBoxEdit.onRendered(function() {
   });
 });
 
-Template.areaBoxEdit.helpers({
+Template.areaItemEdit.helpers({
   activeGeneralArea: function (id) {
     return this.stockTakeData.activeGeneralArea === id;
   },
@@ -99,7 +99,7 @@ Template.areaBoxEdit.helpers({
   }
 });
 
-Template.areaBoxEdit.events({
+Template.areaItemEdit.events({
   'click .garea-filter': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;

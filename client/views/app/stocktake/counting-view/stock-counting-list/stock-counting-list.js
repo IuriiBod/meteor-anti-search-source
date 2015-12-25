@@ -1,10 +1,10 @@
-Template.stockCounting.onCreated(function() {
+Template.stockCountingList.onCreated(function() {
   this.set('editStockTake', false);
   this.set('activeSpecialArea', null);
   this.set('activeGeneralArea', null);
 });
 
-Template.stockCounting.helpers({
+Template.stockCountingList.helpers({
   stockTakeCountingContext: function() {
     var instance = Template.instance();
     return {
@@ -68,18 +68,20 @@ Template.stockCounting.helpers({
   },
 
   modalStockListParams: function() {
-    var currentSpecialArea = Template.instance().get('activeSpecialArea');
-    if(currentSpecialArea) {
-      var stocks = SpecialAreas.findOne({_id: currentSpecialArea}).stocks;
-      return {
-        activeSpecialArea: currentSpecialArea,
-        stockItemsInListIds: stocks
+    var currentSpecialAreaId = Template.instance().get('activeSpecialArea');
+    if(currentSpecialAreaId) {
+      var specialArea = SpecialAreas.findOne({_id: currentSpecialAreaId});
+      if (specialArea) {
+        return {
+          activeSpecialArea: currentSpecialAreaId,
+          stockItemsInListIds: specialArea.stocks
+        }
       }
     }
   }
 });
 
-Template.stockCounting.events({
+Template.stockCountingList.events({
   'click .saveStockTake': function (event, tmpl) {
     event.preventDefault();
     tmpl.set('editStockTake', false);

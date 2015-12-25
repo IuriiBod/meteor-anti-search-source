@@ -1,4 +1,4 @@
-Template.sortableStockItems.onRendered(function() {
+Template.stockItemsListSortable.onRendered(function() {
   this.$(".sortableStockItems").sortable({
     stop: function (event, ui) {
       var sortedStockItems = new SortableItemsHelper(ui).getSortedItems();
@@ -9,7 +9,7 @@ Template.sortableStockItems.onRendered(function() {
   })
 });
 
-Template.sortableStockItems.events({
+Template.stockItemsListSortable.events({
   'click .addStock': function (event) {
     event.preventDefault();
     $("#stocksListModal").modal("show");

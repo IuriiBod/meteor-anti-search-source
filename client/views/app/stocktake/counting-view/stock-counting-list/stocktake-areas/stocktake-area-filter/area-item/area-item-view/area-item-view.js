@@ -1,4 +1,4 @@
-Template.areaBox.helpers({
+Template.areaItemView.helpers({
   activeGeneralArea: function (id) {
     return this.stockTakeData.activeGeneralArea === id;
   },
@@ -43,6 +43,7 @@ Template.areaBox.helpers({
 
     var generalAreaProgressBar = function() {
       var totalCount = 0, progressBar = 0;
+
       var getStocks = function() {
         var specialAreas = getSpecialArea();
         if (specialAreas.count() > 0) {
@@ -78,7 +79,7 @@ Template.areaBox.helpers({
   }
 });
 
-Template.areaBox.events({
+Template.areaItemView.events({
   'click .garea-filter': function (event, tmpl) {
     event.preventDefault();
     var id = this.item._id;

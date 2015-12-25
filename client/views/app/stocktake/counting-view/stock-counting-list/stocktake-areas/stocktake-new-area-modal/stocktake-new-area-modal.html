@@ -1,10 +1,10 @@
 <template name="newAreaModal">
-  <div class="modal-dialog">
-    <div class="modal-content" style="width: 130%">
+  <div class="modal-dialog area-modal">
+    <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
             class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Add new {{name}} area</h4>
+        <h4 class="modal-title" id="areasModal">Add new {{name}} area</h4>
       </div>
       <div class="modal-body">
         <div>
@@ -18,13 +18,11 @@
               </div>
             </div>
           </form>
-          <br>
 
           <div class="pull-right">
             <button class="btn btn-small btn-primary" id="save{{name}}Area">Save</button>
             <button class="btn btn-small btn-default" data-dismiss="modal">Cancel</button>
           </div>
-          <br><br>
         </div>
       </div>
     </div>

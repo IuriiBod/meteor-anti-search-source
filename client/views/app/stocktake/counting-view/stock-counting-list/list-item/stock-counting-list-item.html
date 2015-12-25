@@ -5,8 +5,7 @@
       <small>({{supplierName ingredient.data.suppliers}})</small>
       <span class="pull-right">
         {{#if canEditIngredientsItem ingredient.inStock._id}}
-          <span>{{#if ingredient.inStock.counting}} {{ingredient.inStock.counting}} {{else}}
-            <span style="color: #DD1144"> Empty </span> {{/if}}
+          <span>{{#if ingredient.inStock.counting}} {{ingredient.inStock.counting}} {{else}} <i> Empty </i> {{/if}}
           </span> &nbsp; [{{ingredient.data.portionOrdered}}]
         {{else}}
           <p data-toggle="tooltip" data-placement="top"
