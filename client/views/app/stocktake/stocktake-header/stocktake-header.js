@@ -8,7 +8,7 @@ Template.stocktakeHeader.events({
     });
 
     if (stocktake) {
-      tmpl.$("#newStocktakeModal").modal();
+      tmpl.newStocktakeModal = ModalManager.open("newStocktakeModal");
     } else {
       Meteor.call("createMainStocktake", date, HospoHero.handleMethodResult(function (id) {
         Router.go("stocktakeCounting", {"_id": id});

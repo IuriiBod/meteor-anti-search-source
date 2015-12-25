@@ -1,16 +1,20 @@
+Template.newStocktakeModal.onRendered(function() {
+  this.newStocktakemodalInstance = ModalManager.getInstanceByElement(this.$('.new-stocktake-modal'));
+});
+
 Template.newStocktakeModal.events({
-  'click .createNewStocktake': function (event) {
+  'click .createNewStocktake': function (event, tmpl) {
     event.preventDefault();
-    $("#newStocktakeModal").modal("hide");
+    tmpl.newStocktakemodalInstance.close();
     var date = moment().format("YYYY-MM-DD");
     Meteor.call("createMainStocktake", date, HospoHero.handleMethodResult(function (id) {
       Router.go("stocktakeCounting", {"_id": id});
     }));
   },
 
-  'click .gotoExistingStocktake': function (event) {
+  'click .gotoExistingStocktake': function (event, tmpl) {
     event.preventDefault();
-    $("#newStocktakeModal").modal("hide");
+    tmpl.newStocktakemodalInstance.close();
     var date = moment().format("YYYY-MM-DD");
     date = new Date(date).getTime();
     var stocktakeLatest = StocktakeMain.findOne({"stocktakeDate": date}, {sort: {"date": -1}});
