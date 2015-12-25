@@ -5,7 +5,7 @@ Template.jobItemDetail.onCreated(function () {
     return HospoHero.misc.rounding((parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins);
   };
 
-  this.jobType = JobTypes.findOne(this.data.type);
+  this.jobType = JobTypes.findOne(this.data.jobItem.type);
 });
 
 Template.jobItemDetail.helpers({

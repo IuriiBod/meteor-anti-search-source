@@ -3,7 +3,7 @@ Template.jobItemsList.onCreated(function () {
     collection: 'jobItems',
     fields: ['name', 'recipe', 'description'],
     searchMode: 'local',
-    limit: 10
+    limit: 20
   });
 
   // when jop type changes, set new mongo query
@@ -33,7 +33,7 @@ Template.jobItemsList.onRendered(function () {
 
 Template.jobItemsList.helpers({
   jobItems: function () {
-    return Template.instance().searchSource.searchResult();
+    return Template.instance().searchSource.searchResult({sort: {name: 1}});
   },
   isRecurring: function () {
     return Template.instance().data.type == 'Recurring';
