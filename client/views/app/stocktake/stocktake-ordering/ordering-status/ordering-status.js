@@ -1,8 +1,27 @@
+Template.orderingStatus.onCreated(function () {
+  this.getCurrentReceipt = function () {
+    return OrderReceipts.findOne({
+      version: this.data.stocktakeMainId,
+      supplier: this.data.activeSupplierId,
+      'orderedThrough.through': {$ne: null}
+    });
+  };
+
+  this.getDeliveryDate = function () {
+    var receipt = this.getCurrentReceipt();
+    return receipt && receipt.expectedDeliveryDate && new Date(receipt.expectedDeliveryDate) || moment().add(1, 'day');
+  };
+});
+
 Template.orderingStatus.onRendered(function () {
-  this.$('.expectedDeliveryDate').datepicker({
-    todayHighlight: true,
-    weekStart: 1
+  //initialize date picker
+  var datePickerElement = this.$(".date-picker-input");
+  datePickerElement.datetimepicker({
+    calendarWeeks: true,
+    format: 'YYYY-MM-DD'
   });
+  this.datePicker = datePickerElement.data("DateTimePicker");
+  this.datePicker.date(moment(this.getDeliveryDate()));
 
   this.generateReceipts = function (orderType) {
     var supplierId = this.data.activeSupplierId;
@@ -25,15 +44,11 @@ Template.orderingStatus.onRendered(function () {
 
 Template.orderingStatus.helpers({
   receipt: function () {
-    return OrderReceipts.findOne({
-      version: this.stocktakeMainId,
-      supplier: this.activeSupplierId,
-      'orderedThrough.through': {$ne: null}
-    });
+    return Template.instance().getCurrentReceipt()
   },
 
-  deliveryDate: function (receipt) {
-    return receipt && receipt.expectedDeliveryDate || moment().add(1, 'day');
+  deliveryDate: function () {
+    return Template.instance().getDeliveryDate();
   },
 
   orderSentDetails: function (receipt) {
@@ -44,6 +59,10 @@ Template.orderingStatus.helpers({
 
 
 Template.orderingStatus.events({
+  'click .date-picker-button': function (event, tmpl) {
+    tmpl.datePicker.toggle();
+  },
+
   'click .order-emailed-button': function (event, tmpl) {
     event.preventDefault();
     tmpl.generateReceipts('emailed');
@@ -54,16 +73,21 @@ Template.orderingStatus.events({
     tmpl.generateReceipts('phoned');
   },
 
-  'changeDate .expected-delivery-date-picker': function (event, tmpl) {
+  'dp.change .date-picker-input': function (event, tmpl) {
+    var date = tmpl.datePicker.date().toDate();
+
     var supplierId = tmpl.data.activeSupplierId;
     var version = tmpl.data.stocktakeMainId;
     var receipt = OrderReceipts.findOne({supplier: supplierId, version: version});
-    var info = {
-      expectedDeliveryDate: moment(event.date).startOf('day').getTime(),
-      version: version,
-      supplier: supplierId
-    };
-    Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult());
+
+    if (!moment(date).isSame(receipt.expectedDeliveryDate, 'day')) {
+      var info = {
+        expectedDeliveryDate: moment(date).startOf('day').valueOf(),
+        version: version,
+        supplier: supplierId
+      };
+      Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult());
+    }
   }
 });
 
