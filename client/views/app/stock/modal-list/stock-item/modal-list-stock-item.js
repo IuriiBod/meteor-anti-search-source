@@ -30,7 +30,11 @@ Template.stockModalItem.helpers({
 
 Template.stockModalItem.events({
   'ifChecked .add-ing-checkbox': function (event, tmpl) {
-    tmpl.data.onAddStockItem(tmpl.data.stock._id)
+    if(_.isFunction(tmpl.data.onAddStockItem)) {
+      tmpl.data.onAddStockItem(tmpl.data.stock._id);
+    } else {
+      Meteor.call("assignStocksToAreas", tmpl.data.stock._id, tmpl.data.onAddStockItem, HospoHero.handleMethodResult());
+    }
   }
 });
 

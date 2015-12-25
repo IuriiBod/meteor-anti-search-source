@@ -10,8 +10,11 @@ Template.stocksModalList.onCreated(function () {
 
   var self = this;
   this.autorun(function () {
-    var query = {_id: {$nin: Template.currentData().modalStockListParams.stockItemsInListIds}};
-    self.searchSource.setMongoQuery(query);
+    var currentData = Template.currentData();
+    if(currentData.modalStockListParams && currentData.modalStockListParams.stockItemsInListIds) {
+      var query = {_id: {$nin: Template.currentData().modalStockListParams.stockItemsInListIds}};
+      self.searchSource.setMongoQuery(query);
+    }
   });
   this.searchSource.search('');
 });
@@ -29,8 +32,10 @@ Template.stocksModalList.helpers({
     return Template.instance().showAddStockItemMenu.get();
   },
   onAddStockItem: function () {
-    var modalStockListParams = Template.parentData().modalStockListParams;
-    return modalStockListParams.onAddStockItem || modalStockListParams.activeSpecialArea;
+    var tmplParentData = Template.parentData();
+    if (tmplParentData && tmplParentData.modalStockListParams) {
+      return tmplParentData.modalStockListParams.onAddStockItem || tmplParentData.modalStockListParams.activeSpecialArea;
+    }
   }
 });
 
