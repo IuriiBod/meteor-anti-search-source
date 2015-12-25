@@ -54,7 +54,7 @@ Template.jobDetailsHeader.events({
   },
 
   'click .archive-job-item': function (event, tmpl) {
-    e.preventDefault();
+    event.preventDefault();
     var jobItemId = tmpl.data.id;
     Meteor.call("archiveJobItem", jobItemId, HospoHero.handleMethodResult(function (status) {
       return HospoHero.info("Job item " + status);

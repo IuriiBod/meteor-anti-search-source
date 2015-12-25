@@ -9,16 +9,7 @@ Template.listOfStocksMasterMainView.onCreated(function () {
         ingredient = Ingredients.findOne({_id: ingredient});
       }
 
-      if (self.get('ingredientItemEditorExist')) {
-        Blaze.remove(self.get('ingredientItemEditorExist'));
-      }
-      var ingredientEditorBlazeView = Blaze.renderWithData(Template.ingredientItemEditor, {
-        isModal: true,
-        ingredient: ingredient
-      }, document.getElementById('ingredientItemEditorPlaceHolder'));
-
-      self.set('ingredientItemEditorExist', ingredientEditorBlazeView);
-      self.$("#ingredientItemEditor").modal("show");
+      self.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', {ingredient: ingredient});
     }
   }
 });

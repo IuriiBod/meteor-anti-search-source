@@ -3,14 +3,14 @@
     <td>
       <a data-toggle="modal" class="btn btn-primary btn-sm editIngredient">View Item</a>
     </td>
-    <td>{{{state$item.code}}}</td>
-    <td>{{{state$item.description}}}</td>
-    <td>{{supplierName state$item.suppliers}}</td>
-    <td>{{state$item.portionOrdered}}</td>
-    <td>${{state$item.costPerPortion}}</td>
-    <td>{{state$item.portionUsed}}</td>
+    <td>{{{ingredient.code}}}</td>
+    <td>{{{ingredient.description}}}</td>
+    <td>{{supplierName ingredient.suppliers}}</td>
+    <td>{{ingredient.portionOrdered}}</td>
+    <td>${{ingredient.costPerPortion}}</td>
+    <td>{{ingredient.portionUsed}}</td>
     <td><p data-toggle="tooltip" data-placement="top"
-           title="How many {{state$item.portionUsed}}s in a {{state$item.portionOrdered}}">{{state$item.unitSize}}</p>
+           title="How many {{ingredient.portionUsed}}s in a {{ingredient.portionOrdered}}">{{ingredient.unitSize}}</p>
     </td>
   </tr>
 </template>
