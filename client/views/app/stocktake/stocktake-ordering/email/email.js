@@ -1,4 +1,70 @@
-Template.composeStocktakeOrderingEmail.helpers({
+Template.composeStocktakeOrderingEmail.onCreated(function () {
+  this.set('initialHtml', '');
+
+  var self = this;
+  var receiptData = function () {
+    var version = self.data.stocktakeMainId;
+    var supplierId = self.data.supplier._id;
+
+    var getOrderNote = function () {
+      var receipt = OrderReceipts.findOne({
+        version: version,
+        supplier: supplierId
+      });
+      return receipt && receipt.orderNote || '';
+    };
+
+    var convertStockOrder = function (stockOrder) {
+      var stockItem = Ingredients.findOne({_id: stockOrder.stockId}, {fields: {code: 1, description: 1}});
+      var cost = stockOrder.countOrdered * stockOrder.unitPrice;
+      stockItem.cost = cost.toFixed(2);
+      total += cost;
+      return _.extend(stockOrder, stockItem);
+    };
+
+    var total = 0;
+    var ordersData = StockOrders.find({
+      version: version,
+      supplier: supplierId,
+      'relations.areaId': HospoHero.getCurrentAreaId(),
+      countOrdered: {$gt: 0}
+    }, {
+      fields: {
+        countOrdered: 1,
+        unit: 1,
+        stockId: 1,
+        unitPrice: 1
+      }
+    }).map(convertStockOrder);
+
+    var area = HospoHero.getCurrentArea();
+    var location = Locations.findOne({_id: area.locationId});
+
+    var deliveryDate = receipt && receipt.expectedDeliveryDate ? receipt.expectedDeliveryDate : moment().add(1, 'day');
+
+    var user = {
+      name: HospoHero.username(Meteor.userId()),
+      type: HospoHero.roles.getUserRoleName(Meteor.userId(), HospoHero.getCurrentAreaId())
+    };
+
+    return {
+      supplierName: supplier.name,
+      deliveryDate: HospoHero.dateUtils.dateFormat(deliveryDate),
+      orderNote: getOrderNote(),
+      location: location,
+      areaName: area.name,
+      orderData: ordersData,
+      total: total,
+      user: user
+    };
+  };
+
+  Meteor.call('renderSomeHandlebarsTemplate', 'supplier-email-text', receiptData(), HospoHero.handleMethodResult(function (text) {
+    self.set('initialHtml', text);
+  }));
+});
+
+Template.composeStocktakeOrderingEmail.helpers({git
   subject: function () {
     var location = Locations.findOne({_id: this.supplier.relations.locationId});
     var area = Areas.findOne({_id: this.supplier.relations.areaId});
@@ -31,59 +97,3 @@ Template.composeStocktakeOrderingEmail.events({
   }
 });
 
-var initialHtml = function (spplierId) {
-  var supplier = Suppliers.findOne(supplierId);
-  var receipt = receiptData(this.data, supplier);
-  Meteor.call('renderSomeHandlebarsTemplate', 'supplier-email-text', receipt, HospoHero.handleMethodResult(function (text) {
-    //todo: open modal here
-  }));
-};
-
-var receiptData = function (tmplData, supplier) {
-  var receipt = OrderReceipts.findOne({"version": tmplData.orderId, "supplier": supplier._id});
-  var total = 0;
-
-  var data = StockOrders.find({
-    version: tmplData.orderId,
-    supplier: supplier._id,
-    'relations.areaId': HospoHero.getCurrentAreaId(),
-    countOrdered: {$gt: 0}
-  }, {
-    fields: {
-      countOrdered: 1,
-      unit: 1,
-      stockId: 1,
-      unitPrice: 1
-    }
-  }).fetch();
-  data = _.map(data, function (stock) {
-    var stockItem = Ingredients.findOne({_id: stock.stockId}, {fields: {code: 1, description: 1}});
-    var cost = stock.countOrdered * stock.unitPrice;
-    stockItem.cost = cost.toFixed(2);
-
-    total += cost;
-
-    return _.extend(stock, stockItem);
-  });
-
-  var area = HospoHero.getCurrentArea();
-  var location = Locations.findOne({_id: area.locationId});
-
-  var deliveryDate = receipt && receipt.expectedDeliveryDate ? receipt.expectedDeliveryDate : moment().add(1, 'day');
-
-  var user = {
-    name: HospoHero.username(Meteor.userId()),
-    type: HospoHero.roles.getUserRoleName(Meteor.userId(), HospoHero.getCurrentAreaId())
-  };
-
-  return {
-    supplierName: supplier.name,
-    deliveryDate: HospoHero.dateUtils.dateFormat(deliveryDate),
-    orederNote: receipt && receipt.orderNote || '',
-    location: location,
-    areaName: area.name,
-    orderData: data,
-    total: total,
-    user: user
-  };
-};
