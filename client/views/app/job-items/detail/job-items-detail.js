@@ -5,7 +5,7 @@ Template.jobItemDetail.onCreated(function () {
     return HospoHero.misc.rounding((parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins);
   };
 
-  this.jobType = JobTypes.findOne(this.data.jobItem.type);
+  this.jobType = JobTypes.findOne({_id: this.data.jobItem.type});
 });
 
 Template.jobItemDetail.helpers({
@@ -95,7 +95,7 @@ Template.jobItemDetail.helpers({
       };
 
       var totalCost = (Template.instance().getLabourCost() + getTotalIngredientCost());
-      return Math.round((totalCost / self.jobItem.portions) * 100) / 100;
+      return HospoHero.misc.rounding(totalCost / self.jobItem.portions);
     };
 
     return getPrepCostPerPortion();

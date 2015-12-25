@@ -1,7 +1,7 @@
 Template.listOfIngredients.helpers({
   onChangeItemInList: function () {
     var tmpl = Template.instance();
-    var onChangeStockItemsList = function (operationType, changedItem) {
+    return function (operationType, changedItem) {
       var stockItems = tmpl.data.ingredients;
       if (operationType == 'removed') {
         stockItems = _.reject(stockItems, function (item) {
@@ -15,8 +15,6 @@ Template.listOfIngredients.helpers({
       }
       tmpl.data.onChange(stockItems);
     };
-
-    return onChangeStockItemsList;
   },
 
   ingredients: function () {
@@ -33,7 +31,7 @@ Template.listOfIngredients.helpers({
   },
 
   isMenu: function () {
-    return Template.instance().data.id == "menuSubmit";
+    return this.id === "menuSubmit";
   },
 
   modalStockListParams: function () {

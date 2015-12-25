@@ -14,16 +14,12 @@ Template.submitEditJobItem.onCreated(function () {
 
   initReactiveVars();
 
-  var getSelectedJobType = function () {
-    return JobTypes.findOne({_id: self.selectedJobTypeId.get()});
-  };
+  var selectedJobType = JobTypes.findOne({_id: self.selectedJobTypeId.get()});
   this.isPrep = function () {
-    var selectedJobType = getSelectedJobType();
-    return selectedJobType.name == 'Prep';
+    return selectedJobType.name === 'Prep';
   };
   this.isRecurring = function () {
-    var selectedJobType = getSelectedJobType();
-    return selectedJobType.name == 'Recurring';
+    return selectedJobType.name === 'Recurring';
   };
 });
 
@@ -74,7 +70,7 @@ Template.submitEditJobItem.helpers({
   },
 
   isEditMode: function () {
-    return this.mode == 'edit';
+    return this.mode === 'edit';
   },
   isRecurring: function () {
     return Template.instance().isRecurring();
