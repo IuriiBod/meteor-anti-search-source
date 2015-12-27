@@ -2,6 +2,10 @@ Template.stockCountingList.onCreated(function() {
   this.set('editStockTake', false);
   this.set('activeSpecialArea', null);
   this.set('activeGeneralArea', null);
+
+  this.getMainStock = function() {
+    return StocktakeMain.findOne({_id: this.data.stocktakeId});
+  };
 });
 
 Template.stockCountingList.helpers({
@@ -25,7 +29,7 @@ Template.stockCountingList.helpers({
     var gareaId = Template.instance().get('activeGeneralArea');
     var sareaId = Template.instance().get('activeSpecialArea');
     if (gareaId && sareaId) {
-      var main = StocktakeMain.findOne({_id: this.stocktakeId});
+      var main = Template.instance().getMainStock();
       if (main && main.orderReceipts && main.orderReceipts.length > 0) {
         var stocktakes = Stocktakes.find({
           "version": this.stocktakeId,
@@ -59,12 +63,13 @@ Template.stockCountingList.helpers({
   },
 
   stockTakeMain: function() {
-    return StocktakeMain.findOne({_id: this.stocktakeId});
-  },
-
-  notTemplate: function() {
-    var main = StocktakeMain.findOne({_id: this.stocktakeId});
-    return main && main.orderReceipts && main.orderReceipts.length > 0;
+    var main = Template.instance().getMainStock();
+    if (main) {
+      return {
+        date: main.stocktakeDate,
+        hasNoOrderReceipts: main.orderReceipts && main.orderReceipts.length > 0
+      }
+    }
   },
 
   modalStockListParams: function() {

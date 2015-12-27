@@ -20,18 +20,15 @@ Template.areaItemEdit.onRendered(function() {
 });
 
 Template.areaItemEdit.helpers({
-  activeGeneralArea: function (id) {
-    return this.stockTakeData.activeGeneralArea === id;
-  },
-
-  activeSpecialArea: function (id) {
-    return this.stockTakeData.activeSpecialArea === id;
-  },
-
-  inActiveArea: function (id) {
-    var sarea = this.stockTakeData.activeSpecialArea;
-    var garea = this.stockTakeData.activeGeneralArea;
-    return (sarea !== id) && (garea !== id);
+  areas: function () {
+    var itemId = this.item._id;
+    var currentActiveGeneralArea = this.stockTakeData.activeGeneralArea;
+    var currentActiveSpecialArea = this.stockTakeData.activeSpecialArea;
+    return {
+      activeGeneralArea: currentActiveGeneralArea === itemId,
+      activeSpecialArea: currentActiveSpecialArea === itemId,
+      inActiveArea: (currentActiveSpecialArea !== itemId) && (currentActiveGeneralArea !== itemId)
+    }
   },
 
   widthOfBar: function() {
@@ -121,10 +118,10 @@ Template.areaItemEdit.events({
   'click .removeArea': function (event, tmpl) {
     event.preventDefault();
     var id = tmpl.data.item._id;
-    var itemType = tmpl.data.itemType;
-    if (itemType === "garea") {
+    var itemClass = tmpl.data.itemClass;
+    if (itemClass === "garea-filter") {
       Meteor.call("deleteGeneralArea", id, HospoHero.handleMethodResult());
-    } else if (itemType === "sarea") {
+    } else if (itemClass === "sarea-filter") {
       Meteor.call("deleteSpecialArea", id, HospoHero.handleMethodResult());
     }
   }

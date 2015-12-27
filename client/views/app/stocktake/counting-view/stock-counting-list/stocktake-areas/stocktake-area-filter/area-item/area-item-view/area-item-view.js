@@ -1,16 +1,13 @@
 Template.areaItemView.helpers({
-  activeGeneralArea: function (id) {
-    return this.stockTakeData.activeGeneralArea === id;
-  },
-
-  activeSpecialArea: function (id) {
-    return this.stockTakeData.activeSpecialArea === id;
-  },
-
-  inActiveArea: function (id) {
-    var sarea = this.stockTakeData.activeSpecialArea;
-    var garea = this.stockTakeData.activeGeneralArea;
-    return (sarea !== id) && (garea !== id);
+  areas: function () {
+    var itemId = this.item._id;
+    var currentActiveGeneralArea = this.stockTakeData.activeGeneralArea;
+    var currentActiveSpecialArea = this.stockTakeData.activeSpecialArea;
+    return {
+      activeGeneralArea: currentActiveGeneralArea === itemId,
+      activeSpecialArea: currentActiveSpecialArea === itemId,
+      inActiveArea: (currentActiveSpecialArea !== itemId) && (currentActiveGeneralArea !== itemId)
+    }
   },
 
   widthOfBar: function() {

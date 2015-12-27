@@ -1,7 +1,7 @@
 <template name="stockCountingList">
   <div class="row">
     <div class="col-lg-12">
-      {{#if notTemplate}}
+      {{#if stockTakeMain.hasNoOrderReceipts}}
         <a class="btn btn-primary btn-sm pull-right" href="{{pathFor route='stocktakeOrdering' _id=stocktakeId}}">View Orders</a>
       {{else}}
         <a class="btn btn-primary btn-sm pull-right generateOrders">Save stocktake &amp; generate orders</a>
@@ -12,7 +12,7 @@
             Template</a>
         {{/if}}
       {{/if}}
-      {{dateFormat stockTakeMain.stocktakeDate}}
+      {{dateFormat stockTakeMain.date}}
       <hr>
     </div>
   </div>
@@ -21,7 +21,7 @@
     {{> stocktakeAreaFilter stockTakeData=stockTakeCountingContext}}
     {{#if stockTakeCountingContext.activeSpecialArea}}
       <div class="col-md-8">
-        {{#if notTemplate}}
+        {{#if stockTakeMain.hasNoOrderReceipts}}
           <ul class="list-group">
             {{#each stocktakeList}}
               {{> stockCountingListItem stocktakeItem=this stockTakeData=stockTakeCountingContext}}

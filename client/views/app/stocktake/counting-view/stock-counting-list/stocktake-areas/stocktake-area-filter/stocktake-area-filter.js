@@ -1,3 +1,7 @@
+Template.stocktakeAreaFilter.onCreated(function() {
+  this.mainStocktake = StocktakeMain.findOne({_id: this.data.stocktakeId});
+});
+
 Template.stocktakeAreaFilter.onRendered(function() {
   var garea = GeneralAreas.findOne({}, {sort: {"createdAt": 1}});
   if (garea && !this.data.stockTakeData.activeGeneralArea) {
@@ -8,7 +12,7 @@ Template.stocktakeAreaFilter.onRendered(function() {
 
 Template.stocktakeAreaFilter.helpers({
   generalAreas: function() {
-    var main = StocktakeMain.findOne({_id: this.stocktakeId});
+    var main = Template.instance().mainStocktake;
     if (main && main.orderReceipts && main.orderReceipts.length > 0) {
       var gareas = main.generalAreas;
       return GeneralAreas.find({"_id": {$in: gareas}}, {sort: {"createdAt": 1}});
@@ -18,11 +22,11 @@ Template.stocktakeAreaFilter.helpers({
   },
 
   activeGeneralArea: function(id) {
-    return Template.instance().data.stockTakeData.activeGeneralArea === id;
+    return Template.parentData().stockTakeData.activeGeneralArea === id;
   },
 
   specialAreas: function(gareaId) {
-    var main = StocktakeMain.findOne({_id: Template.instance().data.stocktakeId});
+    var main = Template.instance().mainStocktake;
     if (main && main.orderReceipts && main.orderReceipts.length > 0) {
       var sareas = main.specialAreas;
       return SpecialAreas.find({"_id": {$in: sareas}, "generalArea": gareaId}, {sort: {"createdAt": 1}});
