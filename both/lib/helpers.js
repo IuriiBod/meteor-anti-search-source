@@ -1,5 +1,3 @@
-//todo: !!! Don't use functions from this file. Use HospoHero functions instead.
-
 //todo: DEPRECATED remove it in future (use it's analog in HospoHero.analyze)
 getIngredientItem = function (id) {
   if (id) {
