@@ -1,5 +1,4 @@
 //context: StockOrder
-console.log('test');
 Template.stockOrderItem.onRendered(function () {
   var tmpl = this;
   var onCountChanged = function (response, newValue) {
