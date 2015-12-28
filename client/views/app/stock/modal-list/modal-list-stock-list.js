@@ -35,7 +35,7 @@ Template.stocksModalList.helpers({
 
 Template.stocksModalList.events({
   'click .add-new-ingredient': function (e, tmpl) {
-    tmpl.showAddStockItemMenu.set(true);
+    tmpl.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', {ingredient: null});
   },
 
   //event for submitIngredient template

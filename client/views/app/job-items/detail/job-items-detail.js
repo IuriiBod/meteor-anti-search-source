@@ -1,8 +1,12 @@
 Template.jobItemDetail.onCreated(function () {
   this.getLabourCost = function () {
     var jobItem = this.data.jobItem;
-    var activeTimeInMins = parseInt(jobItem.activeTime / 60);
-    return HospoHero.misc.rounding((parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins);
+    if (jobItem) {
+      var activeTimeInMins = parseInt(jobItem.activeTime / 60);
+      return HospoHero.misc.rounding((parseFloat(jobItem.wagePerHour) / 60) * activeTimeInMins);
+    } else {
+      return false;
+    }
   };
 
   this.jobType = JobTypes.findOne({_id: this.data.jobItem.type});
