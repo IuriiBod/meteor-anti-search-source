@@ -6,7 +6,30 @@ Template.stockCountingListItemEdit.onCreated(function() {
 
 Template.stockCountingListItemEdit.onRendered(function() {
   this.$('[data-toggle="tooltip"]').tooltip();
-  var self = this;
+  var tmpl = this;
+  var onCountChanged = function (response, newValue) {
+    var element = this;
+    var stockRefId = tmpl.getIngredientFromStock() ? tmpl.getIngredientFromStock()._id : null;
+    var stockId = tmpl.data.item._id;
+    if (newValue) {
+      var count = isNaN(newValue) ? 0 : parseFloat(newValue);
+      var info = {
+        "version": tmpl.data.stockTakeData.stockTakeId,
+        "generalArea": tmpl.data.stockTakeData.activeGeneralArea,
+        "specialArea": tmpl.data.stockTakeData.activeSpecialArea,
+        "stockId": stockId,
+        "counting": count
+      };
+      var main = StocktakeMain.findOne({_id: tmpl.data.stockTakeData.stockTakeId});
+      if (main) {
+        Meteor.call("updateStocktake", stockRefId, info, newValue, HospoHero.handleMethodResult(function () {
+          if ($(element).closest('li').next().length > 0) {
+            $(element).closest('li').next().find('a').click();
+          }
+        }));
+      }
+    }
+  };
 
   this.$(".counting").editable({
     type: "text",
@@ -17,29 +40,7 @@ Template.stockCountingListItemEdit.onRendered(function() {
     autotext: 'auto',
     display: function (value, response) {
     },
-    success: function (response, newValue) {
-      var element = this;
-      var stockRefId = self.getIngredientFromStock() ? self.getIngredientFromStock()._id : null;
-      var stockId = self.data.item._id;
-      if (newValue) {
-        var count = isNaN(newValue) ? 0 : parseFloat(newValue);
-        var info = {
-          "version": self.data.stockTakeData.stockTakeId,
-          "generalArea": self.data.stockTakeData.activeGeneralArea,
-          "specialArea": self.data.stockTakeData.activeSpecialArea,
-          "stockId": stockId,
-          "counting": count
-        };
-        var main = StocktakeMain.findOne({_id: self.data.stockTakeData.stockTakeId});
-        if (main) {
-          Meteor.call("updateStocktake", stockRefId, info, newValue, HospoHero.handleMethodResult(function () {
-            if ($(element).closest('li').next().length > 0) {
-              $(element).closest('li').next().find('a').click();
-            }
-          }));
-        }
-      }
-    }
+    success: onCountChanged
   });
 });
 

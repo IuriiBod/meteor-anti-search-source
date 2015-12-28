@@ -1,21 +1,23 @@
 Template.areaItemEdit.onRendered(function() {
-  var self = this.data;
+  var tmpl = this;
+  var onCountChanged = function (response, newValue) {
+    var id = tmpl.data.item._id;
+    if (newValue) {
+      if(tmpl.data.itemClass === 'sarea-filter') {
+        Meteor.call("editSpecialArea", id, newValue, HospoHero.handleMethodResult());
+      } else {
+        Meteor.call("editGeneralArea", id, newValue, HospoHero.handleMethodResult());
+      }
+    }
+  };
+
   this.$(".area").editable({
     type: "text",
     title: 'Edit area name',
     showbuttons: false,
     display: false,
     mode: 'inline',
-    success: function (response, newValue) {
-      var id = self.item._id;
-      if (newValue) {
-        if(self.itemClass === 'sarea-filter') {
-          Meteor.call("editSpecialArea", id, newValue, HospoHero.handleMethodResult());
-        } else {
-          Meteor.call("editGeneralArea", id, newValue, HospoHero.handleMethodResult());
-        }
-      }
-    }
+    success: onCountChanged
   });
 });
 

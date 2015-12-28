@@ -4,12 +4,12 @@ Template.newAreaModal.onCreated(function() {
     if (areaName !== '') {
       if (this.data.name === "general") {
         Meteor.call("createGeneralArea", areaName, HospoHero.handleMethodResult(function () {
-          $("#generalareaName").val("");
+          this.$("#generalareaName").val("");
           $("#addNewGeneralAreaModal").modal("hide");
         }));
       } else if (this.data.name === "special" && this.data.generalArea) {
         Meteor.call("createSpecialArea", areaName, this.data.generalArea, HospoHero.handleMethodResult(function () {
-          $("#specialareaName").val("");
+          this.$("#specialareaName").val("");
           $("#addNewSpecialAreaModal").modal("hide")
         }));
       }
@@ -20,20 +20,20 @@ Template.newAreaModal.onCreated(function() {
 Template.newAreaModal.events({
   'click #savegeneralArea': function (event, tmpl) {
     event.preventDefault();
-    var name = tmpl.$("#generalareaName").val();
-    tmpl.submit(name);
+    var areaName = tmpl.$("#generalareaName").val();
+    tmpl.submit(areaName);
   },
 
 
   'click #savespecialArea': function (event, tmpl) {
     event.preventDefault();
-    var name = tmpl.$("#specialareaName").val();
-    tmpl.submit(name);
+    var areaName = tmpl.$("#specialareaName").val();
+    tmpl.submit(areaName);
   },
 
   'submit form': function(event, tmpl) {
     event.preventDefault();
-    var name = tmpl.$("#generalareaName").val() || tmpl.$("#specialareaName").val();
-    tmpl.submit(name);
+    var areaName = tmpl.$("#generalareaName").val() || tmpl.$("#specialareaName").val();
+    tmpl.submit(areaName);
   }
 });
