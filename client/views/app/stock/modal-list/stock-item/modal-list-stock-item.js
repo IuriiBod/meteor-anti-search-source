@@ -24,13 +24,13 @@ Template.stockModalItem.helpers({
     return Template.instance().data.stock;
   },
   costPerPortionUsed: function () {
-   return  Template.instance().getCostPerPortionUsed();
+    return Template.instance().getCostPerPortionUsed();
   }
 });
 
 Template.stockModalItem.events({
   'ifChecked .add-ing-checkbox': function (event, tmpl) {
-    if(_.isFunction(tmpl.data.onAddStockItem)) {
+    if (_.isFunction(tmpl.data.onAddStockItem)) {
       tmpl.data.onAddStockItem(tmpl.data.stock._id);
     } else {
       Meteor.call("assignStocksToAreas", tmpl.data.stock._id, tmpl.data.onAddStockItem, HospoHero.handleMethodResult());

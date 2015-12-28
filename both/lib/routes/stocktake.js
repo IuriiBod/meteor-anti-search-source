@@ -1,16 +1,14 @@
-// ---------------------STOCKTAKE
-Router.route('/stocktake', {
-  name: "stocktakeList",
+Router.route('stocktakeList', {
   path: '/stocktake',
-  template: "stockListMainView",
+  template: 'stockListMainView',
   waitOn: function () {
     return Meteor.subscribe('stocktakeList', HospoHero.getCurrentAreaId());
   }
 });
 
-Router.route('/stocktake/:_id', {
-  name: "stocktakeCounting",
-  template: "stocktakeCountingMainView",
+Router.route('stocktakeCounting', {
+  path: '/stocktake/:_id',
+  template: 'stocktakeCountingMainView',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
@@ -28,10 +26,30 @@ Router.route('/stocktake/:_id', {
   }
 });
 
-Router.route('/stocktake/order/receive/:_id', {
-  name: "orderReceive",
+Router.route('stocktakeCountingEdit', {
+  path: '/stocktake/edit/:_id',
+  template: 'stocktakeCountingMainEdit',
+  waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return [
+      Meteor.subscribe('allAreas', currentAreaId),
+      Meteor.subscribe('stocktakes', this.params._id),
+      Meteor.subscribe('ordersPlaced', this.params._id),
+      Meteor.subscribe('allSuppliers', currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId)
+    ];
+  },
+  data: function () {
+    return {
+      stocktakeId: this.params._id
+    }
+  }
+});
+
+
+Router.route('orderReceive', {
   path: '/stocktake/order/receive/:_id',
-  template: "orderReceiveMainView",
+  template: 'orderReceiveMainView',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
@@ -48,10 +66,9 @@ Router.route('/stocktake/order/receive/:_id', {
   }
 });
 
-Router.route('/stocktake/orders/:_id', {
-  name: "stocktakeOrdering",
+Router.route('stocktakeOrdering', {
   path: '/stocktake/orders/:_id',
-  template: "stocktakeOrderingMainView",
+  template: 'stocktakeOrdering',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
@@ -65,7 +82,7 @@ Router.route('/stocktake/orders/:_id', {
   },
   data: function () {
     return {
-      orderId: this.params._id
+      stocktakeMainId: this.params._id
     };
   }
 });
