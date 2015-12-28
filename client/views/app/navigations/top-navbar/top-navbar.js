@@ -85,10 +85,6 @@ Template.topNavbar.events({
 
 var settingsMenuItems = [
   {
-    route: 'usersSettings',
-    title: 'Users'
-  },
-  {
     route: 'rolesSettings',
     title: 'Roles'
   },

@@ -1,21 +1,3 @@
-Router.route('usersSettings', {
-  path: '/settings/users',
-  template: "adminMainView",
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return Meteor.subscribe('usersList', currentAreaId);
-  },
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
-    return {
-      template: 'usersList',
-      title: 'Users'
-    }
-  }
-});
-
 Router.route('rolesSettings', {
   path: '/settings/roles',
   template: "adminMainView",

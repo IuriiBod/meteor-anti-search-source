@@ -95,7 +95,7 @@ Meteor.methods({
     }
   },
 
-  'updateStocktake': function (id, info) {
+  'updateStocktake': function (id, info, newValue) {
     if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to update stocktakes");
       throw new Meteor.Error(403, "User not permitted to update stocktakes");
@@ -172,6 +172,7 @@ Meteor.methods({
       });
       logger.info("Stocktake main updated with areas", info.version);
     }
+    Meteor.call("resetCurrentStock",info.stockId, "New stock count", newValue, main.stocktakeDate)
   },
 
   removeStocktake: function (stocktakeId) {
@@ -192,47 +193,29 @@ Meteor.methods({
     logger.info("Stocktake removed", stocktakeId);
   },
 
-  stocktakePositionUpdate: function (stocktakeId, stockId, sAreaId, info) {
+  stocktakePositionUpdate: function (sortedStockItems) {
     if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to update stocktake position");
       throw new Meteor.Error(403, "User not permitted to update stocktake position");
     }
-    var stocktake = Stocktakes.findOne(stocktakeId);
-    //update stocktakes places
-    if (stocktake) {
-      var nextPosition = 0;
-      var prevPosition = 0;
-      var newPosition;
+    console.log();
+    check(sortedStockItems, {
+      draggedItem: Match.OneOf(String, {
+        id: Match.Optional(String),
+        place: Match.Optional(Number)
+      }),
+      stocks: Match.OneOf(Array, null),
+      activeSpecialArea: Match.Optional(String)
+    });
 
-      if (info.hasOwnProperty("nextItemPosition")) {
-        nextPosition = info.nextItemPosition;
-      }
-      if (info.hasOwnProperty("prevItemPosition")) {
-        prevPosition = info.prevItemPosition;
-      }
-
-      newPosition = (parseFloat(nextPosition) + parseFloat(prevPosition)) / 2;
-      Stocktakes.update({"_id": stocktakeId}, {$set: {"place": newPosition}});
+    if(sortedStockItems.draggedItem.place) {
+      Stocktakes.update({"_id": sortedStockItems.draggedItem.id}, {$set: {"place": sortedStockItems.draggedItem.place}});
       logger.info("Stocktake position updated");
     }
 
-    //update special area original places
-    var specialArea = SpecialAreas.findOne(sAreaId);
-    if (specialArea) {
-      var array = specialArea.stocks;
-      var oldPosition = array.indexOf(stockId);
-      newPosition = null;
-      if (info.hasOwnProperty("nextItemId")) {
-        newPosition = (array.indexOf(info.nextItemId) - 1);
-      } else if (info.hasOwnProperty("prevItemId")) {
-        newPosition = (array.indexOf(info.prevItemId) + 1);
-      }
-
-      SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": []}});
-      array.splice(newPosition, 0, array.splice(oldPosition, 1)[0]);
-
-      SpecialAreas.update({"_id": sAreaId}, {$set: {"stocks": array}});
-      logger.info("Stock item position update at special area");
+    if(sortedStockItems.stocks) {
+      SpecialAreas.update({"_id": sortedStockItems.activeSpecialArea}, {$set: {"stocks": sortedStockItems.stocks}});
     }
+
   }
 });
