@@ -16,14 +16,14 @@ Meteor.methods({
  * @param {string} subscriptionParams.itemIds - 'all' or item ID
  * @param {string} subscriptionParams.subscriber - ID of subscriber
  * @param {Object} subscriptionParams.relations - HospoHero relations object
- * @param, {boolean} unsubscribeTrigger - if true - do unsubscription
+ * @param {boolean} unsubscribeTrigger - if true - do unsubscription
  */
 var updateSubscription = function (subscriptionParams, unsubscribeTrigger) {
   /**
    * Remove certain items from subscription
    *
    * @param {Object} existingSubscription - Subscription object that will be updated
-   * @param, {Array} itemToRemoveIds - can be array with item id's, that should be removed from existing subscription
+   * @param {Array} itemToRemoveIds - can be array with item id's, that should be removed from existing subscription
    */
   var removeItemsFromSubscription = function (existingSubscription, itemToRemoveIds) {
     /**
@@ -60,7 +60,7 @@ var updateSubscription = function (subscriptionParams, unsubscribeTrigger) {
    * Add certain items(or all) from subscription
    *
    * @param {Object} existingSubscription - Subscription object that will be updated
-   * @param, {Array|String} itemToRemoveIds - array with items id's, that should be added to existing subscription
+   * @param {Array|String} itemToRemoveIds - array with items id's, that should be added to existing subscription
    */
   var addItemsToSubscription = function (existingSubscription, itemToAddIds) {
     if (existingSubscription.itemIds == 'all') {

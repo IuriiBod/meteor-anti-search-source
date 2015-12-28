@@ -190,7 +190,7 @@ Meteor.methods({
 
 var duplicateSupplier = function (supplierId, areaId) {
   var supplier = Suppliers.findOne({_id: supplierId});
-  if (supplier.relations.areaId != areaId) {
+  if (supplier && supplier.relations && supplier.relations.areaId != areaId) {
     var existsSupplier = Suppliers.findOne({'relations.areaId': areaId, name: supplier.name});
     if (existsSupplier) {
       supplierId = existsSupplier._id;
