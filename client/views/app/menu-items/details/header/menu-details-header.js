@@ -1,6 +1,6 @@
 Template.menuDetailsHeader.onCreated(function () {
   this.getMenuItemId = function () {
-    return Router.current().params._id;
+    return HospoHero.getParamsFromRoute(Router.current(), '_id');
   };
 
   this.isSubscribed = function () {
@@ -20,34 +20,41 @@ Template.menuDetailsHeader.helpers({
   isArchived: function () {
     var menu = MenuItems.findOne({_id: Template.instance().getMenuItemId()});
     return menu && menu.status == "archived";
-  },
-
-  onAreaSelected: function () {
-    var menuItemId = Template.instance().getMenuItemId();
-    var menuItem = MenuItems.findOne({_id: menuItemId});
-    return function (areaId) {
-      Meteor.call("duplicateMenuItem", menuItem, areaId, HospoHero.handleMethodResult(function () {
-        HospoHero.success("Menu item has successfully copied!");
-        $('#areaChooser').modal('hide');
-      }));
-    };
   }
 });
 
 
 Template.menuDetailsHeader.events({
-  'click .subscribeButton': function (event, tmpl) {
+  'click .subscribe-button': function (event, tmpl) {
     event.preventDefault();
     var subscription = HospoHero.misc.getSubscriptionDocument('menu', tmpl.getMenuItemId());
     Meteor.call('subscribe', subscription, tmpl.isSubscribed(), HospoHero.handleMethodResult());
   },
 
-  'click .copyMenuItemBtn': function (event, tmpl) {
+  'click .unsubscribe-button': function (event, tmpl) {
     event.preventDefault();
-    tmpl.$("#areaChooser").modal("show");
+    var subscription = HospoHero.misc.getSubscriptionDocument('menu', tmpl.getMenuItemId());
+    Meteor.call("unsubscribe", subscription, HospoHero.handleMethodResult());
   },
 
-  'click .deleteMenuItemBtn': function (event, tmpl) {
+  'click .copy-item-modal-opener': function (event, tmpl) {
+    event.preventDefault();
+
+    var onAreaSelected = function () {
+      var menuItemId = tmpl.getMenuItemId();
+      var menuItem = MenuItems.findOne({_id: menuItemId});
+      return function (areaId) {
+        Meteor.call("duplicateMenuItem", menuItem, areaId, HospoHero.handleMethodResult(function () {
+          HospoHero.success("Menu item has successfully copied!");
+        }));
+      }
+    };
+    ModalManager.open('areaChooser', {
+      onAreaSelected: onAreaSelected()
+    });
+  },
+
+  'click .delete-menu-item': function (event, tmpl) {
     event.preventDefault();
     var result = confirm("Are you sure, you want to delete this menu ?");
     if (result) {
@@ -58,12 +65,12 @@ Template.menuDetailsHeader.events({
     }
   },
 
-  'click .printMenuItemBtn': function (event) {
+  'click .print-menu-item': function (event) {
     event.preventDefault();
     print();
   },
 
-  'click .archiveMenuItemBtn': function (event, tmpl) {
+  'click .archive-menu-item': function (event, tmpl) {
     event.preventDefault();
     var menuItem = MenuItems.findOne({_id: tmpl.getMenuItemId()});
     menuItem.status = menuItem.status === 'archived' ? 'active' : 'archived';
