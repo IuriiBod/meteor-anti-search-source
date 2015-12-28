@@ -73,16 +73,13 @@ SortableItemsHelper.prototype.getSortedItems = function() {
   var draggedItem = this._draggedItem.item._id;
   var nextItem = this._nextItem ? this._nextItem.item._id : null;
   var previousItem = this._previousItem ? this._previousItem.item._id : null;
-  var stocks = null;
 
   var specialArea = SpecialAreas.findOne({_id: this._draggedItem.stockTakeData.activeSpecialArea});
-  if(specialArea) {
-    stocks = specialArea.stocks;
-    var stockOldPosition = stocks.indexOf(draggedItem);
-    var newPosition = this._draggedItemNewPosition(stocks, previousItem, nextItem, draggedItem);
+  var stocks = specialArea.stocks;
+  var stockOldPosition = stocks.indexOf(draggedItem);
+  var newPosition = this._draggedItemNewPosition(stocks, previousItem, nextItem, draggedItem);
 
-    stocks.splice(newPosition, 0, stocks.splice(stockOldPosition, 1)[0]);
-  }
+  stocks.splice(newPosition, 0, stocks.splice(stockOldPosition, 1)[0]);
 
   return {
     activeSpecialArea: this._draggedItem.stockTakeData.activeSpecialArea,
