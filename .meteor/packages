@@ -19,7 +19,6 @@ iron:router
 cmather:handlebars-server
 percolate:migrations
 
-meteorhacks:flow-components
 meteorhacks:search-source
 accounts-ui
 accounts-google
