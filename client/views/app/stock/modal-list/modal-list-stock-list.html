@@ -10,35 +10,31 @@
       </div>
       <form class="form-horizontal" role="form" style="padding: 10px 20px">
         <div class="modal-body">
-          {{#if showAddStockItemMenu}}
-            {{> ingredientItemEditor isModal=false}}
-          {{else}}
-            <input type="text" class="form-control input-lg search-input" placeholder="Search for stocks..."><br>
+          <input type="text" class="form-control input-lg search-input" placeholder="Search for stocks..."><br>
 
-            <div class="row">
-              <table class="table table-striped ingredients-table">
-                <thead>
-                <tr>
-                  <th>Action</th>
-                  <th>Code</th>
-                  <th>Name</th>
-                  <th>Supplier</th>
-                  <th>Unit used</th>
-                  <th>How much does each unit cost?</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each ingredients}}
-                  {{> stockModalItem stock=this onAddStockItem=onAddStockItem}}
-                {{/each}}
-                </tbody>
-              </table>
-              <div class="alert alert-warning">If your stock item is not in the list,
-                <a class="alert-link add-new-ingredient">click here</a> to add it. Once you save it, it will appear next
-                time you search.
-              </div>
+          <div class="row">
+            <table class="table table-striped ingredients-table">
+              <thead>
+              <tr>
+                <th>Action</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Supplier</th>
+                <th>Unit used</th>
+                <th>How much does each unit cost?</th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#each ingredients}}
+                {{> stockModalItem stock=this onAddStockItem=onAddStockItem}}
+              {{/each}}
+              </tbody>
+            </table>
+            <div class="alert alert-warning">If your stock item is not in the list,
+              <a class="alert-link add-new-ingredient">click here</a> to add it. Once you save it, it will appear next
+              time you search.
             </div>
-          {{/if}}
+          </div>
         </div>
       </form>
     </div>

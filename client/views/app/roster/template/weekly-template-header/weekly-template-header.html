@@ -1,15 +1,9 @@
 <template name="weeklyTemplateHeader">
   {{#if canEditRoster}}
     <div class="title-action">
-      <a href="#calendarModal" class="btn btn-primary" data-toggle="modal">
+      <a href="#" class="btn btn-primary week-selector-opener">
         Copy template shifts to week
       </a>
     </div>
-    <!-- CALENDAR -->
-    <div id="calendarModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-      {{> weekSelector}}
-    </div>
-    <!-- /CALENDAR -->
   {{/if}}
 </template>

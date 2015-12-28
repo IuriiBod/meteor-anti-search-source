@@ -10,8 +10,6 @@ Meteor.startup(function () {
   JobItems._ensureIndex({ingredients: 1});
   JobItems._ensureIndex({name: 1});
 
-  Jobs._ensureIndex({status: 1, assignedTo: 1});
-
   MenuItems._ensureIndex({ingredients: 1});
   MenuItems._ensureIndex({jobItems: 1});
   MenuItems._ensureIndex({name: 1});
