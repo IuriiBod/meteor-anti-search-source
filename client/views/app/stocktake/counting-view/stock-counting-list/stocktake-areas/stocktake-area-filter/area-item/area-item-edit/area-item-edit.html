@@ -1,13 +1,13 @@
 <template name="areaItemEdit">
-  <div class="areaBox">
+  <div class="editableAreaBox">
   {{#if areas.activeGeneralArea}}
-    <div class="box-wrapper pull-right" style="display: block;">
-      <span class="box-remove glyphicon glyphicon-remove removeArea" style="margin: 2px"></span>
+    <div class="box-wrapper pull-right">
+      <span class="box-remove glyphicon glyphicon-remove removeArea"></span>
     </div>
   {{/if}}
   {{#if areas.activeSpecialArea}}
-    <div class="box-wrapper pull-right" style="display: block;">
-      <span class="box-remove glyphicon glyphicon-remove removeArea" style="margin: 2px"></span>
+    <div class="box-wrapper pull-right">
+      <span class="box-remove glyphicon glyphicon-remove removeArea"></span>
     </div>
   {{/if}}
     <a class="btn btn-block {{#if areas.activeGeneralArea}} btn-info {{/if}} {{#if areas.activeSpecialArea}} btn-info {{/if}}

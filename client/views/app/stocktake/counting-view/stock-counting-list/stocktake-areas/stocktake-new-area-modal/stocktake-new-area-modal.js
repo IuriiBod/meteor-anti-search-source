@@ -20,14 +20,20 @@ Template.newAreaModal.onCreated(function() {
 Template.newAreaModal.events({
   'click #savegeneralArea': function (event, tmpl) {
     event.preventDefault();
-    var name = $("#generalareaName").val();
+    var name = tmpl.$("#generalareaName").val();
     tmpl.submit(name);
   },
 
 
   'click #savespecialArea': function (event, tmpl) {
     event.preventDefault();
-    var name = $("#specialareaName").val();
+    var name = tmpl.$("#specialareaName").val();
+    tmpl.submit(name);
+  },
+
+  'submit form': function(event, tmpl) {
+    event.preventDefault();
+    var name = tmpl.$("#generalareaName").val() || tmpl.$("#specialareaName").val();
     tmpl.submit(name);
   }
 });
