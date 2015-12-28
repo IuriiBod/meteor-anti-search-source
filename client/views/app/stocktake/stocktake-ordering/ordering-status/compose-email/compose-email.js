@@ -51,7 +51,7 @@ Template.composeStocktakeOrderingEmail.onCreated(function () {
       location: location,
       areaName: area.name,
       orderData: ordersData,
-      total: total,
+      total: total.toFixed(2),
       user: user
     };
   };
