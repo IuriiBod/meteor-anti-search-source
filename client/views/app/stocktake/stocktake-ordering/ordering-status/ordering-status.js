@@ -9,20 +9,11 @@ Template.orderingStatus.onCreated(function () {
 
   this.getDeliveryDate = function () {
     var receipt = this.getCurrentReceipt();
-    return receipt && receipt.expectedDeliveryDate && new Date(receipt.expectedDeliveryDate) || moment().add(1, 'day');
+    return receipt && receipt.expectedDeliveryDate && new Date(receipt.expectedDeliveryDate)
   };
 });
 
 Template.orderingStatus.onRendered(function () {
-  //initialize date picker
-  var datePickerElement = this.$(".date-picker-input");
-  datePickerElement.datetimepicker({
-    calendarWeeks: true,
-    format: 'YYYY-MM-DD'
-  });
-  this.datePicker = datePickerElement.data("DateTimePicker");
-  this.datePicker.date(moment(this.getDeliveryDate()));
-
   this.generateReceipts = function (orderType) {
     var supplierId = this.data.activeSupplierId;
     if (orderType == 'emailed') {
@@ -59,10 +50,6 @@ Template.orderingStatus.helpers({
 
 
 Template.orderingStatus.events({
-  'click .date-picker-button': function (event, tmpl) {
-    tmpl.datePicker.toggle();
-  },
-
   'click .order-emailed-button': function (event, tmpl) {
     event.preventDefault();
     tmpl.generateReceipts('emailed');
@@ -71,23 +58,6 @@ Template.orderingStatus.events({
   'click .order-phoned-button': function (event, tmpl) {
     event.preventDefault();
     tmpl.generateReceipts('phoned');
-  },
-
-  'dp.change .date-picker-input': function (event, tmpl) {
-    var date = tmpl.datePicker.date().toDate();
-
-    var supplierId = tmpl.data.activeSupplierId;
-    var version = tmpl.data.stocktakeMainId;
-    var receipt = OrderReceipts.findOne({supplier: supplierId, version: version});
-
-    if (!moment(date).isSame(receipt.expectedDeliveryDate, 'day')) {
-      var info = {
-        expectedDeliveryDate: moment(date).startOf('day').valueOf(),
-        version: version,
-        supplier: supplierId
-      };
-      Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult());
-    }
   }
 });
 
