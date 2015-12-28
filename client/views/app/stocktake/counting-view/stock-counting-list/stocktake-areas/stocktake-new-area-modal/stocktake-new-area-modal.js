@@ -1,15 +1,16 @@
 Template.newAreaModal.onCreated(function() {
+  var tmpl = this;
   this.submit = function(name) {
     var areaName = name.trim();
     if (areaName !== '') {
       if (this.data.name === "general") {
         Meteor.call("createGeneralArea", areaName, HospoHero.handleMethodResult(function () {
-          this.$("#generalareaName").val("");
+          tmpl.$("#generalareaName").val("");
           $("#addNewGeneralAreaModal").modal("hide");
         }));
       } else if (this.data.name === "special" && this.data.generalArea) {
         Meteor.call("createSpecialArea", areaName, this.data.generalArea, HospoHero.handleMethodResult(function () {
-          this.$("#specialareaName").val("");
+          tmpl.$("#specialareaName").val("");
           $("#addNewSpecialAreaModal").modal("hide")
         }));
       }

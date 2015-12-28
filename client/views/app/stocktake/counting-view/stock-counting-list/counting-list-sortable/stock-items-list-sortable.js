@@ -55,17 +55,14 @@ SortableItemsHelper.prototype._draggedItemNewPosition = function(stocks, previou
   var newPosition = 0;
   if (!previousItem && nextItem && stocks.indexOf(nextItem) > 0) {
     newPosition = (stocks.indexOf(nextItem) - 1);
-  }
-  if (!nextItem && previousItem) {
+  } else if (!nextItem && previousItem) {
     newPosition = (stocks.indexOf(previousItem) + 1);
-  }
-  if (nextItem && previousItem) {
-    if (stocks.indexOf(draggedItem) > stocks.indexOf(previousItem)) {
+  } else if (stocks.indexOf(draggedItem) > stocks.indexOf(previousItem)) {
       newPosition = stocks.indexOf(previousItem) + 1;
-    } else {
-      newPosition = stocks.indexOf(previousItem);
-    }
+  } else {
+    newPosition = stocks.indexOf(previousItem);
   }
+
   return newPosition;
 };
 
