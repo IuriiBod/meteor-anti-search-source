@@ -67,7 +67,7 @@ Template.stockCountingList.helpers({
     if (main) {
       return {
         date: main.stocktakeDate,
-        hasNoOrderReceipts: main.orderReceipts && main.orderReceipts.length > 0
+        hasOrderReceipts: main.orderReceipts && main.orderReceipts.length > 0
       }
     }
   },
