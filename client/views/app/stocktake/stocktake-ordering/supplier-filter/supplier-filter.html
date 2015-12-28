@@ -1,0 +1,9 @@
+<template name="supplierFilter">
+  <div class="supplier-filter-wrapper">
+    {{#each suppliers}}
+      <a class="btn {{#if receiptExists}} btn-primary {{else}} btn-default {{/if}} activate-supplier-button">
+        {{name}}
+      </a>
+    {{/each}}
+  </div>
+</template>

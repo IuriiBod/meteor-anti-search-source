@@ -57,20 +57,12 @@ Meteor.methods({
           logger.error("Email text does not exist");
           throw new Meteor.Error(404, "Email text does not exist");
         }
-
-        var supplier = Suppliers.findOne({_id: supplierId}, {fields: {relations: 1}});
-
-        var queryOptions = {fields: {name: 1}};
-        var location = Locations.findOne({_id: supplier.relations.locationId}, queryOptions);
-        var area = Areas.findOne({_id: supplier.relations.areaId}, queryOptions);
-
-        var titleSuffix = location.name + ', ' + area.name;
-
+        
         Email.send({
-          "to": info.to,
-          "from": Meteor.user().emails[0].address,
-          "subject": "Order from " + titleSuffix,
-          "html": info.emailText
+          to: info.to,
+          from: Meteor.user().emails[0].address,
+          subject: info.title,
+          html: info.emailText
         });
         logger.info("Email sent to supplier", supplierId);
       }
