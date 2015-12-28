@@ -34,7 +34,8 @@ Template.weekSelector.events({
 
     if (selectedWeek) {
       var shifts = Shifts.find({
-        type: 'template'
+        type: 'template',
+        'relations.areaId': HospoHero.getCurrentAreaId()
       });
 
       var toCurrentDayMoment = function (date) {
@@ -64,6 +65,8 @@ Template.weekSelector.events({
         Meteor.call("createShift", shift, HospoHero.handleMethodResult());
       });
 
+      var weekSelectorModal = ModalManager.getInstanceByElement(event.target);
+      weekSelectorModal.close();
       HospoHero.success('Template was copied to the selected week');
     } else {
       HospoHero.error('You should select week at first');

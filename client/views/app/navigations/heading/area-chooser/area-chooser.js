@@ -29,6 +29,7 @@ Template.areaChooser.events({
 
     if (_.isFunction(tmpl.data.onAreaSelected)) {
       tmpl.data.onAreaSelected(areaId);
+      ModalManager.getInstanceByElement(event.target).close();
     }
   }
 });

@@ -9,15 +9,6 @@ Template.jobDetailsHeader.helpers({
   isArchived: function () {
     var job = JobItems.findOne({_id: this.id});
     return job && job.status == 'archived';
-  },
-  onAreaSelected: function () {
-    var jobItemId = this.id;
-    return function (areaId) {
-      Meteor.call("duplicateJobItem", jobItemId, areaId, HospoHero.handleMethodResult(function () {
-        HospoHero.success("Job item has successfully copied!");
-        $('#areaChooser').modal('hide');
-      }));
-    };
   }
 });
 
@@ -50,11 +41,21 @@ Template.jobDetailsHeader.events({
 
   'click .copy-job-item-button': function (event, tmpl) {
     event.preventDefault();
-    tmpl.$("#areaChooser").modal("show");
+    var onAreaSelected = function () {
+      var jobItemId = tmpl.data.id;
+      return function (areaId) {
+        Meteor.call("duplicateJobItem", jobItemId, areaId, HospoHero.handleMethodResult(function () {
+          HospoHero.success("Job item has successfully copied!");
+        }));
+      }
+    };
+    ModalManager.open('areaChooser', {
+      onAreaSelected: onAreaSelected()
+    });
   },
 
   'click .archive-job-item': function (event, tmpl) {
-    e.preventDefault();
+    event.preventDefault();
     var jobItemId = tmpl.data.id;
     Meteor.call("archiveJobItem", jobItemId, HospoHero.handleMethodResult(function (status) {
       return HospoHero.info("Job item " + status);
