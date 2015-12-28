@@ -89,10 +89,12 @@ Template.jobItemDetail.helpers({
     var getPrepCostPerPortion = function () {
       var getTotalIngredientCost = function () {
         var totalIngCost = 0;
-        self.jobItem.ingredients.forEach(function (ing) {
-          var ingItem = getIngredientItem(ing._id);
-          if (ingItem) {
-            totalIngCost += parseFloat(ingItem.costPerPortionUsed) * parseFloat(ing.quantity);
+        self.jobItem.ingredients.forEach(function (ingredientInJobItem) {
+          var analyzedIngredient = HospoHero.analyze
+            .ingredient(Ingredients.findOne({_id: ingredientInJobItem._id}));
+          if (analyzedIngredient) {
+            totalIngCost += parseFloat(analyzedIngredient.costPerPortionUsed)
+              * parseFloat(ingredientInJobItem.quantity);
           }
         });
         return totalIngCost;

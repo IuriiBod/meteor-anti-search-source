@@ -40,11 +40,13 @@ Template.jobItemDetailed.helpers({
       }
       if (jobItem.ingredients) {
         if (jobItem.ingredients.length > 0) {
-          jobItem.ingredients.forEach(function (ing) {
-            var ingItem = getIngredientItem(ing._id);
-            if (ingItem) {
-              ingItem.totalCost = parseFloat(ingItem.costPerPortionUsed) * parseFloat(ing.quantity);
-              jobItem.totalIngCost += parseFloat(ingItem.totalCost);
+          jobItem.ingredients.forEach(function (ingredientInJobItem) {
+            var analyzedIngredient = HospoHero.analyze
+              .ingredient(Ingredients.findOne({_id: ingredientInJobItem._id}));
+            if (analyzedIngredient) {
+              analyzedIngredient.totalCost = parseFloat(analyzedIngredient.costPerPortionUsed)
+                * parseFloat(ingredientInJobItem.quantity);
+              jobItem.totalIngCost += parseFloat(analyzedIngredient.totalCost);
             }
           });
         }
