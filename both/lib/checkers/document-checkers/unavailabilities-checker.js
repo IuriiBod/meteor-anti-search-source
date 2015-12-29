@@ -19,6 +19,7 @@ var LeaveRequestDocument = Match.Where(function (leaveRequest) {
     notifyManagerId: HospoHero.checkers.MongoId,
     userId: HospoHero.checkers.MongoId,
     status: Match.OneOf('awaiting', 'declined', 'approved'),
+    relations: HospoHero.checkers.Relations,
 
     _id: HospoHero.checkers.OptionalMongoId,
     comment: Match.Optional(String)

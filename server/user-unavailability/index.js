@@ -18,6 +18,7 @@ Meteor.methods({
 
     newLeaveRequest.userId = self.userId;
     newLeaveRequest.status = 'awaiting';
+    newLeaveRequest.relations = HospoHero.getRelationsObject();
     check(newLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
 
     LeaveRequests.insert(newLeaveRequest, function () {

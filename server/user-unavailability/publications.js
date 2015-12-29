@@ -9,6 +9,7 @@ Meteor.publish('userAllLeaveRequests', function () {
 
 Meteor.publish('leaveRequest', function (leaveRequestId) {
   var query = leaveRequestId ? {_id: leaveRequestId} : {};
+  query['relations.areaId'] = HospoHero.getCurrentAreaId(this.userId);
   return LeaveRequests.find(query);
 });
 
