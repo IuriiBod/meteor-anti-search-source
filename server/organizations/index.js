@@ -29,7 +29,7 @@ Meteor.methods({
   //  return true;
   //},
 
-  'deleteOrganization': function (id) {
+  deleteOrganization: function (id) {
     var user = Meteor.user();
     if (!user) {
       logger.error('No user has logged in');
@@ -40,22 +40,21 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to delete organization");
     }
 
-    var areasIds = Meteor.call('getAreasIdsRelatedToOrganization', id);
-    Meteor.call('removeDocumentsRelatedToAreas', areasIds);
+    check(id, HospoHero.checkers.MongoId);
 
-    Areas.remove({organizationId: id});
-    Locations.remove({organizationId: id});
+    var locationsIdsRelatedToOrganization = (function(id) {
+      var ids = [];
+      Locations.find(
+          {organization: id},
+          {fields: {_id: 1}}
+      ).forEach(function (item) {ids.push(item._id)} );
+
+      return ids;
+    })(id);
+
+    Meteor.call('removeLocations', locationsIdsRelatedToOrganization);
+
     Organizations.remove({_id: id});
-  },
-
-  "getAreasIdsRelatedToOrganization": function(id) {
-    var ids = [];
-
-    Areas.find(
-        {organizationId: id},
-        {fields: {_id: 1}}
-    ).forEach(function(item){ ids.push(item._id)});
-
-    return ids;
+    Meteor.call('removeAllDocumentsWithFieldValues', 'relations.organizationId', [id]);
   }
 });

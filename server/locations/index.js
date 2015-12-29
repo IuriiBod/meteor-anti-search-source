@@ -44,5 +44,24 @@ Meteor.methods({
 
     Locations.update({_id: updatedLocation._id}, {$set: updatedLocation});
     logger.info('Location was updated', {locationId: updatedLocation._id, userId: Meteor.userId()});
+  },
+
+  removeLocations: function (locationsIds) {
+    check(locationsIds, [HospoHero.checkers.MongoId]);
+
+    var areasIdsRelatedToLocations = (function(locationsIds) {
+      var ids = [];
+      Areas.find(
+        {locationId: {$in: locationsIds}},
+        {fields: {_id: 1}}
+      ).forEach(function (item) {ids.push(item._id)} );
+
+      return ids;
+    })(locationsIds);
+
+    Meteor.call('removeAreas', areasIdsRelatedToLocations);
+
+    Locations.remove({_id: {$in: locationsIds}});
+    Meteor.call('removeAllDocumentsWithFieldValues', 'relations.locationId', locationsIds);
   }
 });
