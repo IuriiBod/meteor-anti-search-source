@@ -4,9 +4,9 @@ Template.stocktakeOrdering.onCreated(function () {
 
 Template.stocktakeOrdering.helpers({
   isNotEmpty: function () {
-    return !!StockOrders.find({
+    return !!StockOrders.findOne({
       version: this.stocktakeMainId
-    }).count();
+    });
   },
 
   stockOrdersList: function (activeSupplierId) {
@@ -37,7 +37,7 @@ Template.stocktakeOrdering.events({
   'keyup .supplier-order-note': function (event, tmpl) {
     event.preventDefault();
     if (event.keyCode == 13) {
-      var noteText = $(event.target).val().trim();
+      var noteText = tmpl.$(event.target).val().trim();
 
       if (noteText.length > 0) {
         var activeSupplierId = tmpl.get('activeSupplierId');
@@ -45,13 +45,15 @@ Template.stocktakeOrdering.events({
 
         var receipt = OrderReceipts.findOne({supplier: activeSupplierId, version: version});
 
-        var info = {
-          orderNote: noteText,
-          version: version,
-          supplier: activeSupplierId
-        };
+        if (receipt) {
+          var info = {
+            orderNote: noteText,
+            version: version,
+            supplier: activeSupplierId
+          };
 
-        Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult());
+          Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult());
+        }
       }
     }
   }
