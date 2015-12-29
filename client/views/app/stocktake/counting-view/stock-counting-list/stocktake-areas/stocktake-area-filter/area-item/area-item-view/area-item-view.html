@@ -7,7 +7,7 @@
        aria-expanded="false" aria-controls="{{item._id}}">
       {{item.name}}
       <div class="progress progress-mini">
-        <div class="progress-bar" style="width: {{widthOfBar}}"></div>
+        {{> areasProgressBar itemId=item._id itemClass=itemClass stockTakeData=stockTakeData}}
       </div>
     </a>
   </div>
