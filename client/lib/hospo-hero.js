@@ -58,7 +58,8 @@ Namespace('HospoHero', {
     }
   },
 
-  getParamsFromRoute: function (routeContext, params) {
+  getParamsFromRoute: function (params, routeContext) {
+    routeContext = routeContext || Router.current();
     if (_.isString(params)) {
       return routeContext.params[params];
     } else {
