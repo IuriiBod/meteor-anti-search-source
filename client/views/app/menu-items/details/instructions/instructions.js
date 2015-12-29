@@ -13,16 +13,16 @@ Template.menuItemInstructions.helpers({
 Template.menuItemInstructions.events({
   'click .edit-save-button': function (event, tmpl) {
     event.preventDefault();
-    var isEditMode = this.get('isEditMode');
+    var isEditMode = tmpl.get('isEditMode');
 
     var toggleEditMode = function () {
       tmpl.set('isEditMode', !isEditMode);
     };
 
     if (isEditMode) {
-      var info = {};
-      info.instructions = tmpl.$('.summernote').summernote('code');
-      Meteor.call("editMenuItem", tmpl.data._id, info, HospoHero.handleMethodResult(function () {
+      var menuItem = MenuItems.findOne({_id: tmpl.data._id});
+      menuItem.instructions = tmpl.$('.summernote').summernote('code');
+      Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult(function () {
         toggleEditMode();
       }));
     } else {

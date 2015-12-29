@@ -39,45 +39,42 @@ Meteor.methods({
     return newJobItemInfo._id;
   },
 
-  'deleteJobItem': function () {
-    // TODO: Old code, refactor later
-    //if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
-    //  logger.error("User not permitted to create job items");
-    //  throw new Meteor.Error(403, "User not permitted to create jobs");
-    //}
-    //
-    //check(id, HospoHero.checkers.MongoId);
-    //
-    //var job = JobItems.findOne(id);
-    //if (!job) {
-    //  logger.error("Job Item not found", {"id": id});
-    //  throw new Meteor.Error(404, "Job Item not found");
-    //}
-    //
-    //var notificationSender = new NotificationSender(
-    //  'Job item deleted',
-    //  'job-item-deleted',
-    //  {
-    //    itemName: job.name,
-    //    username: HospoHero.username(Meteor.userId()),
-    //    linkToItem: Router.url(routeName, {_id: id})
-    //  }
-    //);
-    //
-    //var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('job', id);
-    //subscriberIds.forEach(function (subscription) {
-    //  if (subscription.subscriber != Meteor.userId()) {
-    //    notificationSender.sendNotification(subscription.subscriber);
-    //  }
-    //  subscription.itemIds = id;
-    //  Meteor.call('subscribe', subscription, true);
-    //});
-    //
-    //logger.info("Job Item removed", {"id": id});
-    //JobItems.remove({'_id': id});
+  'deleteJobItem': function (id) {
+    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+      logger.error("User not permitted to create job items");
+      throw new Meteor.Error(403, "User not permitted to create jobs");
+    }
+
+    check(id, HospoHero.checkers.MongoId);
+
+    var job = JobItems.findOne(id);
+    if (!job) {
+      logger.error("Job Item not found", {"id": id});
+      throw new Meteor.Error(404, "Job Item not found");
+    }
+
+    var notificationSender = new NotificationSender(
+      'Job item deleted',
+      'job-item-deleted',
+      {
+        itemName: job.name,
+        username: HospoHero.username(Meteor.userId())
+      }
+    );
+
+    var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('job', id);
+    subscriberIds.forEach(function (subscription) {
+      if (subscription.subscriber != Meteor.userId()) {
+        notificationSender.sendNotification(subscription.subscriber);
+      }
+      subscription.itemIds = id;
+      Meteor.call('subscribe', subscription, true);
+    });
+
+    JobItems.remove({'_id': id});
+    logger.info("Job Item removed", {"id": id});
   },
 
-  // TODO: I'm not sure that above methods work correctly
   duplicateJobItem: function (jobItemId, areaId, quantity) {
     if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
       logger.error("User not permitted to duplicate job items");
@@ -93,14 +90,12 @@ Meteor.methods({
     }
 
     var jobItem = JobItems.findOne({_id: jobItemId});
-
     if (!quantity || jobItem.relations.areaId != areaId) {
       jobItem = HospoHero.misc.omitAndExtend(jobItem, ['_id', 'editedOn', 'editedBy', 'relations'], areaId);
 
       jobItem.ingredients = HospoHero.misc.itemsMapperWithCallback(jobItem.ingredients, function (item) {
         return Meteor.call('duplicateIngredient', item._id, areaId, item.quantity);
       });
-
       jobItem.name = HospoHero.misc.copyingItemName(jobItem.name, JobItems, areaId);
       jobItemId = JobItems.insert(jobItem);
 

@@ -2,14 +2,10 @@ Template.ingredientsList.onCreated(function () {
   this.onIngredientIdChange = this.data.onIngredientIdChange;
 
   this.searchLimit = 20;
-  var status = HospoHero.getParamsFromRoute(Router.current(), 'type') ? 'archived' : {$ne: 'archived'};
-
   this.searchSource = this.AntiSearchSource({
     collection: 'ingredients',
     fields: ['code', 'description'],
-    mongoQuery: {
-      status: status
-    },
+    searchMode: 'local',
     limit: this.searchLimit
   });
 });
@@ -32,7 +28,12 @@ Template.ingredientsList.onRendered(function () {
 
 Template.ingredientsList.helpers({
   getIngredients: function () {
-    return Template.instance().searchSource.searchResult({sort: {code: 1}});
+    return Template.instance().searchSource.searchResult({
+      transform: function (matchText, regExp) {
+        return matchText.replace(regExp, "<b>$&</b>");
+      },
+      sort: {code: 1}
+    });
   },
   onIngredientIdChange: function () {
     var tmpl = Template.instance();
@@ -49,14 +50,11 @@ Template.ingredientsList.events({
   'keyup #searchIngBox': _.throttle(function (event, tmpl) {
     var text = event.target.value.trim();
     tmpl.searchSource.search(text);
-  }, 200),
+  }, 500),
 
   'click #loadMoreIngs': function (event, tmpl) {
     event.preventDefault();
-    var text = tmpl.$("#searchIngBox").val().trim();
-    tmpl.searchLimit += 10;
-    tmpl.searchSource.setLimit(tmpl.searchLimit);
-    tmpl.searchSource.search(text);
+    tmpl.searchSource.incrementLimit(10);
   }
 });
 

@@ -1,5 +1,9 @@
+var DEFAULT_INSTRUCTIONS = 'Add instructions here';
+
 Template.menuItemSubmitMainView.onCreated(function () {
   this.set('image', false);
+  this.set('menuItemIngredients', []);
+  this.set('menuItemJobs', []);
 });
 
 
@@ -14,53 +18,39 @@ Template.menuItemSubmitMainView.helpers({
   },
 
   initialHTML: function () {
-    return "Add instructions here";
+    return DEFAULT_INSTRUCTIONS;
+  },
+
+  getOnIngredientsListChanged: function () {
+    var tmpl = Template.instance();
+    return function (newIngredientsList) {
+      tmpl.set('menuItemIngredients', newIngredientsList);
+    };
+  },
+
+  getOnJobItemsListChanged: function () {
+    var tmpl = Template.instance();
+    return function (newJobItemsList) {
+      tmpl.set('menuItemJobs', newJobItemsList);
+    };
   }
 });
+
 
 Template.menuItemSubmitMainView.events({
   'submit form': function (event, tmpl) {
     event.preventDefault();
 
     var instructions = tmpl.$('.summernote').summernote('code');
-    if (instructions === "Add instructions here") {
+    if (instructions === DEFAULT_INSTRUCTIONS) {
       instructions = '';
     }
-
-    //todo: get rid of this mess too
-    var preps = $(event.target).find("[name=prep_qty]").get();
-    var ings = $(event.target).find("[name=ing_qty]").get();
-    var ing_doc = [];
-    ings.forEach(function (item) {
-      var dataid = $(item).attr("data-id");
-      if (dataid && !(ing_doc.hasOwnProperty(dataid))) {
-        var quantity = parseFloat($(item).val());
-        quantity = quantity ? quantity : 1;
-        ing_doc.push({
-          "_id": dataid,
-          "quantity": quantity
-        });
-      }
-    });
-    var prep_doc = [];
-    preps.forEach(function (item) {
-      var dataid = $(item).attr("data-id");
-      if (dataid && !(prep_doc.hasOwnProperty(dataid))) {
-        var quantity = parseFloat($(item).val());
-        quantity = quantity ? quantity : 1;
-        prep_doc.push({
-          "_id": dataid,
-          "quantity": quantity
-        });
-      }
-    });
-
 
     var menuItemFieldsConfig = [
       'name', 'category', 'status', {
         name: 'salesPrice',
         transform: function (salesPrice) {
-          return Math.round(parseFloat(salesPrice) * 100) / 100;
+          return HospoHero.misc.rounding(parseFloat(salesPrice));
         }
       }
     ];
@@ -70,12 +60,17 @@ Template.menuItemSubmitMainView.events({
     _.extend(info, {
       image: tmpl.get('image') || '',
       instructions: instructions,
-      ingredients: ing_doc,
-      prepItems: prep_doc
+      ingredients: tmpl.get('menuItemIngredients'),
+      jobItems: tmpl.get('menuItemJobs'),
+      relations: HospoHero.getRelationsObject()
     });
 
     if (!info.name) {
-      return alert("Add a unique name for the menu");
+      return HospoHero.error("Add a unique name for the menu");
+    }
+
+    if (isNaN(info.salesPrice)) {
+      return HospoHero.error("Price should be a number");
     }
 
     Meteor.call("createMenuItem", info, HospoHero.handleMethodResult(function (id) {

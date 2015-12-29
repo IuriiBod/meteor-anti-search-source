@@ -27,6 +27,10 @@ Template.topNavbar.helpers({
       {
         route: 'logout',
         title: 'Logout'
+      },
+      {
+        title: 'Unavailabilities',
+        class: 'user-unavailabilities-flyout'
       }
     ];
   },
@@ -80,10 +84,6 @@ Template.topNavbar.events({
 
 
 var settingsMenuItems = [
-  {
-    route: 'usersSettings',
-    title: 'Users'
-  },
   {
     route: 'rolesSettings',
     title: 'Roles'

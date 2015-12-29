@@ -46,6 +46,6 @@ Template.pageHeading.helpers({
   },
 
   templateData: function () {
-    return this.templateData || {};
+    return this || {};
   }
 });

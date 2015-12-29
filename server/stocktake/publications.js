@@ -77,7 +77,13 @@ Meteor.publish("currentStocks", function (ids) {
 });
 
 Meteor.publish('stocktakeList', function (areaId) {
-  return Stocktakes.find({
+  return [
+    StocktakeMain.find({
+      "stocktakeDate": new Date(moment().format("YYYY-MM-DD")).getTime(),
+      "relations.areaId": areaId
+    }),
+    Stocktakes.find({
     'relations.areaId': areaId
-  });
+    })
+  ]
 });

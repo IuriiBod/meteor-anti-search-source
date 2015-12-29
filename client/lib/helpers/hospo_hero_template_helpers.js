@@ -41,7 +41,7 @@ Namespace('HospoHero.template', {
   },
 
   roundCount: function (count) {
-    return count ? Math.round(count * 100) / 100 : 0;
+    return count ? HospoHero.misc.rounding(count) : 0;
   },
 
   sectionById: function (id) {

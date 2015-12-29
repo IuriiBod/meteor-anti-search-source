@@ -19,7 +19,6 @@ iron:router
 cmather:handlebars-server
 percolate:migrations
 
-meteorhacks:flow-components
 meteorhacks:search-source
 accounts-ui
 accounts-google
@@ -70,3 +69,4 @@ joshowens:timezone-picker
 jss:blaze-states
 natestrauser:animate-css
 jss:anti-search-source
+trsdln:modals

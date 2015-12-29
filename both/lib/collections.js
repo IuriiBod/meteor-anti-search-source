@@ -4,8 +4,6 @@ Ingredients = new Mongo.Collection("ingredients");
 
 JobItems = new Mongo.Collection("jobItems");
 
-Jobs = new Mongo.Collection("jobs");
-
 Shifts = new Mongo.Collection("shifts");
 ManagerNotes = new Mongo.Collection('managerNotes');
 

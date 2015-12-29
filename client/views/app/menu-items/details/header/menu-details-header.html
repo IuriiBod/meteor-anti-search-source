@@ -9,22 +9,22 @@
       <ul class="dropdown-menu" style="margin-left: -56px;">
         {{#if isSubscribed}}
           <li class="text-info">
-            <a href="#" class="hidden-print subscribeButton"><i class="fa fa-lg fa-rss"></i> Unsubscribe</a>
+            <a href="#" class="hidden-print unsubscribe-button"><i class="fa fa-lg fa-rss"></i> Unsubscribe</a>
           </li>
         {{else}}
           <li class="text-muted">
-            <a href="#" class="hidden-print subscribeButton"><i class="fa fa-lg fa-rss"></i> Subscribe</a>
+            <a href="#" class="hidden-print subscribe-button"><i class="fa fa-lg fa-rss"></i> Subscribe</a>
           </li>
         {{/if}}
         {{#if canEditMenu}}
           <li>
-            <a href="" class="hidden-print copyMenuItemBtn">
+            <a href="" class="hidden-print copy-item-modal-opener">
               <i class="fa fa-copy"></i> Copy
             </a>
           </li>
         {{/if}}
         <li>
-          <a href="" class="hidden-print printMenuItemBtn">
+          <a href="" class="hidden-print print-menu-item">
             <i class="fa fa-print"></i> Print
           </a>
         </li>
@@ -32,18 +32,18 @@
           <li role="separator" class="divider"></li>
           {{#if isArchived}}
             <li>
-              <a href="#" class="hidden-print archiveMenuItemBtn">
+              <a href="#" class="hidden-print archive-menu-item">
                 <i class="fa fa-dropbox"></i> Restore
               </a>
             </li>
             <li>
-              <a href="#" class="hidden-print deleteMenuItemBtn">
+              <a href="#" class="hidden-print delete-menu-item">
                 <i class="fa fa-trash-o"></i> Delete
               </a>
             </li>
           {{else}}
             <li>
-              <a href="#" class="hidden-print archiveMenuItemBtn">
+              <a href="#" class="hidden-print archive-menu-item">
                 <i class="fa fa-archive"></i> Archive
               </a>
             </li>
@@ -52,13 +52,4 @@
       </ul>
     </div>
   </div>
-
-  {{#if canEditMenu}}
-    <!--AREA CHOOSER-->
-    <div class="modal fade" id="areaChooser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-      {{> areaChooser onAreaSelected=state$onAreaSelected}}
-    </div>
-    <!--AREA CHOOSER-->
-  {{/if}}
 </template>
