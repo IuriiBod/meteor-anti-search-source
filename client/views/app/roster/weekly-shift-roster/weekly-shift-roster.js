@@ -1,4 +1,5 @@
 //context: weekDate (WeekDate), type ('template'/null)
+
 Template.weeklyShiftRoster.onCreated(function () {
 });
 
@@ -19,8 +20,3 @@ Template.weeklyShiftRoster.helpers({
     return HospoHero.dateUtils.getWeekDays(weekDate);
   }
 });
-
-
-
-
-
