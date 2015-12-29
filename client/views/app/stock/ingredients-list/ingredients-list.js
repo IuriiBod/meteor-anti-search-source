@@ -12,17 +12,15 @@ Template.ingredientsList.onCreated(function () {
 
 Template.ingredientsList.onRendered(function () {
   var tpl = this;
-  Meteor.defer(function () {
-    $('#wrapper').scroll(function (event) {
-      var wrapper = event.target;
-      var wrapperHeight = wrapper.clientHeight;
-      var wrapperScrollHeight = wrapper.scrollHeight;
-      var wrapperScrollTop = wrapper.scrollTop;
+  $('#wrapper').scroll(function (event) {
+    var wrapper = event.target;
+    var wrapperHeight = wrapper.clientHeight;
+    var wrapperScrollHeight = wrapper.scrollHeight;
+    var wrapperScrollTop = wrapper.scrollTop;
 
-      if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
-        tpl.$('#loadMoreIngs').click();
-      }
-    });
+    if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
+      tpl.$('#loadMoreIngs').click();
+    }
   });
 });
 
