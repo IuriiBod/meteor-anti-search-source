@@ -10,7 +10,6 @@ var ShiftDocument = Match.Where(function (shift) {
     createdBy: HospoHero.checkers.OptionalNullableMongoId,
     assignedTo: HospoHero.checkers.OptionalNullableMongoId,
     assignedBy: HospoHero.checkers.OptionalNullableMongoId,
-    jobs: Match.Optional([HospoHero.checkers.MongoId]),
     status: Match.Optional(Match.OneOf('draft', 'started', 'finished')),
     published: Match.Optional(Boolean),
     publishedOn: Match.Optional(Number),
