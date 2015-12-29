@@ -189,11 +189,10 @@ FigureBoxDataHelper.prototype._getPayrate = function (user, shift) {
 FigureBoxDataHelper.prototype._finishDateFix = function (convertToDate, finishDate) {
   var convertToMoment = moment(convertToDate);
   var convertedMoment = moment(finishDate);
-  convertedMoment.set({
-    date: convertToMoment.date(),
-    month: convertToMoment.month(),
-    year: convertToMoment.year()
-  });
+  convertedMoment
+    .year(convertToMoment.year())
+    .month(convertToMoment.month())
+    .date(convertToMoment.date());
   return convertedMoment;
 };
 

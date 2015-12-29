@@ -40,6 +40,7 @@ Template.weekPicker.onRendered(function () {
     if (!this.isSameAsOldWeekDate(date)) {
       this.set('date', date);
       if (_.isFunction(this.data.onDateChanged)) {
+        this.datePicker.date(moment(date));
         this.data.onDateChanged(date);
       }
       this.oldDate = date;
@@ -110,8 +111,4 @@ Template.weekPicker.events({
 
 var getWeekDateByMoment = function (dateMoment) {
   return dateMoment.format('YYYY-MM-DD');
-};
-
-var getMomentByWeekDate = function (weekDate) {
-  return moment().set(weekDate);
 };
