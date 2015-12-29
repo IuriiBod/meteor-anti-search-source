@@ -1,5 +1,4 @@
 //context: weekDate (WeekDate), type ('template'/null)
-
 Template.weeklyShiftRoster.onCreated(function () {
 });
 
