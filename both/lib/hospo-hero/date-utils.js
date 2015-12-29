@@ -115,7 +115,9 @@ Namespace('HospoHero.dateUtils', {
 
   getDateByWeekDate: function (weekDate) {
     if (_.isString(weekDate)) {
-      return moment(weekDate);
+      return moment(weekDate).toDate();
+    } else if (moment.isMoment(weekDate)) {
+      return weekDate.toDate();
     } else {
       return moment().year(weekDate.year).week(weekDate.week).toDate();
     }
