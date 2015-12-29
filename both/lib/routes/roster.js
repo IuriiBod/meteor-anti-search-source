@@ -1,6 +1,5 @@
-Router.route('/roster/weekly/:year/:week', {
+Router.route('/roster/weekly/:date', {
   name: "weeklyRoster",
-  path: '/roster/weekly/:year/:week',
   template: "weeklyRosterMainView",
   waitOn: function () {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);

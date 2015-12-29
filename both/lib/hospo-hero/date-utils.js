@@ -182,5 +182,10 @@ Namespace('HospoHero.dateUtils', {
   //Formatted time with Ago
   timeFromNow: function (time) {
     return moment(time).fromNow();
+  },
+
+  startOfWeekMoment: function (date) {
+    date = date ? moment(date) : moment();
+    return date.startOf('isoWeek');
   }
 });

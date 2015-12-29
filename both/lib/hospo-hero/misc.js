@@ -52,9 +52,15 @@ Namespace('HospoHero.misc', {
   },
 
   getWeekRangeQueryByRouter: function (router) {
-    var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(router);
-    var date = HospoHero.dateUtils.getDateByWeekDate(currentWeekDate);
-    return TimeRangeQueryBuilder.forWeek(date, false);
+    if (router.params.date) {
+      var startDate = moment(router.params.date);
+      var endDate = moment(startDate).add(7, 'days');
+      return TimeRangeQueryBuilder.forInterval(startDate, endDate);
+    } else {
+      var currentWeekDate = HospoHero.misc.getWeekDateFromRoute(router);
+      var date = HospoHero.dateUtils.getDateByWeekDate(currentWeekDate);
+      return TimeRangeQueryBuilder.forWeek(date, false);
+    }
   },
 
   getWeekDateFromRoute: function (routeContext) {

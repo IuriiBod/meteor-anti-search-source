@@ -7,8 +7,8 @@ Template.weeklyHeader.onCreated(function () {
 
 Template.weeklyHeader.helpers({
   onDateChanged: function () {
-    return function (weekDate) {
-      Router.go(Router.current().route.getName(), weekDate);
+    return function (date) {
+      Router.go(Router.current().route.getName(), {date: date});
     };
   },
 
