@@ -96,8 +96,7 @@ var menuEntries = [
         route: 'teamHours',
         params: function () {
           return {
-            year: moment().year(),
-            week: moment().week()
+            date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD')
           }
         }
       }
