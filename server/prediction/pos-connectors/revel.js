@@ -235,7 +235,7 @@ RevelSalesDataBucket.prototype.isEmpty = function () {
 };
 
 
-if (HospoHero.isDevelopmentMode() || Meteor.settings.useRawOrders === true) {
+if (Meteor.settings.useRawOrders === true) {
   _.extend(Revel.prototype, {
     loadOrderItems: function (offset) {
       logger.info('Mock loadOrderItems', {offset: offset});
