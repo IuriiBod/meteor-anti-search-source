@@ -21,7 +21,7 @@ Template.clock.helpers({
         {
           status: 'finished',
           finishedAt: {
-            $lte: new Date()
+            $lte: moment().add(1, 'minutes').toDate()
           }
         }
       ]
