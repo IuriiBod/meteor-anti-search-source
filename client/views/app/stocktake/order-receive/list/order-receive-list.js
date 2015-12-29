@@ -27,7 +27,7 @@ Template.orderReceive.helpers({
   },
 
   receivedNote: function () {
-    return !!this.currentReceipt.receiveNote;
+    return this.currentReceipt.receiveNote;
   },
 
   currentOrderCallback: function () {
