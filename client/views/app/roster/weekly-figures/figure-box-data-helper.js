@@ -1,6 +1,10 @@
 FigureBoxDataHelper = function FigureBoxDataHelper(weekDate) {
-  this.weekDate = weekDate;
-  this.weekDate.weekRange = HospoHero.dateUtils.getWeekStartEnd(weekDate.week, weekDate.year);
+  var dateMoment = moment(weekDate);
+  this.weekDate = {
+    year: dateMoment.year(),
+    week: dateMoment.week()
+  };
+  this.weekDate.weekRange = HospoHero.dateUtils.getWeekStartEnd(weekDate);
 
   this.Sales = this._sales();
   this.Staff = this._staffCost();

@@ -114,7 +114,11 @@ Namespace('HospoHero.dateUtils', {
   },
 
   getDateByWeekDate: function (weekDate) {
-    return moment().year(weekDate.year).week(weekDate.week).toDate();
+    if (_.isString(weekDate)) {
+      return moment(weekDate);
+    } else {
+      return moment().year(weekDate.year).week(weekDate.week).toDate();
+    }
   },
 
   getWeekDays: function (weekDate) {
@@ -129,7 +133,14 @@ Namespace('HospoHero.dateUtils', {
 
   getWeekStartEnd: function (week, year) {
     if (!year) {
-      year = moment().year()
+      if (_.isString(week)) {
+        return {
+          monday: moment(week).startOf('isoWeek').toDate(),
+          sunday: moment(week).endOf('isoWeek').toDate()
+        }
+      } else {
+        year = moment().year()
+      }
     }
     return {
       monday: moment().year(year).week(week).startOf("isoWeek").toDate(),
