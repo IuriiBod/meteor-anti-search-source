@@ -1,8 +1,8 @@
-Template.salesPredictionHeader.onCreated(function () {
-  this.set('currentDate', HospoHero.getParamsFromRoute('date'));
-});
-
 Template.salesPredictionHeader.helpers({
+  currentDate: function () {
+    return moment(HospoHero.getParamsFromRoute('date'));
+  },
+
   onDateChanged: function () {
     return function (weekDate) {
       Router.go('salesPrediction', {
