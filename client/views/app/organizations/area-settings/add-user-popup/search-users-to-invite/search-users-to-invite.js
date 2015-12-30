@@ -12,11 +12,13 @@ Template.searchUsersToInvite.onCreated(function () {
 
   this.searchSource = this.AntiSearchSource({
     collection: Meteor.users,
-    fields: ['username'],
+    fields: ['profile.firstname', 'profile.lastname', 'emails.address'],
     searchMode: 'local',
     mongoQuery: selector,
     limit: 10
   });
+
+  this.usersCount = 0;
 
   this.set('displaySearchResults', false);
   this.set('isNewUserAdding', false);
@@ -25,37 +27,33 @@ Template.searchUsersToInvite.onCreated(function () {
     this.set('displaySearchResults', searchState);
     this.set('isNewUserAdding', inviteState);
   };
+
+  this.searchSource.search('');
 });
 
 Template.searchUsersToInvite.helpers({
   searchedUsers: function () {
-    return Template.instance().searchSource.searchResult({
-      transform: function (matchText, regExp) {
-        return matchText.replace(regExp, "<b>$&</b>");
-      },
+    var users = Template.instance().searchSource.searchResult({
       sort: {'profile.firstname': 1}
-    })
+    });
+    Template.instance().usersCount = users.count();
+    return users;
   },
   isNewUserAdding: function () {
-    console.log("Template.instance().get('isNewUserAdding')", Template.instance().get('isNewUserAdding'));
-
     return Template.instance().get('isNewUserAdding');
   },
   displaySearchResults: function () {
-    console.log("Template.instance().get('displaySearchResults')", Template.instance().get('displaySearchResults'));
-
     return Template.instance().get('displaySearchResults');
   }
 });
 
 Template.searchUsersToInvite.events({
-  'keyup input[name="addUserName"]': function (event, tmpl) {
+  'keyup .add-user-name': function (event, tmpl) {
     var searchText = tmpl.$(event.target).val();
-    console.log('searchText.length', searchText.length);
-    
-    if (searchText.length > 1) {
+
+    if (searchText.length > 0) {
       // If search text is an email, display form for adding user name for a new user
-      if (searchText.indexOf('@') > -1) {
+      if (searchText.indexOf('@') > -1 && !tmpl.usersCount) {
         tmpl.setSearchAndInviteState(false, true);
       }
       // else search users depend on search text
@@ -64,7 +62,7 @@ Template.searchUsersToInvite.events({
         tmpl.searchSource.search(searchText);
       }
     } else {
-      tmpl.setSearchAndInviteState(true, false);
+      tmpl.setSearchAndInviteState(false, false);
     }
   },
 
