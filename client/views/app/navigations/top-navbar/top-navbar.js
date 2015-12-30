@@ -85,10 +85,6 @@ Template.topNavbar.events({
 
 var settingsMenuItems = [
   {
-    route: 'rolesSettings',
-    title: 'Roles'
-  },
-  {
     route: 'sectionsSettings',
     title: 'Sections'
   },
@@ -97,15 +93,7 @@ var settingsMenuItems = [
     title: 'Stock Areas'
   },
   {
-    route: 'inactivityTimeoutSettings',
-    title: 'Inactivity Timeout'
-  },
-  {
     route: 'posSettings',
     title: 'POS / Menu Linking'
-  },
-  {
-    route: 'archivingSettings',
-    title: 'Locations/Areas archiving'
   }
 ];
