@@ -1,6 +1,6 @@
 Template.menuDetailsHeader.onCreated(function () {
   this.getMenuItemId = function () {
-    return HospoHero.getParamsFromRoute(Router.current(), '_id');
+    return HospoHero.getParamsFromRoute('_id');
   };
 
   this.isSubscribed = function () {
