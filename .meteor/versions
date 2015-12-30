@@ -48,7 +48,7 @@ iron:url@1.0.9
 joshowens:timezone-picker@0.1.2
 jquery@1.11.3_2
 json@1.0.3
-jss:anti-search-source@0.2.1
+jss:anti-search-source@0.2.3
 jss:blaze-states@0.0.1
 jss:meteor-google-prediction@0.2.2
 jss:moment-timezone@0.4.1
