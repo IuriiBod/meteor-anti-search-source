@@ -35,6 +35,7 @@ Router.route('/jobItem/submit', {
   },
   data: function () {
     return {
+      jobItem: {},
       mode: 'submit'
     }
   }
