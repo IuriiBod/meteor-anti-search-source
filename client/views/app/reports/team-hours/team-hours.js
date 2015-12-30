@@ -1,6 +1,5 @@
 Template.teamHoursMainView.onCreated(function () {
-  var weekDateFromRoute = HospoHero.misc.getWeekDateFromRoute(Router.current());
-  this.set('weekDate', weekDateFromRoute);
+  this.set('weekDate', moment(this.data.date));
   this.set('tableViewMode', 'shifts');
   this.set('searchText', '');
 });
