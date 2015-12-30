@@ -1,45 +1,55 @@
 @import "../../../stylesheets/theme-globals.import.less";
 
-.prediction-component {
-  .panel {
-    border: 1px solid @border-color;
-    background: white;
-    color: @text-color;
-  }
+.sales-prediction-content {
+  .prediction-component {
+    .panel {
+      border: 1px solid @border-color;
+      background: white;
+      color: @text-color;
+    }
 
-  .prediction-panel {
-    .panel;
-    table {
-      margin-bottom: 0;
+    .prediction-panel {
+      .panel;
+      table {
+        margin-bottom: 0;
 
-      .prediction-cell {
-        .ghost-editable-input {
-          width: 35px;
+        .weather-forecast-cell {
+          text-align: center;
+          .wi {
+            font-size: 40px;
+            color: #924da3;
+          }
+
+          .weather-icon-wrapper {
+            margin: 5px;
+          }
         }
 
-        .manual-prediction-icon {
-          color: #F2D600;
+        .sales-row {
+          &:hover {
+            background: rgba(26, 179, 148, 0.08);
+          }
+
+          .prediction-cell {
+            .ghost-editable-input {
+              width: 35px;
+            }
+
+            .manual-prediction-icon {
+              color: #F2D600;
+            }
+          }
         }
+
       }
+    }
+
+    .load-more-button-wrapper {
+      text-align: center;
+      margin: 10px 0;
     }
   }
 
-  .load-more-button-wrapper {
-    text-align: center;
-    margin: 10px 0;
-  }
-}
-
-.wi {
-  font-size: 40px;
-  color: #924da3;
-}
-
-.weather-icon-wrapper {
-  margin: 5px;
-}
-
-.sales-prediction-content {
   .weather-source-wrapper {
     text-align: right;
     font-size: 12px;
