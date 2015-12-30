@@ -1,19 +1,19 @@
 Template.receiveModal.onRendered(function () {
-  $('[data-toggle="popover"]').popover();
-  $('.i-checks').iCheck({
+  this.$('[data-toggle="popover"]').popover();
+  this.$('.i-checks').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
 });
 
 Template.receiveModal.helpers({
   isWrongPrice: function () {
-    if (this.name == 'wrongPrice') {
+    if (this.name === 'wrongPrice') {
       return true;
     }
   },
 
   isWrongQuantity: function () {
-    if (this.name == 'wrongQuantity') {
+    if (this.name === 'wrongQuantity') {
       return true;
     }
   }
@@ -22,7 +22,7 @@ Template.receiveModal.helpers({
 Template.receiveModal.events({
   'submit .price-form': function (event, tmpl) {
     event.preventDefault();
-    var $form = $(event.target);
+    var $form = tmpl.$(event.target);
     var $priceInput = $form.find('.price-input');
 
     var price = $priceInput.val();
@@ -55,7 +55,7 @@ Template.receiveModal.events({
 
   'submit .quantity-form': function (event, tmpl) {
     event.preventDefault();
-    var $form =$(event.target);
+    var $form =tmpl.$(event.target);
     var $invoiceQuantityInput = $form.find('.invoice-quantity-input');
     
     var invoiceQuantity = $invoiceQuantityInput.val();

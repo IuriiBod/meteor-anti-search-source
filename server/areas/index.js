@@ -107,5 +107,25 @@ Meteor.methods({
     }
 
     Meteor.users.update({_id: userId}, updateObject);
+  },
+
+  removeDocumentsRelatedToAreas: function (areasIds) {
+
+    areasIds.forEach(function (areaId) {
+      check(areaId, HospoHero.checkers.MongoId);
+    });
+
+    var collections = [];
+    var globals = Function('return this')();
+
+    for (var globalObject in globals) {
+      if (globals[globalObject] instanceof Meteor.Collection) {
+        collections.push(globalObject);
+      }
+    }
+
+    collections.forEach(function(item) {
+      globals[item].remove({'relations.areaId': {$in: areasIds}});
+    });
   }
 });

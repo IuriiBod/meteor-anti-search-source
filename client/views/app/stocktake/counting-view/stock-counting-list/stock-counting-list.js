@@ -17,10 +17,10 @@ Template.stockCountingList.helpers({
       activeSpecialArea: instance.get('activeSpecialArea'),
       activeGeneralArea: instance.get('activeGeneralArea'),
       makeGeneralAreaActive: function(areaId) {
-        return instance.set('activeGeneralArea', areaId);
+        instance.set('activeGeneralArea', areaId);
       },
       makeSpecialAreaActive: function(areaId) {
-        return instance.set('activeSpecialArea', areaId);
+        instance.set('activeSpecialArea', areaId);
       }
     };
   },
@@ -90,14 +90,14 @@ Template.stockCountingList.events({
   'click .saveStockTake': function (event, tmpl) {
     event.preventDefault();
     tmpl.set('editStockTake', false);
-    $(event.target).hide();
-    $(".editStockTake").show();
+    tmpl.$(event.target).hide();
+    tmpl.$(".editStockTake").show();
   },
 
   'click .editStockTake': function (event, tmpl) {
     event.preventDefault();
     tmpl.set('editStockTake', true);
-    $(event.target).hide();
+    tmpl.$(event.target).hide();
   },
 
   'click .generateOrders': function (event, tmpl) {

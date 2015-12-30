@@ -39,11 +39,23 @@ Meteor.methods({
       logger.error("User not permitted to delete organization");
       throw new Meteor.Error(403, "User not permitted to delete organization");
     }
+
+    var areasIds = Meteor.call('getAreasIdsRelatedToOrganization', id);
+    Meteor.call('removeDocumentsRelatedToAreas', areasIds);
+
     Areas.remove({organizationId: id});
     Locations.remove({organizationId: id});
-    Relations.remove({organizationId: id});
     Organizations.remove({_id: id});
+  },
 
-    // TODO: Write the code to delete remainder documents
+  "getAreasIdsRelatedToOrganization": function(id) {
+    var ids = [];
+
+    Areas.find(
+        {organizationId: id},
+        {fields: {_id: 1}}
+    ).forEach(function(item){ ids.push(item._id)});
+
+    return ids;
   }
 });

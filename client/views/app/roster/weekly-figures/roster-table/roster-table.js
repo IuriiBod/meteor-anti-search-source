@@ -1,5 +1,5 @@
 Template.rosterTable.helpers({
   weekDate: function () {
-    return HospoHero.misc.getWeekDateFromRoute(Router.current());
+    return HospoHero.getParamsFromRoute('date');
   }
 });
