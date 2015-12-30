@@ -3,8 +3,11 @@
 ## Importing database
 
 ```
-$ ./init_db.sh
+$ ./reset_db.sh d
 ```
+
+If you are using key `d` new database dump will be imported from testing server.
+
 
 ## Starting the app
 

@@ -47,18 +47,7 @@ Meteor.publishComposite('daily', function (date, areaId, worker) {
       }
 
       return Shifts.find(query);
-    },
-    children: [
-      {
-        find: function (shift) {
-          if (shift) {
-            return Jobs.find({onshift: shift});
-          } else {
-            this.ready();
-          }
-        }
-      }
-    ]
+    }
   }
 });
 

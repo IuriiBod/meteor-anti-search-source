@@ -1,5 +1,4 @@
 //context: Shift
-
 Template.clockInfo.helpers({
   clockStatus: function () {
     var shiftClockStatusMap = {
@@ -57,7 +56,7 @@ Template.clockInfo.helpers({
   }
 });
 
-Template.clock.events({
+Template.clockInfo.events({
   'click .clockIn': function (event, tmpl) {
     var shiftId = tmpl.data._id;
     Meteor.call("clockIn", shiftId, HospoHero.handleMethodResult());

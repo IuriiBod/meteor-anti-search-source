@@ -1,41 +1,23 @@
 Migrations.add({
   version: 44,
-  name: "Removing gender, name and address fields from profile and username field in users collection.",
-  up: function() {
-    var usersWithFullName = [];
-    var usersWithFirstName = [];
+  name: "Fix endTime for template shifts",
+  up: function () {
+    Shifts.find({type: 'template'}).forEach(function (shift) {
+      if (shift.endTime) {
 
-    Meteor.users.update({}, {$unset: {'profile.gender': 1, 'profile.address': 1, 'profile.name': 1}}, {multi: true});
+        // some values has 3385 year, instead of 1970
+        var startTimeMoment = moment(shift.startTime);
+        var endTimeMoment = moment(shift.endTime);
+        var diffBetweenMoments = endTimeMoment.diff(startTimeMoment, 'days');
 
-    Meteor.users.find().forEach(function(user) {
-      if (user.profile.firstname && user.profile.lastname) {
-        Meteor.users.update({_id: user._id}, {$unset: {username: 1}});
-      } else {
-        var trimUserName = user.username.trim();
-        var result = trimUserName.indexOf(" ");
-        if (result > 0) {
-          usersWithFullName.push({id: user._id, fullname: trimUserName});
-        } else {
-          usersWithFirstName.push({id: user._id, firstname: trimUserName})
+        // diff between start and end time should be less than 1
+        if (diffBetweenMoments > 0) {
+          endTimeMoment = endTimeMoment.subtract(diffBetweenMoments, 'days');
+          shift.endTime = endTimeMoment.toDate();
         }
       }
-    });
 
-    usersWithFirstName.forEach(function(user) {
-      Meteor.users.update({_id: user.id},
-        {
-          $set: {profile: {firstname: user.firstname, lastname: ''}},
-          $unset: {username: 1}
-        });
-    });
-
-    usersWithFullName.forEach(function(user) {
-      var splitFullName = user.fullname.split(' ');
-      var lastName = splitFullName[2] ? splitFullName[1] + splitFullName[2] : splitFullName[1];
-      Meteor.users.update({_id: user.id}, {
-        $set: {profile: {firstname: splitFullName[0], lastname: lastName}},
-        $unset: {username: 1}
-      });
+      Shifts.update({_id: shift._id}, shift);
     });
   }
 });

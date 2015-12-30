@@ -62,13 +62,20 @@ Meteor.publish('usersList', function (areaId) {
       username: 1,
       emails: 1,
       isActive: 1,
-      "profile.payrates": 1,
-      "profile.resignDate": 1,
+      'profile.firstname': 1,
+      'profile.lastname': 1,
+      'profile.payrates': 1,
+      'profile.resignDate': 1,
       currentAreaId: 1
     };
 
-    options["roles." + areaId] = 1;
-    var users = Meteor.users.find({'relations.areaIds': areaId}, {fields: options});
+    var query = {};
+    if (areaId) {
+      query['relations.areaIds'] = areaId;
+      options["roles." + areaId] = 1;
+    }
+
+    var users = Meteor.users.find(query, {fields: options});
     logger.info("Userlist published");
     return users;
   } else {
