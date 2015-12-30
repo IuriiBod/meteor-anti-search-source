@@ -5,7 +5,7 @@ Migrations.add({
     var usersWithFullName = [];
     var usersWithFirstName = [];
 
-    Meteor.users.update({}, {$unset: {'profile.gender': 1, 'profile.address': 1}}, {multi: true});
+    Meteor.users.update({}, {$unset: {'profile.gender': 1, 'profile.address': 1, 'profile.name': 1}}, {multi: true});
 
     Meteor.users.find().forEach(function(user) {
       if (user.profile.firstname && user.profile.lastname) {
