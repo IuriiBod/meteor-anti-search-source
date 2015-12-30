@@ -30,21 +30,19 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('Permission denied', 'You are not logged in!');
     }
-    //check(leaveRequestId, HospoHero.checkers.MongoId);
+    check(leaveRequestId, HospoHero.checkers.MongoId);
 
     var thisLeaveRequest = findLeaveRequest(leaveRequestId);
-    check(thisLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
 
     if (thisLeaveRequest.notifyManagerId == this.userId || this.userId == thisLeaveRequest.userId) {
       LeaveRequests.remove({_id: leaveRequestId});
       Notifications.remove({'meta.leaveRequestId': leaveRequestId});
     } else {
-      throw new Meteor.Error('Permission denied', 'You can\' remove this leave request!');
+      throw new Meteor.Error('Permission denied', 'You can\'t remove this leave request!');
     }
   },
   changeLeaveRequestStatus: function (leaveRequestId, newStatus) {
     var thisLeaveRequest = findLeaveRequest(leaveRequestId);
-    check(thisLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
 
     if (thisLeaveRequest.status != 'awaiting') {
       throw new Meteor.Error("'This request already approved/declined'");
