@@ -49,7 +49,7 @@ Meteor.methods({
   removeLocations: function (locationsIds) {
     check(locationsIds, [HospoHero.checkers.MongoId]);
 
-    var areasIdsRelatedToLocations = (function(locationsIds) {
+    var getAreasIdsRelatedToLocations = function(locationsIds) {
       var ids = [];
       Areas.find(
         {locationId: {$in: locationsIds}},
@@ -57,11 +57,9 @@ Meteor.methods({
       ).forEach(function (item) {ids.push(item._id)} );
 
       return ids;
-    })(locationsIds);
+    };
 
-    Meteor.call('removeAreas', areasIdsRelatedToLocations);
-
+    Meteor.call('removeAreas', getAreasIdsRelatedToLocations(locationsIds));
     Locations.remove({_id: {$in: locationsIds}});
-    Meteor.call('removeAllDocumentsWithFieldValues', 'relations.locationId', locationsIds);
   }
 });

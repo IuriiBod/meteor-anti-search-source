@@ -112,7 +112,17 @@ Meteor.methods({
   removeAreas: function (areasIds) {
     check(areasIds, [HospoHero.checkers.MongoId]);
 
+    var removeAllDocumentsRelatedToAreas = function(areasIds) {
+      var globals = Function('return this')();
+
+      for (var globalObject in globals) {
+        if (globals[globalObject] instanceof Meteor.Collection) {
+          globals[globalObject].remove({'relations.areaId': {$in: areasIds}});
+        }
+      }
+    };
+
+    removeAllDocumentsRelatedToAreas(areasIds);
     Areas.remove({_id: {$in: areasIds}});
-    Meteor.call('removeAllDocumentsWithFieldValues', 'relations.areaId', areasIds);
   }
 });

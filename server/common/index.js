@@ -89,15 +89,5 @@ Meteor.methods({
 
   renderSomeHandlebarsTemplate: function (tmplName, tmplData) {
     return Handlebars.templates[tmplName](tmplData);
-  },
-
-  removeAllDocumentsWithFieldValues: function (field, values) {
-    var globals = Function('return this')();
-
-    for (var globalObject in globals) {
-      if (globals[globalObject] instanceof Meteor.Collection) {
-        globals[globalObject].remove({field: {$in: values}});
-      }
-    }
   }
 });

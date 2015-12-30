@@ -42,7 +42,7 @@ Meteor.methods({
 
     check(id, HospoHero.checkers.MongoId);
 
-    var locationsIdsRelatedToOrganization = (function(id) {
+    var getLocationsIdsRelatedToOrganization = function(id) {
       var ids = [];
       Locations.find(
           {organization: id},
@@ -50,11 +50,9 @@ Meteor.methods({
       ).forEach(function (item) {ids.push(item._id)} );
 
       return ids;
-    })(id);
+    };
 
-    Meteor.call('removeLocations', locationsIdsRelatedToOrganization);
-
+    Meteor.call('removeLocations', getLocationsIdsRelatedToOrganization(id));
     Organizations.remove({_id: id});
-    Meteor.call('removeAllDocumentsWithFieldValues', 'relations.organizationId', [id]);
   }
 });
