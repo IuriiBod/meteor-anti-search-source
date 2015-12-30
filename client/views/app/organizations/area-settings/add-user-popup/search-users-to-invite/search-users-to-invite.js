@@ -1,4 +1,6 @@
 Template.searchUsersToInvite.onCreated(function () {
+  this.subscribe('usersList');
+
   var selector = {
     _id: {$ne: Meteor.userId()},
     isActive: true
@@ -9,8 +11,8 @@ Template.searchUsersToInvite.onCreated(function () {
   selector['relations.areaIds'] = {$ne: area._id};
 
   this.searchSource = this.AntiSearchSource({
-    collection: 'users',
-    fields: ['profile.firstname', 'profile.lastname', 'emails.address'],
+    collection: Meteor.users,
+    fields: ['username'],
     searchMode: 'local',
     mongoQuery: selector,
     limit: 10
@@ -33,12 +35,24 @@ Template.searchUsersToInvite.helpers({
       },
       sort: {'profile.firstname': 1}
     })
+  },
+  isNewUserAdding: function () {
+    console.log("Template.instance().get('isNewUserAdding')", Template.instance().get('isNewUserAdding'));
+
+    return Template.instance().get('isNewUserAdding');
+  },
+  displaySearchResults: function () {
+    console.log("Template.instance().get('displaySearchResults')", Template.instance().get('displaySearchResults'));
+
+    return Template.instance().get('displaySearchResults');
   }
 });
 
 Template.searchUsersToInvite.events({
   'keyup input[name="addUserName"]': function (event, tmpl) {
     var searchText = tmpl.$(event.target).val();
+    console.log('searchText.length', searchText.length);
+    
     if (searchText.length > 1) {
       // If search text is an email, display form for adding user name for a new user
       if (searchText.indexOf('@') > -1) {
