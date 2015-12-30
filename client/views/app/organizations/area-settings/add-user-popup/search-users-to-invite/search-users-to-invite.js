@@ -1,9 +1,20 @@
 Template.searchUsersToInvite.onCreated(function () {
-  var options = {
-    keepHistory: 1000 * 60 * 5
+  var selector = {
+    _id: {$ne: Meteor.userId()},
+    isActive: true
   };
-  var fields = ['username'];
-  this.UserSearch = new SearchSource('usersSearch', fields, options);
+
+  var area = HospoHero.getCurrentArea();
+  selector['relations.organizationId'] = area.organizationId;
+  selector['relations.areaIds'] = {$ne: area._id};
+
+  this.searchSource = this.AntiSearchSource({
+    collection: 'users',
+    fields: ['profile.firstname', 'profile.lastname', 'emails.address'],
+    searchMode: 'local',
+    mongoQuery: selector,
+    limit: 10
+  });
 
   this.set('displaySearchResults', false);
   this.set('isNewUserAdding', false);
@@ -16,13 +27,18 @@ Template.searchUsersToInvite.onCreated(function () {
 
 Template.searchUsersToInvite.helpers({
   searchedUsers: function () {
-    return Template.instance().UserSearch.getData({});
+    return Template.instance().searchSource.searchResult({
+      transform: function (matchText, regExp) {
+        return matchText.replace(regExp, "<b>$&</b>");
+      },
+      sort: {'profile.firstname': 1}
+    })
   }
 });
 
 Template.searchUsersToInvite.events({
   'keyup input[name="addUserName"]': function (event, tmpl) {
-    var searchText = $(event.target).val();
+    var searchText = tmpl.$(event.target).val();
     if (searchText.length > 1) {
       // If search text is an email, display form for adding user name for a new user
       if (searchText.indexOf('@') > -1) {
@@ -31,10 +47,7 @@ Template.searchUsersToInvite.events({
       // else search users depend on search text
       else {
         tmpl.setSearchAndInviteState(true, false);
-        tmpl.UserSearch.search(searchText, {
-          isActive: true,
-          areaId: HospoHero.getCurrentAreaId()
-        });
+        tmpl.searchSource.search(searchText);
       }
     } else {
       tmpl.setSearchAndInviteState(true, false);
