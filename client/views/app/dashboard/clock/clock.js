@@ -1,6 +1,6 @@
 Template.clock.helpers({
   currentShift: function () {
-    var upplerLimit = moment().add(2, 'hours').toDate();
+    var upperLimit = moment().add(2, 'hours').toDate();
     var lowerLimit = moment().subtract(2, 'hours').toDate();
 
     var query = {
@@ -8,20 +8,15 @@ Template.clock.helpers({
       $or: [
         {
           status: 'draft',
-          $and: [{
-            "startTime": {
-              $gte: lowerLimit
-            }
-          }, {
-            "startTime": {
-              $lte: upplerLimit
-            }
-          }]
+
+          startTime: {
+            $gte: lowerLimit,
+            $lte: upperLimit
+          }
         },
         {
           status: 'started'
         },
-
         //clock info stays visible 1 minutes after clock was finished
         {
           status: 'finished',
@@ -33,7 +28,7 @@ Template.clock.helpers({
     };
     query["relations.areaId"] = HospoHero.getCurrentAreaId();
 
-    return Shifts.findOne(query, {sort: {"startTime": 1}});
+    return Shifts.findOne(query, {sort: {"startTime": -1}});
   }
 });
 
