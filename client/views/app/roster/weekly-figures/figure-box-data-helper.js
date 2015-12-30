@@ -1,6 +1,10 @@
 FigureBoxDataHelper = function FigureBoxDataHelper(weekDate) {
-  this.weekDate = weekDate;
-  this.weekDate.weekRange = HospoHero.dateUtils.getWeekStartEnd(weekDate.week, weekDate.year);
+  var dateMoment = moment(weekDate);
+  this.weekDate = {
+    year: dateMoment.year(),
+    week: dateMoment.week()
+  };
+  this.weekDate.weekRange = HospoHero.dateUtils.getWeekStartEnd(weekDate);
 
   this.Sales = this._sales();
   this.Staff = this._staffCost();
@@ -185,11 +189,10 @@ FigureBoxDataHelper.prototype._getPayrate = function (user, shift) {
 FigureBoxDataHelper.prototype._finishDateFix = function (convertToDate, finishDate) {
   var convertToMoment = moment(convertToDate);
   var convertedMoment = moment(finishDate);
-  convertedMoment.set({
-    date: convertToMoment.date(),
-    month: convertToMoment.month(),
-    year: convertToMoment.year()
-  });
+  convertedMoment
+    .year(convertToMoment.year())
+    .month(convertToMoment.month())
+    .date(convertToMoment.date());
   return convertedMoment;
 };
 
