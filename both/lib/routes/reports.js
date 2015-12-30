@@ -1,6 +1,5 @@
-Router.route('/reports/:year/:week', {
+Router.route('/reports/:date', {
   name: "teamHours",
-  path: "/reports/:year/:week",
   template: "teamHoursMainView",
   waitOn: function () {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
@@ -11,5 +10,8 @@ Router.route('/reports/:year/:week', {
     ];
   },
   data: function () {
+    return {
+      date: HospoHero.getParamsFromRoute('date', this)
+    }
   }
 });

@@ -44,7 +44,7 @@ Template.menuItemIngredientRow.helpers({
 Template.menuItemIngredientRow.events({
   'click .remove-button': function (event, tmpl) {
     event.preventDefault();
-    var menuItemId = HospoHero.getParamsFromRoute(Router.current(), '_id');
+    var menuItemId = HospoHero.getParamsFromRoute('_id');
 
     var confirmRemove = confirm("Are you sure you want to remove this item?");
     if (confirmRemove) {
