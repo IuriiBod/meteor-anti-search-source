@@ -15,12 +15,12 @@ Template.shiftsSummary.helpers({
       future: {
         assignedTo: Meteor.userId(),
         published: true,
-        startTime: {$gte: HospoHero.dateUtils.shiftDate()},
+        startTime: {$gte: new Date()},
         'relations.areaId': HospoHero.getCurrentAreaId()
       },
       past: {
         assignedTo: Meteor.userId(),
-        startTime: {$lte: HospoHero.dateUtils.shiftDate()},
+        startTime: {$lte: new Date()},
         "relations.areaId": HospoHero.getCurrentAreaId()
       },
       open: {
