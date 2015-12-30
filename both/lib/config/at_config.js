@@ -8,20 +8,10 @@ AccountsTemplates.addField({
   errStr: 'error.minChar'
 });
 
-
 AccountsTemplates.addField({
   _id: 'lastname',
   type: 'text',
   displayName: 'Last Name',
-  required: true,
-  minLength: 3,
-  errStr: 'error.minChar'
-});
-
-AccountsTemplates.addField({
-  _id: 'username',
-  type: 'text',
-  displayName: 'Username',
   required: true,
   minLength: 3,
   errStr: 'error.minChar'
