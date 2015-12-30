@@ -114,7 +114,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   getDateByWeekDate: function (weekDate) {
-    return moment().year(weekDate.year).week(weekDate.week).toDate();
+    return moment(weekDate).toDate();
   },
 
   getWeekDays: function (weekDate) {
@@ -127,13 +127,10 @@ Namespace('HospoHero.dateUtils', {
     return weekDays;
   },
 
-  getWeekStartEnd: function (week, year) {
-    if (!year) {
-      year = moment().year()
-    }
+  getWeekStartEnd: function (date) {
     return {
-      monday: moment().year(year).week(week).startOf("isoWeek").toDate(),
-      sunday: moment().year(year).week(week).endOf("isoWeek").toDate()
+      monday: moment(date).startOf('isoWeek').toDate(),
+      sunday: moment(date).endOf('isoWeek').toDate()
     }
   },
 
@@ -182,5 +179,10 @@ Namespace('HospoHero.dateUtils', {
   //Formatted time with Ago
   timeFromNow: function (time) {
     return moment(time).fromNow();
+  },
+
+  startOfWeekMoment: function (date) {
+    date = date ? moment(date) : moment();
+    return date.startOf('isoWeek');
   }
 });

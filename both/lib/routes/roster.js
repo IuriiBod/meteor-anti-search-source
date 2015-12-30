@@ -1,6 +1,5 @@
-Router.route('/roster/weekly/:year/:week', {
+Router.route('/roster/weekly/:date', {
   name: "weeklyRoster",
-  path: '/roster/weekly/:year/:week',
   template: "weeklyRosterMainView",
   waitOn: function () {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
@@ -21,11 +20,8 @@ Router.route('/roster/weekly/:year/:week', {
     return subscriptions;
   },
   data: function () {
-    if (!HospoHero.canUser('view roster', Meteor.userId())) {
-      Router.go("/");
-    }
     return {
-      weekDate: HospoHero.misc.getWeekDateFromRoute(this)
+      date: this.params.date
     }
   }
 });
@@ -33,7 +29,6 @@ Router.route('/roster/weekly/:year/:week', {
 
 Router.route('/roster/template/weekly', {
   name: "templateWeeklyRoster",
-  path: '/roster/template/weekly',
   template: "weeklyRosterTemplateMainView",
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
@@ -42,10 +37,5 @@ Router.route('/roster/template/weekly', {
       Meteor.subscribe('workers', currentAreaId),
       Meteor.subscribe('sections', currentAreaId)
     ];
-  },
-  data: function () {
-    if (!HospoHero.canUser('view roster', Meteor.userId())) {
-      Router.go('/');
-    }
   }
 });

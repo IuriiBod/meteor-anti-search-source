@@ -22,17 +22,15 @@ Template.menuItemsListMainView.onCreated(function () {
 
 Template.menuItemsListMainView.onRendered(function () {
   var tmpl = this;
-  Meteor.defer(function () {
-    $("#wrapper").on('scroll', function (event) {
-      var wrapper = event.target;
-      var wrapperHeight = wrapper.clientHeight;
-      var wrapperScrollHeight = wrapper.scrollHeight;
-      var wrapperScrollTop = wrapper.scrollTop;
+  $("#wrapper").on('scroll', function (event) {
+    var wrapper = event.target;
+    var wrapperHeight = wrapper.clientHeight;
+    var wrapperScrollHeight = wrapper.scrollHeight;
+    var wrapperScrollTop = wrapper.scrollTop;
 
-      if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
-        tmpl.$('#loadMoreMenuItems').click();
-      }
-    });
+    if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
+      tmpl.$('#loadMoreMenuItems').click();
+    }
   });
 });
 

@@ -1,5 +1,5 @@
 Template.weeklyHeader.onCreated(function () {
-  var currentDate = HospoHero.misc.getWeekDateFromRoute(Router.current());
+  var currentDate = moment(HospoHero.getParamsFromRoute('date'));
   this.set('currentDate', currentDate);
   this.set('collapseIn', false);
   this.set('selectedWeekDate', HospoHero.dateUtils.getDateByWeekDate(currentDate));
@@ -7,8 +7,8 @@ Template.weeklyHeader.onCreated(function () {
 
 Template.weeklyHeader.helpers({
   onDateChanged: function () {
-    return function (weekDate) {
-      Router.go(Router.current().route.getName(), weekDate);
+    return function (date) {
+      Router.go(Router.current().route.getName(), {date: date});
     };
   },
 

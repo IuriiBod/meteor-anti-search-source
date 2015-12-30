@@ -2,12 +2,11 @@
   <!-- Page heading -->
   {{> pageHeading title="Weekly Roster" category='Roster' name="weeklyroster"}}
 
-
   {{#if canViewForecast}}
-    {{> weeklyFigures weekDate=weekDate}}
+    {{> weeklyFigures date=date}}
   {{/if}}
 
   <div class="wrapper wrapper-content animated">
-    {{> weeklyShiftRoster type=null weekDate=weekDate}}
+    {{> weeklyShiftRoster type=null date=date}}
   </div>
 </template>
