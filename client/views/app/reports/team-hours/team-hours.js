@@ -1,9 +1,5 @@
 Template.teamHoursMainView.onCreated(function () {
-  var currentDate = moment(this.data.date);
-  this.set('weekDate', {
-    year: currentDate.year(),
-    week: currentDate.week()
-  });
+  this.set('weekDate', moment(this.data.date));
   this.set('tableViewMode', 'shifts');
   this.set('searchText', '');
 });
