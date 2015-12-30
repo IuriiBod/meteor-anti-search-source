@@ -1,5 +1,5 @@
 Migrations.add({
-  version: 43,
+  version: 44,
   name: "Removing gender and address fields from users collection",
   up: function() {
     var usersWithFullName = [];
