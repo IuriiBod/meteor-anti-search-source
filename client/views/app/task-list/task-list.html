@@ -1,3 +1,13 @@
 <template name="taskList">
+  {{> pageHeading title='Task List' name='taskList' onCreateTaskAction=onCreateTaskAction}}
 
+  {{#if isNewTaskCreating}}
+    {{> createNewTask}}
+  {{/if}}
+
+  {{#each tasks}}
+    <p>
+      {{title}}
+    </p>
+  {{/each}}
 </template>
