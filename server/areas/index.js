@@ -29,16 +29,42 @@ Meteor.methods({
   },
 
   deleteArea: function (areaId) {
-    check(areaId, HospoHero.checkers.MongoId);
-
-    if (!HospoHero.isOrganizationOwner()) {
-      throw new Meteor.Error(403, "User not permitted to delete area");
+    if (!HospoHero.isOrganizationOwner()
+        && !HospoHero.isManager(Meteor.userId(), areaId)) {
+      logger.error("User not permitted to delete this area");
+      throw new Meteor.Error(403, "User not permitted to delete this area");
     }
 
-    Areas.remove({_id: areaId});
-    Meteor.users.update({"relations.areaIds": areaId}, {$pull: {"relations.areaIds": areaId}});
-    Meteor.users.update({currentAreaId: areaId}, {$unset: {currentAreaId: 1}});
+    check(areaId, HospoHero.checkers.MongoId);
 
+    var removeAllDocumentsRelatedToArea = function (areaId) {
+      var globals = Function('return this')();
+      for (var globalObject in globals) {
+        if (globals[globalObject] instanceof Meteor.Collection) {
+          globals[globalObject].remove({'relations.areaId': areaId});
+        }
+      }
+    };
+
+    removeAllDocumentsRelatedToArea(areaId);
+
+    var usersIdsRelatedToArea = Meteor.users
+        .find({"relations.areaIds": areaId}, {fields: {_id: 1}})
+        .map(function (user) { return user._id });
+
+    usersIdsRelatedToArea.forEach(function (userId) {
+      Meteor.users.update(
+          {_id: userId},
+          {$pull: {"relations.areaIds": areaId}}
+      );
+
+      Meteor.users.update(
+          {_id: userId, currentAreaId: areaId},
+          {$unset: {currentAreaId: 1}}
+      );
+    });
+
+    Areas.remove({_id: areaId});
     logger.info('Area has been removed', {areaId: areaId});
   },
 
@@ -107,22 +133,5 @@ Meteor.methods({
     }
 
     Meteor.users.update({_id: userId}, updateObject);
-  },
-
-  removeAreas: function (areasIds) {
-    check(areasIds, [HospoHero.checkers.MongoId]);
-
-    var removeAllDocumentsRelatedToAreas = function(areasIds) {
-      var globals = Function('return this')();
-
-      for (var globalObject in globals) {
-        if (globals[globalObject] instanceof Meteor.Collection) {
-          globals[globalObject].remove({'relations.areaId': {$in: areasIds}});
-        }
-      }
-    };
-
-    removeAllDocumentsRelatedToAreas(areasIds);
-    Areas.remove({_id: {$in: areasIds}});
   }
 });

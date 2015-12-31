@@ -29,9 +29,8 @@ Meteor.methods({
   //  return true;
   //},
 
-  deleteOrganization: function (id) {
-    var user = Meteor.user();
-    if (!user) {
+  deleteOrganization: function (organizationId) {
+    if (!Meteor.user()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
     }
@@ -40,19 +39,23 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to delete organization");
     }
 
-    check(id, HospoHero.checkers.MongoId);
+    check(organizationId, HospoHero.checkers.MongoId);
 
-    var getLocationsIdsRelatedToOrganization = function(id) {
-      var ids = [];
-      Locations.find(
-          {organization: id},
-          {fields: {_id: 1}}
-      ).forEach(function (item) {ids.push(item._id)} );
+    var locationsIdsRelatedToOrganization = Locations
+        .find({organizationId: organizationId}, {fields: {_id: 1}})
+        .map(function (location) { return location._id; });
 
-      return ids;
-    };
+    locationsIdsRelatedToOrganization.forEach( function (id) {
+      Meteor.call('deleteLocation', id);
+    });
 
-    Meteor.call('removeLocations', getLocationsIdsRelatedToOrganization(id));
-    Organizations.remove({_id: id});
+    Organizations.remove({_id: organizationId});
+
+    Meteor.users.update(
+        {_id: Meteor.userId()},
+        {$set: {"relations.organizationId": null}}
+    );
+
+    logger.info('Organization was deleted', {organizationId: organizationId});
   }
 });

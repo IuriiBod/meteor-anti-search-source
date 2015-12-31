@@ -20,17 +20,37 @@ Meteor.methods({
 
   deleteLocation: function (locationId) {
     if (!HospoHero.isOrganizationOwner()) {
-      throw new Meteor.Error(403, 'User not permitted to delete location');
+      logger.error("User not permitted to delete this location");
+      throw new Meteor.Error(403, "User not permitted to delete this location");
     }
 
-    Locations.remove({_id: locationId});
-    Areas.remove({locationId: locationId});
+    check(locationId, HospoHero.checkers.MongoId);
+
+    var areasIdsRelatedToLocation = Areas
+        .find({locationId: locationId}, {fields: {_id: 1}})
+        .map(function (area) { return area._id; });
+
+    areasIdsRelatedToLocation.forEach(function (areaId) {
+      Meteor.call('deleteArea', areaId);
+    });
+
+    var usersIdsRelatedToLocation = Meteor.users
+        .find({"relations.locationIds": locationId}, {fields: {_id: 1}})
+        .map(function (user) { return user._id });
+
+    usersIdsRelatedToLocation.forEach(function (userId) {
+      Meteor.users.update(
+          {_id: userId},
+          {$pull: {"relations.locationIds": locationId}}
+      );
+    });
+
     WeatherForecast.remove({locationId: locationId});
-    DailySales.remove({'relations.locationId': locationId});//SalesPrediction
 
     var googlePrediction = new GooglePredictionApi(locationId);
     googlePrediction.removePredictionModel();
 
+    Locations.remove({_id: locationId});
     logger.info('Location was deleted', {locationId: locationId});
   },
 
@@ -44,22 +64,5 @@ Meteor.methods({
 
     Locations.update({_id: updatedLocation._id}, {$set: updatedLocation});
     logger.info('Location was updated', {locationId: updatedLocation._id, userId: Meteor.userId()});
-  },
-
-  removeLocations: function (locationsIds) {
-    check(locationsIds, [HospoHero.checkers.MongoId]);
-
-    var getAreasIdsRelatedToLocations = function(locationsIds) {
-      var ids = [];
-      Areas.find(
-        {locationId: {$in: locationsIds}},
-        {fields: {_id: 1}}
-      ).forEach(function (item) {ids.push(item._id)} );
-
-      return ids;
-    };
-
-    Meteor.call('removeAreas', getAreasIdsRelatedToLocations(locationsIds));
-    Locations.remove({_id: {$in: locationsIds}});
   }
 });
