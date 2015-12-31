@@ -9,7 +9,12 @@ Template.totalSalesRow.helpers({
 
     var actualTotal = getTotalPrice(dailySales, 'actualQuantity');
     var predictionTotal = getTotalPrice(dailySales, 'predictionQuantity');
-    return {predicted: predictionTotal, actual: actualTotal};
+
+    return {
+      predicted: predictionTotal,
+      actual: actualTotal,
+      accuracy: HospoHero.analyze.accuracy(actualTotal, predictionTotal)
+    };
   }
 });
 
