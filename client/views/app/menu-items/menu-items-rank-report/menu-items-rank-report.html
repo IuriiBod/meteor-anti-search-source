@@ -1,0 +1,40 @@
+<template name="menuItemsRankReport">
+  {{> pageHeading title="Menus List" category='Menus' name="menuList"}}
+
+  <div class="wrapper wrapper-content animated">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <td>item name</td>
+            <td>Sparkline of ranking</td>
+            <td>Ranking</td>
+            <td>Item Sales</td>
+            <td>Item Price</td>
+            <td>Total Sales</td>
+            <td>Prep item</td>
+            <td>Prep total</td>
+            <td>Cost of goods item</td>
+            <td>Cost of goods total</td>
+            <td>Tax</td>
+            <td>Profit item</td>
+            <td>Profit total</td>
+          </tr>
+        </thead>
+        <tbody class="table-hover">
+          {{#each menuItems}}
+            <tr>
+              <td>
+                {{this.name}}
+              </td>
+              <td>-</td>
+              <td>-</td>
+              <td>{{itemSalesQuantity this._id}}</td>
+              <td>{{this.salesPrice}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
