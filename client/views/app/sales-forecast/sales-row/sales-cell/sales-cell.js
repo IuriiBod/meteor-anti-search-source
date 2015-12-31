@@ -23,6 +23,25 @@ Template.predictionSalesCell.helpers({
   isFuturePrediction: function () {
     var dailySaleDate = new Date(this.date);
     return moment().add(1, 'day').startOf('day').isBefore(dailySaleDate);
+  },
+
+  predictionAccuracy: function () {
+    var prediction = this.predictionQuantity;
+    var actual = this.actualQuantity;
+    var isPossibleToCalculate = _.isNumber(prediction) && _.isNumber(actual) && actual !== 0;
+
+    var accuracy;
+    if (isPossibleToCalculate) {
+      accuracy = Math.round(100 - Math.abs(actual - prediction) / actual * 100);
+      if (accuracy < 0) {
+        accuracy = 0;
+      }
+      accuracy = accuracy.toString() + '%';
+    } else {
+      accuracy = '-';
+    }
+
+    return accuracy;
   }
 });
 
