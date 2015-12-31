@@ -26,16 +26,17 @@ Template.predictionSalesCell.helpers({
   },
 
   predictionAccuracy: function () {
+    var max = function (a, b) {
+      return a > b ? a : b;
+    };
+
     var prediction = this.predictionQuantity;
     var actual = this.actualQuantity;
-    var isPossibleToCalculate = _.isNumber(prediction) && _.isNumber(actual) && actual !== 0;
+    var isPossibleToCalculate = _.isNumber(prediction) && _.isNumber(actual) && max(prediction, actual) !== 0;
 
     var accuracy;
     if (isPossibleToCalculate) {
-      accuracy = Math.round(100 - Math.abs(actual - prediction) / actual * 100);
-      if (accuracy < 0) {
-        accuracy = 0;
-      }
+      accuracy = Math.round((Math.abs(actual - prediction) / max(prediction, actual)) * 100);
       accuracy = accuracy.toString() + '%';
     } else {
       accuracy = '-';
