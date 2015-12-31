@@ -106,18 +106,10 @@ Meteor.methods({
   },
 
   'archiveJobItem': function (id) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
-      logger.error("User not permitted to create job items");
-      throw new Meteor.Error(403, "User not permitted to create jobs");
-    }
-
-    check(id, HospoHero.checkers.MongoId);
-
-    var job = JobItems.findOne({_id: id});
-    var status = (job && job.status == "archived") ? "active" : "archived";
-
-    if (status == 'archived') {
-      var existInMenus = MenuItems.find({
+    var checkIfJobItemExistInActiveMenu = function () {
+      /* defining additional function */
+      var existInActiveMenus = MenuItems.find({
+        status: 'active',
         jobItems: {
           $elemMatch: {
             _id: id
@@ -125,20 +117,40 @@ Meteor.methods({
         }
       });
 
-      if (existInMenus.count()) {
+      if (existInActiveMenus.count() > 0) {
         var error = [];
         error.push("Can't archive item! Remove it form next menus:\n");
 
-        existInMenus.forEach(function (item) {
+        existInActiveMenus.forEach(function (item) {
           error.push('- ' + item.name + '\n');
         });
 
         logger.error(404, error.join(''));
         throw new Meteor.Error(404, error.join(''));
       }
+    };
+    /* end of defining additional function */
+
+
+    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+      logger.error("User not permitted to create job items");
+      throw new Meteor.Error(403, "User not permitted to create jobs");
     }
 
-    JobItems.update({_id: id}, {$set: {status: status}});
-    return status;
+    check(id, HospoHero.checkers.MongoId);
+
+    var jobItem = JobItems.findOne({_id: id});
+    if (!jobItem) {
+      throw new Meteor.Error(403, 'Job item is not exist');
+    }
+
+    var statusToSet = (jobItem.status == "archived") ? "active" : "archived";
+
+    if (statusToSet == 'archived') {
+      checkIfJobItemExistInActiveMenu();
+    }
+
+    JobItems.update({_id: id}, {$set: {status: statusToSet}});
+    return statusToSet;
   }
 });
