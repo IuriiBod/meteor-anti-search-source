@@ -1,4 +1,4 @@
-<template name="salesPredictionPage">
+<template name="salesForecastMainView">
   <!-- Page heading -->
   {{> pageHeading title="Forecast" name="salesPrediction"}}
 
@@ -15,7 +15,7 @@
             <tr>
               <th></th>
               {{#each week}}
-                <th colspan="2" class="prediction-table-head">
+                <th colspan="3" class="prediction-table-head">
                   {{getDayOfWeek this}}
                   <h5>{{formatDate this}}</h5>
                 </th>
@@ -33,6 +33,7 @@
               {{#each week}}
                 <th>Forecast</th>
                 <th>Actual</th>
+                <th>acc,%</th>
               {{/each}}
             </tr>
             </thead>
