@@ -1,4 +1,4 @@
-<template name="menuItemsRankReport">
+<template name="menuListRankReport">
   {{> pageHeading title="Menus List" category='Menus' name="menuList"}}
 
   <div class="wrapper wrapper-content animated">
@@ -24,13 +24,7 @@
         <tbody class="table-hover">
           {{#each menuItems}}
             <tr>
-              <td>
-                {{this.name}}
-              </td>
-              <td>-</td>
-              <td>-</td>
-              <td>{{itemSalesQuantity this._id}}</td>
-              <td>{{this.salesPrice}}</td>
+              {{> menuItemReport item=this}}
             </tr>
           {{/each}}
         </tbody>

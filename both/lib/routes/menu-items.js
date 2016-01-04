@@ -57,7 +57,7 @@ Router.route('submitMenuItem', {
 
 Router.route('menuItemsRankReport', {
   path: '/menuItems/items-rank-report',
-  template: 'menuItemsRankReport',
+  template: 'menuListRankReport',
   waitOn: function() {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     var formattedDate = TimeRangeQueryBuilder.forDay(HospoHero.dateUtils.formatDate(moment('Wed Sep 30 2015 13:37:22 GMT+0200 (EET)'), 'YYYY-MM-DD'));

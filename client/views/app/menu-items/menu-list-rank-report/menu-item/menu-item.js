@@ -1,10 +1,8 @@
-Template.menuItemsRankReport.helpers({
-  menuItems: function() {
-    return MenuItems.find();
-  },
-
+Template.menuItemReport.helpers({
   itemSalesQuantity: function(itemId) {
     var menuItemDailySales = DailySales.findOne({menuItemId: itemId});
     return menuItemDailySales && menuItemDailySales.actualQuantity || 0;
-  }
+  },
+
+
 });
