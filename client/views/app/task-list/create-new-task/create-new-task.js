@@ -1,6 +1,7 @@
 Template.createNewTask.onCreated(function () {
   this.displayUserSelector = new ReactiveVar(false);
   this.sharingOption = new ReactiveVar('private');
+  this.sharingIds = new ReactiveVar(Meteor.userId());
 });
 
 
@@ -48,6 +49,26 @@ Template.createNewTask.helpers({
     return function (newValue) {
       self.sharingOption.set(newValue);
       self.displayUserSelector.set(newValue === 'users');
+
+      var sharingIds;
+      switch (newValue) {
+        case 'private':
+          sharingIds = Meteor.userId();
+          break;
+        case 'area':
+          sharingIds = HospoHero.getCurrentAreaId();
+          break;
+        case 'location':
+          sharingIds = HospoHero.getCurrentArea().locationId;
+          break;
+        case 'organization':
+          sharingIds = HospoHero.getCurrentArea().organizationId;
+          break;
+        default:
+          sharingIds = null;
+      }
+
+      self.sharingIds.set(sharingIds);
     }
   },
 
@@ -65,13 +86,23 @@ Template.createNewTask.events({
   'submit form': function (event, tmpl) {
     event.preventDefault();
     var newTaskInfo = HospoHero.misc.getValuesFromEvent(event, [
-      'new-task-title',
-      'new-task-description'
+      {
+        name: 'new-task-title',
+        newName: 'title'
+      },
+      {
+        name: 'new-task-description',
+        newName: 'description'
+      }
     ]);
 
     newTaskInfo.date = tmpl.datepicker.date().toDate();
+    newTaskInfo.sharingType = tmpl.sharingOption.get();
+    newTaskInfo.sharingIds = tmpl.sharingIds.get();
 
-    console.log('NEW', newTaskInfo);
+    Meteor.call('createTask', newTaskInfo, HospoHero.handleMethodResult(function () {
+      tmpl.data.onCreateTaskAction();
+    }));
   },
 
   'click .close-create-new-task-container': function (event, tmpl) {
