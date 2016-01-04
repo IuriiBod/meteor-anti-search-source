@@ -15,11 +15,11 @@ Template.stockCountingListItem.onRendered(function() {
     if (newValue) {
       var count = isNaN(newValue) ? 0 : parseFloat(newValue);
       var info = {
-        "version": tmpl.data.stockTakeData.stockTakeId,
-        "generalArea": tmpl.data.stockTakeData.activeGeneralArea,
-        "specialArea": tmpl.data.stockTakeData.activeSpecialArea,
-        "stockId": stockId,
-        "counting": count
+        version: tmpl.data.stockTakeData.stockTakeId,
+        generalArea: tmpl.data.stockTakeData.activeGeneralArea,
+        specialArea: tmpl.data.stockTakeData.activeSpecialArea,
+        stockId: stockId,
+        counting: count
       };
       var main = StocktakeMain.findOne({_id: tmpl.data.stockTakeData.stockTakeId});
       if (main) {
