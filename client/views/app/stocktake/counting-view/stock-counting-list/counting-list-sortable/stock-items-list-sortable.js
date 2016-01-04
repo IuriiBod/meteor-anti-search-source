@@ -9,13 +9,6 @@ Template.stockItemsListSortable.onRendered(function() {
   })
 });
 
-Template.stockItemsListSortable.events({
-  'click .addStock': function (event) {
-    event.preventDefault();
-    $("#stocksListModal").modal("show");
-  }
-});
-
 var SortableItemsHelper = function (ui) {
   this._draggedItem = this._getDataByItem(ui.item);
   this._previousItem = this._getDataByItem(ui.item.prev());
@@ -31,11 +24,11 @@ SortableItemsHelper.prototype._getDataByItem = function (item) {
 SortableItemsHelper.prototype._getOrder = function () {
   var place = 0;
   if (!this._nextItem && this._previousItem) {
-    place = this._previousItem.item.place + 1;
+    place = this._previousItem.ingredient.place + 1;
   } else if (!this._previousItem && this._nextItem) {
-    place = this._nextItem.item.place - 1;
+    place = this._nextItem.ingredient.place - 1;
   } else if (this._nextItem && this._previousItem) {
-    place = (this._nextItem.item.place + this._previousItem.item.place) / 2;
+    place = (this._nextItem.ingredient.place + this._previousItem.ingredient.place) / 2;
   }
 
   return place;
@@ -43,9 +36,9 @@ SortableItemsHelper.prototype._getOrder = function () {
 
 SortableItemsHelper.prototype._draggedItemData = function() {
   var draggedItem = {};
-  draggedItem.id = this._draggedItem.item._id;
-  if (this._draggedItem.item.place) {
-      draggedItem.place = this._draggedItem.item.place;
+  draggedItem.id = this._draggedItem.ingredient._id;
+  if (this._draggedItem.ingredient.place) {
+      draggedItem.place = this._draggedItem.ingredient.place;
   }
 
   return draggedItem;
@@ -67,9 +60,9 @@ SortableItemsHelper.prototype._draggedItemNewPosition = function(stocks, previou
 };
 
 SortableItemsHelper.prototype.getSortedItems = function() {
-  var draggedItem = this._draggedItem.item._id;
-  var nextItem = this._nextItem ? this._nextItem.item._id : null;
-  var previousItem = this._previousItem ? this._previousItem.item._id : null;
+  var draggedItem = this._draggedItem.ingredient._id;
+  var nextItem = this._nextItem ? this._nextItem.ingredient._id : null;
+  var previousItem = this._previousItem ? this._previousItem.ingredient._id : null;
 
   var specialArea = SpecialAreas.findOne({_id: this._draggedItem.stockTakeData.activeSpecialArea});
   var stocks = specialArea.stocks;
