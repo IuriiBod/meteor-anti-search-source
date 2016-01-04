@@ -23,6 +23,10 @@ Template.predictionSalesCell.helpers({
   isFuturePrediction: function () {
     var dailySaleDate = new Date(this.date);
     return moment().add(1, 'day').startOf('day').isBefore(dailySaleDate);
+  },
+
+  predictionAccuracy: function () {
+    return HospoHero.analyze.accuracy(this.actualQuantity, this.predictionQuantity);
   }
 });
 

@@ -1,5 +1,5 @@
 Router.route('salesPrediction', {
-  template: 'salesPredictionPage',
+  template: 'salesForecastMainView',
   path: '/forecast/:date/:category',
   waitOn: function () {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
