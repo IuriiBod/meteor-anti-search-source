@@ -115,7 +115,7 @@ AccountsTemplates.addField({
 // Options
 AccountsTemplates.configure({
   enablePasswordChange: false,
-  showForgotPasswordLink: false,
+  showForgotPasswordLink: true,
   confirmPassword: false,
   overrideLoginErrors: true,
   forbidClientAccountCreation: false,

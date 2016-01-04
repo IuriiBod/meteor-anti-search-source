@@ -16,7 +16,6 @@ Router.route('signUp', {
   template: 'signUp'
 });
 
-
 Router.route('pinLock', {
   path: '/pinLock/:userId',
   layoutTemplate: 'blankLayout',
@@ -79,4 +78,10 @@ Router.route('profile', {
   },
   data: function () {
   }
+});
+
+Router.route('forgotPassword', {
+  path: '/forgotPassword',
+  layoutTemplate: 'blankLayout',
+  template: 'forgotPassword'
 });
