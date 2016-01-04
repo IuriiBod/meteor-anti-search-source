@@ -1,6 +1,6 @@
 Migrations.add({
   version: 45,
-  name: "changed timestamps to date in collections",
+  name: "changed timestamps to date in OrderReceipts and StockOrders collections",
   up: function () {
     OrderReceipts.find().forEach(function (order) {
       if (order.date && _.isString(order.date)) {
