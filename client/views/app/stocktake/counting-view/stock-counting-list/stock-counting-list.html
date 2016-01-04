@@ -36,7 +36,7 @@
           {{else}}
             <ul class="list-group">
               {{#each ingredientsList}}
-                {{> stockCountingListItem ingredientId=this._id stockTakeData=stockTakeCountingContext}}
+                {{> stockCountingListItem ingredient=this stockTakeData=stockTakeCountingContext}}
               {{else}}
                 No items on this list
               {{/each}}
