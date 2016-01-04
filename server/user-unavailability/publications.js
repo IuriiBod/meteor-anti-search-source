@@ -10,6 +10,9 @@ Meteor.publish('userAllLeaveRequests', function () {
 Meteor.publish('leaveRequest', function (leaveRequestId) {
   var query = leaveRequestId ? {_id: leaveRequestId} : {};
   var areaIds = Meteor.users.findOne({_id: this.userId}).relations.areaIds || [];
+  if (!_.isArray(areaIds)) {
+    areaIds = [areaIds];
+  }
   query['relations.areaId'] = {$in: areaIds};
   return LeaveRequests.find(query);
 });
