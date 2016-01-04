@@ -8,20 +8,10 @@ AccountsTemplates.addField({
   errStr: 'error.minChar'
 });
 
-
 AccountsTemplates.addField({
   _id: 'lastname',
   type: 'text',
   displayName: 'Last Name',
-  required: true,
-  minLength: 3,
-  errStr: 'error.minChar'
-});
-
-AccountsTemplates.addField({
-  _id: 'username',
-  type: 'text',
-  displayName: 'Username',
   required: true,
   minLength: 3,
   errStr: 'error.minChar'
@@ -39,35 +29,11 @@ AccountsTemplates.addField({
 });
 
 AccountsTemplates.addField({
-  _id: "address",
-  type: "text",
-  displayName: "Address",
-  required: false,
-  errStr: 'error.minChar'
-});
-
-AccountsTemplates.addField({
   _id: "tel",
   type: "tel",
   displayName: "Phone number",
   required: false,
   errStr: 'error.minChar'
-});
-
-AccountsTemplates.addField({
-  _id: "gender",
-  type: "select",
-  displayName: "Gender",
-  select: [
-    {
-      text: "Male",
-      value: "male",
-    },
-    {
-      text: "Female",
-      value: "female",
-    }
-  ]
 });
 
 AccountsTemplates.addField({
