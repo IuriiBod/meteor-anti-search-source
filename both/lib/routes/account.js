@@ -32,7 +32,7 @@ Router.route('pinLock', {
 
 Router.route('logout', {
   'path': '/logout',
-  data: function () {
+  action: function () {
     return Meteor.logout();
   }
 });
