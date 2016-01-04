@@ -1,7 +1,7 @@
 <template name="stockItemsListSortable">
   <ul class="list-group sortableStockItems">
     {{#each ingredientsList}}
-      {{> stockCountingListItemEdit item=this stockTakeData=../stockTakeData}}
+      {{> stockCountingListItem ingredient=this stockTakeData=../stockTakeData}}
     {{else}}
       No items on this list
     {{/each}}
