@@ -1,13 +1,31 @@
 <template name="taskList">
   {{> pageHeading title='Task List' name='taskList' onCreateTaskAction=onCreateTaskAction}}
 
-  {{#if isNewTaskCreating}}
-    {{> createNewTask}}
-  {{/if}}
+  <div class="wrapper wrapper-content">
+    <div class="row">
+      <div class="col-xs-12">
+        {{#if isNewTaskCreating}}
+          <div class="row">
+            <div class="col-xs-12">
+              {{> createNewTask onCreateTaskAction=onCreateTaskAction}}
+            </div>
+          </div>
+        {{/if}}
 
-  {{#each tasks}}
-    <p>
-      {{title}}
-    </p>
-  {{/each}}
+        <div class="task-list-filter col-sm-4">
+          Tasks filter here
+        </div>
+        <!-- .task-list-filter -->
+
+        <div class="task-list-container col-sm-8">
+          <h2>Current task list heading</h2>
+          {{#each tasks}}
+            {{> taskItem this}}
+          {{/each}}
+        </div>
+        <!-- .task-list-container -->
+
+      </div>
+    </div>
+  </div>
 </template>

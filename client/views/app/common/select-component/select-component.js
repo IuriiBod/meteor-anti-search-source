@@ -31,3 +31,11 @@ Template.selectComponent.helpers({
     return id === Template.instance().data.selected;
   }
 });
+
+Template.selectComponent.events({
+  'change select': function (event, tmpl) {
+    if (_.isFunction(tmpl.data.onValueChanged)) {
+      tmpl.data.onValueChanged(event.target.value);
+    }
+  }
+});

@@ -1,0 +1,39 @@
+.task-list-container {
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.create-new-task-container {
+  .float-with-padding {
+    float: left;
+    padding-right: 10px;
+  }
+
+  position: fixed;
+  //top: 60px;
+  background-color: #fff;
+  z-index: 30;
+  border-bottom: 1px solid #CBD5DD;
+  padding: 20px;
+
+  form {
+    .form-group {
+      margin-top: -1px;
+
+      textarea {
+        resize: none;
+      }
+    }
+
+    .datepicker {
+      .datepicker-date {
+        border: 0;
+        padding: 2px;
+        width: 105px;
+        cursor: default;
+        background: transparent;
+      }
+    }
+  }
+}
