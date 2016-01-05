@@ -20,23 +20,25 @@
                     placeholder="Description ..."></textarea>
         </div>
 
+        {{#if displayUserSelector}}
+          <div class="form-group">
+            <div class="col-xs-12">
+              <div class="user-selector-container">
+                {{> userSelector}}
+              </div>
+            </div>
+          </div>
+        {{/if}}
+
         <div class="form-group">
-          <div class="col-lg-3 col-sm-5 col-xs-12">
-            <div class="float-with-padding">
+          <div class="col-lg-9 col-sm-8 col-xs-12">
+            <div>
               <label for="task-sharing" class="float-with-padding">Sharing:</label>
-              {{> ghostEditableSelect selected="private" values=taskSharingOptions onValueChanged=onSelectChange}}
+              {{> ghostEditableSelect values=taskSharingOptions selected=selectedOption onValueChanged=onSelectChange}}
             </div>
           </div>
 
-          <div class="col-lg-7 col-sm-4 col-xs-12">
-            {{#if displayUserSelector}}
-              <div class="user-selector">
-                {{> userSelector}}
-              </div>
-            {{/if}}
-          </div>
-
-          <div class="col-lg-2 col-sm-3 col-xs-12">
+          <div class="col-lg-3 col-sm-4 col-xs-12 text-right">
             <button type="submit" class="btn btn-primary">Create</button>
             <button type="button" class="btn btn-default close-create-new-task-container">Close</button>
           </div>

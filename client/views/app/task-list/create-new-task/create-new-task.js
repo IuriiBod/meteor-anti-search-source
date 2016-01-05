@@ -1,6 +1,5 @@
 Template.createNewTask.onCreated(function () {
-  this.displayUserSelector = new ReactiveVar(false);
-  this.sharingOption = new ReactiveVar('private');
+  this.sharingType = new ReactiveVar('private');
   this.sharingIds = new ReactiveVar(Meteor.userId());
 });
 
@@ -44,11 +43,14 @@ Template.createNewTask.helpers({
     ];
   },
 
+  selectedOption: function () {
+    return Template.instance().sharingType.get();
+  },
+
   onSelectChange: function () {
     var self = Template.instance();
     return function (newValue) {
-      self.sharingOption.set(newValue);
-      self.displayUserSelector.set(newValue === 'users');
+      self.sharingType.set(newValue);
 
       var sharingIds;
       switch (newValue) {
@@ -73,7 +75,7 @@ Template.createNewTask.helpers({
   },
 
   displayUserSelector: function () {
-    return Template.instance().displayUserSelector.get();
+    return Template.instance().sharingType.get() === 'users';
   }
 });
 
@@ -94,20 +96,35 @@ Template.createNewTask.events({
         name: 'new-task-description',
         newName: 'description'
       }
-    ]);
+    ], true);
 
-    var additionalTaskParams = {
-      done: false,
-      dueDate: tmpl.datepicker.date().toDate(),
-      sharingType: tmpl.sharingOption.get(),
-      sharingIds: tmpl.sharingIds.get()
-    };
+    if (newTaskInfo.title === '') {
+      HospoHero.error('Task must have a title!');
+    } else {
+      if (tmpl.sharingType.get() === 'users') {
+        var taggedUsers = [Meteor.userId()];
+        var options = tmpl.$('.user-selector')[0].options;
+        for (var i = 0; i < options.length; i++) {
+          if (options[i].selected) {
+            taggedUsers.push(options[i].value);
+          }
+        }
+        tmpl.sharingIds.set(taggedUsers);
+      }
 
-    newTaskInfo = _.extend(newTaskInfo, additionalTaskParams);
+      var additionalTaskParams = {
+        done: false,
+        dueDate: tmpl.datepicker.date().toDate(),
+        sharingType: tmpl.sharingType.get(),
+        sharingIds: tmpl.sharingIds.get()
+      };
 
-    Meteor.call('createTask', newTaskInfo, HospoHero.handleMethodResult(function () {
-      tmpl.data.onCreateTaskAction();
-    }));
+      newTaskInfo = _.extend(newTaskInfo, additionalTaskParams);
+
+      Meteor.call('createTask', newTaskInfo, HospoHero.handleMethodResult(function () {
+        tmpl.data.onCreateTaskAction();
+      }));
+    }
   },
 
   'click .close-create-new-task-container': function (event, tmpl) {

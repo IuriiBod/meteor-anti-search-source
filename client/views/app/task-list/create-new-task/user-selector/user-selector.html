@@ -1,14 +1,11 @@
 <template name="userSelector">
   <div class="row">
     <div class="col-xs-12">
-      {{#each users}}
-        <span class="username-label">
-        {{username this}} <span class="fa fa-remove remove-user"></span>
-      </span>
-      {{/each}}
-    </div>
-    <div class="col-xs-12">
-      
+      <select name="user-selector" class="user-selector form-control" multiple="multiple">
+        {{#each users}}
+          <option value="{{_id}}">{{username _id}}</option>
+        {{/each}}
+      </select>
     </div>
   </div>
 </template>
