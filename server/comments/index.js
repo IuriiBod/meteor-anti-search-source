@@ -25,7 +25,7 @@ Meteor.methods({
     var typeCollectionRelations = {
       menu: MenuItems,
       job: JobItems,
-      workerJob: Jobs,
+      stockOrders: StocktakeMain,
       supplier: Suppliers
     };
     var reference = typeCollectionRelations[refType].findOne({_id: ref});
@@ -33,7 +33,7 @@ Meteor.methods({
     var routesRelations = {
       menu: 'menuItemDetail',
       job: 'jobItemDetailed',
-      workerJob: '',
+      stockOrders: 'stocktakeOrdering',
       supplier: 'supplierProfile'
     };
     var routeName = routesRelations[refType];
@@ -43,7 +43,7 @@ Meteor.methods({
       'New comment',
       'new-comment',
       {
-        itemName: reference.name,
+        itemName: reference.name || "stocktake from " + HospoHero.dateUtils.dateFormat(reference.date),
         username: HospoHero.username(Meteor.userId()),
         linkToItem: linkToItem
       }
