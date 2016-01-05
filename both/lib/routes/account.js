@@ -16,7 +16,6 @@ Router.route('signUp', {
   template: 'signUp'
 });
 
-
 Router.route('pinLock', {
   path: '/pinLock/:userId',
   layoutTemplate: 'blankLayout',
@@ -33,7 +32,7 @@ Router.route('pinLock', {
 
 Router.route('logout', {
   'path': '/logout',
-  data: function () {
+  action: function () {
     return Meteor.logout();
   }
 });
@@ -79,4 +78,10 @@ Router.route('profile', {
   },
   data: function () {
   }
+});
+
+Router.route('forgotPassword', {
+  path: '/forgotPassword',
+  layoutTemplate: 'blankLayout',
+  template: 'forgotPassword'
 });

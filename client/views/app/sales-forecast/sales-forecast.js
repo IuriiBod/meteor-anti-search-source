@@ -1,4 +1,4 @@
-Template.salesPredictionPage.onCreated(function () {
+Template.salesForecastMainView.onCreated(function () {
   //currentWeekDate -> this.data.date
   this.set("allMenuItemsLoaded", false);
 
@@ -21,7 +21,7 @@ Template.salesPredictionPage.onCreated(function () {
 });
 
 
-Template.salesPredictionPage.helpers({
+Template.salesForecastMainView.helpers({
   formatDate: function (date) {
     return moment(date).format('YYYY-MM-DD');
   },
@@ -54,7 +54,7 @@ Template.salesPredictionPage.helpers({
 });
 
 
-Template.salesPredictionPage.events({
+Template.salesForecastMainView.events({
   'click #loadMoreBtn': function (event, tmpl) {
     event.preventDefault();
     tmpl.menuItemsSearchSource.incrementLimit();

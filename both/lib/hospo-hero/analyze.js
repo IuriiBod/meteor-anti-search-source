@@ -39,5 +39,23 @@ Namespace('HospoHero.analyze', {
         prepCostPerPortion: prepCostPerPortion
       };
     }
+  },
+
+  accuracy: function (actual,prediction) {
+    var max = function (a, b) {
+      return a > b ? a : b;
+    };
+
+    var isPossibleToCalculate = _.isNumber(prediction) && _.isNumber(actual) && max(prediction, actual) !== 0;
+
+    var accuracy;
+    if (isPossibleToCalculate) {
+      accuracy = Math.round((Math.abs(actual - prediction) / max(prediction, actual)) * 100);
+      accuracy = accuracy.toString() + '%';
+    } else {
+      accuracy = '-';
+    }
+
+    return accuracy;
   }
 });
