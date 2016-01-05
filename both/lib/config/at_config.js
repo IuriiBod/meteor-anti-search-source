@@ -5,7 +5,8 @@ AccountsTemplates.addField({
   displayName: 'First Name',
   required: true,
   minLength: 3,
-  errStr: 'error.minChar'
+  errStr: 'error.minChar',
+  trim: true
 });
 
 AccountsTemplates.addField({
@@ -14,7 +15,8 @@ AccountsTemplates.addField({
   displayName: 'Last Name',
   required: true,
   minLength: 3,
-  errStr: 'error.minChar'
+  errStr: 'error.minChar',
+  trim: true
 });
 
 AccountsTemplates.removeField('email');
