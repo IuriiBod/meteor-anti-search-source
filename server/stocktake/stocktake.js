@@ -6,7 +6,7 @@ Meteor.methods({
     }
     var doc = {
       "stocktakeDate": new Date(date).getTime(),
-      "date": Date.now(),
+      "date": new Date(),
       "generalAreas": [],
       "specialAreas": [],
       relations: HospoHero.getRelationsObject()
