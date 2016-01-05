@@ -25,7 +25,7 @@ Template.orderingStatus.onRendered(function () {
       var info = {
         through: orderType,
         details: null,
-        deliveryDate: moment().add(1, 'days').format('x')
+        expectedDeliveryDate: moment().add(1, 'days').toDate()
       };
       Meteor.call('generateReceipts', this.data.stocktakeMainId, supplierId, info, HospoHero.handleMethodResult());
     }

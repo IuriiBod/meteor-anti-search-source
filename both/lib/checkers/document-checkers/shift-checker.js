@@ -17,7 +17,7 @@ var ShiftDocument = Match.Where(function (shift) {
     finishedAt: Match.Optional(Date),
     order: Match.Optional(Number),
     relations: Match.Optional(HospoHero.checkers.Relations),
-    claimedBy: Match.Optional([HospoHer.checkers.MongoId])
+    claimedBy: Match.Optional([HospoHero.checkers.MongoId])
   });
 
   var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(shift, Shifts);
