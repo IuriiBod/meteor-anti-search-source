@@ -98,6 +98,19 @@ Template.createNewTask.events({
       }
     ], true);
 
+    var reference = {};
+    var $referenceSelector = tmpl.$('.reference-selector');
+    if ($referenceSelector.val() !== '') {
+      var referenceType = $referenceSelector.find('option:selected').parent().attr('label');
+      referenceType = referenceType.replace(' ', '').toLowerCase();
+
+      reference = {
+        id: $referenceSelector.val(),
+        type: referenceType
+      };
+
+    }
+
     if (newTaskInfo.title === '') {
       HospoHero.error('Task must have a title!');
     } else {
@@ -116,7 +129,8 @@ Template.createNewTask.events({
         done: false,
         dueDate: tmpl.datepicker.date().toDate(),
         sharingType: tmpl.sharingType.get(),
-        sharingIds: tmpl.sharingIds.get()
+        sharingIds: tmpl.sharingIds.get(),
+        reference: reference
       };
 
       newTaskInfo = _.extend(newTaskInfo, additionalTaskParams);

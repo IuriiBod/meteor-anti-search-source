@@ -8,7 +8,7 @@ var TaskListChecker = Match.Where(function (task) {
 
     // Optional
     description: Match.Optional(String),
-    reference: Match.Optional({
+    reference: Match.OneOf({}, {
       id: HospoHero.checkers.MongoId,
       type: String
     })

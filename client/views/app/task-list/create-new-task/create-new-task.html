@@ -31,11 +31,13 @@
         {{/if}}
 
         <div class="form-group">
-          <div class="col-lg-9 col-sm-8 col-xs-12">
-            <div>
+          <div class="col-lg-6 col-sm-5 col-xs-12">
               <label for="task-sharing" class="float-with-padding">Sharing:</label>
               {{> ghostEditableSelect values=taskSharingOptions selected=selectedOption onValueChanged=onSelectChange}}
-            </div>
+          </div>
+
+          <div class="col-lg-3 col-sm-3 col-xs-12">
+            {{> referenceSelector}}
           </div>
 
           <div class="col-lg-3 col-sm-4 col-xs-12 text-right">
