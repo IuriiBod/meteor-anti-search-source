@@ -96,9 +96,14 @@ Template.createNewTask.events({
       }
     ]);
 
-    newTaskInfo.date = tmpl.datepicker.date().toDate();
-    newTaskInfo.sharingType = tmpl.sharingOption.get();
-    newTaskInfo.sharingIds = tmpl.sharingIds.get();
+    var additionalTaskParams = {
+      done: false,
+      dueDate: tmpl.datepicker.date().toDate(),
+      sharingType: tmpl.sharingOption.get(),
+      sharingIds: tmpl.sharingIds.get()
+    };
+
+    newTaskInfo = _.extend(newTaskInfo, additionalTaskParams);
 
     Meteor.call('createTask', newTaskInfo, HospoHero.handleMethodResult(function () {
       tmpl.data.onCreateTaskAction();
