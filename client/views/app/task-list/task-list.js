@@ -16,7 +16,7 @@ Template.taskList.helpers({
   tasks: function () {
     return TaskList.find({}, {
       sort: {
-        date: 1
+        dueDate: 1
       }
     });
   }

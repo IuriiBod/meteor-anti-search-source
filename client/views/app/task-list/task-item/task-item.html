@@ -1,3 +1,21 @@
 <template name="taskItem">
-  <p>{{title}}</p>
+  <div class="task-item">
+    <div class="row">
+      <div class="col-xs-1">
+        <input type="checkbox" class="task-checkbox" {{checkboxAttr}} />
+      </div>
+      <div class="col-xs-8">
+        <span class="task-title {{isDoneClass}}">
+          {{title}}
+
+          {{# if done}}
+            ({{username completedBy}})
+          {{/if}}
+        </span>
+      </div>
+      <div class="col-xs-3">
+        {{dueDate}}
+      </div>
+    </div>
+  </div>
 </template>
