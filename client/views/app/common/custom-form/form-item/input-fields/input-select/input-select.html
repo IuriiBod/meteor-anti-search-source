@@ -1,7 +1,7 @@
 <template name="customFormInputSelect">
   <select class="form-control" name="{{state$item.name}}">
     {{#each state$item.options}}
-      {{#if state$isSelected value}}
+      {{#if isSelected value}}
         <option value="{{value}}" selected="selected">{{text}}</option>
       {{else}}
         <option value="{{value}}">{{text}}</option>

@@ -53,31 +53,10 @@ Template.invitationAcceptForm.helpers({
           }
         },
         {
-          name: 'address',
-          placeholder: 'Address',
-          label: 'Address (Optional)'
-        },
-        {
           type: 'text',
           name: 'tel',
           placeholder: 'Tel',
           label: 'Phone number (Optional)'
-        },
-        {
-          type: 'select',
-          name: 'gender',
-          label: 'Gender',
-          value: 0,
-          options: [
-            {
-              value: 'male',
-              text: 'Male'
-            },
-            {
-              value: 'female',
-              text: 'Female'
-            }
-          ]
         },
         {
           type: 'password',
