@@ -101,6 +101,7 @@ Template.createNewTask.events({
     var reference = {};
     var $referenceSelector = tmpl.$('.reference-selector');
     if ($referenceSelector.val() !== '') {
+      // get reference type (menu, job or supplier) based on parent optgroup label
       var referenceType = $referenceSelector.find('option:selected').parent().attr('label');
       referenceType = referenceType.replace(' ', '').toLowerCase();
 
@@ -114,14 +115,14 @@ Template.createNewTask.events({
     if (newTaskInfo.title === '') {
       HospoHero.error('Task must have a title!');
     } else {
+      // if we share task between users, get them ids
       if (tmpl.sharingType.get() === 'users') {
         var taggedUsers = [Meteor.userId()];
-        var options = tmpl.$('.user-selector')[0].options;
-        for (var i = 0; i < options.length; i++) {
-          if (options[i].selected) {
-            taggedUsers.push(options[i].value);
-          }
-        }
+        var selectedOptions = tmpl.$('.user-selector').find('option:selected');
+
+        selectedOptions.each(function(index, option) {
+          taggedUsers.push(option.value);
+        });
         tmpl.sharingIds.set(taggedUsers);
       }
 
