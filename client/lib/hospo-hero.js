@@ -39,25 +39,6 @@ Namespace('HospoHero', {
     sweetAlert("Info!", message, "info");
   },
 
-  // Returns username. user can be user ID or user object
-  username: function (user) {
-    var userNameString = '';
-    if (typeof user == "string") {
-      userNameString = user;
-      user = Meteor.users.findOne({_id: user});
-    }
-
-    if (_.isObject(user)) {
-      if (user.profile.firstname && user.profile.lastname) {
-        return user.profile.firstname + " " + user.profile.lastname;
-      } else {
-        return user.username;
-      }
-    } else {
-      return userNameString;
-    }
-  },
-
   getParamsFromRoute: function (params, routeContext) {
     routeContext = routeContext || Router.current();
     if (_.isString(params)) {
