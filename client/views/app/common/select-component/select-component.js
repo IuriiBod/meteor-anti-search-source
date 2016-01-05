@@ -31,7 +31,7 @@ Template.selectComponent.helpers({
     return id === Template.instance().data.selected;
   },
   values: function () {
-    return Template.instance().values;
+    return Template.instance().values.get();
   }
 });
 
