@@ -8,7 +8,7 @@
 .mupx-deploy/ssl
 
 #bash
-restore_remote_db.sh
+db_remote_restore.sh
 build.sh
 run-android.sh
 
