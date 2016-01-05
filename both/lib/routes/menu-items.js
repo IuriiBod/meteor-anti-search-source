@@ -64,7 +64,10 @@ Router.route('menuItemsRankReport', {
     console.log(formattedDate);
     return [
       Meteor.subscribe('menuList', currentAreaId, 'all', 'all'),
-      Meteor.subscribe('dailySales', formattedDate, currentAreaId)
+      Meteor.subscribe('dailySales', formattedDate, currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('jobItems', null, currentAreaId)
+
       //Meteor.subscribe('menuList', currentAreaId, this.params.category, this.params.status.toLowerCase()),
     ];
   }
