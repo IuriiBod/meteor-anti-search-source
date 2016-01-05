@@ -29,8 +29,5 @@ Meteor.publishAuthorized('taskList', function (userId) {
     query.$or = _.values(sharingOptions);
   }
 
-  console.log('QUERY', query.$or);
-
-
   return TaskList.find(query);
 });
