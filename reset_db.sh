@@ -23,7 +23,7 @@ fi
 meteor reset
 
 mkdir .meteor/local .meteor/local/db
-mongod --dbpath "${DB_PATH}" & sleep 20
+mongod --dbpath "${DB_PATH}" --storageEngine mmapv1 & sleep 10
 
 mongorestore --host=127.0.0.1 --port=27017 --db=meteor --drop  "${DEST_DIR}/${MONGO_DB}"
 
