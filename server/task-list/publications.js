@@ -1,41 +1,36 @@
 Meteor.publishAuthorized('taskList', function (userId) {
   var user = Meteor.users.findOne({_id: userId});
   var relations = user && user.relations;
-
-  var query = {
-    $or: []
-  };
-
-  query.$or.push({sharingIds: userId});
+  var query = {};
 
   if (relations.organizationId) {
-    query.$or.push({
-      sharingType: 'organization',
-      sharingIds: relations.organizationId
-    });
+    var sharingOptions = {
+      user: {
+        sharingIds: userId
+      },
+      organization: {
+        sharingType: 'organization',
+        sharingIds: relations.organizationId
+      },
+      location: {
+        sharingType: 'location'
+      },
+      area: {
+        sharingType: 'area'
+      }
+    };
 
     if (relations.locationIds) {
-      query.$or.push({
-        sharingType: 'location',
-        sharingIds: relations.locationIds
-      });
-    } else {
-      query.$or.push({
-        sharingType: 'location'
-      });
+      sharingOptions.location.sharingIds = {$in: relations.locationIds};
     }
-
     if (relations.areaIds) {
-      query.$or.push({
-        sharingType: 'area',
-        sharingIds: relations.areaIds
-      });
-    } else {
-      query.$or.push({
-        sharingType: 'area'
-      });
+      sharingOptions.area.sharingIds = {$in: relations.areaIds};
     }
+    query.$or = _.values(sharingOptions);
   }
+
+  console.log('QUERY', query.$or);
+
 
   return TaskList.find(query);
 });
