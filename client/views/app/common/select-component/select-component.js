@@ -2,7 +2,7 @@ Template.selectComponent.onCreated(function () {
   var values;
   var passedValues = this.data.values;
   if (_.isArray(passedValues) && passedValues.length) {
-    if (typeof passedValues[0] == 'object') {
+    if (_.isObject(passedValues[0])) {
       values = passedValues;
     } else {
       values = _.map(passedValues, function (value) {
@@ -20,7 +20,7 @@ Template.selectComponent.onCreated(function () {
       };
     });
   }
-  this.set('values', values);
+  this.values = new ReactiveVar(values);
 });
 
 Template.selectComponent.helpers({
@@ -29,6 +29,9 @@ Template.selectComponent.helpers({
   },
   isSelected: function (id) {
     return id === Template.instance().data.selected;
+  },
+  values: function () {
+    return Template.instance().values;
   }
 });
 
