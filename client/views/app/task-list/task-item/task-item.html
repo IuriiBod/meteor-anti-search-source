@@ -4,7 +4,7 @@
       <div class="col-xs-1">
         <input type="checkbox" class="task-checkbox" {{checkboxAttr}} />
       </div>
-      <div class="col-xs-8">
+      <div class="col-xs-7">
         <span class="task-title {{isDoneClass}}">
           {{title}}
 
@@ -20,6 +20,11 @@
         {{#if isTodayOrTomorrow}}
           <small>{{dateFormat dueDate}}</small>
         {{/if}}
+      </div>
+      <div class="col-xs-1">
+        <a href="#" class="remove-task text-danger">
+          <i class="fa fa-trash"></i>
+        </a>
       </div>
     </div>
   </div>

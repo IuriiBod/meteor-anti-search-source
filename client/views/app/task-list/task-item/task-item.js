@@ -59,6 +59,11 @@ Template.taskItem.events({
     task.done = !task.done;
     task.completedBy = task.done ? Meteor.userId() : null;
     Meteor.call('updateTask', task);
+  },
+
+  'click .remove-task': function (event) {
+    event.preventDefault();
+    Meteor.call('removeTask', this);
   }
 });
 
