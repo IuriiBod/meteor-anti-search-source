@@ -2,29 +2,36 @@
   {{> pageHeading title='Task List' name='taskList' onCreateTaskAction=onCreateTaskAction}}
 
   <div class="wrapper wrapper-content">
-    <div class="row">
-      <div class="col-xs-12">
-        {{#if isNewTaskCreating}}
+    <div class="ibox-content">
+      <div class="row">
+        <div class="col-xs-12">
+          {{#if isNewTaskCreating}}
+            <div class="row">
+              <div class="col-xs-12">
+                {{> createNewTask onCreateTaskAction=onCreateTaskAction}}
+              </div>
+            </div>
+          {{/if}}
+
+          <div class="task-list-filter">
+            {{> taskFilter onFilterChange=onFilterChange filterTypes=filterTypes activeFilter=activeFilterName}}
+          </div>
+          <div class="task-switcher-container">
+            <input type="checkbox" class="tasks-switcher" name="task-switcher"/>
+            <label for="task-switcher">Display done tasks</label>
+          </div>
+          <!-- .task-list-filter -->
+
           <div class="row">
-            <div class="col-xs-12">
-              {{> createNewTask onCreateTaskAction=onCreateTaskAction}}
+            <div class="task-list-container col-xs-12">
+              <h2>{{activeFilterName}}</h2>
+              {{#each tasks}}
+                {{> taskItem this}}
+              {{/each}}
             </div>
           </div>
-        {{/if}}
-
-        <div class="task-list-filter col-sm-2">
-          {{> taskFilter onFilterChange=onFilterChange filterTypes=filterTypes activeFilter=activeFilterName}}
+          <!-- .task-list-container -->
         </div>
-        <!-- .task-list-filter -->
-
-        <div class="task-list-container col-sm-10">
-          <h2>{{activeFilterName}}</h2>
-          {{#each tasks}}
-            {{> taskItem this}}
-          {{/each}}
-        </div>
-        <!-- .task-list-container -->
-
       </div>
     </div>
   </div>

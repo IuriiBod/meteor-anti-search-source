@@ -1,6 +1,11 @@
+.float-with-padding {
+  float: left;
+  padding-right: 10px;
+}
+
 .task-list-container {
   h2 {
-    margin-top: 0;
+    margin: 0 0 10px 0;
   }
 
   .task-item {
@@ -9,15 +14,14 @@
     .task-title.done {
       text-decoration: line-through;
     }
+
+    h3 {
+      display: inline-block;
+    }
   }
 }
 
 .create-new-task-container {
-  .float-with-padding {
-    float: left;
-    padding-right: 10px;
-  }
-
   position: absolute;
   top: 0;
   background-color: #fff;
@@ -48,4 +52,14 @@
       }
     }
   }
+}
+
+.task-list-filter {
+  margin: 0 10px 10px 0;
+  display: inline-block;
+}
+
+.task-switcher-container {
+  display: inline-block;
+  vertical-align: middle;
 }

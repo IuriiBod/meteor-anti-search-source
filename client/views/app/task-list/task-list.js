@@ -29,6 +29,12 @@ Template.taskList.onCreated(function () {
   };
 });
 
+Template.taskList.onRendered(function () {
+  this.$('.tasks-switcher').iCheck({
+    checkboxClass: 'icheckbox_square-green'
+  });
+});
+
 Template.taskList.helpers({
   onCreateTaskAction: function () {
     var self = Template.instance();
@@ -73,4 +79,16 @@ Template.taskList.helpers({
       self.filterType.set(filterType);
     }
   }
+});
+
+
+Template.taskList.events({
+  'ifClicked .tasks-switcher': function (event, tmpl) {
+    tmpl.displayDoneTasks.set(!tmpl.displayDoneTasks.get());
+  }
+});
+
+
+Template.taskList.onDestroyed(function () {
+  this.$('.task-switcher').iCheck('destroy');
 });

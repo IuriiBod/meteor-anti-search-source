@@ -37,13 +37,18 @@ Template.taskItem.helpers({
     return this.done ? 'done' : '';
   },
 
-  dueDate: function () {
+  dueDateText: function () {
     return Template.instance().dueDate();
   },
 
   dueDateClass: function () {
     var dueDate = Template.instance().dueDate();
     return dueDate === 'Today' ? 'text-danger' : dueDate === 'Tomorrow' ? 'text-warning' : '';
+  },
+
+  isTodayOrTomorrow: function () {
+    var dueDate = Template.instance().dueDate();
+    return dueDate === 'Today' || dueDate === 'Tomorrow';
   }
 });
 
