@@ -1,3 +1,20 @@
+Template.taskItem.onCreated(function () {
+  this.dueDate = function () {
+    var today = moment().startOf('day');
+    var tomorrow = moment(today).add(1, 'day').toString();
+    var dueDate = moment(this.data.dueDate).startOf('day').toString();
+
+    if (dueDate === today.toString()) {
+      return 'Today';
+    } else if (dueDate === tomorrow) {
+      return 'Tomorrow';
+    } else {
+      return HospoHero.dateUtils.dateFormat(this.data.dueDate);
+    }
+  };
+});
+
+
 Template.taskItem.onRendered(function () {
   this.$('.task-checkbox').iCheck({
     checkboxClass: 'icheckbox_square-green'
@@ -21,17 +38,12 @@ Template.taskItem.helpers({
   },
 
   dueDate: function () {
-    var today = moment().startOf('day');
-    var tomorrow = moment(today).add(1, 'day').toString();
-    var dueDate = moment(this.dueDate).startOf('day').toString();
+    return Template.instance().dueDate();
+  },
 
-    if (dueDate === today.toString()) {
-      return 'Today';
-    } else if (dueDate === tomorrow) {
-      return 'Tomorrow';
-    } else {
-      return HospoHero.dateUtils.dateFormat(this.dueDate);
-    }
+  dueDateClass: function () {
+    var dueDate = Template.instance().dueDate();
+    return dueDate === 'Today' ? 'text-danger' : dueDate === 'Tomorrow' ? 'text-warning' : '';
   }
 });
 

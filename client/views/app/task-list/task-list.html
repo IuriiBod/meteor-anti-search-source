@@ -12,13 +12,13 @@
           </div>
         {{/if}}
 
-        <div class="task-list-filter col-sm-4">
-          Tasks filter here
+        <div class="task-list-filter col-sm-2">
+          {{> taskFilter onFilterChange=onFilterChange filterTypes=filterTypes activeFilter=activeFilterName}}
         </div>
         <!-- .task-list-filter -->
 
-        <div class="task-list-container col-sm-8">
-          <h2>Current task list heading</h2>
+        <div class="task-list-container col-sm-10">
+          <h2>{{activeFilterName}}</h2>
           {{#each tasks}}
             {{> taskItem this}}
           {{/each}}
