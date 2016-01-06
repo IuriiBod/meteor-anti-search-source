@@ -27,7 +27,7 @@ konecty:autolinker
 less
 twbs:bootstrap
 zimme:iron-router-active
-okgrow:iron-router-autoscroll
+okgrow:router-autoscroll
 dbarrett:dropzonejs
 percolate:intercom
 tsega:bootstrap3-datetimepicker
