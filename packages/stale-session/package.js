@@ -6,13 +6,14 @@ Package.describe({
   documentation: 'README.md'
 });
 
-Package.onUse(function(api) {
+Package.onUse(function (api) {
   api.versionsFrom('1.1.0.2');
   api.use([
     'underscore',
     'u2622:persistent-session',
     'jquery'
   ], 'client');
-  api.addFiles('lib/stale-session/client.js', 'client');
+  api.addFiles(['lib/stale-session/client.js'], 'client');
+  api.addFiles(['lib/stale-session/server.js'], 'server');
   api.export(['StaleSession']);
 });

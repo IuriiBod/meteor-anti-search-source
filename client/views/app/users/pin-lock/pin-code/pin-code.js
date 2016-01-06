@@ -1,4 +1,6 @@
-Template.pinCode.onCreated(function() {
+console.log('pincode file');
+
+Template.pinCode.onCreated(function () {
   var userId = Router.current().params.userId;
   this.set('userId', userId);
   this.set('backwardUrl', this.data.backwardUrl);
@@ -23,6 +25,7 @@ Template.pinCode.events({
       }));
     }));
   },
+
   "click #switch-user": function (event) {
     event.preventDefault();
     Router.go('switchUser');

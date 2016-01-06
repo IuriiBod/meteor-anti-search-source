@@ -3,6 +3,18 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
+meteor-base
+standard-minifiers
+mobile-experience
+mongo
+blaze-html-templates
+session
+tracker
+logging
+reload
+ejson
+spacebars
+check
 http
 force-ssl
 service-configuration
@@ -67,15 +79,3 @@ jss:blaze-states
 natestrauser:animate-css
 jss:anti-search-source
 trsdln:modals
-standard-minifiers
-meteor-base
-mobile-experience
-mongo
-blaze-html-templates
-session
-tracker
-logging
-reload
-ejson
-spacebars
-check

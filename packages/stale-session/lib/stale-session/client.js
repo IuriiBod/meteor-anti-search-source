@@ -16,7 +16,7 @@ StaleSession = {
 
   // heartbeatInterval
   get heartbeatInterval() {
-    return 500;
+    return 1000;
   },
 
   // activityEvents
@@ -62,18 +62,49 @@ StaleSession = {
   },
 
   start: function () {
-    if (this.sessionExpired) {
+    if (this.sessionExpired && Meteor.userId()) {
       this.onSessionExpiration();
-      Meteor.logout();
-    }
-    else {
+      Meteor.logout(function () {
+      }, true);
+    } else {
       if (this.timeFromLastActivity >= this.inactivityTimeout) {
         this.sessionExpired = true;
       }
     }
     Meteor.setTimeout(this.start.bind(this), this.heartbeatInterval);
   }
+};
 
+
+var originalMeteorLogout = Meteor.logout.bind(Meteor);
+Meteor.logout = function (resultCallback, isPinLogout) {
+  if (isPinLogout) {
+    Meteor.call('__StaleSession.retainTokenForPinLogin', token, function (err, res) {
+      if (err) {
+        console.log(err);
+      }
+      //logout method should be called in any case (even if token retain failed)
+      originalMeteorLogout(resultCallback);
+    });
+  } else {
+    originalMeteorLogout(resultCallback);
+  }
+};
+
+
+var originalMeteorLoginWithToken = Meteor.loginWithToken.bind(Meteor);
+Meteor.loginWithToken = function (token, resultCallback, isPinLogin) {
+  if (isPinLogin) {
+    Meteor.call('__StaleSession.restoreTokenForPinLogin', token, function (err, res) {
+      if (!err) {
+        originalMeteorLoginWithToken(token, resultCallback);
+      } else {
+        console.log(err);
+      }
+    });
+  } else {
+    originalMeteorLoginWithToken(token, resultCallback);
+  }
 };
 
 

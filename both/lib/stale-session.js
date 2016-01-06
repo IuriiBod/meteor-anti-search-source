@@ -38,13 +38,5 @@ if (Meteor.isClient) {
       users[Meteor.userId()] = Accounts._storedLoginToken();
       Session.setPersistent("loggedUsers", users);
     });
-
-    Meteor.logout = function () {
-      Meteor._localStorage.removeItem("Meteor.loginToken");
-      Meteor._localStorage.removeItem("Meteor.loginTokenExpires");
-      Meteor._localStorage.removeItem("Meteor.userId");
-      Accounts.connection.setUserId(null);
-      Accounts.connection.onReconnect = null;
-    };
   });
 }
