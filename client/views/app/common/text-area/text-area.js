@@ -15,7 +15,7 @@ Template.textArea.onRendered(function () {
       var mentionRegExp = /(?:^|\W)@(\w+)(?!\w)/g, match, matches = [];
       while (match = mentionRegExp.exec(text)) {
         var user = Meteor.users.findOne({
-          username: match[1],
+          'profile.firstname': match[1],
           "relations.areaIds": {$all: [HospoHero.getCurrentAreaId()]}
         });
         if (user) {
@@ -26,11 +26,11 @@ Template.textArea.onRendered(function () {
       var taggedUsers = [];
       matches.forEach(function (username) {
         var filter = new RegExp(username);
-        var subscriber = Meteor.users.findOne({"username": filter});
+        var subscriber = Meteor.users.findOne({"profile.firstname": filter});
         if (subscriber) {
           taggedUsers.push({
             name: '@' + HospoHero.username(subscriber._id),
-            username: '@' + subscriber.username
+            username: '@' + subscriber.profile.firstname
           });
         }
       });

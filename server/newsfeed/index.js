@@ -40,7 +40,7 @@ Meteor.methods({
         }
       );
       recipients.forEach(function (recipientName) {
-        var user = Meteor.users.findOne({username: recipientName});
+        var user = Meteor.users.findOne({'profile.firstname': recipientName});
         notificationSender.sendNotification(user._id);
       });
     }

@@ -18,8 +18,7 @@ Meteor.publishComposite('managerNotes', function (weekRange, areaId) {
             return Meteor.users.find({_id: note.createdBy}, {
               fields: {
                 'profile.firstName': 1,
-                'profile.lastName': 1,
-                username: 1
+                'profile.lastName': 1
               }
             });
           } else {
