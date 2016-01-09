@@ -41,6 +41,17 @@ Meteor.methods({
 
     check(organizationId, HospoHero.checkers.MongoId);
 
+    var organizationOwnerId = Meteor.userId();
+    var usersIdsRelatedToOrganization = Meteor.users
+        .find({'relations.organizationId': organizationId}, {fields: {_id: 1}})
+        .map(function (user) { return user._id });
+
+    usersIdsRelatedToOrganization.forEach(function(userId) {
+      if (userId !== organizationOwnerId) {
+        Meteor.users.remove({_id: userId});
+      }
+    });
+
     var locationsIdsRelatedToOrganization = Locations
         .find({organizationId: organizationId}, {fields: {_id: 1}})
         .map(function (location) { return location._id; });
@@ -49,13 +60,13 @@ Meteor.methods({
       Meteor.call('deleteLocation', id);
     });
 
+    Meteor.users.update({
+      _id: organizationOwnerId
+    },{
+      $set: {'relations.organizationId': null}
+    });
+
     Organizations.remove({_id: organizationId});
-
-    Meteor.users.update(
-        {_id: Meteor.userId()},
-        {$set: {"relations.organizationId": null}}
-    );
-
     logger.info('Organization was deleted', {organizationId: organizationId});
   }
 });

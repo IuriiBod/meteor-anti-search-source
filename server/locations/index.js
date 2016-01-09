@@ -26,23 +26,24 @@ Meteor.methods({
 
     check(locationId, HospoHero.checkers.MongoId);
 
+    var usersIdsRelatedToLocation = Meteor.users
+        .find({'relations.locationIds': locationId}, {fields: {_id: 1}})
+        .map(function (user) { return user._id });
+
+    usersIdsRelatedToLocation.forEach(function (userId) {
+      Meteor.users.update({
+        _id: userId
+      },{
+        $pull: {'relations.locationIds': locationId}
+      });
+    });
+
     var areasIdsRelatedToLocation = Areas
         .find({locationId: locationId}, {fields: {_id: 1}})
         .map(function (area) { return area._id; });
 
     areasIdsRelatedToLocation.forEach(function (areaId) {
       Meteor.call('deleteArea', areaId);
-    });
-
-    var usersIdsRelatedToLocation = Meteor.users
-        .find({"relations.locationIds": locationId}, {fields: {_id: 1}})
-        .map(function (user) { return user._id });
-
-    usersIdsRelatedToLocation.forEach(function (userId) {
-      Meteor.users.update(
-          {_id: userId},
-          {$pull: {"relations.locationIds": locationId}}
-      );
     });
 
     WeatherForecast.remove({locationId: locationId});
