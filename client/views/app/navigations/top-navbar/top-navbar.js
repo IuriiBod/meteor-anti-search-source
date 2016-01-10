@@ -91,9 +91,5 @@ var settingsMenuItems = [
   {
     route: 'stockAreasSettings',
     title: 'Stock Areas'
-  },
-  {
-    route: 'posSettings',
-    title: 'POS / Menu Linking'
   }
 ];
