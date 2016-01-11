@@ -1,39 +1,29 @@
 Meteor.methods({
-  '__StaleSession.retainTokenForPinLogin': function (tokenToRetain) {
-    if (this.userId) {
-      //check if current user has specified token
-      var isTokenValid = !!Meteor.users.findOne({
-        _id: this.userId,
-        'services.resume.loginTokens.hashedToken': tokenToRetain
-      });
+  '__StaleSession.loginWithPin': function (userId, pinCode) {
+    //check if current user has specified pin
+    var user = Meteor.users.findOne({
+      _id: userId,
+      pinCode: pinCode
+    });
 
-      if (isTokenValid) {
-        //retain token
-        Meteor.users.update({_id: this.userId}, {
-          $push: {'services.resume.pinTokens': tokenToRetain}
-        });
-      }
+    if (_.isUndefined(user)) {
+      throw new Meteor.Error(401, 'Wrong pin code');
+    } else {
+      return true;
     }
   },
 
-  '__StaleSession.restoreTokenForPinLogin': function (userId, token) {
-    //check if current user has specified token
+  '__StaleSession.retainTokenForPinLogin': function () {
+    if (this.userId) {
+      //check if current user has specified token
+      var stampedToken = Accounts._generateStampedLoginToken();
+      var hashStampedToken = Accounts._hashStampedToken(stampedToken);
 
-    var userToLogin = Meteor.users.findOne({
-      userId: userId,
-      'services.resume.loginTokens.pinTokens': tokenToRetain
-    });
-
-    if (userToLogin) {
       Meteor.users.update({_id: this.userId}, {
-        $pull: {'services.resume.pinTokens': token},
-        $push: {
-          'services.resume.loginTokens': {
-            hashedToken: token,
-            when: new Date()
-          }
-        }
+        $push: {'services.resume.loginTokens': hashStampedToken}
       });
+
+      return stampedToken.token;
     }
   }
 });

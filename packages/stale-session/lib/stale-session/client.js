@@ -1,5 +1,24 @@
+MeteorSettings.setDefaults({
+  public: {
+    persistent_session: {
+      default_method: 'temporary'
+    }
+  }
+});
+
 StaleSession = {
   _onGetInactivityTimeoutCb: null,
+
+  _getTokenById: function (userId) {
+    var users = Session.get('StaleSession.loggedUsers');
+    return users && users[userId];
+  },
+
+  _setTokenById: function (userId, token) {
+    var users = Session.get('StaleSession.loggedUsers') || {};
+    users[userId] = token;
+    Session.setPersistent('StaleSession.loggedUsers', users);
+  },
 
   onGetInactivityTimeout: function (callback) {
     this._onGetInactivityTimeoutCb = callback;
@@ -64,49 +83,39 @@ StaleSession = {
   start: function () {
     if (this.sessionExpired && Meteor.userId()) {
       this.onSessionExpiration();
-      Meteor.logout(function () {
-      }, true);
+      this._lockWithPin();
     } else {
       if (this.timeFromLastActivity >= this.inactivityTimeout) {
         this.sessionExpired = true;
       }
     }
     Meteor.setTimeout(this.start.bind(this), this.heartbeatInterval);
-  }
-};
+  },
 
-
-var originalMeteorLogout = Meteor.logout.bind(Meteor);
-Meteor.logout = function (resultCallback, isPinLogout) {
-  if (isPinLogout) {
-    Meteor.call('__StaleSession.retainTokenForPinLogin', token, function (err, res) {
+  _lockWithPin: function () {
+    var self = this;
+    Meteor.call('__StaleSession.retainTokenForPinLogin', function (err, token) {
       if (err) {
         console.log('Stale Session:', err);
+      } else {
+        self._setTokenById(Meteor.userId(), token);
       }
       //logout method should be called in any case (even if token retain failed)
-      originalMeteorLogout(resultCallback);
+      Meteor.logout();
     });
-  } else {
-    originalMeteorLogout(resultCallback);
-  }
-};
+  },
 
-
-var originalMeteorLoginWithToken = Meteor.loginWithToken.bind(Meteor);
-Meteor.loginWithToken = function (token, resultCallback, userId) {
-  if (userId) {
-    Meteor.call('__StaleSession.restoreTokenForPinLogin', userId, token, function (err, res) {
-      if (!err) {
-        originalMeteorLoginWithToken(token, resultCallback);
+  loginWithPin: function (userId, pinCode, onLoginCallback) {
+    var token = this._getTokenById(userId);
+    Meteor.call('__StaleSession.loginWithPin', userId, pinCode, function (err, res) {
+      if (err) {
+        onLoginCallback(err, res);
       } else {
-        console.log('Stale Session:', err);
+        Meteor.loginWithToken(token, onLoginCallback);
       }
     });
-  } else {
-    originalMeteorLoginWithToken(token, resultCallback);
   }
 };
-
 
 Meteor.startup(function () {
   StaleSession.lastActivity = new Date();

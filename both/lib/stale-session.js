@@ -1,12 +1,3 @@
-MeteorSettings.setDefaults({
-  public: {
-    persistent_session: {
-      default_method: 'temporary'
-    }
-  }
-});
-
-
 if (Meteor.isClient) {
   Meteor.startup(function () {
     StaleSession.onGetInactivityTimeout(function () {
@@ -32,11 +23,9 @@ if (Meteor.isClient) {
       }
     };
 
+
     Accounts.onLogin(function () {
       StaleSession.reset();
-      var users = Session.get('loggedUsers') || {};
-      users[Meteor.userId()] = Accounts._storedLoginToken();
-      Session.setPersistent('loggedUsers', users);
     });
   });
 }

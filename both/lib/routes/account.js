@@ -76,7 +76,7 @@ Router.route('forgotPassword', {
 
 
 Router.route('pinLock', {
-  path: '/pinLock/:userId',
+  path: '/pin-lock/:userId',
   layoutTemplate: 'blankLayout',
   template: 'pinLock',
   waitOn: function () {
@@ -84,8 +84,8 @@ Router.route('pinLock', {
   },
   data: function () {
     return {
-      backwardUrl: this.params.query.backwardUrl,
-      userId: this.params.userId
+      userId: this.params.userId,
+      backwardUrl: this.params.query.backwardUrl
     };
   }
 });
