@@ -81,7 +81,7 @@ Meteor.logout = function (resultCallback, isPinLogout) {
   if (isPinLogout) {
     Meteor.call('__StaleSession.retainTokenForPinLogin', token, function (err, res) {
       if (err) {
-        console.log(err);
+        console.log('Stale Session:', err);
       }
       //logout method should be called in any case (even if token retain failed)
       originalMeteorLogout(resultCallback);
@@ -93,13 +93,13 @@ Meteor.logout = function (resultCallback, isPinLogout) {
 
 
 var originalMeteorLoginWithToken = Meteor.loginWithToken.bind(Meteor);
-Meteor.loginWithToken = function (token, resultCallback, isPinLogin) {
-  if (isPinLogin) {
-    Meteor.call('__StaleSession.restoreTokenForPinLogin', token, function (err, res) {
+Meteor.loginWithToken = function (token, resultCallback, userId) {
+  if (userId) {
+    Meteor.call('__StaleSession.restoreTokenForPinLogin', userId, token, function (err, res) {
       if (!err) {
         originalMeteorLoginWithToken(token, resultCallback);
       } else {
-        console.log(err);
+        console.log('Stale Session:', err);
       }
     });
   } else {

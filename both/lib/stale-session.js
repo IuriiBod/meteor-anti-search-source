@@ -1,7 +1,7 @@
 MeteorSettings.setDefaults({
   public: {
     persistent_session: {
-      default_method: "temporary"
+      default_method: 'temporary'
     }
   }
 });
@@ -20,23 +20,23 @@ if (Meteor.isClient) {
         return;
       }
       var routeName = Router.current().route.getName();
-      var allowedRouters = ["pinLock", "switchUser"];
+      var allowedRouters = ['pinLock', 'switchUser'];
       var isAllowedRouter = _.contains(allowedRouters, routeName);
       if (!isAllowedRouter) {
         var backwardUrl = HospoHero.misc.getBackwardUrl();
-        Router.go("pinLock", {
+        Router.go('pinLock', {
           userId: userId
         }, {
-          query: "backwardUrl=" + backwardUrl
+          query: 'backwardUrl=' + backwardUrl
         });
       }
     };
 
     Accounts.onLogin(function () {
       StaleSession.reset();
-      var users = Session.get("loggedUsers") || {};
+      var users = Session.get('loggedUsers') || {};
       users[Meteor.userId()] = Accounts._storedLoginToken();
-      Session.setPersistent("loggedUsers", users);
+      Session.setPersistent('loggedUsers', users);
     });
   });
 }

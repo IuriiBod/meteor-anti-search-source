@@ -16,11 +16,11 @@ Meteor.methods({
     }
   },
 
-  '__StaleSession.restoreTokenForPinLogin': function (token) {
+  '__StaleSession.restoreTokenForPinLogin': function (userId, token) {
     //check if current user has specified token
 
-    //todo: [SECURITY] probably I should receive here user ID too (just in case)
     var userToLogin = Meteor.users.findOne({
+      userId: userId,
       'services.resume.loginTokens.pinTokens': tokenToRetain
     });
 
