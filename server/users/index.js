@@ -23,18 +23,6 @@ Accounts.onCreateUser(function (options, user) {
 });
 
 Meteor.methods({
-  inputPinCode: function (userId, pinCode) {
-    var user = Meteor.users.findOne({
-      _id: userId,
-      pinCode: pinCode
-    });
-    if (_.isUndefined(user)) {
-      throw new Meteor.Error(401, "Wrong pin code");
-    }
-    else {
-      return true;
-    }
-  },
   changePinCode: function (newPinCode) {
     Meteor.users.update({
       _id: this.userId

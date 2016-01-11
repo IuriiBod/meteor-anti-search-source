@@ -1,5 +1,24 @@
+MeteorSettings.setDefaults({
+  public: {
+    persistent_session: {
+      default_method: 'temporary'
+    }
+  }
+});
+
 StaleSession = {
   _onGetInactivityTimeoutCb: null,
+
+  _getTokenById: function (userId) {
+    var users = Session.get('StaleSession.loggedUsers');
+    return users && users[userId];
+  },
+
+  _setTokenById: function (userId, token) {
+    var users = Session.get('StaleSession.loggedUsers') || {};
+    users[userId] = token;
+    Session.setPersistent('StaleSession.loggedUsers', users);
+  },
 
   onGetInactivityTimeout: function (callback) {
     this._onGetInactivityTimeoutCb = callback;
@@ -16,7 +35,7 @@ StaleSession = {
 
   // heartbeatInterval
   get heartbeatInterval() {
-    return 500;
+    return 1000;
   },
 
   // activityEvents
@@ -62,20 +81,41 @@ StaleSession = {
   },
 
   start: function () {
-    if (this.sessionExpired) {
+    if (this.sessionExpired && Meteor.userId()) {
       this.onSessionExpiration();
-      Meteor.logout();
-    }
-    else {
+      this._lockWithPin();
+    } else {
       if (this.timeFromLastActivity >= this.inactivityTimeout) {
         this.sessionExpired = true;
       }
     }
     Meteor.setTimeout(this.start.bind(this), this.heartbeatInterval);
+  },
+
+  _lockWithPin: function () {
+    var self = this;
+    Meteor.call('__StaleSession.retainTokenForPinLogin', function (err, token) {
+      if (err) {
+        console.log('Stale Session:', err);
+      } else {
+        self._setTokenById(Meteor.userId(), token);
+      }
+      //logout method should be called in any case (even if token retain failed)
+      Meteor.logout();
+    });
+  },
+
+  loginWithPin: function (userId, pinCode, onLoginCallback) {
+    var token = this._getTokenById(userId);
+    Meteor.call('__StaleSession.loginWithPin', userId, pinCode, function (err, res) {
+      if (err) {
+        onLoginCallback(err, res);
+      } else {
+        Meteor.loginWithToken(token, onLoginCallback);
+      }
+    });
   }
-
 };
-
 
 Meteor.startup(function () {
   StaleSession.lastActivity = new Date();
