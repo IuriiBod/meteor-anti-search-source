@@ -1,39 +1,41 @@
 Template.taskList.onCreated(function () {
   this.isNewTaskCreating = new ReactiveVar(false);
-  this.displayDoneTasks = new ReactiveVar(false);
-
   this.filterType = new ReactiveVar('Next 7 days');
 
   this.filterTypes = {
     'Next 7 days': function () {
       var today = moment().startOf('day');
       var sevenDay = moment(today).add(7, 'days');
-      return TimeRangeQueryBuilder.forInterval(today, sevenDay);
+      var query = {};
+      query.$or = [
+        {dueDate: TimeRangeQueryBuilder.forInterval(today, sevenDay)},
+        {dueDate: {$lte: moment().startOf('day').toDate()}}
+      ];
+      return query;
     },
 
     'Today': function () {
-      return TimeRangeQueryBuilder.forDay(moment());
+      return {dueDate: TimeRangeQueryBuilder.forDay(moment())};
     },
 
     'Tomorrow': function () {
-      return TimeRangeQueryBuilder.forDay(moment().add(1, 'day'));
+      return {dueDate: TimeRangeQueryBuilder.forDay(moment().add(1, 'day'))};
     },
 
     'Overdue': function () {
-      return {$lte: moment().startOf('day').toDate()};
+      return {dueDate: {$lte: moment().startOf('day').toDate()}};
     },
 
     'All tasks': function () {
-      return {$exists: 1};
+      return {dueDate: {$exists: 1}};
+    },
+
+    'Done tasks': function () {
+      return {done: true};
     }
   };
 });
 
-Template.taskList.onRendered(function () {
-  this.$('.tasks-switcher').iCheck({
-    checkboxClass: 'icheckbox_square-green'
-  });
-});
 
 Template.taskList.helpers({
   onCreateTaskAction: function () {
@@ -50,13 +52,13 @@ Template.taskList.helpers({
     var tmpl = Template.instance();
     var filterType = tmpl.filterType.get();
     var filterTypes = tmpl.filterTypes;
-    var query = {};
+    var query = {
+      done: false
+    };
 
     if (filterTypes.hasOwnProperty(filterType)) {
-      query.dueDate = filterTypes[filterType]();
+      _.extend(query, filterTypes[filterType]());
     }
-
-    query.done = tmpl.displayDoneTasks.get();
 
     return TaskList.find(query, {
       sort: {
@@ -79,16 +81,4 @@ Template.taskList.helpers({
       self.filterType.set(filterType);
     }
   }
-});
-
-
-Template.taskList.events({
-  'ifClicked .tasks-switcher': function (event, tmpl) {
-    tmpl.displayDoneTasks.set(!tmpl.displayDoneTasks.get());
-  }
-});
-
-
-Template.taskList.onDestroyed(function () {
-  this.$('.task-switcher').iCheck('destroy');
 });
