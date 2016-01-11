@@ -37,22 +37,27 @@ Meteor.methods({
 
     check(areaId, HospoHero.checkers.MongoId);
 
+
+    //updating user in Meteor.users collection requires user id
     var usersIdsRelatedToArea = Meteor.users
         .find({'relations.areaIds': areaId}, {fields: {_id: 1}})
         .map(function (user) { return user._id });
 
-    usersIdsRelatedToArea.forEach(function (userId) {
-      Meteor.users.update({
-        _id: userId
-      },{
-        $pull: {'relations.areaIds': areaId}
-      });
+    Meteor.users.update({
+      _id: {$in: usersIdsRelatedToArea}
+    },{
+      $pull: {'relations.areaIds': areaId}
+    },{
+      multi: true
+    });
 
-      Meteor.users.update({
-        _id: userId, currentAreaId: areaId
-      },{
-        $unset: {currentAreaId: 1}
-      });
+    Meteor.users.update({
+      _id: {$in: usersIdsRelatedToArea},
+      currentAreaId: areaId
+    },{
+      $unset: {currentAreaId: ''}
+    },{
+      multi: true
     });
 
     var removeDocumentsRelatedToArea = function (areaId) {

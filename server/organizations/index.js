@@ -41,6 +41,7 @@ Meteor.methods({
 
     check(organizationId, HospoHero.checkers.MongoId);
 
+    //updating user in Meteor.users collection requires user id
     var organizationOwnerId = Meteor.userId();
     var usersIdsRelatedToOrganization = Meteor.users
         .find({'relations.organizationId': organizationId}, {fields: {_id: 1}})

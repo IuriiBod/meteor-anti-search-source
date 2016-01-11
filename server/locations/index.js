@@ -26,16 +26,17 @@ Meteor.methods({
 
     check(locationId, HospoHero.checkers.MongoId);
 
+    //updating user in Meteor.users collection requires user id
     var usersIdsRelatedToLocation = Meteor.users
         .find({'relations.locationIds': locationId}, {fields: {_id: 1}})
         .map(function (user) { return user._id });
 
-    usersIdsRelatedToLocation.forEach(function (userId) {
-      Meteor.users.update({
-        _id: userId
-      },{
-        $pull: {'relations.locationIds': locationId}
-      });
+    Meteor.users.update({
+      _id: {$in: usersIdsRelatedToLocation}
+    },{
+      $pull: {'relations.locationIds': locationId}
+    },{
+      multi: true
     });
 
     var areasIdsRelatedToLocation = Areas
