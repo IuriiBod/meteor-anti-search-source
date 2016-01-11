@@ -21,9 +21,13 @@
           <div class="row">
             <div class="task-list-container col-xs-12">
               <h2>{{activeFilterName}}</h2>
-              {{#each tasks}}
-                {{> taskItem this}}
-              {{/each}}
+              {{#if tasks.count}}
+                {{#each tasks}}
+                  {{> taskItem this}}
+                {{/each}}
+              {{else}}
+                <h3>No tasks here</h3>
+              {{/if}}
             </div>
           </div>
           <!-- .task-list-container -->

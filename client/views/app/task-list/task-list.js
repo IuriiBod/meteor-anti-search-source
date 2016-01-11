@@ -6,12 +6,12 @@ Template.taskList.onCreated(function () {
     'Next 7 days': function () {
       var today = moment().startOf('day');
       var sevenDay = moment(today).add(7, 'days');
-      var query = {};
-      query.$or = [
-        {dueDate: TimeRangeQueryBuilder.forInterval(today, sevenDay)},
-        {dueDate: {$lte: moment().startOf('day').toDate()}}
-      ];
-      return query;
+      return {
+        $or: [
+          {dueDate: TimeRangeQueryBuilder.forInterval(today, sevenDay)},
+          {dueDate: {$lte: moment().startOf('day').toDate()}}
+        ]
+      };
     },
 
     'Today': function () {

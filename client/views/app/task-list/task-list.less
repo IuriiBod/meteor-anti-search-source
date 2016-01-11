@@ -23,7 +23,8 @@
 
 .create-new-task-container {
   position: absolute;
-  top: 0;
+  top: -15px;
+  left: 0;
   background-color: #fff;
   z-index: 30;
   border-bottom: 1px solid #CBD5DD;
@@ -57,6 +58,19 @@
 .task-list-filter {
   margin: 0 10px 10px 0;
   display: inline-block;
+
+  .dropdown-toggle.btn-primary:focus {
+    border: 0;
+    background-color: #18A689;
+  }
+
+  .dropdown-menu {
+    .task-filter-switcher.active {
+      a {
+        background-color: #18A689;
+      }
+    }
+  }
 }
 
 .task-switcher-container {
