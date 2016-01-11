@@ -20,17 +20,39 @@ Meteor.methods({
 
   deleteLocation: function (locationId) {
     if (!HospoHero.isOrganizationOwner()) {
-      throw new Meteor.Error(403, 'User not permitted to delete location');
+      logger.error("User not permitted to delete this location");
+      throw new Meteor.Error(403, "User not permitted to delete this location");
     }
 
-    Locations.remove({_id: locationId});
-    Areas.remove({locationId: locationId});
+    check(locationId, HospoHero.checkers.MongoId);
+
+    //updating user in Meteor.users collection requires user id
+    var usersIdsRelatedToLocation = Meteor.users
+        .find({'relations.locationIds': locationId}, {fields: {_id: 1}})
+        .map(function (user) { return user._id });
+
+    Meteor.users.update({
+      _id: {$in: usersIdsRelatedToLocation}
+    },{
+      $pull: {'relations.locationIds': locationId}
+    },{
+      multi: true
+    });
+
+    var areasIdsRelatedToLocation = Areas
+        .find({locationId: locationId}, {fields: {_id: 1}})
+        .map(function (area) { return area._id; });
+
+    areasIdsRelatedToLocation.forEach(function (areaId) {
+      Meteor.call('deleteArea', areaId);
+    });
+
     WeatherForecast.remove({locationId: locationId});
-    DailySales.remove({'relations.locationId': locationId});//SalesPrediction
 
     var googlePrediction = new GooglePredictionApi(locationId);
     googlePrediction.removePredictionModel();
 
+    Locations.remove({_id: locationId});
     logger.info('Location was deleted', {locationId: locationId});
   },
 
