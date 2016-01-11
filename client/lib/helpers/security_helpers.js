@@ -8,7 +8,7 @@ Meteor.startup(function () {
     getCurrentArea: HospoHero.getCurrentArea,
     getCurrentAreaId: HospoHero.getCurrentAreaId,
     isMe: HospoHero.isMe,
-    canBeRosted: HospoHero.canUser('be rosted onto shifts'),
+    canBeRosted: HospoHero.canUser('be rosted'),
     canInvite: HospoHero.canUser('invite users'),
     canViewRoster: HospoHero.canUser('view roster'),
     canEditRoster: HospoHero.canUser('edit roster'),
