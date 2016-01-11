@@ -29,9 +29,8 @@ Meteor.methods({
   //  return true;
   //},
 
-  'deleteOrganization': function (id) {
-    var user = Meteor.user();
-    if (!user) {
+  deleteOrganization: function (organizationId) {
+    if (!Meteor.user()) {
       logger.error('No user has logged in');
       throw new Meteor.Error(401, "User not logged in");
     }
@@ -40,22 +39,35 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to delete organization");
     }
 
-    var areasIds = Meteor.call('getAreasIdsRelatedToOrganization', id);
-    Meteor.call('removeDocumentsRelatedToAreas', areasIds);
+    check(organizationId, HospoHero.checkers.MongoId);
 
-    Areas.remove({organizationId: id});
-    Locations.remove({organizationId: id});
-    Organizations.remove({_id: id});
-  },
+    //updating user in Meteor.users collection requires user id
+    var organizationOwnerId = Meteor.userId();
+    var usersIdsRelatedToOrganization = Meteor.users
+        .find({'relations.organizationId': organizationId}, {fields: {_id: 1}})
+        .map(function (user) { return user._id });
 
-  "getAreasIdsRelatedToOrganization": function(id) {
-    var ids = [];
+    usersIdsRelatedToOrganization.forEach(function(userId) {
+      if (userId !== organizationOwnerId) {
+        Meteor.users.remove({_id: userId});
+      }
+    });
 
-    Areas.find(
-        {organizationId: id},
-        {fields: {_id: 1}}
-    ).forEach(function(item){ ids.push(item._id)});
+    var locationsIdsRelatedToOrganization = Locations
+        .find({organizationId: organizationId}, {fields: {_id: 1}})
+        .map(function (location) { return location._id; });
 
-    return ids;
+    locationsIdsRelatedToOrganization.forEach( function (id) {
+      Meteor.call('deleteLocation', id);
+    });
+
+    Meteor.users.update({
+      _id: organizationOwnerId
+    },{
+      $set: {'relations.organizationId': null}
+    });
+
+    Organizations.remove({_id: organizationId});
+    logger.info('Organization was deleted', {organizationId: organizationId});
   }
 });
