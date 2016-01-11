@@ -29,16 +29,15 @@ Template.textArea.onRendered(function () {
         var subscriber = Meteor.users.findOne({"profile.firstname": filter});
         if (subscriber) {
           taggedUsers.push({
-            name: '@' + HospoHero.username(subscriber._id),
-            username: '@' + subscriber.profile.firstname
+            name: '@' + HospoHero.username(subscriber._id)
           });
         }
       });
 
-      var textHtml = '<div class="non">' + text + '</div>';
+      var textHtml = '<div class="non">' + text.trim() + '</div>';
 
       taggedUsers.forEach(function (user) {
-        textHtml = textHtml.replace(user.username, '<span class="label label-success">' + user.name + '</span>');
+        textHtml = textHtml.replace(user.name, '<span class="label label-success">' + user.name + '</span>');
       });
 
       var linkedText = autolinker.link(textHtml);
@@ -62,7 +61,7 @@ Template.textArea.helpers({
       rules: [{
         token: '@',
         collection: Meteor.users,
-        field: "username",
+        field: ["profile.firstname", "profile.lastname"],
         filter: {
           "_id": {$nin: [Meteor.userId()]},
           "isActive": true
