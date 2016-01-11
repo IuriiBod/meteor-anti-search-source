@@ -1,17 +1,23 @@
 Template.taskItem.onCreated(function () {
   this.dueDate = function () {
-    var today = moment().startOf('day');
-    var tomorrow = moment(today).add(1, 'day').toString();
-    var dueDate = moment(this.data.dueDate).startOf('day').toString();
+    var today = moment().startOf('day').toDate();
+    var tomorrow = moment(today).add(1, 'day').toDate();
+    var dueDate = moment(this.data.dueDate).startOf('day').toDate();
 
-    if (dueDate === today.toString()) {
-      return 'Today';
-    } else if (dueDate === tomorrow) {
-      return 'Tomorrow';
+    if (dueDate < today && this.done === false) {
+      return 'Overdue';
     } else {
-      return HospoHero.dateUtils.dateFormat(this.data.dueDate);
+      if (dueDate.toString() === today.toString()) {
+        return 'Today';
+      } else if (dueDate.toString() === tomorrow.toString()) {
+        return 'Tomorrow';
+      } else {
+        return HospoHero.dateUtils.dateFormat(this.data.dueDate);
+      }
     }
   };
+
+  this.dueDateText = this.dueDate();
 });
 
 
@@ -38,17 +44,17 @@ Template.taskItem.helpers({
   },
 
   dueDateText: function () {
-    return Template.instance().dueDate();
+    return Template.instance().dueDateText;
   },
 
   dueDateClass: function () {
-    var dueDate = Template.instance().dueDate();
-    return dueDate === 'Today' ? 'text-danger' : dueDate === 'Tomorrow' ? 'text-warning' : '';
+    var dueDate = Template.instance().dueDateText;
+    return dueDate === 'Overdue' ? 'text-danger' : dueDate === 'Today' ? 'text-warning' : '';
   },
 
-  isTodayOrTomorrow: function () {
-    var dueDate = Template.instance().dueDate();
-    return dueDate === 'Today' || dueDate === 'Tomorrow';
+  isTodayTomorrowOrOverdue: function () {
+    var dueDate = Template.instance().dueDateText;
+    return dueDate === 'Today' || dueDate === 'Tomorrow' || dueDate === 'Overdue';
   }
 });
 
