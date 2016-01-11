@@ -7,9 +7,9 @@ Template.taskItem.onCreated(function () {
     if (dueDate < today && this.done === false) {
       return 'Overdue';
     } else {
-      if (dueDate.toString() === today.toString()) {
+      if (dueDate.valueOf() === today.valueOf()) {
         return 'Today';
-      } else if (dueDate.toString() === tomorrow.toString()) {
+      } else if (dueDate.valueOf() === tomorrow.valueOf()) {
         return 'Tomorrow';
       } else {
         return HospoHero.dateUtils.dateFormat(this.data.task.dueDate);

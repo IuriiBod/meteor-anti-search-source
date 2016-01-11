@@ -1,5 +1,7 @@
 Template.userSelector.onRendered(function () {
-  this.$('.user-selector').select2();
+  this.$('.user-selector').select2({
+    placeholder: "Select users for sharing task"
+  });
 });
 
 

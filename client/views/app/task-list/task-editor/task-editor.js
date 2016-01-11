@@ -7,13 +7,14 @@ Template.taskEditor.onCreated(function () {
 Template.taskEditor.onRendered(function () {
   this.$('.new-task-title').focus();
 
-  var dueDate = this.data.task.dueDate || new Date();
   this.$('.datepicker').datetimepicker({
     format: 'ddd DD/MM/YY',
     minDate: moment()
   });
 
   this.datepicker = this.$('.datepicker').data("DateTimePicker");
+  
+  var dueDate = this.data.task.dueDate || new Date();
   this.datepicker.date(moment(dueDate));
 });
 
