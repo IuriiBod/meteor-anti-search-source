@@ -1,23 +1,24 @@
-Template.createNewTask.onCreated(function () {
-  this.sharingType = new ReactiveVar('private');
-  this.sharingIds = new ReactiveVar(Meteor.userId());
+Template.taskEditor.onCreated(function () {
+  this.sharingType = new ReactiveVar(this.data.task.sharingType || 'private');
+  this.sharingIds = new ReactiveVar(this.data.task.sharingIds || Meteor.userId());
 });
 
 
-Template.createNewTask.onRendered(function () {
+Template.taskEditor.onRendered(function () {
   this.$('.new-task-title').focus();
 
+  var dueDate = this.data.task.dueDate || new Date();
   this.$('.datepicker').datetimepicker({
     format: 'ddd DD/MM/YY',
-    minDate: moment(),
-    defaultDate: moment()
+    minDate: moment()
   });
 
   this.datepicker = this.$('.datepicker').data("DateTimePicker");
+  this.datepicker.date(moment(dueDate));
 });
 
 
-Template.createNewTask.helpers({
+Template.taskEditor.helpers({
   taskSharingOptions: function () {
     return [
       {
@@ -80,7 +81,7 @@ Template.createNewTask.helpers({
 });
 
 
-Template.createNewTask.events({
+Template.taskEditor.events({
   'click .open-datetimepicker': function (event, tmpl) {
     tmpl.datepicker.show();
   },
@@ -136,7 +137,13 @@ Template.createNewTask.events({
 
       newTaskInfo = _.extend(newTaskInfo, additionalTaskParams);
 
-      Meteor.call('createTask', newTaskInfo, HospoHero.handleMethodResult(function () {
+      var method = 'createTask';
+      if (tmpl.data.task._id) {
+        method = 'updateTask';
+        newTaskInfo._id = tmpl.data.task._id;
+      }
+
+      Meteor.call(method, newTaskInfo, HospoHero.handleMethodResult(function () {
         tmpl.data.onCreateTaskAction();
       }));
     }

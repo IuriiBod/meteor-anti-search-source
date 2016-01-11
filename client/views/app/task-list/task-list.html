@@ -8,7 +8,7 @@
           {{#if isNewTaskCreating}}
             <div class="row">
               <div class="col-xs-12">
-                {{> createNewTask onCreateTaskAction=onCreateTaskAction}}
+                {{> taskEditor onCreateTaskAction=onCreateTaskAction task=task}}
               </div>
             </div>
           {{/if}}
@@ -23,7 +23,7 @@
               <h2>{{activeFilterName}}</h2>
               {{#if tasks.count}}
                 {{#each tasks}}
-                  {{> taskItem this}}
+                  {{> taskItem task=this onEditTaskAction=onEditTaskAction}}
                 {{/each}}
               {{else}}
                 <h3>No tasks here</h3>

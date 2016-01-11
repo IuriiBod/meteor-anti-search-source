@@ -3,7 +3,11 @@
     <div class="col-xs-12">
       <select name="user-selector" class="user-selector form-control" multiple="multiple">
         {{#each users}}
-          <option value="{{_id}}">{{username _id}}</option>
+          {{#if isSelected}}
+            <option value="{{_id}}" selected="selected">{{username _id}}</option>
+          {{else}}
+            <option value="{{_id}}">{{username _id}}</option>
+          {{/if}}
         {{/each}}
       </select>
     </div>

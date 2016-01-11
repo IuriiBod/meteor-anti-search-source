@@ -1,8 +1,7 @@
 Template.taskDescriptionAndReference.onCreated(function () {
   this.getReference = function () {
-    if (Object.keys(this.data.reference).length) {
-      var taskReference = this.data.reference;
-
+    var taskReference = this.data.reference;
+    if (Object.keys(taskReference).length) {
       var references = {
         suppliers: {
           collection: Suppliers,
@@ -33,12 +32,10 @@ Template.taskDescriptionAndReference.onCreated(function () {
       return false;
     }
   };
-
-  this.reference = this.getReference();
 });
 
 Template.taskDescriptionAndReference.helpers({
   reference: function () {
-    return Template.instance().reference;
+    return Template.instance().getReference();
   }
 });

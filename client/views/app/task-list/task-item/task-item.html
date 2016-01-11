@@ -6,13 +6,13 @@
       </div>
       <div class="col-xs-7">
         <span class="task-title {{isDoneClass}}">
-          {{title}}
+          {{task.title}}
 
-          {{#if done}}
-            ({{username completedBy}})
+          {{#if task.done}}
+            ({{username task.completedBy}})
           {{/if}}
 
-          {{> taskDescriptionAndReference}}
+          {{> taskDescriptionAndReference task}}
         </span>
       </div>
       <div class="col-xs-3">
@@ -20,10 +20,14 @@
           {{dueDateText}}
         </h3>
         {{#if isTodayTomorrowOrOverdue}}
-          <small>{{dateFormat dueDate}}</small>
+          <small>{{dateFormat task.dueDate}}</small>
         {{/if}}
       </div>
       <div class="col-xs-1">
+        <a href="#" class="edit-task">
+          <i class="fa fa-pencil"></i>
+        </a>
+
         <a href="#" class="remove-task text-danger">
           <i class="fa fa-trash"></i>
         </a>

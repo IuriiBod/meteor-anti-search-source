@@ -2,7 +2,7 @@ Template.taskItem.onCreated(function () {
   this.getDueDate = function () {
     var today = moment().startOf('day').toDate();
     var tomorrow = moment(today).add(1, 'day').toDate();
-    var dueDate = moment(this.data.dueDate).startOf('day').toDate();
+    var dueDate = moment(this.data.task.dueDate).startOf('day').toDate();
 
     if (dueDate < today && this.done === false) {
       return 'Overdue';
@@ -12,11 +12,10 @@ Template.taskItem.onCreated(function () {
       } else if (dueDate.toString() === tomorrow.toString()) {
         return 'Tomorrow';
       } else {
-        return HospoHero.dateUtils.dateFormat(this.data.dueDate);
+        return HospoHero.dateUtils.dateFormat(this.data.task.dueDate);
       }
     }
   };
-  this.dueDate = this.getDueDate();
 });
 
 
@@ -27,7 +26,7 @@ Template.taskItem.onRendered(function () {
 
   var self = this;
   this.autorun(function () {
-    var state = self.data.done ? 'check' : 'unckeck';
+    var state = self.data.task.done ? 'check' : 'unckeck';
     self.$('.task-checbox').iCheck(state);
   });
 });
@@ -35,24 +34,24 @@ Template.taskItem.onRendered(function () {
 
 Template.taskItem.helpers({
   checkboxAttr: function () {
-    return this.done ? {checked: 'checked'} : {};
+    return this.task.done ? {checked: 'checked'} : {};
   },
 
   isDoneClass: function () {
-    return this.done ? 'done' : '';
+    return this.task.done ? 'done' : '';
   },
 
   dueDateText: function () {
-    return Template.instance().dueDate;
+    return Template.instance().getDueDate();
   },
 
   dueDateClass: function () {
-    var dueDate = Template.instance().dueDate;
+    var dueDate = Template.instance().getDueDate();
     return dueDate === 'Overdue' ? 'text-danger' : dueDate === 'Today' ? 'text-warning' : '';
   },
 
   isTodayTomorrowOrOverdue: function () {
-    var dueDate = Template.instance().dueDate;
+    var dueDate = Template.instance().getDueDate();
     return dueDate === 'Today' || dueDate === 'Tomorrow' || dueDate === 'Overdue';
   }
 });
@@ -60,7 +59,7 @@ Template.taskItem.helpers({
 
 Template.taskItem.events({
   'ifClicked .task-checkbox': function (event, tmpl) {
-    var task = tmpl.data;
+    var task = tmpl.data.task;
     task.done = !task.done;
     task.completedBy = task.done ? Meteor.userId() : null;
     Meteor.call('updateTask', task);
@@ -68,7 +67,12 @@ Template.taskItem.events({
 
   'click .remove-task': function (event) {
     event.preventDefault();
-    Meteor.call('removeTask', this);
+    Meteor.call('removeTask', this.task);
+  },
+
+  'click .edit-task': function (event, tmpl) {
+    event.preventDefault();
+    tmpl.data.onEditTaskAction(tmpl.data.task);
   }
 });
 

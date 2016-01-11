@@ -34,6 +34,8 @@ Template.taskList.onCreated(function () {
       return {done: true};
     }
   };
+
+  this.task = {};
 });
 
 
@@ -41,9 +43,19 @@ Template.taskList.helpers({
   onCreateTaskAction: function () {
     var self = Template.instance();
     return function () {
+      self.task = {};
       self.isNewTaskCreating.set(!self.isNewTaskCreating.get());
     }
   },
+
+  onEditTaskAction: function () {
+    var self = Template.instance();
+    return function (task) {
+      self.task = task;
+      self.isNewTaskCreating.set(true);
+    }
+  },
+
   isNewTaskCreating: function () {
     return Template.instance().isNewTaskCreating.get();
   },
@@ -65,6 +77,10 @@ Template.taskList.helpers({
         dueDate: 1
       }
     });
+  },
+
+  task: function () {
+    return Template.instance().task;
   },
 
   filterTypes: function () {
