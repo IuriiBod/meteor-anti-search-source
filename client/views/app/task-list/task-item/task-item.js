@@ -1,5 +1,5 @@
 Template.taskItem.onCreated(function () {
-  this.dueDate = function () {
+  this.getDueDate = function () {
     var today = moment().startOf('day').toDate();
     var tomorrow = moment(today).add(1, 'day').toDate();
     var dueDate = moment(this.data.dueDate).startOf('day').toDate();
@@ -16,8 +16,7 @@ Template.taskItem.onCreated(function () {
       }
     }
   };
-
-  this.dueDateText = this.dueDate();
+  this.dueDate = this.getDueDate();
 });
 
 
@@ -44,16 +43,16 @@ Template.taskItem.helpers({
   },
 
   dueDateText: function () {
-    return Template.instance().dueDateText;
+    return Template.instance().dueDate;
   },
 
   dueDateClass: function () {
-    var dueDate = Template.instance().dueDateText;
+    var dueDate = Template.instance().dueDate;
     return dueDate === 'Overdue' ? 'text-danger' : dueDate === 'Today' ? 'text-warning' : '';
   },
 
   isTodayTomorrowOrOverdue: function () {
-    var dueDate = Template.instance().dueDateText;
+    var dueDate = Template.instance().dueDate;
     return dueDate === 'Today' || dueDate === 'Tomorrow' || dueDate === 'Overdue';
   }
 });
