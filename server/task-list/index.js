@@ -4,7 +4,7 @@ Meteor.methods({
     return TaskList.insert(task);
   },
 
-  updateTask: function (task) {
+  editTask: function (task) {
     check(task, HospoHero.checkers.TaskListChecker);
     return TaskList.update({_id: task._id}, {$set: task});
   },

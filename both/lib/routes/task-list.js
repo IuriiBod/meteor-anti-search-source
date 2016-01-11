@@ -4,7 +4,6 @@ Router.route('/task-list', {
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId();
     return [
-      Meteor.subscribe('taskList', Meteor.userId()),
       Meteor.subscribe('usersList', currentAreaId),
       Meteor.subscribe('jobItems', null, currentAreaId, 'active'),
       Meteor.subscribe('menuList', currentAreaId, 'all', 'all'),

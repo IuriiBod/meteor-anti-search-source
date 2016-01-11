@@ -31,8 +31,11 @@
           </a>
         </li>
         <li>
-          <a href="{{pathFor 'taskList'}}">
+          <a href="{{pathFor 'taskList'}}" class="count-info">
             <i class="fa fa-tasks"></i>
+            {{#if tasksCount}}
+              <span class="label label-danger">{{tasksCount}}</span>
+            {{/if}}
           </a>
         </li>
         {{#if isManager}}

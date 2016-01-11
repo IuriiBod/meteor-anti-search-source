@@ -9,11 +9,11 @@ Template.taskEditor.onRendered(function () {
 
   this.$('.datepicker').datetimepicker({
     format: 'ddd DD/MM/YY',
-    minDate: moment()
+    minDate: moment().subtract(1, 'day')
   });
 
   this.datepicker = this.$('.datepicker').data("DateTimePicker");
-  
+
   var dueDate = this.data.task.dueDate || new Date();
   this.datepicker.date(moment(dueDate));
 });
@@ -140,7 +140,7 @@ Template.taskEditor.events({
 
       var method = 'createTask';
       if (tmpl.data.task._id) {
-        method = 'updateTask';
+        method = 'editTask';
         newTaskInfo._id = tmpl.data.task._id;
       }
 

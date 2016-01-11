@@ -4,7 +4,7 @@ Template.taskItem.onCreated(function () {
     var tomorrow = moment(today).add(1, 'day').toDate();
     var dueDate = moment(this.data.task.dueDate).startOf('day').toDate();
 
-    if (dueDate < today && this.done === false) {
+    if (dueDate < today && this.data.task.done === false) {
       return 'Overdue';
     } else {
       if (dueDate.valueOf() === today.valueOf()) {
@@ -62,7 +62,7 @@ Template.taskItem.events({
     var task = tmpl.data.task;
     task.done = !task.done;
     task.completedBy = task.done ? Meteor.userId() : null;
-    Meteor.call('updateTask', task);
+    Meteor.call('editTask', task);
   },
 
   'click .remove-task': function (event) {
