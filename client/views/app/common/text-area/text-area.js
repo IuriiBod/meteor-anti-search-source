@@ -19,13 +19,13 @@ Template.textArea.onRendered(function () {
           "relations.areaIds": {$all: [HospoHero.getCurrentAreaId()]}
         });
         if (user) {
-          matches.push(match[1]);
+          matches.push(user);
         }
       }
 
       var taggedUsers = [];
-      matches.forEach(function (username) {
-        var filter = new RegExp(username);
+      matches.forEach(function (user) {
+        var filter = new RegExp(user.profile.firstname);
         var subscriber = Meteor.users.findOne({"profile.firstname": filter});
         if (subscriber) {
           taggedUsers.push({

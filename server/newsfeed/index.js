@@ -39,9 +39,8 @@ Meteor.methods({
           linkToItem: Router.url('dashboard')
         }
       );
-      recipients.forEach(function (recipientName) {
-        var user = Meteor.users.findOne({'profile.firstname': recipientName});
-        notificationSender.sendNotification(user._id);
+      recipients.forEach(function (recipient) {
+        notificationSender.sendNotification(recipient._id);
       });
     }
     return id;
