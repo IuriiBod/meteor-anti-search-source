@@ -23,12 +23,6 @@ Template.taskItem.onRendered(function () {
   this.$('.task-checkbox').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
-
-  var self = this;
-  this.autorun(function () {
-    var state = self.data.task.done ? 'check' : 'unckeck';
-    self.$('.task-checbox').iCheck(state);
-  });
 });
 
 

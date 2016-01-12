@@ -1,9 +1,9 @@
 <template name="taskDescriptionAndReference">
   <span class="task-info">
-    {{#if reference}}
-      <a href="{{reference.route}}">
-        <i class="text-info fa {{reference.icon}}"></i>
-        {{reference.name}}
+    {{#if referenceObject}}
+      <a href="{{referenceObject.route}}">
+        <i class="text-info fa {{referenceObject.icon}}"></i>
+        {{referenceObject.name}}
       </a>
     {{/if}}
 
