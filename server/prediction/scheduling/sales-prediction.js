@@ -177,7 +177,7 @@ if (!HospoHero.isDevelopmentMode()) {
   HospoHero.LocationScheduler.addDailyJob('Update forecast', function (location) {
     return 3; //3:00 AM
   }, function (location) {
-    logger.error('Started forecast generation', {locationId: location._id});
-    //updateForecastForLocation(location);
+    logger.info('Started forecast generation', {locationId: location._id});
+    updateForecastForLocation(location);
   });
 }
