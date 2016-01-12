@@ -27,5 +27,5 @@
     }
   ],
   "useRawOrders": true,
-  "logLevel": "warn"
+  "logLevel": "info"
 }
