@@ -9,7 +9,6 @@ Template.notificationAction.onCreated(function () {
       action: String
     });
 
-    //var self = this;
     Meteor.call(routerQuery.method, routerQuery.id, routerQuery.action, HospoHero.handleMethodResult(function (result) {
       Router.go('dashboard');
     }));
