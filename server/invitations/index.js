@@ -22,7 +22,7 @@ Meteor.methods({
     };
 
     var id = Invitations.insert(invitation);
-    console.log(id);
+
     new NotificationSender(
       'Added to the ' + area.name + ' area',
       'invitation-email',
