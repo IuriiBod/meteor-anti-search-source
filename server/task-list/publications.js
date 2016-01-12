@@ -36,12 +36,20 @@ Meteor.publishComposite('taskList', function (userId) {
   }
 });
 
-Meteor.publishAuthorized('todayTasks', function(userId) {
-  var today = moment().endOf('day').toDate();
+Meteor.publishAuthorized('todayTasks', function() {
+  var user = Meteor.users.findOne({_id: this.userId});
+  var area = Areas.findOne({_id: user.currentAreaId});
+  var today;
 
-  var user = Meteor.users.findOne({_id: userId});
+  if (area) {
+    today = HospoHero.dateUtils.getDateMomentForLocation(new Date(), area.locationId);
+    today = moment(today).endOf('day').toDate();
+  } else {
+    today = moment().endOf('day').toDate();
+  }
+
   var relations = user && user.relations;
-  var sharingQuery = getTasksQuery(relations, userId);
+  var sharingQuery = getTasksQuery(relations, this.userId);
 
   var dueDateQuery = {
     dueDate: {
