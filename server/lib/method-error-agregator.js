@@ -1,4 +1,4 @@
-if (HospoHero.isProductionMode()) {
+if (HospoHero.isProductionServer()) {
   Meteor._registerMethodsFn = Meteor.methods;
 
   Meteor.methods = function (methodsObj) {

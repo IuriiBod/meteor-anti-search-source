@@ -17,7 +17,7 @@ updateTrainingDataForLocation = function (location) {
 };
 
 
-if (HospoHero.isProductionMode()) {
+if (!HospoHero.isDevelopmentMode()) {
   HospoHero.LocationScheduler.addDailyJob('Training data uploading', function (location) {
     return 1; //at 1:00 AM
   }, function (location) {

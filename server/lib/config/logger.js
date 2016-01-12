@@ -22,7 +22,7 @@ var papertrailTransportOptions = {
 
 
 // Add & configure transport
-if (HospoHero.isProductionMode()) {
+if (HospoHero.isProductionServer()) {
   logger.addTransport('papertrail', papertrailTransportOptions);
 } else {
   logger.addTransport('console', consoleTransportOptions);
