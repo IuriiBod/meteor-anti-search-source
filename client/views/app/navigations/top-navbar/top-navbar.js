@@ -71,12 +71,6 @@ Template.topNavbar.events({
     }
   },
 
-  'click #signOutButton': function (event) {
-    event.preventDefault();
-    Meteor.logout();
-    Router.go("signIn");
-  },
-
   'click .notifi-toggler': function () {
     FlyoutManager.open('notifiFlyout', {});
   },
