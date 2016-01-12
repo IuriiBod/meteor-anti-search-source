@@ -13,6 +13,7 @@
  * link notification's metadata with notification itself.
  * This feature may be used in server side routes for
  * processing any notification's actions.
+ * Use `{{_notificationId}}` - in templates and `this._notificationId` - in helpers
  *
  * Template data helpers
  * You can also define you own helpers
