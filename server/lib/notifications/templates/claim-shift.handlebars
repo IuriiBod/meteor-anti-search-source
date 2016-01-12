@@ -24,10 +24,10 @@
 </style>
 
 <div>
-  Shift on {{date}} has been claimed by <b>{{username}}</b>
+  Shift in <b>{{areaName}}</b> area in <b>{{sectionName}}</b> section on {{date}} has been claimed by <b>{{username}}</b>
 
   <p class="button-container">
-    <a href="{{claimUrl 'confirm'}}" class="claim-button confirm-button">Confirm</a>
-    <a href="{{claimUrl 'reject'}}" class="claim-button reject-button">Reject</a>
+    <a href="{{confirmClaimUrl}}" class="claim-button confirm-button">Confirm</a>
+    <a href="{{rejectClaimUrl}}" class="claim-button reject-button">Reject</a>
   </p>
 </div>
