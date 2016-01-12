@@ -88,6 +88,31 @@ Template.taskEditor.events({
   },
 
   'submit form': function (event, tmpl) {
+    var getReference = function () {
+      var $referenceSelector = tmpl.$('.reference-selector');
+      if ($referenceSelector.val() !== '') {
+        // get reference type (menu, job or supplier) based on parent optgroup label
+        var referenceType = $referenceSelector.find('option:selected').parent().attr('label');
+        referenceType = referenceType.replace(' ', '').toLowerCase();
+
+        return {
+          id: $referenceSelector.val(),
+          type: referenceType
+        };
+      }
+    };
+
+    var getSharedUserIds = function () {
+      var taggedUsers = [Meteor.userId()];
+      var selectedOptions = tmpl.$('.user-selector').find('option:selected');
+
+      selectedOptions.each(function(index, option) {
+        taggedUsers.push(option.value);
+      });
+      return taggedUsers;
+    };
+
+
     event.preventDefault();
     var newTaskInfo = HospoHero.misc.getValuesFromEvent(event, [
       {
@@ -100,32 +125,12 @@ Template.taskEditor.events({
       }
     ], true);
 
-    var reference = {};
-    var $referenceSelector = tmpl.$('.reference-selector');
-    if ($referenceSelector.val() !== '') {
-      // get reference type (menu, job or supplier) based on parent optgroup label
-      var referenceType = $referenceSelector.find('option:selected').parent().attr('label');
-      referenceType = referenceType.replace(' ', '').toLowerCase();
-
-      reference = {
-        id: $referenceSelector.val(),
-        type: referenceType
-      };
-
-    }
-
     if (newTaskInfo.title === '') {
       HospoHero.error('Task must have a title!');
     } else {
       // if we share task between users, get them ids
       if (tmpl.sharingType.get() === 'users') {
-        var taggedUsers = [Meteor.userId()];
-        var selectedOptions = tmpl.$('.user-selector').find('option:selected');
-
-        selectedOptions.each(function(index, option) {
-          taggedUsers.push(option.value);
-        });
-        tmpl.sharingIds.set(taggedUsers);
+        tmpl.sharingIds.set(getSharedUserIds());
       }
 
       var additionalTaskParams = {
@@ -133,9 +138,8 @@ Template.taskEditor.events({
         dueDate: tmpl.datepicker.date().toDate(),
         sharingType: tmpl.sharingType.get(),
         sharingIds: tmpl.sharingIds.get(),
-        reference: reference
+        reference: getReference()
       };
-
       newTaskInfo = _.extend(newTaskInfo, additionalTaskParams);
 
       var method = 'createTask';

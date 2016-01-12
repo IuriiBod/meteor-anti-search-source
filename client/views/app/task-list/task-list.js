@@ -1,40 +1,40 @@
+var filterTypes = {
+  'Next 7 days': function () {
+    var today = moment().startOf('day');
+    var sevenDay = moment(today).add(7, 'days');
+    return {
+      $or: [
+        {dueDate: TimeRangeQueryBuilder.forInterval(today, sevenDay)},
+        {dueDate: {$lte: moment().startOf('day').toDate()}}
+      ]
+    };
+  },
+
+  'Today': function () {
+    return {dueDate: TimeRangeQueryBuilder.forDay(moment())};
+  },
+
+  'Tomorrow': function () {
+    return {dueDate: TimeRangeQueryBuilder.forDay(moment().add(1, 'day'))};
+  },
+
+  'Overdue': function () {
+    return {dueDate: {$lte: moment().startOf('day').toDate()}};
+  },
+
+  'All tasks': function () {
+    return {dueDate: {$exists: 1}};
+  },
+
+  'Done tasks': function () {
+    return {done: true};
+  }
+};
+
+
 Template.taskList.onCreated(function () {
   this.isNewTaskCreating = new ReactiveVar(false);
   this.filterType = new ReactiveVar('Next 7 days');
-
-  this.filterTypes = {
-    'Next 7 days': function () {
-      var today = moment().startOf('day');
-      var sevenDay = moment(today).add(7, 'days');
-      return {
-        $or: [
-          {dueDate: TimeRangeQueryBuilder.forInterval(today, sevenDay)},
-          {dueDate: {$lte: moment().startOf('day').toDate()}}
-        ]
-      };
-    },
-
-    'Today': function () {
-      return {dueDate: TimeRangeQueryBuilder.forDay(moment())};
-    },
-
-    'Tomorrow': function () {
-      return {dueDate: TimeRangeQueryBuilder.forDay(moment().add(1, 'day'))};
-    },
-
-    'Overdue': function () {
-      return {dueDate: {$lte: moment().startOf('day').toDate()}};
-    },
-
-    'All tasks': function () {
-      return {dueDate: {$exists: 1}};
-    },
-
-    'Done tasks': function () {
-      return {done: true};
-    }
-  };
-
   this.task = {};
 });
 
@@ -63,7 +63,6 @@ Template.taskList.helpers({
   tasks: function () {
     var tmpl = Template.instance();
     var filterType = tmpl.filterType.get();
-    var filterTypes = tmpl.filterTypes;
     var query = {
       done: false
     };
@@ -84,7 +83,7 @@ Template.taskList.helpers({
   },
 
   filterTypes: function () {
-    return _.keys(Template.instance().filterTypes);
+    return _.keys(filterTypes);
   },
 
   activeFilterName: function () {
