@@ -39,6 +39,14 @@ Template.topNavbar.helpers({
     return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).count();
   },
 
+  tasksCount: function () {
+    var today = moment().endOf('day').toDate();
+    return TaskList.find({
+      dueDate: {$lte: today},
+      done: false
+    }).count();
+  },
+
   notifications: function () {
     return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
   },

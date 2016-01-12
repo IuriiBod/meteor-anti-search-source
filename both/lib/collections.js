@@ -18,8 +18,6 @@ Sections = new Mongo.Collection("sections");
 GeneralAreas = new Mongo.Collection("generalAreas");
 SpecialAreas = new Mongo.Collection("specialAreas");
 
-Payroll = new Mongo.Collection("payroll");
-
 NewsFeeds = new Mongo.Collection("newsFeeds");
 
 StocktakeMain = new Mongo.Collection("stocktakeMain");
@@ -43,6 +41,4 @@ PosMenuItems = new Mongo.Collection('posMenuItems');
 
 LeaveRequests = new Mongo.Collection('leaveRequests');
 
-// null collections
-LocalMenuItem = new Mongo.Collection(null);
-LocalJobItem = new Mongo.Collection(null);
+TaskList = new Mongo.Collection('taskList');
