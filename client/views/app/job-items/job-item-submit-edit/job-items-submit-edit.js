@@ -100,7 +100,7 @@ Template.submitEditJobItem.helpers({
 
   startsOn: function () {
     var startsOn = moment(this.jobItem.startsOn) || moment();
-    return startsOn.format('YYYY-MM-DD');
+    return HospoHero.dateUtils.shortDateFormat(startsOn);
   },
   endsOn: function () {
     var endsOn = moment().add(1, 'days');
@@ -108,7 +108,7 @@ Template.submitEditJobItem.helpers({
       endsOn = moment(this.jobItem.endsOn.lastDate)
         || moment(this.jobItem.startsOn).add(1, 'days');
     }
-    return endsOn.format('YYYY-MM-DD');
+    return HospoHero.dateUtils.shortDateFormat(endsOn);
   },
   week: function () {
     var days = ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];

@@ -10,7 +10,7 @@ Template.teamHoursMainView.helpers({
     return moment(date).format('dddd');
   },
   formatDate: function (date) {
-    return moment(date).format('YYYY-MM-DD');
+    return HospoHero.dateUtils.shortDateFormat(moment(date));
   },
   onKeyUp: function () {
     var tmpl = Template.instance();

@@ -42,7 +42,7 @@ Template.jobItemDetail.helpers({
       } else if (item.endsOn.after) {
         ends = 'After ' + item.endsOn.after + ' occurrences';
       } else if (item.endsOn.lastDate) {
-        ends = moment(item.endsOn.lastDate).format('YYYY-MM-DD');
+        ends = HospoHero.dateUtils.shortDateFormat(moment(item.endsOn.lastDate));
       }
     }
     return ends;
