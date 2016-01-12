@@ -1,0 +1,9 @@
+<template name="referenceSelector">
+  <select name="reference-selector" class="reference-selector form-control">
+    <option value="">Select referece</option>
+
+    {{> referenceOptgroup items=menuItems label='Menus' reference=this}}
+    {{> referenceOptgroup items=jobItems label='Jobs' reference=this}}
+    {{> referenceOptgroup items=suppliers label='Suppliers' reference=this}}
+  </select>
+</template>

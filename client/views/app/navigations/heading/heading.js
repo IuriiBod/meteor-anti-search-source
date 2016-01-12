@@ -12,7 +12,8 @@ var headingComponentsMap = {
   salesPrediction: 'salesPredictionHeader',
   stocktakeList: 'stocktakeHeader',
   suppliersListHeader: 'suppliersListHeader',
-  posMenuLinking: 'posMenuLinkingHeader'
+  posMenuLinking: 'posMenuLinkingHeader',
+  taskList: 'taskListHeader'
 };
 
 Template.pageHeading.onCreated(function () {
