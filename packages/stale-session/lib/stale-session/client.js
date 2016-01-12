@@ -20,6 +20,12 @@ StaleSession = {
     Session.setPersistent('StaleSession.loggedUsers', users);
   },
 
+  _removeTokenById: function (userId) {
+    var users = Session.get('StaleSession.loggedUsers') || {};
+    delete users[userId];
+    Session.setPersistent('StaleSession.loggedUsers', users);
+  },
+
   onGetInactivityTimeout: function (callback) {
     this._onGetInactivityTimeoutCb = callback;
   },
@@ -114,6 +120,11 @@ StaleSession = {
         Meteor.loginWithToken(token, onLoginCallback);
       }
     });
+  },
+
+  getStoredUsersIds: function () {
+    var users = Session.get('StaleSession.loggedUsers') || {};
+    return _.keys(users);
   }
 };
 
