@@ -17,6 +17,35 @@ Template.shiftItem.helpers({
     return shift && shift.rejectedFor && shift.rejectedFor.indexOf(Meteor.userId()) >= 0;
   },
 
+  isUnavailable: function () {
+    var queryForInterval = function (fields, interval) {
+      // ['startTime', 'endTime'] => [{'startTime: interval}, {endTime: interval}]
+      return _.map(fields, function (field) {
+        var query = {};
+        query[field] = interval;
+        return query;
+      });
+    };
+
+    var shift = this.shift;
+    var interval = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
+
+    var existingShift = !!Shifts.findOne({
+      type: null,
+      assignedTo: Meteor.userId(),
+      published: true,
+      $or: queryForInterval(['startTime', 'endTime'], interval)
+    });
+
+    var leaveRequest = !!LeaveRequests.findOne({
+      userId: Meteor.userId(),
+      status: 'approved',
+      $or: queryForInterval(['startDate', 'endDate'], interval)
+    });
+
+    return existingShift || leaveRequest;
+  },
+
   confirmed: function () {
     return this.shift && this.shift.confirmed && "success";
   },

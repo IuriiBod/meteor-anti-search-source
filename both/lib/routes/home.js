@@ -14,7 +14,8 @@ Router.route('/', {
         Meteor.subscribe('usersList', currentAreaId),
         Meteor.subscribe('comments', Meteor.userId(), currentAreaId),
         Meteor.subscribe('newsfeeds'),
-        Meteor.subscribe('daily', moment().format('YYYY-MM-DD'), currentAreaId, Meteor.userId())
+        Meteor.subscribe('daily', HospoHero.dateUtils.shortDateFormat(moment()), currentAreaId, Meteor.userId()),
+        Meteor.subscribe('userAllLeaveRequests', Meteor.userId())
       ];
     }
   },
