@@ -1,5 +1,6 @@
 //context: MenuItem
 Template.menuItemDetailedMainView.onCreated(function () {
+  console.log('this.data -> ', this.data);
 });
 
 

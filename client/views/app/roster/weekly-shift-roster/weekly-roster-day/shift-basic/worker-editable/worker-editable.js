@@ -100,7 +100,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
 
     workersQuery["roles." + HospoHero.getCurrentAreaId()] = {$in: getCanBeRostedRoles()};
 
-    return Meteor.users.find(workersQuery, {sort: {"username": 1}}).map(function (worker) {
+    return Meteor.users.find(workersQuery, {sort: {"profile.firstname": 1}}).map(function (worker) {
       return {
         value: worker._id,
         text: HospoHero.username(worker)

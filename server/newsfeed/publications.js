@@ -18,8 +18,7 @@ Meteor.publishComposite('newsfeeds', {
           _id: newsfeed.createdBy
         }, {
           fields: {
-            profile: 1,
-            username: 1
+            profile: 1
           }
         });
       }

@@ -76,7 +76,6 @@ Meteor.publishComposite('organizationInfo', {
             "relations.organizationId": organization._id
           }, {
             fields: {
-              username: 1,
               "services.google.picture": 1,
               profile: 1,
               relations: 1

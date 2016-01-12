@@ -4,7 +4,6 @@ Meteor.publish(null, function () {
     var fields = {
       "services.google": 1,
       profile: 1,
-      username: 1,
       emails: 1,
       isActive: 1,
       relations: 1,
@@ -32,7 +31,6 @@ Meteor.publish('profileUser', function (userId) {
       var fields = {
         "services.google": 1,
         profile: 1,
-        username: 1,
         emails: 1,
         isActive: 1,
         relations: 1,
@@ -59,7 +57,6 @@ Meteor.publish('profileUser', function (userId) {
 Meteor.publish('usersList', function (areaId) {
   if (this.userId) {
     var options = {
-      username: 1,
       emails: 1,
       isActive: 1,
       'profile.firstname': 1,
@@ -85,7 +82,6 @@ Meteor.publish('usersList', function (areaId) {
 
 Meteor.publish("selectedUsersList", function (usersIds) {
   var options = {
-    username: 1,
     emails: 1,
     isActive: 1,
     profile: 1,
