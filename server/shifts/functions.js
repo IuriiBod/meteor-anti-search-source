@@ -123,6 +123,7 @@ Meteor.methods({
     }
 
     check(shiftId, HospoHero.checkers.ShiftId);
+
     var shift = Shifts.findOne(shiftId);
     if (shift.assignedTo) {
       logger.error('Shift has been already assigned');
@@ -139,30 +140,73 @@ Meteor.methods({
     var userIds = HospoHero.roles.getUserIdsByAction('approves roster requests');
 
     if (userIds.length) {
-      var notificationSender = new NotificationSender(
-        'Shift claiming',
-        'claim-shift',
-        {
-          date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId),
-          username: HospoHero.username(userId)
-        },
-        {
-          interactive: true,
-          helpers: {
-            claimUrl: function (action) {
-              return Router.url('claim', {id: this._notificationId, action: action});
-            }
-          },
-          meta: {
-            shiftId: shiftId,
-            claimedBy: userId
-          }
-        }
-      );
+      sendNotification(shift, userIds);
+    }
+  },
 
-      userIds.forEach(function (userId) {
-        notificationSender.sendNotification(userId);
+  approveClaimShift: function (notificationId, action) {
+    var notification = Notifications.findOne({_id: notificationId});
+    var meta = notification.meta;
+    var shiftId = meta.shiftId;
+    var claimedBy = meta.claimedBy;
+
+    if (action === 'confirm') {
+      Shifts.update({_id: shiftId}, {
+        $set: {
+          assignedTo: claimedBy
+        },
+        $unset: {
+          claimedBy: 1,
+          rejectedFor: 1
+        }
       });
+      Notifications.remove({'meta.shiftId': shiftId});
+    } else {
+      Shifts.update({_id: shiftId}, {
+        $pull: {
+          claimedBy: claimedBy
+        },
+        $addToSet: {
+          rejectedFor: claimedBy
+        }
+      });
+      Notifications.remove({_id: notificationId});
     }
   }
 });
+
+var sendNotification = function (shift, userIds) {
+  var userId = Meteor.userId();
+  var notificationTitle = 'Shift claiming';
+
+  var area = Areas.findOne({_id: shift.relations.areaId});
+  var section = Sections.findOne({_id: shift.section});
+
+  var params = {
+    date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId),
+    username: HospoHero.username(userId),
+    areaName: area.name,
+    sectionName: section && section.name || 'open'
+  };
+
+  var options = {
+    interactive: true,
+    helpers: {
+      confirmClaimUrl: function () {
+        return NotificationSender.actionUrlFor('approveClaimShift', this._notificationId, 'confirm');
+      },
+      rejectClaimUrl: function () {
+        return NotificationSender.actionUrlFor('approveClaimShift', this._notificationId, 'reject');
+      }
+    },
+    meta: {
+      shiftId: shift._id,
+      claimedBy: userId
+    }
+  };
+
+  var notificationSender = new NotificationSender(notificationTitle, 'claim-shift', params, options);
+  userIds.forEach(function (userId) {
+    notificationSender.sendNotification(userId);
+  });
+};

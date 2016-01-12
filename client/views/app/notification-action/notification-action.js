@@ -9,10 +9,9 @@ Template.notificationAction.onCreated(function () {
       action: String
     });
 
-    var self = this;
+    //var self = this;
     Meteor.call(routerQuery.method, routerQuery.id, routerQuery.action, HospoHero.handleMethodResult(function (result) {
-      self.actionResult.set('Success! ', result);
-      //probably we can also create this tab, if action opened in new tab
+      Router.go('dashboard');
     }));
 
   } catch (err) {
