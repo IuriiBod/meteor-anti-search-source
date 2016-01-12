@@ -6,9 +6,6 @@ validateRule = (rule) ->
   if rule.subscription? and rule.collection?
     throw new Error("Rule cannot specify both a server-side subscription and a client/server collection to search simultaneously")
 
-#  unless rule.subscription? or Match.test(rule.collection, Match.OneOf(String, Mongo.Collection))
-#    throw new Error("Collection to search must be either a Mongo collection or server-side name")
-
   # XXX back-compat message, to be removed
   if rule.callback?
     console.warn("autocomplete no longer supports callbacks; use event listeners instead.")
@@ -241,6 +238,7 @@ class @AutoComplete
     return AutoCompleteRecords.find({}, options) if isServerSearch(rule)
 
     # Otherwise, search on client
+    console.log('client search');
     return rule.collection.find(selector, options)
 
   isShowing: ->

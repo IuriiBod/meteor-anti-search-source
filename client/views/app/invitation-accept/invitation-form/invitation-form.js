@@ -13,7 +13,7 @@ Template.invitationAcceptForm.helpers({
           placeholder: 'Firstname',
           label: 'First Name',
           disabled: true,
-          value: invitation.name,
+          value: invitation.firstname,
           required: true,
           validation: {
             minLength: 3
@@ -23,6 +23,8 @@ Template.invitationAcceptForm.helpers({
           name: 'lastname',
           placeholder: 'Lastname',
           label: 'Last Name',
+          disabled: true,
+          value: invitation.lastname,
           required: true,
           validation: {
             minLength: 3
