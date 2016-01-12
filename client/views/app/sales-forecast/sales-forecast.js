@@ -23,7 +23,7 @@ Template.salesForecastMainView.onCreated(function () {
 
 Template.salesForecastMainView.helpers({
   formatDate: function (date) {
-    return moment(date).format('YYYY-MM-DD');
+    return HospoHero.dateUtils.shortDateFormat(moment(date));
   },
 
   getDayOfWeek: function (date) {

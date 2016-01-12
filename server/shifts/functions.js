@@ -182,11 +182,16 @@ var sendNotification = function (shift, userIds) {
   var area = Areas.findOne({_id: shift.relations.areaId});
   var section = Sections.findOne({_id: shift.section});
 
+  var shiftTime = HospoHero.dateUtils.getDateMomentForLocation(shift.startTime, shift.relations.locationId);
+  var rosterDate = HospoHero.dateUtils.shortDateFormat(shiftTime.startOf('week'));
+  var rosterUrl = Router.url('weeklyRoster', {date: rosterDate});
+
   var params = {
     date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId),
     username: HospoHero.username(userId),
     areaName: area.name,
-    sectionName: section && section.name || 'open'
+    sectionName: section && section.name || 'open',
+    rosterUrl: rosterUrl
   };
 
   var options = {

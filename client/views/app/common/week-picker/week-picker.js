@@ -110,5 +110,5 @@ Template.weekPicker.events({
 });
 
 var getWeekDateByMoment = function (dateMoment) {
-  return dateMoment.format('YYYY-MM-DD');
+  return HospoHero.dateUtils.shortDateFormat(dateMoment);
 };
