@@ -30,6 +30,14 @@
             {{/if}}
           </a>
         </li>
+        <li>
+          <a href="{{pathFor 'taskList'}}" class="count-info">
+            <i class="fa fa-tasks"></i>
+            {{#if tasksCount}}
+              <span class="label label-danger">{{tasksCount}}</span>
+            {{/if}}
+          </a>
+        </li>
         {{#if isManager}}
           <li class="dropdown">
             <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

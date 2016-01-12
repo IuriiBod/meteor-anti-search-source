@@ -1,0 +1,37 @@
+<template name="taskItem">
+  <div class="task-item">
+    <div class="row">
+      <div class="col-xs-1">
+        <input type="checkbox" class="task-checkbox" {{checkboxAttr}} />
+      </div>
+      <div class="col-xs-7">
+        <span class="task-title {{isDoneClass}}">
+          {{task.title}}
+
+          {{#if task.done}}
+            ({{username task.completedBy}})
+          {{/if}}
+
+          {{> taskDescriptionAndReference task}}
+        </span>
+      </div>
+      <div class="col-xs-3">
+        <h3 class="{{dueDateClass}}">
+          {{dueDateText}}
+        </h3>
+        {{#if isTodayTomorrowOrOverdue}}
+          <small>{{dateFormat task.dueDate}}</small>
+        {{/if}}
+      </div>
+      <div class="col-xs-1">
+        <a href="#" class="edit-task">
+          <i class="fa fa-pencil"></i>
+        </a>
+
+        <a href="#" class="remove-task text-danger">
+          <i class="fa fa-trash"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</template>
