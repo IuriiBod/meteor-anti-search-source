@@ -1,5 +1,5 @@
 Template.taskDescriptionAndReference.helpers({
-  reference: function () {
+  referenceObject: function () {
     var taskReference = this.reference;
 
     if (Object.keys(taskReference).length) {

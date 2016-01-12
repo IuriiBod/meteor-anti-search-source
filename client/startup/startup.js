@@ -1,4 +1,4 @@
 Meteor.startup(function () {
   Meteor.subscribe('organizationInfo');
-  Meteor.subscribe('taskList', Meteor.userId());
+  Meteor.subscribe('todayTasks', Meteor.userId());
 });

@@ -99,6 +99,8 @@ Template.taskEditor.events({
           id: $referenceSelector.val(),
           type: referenceType
         };
+      } else {
+        return {};
       }
     };
 
