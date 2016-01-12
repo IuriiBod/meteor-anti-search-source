@@ -20,7 +20,8 @@ Router.route('signUp', {
 Router.route('logout', {
   'path': '/logout',
   action: function () {
-    return Meteor.logout();
+    StaleSession._removeTokenById(Meteor.userId());
+    Meteor.logout();
   }
 });
 
@@ -44,9 +45,13 @@ Router.route('switchUser', {
   layoutTemplate: 'blankLayout',
   template: 'switchUserView',
   waitOn: function () {
-    var usersIds = Session.get('loggedUsers') || {};
-    usersIds = _.keys(usersIds);
-    return Meteor.subscribe('selectedUsersList', usersIds);
+    return Meteor.subscribe('selectedUsersList', StaleSession.getStoredUsersIds());
+  },
+  data: function () {
+    StaleSession._lockWithPin();
+    return {
+      users: Meteor.users.find()
+    };
   }
 });
 
