@@ -21,14 +21,13 @@ Template.clock.helpers({
         {
           status: 'finished',
           finishedAt: {
-            $lte: moment().add(1, 'minutes').toDate()
+            $gte: moment().subtract(1, 'minutes').toDate()
           }
         }
       ]
     };
     query["relations.areaId"] = HospoHero.getCurrentAreaId();
-
-    return Shifts.findOne(query, {sort: {"startTime": -1}});
+    return Shifts.findOne(query, {sort: {startTime: -1}});
   }
 });
 
