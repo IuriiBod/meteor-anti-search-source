@@ -1,7 +1,7 @@
 <template name="shiftItem">
   <tr class="{{confirmed}}">
     <td class="text-left">
-      {{timeFormat shift.startTime}} - {{timeFormat shift.endTime}}
+      {{formatLocationTime shift.startTime}} - {{formatLocationTime shift.endTime}}
     </td>
     <td>{{dayFormat shift.startTime}}</td>
     <td class="text-center">{{section}}</td>
