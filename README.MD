@@ -14,6 +14,7 @@ $ ./reset_db.sh d
 
 This command takes less time (in case if you have existing dump in `.dump` folder).
 
+__Note for Linux users:__ Use `reset_db_linux.sh` instead. 
 
 ## Starting the app
 

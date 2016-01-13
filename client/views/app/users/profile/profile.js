@@ -12,7 +12,7 @@ Template.profileMainView.helpers({
       if (user._id == loggedIn._id) {
         return "My Profile";
       } else {
-        return user.username + "'s Profile";
+        return user.profile.firstname + "'s Profile";
       }
     }
   },

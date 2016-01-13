@@ -50,9 +50,8 @@ Meteor.methods({
     );
 
     if (recipients.length) {
-      recipients.forEach(function (recipientName) {
-        var user = Meteor.users.findOne({username: recipientName});
-        notificationSender.sendNotification(user._id);
+      recipients.forEach(function (recipient) {
+        notificationSender.sendNotification(recipient ._id);
       });
     }
 
