@@ -40,7 +40,7 @@ LocationScheduler.prototype._cronHourlyJob = function () {
 
       if (isSameHour(timeResult)) {
         Meteor.defer(function () {
-          logger.info('Location job: ' + jobEntry.description, {
+          logger.info('[scheduler] Location job: ' + jobEntry.description, {
             locationId: location._id,
             localTime: localMoment.format('YYYY-MM-DD HH:mm')
           });
