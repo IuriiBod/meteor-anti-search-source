@@ -40,7 +40,7 @@ Template.areaSettings.helpers({
         ]
       }, {
         sort: {
-          username: 1
+          'profile.firstname': 1
         }
       });
     }

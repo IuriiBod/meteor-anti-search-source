@@ -29,7 +29,6 @@ Meteor.publish('leaveRequestsApprovers', function () {
   query['roles.' + areaId] = {$in: roleIds};
   return Meteor.users.find(query, {
     fields: {
-      username: 1,
       profile: 1,
       roles: 1,
       relations: 1
