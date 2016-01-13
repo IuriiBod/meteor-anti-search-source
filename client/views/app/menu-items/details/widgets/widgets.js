@@ -19,7 +19,6 @@ Template.menuDetailWidgets.onRendered(function () {
 Template.menuDetailWidgets.helpers({
   menuItemStats: function () {
     var menu = this;
-    console.log(this);
 
     var round = function (value) {
       return HospoHero.misc.rounding(value);
