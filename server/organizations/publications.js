@@ -100,6 +100,7 @@ Meteor.publishComposite('organizationInfo', {
             if (!HospoHero.canUser('edit locations', this.userId)) {
               fields.name = 1;
               fields.organizationId = 1;
+              fields.timezone = 1;
             }
           }
           return Locations.find(query, {fields: fields});

@@ -181,8 +181,16 @@ Namespace('HospoHero.dateUtils', {
     return moment(time).fromNow();
   },
 
-  startOfWeekMoment: function (date) {
+  startOfWeekMoment: function (date, location) {
     date = date ? moment(date) : moment();
+    if (location) {
+      date = HospoHero.dateUtils.getDateMomentForLocation(date, location);
+    }
     return date.startOf('isoWeek');
+  },
+
+  getDateStringForRoute: function (date, location) {
+    date = HospoHero.dateUtils.startOfWeekMoment(date, location);
+    return HospoHero.dateUtils.shortDateFormat(date);
   }
 });

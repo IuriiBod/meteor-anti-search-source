@@ -50,7 +50,7 @@ Router.route('switchUser', {
   data: function () {
     StaleSession._lockWithPin();
     return {
-      users: Meteor.users.find()
+      users: Meteor.users.find({_id: {$in: StaleSession.getStoredUsersIds()}})
     };
   }
 });

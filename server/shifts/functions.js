@@ -55,6 +55,7 @@ Meteor.methods({
         assignedTo: 1,
         startTime: 1,
         endTime: 1,
+        section: 1,
         relations: 1
       }
     });
@@ -63,7 +64,7 @@ Meteor.methods({
       var locationId = null;
 
       shiftsToPublish.forEach(function (shift) {
-        locationId = shift.relations.locationId;
+        locationId = locationId || shift.relations.locationId;
 
         if (shift.assignedTo) {
           if (usersToNotify[shift.assignedTo]) {
@@ -87,10 +88,7 @@ Meteor.methods({
       });
 
       var shiftDate = shiftDateQuery.$gte;
-      var routeParams = {
-        week: moment(shiftDate).week(),
-        year: moment(shiftDate).year()
-      };
+      shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDate, locationId);
 
       Object.keys(usersToNotify).forEach(function (key) {
         new NotificationSender(
@@ -101,10 +99,15 @@ Meteor.methods({
             shifts: usersToNotify[key],
             openShifts: openShifts,
             publishedByName: HospoHero.username(Meteor.userId()),
-            linkToItem: Router.url('weeklyRoster', routeParams)
+            linkToItem: Router.url('weeklyRoster', {date: shiftDate}),
+            areaName: HospoHero.getCurrentArea().name
           },
           {
             helpers: {
+              sectionNameFormatter: function (shift) {
+                var section = Sections.findOne({_id: shift.section});
+                return section && section.name || 'open';
+              },
               dateFormatter: function (shift) {
                 return HospoHero.dateUtils.shiftDateInterval(shift)
               }
@@ -182,8 +185,7 @@ var sendNotification = function (shift, userIds) {
   var area = Areas.findOne({_id: shift.relations.areaId});
   var section = Sections.findOne({_id: shift.section});
 
-  var shiftTime = HospoHero.dateUtils.getDateMomentForLocation(shift.startTime, shift.relations.locationId);
-  var rosterDate = HospoHero.dateUtils.shortDateFormat(shiftTime.startOf('week'));
+  var rosterDate = HospoHero.dateUtils.getDateStringForRoute(shift.startTime, shift.relations.locationId);
   var rosterUrl = Router.url('weeklyRoster', {date: rosterDate});
 
   var params = {

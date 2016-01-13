@@ -73,6 +73,11 @@ Template.shiftItem.helpers({
 
   past: function () {
     return this.shiftState == 'past';
+  },
+
+  formatLocationTime: function (time) {
+    var area = HospoHero.getCurrentArea();
+    return HospoHero.dateUtils.locationTimeFormat(time, area.locationId);
   }
 });
 
