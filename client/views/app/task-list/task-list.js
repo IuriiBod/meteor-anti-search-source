@@ -1,4 +1,8 @@
 var filterTypes = {
+  'All tasks': function () {
+    return {dueDate: {$exists: 1}};
+  },
+
   'Next 7 days': function () {
     var today = moment().startOf('day');
     var sevenDay = moment(today).add(7, 'days');
@@ -22,10 +26,6 @@ var filterTypes = {
     return {dueDate: {$lte: moment().startOf('day').toDate()}};
   },
 
-  'All tasks': function () {
-    return {dueDate: {$exists: 1}};
-  },
-
   'Done tasks': function () {
     return {done: true};
   }
@@ -34,7 +34,7 @@ var filterTypes = {
 
 Template.taskList.onCreated(function () {
   this.isNewTaskCreating = new ReactiveVar(false);
-  this.filterType = new ReactiveVar('Next 7 days');
+  this.filterType = new ReactiveVar('All tasks');
   this.task = {};
 });
 

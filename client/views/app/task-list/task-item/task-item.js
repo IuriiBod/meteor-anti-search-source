@@ -21,7 +21,7 @@ Template.taskItem.onCreated(function () {
 
 Template.taskItem.onRendered(function () {
   this.$('.task-checkbox').iCheck({
-    checkboxClass: 'icheckbox_square-green'
+    checkboxClass: 'iradio_square-green'
   });
 });
 

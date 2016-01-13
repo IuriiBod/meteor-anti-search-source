@@ -1,15 +1,8 @@
 <template name="taskDescriptionAndReference">
   <span class="task-info">
-    {{#if referenceObject}}
-      <a href="{{referenceObject.route}}">
-        <i class="text-info fa {{referenceObject.icon}}"></i>
-        {{referenceObject.name}}
-      </a>
-    {{/if}}
-
     {{#if description}}
       <a data-toggle="collapse" href="#{{_id}}" aria-expanded="false" class="text-info">
-        <i class="fa fa-comment"></i>
+        <i class="fa fa-bars"></i>
       </a>
 
       <div class="collapse" id="{{_id}}">
@@ -17,6 +10,15 @@
           {{description}}
         </div>
       </div>
+    {{/if}}
+
+    {{#if referenceObject}}
+      <span class="pull-right">
+        <a href="{{referenceObject.route}}" class="text-primary">
+          <i class="text-info fa {{referenceObject.icon}}"></i>
+          {{referenceObject.name}}
+        </a>
+      </span>
     {{/if}}
   </span>
 </template>
