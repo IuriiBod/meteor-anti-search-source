@@ -8,6 +8,7 @@ $ ./reset_db.sh d
 
 If you are using key `d` new database dump will be imported from testing server.
 
+__Note for Linux users:__ Use `reset_db_linux.sh` instead. 
 
 ## Starting the app
 
