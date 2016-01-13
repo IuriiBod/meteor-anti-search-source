@@ -55,6 +55,7 @@ Meteor.methods({
         assignedTo: 1,
         startTime: 1,
         endTime: 1,
+        section: 1,
         relations: 1
       }
     });
@@ -87,10 +88,9 @@ Meteor.methods({
       });
 
       var shiftDate = shiftDateQuery.$gte;
-      var routeParams = {
-        week: moment(shiftDate).week(),
-        year: moment(shiftDate).year()
-      };
+      shiftDate = HospoHero.dateUtils.getDateMomentForLocation(shiftDate, locationId);
+      shiftDate = moment(shiftDate).startOf('week');
+      shiftDate = HospoHero.dateUtils.shortDateFormat(shiftDate);
 
       Object.keys(usersToNotify).forEach(function (key) {
         new NotificationSender(
@@ -101,10 +101,15 @@ Meteor.methods({
             shifts: usersToNotify[key],
             openShifts: openShifts,
             publishedByName: HospoHero.username(Meteor.userId()),
-            linkToItem: Router.url('weeklyRoster', routeParams)
+            linkToItem: Router.url('weeklyRoster', {date: shiftDate}),
+            areaName: HospoHero.getCurrentArea().name
           },
           {
             helpers: {
+              sectionNameFormatter: function (shift) {
+                var section = Sections.findOne({_id: shift.section});
+                return section && section.name || 'open';
+              },
               dateFormatter: function (shift) {
                 return HospoHero.dateUtils.shiftDateInterval(shift)
               }
