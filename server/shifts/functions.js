@@ -64,7 +64,7 @@ Meteor.methods({
       var locationId = null;
 
       shiftsToPublish.forEach(function (shift) {
-        locationId = shift.relations.locationId;
+        locationId = locationId || shift.relations.locationId;
 
         if (shift.assignedTo) {
           if (usersToNotify[shift.assignedTo]) {
@@ -88,9 +88,7 @@ Meteor.methods({
       });
 
       var shiftDate = shiftDateQuery.$gte;
-      shiftDate = HospoHero.dateUtils.getDateMomentForLocation(shiftDate, locationId);
-      shiftDate = moment(shiftDate).startOf('week');
-      shiftDate = HospoHero.dateUtils.shortDateFormat(shiftDate);
+      shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDate, locationId);
 
       Object.keys(usersToNotify).forEach(function (key) {
         new NotificationSender(
@@ -187,8 +185,7 @@ var sendNotification = function (shift, userIds) {
   var area = Areas.findOne({_id: shift.relations.areaId});
   var section = Sections.findOne({_id: shift.section});
 
-  var shiftTime = HospoHero.dateUtils.getDateMomentForLocation(shift.startTime, shift.relations.locationId);
-  var rosterDate = HospoHero.dateUtils.shortDateFormat(shiftTime.startOf('week'));
+  var rosterDate = HospoHero.dateUtils.getDateStringForRoute(shift.startTime, shift.relations.locationId);
   var rosterUrl = Router.url('weeklyRoster', {date: rosterDate});
 
   var params = {
