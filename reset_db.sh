@@ -15,6 +15,7 @@ MONGO_DB="heroku_5dd8c4xw"
 
 if [[ $1 != "d" ]]; then
   # refresh dump
+  echo "Making remote database dump..."
   rm -rf "${DEST_DIR}"
   mongodump -u "${MONGO_USER}" -h "${MONGO_DOMAIN}" -d "${MONGO_DB}" -p "${MONGO_PASSWORD}" -o "${DEST_DIR}"
 fi
