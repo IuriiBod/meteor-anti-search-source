@@ -238,7 +238,6 @@ class @AutoComplete
     return AutoCompleteRecords.find({}, options) if isServerSearch(rule)
 
     # Otherwise, search on client
-    console.log('client search');
     return rule.collection.find(selector, options)
 
   isShowing: ->
