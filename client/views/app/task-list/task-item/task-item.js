@@ -59,11 +59,6 @@ Template.taskItem.events({
     Meteor.call('editTask', task);
   },
 
-  'click .remove-task': function (event) {
-    event.preventDefault();
-    Meteor.call('removeTask', this.task);
-  },
-
   'click .edit-task': function (event, tmpl) {
     event.preventDefault();
     tmpl.data.onEditTaskAction(tmpl.data.task);

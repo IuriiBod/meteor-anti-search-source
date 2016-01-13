@@ -87,6 +87,13 @@ Template.taskEditor.events({
     tmpl.datepicker.show();
   },
 
+  'click .remove-task': function (event, tmpl) {
+    event.preventDefault();
+    Meteor.call('removeTask', tmpl.data.task, HospoHero.handleMethodResult(function () {
+      tmpl.data.onCreateTaskAction();
+    }));
+  },
+
   'submit form': function (event, tmpl) {
     var getReference = function () {
       var $referenceSelector = tmpl.$('.reference-selector');

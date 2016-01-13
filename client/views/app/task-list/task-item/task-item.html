@@ -14,7 +14,7 @@
           <small>{{dateFormat task.dueDate}}</small>
         {{/if}}
       </div>
-      <div class="col-xs-7">
+      <div class="col-xs-8">
         <span class="task-title {{isDoneClass}}">
           <a href="#" class="text-primary edit-task">
             {{task.title}}
@@ -26,11 +26,6 @@
 
           {{> taskDescriptionAndReference task}}
         </span>
-      </div>
-      <div class="col-xs-1">
-        <a href="#" class="remove-task text-danger">
-          <i class="fa fa-trash"></i>
-        </a>
       </div>
     </div>
   </div>
