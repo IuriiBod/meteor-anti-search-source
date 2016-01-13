@@ -11,7 +11,7 @@ Template.profile.helpers({
     if (this && this.profile && this.profile.firstname) {
       return this.profile.firstname;
     } else {
-      return this.username;
+      return "";
     }
   },
   lastName: function() {

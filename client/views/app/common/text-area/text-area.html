@@ -11,15 +11,12 @@
 -->
 <template name="username">
   <td data-id="{{this._id}}">
-    {{this.username}}
     <small>
       {{#if this.profile.firstname}}
         {{this.profile.firstname}}
       {{/if}}
       {{#if this.profile.lastname}}
         {{this.profile.lastname}}
-      {{/if}}
-      {{#if this.username}}
       {{/if}}
     </small>
   </td>
