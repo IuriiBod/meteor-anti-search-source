@@ -26,7 +26,6 @@ meteor reset
 mkdir .meteor/local .meteor/local/db
 
 echo "Starting local database ..."
-
 mongod --dbpath "${DB_PATH}" --storageEngine mmapv1 > /dev/null & sleep 5
 
 mongorestore --host=127.0.0.1 --port=27017 --db=meteor --drop  "${DEST_DIR}/${MONGO_DB}"
@@ -34,4 +33,4 @@ mongorestore --host=127.0.0.1 --port=27017 --db=meteor --drop  "${DEST_DIR}/${MO
 kill $! #kill db server
 
 echo
-echo "Import finished. Press any key to exit... "
+echo "Congratulaitons! Your database is restored."
