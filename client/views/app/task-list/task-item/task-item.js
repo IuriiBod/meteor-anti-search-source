@@ -47,6 +47,34 @@ Template.taskItem.helpers({
   isTodayTomorrowOrOverdue: function () {
     var dueDate = Template.instance().getDueDate();
     return dueDate === 'Today' || dueDate === 'Tomorrow' || dueDate === 'Overdue';
+  },
+
+  sharedFor: function () {
+    var sharingType = this.task.sharingType;
+    var sharingIds = this.task.sharingIds;
+
+    var temp = {
+      private: function () {
+        return 'you';
+      },
+      users: function () {
+        var users = _.map(sharingIds, function (userId) {
+          return HospoHero.username(userId);
+        });
+        return users.join(', ');
+      },
+      area: function () {
+        return Areas.findOne({_id: sharingIds}).name + ' area';
+      },
+      location: function () {
+        return Locations.findOne({_id: sharingIds}).name + ' location';
+      },
+      organization: function () {
+        return Organizations.findOne({_id: sharingIds}).name + ' organization';
+      }
+    };
+
+    return temp[sharingType]();
   }
 });
 
