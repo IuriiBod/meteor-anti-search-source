@@ -69,6 +69,8 @@ Meteor.methods({
       }
     };
 
+    Invitations.remove({areaId: areaId});
+
     removeDocumentsRelatedToArea(areaId);
 
     Areas.remove({_id: areaId});

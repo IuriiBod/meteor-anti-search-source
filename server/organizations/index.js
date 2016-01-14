@@ -19,6 +19,7 @@ Meteor.methods({
 
     usersIdsRelatedToOrganization.forEach(function(userId) {
       if (userId !== organizationOwnerId) {
+        Notifications.remove({$or: [{to: userId}, {createdBy: userId}]});
         Meteor.users.remove({_id: userId});
       }
     });
