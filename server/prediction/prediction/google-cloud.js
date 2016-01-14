@@ -111,11 +111,9 @@ PredictionModelDataGenerator.prototype.getDataForSale = function (dailySale) {
   }
 
   var valuesVector = [
-    dailySale.actualQuantity,
+    localDateMoment.day(),
     weather.temp,
-    weather.main,
-    localDateMoment.format('ddd'),
-    localDateMoment.dayOfYear()
+    dailySale.actualQuantity
   ];
 
   return this._convertValueVectorToString(valuesVector);
