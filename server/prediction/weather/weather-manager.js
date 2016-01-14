@@ -55,23 +55,27 @@ WeatherManager.prototype.updateForecast = function () {
   var needUpdate = !lastForecast || !today.isSame(lastForecast.updatedAt, 'day');
 
   if (needUpdate) {
-    var weatherForecastList = this._weatherConnector.getForecast();
-    var self = this;
+    try {
+      var weatherForecastList = this._weatherConnector.getForecast();
+      var self = this;
 
-    weatherForecastList.forEach(function (forecast) {
-      var forecastMoment = self._getLocalMomentByDate(forecast.date).startOf('day');
+      weatherForecastList.forEach(function (forecast) {
+        var forecastMoment = self._getLocalMomentByDate(forecast.date).startOf('day');
 
-      var forecastEntry = _.extend(forecast, {
-        date: forecastMoment.toDate(),
-        updatedAt: today.toDate(),
-        locationId: locationId
+        var forecastEntry = _.extend(forecast, {
+          date: forecastMoment.toDate(),
+          updatedAt: today.toDate(),
+          locationId: locationId
+        });
+
+        WeatherForecast.update({
+          locationId: locationId,
+          date: TimeRangeQueryBuilder.forDay(forecastMoment, self.location)
+        }, {$set: forecastEntry}, {upsert: true});
       });
-
-      WeatherForecast.update({
-        locationId: locationId,
-        date: TimeRangeQueryBuilder.forDay(forecastMoment, self.location)
-      }, {$set: forecastEntry}, {upsert: true});
-    });
+    } catch (err) {
+      logger.error(err.stack);
+    }
   }
 };
 

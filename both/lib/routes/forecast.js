@@ -1,6 +1,6 @@
 Router.route('salesPrediction', {
-  template: 'salesPredictionPage',
-  path: '/forecast/:year/:week/:category',
+  template: 'salesForecastMainView',
+  path: '/forecast/:date/:category',
   waitOn: function () {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
@@ -16,7 +16,7 @@ Router.route('salesPrediction', {
   },
   data: function () {
     return {
-      date: HospoHero.misc.getWeekDateFromRoute(this)
+      date: HospoHero.getParamsFromRoute('date', this)
     };
   }
 });

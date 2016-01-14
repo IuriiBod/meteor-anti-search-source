@@ -1,12 +1,14 @@
-Template.salesPredictionHeader.onCreated(function () {
-  this.set('currentDate', HospoHero.misc.getWeekDateFromRoute(Router.current()));
-});
-
 Template.salesPredictionHeader.helpers({
+  currentDate: function () {
+    return moment(HospoHero.getParamsFromRoute('date'));
+  },
+
   onDateChanged: function () {
     return function (weekDate) {
-      weekDate.category = Router.current().params.category;
-      Router.go('salesPrediction', weekDate);
+      Router.go('salesPrediction', {
+        date: weekDate,
+        category: HospoHero.getParamsFromRoute('category')
+      });
     };
   }
 });

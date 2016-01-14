@@ -117,113 +117,101 @@ Meteor.methods({
 
   claimShift: function (shiftId) {
     var userId = Meteor.userId();
-    if (!userId) {
-      logger.error("User not found");
-      throw new Meteor.Error(404, "User not found");
+    if (!HospoHero.canUser('be rosted', userId)) {
+      logger.error('User can\'t be rosted onto shifts');
+      throw new Meteor.Error(404, 'User can\'t be rosted onto shifts');
     }
+
     check(shiftId, HospoHero.checkers.ShiftId);
+
     var shift = Shifts.findOne(shiftId);
     if (shift.assignedTo) {
-      logger.error("Shift has already been assigned");
-      throw new Meteor.Error(404, "Shift has already been assigned");
+      logger.error('Shift has been already assigned');
+      throw new Meteor.Error(404, 'Shift has been already assigned');
     }
-    if (userId) {
-      Shifts.update({'_id': shiftId}, {$addToSet: {"claimedBy": userId}});
+
+    if (shift.claimedBy && _.isArray(shift.claimedBy)) {
+      Shifts.update({'_id': shiftId}, {$addToSet: {claimedBy: userId}});
     } else {
-      Shifts.update({'_id': shiftId}, {$set: {"claimedBy": [userId]}});
+      Shifts.update({'_id': shiftId}, {$set: {claimedBy: [userId]}});
     }
-    logger.info("Shift has been claimed ", {"user": userId, "shiftId": shiftId});
+    logger.info('Shift has been claimed', {user: userId, shiftId: shiftId});
 
     var userIds = HospoHero.roles.getUserIdsByAction('approves roster requests');
 
     if (userIds.length) {
-      var notificationSender = new NotificationSender(
-        'Shift claiming',
-        'claim-shift',
-        {
-          date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId),
-          username: HospoHero.username(userId)
+      sendNotification(shift, userIds);
+    }
+  },
+
+  approveClaimShift: function (notificationId, action) {
+    var notification = Notifications.findOne({_id: notificationId});
+    var meta = notification.meta;
+    var shiftId = meta.shiftId;
+    var claimedBy = meta.claimedBy;
+
+    if (action === 'confirm') {
+      Shifts.update({_id: shiftId}, {
+        $set: {
+          assignedTo: claimedBy
         },
-        {
-          interactive: true,
-          helpers: {
-            claimUrl: function (action) {
-              return Router.url('claim', {id: this._notificationId, action: action});
-            }
-          },
-          meta: {
-            shiftId: shiftId,
-            claimedBy: userId
-          }
+        $unset: {
+          claimedBy: 1,
+          rejectedFor: 1
         }
-      );
-
-      userIds.forEach(function (userId) {
-        notificationSender.sendNotification(userId);
       });
+      Notifications.remove({'meta.shiftId': shiftId});
+    } else {
+      Shifts.update({_id: shiftId}, {
+        $pull: {
+          claimedBy: claimedBy
+        },
+        $addToSet: {
+          rejectedFor: claimedBy
+        }
+      });
+      Notifications.remove({_id: notificationId});
     }
-  },
-
-  confirmClaim: function (shiftId, userId) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
-      logger.error("User does not have permission to confirm a shift claim");
-      throw new Meteor.Error(403, "User does not have permission to confirm a shift claim");
-    }
-    var claimedBy = Meteor.users.findOne(userId);
-    if (!claimedBy) {
-      logger.error("Claimed user not found");
-      throw new Meteor.Error(404, "Claimed user not found");
-    }
-    check(shiftId, HospoHero.checkers.ShiftId);
-    var shift = Shifts.findOne(shiftId);
-    if (shift.assignedTo) {
-      logger.error("Shift has already been assigned");
-      throw new Meteor.Error(404, "Shift has already been assigned");
-    }
-    var hasBeenAssigned = Shifts.findOne({
-      startTime: TimeRangeQueryBuilder.forDay(shift.startTime),
-      assignedTo: userId
-    });
-    if (hasBeenAssigned) {
-      logger.error("User already has a shift on this day");
-      throw new Meteor.Error(404, "User already has a shift on this day");
-    }
-    Shifts.update({"_id": shiftId}, {$set: {"assignedTo": userId}, $unset: {claimedBy: 1}});
-    logger.info("Shift claim confirmed ", {"shiftId": shiftId, "user": userId});
-
-    new NotificationSender(
-      'Claim confirmed',
-      'claim-confirmed',
-      {
-        date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId)
-      }
-    ).sendNotification(userId);
-  },
-
-  rejectClaim: function (shiftId, userId) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
-      logger.error("User does not have permission to confirm a shift claim");
-      throw new Meteor.Error(403, "User does not have permission to confirm a shift claim");
-    }
-    check(shiftId, HospoHero.checkers.ShiftId);
-    var shift = Shifts.findOne(shiftId);
-    if (shift.assignedTo == userId) {
-      logger.error("User has been assigned to this shift");
-      throw new Meteor.Error(404, "User has been assigned to this shift");
-    }
-    if (shift.claimedBy.indexOf(userId) < 0) {
-      logger.error("User has not claimed the shift");
-      throw new Meteor.Error(404, "User has not claimed the shift");
-    }
-    Shifts.update({"_id": shiftId}, {$pull: {"claimedBy": userId}, $push: {"rejectedFor": userId}});
-    logger.info("Shift claim rejected ", {"shiftId": shiftId, "user": userId});
-
-    new NotificationSender(
-      'Claim rejected',
-      'claim-rejected',
-      {
-        date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId)
-      }
-    ).sendNotification(userId);
   }
 });
+
+var sendNotification = function (shift, userIds) {
+  var userId = Meteor.userId();
+  var notificationTitle = 'Shift claiming';
+
+  var area = Areas.findOne({_id: shift.relations.areaId});
+  var section = Sections.findOne({_id: shift.section});
+
+  var shiftTime = HospoHero.dateUtils.getDateMomentForLocation(shift.startTime, shift.relations.locationId);
+  var rosterDate = HospoHero.dateUtils.shortDateFormat(shiftTime.startOf('week'));
+  var rosterUrl = Router.url('weeklyRoster', {date: rosterDate});
+
+  var params = {
+    date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId),
+    username: HospoHero.username(userId),
+    areaName: area.name,
+    sectionName: section && section.name || 'open',
+    rosterUrl: rosterUrl
+  };
+
+  var options = {
+    interactive: true,
+    helpers: {
+      confirmClaimUrl: function () {
+        return NotificationSender.actionUrlFor('approveClaimShift', this._notificationId, 'confirm');
+      },
+      rejectClaimUrl: function () {
+        return NotificationSender.actionUrlFor('approveClaimShift', this._notificationId, 'reject');
+      }
+    },
+    meta: {
+      shiftId: shift._id,
+      claimedBy: userId
+    }
+  };
+
+  var notificationSender = new NotificationSender(notificationTitle, 'claim-shift', params, options);
+  userIds.forEach(function (userId) {
+    notificationSender.sendNotification(userId);
+  });
+};

@@ -1,17 +1,13 @@
-//context: mode (?), leaveRequestId (ID), currentFlyout (Flyout)
+//context: mode (?), leaveRequest (leaveRequest), currentFlyout (Flyout)
 Template.viewLeaveRequest.onCreated(function () {
   this.subscribe('leaveRequestsApprovers');
 
   this.changeLeaveRequestStatus = function (status) {
-    var leaveRequestId = this.data.leaveRequestId;
+    var leaveRequest = this.data.leaveRequest;
     status = status ? 'approved' : 'declined';
-    Meteor.call('changeLeaveRequestStatus', leaveRequestId, status, HospoHero.handleMethodResult(function () {
+    Meteor.call('changeLeaveRequestStatus', leaveRequest._id, status, HospoHero.handleMethodResult(function () {
       Router.go('home');
     }));
-  };
-
-  this.getCurrentLeaveRquest = function () {
-    return LeaveRequests.findOne({_id: this.data.leaveRequestId});
   };
 });
 
@@ -38,7 +34,7 @@ Template.viewLeaveRequest.onRendered(function () {
 
 Template.viewLeaveRequest.helpers({
   leaveRequest: function () {
-    return Template.instance().getCurrentLeaveRquest();
+    return this.leaveRequest;
   },
 
   isReviewMode: function (leaveRequest) {
@@ -46,8 +42,7 @@ Template.viewLeaveRequest.helpers({
   },
 
   canBeApprovedOrDeclined: function (isReviewMode) {
-    var leaveRequest = Template.instance().getCurrentLeaveRquest();
-    return isReviewMode && !leaveRequest.approved && !leaveRequest.declined;
+    return isReviewMode && !this.leaveRequest.approved && !this.leaveRequest.declined;
   },
 
   managers: function () {

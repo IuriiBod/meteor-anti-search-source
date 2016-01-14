@@ -1,3 +1,4 @@
 Meteor.startup(function () {
-  return Meteor.subscribe('organizationInfo');
+  Meteor.subscribe('organizationInfo');
+  Meteor.subscribe('todayTasks');
 });

@@ -17,24 +17,11 @@ Router.route('signUp', {
 });
 
 
-Router.route('pinLock', {
-  path: '/pinLock/:userId',
-  layoutTemplate: 'blankLayout',
-  template: 'pinLock',
-  waitOn: function () {
-    return Meteor.subscribe('profileUser', this.params.userId);
-  },
-  data: function () {
-    return {
-      backwardUrl: this.params.query.backwardUrl
-    };
-  }
-});
-
 Router.route('logout', {
   'path': '/logout',
-  data: function () {
-    return Meteor.logout();
+  action: function () {
+    StaleSession._removeTokenById(Meteor.userId());
+    Meteor.logout();
   }
 });
 
@@ -58,9 +45,13 @@ Router.route('switchUser', {
   layoutTemplate: 'blankLayout',
   template: 'switchUserView',
   waitOn: function () {
-    var usersIds = Session.get('loggedUsers') || {};
-    usersIds = _.keys(usersIds);
-    return Meteor.subscribe('selectedUsersList', usersIds);
+    return Meteor.subscribe('selectedUsersList', StaleSession.getStoredUsersIds());
+  },
+  data: function () {
+    StaleSession._lockWithPin();
+    return {
+      users: Meteor.users.find()
+    };
   }
 });
 
@@ -78,5 +69,28 @@ Router.route('profile', {
     ];
   },
   data: function () {
+  }
+});
+
+
+Router.route('forgotPassword', {
+  path: '/forgotPassword',
+  layoutTemplate: 'blankLayout',
+  template: 'forgotPassword'
+});
+
+
+Router.route('pinLock', {
+  path: '/pin-lock/:userId',
+  layoutTemplate: 'blankLayout',
+  template: 'pinLock',
+  waitOn: function () {
+    return Meteor.subscribe('profileUser', this.params.userId);
+  },
+  data: function () {
+    return {
+      userId: this.params.userId,
+      backwardUrl: this.params.query.backwardUrl
+    };
   }
 });

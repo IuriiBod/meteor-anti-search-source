@@ -10,14 +10,14 @@ var ShiftDocument = Match.Where(function (shift) {
     createdBy: HospoHero.checkers.OptionalNullableMongoId,
     assignedTo: HospoHero.checkers.OptionalNullableMongoId,
     assignedBy: HospoHero.checkers.OptionalNullableMongoId,
-    jobs: Match.Optional([HospoHero.checkers.MongoId]),
     status: Match.Optional(Match.OneOf('draft', 'started', 'finished')),
     published: Match.Optional(Boolean),
     publishedOn: Match.Optional(Number),
     startedAt: Match.Optional(Date),
     finishedAt: Match.Optional(Date),
     order: Match.Optional(Number),
-    relations: Match.Optional(HospoHero.checkers.Relations)
+    relations: Match.Optional(HospoHero.checkers.Relations),
+    claimedBy: Match.Optional([HospoHero.checkers.MongoId])
   });
 
   var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(shift, Shifts);

@@ -121,7 +121,6 @@ Meteor.methods({
 
     var defaultShiftProperties = {
       createdBy: Meteor.userId(),
-      jobs: [],
       status: "draft",
       published: isRosterPublished,
       order: shiftsCount,
@@ -172,9 +171,9 @@ Meteor.methods({
     var shift = Shifts.findOne(shiftToDeleteId);
 
     if (shift) {
-      if (shift.assignedTo || shift.jobs.length > 0) {
-        logger.error("Can't delete a shift with assigned worker or jobs", {"id": shiftToDeleteId});
-        throw new Meteor.Error(404, "Can't delete a shift with assigned worker or jobs");
+      if (shift.assignedTo) {
+        logger.error("Can't delete a shift with assigned worker", {"id": shiftToDeleteId});
+        throw new Meteor.Error(404, "Can't delete a shift with assigned worker");
       }
 
       Shifts.remove({_id: shiftToDeleteId});

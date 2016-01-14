@@ -20,8 +20,21 @@ Meteor.methods({
   resetForecastData: function () {
     checkOrganizationOwner(this.userId);
     var currentArea = HospoHero.getCurrentArea(this.userId);
-    var importer = new ActualSalesImporter(currentArea.locationId);
-    importer._resetActualSales();
+
+    //remove only sales with actual quantity
+    DailySales.remove({
+      predictionQuantity: {$exists: false},
+      'relations.locationId': currentArea.locationId
+    });
+
+    DailySales.update({
+      'relations.locationId': currentArea.locationId
+    }, {
+      $unset: {
+        actualQuantity: ''
+      }
+    }, {multi: true});
+
     return true;
   },
 

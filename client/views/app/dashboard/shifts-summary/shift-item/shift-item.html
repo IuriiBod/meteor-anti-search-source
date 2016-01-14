@@ -13,7 +13,11 @@
           {{#if hadBeenRejected}}
             <a href="#" class="btn btn-danger btn-xs">Rejected</a>
           {{else}}
-            <a href="#" class="btn btn-primary btn-xs claim-shift-button">Claim</a>
+            {{#if isUnavailable}}
+              <a href="#" class="btn btn-default btn-xs unavailable-button">Unavailable</a>
+            {{else}}
+              <a href="#" class="btn btn-primary btn-xs claim-shift-button">Claim</a>
+            {{/if}}
           {{/if}}
         {{/if}}
       </td>

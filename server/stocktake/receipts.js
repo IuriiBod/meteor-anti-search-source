@@ -21,7 +21,7 @@ Meteor.methods({
       logger.error("Order method should exist");
       throw new Meteor.Error("Order method should exist");
     }
-    if (!info.deliveryDate) {
+    if (!info.expectedDeliveryDate) {
       logger.error("Expected delivery date should exist");
       throw new Meteor.Error("Expected delivery date should exist");
     }
@@ -86,7 +86,7 @@ Meteor.methods({
             $set: {
               "orderedThrough": orderedMethod,
               "orderPlacedBy": Meteor.userId(),
-              "expectedDeliveryDate": info.deliveryDate
+              "expectedDeliveryDate": info.expectedDeliveryDate
             }
           }
         );
@@ -100,13 +100,13 @@ Meteor.methods({
       };
       //generating order receipt
       var id = OrderReceipts.insert({
-        "date": Date.now(),
+        "date": new Date(),
         "version": version,
         "stocktakeDate": stocktakeMain.stocktakeDate,
         "supplier": supplierId,
         "orderedThrough": orderedMethod,
         "orderPlacedBy": Meteor.userId(),
-        "expectedDeliveryDate": info.deliveryDate,
+        "expectedDeliveryDate": info.expectedDeliveryDate,
         "received": false,
         "receivedDate": null,
         "invoiceFaceValue": 0,
@@ -120,8 +120,8 @@ Meteor.methods({
       {
         $set: {
           "orderedThrough": orderedMethod,
-          "orderedOn": Date.now(),
-          "expectedDeliveryDate": info.deliveryDate,
+          "orderedOn": new Date(),
+          "expectedDeliveryDate": info.expectedDeliveryDate,
           "received": false,
           "receivedDate": null,
           "orderReceipt": id
@@ -181,7 +181,7 @@ Meteor.methods({
           throw new Meteor.Error(404, "Stocktake main does not exist");
         }
         var doc = {
-          "date": Date.now(),
+          "date": new Date(),
           "version": info.version,
           "stocktakeDate": stocktakeMain.stocktakeDate,
           "supplier": info.supplier,

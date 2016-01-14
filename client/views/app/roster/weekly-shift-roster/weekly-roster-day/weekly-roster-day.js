@@ -54,7 +54,7 @@ Template.weeklyRosterDay.helpers({
     }).count();
   },
   shiftDateFormat: function (date) {
-    return moment(date).format('YYYY-MM-DD');
+    return HospoHero.dateUtils.shortDateFormat(moment(date));
   }
 });
 

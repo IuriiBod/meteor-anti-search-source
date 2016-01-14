@@ -1,25 +1,17 @@
 Template.submitEditJobItem.onCreated(function () {
-  var self = this;
 
-  var initReactiveVars = function () {
-    self.data.jobItem = self.data.jobItem || {};
+  var jobItem = this.data.jobItem;
 
-    // Write data into reactive var
-    self.selectedJobTypeId = new ReactiveVar(self.data.jobItem.type || JobTypes.findOne()._id);
-    self.selectedFrequency = new ReactiveVar(self.data.jobItem.frequency || 'daily');
-    self.addedIngredientsToThisJob = new ReactiveVar(self.data.jobItem.ingredients || []);
-    self.repeatAt = new ReactiveVar(self.data.jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
-    self.checklistItems = new ReactiveVar(self.data.jobItem.checklist || []);
-  };
+  // Write data into reactive var
+  this.selectedJobTypeId = new ReactiveVar(jobItem.type || JobTypes.findOne()._id);
+  this.selectedFrequency = new ReactiveVar(jobItem.frequency || 'daily');
+  this.addedIngredientsToThisJob = new ReactiveVar(jobItem.ingredients || []);
+  this.repeatAt = new ReactiveVar(jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
+  this.checklistItems = new ReactiveVar(jobItem.checklist || []);
 
-  initReactiveVars();
-
-  var selectedJobType = JobTypes.findOne({_id: self.selectedJobTypeId.get()});
-  this.isPrep = function () {
-    return selectedJobType.name === 'Prep';
-  };
-  this.isRecurring = function () {
-    return selectedJobType.name === 'Recurring';
+  this.isSelectedJobType = function (typeName) {
+    var selectedJobType = JobTypes.findOne({_id: this.selectedJobTypeId.get()});
+    return selectedJobType.name === typeName;
   };
 });
 
@@ -73,10 +65,10 @@ Template.submitEditJobItem.helpers({
     return this.mode === 'edit';
   },
   isRecurring: function () {
-    return Template.instance().isRecurring();
+    return Template.instance().isSelectedJobType('Recurring');
   },
   isPrep: function () {
-    return Template.instance().isPrep();
+    return Template.instance().isSelectedJobType('Prep');
   },
 
   jobTypes: function () {
@@ -108,7 +100,7 @@ Template.submitEditJobItem.helpers({
 
   startsOn: function () {
     var startsOn = moment(this.jobItem.startsOn) || moment();
-    return startsOn.format('YYYY-MM-DD');
+    return HospoHero.dateUtils.shortDateFormat(startsOn);
   },
   endsOn: function () {
     var endsOn = moment().add(1, 'days');
@@ -116,7 +108,7 @@ Template.submitEditJobItem.helpers({
       endsOn = moment(this.jobItem.endsOn.lastDate)
         || moment(this.jobItem.startsOn).add(1, 'days');
     }
-    return endsOn.format('YYYY-MM-DD');
+    return HospoHero.dateUtils.shortDateFormat(endsOn);
   },
   week: function () {
     var days = ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
@@ -241,12 +233,12 @@ Template.submitEditJobItem.events({
       assignCommonFields(jobItem);
 
       // for recurring
-      if (tmpl.isRecurring()) {
+      if (tmpl.isSelectedJobType('Recurring')) {
         assignFieldsForRecurring(jobItem);
       }
 
       // for prep
-      if (tmpl.isPrep()) {
+      if (tmpl.isSelectedJobType('Prep')) {
         assignFieldsForPrep(jobItem);
       }
 
