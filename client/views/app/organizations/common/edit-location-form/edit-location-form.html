@@ -41,9 +41,23 @@
     {{> locationTimeSelect time=openingTime label="Opening Time" hoursName="openingHour" minutesName="openingMinutes"}}
     {{> locationTimeSelect time=closingTime label="Closing Time" hoursName="closingHour" minutesName="closingMinutes"}}
 
-    <button type="submit" class="btn btn-primary btn-full-width show-pos-settings-btn">
-      POS Settings
-    </button><br/>
+    <div class="ibox collapsed">
+      <div class="ibox-title">
+        <h5>POS Settings</h5>
+        <div class="ibox-tools">
+          <a class="collapse-link show-pos-settings">
+            {{#if isPosSettingsShown}}
+              <i class="fa fa-chevron-down"></i>
+            {{else}}
+              <i class="fa fa-chevron-up"></i>
+            {{/if}}
+          </a>
+        </div>
+      </div>
+      <div class="ibox-content border-bottom" style="{{#if isPosSettingsShown}}display:block{{/if}}">
+        {{> posSettings locationDoc=locationDoc}}
+      </div>
+    </div>
 
     <div class="form-group">
       <div class="btn-group col-xs-12">
