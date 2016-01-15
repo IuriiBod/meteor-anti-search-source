@@ -1,7 +1,6 @@
 //context: year (number), week (number), onDateChanged (Function)
 Template.weekPicker.onCreated(function () {
-  this.date = this.data.date;
-  this.oldDate = getWeekDateByMoment(this.date);
+  this.oldDate = getWeekDateByMoment(this.data.date);
 });
 
 
@@ -37,7 +36,6 @@ Template.weekPicker.onRendered(function () {
     var date = getWeekDateByMoment(currentMoment);
 
     if (!this.isSameAsOldWeekDate(date)) {
-      this.date = date;
       if (_.isFunction(this.data.onDateChanged)) {
         this.data.onDateChanged(date);
       }
@@ -47,7 +45,7 @@ Template.weekPicker.onRendered(function () {
 
   //init bootstrap date picker
 
-  var initialPlainDate = this.date;
+  var initialPlainDate = this.data.date;
   this.datePicker = this.$(".date-picker-input");
 
   this.datePicker.datepicker({
@@ -59,10 +57,6 @@ Template.weekPicker.onRendered(function () {
 
 
 Template.weekPicker.helpers({
-  date: function () {
-    return Template.instance().date;
-  },
-
   weekDateStr: function (date) {
     var weekStartEnd = moment(date);
     var firstDay = moment(weekStartEnd).startOf('isoweek');
