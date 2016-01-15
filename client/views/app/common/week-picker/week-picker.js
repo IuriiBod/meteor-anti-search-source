@@ -51,10 +51,7 @@ Template.weekPicker.onRendered(function () {
   this.datePicker = this.$(".date-picker-input");
 
   this.datePicker.datepicker({
-    calendarWeeks: true,
-    format: 'yyyy-mm-dd',
-    todayHighlight: true,
-    weekStart: 1
+    format: 'yyyy-mm-dd'
   });
 
   this.datePicker.datepicker('setDate', initialPlainDate.toDate());

@@ -4,9 +4,7 @@ Template.unavailabiliiesDatepicker.onRendered(function () {
 
   this.datepicker.datepicker({
     format: 'dd/mm/yy',
-    startDate: defaultDate,
-    autoclose: true,
-    todayHighlight: true
+    startDate: defaultDate
   });
   this.datepicker.datepicker('setDate', defaultDate);
 });

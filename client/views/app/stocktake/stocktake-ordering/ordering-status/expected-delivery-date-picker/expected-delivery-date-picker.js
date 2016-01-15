@@ -2,11 +2,7 @@ Template.expectedDeliveryDatePicker.onRendered(function () {
   //initialize date picker
   var datePickerElement = this.$(".date-picker-input");
   datePickerElement.datepicker({
-    calendarWeeks: true,
-    format: 'yyyy-mm-dd',
-    todayHighlight: true,
-    autoclose: true,
-    weekStart: 1
+    format: 'yyyy-mm-dd'
   });
   this.datePicker = datePickerElement;
   this.datePicker.datepicker('setDate', this.data.deliveryDate);

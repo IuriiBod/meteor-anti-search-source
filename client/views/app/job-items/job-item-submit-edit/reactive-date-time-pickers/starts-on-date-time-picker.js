@@ -1,6 +1,5 @@
 Template.reactiveDateTimePicker.onRendered(function () {
   this.$('.' + this.data.selector).datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true
+    format: 'yyyy-mm-dd'
   });
 });

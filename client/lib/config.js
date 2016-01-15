@@ -9,3 +9,11 @@ Accounts.ui.config({
 
 //x-editable config
 $.fn.editable.defaults.mode = 'inline';
+
+var datepickerDefaults = {
+  autoclose: true,
+  todayHighlight: true,
+  calendarWeeks: true,
+  weekStart: 1
+};
+_.extend($.fn.datepicker.defaults, datepickerDefaults);

@@ -13,9 +13,7 @@ Template.taskEditor.onRendered(function () {
   this.datepicker  = this.$('.date-picker-input');
   this.datepicker .datepicker({
     format: 'D dd/mm/yy',
-    startDate: new Date(),
-    todayHighlight: true,
-    weekStart: 1
+    startDate: new Date()
   });
 
   this.datepicker.datepicker('setDate', this.dueDate.get());
