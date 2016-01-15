@@ -131,6 +131,34 @@ Template.taskEditor.events({
       return taggedUsers;
     };
 
+    var getTaskDurationInMinutes = function (durationString) {
+      var durationRegEx = /(\d+)\s?(\S+)/;
+
+      var duration = durationString.match(durationRegEx);
+      var timeUnitsNumber = duration[1];
+      var timeUnitName = duration[2];
+
+      var timeUnits = {
+        hours: {
+          names: ['h', 'hour', 'hours'],
+          multiplier: 60
+        },
+        minutes: {
+          names: ['m', 'min', 'minute', 'minutes'],
+          multiplier: 1
+        }
+      };
+
+      Object.keys(timeUnits).forEach(function(key) {
+        var timeUnit = timeUnits[key];
+        if (timeUnit.names.indexOf(timeUnitName) > -1) {
+          timeUnitsNumber *= timeUnit.multiplier;
+        }
+      });
+
+      return timeUnitsNumber;
+    };
+
 
     event.preventDefault();
     var newTaskInfo = HospoHero.misc.getValuesFromEvent(event, [
@@ -141,6 +169,11 @@ Template.taskEditor.events({
       {
         name: 'new-task-description',
         newName: 'description'
+      },
+      {
+        name: 'task-duration',
+        newName: 'duration',
+        transform: getTaskDurationInMinutes
       }
     ], true);
 
