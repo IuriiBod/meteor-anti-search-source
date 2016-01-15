@@ -14,26 +14,31 @@ Meteor.methods({
     //updating user in Meteor.users collection requires user id
     var organizationOwnerId = Meteor.userId();
     var usersIdsRelatedToOrganization = Meteor.users
-        .find({'relations.organizationId': organizationId}, {fields: {_id: 1}})
-        .map(function (user) { return user._id });
+      .find({'relations.organizationId': organizationId}, {fields: {_id: 1}})
+      .map(function (user) {
+        return user._id
+      });
 
-    usersIdsRelatedToOrganization.forEach(function(userId) {
+    usersIdsRelatedToOrganization.forEach(function (userId) {
       if (userId !== organizationOwnerId) {
+        Notifications.remove({$or: [{to: userId}, {createdBy: userId}]});
         Meteor.users.remove({_id: userId});
       }
     });
 
     var locationsIdsRelatedToOrganization = Locations
-        .find({organizationId: organizationId}, {fields: {_id: 1}})
-        .map(function (location) { return location._id; });
+      .find({organizationId: organizationId}, {fields: {_id: 1}})
+      .map(function (location) {
+        return location._id;
+      });
 
-    locationsIdsRelatedToOrganization.forEach( function (id) {
+    locationsIdsRelatedToOrganization.forEach(function (id) {
       Meteor.call('deleteLocation', id);
     });
 
     Meteor.users.update({
       _id: organizationOwnerId
-    },{
+    }, {
       $set: {'relations.organizationId': null}
     });
 
