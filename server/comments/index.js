@@ -34,7 +34,7 @@ Meteor.methods({
       if (reference.name) {
         return reference.name;
       } else if (refType === 'taskItem') {
-        return reference.title;
+        return ' task ' + reference.title;
       } else if (refType === 'stockOrders') {
         return 'stocktake from ' + HospoHero.dateUtils.dateFormat(reference.date);
       } else {
