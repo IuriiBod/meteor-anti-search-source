@@ -1,21 +1,22 @@
 Template.taskEditor.onCreated(function () {
   this.sharingType = new ReactiveVar(this.data.task.sharingType || 'private');
   this.sharingIds = new ReactiveVar(this.data.task.sharingIds || Meteor.userId());
+
+  var dueDate = this.data.task.dueDate || new Date();
+  this.dueDate = new ReactiveVar(dueDate);
 });
 
 
 Template.taskEditor.onRendered(function () {
   this.$('.new-task-title').focus();
 
-  this.$('.datepicker').datetimepicker({
-    format: 'ddd DD/MM/YY',
-    minDate: moment().subtract(1, 'day')
+  this.datepicker  = this.$('.date-picker-input');
+  this.datepicker .datepicker({
+    format: 'D dd/mm/yy',
+    startDate: new Date()
   });
 
-  this.datepicker = this.$('.datepicker').data("DateTimePicker");
-
-  var dueDate = this.data.task.dueDate || new Date();
-  this.datepicker.date(moment(dueDate));
+  this.datepicker.datepicker('setDate', this.dueDate.get());
 });
 
 
@@ -78,13 +79,22 @@ Template.taskEditor.helpers({
 
   displayUserSelector: function () {
     return Template.instance().sharingType.get() === 'users';
+  },
+
+  taskDate: function () {
+    return Template.instance().dueDate.get();
   }
 });
 
 
 Template.taskEditor.events({
-  'click .open-datetimepicker': function (event, tmpl) {
-    tmpl.datepicker.show();
+  'click .date-picker-button': function (event, tmpl) {
+    tmpl.datepicker.datepicker('show');
+  },
+
+  'changeDate .date-picker-input': function (event, tmpl) {
+    Template.instance().dueDate.set(event.date);
+    tmpl.datepicker.datepicker('hide');
   },
 
   'submit form': function (event, tmpl) {
@@ -137,7 +147,7 @@ Template.taskEditor.events({
 
       var additionalTaskParams = {
         done: false,
-        dueDate: tmpl.datepicker.date().toDate(),
+        dueDate: tmpl.datepicker.datepicker('getDate'),
         sharingType: tmpl.sharingType.get(),
         sharingIds: tmpl.sharingIds.get(),
         reference: getReference()

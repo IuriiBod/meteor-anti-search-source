@@ -1,22 +1,21 @@
 Template.expectedDeliveryDatePicker.onRendered(function () {
   //initialize date picker
   var datePickerElement = this.$(".date-picker-input");
-  datePickerElement.datetimepicker({
-    calendarWeeks: true,
-    format: 'YYYY-MM-DD'
+  datePickerElement.datepicker({
+    format: 'yyyy-mm-dd'
   });
-  this.datePicker = datePickerElement.data("DateTimePicker");
-  this.datePicker.date(moment(this.data.deliveryDate));
+  this.datePicker = datePickerElement;
+  this.datePicker.datepicker('setDate', this.data.deliveryDate);
 });
 
 
 Template.expectedDeliveryDatePicker.events({
   'click .date-picker-button': function (event, tmpl) {
-    tmpl.datePicker.toggle();
+    tmpl.datePicker.datepicker('show');
   },
 
-  'dp.change .date-picker-input': function (event, tmpl) {
-    var date = tmpl.datePicker.date().toDate();
+  'changeDate .date-picker-input': function (event, tmpl) {
+    var date = event.date;
     var receipt = tmpl.data.receipt;
 
     if (!moment(date).isSame(receipt.expectedDeliveryDate, 'day')) {

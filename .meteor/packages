@@ -42,7 +42,6 @@ zimme:iron-router-active
 okgrow:router-autoscroll
 dbarrett:dropzonejs
 percolate:intercom
-tsega:bootstrap3-datetimepicker
 kevohagan:sweetalert
 mrt:jquery-ui-sortable
 hospohero:stale-session
@@ -71,10 +70,9 @@ trsdln:flyouts
 russ:weather-icons
 fortawesome:fontawesome
 
-momentjs:moment
-jss:moment-timezone
 joshowens:timezone-picker
 jss:blaze-states
 natestrauser:animate-css
 jss:anti-search-source
 trsdln:modals
+jss:moment-timezone
