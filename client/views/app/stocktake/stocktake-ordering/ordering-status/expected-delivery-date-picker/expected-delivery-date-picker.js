@@ -1,22 +1,24 @@
 Template.expectedDeliveryDatePicker.onRendered(function () {
   //initialize date picker
   var datePickerElement = this.$(".date-picker-input");
-  datePickerElement.datetimepicker({
+  datePickerElement.datepicker({
     calendarWeeks: true,
-    format: 'YYYY-MM-DD'
+    format: 'yyyy-mm-dd',
+    todayHighlight: true,
+    weekStart: 1
   });
-  this.datePicker = datePickerElement.data("DateTimePicker");
-  this.datePicker.date(moment(this.data.deliveryDate));
+  this.datePicker = datePickerElement;
+  this.datePicker.datepicker('setDate', this.data.deliveryDate);
 });
 
 
 Template.expectedDeliveryDatePicker.events({
   'click .date-picker-button': function (event, tmpl) {
-    tmpl.datePicker.toggle();
+    tmpl.datePicker.datepicker('show');
   },
 
-  'dp.change .date-picker-input': function (event, tmpl) {
-    var date = tmpl.datePicker.date().toDate();
+  'changeDate .date-picker-input': function (event, tmpl) {
+    var date = event.date;
     var receipt = tmpl.data.receipt;
 
     if (!moment(date).isSame(receipt.expectedDeliveryDate, 'day')) {
@@ -25,7 +27,9 @@ Template.expectedDeliveryDatePicker.events({
         version: receipt.version,
         supplier: receipt.supplierId
       };
-      Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult());
+      Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult(function () {
+        tmpl.datePicker.datepicker('hide');
+      }));
     }
   }
 });
