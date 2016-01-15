@@ -1,0 +1,22 @@
+<template name="userPopup">
+  <div class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <img src="{{profilePicture _id}}" alt="Profile photo of {{username _id}}" class="user-photo-medium"
+                   title="{{username _id}}"/>
+            </div>
+            <div class="col-sm-9">
+              <h3>{{username _id}}</h3>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-default close-button" data-dismiss="modal">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
