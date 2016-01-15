@@ -84,7 +84,12 @@ Template.areaSettings.events({
   },
 
   'click .remove-user-from-area': function (event, tmpl) {
-    var userId = this._id;
-    Meteor.call('removeUserFromArea', userId, tmpl.data.areaId, HospoHero.handleMethodResult());
+    //var userId = this._id;
+    //Meteor.call('removeUserFromArea', userId, tmpl.data.areaId, HospoHero.handleMethodResult());
+  },
+  'click .user-profile-image-container': function (event, tmpl) {
+    var user = Blaze.getData(event.target);
+    console.log(user);
+    Modal.show('userPopup', user);
   }
 });
