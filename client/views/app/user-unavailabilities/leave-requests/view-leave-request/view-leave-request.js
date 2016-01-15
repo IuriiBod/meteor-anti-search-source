@@ -21,13 +21,14 @@ Template.viewLeaveRequest.onRendered(function () {
   // Events for dateTimePicker
   // Set minDate for end-date-picker, that equals date of start-date-picker,
   // and change date on end-time-picker, if current date less than minDate
-  self.$(".start-date-picker").on("dp.change", function (e) {
-    var endDatePicker = self.$('.end-date-picker').data("DateTimePicker");
-    endDatePicker.minDate(e.date.add(1, 'day'));
+  self.$(".start-date-picker").on("changeDate", function (event) {
+    var startDate = moment(event.date).add(1, 'day').toDate();
+    var endDatePicker = self.$('.end-date-picker');
 
-    if (endDatePicker.minDate() > endDatePicker.date()) {
-      endDatePicker.date(endDatePicker.minDate());
+    if (startDate > endDatePicker.datepicker('getDate')) {
+      endDatePicker.datepicker('setDate', startDate);
     }
+    endDatePicker.datepicker('setStartDate', startDate);
   });
 });
 
@@ -59,7 +60,7 @@ Template.viewLeaveRequest.helpers({
   },
 
   defaultEndDate: function () {
-    return moment().add(1, 'day');
+    return moment().add(1, 'day').toDate();
   }
 });
 
@@ -68,14 +69,14 @@ Template.viewLeaveRequest.events({
   'submit .leave-request-form': function (event, tmpl) {
     event.preventDefault();
 
-    var startDate = tmpl.$('.start-date-picker').data('DateTimePicker').date();
-    var endDate = tmpl.$('.end-date-picker').data('DateTimePicker').date();
+    var startDate = tmpl.$('.start-date-picker').datepicker('getDate');
+    var endDate = tmpl.$('.end-date-picker').datepicker('getDate');
     var notifyManagerId = tmpl.$('.notify-manager-select').val() || '';
     var comment = tmpl.$('.comment-input').val() || '';
 
     var newLeaveRequest = {
-      startDate: startDate.toDate(),
-      endDate: endDate.toDate(),
+      startDate: startDate,
+      endDate: endDate,
       notifyManagerId: notifyManagerId,
       comment: comment
     };
