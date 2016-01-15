@@ -6,7 +6,7 @@ Template.addNewUnavailability.onCreated(function () {
   this.set('endTime', moment().add(1, 'hours').toDate());
 
   this.getValuesFromTemplate = function () {
-    var date = this.$('.date-picker').data('DateTimePicker').date();
+    var date = this.$('.date-picker').datepicker('getDate');
     var startTime = this.get('startTime');
     var endTime = this.get('endTime');
     var repeat = this.$('.repeat-select').val();

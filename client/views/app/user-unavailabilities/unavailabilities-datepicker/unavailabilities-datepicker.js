@@ -1,17 +1,19 @@
 Template.unavailabiliiesDatepicker.onRendered(function () {
-  this.dateFormat = 'DD/MM/YY';
-  this.defaultDate = this.data.defaultDate || moment();
+  var defaultDate = this.data.defaultDate || new Date();
+  this.datepicker = this.$('.' + this.data.datepickerClass);
 
-  this.$('.' + this.data.datepickerClass).datetimepicker({
-    format: this.dateFormat,
-    minDate: this.defaultDate,
-    defaultDate: this.defaultDate
+  this.datepicker.datepicker({
+    format: 'dd/mm/yy',
+    startDate: defaultDate,
+    autoclose: true,
+    todayHighlight: true
   });
+  this.datepicker.datepicker('setDate', defaultDate);
 });
 
 Template.unavailabiliiesDatepicker.events({
-  'click .open-datetimepicker': function () {
+  'click .open-datepicker': function () {
     var tmpl = Template.instance();
-    tmpl.$('.' + this.datepickerClass).data("DateTimePicker").show();
+    tmpl.datepicker.datepicker('show');
   }
 });
