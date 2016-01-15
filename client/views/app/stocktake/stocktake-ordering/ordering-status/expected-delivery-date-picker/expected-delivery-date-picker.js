@@ -5,6 +5,7 @@ Template.expectedDeliveryDatePicker.onRendered(function () {
     calendarWeeks: true,
     format: 'yyyy-mm-dd',
     todayHighlight: true,
+    autoclose: true,
     weekStart: 1
   });
   this.datePicker = datePickerElement;
@@ -27,9 +28,7 @@ Template.expectedDeliveryDatePicker.events({
         version: receipt.version,
         supplier: receipt.supplierId
       };
-      Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult(function () {
-        tmpl.datePicker.datepicker('hide');
-      }));
+      Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult());
     }
   }
 });
