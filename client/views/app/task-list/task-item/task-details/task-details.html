@@ -1,10 +1,17 @@
-<template name="taskDescriptionAndReference">
+<template name="taskDetails">
   <span class="task-info">
     {{#if description}}
       <a data-toggle="collapse" href="#{{_id}}" aria-expanded="false" class="text-info">
         <i class="fa fa-bars"></i>
       </a>
     {{/if}}
+
+    <a data-toggle="collapse" href="#comments-{{_id}}" aria-expanded="false" class="count-info text-primary">
+      <i class="fa fa-comment"></i>
+      {{#if commentsCount}}
+        <span class="label">{{commentsCount}}</span>
+      {{/if}}
+    </a>
 
     {{#if referenceObject}}
       <span class="pull-right">
@@ -22,5 +29,11 @@
         </div>
       </div>
     {{/if}}
+
+    <div class="collapse" id="comments-{{_id}}">
+      <div class="well">
+        {{> commentsPanel id=_id type='taskItem'}}
+      </div>
+    </div>
   </span>
 </template>
