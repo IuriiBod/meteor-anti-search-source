@@ -55,3 +55,21 @@ Router.route('submitMenuItem', {
   }
 });
 
+Router.route('menuItemsRankReport', {
+  path: '/menuItems/items-rank-report',
+  template: 'menuListRankReport',
+  waitOn: function() {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    var formattedDate = TimeRangeQueryBuilder.forDay(HospoHero.dateUtils.formatDate(moment('Wed Sep 30 2015 13:37:22 GMT+0200 (EET)'), 'YYYY-MM-DD'));
+    console.log(formattedDate);
+    return [
+      Meteor.subscribe('menuList', currentAreaId, 'all', 'all'),
+      Meteor.subscribe('dailySales', formattedDate, currentAreaId),
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('jobItems', null, currentAreaId)
+
+      //Meteor.subscribe('menuList', currentAreaId, this.params.category, this.params.status.toLowerCase()),
+    ];
+  }
+});
+

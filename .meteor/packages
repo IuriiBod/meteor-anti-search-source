@@ -22,7 +22,7 @@ jquery
 email
 underscore
 random
-micah:google-cloud
+#micah:google-cloud
 jss:through
 votercircle:winston
 iron:router
@@ -40,7 +40,7 @@ less
 twbs:bootstrap
 zimme:iron-router-active
 okgrow:router-autoscroll
-dbarrett:dropzonejs
+#dbarrett:dropzonejs
 percolate:intercom
 kevohagan:sweetalert
 mrt:jquery-ui-sortable
@@ -76,3 +76,4 @@ natestrauser:animate-css
 jss:anti-search-source
 trsdln:modals
 jss:moment-timezone
+jquery-sparkline

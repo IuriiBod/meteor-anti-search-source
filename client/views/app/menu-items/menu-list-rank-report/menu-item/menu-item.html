@@ -1,0 +1,17 @@
+<template name="menuItemReport">
+  <td>
+    {{item.name}}
+  </td>
+  <td><span class="sparkline"></span></td>
+  <td>-</td>
+  <td>{{itemSalesQuantity}}</td>
+  <td>${{item.salesPrice}}</td>
+  <td>${{itemTotalPriceFromSales}}</td>
+  <td>{{menuItemStats.totalPrepCost}}</td>
+  <td></td>
+  <td>{{menuItemStats.totalIngCost}}</td>
+  <td></td>
+  <td>{{menuItemStats.tax}}</td>
+  <td>{{menuItemStats.contribution}}</td>
+  <td>{{menuItemStats.totalContribution}}</td>
+</template>
