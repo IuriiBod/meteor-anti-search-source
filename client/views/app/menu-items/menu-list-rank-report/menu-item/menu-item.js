@@ -13,11 +13,11 @@ Template.menuItemReport.onRendered(function() {
 Template.menuItemReport.helpers({
   itemSalesQuantity: function() {
     var menuItemDailySales = Template.instance().getItemSalesQuantity();
-    return menuItemDailySales && menuItemDailySales.actualQuantity || 0;
+    return menuItemDailySales && menuItemDailySales.predictionQuantity || 0;
   },
   itemTotalPriceFromSales: function() {
     var menuItemDailySales = Template.instance().getItemSalesQuantity();
-    return menuItemDailySales && menuItemDailySales.actualQuantity * this.item.salesPrice || 0;
+    return menuItemDailySales && menuItemDailySales.predictionQuantity * this.item.salesPrice || 0;
   },
 
   menuItemStats: function () {
@@ -50,7 +50,7 @@ Template.menuItemReport.helpers({
     };
 
     result.contribution = round(menu.salesPrice - result.totalPrepCost - result.totalIngCost - result.tax);
-    result.totalContribution = round(result.contribution * Template.instance().getItemSalesQuantity().actualQuantity);
+    result.totalContribution = round(result.contribution * Template.instance().getItemSalesQuantity().predictionQuantity);
     console.log(result);
     return result;
   }

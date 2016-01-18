@@ -1,5 +1,12 @@
 Template.menuListRankReport.helpers({
   menuItems: function() {
-    return MenuItems.find();
+    var items = MenuItems.find({}, {sort: {rank: 1}}).fetch();
+    _.map(items, function(item) {
+      if (!item.rank) {
+        item.rank = 0;
+      }
+    });
+
+    return items;
   }
 });
