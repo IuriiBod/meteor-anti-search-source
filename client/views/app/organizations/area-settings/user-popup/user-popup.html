@@ -1,15 +1,33 @@
 <template name="userPopup">
   <div class="modal fade">
     <div class="modal-dialog">
+      {{#if Template.subscriptionsReady}}
       <div class="modal-content">
-         <div class="modal-body">
+         <div class="modal-header">
           <div class="row">
-            <div class="col-sm-3">
-              <img src="{{profilePicture _id}}" alt="Profile photo of {{username _id}}" class="user-photo-medium"
-                   title="{{username _id}}"/>
+            <div class="col-sm-4">
+              <img src="{{profilePicture userId}}" alt="Profile photo of {{username userId}}" class="user-photo"
+                   title="{{username userId}}"/>
             </div>
-            <div class="col-sm-9">
-              <h3>{{username _id}}</h3>
+            <div class="col-sm-4">
+              <h3>{{username userId}}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Role</label>
+            <div class="col-sm-8">
+              <button data-toggle="dropdown"
+                      class="btn btn-white dropdown-toggle form-control text-capitalize">
+                {{userRole}}
+              </button>
+              <span class="caret caret-pulled-right pull-right"></span>
+              <ul class="dropdown-menu text-capitalize filter-menus">
+                {{#each roles}}
+                  <li><a href="#">{{name}}</a></li>
+                {{/each}}
+              </ul>
             </div>
           </div>
         </div>
@@ -17,6 +35,7 @@
           <i class="fa fa-times"></i>
         </button>
       </div>
+      {{/if}}
     </div>
   </div>
 </template>

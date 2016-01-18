@@ -88,8 +88,24 @@ Template.areaSettings.events({
     //Meteor.call('removeUserFromArea', userId, tmpl.data.areaId, HospoHero.handleMethodResult());
   },
   'click .user-profile-image-container': function (event, tmpl) {
+    event.preventDefault();
+
+    //console.log(event.currentTarget);
+    //console.log($(event.currentTarget).offset());
+
     var user = Blaze.getData(event.target);
-    console.log(user);
-    Modal.show('userPopup', user);
+    var area = tmpl.area();
+    var target = $(event.currentTarget);
+
+    Modal.show('userPopup', {
+      target: {
+        width: target.width(),
+        height: target.height(),
+        left: Math.round(target.offset().left),
+        top: Math.round(target.offset().top)
+      },
+      userId: user._id,
+      areaId: area._id
+    });
   }
 });

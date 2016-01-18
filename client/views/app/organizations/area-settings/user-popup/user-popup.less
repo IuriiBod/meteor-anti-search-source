@@ -1,5 +1,26 @@
+.modal,
+.modal.fade .modal-dialog {
+  transition: none;
+}
+
+.modal-backdrop.in {
+  opacity: 0;
+}
+
+.modal-dialog {
+  width: 302px;
+  margin: 0;
+  visibility: hidden;
+}
+
+.modal-dialog img {
+  max-height: 50px;
+  max-width: 50px;
+  border-radius: 5px;
+}
+
 .modal-content {
-  position: relative;
+  border-radius: 0;
 }
 
 .modal-content .close-button {
