@@ -8,7 +8,7 @@ Template.userPopup.onRendered(function() {
   var modalPosition = {
     top: target.top + target.height,
     left: target.left
-  }
+  };
   $(modal).offset(modalPosition);
 
   var getModalSize = function() {
@@ -57,5 +57,14 @@ Template.userPopup.helpers({
   },
   roles: function() {
     return Meteor.roles.find().fetch();
+  }
+});
+
+Template.userPopup.events({
+  'click .remove-user-from-area': function (event, tmpl) {
+    var userId = tmpl.data.userId;
+    var areaId = tmpl.data.areaId;
+    Meteor.call('removeUserFromArea', userId, areaId, HospoHero.handleMethodResult());
+    Modal.hide();
   }
 });

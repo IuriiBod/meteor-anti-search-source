@@ -75,23 +75,8 @@ Template.areaSettings.events({
     tmpl.set('addUser', !tmpl.get('addUser'));
   },
 
-  'mouseenter .user-profile-image-container': function (e) {
-    $(e.target).find('.remove-user-from-area').css('opacity', 1);
-  },
-
-  'mouseleave .user-profile-image-container': function (e) {
-    $(e.target).find('.remove-user-from-area').css('opacity', 0);
-  },
-
-  'click .remove-user-from-area': function (event, tmpl) {
-    //var userId = this._id;
-    //Meteor.call('removeUserFromArea', userId, tmpl.data.areaId, HospoHero.handleMethodResult());
-  },
   'click .user-profile-image-container': function (event, tmpl) {
     event.preventDefault();
-
-    //console.log(event.currentTarget);
-    //console.log($(event.currentTarget).offset());
 
     var user = Blaze.getData(event.target);
     var area = tmpl.area();

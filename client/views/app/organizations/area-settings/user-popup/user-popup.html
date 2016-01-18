@@ -5,19 +5,19 @@
       <div class="modal-content">
          <div class="modal-header">
           <div class="row">
-            <div class="col-sm-4">
+            <div class="col-xs-4">
               <img src="{{profilePicture userId}}" alt="Profile photo of {{username userId}}" class="user-photo"
                    title="{{username userId}}"/>
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-4">
               <h3>{{username userId}}</h3>
             </div>
           </div>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <label class="col-sm-4 control-label">Role</label>
-            <div class="col-sm-8">
+          <div class="row">
+            <label class="col-xs-2 control-label">Role</label>
+            <div class="col-xs-10">
               <button data-toggle="dropdown"
                       class="btn btn-white dropdown-toggle form-control text-capitalize">
                 {{userRole}}
@@ -30,8 +30,20 @@
               </ul>
             </div>
           </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <a href="/user/profile/{{userId}}">View User Profile</a>
+            </div>
+          </div>
+          {{#if isManager}}
+            <div class="row">
+              <div class="col-xs-12 remove-user-from-area">
+                <a href="#">Remove From Area</a>
+              </div>
+            </div>
+          {{/if}}
         </div>
-        <button type="button" class="btn btn-default close-button" data-dismiss="modal">
+        <button type="button" class="btn btn-white close-button" data-dismiss="modal">
           <i class="fa fa-times"></i>
         </button>
       </div>
