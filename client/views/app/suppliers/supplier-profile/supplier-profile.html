@@ -26,7 +26,13 @@
           </div>
         </div>
         <div class="row">
-          {{> commentsPanel id=supplierId type='supplier'}}
+          <div class="col-md-6">
+            {{> relatedTasks type="suppliers" itemId=supplierId}}
+          </div>
+
+          <div class="col-md-6">
+            {{> commentsPanel id=supplierId type='supplier'}}
+          </div>
         </div>
       </div>
     </div>
