@@ -8,6 +8,22 @@ Template.timeDurationSelector.onRendered(function () {
 
 Template.timeDurationSelector.helpers({
   getTaskDuration: function () {
+    var getHoursFromDuration = function (durationInMinutes) {
+      var hours = parseInt(durationInMinutes / 60);
+      var hoursText = hours % 10 === 1 ? 'hour' : 'hours';
+      return hours + ' ' + hoursText;
+    };
+
+    var getMinutesFromDuration = function (durationInMinutes) {
+      var minutes = durationInMinutes % 60;
+      if (minutes > 0) {
+        var minutesText = minutes === 1 ? 'minute' : 'minutes';
+        return minutes + ' ' + minutesText;
+      } else {
+        return '';
+      }
+    };
+
     if (!this.duration) {
       return '';
     } else {
@@ -15,16 +31,10 @@ Template.timeDurationSelector.helpers({
       var durationString = [];
 
       if (duration >= 60) {
-        var hours = parseInt(duration / 60);
-        var hoursText = hours % 10 === 1 ? 'hour' : 'hours';
-        durationString.push(hours + ' ' + hoursText);
+        durationString.push(getHoursFromDuration(duration));
       }
-      var minutes = duration % 60;
-      if (minutes > 0) {
-        var minutesText = minutes === 1 ? 'minute' : 'minutes';
-        durationString.push(minutes + ' ' + minutesText);
-      }
-      return durationString.join(' ');
+      durationString.push(getMinutesFromDuration(duration));
+      return durationString.join(' ').trim();
     }
   }
 });
