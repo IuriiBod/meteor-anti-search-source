@@ -13,7 +13,12 @@ Router.route('signIn', {
 Router.route('signUp', {
   path: '/register',
   layoutTemplate: 'blankLayout',
-  template: 'signUp'
+  template: 'signUp',
+  data: function () {
+    if (Meteor.userId()) {
+      Router.go('/');
+    }
+  }
 });
 
 
