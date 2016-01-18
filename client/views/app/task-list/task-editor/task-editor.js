@@ -132,11 +132,10 @@ Template.taskEditor.events({
     };
 
     var getTaskDurationInMinutes = function (durationString) {
-      var durationRegEx = /(\d+)\s?(\S+)/;
+      var durationRegEx = /(\d+)\s?(\S+)/g;
 
-      var duration = durationString.match(durationRegEx);
-      var timeUnitsNumber = duration[1];
-      var timeUnitName = duration[2];
+      var duration;
+      var durationInMinutes = 0;
 
       var timeUnits = {
         hours: {
@@ -149,14 +148,20 @@ Template.taskEditor.events({
         }
       };
 
-      Object.keys(timeUnits).forEach(function(key) {
-        var timeUnit = timeUnits[key];
-        if (timeUnit.names.indexOf(timeUnitName) > -1) {
-          timeUnitsNumber *= timeUnit.multiplier;
-        }
-      });
+      while (duration = durationRegEx.exec(durationString)) {
+        var timeUnitsNumber = duration[1];
+        var timeUnitName = duration[2];
 
-      return timeUnitsNumber;
+        Object.keys(timeUnits).forEach(function (key) {
+          var timeUnit = timeUnits[key];
+          if (timeUnit.names.indexOf(timeUnitName) > -1) {
+            timeUnitsNumber *= timeUnit.multiplier;
+            durationInMinutes += timeUnitsNumber;
+          }
+        });
+      }
+
+      return durationInMinutes;
     };
 
 
