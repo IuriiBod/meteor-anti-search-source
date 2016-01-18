@@ -31,12 +31,33 @@ Meteor.publishComposite('taskList', function (userId) {
             this.ready();
           }
         }
+      },
+      {
+        find: function (task) {
+          if (task) {
+            return Comments.find({
+              reference: task._id
+            }, {
+              sort: {"createdOn": -1},
+              limit: 10
+            });
+          }
+        },
+        children: [
+          {
+            find: function (comment) {
+              return Meteor.users.find({
+                _id: comment.createdBy
+              });
+            }
+          }
+        ]
       }
     ]
   }
 });
 
-Meteor.publishAuthorized('todayTasks', function() {
+Meteor.publishAuthorized('todayTasks', function () {
   var user = Meteor.users.findOne({_id: this.userId});
   var area = Areas.findOne({_id: user.currentAreaId});
   var today;

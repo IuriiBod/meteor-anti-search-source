@@ -97,6 +97,13 @@ Template.taskEditor.events({
     tmpl.datepicker.datepicker('hide');
   },
 
+  'click .remove-task': function (event, tmpl) {
+    event.preventDefault();
+    Meteor.call('removeTask', tmpl.data.task, HospoHero.handleMethodResult(function () {
+      tmpl.data.onCreateTaskAction();
+    }));
+  },
+
   'submit form': function (event, tmpl) {
     var getReference = function () {
       var $referenceSelector = tmpl.$('.reference-selector');
@@ -124,6 +131,39 @@ Template.taskEditor.events({
       return taggedUsers;
     };
 
+    var getTaskDurationInMinutes = function (durationString) {
+      var durationRegEx = /(\d+)\s?(\S+)/g;
+
+      var duration;
+      var durationInMinutes = 0;
+
+      var timeUnits = {
+        hours: {
+          names: ['h', 'hour', 'hours'],
+          multiplier: 60
+        },
+        minutes: {
+          names: ['m', 'min', 'minute', 'minutes'],
+          multiplier: 1
+        }
+      };
+
+      while (duration = durationRegEx.exec(durationString)) {
+        var timeUnitsNumber = duration[1];
+        var timeUnitName = duration[2];
+
+        Object.keys(timeUnits).forEach(function (key) {
+          var timeUnit = timeUnits[key];
+          if (timeUnit.names.indexOf(timeUnitName) > -1) {
+            timeUnitsNumber *= timeUnit.multiplier;
+            durationInMinutes += timeUnitsNumber;
+          }
+        });
+      }
+
+      return durationInMinutes;
+    };
+
 
     event.preventDefault();
     var newTaskInfo = HospoHero.misc.getValuesFromEvent(event, [
@@ -134,6 +174,11 @@ Template.taskEditor.events({
       {
         name: 'new-task-description',
         newName: 'description'
+      },
+      {
+        name: 'task-duration',
+        newName: 'duration',
+        transform: getTaskDurationInMinutes
       }
     ], true);
 

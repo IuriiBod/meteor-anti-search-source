@@ -45,7 +45,12 @@ Template.textArea.onRendered(function () {
       if (this.data.type == "newsFeedMainTextBox" || this.data.type == "newsFeedSubTextBox") {
         Meteor.call("createNewsfeed", linkedText, this.data.reference, matches, HospoHero.handleMethodResult());
       } else if (this.data.type == "submitComment") {
-        Meteor.call("createComment", linkedText, this.data.reference, this.data.refType, matches, HospoHero.handleMethodResult());
+        var comment = {
+          text: linkedText,
+          reference: this.data.reference,
+        };
+
+        Meteor.call("createComment", comment, this.data.refType, matches, HospoHero.handleMethodResult());
       }
     }
   }

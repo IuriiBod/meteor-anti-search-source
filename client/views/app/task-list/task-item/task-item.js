@@ -21,7 +21,7 @@ Template.taskItem.onCreated(function () {
 
 Template.taskItem.onRendered(function () {
   this.$('.task-checkbox').iCheck({
-    checkboxClass: 'icheckbox_square-green'
+    checkboxClass: 'iradio_square-green'
   });
 });
 
@@ -47,6 +47,34 @@ Template.taskItem.helpers({
   isTodayTomorrowOrOverdue: function () {
     var dueDate = Template.instance().getDueDate();
     return dueDate === 'Today' || dueDate === 'Tomorrow' || dueDate === 'Overdue';
+  },
+
+  sharedFor: function () {
+    var sharingType = this.task.sharingType;
+    var sharingIds = this.task.sharingIds;
+
+    var temp = {
+      private: function () {
+        return 'you';
+      },
+      users: function () {
+        var users = _.map(sharingIds, function (userId) {
+          return HospoHero.username(userId);
+        });
+        return users.join(', ');
+      },
+      area: function () {
+        return Areas.findOne({_id: sharingIds}).name + ' area';
+      },
+      location: function () {
+        return Locations.findOne({_id: sharingIds}).name + ' location';
+      },
+      organization: function () {
+        return Organizations.findOne({_id: sharingIds}).name + ' organization';
+      }
+    };
+
+    return temp[sharingType]();
   }
 });
 
@@ -57,11 +85,6 @@ Template.taskItem.events({
     task.done = !task.done;
     task.completedBy = task.done ? Meteor.userId() : null;
     Meteor.call('editTask', task);
-  },
-
-  'click .remove-task': function (event) {
-    event.preventDefault();
-    Meteor.call('removeTask', this.task);
   },
 
   'click .edit-task': function (event, tmpl) {
