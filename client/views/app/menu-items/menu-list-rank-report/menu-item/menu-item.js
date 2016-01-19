@@ -5,7 +5,7 @@ Template.menuItemReport.onCreated(function() {
 });
 
 Template.menuItemReport.onRendered(function() {
-  this.$('.sparkline').sparkline([5,6,7,9,1,5,3], {
+  this.$('.sparkline').sparkline(this.data.item.rank, {
     type: 'line',
     width: 50});
 });
