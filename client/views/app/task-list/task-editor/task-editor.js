@@ -28,10 +28,6 @@ Template.taskEditor.helpers({
         text: 'Private'
       },
       {
-        value: 'users',
-        text: 'For users'
-      },
-      {
         value: 'area',
         text: 'For current area'
       },
@@ -75,10 +71,6 @@ Template.taskEditor.helpers({
 
       self.sharingIds.set(sharingIds);
     }
-  },
-
-  displayUserSelector: function () {
-    return Template.instance().sharingType.get() === 'users';
   },
 
   taskDate: function () {

@@ -1,15 +1,11 @@
 <template name="userSelector">
-  <div class="row">
-    <div class="col-xs-12">
-      <select name="user-selector" class="user-selector form-control" multiple="multiple">
-        {{#each users}}
-          {{#if isSelected}}
-            <option value="{{_id}}" selected="selected">{{username _id}}</option>
-          {{else}}
-            <option value="{{_id}}">{{username _id}}</option>
-          {{/if}}
-        {{/each}}
-      </select>
-    </div>
-  </div>
+  <select name="user-selector" class="user-selector form-control" multiple="multiple">
+    {{#each users}}
+      {{#if isSelected}}
+        <option value="{{_id}}" selected="selected">{{username _id}}</option>
+      {{else}}
+        <option value="{{_id}}">{{username _id}}</option>
+      {{/if}}
+    {{/each}}
+  </select>
 </template>
