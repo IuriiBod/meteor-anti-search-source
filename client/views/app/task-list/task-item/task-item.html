@@ -2,9 +2,11 @@
   <div class="task-item">
     <div class="row">
       <div class="col-xs-4 task-due-date">
-        <span class="float-with-padding">
+        {{#if canDoneTask}}
+          <span class="float-with-padding">
           <input type="checkbox" class="task-checkbox" {{checkboxAttr}} />
         </span>
+        {{/if}}
 
         <h3 class="{{dueDateClass}}">
           {{dueDateText}}
@@ -17,12 +19,12 @@
       <div class="col-xs-8 task-details">
         <div>
           <small class="text-muted">
-            Shared for {{sharedFor}}
+            Assigned to {{assignedTo}}
           </small>
         </div>
 
         <span class="task-title {{isDoneClass}}">
-          <a href="#" class="text-primary edit-task">
+          <a href="#" class="text-primary {{#if canDoneTask}}edit-task{{/if}}">
             {{task.title}}
           </a>
 

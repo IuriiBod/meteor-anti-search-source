@@ -9,6 +9,7 @@ var TaskListChecker = Match.Where(function (task) {
     },
     duration: Match.Optional(Number),
     done: Boolean,
+    createdBy: HospoHero.checkers.MongoId,
 
     // Optional
     _id: HospoHero.checkers.OptionalMongoId,

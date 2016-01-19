@@ -49,32 +49,18 @@ Template.taskItem.helpers({
     return dueDate === 'Today' || dueDate === 'Tomorrow' || dueDate === 'Overdue';
   },
 
-  sharedFor: function () {
-    var sharingType = this.task.sharingType;
-    var sharingIds = this.task.sharingIds;
+  assignedTo: function () {
+    var assignedTo = this.task.assignedTo;
+    assignedTo = _.map(assignedTo, function (userId) {
+      return HospoHero.username(userId);
+    });
+    return assignedTo.join(', ');
+  },
 
-    var temp = {
-      private: function () {
-        return 'you';
-      },
-      users: function () {
-        var users = _.map(sharingIds, function (userId) {
-          return HospoHero.username(userId);
-        });
-        return users.join(', ');
-      },
-      area: function () {
-        return Areas.findOne({_id: sharingIds}).name + ' area';
-      },
-      location: function () {
-        return Locations.findOne({_id: sharingIds}).name + ' location';
-      },
-      organization: function () {
-        return Organizations.findOne({_id: sharingIds}).name + ' organization';
-      }
-    };
-
-    return temp[sharingType]();
+  canDoneTask: function () {
+    var userId = Meteor.userId();
+    return this.task.createdBy === userId ||
+      this.task.assignedTo.indexOf(userId) > -1;
   }
 });
 
@@ -89,7 +75,7 @@ Template.taskItem.events({
 
   'click .edit-task': function (event, tmpl) {
     event.preventDefault();
-    if(_.isFunction (tmpl.data.onEditTaskAction)) {
+    if (_.isFunction(tmpl.data.onEditTaskAction)) {
       tmpl.data.onEditTaskAction(tmpl.data.task);
     }
   }
