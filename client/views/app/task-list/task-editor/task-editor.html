@@ -1,10 +1,9 @@
 <template name="taskEditor">
-  <div class="row create-new-task-container">
-    <div class="col-xs-12">
-      <form>
-        <div class="input-group">
-          <input type="text" class="form-control new-task-title" name="new-task-title" placeholder="Title"
-                 value="{{task.title}}" required="required">
+  <div class="create-new-task-container">
+    <form>
+      <div class="input-group">
+        <input type="text" class="form-control new-task-title" name="new-task-title" placeholder="Title"
+               value="{{task.title}}" required="required">
 
           <span class="input-group-btn">
             <input type="text" class="form-control date-picker-input"/>
@@ -14,52 +13,51 @@
               {{formatDate taskDate 'MMMM Do YYYY'}}
             </button>
           </span>
-        </div>
-        <!-- /input-group -->
-        <div class="form-group">
+      </div>
+      <!-- /input-group -->
+      <div class="form-group">
           <textarea name="new-task-description" cols="30" rows="10" class="form-control"
                     placeholder="Description ...">{{task.description}}</textarea>
+      </div>
+
+      <div class="form-group">
+        <div class="user-selector-container">
+          {{> userSelector}}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-5">
+          <label for="task-sharing" class="float-with-padding">Sharing:</label>
+          {{> ghostEditableSelect values=taskSharingOptions selected=selectedOption onValueChanged=onSelectChange}}
         </div>
 
-        <div class="form-group">
-          <div class="user-selector-container">
-            {{> userSelector}}
-          </div>
+        <div class="col-sm-3">
+          {{> referenceSelector task.reference}}
         </div>
 
-        <div class="form-group">
-          <div class="col-sm-5">
-            <label for="task-sharing" class="float-with-padding">Sharing:</label>
-            {{> ghostEditableSelect values=taskSharingOptions selected=selectedOption onValueChanged=onSelectChange}}
-          </div>
-
-          <div class="col-sm-3">
-            {{> referenceSelector task.reference}}
-          </div>
-
-          <div class="col-sm-4">
-            {{> timeDurationSelector duration=task.duration}}
-          </div>
+        <div class="col-sm-4">
+          {{> timeDurationSelector duration=task.duration}}
         </div>
+      </div>
 
-        <div class="form-group">
-          <div class="text-right col-xs-12 task-buttons-container">
+      <div class="form-group">
+        <div class="text-right col-xs-12 task-buttons-container">
+          {{#if task._id}}
+            <a href="#" class="btn btn-link text-danger remove-task">
+              Remove
+            </a>
+          {{/if}}
+          <button type="submit" class="btn btn-primary">
             {{#if task._id}}
-              <a href="#" class="btn btn-link text-danger remove-task">
-                Remove
-              </a>
+              Save
+            {{else}}
+              Create
             {{/if}}
-            <button type="submit" class="btn btn-primary">
-              {{#if task._id}}
-                Save
-              {{else}}
-                Create
-              {{/if}}
-            </button>
-            <button type="button" class="btn btn-default close-create-new-task-container">Close</button>
-          </div>
+          </button>
+          <button type="button" class="btn btn-default close-create-new-task-container">Close</button>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </template>

@@ -1,27 +1,6 @@
-Template.taskItem.onCreated(function () {
-  this.getDueDate = function () {
-    var today = moment().startOf('day').toDate();
-    var tomorrow = moment(today).add(1, 'day').toDate();
-    var dueDate = moment(this.data.task.dueDate).startOf('day').toDate();
-
-    if (dueDate < today && this.data.task.done === false) {
-      return 'Overdue';
-    } else {
-      if (dueDate.valueOf() === today.valueOf()) {
-        return 'Today';
-      } else if (dueDate.valueOf() === tomorrow.valueOf()) {
-        return 'Tomorrow';
-      } else {
-        return HospoHero.dateUtils.dateFormat(this.data.task.dueDate);
-      }
-    }
-  };
-});
-
-
 Template.taskItem.onRendered(function () {
   this.$('.task-checkbox').iCheck({
-    checkboxClass: 'iradio_square-green'
+    checkboxClass: 'icheckbox_square-green'
   });
 });
 
@@ -33,20 +12,6 @@ Template.taskItem.helpers({
 
   isDoneClass: function () {
     return this.task.done ? 'done' : '';
-  },
-
-  dueDateText: function () {
-    return Template.instance().getDueDate();
-  },
-
-  dueDateClass: function () {
-    var dueDate = Template.instance().getDueDate();
-    return dueDate === 'Overdue' ? 'text-danger' : dueDate === 'Today' ? 'text-warning' : '';
-  },
-
-  isTodayTomorrowOrOverdue: function () {
-    var dueDate = Template.instance().getDueDate();
-    return dueDate === 'Today' || dueDate === 'Tomorrow' || dueDate === 'Overdue';
   },
 
   assignedTo: function () {
@@ -61,6 +26,16 @@ Template.taskItem.helpers({
     var userId = Meteor.userId();
     return this.task.createdBy === userId ||
       this.task.assignedTo.indexOf(userId) > -1;
+  },
+
+  taskDuration: function () {
+    return HospoHero.dateUtils.minutesToHours(this.task.duration);
+  },
+
+  commentsCount: function () {
+    return Comments.find({
+      reference: this.task._id
+    }).count();
   }
 });
 

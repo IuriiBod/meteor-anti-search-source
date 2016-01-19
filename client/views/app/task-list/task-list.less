@@ -9,41 +9,37 @@
   }
 
   .task-list-container {
-    .task-item {
-      margin-bottom: 20px;
 
-      .task-title.done {
-        text-decoration: line-through;
+    .edit-task {
+      cursor: pointer;
+    }
+
+    .task-title.done {
+      text-decoration: line-through;
+    }
+
+    .well {
+      margin-bottom: 0;
+      margin-top: 7px;
+      background-color: transparent;
+      border: 1px solid #1AB394;
+      border-radius: 0;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+
+      .comments-panel {
+        float: none;
       }
+    }
 
-      h3 {
-        display: inline-block;
-      }
+    .mail-date {
+      position: relative;
 
-      .well {
-        margin-bottom: 0;
-        margin-top: 7px;
-        background-color: transparent;
-        border: 1px solid #1AB394;
-        border-radius: 0;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-
-        .comments-panel {
-          float: none;
+      .count-info {
+        .label {
+          top: 25px;
+          right: 15px;
         }
-      }
-
-      .task-info {
-        padding-left: 10px;
-
-        .comments-toggler {
-          margin-left: 5px;
-        }
-      }
-
-      .task-details {
-        margin-top: -13px;
       }
     }
   }
