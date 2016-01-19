@@ -82,14 +82,16 @@ NotificationSender.prototype._isInteractive = function () {
 };
 
 
-NotificationSender.prototype._renderTemplateWithData = function (notificationId) {
+NotificationSender.prototype._renderTemplateWithData = function (notificationId, isMobile) {
   var templateData = this._options.templateData;
 
   if (this._isInteractive()) {
     templateData._notificationId = notificationId
   }
 
-  return Handlebars.templates[this._options.templateName](templateData);
+  var templateName = this._options.templateName + (isMobile ? '-m' : '');
+
+  return Handlebars.templates[templateName](templateData);
 };
 
 
@@ -124,21 +126,26 @@ NotificationSender.prototype._insertNotification = function (receiverId, markAsR
     createdOn: Date.now()
   };
 
-  var html = false;
+  var notificationId = Notifications.insert(notificationOptions);
 
-  if (this._isInteractive()) {
-    var notificationId = Notifications.insert(notificationOptions);
+  var html = this._renderTemplateWithData(notificationId);
 
-    html = this._renderTemplateWithData(notificationId);
+  Notifications.update({_id: notificationId}, {
+    $set: {text: html}
+  });
 
-    Notifications.update({_id: notificationId}, {
-      $set: {text: html}
-    });
-  } else {
-    html = this._renderTemplateWithData();
-    notificationOptions.text = html;
-    Notifications.insert(notificationOptions);
+  try {
+    var pushSender = new PushNotificationSender(notificationOptions.to);
+    if (pushSender.isDeviceRegistered()) {
+      pushSender.send({
+        title: notificationOptions.title,
+        text: this._renderTemplateWithData(notificationId, true)
+      });
+    }
+  } catch (err) {
+    logger.error('Error while trying to send mobile notification', err);
   }
+
   return html;
 };
 
