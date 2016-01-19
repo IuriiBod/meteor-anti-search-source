@@ -11,11 +11,7 @@ Template.userSelector.helpers({
   },
 
   isSelected: function () {
-    var sharingIds = Template.parentData().task.sharingIds;
-    if (sharingIds && sharingIds.length) {
-      return sharingIds.indexOf(this._id) > -1;
-    } else {
-      return false;
-    }
+    var assignedUsers = Template.parentData().task.assignedTo;
+    return assignedUsers.indexOf(this._id) > -1;
   }
 });
