@@ -109,20 +109,6 @@ Template.editLocationForm.events({
     }
   },
 
-  'click .show-pos-settings-btn': function (event, tmpl) {
-    event.preventDefault();
-
-    var posSettings = {locationName: tmpl.data.locationDoc.name};
-
-    if (tmpl.data.locationDoc.pos) {
-      posSettings.host = tmpl.data.locationDoc.pos.host;
-      posSettings.key = tmpl.data.locationDoc.pos.key;
-      posSettings.secret = tmpl.data.locationDoc.pos.secret;
-    }
-
-    FlyoutManager.open('posSettings', posSettings);
-  },
-
   'click .show-pos-settings': function (event, tmpl) {
     var isShown = tmpl.isPosSettingsShown.get();
     tmpl.isPosSettingsShown.set(!isShown);
