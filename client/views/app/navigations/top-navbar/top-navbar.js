@@ -41,10 +41,12 @@ Template.topNavbar.helpers({
 
   tasksCount: function () {
     var today = moment().endOf('day').toDate();
-    return TaskList.find({
+    var query = HospoHero.misc.getTasksQuery(Meteor.userId());
+    query = _.extend(query, {
       dueDate: {$lte: today},
       done: false
-    }).count();
+    });
+    return TaskList.find(query).count();
   },
 
   notifications: function () {

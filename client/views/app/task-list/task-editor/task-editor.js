@@ -1,9 +1,10 @@
 Template.taskEditor.onCreated(function () {
-  this.sharingType = new ReactiveVar(this.data.task.sharing.type || 'private');
-  this.sharingIds = new ReactiveVar(this.data.task.sharing.id || null);
+  var task = this.data.task;
+  var dueDate = task.dueDate || new Date();
 
-  var dueDate = this.data.task.dueDate || new Date();
   this.dueDate = new ReactiveVar(dueDate);
+  this.sharingType = new ReactiveVar(task.sharing && task.sharing.type || 'private');
+  this.sharingIds = new ReactiveVar(task.sharing && task.sharing.id || Meteor.userId());
 });
 
 
