@@ -22,17 +22,20 @@ Template.unavailabilitiesList.helpers({
   },
 
   intervalDateFormat: function (startDate, endDate, formatType) {
-    var format = function (date, format) {
-      return moment(date).format(format);
+    var formatInterval = function (startDate, startDateFormat, endDate, endDateFormat) {
+      var format = function (date, format) {
+        return moment(date).format(format);
+      };
+      return format(startDate, startDateFormat) + ' - ' + format(endDate, endDateFormat);
     };
 
     var dateFormat = 'ddd DD/MM/YYYY';
     var timeFormat = 'HH:mm A';
 
     if (formatType === 'dateOnly') {
-      return format(startDate, dateFormat) + ' - ' + format(endDate, dateFormat);
+      return formatInterval(startDate, dateFormat, endDate, dateFormat);
     } else if (formatType === 'dateTime') {
-      return format(startDate, dateFormat + ' ' + timeFormat) + ' - ' + format(endDate, timeFormat);
+      return formatInterval(startDate, dateFormat + ' ' + timeFormat, endDate, timeFormat);
     } else {
       return '';
     }
