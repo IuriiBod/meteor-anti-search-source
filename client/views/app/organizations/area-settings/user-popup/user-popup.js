@@ -64,7 +64,9 @@ Template.userPopup.events({
   'click .remove-user-from-area': function (event, tmpl) {
     var userId = tmpl.data.userId;
     var areaId = tmpl.data.areaId;
-    Meteor.call('removeUserFromArea', userId, areaId, HospoHero.handleMethodResult());
-    Modal.hide();
+    if (confirm("Are you sure, you want to delete this user from area?")) {
+      Meteor.call('removeUserFromArea', userId, areaId, HospoHero.handleMethodResult());
+      Modal.hide();
+    }
   }
 });
