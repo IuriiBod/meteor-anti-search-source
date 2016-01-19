@@ -1,5 +1,6 @@
 Meteor.publishComposite('taskList', function (userId) {
   return {
+    // publish all user's tasks
     find: function () {
       if (userId) {
         var user = Meteor.users.findOne({_id: userId});
@@ -12,6 +13,7 @@ Meteor.publishComposite('taskList', function (userId) {
     },
     children: [
       {
+        // publish reference of the task
         find: function (task) {
           if (task) {
             var reference = task.reference;
@@ -33,6 +35,7 @@ Meteor.publishComposite('taskList', function (userId) {
         }
       },
       {
+        // publish comments to the task
         find: function (task) {
           if (task) {
             return Comments.find({
@@ -84,33 +87,34 @@ Meteor.publishAuthorized('todayTasks', function () {
 });
 
 var getTasksQuery = function (relations, userId) {
-  var query = {};
-
   if (relations && relations.organizationId) {
-    var sharingOptions = {
-      user: {
-        sharingIds: userId
-      },
-      organization: {
-        sharingType: 'organization',
-        sharingIds: relations.organizationId
-      },
-      location: {
-        sharingType: 'location'
-      },
-      area: {
-        sharingType: 'area'
-      }
-    };
+    var allowedSharingTypes = ['area', 'location'];
+    var allowedSharingIds = [userId, relations.organizationId];
 
     if (relations.locationIds) {
-      sharingOptions.location.sharingIds = {$in: relations.locationIds};
+      allowedSharingIds = _.union(allowedSharingIds, relations.locationIds);
     }
     if (relations.areaIds) {
-      sharingOptions.area.sharingIds = {$in: relations.areaIds};
+      allowedSharingIds = _.union(allowedSharingIds, relations.areaIds);
     }
-    query.$or = _.values(sharingOptions);
+    return {
+      $or: [
+        {
+          'sharing.type': {
+            $in: allowedSharingTypes
+          }
+        },
+        {
+          'sharing.id': {
+            $in: allowedSharingIds
+          }
+        },
+        {
+          assignedTo: userId
+        }
+      ]
+    };
+  } else {
+    return {};
   }
-
-  return query;
 };
