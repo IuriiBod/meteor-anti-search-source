@@ -1,0 +1,51 @@
+.modal,
+.modal.fade .modal-dialog {
+  transition: none;
+}
+
+.modal-backdrop.in {
+  opacity: 0;
+}
+
+.modal-dialog {
+  width: 320px;
+  margin: 0;
+  visibility: hidden;
+}
+
+.modal-dialog img {
+  max-height: 50px;
+  max-width: 50px;
+  border-radius: 5px;
+}
+
+.modal-dialog .row {
+  padding-bottom: 15px;
+}
+
+.modal-content {
+  border-radius: 0;
+}
+
+.modal-content .close-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 10;
+}
+
+.modal-header,
+.close-button {
+  border: none;
+}
+
+.modal-body,
+.modal-header {
+  padding: 10px !important;
+}
+
+.modal-body button.disabled,
+.modal-body button.disabled:hover {
+  color: #2f4050;
+  border: 1px solid #e5e6e7;
+}

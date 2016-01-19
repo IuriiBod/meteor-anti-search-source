@@ -37,6 +37,11 @@ var menuEntries = [
         title: 'Template',
         route: 'templateWeeklyRoster',
         permission: 'edit roster'
+      },
+      {
+        title: 'Sections',
+        route: 'sectionsSettings',
+        permission: 'edit roster'
       }
     ]
   },
@@ -82,6 +87,11 @@ var menuEntries = [
       {
         title: 'Suppliers',
         route: 'suppliersList'
+      },
+      {
+        title: 'Stock Areas',
+        route: 'stockAreasSettings',
+        permission: 'edit stocks'
       }
     ]
   },

@@ -14,7 +14,6 @@
 
     <div class="form-group">
       <label class="col-sm-2 control-label">Area Color</label>
-
       <div class="col-sm-10">
         {{> colorPicker onColorChange=onColorChange checkedColor=areaColor}}
       </div>
@@ -23,11 +22,6 @@
     <div class="area-users">
       {{#each areaUsers}}
         <div class="user-profile-image-container">
-          {{#if isManager}}
-            {{#unless isMe _id}}
-              <i class="fa fa-times remove-user-from-area"></i>
-            {{/unless}}
-          {{/if}}
           <a href="/user/profile/{{_id}}">
             <img src="{{profilePicture _id}}" alt="Profile photo of {{username _id}}" class="user-photo-min"
                  title="{{username _id}}"/>
@@ -44,6 +38,16 @@
       {{#if state$addUser}}
         {{> addUserPopup areaId=area._id}}
       {{/if}}
+    {{/if}}
+
+    <br/>
+    <ul class="list-group" style="display: block;">
+      <li class="list-group-item">
+        <a href="{{pathFor 'posSettings'}}">POS / Menu Linking</a>
+      </li>
+    </ul>
+
+    {{#if isManager}}
       <button class="btn btn-danger col-xs-12 delete-area">Delete Area</button>
     {{/if}}
   </div>
