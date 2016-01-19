@@ -162,11 +162,11 @@ Revel.prototype.uploadRawOrderItems = function (onOrdersLoaded) {
 
     logger.info('Requested to Revel', {offset: offset, total: totalCount});
 
-    onOrdersLoaded(result.objects);
+    var toContinue = onOrdersLoaded(result.objects);
 
     //check if 1 year is imported
     var lastOrder = result.objects[result.objects.length - 1];
-    if (yearBackMoment.isAfter(lastOrder.created_date)) {
+    if (yearBackMoment.isAfter(lastOrder.created_date) || !toContinue) {
       break;
     }
 
@@ -251,7 +251,6 @@ if (Meteor.settings.useRawOrders === true) {
       };
 
       var query = {};
-
       result.objects = RawOrders.find(query, {limit: limit, skip: offset, sort: {created_date: -1}}).fetch();
 
       return result;

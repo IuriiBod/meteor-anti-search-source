@@ -1,4 +1,4 @@
-Template.taskDescriptionAndReference.helpers({
+Template.taskDetails.helpers({
   referenceObject: function () {
     var taskReference = this.reference;
 
@@ -32,5 +32,11 @@ Template.taskDescriptionAndReference.helpers({
     } else {
       return false;
     }
+  },
+
+  commentsCount: function () {
+    return Comments.find({
+      reference: this._id
+    }).count();
   }
 });

@@ -58,7 +58,13 @@
       </div>
       {{> menuDetailWidgets}}
 
-      {{> commentsPanel id=_id type='menu'}}
+      <div class="col-md-6">
+        {{> relatedTasks type='menus' itemId=_id}}
+      </div>
+
+      <div class="col-md-6">
+        {{> commentsPanel id=_id type='menu'}}
+      </div>
     </div>
   </div>
 

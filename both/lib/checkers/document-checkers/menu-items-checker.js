@@ -18,13 +18,14 @@ var MenuItemDocument = Match.Where(function (menuItem) {
     editedOn: Match.Optional(Number),
     relations: Match.Optional(HospoHero.checkers.Relations),
     posNames: Match.Optional([String]),
-    isNotSyncedWithPos: Match.Optional(Boolean)
+    isNotSyncedWithPos: Match.Optional(Boolean),
+    lastForecastModelUpdateDate: Match.Optional(Date)
   });
 
   var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(menuItem, MenuItems);
 
   checkerHelper.checkProperty('name', function () {
-    if (!!MenuItems.findOne({ name: menuItem.name, 'relations.areaId': menuItem.relations.areaId })) {
+    if (!!MenuItems.findOne({name: menuItem.name, 'relations.areaId': menuItem.relations.areaId})) {
       logger.error('The menu item with the same name already exists!');
       throw new Meteor.Error("The menu item the same name already exists!");
     }

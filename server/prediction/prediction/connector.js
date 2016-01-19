@@ -58,7 +58,7 @@ GooglePredictionApi.prototype.updatePredictionModel = function (menuItemsQuery, 
     var lastForecastModelUpdateDate = menuItem.lastForecastModelUpdateDate || false;
 
     var needToUpdateModel = !lastForecastModelUpdateDate
-      || moment(lastForecastModelUpdateDate) < moment().subtract(182, 'day');
+      || moment(lastForecastModelUpdateDate).add(182, 'day').isBefore(moment());
 
     if (needToUpdateModel || isForcedUpdate) {
       self._buildPredictionModelForMenuItem(menuItem);

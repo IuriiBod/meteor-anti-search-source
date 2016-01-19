@@ -7,10 +7,11 @@ Template.ghostEditable.onCreated(function () {
 
   this.submitValue = function () {
     var newValue = this.getInputValue();
-    if (newValue.toString() !== this.value.toString()) {
-      if (_.isFunction(this.onValueChanged)) {
-        this.onValueChanged(newValue);
+    if (newValue.toString() !== this.data.value.toString()) {
+      if (_.isFunction(this.data.onValueChanged)) {
+        this.data.onValueChanged(newValue);
       }
+      this.showSubmitButton.set(false);
     }
   };
 });

@@ -45,7 +45,7 @@ Meteor.methods({
       'Menu item created',
       'menu-item-created',
       {
-        itemName: doc.name,
+        itemName: menuItem.name,
         username: HospoHero.username(Meteor.userId()),
         linkToItem: Router.url('menuItemDetail', {_id: menuId})
       }
@@ -113,7 +113,7 @@ Meteor.methods({
         notificationSender.sendNotification(subscription.subscriber);
       }
       subscription.itemIds = menuItem._id;
-      Meteor.call('subscribe', subscription, true);
+      Meteor.call('unsubscribe', subscription);
     });
 
     logger.info("Menu item deleted", menuItem._id);

@@ -2,7 +2,7 @@
   {{> pageHeading title='Task List' name='taskList' onCreateTaskAction=onCreateTaskAction}}
 
   <div class="wrapper wrapper-content">
-    <div class="ibox-content">
+    <div class="ibox-content task-list-content">
       <div class="row">
         <div class="col-xs-12">
           {{#if isNewTaskCreating}}
@@ -13,14 +13,14 @@
             </div>
           {{/if}}
 
-          <div class="task-list-filter">
+          <div class="task-list-filter pull-right">
             {{> taskFilter onFilterChange=onFilterChange filterTypes=filterTypes activeFilter=activeFilterName}}
           </div>
+          <h2>{{activeFilterName}}</h2>
           <!-- .task-list-filter -->
 
           <div class="row">
             <div class="task-list-container col-xs-12">
-              <h2>{{activeFilterName}}</h2>
               {{#if tasks.count}}
                 {{#each tasks}}
                   {{> taskItem task=this onEditTaskAction=onEditTaskAction}}

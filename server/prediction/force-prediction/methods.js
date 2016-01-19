@@ -70,17 +70,33 @@ Meteor.methods({
 
   importRawOrders: function () {
     checkOrganizationOwner(this.userId);
-    //remove old data
-    RawOrders.remove({});
+
+    var lastOrderItem = RawOrders.findOne({}, {sort: {created_date: -1}});
+
+    var isLastSynced = function (orderItem) {
+      return lastOrderItem && lastOrderItem.created_date === orderItem.created_date
+        && lastOrderItem.quantity === orderItem.quantity
+        && lastOrderItem.resource_uri === orderItem.resource_uri;
+    };
 
     var area = HospoHero.getCurrentArea(this.userId);
     var location = Locations.findOne({_id: area.locationId});
     var revelApi = new Revel(location.pos);
+
+    var toContinue = true;
     revelApi.uploadRawOrderItems(function (orderItems) {
-      orderItems.forEach(function (item) {
-        RawOrders.insert(item);
+      orderItems.every(function (item) {
+        if (isLastSynced(item) || !toContinue) {
+          toContinue = false;
+          return false;
+        } else {
+          RawOrders.insert(item);
+          return true;
+        }
       });
+      return toContinue;
     });
+
     return true;
   }
 });

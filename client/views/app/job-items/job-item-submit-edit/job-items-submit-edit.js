@@ -206,7 +206,7 @@ Template.submitEditJobItem.events({
           }
         }
         jobItem.repeatAt = tmpl.repeatAt.get();
-        jobItem.startsOn = tmpl.$('.starts-on-date-picker').data('DateTimePicker').date().toDate();
+        jobItem.startsOn = tmpl.$('.starts-on-date-picker').datepicker('getDate');
         jobItem.endsOn = getEndsOnDate();
       };
 

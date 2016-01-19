@@ -1,4 +1,4 @@
-rawColl = CurrentStocks.rawCollection();
+var rawColl = CurrentStocks.rawCollection();
 
 Meteor.methods({
   updateCurrentStock: function (stockId, note, quantity, date) {
