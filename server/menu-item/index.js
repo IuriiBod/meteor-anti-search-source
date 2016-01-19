@@ -113,7 +113,7 @@ Meteor.methods({
         notificationSender.sendNotification(subscription.subscriber);
       }
       subscription.itemIds = menuItem._id;
-      Meteor.call('subscribe', subscription, true);
+      Meteor.call('unsubscribe', subscription);
     });
 
     logger.info("Menu item deleted", menuItem._id);
