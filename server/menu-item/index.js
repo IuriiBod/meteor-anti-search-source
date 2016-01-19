@@ -45,7 +45,7 @@ Meteor.methods({
       'Menu item created',
       'menu-item-created',
       {
-        itemName: doc.name,
+        itemName: menuItem.name,
         username: HospoHero.username(Meteor.userId()),
         linkToItem: Router.url('menuItemDetail', {_id: menuId})
       }
