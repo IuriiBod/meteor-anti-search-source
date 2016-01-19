@@ -21,16 +21,16 @@ Template.topNavbar.helpers({
         }
       },
       {
+        title: 'Availability & Leave',
+        class: 'user-unavailabilities-flyout'
+      },
+      {
         route: 'switchUser',
         title: 'Switch User'
       },
       {
         route: 'logout',
         title: 'Logout'
-      },
-      {
-        title: 'Unavailabilities',
-        class: 'user-unavailabilities-flyout'
       }
     ];
   },
