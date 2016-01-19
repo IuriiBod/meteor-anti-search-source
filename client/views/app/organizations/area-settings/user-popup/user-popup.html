@@ -20,7 +20,7 @@
             <div class="col-xs-10">
               <button data-toggle="dropdown"
                       class="btn btn-white dropdown-toggle form-control text-capitalize
-                      {{#if isManager}}disabled{{/if}}">
+                      {{#unless isManager}}disabled{{/unless}}">
                 {{userRole}}
               </button>
               <span class="caret caret-pulled-right pull-right"></span>
