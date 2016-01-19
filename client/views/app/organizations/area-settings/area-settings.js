@@ -62,13 +62,35 @@ Template.areaSettings.helpers({
 
 Template.areaSettings.events({
   'click .delete-area': function (event, tmpl) {
-    if (confirm("Are you sure, you want to delete this area?")) {
-      var id = tmpl.data.areaId;
-      Meteor.call('deleteArea', id, HospoHero.handleMethodResult(function () {
+    event.preventDefault();
+
+    var areaId = tmpl.data.areaId;
+    var nameOfArea = Template.instance().area().name;
+    sweetAlert({
+      title: 'Are you absolutely sure?',
+      text: 'Please type in the name of the area to confirm.',
+      type: 'input',
+      showCancelButton: true,
+      closeOnConfirm: false,
+      confirmButtonText: 'Delete Area',
+      confirmButtonColor: '#ec4758',
+      animation: 'slide-from-top',
+      inputPlaceholder: 'Name of area'
+    }, function (inputValue) {
+      if (inputValue === '') {
+        sweetAlert.showInputError('You need to write name of area!');
+        return false
+      }
+      if (inputValue !== nameOfArea) {
+        sweetAlert.showInputError("It isn't name of current area!");
+        return false;
+      }
+      Meteor.call('deleteArea', areaId, HospoHero.handleMethodResult(function () {
         var flyout = FlyoutManager.getInstanceByElement(event.target);
+        sweetAlert('Ok!', nameOfArea + ' was deleted!', 'success');
         flyout.close();
       }));
-    }
+    });
   },
 
   'click .add-user': function (event, tmpl) {
