@@ -68,5 +68,10 @@ Template.userPopup.events({
       Meteor.call('removeUserFromArea', userId, areaId, HospoHero.handleMethodResult());
       Modal.hide();
     }
+  },
+  'click .filter-menus a': function(event, tmpl) {
+    var userId = tmpl.data.userId;
+    var newRoleId = event.target.getAttribute('data-role-id');
+    Meteor.call('changeUserRole', userId, newRoleId);
   }
 });

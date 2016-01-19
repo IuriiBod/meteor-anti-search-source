@@ -15,17 +15,18 @@
           </div>
         </div>
         <div class="modal-body">
-          <div class="row">
+          <div class="row role-select">
             <label class="col-xs-2 control-label">Role</label>
             <div class="col-xs-10">
               <button data-toggle="dropdown"
-                      class="btn btn-white dropdown-toggle form-control text-capitalize">
+                      class="btn btn-white dropdown-toggle form-control text-capitalize
+                      {{#if isManager}}disabled{{/if}}">
                 {{userRole}}
               </button>
               <span class="caret caret-pulled-right pull-right"></span>
               <ul class="dropdown-menu text-capitalize filter-menus">
                 {{#each roles}}
-                  <li><a href="#">{{name}}</a></li>
+                  <li><a href="#" data-role-id="{{_id}}">{{name}}</a></li>
                 {{/each}}
               </ul>
             </div>
