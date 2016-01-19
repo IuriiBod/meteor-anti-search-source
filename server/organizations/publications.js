@@ -76,7 +76,7 @@ Meteor.publishComposite('organizationInfo', {
             "relations.organizationId": organization._id
           }, {
             fields: {
-              username: 1,
+              isActive: 1,
               "services.google.picture": 1,
               profile: 1,
               relations: 1
@@ -101,6 +101,7 @@ Meteor.publishComposite('organizationInfo', {
             if (!HospoHero.canUser('edit locations', this.userId)) {
               fields.name = 1;
               fields.organizationId = 1;
+              fields.timezone = 1;
             }
           }
           return Locations.find(query, {fields: fields});

@@ -68,7 +68,7 @@ Meteor.methods({
         notificationSender.sendNotification(subscription.subscriber);
       }
       subscription.itemIds = id;
-      Meteor.call('subscribe', subscription, true);
+      Meteor.call('unsubscribe', subscription);
     });
 
     JobItems.remove({'_id': id});

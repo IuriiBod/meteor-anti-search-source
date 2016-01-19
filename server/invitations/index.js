@@ -2,8 +2,16 @@ Meteor.methods({
   createInvitation: function (invitationData) {
     var area = Areas.findOne({_id: invitationData.areaId});
     var senderId = Meteor.userId();
+    var invitedUserName = invitationData.name;
+    var splittedUserName = [];
+
+    if (invitedUserName.indexOf(' ') > 0) {
+      splittedUserName = invitedUserName.split(' ');
+    }
+
     var invitation = {
-      name: invitationData.name,
+      firstname: splittedUserName[0] || invitationData.name,
+      lastname: splittedUserName[2] ? splittedUserName[1] + splittedUserName[2] : splittedUserName[1] || null,
       email: invitationData.email,
       invitedBy: senderId,
       areaId: invitationData.areaId,
@@ -32,7 +40,7 @@ Meteor.methods({
   },
 
   acceptInvitation: function (id, response) {
-    var nonProfileItems = ['username', 'email', 'password'];
+    var nonProfileItems = ['email', 'password'];
     var user = {
       profile: {}
     };
@@ -54,7 +62,7 @@ Meteor.methods({
       'Invitation accepted',
       'invitation-accepted',
       {
-        username: invitation.name,
+        username: invitation.lastname ? invitation.firstname + " " + invitation.lastname : invitation.firstname,
         areaName: area.name
       }
     ).sendBoth(invitation.invitedBy);

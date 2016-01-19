@@ -1,15 +1,14 @@
 <template name="training">
-  <div class="col-md-4">
+  <div class="col-sm-12 col-md-6 col-lg-4">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
         <h5>Training</h5>
       </div>
       <div class="ibox-content">
-
-        {{#each sections}}
-          {{#if canEditUsers}}
+        {{#if canEditUsers}}
+          {{#each sections}}
             <div class="form-group">
-              {{#if userSelectedSections _id}}
+              {{#if isSelectedSection _id}}
                 <input type="checkbox" class="section-checker" value="{{_id}}" checked="checked">
               {{else}}
                 <input type="checkbox" class="section-checker" value="{{_id}}">
@@ -17,16 +16,19 @@
 
               {{name}}
             </div>
-          {{else}}
-            {{#if userSelectedSections _id}}
+          {{/each}}
+        {{else}}
+          {{#if userTrainedSections.count}}
+            {{# each userTrainedSections}}
               <div>
                 <i class="fa fa-check"></i>
                 {{name}}
               </div>
-            {{/if}}
+            {{/each}}
+          {{else}}
+            No trained sections
           {{/if}}
-        {{/each}}
-
+        {{/if}}
       </div>
     </div>
   </div>

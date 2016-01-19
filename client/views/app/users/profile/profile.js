@@ -1,10 +1,10 @@
 Template.profileMainView.helpers({
-  'user': function () {
+  user: function () {
     var userId = Router.current().params._id;
     return Meteor.users.findOne({_id: userId});
   },
 
-  'name': function () {
+  name: function () {
     var id = Router.current().params._id;
     var user = Meteor.users.findOne(id);
     var loggedIn = Meteor.user();
@@ -12,18 +12,13 @@ Template.profileMainView.helpers({
       if (user._id == loggedIn._id) {
         return "My Profile";
       } else {
-        return user.username + "'s Profile";
+        return user.profile.firstname + "'s Profile";
       }
     }
   },
 
   me: function () {
-    var id = Router.current().params._id;
-    var user = Meteor.userId();
-    if (id == user) {
-      return true;
-    } else {
-      return false;
-    }
+    var id = HospoHero.getParamsFromRoute('_id');
+    return HospoHero.isMe(id);
   }
 });

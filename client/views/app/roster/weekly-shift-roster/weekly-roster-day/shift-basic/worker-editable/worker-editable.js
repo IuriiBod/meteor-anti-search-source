@@ -10,8 +10,7 @@ Template.shiftBasicWorkerEditable.helpers({
 
 
 var workersSourceMixin = function (editableConfig, templateInstance) {
-  var getAlreadyAssignedWorkersIds = function () {
-    var shift = templateInstance.data;
+  var getAlreadyAssignedWorkersIds = function (shift) {
     var occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
 
     var assignedUserIds = Shifts.find({
@@ -65,8 +64,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
     });
   };
 
-  var getTraindeWorkers = function () {
-    var shift = templateInstance.data;
+  var getTraindeWorkers = function (shift) {
     var shiftSection = shift.section;
 
     if (shiftSection) {
@@ -79,7 +77,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
   };
 
   var sourceFn = function (getAvailableWorkers, showTrainedWorkers) {
-    var shift = templateInstance.data;
+    var shift = Shifts.findOne({_id: templateInstance.data._id});
     var workersQuery = {
       "isActive": true,
       $or: [
@@ -88,8 +86,8 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
       ]
     };
 
-    var assignedWorkers = getAlreadyAssignedWorkersIds();
-    var trainedWorkers = getTraindeWorkers();
+    var assignedWorkers = getAlreadyAssignedWorkersIds(shift);
+    var trainedWorkers = getTraindeWorkers(shift);
     if (showTrainedWorkers) {
       assignedWorkers = _.difference(trainedWorkers, assignedWorkers);
     } else if (getAvailableWorkers) {
@@ -100,7 +98,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
 
     workersQuery["roles." + HospoHero.getCurrentAreaId()] = {$in: getCanBeRostedRoles()};
 
-    return Meteor.users.find(workersQuery, {sort: {"username": 1}}).map(function (worker) {
+    return Meteor.users.find(workersQuery, {sort: {"profile.firstname": 1}}).map(function (worker) {
       return {
         value: worker._id,
         text: HospoHero.username(worker)

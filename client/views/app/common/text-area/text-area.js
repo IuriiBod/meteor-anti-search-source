@@ -15,30 +15,29 @@ Template.textArea.onRendered(function () {
       var mentionRegExp = /(?:^|\W)@(\w+)(?!\w)/g, match, matches = [];
       while (match = mentionRegExp.exec(text)) {
         var user = Meteor.users.findOne({
-          username: match[1],
+          'profile.firstname': match[1],
           "relations.areaIds": {$all: [HospoHero.getCurrentAreaId()]}
         });
         if (user) {
-          matches.push(match[1]);
+          matches.push(user);
         }
       }
 
       var taggedUsers = [];
-      matches.forEach(function (username) {
-        var filter = new RegExp(username);
-        var subscriber = Meteor.users.findOne({"username": filter});
+      matches.forEach(function (user) {
+        var filter = new RegExp(user.profile.firstname);
+        var subscriber = Meteor.users.findOne({"profile.firstname": filter});
         if (subscriber) {
           taggedUsers.push({
-            name: '@' + HospoHero.username(subscriber._id),
-            username: '@' + subscriber.username
+            name: '@' + HospoHero.username(subscriber._id)
           });
         }
       });
 
-      var textHtml = '<div class="non">' + text + '</div>';
+      var textHtml = '<div class="non">' + text.trim() + '</div>';
 
       taggedUsers.forEach(function (user) {
-        textHtml = textHtml.replace(user.username, '<span class="label label-success">' + user.name + '</span>');
+        textHtml = textHtml.replace(user.name, '<span class="label label-success">' + user.name + '</span>');
       });
 
       var linkedText = autolinker.link(textHtml);
@@ -46,7 +45,12 @@ Template.textArea.onRendered(function () {
       if (this.data.type == "newsFeedMainTextBox" || this.data.type == "newsFeedSubTextBox") {
         Meteor.call("createNewsfeed", linkedText, this.data.reference, matches, HospoHero.handleMethodResult());
       } else if (this.data.type == "submitComment") {
-        Meteor.call("createComment", linkedText, this.data.reference, this.data.refType, matches, HospoHero.handleMethodResult());
+        var comment = {
+          text: linkedText,
+          reference: this.data.reference,
+        };
+
+        Meteor.call("createComment", comment, this.data.refType, matches, HospoHero.handleMethodResult());
       }
     }
   }
@@ -62,7 +66,7 @@ Template.textArea.helpers({
       rules: [{
         token: '@',
         collection: Meteor.users,
-        field: "username",
+        field: ["profile.firstname", "profile.lastname"],
         filter: {
           "_id": {$nin: [Meteor.userId()]},
           "isActive": true

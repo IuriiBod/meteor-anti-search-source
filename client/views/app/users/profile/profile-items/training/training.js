@@ -4,9 +4,19 @@ Template.training.helpers({
       'relations.areaId': HospoHero.getCurrentAreaId()
     });
   },
-  userSelectedSections: function(sectionId) {
-    var userId = Template.instance().data.userId;
 
+  userTrainedSections: function () {
+    var userId = Template.instance().data.userId;
+    var user = Meteor.users.findOne({_id: userId});
+    if (user && user.profile.sections) {
+      return Sections.find({_id: {$in: user.profile.sections}});
+    } else {
+      return false;
+    }
+  },
+
+  isSelectedSection: function(sectionId) {
+    var userId = Template.instance().data.userId;
     return !!Meteor.users.findOne({
       _id: userId,
       'profile.sections': sectionId

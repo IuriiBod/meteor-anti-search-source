@@ -13,7 +13,12 @@ Router.route('signIn', {
 Router.route('signUp', {
   path: '/register',
   layoutTemplate: 'blankLayout',
-  template: 'signUp'
+  template: 'signUp',
+  data: function () {
+    if (Meteor.userId()) {
+      Router.go('/');
+    }
+  }
 });
 
 
@@ -50,7 +55,7 @@ Router.route('switchUser', {
   data: function () {
     StaleSession._lockWithPin();
     return {
-      users: Meteor.users.find()
+      users: Meteor.users.find({_id: {$in: StaleSession.getStoredUsersIds()}})
     };
   }
 });
@@ -65,10 +70,9 @@ Router.route('profile', {
       Meteor.subscribe('profileUser', this.params._id),
       Meteor.subscribe('shifts', 'future', this.params._id, currentAreaId),
       Meteor.subscribe('shifts', 'opened', null, currentAreaId),
-      Meteor.subscribe('sections', currentAreaId)
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('userAllLeaveRequests', this.params._id)
     ];
-  },
-  data: function () {
   }
 });
 
