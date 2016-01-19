@@ -55,7 +55,8 @@ Router.route('/jobItem/:_id', {
       Meteor.subscribe('userSubscriptions', currentAreaId),
       Meteor.subscribe('allCategories', currentAreaId),
       Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('jobsRelatedMenus', this.params._id)
+      Meteor.subscribe('jobsRelatedMenus', this.params._id),
+      Meteor.subscribe('taskList', Meteor.userId())
     ];
   },
   data: function () {

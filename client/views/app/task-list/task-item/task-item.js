@@ -89,7 +89,9 @@ Template.taskItem.events({
 
   'click .edit-task': function (event, tmpl) {
     event.preventDefault();
-    tmpl.data.onEditTaskAction(tmpl.data.task);
+    if(_.isFunction (tmpl.data.onEditTaskAction)) {
+      tmpl.data.onEditTaskAction(tmpl.data.task);
+    }
   }
 });
 

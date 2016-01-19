@@ -1,0 +1,23 @@
+<template name="relatedTasks">
+  <div class="col-md-12 hidden-print task-list-content task-list-widget">
+    <hr>
+    <div class="ibox">
+      <div class="ibox-title">
+        Tasks
+      </div>
+      <div class="ibox-content">
+        <div class="row">
+          <div class="task-list-container col-xs-12">
+            {{#if tasks.count}}
+              {{#each tasks}}
+                {{> taskItem task=this}}
+              {{/each}}
+            {{else}}
+              <h3>No tasks here</h3>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
