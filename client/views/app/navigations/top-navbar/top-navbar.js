@@ -7,10 +7,6 @@ Template.topNavbar.helpers({
     return moment().format("w");
   },
 
-  settingsMenuItems: function () {
-    return settingsMenuItems;
-  },
-
   profileMenuItems: function () {
     return [
       {
@@ -83,15 +79,3 @@ Template.topNavbar.events({
     FlyoutManager.open('userUnavailability', {});
   }
 });
-
-
-var settingsMenuItems = [
-  {
-    route: 'sectionsSettings',
-    title: 'Sections'
-  },
-  {
-    route: 'stockAreasSettings',
-    title: 'Stock Areas'
-  }
-];

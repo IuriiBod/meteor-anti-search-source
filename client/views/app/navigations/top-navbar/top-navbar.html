@@ -17,9 +17,6 @@
               {{getCurrentArea.name}}
             </span>
           </li>
-          <li>
-            <a class="count-info organization-structure-flyout"><i class="fa fa-sitemap"></i></a>
-          </li>
         {{/if}}
         <li class="dropdown">
           <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,14 +43,6 @@
         <li>
           <a href="#"><i class="fa fa-calendar"></i></a>
         </li>
-        {{#if isManager}}
-          <li class="dropdown">
-            <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-cog"></i>
-            </a>
-            {{> settingsDropdownMenu menuItems=settingsMenuItems}}
-          </li>
-        {{/if}}
       </ul>
     </nav>
   </div>
