@@ -13,45 +13,31 @@ Template.menuItemReport.onRendered(function() {
 Template.menuItemReport.helpers({
   itemSalesQuantity: function() {
     var menuItemDailySales = Template.instance().getItemSalesQuantity();
-    return menuItemDailySales && menuItemDailySales.predictionQuantity || 0;
+    if (menuItemDailySales) {
+      return menuItemDailySales.actualQuantity || menuItemDailySales.predictionQuantity || 0;
+    }
   },
   itemTotalPriceFromSales: function() {
     var menuItemDailySales = Template.instance().getItemSalesQuantity();
-    return menuItemDailySales && menuItemDailySales.predictionQuantity * this.item.salesPrice || 0;
+    if (menuItemDailySales) {
+      return this.item.salesPrice * (menuItemDailySales.actualQuantity || menuItemDailySales.predictionQuantity) || 0;
+    }
   },
 
   menuItemStats: function () {
-    var menu = this.item;
-    var round = function (value) {
-      return HospoHero.misc.rounding(value);
-    };
+    var menuItem = this.item;
+    var menuItemDailySales = Template.instance().getItemSalesQuantity();
 
-    var processMenuEntry = function (propertyName, predicate) {
-      var entriesField = menu[propertyName];
-      return _.isArray(entriesField) && round(_.reduce(entriesField, predicate, 0)) || 0;
-    };
+    if (menuItemDailySales) {
+      var round = function (value) {
+        return HospoHero.misc.rounding(value);
+      };
 
-    var result = {
-      totalIngCost: processMenuEntry('ingredients', function (total, ingredientEntry) {
-        var ingredient = Ingredients.findOne({_id: ingredientEntry._id});
-        var ingredientProps = HospoHero.analyze.ingredient(ingredient);
-        total += ingredientProps.costPerPortionUsed * ingredientEntry.quantity;
-        return total;
-      }),
+      var result = HospoHero.analyze.menuItem(menuItem);
 
-      totalPrepCost: processMenuEntry('jobItems', function (total, jobEntry) {
-        var job = JobItems.findOne({_id: jobEntry._id});
-        var jobItemProps = HospoHero.analyze.jobItem(job);
-        total += jobItemProps.prepCostPerPortion * jobEntry.quantity;
-        return total;
-      }),
+      result.totalContribution = round(result.contribution * (menuItemDailySales.actualQuantity || menuItemDailySales.predictionQuantity));
 
-      tax: round(menu.salesPrice * 0.1)
-    };
-
-    result.contribution = round(menu.salesPrice - result.totalPrepCost - result.totalIngCost - result.tax);
-    result.totalContribution = round(result.contribution * Template.instance().getItemSalesQuantity().predictionQuantity);
-    console.log(result);
-    return result;
+      return result;
+    }
   }
 });
