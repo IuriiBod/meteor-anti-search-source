@@ -3,6 +3,7 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
+# ===========> meteor core packages
 meteor-base
 standard-minifiers
 mobile-experience
@@ -17,63 +18,77 @@ spacebars
 check
 http
 force-ssl
-service-configuration
 jquery
 email
 underscore
 random
-micah:google-cloud
-jss:through
-votercircle:winston
-iron:router
-cmather:handlebars-server
-percolate:migrations
+
+less
+reactive-var
+
+crosswalk
 
 accounts-ui
 accounts-google
 accounts-password
+service-configuration
 
-useraccounts:bootstrap
-mizzao:autocomplete
-konecty:autolinker
-less
+# ===========> frontend
 twbs:bootstrap
+useraccounts:bootstrap
 zimme:iron-router-active
 okgrow:router-autoscroll
+konecty:autolinker
+mizzao:autocomplete
 dbarrett:dropzonejs
 percolate:intercom
 kevohagan:sweetalert
 mrt:jquery-ui-sortable
-hospohero:stale-session
-reactive-var
-
+dbernhard:jquery-ui-draggable
+thesabbir:jquery-nestable
 claudiojulio:blueimp-gallery
 summernote:summernote
 planettraining:jquery-fullcalendar
-thesabbir:jquery-nestable
 rochal:slimscroll
-
 natestrauser:x-editable-bootstrap
+deepwell:bootstrap-datepicker2
+u2622:persistent-session
+natestrauser:select2
+fortawesome:fontawesome
+russ:weather-icons
+joshowens:timezone-picker
+natestrauser:animate-css
+peppelg:bootstrap-3-modal
+
+hospohero:stale-session
+trsdln:flyouts
+jss:blaze-states
+trsdln:modals
+
+# ===========> backend
+micah:google-cloud
+votercircle:winston
+cmather:handlebars-server
+percolate:migrations
+percolate:synced-cron
+reywood:publish-composite
+
+jss:through
+jss:meteor-google-prediction
+jss:publish-authorized
+
+# ===========> both
+iron:router
+zephraph:namespace
 
 alonoslav:roles
-
-zephraph:namespace
-jss:meteor-google-prediction
-u2622:persistent-session
-deepwell:bootstrap-datepicker2
-percolate:synced-cron
-dbernhard:jquery-ui-draggable
-reywood:publish-composite
-jss:publish-authorized
-natestrauser:select2
-trsdln:flyouts
-russ:weather-icons
-fortawesome:fontawesome
-
-joshowens:timezone-picker
-jss:blaze-states
-natestrauser:animate-css
 jss:anti-search-source
-trsdln:modals
 jss:moment-timezone
-peppelg:bootstrap-3-modal
+
+# ===========> new
+
+
+
+
+
+
