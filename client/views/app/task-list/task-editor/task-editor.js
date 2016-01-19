@@ -124,33 +124,35 @@ Template.taskEditor.events({
     };
 
     var getTaskDurationInMinutes = function (durationString) {
-      var durationRegEx = /(\d+)\s?(\S+)/g;
-
-      var duration;
       var durationInMinutes = 0;
 
-      var timeUnits = {
-        hours: {
-          names: ['h', 'hour', 'hours'],
-          multiplier: 60
-        },
-        minutes: {
-          names: ['m', 'min', 'minute', 'minutes'],
-          multiplier: 1
-        }
-      };
+      if (durationString.trim()) {
+        var durationRegEx = /(\d+)\s?(\S+)/g;
+        var duration;
 
-      while (duration = durationRegEx.exec(durationString)) {
-        var timeUnitsNumber = duration[1];
-        var timeUnitName = duration[2];
-
-        Object.keys(timeUnits).forEach(function (key) {
-          var timeUnit = timeUnits[key];
-          if (timeUnit.names.indexOf(timeUnitName) > -1) {
-            timeUnitsNumber *= timeUnit.multiplier;
-            durationInMinutes += timeUnitsNumber;
+        var timeUnits = {
+          hours: {
+            names: ['h', 'hour', 'hours'],
+            multiplier: 60
+          },
+          minutes: {
+            names: ['m', 'min', 'minute', 'minutes'],
+            multiplier: 1
           }
-        });
+        };
+
+        while (duration = durationRegEx.exec(durationString)) {
+          var timeUnitsNumber = duration[1];
+          var timeUnitName = duration[2];
+
+          Object.keys(timeUnits).forEach(function (key) {
+            var timeUnit = timeUnits[key];
+            if (timeUnit.names.indexOf(timeUnitName) > -1) {
+              timeUnitsNumber *= timeUnit.multiplier;
+              durationInMinutes += timeUnitsNumber;
+            }
+          });
+        }
       }
 
       return durationInMinutes;
@@ -158,7 +160,7 @@ Template.taskEditor.events({
 
 
     event.preventDefault();
-    var newTaskInfo = HospoHero.misc.getValuesFromEvent(event, [
+    var taskInfo = HospoHero.misc.getValuesFromEvent(event, [
       {
         name: 'new-task-title',
         newName: 'title'
@@ -174,30 +176,28 @@ Template.taskEditor.events({
       }
     ], true);
 
-    if (newTaskInfo.title === '') {
+    if (taskInfo.title === '') {
       HospoHero.error('Task must have a title!');
     } else {
-      // if we share task between users, get them ids
-      if (tmpl.sharingType.get() === 'users') {
-        tmpl.sharingIds.set(getSharedUserIds());
-      }
-
       var additionalTaskParams = {
         done: false,
         dueDate: tmpl.datepicker.datepicker('getDate'),
-        sharingType: tmpl.sharingType.get(),
-        sharingIds: tmpl.sharingIds.get(),
+        assignedTo: getSharedUserIds(),
+        sharing: {
+          type: tmpl.sharingType.get(),
+          id: tmpl.sharingIds.get()
+        },
         reference: getReference()
       };
-      newTaskInfo = _.extend(newTaskInfo, additionalTaskParams);
+      taskInfo = _.extend(taskInfo, additionalTaskParams);
 
       var method = 'createTask';
       if (tmpl.data.task._id) {
         method = 'editTask';
-        newTaskInfo._id = tmpl.data.task._id;
+        taskInfo._id = tmpl.data.task._id;
       }
 
-      Meteor.call(method, newTaskInfo, HospoHero.handleMethodResult(function () {
+      Meteor.call(method, taskInfo, HospoHero.handleMethodResult(function () {
         tmpl.data.onCreateTaskAction();
       }));
     }
