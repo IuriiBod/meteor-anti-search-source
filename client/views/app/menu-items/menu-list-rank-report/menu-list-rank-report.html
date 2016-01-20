@@ -2,6 +2,16 @@
   {{> pageHeading title="Menus List" category='Menus' name="menuList"}}
 
   <div class="wrapper wrapper-content animated">
+    {{#if customRangeSelected}}
+      {{> menuItemReportDatepicker}}
+    {{else}}
+      <select class="date">
+        <option value="yesterday">Yesterday</option>
+        <option value="this week">This Week</option>
+        <option value="last week">Last week</option>
+        <option value="custom range">Custom range</option>
+      </select>
+    {{/if}}
     <div class="table-responsive">
       <table class="table">
         <thead>
