@@ -208,8 +208,8 @@ FigureBoxDataHelper.prototype._getTotalMinutes = function (shift) {
 
 //DAILY SALES
 FigureBoxDataHelper.prototype._getDailyShifts = function (day, isFinished) {
-  var statusQeury = isFinished ? 'finished' : {$ne: null};
-  return Shifts.find({startTime: TimeRangeQueryBuilder.forDay(day), status: statusQeury, type: null}).fetch();
+  var statusQuery = isFinished ? 'finished' : {$ne: null};
+  return Shifts.find({startTime: TimeRangeQueryBuilder.forDay(day), status: statusQuery, type: null}).fetch();
 };
 
 FigureBoxDataHelper.prototype.getDailyStaff = function (day) {

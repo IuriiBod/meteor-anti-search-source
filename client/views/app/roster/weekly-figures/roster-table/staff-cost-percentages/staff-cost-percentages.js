@@ -1,20 +1,17 @@
 Template.staffCostPercentagesTr.onCreated(function () {
+  this.dailyStaff = new ReactiveVar(false);
   var tmpl = this;
   this.autorun(function () {
     var data = Template.currentData();
-    tmpl.set('dailyStaff', data.figureBoxDataHelper.getDailyStaff(data.day));
+    var dailyStaff = data.figureBoxDataHelper.getDailyStaff(data.day);
+    tmpl.dailyStaff.set('dailyStaff', dailyStaff);
   });
 });
 
 Template.staffCostPercentagesTr.helpers({
-  actual: function () {
-    return this.actualWage;
+  dailyStaff: function () {
+    return Template.instance().dailyStaff.get();
   },
-
-  forecast: function () {
-    return this.forecastedWage;
-  },
-
   textClass: function () {
     if (this.actualWage != 0) {
       if (this.actualWage <= this.forecastedWage) {

@@ -1,22 +1,5 @@
 //context: user (User), tableViewMode ("shifts"/"hours"), weekDate (WeekDate)
 Template.teamHoursItem.onCreated(function () {
-  this.getUserPayRate = function (date) {
-    var user = this.data.user;
-    if (user.profile && user.profile.payrates) {
-      var wageDoc = user.profile.payrates;
-
-      var currentWeekDay = moment(date).format('dddd').toLowerCase();
-
-      var rate = wageDoc[currentWeekDay];
-      if (!rate) {
-        rate = wageDoc['weekdays']
-      }
-      return rate;
-    } else {
-      return 0;
-    }
-  };
-
   this.getTotalTimeAndWage = function (templateData) {
     var dateForWeek = HospoHero.dateUtils.getDateByWeekDate(templateData.weekDate);
 
@@ -38,7 +21,7 @@ Template.teamHoursItem.onCreated(function () {
         var shiftDuration = locationFinish.diff(locationStart, 'minutes');
 
         totalMinutes += shiftDuration;
-        totalWage += (self.getUserPayRate(locationStart) / 60) * shiftDuration;
+        totalWage += (HospoHero.misc.getUserPayRate(self.data.user,locationStart) / 60) * shiftDuration;
         dailyHoursManager.addMinutes(locationStart, shiftDuration);
       }
     });
