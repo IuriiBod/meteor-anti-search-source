@@ -43,6 +43,11 @@ Template.ingredientItemEditor.onRendered(function () {
   this.$('.unit-size-popover').popover({
     content: "If you use mls of milk and order 1lt you'd put 1000 in this box, as there is 1000 mls in every litre. If you use grams of flour and order 20kg bags you'd put 20000, as there is 20000 grams in 20kgs."
   });
+
+  //it's important to raise the backdrop of current modal window above another modal windows
+  Meteor.setTimeout(function() {
+    $('.modal-backdrop.fade.in').last().css('cssText', 'z-index: 3000 !important');
+  }, 200);
 });
 
 
