@@ -11,7 +11,7 @@ Template.userSelector.helpers({
   },
 
   isSelected: function () {
-    var assignedUsers = Template.parentData().task.assignedTo;
+    var assignedUsers = Template.parentData().task.assignedTo || [];
     return assignedUsers.indexOf(this._id) > -1;
   }
 });

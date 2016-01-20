@@ -77,8 +77,6 @@ Template.taskList.helpers({
       _.extend(query, filterTypes[filterType]());
     }
 
-    console.log('QUERY', query);
-
     return TaskList.find(query, {
       sort: {
         dueDate: 1

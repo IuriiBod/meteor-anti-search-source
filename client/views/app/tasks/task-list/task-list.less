@@ -19,7 +19,7 @@
     .select2 {
       margin-left: 10px;
       margin-top: 1px;
-      
+
       .select2-selection {
         border-radius: 0;
       }
@@ -70,59 +70,7 @@
           line-height: 12px;
           padding: 0 4px;
           position: absolute;
-          right: 10px;
-          top: 7px;
-        }
-      }
-    }
-  }
-
-  .create-new-task-container {
-    position: absolute;
-    top: -15px;
-    left: 0;
-    background-color: #fff;
-    z-index: 30;
-    border-bottom: 1px solid #CBD5DD;
-    padding: 20px;
-
-    form {
-      .form-group {
-        margin-top: -1px;
-
-        textarea {
-          resize: none;
-        }
-
-        .user-selector-container {
-          margin: -16px 0 10px;
-
-          .select2-selection {
-            border-radius: 0;
-          }
-        }
-
-        .task-buttons-container {
-          margin-top: 10px;
-        }
-
-        .time-duration-popover {
-          position: absolute;
-          top: 10px;
-          right: 0;
-        }
-      }
-
-      .input-group {
-        .input-group-btn {
-          .date-picker-input {
-            visibility: hidden;
-            position: absolute;
-          }
-
-          .date-picker-button {
-            border-radius: 0;
-          }
+          margin-top: -7px;
         }
       }
     }
@@ -131,5 +79,56 @@
   .task-switcher-container {
     display: inline-block;
     vertical-align: middle;
+  }
+}
+
+.create-new-task-container {
+  position: absolute;
+  top: -15px;
+  left: 0;
+  background-color: #fff;
+  z-index: 30;
+  border-bottom: 1px solid #CBD5DD;
+  padding: 20px;
+
+  form {
+    .form-group {
+      margin-top: -1px;
+
+      textarea {
+        resize: none;
+      }
+
+      .user-selector-container {
+        margin: -16px 0 10px;
+
+        .select2-selection {
+          border-radius: 0;
+        }
+      }
+
+      .task-buttons-container {
+        margin-top: 10px;
+      }
+
+      .time-duration-popover {
+        position: absolute;
+        top: 10px;
+        right: 0;
+      }
+    }
+
+    .input-group {
+      .input-group-btn {
+        .date-picker-input {
+          visibility: hidden;
+          position: absolute;
+        }
+
+        .date-picker-button {
+          border-radius: 0;
+        }
+      }
+    }
   }
 }
