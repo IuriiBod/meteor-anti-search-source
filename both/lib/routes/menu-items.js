@@ -56,7 +56,7 @@ Router.route('submitMenuItem', {
 });
 
 Router.route('menuItemsRankReport', {
-  path: '/menuItems/items-rank-report',
+  path: '/menu-items/items-rank-report',
   template: 'menuListRankReport',
   waitOn: function() {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
@@ -70,6 +70,31 @@ Router.route('menuItemsRankReport', {
 
       //Meteor.subscribe('menuList', currentAreaId, this.params.category, this.params.status.toLowerCase()),
     ];
+  }
+});
+
+Router.route('menuItemsReportByDate', {
+  path: '/menu-items/items-rank-report/:date',
+  template: 'menuListRankReport',
+  data: function () {
+    console.log(this.params.date);
+  }
+});
+
+Router.route('menuItemsReportByDateRange', {
+  path: '/menu-items/items-rank-report/:startDate/:endDate',
+  template: 'menuListRankReport',
+  waitOn: function () {
+    var query = TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate);
+
+    return [
+      Meteor.subscribe('menuItemsSales', query)
+    ]
+  },
+  data: function () {
+    console.log(this.params.startDate);
+    console.log(this.params.endDate);
+    console.log(DailySales.find().fetch());
   }
 });
 
