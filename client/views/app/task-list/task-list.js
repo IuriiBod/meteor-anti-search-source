@@ -35,6 +35,7 @@ var filterTypes = {
 Template.taskList.onCreated(function () {
   this.isNewTaskCreating = new ReactiveVar(false);
   this.filterType = new ReactiveVar('All tasks');
+  this.filterUser = new ReactiveVar(Meteor.userId());
   this.task = {};
 });
 
@@ -63,13 +64,20 @@ Template.taskList.helpers({
   tasks: function () {
     var tmpl = Template.instance();
     var filterType = tmpl.filterType.get();
-    var query = HospoHero.misc.getTasksQuery(Meteor.userId());
-    query.done = false;
+    var filterUser = tmpl.filterUser.get();
 
+    var query = HospoHero.misc.getTasksQuery(filterUser);
+
+    query = _.extend(query, {
+      done: false,
+      assignedTo: filterUser
+    });
 
     if (filterTypes.hasOwnProperty(filterType)) {
       _.extend(query, filterTypes[filterType]());
     }
+
+    console.log('QUERY', query);
 
     return TaskList.find(query, {
       sort: {
@@ -94,6 +102,13 @@ Template.taskList.helpers({
     var self = Template.instance();
     return function (filterType) {
       self.filterType.set(filterType);
+    }
+  },
+
+  onUserFilterChange: function () {
+    var self = Template.instance();
+    return function (user) {
+      self.filterUser.set(user);
     }
   }
 });
