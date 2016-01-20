@@ -5,7 +5,9 @@
       {{#with getTotalSales this}}
         <td>${{predicted}}</td>
         <td>${{actual}}</td>
-        <td>{{accuracy}}</td>
+        {{#if ../../showAccuracy}}
+          <td>{{accuracy}}</td>
+        {{/if}}
       {{/with}}
     {{/each}}
   </tr>
