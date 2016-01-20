@@ -7,10 +7,6 @@ Template.topNavbar.helpers({
     return moment().format("w");
   },
 
-  settingsMenuItems: function () {
-    return settingsMenuItems;
-  },
-
   profileMenuItems: function () {
     return [
       {
@@ -21,16 +17,16 @@ Template.topNavbar.helpers({
         }
       },
       {
+        title: 'Availability & Leave',
+        class: 'user-unavailabilities-flyout'
+      },
+      {
         route: 'switchUser',
         title: 'Switch User'
       },
       {
         route: 'logout',
         title: 'Logout'
-      },
-      {
-        title: 'Unavailabilities',
-        class: 'user-unavailabilities-flyout'
       }
     ];
   },
@@ -85,31 +81,3 @@ Template.topNavbar.events({
     FlyoutManager.open('userUnavailability', {});
   }
 });
-
-
-var settingsMenuItems = [
-  {
-    route: 'rolesSettings',
-    title: 'Roles'
-  },
-  {
-    route: 'sectionsSettings',
-    title: 'Sections'
-  },
-  {
-    route: 'stockAreasSettings',
-    title: 'Stock Areas'
-  },
-  {
-    route: 'inactivityTimeoutSettings',
-    title: 'Inactivity Timeout'
-  },
-  {
-    route: 'posSettings',
-    title: 'POS / Menu Linking'
-  },
-  {
-    route: 'archivingSettings',
-    title: 'Locations/Areas archiving'
-  }
-];
