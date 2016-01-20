@@ -84,9 +84,10 @@ Template.taskItem.events({
   },
 
   'click .edit-task': function (event, tmpl) {
-    //event.preventDefault();
-    if (_.isFunction(tmpl.data.onEditTaskAction)) {
-      tmpl.data.onEditTaskAction(tmpl.data.task);
+    if (!$(event.target).is($('.comments-toggler'))) {
+      if (_.isFunction(tmpl.data.onEditTaskAction)) {
+        tmpl.data.onEditTaskAction(tmpl.data.task);
+      }
     }
   }
 });

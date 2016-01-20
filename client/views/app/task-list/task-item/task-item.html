@@ -24,13 +24,21 @@
     </td>
 
     <td class="text-right mail-date">
-      <a class="task-comment-count" href="#">
-        <i class="fa fa-comments-o fa-fw fa-lg">
+      <a class="task-comment-count" href="#comments-{{task._id}}" data-toggle="collapse" aria-expanded="false">
+        <i class="fa fa-comments-o fa-fw fa-lg comments-toggler">
           {{#if commentsCount}}
             <span class="label label-primary">{{commentsCount}}</span>
           {{/if}}
         </i>
       </a>
+    </td>
+  </tr>
+
+  <tr class="collapse" id="comments-{{task._id}}">
+    <td colspan="6">
+      <div class="well">
+        {{> commentsPanel id=task._id type='taskItem'}}
+      </div>
     </td>
   </tr>
 </template>
