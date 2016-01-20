@@ -1,3 +1,23 @@
+// Task references object. Contains the information about reference type, collection, icon and route
+var references = {
+  suppliers: {
+    collection: Suppliers,
+    icon: 'fa-user',
+    route: 'supplierProfile'
+  },
+  menus: {
+    collection: MenuItems,
+    icon: 'fa-cutlery',
+    route: 'menuItemDetail'
+  },
+  jobs: {
+    collection: JobItems,
+    icon: 'fa-spoon',
+    route: 'jobItemDetailed'
+  }
+};
+
+
 Template.taskItem.onRendered(function () {
   this.$('.task-checkbox').iCheck({
     checkboxClass: 'icheckbox_square-green'
@@ -14,18 +34,9 @@ Template.taskItem.helpers({
     return this.task.done ? 'done' : '';
   },
 
-  assignedTo: function () {
-    var assignedTo = this.task.assignedTo;
-    assignedTo = _.map(assignedTo, function (userId) {
-      return HospoHero.username(userId);
-    });
-    return assignedTo.join('</p><p>');
-  },
-
   canDoneTask: function () {
     var userId = Meteor.userId();
-    return this.task.createdBy === userId ||
-      this.task.assignedTo.indexOf(userId) > -1;
+    return this.task.assignedTo.indexOf(userId) > -1;
   },
 
   taskDuration: function () {
@@ -42,24 +53,6 @@ Template.taskItem.helpers({
     var taskReference = this.task.reference;
 
     if (Object.keys(taskReference).length) {
-      var references = {
-        suppliers: {
-          collection: Suppliers,
-          icon: 'fa-user',
-          route: 'supplierProfile'
-        },
-        menus: {
-          collection: MenuItems,
-          icon: 'fa-cutlery',
-          route: 'menuItemDetail'
-        },
-        jobs: {
-          collection: JobItems,
-          icon: 'fa-spoon',
-          route: 'jobItemDetailed'
-        }
-      };
-
       var reference = references[taskReference.type];
       var referenceItem = reference.collection.findOne({_id: taskReference.id});
 
@@ -71,6 +64,21 @@ Template.taskItem.helpers({
     } else {
       return false;
     }
+  },
+
+  dueDateClass: function () {
+    var dueDate = this.task.dueDate;
+    var today = moment();
+    var startOfDay = moment(today).startOf('day').toDate();
+    var endOfDay = moment(today).endOf('day').toDate();
+
+    if (dueDate < startOfDay) {
+      return 'text-danger';
+    } else if (dueDate >= startOfDay && dueDate <= endOfDay) {
+      return 'text-info';
+    } else {
+      return '';
+    }
   }
 });
 
@@ -78,8 +86,10 @@ Template.taskItem.helpers({
 Template.taskItem.events({
   'ifClicked .task-checkbox': function (event, tmpl) {
     var task = tmpl.data.task;
-    task.done = !task.done;
-    task.completedBy = task.done ? Meteor.userId() : null;
+    task = _.extend(task, {
+      done: !task.done,
+      completedBy: task.done ? Meteor.userId() : null
+    });
     Meteor.call('editTask', task);
   },
 

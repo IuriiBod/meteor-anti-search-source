@@ -41,9 +41,6 @@ Meteor.publishComposite('taskList', function (userId) {
           if (task) {
             return Comments.find({
               reference: task._id
-            }, {
-              sort: {"createdOn": -1},
-              limit: 10
             });
           }
         },

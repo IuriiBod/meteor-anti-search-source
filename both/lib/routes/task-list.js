@@ -1,4 +1,4 @@
-Router.route('/task-list', {
+Router.route('/task', {
   name: 'taskList',
   template: 'taskList',
   waitOn: function () {

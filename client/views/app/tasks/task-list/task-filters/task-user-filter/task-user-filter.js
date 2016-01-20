@@ -1,11 +1,22 @@
 Template.taskUserFilter.onRendered(function () {
-  this.$('.task-user-filter').select2({});
+  this.$('.task-user-filter').select2({
+    placeholder: 'Select user',
+    allowClear: true
+  });
 });
 
 
 Template.taskUserFilter.helpers({
   users: function () {
-    return Meteor.users.find();
+    return Meteor.users.find({
+      _id: {
+        $ne: Meteor.userId()
+      }
+    }, {
+      sort: {
+        'profile.firstname': 1
+      }
+    });
   }
 });
 

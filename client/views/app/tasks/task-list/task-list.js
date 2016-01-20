@@ -35,7 +35,7 @@ var filterTypes = {
 Template.taskList.onCreated(function () {
   this.isNewTaskCreating = new ReactiveVar(false);
   this.filterType = new ReactiveVar('All tasks');
-  this.filterUser = new ReactiveVar(Meteor.userId());
+  this.filterUser = new ReactiveVar();
   this.task = {};
 });
 
@@ -67,11 +67,10 @@ Template.taskList.helpers({
     var filterUser = tmpl.filterUser.get();
 
     var query = HospoHero.misc.getTasksQuery(filterUser);
-
-    query = _.extend(query, {
-      done: false,
-      assignedTo: filterUser
-    });
+    query.done = false;
+    if (filterUser) {
+      query.assignedTo = filterUser;
+    }
 
     if (filterTypes.hasOwnProperty(filterType)) {
       _.extend(query, filterTypes[filterType]());

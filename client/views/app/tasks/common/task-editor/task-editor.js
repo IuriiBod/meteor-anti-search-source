@@ -115,13 +115,13 @@ Template.taskEditor.events({
     };
 
     var getSharedUserIds = function () {
-      var taggedUsers = [Meteor.userId()];
+      var taggedUsers = [];
       var selectedOptions = tmpl.$('.user-selector').find('option:selected');
 
       selectedOptions.each(function(index, option) {
         taggedUsers.push(option.value);
       });
-      return taggedUsers;
+      return taggedUsers.length ? taggedUsers : [Meteor.userId()];
     };
 
     var getTaskDurationInMinutes = function (durationString) {

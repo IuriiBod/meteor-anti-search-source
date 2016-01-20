@@ -7,7 +7,11 @@ Template.userSelector.onRendered(function () {
 
 Template.userSelector.helpers({
   users: function () {
-    return Meteor.users.find({_id: {$ne: Meteor.userId()}});
+    return Meteor.users.find({}, {
+      sort: {
+        'profile.firstname': 1
+      }
+    });
   },
 
   isSelected: function () {
