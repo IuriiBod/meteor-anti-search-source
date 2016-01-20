@@ -90,7 +90,7 @@ Template.taskList.helpers({
     return Template.instance().filterType.get();
   },
 
-  onFilterChange: function () {
+  onDateFilterChange: function () {
     var self = Template.instance();
     return function (filterType) {
       self.filterType.set(filterType);

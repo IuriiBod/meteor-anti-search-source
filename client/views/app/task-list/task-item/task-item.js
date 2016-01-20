@@ -19,7 +19,7 @@ Template.taskItem.helpers({
     assignedTo = _.map(assignedTo, function (userId) {
       return HospoHero.username(userId);
     });
-    return assignedTo.join(', ');
+    return assignedTo.join('</p><p>');
   },
 
   canDoneTask: function () {

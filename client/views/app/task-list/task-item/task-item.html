@@ -10,11 +10,20 @@
       {{dateFormat task.dueDate}}
     </td>
 
+    <td class="mail-subject task-title {{isDoneClass}}">
+      {{task.title}}
+      {{#if task.done}}
+        ({{username task.completedBy}})
+      {{/if}}
+    </td>
+
     <td class="mail-subject">
       <span class="label label-warning pull-right hidden-xs">{{taskDuration}}</span>
     </td>
 
-    <td>{{assignedTo}}</td>
+    <td>
+      <p>{{{assignedTo}}}</p>
+    </td>
 
     <td>
       <a href="{{referenceObject.route}}" class="text-primary">

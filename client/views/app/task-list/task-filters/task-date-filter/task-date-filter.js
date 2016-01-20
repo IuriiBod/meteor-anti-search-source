@@ -1,4 +1,4 @@
-Template.taskFilter.helpers({
+Template.taskDateFilter.helpers({
   templateData: function () {
     var parentData = Template.parentData();
     return {
