@@ -8,18 +8,45 @@ updateDataForSparkline = function(location) {
     return HospoHero.misc.rounding(value);
   };
 
-  var getMenuItems = function (menuItemId) {
+  var getMenuItem = function (menuItemId) {
     return MenuItems.findOne({_id: menuItemId});
   };
-  //var date2 = moment(new Date()).toDate();
-  //console.log('DailySales.findOne({date: date}) ->', DailySales.find({date: date}).count());
+
+  var getSortedMenuItems = function () {
+    var filteredMenuItems = menuItemsIds.map(function (id) {
+      var filteredMenuItemStats = _.filter(menuItemsStats, function (item) {
+        return item.menuItemId === id;
+      });
+
+      return filteredMenuItemStats.reduce(function (previousValue, currentValue) {
+        return {
+          menuItemId: currentValue.menuItemId,
+          totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
+        }
+      });
+    });
+
+    console.log('before sort -> ', filteredMenuItems[0]);
+    filteredMenuItems.sort(function (a, b) {
+      if (a.totalContribution < b.totalContribution) {
+        return 1;
+      } else if (a.totalContribution > b.totalContribution) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
+    return filteredMenuItems;
+  };
+
   DailySales.find({
     date: {
       $gte: fifteenDaysAgo,
       $lte: yesterday
     }
   }).forEach(function (dailySalesItem) {
-    var menuItem = getMenuItems(dailySalesItem.menuItemId);
+    var menuItem = getMenuItem(dailySalesItem.menuItemId);
 
     var result = HospoHero.analyze.menuItem(menuItem);
 
@@ -33,36 +60,14 @@ updateDataForSparkline = function(location) {
     }
   });
 
-  var filteredMenuItems = menuItemsIds.map(function (id) {
-    var filteredMenuItemStats = _.filter(menuItemsStats, function (item) {
-      return item.menuItemId === id;
-    });
+  console.log('after sort -> ', getSortedMenuItems()[0]);
 
-    return filteredMenuItemStats.reduce(function (previousValue, currentValue) {
-      return {
-        menuItemId: currentValue.menuItemId,
-        totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
-      }
-    });
-  });
-
-  console.log('before sort -> ', filteredMenuItems[0]);
-  filteredMenuItems.sort(function (a, b) {
-    if (a.totalContribution < b.totalContribution) {
-      return 1;
-    } else if (a.totalContribution > b.totalContribution) {
-      return -1;
-    } else {
-      return 0;
-    }
-  });
-  console.log('after sort -> ', filteredMenuItems[0]);
-  filteredMenuItems.forEach(function (item, index) {
-    var menuItem = getMenuItems(item.menuItemId);
+  getSortedMenuItems().forEach(function (item, index) {
+    var menuItem = getMenuItem(item.menuItemId);
     //if (!menuItem.rank) {
     //  MenuItems.update({_id: item.menuItemId}, {$set: {rank: []}});
     //}
-    if (menuItem.rank.length > 7) {
+    if (menuItem.rank.length > 6) {
       menuItem.rank.shift();
       menuItem.rank.push(++index);
     } else {

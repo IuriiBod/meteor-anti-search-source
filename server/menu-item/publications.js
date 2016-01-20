@@ -98,3 +98,85 @@ AntiSearchSource.queryTransform('menuItems', function (userId, query) {
     'relations.areaId': HospoHero.getCurrentAreaId(userId)
   });
 });
+
+Meteor.publish('menuItemsSales', function (query) {
+  if (this.userId) {
+    var observer;
+    var menuItemsStats = [];
+    var menuItemsIds = [];
+
+    var round = function (value) {
+      return HospoHero.misc.rounding(value);
+    };
+
+    var getSortedMenuItems = function () {
+      var filteredMenuItems = menuItemsIds.map(function (id) {
+        var filteredMenuItemStats = _.filter(menuItemsStats, function (item) {
+          return item.menuItemId === id;
+        });
+
+        return filteredMenuItemStats.reduce(function (previousValue, currentValue) {
+          return {
+            menuItemId: currentValue.menuItemId,
+            totalIngCost: round(previousValue.totalIngCost + currentValue.totalIngCost),
+            totalPrepCost: round(previousValue.totalPrepCost + currentValue.totalPrepCost),
+            totalTax: round(previousValue.tax + currentValue.tax),
+            totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
+          }
+        });
+      });
+
+      filteredMenuItems.sort(function (a, b) {
+        if (a.totalContribution < b.totalContribution) {
+          return 1;
+        } else if (a.totalContribution > b.totalContribution) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+
+      return filteredMenuItems;
+    };
+
+    var transform = function(doc, dailySalesItem) {
+      var result = HospoHero.analyze.menuItem(doc);
+
+      result.menuItemId = dailySalesItem.menuItemId;
+      result.totalContribution = round(result.contribution * (dailySalesItem.actualQuantity || dailySalesItem.predictionQuantity || 0));
+
+      menuItemsStats.push(result);
+
+      if (menuItemsIds.indexOf(dailySalesItem.menuItemId) === -1) {
+        menuItemsIds.push(dailySalesItem.menuItemId);
+      }
+
+      doc.report = getSortedMenuItems()[0];
+      return doc;
+    };
+
+    var self = this;
+
+    DailySales.find({date: query}).forEach(function (dailySalesItem) {
+      observer = MenuItems.find({_id: dailySalesItem.menuItemId}).observe({
+        added: function (document) {
+          self.added('menuItems', document._id, transform(document, dailySalesItem));
+        },
+        changed: function (newDocument, oldDocument) {
+          self.changed('menuItems', newDocument._id, transform(newDocument, dailySalesItem));
+        },
+        removed: function (oldDocument) {
+          self.removed('menuItems', oldDocument._id);
+        }
+      });
+    });
+
+    self.onStop(function () {
+      observer.stop();
+    });
+
+    self.ready();
+  } else {
+    this.ready();
+  }
+});
