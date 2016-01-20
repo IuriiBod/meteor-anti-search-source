@@ -4,9 +4,17 @@ Namespace('HospoHero.template', {
   },
 
   or: function () {
-    var res = null;
+    var res = false;
     for (var i = 0; i < arguments.length; i++) {
       res = res || arguments[i];
+    }
+    return res;
+  },
+
+  and: function () {
+    var res = true;
+    for (var i = 0; i < arguments.length; i++) {
+      res = !!(res && arguments[i]);
     }
     return res;
   },

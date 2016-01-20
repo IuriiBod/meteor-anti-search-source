@@ -2,6 +2,8 @@ Template.editLocationForm.onCreated(function () {
   var format = 'HH:mm';
   this.defaultOpeningTime = moment('08:00', format).toDate();
   this.defaultClosingTime = moment('17:00', format).toDate();
+
+  this.isPosSettingsShown = new ReactiveVar(false);
 });
 
 Template.editLocationForm.onRendered(function () {
@@ -29,6 +31,9 @@ Template.editLocationForm.helpers({
   closingTime: function () {
     var locationDoc = Template.instance().data.locationDoc;
     return locationDoc && locationDoc.closingTime || Template.instance().defaultClosingTime;
+  },
+  isPosSettingsShown: function() {
+    return Template.instance().isPosSettingsShown.get();
   }
 });
 
@@ -102,5 +107,10 @@ Template.editLocationForm.events({
     if (_.isFunction(tmpl.data.onCancel)) {
       tmpl.data.onCancel(event);
     }
+  },
+
+  'click .show-pos-settings': function (event, tmpl) {
+    var isShown = tmpl.isPosSettingsShown.get();
+    tmpl.isPosSettingsShown.set(!isShown);
   }
 });

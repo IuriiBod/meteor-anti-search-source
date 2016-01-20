@@ -1,11 +1,11 @@
-Template.userBio.helpers({
+Template.profilePhotoAndName.helpers({
   userId: function () {
     if (this.userId) {
       return this.userId;
     }
   }
 });
-Template.userBio.events({
+Template.profilePhotoAndName.events({
   "click *": function (event, tmpl) {
     if (_.isFunction(tmpl.data.onClick)) {
       var userId = tmpl.data.userId;
