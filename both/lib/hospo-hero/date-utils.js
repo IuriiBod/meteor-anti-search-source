@@ -197,14 +197,15 @@ Namespace('HospoHero.dateUtils', {
   minutesToHours: function (duration) {
     var getHoursFromDuration = function (durationInMinutes) {
       var hours = parseInt(durationInMinutes / 60);
-      var hoursText = hours % 10 === 1 ? 'hour' : 'hours';
-      return hours + ' ' + hoursText;
+      //var hoursText = hours % 10 === 1 ? 'hour' : 'hours';
+      //return hours + ' ' + hoursText;
+      return hours + ' h';
     };
 
     var getMinutesFromDuration = function (durationInMinutes) {
       var minutes = durationInMinutes % 60;
       if (minutes > 0) {
-        var minutesText = minutes === 1 ? 'minute' : 'minutes';
+        var minutesText = minutes === 1 ? 'min' : 'mins';
         return minutes + ' ' + minutesText;
       } else {
         return '';

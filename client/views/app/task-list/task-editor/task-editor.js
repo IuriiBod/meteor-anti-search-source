@@ -1,6 +1,6 @@
 Template.taskEditor.onCreated(function () {
   var task = this.data.task;
-  var dueDate = task.dueDate || new Date();
+  var dueDate = task.dueDate && task.dueDate > new Date() ? task.dueDate : new Date();
 
   this.dueDate = new ReactiveVar(dueDate);
   this.sharingType = new ReactiveVar(task.sharing && task.sharing.type || 'private');
@@ -137,7 +137,7 @@ Template.taskEditor.events({
             multiplier: 60
           },
           minutes: {
-            names: ['m', 'min', 'minute', 'minutes'],
+            names: ['m', 'min', 'mins', 'minute', 'minutes'],
             multiplier: 1
           }
         };

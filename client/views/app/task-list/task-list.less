@@ -1,4 +1,22 @@
 .task-list-content {
+
+  .task-list-filter {
+    margin: 18px 0 20px;
+
+    .dropdown-toggle.btn-primary:focus {
+      border: 0;
+      background-color: #18A689;
+    }
+
+    .dropdown-menu {
+      .task-filter-switcher.active {
+        a {
+          background-color: #18A689;
+        }
+      }
+    }
+  }
+
   .float-with-padding {
     float: left;
     padding-right: 10px;
@@ -9,7 +27,6 @@
   }
 
   .task-list-container {
-
     .edit-task {
       cursor: pointer;
     }
@@ -35,10 +52,13 @@
     .mail-date {
       position: relative;
 
-      .count-info {
+      .task-comment-count {
         .label {
-          top: 25px;
-          right: 15px;
+          line-height: 12px;
+          padding: 0 4px;
+          position: absolute;
+          right: 10px;
+          top: 7px;
         }
       }
     }
@@ -90,24 +110,6 @@
           .date-picker-button {
             border-radius: 0;
           }
-        }
-      }
-    }
-  }
-
-  .task-list-filter {
-    margin: 0 10px 10px 0;
-    display: inline-block;
-
-    .dropdown-toggle.btn-primary:focus {
-      border: 0;
-      background-color: #18A689;
-    }
-
-    .dropdown-menu {
-      .task-filter-switcher.active {
-        a {
-          background-color: #18A689;
         }
       }
     }
