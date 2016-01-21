@@ -2,10 +2,14 @@ var TaskListChecker = Match.Where(function (task) {
   check(task, {
     title: String,
     dueDate: Date,
-    sharingType: String,
-    sharingIds: Match.OneOf(HospoHero.checkers.MongoId, [HospoHero.checkers.MongoId]),
-    duration: Number,
+    assignedTo: [HospoHero.checkers.MongoId],
+    sharing: {
+      type: String,
+      id: HospoHero.checkers.MongoId
+    },
+    duration: Match.Optional(Number),
     done: Boolean,
+    createdBy: HospoHero.checkers.MongoId,
 
     // Optional
     _id: HospoHero.checkers.OptionalMongoId,

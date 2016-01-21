@@ -73,7 +73,8 @@ Meteor.methods({
         organizationId: area.organizationId,
         locationIds: [area.locationId],
         areaIds: [area._id]
-      }
+      },
+      currentAreaId: area._id
     };
     updateObject.roles[area._id] = invitation.roleId;
     Meteor.users.update({_id: userId}, {$set: updateObject});

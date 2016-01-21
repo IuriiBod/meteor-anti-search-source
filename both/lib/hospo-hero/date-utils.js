@@ -192,5 +192,45 @@ Namespace('HospoHero.dateUtils', {
   getDateStringForRoute: function (date, location) {
     date = HospoHero.dateUtils.startOfWeekMoment(date, location);
     return HospoHero.dateUtils.shortDateFormat(date);
+  },
+
+  getSeasonOfTheYear: (month) => {
+    let seasons = ['Winter', 'Winter',
+      'Spring', 'Spring', 'Spring',
+      'Summer', 'Summer', 'Summer',
+      'Fall', 'Fall', 'Fall',
+      'Winter'];
+    return seasons[parseInt(month) - 1];
+  },
+
+  minutesToHours: function (duration) {
+    var getHoursFromDuration = function (durationInMinutes) {
+      var hours = parseInt(durationInMinutes / 60);
+      //var hoursText = hours % 10 === 1 ? 'hour' : 'hours';
+      //return hours + ' ' + hoursText;
+      return hours + ' h';
+    };
+
+    var getMinutesFromDuration = function (durationInMinutes) {
+      var minutes = durationInMinutes % 60;
+      if (minutes > 0) {
+        var minutesText = minutes === 1 ? 'min' : 'mins';
+        return minutes + ' ' + minutesText;
+      } else {
+        return '';
+      }
+    };
+
+    if (!duration) {
+      return '';
+    } else {
+      var durationString = [];
+
+      if (duration >= 60) {
+        durationString.push(getHoursFromDuration(duration));
+      }
+      durationString.push(getMinutesFromDuration(duration));
+      return durationString.join(' ').trim();
+    }
   }
 });
