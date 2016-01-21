@@ -59,11 +59,15 @@ var requireLogIn = function () {
       }
     }
   } else {
-    var backwardUrl = HospoHero.misc.getBackwardUrl();
-    var goOptions = {};
-    if (backwardUrl !== '/' && backwardUrl !== '/logout') {
-      goOptions.query = 'backwardUrl=' + backwardUrl;
+    let goOptions = {};
+    let backwardUrl = HospoHero.misc.getBackwardUrl();
+    let backwardUrlParameter = 'enableBackwardsUrl=true';
+    let enableBackwardUrl = backwardUrl.includes(backwardUrlParameter);
+
+    if (enableBackwardUrl && backwardUrl !== '/' && backwardUrl !== '/logout') {
+      goOptions.query = 'backwardUrl=' + backwardUrl.replace(backwardUrlParameter, '');
     }
+
     Router.go('signIn', {}, goOptions);
     return this.next();
   }
