@@ -195,6 +195,15 @@ Namespace('HospoHero.dateUtils', {
     return HospoHero.dateUtils.shortDateFormat(date);
   },
 
+  getSeasonOfTheYear: (month) => {
+    let seasons = ['Winter', 'Winter',
+      'Spring', 'Spring', 'Spring',
+      'Summer', 'Summer', 'Summer',
+      'Fall', 'Fall', 'Fall',
+      'Winter'];
+    return seasons[parseInt(month) - 1];
+  },
+
   minutesToHours: function (duration) {
     var getHoursFromDuration = function (durationInMinutes) {
       var hours = parseInt(durationInMinutes / 60);

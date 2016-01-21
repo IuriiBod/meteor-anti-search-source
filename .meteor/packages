@@ -22,6 +22,7 @@ jquery
 email
 underscore
 random
+ecmascript
 
 less
 reactive-var
@@ -64,6 +65,7 @@ hospohero:stale-session
 trsdln:flyouts
 jss:blaze-states
 trsdln:modals
+jss:meteor-reactive-fullcalendar
 
 # ===========> backend
 micah:google-cloud
@@ -76,6 +78,7 @@ reywood:publish-composite
 jss:through
 jss:meteor-google-prediction
 jss:publish-authorized
+jss:suncalc
 
 # ===========> both
 iron:router
@@ -86,4 +89,3 @@ jss:anti-search-source
 jss:moment-timezone
 
 # ===========> new
-jss:meteor-reactive-fullcalendar
