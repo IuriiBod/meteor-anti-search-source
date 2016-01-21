@@ -102,7 +102,6 @@ AntiSearchSource.queryTransform('menuItems', function (userId, query) {
 Meteor.publish('menuItemsSales', function (query) {
   if (this.userId) {
     var observer;
-    var menuItemsStats = [];
     var menuItemsIds = [];
 
     var round = function (value) {
@@ -143,36 +142,45 @@ Meteor.publish('menuItemsSales', function (query) {
       //return filteredMenuItems;
     };
 
-    var dailySales = DailySales.find({date: query});
-
     var transform = function(doc) {
-      var result = HospoHero.analyze.menuItem(doc);
-
-      dailySales.forEach(function (dailySalesItem) {
-        if (isNaN(dailySalesItem.menuItemId)) {
-          console.log(dailySalesItem);
-        }
-
-        //console.log('dailySalesItem -> ', dailySalesItem.menuItemId);
-        if(doc._id === dailySalesItem.menuItemId) {
-          //console.log(doc._id + ' === ', + dailySalesItem.menuItemId);
-          result.menuItemId = dailySalesItem.menuItemId;
-          result.totalContribution = round(result.contribution * (dailySalesItem.actualQuantity || 0));
-
-          menuItemsStats.push(result);
-        }
+      var totalContribution = DailySales.find({date: query, menuItemId: doc._id}).map(function (dailySalesItem) {
+        var result = HospoHero.analyze.menuItem(doc);
+        result.menuItemId = dailySalesItem.menuItemId;
+        result.totalContribution = round(result.contribution * (dailySalesItem.actualQuantity || 0));
+        console.log(result.totalContribution);
+        return result;
       });
+
+      console.log('dailySales -> ', totalContribution);
+      //console.log(dailySales.count());
+      //if (menuItemsStats.length === dailySales.count()) {
+      //  console.log('------------------');
+      //  console.log(menuItemsStats[0]);
+      //  var i = 0;
+      //  var filteredMenuItems = menuItemsIds.map(function (id) {
+      //    //console.log('id -> ', id + " " + ++i);
+      //    var filteredMenuItemStats = _.filter(menuItemsStats, function (item) {
+      //      return item.menuItemId === id;
+      //    });
       //
-      //console.log('----------------');
-      //console.log(menuItemsStats);
-      //console.log('----------------');
+      //    return filteredMenuItemStats.reduce(function (previousValue, currentValue) {
+      //      return {
+      //        menuItemId: currentValue.menuItemId,
+      //        totalIngCost: round(previousValue.totalIngCost + currentValue.totalIngCost),
+      //        totalPrepCost: round(previousValue.totalPrepCost + currentValue.totalPrepCost),
+      //        totalTax: round(previousValue.tax + currentValue.tax),
+      //        totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
+      //      }
+      //    });
+      //  });
+      //}
 
       return doc;
     };
 
     var self = this;
 
-    observer = MenuItems.find().observe({
+    observer = MenuItems.find({_id: '7D3k56oS6H9TdtK5h'}).observe({
       added: function (document) {
         self.added('menuItems', document._id, transform(document));
       },
