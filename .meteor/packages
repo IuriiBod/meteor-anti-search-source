@@ -86,3 +86,4 @@ jss:anti-search-source
 jss:moment-timezone
 
 # ===========> new
+jss:meteor-reactive-fullcalendar
