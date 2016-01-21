@@ -1,0 +1,1 @@
+SunCalc = Npm.require('suncalc');
