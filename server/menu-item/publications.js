@@ -115,6 +115,10 @@ Meteor.publish('menuItemsSales', function (query) {
           return item.menuItemId === id;
         });
 
+        //console.log('----------------------');
+        //console.log(filteredMenuItemStats.length);
+        //console.log('----------------------');
+
         return filteredMenuItemStats.reduce(function (previousValue, currentValue) {
           return {
             menuItemId: currentValue.menuItemId,
@@ -126,49 +130,58 @@ Meteor.publish('menuItemsSales', function (query) {
         });
       });
 
-      filteredMenuItems.sort(function (a, b) {
-        if (a.totalContribution < b.totalContribution) {
-          return 1;
-        } else if (a.totalContribution > b.totalContribution) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
+      //filteredMenuItems.sort(function (a, b) {
+      //  if (a.totalContribution < b.totalContribution) {
+      //    return 1;
+      //  } else if (a.totalContribution > b.totalContribution) {
+      //    return -1;
+      //  } else {
+      //    return 0;
+      //  }
+      //});
 
-      return filteredMenuItems;
+      //return filteredMenuItems;
     };
 
-    var transform = function(doc, dailySalesItem) {
+    var dailySales = DailySales.find({date: query});
+
+    var transform = function(doc) {
       var result = HospoHero.analyze.menuItem(doc);
 
-      result.menuItemId = dailySalesItem.menuItemId;
-      result.totalContribution = round(result.contribution * (dailySalesItem.actualQuantity || dailySalesItem.predictionQuantity || 0));
+      dailySales.forEach(function (dailySalesItem) {
+        if (isNaN(dailySalesItem.menuItemId)) {
+          console.log(dailySalesItem);
+        }
 
-      menuItemsStats.push(result);
+        //console.log('dailySalesItem -> ', dailySalesItem.menuItemId);
+        if(doc._id === dailySalesItem.menuItemId) {
+          //console.log(doc._id + ' === ', + dailySalesItem.menuItemId);
+          result.menuItemId = dailySalesItem.menuItemId;
+          result.totalContribution = round(result.contribution * (dailySalesItem.actualQuantity || 0));
 
-      if (menuItemsIds.indexOf(dailySalesItem.menuItemId) === -1) {
-        menuItemsIds.push(dailySalesItem.menuItemId);
-      }
+          menuItemsStats.push(result);
+        }
+      });
+      //
+      //console.log('----------------');
+      //console.log(menuItemsStats);
+      //console.log('----------------');
 
-      doc.report = getSortedMenuItems()[0];
       return doc;
     };
 
     var self = this;
 
-    DailySales.find({date: query}).forEach(function (dailySalesItem) {
-      observer = MenuItems.find({_id: dailySalesItem.menuItemId}).observe({
-        added: function (document) {
-          self.added('menuItems', document._id, transform(document, dailySalesItem));
-        },
-        changed: function (newDocument, oldDocument) {
-          self.changed('menuItems', newDocument._id, transform(newDocument, dailySalesItem));
-        },
-        removed: function (oldDocument) {
-          self.removed('menuItems', oldDocument._id);
-        }
-      });
+    observer = MenuItems.find().observe({
+      added: function (document) {
+        self.added('menuItems', document._id, transform(document));
+      },
+      changed: function (newDocument, oldDocument) {
+        self.changed('menuItems', newDocument._id, transform(newDocument));
+      },
+      removed: function (oldDocument) {
+        self.removed('menuItems', oldDocument._id);
+      }
     });
 
     self.onStop(function () {
