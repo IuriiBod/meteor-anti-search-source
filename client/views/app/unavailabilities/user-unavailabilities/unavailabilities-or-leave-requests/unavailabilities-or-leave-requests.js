@@ -4,7 +4,7 @@ Template.unavailabilitiesOrLeaveRequests.onCreated(function () {
 
 Template.unavailabilitiesOrLeaveRequests.helpers({
   templateName: function () {
-    return Template.instance().get('isUnavailability') ? 'Unavailables' : 'Leave Requests';
+    return Template.instance().get('isUnavailability') ? 'Unavailabilities' : 'Leave Requests';
   },
   // Can be leave requests or unavailables
   items: function () {
