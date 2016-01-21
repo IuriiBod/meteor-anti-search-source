@@ -9,8 +9,9 @@
 
 #bash
 db_remote_restore.sh
+backup_dump.sh
 build.sh
-run-android.sh
+run-mobile.sh
 
 #packages
 packages/modals

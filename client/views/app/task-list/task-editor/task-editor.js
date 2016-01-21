@@ -1,21 +1,22 @@
 Template.taskEditor.onCreated(function () {
   this.sharingType = new ReactiveVar(this.data.task.sharingType || 'private');
   this.sharingIds = new ReactiveVar(this.data.task.sharingIds || Meteor.userId());
+
+  var dueDate = this.data.task.dueDate || new Date();
+  this.dueDate = new ReactiveVar(dueDate);
 });
 
 
 Template.taskEditor.onRendered(function () {
   this.$('.new-task-title').focus();
 
-  this.$('.datepicker').datetimepicker({
-    format: 'ddd DD/MM/YY',
-    minDate: moment().subtract(1, 'day')
+  this.datepicker  = this.$('.date-picker-input');
+  this.datepicker .datepicker({
+    format: 'D dd/mm/yy',
+    startDate: new Date()
   });
 
-  this.datepicker = this.$('.datepicker').data("DateTimePicker");
-
-  var dueDate = this.data.task.dueDate || new Date();
-  this.datepicker.date(moment(dueDate));
+  this.datepicker.datepicker('setDate', this.dueDate.get());
 });
 
 
@@ -78,13 +79,29 @@ Template.taskEditor.helpers({
 
   displayUserSelector: function () {
     return Template.instance().sharingType.get() === 'users';
+  },
+
+  taskDate: function () {
+    return Template.instance().dueDate.get();
   }
 });
 
 
 Template.taskEditor.events({
-  'click .open-datetimepicker': function (event, tmpl) {
-    tmpl.datepicker.show();
+  'click .date-picker-button': function (event, tmpl) {
+    tmpl.datepicker.datepicker('show');
+  },
+
+  'changeDate .date-picker-input': function (event, tmpl) {
+    Template.instance().dueDate.set(event.date);
+    tmpl.datepicker.datepicker('hide');
+  },
+
+  'click .remove-task': function (event, tmpl) {
+    event.preventDefault();
+    Meteor.call('removeTask', tmpl.data.task, HospoHero.handleMethodResult(function () {
+      tmpl.data.onCreateTaskAction();
+    }));
   },
 
   'submit form': function (event, tmpl) {
@@ -114,6 +131,39 @@ Template.taskEditor.events({
       return taggedUsers;
     };
 
+    var getTaskDurationInMinutes = function (durationString) {
+      var durationRegEx = /(\d+)\s?(\S+)/g;
+
+      var duration;
+      var durationInMinutes = 0;
+
+      var timeUnits = {
+        hours: {
+          names: ['h', 'hour', 'hours'],
+          multiplier: 60
+        },
+        minutes: {
+          names: ['m', 'min', 'minute', 'minutes'],
+          multiplier: 1
+        }
+      };
+
+      while (duration = durationRegEx.exec(durationString)) {
+        var timeUnitsNumber = duration[1];
+        var timeUnitName = duration[2];
+
+        Object.keys(timeUnits).forEach(function (key) {
+          var timeUnit = timeUnits[key];
+          if (timeUnit.names.indexOf(timeUnitName) > -1) {
+            timeUnitsNumber *= timeUnit.multiplier;
+            durationInMinutes += timeUnitsNumber;
+          }
+        });
+      }
+
+      return durationInMinutes;
+    };
+
 
     event.preventDefault();
     var newTaskInfo = HospoHero.misc.getValuesFromEvent(event, [
@@ -124,6 +174,11 @@ Template.taskEditor.events({
       {
         name: 'new-task-description',
         newName: 'description'
+      },
+      {
+        name: 'task-duration',
+        newName: 'duration',
+        transform: getTaskDurationInMinutes
       }
     ], true);
 
@@ -137,7 +192,7 @@ Template.taskEditor.events({
 
       var additionalTaskParams = {
         done: false,
-        dueDate: tmpl.datepicker.date().toDate(),
+        dueDate: tmpl.datepicker.datepicker('getDate'),
         sharingType: tmpl.sharingType.get(),
         sharingIds: tmpl.sharingIds.get(),
         reference: getReference()

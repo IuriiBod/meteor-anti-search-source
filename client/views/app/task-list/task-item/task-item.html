@@ -1,38 +1,40 @@
 <template name="taskItem">
   <div class="task-item">
     <div class="row">
-      <div class="col-xs-8">
+      <div class="col-xs-4 task-due-date">
         <span class="float-with-padding">
           <input type="checkbox" class="task-checkbox" {{checkboxAttr}} />
         </span>
-        
+
+        <h3 class="{{dueDateClass}}">
+          {{dueDateText}}
+        </h3>
+
+        {{#if isTodayTomorrowOrOverdue}}
+          <small>{{dateFormat task.dueDate}}</small>
+        {{/if}}
+      </div>
+      <div class="col-xs-8 task-details">
+        <div>
+          <small class="text-muted">
+            Shared for {{sharedFor}}
+          </small>
+        </div>
+
         <span class="task-title {{isDoneClass}}">
-          {{task.title}}
+          <a href="#" class="text-primary edit-task">
+            {{task.title}}
+          </a>
 
           {{#if task.done}}
             ({{username task.completedBy}})
           {{/if}}
 
-          {{> taskDescriptionAndReference task}}
+          {{> taskDetails task=task type="icons"}}
         </span>
       </div>
-      <div class="col-xs-3">
-        <h3 class="{{dueDateClass}}">
-          {{dueDateText}}
-        </h3>
-        {{#if isTodayTomorrowOrOverdue}}
-          <small>{{dateFormat task.dueDate}}</small>
-        {{/if}}
-      </div>
-      <div class="col-xs-1">
-        <a href="#" class="edit-task">
-          <i class="fa fa-pencil"></i>
-        </a>
-
-        <a href="#" class="remove-task text-danger">
-          <i class="fa fa-trash"></i>
-        </a>
-      </div>
     </div>
+
+    {{> taskDetails task=task type="pannels"}}
   </div>
 </template>

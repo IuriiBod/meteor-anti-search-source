@@ -8,10 +8,18 @@ DEST_DIR="./.dump"
 DB_PATH=$(pwd)/.meteor/local/db
 
 #credentials
+
+#testing
 MONGO_USER="admin"
 MONGO_PASSWORD="djf2i3rfjkweh"
 MONGO_DOMAIN="ds027744.mongolab.com:27744"
 MONGO_DB="heroku_5dd8c4xw"
+
+#production
+#MONGO_USER="cloudninja"
+#MONGO_PASSWORD="Bertaroo1"
+#MONGO_DOMAIN="c144.capital.3.mongolayer.com:10144"
+#MONGO_DB="herochef"
 
 if [[ $1 != "d" ]]; then
   # refresh dump

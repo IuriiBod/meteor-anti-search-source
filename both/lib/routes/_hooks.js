@@ -27,7 +27,6 @@ RoutePermissionChecker.prototype.checkIsUserInOrganization = function () {
 RoutePermissionChecker.prototype._permissionsByRouteName = {
   // route_name : 'permission to check',
   teamHours: 'edit roster',
-  currentStocks: 'edit roster',
   weeklyRoster: 'view roster',
   templateWeeklyRoster: 'edit roster',
   stocktake: 'edit stocks',

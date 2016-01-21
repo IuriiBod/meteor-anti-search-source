@@ -114,8 +114,7 @@ function makeInputsEditable(userId) {
   });
 
   $('#datepicker').datepicker({
-    todayBtn: true,
-    todayHighlight: true
+    todayBtn: true
   });
 
   $('#firstname').editable({

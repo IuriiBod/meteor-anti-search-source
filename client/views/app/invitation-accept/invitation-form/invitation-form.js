@@ -23,7 +23,6 @@ Template.invitationAcceptForm.helpers({
           name: 'lastname',
           placeholder: 'Lastname',
           label: 'Last Name',
-          disabled: true,
           value: invitation.lastname,
           required: true,
           validation: {

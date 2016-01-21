@@ -2,6 +2,9 @@
   "public": {
     "intercom": {
       "id": "rc6uoqw0"
+    },
+    "GCM": {
+      "senderId": "24418709828"
     }
   },
   "intercom": {
@@ -26,6 +29,9 @@
       "secret": "ALNUwQE9u31XHqj31fMYXxVb"
     }
   ],
+  "GCM": {
+    "key": "AIzaSyCBw7Db9feI3lrSbncwqkqhxFXUbKN295o"
+  },
   "useRawOrders": true,
   "logLevel": "warn"
 }

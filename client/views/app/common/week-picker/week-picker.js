@@ -1,8 +1,6 @@
 //context: year (number), week (number), onDateChanged (Function)
 Template.weekPicker.onCreated(function () {
-  var date = this.data.date;
-  this.oldDate = date;
-  this.set('date', date);
+  this.oldDate = getWeekDateByMoment(this.data.date);
 });
 
 
@@ -17,9 +15,9 @@ Template.weekPicker.onRendered(function () {
    * @param {Number} [dateChangeStep=7] - number of days to add/subtract
    */
   this.updatePickedMoment = function (action, dateChangeStep) {
-    dateChangeStep = dateChangeStep || 7;
+    dateChangeStep = _.isUndefined(dateChangeStep) ? 7 : dateChangeStep;
 
-    var currentMoment = moment(this.datePicker.date().toDate());
+    var currentMoment = moment(this.datePicker.datepicker('getDate'));
     currentMoment = HospoHero.dateUtils.startOfWeekMoment(currentMoment);
 
     var applyChangeToCurrentMoment = function () {
@@ -38,9 +36,7 @@ Template.weekPicker.onRendered(function () {
     var date = getWeekDateByMoment(currentMoment);
 
     if (!this.isSameAsOldWeekDate(date)) {
-      this.set('date', date);
       if (_.isFunction(this.data.onDateChanged)) {
-        this.datePicker.date(moment(date));
         this.data.onDateChanged(date);
       }
       this.oldDate = date;
@@ -49,16 +45,14 @@ Template.weekPicker.onRendered(function () {
 
   //init bootstrap date picker
 
-  var initialPlainDate = this.get('date');
-  var datePickerElement = this.$(".date-picker-input");
+  var initialPlainDate = this.data.date;
+  this.datePicker = this.$(".date-picker-input");
 
-  datePickerElement.datetimepicker({
-    calendarWeeks: true,
-    format: 'YYYY-MM-DD'
+  this.datePicker.datepicker({
+    format: 'yyyy-mm-dd'
   });
 
-  this.datePicker = datePickerElement.data("DateTimePicker");
-  this.datePicker.date(moment(initialPlainDate));
+  this.datePicker.datepicker('setDate', initialPlainDate.toDate());
 });
 
 
@@ -86,7 +80,7 @@ Template.weekPicker.helpers({
 
 Template.weekPicker.events({
   'click .date-picker-button': function (event, tmpl) {
-    tmpl.datePicker.toggle();
+    tmpl.datePicker.datepicker('show');
   },
 
   'click .next-week': function (event, tmpl) {
@@ -99,13 +93,15 @@ Template.weekPicker.events({
     tmpl.updatePickedMoment('subtract');
   },
 
-  'dp.change .date-picker-input': function (event, tmpl) {
-    tmpl.updatePickedMoment();
+  'changeDate .date-picker-input': function (event, tmpl) {
+    tmpl.updatePickedMoment(null, 0);
+    tmpl.datePicker.datepicker('hide');
   },
 
-  'dp.show .date-picker-input': function (event, tmpl) {
+  'show .date-picker-input': function (event, tmpl) {
     //mark all selected week before showing
-    $('.day.active').siblings('.day').addClass('week');
+    var activeDayClass = $('.day.active').length === 0 ? '.day.today' : '.day.active';
+    $(activeDayClass).siblings('.day').addClass('week');
   }
 });
 
