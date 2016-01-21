@@ -4,6 +4,7 @@ Template.userPopup.onCreated(function() {
 
 Template.userPopup.onRendered(function() {
   var target = Template.currentData().target;
+  var popup = this.find('.user-popup');
   var modal = this.find('.modal-dialog');
   var modalPosition = {
     top: target.top + target.height,
@@ -33,7 +34,6 @@ Template.userPopup.onRendered(function() {
       newModalPosition.top = windowHeight - modalSize.height;
     }
     $(modal).offset(newModalPosition);
-    modal.style.visibility = 'visible';
   };
 
   var checkModalPosition = function() {
@@ -43,6 +43,7 @@ Template.userPopup.onRendered(function() {
         checkModalPosition();
       } else {
         fitModalToWindow(modalSize, modalPosition);
+        $(popup).css('visibility', 'visible');
       }
     }, 200)
   };
