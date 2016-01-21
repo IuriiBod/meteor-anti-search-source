@@ -1,14 +1,19 @@
 <template name="totalSalesRow">
   <tr>
     <td><b>Sales</b></td>
-    {{#each week}}
-      {{#with getTotalSales this}}
-        <td>${{predicted}}</td>
-        <td>${{actual}}</td>
-        {{#if ../../showAccuracy}}
+    {{#if weekFigures}}
+      {{#each weekFigures}}
+        <td>${{sales.forecast}}</td>
+        <td>${{sales.actual}}</td>
+      {{/each}}
+    {{else}}
+      {{#each week}}
+        {{#with getTotalSales this}}
+          <td>${{predicted}}</td>
+          <td>${{actual}}</td>
           <td>{{accuracy}}</td>
-        {{/if}}
-      {{/with}}
-    {{/each}}
+        {{/with}}
+      {{/each}}
+    {{/if}}
   </tr>
 </template>

@@ -1,8 +1,8 @@
 Template.rosterTable.helpers({
-  weekDate: function () {
-    return HospoHero.getParamsFromRoute('date');
+  weekDates: function () {
+    return HospoHero.dateUtils.getWeekDays(this.date);
   },
-  rosterTableDateFormat: function (date) {
-    return HospoHero.dateUtils.shortDateFormat(moment(date));
+  rosterTableDateFormat: function () {
+    return HospoHero.dateUtils.shortDateFormat(this);
   }
 });

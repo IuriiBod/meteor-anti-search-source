@@ -38,7 +38,7 @@
             </tr>
             </thead>
             <tbody>
-            {{> totalSalesRow weekDate=date showAccuracy=true}}
+            {{> totalSalesRow weekDate=date}}
 
             {{#each menuItems}}
               {{> predictionSalesRow currentWeekDate=../date week=week menuItem=this}}
