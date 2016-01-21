@@ -64,41 +64,22 @@ Meteor.publish("jobsRelatedMenus", function (id) {
   return MenuItems.find({"jobItems._id": id});
 });
 
-Meteor.publish("autocomplete-jobItems", function (selector, options) {
-  if (this.userId) {
-    var sub = this;
-    var search;
+Meteor.publish('recurringJobItems', function (areaId, userId, date) {
+  var area = Areas.findOne({_id: areaId});
 
-    var query = {
-      'relations.areaId': HospoHero.getCurrentAreaId(this.userId)
-    };
+  var shiftTimeRange = TimeRangeQueryBuilder.forDay(new Date(date), area.locationId);
+  var usersShifts = Shifts.find({
+    assignedTo: userId,
+    startTime: shiftTimeRange
+  }).map(function (shift) {
+    var recurringJobType = JobTypes.findOne({name: 'Recurring'});
+    return JobItems.find({
+      type: recurringJobType._id,
+      section: shift.section
+    }).fetch();
+  });
 
-    if (selector.name) {
-      search = selector.name.$regex;
-      options = selector.name.$options;
-    } else {
-      // Match all since no selector given
-      search = "";
-      options = "i";
-    }
-    query.name = new RegExp(search, options);
-    var limit = options.limit || 10;
+  console.log('US', usersShifts);
 
-    if (selector.type) {
-      query.type = selector.type;
-    }
-
-    // Push this into our own collection on the client so they don't interfere with other publications of the named collection.
-    JobItems.find(query, {
-      limit: limit
-    }).observeChanges({
-      added: function (id, fields) {
-        sub.added("autocompleteRecords", id, fields)
-      }
-    });
-    logger.info("Autocomplete search text", selector.name);
-    sub.ready();
-  } else {
-    this.ready();
-  }
+  this.ready();
 });
