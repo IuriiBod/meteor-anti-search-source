@@ -4,6 +4,8 @@ Template.weeklyFigures.onCreated(function () {
 
   this.autorun(function () {
     var data = Template.currentData();
+    var staffCalculator = new StaffCostCalculator(data.date);
+    console.log(staffCalculator);
     var figureBoxDataHelper = new FigureBoxDataHelper(data.date);
     tmpl.set('figureBoxDataHelper', figureBoxDataHelper);
   });

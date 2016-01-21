@@ -20,7 +20,7 @@ Router.route('/roster/weekly/:date', {
   },
   data: function () {
     return {
-      date: this.params.date
+      date: new Date(this.params.date)
     }
   }
 });

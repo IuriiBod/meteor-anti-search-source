@@ -1,3 +1,6 @@
+console.log('debug here');
+
+
 StaffCostCalculator = function (weekMonday) {
   this._weekMonday = weekMonday;
 
@@ -39,11 +42,18 @@ StaffCostCalculator.prototype._calculateStaffFigures = function (date) {
 
   dailyShifts.forEach(function (shift) {
     var user = Meteor.users.findOne({_id: shift.assignedTo});
-    var payRate = HospoHero.misc.getUserPayRate(user, date);
 
-    staffCost.actual += self._calculateShiftCost(self._getShiftDuration(shift, false), payRate);
-    staffCost.forecast += self._calculateShiftCost(self._getShiftDuration(shift, true), payRate);
+    if (user) {
+      var payRate = HospoHero.misc.getUserPayRate(user, date);
+
+      staffCost.actual += self._calculateShiftCost(self._getShiftDuration(shift, false), payRate);
+      staffCost.forecast += self._calculateShiftCost(self._getShiftDuration(shift, true), payRate);
+    } else {
+      console.log('user not found', shift.assignedTo);
+    }
   });
+
+  return staffCost;
 };
 
 
@@ -55,11 +65,18 @@ StaffCostCalculator.prototype._calculateSalesFigures = function (date) {
     actual: 0
   };
 
-  dailySales.forEach(function (dailySale) {
-    var itemPrice = MenuItems.findOne({_id: dailySale.menuItemId}).salesPrice;
+  var dailyMenuItemSale = function (quantity, price) {
+    return _.isNumber(quantity) ? quantity * price : 0;
+  };
 
-    salesFigures.actual += dailySale.actualQuantity * itemPrice;
-    salesFigures.forecast += dailySale.predictionQuantity * itemPrice;
+  dailySales.forEach(function (dailySale) {
+    var menuItem = MenuItems.findOne({_id: dailySale.menuItemId});
+    if (menuItem && _.isNumber(menuItem.salesPrice)) {
+      var itemPrice = menuItem.salesPrice;
+
+      salesFigures.actual += dailyMenuItemSale(dailySale.actualQuantity, itemPrice);
+      salesFigures.forecast += dailyMenuItemSale(dailySale.predictionQuantity, itemPrice);
+    }
   });
 
   return salesFigures;
@@ -77,7 +94,7 @@ StaffCostCalculator.prototype._calculateDailyFigures = function (date) {
 
 StaffCostCalculator.prototype._calculateTotalFigures = function (weekFigures) {
   var totalFigures = {
-    stuff: {
+    staff: {
       actual: 0,
       forecast: 0
     },
@@ -93,7 +110,7 @@ StaffCostCalculator.prototype._calculateTotalFigures = function (weekFigures) {
       totalFigures[propertyName].forecast += dailyFigures[propertyName].forecast;
     };
 
-    sumFigures('stuff');
+    sumFigures('staff');
     sumFigures('sales');
   });
 
