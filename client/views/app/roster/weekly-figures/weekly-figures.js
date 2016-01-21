@@ -7,7 +7,6 @@ Template.weeklyFigures.onCreated(function () {
   this.autorun(function () {
     var data = Template.currentData();
     var staffCalculator = new StaffCostCalculator(data.date);
-    console.log(staffCalculator);
     tmpl.weekFigures.set(staffCalculator.getWeekFigures());
     tmpl.totalFigures.set(staffCalculator.getTotalFigures());
   });
