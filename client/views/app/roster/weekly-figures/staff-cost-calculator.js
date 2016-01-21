@@ -1,6 +1,3 @@
-console.log('debug here');
-
-
 StaffCostCalculator = function (weekMonday) {
   this._weekMonday = weekMonday;
 
