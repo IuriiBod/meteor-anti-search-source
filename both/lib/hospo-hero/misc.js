@@ -259,5 +259,46 @@ Namespace('HospoHero.misc', {
     }
 
     return weatherRepresentation;
+  },
+
+  /**
+   * Returns query for task list only for passed user
+   * @param userId - ID of needed user
+   * @returns {Object}
+   */
+  getTasksQuery: function (userId) {
+    var user = Meteor.users.findOne({_id: userId});
+    var relations = user && user.relations;
+
+    if (relations && relations.organizationId) {
+      var allowedSharingTypes = ['area', 'location'];
+      var allowedSharingIds = [userId, relations.organizationId];
+
+      if (relations.locationIds) {
+        allowedSharingIds = _.union(allowedSharingIds, relations.locationIds);
+      }
+      if (relations.areaIds) {
+        allowedSharingIds = _.union(allowedSharingIds, relations.areaIds);
+      }
+      return {
+        $or: [
+          {
+            'sharing.type': {
+              $in: allowedSharingTypes
+            }
+          },
+          {
+            'sharing.id': {
+              $in: allowedSharingIds
+            }
+          },
+          {
+            assignedTo: userId
+          }
+        ]
+      };
+    } else {
+      return {};
+    }
   }
 });

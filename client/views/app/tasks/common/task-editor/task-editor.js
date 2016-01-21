@@ -1,9 +1,10 @@
 Template.taskEditor.onCreated(function () {
-  this.sharingType = new ReactiveVar(this.data.task.sharingType || 'private');
-  this.sharingIds = new ReactiveVar(this.data.task.sharingIds || Meteor.userId());
+  var task = this.data.task;
+  var dueDate = task.dueDate && task.dueDate > new Date() ? task.dueDate : new Date();
 
-  var dueDate = this.data.task.dueDate || new Date();
   this.dueDate = new ReactiveVar(dueDate);
+  this.sharingType = new ReactiveVar(task.sharing && task.sharing.type || 'private');
+  this.sharingIds = new ReactiveVar(task.sharing && task.sharing.id || Meteor.userId());
 });
 
 
@@ -26,10 +27,6 @@ Template.taskEditor.helpers({
       {
         value: 'private',
         text: 'Private'
-      },
-      {
-        value: 'users',
-        text: 'For users'
       },
       {
         value: 'area',
@@ -77,10 +74,6 @@ Template.taskEditor.helpers({
     }
   },
 
-  displayUserSelector: function () {
-    return Template.instance().sharingType.get() === 'users';
-  },
-
   taskDate: function () {
     return Template.instance().dueDate.get();
   }
@@ -122,43 +115,45 @@ Template.taskEditor.events({
     };
 
     var getSharedUserIds = function () {
-      var taggedUsers = [Meteor.userId()];
+      var taggedUsers = [];
       var selectedOptions = tmpl.$('.user-selector').find('option:selected');
 
       selectedOptions.each(function(index, option) {
         taggedUsers.push(option.value);
       });
-      return taggedUsers;
+      return taggedUsers.length ? taggedUsers : [Meteor.userId()];
     };
 
     var getTaskDurationInMinutes = function (durationString) {
-      var durationRegEx = /(\d+)\s?(\S+)/g;
-
-      var duration;
       var durationInMinutes = 0;
 
-      var timeUnits = {
-        hours: {
-          names: ['h', 'hour', 'hours'],
-          multiplier: 60
-        },
-        minutes: {
-          names: ['m', 'min', 'minute', 'minutes'],
-          multiplier: 1
-        }
-      };
+      if (durationString.trim()) {
+        var durationRegEx = /(\d+)\s?(\S+)/g;
+        var duration;
 
-      while (duration = durationRegEx.exec(durationString)) {
-        var timeUnitsNumber = duration[1];
-        var timeUnitName = duration[2];
-
-        Object.keys(timeUnits).forEach(function (key) {
-          var timeUnit = timeUnits[key];
-          if (timeUnit.names.indexOf(timeUnitName) > -1) {
-            timeUnitsNumber *= timeUnit.multiplier;
-            durationInMinutes += timeUnitsNumber;
+        var timeUnits = {
+          hours: {
+            names: ['h', 'hour', 'hours'],
+            multiplier: 60
+          },
+          minutes: {
+            names: ['m', 'min', 'mins', 'minute', 'minutes'],
+            multiplier: 1
           }
-        });
+        };
+
+        while (duration = durationRegEx.exec(durationString)) {
+          var timeUnitsNumber = duration[1];
+          var timeUnitName = duration[2];
+
+          Object.keys(timeUnits).forEach(function (key) {
+            var timeUnit = timeUnits[key];
+            if (timeUnit.names.indexOf(timeUnitName) > -1) {
+              timeUnitsNumber *= timeUnit.multiplier;
+              durationInMinutes += timeUnitsNumber;
+            }
+          });
+        }
       }
 
       return durationInMinutes;
@@ -166,7 +161,7 @@ Template.taskEditor.events({
 
 
     event.preventDefault();
-    var newTaskInfo = HospoHero.misc.getValuesFromEvent(event, [
+    var taskInfo = HospoHero.misc.getValuesFromEvent(event, [
       {
         name: 'new-task-title',
         newName: 'title'
@@ -182,30 +177,29 @@ Template.taskEditor.events({
       }
     ], true);
 
-    if (newTaskInfo.title === '') {
+    if (taskInfo.title === '') {
       HospoHero.error('Task must have a title!');
     } else {
-      // if we share task between users, get them ids
-      if (tmpl.sharingType.get() === 'users') {
-        tmpl.sharingIds.set(getSharedUserIds());
-      }
-
       var additionalTaskParams = {
         done: false,
         dueDate: tmpl.datepicker.datepicker('getDate'),
-        sharingType: tmpl.sharingType.get(),
-        sharingIds: tmpl.sharingIds.get(),
+        assignedTo: getSharedUserIds(),
+        sharing: {
+          type: tmpl.sharingType.get(),
+          id: tmpl.sharingIds.get()
+        },
+        createdBy: Meteor.userId(),
         reference: getReference()
       };
-      newTaskInfo = _.extend(newTaskInfo, additionalTaskParams);
+      taskInfo = _.extend(taskInfo, additionalTaskParams);
 
       var method = 'createTask';
       if (tmpl.data.task._id) {
         method = 'editTask';
-        newTaskInfo._id = tmpl.data.task._id;
+        taskInfo._id = tmpl.data.task._id;
       }
 
-      Meteor.call(method, newTaskInfo, HospoHero.handleMethodResult(function () {
+      Meteor.call(method, taskInfo, HospoHero.handleMethodResult(function () {
         tmpl.data.onCreateTaskAction();
       }));
     }

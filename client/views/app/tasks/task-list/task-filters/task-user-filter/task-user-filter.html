@@ -1,0 +1,10 @@
+<template name="taskUserFilter">
+  <select name="task-user-filter" class="task-user-filter">
+    <option value=""></option>
+    <option value="{{currentUser._id}}">{{username currentUser._id}}</option>
+
+    {{# each users}}
+      <option value="{{_id}}">{{username _id}}</option>
+    {{/each}}
+  </select>
+</template>

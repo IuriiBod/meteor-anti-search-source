@@ -35,6 +35,7 @@ var filterTypes = {
 Template.taskList.onCreated(function () {
   this.isNewTaskCreating = new ReactiveVar(false);
   this.filterType = new ReactiveVar('All tasks');
+  this.filterUser = new ReactiveVar();
   this.task = {};
 });
 
@@ -63,9 +64,13 @@ Template.taskList.helpers({
   tasks: function () {
     var tmpl = Template.instance();
     var filterType = tmpl.filterType.get();
-    var query = {
-      done: false
-    };
+    var filterUser = tmpl.filterUser.get();
+
+    var query = HospoHero.misc.getTasksQuery(filterUser);
+    query.done = false;
+    if (filterUser) {
+      query.assignedTo = filterUser;
+    }
 
     if (filterTypes.hasOwnProperty(filterType)) {
       _.extend(query, filterTypes[filterType]());
@@ -90,10 +95,17 @@ Template.taskList.helpers({
     return Template.instance().filterType.get();
   },
 
-  onFilterChange: function () {
+  onDateFilterChange: function () {
     var self = Template.instance();
     return function (filterType) {
       self.filterType.set(filterType);
+    }
+  },
+
+  onUserFilterChange: function () {
+    var self = Template.instance();
+    return function (user) {
+      self.filterUser.set(user);
     }
   }
 });
