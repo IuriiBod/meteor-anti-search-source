@@ -10,13 +10,12 @@ DataVector = class DataVector {
 
   getTestingData() {
     return [
-      this.date.day() * 5, // Day of week (from 0 to 6)
-      this.date.day() % 6 == 0 ? 10 : 0, // Is weekend
-      Math.round(SunCalc.getMoonIllumination(this.date.toDate()).phase * 10), // Moon illumination (from 0 to 5)
-      this.weather.temp, // Air temperature
-      HospoHero.dateUtils.getWeatherNumericalRepresentation(this.weather.main), // Weather in numeric format
-      this.weather.main, // Weather in numeric format
-      HospoHero.dateUtils.getSeasonOfTheYear(this.date.format('MM')) // Season of the year
+      this.date.weekday() * 5,
+      this.date.weekday() % 6 == 0 ? 'yes' : 'no',
+      Math.round(SunCalc.getMoonIllumination(this.date.toDate()).phase * 10),
+      this.weather.temp,
+      HospoHero.dateUtils.simplifyWeatherDescription(this.weather.main),
+      HospoHero.dateUtils.getSeasonOfTheYear(this.date.format('MM'))
     ]
   }
 };
