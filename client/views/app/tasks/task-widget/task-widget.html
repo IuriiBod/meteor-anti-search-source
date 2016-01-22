@@ -1,0 +1,38 @@
+<template name="taskWidget">
+  <div class="task-list-widget">
+    {{#if isNewTaskCreating}}
+      <div class="row">
+        <div class="col-xs-12">
+          {{> taskEditor onCreateTaskAction=onCreateTaskAction task=task}}
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="col-md-12 hidden-print task-list-content">
+      <hr>
+      <div class="ibox">
+        <div class="ibox-title">
+          Tasks
+          <a href="#" class="create-task">
+            <i class="fa fa-plus"></i>
+          </a>
+        </div>
+        <div class="ibox-content">
+          <div class="row">
+            {{#if tasks.count}}
+              <div class="table-responsive">
+                <table class="table table-hover table-mail task-list-container">
+                  {{#each tasks}}
+                    {{> taskItem task=this onEditTaskAction=onEditTaskAction}}
+                  {{/each}}
+                </table>
+              </div>
+            {{else}}
+              <h3>No tasks here</h3>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,43 @@
+<template name="taskList">
+  {{> pageHeading title='Task List' name='taskList' onCreateTaskAction=onCreateTaskAction}}
+
+  <div class="task-list-content">
+    {{#if isNewTaskCreating}}
+      <div class="row">
+        <div class="col-xs-12">
+          {{> taskEditor onCreateTaskAction=onCreateTaskAction task=task}}
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="task-list-filter">
+      <div class="row">
+        <div class="col-xs-12">
+          {{> taskDateFilter onFilterChange=onDateFilterChange filterTypes=filterTypes activeFilter=activeFilterName}}
+          {{> taskUserFilter onFilterChange=onUserFilterChange}}
+        </div>
+      </div>
+    </div>
+    <!-- .task-list-filter -->
+
+    <div class="row">
+      <div class="mail-box">
+        {{#if tasks.count}}
+          <div class="table-responsive">
+            <table class="table table-hover table-mail task-list-container">
+              <tbody class="">
+              {{#each tasks}}
+                {{> taskItem task=this onEditTaskAction=onEditTaskAction}}
+              {{/each}}
+              </tbody>
+            </table>
+          </div>
+          <!-- .table-responsive -->
+        {{else}}
+          <h3>No tasks here</h3>
+        {{/if}}
+      </div>
+      <!-- .mail-box -->
+    </div>
+  </div>
+</template>

@@ -34,12 +34,34 @@ Template.locationSettings.helpers({
 
 Template.locationSettings.events({
   'click .delete-location': function (event, tmpl) {
-    if (confirm("Are you sure, you want to delete this location?")) {
-      var locationId = tmpl.data.locationId;
+    event.preventDefault();
+
+    var locationId = tmpl.data.locationId;
+    var nameOfLocation = Template.instance().location().name;
+    sweetAlert({
+      title: 'Are you absolutely sure?',
+      text: 'Please type in the name of the location to confirm.',
+      type: 'input',
+      showCancelButton: true,
+      closeOnConfirm: false,
+      confirmButtonText: 'Delete Location',
+      confirmButtonColor: '#ec4758',
+      animation: 'slide-from-top',
+      inputPlaceholder: 'Name of location'
+    }, function (inputValue) {
+      if (inputValue === '') {
+        sweetAlert.showInputError('You need to write name of location!');
+        return false
+      }
+      if (inputValue !== nameOfLocation) {
+        sweetAlert.showInputError("It isn't name of current location!");
+        return false;
+      }
       Meteor.call('deleteLocation', locationId, HospoHero.handleMethodResult(function () {
         tmpl.closeFlyoutByEvent(event);
+        sweetAlert('Ok!', nameOfLocation + ' was deleted!', 'success');
       }));
-    }
+    });
   },
 
   'click .create-area-flyout': function (event, tmpl) {

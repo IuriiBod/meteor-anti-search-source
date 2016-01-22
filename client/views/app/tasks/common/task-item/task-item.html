@@ -1,0 +1,53 @@
+<template name="taskItem">
+  <tr class="edit-task">
+    <td class="check-mail">
+      {{#if canDoneTask}}
+        <input type="checkbox" class="task-checkbox" {{checkboxAttr}} />
+      {{/if}}
+    </td>
+
+    <td class="mail-ontact {{dueDateClass}}">
+      {{dateFormat task.dueDate}}
+    </td>
+
+    <td class="mail-subject task-title {{isDoneClass}}">
+      {{task.title}}
+      {{#if task.done}}
+        ({{username task.completedBy}})
+      {{/if}}
+    </td>
+
+    <td class="mail-subject">
+      <span class="label label-warning pull-right hidden-xs">{{taskDuration}}</span>
+    </td>
+
+    <td>
+      {{#each task.assignedTo}}
+        <p>{{username this}}</p>
+      {{/each}}
+    </td>
+
+    <td>
+      <a href="{{referenceObject.route}}" class="text-primary">
+        <i class="text-info fa {{referenceObject.icon}}"></i>
+        {{referenceObject.name}}
+      </a>
+    </td>
+
+    <td class="text-right mail-date">
+      <a class="task-comment-count" href="#comments-{{task._id}}" data-toggle="collapse" aria-expanded="false">
+        <i class="fa fa-comments-o fa-fw fa-lg comments-toggler">
+          {{#if commentsCount}}
+            <span class="label label-primary">{{commentsCount}}</span>
+          {{/if}}
+        </i>
+      </a>
+    </td>
+  </tr>
+
+  <tr class="collapse" id="comments-{{task._id}}">
+    <td colspan="7">
+        {{> commentsPanel id=task._id type='taskItem'}}
+    </td>
+  </tr>
+</template>
