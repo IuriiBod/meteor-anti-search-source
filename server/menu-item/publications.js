@@ -99,93 +99,73 @@ AntiSearchSource.queryTransform('menuItems', function (userId, query) {
   });
 });
 
-Meteor.publish('menuItemsSales', function (query) {
+Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, status) {
   if (this.userId) {
+    console.log('dailySalesDate -> ', dailySalesDate);
     var observer;
-    var menuItemsIds = [];
+
+    var query = {
+      'relations.areaId': areaId
+    };
+
+    if (categoryId && categoryId != "all") {
+      query.category = categoryId;
+    }
+
+    if (status) {
+      query.status = (status && status != 'all') ? status : {$ne: 'archived'};
+    }
 
     var round = function (value) {
       return HospoHero.misc.rounding(value);
     };
 
-    var getSortedMenuItems = function () {
-      var filteredMenuItems = menuItemsIds.map(function (id) {
-        var filteredMenuItemStats = _.filter(menuItemsStats, function (item) {
-          return item.menuItemId === id;
-        });
+    var transform = function(menuItem) {
+      var analizedMenuItem = HospoHero.analyze.menuItem(menuItem);
+      var menuItemSales = DailySales.find({date: dailySalesDate, menuItemId: menuItem._id});
+      var itemStats = menuItemSales.map(function (dailySalesItem) {
+        var result = {};
+        result.soldQuantity = dailySalesItem.actualQuantity || 0;
+        result.totalIngCost = round(analizedMenuItem.ingCost * result.soldQuantity);
+        result.totalPrepCost = round(analizedMenuItem.prepCost * result.soldQuantity);
+        result.totalItemSales = round(menuItem.salesPrice * result.soldQuantity);
+        result.totalContribution = round(analizedMenuItem.contribution * result.soldQuantity);
 
-        //console.log('----------------------');
-        //console.log(filteredMenuItemStats.length);
-        //console.log('----------------------');
-
-        return filteredMenuItemStats.reduce(function (previousValue, currentValue) {
-          return {
-            menuItemId: currentValue.menuItemId,
-            totalIngCost: round(previousValue.totalIngCost + currentValue.totalIngCost),
-            totalPrepCost: round(previousValue.totalPrepCost + currentValue.totalPrepCost),
-            totalTax: round(previousValue.tax + currentValue.tax),
-            totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
-          }
-        });
-      });
-
-      //filteredMenuItems.sort(function (a, b) {
-      //  if (a.totalContribution < b.totalContribution) {
-      //    return 1;
-      //  } else if (a.totalContribution > b.totalContribution) {
-      //    return -1;
-      //  } else {
-      //    return 0;
-      //  }
-      //});
-
-      //return filteredMenuItems;
-    };
-
-    var transform = function(doc) {
-      var totalContribution = DailySales.find({date: query, menuItemId: doc._id}).map(function (dailySalesItem) {
-        var result = HospoHero.analyze.menuItem(doc);
-        result.menuItemId = dailySalesItem.menuItemId;
-        result.totalContribution = round(result.contribution * (dailySalesItem.actualQuantity || 0));
-        console.log(result.totalContribution);
         return result;
       });
 
-      console.log('dailySales -> ', totalContribution);
-      //console.log(dailySales.count());
-      //if (menuItemsStats.length === dailySales.count()) {
-      //  console.log('------------------');
-      //  console.log(menuItemsStats[0]);
-      //  var i = 0;
-      //  var filteredMenuItems = menuItemsIds.map(function (id) {
-      //    //console.log('id -> ', id + " " + ++i);
-      //    var filteredMenuItemStats = _.filter(menuItemsStats, function (item) {
-      //      return item.menuItemId === id;
-      //    });
-      //
-      //    return filteredMenuItemStats.reduce(function (previousValue, currentValue) {
-      //      return {
-      //        menuItemId: currentValue.menuItemId,
-      //        totalIngCost: round(previousValue.totalIngCost + currentValue.totalIngCost),
-      //        totalPrepCost: round(previousValue.totalPrepCost + currentValue.totalPrepCost),
-      //        totalTax: round(previousValue.tax + currentValue.tax),
-      //        totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
-      //      }
-      //    });
-      //  });
-      //}
+      if (itemStats.length && itemStats.length === menuItemSales.count()) {
+        menuItem.menuItemStats = itemStats.reduce(function (previousValue, currentValue) {
+          return {
+            soldQuantity: round(previousValue.soldQuantity + currentValue.soldQuantity),
+            totalIngCost: round(previousValue.totalIngCost + currentValue.totalIngCost),
+            totalPrepCost: round(previousValue.totalPrepCost + currentValue.totalPrepCost),
+            totalItemSales: round(previousValue.totalItemSales + currentValue.totalItemSales),
+            totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
+          }
+        });
 
-      return doc;
+        _.extend(menuItem.menuItemStats, {
+          contribution: analizedMenuItem.contribution,
+          ingredientCost: analizedMenuItem.ingCost,
+          prepCost: analizedMenuItem.prepCost,
+          tax: analizedMenuItem.tax
+        });
+
+        return menuItem;
+      }
+
+      return menuItem;
     };
 
     var self = this;
 
-    observer = MenuItems.find({_id: '7D3k56oS6H9TdtK5h'}).observe({
-      added: function (document) {
-        self.added('menuItems', document._id, transform(document));
+    observer = MenuItems.find(query).observe({
+      added: function (menuItem) {
+        self.added('menuItems', menuItem._id, transform(menuItem));
       },
-      changed: function (newDocument, oldDocument) {
-        self.changed('menuItems', newDocument._id, transform(newDocument));
+      changed: function (menuItem, oldDocument) {
+        self.changed('menuItems', menuItem._id, transform(menuItem));
       },
       removed: function (oldDocument) {
         self.removed('menuItems', oldDocument._id);
