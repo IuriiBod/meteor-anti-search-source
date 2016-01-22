@@ -57,14 +57,14 @@ Namespace('HospoHero.analyze', {
       };
 
       var result = {
-        totalIngCost: processMenuEntry('ingredients', function (total, ingredientEntry) {
+        ingCost: processMenuEntry('ingredients', function (total, ingredientEntry) {
           var ingredient = Ingredients.findOne({_id: ingredientEntry._id});
           var ingredientProps = self.ingredient(ingredient);
           total += ingredientProps.costPerPortionUsed * ingredientEntry.quantity;
           return total;
         }),
 
-        totalPrepCost: processMenuEntry('jobItems', function (total, jobEntry) {
+        prepCost: processMenuEntry('jobItems', function (total, jobEntry) {
           var job = JobItems.findOne({_id: jobEntry._id});
           var jobItemProps = self.jobItem(job);
           total += jobItemProps.prepCostPerPortion * jobEntry.quantity;
@@ -74,7 +74,7 @@ Namespace('HospoHero.analyze', {
         tax: round(menuItem.salesPrice * 0.1)
       };
 
-      result.contribution = round(menuItem.salesPrice - result.totalPrepCost - result.totalIngCost - result.tax);
+      result.contribution = round(menuItem.salesPrice - result.prepCost - result.ingCost - result.tax);
 
       return result;
     }

@@ -85,16 +85,16 @@ Router.route('menuItemsReportByDateRange', {
   path: '/menu-items/items-rank-report/:startDate/:endDate',
   template: 'menuListRankReport',
   waitOn: function () {
-    var query = TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate);
-
+    var timeInterval = TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate);
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('menuItemsSales', query)
+      Meteor.subscribe('menuItemsSales', timeInterval, currentAreaId, 'all', 'all')
     ]
   },
   data: function () {
     console.log(this.params.startDate);
     console.log(this.params.endDate);
-    console.log(DailySales.find().fetch());
+    console.log(MenuItems.find().fetch());
   }
 });
 
