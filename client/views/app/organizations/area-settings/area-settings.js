@@ -33,7 +33,7 @@ Template.areaSettings.helpers({
         $or: [
           {'relations.areaIds': this.areaId},
           {
-            'relations.organizationId': area.organizationId,
+            'relations.organizationIds': {$in: [area.organizationId]},
             'relations.locationIds': null,
             'relations.areaIds': null
           }
