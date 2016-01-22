@@ -34,13 +34,11 @@
       <button class="btn btn-white col-xs-12 add-user">
         <i class="fa fa-user-plus"></i> Add User
       </button>
-      <br/>
       {{#if state$addUser}}
         {{> addUserPopup areaId=area._id}}
       {{/if}}
     {{/if}}
 
-    <br/>
     <ul class="list-group" style="display: block;">
       <li class="list-group-item">
         <a href="{{pathFor 'posSettings'}}">POS / Menu Linking</a>
