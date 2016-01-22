@@ -9,7 +9,7 @@
             {{#each weekDates}}
               <th colspan="2">
                 {{weekDateName this}}
-                <h5>{{dateFormat this}}</h5>
+                <h5>{{rosterTableDateFormat}}</h5>
               </th>
             {{/each}}
           </tr>
@@ -25,19 +25,19 @@
           </thead>
           <tbody>
 
-          {{>totalSalesRow weekDate=weekDate}}
+          {{> totalSalesRow weekFigures=weekFigures}}
 
           <tr>
             <td>Staff Cost ($)</td>
-            {{#each weekDates}}
-              {{> staffCostTr day=this figureBoxDataHelper=../figureBoxDataHelper}}
+            {{#each weekFigures}}
+              {{> staffCostTr}}
             {{/each}}
           </tr>
 
           <tr>
             <td>Staff Cost (%)</td>
-            {{#each weekDates}}
-              {{> staffCostPercentagesTr day=this figureBoxDataHelper=../figureBoxDataHelper}}
+            {{#each weekFigures}}
+              {{> staffCostPercentagesTr}}
             {{/each}}
           </tr>
           </tbody>

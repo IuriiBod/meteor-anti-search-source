@@ -57,13 +57,6 @@ Namespace('HospoHero.misc', {
     return TimeRangeQueryBuilder.forInterval(startDate, endDate);
   },
 
-  getWeekDateFromRoute: function (routeContext) {
-    return {
-      week: parseInt(routeContext.params.week),
-      year: parseInt(routeContext.params.year)
-    };
-  },
-
   getSubscriptionDocument: function (type, itemId) {
     var subscription = Subscriptions.findOne({
       type: type,
@@ -95,6 +88,28 @@ Namespace('HospoHero.misc', {
       statuses.push('archived');
     }
     return statuses;
+  },
+
+  /**
+   * Returns user's payrate for specified date
+   * @param {Object} user user's document
+   * @param {Date} date
+   * @returns {*}
+   */
+  getUserPayRate: function (user, date) {
+    if (user.profile && user.profile.payrates) {
+      var wageDoc = user.profile.payrates;
+
+      var currentWeekDay = moment(date).format('dddd').toLowerCase();
+
+      var rate = wageDoc[currentWeekDay];
+      if (!rate) {
+        rate = wageDoc['weekdays']
+      }
+      return rate;
+    } else {
+      return 0;
+    }
   },
 
   getCountries: function () {
