@@ -9,11 +9,13 @@ Template.calendarItem.helpers({
       var location = Locations.findOne({_id: area.locationId});
 
       return {
+        id: this.userId,
         header: {
           right: 'agendaDay, agendaWeek, prev, next'
         },
         defaultView: this.type === 'day' ? 'agendaDay' : 'agendaWeek',
         defaultDate: this.date,
+        firstDay: 1,
         displayTime: true,
         timezone: location.timezone,
 

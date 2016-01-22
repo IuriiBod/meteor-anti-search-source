@@ -3,12 +3,11 @@ Meteor.methods({
     // Set job time to the shift time
     var adjustJobTime = function (oldTime, newTime) {
       newTime = moment(newTime);
-
-      var adjustedMoment = moment(oldTime);
-      adjustedMoment.hours(newTime.hours());
-      adjustedMoment.minutes(newTime.minutes());
-
-      return adjustedMoment;
+      var adjustTime = moment(oldTime);
+      adjustTime.year(newTime.year());
+      adjustTime.month(newTime.month());
+      adjustTime.day(newTime.day());
+      return adjustTime;
     };
 
     if (_.keys(usersAndShifts).length) {

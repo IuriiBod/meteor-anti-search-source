@@ -1,9 +1,9 @@
-Meteor.publishComposite('calendarEvents', function (date, locationId, userId) {
+Meteor.publishComposite('calendarEvents', function (date, queryType, locationId, userId) {
   return {
     find: function () {
       if (this.userId) {
         var query = {
-          date: TimeRangeQueryBuilder.forWeek(date, locationId)
+          date: TimeRangeQueryBuilder[queryType](date, locationId)
         };
 
         if (userId) {

@@ -7,7 +7,8 @@ Router.route('calendar', {
     var area = HospoHero.getCurrentArea(userId);
     if (!!area) {
       var date = this.params.date;
-      return Meteor.subscribe('calendarEvents', date, area.locationId, userId);
+      var queryType = this.params.type === 'day' ? 'forDay' : 'forWeek';
+      return Meteor.subscribe('calendarEvents', date, queryType, area.locationId, userId);
     }
   },
 

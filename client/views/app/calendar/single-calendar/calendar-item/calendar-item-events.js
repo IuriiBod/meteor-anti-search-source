@@ -10,10 +10,12 @@ Template.calendarItem.events({
   },
 
   'click .fc-agendaDay-button': function (event, tmpl) {
-    tmpl.calendarView = 'day';
+    tmpl.calendarType = 'day';
+    tmpl.changeDate();
   },
 
   'click .fc-agendaWeek-button': function (event, tmpl) {
-    tmpl.calendarView = 'week';
+    tmpl.calendarType = 'week';
+    tmpl.changeDate();
   }
 });
