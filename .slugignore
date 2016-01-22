@@ -1,0 +1,9 @@
+reset_db_win.bat
+reset_db.sh
+mobile-config.js
+README.MD
+generate-mobile-assets.sh
+.jshintrc
+.mupx-deploy
+cordova-build-override
+public/mobile
