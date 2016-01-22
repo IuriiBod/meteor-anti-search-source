@@ -14,6 +14,23 @@ PushNotificationSender.prototype._getDeviceTokens = function () {
   return user && user.pushNotificationTokens || [];
 };
 
+PushNotificationSender.prototype._sendApnsNotification = function (notificationData) {
+  var connection = new Apns.Connection({
+    keyFile: Apns.getAssetAbsolutePath('apns_key.pem'),
+    certFile: Apns.getAssetAbsolutePath('apns_cert.pem'),
+    debug: false
+  });
+
+  var notification = new Apns.Notification();
+
+  //todo: use notification data
+  notification.alert = "Hello World !";
+  
+  //todo: token
+  notification.device = new Apns.Device("iphone_token");
+
+  connection.sendNotification(notification);
+};
 
 PushNotificationSender.prototype._sendGcmNotification = function (notificationData) {
   if (this.isDeviceRegistered()) {

@@ -12,7 +12,6 @@ if (Meteor.isCordova) {
         iconColor: '#1AB394'
       },
       ios: {
-        senderID: senderId,
         alert: true,
         badge: true,
         sound: true
@@ -23,6 +22,8 @@ if (Meteor.isCordova) {
     PushNotification.hasPermission(function (permissionResult) {
       if (permissionResult.isEnabled) {
         pushNotification.on('registration', function (registrationResult) {
+          //todo: remove it
+          console.log('registered for APNs', registrationResult);
           var registrationId = registrationResult.registrationId;
           if (registrationId) {
             Session.setPersistent(PUSH_TOKEN_PROPERTY, registrationId)
