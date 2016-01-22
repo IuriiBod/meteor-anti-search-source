@@ -45,6 +45,8 @@ if (Meteor.isCordova) {
 
   //add device token on login
   Accounts.onLogin(function () {
+    //todo: remove it
+    console.log('user login', Meteor.userId());
     var token = Session.get(PUSH_TOKEN_PROPERTY);
     if (token) {
       Meteor.call('registerPushDeviceToken', token);

@@ -25,7 +25,7 @@ PushNotificationSender.prototype._sendApnsNotification = function (notificationD
 
   //todo: use notification data
   notification.alert = "Hello World !";
-  
+
   //todo: token
   notification.device = new Apns.Device("iphone_token");
 
