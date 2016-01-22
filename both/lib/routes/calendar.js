@@ -1,19 +1,20 @@
 Router.route('calendar', {
-  path: '/calendar/:date',
+  path: '/calendar/:type/:date',
   template: 'userCalendar',
 
   waitOn: function () {
     var userId = Meteor.userId();
-    var areaId = HospoHero.getCurrentAreaId(userId);
-    var date = this.params.date;
-    return [
-      //Meteor.subscribe('recurringJobItems', areaId, userId, date)
-    ];
+    var area = HospoHero.getCurrentArea(userId);
+    if (!!area) {
+      var date = this.params.date;
+      return Meteor.subscribe('calendarEvents', date, area.locationId, userId);
+    }
   },
 
   data: function () {
     return {
-      date: this.params.date
+      date: this.params.date,
+      type: this.params.type
     };
   }
 });
