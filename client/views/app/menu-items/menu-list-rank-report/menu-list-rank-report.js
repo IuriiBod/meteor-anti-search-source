@@ -4,14 +4,18 @@ Template.menuListRankReport.onCreated(function () {
 
 Template.menuListRankReport.helpers({
   menuItems: function() {
-    var items = MenuItems.find({}, {sort: {rank: 1}}).fetch();
-    _.map(items, function(item) {
-      if (!item.rank) {
-        item.rank = 0;
-      }
+    return MenuItems.find({}, {sort: {'menuItemStats.totalContribution': -1}}).map(function (item, index) {
+      item.index = ++index;
+      return item;
     });
+  },
 
-    return items;
+  theadItems: function () {
+    return [
+        'Item name', 'Sparkline of ranking', 'Ranking', 'Item Sales', 'Item Price',
+        'Total Sales', 'Prep item', 'Prep total', 'Cost of goods item', 'Cost of goods total',
+        'Tax', 'Profit item', 'Profit total'
+    ]
   },
 
   customRangeSelected: function () {

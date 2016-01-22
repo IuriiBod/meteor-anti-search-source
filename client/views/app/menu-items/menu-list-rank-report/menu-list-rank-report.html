@@ -16,25 +16,15 @@
       <table class="table">
         <thead>
           <tr>
-            <td>item name</td>
-            <td>Sparkline of ranking</td>
-            <td>Ranking</td>
-            <td>Item Sales</td>
-            <td>Item Price</td>
-            <td>Total Sales</td>
-            <td>Prep item</td>
-            <td>Prep total</td>
-            <td>Cost of goods item</td>
-            <td>Cost of goods total</td>
-            <td>Tax</td>
-            <td>Profit item</td>
-            <td>Profit total</td>
+            {{#each theadItems}}
+              <td>{{this}}</td>
+            {{/each}}
           </tr>
         </thead>
         <tbody class="table-hover">
           {{#each menuItems}}
             <tr>
-              {{> menuItemReport item=this}}
+              {{> menuItemReport this}}
             </tr>
           {{/each}}
         </tbody>
