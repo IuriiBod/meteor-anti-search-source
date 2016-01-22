@@ -7,7 +7,7 @@ Router.route('calendar', {
     var areaId = HospoHero.getCurrentAreaId(userId);
     var date = this.params.date;
     return [
-      Meteor.subscribe('recurringJobItems', areaId, userId, date)
+      //Meteor.subscribe('recurringJobItems', areaId, userId, date)
     ];
   },
 
