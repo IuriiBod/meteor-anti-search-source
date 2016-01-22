@@ -1,27 +1,16 @@
-Template.staffCostPercentagesTr.onCreated(function () {
-  var tmpl = this;
-  this.autorun(function () {
-    var data = Template.currentData();
-    tmpl.set('dailyStaff', data.figureBoxDataHelper.getDailyStaff(data.day));
-  });
-});
-
 Template.staffCostPercentagesTr.helpers({
-  actual: function () {
-    return this.actualWage;
-  },
+  percentages: function () {
+    var calculatePercentage = function (staffAmount, salesAmount) {
+      return salesAmount !== 0 ? (staffAmount / salesAmount ) * 100 : 0;
+    };
 
-  forecast: function () {
-    return this.forecastedWage;
-  },
+    var forecast = calculatePercentage(this.staff.forecast, this.sales.forecast);
+    var actual = calculatePercentage(this.staff.actual, this.sales.actual);
 
-  textClass: function () {
-    if (this.actualWage != 0) {
-      if (this.actualWage <= this.forecastedWage) {
-        return "text-info";
-      } else {
-        return "text-danger";
-      }
+    return {
+      forecast: forecast,
+      actual: actual,
+      statusClass: 'text-' + (actual <= forecast ? 'info' : 'danger')
     }
   }
 });
