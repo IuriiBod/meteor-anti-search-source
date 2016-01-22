@@ -32,6 +32,9 @@
   "GCM": {
     "key": "AIzaSyCBw7Db9feI3lrSbncwqkqhxFXUbKN295o"
   },
+  "APNS": {
+    "passphrase": "HsopoHeroApnsPassPharase1601221552"
+  },
   "useRawOrders": true,
   "logLevel": "warn"
 }

@@ -14,44 +14,57 @@ PushNotificationSender.prototype._getDeviceTokens = function () {
   return user && user.pushNotificationTokens || [];
 };
 
-PushNotificationSender.prototype._sendApnsNotification = function (notificationData) {
+PushNotificationSender.prototype._isApnsToken = function (deviceToken) {
+  //token length: gcm: 152, apns: 64
+  return deviceToken.length === 64;
+};
+
+PushNotificationSender.prototype._sendApnsNotification = function (deviceToken, notificationData) {
   var connection = new Apns.Connection({
     keyFile: Apns.getAssetAbsolutePath('apns_key.pem'),
     certFile: Apns.getAssetAbsolutePath('apns_cert.pem'),
-    debug: false
+    passphrase: Meteor.settings.APNS.passphrase,
+    debug: true,
+    errorCallback: function (errorCode) {
+      //find out error by it's code
+      var errors = Object.keys(Apns.Errors);
+      var currentError = _.find(errors, function (error) {
+        return Apns.Errors[error] === errorCode;
+      });
+
+      logger.error('Error while sending notification', {error: currentError, token: deviceToken});
+    }
   });
 
   var notification = new Apns.Notification();
 
   //todo: use notification data
-  notification.alert = "Hello World !";
+  notification.alert = "Hello World!";
 
   //todo: token
-  notification.device = new Apns.Device("iphone_token");
+  notification.device = new Apns.Device(deviceToken);
 
   connection.sendNotification(notification);
+
+  console.log('Notification sended');
 };
 
-PushNotificationSender.prototype._sendGcmNotification = function (notificationData) {
-  if (this.isDeviceRegistered()) {
-    this._deviceTokens.forEach(function (deviceToken) {
-      try {
-        var response = HTTP.post('https://gcm-http.googleapis.com/gcm/send', {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'key=' + Meteor.settings.GCM.key
-          },
-          data: {
-            data: notificationData,
-            to: deviceToken
-          }
-        });
-
-        logger.info('Send push notification', {response_data: response.data});
-      } catch (err) {
-        logger.error('Error while sending push notification', {response: err});
+PushNotificationSender.prototype._sendGcmNotification = function (deviceToken, notificationData) {
+  try {
+    var response = HTTP.post('https://gcm-http.googleapis.com/gcm/send', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=' + Meteor.settings.GCM.key
+      },
+      data: {
+        data: notificationData,
+        to: deviceToken
       }
     });
+
+    logger.info('Send push notification', {response_data: response.data});
+  } catch (err) {
+    logger.error('Error while sending push notification', {response: err});
   }
 };
 
@@ -79,7 +92,16 @@ PushNotificationSender.prototype.send = function (notificationData) {
     extra: {} // data payload
   };
 
-  this._sendGcmNotification(notification);
+  if (this.isDeviceRegistered()) {
+    var self = this;
+    this._deviceTokens.forEach(function (deviceToken) {
+      if (self._isApnsToken(deviceToken)) {
+        self._sendApnsNotification(deviceToken, notification);
+      } else {
+        self._sendGcmNotification(deviceToken, notification);
+      }
+    });
+  }
 };
 
 

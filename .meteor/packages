@@ -17,7 +17,7 @@ ejson
 spacebars
 check
 http
-force-ssl
+#force-ssl
 jquery
 email
 underscore
