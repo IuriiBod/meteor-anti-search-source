@@ -1,17 +1,20 @@
 Meteor.publishComposite('taskList', function (userId) {
   return {
+    // publish all user's tasks
     find: function () {
+      var query = {};
+
       if (userId) {
         var user = Meteor.users.findOne({_id: userId});
         var relations = user && user.relations;
-        var query = getTasksQuery(relations, userId);
-        return TaskList.find(query);
-      } else {
-        this.ready();
+        query = getTasksQuery(relations, userId);
       }
+
+      return TaskList.find(query);
     },
     children: [
       {
+        // publish reference of the task
         find: function (task) {
           if (task) {
             var reference = task.reference;
@@ -33,13 +36,11 @@ Meteor.publishComposite('taskList', function (userId) {
         }
       },
       {
+        // publish comments to the task
         find: function (task) {
           if (task) {
             return Comments.find({
               reference: task._id
-            }, {
-              sort: {"createdOn": -1},
-              limit: 10
             });
           }
         },
@@ -69,9 +70,7 @@ Meteor.publishAuthorized('todayTasks', function () {
     today = moment().endOf('day').toDate();
   }
 
-  var relations = user && user.relations;
-  var sharingQuery = getTasksQuery(relations, this.userId);
-
+  var sharingQuery = HospoHero.misc.getTasksQuery(this.userId);
   var dueDateQuery = {
     dueDate: {
       $lte: today
@@ -82,35 +81,3 @@ Meteor.publishAuthorized('todayTasks', function () {
   var query = _.extend(dueDateQuery, sharingQuery);
   return TaskList.find(query);
 });
-
-var getTasksQuery = function (relations, userId) {
-  var query = {};
-
-  if (relations && relations.organizationId) {
-    var sharingOptions = {
-      user: {
-        sharingIds: userId
-      },
-      organization: {
-        sharingType: 'organization',
-        sharingIds: relations.organizationId
-      },
-      location: {
-        sharingType: 'location'
-      },
-      area: {
-        sharingType: 'area'
-      }
-    };
-
-    if (relations.locationIds) {
-      sharingOptions.location.sharingIds = {$in: relations.locationIds};
-    }
-    if (relations.areaIds) {
-      sharingOptions.area.sharingIds = {$in: relations.areaIds};
-    }
-    query.$or = _.values(sharingOptions);
-  }
-
-  return query;
-};
