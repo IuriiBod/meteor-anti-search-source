@@ -1,4 +1,4 @@
-var CalendarEventChecker = Match.Where(function (calendarEvent) {
+var CalendarEventDocument = Match.Where(function (calendarEvent) {
   check(calendarEvent, {
     itemId: HospoHero.checkers.MongoId,
     startTime: Date,
@@ -16,5 +16,5 @@ var CalendarEventChecker = Match.Where(function (calendarEvent) {
 });
 
 Namespace('HospoHero.checkers', {
-  CalendarEventChecker: CalendarEventChecker
+  CalendarEventDocument: CalendarEventDocument
 });

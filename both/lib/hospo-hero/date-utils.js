@@ -204,7 +204,7 @@ Namespace('HospoHero.dateUtils', {
     return seasons[parseInt(month) - 1];
   },
 
-  minutesToHours: function (duration) {
+  humanizeTimeDuration: function (duration) {
     moment.duration(duration, 'hours').humanize();
   }
 });

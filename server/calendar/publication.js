@@ -1,4 +1,6 @@
 Meteor.publishComposite('calendarEvents', function (date, queryType, locationId, userId) {
+  queryType = queryType === 'day' ? 'forDay' : 'forWeek';
+
   return {
     find: function () {
       if (this.userId) {
