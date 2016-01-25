@@ -65,7 +65,7 @@ hospohero:stale-session
 trsdln:flyouts
 jss:blaze-states
 trsdln:modals
-jss:meteor-reactive-fullcalendar
+jss:reactive-fullcalendar
 
 # ===========> backend
 micah:google-cloud
