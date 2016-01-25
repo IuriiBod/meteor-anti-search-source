@@ -63,23 +63,3 @@ Meteor.publish("jobsRelatedMenus", function (id) {
   logger.info("Related menus published", {"id": id});
   return MenuItems.find({"jobItems._id": id});
 });
-
-Meteor.publish('recurringJobItems', function (areaId, userId, date) {
-  var area = Areas.findOne({_id: areaId});
-
-  var shiftTimeRange = TimeRangeQueryBuilder.forDay(new Date(date), area.locationId);
-  var usersShifts = Shifts.find({
-    assignedTo: userId,
-    startTime: shiftTimeRange
-  }).map(function (shift) {
-    var recurringJobType = JobTypes.findOne({name: 'Recurring'});
-    return JobItems.find({
-      type: recurringJobType._id,
-      section: shift.section
-    }).fetch();
-  });
-
-  console.log('US', usersShifts);
-
-  this.ready();
-});
