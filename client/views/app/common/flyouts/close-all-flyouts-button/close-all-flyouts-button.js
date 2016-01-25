@@ -10,7 +10,7 @@ Template.CloseAllFlyoutsButton.events({
       closeOnConfirm: true,
       html: false
     }, function () {
-      FlyoutManager.removeAllFlyoutes();
+      FlyoutManager.closeAll();
     });
   }
 });

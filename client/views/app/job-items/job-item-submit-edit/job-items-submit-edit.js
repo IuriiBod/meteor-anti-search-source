@@ -183,7 +183,7 @@ Template.submitEditJobItem.events({
             }
 
           } else if (checkedButtonFor == 'on-date') {
-            var lastDate = tmpl.$('.ends-on-date-picker').data('DateTimePicker').date().toDate();
+            var lastDate = tmpl.$('.ends-on-date-picker').datepicker('getDate');
             return {
               lastDate: lastDate
             }
