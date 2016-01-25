@@ -1,7 +1,7 @@
 var UserRelations = Match.Where(function (relation) {
   try {
     check(relation, {
-      organizationId: HospoHero.checkers.MongoId,
+      organizationIds: Match.OneOf([HospoHero.checkers.MongoId], null),
       locationIds: Match.OneOf([HospoHero.checkers.MongoId], null),
       areaIds: Match.OneOf([HospoHero.checkers.MongoId], null)
     });
