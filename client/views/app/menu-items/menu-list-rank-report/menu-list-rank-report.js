@@ -1,10 +1,15 @@
 Template.menuListRankReport.onCreated(function () {
-  this.customRange = new ReactiveVar(false);
+  this.customRange = new ReactiveVar();
+  this.data.dateRange === 'custom-range' ? this.customRange.set(true) : this.customRange.set(false);
+});
+
+Template.menuListRankReport.onRendered(function () {
+  this.$('.date').val(this.data.dateRange);
 });
 
 Template.menuListRankReport.helpers({
   menuItems: function() {
-    return MenuItems.find({}, {sort: {'menuItemStats.totalContribution': -1}}).map(function (item, index) {
+    return this.menuItems.map(function (item, index) {
       item.index = ++index;
       return item;
     });
@@ -12,9 +17,9 @@ Template.menuListRankReport.helpers({
 
   theadItems: function () {
     return [
-        'Item name', 'Sparkline of ranking', 'Ranking', 'Item Sales', 'Item Price',
-        'Total Sales', 'Prep item', 'Prep total', 'Cost of goods item', 'Cost of goods total',
-        'Tax', 'Profit item', 'Profit total'
+        'Item Name', 'Sparkline of Ranking', 'Ranking', '<b>Item Sales</b>', '<b>Item Price</b>',
+        '<b>Total Sales</b>', '<b>Prep (Item)</b>', '<b>Total Prep</b>', '<b>Cost of Goods (Item)</b>', '<b>Total Cost of Goods</b>',
+        '<b>Tax</b>', '<b>Profit (Item)</b>', '<b>Total Profit</b>'
     ]
   },
 
@@ -29,27 +34,34 @@ Template.menuListRankReport.events({
 
     var selectedValue = tmpl.$(event.target).val();
     var date = new Date();
-    var params = {};
+
+    var params = {
+      dateRange: selectedValue
+    };
 
     if (selectedValue === 'yesterday') {
-      params.date = HospoHero.dateUtils.shortDateFormat(moment(date).subtract(1, 'days'));
-    } else if (selectedValue === 'this week') {
+      _.extend(params, {
+          startDate: HospoHero.dateUtils.shortDateFormat(moment(date).subtract(1, 'days'))
+      });
+    } else if (selectedValue === 'this-week') {
       var weekDays = HospoHero.dateUtils.getWeekDays(date);
-      params.startDate = HospoHero.dateUtils.shortDateFormat(weekDays[0]);
-      params.endDate = HospoHero.dateUtils.shortDateFormat(weekDays[weekDays.length - 1]);
-    } else if (selectedValue === 'last week') {
-      var lastWeekDays = HospoHero.dateUtils.getWeekDays(moment(date).subtract(8, 'days'));
-      params.startDate = HospoHero.dateUtils.shortDateFormat(lastWeekDays[0]);
-      params.endDate = HospoHero.dateUtils.shortDateFormat(lastWeekDays[lastWeekDays.length - 1]);
+
+      _.extend(params, {
+        startDate: HospoHero.dateUtils.shortDateFormat(weekDays[0]),
+        endDate: HospoHero.dateUtils.shortDateFormat(weekDays[weekDays.length - 1])
+      });
+    } else if (selectedValue === 'last-week') {
+      var lastWeekDays = HospoHero.dateUtils.getWeekDays(moment(date).subtract(7, 'days'));
+
+      _.extend(params, {
+        startDate: HospoHero.dateUtils.shortDateFormat(lastWeekDays[0]),
+        endDate: HospoHero.dateUtils.shortDateFormat(lastWeekDays[lastWeekDays.length - 1])
+      });
     } else {
       tmpl.customRange.set(true);
       return false;
     }
 
-    if (params.startDate && params.endDate) {
-      Router.go('menuItemsReportByDateRange', params);
-    } else {
-      Router.go('menuItemsReportByDate', params);
-    }
+    Router.go('menuItemsRankReport', params);
   }
 });

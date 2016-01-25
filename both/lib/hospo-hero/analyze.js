@@ -96,20 +96,5 @@ Namespace('HospoHero.analyze', {
     }
 
     return accuracy;
-  },
-
-  totalValuesItemStats: function (itemStats) {
-    return itemStats.reduce(function (previousValue, currentValue) {
-      if (_.isObject(previousValue) && _.isObject(currentValue)) {
-        var result = {};
-        _.each(previousValue, function (value, key) {
-          result[key] = HospoHero.misc.rounding(value + currentValue[key]);
-        });
-
-        return result;
-      } else {
-        return HospoHero.misc.rounding(previousValue + currentValue);
-      }
-    });
   }
 });

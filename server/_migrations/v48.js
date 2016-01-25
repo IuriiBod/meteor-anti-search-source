@@ -2,11 +2,6 @@ Migrations.add({
   version: 48,
   name: 'added menu rank report sparkline for 7 days',
   up: function () {
-
-    var round = function (value) {
-      return HospoHero.misc.rounding(value);
-    };
-
     for (var day = 1; day < 8; day++) {
       var yesterday = moment(new Date()).subtract(day, 'days').toDate();
       var fifteenDaysAgo = moment(yesterday).subtract(14, 'days').toDate();
@@ -21,22 +16,18 @@ Migrations.add({
           menuItemId: menuItem._id
         });
         var itemStats = menuItemsSales.map(function (dailySalesItem) {
-          var itemContribution = result.contribution;
-          var menuItemId = dailySalesItem.menuItemId;
-          var totalContribution = round(itemContribution * (dailySalesItem.actualQuantity || 0));
-
-          return {
-            menuItemId: menuItemId,
-            totalContribution: totalContribution
-          };
+          return HospoHero.misc.rounding(result.contribution * (dailySalesItem.actualQuantity || 0));
         });
 
         if (itemStats.length && itemStats.length === menuItemsSales.count()) {
-          var reducedItemStats = itemStats.reduce(function (previousValue, currentValue) {
-            return {
-              menuItemId: currentValue.menuItemId,
-              totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
-            }
+          var reducedItemStats = {};
+
+          var calculateItemStats = itemStats.reduce(function (previousValue, currentValue) {
+            return HospoHero.misc.rounding(previousValue + currentValue);
+          });
+          _.extend(reducedItemStats, {
+            menuItemId: menuItem._id,
+            totalContribution: calculateItemStats
           });
 
           menuItemsStats.push(reducedItemStats);
@@ -59,6 +50,7 @@ Migrations.add({
           if (menuItem.rank && menuItem.rank.length > 6) {
             menuItem.rank.shift();
             menuItem.rank.push(++index);
+
             MenuItems.update({
               _id: item.menuItemId
             }, {
@@ -68,6 +60,7 @@ Migrations.add({
             });
           } else if (menuItem.rank) {
             menuItem.rank.push(++index);
+
             MenuItems.update({
               _id: item.menuItemId
             }, {

@@ -56,45 +56,24 @@ Router.route('submitMenuItem', {
 });
 
 Router.route('menuItemsRankReport', {
-  path: '/menu-items/items-rank-report',
-  template: 'menuListRankReport',
-  waitOn: function() {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    var formattedDate = TimeRangeQueryBuilder.forDay(HospoHero.dateUtils.formatDate(moment('Sun Jan 17 2016 13:37:22 GMT+0200 (EET)'), 'YYYY-MM-DD'));
-    console.log(formattedDate);
-    return [
-      Meteor.subscribe('menuList', currentAreaId, 'all', 'all'),
-      Meteor.subscribe('dailySales', formattedDate, currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('jobItems', null, currentAreaId)
-
-      //Meteor.subscribe('menuList', currentAreaId, this.params.category, this.params.status.toLowerCase()),
-    ];
-  }
-});
-
-Router.route('menuItemsReportByDate', {
-  path: '/menu-items/items-rank-report/:date',
-  template: 'menuListRankReport',
-  data: function () {
-    console.log(this.params.date);
-  }
-});
-
-Router.route('menuItemsReportByDateRange', {
-  path: '/menu-items/items-rank-report/:startDate/:endDate',
+  path: '/menu-items/items-rank-report/:dateRange/:startDate/:endDate?',
   template: 'menuListRankReport',
   waitOn: function () {
-    var timeInterval = TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate);
+    var timeInterval = this.params.endDate ? TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate) : TimeRangeQueryBuilder.forDay(this.params.startDate);
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('menuItemsSales', timeInterval, currentAreaId, 'all', 'all')
     ]
   },
   data: function () {
-    console.log(this.params.startDate);
-    console.log(this.params.endDate);
-    console.log(MenuItems.find().fetch());
+    var menuItems = MenuItems.find({menuItemStats: {$exists: true}}, {sort: {'menuItemStats.totalContribution': -1}});
+    return {
+      menuItems: menuItems,
+      menuItemsCount: menuItems.count(),
+      dateRange: this.params.dateRange,
+      startDate: this.params.startDate,
+      endDate: this.params.endDate
+    }
   }
 });
 

@@ -1,25 +1,46 @@
 Template.menuItemReport.onRendered(function() {
-  this.$('.sparkline').sparkline(this.data.rank, {
-    type: 'line',
-    width: 50});
+  var rank = this.data.item.rank;
+  var itemsTotalCount = this.data.itemsCount;
+
+  if (rank && rank.length) {
+    var itemRankValues = {};
+
+    rank.forEach(function (item) {
+      itemRankValues[item] = itemsTotalCount - item + 1;
+    });
+
+    this.$('.sparkline').sparkline(rank, {
+      type: 'line',
+      'width': 100,
+      chartRangeMin: 0,
+      chartRangeMax: rank && rank.length || 0,
+      tooltipFormat: '<span style="color: {{color}}">&#9679;</span> {{y:itemRankValues}}</span>',
+      tooltipValueLookups: {
+        itemRankValues: itemRankValues
+      }
+    });
+  }
 });
 
 Template.menuItemReport.helpers({
   itemData: function () {
-    var menuItemStats = [this.name, 'sparkline', this.index,
-      this.menuItemStats && this.menuItemStats.soldQuantity,
-      '$' + this.salesPrice,
-      '$' + (this.menuItemStats && this.menuItemStats.totalItemSales),
-      '$' + (this.menuItemStats && this.menuItemStats.prepCost),
-      '$' + (this.menuItemStats && this.menuItemStats.totalPrepCost),
-      '$' + (this.menuItemStats && this.menuItemStats.ingredientCost),
-      '$' + (this.menuItemStats && this.menuItemStats.totalIngCost),
-      '$' + (this.menuItemStats && this.menuItemStats.tax),
-      '$' + (this.menuItemStats && this.menuItemStats.contribution),
-      '$' + (this.menuItemStats && this.menuItemStats.totalContribution)
-    ];
-    if (this.menuItemStats) {
-      return menuItemStats;
+    if (this.item.menuItemStats) {
+      var item = this.item;
+      return [
+        item.name,
+        'sparkline',
+        item.index,
+        item.menuItemStats.soldQuantity,
+        '$' + item.salesPrice,
+        '$' + item.menuItemStats.totalItemSales,
+        '$' + item.menuItemStats.prepCost,
+        '$' + item.menuItemStats.totalPrepCost,
+        '$' + item.menuItemStats.ingredientCost,
+        '$' + item.menuItemStats.totalIngCost,
+        '$' + item.menuItemStats.tax,
+        '$' + item.menuItemStats.contribution,
+        '$' + item.menuItemStats.totalContribution
+      ];
     }
   }
 });

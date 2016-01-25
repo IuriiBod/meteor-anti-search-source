@@ -1,6 +1,6 @@
 <template name="menuListHeader">
   <div class="title-action menu-list-header">
-    <a class="btn btn-default" href="{{pathFor route='menuItemsRankReport'}}">Menu items rank report</a>
+    <a class="btn btn-white" href="{{pathFor route='menuItemsRankReport' dateRange='yesterday' startDate=dateRange}}">Menu items rank report</a>
     <a class="btn btn-primary" href="{{pathFor route='submitMenuItem'}}">Add new menu</a>
     {{#if isArchived}}
       {{#linkTo route="menuItemsMaster" category="all" status="all" class="btn btn-info"}}
