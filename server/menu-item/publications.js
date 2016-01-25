@@ -101,7 +101,6 @@ AntiSearchSource.queryTransform('menuItems', function (userId, query) {
 
 Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, status) {
   if (this.userId) {
-    console.log('dailySalesDate -> ', dailySalesDate);
     var observer;
 
     var query = {
@@ -124,26 +123,18 @@ Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, s
       var analizedMenuItem = HospoHero.analyze.menuItem(menuItem);
       var menuItemSales = DailySales.find({date: dailySalesDate, menuItemId: menuItem._id});
       var itemStats = menuItemSales.map(function (dailySalesItem) {
-        var result = {};
-        result.soldQuantity = dailySalesItem.actualQuantity || 0;
-        result.totalIngCost = round(analizedMenuItem.ingCost * result.soldQuantity);
-        result.totalPrepCost = round(analizedMenuItem.prepCost * result.soldQuantity);
-        result.totalItemSales = round(menuItem.salesPrice * result.soldQuantity);
-        result.totalContribution = round(analizedMenuItem.contribution * result.soldQuantity);
-
-        return result;
+        var soldQuantity = dailySalesItem.actualQuantity || 0;
+        return {
+          soldQuantity: soldQuantity,
+          totalIngCost: round(analizedMenuItem.ingCost * soldQuantity),
+          totalPrepCost: round(analizedMenuItem.prepCost * soldQuantity),
+          totalItemSales: round(menuItem.salesPrice * soldQuantity),
+          totalContribution: round(analizedMenuItem.contribution * soldQuantity)
+        };
       });
 
       if (itemStats.length && itemStats.length === menuItemSales.count()) {
-        menuItem.menuItemStats = itemStats.reduce(function (previousValue, currentValue) {
-          return {
-            soldQuantity: round(previousValue.soldQuantity + currentValue.soldQuantity),
-            totalIngCost: round(previousValue.totalIngCost + currentValue.totalIngCost),
-            totalPrepCost: round(previousValue.totalPrepCost + currentValue.totalPrepCost),
-            totalItemSales: round(previousValue.totalItemSales + currentValue.totalItemSales),
-            totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
-          }
-        });
+        menuItem.menuItemStats = HospoHero.analyze.totalValuesItemStats(itemStats);
 
         _.extend(menuItem.menuItemStats, {
           contribution: analizedMenuItem.contribution,

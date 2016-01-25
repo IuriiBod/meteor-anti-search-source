@@ -1,12 +1,8 @@
 updateDataForSparkline = function(location) {
   var menuItemsStats = [];
-  var yesterday = moment(new Date()).subtract(1, 'days').toDate();
-  var fifteenDaysAgo = moment(yesterday).subtract(14, 'days').toDate();
-  var dateInterval = TimeRangeQueryBuilder.forInterval(fifteenDaysAgo, yesterday);
-
-  var round = function (value) {
-    return HospoHero.misc.rounding(value);
-  };
+  var yesterdayDate = moment(new Date()).subtract(1, 'days').toDate();
+  var twoWeeksAgoDate = moment(yesterdayDate).subtract(14, 'days').toDate();
+  var dateInterval = TimeRangeQueryBuilder.forInterval(twoWeeksAgoDate, yesterdayDate);
 
   MenuItems.find({status: {$ne: 'archived'}}).forEach(function (menuItem) {
     var result = HospoHero.analyze.menuItem(menuItem);
@@ -16,21 +12,14 @@ updateDataForSparkline = function(location) {
     });
     var itemStats = menuItemsSales.map(function (dailySalesItem) {
       var itemContribution = result.contribution;
-      var menuItemId = dailySalesItem.menuItemId;
-      var totalContribution = round(itemContribution * (dailySalesItem.actualQuantity || 0));
-
-      return {
-        menuItemId: menuItemId,
-        totalContribution: totalContribution
-      };
+      return HospoHero.misc.rounding(itemContribution * (dailySalesItem.actualQuantity || 0));
     });
 
     if (itemStats.length && itemStats.length === menuItemsSales.count()) {
-      var reducedItemStats = itemStats.reduce(function (previousValue, currentValue) {
-        return {
-          menuItemId: currentValue.menuItemId,
-          totalContribution: round(previousValue.totalContribution + currentValue.totalContribution)
-        }
+      var reducedItemStats = {};
+      _.extend(reducedItemStats, {
+        menuItemId: menuItem._id,
+        totalContribution: HospoHero.analyze.totalValuesItemStats(itemStats)
       });
 
       menuItemsStats.push(reducedItemStats);
@@ -90,44 +79,3 @@ if (HospoHero.isDevelopmentMode()) {
 //  //  updateDataForSparkline(location);
 //  //})
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
