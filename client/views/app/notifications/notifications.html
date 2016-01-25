@@ -1,9 +1,8 @@
 <template name="notifiFlyout">
   <div class="flyout-header">
-    <button class="close-flyout-button">
-      <i class="fa fa-angle-right"></i>
-    </button>
+    {{> CloseFlyoutButton}}
     Notifications
+    {{> CloseAllFlyoutsButton}}
   </div>
 
   <div class="flyout-content">
