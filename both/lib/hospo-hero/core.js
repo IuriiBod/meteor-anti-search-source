@@ -2,7 +2,12 @@ Namespace('HospoHero', {
   isInOrganization: function (userId) {
     userId = userId ? userId : Meteor.userId();
     var user = Meteor.users.findOne({_id: userId});
-    return user && user.relations && user.relations.organizationId ? user.relations.organizationId : false;
+    return user &&
+    user.relations &&
+    user.relations.organizationIds ?
+      user.relations.organizationIds.length === 1 ?
+        user.relations.organizationIds[0] : HospoHero.getOrganizationIdBasedOnCurrentArea()
+      : false;
   },
 
   isOrganizationOwner: function (userId) {
@@ -15,6 +20,10 @@ Namespace('HospoHero', {
     }
     var orgId = HospoHero.isInOrganization(userId);
     return !!Organizations.findOne({_id: orgId, owner: userId});
+  },
+
+  getOrganizationIdBasedOnCurrentArea: function (userId) {
+    return HospoHero.getCurrentArea(userId).organizationId;
   },
 
   isInRole: function (roleName, userId, areaId) {

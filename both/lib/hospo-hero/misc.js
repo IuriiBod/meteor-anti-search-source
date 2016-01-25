@@ -285,9 +285,9 @@ Namespace('HospoHero.misc', {
     var user = Meteor.users.findOne({_id: userId});
     var relations = user && user.relations;
 
-    if (relations && relations.organizationId) {
+    if (relations && relations.organizationIds) {
       var allowedSharingTypes = ['area', 'location'];
-      var allowedSharingIds = [userId, relations.organizationId];
+      var allowedSharingIds = _.union(userId, relations.organizationIds);
 
       if (relations.locationIds) {
         allowedSharingIds = _.union(allowedSharingIds, relations.locationIds);

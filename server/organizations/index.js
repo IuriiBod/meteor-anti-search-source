@@ -20,7 +20,7 @@ Meteor.methods({
     Meteor.users.update({_id: Meteor.userId()}, {
       $set: {
         relations: {
-          organizationId: orgId,
+          organizationIds: [orgId],
           locationIds: null,
           areaIds: null
         }
@@ -44,7 +44,7 @@ Meteor.methods({
     //updating user in Meteor.users collection requires user id
     var organizationOwnerId = Meteor.userId();
     var usersIdsRelatedToOrganization = Meteor.users
-      .find({'relations.organizationId': organizationId}, {fields: {_id: 1}})
+      .find({'relations.organizationIds': {$in: [organizationId]}}, {fields: {_id: 1}})
       .map(function (user) {
         return user._id
       });
@@ -69,7 +69,7 @@ Meteor.methods({
     Meteor.users.update({
       _id: organizationOwnerId
     }, {
-      $set: {'relations.organizationId': null}
+      $pull: {'relations.organizationIds': organizationId}
     });
 
     Organizations.remove({_id: organizationId});
