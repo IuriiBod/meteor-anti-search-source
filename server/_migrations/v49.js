@@ -5,7 +5,7 @@ Migrations.add({
     var usersWithoutCurrentAreaId = Meteor.users
         .find({currentAreaId: {$exists: false}})
         .map(function(user) {
-          return {_id: user._id, areaIds: user.relations.areaIds};
+          return {_id: user._id, areaIds: user.relations ? user.relations.areaIds : []};
         });
     usersWithoutCurrentAreaId.forEach(function(user) {
       if (user.areaIds.length > 0) {

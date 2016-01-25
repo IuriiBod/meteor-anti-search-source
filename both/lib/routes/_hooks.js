@@ -33,7 +33,7 @@ var RoutePermissionChecker = class RoutePermissionChecker {
   }
 
   checkIsUserInOrganization() {
-    return this._user.relations && this._user.relations.organizationId;
+    return HospoHero.isInOrganization(this._user._id);
   }
 };
 

@@ -7,7 +7,6 @@ Template.searchUsersToInvite.onCreated(function () {
   };
 
   var area = HospoHero.getCurrentArea();
-  selector['relations.organizationId'] = area.organizationId;
   selector['relations.areaIds'] = {$ne: area._id};
 
   this.searchSource = this.AntiSearchSource({
