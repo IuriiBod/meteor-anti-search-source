@@ -13,7 +13,7 @@ var menuEntries = [
     permission: 'view forecast',
     params: function () {
       return {
-        date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD'),
+        date: HospoHero.dateUtils.getDateStringForRoute(),
         category: 'all'
       }
     }
@@ -29,7 +29,7 @@ var menuEntries = [
         route: 'weeklyRoster',
         params: function () {
           return {
-            date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD')
+            date: HospoHero.dateUtils.getDateStringForRoute()
           }
         }
       },
@@ -106,7 +106,7 @@ var menuEntries = [
         route: 'teamHours',
         params: function () {
           return {
-            date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD')
+            date: HospoHero.dateUtils.getDateStringForRoute()
           }
         }
       }

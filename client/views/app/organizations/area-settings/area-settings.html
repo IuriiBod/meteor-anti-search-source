@@ -1,9 +1,8 @@
 <template name="areaSettings">
   <div class="flyout-header">
-    <button class="close-flyout-button">
-      <i class="fa fa-angle-right"></i>
-    </button>
+    {{> CloseFlyoutButton}}
     {{area.name}} settings
+    {{> CloseAllFlyoutsButton}}
   </div>
 
   <div class="flyout-content">
