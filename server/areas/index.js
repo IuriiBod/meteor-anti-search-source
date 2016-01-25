@@ -53,10 +53,13 @@ Meteor.methods({
       multi: true
     });
 
+    var usersIdsWithCurrentAreaId = Meteor.users
+        .find({currentAreaId: areaId})
+        .map(function (user) {return user._id});
+
     Meteor.users.update({
-      _id: {$in: usersIdsRelatedToArea},
-      currentAreaId: areaId
-    }, {
+      _id: {$in: usersIdsWithCurrentAreaId}
+    },{
       $unset: {currentAreaId: ''}
     }, {
       multi: true
@@ -104,7 +107,7 @@ Meteor.methods({
       $set: {}
     };
 
-    let userToUpdate = Meteor.users.findOne({_id: addedUserInfo.userId});
+    var userToUpdate = Meteor.users.findOne({_id: addedUserInfo.userId});
 
     updateUserDocument.$set['roles.' + addedUserInfo.areaId] = addedUserInfo.roleId;
 
