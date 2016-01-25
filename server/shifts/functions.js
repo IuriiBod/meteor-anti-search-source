@@ -115,6 +115,9 @@ Meteor.methods({
           }
         ).sendBoth(key);
       });
+
+      // Create events in users calendar
+      Meteor.call('addShiftsToCalendar', usersToNotify);
     }
   },
 
