@@ -14,11 +14,13 @@ Migrations.add({
         orderReceiptsDates.expectedDeliveryDate = new Date(parseInt(order.expectedDeliveryDate));
       }
 
-      OrderReceipts.update({
-        _id: order._id
-      }, {
-        $set: orderReceiptsDates
-      });
+      if (Object.keys(orderReceiptsDates).length > 0) {
+        OrderReceipts.update({
+          _id: order._id
+        }, {
+          $set: orderReceiptsDates
+        });
+      }
     });
 
     StockOrders.find().forEach(function (item) {
@@ -30,11 +32,13 @@ Migrations.add({
         stockOrdersDates.expectedDeliveryDate = new Date(parseInt(item.expectedDeliveryDate));
       }
 
-      StockOrders.update({
-        _id: item._id
-      }, {
-        $set: stockOrdersDates
-      });
+      if (Object.keys(stockOrdersDates).length > 0) {
+        StockOrders.update({
+          _id: item._id
+        }, {
+          $set: stockOrdersDates
+        });
+      }
     });
   }
 });

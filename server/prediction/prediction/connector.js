@@ -12,14 +12,12 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
 };
 
 
-GooglePredictionApi.prototype._getModelName = function (menuItemId) {
-  return "menu-item-" + menuItemId;
-};
+GooglePredictionApi.prototype._getModelName = (menuItemId) =>
+  `${HospoHero.isDevelopmentMode() ? "dev-" : ""}menu-item-${menuItemId}`;
 
 
-GooglePredictionApi.prototype._getTrainingFileName = function (menuItemId) {
-  return "menu-item-" + menuItemId + ".csv";
-};
+GooglePredictionApi.prototype._getTrainingFileName = (menuItemId) =>
+  `${HospoHero.isDevelopmentMode() ? "dev-" : ""}menu-item-${menuItemId}.csv`;
 
 
 GooglePredictionApi.prototype._buildPredictionModelForMenuItem = function (menuItem) {

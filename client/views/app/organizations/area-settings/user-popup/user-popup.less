@@ -1,0 +1,49 @@
+.user-popup {
+  visibility: hidden;
+
+  .modal-dialog {
+    width: 320px;
+    margin: 0;
+
+    img {
+      max-height: 50px;
+      max-width: 50px;
+      border-radius: 5px;
+    }
+
+    .row {
+      padding-bottom: 15px;
+    }
+  }
+
+  .modal-content {
+    border-radius: 0;
+
+    .close-button {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      z-index: 10;
+    }
+  }
+
+  .modal-header,
+  .close-button {
+    border: none;
+  }
+
+  .modal-body,
+  .modal-header {
+    padding: 10px !important;
+  }
+
+  .modal-body button.disabled,
+  .modal-body button.disabled:hover {
+    color: #2f4050;
+    border: 1px solid #e5e6e7;
+  }
+}
+
+.user-popup.in ~ .modal-backdrop.in {
+  background-color: transparent;
+}

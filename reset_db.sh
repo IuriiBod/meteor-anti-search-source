@@ -8,10 +8,26 @@ DEST_DIR="./.dump"
 DB_PATH=$(pwd)/.meteor/local/db
 
 #credentials
+
+#testing
 MONGO_USER="admin"
 MONGO_PASSWORD="djf2i3rfjkweh"
 MONGO_DOMAIN="ds027744.mongolab.com:27744"
 MONGO_DB="heroku_5dd8c4xw"
+
+#production
+#MONGO_USER="cloudninja"
+#MONGO_PASSWORD="Bertaroo1"
+#MONGO_DOMAIN="c144.capital.3.mongolayer.com:10144"
+#MONGO_DB="herochef"
+
+if [[ $OSTYPE == "darwin14" ]]; then # mac os x
+  echo Using configuration for Mac OS X
+  DB_WAIT_TIME=5
+else
+  echo Using configuration for Linux
+  DB_WAIT_TIME=30
+fi
 
 if [[ $1 != "d" ]]; then
   # refresh dump
@@ -26,9 +42,9 @@ meteor reset
 mkdir .meteor/local .meteor/local/db
 
 echo "Starting local database ..."
-mongod --dbpath "${DB_PATH}" --storageEngine mmapv1 > /dev/null & sleep 5
+mongod --dbpath "${DB_PATH}" --port=3000 --storageEngine mmapv1 > /dev/null & sleep ${DB_WAIT_TIME}
 
-mongorestore --host=127.0.0.1 --port=27017 --db=meteor --drop  "${DEST_DIR}/${MONGO_DB}"
+mongorestore --host=127.0.0.1 --port=3000 --db=meteor --drop  "${DEST_DIR}/${MONGO_DB}"
 
 kill $! #kill db server
 

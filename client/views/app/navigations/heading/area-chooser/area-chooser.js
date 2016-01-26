@@ -2,9 +2,9 @@ Template.areaChooser.helpers({
   areas: function () {
     var user = Meteor.user();
 
-    if (user && user.relations && user.relations.organizationId) {
+    if (user && user.relations && user.relations.organizationIds) {
       var query = {
-        organizationId: user.relations.organizationId
+        organizationId: {$in: user.relations.organizationIds}
       };
 
       if (user.relations.locationIds) {

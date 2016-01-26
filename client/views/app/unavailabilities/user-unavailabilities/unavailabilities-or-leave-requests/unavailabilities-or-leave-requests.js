@@ -1,0 +1,31 @@
+Template.unavailabilitiesOrLeaveRequests.onCreated(function () {
+  this.set('isUnavailability', this.data.type === 'unavailabilities');
+});
+
+Template.unavailabilitiesOrLeaveRequests.helpers({
+  templateName: function () {
+    return Template.instance().get('isUnavailability') ? 'Unavailabilities' : 'Leave Requests';
+  },
+  // Can be leave requests or unavailables
+  items: function () {
+    if (Template.instance().get('isUnavailability')) {
+      var user = Meteor.user();
+      var unavailabilities = user && user.unavailabilities || [];
+      return _.sortBy(unavailabilities, 'startDate');
+    } else {
+      return LeaveRequests.find({
+        userId: Meteor.userId()
+      }, {sort: {startDate: 1}}).fetch();
+    }
+  }
+});
+
+Template.unavailabilitiesOrLeaveRequests.events({
+  'click .new-item-button': function (event, tmpl) {
+    if (tmpl.get('isUnavailability')) {
+      FlyoutManager.open('addNewUnavailability');
+    } else {
+      FlyoutManager.open('viewLeaveRequest', {});
+    }
+  }
+});

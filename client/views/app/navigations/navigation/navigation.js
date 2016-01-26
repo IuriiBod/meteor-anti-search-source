@@ -13,7 +13,7 @@ var menuEntries = [
     permission: 'view forecast',
     params: function () {
       return {
-        date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD'),
+        date: HospoHero.dateUtils.getDateStringForRoute(),
         category: 'all'
       }
     }
@@ -29,13 +29,18 @@ var menuEntries = [
         route: 'weeklyRoster',
         params: function () {
           return {
-            date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD')
+            date: HospoHero.dateUtils.getDateStringForRoute()
           }
         }
       },
       {
         title: 'Template',
         route: 'templateWeeklyRoster',
+        permission: 'edit roster'
+      },
+      {
+        title: 'Sections',
+        route: 'sectionsSettings',
         permission: 'edit roster'
       }
     ]
@@ -82,6 +87,11 @@ var menuEntries = [
       {
         title: 'Suppliers',
         route: 'suppliersList'
+      },
+      {
+        title: 'Stock Areas',
+        route: 'stockAreasSettings',
+        permission: 'edit stocks'
       }
     ]
   },
@@ -96,7 +106,7 @@ var menuEntries = [
         route: 'teamHours',
         params: function () {
           return {
-            date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD')
+            date: HospoHero.dateUtils.getDateStringForRoute()
           }
         }
       }

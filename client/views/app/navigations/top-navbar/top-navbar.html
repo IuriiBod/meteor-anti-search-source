@@ -3,18 +3,30 @@
     <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
       <div class="navbar-header">
         <a id="navbar-minimalize" class="minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+        <form role="search" class="navbar-form-custom" action="">
+          <div class="form-group">
+            <input placeholder="Search for something..." class="form-control" name="top-search" id="top-search" type="text">
+          </div>
+        </form>
       </div>
       <ul class="nav navbar-top-links navbar-right">
         {{#if isInOrganization}}
-          <li>
-            <span class="organization-structure-flyout">
-              <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
-              {{getCurrentArea.name}}
-            </span>
-          </li>
-          <li>
-            <a class="count-info organization-structure-flyout"><i class="fa fa-sitemap"></i></a>
-          </li>
+          {{#if getCurrentAreaId}}
+            <li>
+              <span class="organization-structure-flyout">
+                <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
+                {{getCurrentArea.name}}
+              </span>
+            </li>
+          {{else}}
+            {{#if isOrganizationOwner}}
+              <li>
+                <a class="organization-structure-flyout">
+                  <i class="fa fa-sitemap"></i>
+                </a>
+              </li>
+            {{/if}}
+          {{/if}}
         {{/if}}
         <li class="dropdown">
           <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -32,20 +44,15 @@
         </li>
         <li>
           <a href="{{pathFor 'taskList'}}" class="count-info">
-            <i class="fa fa-tasks"></i>
+            <i class="fa fa-check-square-o"></i>
             {{#if tasksCount}}
               <span class="label label-danger">{{tasksCount}}</span>
             {{/if}}
           </a>
         </li>
-        {{#if isManager}}
-          <li class="dropdown">
-            <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-cog"></i>
-            </a>
-            {{> settingsDropdownMenu menuItems=settingsMenuItems}}
-          </li>
-        {{/if}}
+        <li>
+          <a href="{{pathFor 'calendar' type="day" date=shortDateFormat}}"><i class="fa fa-calendar"></i></a>
+        </li>
       </ul>
     </nav>
   </div>

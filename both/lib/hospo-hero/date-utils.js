@@ -28,6 +28,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   shortDateFormat: function (date) {
+    date = date || new Date();
     return moment(date).format('YYYY-MM-DD');
   },
 
@@ -192,5 +193,18 @@ Namespace('HospoHero.dateUtils', {
   getDateStringForRoute: function (date, location) {
     date = HospoHero.dateUtils.startOfWeekMoment(date, location);
     return HospoHero.dateUtils.shortDateFormat(date);
+  },
+
+  getSeasonOfTheYear: (month) => {
+    let seasons = ['Winter', 'Winter',
+      'Spring', 'Spring', 'Spring',
+      'Summer', 'Summer', 'Summer',
+      'Fall', 'Fall', 'Fall',
+      'Winter'];
+    return seasons[parseInt(month) - 1];
+  },
+
+  humanizeTimeDuration: function (duration) {
+    moment.duration(duration, 'hours').humanize();
   }
 });
