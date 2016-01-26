@@ -7,7 +7,10 @@ Router.route('calendar', {
     var area = HospoHero.getCurrentArea(userId);
     if (!!area) {
       var date = this.params.date;
-      return Meteor.subscribe('calendarEvents', date, this.params.type, area.locationId, userId);
+      return [
+        Meteor.subscribe('calendarEvents', date, this.params.type, area.locationId, userId),
+        Meteor.subscribe('sections', area._id)
+      ];
     }
   },
 

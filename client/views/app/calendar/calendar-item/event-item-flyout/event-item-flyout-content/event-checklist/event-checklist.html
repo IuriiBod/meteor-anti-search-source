@@ -1,0 +1,7 @@
+<template name="eventChecklist">
+  {{#each checklistItems}}
+    <p class="event-description-row">
+      {{> eventChecklistItem title=this index=@index isChecked=isChecked}}
+    </p>
+  {{/each}}
+</template>

@@ -162,7 +162,7 @@ Meteor.methods({
   editCalendarEvent: function (eventObject) {
     check(eventObject, HospoHero.checkers.CalendarEventDocument);
 
-    if (!HospoHero.canUser('edit calendar', Meteor.userId())) {
+    if (!HospoHero.canUser('view calendar', Meteor.userId())) {
       logger.error("User not permitted to edit calendar items");
       throw new Meteor.Error(403, "User not permitted to edit calendar items");
     } else {

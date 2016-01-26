@@ -1,3 +1,40 @@
 <template name="eventRecurringJob">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 event-description-row">
+        <div class="col-xs-6">
+          <strong>Section</strong>
+        </div>
+        <div class="col-xs-6 text-right">{{sectionName job.section}}</div>
+      </div>
 
+      <div class="col-xs-12 event-description-row">
+        <div class="col-xs-6">
+          <strong>Active Time</strong>
+        </div>
+        <div class="col-xs-6 text-right">{{humanizeTimeDuration job.activeTime 'seconds'}}</div>
+      </div>
+
+      {{#if job.description}}
+        <div class="col-xs-12 event-description-row">
+          <div class="col-xs-12">
+            <strong>Description</strong>
+          </div>
+          <div class="col-xs-12 job-description">{{{job.description}}}</div>
+        </div>
+      {{/if}}
+
+      {{#if job.checklist}}
+        <div class="col-xs-12 event-description-row">
+          <div class="col-xs-12">
+            <strong>Checklist</strong>
+          </div>
+
+          <div class="col-xs-12 job-checklist">
+            {{> eventChecklist checklistItems=job.checklist checkedItems=eventObject.item.doneCheckListItems onCheckToggle=onCheckToggle}}
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </div>
 </template>
