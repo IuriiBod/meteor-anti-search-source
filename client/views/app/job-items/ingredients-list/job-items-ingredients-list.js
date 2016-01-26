@@ -32,28 +32,28 @@ Template.listOfIngredients.helpers({
 
   isMenu: function () {
     return this.id === "menuSubmit";
-  },
-
-  modalStockListParams: function () {
-    var tmpl = Template.instance();
-
-    var stockItemsInListIds = _.map(tmpl.data.ingredients, function (item) {
-      return item._id;
-    });
-    return {
-      onAddStockItem: function (itemId) {
-        var addedIds = tmpl.data.ingredients;
-        addedIds.push({_id: itemId, quantity: 1});
-        tmpl.data.onChange(addedIds);
-      },
-      stockItemsInListIds: stockItemsInListIds
-    }
   }
 });
 
 Template.listOfIngredients.events({
   'click #showIngredientsList': function (event, tmpl) {
     event.preventDefault();
-    tmpl.$("#ingredientsListModal").modal("show");
+
+    var onAddStockItem = function (itemId) {
+      var addedIds = tmpl.data.ingredients;
+      addedIds.push({_id: itemId, quantity: 1});
+      tmpl.data.onChange(addedIds);
+    };
+
+    var stockItemsInListIds = _.map(tmpl.data.ingredients, function (item) {
+      return item._id;
+    });
+
+    FlyoutManager.open('stocksList', {
+      modalStockListParams: {
+        onAddStockItem: onAddStockItem,
+        stockItemsInListIds: stockItemsInListIds
+      }
+    });
   }
 });
