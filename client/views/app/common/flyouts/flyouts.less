@@ -1,0 +1,22 @@
+@marginTop: 60px;
+.flyout-container {
+  .show-flyout, .hide-flyout {
+    &:nth-child(2) {
+      margin-top: @marginTop;
+    }
+    &:nth-child(3) {
+      margin-top: @marginTop * 2;
+    }
+    &:nth-child(4) {
+      margin-top: @marginTop * 3;
+    }
+    &:nth-child(5) {
+      margin-top: @marginTop * 4;
+    }
+
+    .flyout-header {
+      position: static !important;
+    }
+  }
+}
+
