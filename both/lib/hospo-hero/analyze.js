@@ -42,9 +42,7 @@ Namespace('HospoHero.analyze', {
   },
 
   menuItem: function (menuItem) {
-    if (!menuItem) {
-      return false;
-    } else {
+    if (menuItem) {
       var self = this;
 
       var round = function (value) {

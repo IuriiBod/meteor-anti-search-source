@@ -1,10 +1,16 @@
 Template.menuListRankReport.onCreated(function () {
   this.customRange = new ReactiveVar();
-  this.data.dateRange === 'custom-range' ? this.customRange.set(true) : this.customRange.set(false);
+  this.data.rangeType === 'custom-range' ? this.customRange.set(true) : this.customRange.set(false);
+  this.getDaysOfWeek = function (daysOfWeek) {
+    return  {
+      startDate: HospoHero.dateUtils.shortDateFormat(daysOfWeek[0]),
+      endDate: HospoHero.dateUtils.shortDateFormat(daysOfWeek[daysOfWeek.length - 1])
+    }
+  }
 });
 
 Template.menuListRankReport.onRendered(function () {
-  this.$('.date').val(this.data.dateRange);
+  this.$('.date').val(this.data.rangeType);
 });
 
 Template.menuListRankReport.helpers({
@@ -59,32 +65,26 @@ Template.menuListRankReport.events({
   'change .date': function (event, tmpl) {
     event.preventDefault();
 
-    var selectedValue = tmpl.$(event.target).val();
+    var rangeType = tmpl.$(event.target).val();
     var date = new Date();
 
     var params = {
       category: tmpl.data.selectedCategoryId,
-      dateRange: selectedValue
+      rangeType: rangeType
     };
 
-    if (selectedValue === 'yesterday') {
+    if (rangeType === 'yesterday') {
       _.extend(params, {
           startDate: HospoHero.dateUtils.shortDateFormat(moment(date).subtract(1, 'days'))
       });
-    } else if (selectedValue === 'this-week') {
-      var weekDays = HospoHero.dateUtils.getWeekDays(date);
+    } else if (rangeType === 'current-week') {
+      var daysOfCurrentWeek = HospoHero.dateUtils.getWeekDays(date);
 
-      _.extend(params, {
-        startDate: HospoHero.dateUtils.shortDateFormat(weekDays[0]),
-        endDate: HospoHero.dateUtils.shortDateFormat(weekDays[weekDays.length - 1])
-      });
-    } else if (selectedValue === 'last-week') {
-      var lastWeekDays = HospoHero.dateUtils.getWeekDays(moment(date).subtract(7, 'days'));
+      _.extend(params, tmpl.getDaysOfWeek(daysOfCurrentWeek));
+    } else if (rangeType === 'last-week') {
+      var daysOfLastWeek = HospoHero.dateUtils.getWeekDays(moment(date).subtract(7, 'days'));
 
-      _.extend(params, {
-        startDate: HospoHero.dateUtils.shortDateFormat(lastWeekDays[0]),
-        endDate: HospoHero.dateUtils.shortDateFormat(lastWeekDays[lastWeekDays.length - 1])
-      });
+      _.extend(params, tmpl.getDaysOfWeek(daysOfLastWeek));
     } else {
       tmpl.customRange.set(true);
       return false;

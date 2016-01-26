@@ -57,7 +57,7 @@ Router.route('submitMenuItem', {
 });
 
 Router.route('menuItemsRankReport', {
-  path: '/menu-items/items-rank-report/:category/:dateRange/:startDate/:endDate?',
+  path: '/menu-items/rank/:category/:rangeType/:startDate/:endDate?',
   template: 'menuListRankReport',
   waitOn: function () {
     var timeInterval = this.params.endDate ? TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate) : TimeRangeQueryBuilder.forDay(this.params.startDate);
@@ -73,7 +73,7 @@ Router.route('menuItemsRankReport', {
       menuItems: menuItems,
       menuItemsCount: menuItems.count(),
       selectedCategoryId: this.params.category,
-      dateRange: this.params.dateRange,
+      rangeType: this.params.rangeType,
       startDate: this.params.startDate,
       endDate: this.params.endDate
     }

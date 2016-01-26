@@ -23,7 +23,7 @@ Template.menuItemReport.onRendered(function() {
 });
 
 Template.menuItemReport.helpers({
-  itemData: function () {
+  item: function () {
     if (this.item.menuItemStats) {
       var item = this.item;
       return [

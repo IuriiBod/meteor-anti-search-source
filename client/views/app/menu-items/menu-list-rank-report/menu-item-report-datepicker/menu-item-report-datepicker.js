@@ -5,7 +5,7 @@ Template.menuItemReportDatepicker.onRendered(function () {
     format: 'yyyy-mm-dd'
   });
 
-  if (this.data.dateRange === 'custom-range') {
+  if (this.data.rangeType === 'custom-range') {
     datePicker.find('[name=start]').val(this.data.startDate);
     datePicker.find('[name=end]').val(this.data.endDate);
   }
@@ -18,7 +18,7 @@ Template.menuItemReportDatepicker.events({
     var endDate = tmpl.$('.input-daterange input[name=end]').val();
 
     if (startDate && endDate && startDate < endDate) {
-      Router.go('menuItemsRankReport', {category: tmpl.data.selectedCategoryId, dateRange: 'custom-range', startDate: startDate, endDate: endDate});
+      Router.go('menuItemsRankReport', {category: tmpl.data.selectedCategoryId, rangeType: 'custom-range', startDate: startDate, endDate: endDate});
     }
   }
 });
