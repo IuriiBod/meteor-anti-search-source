@@ -19,34 +19,40 @@ PushNotificationSender.prototype._isApnsToken = function (deviceToken) {
   return deviceToken.length === 64;
 };
 
-PushNotificationSender.prototype._sendApnsNotification = function (deviceToken, notificationData) {
-  var connection = new Apns.Connection({
-    keyFile: Apns.getAssetAbsolutePath('apns_key.pem'),
-    certFile: Apns.getAssetAbsolutePath('apns_cert.pem'),
-    passphrase: Meteor.settings.APNS.passphrase,
-    debug: true,
-    errorCallback: function (errorCode) {
-      //find out error by it's code
-      var errors = Object.keys(Apns.Errors);
-      var currentError = _.find(errors, function (error) {
-        return Apns.Errors[error] === errorCode;
-      });
 
-      logger.error('Error while sending notification', {error: currentError, token: deviceToken});
-    }
+PushNotificationSender._configureConnection = function () {
+  var connection = new Apns.Connection({
+    cert: Apns.getAssetAbsolutePath('apns_cert.pem'),
+    key: Apns.getAssetAbsolutePath('apns_key.pem'),
+    passphrase: Meteor.settings.APNS.passphrase,
+    production: true
   });
 
+  var connectionErrorHandler = function (error) {
+    logger.error('Error while sending notification', {error: error});
+  };
+
+  connection.on('error', connectionErrorHandler);
+  connection.on('socketError', connectionErrorHandler);
+
+  PushNotificationSender.connection = connection;
+};
+
+PushNotificationSender._configureConnection();
+
+
+PushNotificationSender.prototype._sendApnsNotification = function (deviceToken, notificationData) {
+  var connection = PushNotificationSender.connection;
+
   var notification = new Apns.Notification();
+  notification.alert = notificationData.title + ': ' + notificationData.text;
 
-  //todo: use notification data
-  notification.alert = "Hello World!";
+  var targetDevice = new Apns.Device(deviceToken);
+  connection.sendNotification(notification, targetDevice);
 
-  //todo: token
-  notification.device = new Apns.Device(deviceToken);
+  logger.warn('Notification sent!', {nt: notification, token: deviceToken});
 
-  connection.sendNotification(notification);
-
-  console.log('Notification sended');
+  connection.shutdown();
 };
 
 PushNotificationSender.prototype._sendGcmNotification = function (deviceToken, notificationData) {

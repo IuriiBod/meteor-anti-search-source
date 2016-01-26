@@ -1,6 +1,15 @@
 if (Meteor.isCordova) {
   var PUSH_TOKEN_PROPERTY = 'push_device_token';
 
+  var registerNotificationToken = function () {
+    var token = Session.get(PUSH_TOKEN_PROPERTY);
+    if (token) {
+      Meteor.call('registerPushDeviceToken', token);
+    } else {
+      console.error('Unable to get push notification device token!');
+    }
+  };
+
   var onDeviceReady = function () {
     var senderId = Meteor.settings.public.GCM.senderId;
 
@@ -12,6 +21,7 @@ if (Meteor.isCordova) {
         iconColor: '#1AB394'
       },
       ios: {
+        senderID: senderId,
         alert: true,
         badge: true,
         sound: true
@@ -23,10 +33,15 @@ if (Meteor.isCordova) {
       if (permissionResult.isEnabled) {
         pushNotification.on('registration', function (registrationResult) {
           //todo: remove it
-          console.log('registered for APNs', registrationResult);
+          console.log('registered', registrationResult);
           var registrationId = registrationResult.registrationId;
           if (registrationId) {
-            Session.setPersistent(PUSH_TOKEN_PROPERTY, registrationId)
+            Session.setPersistent(PUSH_TOKEN_PROPERTY, registrationId);
+            Meteor.startup(function () {
+              if (Meteor.userId()) {
+                registerNotificationToken();
+              }
+            });
           }
         });
 
@@ -44,16 +59,7 @@ if (Meteor.isCordova) {
   document.addEventListener('deviceready', onDeviceReady, false);
 
   //add device token on login
-  Accounts.onLogin(function () {
-    //todo: remove it
-    console.log('user login', Meteor.userId());
-    var token = Session.get(PUSH_TOKEN_PROPERTY);
-    if (token) {
-      Meteor.call('registerPushDeviceToken', token);
-    } else {
-      console.error('Unable to get push notification device token!');
-    }
-  });
+  Accounts.onLogin(registerNotificationToken);
 
   //remove device token before logout
   var originalAccountsLogout = Accounts.logout;

@@ -1,4 +1,4 @@
-Apns = Npm.require('apns');
+Apns = Npm.require('apn');
 
 Apns.getAssetAbsolutePath = function (fileName) {
   var fs = Npm.require('fs');

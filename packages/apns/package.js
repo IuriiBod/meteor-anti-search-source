@@ -1,6 +1,6 @@
 Package.describe({
   name: 'jss:apns',
-  version: '0.0.1',
+  version: '1.7.5',
   summary: 'APNS (Apple Push Notification Service) interface',
   git: 'https://github.com/neoziro/node-apns',
   documentation: 'README.md'
@@ -13,5 +13,5 @@ Package.onUse(function (api) {
 });
 
 Npm.depends({
-  "apns": "0.1.0"
+  "apn": "1.7.5"
 });
