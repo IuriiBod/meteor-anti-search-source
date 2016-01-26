@@ -64,9 +64,9 @@ jquery@1.11.4
 jss:anti-search-source@0.2.3
 jss:blaze-states@0.0.1
 jss:meteor-google-prediction@0.2.2
-jss:meteor-reactive-fullcalendar@1.0.0
 jss:moment-timezone@0.5.0
 jss:publish-authorized@0.1.1
+jss:reactive-fullcalendar@1.0.0
 jss:suncalc@0.0.1
 jss:through@0.0.1
 kevohagan:sweetalert@1.0.0
@@ -133,7 +133,7 @@ templating@1.1.5
 templating-tools@1.0.0
 thesabbir:jquery-nestable@0.0.1
 tracker@1.0.9
-trsdln:flyouts@1.0.3
+trsdln:flyouts@1.1.0
 trsdln:modals@0.6.0
 twbs:bootstrap@3.3.6
 u2622:persistent-session@0.4.4
