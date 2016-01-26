@@ -1,4 +1,6 @@
 <template name="eventChecklist">
+  {{> eventChecklistProgress doneTasks=checkedItems.length allTasks=checklistItems.length}}
+
   {{#each checklistItems}}
     <p class="event-description-row">
       {{> eventChecklistItem title=this index=@index isChecked=isChecked}}

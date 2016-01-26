@@ -1,7 +1,16 @@
+Template.eventRecurringJob.onCreated(function () {
+  var self = this;
+  this.job = function () {
+    var jobId = self.data.eventObject.item.itemId;
+    return JobItems.findOne({_id: jobId});
+  };
+
+  this.checkedItems = new ReactiveVar(self.data.eventObject.item.doneCheckListItems || []);
+});
+
 Template.eventRecurringJob.helpers({
   job: function () {
-    var jobId = this.eventObject.item.itemId;
-    return JobItems.findOne({_id: jobId});
+    return Template.instance().job();
   },
 
   sectionName: function (sectionId) {
@@ -9,11 +18,23 @@ Template.eventRecurringJob.helpers({
     return section && section.name || 'No section name';
   },
 
+  checklist: function () {
+    var job = Template.instance().job();
+    return job.checklist || [];
+  },
+
+  checkedItems: function () {
+    return Template.instance().checkedItems.get();
+  },
+
   onCheckToggle: function () {
-    var tmplData = Template.currentData();
+    var tmpl = Template.instance();
+
     return function (doneCheckListItems) {
-      var eventObject = tmplData.eventObject.item;
+      var eventObject = tmpl.data.eventObject.item;
       eventObject.doneCheckListItems = doneCheckListItems;
+      tmpl.checkedItems.set(doneCheckListItems);
+
       Meteor.call('editCalendarEvent', eventObject, HospoHero.handleMethodResult());
     }
   }
