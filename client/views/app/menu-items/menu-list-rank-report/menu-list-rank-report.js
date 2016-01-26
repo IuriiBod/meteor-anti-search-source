@@ -9,10 +9,17 @@ Template.menuListRankReport.onRendered(function () {
 
 Template.menuListRankReport.helpers({
   menuItems: function() {
-    return this.menuItems.map(function (item, index) {
-      item.index = ++index;
-      return item;
+    var rankedMenuItems = [];
+    var category = this.selectedCategoryId;
+    var index = 0;
+    this.menuItems.forEach(function (item) {
+      if (category === 'all' || item.category === category) {
+        item.index = ++index;
+        rankedMenuItems.push(item);
+      }
     });
+
+    return rankedMenuItems.length && rankedMenuItems;
   },
 
   theadItems: function () {
@@ -28,7 +35,6 @@ Template.menuListRankReport.helpers({
   },
 
   categories: function () {
-    console.log(this);
     var categories = Categories.find({
       _id: {$ne: this.selectedCategoryId}
     }).fetch();

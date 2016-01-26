@@ -64,7 +64,7 @@ Router.route('menuItemsRankReport', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allCategories', currentAreaId),
-      Meteor.subscribe('menuItemsSales', timeInterval, currentAreaId, this.params.category, 'all')
+      Meteor.subscribe('menuItemsSales', timeInterval, currentAreaId, 'all', 'all')
     ]
   },
   data: function () {
