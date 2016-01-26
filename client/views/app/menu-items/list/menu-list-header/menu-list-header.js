@@ -4,8 +4,8 @@ Template.menuListHeader.helpers({
     return archive && archive == 'archived';
   },
 
-  dateRange: function() {
-    return HospoHero.dateUtils.shortDateFormat(moment(new Date()).subtract(1, 'days'));
+  startDate: function() {
+      return HospoHero.dateUtils.shortDateFormat(moment(new Date()).subtract(1, 'days'));
   }
 });
 

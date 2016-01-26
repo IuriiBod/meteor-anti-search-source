@@ -25,6 +25,27 @@ Template.menuListRankReport.helpers({
 
   customRangeSelected: function () {
     return Template.instance().customRange.get();
+  },
+
+  categories: function () {
+    console.log(this);
+    var categories = Categories.find({
+      _id: {$ne: this.selectedCategoryId}
+    }).fetch();
+
+    if (this.selectedCategoryId !== 'all') {
+      categories.push({name: 'All', _id: 'all'});
+    }
+
+    return categories;
+  },
+
+  selectedCategory: function () {
+    if (this.selectedCategoryId != 'all') {
+      return Categories.findOne({_id: this.selectedCategoryId});
+    } else {
+      return {name: 'All', _id: 'all'};
+    }
   }
 });
 
@@ -36,6 +57,7 @@ Template.menuListRankReport.events({
     var date = new Date();
 
     var params = {
+      category: tmpl.data.selectedCategoryId,
       dateRange: selectedValue
     };
 

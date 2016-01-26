@@ -18,7 +18,7 @@ Template.menuItemReportDatepicker.events({
     var endDate = tmpl.$('.input-daterange input[name=end]').val();
 
     if (startDate && endDate && startDate < endDate) {
-      Router.go('menuItemsRankReport', {dateRange: 'custom-range', startDate: startDate, endDate: endDate});
+      Router.go('menuItemsRankReport', {category: tmpl.data.selectedCategoryId, dateRange: 'custom-range', startDate: startDate, endDate: endDate});
     }
   }
 });

@@ -57,13 +57,14 @@ Router.route('submitMenuItem', {
 });
 
 Router.route('menuItemsRankReport', {
-  path: '/menu-items/items-rank-report/:dateRange/:startDate/:endDate?',
+  path: '/menu-items/items-rank-report/:category/:dateRange/:startDate/:endDate?',
   template: 'menuListRankReport',
   waitOn: function () {
     var timeInterval = this.params.endDate ? TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate) : TimeRangeQueryBuilder.forDay(this.params.startDate);
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('menuItemsSales', timeInterval, currentAreaId, 'all', 'all')
+      Meteor.subscribe('allCategories', currentAreaId),
+      Meteor.subscribe('menuItemsSales', timeInterval, currentAreaId, this.params.category, 'all')
     ]
   },
   data: function () {
@@ -71,6 +72,7 @@ Router.route('menuItemsRankReport', {
     return {
       menuItems: menuItems,
       menuItemsCount: menuItems.count(),
+      selectedCategoryId: this.params.category,
       dateRange: this.params.dateRange,
       startDate: this.params.startDate,
       endDate: this.params.endDate
