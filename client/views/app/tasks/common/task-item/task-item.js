@@ -40,7 +40,7 @@ Template.taskItem.helpers({
   },
 
   taskDuration: function () {
-    return HospoHero.dateUtils.minutesToHours(this.task.duration);
+    return HospoHero.dateUtils.humanizeTimeDuration(this.task.duration);
   },
 
   commentsCount: function () {
@@ -67,14 +67,15 @@ Template.taskItem.helpers({
   },
 
   dueDateClass: function () {
+    var done = this.task.done;
     var dueDate = this.task.dueDate;
     var today = moment();
     var startOfDay = moment(today).startOf('day').toDate();
     var endOfDay = moment(today).endOf('day').toDate();
 
-    if (dueDate < startOfDay) {
+    if (dueDate < startOfDay && done === false) {
       return 'text-danger';
-    } else if (dueDate >= startOfDay && dueDate <= endOfDay) {
+    } else if (dueDate >= startOfDay && dueDate <= endOfDay && done === false) {
       return 'text-info';
     } else {
       return '';
