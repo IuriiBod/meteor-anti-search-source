@@ -3,7 +3,7 @@ Migrations.add({
   name: 'added menu rank report sparkline for 7 days',
   up: function () {
     for (var day = 1; day < 8; day++) {
-      var yesterdayDate = moment(new Date()).subtract(1, 'days').toDate();
+      var yesterdayDate = moment(new Date()).subtract(day, 'days').toDate();
       var twoWeeksAgoDate = moment(yesterdayDate).subtract(14, 'days').toDate();
       var dateInterval = TimeRangeQueryBuilder.forInterval(twoWeeksAgoDate, yesterdayDate);
 
@@ -15,6 +15,7 @@ Migrations.add({
           date: dateInterval,
           menuItemId: menuItem._id
         });
+
         var itemStats = menuItemsSales.map(function (dailySalesItem) {
           return HospoHero.misc.rounding(result.contribution * (dailySalesItem.actualQuantity || 0));
         });
@@ -48,6 +49,7 @@ Migrations.add({
 
         menuItemsStats.forEach(function (item, index) {
           var menuItem = MenuItems.findOne({_id: item.menuItemId});
+
           if (menuItem.rank && menuItem.rank.length > 6) {
             menuItem.rank.shift();
             menuItem.rank.push(++index);

@@ -14,7 +14,7 @@ updateMenuItemsRank = function(location) {
       return HospoHero.misc.rounding(result.contribution * (dailySalesItem.actualQuantity || 0));
     });
 
-    if (itemStats.length === menuItemsSales.count()) {
+    if (itemStats.length && itemStats.length === menuItemsSales.count()) {
       var reducedItemStats = {};
 
       var calculateItemStats = itemStats.reduce(function (previousValue, currentValue) {
