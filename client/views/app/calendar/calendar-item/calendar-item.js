@@ -85,8 +85,8 @@ Template.calendarItem.helpers({
           callback(events);
         },
 
-        eventClick: function () {
-
+        eventClick: function (eventObject) {
+          FlyoutManager.open('eventItemFlyout', {eventObject: eventObject});
         }
       }
     }
@@ -113,5 +113,14 @@ Template.calendarItem.events({
   'click .fc-agendaWeek-button': function (event, tmpl) {
     tmpl.calendarType = 'week';
     tmpl.changeDate();
+  },
+
+  'click .fc-day-header': function (event, tmpl) {
+    var selectedDateText = tmpl.$(event.currentTarget).text();
+    var selectedDateMoment = moment(selectedDateText, 'ddd DD/MM');
+    Router.go('calendar', {
+      type: 'day',
+      date: HospoHero.dateUtils.shortDateFormat(selectedDateMoment)
+    });
   }
 });

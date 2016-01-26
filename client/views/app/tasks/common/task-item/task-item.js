@@ -40,7 +40,7 @@ Template.taskItem.helpers({
   },
 
   taskDuration: function () {
-    return HospoHero.dateUtils.minutesToHours(this.task.duration);
+    return HospoHero.dateUtils.humanizeTimeDuration(this.task.duration, 'minutes');
   },
 
   commentsCount: function () {
