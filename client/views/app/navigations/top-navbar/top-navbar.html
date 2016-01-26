@@ -11,12 +11,22 @@
       </div>
       <ul class="nav navbar-top-links navbar-right">
         {{#if isInOrganization}}
-          <li>
-            <span class="organization-structure-flyout">
-              <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
-              {{getCurrentArea.name}}
-            </span>
-          </li>
+          {{#if getCurrentAreaId}}
+            <li>
+              <span class="organization-structure-flyout">
+                <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
+                {{getCurrentArea.name}}
+              </span>
+            </li>
+          {{else}}
+            {{#if isOrganizationOwner}}
+              <li>
+                <a class="organization-structure-flyout">
+                  <i class="fa fa-sitemap"></i>
+                </a>
+              </li>
+            {{/if}}
+          {{/if}}
         {{/if}}
         <li class="dropdown">
           <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,7 +51,7 @@
           </a>
         </li>
         <li>
-          <a href="#"><i class="fa fa-calendar"></i></a>
+          <a href="{{pathFor 'calendar' type="day" date=shortDateFormat}}"><i class="fa fa-calendar"></i></a>
         </li>
       </ul>
     </nav>

@@ -66,6 +66,7 @@ jss:blaze-states@0.0.1
 jss:meteor-google-prediction@0.2.2
 jss:moment-timezone@0.5.0
 jss:publish-authorized@0.1.1
+jss:reactive-fullcalendar@1.0.0
 jss:suncalc@0.0.1
 jss:through@0.0.1
 kevohagan:sweetalert@1.0.0
@@ -90,6 +91,7 @@ mongo-livedata@1.0.9
 mrt:jquery-ui-sortable@1.10.3
 mrt:moment@2.8.1
 mrt:moment-timezone@0.2.1
+mrt:nprogress@0.1.0
 natestrauser:animate-css@3.4.0
 natestrauser:select2@4.0.0_1
 natestrauser:x-editable-bootstrap@1.5.2_4
@@ -119,6 +121,7 @@ routepolicy@1.0.6
 russ:weather-icons@1.0.0
 service-configuration@1.0.5
 session@1.1.1
+settinghead:auto-nprogress@1.0.0
 sha@1.0.4
 softwarerero:accounts-t9n@1.1.7
 spacebars@1.0.7

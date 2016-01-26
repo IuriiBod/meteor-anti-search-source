@@ -100,11 +100,11 @@ Meteor.publishComposite('workers', function (areaId) {
       if (this.userId) {
         var user = Meteor.users.findOne(this.userId);
 
-        if (user && user.relations && user.relations.organizationId) {
+        if (user && user.relations && user.relations.organizationIds) {
           return Meteor.roles.find({
             actions: 'be rosted',
             $or: [
-              {'relations.organizationId': user.relations.organizationId},
+              {'relations.organizationId': {$in: user.relations.organizationIds}},
               {default: true}
             ]
           });
