@@ -117,7 +117,7 @@ var menuEntries = [
           return {
             category: 'all',
             rangeType: 'yesterday',
-            startDate: HospoHero.dateUtils.shortDateFormat(moment(new Date()).subtract(1, 'days'))
+            startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
           }
         }
       }
