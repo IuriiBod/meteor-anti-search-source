@@ -1,8 +1,21 @@
 Migrations.add({
   version: 52,
-  name: 'Change weekday name Thurs to Thu in recurring jobs',
-  up: function () {
-    JobItems.update({repeatOn: 'Thurs'}, {$push: {repeatOn: 'Thu'}});
-    JobItems.update({repeatOn: 'Thurs'}, {$pull: {repeatOn: 'Thurs'}});
+  name: 'Drop old redundant collections',
+  up: ()=> {
+    let collectionsToDrop = ['actualSales',
+      'forecastCafe',
+      'forecastDates',
+      'orderingUnits',
+      'post',
+      'salesCalibration',
+      'salesForecast',
+      'templateShifts',
+      'usingUnits',
+      'staleSessionConfigs'
+    ];
+
+    collectionsToDrop.forEach((collName)=> {
+      Migrations.utils.removeCollection(collName);
+    });
   }
 });
