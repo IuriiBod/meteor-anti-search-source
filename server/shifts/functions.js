@@ -73,50 +73,50 @@ Meteor.methods({
           }
 
           // Create events in user's calendar
-          Meteor.call('addJobsToCalendar', shift.assignedTo, shift.startTime, shift.relations.locationId);
+          Meteor.call('addJobsToCalendar', shift);
         } else {
           openShifts.push(shift);
         }
       });
 
-      // Publishing shifts
-      Shifts.update(shiftsToPublishQuery, {
-        $set: {
-          published: true,
-          publishedOn: Date.now()
-        }
-      }, {
-        multi: true
-      });
-
-      var shiftDate = shiftDateQuery.$gte;
-      shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDate, locationId);
-
-      Object.keys(usersToNotify).forEach(function (key) {
-        new NotificationSender(
-          'Weekly roster published',
-          'roster-published',
-          {
-            date: HospoHero.dateUtils.formatDateWithTimezone(shiftDate, 'ddd, Do MMMM', locationId),
-            shifts: usersToNotify[key],
-            openShifts: openShifts,
-            publishedByName: HospoHero.username(Meteor.userId()),
-            linkToItem: Router.url('weeklyRoster', {date: shiftDate}),
-            areaName: HospoHero.getCurrentArea().name
-          },
-          {
-            helpers: {
-              sectionNameFormatter: function (shift) {
-                var section = Sections.findOne({_id: shift.section});
-                return section && section.name || 'open';
-              },
-              dateFormatter: function (shift) {
-                return HospoHero.dateUtils.shiftDateInterval(shift)
-              }
-            }
-          }
-        ).sendBoth(key);
-      });
+      //// Publishing shifts
+      //Shifts.update(shiftsToPublishQuery, {
+      //  $set: {
+      //    published: true,
+      //    publishedOn: Date.now()
+      //  }
+      //}, {
+      //  multi: true
+      //});
+      //
+      //var shiftDate = shiftDateQuery.$gte;
+      //shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDate, locationId);
+      //
+      //Object.keys(usersToNotify).forEach(function (key) {
+      //  new NotificationSender(
+      //    'Weekly roster published',
+      //    'roster-published',
+      //    {
+      //      date: HospoHero.dateUtils.formatDateWithTimezone(shiftDate, 'ddd, Do MMMM', locationId),
+      //      shifts: usersToNotify[key],
+      //      openShifts: openShifts,
+      //      publishedByName: HospoHero.username(Meteor.userId()),
+      //      linkToItem: Router.url('weeklyRoster', {date: shiftDate}),
+      //      areaName: HospoHero.getCurrentArea().name
+      //    },
+      //    {
+      //      helpers: {
+      //        sectionNameFormatter: function (shift) {
+      //          var section = Sections.findOne({_id: shift.section});
+      //          return section && section.name || 'open';
+      //        },
+      //        dateFormatter: function (shift) {
+      //          return HospoHero.dateUtils.shiftDateInterval(shift)
+      //        }
+      //      }
+      //    }
+      //  ).sendBoth(key);
+      //});
     }
   },
 

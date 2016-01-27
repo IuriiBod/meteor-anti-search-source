@@ -36,19 +36,23 @@ Template.calendarItem.onCreated(function () {
 
     return CalendarEvents.find({
       userId: this.data.userId,
-      date: TimeRangeQueryBuilder[queryType](this.data.date)
+      startTime: TimeRangeQueryBuilder[queryType](this.data.date)
     }).map(function (event) {
       var currentEventItem = eventItemsSettings[event.type];
       var item = currentEventItem.collection.findOne({_id: event.itemId});
 
-      return {
-        id: event._id,
-        title: item[currentEventItem.titleField],
-        start: moment(event.startTime),
-        end: moment(event.endTime),
-        backgroundColor: currentEventItem.backgroundColor,
-        textColor: currentEventItem.textColor,
-        item: event
+      if (item) {
+        return {
+          id: event._id,
+          title: item[currentEventItem.titleField],
+          start: moment(event.startTime),
+          end: moment(event.endTime),
+          backgroundColor: currentEventItem.backgroundColor,
+          textColor: currentEventItem.textColor,
+          item: event
+        }
+      } else {
+        return {};
       }
     });
   };
