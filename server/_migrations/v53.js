@@ -1,5 +1,5 @@
 Migrations.add({
-  version: 52,
+  version: 53,
   name: 'built menu items rank for last 7 days',
   up: function () {
     var menuItemsStatsInCurrentArea = function (areaId, dateInterval) {
