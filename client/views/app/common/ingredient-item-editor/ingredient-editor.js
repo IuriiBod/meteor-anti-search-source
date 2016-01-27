@@ -32,8 +32,6 @@ Template.ingredientEditor.onCreated(function () {
 
 
 Template.ingredientEditor.onRendered(function () {
-  this.modalInstance = ModalManager.getInstanceByElement(this.$('.ingredient-item-editor'));
-
   this.$('.unit-ordered-popover').popover({
     content: "Put the amount that you usually order in here. If it's a 20kg bag of flour, put '20kg bag'. If it's a 1lt bottle, put '1lt Bottle."
   });
@@ -103,15 +101,15 @@ Template.ingredientEditor.events({
 
     info.costPerPortion = HospoHero.misc.rounding(info.costPerPortion);
 
-    var handleMethodResultCb = HospoHero.handleMethodResult(function () {
-      tmpl.modalInstance.close();
+    var handleMethodResultClose = HospoHero.handleMethodResult(function () {
+      FlyoutManager.getInstanceByElement(event.target).close();
     });
 
     var oldIngredient = tmpl.data.ingredient;
     if (oldIngredient) {
-      Meteor.call("editIngredient", oldIngredient._id, info, handleMethodResultCb);
+      Meteor.call("editIngredient", oldIngredient._id, info, handleMethodResultClose);
     } else {
-      Meteor.call("createIngredients", info, handleMethodResultCb);
+      Meteor.call("createIngredients", info, handleMethodResultClose);
     }
   },
 
@@ -137,6 +135,9 @@ Template.ingredientEditor.events({
     if (confirm('Are you sure you want to delete this ingredient?')) {
       tmpl.changeIngredientState('delete');
     }
+  },
+  'click .cancel-button': function (event) {
+    FlyoutManager.getInstanceByElement(event.target).close();
   }
 });
 
