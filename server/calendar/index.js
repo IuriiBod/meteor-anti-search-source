@@ -1,11 +1,10 @@
 Meteor.methods({
+  // TODO: Write job adding with shift chaining
   /**
-   * Finds recurring jobs from shifts and place it onto user's calendar
-   * @param {string} userId - ID of user
-   * @param {Date} date - the date of shift
-   * @param {string} locationId - ID of location
+   * Finds recurring jobs from shift and place it onto user's calendar
+   * @param {Object} shift
    */
-  addJobsToCalendar: function (userId, date, locationId) {
+  addJobsToCalendar: function (shift) {
     /**
      * Returns different between two moments
      * @param {Date|moment} firstDate - date or moment
@@ -88,76 +87,67 @@ Meteor.methods({
       return adjustTime;
     };
 
-    var interestedTimeRange = TimeRangeQueryBuilder.forDay(date, locationId);
 
-    // find all shifts in all areas for current user for interested date
-    var shifts = Shifts.find({
-      assignedTo: userId,
-      startTime: interestedTimeRange,
-      published: true
-    });
+    if (shift.section && shift.assignedTo) {
+      var shiftTime = shift.startTime;
+      var userId = shift.assignedTo;
 
-    shifts.forEach(function (shift) {
+      var defaultEventObject = {
+        type: 'recurring job',
+        userId: userId,
+        shiftId: shift._id,
+        date: shiftTime,
+        locationId: shift.relations.locationId
+      };
 
-      if (shift.section) {
-        var shiftTime = shift.startTime;
+      ////Remove jobs already placed in the calendar
+      //CalendarEvents.remove({
+      //  userId: userId,
+      //  date: interestedTimeRange,
+      //  type: 'recurring job'
+      //});
 
-        var defaultEventObject = {
-          type: 'recurring job',
-          userId: userId,
-          date: shiftTime,
-          locationId: shift.relations.locationId
-        };
+      var notPlacedJobs = JobItems.find({
+        startsOn: {
+          $lte: shiftTime
+        },
+        $or: [
+          {'endsOn.on': 'endsNever'},
+          {'endsOn.lastDate': {$gte: shiftTime}}
+        ],
+        section: shift.section
+      });
 
-        //Remove jobs already placed in the calendar
-        CalendarEvents.remove({
-          userId: userId,
-          date: interestedTimeRange,
-          type: 'recurring job'
-        });
+      // Place found jobs into the calendar
+      notPlacedJobs.forEach(function (job) {
+        if (isJobEnded(job, shiftTime)) {
+          return false;
+        } else {
+          var shiftMoment = moment(shiftTime);
 
-        var notPlacedJobs = JobItems.find({
-          startsOn: {
-            $lte: shiftTime
-          },
-          $or: [
-            {'endsOn.on': 'endsNever'},
-            {'endsOn.lastDate': {$gte: shiftTime}}
-          ],
-          section: shift.section
-        });
-
-        // Place found jobs into the calendar
-        notPlacedJobs.forEach(function (job) {
-          if (isJobEnded(job, shiftTime)) {
+          if (!isJobActiveToday(job, shiftMoment)) {
             return false;
-          } else {
-            var shiftMoment = moment(shiftTime);
-
-            if (!isJobActiveToday(job, shiftMoment)) {
-              return false;
-            }
-
-            var jobStartTime = adjustJobTime(job.repeatAt, shiftTime);
-            var jobEndTime = moment(jobStartTime).add(job.activeTime, 'seconds');
-
-            // check if the job start time is less than shift start time
-            // and the job end time grater than shift end time
-            if (jobStartTime.isBefore(shiftMoment) || jobEndTime.isAfter(shift.endTime)) {
-              return false;
-            }
-
-            var jobEventObject = _.extend({
-              itemId: job._id,
-              startTime: jobStartTime.toDate(),
-              endTime: jobEndTime.toDate()
-            }, defaultEventObject);
-
-            Meteor.call('addCalendarEvent', jobEventObject);
           }
-        });
-      }
-    });
+
+          var jobStartTime = adjustJobTime(job.repeatAt, shiftTime);
+          var jobEndTime = moment(jobStartTime).add(job.activeTime, 'seconds');
+
+          // check if the job start time is less than shift start time
+          // and the job end time grater than shift end time
+          if (jobStartTime.isBefore(shiftMoment) || jobEndTime.isAfter(shift.endTime)) {
+            return false;
+          }
+
+          var jobEventObject = _.extend({
+            itemId: job._id,
+            startTime: jobStartTime.toDate(),
+            endTime: jobEndTime.toDate()
+          }, defaultEventObject);
+
+          Meteor.call('addCalendarEvent', jobEventObject);
+        }
+      });
+    }
   },
 
   addCalendarEvent: function (eventObject) {
