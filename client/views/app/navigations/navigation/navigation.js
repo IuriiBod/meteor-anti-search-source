@@ -99,7 +99,7 @@ var menuEntries = [
     title: 'Reports',
     icon: 'fa-line-chart',
     permission: 'view reports',
-    activeOnRoutes: ['teamHours', 'currentStocks'],
+    activeOnRoutes: ['teamHours', 'currentStocks', 'menuItemsRankReport'],
     subMenuEntries: [
       {
         title: 'Team Hours',
@@ -107,6 +107,17 @@ var menuEntries = [
         params: function () {
           return {
             date: HospoHero.dateUtils.getDateStringForRoute()
+          }
+        }
+      },
+      {
+        title: 'Menu Items Rank <span class="label label-info pull-right">NEW</span>',
+        route: 'menuItemsRankReport',
+        params: function () {
+          return {
+            category: 'all',
+            rangeType: 'yesterday',
+            startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
           }
         }
       }
