@@ -66,7 +66,7 @@ Template.menuListRankReport.events({
     event.preventDefault();
 
     var rangeType = tmpl.$(event.target).val();
-    var date = new Date();
+    var date = moment();
 
     var params = {
       category: tmpl.data.selectedCategoryId,
@@ -75,14 +75,14 @@ Template.menuListRankReport.events({
 
     if (rangeType === 'yesterday') {
       _.extend(params, {
-          startDate: HospoHero.dateUtils.shortDateFormat(moment(date).subtract(1, 'days'))
+          startDate: HospoHero.dateUtils.shortDateFormat(date.subtract(1, 'days'))
       });
     } else if (rangeType === 'current-week') {
       var daysOfCurrentWeek = HospoHero.dateUtils.getWeekDays(date);
 
       _.extend(params, tmpl.getDaysOfWeek(daysOfCurrentWeek));
     } else if (rangeType === 'last-week') {
-      var daysOfLastWeek = HospoHero.dateUtils.getWeekDays(moment(date).subtract(7, 'days'));
+      var daysOfLastWeek = HospoHero.dateUtils.getWeekDays(date.subtract(7, 'days'));
 
       _.extend(params, tmpl.getDaysOfWeek(daysOfLastWeek));
     } else {

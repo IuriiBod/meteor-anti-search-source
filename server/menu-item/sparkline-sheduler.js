@@ -1,14 +1,19 @@
-var menuItemsStatsForLastTwoWeeks = function (dateInterval) {
+var menuItemsStatsInCurrentArea = function (areaId) {
+  var yesterdayDate = moment().subtract(1, 'days');
+  var twoWeeksAgoDate = moment(yesterdayDate).subtract(14, 'days');
+  var dateInterval = TimeRangeQueryBuilder.forInterval(twoWeeksAgoDate, yesterdayDate);
   var menuItemsStats = [];
-  MenuItems.find({status: {$ne: 'archived'}}).forEach(function (menuItem) {
+
+  MenuItems.find({status: {$ne: 'archived'}, 'relations.areaId': areaId}).forEach(function (menuItem) {
     var result = HospoHero.analyze.menuItem(menuItem);
     var totalItemSalesQuantity = 0;
 
-    var itemDailySales = DailySales.find({date: dateInterval, menuItemId: menuItem._id});
+    var itemDailySales = DailySales.find({date: dateInterval, menuItemId: menuItem._id, actualQuantity: {$exists: true}});
 
     itemDailySales.forEach(function (item) {
-      totalItemSalesQuantity += item.actualQuantity || 0;
+      totalItemSalesQuantity += item.actualQuantity;
     });
+
     if (itemDailySales.count()) {
       var totalContribution = _.extend({}, {
         menuItemId: menuItem._id,
@@ -19,69 +24,45 @@ var menuItemsStatsForLastTwoWeeks = function (dateInterval) {
     }
   });
 
-  return menuItemsStats.length && menuItemsStats;
+  return menuItemsStats;
 };
 
-var sortMenuItemsByTotalContribution = function (menuItemsStats) {
-  return menuItemsStats.sort(function (a, b) {
-    if (a.totalContribution < b.totalContribution) {
-      return -1;
-    } else if (a.totalContribution > b.totalContribution) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
-};
+updateMenuItemsRank = function() {
 
-updateMenuItemsRank = function(location) {
-  var yesterdayDate = moment(new Date()).subtract(1, 'days').toDate();
-  var twoWeeksAgoDate = moment(yesterdayDate).subtract(14, 'days').toDate();
-  var dateInterval = TimeRangeQueryBuilder.forInterval(twoWeeksAgoDate, yesterdayDate);
+  Areas.find().forEach(function (area) {
+    var menuItemsStats = menuItemsStatsInCurrentArea(area._id);
 
-  var menuItemsStats = menuItemsStatsForLastTwoWeeks(dateInterval);
-
-  var sortedMenuItemsStats = sortMenuItemsByTotalContribution(menuItemsStats);
-
-  sortedMenuItemsStats.forEach(function (item, index) {
-    var menuItem = MenuItems.findOne({_id: item.menuItemId});
-    if (menuItem.rank && menuItem.rank.length > 6) {
-      menuItem.rank.shift();
-      menuItem.rank.push(++index);
-
-      MenuItems.update({
-        _id: item.menuItemId
-      }, {
-        $set: {
-          rank: menuItem.rank
-        }
+    if (menuItemsStats.length) {
+      menuItemsStats.sort(function (a, b) {
+        return a.totalContribution - b.totalContribution;
       });
-    } else if (menuItem.rank) {
-      menuItem.rank.push(++index);
 
-      MenuItems.update({
-        _id: item.menuItemId
-      }, {
-        $set: {
-          rank: menuItem.rank
+      menuItemsStats.forEach(function (item, index) {
+        var menuItem = MenuItems.findOne({_id: item.menuItemId});
+
+        var weeklyRanks = menuItem.rank || [];
+        weeklyRanks.push(index + 1);
+        if (weeklyRanks.length > 6) {
+          weeklyRanks.shift();
         }
-      });
-    } else {
-      MenuItems.update({
-        _id: item.menuItemId
-      }, {
-        $set: {
-          rank: [++index]
-        }
+
+        MenuItems.update({
+          _id: item.menuItemId
+        }, {
+          $set: {
+            rank: weeklyRanks
+          }
+        });
       });
     }
   });
 };
 
-if (!HospoHero.isDevelopmentMode()) {
-  HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function (location) {
-    return 4;
-  }, function (location) {
-    updateMenuItemsRank(location);
-  })
+if (HospoHero.isDevelopmentMode()) {
+  updateMenuItemsRank();
+  //HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function () {
+  //  return 4;
+  //}, function () {
+  //  updateMenuItemsRank();
+  //})
 }
