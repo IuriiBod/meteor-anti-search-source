@@ -1,3 +1,9 @@
+Template.menuItemReport.onCreated(function () {
+  this.round = function (value) {
+    return HospoHero.misc.rounding(value);
+  }
+});
+
 Template.menuItemReport.onRendered(function() {
   var rank = this.data.item.rank;
   var itemsTotalCount = this.data.itemsCount;
@@ -24,23 +30,20 @@ Template.menuItemReport.onRendered(function() {
 
 Template.menuItemReport.helpers({
   item: function () {
-    if (this.item.menuItemStats) {
-      var item = this.item;
-      return [
-        item.name,
-        'sparkline',
-        item.index,
-        item.menuItemStats.soldQuantity,
-        '$' + item.salesPrice,
-        '$' + item.menuItemStats.totalItemSales,
-        '$' + item.menuItemStats.prepCost,
-        '$' + item.menuItemStats.totalPrepCost,
-        '$' + item.menuItemStats.ingredientCost,
-        '$' + item.menuItemStats.totalIngCost,
-        '$' + item.menuItemStats.tax,
-        '$' + item.menuItemStats.contribution,
-        '$' + item.menuItemStats.totalContribution
-      ];
-    }
+    var item = this.item;
+    var itemSalesQuantity = item.stats.soldQuantity;
+    var instance = Template.instance();
+    return [
+      item.name, 'sparkline', item.index, itemSalesQuantity,
+      '$' + item.salesPrice,
+      '$' + instance.round(item.salesPrice * itemSalesQuantity),
+      '$' + item.stats.prepCost,
+      '$' + instance.round(item.stats.prepCost * itemSalesQuantity),
+      '$' + item.stats.ingCost,
+      '$' + instance.round(item.stats.ingCost * itemSalesQuantity),
+      '$' + item.stats.tax,
+      '$' + item.stats.contribution,
+      '$' + item.stats.totalContribution
+    ];
   }
 });

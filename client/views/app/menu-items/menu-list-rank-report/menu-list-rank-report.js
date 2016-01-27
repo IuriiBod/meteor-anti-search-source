@@ -1,6 +1,7 @@
 Template.menuListRankReport.onCreated(function () {
   this.customRange = new ReactiveVar();
   this.data.rangeType === 'custom-range' ? this.customRange.set(true) : this.customRange.set(false);
+
   this.getDaysOfWeek = function (daysOfWeek) {
     return  {
       startDate: HospoHero.dateUtils.shortDateFormat(daysOfWeek[0]),
@@ -24,7 +25,6 @@ Template.menuListRankReport.helpers({
         rankedMenuItems.push(item);
       }
     });
-
     return rankedMenuItems.length && rankedMenuItems;
   },
 

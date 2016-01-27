@@ -107,52 +107,33 @@ Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, s
       'relations.areaId': areaId
     };
 
-    if (categoryId && categoryId != "all") {
+    if (categoryId && categoryId !== "all") {
       query.category = categoryId;
     }
 
-    if (status) {
-      query.status = (status && status != 'all') ? status : {$ne: 'archived'};
-    }
-
-    var round = function (value) {
-      return HospoHero.misc.rounding(value);
-    };
+    query.status = status && status !== 'all' ? status : {$ne: 'archived'};
 
     var transform = function(menuItem) {
-      var analizedMenuItem = HospoHero.analyze.menuItem(menuItem);
+      var analyzedMenuItem = HospoHero.analyze.menuItem(menuItem);
       var totalItemSalesQuantity = 0;
-      menuItem.menuItemStats = {};
+      menuItem.stats = {};
       DailySales.find({date: dailySalesDate, menuItemId: menuItem._id}).forEach(function (item) {
         totalItemSalesQuantity += item.actualQuantity || 0;
       });
 
-      _.extend(analizedMenuItem, {soldQuantity: totalItemSalesQuantity});
-
-      _.each(analizedMenuItem, function(item, key) {
-        if (key !== 'tax' && key !== 'soldQuantity') {
-          key = key.charAt(0).toUpperCase() + key.slice(1);
-          return analizedMenuItem['total' + key] = HospoHero.misc.rounding(item * totalItemSalesQuantity);
-        }
+      _.extend(analyzedMenuItem, {
+        soldQuantity: totalItemSalesQuantity,
+        totalContribution: HospoHero.misc.rounding(analyzedMenuItem.contribution * totalItemSalesQuantity)
       });
-      console.log(analizedMenuItem);
-      _.extend(menuItem.menuItemStats, analizedMenuItem);
-      //
-      //console.log('analizedMenuItem -> ', analizedMenuItem);
-      //
-      //  _.extend(menuItem.menuItemStats, {
-      //    contribution: analizedMenuItem.contribution,
-      //    ingredientCost: analizedMenuItem.ingCost,
-      //    prepCost: analizedMenuItem.prepCost,
-      //    tax: analizedMenuItem.tax
-      //  });
-      //}
+
+      _.extend(menuItem.stats, analyzedMenuItem);
+
       return menuItem;
       };
 
     var self = this;
 
-    observer = MenuItems.find({_id: '7D3k56oS6H9TdtK5h'}).observe({
+    observer = MenuItems.find(query).observe({
       added: function (menuItem) {
         self.added('menuItems', menuItem._id, transform(menuItem));
       },
