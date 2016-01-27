@@ -41,4 +41,6 @@ PosMenuItems = new Mongo.Collection('posMenuItems');
 
 LeaveRequests = new Mongo.Collection('leaveRequests');
 
+// calendar functionality
+CalendarEvents = new Mongo.Collection('calendarEvents');
 TaskList = new Mongo.Collection('taskList');
