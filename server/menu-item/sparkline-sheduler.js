@@ -10,11 +10,12 @@ var menuItemsStatsInCurrentArea = function (areaId) {
 
     var itemDailySales = DailySales.find({date: dateInterval, menuItemId: menuItem._id, actualQuantity: {$exists: true}});
 
-    itemDailySales.forEach(function (item) {
-      totalItemSalesQuantity += item.actualQuantity;
-    });
-
     if (itemDailySales.count()) {
+
+      itemDailySales.forEach(function (item) {
+        totalItemSalesQuantity += item.actualQuantity;
+      });
+
       var totalContribution = _.extend({}, {
         menuItemId: menuItem._id,
         totalContribution: HospoHero.misc.rounding(result.contribution * totalItemSalesQuantity)
@@ -27,9 +28,8 @@ var menuItemsStatsInCurrentArea = function (areaId) {
   return menuItemsStats;
 };
 
-updateMenuItemsRank = function() {
-
-  Areas.find().forEach(function (area) {
+updateMenuItemsRank = function (location) {
+  Areas.find({locationId: location._id}).forEach(function (area) {
     var menuItemsStats = menuItemsStatsInCurrentArea(area._id);
 
     if (menuItemsStats.length) {
@@ -58,10 +58,10 @@ updateMenuItemsRank = function() {
   });
 };
 
-if (!HospoHero.isDevelopmentMode()) {
-  HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function () {
+if (HospoHero.isDevelopmentMode()) {
+  HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function (location) {
     return 4;
-  }, function () {
-    updateMenuItemsRank();
+  }, function (location) {
+    updateMenuItemsRank(location);
   })
 }
