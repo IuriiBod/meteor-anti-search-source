@@ -35,7 +35,7 @@ var filterTypes = {
 Template.taskList.onCreated(function () {
   this.isNewTaskCreating = new ReactiveVar(false);
   this.filterType = new ReactiveVar('All tasks');
-  this.filterUser = new ReactiveVar();
+  this.filterUser = new ReactiveVar(Meteor.userId());
   this.task = {};
 });
 

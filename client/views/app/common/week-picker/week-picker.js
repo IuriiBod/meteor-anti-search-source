@@ -14,9 +14,7 @@ Template.weekPicker.onRendered(function () {
    * @param {String} [action=add|subtract] - action to do with current date. null for do nothing.
    * @param {Number} [dateChangeStep=7] - number of days to add/subtract
    */
-  this.updatePickedMoment = function (action, dateChangeStep) {
-    dateChangeStep = _.isUndefined(dateChangeStep) ? 7 : dateChangeStep;
-
+  this.updatePickedMoment = function (action, dateChangeStep = 7) {
     var currentMoment = moment(this.datePicker.datepicker('getDate'));
     currentMoment = HospoHero.dateUtils.startOfWeekMoment(currentMoment);
 
@@ -52,7 +50,7 @@ Template.weekPicker.onRendered(function () {
     format: 'yyyy-mm-dd'
   });
 
-  this.datePicker.datepicker('setDate', initialPlainDate.toDate());
+  this.datePicker.datepicker('setDate', moment(initialPlainDate).toDate());
 });
 
 
