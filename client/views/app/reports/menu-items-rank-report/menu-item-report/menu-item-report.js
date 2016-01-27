@@ -1,10 +1,10 @@
-Template.menuItem.onCreated(function () {
+Template.menuItemReport.onCreated(function () {
   this.round = function (value) {
     return HospoHero.misc.rounding(value);
   }
 });
 
-Template.menuItem.onRendered(function() {
+Template.menuItemReport.onRendered(function() {
   var rank = this.data.item.rank;
   var itemsTotalCount = this.data.itemsCount;
 
@@ -28,7 +28,7 @@ Template.menuItem.onRendered(function() {
   }
 });
 
-Template.menuItem.helpers({
+Template.menuItemReport.helpers({
   item: function () {
     var item = this.item;
     var itemSalesQuantity = item.stats.soldQuantity;

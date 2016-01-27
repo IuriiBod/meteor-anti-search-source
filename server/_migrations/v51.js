@@ -2,86 +2,84 @@ Migrations.add({
   version: 51,
   name: 'added menu rank report sparkline for 7 days',
   up: function () {
-    for (var day = 1; day < 8; day++) {
+    var menuItemsStatsForLastTwoWeeks = function (dateInterval) {
+      var menuItemsStats = [];
+      MenuItems.find({status: {$ne: 'archived'}}).forEach(function (menuItem) {
+        var result = HospoHero.analyze.menuItem(menuItem);
+        var totalItemSalesQuantity = 0;
+
+        var itemDailySales = DailySales.find({date: dateInterval, menuItemId: menuItem._id});
+
+        itemDailySales.forEach(function (item) {
+          totalItemSalesQuantity += item.actualQuantity || 0;
+        });
+        if (itemDailySales.count()) {
+          var totalContribution = _.extend({}, {
+            menuItemId: menuItem._id,
+            totalContribution: HospoHero.misc.rounding(result.contribution * totalItemSalesQuantity)
+          });
+
+          menuItemsStats.push(totalContribution);
+        }
+      });
+
+      return menuItemsStats.length && menuItemsStats;
+    };
+
+    var sortMenuItemsByTotalContribution = function (menuItemsStats) {
+      return menuItemsStats.sort(function (a, b) {
+        if (a.totalContribution < b.totalContribution) {
+          return -1;
+        } else if (a.totalContribution > b.totalContribution) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    };
+
+    for (var day = 8; day > 1; day--) {
       var yesterdayDate = moment(new Date()).subtract(day, 'days').toDate();
       var twoWeeksAgoDate = moment(yesterdayDate).subtract(14, 'days').toDate();
       var dateInterval = TimeRangeQueryBuilder.forInterval(twoWeeksAgoDate, yesterdayDate);
 
-      var menuItemsStats = [];
+      var menuItemsStats = menuItemsStatsForLastTwoWeeks(dateInterval);
 
-      MenuItems.find({status: {$ne: 'archived'}}).forEach(function (menuItem) {
-        var result = HospoHero.analyze.menuItem(menuItem);
-        var menuItemsSales = DailySales.find({
-          date: dateInterval,
-          menuItemId: menuItem._id
-        });
+      var sortedMenuItemsStats = sortMenuItemsByTotalContribution(menuItemsStats);
 
-        var itemStats = menuItemsSales.map(function (dailySalesItem) {
-          return HospoHero.misc.rounding(result.contribution * (dailySalesItem.actualQuantity || 0));
-        });
+      sortedMenuItemsStats.forEach(function (item, index) {
+        var menuItem = MenuItems.findOne({_id: item.menuItemId});
+        if (menuItem.rank && menuItem.rank.length > 6) {
+          menuItem.rank.shift();
+          menuItem.rank.push(++index);
 
-        if (itemStats.length && itemStats.length === menuItemsSales.count()) {
-          var reducedItemStats = {};
-
-          var calculateItemStats = itemStats.reduce(function (previousValue, currentValue) {
-            return HospoHero.misc.rounding(previousValue + currentValue);
+          MenuItems.update({
+            _id: item.menuItemId
+          }, {
+            $set: {
+              rank: menuItem.rank
+            }
           });
+        } else if (menuItem.rank) {
+          menuItem.rank.push(++index);
 
-          _.extend(reducedItemStats, {
-            menuItemId: menuItem._id,
-            totalContribution: calculateItemStats
+          MenuItems.update({
+            _id: item.menuItemId
+          }, {
+            $set: {
+              rank: menuItem.rank
+            }
           });
-
-          menuItemsStats.push(reducedItemStats);
+        } else {
+          MenuItems.update({
+            _id: item.menuItemId
+          }, {
+            $set: {
+              rank: [++index]
+            }
+          });
         }
       });
-
-      if (menuItemsStats.length) {
-        menuItemsStats.sort(function (a, b) {
-          if (a.totalContribution < b.totalContribution) {
-            return -1;
-          } else if (a.totalContribution > b.totalContribution) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
-
-        menuItemsStats.forEach(function (item, index) {
-          var menuItem = MenuItems.findOne({_id: item.menuItemId});
-
-          if (menuItem.rank && menuItem.rank.length > 6) {
-            menuItem.rank.shift();
-            menuItem.rank.push(++index);
-
-            MenuItems.update({
-              _id: item.menuItemId
-            }, {
-              $set: {
-                rank: menuItem.rank
-              }
-            });
-          } else if (menuItem.rank) {
-            menuItem.rank.push(++index);
-
-            MenuItems.update({
-              _id: item.menuItemId
-            }, {
-              $set: {
-                rank: menuItem.rank
-              }
-            });
-          } else {
-            MenuItems.update({
-              _id: item.menuItemId
-            }, {
-              $set: {
-                rank: [++index]
-              }
-            });
-          }
-        });
-      }
     }
   }
 });

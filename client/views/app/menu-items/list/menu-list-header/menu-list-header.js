@@ -2,10 +2,6 @@ Template.menuListHeader.helpers({
   isArchived: function () {
     var archive = Router.current().params.status;
     return archive && archive == 'archived';
-  },
-
-  startDate: function() {
-      return HospoHero.dateUtils.shortDateFormat(moment(new Date()).subtract(1, 'days'));
   }
 });
 

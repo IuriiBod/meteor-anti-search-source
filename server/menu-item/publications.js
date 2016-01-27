@@ -116,17 +116,18 @@ Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, s
     var transform = function(menuItem) {
       var analyzedMenuItem = HospoHero.analyze.menuItem(menuItem);
       var totalItemSalesQuantity = 0;
-      menuItem.stats = {};
-      DailySales.find({date: dailySalesDate, menuItemId: menuItem._id}).forEach(function (item) {
+      var itemDailySales = DailySales.find({date: dailySalesDate, menuItemId: menuItem._id});
+
+      itemDailySales.forEach(function (item) {
         totalItemSalesQuantity += item.actualQuantity || 0;
       });
 
-      _.extend(analyzedMenuItem, {
-        soldQuantity: totalItemSalesQuantity,
-        totalContribution: HospoHero.misc.rounding(analyzedMenuItem.contribution * totalItemSalesQuantity)
-      });
-
-      _.extend(menuItem.stats, analyzedMenuItem);
+      if (itemDailySales.count()) {
+        menuItem.stats = _.extend({}, analyzedMenuItem, {
+          soldQuantity: totalItemSalesQuantity,
+          totalContribution: HospoHero.misc.rounding(analyzedMenuItem.contribution * totalItemSalesQuantity)
+        });
+      }
 
       return menuItem;
       };

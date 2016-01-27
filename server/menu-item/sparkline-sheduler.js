@@ -1,23 +1,22 @@
-var calculateMenuItemsStatsForPreviousTwoWeeks = function (dateInterval) {
+var menuItemsStatsForLastTwoWeeks = function (dateInterval) {
   var menuItemsStats = [];
   MenuItems.find({status: {$ne: 'archived'}}).forEach(function (menuItem) {
     var result = HospoHero.analyze.menuItem(menuItem);
     var totalItemSalesQuantity = 0;
-    DailySales.find({
-      date: dateInterval,
-      menuItemId: menuItem._id
-    }).forEach(function (item) {
+
+    var itemDailySales = DailySales.find({date: dateInterval, menuItemId: menuItem._id});
+
+    itemDailySales.forEach(function (item) {
       totalItemSalesQuantity += item.actualQuantity || 0;
     });
+    if (itemDailySales.count()) {
+      var totalContribution = _.extend({}, {
+        menuItemId: menuItem._id,
+        totalContribution: HospoHero.misc.rounding(result.contribution * totalItemSalesQuantity)
+      });
 
-    var reducedItemStats = {};
-
-    _.extend(reducedItemStats, {
-      menuItemId: menuItem._id,
-      totalContribution: HospoHero.misc.rounding(result.contribution * totalItemSalesQuantity)
-    });
-
-    menuItemsStats.push(reducedItemStats);
+      menuItemsStats.push(totalContribution);
+    }
   });
 
   return menuItemsStats.length && menuItemsStats;
@@ -40,7 +39,7 @@ updateMenuItemsRank = function(location) {
   var twoWeeksAgoDate = moment(yesterdayDate).subtract(14, 'days').toDate();
   var dateInterval = TimeRangeQueryBuilder.forInterval(twoWeeksAgoDate, yesterdayDate);
 
-  var menuItemsStats = calculateMenuItemsStatsForPreviousTwoWeeks(dateInterval);
+  var menuItemsStats = menuItemsStatsForLastTwoWeeks(dateInterval);
 
   var sortedMenuItemsStats = sortMenuItemsByTotalContribution(menuItemsStats);
 
