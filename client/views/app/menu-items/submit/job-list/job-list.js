@@ -35,16 +35,21 @@ Template.menuItemJobsList.helpers({
       quantity: this.quantity,
       onJobItemUpdate: Template.instance().onJobItemUpdate
     };
-  },
+  }
+});
 
-  idsToExclude: function () {
-    return _.pluck(this.jobItems, '_id');
-  },
+Template.menuItemJobsList.events({
+  'click .add-job-item-button': function(event, tmpl) {
 
-  getOnJobItemsAdded: function () {
-    var tmpl = Template.instance();
-    return function (jobItemId) {
-      tmpl.onJobItemUpdate('add', jobItemId);
-    };
+    FlyoutManager.open('addJobItem', {
+      idsToExclude: function() {
+        return _.pluck(tmpl.jobItems, '_id');
+      },
+      onItemsAdded: function () {
+        return function (jobItemId) {
+          tmpl.onJobItemUpdate('add', jobItemId);
+        };
+      }
+    });
   }
 });

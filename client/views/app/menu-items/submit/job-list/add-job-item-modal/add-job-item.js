@@ -1,6 +1,5 @@
-Template.addJobItemModal.onCreated(function () {
+Template.addJobItem.onCreated(function () {
   this.onItemsAdded = this.data.onItemsAdded;
-
   this.jobItemsSearch = this.AntiSearchSource({
     collection: 'jobItems',
     fields: ['name'],
@@ -8,14 +7,17 @@ Template.addJobItemModal.onCreated(function () {
     limit: 10
   });
 
+  console.log(Template.currentData().idsToExclude());
+
   var self = this;
   this.autorun(function () {
-    var query = {_id: {$nin: Template.currentData().idsToExclude}, status: 'active'};
+    //var query = {_id: {$nin: Template.currentData().idsToExclude()}, status: 'active'};
+    var query = {status: 'active'};
     self.jobItemsSearch.setMongoQuery(query);
   });
 });
 
-Template.addJobItemModal.helpers({
+Template.addJobItem.helpers({
   availableJobItems: function () {
     return Template.instance().jobItemsSearch.searchResult({sort: {name: 1}});
   },
@@ -28,7 +30,7 @@ Template.addJobItemModal.helpers({
   }
 });
 
-Template.addJobItemModal.events({
+Template.addJobItem.events({
   'keyup .search-input': _.throttle(function (event, tmpl) {
     var text = event.target.value.trim();
     tmpl.jobItemsSearch.search(text);
