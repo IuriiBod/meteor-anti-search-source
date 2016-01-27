@@ -41,7 +41,8 @@ Template.stocksList.helpers({
 
 Template.stocksList.events({
   'click .add-new-ingredient': function (e, tmpl) {
-    tmpl.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', {ingredient: null});
+    //tmpl.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', {ingredient: null});
+    FlyoutManager.open('ingredientEditor', {ingredient: null});
   },
 
   //event for submitIngredient template
