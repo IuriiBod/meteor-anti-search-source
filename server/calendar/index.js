@@ -167,9 +167,6 @@ Meteor.methods({
             endTime: jobEndTime.toDate()
           }, defaultEventObject);
 
-          console.log('EVEBT', jobEventObject);
-
-
           Meteor.call('addCalendarEvent', jobEventObject);
         }
       });
