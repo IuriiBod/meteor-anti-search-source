@@ -40,8 +40,7 @@ Template.stocksList.helpers({
 });
 
 Template.stocksList.events({
-  'click .add-new-ingredient': function (e, tmpl) {
-    //tmpl.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', {ingredient: null});
+  'click .add-new-ingredient': function () {
     FlyoutManager.open('ingredientEditor', {ingredient: null});
   },
 
