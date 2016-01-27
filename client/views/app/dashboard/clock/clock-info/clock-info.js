@@ -65,11 +65,11 @@ Template.clockInfo.helpers({
 Template.clockInfo.events({
   'click .clockIn': function (event, tmpl) {
     var shiftId = tmpl.data._id;
-    Meteor.call("clockIn", shiftId, HospoHero.handleMethodResult());
+    Meteor.call('clockIn', shiftId, HospoHero.handleMethodResult());
   },
 
   'click .clockOut': function (event, tmpl) {
     var shiftId = tmpl.data._id;
-    Meteor.call("clockOut", shiftId, HospoHero.handleMethodResult());
+    Meteor.call('clockOut', shiftId, HospoHero.handleMethodResult());
   }
 });
