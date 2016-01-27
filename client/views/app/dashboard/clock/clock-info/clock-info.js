@@ -1,17 +1,20 @@
 //context: Shift
 Template.clockInfo.onCreated(function () {
-  this.shiftClockStatuses = new Map()
-    .set('draft', 'clockIn')
-    .set('started', 'clockOut')
-    .set('finished', 'clockInfo');
-  this.backgrounds = new Map()
-    .set('clockIn', 'navy-bg')
-    .set('clockOut', 'red-bg')
-    .set('clockInfo', 'lazur-bg');
-  this.titles = new Map()
-    .set('clockIn', 'Clock In')
-    .set('clockOut', 'Clock Out')
-    .set('clockInfo', 'Clock Ended');
+  this.shiftClockStatuses = {
+    draft: 'clockIn',
+    started: 'clockOut',
+    finished: 'clockInfo'
+  };
+  this.backgrounds = {
+    clockIn: 'navy-bg',
+    clockOut: 'red-bg',
+    clockInfo: 'lazur-bg'
+  };
+  this.titles = {
+    clockIn: 'Clock In',
+    clockOut: 'Clock Out',
+    clockInfo: 'Clock Ended'
+  };
 
   this.ClockInfo = class {
     constructor(shift) {
@@ -45,15 +48,15 @@ Template.clockInfo.onCreated(function () {
 
 Template.clockInfo.helpers({
   clockStatus: function () {
-    return Template.instance().shiftClockStatuses.get(this.status);
+    return Template.instance().shiftClockStatuses[this.status];
   },
 
   backgroundClassByStatus: function (status) {
-    return Template.instance().backgrounds.get(status);
+    return Template.instance().backgrounds[status];
   },
 
   titleByStatus: function (status) {
-    return Template.instance().titles.get(status);
+    return Template.instance().titles[status];
   },
 
   clockInfoByStatus: function (status) {
