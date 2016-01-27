@@ -109,6 +109,10 @@ var menuEntries = [
             date: HospoHero.dateUtils.getDateStringForRoute()
           }
         }
+      },
+      {
+        title: 'Stock Report',
+        route: 'stockReport'
       }
     ]
   }

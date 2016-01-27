@@ -79,11 +79,11 @@ Meteor.publish("currentStocks", function (ids) {
 Meteor.publish('stocktakeList', function (areaId) {
   return [
     StocktakeMain.find({
-      "stocktakeDate": new Date(moment().format("YYYY-MM-DD")).getTime(),
+      "stocktakeDate": new Date(moment().format("YYYY-MM-DD")).getTime(), // Need to pass moment instance to round unix time
       "relations.areaId": areaId
     }),
     Stocktakes.find({
-    'relations.areaId': areaId
+      'relations.areaId': areaId
     })
-  ]
+  ];
 });

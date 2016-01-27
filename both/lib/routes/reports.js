@@ -15,3 +15,19 @@ Router.route('/reports/:date', {
     }
   }
 });
+
+Router.route('/stock-report', {
+  name: "stockReport",
+  template: "stockReport",
+  waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return [
+      Meteor.subscribe('stocktakeList', currentAreaId)
+    ];
+  },
+  data: function () {
+    return {
+      date: HospoHero.dateUtils.getDateStringForRoute()
+    }
+  }
+});
