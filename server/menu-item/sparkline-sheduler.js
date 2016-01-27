@@ -2,36 +2,29 @@ var calculateMenuItemsStatsForPreviousTwoWeeks = function (dateInterval) {
   var menuItemsStats = [];
   MenuItems.find({status: {$ne: 'archived'}}).forEach(function (menuItem) {
     var result = HospoHero.analyze.menuItem(menuItem);
-    var menuItemSales = DailySales.find({
+    var totalItemSalesQuantity = 0;
+    DailySales.find({
       date: dateInterval,
       menuItemId: menuItem._id
+    }).forEach(function (item) {
+      totalItemSalesQuantity += item.actualQuantity || 0;
     });
 
-    var itemTotalContribution = menuItemSales.map(function (dailySalesItem) {
-      return HospoHero.misc.rounding(result.contribution * (dailySalesItem.actualQuantity || 0));
+    var reducedItemStats = {};
+
+    _.extend(reducedItemStats, {
+      menuItemId: menuItem._id,
+      totalContribution: HospoHero.misc.rounding(result.contribution * totalItemSalesQuantity)
     });
 
-    if (itemTotalContribution.length && itemTotalContribution.length === menuItemSales.count()) {
-      var reducedItemStats = {};
-
-      var getSumOfItemTotalContribution = itemTotalContribution.reduce(function (previousValue, currentValue) {
-        return HospoHero.misc.rounding(previousValue + currentValue);
-      });
-
-      _.extend(reducedItemStats, {
-        menuItemId: menuItem._id,
-        totalContribution: getSumOfItemTotalContribution
-      });
-
-      menuItemsStats.push(reducedItemStats);
-    }
+    menuItemsStats.push(reducedItemStats);
   });
 
   return menuItemsStats.length && menuItemsStats;
 };
 
 var sortMenuItemsByTotalContribution = function (menuItemsStats) {
-  menuItemsStats.sort(function (a, b) {
+  return menuItemsStats.sort(function (a, b) {
     if (a.totalContribution < b.totalContribution) {
       return -1;
     } else if (a.totalContribution > b.totalContribution) {
@@ -40,8 +33,6 @@ var sortMenuItemsByTotalContribution = function (menuItemsStats) {
       return 0;
     }
   });
-
-  return menuItemsStats;
 };
 
 updateMenuItemsRank = function(location) {

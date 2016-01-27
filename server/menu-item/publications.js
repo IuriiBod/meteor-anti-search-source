@@ -121,46 +121,42 @@ Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, s
 
     var transform = function(menuItem) {
       var analizedMenuItem = HospoHero.analyze.menuItem(menuItem);
-      var menuItemSales = DailySales.find({date: dailySalesDate, menuItemId: menuItem._id});
-      var itemStats = menuItemSales.map(function (dailySalesItem) {
-        var soldQuantity = dailySalesItem.actualQuantity || 0;
-        return {
-          soldQuantity: soldQuantity,
-          totalIngCost: round(analizedMenuItem.ingCost * soldQuantity),
-          totalPrepCost: round(analizedMenuItem.prepCost * soldQuantity),
-          totalItemSales: round(menuItem.salesPrice * soldQuantity),
-          totalContribution: round(analizedMenuItem.contribution * soldQuantity)
-        };
+      var totalItemSalesQuantity = 0;
+      menuItem.menuItemStats = {};
+      DailySales.find({date: dailySalesDate, menuItemId: menuItem._id}).forEach(function (item) {
+        totalItemSalesQuantity += item.actualQuantity || 0;
       });
 
-      if (itemStats.length && itemStats.length === menuItemSales.count()) {
-        menuItem.menuItemStats = itemStats.reduce(function (previousValue, currentValue) {
-          var result = {};
-          _.each(previousValue, function (value, key) {
-            result[key] = HospoHero.misc.rounding(value + currentValue[key]);
-          });
+      _.extend(analizedMenuItem, {soldQuantity: totalItemSalesQuantity});
 
-          return result;
-        });
-
-        _.extend(menuItem.menuItemStats, {
-          contribution: analizedMenuItem.contribution,
-          ingredientCost: analizedMenuItem.ingCost,
-          prepCost: analizedMenuItem.prepCost,
-          tax: analizedMenuItem.tax
-        });
-
-        return menuItem;
-      }
-    };
+      _.each(analizedMenuItem, function(item, key) {
+        if (key !== 'tax' && key !== 'soldQuantity') {
+          key = key.charAt(0).toUpperCase() + key.slice(1);
+          return analizedMenuItem['total' + key] = HospoHero.misc.rounding(item * totalItemSalesQuantity);
+        }
+      });
+      console.log(analizedMenuItem);
+      _.extend(menuItem.menuItemStats, analizedMenuItem);
+      //
+      //console.log('analizedMenuItem -> ', analizedMenuItem);
+      //
+      //  _.extend(menuItem.menuItemStats, {
+      //    contribution: analizedMenuItem.contribution,
+      //    ingredientCost: analizedMenuItem.ingCost,
+      //    prepCost: analizedMenuItem.prepCost,
+      //    tax: analizedMenuItem.tax
+      //  });
+      //}
+      return menuItem;
+      };
 
     var self = this;
 
-    observer = MenuItems.find(query).observe({
+    observer = MenuItems.find({_id: '7D3k56oS6H9TdtK5h'}).observe({
       added: function (menuItem) {
         self.added('menuItems', menuItem._id, transform(menuItem));
       },
-      changed: function (menuItem, oldDocument) {
+      changed: function (menuItem) {
         self.changed('menuItems', menuItem._id, transform(menuItem));
       },
       removed: function (oldDocument) {
