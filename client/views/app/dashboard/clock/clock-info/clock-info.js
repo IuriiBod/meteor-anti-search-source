@@ -1,58 +1,64 @@
 //context: Shift
+Template.clockInfo.onCreated(function () {
+  this.shiftClockStatuses = new Map()
+    .set('draft', 'clockIn')
+    .set('started', 'clockOut')
+    .set('finished', 'clockInfo');
+  this.backgrounds = new Map()
+    .set('clockIn', 'navy-bg')
+    .set('clockOut', 'red-bg')
+    .set('clockInfo', 'lazur-bg');
+  this.titles = new Map()
+    .set('clockIn', 'Clock In')
+    .set('clockOut', 'Clock Out')
+    .set('clockInfo', 'Clock Ended');
+
+  this.ClockInfo = class {
+    constructor(shift) {
+      this.shift = shift
+    }
+
+    clockIn() {
+      let startTimeMoment = moment(shift.startTime);
+      let howLongAgoWord = startTimeMoment.fromNow();
+      let startWord = startTimeMoment.isAfter(new Date()) ? 'starts' : 'started';
+      return `Today shift ${startWord} ${howLongAgoWord}`;
+    }
+
+    clockOut() {
+      let recordedTime = moment().diff(shift.startedAt);
+      let howManyMinutes = moment.duration(recordedTime).humanize();
+      return `Recording ${howManyMinutes}`;
+    }
+
+    clockInfo() {
+      let recordedTime = moment(shift.finishedAt).diff(shift.startedAt);
+      let howManyMinutes = moment.duration(recordedTime).humanize();
+      return `Recorded ${howManyMinutes}`;
+    }
+
+    getByStatus(status) {
+      return this[status]();
+    }
+  }
+});
+
 Template.clockInfo.helpers({
   clockStatus: function () {
-    var shiftClockStatusMap = {
-      draft: 'clockIn',
-      started: 'clockOut',
-      finished: 'clockInfo'
-    };
-
-    return shiftClockStatusMap[this.status];
+    return Template.instance().shiftClockStatuses.get(this.status);
   },
 
   backgroundClassByStatus: function (status) {
-    var bgMap = {
-      clockIn: 'navy-bg',
-      clockOut: 'red-bg',
-      clockInfo: 'lazur-bg'
-    };
-
-    return bgMap[status];
+    return Template.instance().backgrounds.get(status);
   },
 
   titleByStatus: function (status) {
-    var titleMap = {
-      clockIn: 'Clock In',
-      clockOut: 'Clock Out',
-      clockInfo: 'Clock Ended'
-    };
-
-    return titleMap[status];
+    return Template.instance().titles.get(status);
   },
 
   clockInfoByStatus: function (status) {
-    var shift = this;
-
-    var infoFnMap = {
-      clockIn: function () {
-        var startTimeMoment = moment(shift.startTime);
-        var fromNowStr = startTimeMoment.fromNow();
-        var startWord = startTimeMoment.isAfter(new Date()) ? 'starts' : 'started';
-        return 'Today shift ' + startWord + ' ' + fromNowStr;
-      },
-
-      clockOut: function () {
-        var recordedTime = moment().diff(shift.startedAt);
-        return 'Recording ' + moment.duration(recordedTime).humanize();
-      },
-
-      clockInfo: function () {
-        var recordedTime = moment(shift.finishedAt).diff(shift.startedAt);
-        return 'Recorded ' + moment.duration(recordedTime).humanize();
-      }
-    };
-
-    return infoFnMap[status]();
+    let ClockInfo = Template.instance().ClockInfo;
+    return new ClockInfo(shift = this).getByStatus(status);
   }
 });
 
