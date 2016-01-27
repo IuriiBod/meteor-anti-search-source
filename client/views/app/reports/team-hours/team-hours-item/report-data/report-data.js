@@ -1,6 +1,7 @@
 //context: date (Date), userId (User._id)
 
 Template.reportData.onCreated(function () {
+  this.currentDate = this.data.date;
   this.getCurrentShift = function () {
     return Shifts.findOne({
       assignedTo: this.data.userId,
@@ -16,11 +17,11 @@ Template.reportData.helpers({
   },
 
   startedTimeParams: function (shift) {
-    var restoreShiftDate = function (baseDate, newTime) {
-      var newMoment = moment(newTime);
+    let changeShiftHours = function (baseDate = newTime, newTime) {
+      let newShiftTime = moment(newTime);
       return moment(baseDate)
-        .hours(newMoment.hours())
-        .minutes(newMoment.minutes())
+        .hours(newShiftTime.hours())
+        .minutes(newShiftTime.minutes())
         .toDate();
     };
 
@@ -28,10 +29,11 @@ Template.reportData.helpers({
       firstTime: shift.startedAt || 'Start',
       secondTime: shift.finishedAt || 'End',
       minuteStepping: 5,
-      onSubmit: function (startTime, endTime) {
-        shift.startedAt = restoreShiftDate(shift.startedAt, startTime);
-        shift.finishedAt = restoreShiftDate(shift.finishedAt, endTime);
-        Meteor.call("editShift", shift, HospoHero.handleMethodResult());
+      date: Template.instance().currentDate,
+      onSubmit: function (newStartTime, newEndTime) {
+        shift.startedAt = changeShiftHours(shift.startedAt, newStartTime);
+        shift.finishedAt = changeShiftHours(shift.finishedAt, newEndTime);
+        Meteor.call('editShift', shift, HospoHero.handleMethodResult());
       }
     };
   }
@@ -44,7 +46,7 @@ Template.reportData.events({
     var confirmClockOut = confirm('Are you sure you want to clock out this shift?');
     if (confirmClockOut) {
       var id = tmpl.getCurrentShift()._id;
-      Meteor.call("clockOut", id, HospoHero.handleMethodResult());
+      Meteor.call('clockOut', id, HospoHero.handleMethodResult());
     }
   }
 });
