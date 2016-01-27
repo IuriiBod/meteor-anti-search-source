@@ -19,7 +19,7 @@ Template.menuListRankReport.helpers({
     var rankedMenuItems = [];
     var category = this.selectedCategoryId;
     var index = 0;
-    this.menuItems.forEach(function (item) {
+    MenuItems.find({stats: {$exists: true}}, {sort: {'stats.totalContribution': -1}}).forEach(function (item) {
       if (category === 'all' || item.category === category) {
         item.index = ++index;
         rankedMenuItems.push(item);

@@ -7,6 +7,7 @@ Template.menuItemReport.onCreated(function () {
 Template.menuItemReport.onRendered(function() {
   var itemWeeklyRanks = this.data.item.weeklyRanks;
   var itemsTotalCount = this.data.itemsCount;
+  console.log(this.data.itemsCount);
 
   if (itemWeeklyRanks && itemWeeklyRanks.length) {
     var itemRankValues = {};

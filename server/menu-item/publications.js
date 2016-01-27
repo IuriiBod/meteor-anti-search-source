@@ -104,7 +104,10 @@ Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, s
     var observer;
 
     var query = {
-      'relations.areaId': areaId
+      'relations.areaId': areaId,
+        weeklyRanks: {
+          $exists: true
+        }
     };
 
     if (categoryId && categoryId !== "all") {
@@ -115,21 +118,21 @@ Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, s
 
     var transform = function (menuItem) {
       var analyzedMenuItem = HospoHero.analyze.menuItem(menuItem);
-      var totalItemSalesQuantity = 0;
       var itemDailySales = DailySales.find({date: dailySalesDate, menuItemId: menuItem._id, actualQuantity: {$exists: true}});
 
-      itemDailySales.forEach(function (item) {
-        totalItemSalesQuantity += item.actualQuantity;
-      });
-
       if (itemDailySales.count()) {
+        var totalItemSalesQuantity = 0;
+        itemDailySales.forEach(function (item) {
+          totalItemSalesQuantity += item.actualQuantity;
+        });
+
         menuItem.stats = _.extend({}, analyzedMenuItem, {
           soldQuantity: totalItemSalesQuantity,
           totalContribution: HospoHero.misc.rounding(analyzedMenuItem.contribution * totalItemSalesQuantity)
         });
-      }
 
-      return menuItem;
+        return menuItem;
+      }
     };
 
     var self = this;

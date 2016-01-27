@@ -1,19 +1,21 @@
 Migrations.add({
-  version: 52,
+  version: 53,
   name: 'built menu items rank for last 7 days',
   up: function () {
     var menuItemsStatsInCurrentArea = function (areaId, dateInterval) {
       var menuItemsStats = [];
       MenuItems.find({status: {$ne: 'archived'}, 'relations.areaId': areaId}).forEach(function (menuItem) {
         var result = HospoHero.analyze.menuItem(menuItem);
-        var totalItemSalesQuantity = 0;
 
         var itemDailySales = DailySales.find({date: dateInterval, menuItemId: menuItem._id, actualQuantity: {$exists: true}});
 
-        itemDailySales.forEach(function (item) {
-          totalItemSalesQuantity += item.actualQuantity;
-        });
         if (itemDailySales.count()) {
+          var totalItemSalesQuantity = 0;
+
+          itemDailySales.forEach(function (item) {
+            totalItemSalesQuantity += item.actualQuantity;
+          });
+
           var totalContribution = _.extend({}, {
             menuItemId: menuItem._id,
             totalContribution: HospoHero.misc.rounding(result.contribution * totalItemSalesQuantity)
@@ -34,6 +36,7 @@ Migrations.add({
 
         var menuItemsStats = menuItemsStatsInCurrentArea(area._id, dateInterval);
         if (menuItemsStats.length) {
+          console.log('menuItemsStats.length -> ', menuItemsStats.length);
           menuItemsStats.sort(function (a, b) {
             return a.totalContribution - b.totalContribution;
           });
