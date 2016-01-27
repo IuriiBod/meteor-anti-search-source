@@ -10,7 +10,7 @@ var CalendarEventDocument = Match.Where(function (calendarEvent) {
 
     // Optional
     _id: HospoHero.checkers.OptionalMongoId,
-    doneCheckListItems: [Number]
+    doneCheckListItems: Match.Optional([Number])
   });
 
   return true;

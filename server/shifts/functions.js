@@ -72,6 +72,9 @@ Meteor.methods({
           } else {
             usersToNotify[shift.assignedTo] = [shift];
           }
+
+          // Create events in user's calendar
+          Meteor.call('addJobsToCalendar', shift.assignedTo, shift.startTime, shift.relations.locationId);
         } else {
           openShifts.push(shift);
         }
@@ -115,9 +118,6 @@ Meteor.methods({
           }
         ).sendBoth(key);
       });
-
-      // Create events in users calendar
-      Meteor.call('addShiftsToCalendar', usersToNotify);
     }
   },
 
