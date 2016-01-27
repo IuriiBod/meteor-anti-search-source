@@ -41,6 +41,45 @@ Namespace('HospoHero.analyze', {
     }
   },
 
+  menuItem: function (menuItem) {
+    if (menuItem) {
+      var self = this;
+
+      var round = function (value) {
+        return HospoHero.misc.rounding(value);
+      };
+
+      var processMenuEntry = function (propertyName, predicate) {
+        var entriesField = menuItem[propertyName];
+        return _.isArray(entriesField) && round(_.reduce(entriesField, predicate, 0)) || 0;
+      };
+
+      var result = {
+        ingCost: processMenuEntry('ingredients', function (total, ingredientEntry) {
+          var ingredient = Ingredients.findOne({_id: ingredientEntry._id});
+          var ingredientProps = self.ingredient(ingredient);
+          total += ingredientProps.costPerPortionUsed * ingredientEntry.quantity;
+          return total;
+        }),
+
+        prepCost: processMenuEntry('jobItems', function (total, jobEntry) {
+          var job = JobItems.findOne({_id: jobEntry._id});
+          var jobItemProps = self.jobItem(job);
+          total += jobItemProps.prepCostPerPortion * jobEntry.quantity;
+          return total;
+        }),
+
+        salesPrice: menuItem.salesPrice,
+
+        tax: round(menuItem.salesPrice * 0.1)
+      };
+
+      result.contribution = round(result.salesPrice - result.prepCost - result.ingCost - result.tax);
+
+      return result;
+    }
+  },
+
   accuracy: function (actual, prediction) {
     var isPossibleToCalculate = _.isNumber(prediction) && _.isNumber(actual) && Math.max(prediction, actual) !== 0;
 

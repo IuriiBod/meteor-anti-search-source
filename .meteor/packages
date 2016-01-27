@@ -66,6 +66,7 @@ trsdln:flyouts
 jss:blaze-states
 trsdln:modals
 jss:reactive-fullcalendar
+jquery-sparkline
 
 # ===========> backend
 micah:google-cloud
