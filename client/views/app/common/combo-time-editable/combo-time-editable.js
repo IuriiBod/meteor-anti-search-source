@@ -19,7 +19,7 @@ Template.comboTimeEditable.onCreated(function () {
     var minutes = $combodate.find('.minutes').val();
     var ampm = $combodate.find('.ampm').val();
 
-    return new Date(moment().format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm);
+    return new Date(moment(self.data.params.date).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm);
   };
 
   self.exitFromEditMode = function () {
