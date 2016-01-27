@@ -40,9 +40,9 @@ updateMenuItemsRank = function() {
       menuItemsStats.forEach(function (item, index) {
         var menuItem = MenuItems.findOne({_id: item.menuItemId});
 
-        var weeklyRanks = menuItem.rank || [];
+        var weeklyRanks = menuItem.weeklyRanks || [];
         weeklyRanks.push(index + 1);
-        if (weeklyRanks.length > 6) {
+        if (weeklyRanks.length > 7) {
           weeklyRanks.shift();
         }
 
@@ -50,7 +50,7 @@ updateMenuItemsRank = function() {
           _id: item.menuItemId
         }, {
           $set: {
-            rank: weeklyRanks
+            weeklyRanks: weeklyRanks
           }
         });
       });
@@ -58,11 +58,10 @@ updateMenuItemsRank = function() {
   });
 };
 
-if (HospoHero.isDevelopmentMode()) {
-  updateMenuItemsRank();
-  //HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function () {
-  //  return 4;
-  //}, function () {
-  //  updateMenuItemsRank();
-  //})
+if (!HospoHero.isDevelopmentMode()) {
+  HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function () {
+    return 4;
+  }, function () {
+    updateMenuItemsRank();
+  })
 }

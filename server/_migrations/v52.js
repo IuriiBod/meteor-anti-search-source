@@ -28,8 +28,8 @@ Migrations.add({
 
     Areas.find().forEach(function (area) {
       for (var day = 8; day > 1; day--) {
-        var yesterdayDate = moment(new Date()).subtract(day, 'days').toDate();
-        var twoWeeksAgoDate = moment(yesterdayDate).subtract(14, 'days').toDate();
+        var yesterdayDate = moment().subtract(day, 'days');
+        var twoWeeksAgoDate = moment(yesterdayDate).subtract(14, 'days');
         var dateInterval = TimeRangeQueryBuilder.forInterval(twoWeeksAgoDate, yesterdayDate);
 
         var menuItemsStats = menuItemsStatsInCurrentArea(area._id, dateInterval);
@@ -41,9 +41,9 @@ Migrations.add({
           menuItemsStats.forEach(function (item, index) {
             var menuItem = MenuItems.findOne({_id: item.menuItemId});
 
-            var weeklyRanks = menuItem.rank || [];
+            var weeklyRanks = menuItem.weeklyRanks || [];
             weeklyRanks.push(index + 1);
-            if (weeklyRanks.length > 6) {
+            if (weeklyRanks.length > 7) {
               weeklyRanks.shift();
             }
 
@@ -51,7 +51,7 @@ Migrations.add({
               _id: item.menuItemId
             }, {
               $set: {
-                rank: weeklyRanks
+                weeklyRanks: weeklyRanks
               }
             });
           });
