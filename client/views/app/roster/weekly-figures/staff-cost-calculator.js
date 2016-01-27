@@ -45,8 +45,6 @@ StaffCostCalculator.prototype._calculateStaffFigures = function (date) {
 
       staffCost.actual += self._calculateShiftCost(self._getShiftDuration(shift, false), payRate);
       staffCost.forecast += self._calculateShiftCost(self._getShiftDuration(shift, true), payRate);
-    } else {
-      console.log('user not found', shift.assignedTo);
     }
   });
 

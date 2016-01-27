@@ -1,8 +1,6 @@
 <template name="organizationStructure">
   <div class="flyout-header">
-    <button class="close-flyout-button">
-      <i class="fa fa-angle-right"></i>
-    </button>
+    {{> closeAllFlyoutButton}}
     <div class="col-xs-11 col-xs-offset-1">
       {{>organizationButtons hasLocations=hasLocations
          organizationId=state$organization._id}}

@@ -65,6 +65,7 @@ hospohero:stale-session
 trsdln:flyouts
 jss:blaze-states
 trsdln:modals
+jss:reactive-fullcalendar
 
 # ===========> backend
 micah:google-cloud
@@ -88,3 +89,4 @@ jss:anti-search-source
 jss:moment-timezone
 
 # ===========> new
+settinghead:auto-nprogress

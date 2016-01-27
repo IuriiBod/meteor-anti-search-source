@@ -40,21 +40,24 @@ Namespace('HospoHero.roles', {
     "Edit Roster": "edit roster",
     "Can be rosted": "be rosted",
     "Roster Approver": "approves roster requests",
-    "Approve leave requests": "approve leave requests",
     "View Stocks": "view stocks",
     "Edit Stocks": "edit stocks",
     "Invite Users": "invite users",
     "Edit Users": "edit users",
     "View Forecast": "view forecast",
     "Edit Areas": "edit areas",
-    "View Areas Reports": "view areas reports",
+    "View Area Reports": "view area reports",
     "View areas financial info": "view area's financial info",
     "Edit Locations": "edit locations",
-    //"Billing Account": "edit billing account",
+    "Billing Account": "edit billing account",
     "Edit Organization": "edit organization settings",
+    "All Rights": "all rights",
     "Edit users payrate": "edit user's payrate",
     "View Reports": "view reports",
-    "Receive Deliveries": "receive deliveries"
+    "Receive Deliveries": "receive deliveries",
+    "Approve leave requests": "approve leave requests",
+    "Edit calendar": "edit calendar",
+    "View calendar": "view calendar"
   },
 
   getActions: function () {

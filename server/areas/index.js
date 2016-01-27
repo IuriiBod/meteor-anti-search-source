@@ -30,7 +30,7 @@ Meteor.methods({
 
   deleteArea: function (areaId) {
     if (!HospoHero.isOrganizationOwner()
-        && !HospoHero.isManager(Meteor.userId(), areaId)) {
+      && !HospoHero.isManager(Meteor.userId(), areaId)) {
       logger.error('User not permitted to delete this area');
       throw new Meteor.Error(403, 'User not permitted to delete this area');
     }
@@ -40,23 +40,28 @@ Meteor.methods({
 
     //updating user in Meteor.users collection requires user id
     var usersIdsRelatedToArea = Meteor.users
-        .find({'relations.areaIds': areaId}, {fields: {_id: 1}})
-        .map(function (user) { return user._id });
+      .find({'relations.areaIds': areaId}, {fields: {_id: 1}})
+      .map(function (user) {
+        return user._id
+      });
 
     Meteor.users.update({
       _id: {$in: usersIdsRelatedToArea}
-    },{
+    }, {
       $pull: {'relations.areaIds': areaId}
-    },{
+    }, {
       multi: true
     });
 
+    var usersIdsWithCurrentAreaId = Meteor.users
+        .find({currentAreaId: areaId})
+        .map(function (user) {return user._id});
+
     Meteor.users.update({
-      _id: {$in: usersIdsRelatedToArea},
-      currentAreaId: areaId
+      _id: {$in: usersIdsWithCurrentAreaId}
     },{
       $unset: {currentAreaId: ''}
-    },{
+    }, {
       multi: true
     });
 
@@ -99,16 +104,21 @@ Meteor.methods({
     var area = Areas.findOne({_id: addedUserInfo.areaId});
 
     var updateUserDocument = {
-      $set: {},
-      $addToSet: {}
+      $set: {}
     };
+
+    var userToUpdate = Meteor.users.findOne({_id: addedUserInfo.userId});
 
     updateUserDocument.$set['roles.' + addedUserInfo.areaId] = addedUserInfo.roleId;
 
-    updateUserDocument.$set['relations.organizationId'] = area.organizationId;
+    updateUserDocument.$set['relations.organizationIds'] = _.chain(userToUpdate.relations.organizationIds)
+      .union(area.organizationId).uniq().without(null).value();
 
-    updateUserDocument.$addToSet['relations.locationIds'] = area.locationId;
-    updateUserDocument.$addToSet['relations.areaIds'] = addedUserInfo.areaId;
+    updateUserDocument.$set['relations.locationIds'] = _.chain(userToUpdate.relations.locationIds)
+      .union(area.locationId).uniq().without(null).value();
+
+    updateUserDocument.$set['relations.areaIds'] = _.chain(userToUpdate.relations.areaIds)
+      .union(addedUserInfo.areaId).uniq().without(null).value();
 
     Meteor.users.update({_id: addedUserInfo.userId}, updateUserDocument);
 
