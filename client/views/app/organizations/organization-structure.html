@@ -1,9 +1,8 @@
 <template name="organizationStructure">
   <div class="flyout-header">
-    {{> closeAllFlyoutButton}}
+    {{> CloseFlyoutButton}}
     <div class="col-xs-11 col-xs-offset-1">
-      {{>organizationButtons hasLocations=hasLocations
-         organizationId=state$organization._id}}
+      {{>organizationButtons hasLocations=hasLocations organizationId=state$organization._id}}
     </div>
   </div>
 
@@ -29,7 +28,7 @@
 
             {{#if isManager}}
               <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i
-                class="fa fa-fw fa-cog"></i></span>
+                  class="fa fa-fw fa-cog"></i></span>
             {{/if}}
           </li>
         {{/each}}

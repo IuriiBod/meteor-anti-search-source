@@ -1,25 +1,18 @@
 Meteor.methods({
   /**
-   * Finds jobs from shifts and place it onto user's calendar
-   * @param {Object} usersAndShifts - object in
-   * {
-   *  userId: [
-   *    shiftDocument1,
-   *    shiftDocument2,
-   *    ...
-   *  ]
-   * }
+   * Finds recurring jobs from shift and place it onto user's calendar
+   * @param {Object} shift
    */
-  addShiftsToCalendar: function (usersAndShifts) {
+  addJobsToCalendar: function (shift) {
     /**
      * Returns different between two moments
      * @param {Date|moment} firstDate - date or moment
      * @param {Date|moment} secondDate - date or moment
-     * @param {String} dateUnits - the date units to count difference (days, weeks...)
+     * @param {String} dateUnits - the date units to count difference (date, week~...)
      * @returns {number}
      */
     var diffDates = function (firstDate, secondDate, dateUnits) {
-      return Math.abs(moment(firstDate).diff(moment(secondDate), dateUnits));
+      return Math.abs(moment(firstDate)[dateUnits]() - moment(secondDate)[dateUnits]());
     };
 
     /**
@@ -35,13 +28,13 @@ Meteor.methods({
 
         var frequencies = {
           daily: function () {
-            return diffDates(shiftTime, jobStarts, 'days');
+            return diffDates(shiftTime, jobStarts, 'date');
           },
           weekly: function () {
-            return diffDates(shiftTime, jobStarts, 'weeks');
+            return diffDates(shiftTime, jobStarts, 'week');
           },
           everyXWeeks: function () {
-            return Math.floor(diffDates(shiftTime, jobStarts, 'weeks')) / job.repeatEvery;
+            return Math.floor(diffDates(shiftTime, jobStarts, 'week')) / job.repeatEvery;
           }
         };
 
@@ -56,6 +49,28 @@ Meteor.methods({
     };
 
     /**
+     * Checks if the job can be placed for current date
+     * @param {Object} job - job to check
+     * @param {Date} date - date object for interested date
+     * @returns {boolean}
+     */
+    var isJobActiveToday = function (job, date) {
+      if (job.frequency === 'weekly') {
+        // check if the repeating weekday is equal to the shift date
+        var shiftWeekday = moment(date).format('ddd');
+        if (job.repeatOn.indexOf(shiftWeekday) === -1) {
+          return false;
+        }
+      } else if (job.frequency === 'everyXWeeks') {
+        // check if the repeating week is equal to the shift date
+        if (diffDates(date, job.startsOn, 'week') % job.repeatEvery !== 0) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    /**
      * Set job year, month and day to the shift time
      * @param {Date} oldTime - job date
      * @param {Date} newTime - shiftDate
@@ -66,85 +81,102 @@ Meteor.methods({
       var adjustTime = moment(oldTime);
       adjustTime.year(newTime.year());
       adjustTime.month(newTime.month());
-      adjustTime.day(newTime.day());
+      adjustTime.date(newTime.date());
 
       return adjustTime;
     };
 
+    /**
+     * Checks if another job are already placed in this time interval
+     * @param {Date|moment} jobStartTime
+     * @param {Date|moment} jobEndTime
+     * @returns {boolean}
+     */
+    var anotherJobExistsAtThisTime = function (jobStartTime, jobEndTime) {
+      var jobStartEndInterval = TimeRangeQueryBuilder.forInterval(jobStartTime, jobEndTime);
+      return !!CalendarEvents.findOne({
+        $or: [
+          {startTime: jobStartEndInterval},
+          {endTime: jobStartEndInterval}
+        ]
+      });
+    };
 
-    if (_.keys(usersAndShifts).length) {
 
-      _.each(usersAndShifts, function (shifts, userId) {
-        shifts.forEach(function (shift) {
+    // Code starts here
+    if (shift.section && shift.assignedTo) {
+      var shiftTime = shift.startTime;
+      var userId = shift.assignedTo;
+      var locationId = shift.relations.locationId;
 
-          if (shift.section) {
-            var shiftTime = shift.startTime;
+      var defaultEventObject = {
+        type: 'recurring job',
+        userId: userId,
+        shiftId: shift._id,
+        locationId: locationId
+      };
 
-            var defaultEventObject = {
-              type: 'recurring job',
-              userId: userId,
-              date: shiftTime,
-              locationId: shift.relations.locationId
-            };
+      // Remove existed recurring job event for current shift.
+      // Need to ensure that inserted event will have the last
+      // version of job item and shift information
+      CalendarEvents.remove({
+        shiftId: shift._id,
+        type: 'recurring job'
+      });
 
-            /**
-             * Find already placed job IDs in the calendar
-             * @type {Array}
-             */
-            var placedJobIds = CalendarEvents.find({
-              userId: userId,
-              date: TimeRangeQueryBuilder.forDay(shiftTime, shift.relations.locationId),
-              type: 'recurring job'
-            }).map(function (event) {
-              return event.itemId;
-            });
+      // find all placed jobs for other users
+      var placedJobs = CalendarEvents.find({
+        startTime: TimeRangeQueryBuilder.forDay(shiftTime, locationId),
+        type: 'recurring job'
+      }).map(function (event) {
+        return event.itemId;
+      });
 
-            // find not placed jobs in current shift section
-            JobItems.find({
-              _id: { $nin: placedJobIds },
-              startsOn: {
-                $lte: shiftTime
-              },
-              $or: [
-                {'endsOn.on': 'endsNever'},
-                {'endsOn.lastDate': { $gte: shiftTime }}
-              ],
-              section: shift.section
-            }).forEach(function (job) {
-              // check if the job is already ended
-              if (isJobEnded(job, shiftTime)) {
-                return false;
-              } else {
-                var shiftMoment = moment(shiftTime);
+      var notPlacedJobs = JobItems.find({
+        _id: {
+          $nin: placedJobs
+        },
+        startsOn: {
+          $lte: shiftTime
+        },
+        $or: [
+          {'endsOn.on': 'endsNever'},
+          {'endsOn.lastDate': {$gte: shiftTime}}
+        ],
+        section: shift.section
+      });
 
-                if (job.frequency === 'weekly') {
-                  // check if the repeating weekday is equal to the shift date
-                  var shiftWeekday = moment(shiftMoment).format('ddd');
-                  if (job.repeatOn.indexOf(shiftWeekday) > -1) {
-                    return false;
-                  }
-                } else if (job.frequency === 'everyXWeeks') {
-                  // check if the repeating week is equal to the shift date
-                  if (diffDates(shiftMoment, job.startsOn, 'weeks') % job.repeatEvery !== 0) {
-                    return false;
-                  }
-                }
-
-                var jobStartTime = adjustJobTime(job.repeatAt, shiftTime);
-
-                var jobEventObject = _.extend({
-                  itemId: job._id,
-                  startTime: jobStartTime.toDate(),
-                  endTime: moment(jobStartTime).add(job.activeTime, 'seconds').toDate()
-                }, defaultEventObject);
-
-                // add the job to the user's calendar
-                Meteor.call('addCalendarEvent', jobEventObject);
-              }
-            });
+      // Place found jobs into the calendar
+      notPlacedJobs.forEach(function (job) {
+        if (isJobEnded(job, shiftTime)) {
+          return false;
+        } else {
+          if (!isJobActiveToday(job, shiftTime)) {
+            return false;
           }
-        });
-      })
+
+          var jobStartTime = adjustJobTime(job.repeatAt, shiftTime);
+          var jobEndTime = moment(jobStartTime).add(job.activeTime, 'seconds');
+
+          // check if the job start time is less than shift start time
+          // and the job end time grater than shift end time
+          if (jobStartTime.isBefore(shiftTime) || jobEndTime.isAfter(shift.endTime)) {
+            return false;
+          }
+
+          if (anotherJobExistsAtThisTime(jobStartTime, jobEndTime)) {
+            return false;
+          }
+
+          var jobEventObject = _.extend({
+            itemId: job._id,
+            startTime: jobStartTime.toDate(),
+            endTime: jobEndTime.toDate()
+          }, defaultEventObject);
+
+          Meteor.call('addCalendarEvent', jobEventObject);
+        }
+      });
     }
   },
 
@@ -162,7 +194,7 @@ Meteor.methods({
   editCalendarEvent: function (eventObject) {
     check(eventObject, HospoHero.checkers.CalendarEventDocument);
 
-    if (!HospoHero.canUser('edit calendar', Meteor.userId())) {
+    if (!HospoHero.canUser('view calendar', Meteor.userId())) {
       logger.error("User not permitted to edit calendar items");
       throw new Meteor.Error(403, "User not permitted to edit calendar items");
     } else {
