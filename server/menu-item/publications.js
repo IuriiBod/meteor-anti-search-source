@@ -101,8 +101,6 @@ AntiSearchSource.queryTransform('menuItems', function (userId, query) {
 
 Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, status) {
   if (this.userId) {
-    var observer;
-
     var query = {
       'relations.areaId': areaId,
         weeklyRanks: {
@@ -118,8 +116,12 @@ Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, s
 
     var transform = function (menuItem) {
       var analyzedMenuItem = HospoHero.analyze.menuItem(menuItem);
-      var itemDailySales = DailySales.find({date: dailySalesDate, menuItemId: menuItem._id, actualQuantity: {$exists: true}});
-
+      var itemDailySales = DailySales.find({
+        date: dailySalesDate, 
+        menuItemId: menuItem._id, 
+        actualQuantity: {$exists: true}
+      });
+      
       if (itemDailySales.count()) {
         var totalItemSalesQuantity = 0;
         itemDailySales.forEach(function (item) {
@@ -137,7 +139,7 @@ Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, s
 
     var self = this;
 
-    observer = MenuItems.find(query).observe({
+    var observer = MenuItems.find(query).observe({
       added: function (menuItem) {
         self.added('menuItems', menuItem._id, transform(menuItem));
       },

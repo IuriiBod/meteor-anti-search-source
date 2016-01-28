@@ -20,12 +20,13 @@ Router.route('menuItemsRankReport', {
   path: '/rank/:category/:rangeType/:startDate/:endDate?',
   template: 'menuListRankReport',
   waitOn: function () {
-    var dateInterval;
+    let dateInterval;
     if (this.params.endDate) {
       dateInterval = TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate);
     } else {
       dateInterval = TimeRangeQueryBuilder.forDay(this.params.startDate);
     }
+
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allCategories', currentAreaId),
