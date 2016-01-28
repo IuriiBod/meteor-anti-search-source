@@ -10,9 +10,9 @@
                 {{#each reports}}
                   <thead>
                   <tr>
-                    <th>{{firstStockTake.date}}</th>
+                    <th>{{firstStocktake.date}}</th>
                     <th>Total $ of orders received</th>
-                    <th>{{secondStockTake.date}}</th>
+                    <th>{{secondStocktake.date}}</th>
                     <th colspan="2">Expected Cost of Goods</th>
                     <th colspan="2">Actual Cost of Goods</th>
                     <th colspan="2">Difference</th>
@@ -20,9 +20,9 @@
                   </thead>
                   <tbody>
                   <tr>
-                    <td>{{firstStockTake.total}}</td>
+                    <td>{{firstStocktake.total}}</td>
                     <td>{{totalOrdersReceived}}</td>
-                    <td>{{secondStockTake.total}}</td>
+                    <td>{{secondStocktake.total}}</td>
                     <td>$ {{costOfGoods.expected.amount}}</td>
                     <td>{{costOfGoods.expected.ratio}} %</td>
                     <td>$ {{costOfGoods.actual.amount}}</td>

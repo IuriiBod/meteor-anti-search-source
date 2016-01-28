@@ -1,16 +1,24 @@
 StocktakesReporter = class {
-  constructor(firstStockTake, secondStockTake) {
-    console.log(firstStockTake, secondStockTake);
+  constructor(firstStocktakeGroup, secondStocktakeGroup) {
+    this.firstStocktakeGroup = firstStocktakeGroup;
+    this.secondStocktakeGroup = secondStocktakeGroup;
   }
+
+  static getLastNStocktakes(count) {
+    let rawStocktakes = Stocktakes.find({}, {sort: {date: -1}}).fetch();
+    let groupedStocktakes = _.groupBy(rawStocktakes, 'version');
+    let stockTakesGroupsKeys = _.keys(groupedStocktakes).slice(0, count);
+    return _.map(stockTakesGroupsKeys, (key) => groupedStocktakes[key]);
+  };
 
   getReport() {
     return {
-      firstStockTake: {
-        date: '17.01.2016',
+      firstStocktake: {
+        date: moment.unix(this.firstStocktakeGroup[0].date / 1000).format('DD-MM-YYYY'),
         total: 3000
       },
-      secondStockTake: {
-        date: '24.01.2016',
+      secondStocktake: {
+        date: moment.unix(this.secondStocktakeGroup[0].date / 1000).format('DD-MM-YYYY'),
         total: 2000
       },
       totalOrdersReceived: 500,
