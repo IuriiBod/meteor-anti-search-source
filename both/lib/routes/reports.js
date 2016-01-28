@@ -20,7 +20,13 @@ Router.route('menuItemsRankReport', {
   path: '/rank/:category/:rangeType/:startDate/:endDate?',
   template: 'menuListRankReport',
   waitOn: function () {
-    var dateInterval = this.params.endDate ? TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate) : TimeRangeQueryBuilder.forDay(this.params.startDate);
+    let dateInterval;
+    if (this.params.endDate) {
+      dateInterval = TimeRangeQueryBuilder.forInterval(this.params.startDate, this.params.endDate);
+    } else {
+      dateInterval = TimeRangeQueryBuilder.forDay(this.params.startDate);
+    }
+
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allCategories', currentAreaId),
