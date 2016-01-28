@@ -5,26 +5,20 @@ StocktakesReporter = class {
   }
 
   getReport() {
+    let firstStocktakeDate = moment.unix(this.firstStocktakeGroup[0].date / 1000).format('DD-MM-YYYY');
+    let secondStocktakeDate = moment.unix(this.secondStocktakeGroup[0].date / 1000).format('DD-MM-YYYY');
+
     return {
       firstStocktake: {
-        date: moment.unix(this.firstStocktakeGroup[0].date / 1000).format('DD-MM-YYYY'),
+        date: firstStocktakeDate,
         total: 3000
       },
       secondStocktake: {
-        date: moment.unix(this.secondStocktakeGroup[0].date / 1000).format('DD-MM-YYYY'),
+        date: secondStocktakeDate,
         total: 2000
       },
       totalOrdersReceived: 500,
-      costOfGoods: {
-        expected: {
-          amount: 1203,
-          ratio: 31.83
-        },
-        actual: {
-          amount: 1000,
-          ratio: 26.46
-        }
-      },
+      costOfGoods: new CostOfGoodsReporter(firstStocktakeDate, secondStocktakeDate).getReport(),
       difference: {
         amount: -203,
         ratio: -5.37
