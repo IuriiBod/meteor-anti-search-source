@@ -6,23 +6,23 @@ Template.addJobItem.onCreated(function () {
     searchMode: 'local',
     limit: 10
   });
-
-  var self = this;
-  this.autorun(function () {
-    var query = {_id: {$nin: Template.currentData().idsToExclude()}, status: 'active'};
-    console.log({query: query});
-    self.jobItemsSearch.setMongoQuery(query);
-  });
+  this.idsToExclude = new ReactiveVar(this.data.idsToExclude);
 });
 
 Template.addJobItem.helpers({
   availableJobItems: function () {
+    var tmpl = Template.instance();
+    var query = {_id: {$nin: tmpl.idsToExclude.get()}, status: 'active'};
+    tmpl.jobItemsSearch.setMongoQuery(query);
     return Template.instance().jobItemsSearch.searchResult({sort: {name: 1}});
   },
 
   onJobItemSelect: function () {
     var tmpl = Template.instance();
     return function (jobItemId) {
+      var idsToExclude = tmpl.idsToExclude.get();
+      idsToExclude.push(jobItemId);
+      tmpl.idsToExclude.set(idsToExclude);
       tmpl.data.onItemsAdded(jobItemId);
     }
   }

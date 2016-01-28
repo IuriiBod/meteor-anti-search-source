@@ -40,10 +40,7 @@ Template.menuItemJobsList.helpers({
 
 Template.menuItemJobsList.events({
   'click .add-job-item-button': function(event, tmpl) {
-    var idsToExclude = function() {
-      return _.pluck(tmpl.jobItems, '_id');
-    };
-
+    var idsToExclude = _.pluck(tmpl.data.jobItems, '_id');
     var onItemsAdded = function(jobItemId) {
         tmpl.onJobItemUpdate('add', jobItemId);
     };
