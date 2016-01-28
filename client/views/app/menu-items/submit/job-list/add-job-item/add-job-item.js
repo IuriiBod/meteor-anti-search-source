@@ -7,12 +7,10 @@ Template.addJobItem.onCreated(function () {
     limit: 10
   });
 
-  console.log(Template.currentData().idsToExclude());
-
   var self = this;
   this.autorun(function () {
-    //var query = {_id: {$nin: Template.currentData().idsToExclude()}, status: 'active'};
-    var query = {status: 'active'};
+    var query = {_id: {$nin: Template.currentData().idsToExclude()}, status: 'active'};
+    console.log({query: query});
     self.jobItemsSearch.setMongoQuery(query);
   });
 });

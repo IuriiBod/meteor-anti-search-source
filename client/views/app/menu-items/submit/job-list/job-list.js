@@ -40,16 +40,17 @@ Template.menuItemJobsList.helpers({
 
 Template.menuItemJobsList.events({
   'click .add-job-item-button': function(event, tmpl) {
+    var idsToExclude = function() {
+      return _.pluck(tmpl.jobItems, '_id');
+    };
+
+    var onItemsAdded = function(jobItemId) {
+        tmpl.onJobItemUpdate('add', jobItemId);
+    };
 
     FlyoutManager.open('addJobItem', {
-      idsToExclude: function() {
-        return _.pluck(tmpl.jobItems, '_id');
-      },
-      onItemsAdded: function () {
-        return function (jobItemId) {
-          tmpl.onJobItemUpdate('add', jobItemId);
-        };
-      }
+      idsToExclude: idsToExclude,
+      onItemsAdded: onItemsAdded
     });
   }
 });
