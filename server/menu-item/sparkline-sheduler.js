@@ -6,12 +6,15 @@ var menuItemsStatsInCurrentArea = function (areaId) {
 
   MenuItems.find({status: {$ne: 'archived'}, 'relations.areaId': areaId}).forEach(function (menuItem) {
     var result = HospoHero.analyze.menuItem(menuItem);
-    var totalItemSalesQuantity = 0;
 
-    var itemDailySales = DailySales.find({date: dateInterval, menuItemId: menuItem._id, actualQuantity: {$exists: true}});
+    var itemDailySales = DailySales.find({
+      date: dateInterval,
+      menuItemId: menuItem._id,
+      actualQuantity: {$exists: true}
+    });
 
     if (itemDailySales.count()) {
-
+      var totalItemSalesQuantity = 0;
       itemDailySales.forEach(function (item) {
         totalItemSalesQuantity += item.actualQuantity;
       });
