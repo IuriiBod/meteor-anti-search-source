@@ -25,7 +25,8 @@ Template.stockReport.helpers({
       stocktakeList.push({
         _id: versionId,
         date: stocktakesGroup[0].date,
-        totalStockValue: getTotalStockValue(stocktakesGroup)
+        totalStockValue: getTotalStockValue(stocktakesGroup),
+        expectedCostOfGoods: Math.random() * 50
       });
     });
 

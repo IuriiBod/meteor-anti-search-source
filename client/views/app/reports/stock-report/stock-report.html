@@ -11,6 +11,7 @@
               <tr>
                 {{#each stocktakes}}
                   <th>Stocktake Total {{dateFormat this.date}}</th>
+                  <th>Expected COGS</th>
                 {{/each}}
               </tr>
             {{else}}
@@ -22,6 +23,7 @@
               <tr>
                 {{#each stocktakes}}
                   <td>${{roundCount this.totalStockValue}}</td>
+                  <td>${{roundCount this.expectedCostOfGoods}}</td>
                 {{/each}}
               </tr>
               </tbody>

@@ -69,6 +69,7 @@ Namespace('HospoHero.analyze', {
     };
 
     result.contribution = round(result.salesPrice - result.prepCost - result.ingCost - result.tax);
+    result.costOfGoods = round(result.ingCost + result.prepCost);
 
     return result;
   },
