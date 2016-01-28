@@ -19,7 +19,7 @@ Template.menuItemJobsList.onCreated(function () {
         return jobItem;
       });
     } else if (action === 'remove') {
-      jobItemsList = _.filter(stockItems, function (jobItem) {
+      jobItemsList = _.filter(jobItemsList, function (jobItem) {
         return jobItem._id !== jobItemId;
       });
     }
