@@ -1,11 +1,11 @@
 Template.eventRecurringJob.onCreated(function () {
-  var self = this;
+  var eventItem = this.data.eventObject.item;
   this.job = function () {
-    var jobId = self.data.eventObject.item.itemId;
+    var jobId = eventItem.itemId;
     return JobItems.findOne({_id: jobId});
   };
 
-  this.checkedItems = new ReactiveVar(self.data.eventObject.item.doneCheckListItems || []);
+  this.checkedItems = new ReactiveVar(eventItem.doneCheckListItems || []);
 });
 
 Template.eventRecurringJob.helpers({

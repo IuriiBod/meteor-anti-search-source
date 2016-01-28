@@ -51,19 +51,19 @@ Meteor.methods({
     /**
      * Checks if the job can be placed for current date
      * @param {Object} job - job to check
-     * @param {moment} dateMoment - moment object for interested date
+     * @param {Date} date - date object for interested date
      * @returns {boolean}
      */
-    var isJobActiveToday = function (job, dateMoment) {
+    var isJobActiveToday = function (job, date) {
       if (job.frequency === 'weekly') {
         // check if the repeating weekday is equal to the shift date
-        var shiftWeekday = moment(dateMoment).format('ddd');
+        var shiftWeekday = moment(date).format('ddd');
         if (job.repeatOn.indexOf(shiftWeekday) === -1) {
           return false;
         }
       } else if (job.frequency === 'everyXWeeks') {
         // check if the repeating week is equal to the shift date
-        if (diffDates(dateMoment, job.startsOn, 'week') % job.repeatEvery !== 0) {
+        if (diffDates(date, job.startsOn, 'week') % job.repeatEvery !== 0) {
           return false;
         }
       }
@@ -86,6 +86,12 @@ Meteor.methods({
       return adjustTime;
     };
 
+    /**
+     * Checks if another job are already placed in this time interval
+     * @param {Date|moment} jobStartTime
+     * @param {Date|moment} jobEndTime
+     * @returns {boolean}
+     */
     var anotherJobExistsAtThisTime = function (jobStartTime, jobEndTime) {
       var jobStartEndInterval = TimeRangeQueryBuilder.forInterval(jobStartTime, jobEndTime);
       return !!CalendarEvents.findOne({
@@ -97,6 +103,7 @@ Meteor.methods({
     };
 
 
+    // Code starts here
     if (shift.section && shift.assignedTo) {
       var shiftTime = shift.startTime;
       var userId = shift.assignedTo;
@@ -109,7 +116,9 @@ Meteor.methods({
         locationId: locationId
       };
 
-      //// remove existed recurring job event for current shift
+      // Remove existed recurring job event for current shift.
+      // Need to ensure that inserted event will have the last
+      // version of job item and shift information
       CalendarEvents.remove({
         shiftId: shift._id,
         type: 'recurring job'
@@ -142,9 +151,7 @@ Meteor.methods({
         if (isJobEnded(job, shiftTime)) {
           return false;
         } else {
-          var shiftMoment = moment(shiftTime);
-
-          if (!isJobActiveToday(job, shiftMoment)) {
+          if (!isJobActiveToday(job, shiftTime)) {
             return false;
           }
 
@@ -153,7 +160,7 @@ Meteor.methods({
 
           // check if the job start time is less than shift start time
           // and the job end time grater than shift end time
-          if (jobStartTime.isBefore(shiftMoment) || jobEndTime.isAfter(shift.endTime)) {
+          if (jobStartTime.isBefore(shiftTime) || jobEndTime.isAfter(shift.endTime)) {
             return false;
           }
 
