@@ -286,32 +286,28 @@ Namespace('HospoHero.misc', {
     var relations = user && user.relations;
 
     if (relations && relations.organizationIds) {
-      var allowedSharingTypes = ['area', 'location'];
-      var allowedSharingIds = _.union(userId, relations.organizationIds);
+      var sharingObject = {
+        'private': [userId],
+        organization: relations.organizationIds
+      };
 
       if (relations.locationIds) {
-        allowedSharingIds = _.union(allowedSharingIds, relations.locationIds);
+        sharingObject.location = relations.locationIds;
       }
       if (relations.areaIds) {
-        allowedSharingIds = _.union(allowedSharingIds, relations.areaIds);
+        sharingObject.area = relations.areaIds;
       }
-      return {
-        $or: [
-          {
-            'sharing.type': {
-              $in: allowedSharingTypes
-            }
-          },
-          {
-            'sharing.id': {
-              $in: allowedSharingIds
-            }
-          },
-          {
-            assignedTo: userId
+
+      var or = _.map(sharingObject, function (value, key) {
+        return {
+          'sharing.type': key,
+          'sharing.id': {
+            $in: value
           }
-        ]
-      };
+        }
+      });
+
+      return {$or: or};
     } else {
       return {};
     }

@@ -1,5 +1,5 @@
 <template name="taskItem">
-  <tr class="edit-task">
+  <tr class="{{#if canEditTask}}edit-task{{/if}}">
     <td class="check-mail">
       {{#if canDoneTask}}
         <input type="checkbox" class="task-checkbox" {{checkboxAttr}} />
@@ -18,7 +18,9 @@
     </td>
 
     <td class="mail-subject">
-      <span class="label label-warning pull-right hidden-xs">{{taskDuration}}</span>
+      {{#if taskDuration}}
+        <span class="label label-warning pull-right hidden-xs">{{taskDuration}}</span>
+      {{/if}}
     </td>
 
     <td>
@@ -47,7 +49,7 @@
 
   <tr class="collapse" id="comments-{{task._id}}">
     <td colspan="7">
-        {{> commentsPanel id=task._id type='taskItem'}}
+      {{> commentsPanel id=task._id type='taskItem'}}
     </td>
   </tr>
 </template>
