@@ -1,11 +1,12 @@
 CostOfGoodsReporter = class {
   /**
-   * @param {string} fromDate DD-MM-YYYY
-   * @param {string} toDate DD-MM-YYYY
+   * @param {string} fromDate DD/MM/YY
+   * @param {string} toDate DD/MM/YY
    */
   constructor(fromDate, toDate) {
     this.fromDate = fromDate;
     this.toDate = toDate;
+    this.dateQuery = TimeRangeQueryBuilder.forInterval(moment(fromDate, 'DD/MM/YY'), moment(toDate, 'DD/MM/YY'))
   }
 
   getReport() {
