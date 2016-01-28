@@ -1,32 +1,40 @@
 Template.menuItemInstructions.onCreated(function () {
   this.set('isEditMode', false);
+  this.instructionsSaved = new ReactiveVar(false);
+  this.timeout = new ReactiveVar(null);
 });
-
 
 Template.menuItemInstructions.helpers({
   instructionsStr: function () {
     return this.instructions || "Add instructions here";
+  },
+
+  isInstructionSaved() {
+    return Template.instance().instructionsSaved.get();
   }
 });
 
 
 Template.menuItemInstructions.events({
-  'click .edit-save-button': function (event, tmpl) {
+  'click .edit-close-button': function (event, tmpl) {
     event.preventDefault();
-    var isEditMode = tmpl.get('isEditMode');
+    tmpl.set('isEditMode', !tmpl.get('isEditMode'));
+  },
 
-    var toggleEditMode = function () {
-      tmpl.set('isEditMode', !isEditMode);
-    };
-
-    if (isEditMode) {
+  'keyup .note-editor': function(event, tmpl) {
+    event.preventDefault();
+    let saveChanges = function () {
       var menuItem = MenuItems.findOne({_id: tmpl.data._id});
       menuItem.instructions = tmpl.$('.summernote').summernote('code');
       Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult(function () {
-        toggleEditMode();
+        console.log('it saved');
       }));
+    };
+    if (tmpl.timeout.get()) {
+      Meteor.clearTimeout(tmpl.timeout.get());
+      tmpl.timeout.set(Meteor.setTimeout(saveChanges, 3000));
     } else {
-      toggleEditMode();
+      tmpl.timeout.set(Meteor.setTimeout(saveChanges, 3000));
     }
   }
 });
