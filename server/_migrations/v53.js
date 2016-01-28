@@ -6,14 +6,16 @@ Migrations.add({
       var menuItemsStats = [];
       MenuItems.find({status: {$ne: 'archived'}, 'relations.areaId': areaId}).forEach(function (menuItem) {
         var result = HospoHero.analyze.menuItem(menuItem);
-        var totalItemSalesQuantity = 0;
 
         var itemDailySales = DailySales.find({date: dateInterval, menuItemId: menuItem._id, actualQuantity: {$exists: true}});
 
-        itemDailySales.forEach(function (item) {
-          totalItemSalesQuantity += item.actualQuantity;
-        });
         if (itemDailySales.count()) {
+          var totalItemSalesQuantity = 0;
+
+          itemDailySales.forEach(function (item) {
+            totalItemSalesQuantity += item.actualQuantity;
+          });
+
           var totalContribution = _.extend({}, {
             menuItemId: menuItem._id,
             totalContribution: HospoHero.misc.rounding(result.contribution * totalItemSalesQuantity)

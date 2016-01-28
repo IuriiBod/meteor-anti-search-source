@@ -111,7 +111,7 @@ var menuEntries = [
         }
       },
       {
-        title: 'Menu Items Rank <span class="label label-info pull-right">NEW</span>',
+        title: 'Menu Rank <span class="label label-info pull-right">NEW</span>',
         route: 'menuItemsRankReport',
         params: function () {
           return {
