@@ -1,6 +1,4 @@
 Template.stocksList.onCreated(function () {
-  this.showAddStockItemMenu = new ReactiveVar(false);
-
   this.searchSource = this.AntiSearchSource({
     collection: 'ingredients',
     fields: ['code', 'description'],
@@ -28,9 +26,6 @@ Template.stocksList.helpers({
       }
     });
   },
-  showAddStockItemMenu: function () {
-    return Template.instance().showAddStockItemMenu.get();
-  },
   onAddStockItem: function () {
     var tmplParentData = Template.parentData();
     if (tmplParentData && tmplParentData.modalStockListParams) {
@@ -43,16 +38,6 @@ Template.stocksList.events({
   'click .add-new-ingredient': function () {
     FlyoutManager.open('ingredientEditor', {ingredient: null});
   },
-
-  //event for submitIngredient template
-  'click .submit-ingredient-button': function (e, tmpl) {
-    tmpl.showAddStockItemMenu.set(false);
-  },
-  'click .ingredient-editor-cancel': function (e, tmpl) {
-    e.preventDefault();
-    tmpl.showAddStockItemMenu.set(false);
-  },
-
   'keyup .search-for-stocks-input': _.throttle(function (e, tmpl) {
     var value = $(e.target).val();
     tmpl.searchSource.search(value);
