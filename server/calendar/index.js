@@ -8,7 +8,7 @@ Meteor.methods({
      * Returns different between two moments
      * @param {Date|moment} firstDate - date or moment
      * @param {Date|moment} secondDate - date or moment
-     * @param {String} dateUnits - the date units to count difference (date, week...)
+     * @param {String} dateUnits - the date units to count difference (date, week~...)
      * @returns {number}
      */
     var diffDates = function (firstDate, secondDate, dateUnits) {
