@@ -12,13 +12,45 @@ CostOfGoodsReporter = class {
   getReport() {
     return {
       expected: {
-        amount: 1203.00,
-        ration: 31.83
+        amount: this._getTotalExpectedCost(),
+        ratio: this._getTotalExpectedRation()
       },
       actual: {
         amount: 1000,
         ratio: 26.46
       }
     }
+  }
+
+  _getTotalExpectedCost() {
+    return _.chain(this._getMenuItems())
+      .map((menuItem) => {
+        return this._getExpectedCostForMenuItem(menuItem);
+      })
+      .reduce((memo, value) => memo + value, 0)
+      .value();
+  }
+
+  _getTotalExpectedRation() {
+    return 31.83;
+  }
+
+  _getExpectedCostForMenuItem(menuItem) {
+    return menuItem.soldAmount * (menuItem.totalIngredientCost + menuItem.totalPreparationCost);
+  }
+
+  _getMenuItems() {
+    return [
+      {
+        soldAmount: 100,
+        totalIngredientCost: 3.44,
+        totalPreparationCost: 2.87
+      },
+      {
+        soldAmount: 100,
+        totalIngredientCost: 3.22,
+        totalPreparationCost: 2.5
+      }
+    ]
   }
 };
