@@ -1,12 +1,18 @@
 StocktakesReporter = class {
-  constructor(...stocktakes) {
-    console.log(stocktakes);
+  constructor(firstStockTake, secondStockTake) {
+    console.log(firstStockTake, secondStockTake);
   }
 
   getReport() {
     return {
-      firstDate: '17.01.2016',
-      secondDate: '24.01.2016',
+      firstStockTake: {
+        date: '17.01.2016',
+        total: 3000
+      },
+      secondStockTake: {
+        date: '24.01.2016',
+        total: 2000
+      },
       totalOrdersReceived: 500,
       costOfGoods: {
         expected: {

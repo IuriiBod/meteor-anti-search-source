@@ -1,37 +1,46 @@
 <template name="stockReport">
   {{> pageHeading title="Stock Reports" category="Stock" name="stocktake"}}
-
-  <div class="col-lg-12">
-    <div class="ibox ">
-      <div class="ibox-content">
-        <div class="table-responsive">
-          <table class="table table-condensed table-hover table-striped">
-            <thead>
-            {{#if stocktakes}}
-              <tr>
-                {{#each stocktakes}}
-                  <th>Stocktake Total {{dateFormat this.date}}</th>
-                  <th>Expected COGS</th>
+  <div class="wrapper wrapper-content animated">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox ">
+          <div class="ibox-content">
+            <div class="table-responsive">
+              <table class="table table-condensed table-hover table-striped">
+                {{#each reports}}
+                  <thead>
+                  <tr>
+                    <th>{{firstStockTake.date}}</th>
+                    <th>Total $ of orders received</th>
+                    <th>{{secondStockTake.date}}</th>
+                    <th colspan="2">Expected Cost of Goods</th>
+                    <th colspan="2">Actual Cost of Goods</th>
+                    <th colspan="2">Difference</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>{{firstStockTake.total}}</td>
+                    <td>{{totalOrdersReceived}}</td>
+                    <td>{{secondStockTake.total}}</td>
+                    <td>$ {{costOfGoods.expected.amount}}</td>
+                    <td>{{costOfGoods.expected.ratio}} %</td>
+                    <td>$ {{costOfGoods.actual.amount}}</td>
+                    <td>{{costOfGoods.actual.ratio}} %</td>
+                    <td>$ {{difference.amount}}</td>
+                    <td>{{difference.ratio}} %</td>
+                  </tr>
+                  </tbody>
                 {{/each}}
-              </tr>
-            {{else}}
-              No history
-            {{/if}}
-            </thead>
-            {{#if stocktakes}}
-              <tbody>
-              <tr>
-                {{#each stocktakes}}
-                  <td>${{roundCount this.totalStockValue}}</td>
-                  <td>${{roundCount this.expectedCostOfGoods}}</td>
-                {{/each}}
-              </tr>
-              </tbody>
-            {{else}}
-              No history
-            {{/if}}
-          </table>
+              </table>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="load-more-button-wrapper">
+        <button id="load-stocktake-report" class="btn btn-white center-block" type="button">Load more</button>
       </div>
     </div>
   </div>

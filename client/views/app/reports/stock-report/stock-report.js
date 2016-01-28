@@ -1,35 +1,15 @@
+Template.stockReport.onCreated(function () {
+  this.reportsCount = new ReactiveVar(1);
+});
+
 Template.stockReport.helpers({
-  stocktakes: function () {
-    let getTotalStockValue = (stocktakesGroup) => {
-      return _.reduce(stocktakesGroup, (memo, stocktake) => {
-        return memo + (stocktake.counting * stocktake.unitCost);
-      }, 0);
-    };
+  reports: function () {
+    return ReactiveMethod.call('getStocktakesReport', Template.instance().reportsCount.get());
+  }
+});
 
-    var stocktakeList = [];
-    var stocktakes = Stocktakes.find({}, {
-      fields: {
-        date: 1,
-        counting: 1,
-        unitCost: 1,
-        version: 1
-      },
-      sort: {date: -1}
-    }).fetch();
-
-    var stocktakesGroupedByVersionId = _.groupBy(stocktakes, 'version');
-
-    _.keys(stocktakesGroupedByVersionId).forEach((versionId) => {
-      let stocktakesGroup = stocktakesGroupedByVersionId[versionId];
-
-      stocktakeList.push({
-        _id: versionId,
-        date: stocktakesGroup[0].date,
-        totalStockValue: getTotalStockValue(stocktakesGroup),
-        expectedCostOfGoods: Math.random() * 50
-      });
-    });
-
-    return stocktakeList;
+Template.stockReport.events({
+  'click #load-stocktake-report': function (event, tmpl) {
+    tmpl.reportsCount.set(tmpl.reportsCount.get() + 1);
   }
 });
