@@ -8,11 +8,11 @@ Meteor.methods({
      * Returns different between two moments
      * @param {Date|moment} firstDate - date or moment
      * @param {Date|moment} secondDate - date or moment
-     * @param {String} dateUnits - the date units to count difference (days, weeks...)
+     * @param {String} dateUnits - the date units to count difference (date, week...)
      * @returns {number}
      */
     var diffDates = function (firstDate, secondDate, dateUnits) {
-      return Math.abs(moment(firstDate).diff(moment(secondDate), dateUnits));
+      return Math.abs(moment(firstDate)[dateUnits]() - moment(secondDate)[dateUnits]());
     };
 
     /**
@@ -28,13 +28,13 @@ Meteor.methods({
 
         var frequencies = {
           daily: function () {
-            return diffDates(shiftTime, jobStarts, 'days');
+            return diffDates(shiftTime, jobStarts, 'date');
           },
           weekly: function () {
-            return diffDates(shiftTime, jobStarts, 'weeks');
+            return diffDates(shiftTime, jobStarts, 'week');
           },
           everyXWeeks: function () {
-            return Math.floor(diffDates(shiftTime, jobStarts, 'weeks')) / job.repeatEvery;
+            return Math.floor(diffDates(shiftTime, jobStarts, 'week')) / job.repeatEvery;
           }
         };
 
@@ -63,7 +63,7 @@ Meteor.methods({
         }
       } else if (job.frequency === 'everyXWeeks') {
         // check if the repeating week is equal to the shift date
-        if (diffDates(dateMoment, job.startsOn, 'weeks') % job.repeatEvery !== 0) {
+        if (diffDates(dateMoment, job.startsOn, 'week') % job.repeatEvery !== 0) {
           return false;
         }
       }
@@ -110,10 +110,10 @@ Meteor.methods({
       };
 
       //// remove existed recurring job event for current shift
-      //CalendarEvents.remove({
-      //  shiftId: shift._id,
-      //  type: 'recurring job'
-      //});
+      CalendarEvents.remove({
+        shiftId: shift._id,
+        type: 'recurring job'
+      });
 
       // find all placed jobs for other users
       var placedJobs = CalendarEvents.find({
