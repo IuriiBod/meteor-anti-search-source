@@ -4,13 +4,6 @@ StocktakesReporter = class {
     this.secondStocktakeGroup = secondStocktakeGroup;
   }
 
-  static getLastNStocktakes(count) {
-    let rawStocktakes = Stocktakes.find({}, {sort: {date: -1}}).fetch();
-    let groupedStocktakes = _.groupBy(rawStocktakes, 'version');
-    let stockTakesGroupsKeys = _.keys(groupedStocktakes).slice(0, count);
-    return _.map(stockTakesGroupsKeys, (key) => groupedStocktakes[key]);
-  };
-
   getReport() {
     return {
       firstStocktake: {
