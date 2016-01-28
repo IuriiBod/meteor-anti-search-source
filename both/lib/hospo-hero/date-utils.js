@@ -204,7 +204,29 @@ Namespace('HospoHero.dateUtils', {
     return seasons[parseInt(month) - 1];
   },
 
-  humanizeTimeDuration: function (duration) {
-    moment.duration(duration, 'hours').humanize();
+  /**
+   * * Converts the duration to the hours and minutes string
+   * e.g. duration = 65, result will be 1h 5m
+   * @param {number} duration - time duration
+   * @param {string|'minutes'} timeUnit - the unit of duration measure (minutes, hours, ...)
+   * @returns {string}
+   */
+  humanizeTimeDuration: function (duration, timeUnit) {
+    timeUnit = timeUnit || 'minutes';
+    duration = moment.duration(duration, timeUnit);
+
+    var durationResult = [];
+    var hours = duration.hours();
+    var minutes = duration.minutes();
+
+    if (hours > 0) {
+      durationResult.push(hours + 'h');
+    }
+
+    if (minutes > 0) {
+      durationResult.push(minutes + 'm');
+    }
+
+    return durationResult.length ? durationResult.join(' ') : '0m';
   }
 });

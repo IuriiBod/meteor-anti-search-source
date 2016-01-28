@@ -39,8 +39,12 @@ Template.taskItem.helpers({
     return this.task.assignedTo.indexOf(userId) > -1;
   },
 
+  canEditTask: function () {
+    return this.task.createdBy === Meteor.userId();
+  },
+
   taskDuration: function () {
-    return HospoHero.dateUtils.humanizeTimeDuration(this.task.duration);
+    return !!this.task.duration ? HospoHero.dateUtils.humanizeTimeDuration(this.task.duration) : false;
   },
 
   commentsCount: function () {
