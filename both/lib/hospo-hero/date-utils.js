@@ -223,5 +223,13 @@ Namespace('HospoHero.dateUtils', {
     }
 
     return durationResult.length ? durationResult.join(' ') : '0m';
+  },
+
+  truncateTimestamp: (timestamp = new Date().getTime()) => {
+    return parseInt((timestamp).toString().substr(0, 10));
+  },
+
+  formatTimestamp: (timestamp = new Date().getTime()) => {
+    return moment.unix(HospoHero.dateUtils.truncateTimestamp(timestamp)).format('DD/MM/YY');
   }
 });
