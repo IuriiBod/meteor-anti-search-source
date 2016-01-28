@@ -33,8 +33,11 @@ Router.route('menuItemsRankReport', {
     ]
   },
   data: function () {
+    var menuItems = MenuItems.find({stats: {$exists: true}}, {sort: {'stats.totalContribution': -1}});
+
     return {
-      menuItemsCount: MenuItems.find().count(),
+      menuItems: menuItems,
+      menuItemsCount: menuItems.count(),
       selectedCategoryId: this.params.category,
       rangeType: this.params.rangeType,
       startDate: this.params.startDate,

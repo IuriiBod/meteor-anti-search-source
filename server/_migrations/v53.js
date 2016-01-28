@@ -36,7 +36,6 @@ Migrations.add({
 
         var menuItemsStats = menuItemsStatsInCurrentArea(area._id, dateInterval);
         if (menuItemsStats.length) {
-          console.log('menuItemsStats.length -> ', menuItemsStats.length);
           menuItemsStats.sort(function (a, b) {
             return a.totalContribution - b.totalContribution;
           });

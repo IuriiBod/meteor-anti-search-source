@@ -130,9 +130,9 @@ Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, s
           soldQuantity: totalItemSalesQuantity,
           totalContribution: HospoHero.misc.rounding(analyzedMenuItem.contribution * totalItemSalesQuantity)
         });
-
-        return menuItem;
       }
+
+      return menuItem;
     };
 
     var self = this;
