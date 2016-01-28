@@ -27,8 +27,7 @@ Namespace('HospoHero.dateUtils', {
     return moment(date).format(format);
   },
 
-  shortDateFormat: function (date) {
-    date = date || new Date();
+  shortDateFormat: function (date = new Date()) {
     return moment(date).format('YYYY-MM-DD');
   },
 
@@ -83,9 +82,7 @@ Namespace('HospoHero.dateUtils', {
     return date ? moment(date).format('hh:mm A') : '-';
   },
 
-  shiftDate: function (date, isTemplate) {
-    date = date ? date : moment().startOf('d');
-
+  shiftDate: function (date = moment().startOf('d'), isTemplate) {
     var dateMoment;
     if (isTemplate) {
       dateMoment = moment(0).week(2).startOf('isoweek').day(moment(date).day()); //1970 year
@@ -182,8 +179,7 @@ Namespace('HospoHero.dateUtils', {
     return moment(time).fromNow();
   },
 
-  startOfWeekMoment: function (date, location) {
-    date = date ? moment(date) : moment();
+  startOfWeekMoment: function (date = moment(), location) {
     if (location) {
       date = HospoHero.dateUtils.getDateMomentForLocation(date, location);
     }
@@ -211,8 +207,7 @@ Namespace('HospoHero.dateUtils', {
    * @param {string|'minutes'} timeUnit - the unit of duration measure (minutes, hours, ...)
    * @returns {string}
    */
-  humanizeTimeDuration: function (duration, timeUnit) {
-    timeUnit = timeUnit || 'minutes';
+  humanizeTimeDuration: function (duration, timeUnit = 'minutes') {
     duration = moment.duration(duration, timeUnit);
 
     var durationResult = [];
