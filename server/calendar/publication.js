@@ -5,7 +5,7 @@ Meteor.publishComposite('calendarEvents', function (date, queryType, locationId,
     find: function () {
       if (this.userId) {
         var query = {
-          date: TimeRangeQueryBuilder[queryType](date, locationId)
+          startTime: TimeRangeQueryBuilder[queryType](date, locationId)
         };
 
         if (userId) {
