@@ -20,7 +20,7 @@ StaffCostCalculator.prototype._getShiftDuration = function (shift, useStartEndTi
     end = shift.finishedAt;
   }
 
-  var duration = moment(end).diff(start, 'minutes');
+  var duration = start && end && moment(end).diff(start, 'minutes') || 0;
 
   // we have problem with clock out dates
   // so, I temporarily limit  shift duration in
@@ -30,9 +30,6 @@ StaffCostCalculator.prototype._getShiftDuration = function (shift, useStartEndTi
       duration -= 24;
     }
   }
-
-  //todo: test it
-
   return duration;
 };
 
@@ -58,11 +55,13 @@ StaffCostCalculator.prototype._calculateStaffFigures = function (date) {
     if (user) {
       var payRate = HospoHero.misc.getUserPayRate(user, date);
 
-      staffCost.actual += self._calculateShiftCost(self._getShiftDuration(shift, false), payRate);
-      staffCost.forecast += self._calculateShiftCost(self._getShiftDuration(shift, true), payRate);
+      var actualDuration = self._getShiftDuration(shift, false);
+      staffCost.actual += self._calculateShiftCost(actualDuration, payRate);
+
+      var forecastDuration = self._getShiftDuration(shift, true);
+      staffCost.forecast += self._calculateShiftCost(forecastDuration, payRate);
     }
   });
-
   return staffCost;
 };
 
