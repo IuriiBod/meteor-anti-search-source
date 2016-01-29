@@ -1,12 +1,13 @@
 Template.organizationStructure.onCreated(function () {
-  this.set('organization', HospoHero.getOrganization());
+  this.organization = new ReactiveVar(HospoHero.getOrganization());
 
   var self = this;
 
   this.locations = function () {
-    if (self.get('organization')) {
+    var organization = self.organization.get();
+    if (organization && organization._id) {
       var selector = {
-        organizationId: self.get('organization')._id,
+        organizationId: organization._id,
         archived: {$ne: true}
       };
 
@@ -20,9 +21,25 @@ Template.organizationStructure.onCreated(function () {
       return Locations.find(selector);
     }
   };
+
+  this.isManagerInArea = function (areaId) {
+    if (HospoHero.isOrganizationOwner()) {
+      return true;
+    } else {
+      var user = Meteor.user();
+      if (user && user.relations && user.relations.areaIds) {
+        return HospoHero.isOrganizationOwner() ||
+          Roles.hasAction(user.roles[areaId], 'edit areas');
+      }
+    }
+  }
 });
 
 Template.organizationStructure.helpers({
+  organization: function () {
+    return Template.instance().organization.get();
+  },
+
   locations: function () {
     return Template.instance().locations();
   },
@@ -34,7 +51,7 @@ Template.organizationStructure.helpers({
 
   areas: function (locationId) {
     var selector = {
-      organizationId: Template.instance().get('organization')._id,
+      organizationId: Template.instance().organization.get()._id,
       locationId: locationId,
       archived: {$ne: true}
     };
@@ -49,14 +66,28 @@ Template.organizationStructure.helpers({
   },
 
   isCurrentArea: function (id) {
-    return HospoHero.getCurrentAreaId() == id;
+    return HospoHero.getCurrentAreaId() === id;
+  },
+
+  isManagerInLocation: function (locationId) {
+    var user = Meteor.user();
+    if (user && user.relations && user.relations.areaIds) {
+      return Areas.find({
+        _id: {$in: user.relations.areaIds},
+        locationId: locationId
+      }).fetch().reduce(function (isManager, area) {
+        return isManager || Template.instance().isManagerInArea(area._id);
+      }, false);
+    }
+  },
+
+  isManagerInArea: function (areaId) {
+    return Template.instance().isManagerInArea(areaId);
   },
 
   areaColor: function (areaId) {
     var area = Areas.findOne({_id: areaId});
-    if (area) {
-      return area.color;
-    }
+    return area && area.color || false;
   }
 });
 

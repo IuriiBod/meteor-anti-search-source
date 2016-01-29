@@ -19,7 +19,7 @@ Namespace('HospoHero', {
       }
     }
     var orgId = HospoHero.isInOrganization(userId);
-    return !!Organizations.findOne({_id: orgId, owner: userId});
+    return !!Organizations.findOne({_id: orgId, owners: userId});
   },
 
   getOrganizationIdBasedOnCurrentArea: function (userId) {
