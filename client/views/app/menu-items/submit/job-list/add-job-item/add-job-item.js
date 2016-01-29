@@ -32,5 +32,12 @@ Template.addJobItem.events({
   'keyup .search-input': _.throttle(function (event, tmpl) {
     var text = event.target.value.trim();
     tmpl.jobItemsSearch.search(text);
-  })
+  }),
+  'click .add-new-job': function() {
+    var prepJobTypeId = JobTypes.findOne({name: 'Prep'})._id;
+    FlyoutManager.open('newJobItem', {
+      jobItem: {type: prepJobTypeId},
+      mode: 'submit'
+    });
+  }
 });
