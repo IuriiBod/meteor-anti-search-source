@@ -113,14 +113,17 @@ StaffCostCalculator.prototype._calculateTotalFigures = function (weekFigures) {
     }
   };
 
-  weekFigures.forEach(function (dailyFigures) {
-    var sumFigures = function (propertyName) {
-      totalFigures[propertyName].actual += dailyFigures[propertyName].actual;
-      totalFigures[propertyName].forecast += dailyFigures[propertyName].forecast;
-    };
+  let today = moment();
 
-    sumFigures('staff');
-    sumFigures('sales');
+  weekFigures.forEach(function (dailyFigures) {
+    totalFigures.sales.actual += dailyFigures.sales.actual;
+    totalFigures.sales.forecast += dailyFigures.sales.forecast;
+
+    totalFigures.staff.forecast += dailyFigures.staff.forecast;
+
+    let useForecast = today.isSame(dailyFigures.date, 'day') || today.isBefore(dailyFigures.date);
+    let actualStaffProperty = useForecast ? 'forecast' : 'actual';
+    totalFigures.staff.actual += dailyFigures.staff[actualStaffProperty];
   });
 
   return totalFigures;
