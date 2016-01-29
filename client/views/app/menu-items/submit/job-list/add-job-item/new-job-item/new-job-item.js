@@ -7,8 +7,10 @@ Template.newJobItem.onCreated(function() {
 });
 
 Template.newJobItem.helpers({
-  getData: function () {
-    console.log(Template.currentData());
-    return Template.currentData();
+  getSettings: function () {
+    var data = Template.currentData();
+    data.isPlacedInFlyout = true;
+    console.log(data);
+    return data;
   }
 });
