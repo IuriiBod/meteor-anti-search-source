@@ -16,6 +16,12 @@ ExpectedCostOfGoodsReporter = class {
     });
   }
 
+  getTotalRevenue() {
+    return this._sumMenuItemProperty((menuItem) => {
+      return this._getRevenueForMenuItem(menuItem);
+    });
+  }
+
   _getTotalExpectedCost() {
     return this._sumMenuItemProperty((menuItem) => {
       return this._getExpectedCostForMenuItem(menuItem);
@@ -23,13 +29,7 @@ ExpectedCostOfGoodsReporter = class {
   }
 
   _getTotalExpectedRatio() {
-    return 100 * this._getTotalExpectedCost() / this._getTotalRevenue();
-  }
-
-  _getTotalRevenue() {
-    return this._sumMenuItemProperty((menuItem) => {
-      return this._getRevenueForMenuItem(menuItem);
-    });
+    return 100 * this._getTotalExpectedCost() / this.getTotalRevenue();
   }
 
   _getRevenueForMenuItem(menuItem) {

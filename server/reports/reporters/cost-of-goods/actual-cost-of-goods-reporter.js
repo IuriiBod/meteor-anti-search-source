@@ -12,14 +12,14 @@ ActualCostOfGoodsReporter = class {
 
   _getTotalActuallyUsedAmount() {
     return this._getTotalAmountOrdersReceived()
-      + (this._getFirstStocktakeTotal() - this._getSecondStocktakeTotal());
+      + (this.getFirstStocktakeTotal() - this.getSecondStocktakeTotal());
   }
 
-  _getFirstStocktakeTotal() {
+  getFirstStocktakeTotal() {
     return 3000;
   }
 
-  _getSecondStocktakeTotal() {
+  getSecondStocktakeTotal() {
     return 2000;
   }
 
