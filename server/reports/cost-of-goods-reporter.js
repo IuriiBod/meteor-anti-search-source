@@ -42,7 +42,8 @@ CostOfGoodsReporter = class {
   }
 
   _getRevenueForMenuItem(menuItem) {
-    return menuItem.soldAmount * menuItem.salePrice;
+    let tax = menuItem.salePrice * 0.1;
+    return menuItem.soldAmount * (menuItem.salePrice - tax);
   }
 
   _getExpectedCostForMenuItem(menuItem) {
@@ -62,13 +63,13 @@ CostOfGoodsReporter = class {
         soldAmount: 100,
         totalIngredientCost: 3.44,
         totalPreparationCost: 2.87,
-        salePrice: 18
+        salePrice: 20
       },
       {
         soldAmount: 110,
         totalIngredientCost: 3.22,
         totalPreparationCost: 2.5,
-        salePrice: 18
+        salePrice: 20
       }
     ]
   }
