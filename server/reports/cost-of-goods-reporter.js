@@ -1,4 +1,4 @@
-CostOfGoodsReporter = class {
+ExpectedCostOfGoodsReporter = class {
   /**
    * @param {string} fromDate DD/MM/YY
    * @param {string} toDate DD/MM/YY
@@ -15,10 +15,6 @@ CostOfGoodsReporter = class {
       expected: {
         amount: this._getTotalExpectedCost(),
         ratio: this._getTotalExpectedRatio()
-      },
-      actual: {
-        amount: 1350,
-        ratio: 35.71
       }
     }
   }

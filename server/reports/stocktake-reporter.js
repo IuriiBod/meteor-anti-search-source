@@ -23,7 +23,11 @@ StocktakesReporter = class {
         total: 2000
       },
       totalOrdersReceived: 500,
-      costOfGoods: new CostOfGoodsReporter(this.fromDate, this.toDate).getReport(),
+      costOfGoods: new ExpectedCostOfGoodsReporter(this.fromDate, this.toDate).getReport(),
+      actual: {
+        amount: 1350,
+        ratio: 35.71
+      },
       difference: {
         amount: -203,
         ratio: -5.37
