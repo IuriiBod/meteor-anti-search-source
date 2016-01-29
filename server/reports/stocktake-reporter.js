@@ -13,8 +13,11 @@ StocktakesReporter = class {
   }
 
   getReport() {
-    let expectedCostOfGoodsReport = new ExpectedCostOfGoodsReporter(this.fromDate, this.toDate).getReport();
-    let actualCostOfGoodsReport = new ActualCostOfGoodsReporter().getReport();
+    let expectedCostOfGoodsReporter = new ExpectedCostOfGoodsReporter(this.fromDate, this.toDate);
+    let actualCostOfGoodsReporter = new ActualCostOfGoodsReporter(expectedCostOfGoodsReporter._getTotalRevenue());
+
+    let expectedCostOfGoodsReport = expectedCostOfGoodsReporter.getReport();
+    let actualCostOfGoodsReport = actualCostOfGoodsReporter.getReport();
 
     return {
       firstStocktake: {
