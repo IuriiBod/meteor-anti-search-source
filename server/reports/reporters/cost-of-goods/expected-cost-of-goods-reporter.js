@@ -4,9 +4,9 @@ ExpectedCostOfGoodsReporter = class {
    * @param {string} toDate DD/MM/YY
    */
   constructor(fromDate, toDate) {
-    this.fromDate = fromDate;
-    this.toDate = toDate;
-    this.dateQuery = TimeRangeQueryBuilder.forInterval(moment(fromDate, 'DD/MM/YY'), moment(toDate, 'DD/MM/YY'));
+    this._fromDate = fromDate;
+    this._toDate = toDate;
+    this._dateQuery = TimeRangeQueryBuilder.forInterval(moment(fromDate, 'DD/MM/YY'), moment(toDate, 'DD/MM/YY'));
   }
 
   getReport() {

@@ -1,5 +1,7 @@
 ActualCostOfGoodsReporter = class {
-  constructor(totalRevenue) {
+  constructor(firstStocktakeGroup, secondStocktakeGroup, totalRevenue) {
+    this._firstStocktakeGroup = firstStocktakeGroup;
+    this._secondStocktakeGroup = secondStocktakeGroup;
     this._totalRevenue = totalRevenue;
   }
 

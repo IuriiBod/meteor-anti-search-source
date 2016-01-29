@@ -1,31 +1,31 @@
 StocktakesReporter = class {
   constructor(firstStocktakeGroup, secondStocktakeGroup) {
-    this.firstStocktakeGroup = firstStocktakeGroup;
-    this.secondStocktakeGroup = secondStocktakeGroup;
+    this._firstStocktakeGroup = firstStocktakeGroup;
+    this._secondStocktakeGroup = secondStocktakeGroup;
 
     this._setDates();
   }
 
   _setDates() {
     let formatDate = HospoHero.dateUtils.formatTimestamp;
-    this.fromDate = formatDate(this.firstStocktakeGroup[0].date);
-    this.toDate = formatDate(this.secondStocktakeGroup[0].date);
+    this._fromDate = formatDate(this._firstStocktakeGroup[0].date);
+    this._toDate = formatDate(this._secondStocktakeGroup[0].date);
   }
 
   getReport() {
-    let expectedReporter = new ExpectedCostOfGoodsReporter(this.fromDate, this.toDate);
-    let actualReporter = new ActualCostOfGoodsReporter(expectedReporter.getTotalRevenue());
+    let expectedReporter = new ExpectedCostOfGoodsReporter(this._fromDate, this._toDate);
+    let actualReporter = new ActualCostOfGoodsReporter(this._firstStocktakeGroup, this._secondStocktakeGroup, expectedReporter.getTotalRevenue());
 
     let expectedReport = expectedReporter.getReport();
     let actualReport = actualReporter.getReport();
 
     return {
       firstStocktake: {
-        date: this.fromDate,
+        date: this._fromDate,
         total: actualReporter.getFirstStocktakeTotal()
       },
       secondStocktake: {
-        date: this.toDate,
+        date: this._toDate,
         total: actualReporter.getSecondStocktakeTotal()
       },
       totalOrdersReceived: 500,
