@@ -28,8 +28,7 @@ Template.organizationStructure.onCreated(function () {
     } else {
       var user = Meteor.user();
       if (user && user.relations && user.relations.areaIds) {
-        return HospoHero.isOrganizationOwner() ||
-          Roles.hasAction(user.roles[areaId], 'edit areas');
+        return Roles.hasAction(user.roles[areaId], 'edit areas');
       }
     }
   }
@@ -70,14 +69,20 @@ Template.organizationStructure.helpers({
   },
 
   isManagerInLocation: function (locationId) {
-    var user = Meteor.user();
-    if (user && user.relations && user.relations.areaIds) {
-      return Areas.find({
-        _id: {$in: user.relations.areaIds},
-        locationId: locationId
-      }).fetch().reduce(function (isManager, area) {
-        return isManager || Template.instance().isManagerInArea(area._id);
-      }, false);
+    if (HospoHero.isOrganizationOwner()) {
+      return true;
+    } else {
+      var user = Meteor.user();
+      if (user && user.relations && user.relations.areaIds) {
+        var locationAreaIds = Areas.find({
+          _id: {$in: user.relations.areaIds},
+          locationId: locationId
+        }).fetch();
+
+        return locationAreaIds.reduce(function (isManager, area) {
+          return isManager || Template.instance().isManagerInArea(area._id);
+        }, false);
+      }
     }
   },
 

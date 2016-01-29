@@ -23,9 +23,6 @@ Accounts.onCreateUser(function (options, user) {
     delete user.profile.pinCode;
   }
 
-  // if this is the first user ever, make him an owner
-  var role = Roles.getRoleByName('Owner');
-  user.roles = {defaultRole: role._id};
   return user;
 });
 
@@ -179,7 +176,7 @@ Meteor.methods({
     }
   },
 
-  changeUserRole: function (userId, newRoleId) {
+  changeUserRole: function (userId, newRoleId, areaId) {
     if (!HospoHero.isManager()) {
       logger.error("User not permitted to change roles");
       throw new Meteor.Error(403, "User not permitted to change roles");
@@ -191,14 +188,26 @@ Meteor.methods({
     }
 
     check(newRoleId, HospoHero.checkers.MongoId);
-    if (!Meteor.roles.findOne(newRoleId)) {
+    if (!Roles.getRoleById(newRoleId)) {
       throw new Meteor.Error("Role not found", newRoleId);
     }
 
-    var updateQuery = {};
-    updateQuery["roles." + HospoHero.getCurrentAreaId()] = newRoleId;
+    areaId = areaId || HospoHero.getCurrentAreaId();
 
+    var updateQuery = {};
+    updateQuery["roles." + areaId] = newRoleId;
     Meteor.users.update({_id: userId}, {$set: updateQuery});
+
+    var updateOrganizationQuery;
+    var area = Areas.findOne({_id: areaId});
+
+    // when selected role is Owner - add userId to the organization's owners
+    if (Roles.hasAction(newRoleId, 'all rights')) {
+      updateOrganizationQuery = {$addToSet: {owners: userId}};
+    } else {
+      updateOrganizationQuery = {$pull: {owners: userId}};
+    }
+    Organizations.update({_id: area.organizationId}, updateOrganizationQuery);
   },
 
   toggleUserTrainingSection: function (userId, sectionId, isAddingSection) {
