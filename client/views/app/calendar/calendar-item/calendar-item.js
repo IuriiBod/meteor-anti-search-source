@@ -36,19 +36,23 @@ Template.calendarItem.onCreated(function () {
 
     return CalendarEvents.find({
       userId: this.data.userId,
-      date: TimeRangeQueryBuilder[queryType](this.data.date)
+      startTime: TimeRangeQueryBuilder[queryType](this.data.date)
     }).map(function (event) {
       var currentEventItem = eventItemsSettings[event.type];
       var item = currentEventItem.collection.findOne({_id: event.itemId});
 
-      return {
-        id: event._id,
-        title: item[currentEventItem.titleField],
-        start: moment(event.startTime),
-        end: moment(event.endTime),
-        backgroundColor: currentEventItem.backgroundColor,
-        textColor: currentEventItem.textColor,
-        item: event
+      if (item) {
+        return {
+          id: event._id,
+          title: item[currentEventItem.titleField],
+          start: moment(event.startTime),
+          end: moment(event.endTime),
+          backgroundColor: currentEventItem.backgroundColor,
+          textColor: currentEventItem.textColor,
+          item: event
+        }
+      } else {
+        return {};
       }
     });
   };
@@ -85,8 +89,8 @@ Template.calendarItem.helpers({
           callback(events);
         },
 
-        eventClick: function () {
-
+        eventClick: function (eventObject) {
+          FlyoutManager.open('eventItemFlyout', {eventObject: eventObject});
         }
       }
     }
@@ -113,5 +117,14 @@ Template.calendarItem.events({
   'click .fc-agendaWeek-button': function (event, tmpl) {
     tmpl.calendarType = 'week';
     tmpl.changeDate();
+  },
+
+  'click .fc-day-header': function (event, tmpl) {
+    var selectedDateText = tmpl.$(event.currentTarget).text();
+    var selectedDateMoment = moment(selectedDateText, 'ddd DD/MM');
+    Router.go('calendar', {
+      type: 'day',
+      date: HospoHero.dateUtils.shortDateFormat(selectedDateMoment)
+    });
   }
 });

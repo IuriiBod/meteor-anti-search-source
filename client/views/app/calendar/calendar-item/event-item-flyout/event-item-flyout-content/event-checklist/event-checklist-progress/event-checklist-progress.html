@@ -1,0 +1,8 @@
+<template name="eventChecklistProgress">
+  <div class="progress">
+    <div class="progress-bar progress-bar-{{progress.class}}" role="progressbar" aria-valuenow="{{progress.percent}}"
+         aria-valuemin="0" aria-valuemax="100" style="width: {{progress.percent}}%;">
+      {{progress.percent}}%
+    </div>
+  </div>
+</template>
