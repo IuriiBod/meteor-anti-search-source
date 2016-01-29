@@ -13,8 +13,14 @@ StocktakesReporter = class {
   }
 
   getReport() {
+    let ordersReporter = new OrdersReporter(this._fromDate, this._toDate);
     let expectedReporter = new ExpectedCostOfGoodsReporter(this._fromDate, this._toDate);
-    let actualReporter = new ActualCostOfGoodsReporter(this._firstStocktakeGroup, this._secondStocktakeGroup, expectedReporter.getTotalRevenue());
+    let actualReporter = new ActualCostOfGoodsReporter(
+      this._firstStocktakeGroup,
+      this._secondStocktakeGroup,
+      expectedReporter.getTotalRevenue(),
+      ordersReporter.getTotalOrdersReceived()
+    );
 
     let expectedReport = expectedReporter.getReport();
     let actualReport = actualReporter.getReport();
@@ -28,7 +34,7 @@ StocktakesReporter = class {
         date: this._toDate,
         total: actualReporter.secondStocktakeTotal
       },
-      totalOrdersReceived: 500,
+      totalOrdersReceived: ordersReporter.getTotalOrdersReceived(),
       costOfGoods: {
         expected: expectedReport,
         actual: actualReport

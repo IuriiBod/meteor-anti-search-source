@@ -1,8 +1,9 @@
 ActualCostOfGoodsReporter = class {
-  constructor(firstStocktakeGroup, secondStocktakeGroup, totalRevenue) {
+  constructor(firstStocktakeGroup, secondStocktakeGroup, totalRevenue, ordersReceived) {
     this._firstStocktakeGroup = firstStocktakeGroup;
     this._secondStocktakeGroup = secondStocktakeGroup;
     this._totalRevenue = totalRevenue;
+    this._ordersReceived = ordersReceived;
 
     this._setTotalValues();
   }
@@ -33,7 +34,7 @@ ActualCostOfGoodsReporter = class {
   }
 
   _getTotalAmountOrdersReceived() {
-    return 350;
+    return this._ordersReceived;
   }
 
   _getTotalActualRatio() {
