@@ -73,7 +73,8 @@ Meteor.methods({
           }
 
           // Create events in user's calendar
-          Meteor.call('addJobsToCalendar', shift);
+          var calendarEventsManager = new CalendarEventsManager();
+          calendarEventsManager.addJobsToCalendar(shift);
         } else {
           openShifts.push(shift);
         }
