@@ -1,26 +1,30 @@
 <template name="submitEditJobItem">
   <!-- Page heading -->
-  {{#if isEditMode}}
-    {{> pageHeading title="Edit Job" category="Jobs" name="jobedit" subCategory=jobItem.name id=jobItem._id}}
-  {{else}}
-    {{> pageHeading title="Submit Job" category="Job" name="jobsubmit"}}
-  {{/if}}
+  {{#unless isPlacedInFlayout}}
+    {{#if isEditMode}}
+      {{> pageHeading title="Edit Job" category="Jobs" name="jobedit" subCategory=jobItem.name id=jobItem._id}}
+    {{else}}
+      {{> pageHeading title="Submit Job" category="Job" name="jobsubmit"}}
+    {{/if}}
+  {{/unless}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
       <div class="col-lg-12">
         <div class="ibox float-e-margins">
+          {{#unless isPlacedInFlayout}}
           <div class="ibox-title">
             <h5>Create a new job</h5>
           </div>
-          <div class="ibox-content">
+          {{/unless}}
+          <div class="{{#if isPlacedInFlayout}}placed-in-flayout{{else}}ibox-content{{/if}}">
             <form class="form-horizontal job-item-submit-edit-form">
 
               <!-- Name -->
               <div class="form-group">
-                <label class="col-sm-2 control-label">Name</label>
+                <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">Name</label>
 
-                <div class="col-sm-10">
+                <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                   <input type="text" class="form-control name-input" placeholder="Enter Name for the job" required
                          value="{{jobItem.name}}">
                 </div>
@@ -28,10 +32,10 @@
 
               <!-- Type -->
               <div class="form-group">
-                <label class="col-sm-2 control-label">Type</label>
+                <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">Type</label>
 
-                <div class="col-sm-10">
-                  <select class="form-control type-select">
+                <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <select class="form-control type-select" disabled="{{#if isJobTypePreselected}}disabled{{/if}}">
                     {{#each jobTypes}}
                       {{#if equal ../jobItem.type _id}}
                         <option value="{{_id}}" selected>{{name}}</option>
@@ -46,9 +50,10 @@
               <!-- Sections -->
               {{#if isRecurring}}
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Sections</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Sections</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <select class="form-control sections-select">
                       {{#each sections}}
                         {{#if equal ../jobItem.section _id}}
@@ -65,15 +70,17 @@
               <!-- Recipe/Description-->
               <div class="form-group">
                 {{#if isPrep}}
-                  <label class="col-sm-2 control-label">Recipe</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Recipe</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     {{> textEditor initialHtml= jobItem.recipe}} <!--  "Add recipe to job" -->
                   </div>
                 {{else}}
-                  <label class="col-sm-2 control-label">Description</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Description</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     {{> textEditor initialHtml=jobItem.description}} <!-- "Add description to job" -->
                   </div>
                 {{/if}}
@@ -84,9 +91,10 @@
 
                 <!-- Checklist -->
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Checklist</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Checklist</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <input type="text" class="form-control add-item-to-checklist"
                            placeholder="Add an item to checklist and press enter">
                     <br/>
@@ -104,9 +112,10 @@
 
                 <!-- Frequency -->
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Frequency</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Frequency</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <select class="form-control frequency-select">
                       {{#each frequencies}}
                         {{#if equal ../jobItem.frequency value}}
@@ -124,9 +133,9 @@
 
                     <!-- Repeat every X weeks -->
                     <div class="form-group">
-                      <label class="col-sm-2 control-label"></label>
+                      <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label"></label>
 
-                      <div class="col-sm-10">
+                      <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                         <p>Repeat every <input type="number" class="repeat-every-weeks-input" min="2"
                                                value="{{../jobItem.repeatEvery}}"> weeks.
                         </p>
@@ -136,9 +145,10 @@
 
                   <!-- Repeat on -->
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">Repeat On</label>
+                    <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                      Repeat On</label>
 
-                    <div class="col-sm-10">
+                    <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                       {{#each week}}
                         <div class="checkbox">
                           {{#if checked}}
@@ -157,9 +167,10 @@
 
                 <!-- Repeat at -->
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Repeat At</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Repeat At</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <div class="input-group">
                       {{> comboTimeEditable params=repeatAtComboEditableParams}}
                     </div>
@@ -168,18 +179,20 @@
 
                 <!-- Starts on-->
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Starts On</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Starts On</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     {{> reactiveDateTimePicker selector="starts-on-date-picker" value=startsOn}}
                   </div>
                 </div>
 
                 <!-- Ends on -->
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Ends</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Ends</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
 
                     <div class="radio">
                       {{#if isEditMode}}
@@ -234,15 +247,19 @@
 
                 <!-- Ingredients used -->
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Ingredients used</label>
-                  {{> listOfIngredients ingredients=ingredients onChange=editIngredientsListOnChange}}
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Ingredients used</label>
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                    {{> listOfIngredients ingredients=ingredients onChange=editIngredientsListOnChange}}
+                  </div>
                 </div>
 
                 <!-- Portions -->
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Portions</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Portions</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <input type="number" class="form-control portions" placeholder="No. of Portions"
                            value="{{jobItem.portions}}" required>
                   </div>
@@ -250,9 +267,10 @@
 
                 <!-- Shelf life -->
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Shelf Life</label>
+                  <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    Shelf Life</label>
 
-                  <div class="col-sm-10">
+                  <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <div class="input-group m-b">
                       <input type="number" class="form-control shelf-life" placeholder="Shelf Life"
                              value="{{jobItem.shelfLife}}" required>
@@ -266,9 +284,10 @@
 
               <!-- Active time -->
               <div class="form-group">
-                <label class="col-sm-2 control-label">Active Time</label>
+                <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  Active Time</label>
 
-                <div class="col-sm-10">
+                <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                   <div class="input-group m-b">
                     <input type="number" class="form-control active-time" placeholder="Active Time"
                            value="{{activeTime}}" required>
@@ -279,9 +298,10 @@
 
               <!-- labours wage -->
               <div class="form-group">
-                <label class="col-sm-2 control-label">Labours" Wage</label>
+                <label class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  Labours" Wage</label>
 
-                <div class="col-sm-10">
+                <div class="{{#if isPlacedInFlayout}}col-sm-12{{else}}col-sm-10{{/if}}">
                   <div class="input-group m-b">
                     <span class="input-group-addon">$</span>
                     <input type="number" class="form-control avg-wage-per-hour"
@@ -293,7 +313,7 @@
 
               <!-- Buttons -->
               <div class="row">
-                <div class="col-sm-4 col-sm-offset-2">
+                <div class="{{#if isPlacedInFlayout}}col-sm-10{{else}}col-sm-4 col-sm-offset-2{{/if}}">
                   <a href="{{pathFor route="jobItemsMaster"}}" class="btn btn-white" type="button">Cancel</a>
                   <button class="btn btn-primary submit-button" type="submit">Save changes</button>
                 </div>

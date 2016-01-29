@@ -1,9 +1,11 @@
 Template.submitEditJobItem.onCreated(function () {
-
   var jobItem = this.data.jobItem;
 
+  this.isPlacedInFlyout = !!this.data.isPlacedInFlyout;
+  this.preselectedJobType = jobItem.type;
+
   // Write data into reactive var
-  this.selectedJobTypeId = new ReactiveVar(jobItem.type || JobTypes.findOne()._id);
+  this.selectedJobTypeId = new ReactiveVar(this.preselectedJobType || JobTypes.findOne()._id);
   this.selectedFrequency = new ReactiveVar(jobItem.frequency || 'daily');
   this.addedIngredientsToThisJob = new ReactiveVar(jobItem.ingredients || []);
   this.repeatAt = new ReactiveVar(jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
@@ -37,6 +39,12 @@ Template.submitEditJobItem.onRendered(function () {
 });
 
 Template.submitEditJobItem.helpers({
+  isPlacedInFlayout: function() {
+    return Template.instance().isPlacedInFlyout;
+  },
+  isJobTypePreselected: function() {
+    return !!Template.instance().preselectedJobType;
+  },
   repeatAtComboEditableParams: function () {
     var tmpl = Template.instance();
     return {
