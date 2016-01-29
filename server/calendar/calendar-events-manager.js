@@ -108,9 +108,10 @@ CalendarEventsManager.prototype._anotherJobExistsAtThisTime = function (jobStart
  */
 CalendarEventsManager.prototype.addJobsToCalendar = function (shift) {
   if (shift.section && shift.assignedTo) {
-    var shiftTime = shift.startTime;
     var userId = shift.assignedTo;
     var locationId = shift.relations.locationId;
+    var shiftTime = shift.startTime;
+    var startOfDay = HospoHero.dateUtils.getDateMomentForLocation(shiftTime, locationId).startOf('day').toDate();
 
     var defaultEventObject = {
       type: 'recurring job',
@@ -137,10 +138,10 @@ CalendarEventsManager.prototype.addJobsToCalendar = function (shift) {
 
     var notPlacedJobs = JobItems.find({
       _id: { $nin: placedJobs },
-      startsOn: { $lte: shiftTime },
+      startsOn: { $lte: startOfDay },
       $or: [
         {'endsOn.on': 'endsNever'},
-        {'endsOn.lastDate': {$gte: shiftTime}}
+        {'endsOn.lastDate': {$gte: startOfDay}}
       ],
       section: shift.section
     });
