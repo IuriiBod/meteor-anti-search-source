@@ -50,19 +50,30 @@ ExpectedCostOfGoodsReporter = class {
   }
 
   _getMenuItems() {
+    let soldAmountMenuItems = this._getSoldAmountMenuItems();
+    return _.map(soldAmountMenuItems, (item) => {
+      return _.extend(item, this._getMenuItemCost(item.menuItemId));
+    });
+  }
+
+  _getSoldAmountMenuItems() {
     return [
       {
         soldAmount: 100,
-        totalIngredientCost: 3.44,
-        totalPreparationCost: 2.87,
-        salePrice: 20
+        menuItemId: 'WGCBpZzzPb5ZRn4gN'
       },
       {
         soldAmount: 110,
-        totalIngredientCost: 3.22,
-        totalPreparationCost: 2.5,
-        salePrice: 20
+        menuItemId: 'XrXkqcvZZQ8viZCeY'
       }
     ]
+  }
+
+  _getMenuItemCost(menuItemId) {
+    return {
+      totalIngredientCost: 3.44,
+      totalPreparationCost: 2.87,
+      salePrice: 20
+    };
   }
 };
