@@ -7,16 +7,13 @@ ExpectedCostOfGoodsReporter = class {
     this.fromDate = fromDate;
     this.toDate = toDate;
     this.dateQuery = TimeRangeQueryBuilder.forInterval(moment(fromDate, 'DD/MM/YY'), moment(toDate, 'DD/MM/YY'));
-    this.sumPredicate = (memo, value) => memo + value;
   }
 
   getReport() {
-    return {
-      expected: {
-        amount: this._getTotalExpectedCost(),
-        ratio: this._getTotalExpectedRatio()
-      }
-    }
+    return StocktakesReporter.roundReportValues({
+      amount: this._getTotalExpectedCost(),
+      ratio: this._getTotalExpectedRatio()
+    });
   }
 
   _getTotalExpectedCost() {
@@ -26,9 +23,7 @@ ExpectedCostOfGoodsReporter = class {
   }
 
   _getTotalExpectedRatio() {
-    let totalExpectedRatio = 100 * this._getTotalExpectedCost() / this._getTotalRevenue();
-    totalExpectedRatio = HospoHero.misc.rounding(totalExpectedRatio, 100);
-    return totalExpectedRatio;
+    return 100 * this._getTotalExpectedCost() / this._getTotalRevenue();
   }
 
   _getTotalRevenue() {
@@ -47,9 +42,10 @@ ExpectedCostOfGoodsReporter = class {
   }
 
   _sumMenuItemProperty(mapFunction) {
+    let sumFunction = (memo, value) => memo + value;
     return _.chain(this._getMenuItems())
       .map(mapFunction)
-      .reduce(this.sumPredicate, 0)
+      .reduce(sumFunction, 0)
       .value();
   }
 

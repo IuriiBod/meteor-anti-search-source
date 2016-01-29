@@ -13,6 +13,9 @@ StocktakesReporter = class {
   }
 
   getReport() {
+    let expectedCostOfGoodsReport = new ExpectedCostOfGoodsReporter(this.fromDate, this.toDate).getReport();
+    let actualCostOfGoodsReport = new ActualCostOfGoodsReporter().getReport();
+
     return {
       firstStocktake: {
         date: this.fromDate,
@@ -23,15 +26,25 @@ StocktakesReporter = class {
         total: 2000
       },
       totalOrdersReceived: 500,
-      costOfGoods: new ExpectedCostOfGoodsReporter(this.fromDate, this.toDate).getReport(),
-      actual: {
-        amount: 1350,
-        ratio: 35.71
+      costOfGoods: {
+        expected: expectedCostOfGoodsReport,
+        actual: actualCostOfGoodsReport
       },
-      difference: {
-        amount: -203,
-        ratio: -5.37
-      }
+      difference: this._getExpectedActualDifference(actualCostOfGoodsReport, expectedCostOfGoodsReport)
+    }
+  }
+
+  _getExpectedActualDifference(actualCostOfGoodsReport, expectedCostOfGoodsReport) {
+    return StocktakesReporter.roundReportValues({
+      amount: actualCostOfGoodsReport.amount - expectedCostOfGoodsReport.amount,
+      ratio: actualCostOfGoodsReport.ratio - expectedCostOfGoodsReport.ratio
+    });
+  }
+
+  static roundReportValues(report) {
+    return {
+      amount: HospoHero.misc.rounding(report.amount, 10),
+      ratio: HospoHero.misc.rounding(report.ratio, 100)
     }
   }
 };
