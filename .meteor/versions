@@ -44,6 +44,7 @@ force-ssl@1.0.6
 fortawesome:fontawesome@4.5.0
 geojson-utils@1.0.4
 google@1.1.7
+grigio:babel@0.1.8
 handlebars@1.0.4
 hospohero:stale-session@0.0.7
 hot-code-push@1.0.0
@@ -78,6 +79,7 @@ less@2.5.1
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
+manuel:reactivearray@1.0.5
 matb33:collection-hooks@0.8.1
 meteor@1.1.10
 meteor-base@1.0.1
@@ -126,7 +128,6 @@ service-configuration@1.0.5
 session@1.1.1
 settinghead:auto-nprogress@1.0.0
 sha@1.0.4
-simple:reactive-method@1.0.2
 softwarerero:accounts-t9n@1.1.7
 spacebars@1.0.7
 spacebars-compiler@1.0.7

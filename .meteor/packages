@@ -91,6 +91,7 @@ jss:moment-timezone
 
 # ===========> new
 settinghead:auto-nprogress
-simple:reactive-method
 matb33:collection-hooks
 dburles:mongo-collection-instances
+grigio:babel
+manuel:reactivearray
