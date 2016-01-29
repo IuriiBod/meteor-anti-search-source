@@ -76,11 +76,6 @@ ExpectedCostOfGoodsReporter = class {
   }
 
   _getMenuItemCost(menuItemId) {
-    let menuItemAnalysis = HospoHero.analyze.menuItemById(menuItemId);
-    return {
-      totalIngredientCost: menuItemAnalysis.ingCost,
-      totalPreparationCost: menuItemAnalysis.prepCost,
-      salePrice: menuItemAnalysis.salesPrice
-    };
+    return MenuItemsCostCache.lookup(menuItemId);
   }
 };
