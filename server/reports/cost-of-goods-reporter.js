@@ -17,19 +17,16 @@ CostOfGoodsReporter = class {
         ratio: this._getTotalExpectedRatio()
       },
       actual: {
-        amount: 1000,
-        ratio: 26.46
+        amount: 1350,
+        ratio: 35.71
       }
     }
   }
 
   _getTotalExpectedCost() {
-    return _.chain(this._getMenuItems())
-      .map((menuItem) => {
-        return this._getExpectedCostForMenuItem(menuItem);
-      })
-      .reduce(this.sumPredicate, 0)
-      .value();
+    return this._sumMenuItemProperty((menuItem) => {
+      return this._getExpectedCostForMenuItem(menuItem);
+    });
   }
 
   _getTotalExpectedRatio() {
@@ -39,12 +36,9 @@ CostOfGoodsReporter = class {
   }
 
   _getTotalRevenue() {
-    return _.chain(this._getMenuItems())
-      .map((menuItem) => {
-        return this._getRevenueForMenuItem(menuItem);
-      })
-      .reduce(this.sumPredicate, 0)
-      .value();
+    return this._sumMenuItemProperty((menuItem) => {
+      return this._getRevenueForMenuItem(menuItem);
+    });
   }
 
   _getRevenueForMenuItem(menuItem) {
@@ -53,6 +47,13 @@ CostOfGoodsReporter = class {
 
   _getExpectedCostForMenuItem(menuItem) {
     return menuItem.soldAmount * (menuItem.totalIngredientCost + menuItem.totalPreparationCost);
+  }
+
+  _sumMenuItemProperty(mapFunction) {
+    return _.chain(this._getMenuItems())
+      .map(mapFunction)
+      .reduce(this.sumPredicate, 0)
+      .value();
   }
 
   _getMenuItems() {
