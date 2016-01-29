@@ -81,7 +81,7 @@ ForecastMaker.prototype._predictFor = function (days) {
   logger.info('Make prediction', {days: days, locationId: this._locationId});
 
   var today = new Date();
-  var dateToMakePredictionFrom = new Date(); // new Date() default
+  var dateToMakePredictionFrom = HospoHero.prediction.getDateThreshold(); // new Date() default
   var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(dateToMakePredictionFrom, this._location).startOf('day');
   var self = this;
 
@@ -163,7 +163,7 @@ ForecastMaker.prototype.makeForecast = function () {
   });
 };
 
-ForecastMaker.prototype._updateDayIntervals = [14];//[84, 7, 2];
+ForecastMaker.prototype._updateDayIntervals = Meteor.settings.prediction.forecastIntervals;
 
 
 updateForecastForLocation = function (location) {
