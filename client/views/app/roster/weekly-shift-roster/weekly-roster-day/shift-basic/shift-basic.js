@@ -17,7 +17,7 @@ Template.shiftBasic.helpers({
     return {
       firstTime: tmpl.data.startTime,
       secondTime: tmpl.data.endTime,
-      minuteStepping: 10,
+      minuteStepping: 15,
       onSubmit: function (startTime, endTime) {
         tmpl.editShiftTime(startTime, endTime);
       }

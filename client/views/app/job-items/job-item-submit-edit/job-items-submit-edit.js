@@ -119,7 +119,7 @@ Template.submitEditJobItem.helpers({
     return HospoHero.dateUtils.shortDateFormat(endsOn);
   },
   week: function () {
-    var days = ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
+    var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     var checkedDays = this.jobItem ? this.jobItem.repeatOn : [];
 

@@ -66,6 +66,7 @@ trsdln:flyouts
 jss:blaze-states
 trsdln:modals
 jss:reactive-fullcalendar
+jquery-sparkline
 
 # ===========> backend
 micah:google-cloud
@@ -90,3 +91,5 @@ jss:moment-timezone
 
 # ===========> new
 settinghead:auto-nprogress
+matb33:collection-hooks
+dburles:mongo-collection-instances

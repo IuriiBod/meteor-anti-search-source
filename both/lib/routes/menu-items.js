@@ -55,4 +55,3 @@ Router.route('submitMenuItem', {
     ];
   }
 });
-

@@ -25,6 +25,7 @@ if (Meteor.isCordova) {
         pushNotification.on('registration', function (registrationResult) {
           var registrationId = registrationResult.registrationId;
           if (registrationId) {
+            console.log('GCM Token ', registrationId);
             Session.setPersistent(PUSH_TOKEN_PROPERTY, registrationId)
           }
         });

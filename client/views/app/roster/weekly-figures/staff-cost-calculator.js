@@ -9,16 +9,28 @@ StaffCostCalculator = function (weekMonday) {
 };
 
 
-StaffCostCalculator.prototype._getShiftDuration = function (shift, isForceStartEndTime) {
+StaffCostCalculator.prototype._getShiftDuration = function (shift, useStartEndTime) {
   var start, end;
-  if (shift.status === 'finished' && !isForceStartEndTime) {
-    start = shift.startedAt;
-    end = shift.finishedAt;
-  } else {
+
+  if (useStartEndTime) {
     start = shift.startTime;
     end = shift.endTime;
+  } else {
+    start = shift.startedAt;
+    end = shift.finishedAt;
   }
-  return moment(end).diff(start, 'minutes');
+
+  var duration = start && end && moment(end).diff(start, 'minutes') || 0;
+
+  // we have problem with clock out dates
+  // so, I temporarily limit  shift duration in
+  // case if it is longer than 24 hours.
+  if (shift.status === 'finished' && !useStartEndTime) {
+    if (duration / 60 > 24) {
+      duration -= 24;
+    }
+  }
+  return duration;
 };
 
 
@@ -43,11 +55,13 @@ StaffCostCalculator.prototype._calculateStaffFigures = function (date) {
     if (user) {
       var payRate = HospoHero.misc.getUserPayRate(user, date);
 
-      staffCost.actual += self._calculateShiftCost(self._getShiftDuration(shift, false), payRate);
-      staffCost.forecast += self._calculateShiftCost(self._getShiftDuration(shift, true), payRate);
+      var actualDuration = self._getShiftDuration(shift, false);
+      staffCost.actual += self._calculateShiftCost(actualDuration, payRate);
+
+      var forecastDuration = self._getShiftDuration(shift, true);
+      staffCost.forecast += self._calculateShiftCost(forecastDuration, payRate);
     }
   });
-
   return staffCost;
 };
 
@@ -99,14 +113,17 @@ StaffCostCalculator.prototype._calculateTotalFigures = function (weekFigures) {
     }
   };
 
-  weekFigures.forEach(function (dailyFigures) {
-    var sumFigures = function (propertyName) {
-      totalFigures[propertyName].actual += dailyFigures[propertyName].actual;
-      totalFigures[propertyName].forecast += dailyFigures[propertyName].forecast;
-    };
+  let today = moment();
 
-    sumFigures('staff');
-    sumFigures('sales');
+  weekFigures.forEach(function (dailyFigures) {
+    totalFigures.sales.actual += dailyFigures.sales.actual;
+    totalFigures.sales.forecast += dailyFigures.sales.forecast;
+
+    totalFigures.staff.forecast += dailyFigures.staff.forecast;
+
+    let useForecast = today.isSame(dailyFigures.date, 'day') || today.isBefore(dailyFigures.date);
+    let actualStaffProperty = useForecast ? 'forecast' : 'actual';
+    totalFigures.staff.actual += dailyFigures.staff[actualStaffProperty];
   });
 
   return totalFigures;
