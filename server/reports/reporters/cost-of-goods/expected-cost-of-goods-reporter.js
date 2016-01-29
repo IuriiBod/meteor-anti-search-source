@@ -29,7 +29,7 @@ ExpectedCostOfGoodsReporter = class {
   }
 
   _getTotalExpectedRatio() {
-    return 100 * this._getTotalExpectedCost() / this.getTotalRevenue();
+    return 100 * this._getTotalExpectedCost() / (this.getTotalRevenue() || 1);
   }
 
   _getRevenueForMenuItem(menuItem) {
@@ -57,16 +57,22 @@ ExpectedCostOfGoodsReporter = class {
   }
 
   _getSoldAmountMenuItems() {
-    return [
-      {
-        soldAmount: 100,
-        menuItemId: 'WGCBpZzzPb5ZRn4gN'
-      },
-      {
-        soldAmount: 110,
-        menuItemId: 'XrXkqcvZZQ8viZCeY'
+    let findQuery = {
+      date: this._dateQuery,
+      actualQuantity: {$exists: true}
+    };
+    let projectionQuery = {
+      fields: {
+        _id: 0,
+        menuItemId: 1,
+        actualQuantity: 1
       }
-    ]
+    };
+
+    let menuItemsSales = DailySales.find(findQuery, projectionQuery).fetch();
+    return _.map(menuItemsSales, (item) => {
+      return HospoHero.misc.renameObjectProperty(item, 'actualQuantity', 'soldAmount')
+    });
   }
 
   _getMenuItemCost(menuItemId) {

@@ -8,8 +8,8 @@ StocktakesReporter = class {
 
   _setDates() {
     let formatDate = HospoHero.dateUtils.formatTimestamp;
-    this._fromDate = formatDate(this._firstStocktakeGroup[0].date);
-    this._toDate = formatDate(this._secondStocktakeGroup[0].date);
+    this._fromDate = formatDate(this._secondStocktakeGroup[0].date);
+    this._toDate = formatDate(this._firstStocktakeGroup[0].date);
   }
 
   getReport() {

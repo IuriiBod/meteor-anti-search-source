@@ -37,7 +37,7 @@ ActualCostOfGoodsReporter = class {
   }
 
   _getTotalActualRatio() {
-    return 100 * this._getTotalActualCost() / this._totalRevenue;
+    return 100 * this._getTotalActualCost() / (this._totalRevenue || 1);
   }
 
   _getTotalStocktakesGroupValue(stocktakesGroup) {
