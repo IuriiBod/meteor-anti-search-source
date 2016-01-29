@@ -13,30 +13,36 @@ Meteor.methods({
   updatePredictionModel: function () {
     checkOrganizationOwner(this.userId);
     var locations = Locations.find({archived: {$ne: true}});
-    locations.forEach(updateTrainingDataForLocation);
-    return true;
-  },
 
-  resetForecastData: function () {
-    checkOrganizationOwner(this.userId);
-    var currentArea = HospoHero.getCurrentArea(this.userId);
-
-    //remove only sales with actual quantity
-    DailySales.remove({
-      predictionQuantity: {$exists: false},
-      'relations.locationId': currentArea.locationId
+    locations.forEach((location) => {
+      logger.info('Force prediction model update for', {_id: location._id, name: location.name});
+      MenuItems.update({'relations.locationId': location._id}, {$unset: {lastForecastModelUpdateDate: ''}}, {multi: true});
+      updateTrainingDataForLocation(location);
     });
 
-    DailySales.update({
-      'relations.locationId': currentArea.locationId
-    }, {
-      $unset: {
-        actualQuantity: ''
-      }
-    }, {multi: true});
-
     return true;
   },
+
+  //resetForecastData: function () {
+  //  checkOrganizationOwner(this.userId);
+  //  var currentArea = HospoHero.getCurrentArea(this.userId);
+  //
+  //  //remove only sales with actual quantity
+  //  DailySales.remove({
+  //    predictionQuantity: {$exists: false},
+  //    'relations.locationId': currentArea.locationId
+  //  });
+  //
+  //  DailySales.update({
+  //    'relations.locationId': currentArea.locationId
+  //  }, {
+  //    $unset: {
+  //      actualQuantity: ''
+  //    }
+  //  }, {multi: true});
+  //
+  //  return true;
+  //},
 
   updatePredictions: function () {
     checkOrganizationOwner(this.userId);
