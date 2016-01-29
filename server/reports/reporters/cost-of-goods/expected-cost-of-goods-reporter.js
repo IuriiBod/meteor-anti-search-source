@@ -76,10 +76,11 @@ ExpectedCostOfGoodsReporter = class {
   }
 
   _getMenuItemCost(menuItemId) {
+    let menuItemAnalysis = HospoHero.analyze.menuItemById(menuItemId);
     return {
-      totalIngredientCost: 3.44,
-      totalPreparationCost: 2.87,
-      salePrice: 20
+      totalIngredientCost: menuItemAnalysis.ingCost,
+      totalPreparationCost: menuItemAnalysis.prepCost,
+      salePrice: menuItemAnalysis.salesPrice
     };
   }
 };

@@ -37,6 +37,11 @@ Namespace('HospoHero.analyze', {
     };
   },
 
+  menuItemById: (menuItemId) => {
+    if (!menuItemId) return {};
+    return HospoHero.analyze.menuItem(MenuItems.findOne({_id: menuItemId}));
+  },
+
   menuItem: function (menuItem) {
     if (!menuItem) return {};
 
