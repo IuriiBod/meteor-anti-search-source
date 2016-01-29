@@ -3,6 +3,7 @@ Template.menuItemInstructions.onCreated(function () {
   this.instructionSaved = new ReactiveVar(false);
   this.timeout = new ReactiveVar(null);
   this.typingInstruction = new ReactiveVar(false);
+  this.uiStatesManager = new UIStatesManager('menuItems');
 
   this.setTimeout = (executeFunction, hasTimeout) => {
     if (hasTimeout) {
@@ -13,6 +14,7 @@ Template.menuItemInstructions.onCreated(function () {
     }
   }
 });
+
 
 Template.menuItemInstructions.helpers({
   instructionsStr: function () {
@@ -52,5 +54,13 @@ Template.menuItemInstructions.events({
     };
 
     tmpl.timeout.get() ? tmpl.setTimeout(saveChanges, true) : tmpl.setTimeout(saveChanges());
-  }
+  },
+
+  'shown.bs.collapse #Instructions': _.throttle(function (event, tmpl) {
+    tmpl.uiStatesManager.set('instructions', true);
+  }, 1000),
+
+  'hidden.bs.collapse #Instructions': _.throttle(function (event, tmpl) {
+    tmpl.uiStatesManager.set('instructions', false);
+  }, 1000)
 });
