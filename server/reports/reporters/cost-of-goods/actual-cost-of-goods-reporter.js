@@ -3,33 +3,47 @@ ActualCostOfGoodsReporter = class {
     this._firstStocktakeGroup = firstStocktakeGroup;
     this._secondStocktakeGroup = secondStocktakeGroup;
     this._totalRevenue = totalRevenue;
+
+    this._setTotalValues();
+  }
+
+  _setTotalValues() {
+    this._firstStocktakeTotalValue = this._getTotalStocktakesGroupValue(this._firstStocktakeGroup);
+    this._secondStocktakeTotalValue = this._getTotalStocktakesGroupValue(this._secondStocktakeGroup);
   }
 
   getReport() {
     return StocktakesReporter.roundReportValues({
-      amount: this._getTotalActuallyUsedAmount(),
-      ratio: this._getTotalActuallyUsedRatio()
+      amount: this._getTotalActualCost(),
+      ratio: this._getTotalActualRatio()
     });
   }
 
-  _getTotalActuallyUsedAmount() {
+  get firstStocktakeTotal() {
+    return this._firstStocktakeTotalValue;
+  }
+
+  get secondStocktakeTotal() {
+    return this._secondStocktakeTotalValue;
+  }
+
+  _getTotalActualCost() {
     return this._getTotalAmountOrdersReceived()
-      + (this.getFirstStocktakeTotal() - this.getSecondStocktakeTotal());
-  }
-
-  getFirstStocktakeTotal() {
-    return 3000;
-  }
-
-  getSecondStocktakeTotal() {
-    return 2000;
+      + (this.firstStocktakeTotal - this.secondStocktakeTotal);
   }
 
   _getTotalAmountOrdersReceived() {
     return 350;
   }
 
-  _getTotalActuallyUsedRatio() {
-    return 100 * this._getTotalActuallyUsedAmount() / this._totalRevenue;
+  _getTotalActualRatio() {
+    return 100 * this._getTotalActualCost() / this._totalRevenue;
   }
+
+  _getTotalStocktakesGroupValue(stocktakesGroup) {
+    let stocktakeTotalValue = _.reduce(stocktakesGroup, (memo, stocktake) => {
+      return memo + (stocktake.counting * stocktake.unitCost);
+    }, 0);
+    return HospoHero.misc.rounding(stocktakeTotalValue, 100);
+  };
 };

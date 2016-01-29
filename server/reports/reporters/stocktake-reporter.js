@@ -22,11 +22,11 @@ StocktakesReporter = class {
     return {
       firstStocktake: {
         date: this._fromDate,
-        total: actualReporter.getFirstStocktakeTotal()
+        total: actualReporter.firstStocktakeTotal
       },
       secondStocktake: {
         date: this._toDate,
-        total: actualReporter.getSecondStocktakeTotal()
+        total: actualReporter.secondStocktakeTotal
       },
       totalOrdersReceived: 500,
       costOfGoods: {
