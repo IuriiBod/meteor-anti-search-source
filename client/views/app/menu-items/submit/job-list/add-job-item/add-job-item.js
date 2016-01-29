@@ -14,7 +14,7 @@ Template.addJobItem.helpers({
     var tmpl = Template.instance();
     var query = {_id: {$nin: tmpl.idsToExclude.get()}, status: 'active'};
     tmpl.jobItemsSearch.setMongoQuery(query);
-    return Template.instance().jobItemsSearch.searchResult({sort: {name: 1}});
+    return tmpl.jobItemsSearch.searchResult({sort: {name: 1}});
   },
 
   onJobItemSelect: function () {

@@ -45,15 +45,11 @@ Template.listOfIngredients.events({
       tmpl.data.onChange(addedIds);
     };
 
-    var stockItemsInListIds = _.map(tmpl.data.ingredients, function (item) {
-      return item._id;
-    });
+    var idsOfItemsInList = _.pluck(tmpl.data.ingredients, '_id');
 
     FlyoutManager.open('stocksList', {
-      modalStockListParams: {
-        onAddStockItem: onAddStockItem,
-        stockItemsInListIds: stockItemsInListIds
-      }
+      onAddStockItem: onAddStockItem,
+      idsToExclude: idsOfItemsInList
     });
   }
 });

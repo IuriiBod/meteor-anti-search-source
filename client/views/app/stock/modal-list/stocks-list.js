@@ -1,36 +1,35 @@
 Template.stocksList.onCreated(function () {
-  this.searchSource = this.AntiSearchSource({
+  this.ingredienstSearch = this.AntiSearchSource({
     collection: 'ingredients',
     fields: ['code', 'description'],
     searchMode: 'local',
     limit: 10
   });
-
-  var self = this;
-  this.autorun(function () {
-    var currentData = Template.currentData();
-    if(currentData.modalStockListParams && currentData.modalStockListParams.stockItemsInListIds) {
-      var query = {_id: {$nin: Template.currentData().modalStockListParams.stockItemsInListIds}};
-      self.searchSource.setMongoQuery(query);
-    }
-  });
-  this.searchSource.search('');
+  this.idsToExclude = new ReactiveVar(this.data.idsToExclude);
+  this.ingredienstSearch.search('');
 });
 
 
 Template.stocksList.helpers({
   ingredients: function () {
-    return Template.instance().searchSource.searchResult({
+    var tmpl = Template.instance();
+    var query = {_id: {$nin: tmpl.idsToExclude.get()}};
+    tmpl.ingredienstSearch.setMongoQuery(query);
+    return tmpl.ingredienstSearch.searchResult({
       transform: function (matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>");
-      }
+      },
+      sort: {code: 1}
     });
   },
   onAddStockItem: function () {
-    var tmplParentData = Template.parentData();
-    if (tmplParentData && tmplParentData.modalStockListParams) {
-      return tmplParentData.modalStockListParams.onAddStockItem || tmplParentData.modalStockListParams.activeSpecialArea;
-    }
+    var tmpl = Template.instance();
+    return function(stockId) {
+      var idsToExclude = tmpl.idsToExclude.get();
+      idsToExclude.push(stockId);
+      tmpl.idsToExclude.set(idsToExclude);
+      tmpl.data.onAddStockItem(stockId);
+    };
   }
 });
 
@@ -38,9 +37,9 @@ Template.stocksList.events({
   'click .add-new-ingredient': function () {
     FlyoutManager.open('ingredientEditor', {ingredient: null});
   },
-  'keyup .search-for-stocks-input': _.throttle(function (e, tmpl) {
-    var value = $(e.target).val();
-    tmpl.searchSource.search(value);
+  'keyup .search-for-stocks-input': _.throttle(function (event, tmpl) {
+    var value = $(event.target).val();
+    tmpl.ingredienstSearch.search(value);
   }, 500)
 });
 
