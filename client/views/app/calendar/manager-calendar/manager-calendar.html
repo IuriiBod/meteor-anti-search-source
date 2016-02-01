@@ -1,0 +1,11 @@
+<template name="managerCalendar">
+  {{> calendarHeader date=date type="day" isManagerCalendar=true userId=123}}
+
+  <div class="calendar-container text-center">
+    {{#if users.length}}
+      {{> calendarItem resources=users date=date type="day"}}
+    {{else}}
+      <h3>No shifts for today</h3>
+    {{/if}}
+  </div>
+</template>

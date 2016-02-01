@@ -62,21 +62,27 @@ Template.weekPicker.onRendered(function () {
 
 Template.weekPicker.helpers({
   weekDateStr: function (date) {
-    var weekStartEnd = moment(date);
-    var firstDay = moment(weekStartEnd).startOf('isoweek');
-    var lastDay = moment(weekStartEnd).endOf('isoweek');
-
     var currentDate;
-    if (firstDay.year() != lastDay.year()) {
-      currentDate = firstDay.format('D MMM YYYY - ') + lastDay.format('D MMM YYYY');
-    } else {
-      if (firstDay.month() != lastDay.month()) {
-        currentDate = firstDay.format('D MMM - ') + lastDay.format('D MMM YYYY');
+
+    if (this.type !== 'day') {
+      var weekStartEnd = moment(date);
+      var firstDay = moment(weekStartEnd).startOf('isoweek');
+      var lastDay = moment(weekStartEnd).endOf('isoweek');
+
+      if (firstDay.year() != lastDay.year()) {
+        currentDate = firstDay.format('D MMM YYYY - ') + lastDay.format('D MMM YYYY');
       } else {
-        currentDate = firstDay.format('D - ') + lastDay.format('D MMM YYYY');
+        if (firstDay.month() != lastDay.month()) {
+          currentDate = firstDay.format('D MMM - ') + lastDay.format('D MMM YYYY');
+        } else {
+          currentDate = firstDay.format('D - ') + lastDay.format('D MMM YYYY');
+        }
       }
+      currentDate += ", week " + weekStartEnd.week();
+    } else {
+      currentDate = HospoHero.dateUtils.dayFormat(date);
     }
-    currentDate += ", week " + weekStartEnd.week();
+
     return currentDate.toUpperCase();
   }
 });
@@ -103,9 +109,11 @@ Template.weekPicker.events({
   },
 
   'show .date-picker-input': function (event, tmpl) {
-    //mark all selected week before showing
-    var activeDayClass = $('.day.active').length === 0 ? '.day.today' : '.day.active';
-    $(activeDayClass).siblings('.day').addClass('week');
+    if (tmpl.data.type !== 'day') {
+      //mark all selected week before showing
+      var activeDayClass = $('.day.active').length === 0 ? '.day.today' : '.day.active';
+      $(activeDayClass).siblings('.day').addClass('week');
+    }
   }
 });
 
