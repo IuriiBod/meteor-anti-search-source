@@ -11,21 +11,33 @@ let StockTakeIterator = class {
     return {sort: {date: -1}};
   }
 
+  _currentStocktakeMain(stocktakeMainId) {
+    let currentStocktakeMainQuery = this._stocktakeMainQuery(stocktakeMainId ? {_id: stocktakeMainId} : {});
+    return StocktakeMain.findOne(currentStocktakeMainQuery, this._queryOptions());
+  }
+
   _nextStocktakeMain(currentStocktakeMainId) {
-    let currentStocktakeMainQuery = this._stocktakeMainQuery(currentStocktakeMainId ? {_id: currentStocktakeMainId} : {});
+    let nextStocktakeMain;
 
-    let currentStocktakeMain = StocktakeMain.findOne(currentStocktakeMainQuery, this._queryOptions());
-
-    if (currentStocktakeMainId) {
+//todo: avoiding empty array: needs to be tested
+    while (true) {
+      let currentStocktakeMain = this._currentStocktakeMain(currentStocktakeMainId);
       let nextStocktakeMainQuery = this._stocktakeMainQuery({date: {$lt: currentStocktakeMain.date}});
-      return StocktakeMain.findOne(nextStocktakeMainQuery, this._queryOptions());
-    } else {
-      return currentStocktakeMain;
+
+      nextStocktakeMain = StocktakeMain.findOne(nextStocktakeMainQuery, this._queryOptions());
+
+      if (!nextStocktakeMain) {
+        nextStocktakeMain = false;
+        break;
+      }
+      if (Stocktakes.findOne({version: currentStocktakeMainId}, this._queryOptions())) {
+        break;
+      }
     }
   }
 
 
-  getStocktakeGroup(stocktakeMainId) {
+  _getStocktakeGroup(stocktakeMainId) {
     if (stocktakeMainId) {
       let stocktakesCursor = Stocktakes.find({version: stocktakeMainId}, this._queryOptions());
       return {
@@ -37,16 +49,21 @@ let StockTakeIterator = class {
     }
   }
 
+  getCurrentStocktakeGroup(currentStocktakeMainId = false) {
+    let currentStocktakeMain = this._currentStocktakeMain(currentStocktakeMainId);
+    return this._getStocktakeGroup(currentStocktakeMain._id);
+  }
+
   getNextStocktakeGroup(currentStocktakeMainId = false) {
     let nextStocktakeMain = this._nextStocktakeMain(currentStocktakeMainId);
-    return nextStocktakeMain && this.getStocktakeGroup(nextStocktakeMain._id);
+    return nextStocktakeMain && this._getStocktakeGroup(nextStocktakeMain._id);
   }
 };
 
 
 let getReportForStocktakeMain = function (areaId, stocktakeMainId) {
   let stocktakeIterator = new StockTakeIterator(areaId);
-  let firstStocktake = stocktakeIterator.getNextStocktakeGroup(stocktakeMainId);
+  let firstStocktake = stocktakeIterator.getCurrentStocktakeGroup(stocktakeMainId);
 
   console.log('frist', firstStocktake);
 
