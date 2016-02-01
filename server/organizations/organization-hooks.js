@@ -4,7 +4,7 @@ Organizations.after.update(function (userId, newOrganization) {
   var newOwners = newOrganization.owners;
   var oldOwners = oldOrganization.owners;
 
-  if (newOwners.length !== oldOwners.length) {
+  if (newOwners && oldOwners && newOwners.length !== oldOwners.length) {
     // Set to true if the new organization owner was added
     var isNewOwner = newOwners.length > oldOwners.length;
 
