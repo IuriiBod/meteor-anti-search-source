@@ -1,5 +1,5 @@
 Template.areaSettings.onCreated(function () {
-  this.set('addUser', false);
+  this.addUser = new ReactiveVar(false);
 
   this.area = function () {
     return Areas.findOne({_id: this.data.areaId});
@@ -57,6 +57,10 @@ Template.areaSettings.helpers({
         Meteor.call('editArea', area, HospoHero.handleMethodResult());
       }
     }
+  },
+
+  addUser: function () {
+    return Template.instance().addUser.get();
   }
 });
 
@@ -94,14 +98,13 @@ Template.areaSettings.events({
   },
 
   'click .add-user': function (event, tmpl) {
-    tmpl.set('addUser', !tmpl.get('addUser'));
+    tmpl.addUser.set(!tmpl.addUser.get());
   },
 
   'click .user-profile-image-container': function (event, tmpl) {
     event.preventDefault();
 
     var user = Blaze.getData(event.target);
-    var area = tmpl.area();
     var target = $(event.currentTarget);
 
     Modal.show('userPopup', {
@@ -112,7 +115,7 @@ Template.areaSettings.events({
         top: Math.round(target.offset().top)
       },
       userId: user._id,
-      areaId: area._id
+      areaId: tmpl.data.areaId
     });
   }
 });

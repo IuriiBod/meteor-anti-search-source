@@ -18,8 +18,7 @@ Namespace('HospoHero', {
         return false;
       }
     }
-    var orgId = HospoHero.isInOrganization(userId);
-    return !!Organizations.findOne({_id: orgId, owner: userId});
+    return !!Organizations.findOne({owners: userId});
   },
 
   getOrganizationIdBasedOnCurrentArea: function (userId) {
@@ -33,7 +32,7 @@ Namespace('HospoHero', {
     }
     if (!areaId) {
       var user = Meteor.users.findOne({_id: userId});
-      areaId = user && user.currentAreaId ? user.currentAreaId : 'defaultRole';
+      areaId = user && user.currentAreaId || false;
     }
 
     var query = {
@@ -41,7 +40,7 @@ Namespace('HospoHero', {
     };
     var role = Roles.getRoleByName(roleName);
 
-    if (role) {
+    if (areaId && role) {
       query['roles.' + areaId] = role._id;
       return !!Meteor.users.findOne(query);
     } else {
@@ -49,14 +48,10 @@ Namespace('HospoHero', {
     }
   },
 
-  isOwner: function (userId, areaId) {
-    return HospoHero.isInRole('Owner', userId, areaId);
-  },
-
   isManager: function (userId, areaId) {
     return HospoHero.isInRole('Manager', userId, areaId) ||
       HospoHero.isOrganizationOwner(userId) ||
-      HospoHero.isOwner(userId, areaId);
+      HospoHero.isOrganizationOwner(userId);
   },
 
   isWorker: function (userId, areaId) {

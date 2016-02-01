@@ -8,6 +8,7 @@ Meteor.startup(function () {
     getCurrentArea: HospoHero.getCurrentArea,
     getCurrentAreaId: HospoHero.getCurrentAreaId,
     isMe: HospoHero.isMe,
+
     canBeRosted: HospoHero.canUser('be rosted'),
     canInvite: HospoHero.canUser('invite users'),
     canViewRoster: HospoHero.canUser('view roster'),
@@ -20,7 +21,10 @@ Meteor.startup(function () {
     canEditStock: HospoHero.canUser('edit stocks'),
     canViewForecast: HospoHero.canUser('view forecast'),
     canEditUsers: HospoHero.canUser('edit users'),
-    canViewReports: HospoHero.canUser('view reports')
+    canViewReports: HospoHero.canUser('view reports'),
+    canEditAreas: HospoHero.canUser("edit areas"),
+    canEditLocations: HospoHero.canUser("edit locations"),
+    canEditOrganization: HospoHero.canUser("edit organization settings")
   };
 
   Object.keys(securityHelpers).forEach(function (helperName) {
