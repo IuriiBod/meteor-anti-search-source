@@ -25,12 +25,20 @@
             </span>
             Roles
           </li>
-          <li class="list-group-item">
-            <a href="{{pathFor 'inactivityTimeoutSettings'}}">Inactivity Timeout</a>
+          <li class="list-group-item open-inactivity-timeout-settings-flyout">
+            <span class="badge">
+              <i class="fa fa-fw fa-angle-right"></i>
+            </span>
+            Inactivity Timeout
           </li>
-          <li class="list-group-item">
-            <a href="{{pathFor 'archivingSettings'}}">Locations/Areas archiving</a>
+          {{#if Template.subscriptionsReady}}
+          <li class="list-group-item open-archiving-settings-flyout">
+            <span class="badge">
+              <i class="fa fa-fw fa-angle-right"></i>
+            </span>
+            Locations/Areas archiving
           </li>
+          {{/if}}
         </ul>
       </div>
     </div>

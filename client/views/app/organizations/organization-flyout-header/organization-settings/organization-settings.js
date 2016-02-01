@@ -1,3 +1,8 @@
+Template.organizationDetailsPage.onCreated(function() {
+  this.subscribe('locationsOfOrganization');
+  this.subscribe('areasOfOrganization');
+});
+
 Template.organizationDetailsPage.events({
   'click .delete-organization': function (e) {
     //e.preventDefault();
@@ -11,6 +16,21 @@ Template.organizationDetailsPage.events({
     FlyoutManager.open('changeBillingAccount');
   },
   'click .open-roles-settings-flyout': function () {
-    FlyoutManager.open('wrapperFlyout', {title: 'Roles Settings', template: 'rolesSettings'});
+    FlyoutManager.open('wrapperFlyout', {
+      title: 'Roles Settings',
+      template: 'rolesSettings'
+    });
+  },
+  'click .open-inactivity-timeout-settings-flyout': function () {
+    FlyoutManager.open('wrapperFlyout', {
+      title: 'Inactivity Timeout',
+      template: 'inactivityTimeoutField'
+    });
+  },
+  'click .open-archiving-settings-flyout': function () {
+    FlyoutManager.open('wrapperFlyout', {
+      title: 'Locations/Areas archiving',
+      template: 'locationAreaArchiving'
+    });
   }
 });
