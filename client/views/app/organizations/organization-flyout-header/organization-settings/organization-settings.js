@@ -7,8 +7,10 @@ Template.organizationDetailsPage.events({
     //  $('.flyout-container').removeClass('show');
     //}
   },
-
   'click .change-billing-account-flyout': function () {
     FlyoutManager.open('changeBillingAccount');
+  },
+  'click .open-roles-settings-flyout': function () {
+    FlyoutManager.open('rolesSettingsFlyout');
   }
 });
