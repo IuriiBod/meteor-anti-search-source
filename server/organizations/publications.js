@@ -22,11 +22,14 @@ Meteor.publishComposite('organizationInfo', {
         var fields = {};
 
         if (!HospoHero.canUser('edit organization settings', this.userId)) {
-          fields.name = 1;
+          _.extend(fields, {
+            name: 1,
+            owners: 1
+          });
         }
 
         return Organizations.find({
-          _id: HospoHero.isInOrganization(user._id)
+          _id: {$in: user.relations.organizationIds}
         }, {
           fields: fields
         });
@@ -79,7 +82,8 @@ Meteor.publishComposite('organizationInfo', {
               isActive: 1,
               "services.google.picture": 1,
               profile: 1,
-              relations: 1
+              relations: 1,
+              roles: 1
             }
           });
         }
