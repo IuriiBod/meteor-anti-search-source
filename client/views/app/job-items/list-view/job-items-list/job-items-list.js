@@ -19,7 +19,7 @@ Template.jobItemsList.onCreated(function () {
 Template.jobItemsList.onRendered(function () {
   // for infinite scroll
   var tmpl = this;
-  $('#wrapper').scroll(function (e) {
+  $('#wrapper').scroll(function (event) {
     var wrapper = event.target;
     var wrapperHeight = wrapper.clientHeight;
     var wrapperScrollHeight = wrapper.scrollHeight;
@@ -41,12 +41,12 @@ Template.jobItemsList.helpers({
 });
 
 Template.jobItemsList.events({
-  'keyup .search-job-items-box': _.throttle(function (e, tmpl) {
-    var value = $(e.target).val();
+  'keyup .search-job-items-box': _.throttle(function (event, tmpl) {
+    var value = $(event.target).val();
     tmpl.searchSource.search(value);
   }, 500),
 
-  'click .load-more-items': function (e, tmpl) {
+  'click .load-more-items': function (event, tmpl) {
     tmpl.searchSource.incrementLimit(10);
   }
 });

@@ -16,7 +16,7 @@ var RoutePermissionChecker = class RoutePermissionChecker {
   }
 
   isOrganizationOwner() {
-    return !!Organizations.findOne({owner: this._user._id});
+    return !!Organizations.findOne({owners: this._user._id});
   }
 
   checkRoutePermissions() {
