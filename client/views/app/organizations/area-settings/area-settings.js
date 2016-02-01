@@ -115,5 +115,9 @@ Template.areaSettings.events({
       userId: user._id,
       areaId: area._id
     });
+  },
+  'click .show-pos-settings': function() {
+    event.preventDefault();
+    Router.go('posSettings');
   }
 });
