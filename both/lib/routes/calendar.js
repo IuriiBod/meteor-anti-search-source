@@ -21,3 +21,18 @@ Router.route('calendar', {
     };
   }
 });
+
+Router.route('managerCalendar', {
+  path: '/manager-calendar/:date',
+  template: 'managerCalendar',
+  waitOn: function () {
+
+  },
+  data: function () {
+    return {
+      date: this.params.date,
+      type: 'day',
+      userId: null
+    }
+  }
+});

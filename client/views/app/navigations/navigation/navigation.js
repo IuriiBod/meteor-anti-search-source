@@ -122,6 +122,17 @@ var menuEntries = [
         }
       }
     ]
+  },
+  {
+    title: 'Manger Calendar',
+    icon: 'fa-calendar',
+    route: 'managerCalendar',
+    permission: 'edit calendar',
+    params: function () {
+      return {
+        date: HospoHero.dateUtils.shortDateFormat(new Date())
+      }
+    }
   }
 ];
 
