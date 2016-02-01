@@ -9,27 +9,6 @@ var eventItemsSettings = {
 
 
 Template.calendarItem.onCreated(function () {
-  this.calendarType = this.data.type;
-
-  // add or subtract 1 week or day and go to another router
-  this.changeDate = function (action, step) {
-    var calendarType = this.calendarType;
-    var date = moment(new Date(this.data.date));
-
-    // if calendar type is week - set current calendar date to the beginning of the week
-    if (calendarType === 'week') {
-      date = HospoHero.dateUtils.startOfWeekMoment(date);
-    }
-
-    // get string like date.add(1, 'day') at output
-    if (action && step) {
-      date[action](step, calendarType);
-    }
-
-    date = date.format('YYYY-MM-DD');
-    Router.go('calendar', {date: date, type: calendarType});
-  };
-
   // returns events need to render to the calendar
   this.getCalendarEvents = function () {
     var queryType = this.data.type === 'day' ? 'forDay' : 'forWeek';
@@ -71,9 +50,7 @@ Template.calendarItem.helpers({
 
       return {
         id: this.userId,
-        header: {
-          right: 'agendaDay, agendaWeek, prev, next'
-        },
+        header: false,
         defaultView: this.type === 'day' ? 'agendaDay' : 'agendaWeek',
         defaultDate: this.date,
         firstDay: 1,
@@ -99,32 +76,13 @@ Template.calendarItem.helpers({
 
 
 Template.calendarItem.events({
-  'click .fc-prev-button': function (event, tmpl) {
-    event.preventDefault();
-    tmpl.changeDate('subtract', 1);
-  },
-
-  'click .fc-next-button': function (event, tmpl) {
-    event.preventDefault();
-    tmpl.changeDate('add', 1);
-  },
-
-  'click .fc-agendaDay-button': function (event, tmpl) {
-    tmpl.calendarType = 'day';
-    tmpl.changeDate();
-  },
-
-  'click .fc-agendaWeek-button': function (event, tmpl) {
-    tmpl.calendarType = 'week';
-    tmpl.changeDate();
-  },
-
   'click .fc-day-header': function (event, tmpl) {
     var selectedDateText = tmpl.$(event.currentTarget).text();
     var selectedDateMoment = moment(selectedDateText, 'ddd DD/MM');
     Router.go('calendar', {
       type: 'day',
-      date: HospoHero.dateUtils.shortDateFormat(selectedDateMoment)
+      date: HospoHero.dateUtils.shortDateFormat(selectedDateMoment),
+      userId: tmpl.data.userId
     });
   }
 });

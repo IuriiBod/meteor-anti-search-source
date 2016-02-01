@@ -1,6 +1,7 @@
 //context: year (number), week (number), onDateChanged (Function)
 Template.weekPicker.onCreated(function () {
   this.oldDate = getWeekDateByMoment(this.data.date);
+  this.dayStep = this.data.type === 'day' ? 1 : 7;
 });
 
 
@@ -12,11 +13,16 @@ Template.weekPicker.onRendered(function () {
   /**
    * Update picked moment after changing date in datepicker
    * @param {String} [action=add|subtract] - action to do with current date. null for do nothing.
-   * @param {Number} [dateChangeStep=7] - number of days to add/subtract
+   * @param {Number} [dateChangeStep] - number of days to add/subtract
    */
-  this.updatePickedMoment = function (action, dateChangeStep = 7) {
+  this.updatePickedMoment = function (action, dateChangeStep) {
+    dateChangeStep = dateChangeStep || this.dayStep;
+
     var currentMoment = moment(this.datePicker.datepicker('getDate'));
-    currentMoment = HospoHero.dateUtils.startOfWeekMoment(currentMoment);
+
+    if (this.data.type !== 'day') {
+      currentMoment = HospoHero.dateUtils.startOfWeekMoment(currentMoment);
+    }
 
     var applyChangeToCurrentMoment = function () {
       if (action) {

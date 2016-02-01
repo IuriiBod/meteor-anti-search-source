@@ -1,14 +1,13 @@
 Router.route('calendar', {
-  path: '/calendar/:type/:date',
+  path: '/calendar/:type/:date/:userId',
   template: 'userCalendar',
 
   waitOn: function () {
-    var userId = Meteor.userId();
+    var userId = this.params.userId;
     var area = HospoHero.getCurrentArea(userId);
     if (!!area) {
-      var date = this.params.date;
       return [
-        Meteor.subscribe('calendarEvents', date, this.params.type, area.locationId, userId),
+        Meteor.subscribe('calendarEvents', this.params.date, this.params.type, area.locationId, userId),
         Meteor.subscribe('sections', area._id)
       ];
     }
@@ -17,7 +16,8 @@ Router.route('calendar', {
   data: function () {
     return {
       date: this.params.date,
-      type: this.params.type
+      type: this.params.type,
+      userId: this.params.userId
     };
   }
 });

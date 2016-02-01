@@ -1,3 +1,4 @@
 <template name="userCalendar">
-  {{> calendarItem userId=currentUser._id date=date type=type}}
+  {{> calendarHeader date=date type=type isManagerCalendar=false userId=userId}}
+  {{> calendarItem userId=userId date=date type=type}}
 </template>
