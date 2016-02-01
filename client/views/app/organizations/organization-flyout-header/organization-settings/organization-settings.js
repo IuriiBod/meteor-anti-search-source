@@ -11,6 +11,6 @@ Template.organizationDetailsPage.events({
     FlyoutManager.open('changeBillingAccount');
   },
   'click .open-roles-settings-flyout': function () {
-    FlyoutManager.open('rolesSettingsFlyout');
+    FlyoutManager.open('wrapperFlyout', {title: 'Roles Settings', template: 'rolesSettings'});
   }
 });
