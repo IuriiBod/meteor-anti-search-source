@@ -20,6 +20,7 @@ Template.areaSettings.onRendered(function () {
       Meteor.call('editArea', area, HospoHero.handleMethodResult());
     }
   });
+  $('[data-toggle="tooltip"]').tooltip();
 });
 
 Template.areaSettings.helpers({
