@@ -1,7 +1,6 @@
 Template.submitEditJobItem.onCreated(function () {
   var jobItem = this.data.jobItem;
 
-  this.isPlacedInFlyout = !!this.data.isPlacedInFlyout;
   this.preselectedJobType = jobItem.type;
 
   // Write data into reactive var
@@ -39,8 +38,8 @@ Template.submitEditJobItem.onRendered(function () {
 });
 
 Template.submitEditJobItem.helpers({
-  isPlacedInFlayout: function() {
-    return Template.instance().isPlacedInFlyout;
+  isPlacedInFlyout: function() {
+    return !!Template.currentData().isPlacedInFlyout;
   },
   isJobTypePreselected: function() {
     return !!Template.instance().preselectedJobType;
@@ -154,7 +153,6 @@ Template.submitEditJobItem.events({
   },
 
   'submit .job-item-submit-edit-form': function (e, tmpl) {
-
     var saveJobItem = function () {
       var assignCommonFields = function (jobItem) {
         var MINUTE = 60;
@@ -250,13 +248,19 @@ Template.submitEditJobItem.events({
         assignFieldsForPrep(jobItem);
       }
 
+      var closeFlyoutOrGoToDetails  = function(jobItemId) {
+        var isFlyout = tmpl.data.isPlacedInFlyout;
+        if (isFlyout) FlyoutManager.getInstanceByElement(e.target).close();
+        else Router.go('jobItemDetailed', {_id: jobItemId});
+      };
+
       if (tmpl.data.jobItem._id) {
         Meteor.call('editJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
-          Router.go('jobItemDetailed', {_id: jobItemId});
+          closeFlyoutOrGoToDetails(jobItemId);
         }));
       } else {
         Meteor.call('createJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
-          Router.go('jobItemDetailed', {_id: jobItemId});
+          closeFlyoutOrGoToDetails(jobItemId);
         }));
       }
     };

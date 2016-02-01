@@ -10,7 +10,6 @@ Template.newJobItem.helpers({
   getSettings: function () {
     var data = Template.currentData();
     data.isPlacedInFlyout = true;
-    console.log(data);
     return data;
   }
 });
