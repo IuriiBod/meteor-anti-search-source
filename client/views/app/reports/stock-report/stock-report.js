@@ -1,6 +1,16 @@
 Template.stockReport.onCreated(function () {
   this.reports = new ReactiveArray();
-  this.fromTheBeginning = true;
+
+  this.uploadNextStockReport = function () {
+    Meteor.call('getNextStocktakeReport', null, HospoHero.handleMethodResult((result) => {
+      if (result) {
+        console.log(result);
+        this.reports.push(result);
+      }
+    }));
+  };
+
+  this.uploadNextStockReport();
 });
 
 Template.stockReport.helpers({
@@ -11,12 +21,6 @@ Template.stockReport.helpers({
 
 Template.stockReport.events({
   'click #load-stocktake-report': function (event, tmpl) {
-    Meteor.call('getNextStocktakeReport', tmpl.fromTheBeginning, (err, result) => {
-      console.log(tmpl.fromTheBeginning);
-      if (!result.done) {
-        tmpl.reports.push(result.value);
-        tmpl.fromTheBeginning = undefined; // Needed to reset the generator
-      }
-    });
+    tmpl.uploadNextStockReport();
   }
 });
