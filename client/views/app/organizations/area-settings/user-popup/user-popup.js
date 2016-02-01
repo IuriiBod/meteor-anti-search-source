@@ -72,6 +72,6 @@ Template.userPopup.events({
   'click .filter-menus a': function(event, tmpl) {
     var newRoleId = this._id;
     var userId = tmpl.data.userId;
-    Meteor.call('changeUserRole', userId, newRoleId, tmpl.data.areaId);
+    Meteor.call('changeUserRole', userId, newRoleId, tmpl.data.areaId, HospoHero.handleMethodResult());
   }
 });
