@@ -1,4 +1,4 @@
-Template.stockModalItem.onCreated(function () {
+Template.stocksListItem.onCreated(function () {
   this.getCostPerPortionUsed = function () {
     var costPerPortionUsed = 0;
     var stock = this.data.stock;
@@ -13,13 +13,13 @@ Template.stockModalItem.onCreated(function () {
   };
 });
 
-Template.stockModalItem.onRendered(function () {
+Template.stocksListItem.onRendered(function () {
   this.$('.i-checks').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
 });
 
-Template.stockModalItem.helpers({
+Template.stocksListItem.helpers({
   stockItem: function () {
     return Template.instance().data.stock;
   },
@@ -28,16 +28,12 @@ Template.stockModalItem.helpers({
   }
 });
 
-Template.stockModalItem.events({
+Template.stocksListItem.events({
   'ifChecked .add-ing-checkbox': function (event, tmpl) {
-    if (_.isFunction(tmpl.data.onAddStockItem)) {
-      tmpl.data.onAddStockItem(tmpl.data.stock._id);
-    } else {
-      Meteor.call("assignStocksToAreas", tmpl.data.stock._id, tmpl.data.onAddStockItem, HospoHero.handleMethodResult());
-    }
+    tmpl.data.onAddStockItem(tmpl.data.stock._id);
   }
 });
 
-Template.stockModalItem.onDestroyed(function () {
+Template.stocksListItem.onDestroyed(function () {
   this.$('.i-checks').iCheck('destroy');
 });
