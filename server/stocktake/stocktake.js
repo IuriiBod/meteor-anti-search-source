@@ -175,7 +175,6 @@ Meteor.methods({
       });
       logger.info("Stocktake main updated with areas", info.version);
     }
-    Meteor.call("resetCurrentStock", info.stockId, "New stock count", newValue, main.stocktakeDate)
   },
 
   removeStocktake: function (stocktakeId) {

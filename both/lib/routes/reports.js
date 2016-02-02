@@ -46,3 +46,8 @@ Router.route('menuItemsRankReport', {
     }
   }
 });
+
+Router.route('/stock-report', {
+  name: "stockReport",
+  template: "stockReport"
+});

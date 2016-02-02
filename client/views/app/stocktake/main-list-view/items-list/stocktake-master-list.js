@@ -1,5 +1,11 @@
 Template.stockTakeMasterList.helpers({
-  stocktakes: function() {
+  stocktakes: function () {
+    let getTotalStockValue = (stocktakesGroup) => {
+      return _.reduce(stocktakesGroup, (memo, stocktake) => {
+        return memo + (stocktake.counting * stocktake.unitCost);
+      }, 0);
+    };
+
     var stocktakeList = [];
     var stocktakes = Stocktakes.find({}, {
       fields: {
@@ -13,17 +19,16 @@ Template.stockTakeMasterList.helpers({
 
     var stocktakesGroupedByVersionId = _.groupBy(stocktakes, 'version');
 
-    _.keys(stocktakesGroupedByVersionId).forEach(function (versionId) {
-      var stocktakeCost = _.reduce(stocktakesGroupedByVersionId[versionId], function (memo, stocktake) {
-        return memo + stocktake.counting * stocktake.unitCost;
-      }, 0);
+    _.keys(stocktakesGroupedByVersionId).forEach((versionId) => {
+      let stocktakesGroup = stocktakesGroupedByVersionId[versionId];
 
       stocktakeList.push({
         _id: versionId,
-        date: stocktakesGroupedByVersionId[versionId][0].date,
-        totalStockValue: stocktakeCost
+        date: stocktakesGroup[0].date,
+        totalStockValue: getTotalStockValue(stocktakesGroup)
       });
     });
+
     return stocktakeList;
   }
 });

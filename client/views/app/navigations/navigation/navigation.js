@@ -120,6 +120,10 @@ var menuEntries = [
             startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
           }
         }
+      },
+      {
+        title: 'Stock Report <span class="label label-info pull-right">NEW</span>',
+        route: 'stockReport'
       }
     ]
   },

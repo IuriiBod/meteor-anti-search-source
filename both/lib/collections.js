@@ -22,7 +22,6 @@ NewsFeeds = new Mongo.Collection("newsFeeds");
 
 StocktakeMain = new Mongo.Collection("stocktakeMain");
 Stocktakes = new Mongo.Collection("stocktakes");
-CurrentStocks = new Mongo.Collection("currentStocks");
 StockOrders = new Mongo.Collection("stockOrders");
 OrderReceipts = new Mongo.Collection("orderReceipts");
 
