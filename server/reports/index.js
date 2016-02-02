@@ -18,8 +18,7 @@ let StockTakeIterator = class {
 
   _nextStocktakeMain(currentStocktakeMainId) {
     let nextStocktakeMain;
-
-//todo: avoiding empty array: needs to be tested
+    //todo: avoiding empty array: needs to be tested
     while (true) {
       let currentStocktakeMain = this._currentStocktakeMain(currentStocktakeMainId);
       let nextStocktakeMainQuery = this._stocktakeMainQuery({date: {$lt: currentStocktakeMain.date}});

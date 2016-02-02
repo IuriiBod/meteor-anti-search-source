@@ -1,18 +1,7 @@
-var RoutePermissionChecker = class RoutePermissionChecker {
+let RoutePermissionChecker = class RoutePermissionChecker {
   constructor(routeInstance) {
     this._user = Meteor.user();
     this._routeName = routeInstance.route.getName();
-    this._permissionsByRouteName = {
-      // route_name : 'permission to check',
-      teamHours: 'edit roster',
-      weeklyRoster: 'view roster',
-      templateWeeklyRoster: 'edit roster',
-      stocktake: 'edit stocks',
-      stocktakeCounting: 'edit stocks',
-      orderReceive: 'receive deliveries',
-      stocktakeOrdering: 'receive deliveries'
-      //todo: add other routes and their permissions
-    };
   }
 
   isOrganizationOwner() {
@@ -24,12 +13,19 @@ var RoutePermissionChecker = class RoutePermissionChecker {
   }
 
   _checkUserPermissionForRoute() {
-    const permission = this._permissionsByRouteName[this._routeName];
+    const permission = RoutePermissionChecker._permissionsByRouteName[this._routeName];
     return permission && HospoHero.canUser(permission, this._user._id) || !permission;
   }
 
   _checkCurrentAreaNotArchived() {
-    return this._user.currentAreaId && Areas.findOne({_id: this._user.currentAreaId, archived: {$ne: "true"}});
+    if (this._user.currentAreaId && Areas.findOne()) {
+      return !!Areas.findOne({_id: this._user.currentAreaId, archived: {$ne: true}});
+    } else {
+      //in case if there is no areas yet we return true
+      //because we will be able to check user permissions
+      //again after subscriptions will be finished
+      return true;
+    }
   }
 
   checkIsUserInOrganization() {
@@ -37,7 +33,21 @@ var RoutePermissionChecker = class RoutePermissionChecker {
   }
 };
 
-var requireLogIn = function () {
+
+RoutePermissionChecker._permissionsByRouteName = {
+  // routeName : 'permission to check',
+  teamHours: 'edit roster',
+  weeklyRoster: 'view roster',
+  templateWeeklyRoster: 'edit roster',
+  stocktake: 'edit stocks',
+  stocktakeCounting: 'edit stocks',
+  orderReceive: 'receive deliveries',
+  stocktakeOrdering: 'receive deliveries'
+};
+
+
+let requireLogIn = function () {
+  console.log('onBefore action');
   if (Meteor.loggingIn()) {
     this.render(this.loadingTemplate);
   } else if (Meteor.userId()) {
