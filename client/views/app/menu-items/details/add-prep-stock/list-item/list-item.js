@@ -18,16 +18,16 @@ Template.addPrepStockListItem.helpers({
 
 
 Template.addPrepStockListItem.events({
-  'ifChecked .prep-stock-select': function (event, tmpl) {
-    var query = {};
-    query[this.type === 'prep' ? 'jobItems' : 'ingredients'] = {
-      _id: this.item._id,
-      quantity: 1
-    };
-
-    var menuItemId = HospoHero.getParamsFromRoute('_id');
-    Meteor.call("editItemOfMenu", menuItemId, query, 'add', HospoHero.handleMethodResult());
-  }
+  //'ifChecked .prep-stock-select': function (event, tmpl) {
+  //  var query = {};
+  //  query[this.type === 'prep' ? 'jobItems' : 'ingredients'] = {
+  //    _id: this.item._id,
+  //    quantity: 1
+  //  };
+  //
+  //  var menuItemId = HospoHero.getParamsFromRoute('_id');
+  //  Meteor.call("editItemOfMenu", menuItemId, query, 'add', HospoHero.handleMethodResult());
+  //}
 });
 
 

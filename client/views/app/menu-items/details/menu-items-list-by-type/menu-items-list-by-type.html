@@ -4,7 +4,7 @@
       <h5>{{type}}</h5>
       <div class="ibox-tools">
         {{#if canEditMenu}}
-          <a class="btn btn-xs btn-primary" href="#addPrepStockModal" data-toggle="modal">Add prep or stock</a>
+          <button id="showIngsOrPrepList" class="btn btn-xs btn-primary" type="button">Add {{type}}</button>
         {{/if}}
         <a data-toggle="collapse" data-target="#{{type}}" aria-expanded="false" aria-controls="{{type}}">
           <i class="fa fa-chevron-up"></i>
@@ -29,16 +29,19 @@
         </tr>
         </thead>
         <tbody>
-          {{#each jobItems}}
-            {{> menuItemIngredientRow item=jobItem quantity=quantity type="prep" setCurrentEditedIngredient=setCurrentEditedIngredient}}
-          {{/each}}
-          {{#each ingredients}}
-            {{> menuItemIngredientRow item=ingredient quantity=quantity type="ings" setCurrentEditedIngredient=setCurrentEditedIngredient}}
-          {{/each}}
+          {{#if jobItems}}
+            {{#each jobItems}}
+              {{> menuItemIngredientRow item=jobItem quantity=quantity type="prep" setCurrentEditedIngredient=setCurrentEditedIngredient}}
+            {{/each}}
+          {{else}}
+            {{#each ingredients}}
+              {{> menuItemIngredientRow item=ingredient quantity=quantity type="ings" setCurrentEditedIngredient=setCurrentEditedIngredient}}
+            {{/each}}
+          {{/if}}
         </tbody>
       </table>
     </div>
   </div>
 
-  {{> addPrepStockModal jobItems=jobItems ingredients=ingredients}}
+  <!--{{> addPrepStockModal jobItems=jobItems ingredients=ingredients}}-->
 </template>
