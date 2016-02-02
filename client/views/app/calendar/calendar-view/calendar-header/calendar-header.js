@@ -1,3 +1,14 @@
+Template.calendarHeader.onCreated(function () {
+  this.onEventChange = function () {
+    var self = this;
+
+    return function (eventType, itemId) {
+      console.log('ARGS', arguments);
+    }
+  }
+});
+
+
 Template.calendarHeader.helpers({
   onDateChanged: function () {
     var self = this;
@@ -7,6 +18,7 @@ Template.calendarHeader.helpers({
   }
 });
 
+
 Template.calendarHeader.events({
   'click .calendar-day': function (event, tmpl) {
     routerReload('day', tmpl.data.date, tmpl.data.userId);
@@ -14,6 +26,10 @@ Template.calendarHeader.events({
 
   'click .calendar-week': function (event, tmpl) {
     routerReload('week', tmpl.data.date, tmpl.data.userId);
+  },
+
+  'click .add-item-to-calendar': function (event, tmpl) {
+    FlyoutManager.open('addEventItemFlyout', {onEventChange: tmpl.onEventChange()});
   }
 });
 

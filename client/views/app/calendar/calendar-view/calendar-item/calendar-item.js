@@ -1,13 +1,3 @@
-var eventItemsSettings = {
-  'recurring job': {
-    collection: JobItems,
-    titleField: 'name',
-    backgroundColor: '#1AB394',
-    textColor: '#FFF'
-  }
-};
-
-
 Template.calendarItem.onCreated(function () {
   // returns events need to render to the calendar
   this.getCalendarEvents = function () {
@@ -24,18 +14,20 @@ Template.calendarItem.onCreated(function () {
         userId: userId,
         startTime: TimeRangeQueryBuilder[queryType](date)
       }).map(function (event) {
-        var currentEventItem = eventItemsSettings[event.type];
-        var item = currentEventItem.collection.findOne({_id: event.itemId});
+
+        var currentEventItem = HospoHero.calendar.getEventByType(event.type);
+        var eventSettings = currentEventItem.eventSettings;
+        var item = Mongo.Collection.get(currentEventItem.collection).findOne({_id: event.itemId});
 
         if (item) {
           return {
             id: event._id,
             resourceId: userId,
-            title: item[currentEventItem.titleField],
+            title: item[eventSettings.titleField],
             start: moment(event.startTime),
             end: moment(event.endTime),
-            backgroundColor: currentEventItem.backgroundColor,
-            textColor: currentEventItem.textColor,
+            backgroundColor: eventSettings.backgroundColor,
+            textColor: eventSettings.textColor,
             item: event
           }
         } else {
@@ -77,14 +69,15 @@ Template.calendarItem.helpers({
         defaultDate: this.date,
         firstDay: 1,
         displayTime: true,
-        timezone: location.timezone,
+        allDaySlot: false,
+        eventOverlap: false,
+        height: 700,
         scrollTime: 0,
 
-        height: 700,
-
-        allDaySlot: false,
+        editable: true,
 
         columnFormat: 'ddd DD/MM',
+        timezone: location.timezone,
 
         events: function (start, end, timezone, callback) {
           var events = tmpl.getCalendarEvents();

@@ -8,8 +8,9 @@ Router.route('calendar', {
     if (!!area) {
       return [
         Meteor.subscribe('calendarEvents', this.params.date, this.params.type, area.locationId, userId),
-        Meteor.subscribe('sections', area._id)
-      ];
+        Meteor.subscribe('sections', area._id),
+        Meteor.subscribe('jobItems', null, area._id)
+      ]
     }
   },
 
@@ -31,13 +32,11 @@ Router.route('managerCalendar', {
     if (!!area) {
       return [
         Meteor.users.find().map(function (user) {
-          return [
-            Meteor.subscribe('calendarEvents', date, 'day', area.locationId, user._id),
-            Meteor.subscribe('shifts', 'today', user._id, area._id, new Date(date))
-          ]
+          return Meteor.subscribe('calendarEvents', date, 'day', area.locationId, user._id);
         }),
-        Meteor.subscribe('sections', area._id)
-      ];
+        Meteor.subscribe('sections', area._id),
+        Meteor.subscribe('jobItems', null, area._id)
+      ]
     }
   },
   data: function () {
