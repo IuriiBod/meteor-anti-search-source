@@ -1,5 +1,6 @@
 StocktakesReporter = class {
-  constructor(firstStocktakeGroup, secondStocktakeGroup) {
+  constructor(firstStocktakeGroup, secondStocktakeGroup, areaId) {
+    this._areaId = areaId;
     this._firstStocktakeGroup = firstStocktakeGroup;
     this._secondStocktakeGroup = secondStocktakeGroup;
 
@@ -13,8 +14,8 @@ StocktakesReporter = class {
   }
 
   getReport() {
-    let ordersReporter = new OrdersReporter(this._fromDate, this._toDate);
-    let expectedReporter = new ExpectedCostOfGoodsReporter(this._fromDate, this._toDate);
+    let ordersReporter = new OrdersReporter(this._fromDate, this._toDate, this._areaId);
+    let expectedReporter = new ExpectedCostOfGoodsReporter(this._fromDate, this._toDate, this._areaId);
     let actualReporter = new ActualCostOfGoodsReporter(
       this._firstStocktakeGroup,
       this._secondStocktakeGroup,

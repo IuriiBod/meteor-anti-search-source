@@ -44,7 +44,6 @@ force-ssl@1.0.6
 fortawesome:fontawesome@4.5.0
 geojson-utils@1.0.4
 google@1.1.7
-grigio:babel@0.1.8
 handlebars@1.0.4
 hospohero:stale-session@0.0.7
 hot-code-push@1.0.0

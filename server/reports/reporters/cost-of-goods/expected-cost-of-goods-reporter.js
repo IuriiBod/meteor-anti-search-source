@@ -2,11 +2,16 @@ ExpectedCostOfGoodsReporter = class {
   /**
    * @param {string} fromDate DD/MM/YY
    * @param {string} toDate DD/MM/YY
+   * @param {string} areaId
    */
-  constructor(fromDate, toDate) {
+  constructor(fromDate, toDate, areaId) {
     this._fromDate = fromDate;
     this._toDate = toDate;
+    this._areaId = areaId;
+
     this._dateQuery = TimeRangeQueryBuilder.forInterval(moment(fromDate, 'DD/MM/YY'), moment(toDate, 'DD/MM/YY'));
+
+    this._menuItemsCostCache = new MenuItemsCostCache(areaId);
   }
 
   getReport() {
@@ -59,9 +64,11 @@ ExpectedCostOfGoodsReporter = class {
   _getSoldAmountMenuItems() {
     let findQuery = {
       date: this._dateQuery,
-      actualQuantity: {$exists: true}
+      actualQuantity: {$exists: true},
+      'relations.areaId': this._areaId
     };
-    let projectionQuery = {
+
+    let queryOptions = {
       fields: {
         _id: 0,
         menuItemId: 1,
@@ -69,13 +76,13 @@ ExpectedCostOfGoodsReporter = class {
       }
     };
 
-    let menuItemsSales = DailySales.find(findQuery, projectionQuery).fetch();
+    let menuItemsSales = DailySales.find(findQuery, queryOptions).fetch();
     return _.map(menuItemsSales, (item) => {
       return HospoHero.misc.renameObjectProperty(item, 'actualQuantity', 'soldAmount')
     });
   }
 
   _getMenuItemCost(menuItemId) {
-    return MenuItemsCostCache.lookup(menuItemId);
+    return this._menuItemsCostCache.lookup(menuItemId);
   }
 };

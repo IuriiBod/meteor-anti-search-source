@@ -122,7 +122,7 @@ var menuEntries = [
         }
       },
       {
-        title: 'Stock Report',
+        title: 'Stock Report <span class="label label-info pull-right">NEW</span>',
         route: 'stockReport'
       }
     ]
