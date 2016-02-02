@@ -8,7 +8,8 @@ Meteor.publish('jobItems', function (ids, areaId, status) {
       query._id = {$in: ids};
     }
 
-    if (status) {
+    //if status isn't defined when function called status = {}
+    if (status && !_.isEmpty(status)) {
       query.status = status;
     }
 

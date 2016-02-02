@@ -15,15 +15,9 @@
         {{/each}}
         </tbody>
       </table>
-
-      <button class="btn btn-block btn-outline btn-primary" type="button" data-toggle="modal"
-              data-target="#addJobItemModal">
+      <button class="btn btn-block btn-outline btn-primary add-job-item-button" type="button">
         <i class="fa fa-plus"></i> Add prep jobs
       </button>
     </div>
   </div>
-
-  <!-- JOB ITEMS LIST-->
-  {{> addJobItemModal idsToExclude=idsToExclude onItemsAdded=getOnJobItemsAdded}}
-  <!-- /JOB ITEMS LIST -->
 </template>
