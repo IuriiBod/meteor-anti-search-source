@@ -47,7 +47,6 @@ RoutePermissionChecker._permissionsByRouteName = {
 
 
 let requireLogIn = function () {
-  console.log('onBefore action');
   if (Meteor.loggingIn()) {
     this.render(this.loadingTemplate);
   } else if (Meteor.userId()) {

@@ -11,51 +11,54 @@ let StockTakeIterator = class {
     return {sort: {date: -1}};
   }
 
-  _currentStocktakeMain(stocktakeMainId) {
+  /**
+   * Checks if stocktake main is filled
+   *
+   * @param stocktakeMainId
+   * @returns {boolean}
+   * @private
+   */
+  _hasStocktakes(stocktakeMainId) {
+    return !!Stocktakes.findOne({version: stocktakeMainId}, this._queryOptions());
+  }
+
+  _getStocktakeMainById(stocktakeMainId) {
     let currentStocktakeMainQuery = this._stocktakeMainQuery(stocktakeMainId ? {_id: stocktakeMainId} : {});
     return StocktakeMain.findOne(currentStocktakeMainQuery, this._queryOptions());
   }
 
-  _nextStocktakeMain(currentStocktakeMainId) {
-    let nextStocktakeMain;
-    //todo: avoiding empty array: needs to be tested
-    while (true) {
-      let currentStocktakeMain = this._currentStocktakeMain(currentStocktakeMainId);
+  _filledStocktakeMain(stocktakeMainId, forceNext = false) {
+    let currentStocktakeMain = this._getStocktakeMainById(stocktakeMainId);
+
+    while (currentStocktakeMain && (!this._hasStocktakes(currentStocktakeMain._id) || forceNext)) {
       let nextStocktakeMainQuery = this._stocktakeMainQuery({date: {$lt: currentStocktakeMain.date}});
+      currentStocktakeMain = StocktakeMain.findOne(nextStocktakeMainQuery, this._queryOptions());
 
-      nextStocktakeMain = StocktakeMain.findOne(nextStocktakeMainQuery, this._queryOptions());
-
-      if (!nextStocktakeMain) {
-        nextStocktakeMain = false;
-        break;
-      }
-      if (Stocktakes.findOne({version: currentStocktakeMainId}, this._queryOptions())) {
-        break;
-      }
+      forceNext = false; //disable force next after first iteration
     }
+
+    return currentStocktakeMain;
   }
 
+  _getStocktakeGroup(stocktakeMainId, forceNext) {
+    //ensure stocktake is filled otherwise find next filled stocktake
+    let stocktakeMain = this._filledStocktakeMain(stocktakeMainId, forceNext);
 
-  _getStocktakeGroup(stocktakeMainId) {
-    if (stocktakeMainId) {
-      let stocktakesCursor = Stocktakes.find({version: stocktakeMainId}, this._queryOptions());
+    if (stocktakeMain) {
+      let stocktakesCursor = Stocktakes.find({version: stocktakeMain._id}, this._queryOptions());
       return {
-        stocktakeMainId: stocktakeMainId,
+        stocktakeMainId: stocktakeMain._id,
         group: stocktakesCursor.fetch()
       };
-    } else {
-      return false;
     }
   }
 
   getCurrentStocktakeGroup(currentStocktakeMainId = false) {
-    let currentStocktakeMain = this._currentStocktakeMain(currentStocktakeMainId);
-    return this._getStocktakeGroup(currentStocktakeMain._id);
+    return this._getStocktakeGroup(currentStocktakeMainId, false);
   }
 
   getNextStocktakeGroup(currentStocktakeMainId = false) {
-    let nextStocktakeMain = this._nextStocktakeMain(currentStocktakeMainId);
-    return nextStocktakeMain && this._getStocktakeGroup(nextStocktakeMain._id);
+    return this._getStocktakeGroup(currentStocktakeMainId, true);
   }
 };
 
@@ -64,16 +67,15 @@ let getReportForStocktakeMain = function (areaId, stocktakeMainId) {
   let stocktakeIterator = new StockTakeIterator(areaId);
   let firstStocktake = stocktakeIterator.getCurrentStocktakeGroup(stocktakeMainId);
 
-  console.log('frist', firstStocktake);
-
   if (firstStocktake) {
     let secondStocktake = stocktakeIterator.getNextStocktakeGroup(firstStocktake.stocktakeMainId);
 
-    console.log('2nd', secondStocktake);
-
     if (secondStocktake) {
       let stocktakesReporter = new StocktakesReporter(firstStocktake.group, secondStocktake.group);
-      return stocktakesReporter.getReport();
+      return {
+        lastStocktakeMainId: secondStocktake.stocktakeMainId,
+        report: stocktakesReporter.getReport()
+      };
     }
   }
 };
