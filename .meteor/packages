@@ -93,3 +93,4 @@ jss:moment-timezone
 settinghead:auto-nprogress
 matb33:collection-hooks
 dburles:mongo-collection-instances
+manuel:reactivearray
