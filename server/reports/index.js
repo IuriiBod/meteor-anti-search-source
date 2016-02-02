@@ -71,7 +71,7 @@ let getReportForStocktakeMain = function (areaId, stocktakeMainId) {
     let secondStocktake = stocktakeIterator.getNextStocktakeGroup(firstStocktake.stocktakeMainId);
 
     if (secondStocktake) {
-      let stocktakesReporter = new StocktakesReporter(firstStocktake.group, secondStocktake.group);
+      let stocktakesReporter = new StocktakesReporter(firstStocktake.group, secondStocktake.group, areaId);
       return {
         lastStocktakeMainId: secondStocktake.stocktakeMainId,
         report: stocktakesReporter.getReport()

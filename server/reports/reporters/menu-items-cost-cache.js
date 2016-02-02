@@ -1,10 +1,23 @@
 MenuItemsCostCache = class {
-  static _initCache() {
-    let menuItemsIds = _.pluck(MenuItems.find({}, {fields: {_id: 1}}).fetch(), '_id');
-    this._cache = _.map(menuItemsIds, (menuItemId) => {
-      let menuItemAnalysis = HospoHero.analyze.menuItemById(menuItemId);
+  /**
+   * @param {string} areaId
+   */
+  constructor(areaId) {
+    this._areaId = areaId;
+    this._initCache();
+  }
+
+  _initCache() {
+    this._cache = MenuItems.find({'relations.areaId': this._areaId}, {
+      fields: {
+        ingredients: 1,
+        jobItems: 1,
+        salesPrice: 1
+      }
+    }).map((menuItem)=> {
+      let menuItemAnalysis = HospoHero.analyze.menuItem(menuItem);
       return {
-        menuItemId,
+        menuItemId: menuItem._id,
         totalIngredientCost: menuItemAnalysis.ingCost,
         totalPreparationCost: menuItemAnalysis.prepCost,
         salePrice: menuItemAnalysis.salesPrice
@@ -12,10 +25,7 @@ MenuItemsCostCache = class {
     });
   }
 
-  static lookup(menuItemId) {
-    if (!this._cache) {
-      this._initCache();
-    }
+  lookup(menuItemId) {
     return _.findWhere(this._cache, {menuItemId});
   }
 };

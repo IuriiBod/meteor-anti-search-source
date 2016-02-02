@@ -82,7 +82,7 @@ Namespace('HospoHero.dateUtils', {
     return date ? moment(date).format('hh:mm A') : '-';
   },
 
-  shiftDate: function (date = moment().startOf('d'), isTemplate) {
+  shiftDate: function (date = moment().startOf('d'), isTemplate = false) {
     var dateMoment;
     if (isTemplate) {
       dateMoment = moment(0).week(2).startOf('isoweek').day(moment(date).day()); //1970 year
@@ -179,7 +179,7 @@ Namespace('HospoHero.dateUtils', {
     return moment(time).fromNow();
   },
 
-  startOfWeekMoment: function (date = moment(), location) {
+  startOfWeekMoment: function (date = moment(), location = false) {
     if (location) {
       date = HospoHero.dateUtils.getDateMomentForLocation(date, location);
     }

@@ -2,12 +2,14 @@ OrdersReporter = class {
   /**
    * @param {string} fromDate DD/MM/YY
    * @param {string} toDate DD/MM/YY
+   * @param {string} areaId Mongo ID
    */
-  constructor(fromDate, toDate) {
+  constructor(fromDate, toDate, areaId) {
     this._fromDate = fromDate;
     this._toDate = toDate;
+    this._areaId = areaId;
     this._dateQuery = {
-      $gte: moment(fromDate, 'DD/MM/YY').unix() * 1000, // TODO Change in case of migration to plain Date object in collection
+      $gte: moment(fromDate, 'DD/MM/YY').unix() * 1000,
       $lte: moment(toDate, 'DD/MM/YY').unix() * 1000
     };
   }
@@ -24,7 +26,8 @@ OrdersReporter = class {
     let findQuery = {
       orderReceipt: {
         $in: orderReceiptsIds
-      }
+      },
+      'relations.areaId': this._areaId
     };
     let projectionQuery = {
       fields: {
@@ -39,7 +42,8 @@ OrdersReporter = class {
 
   _getOrderReceiptsIds() {
     let findQuery = {
-      stocktakeDate: this._dateQuery
+      stocktakeDate: this._dateQuery,
+      'relations.areaId': this._areaId
     };
     let projectionQuery = {
       fields: {
