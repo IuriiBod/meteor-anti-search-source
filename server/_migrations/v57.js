@@ -1,5 +1,3 @@
-
-currentStocks
 Migrations.add({
   version: 57,
   name: 'Remove defaultRole from roles object',
