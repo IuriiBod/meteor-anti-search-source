@@ -53,8 +53,7 @@ Template.userPopup.onRendered(function() {
 
 Template.userPopup.helpers({
   userRole: function() {
-    var data = Template.currentData();
-    return HospoHero.roles.getUserRoleName(data.userId, data.areaId);
+    return HospoHero.roles.getUserRoleName(this.userId, this.areaId);
   },
   roles: function() {
     return Meteor.roles.find().fetch();
@@ -71,8 +70,8 @@ Template.userPopup.events({
     }
   },
   'click .filter-menus a': function(event, tmpl) {
+    var newRoleId = this._id;
     var userId = tmpl.data.userId;
-    var newRoleId = event.target.getAttribute('data-role-id');
-    Meteor.call('changeUserRole', userId, newRoleId);
+    Meteor.call('changeUserRole', userId, newRoleId, tmpl.data.areaId, HospoHero.handleMethodResult());
   }
 });

@@ -36,7 +36,7 @@ GoogleCloud.prototype.uploadSalesData = function (uploadToFile = false) {
   var predictionModelDataGenerator = new PredictionModelDataGenerator(this._menuItem);
 
   var locationId = this._menuItem.relations.locationId;
-  var dateToStartUploadFrom = new Date(); // new Date() default
+  var dateToStartUploadFrom = HospoHero.prediction.getDateThreshold(); // new Date() default
   var nowMoment = HospoHero.dateUtils.getDateMomentForLocation(dateToStartUploadFrom, locationId);
   var indexMoment = moment(nowMoment);
 

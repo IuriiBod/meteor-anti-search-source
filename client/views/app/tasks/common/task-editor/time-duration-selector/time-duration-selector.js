@@ -8,6 +8,6 @@ Template.timeDurationSelector.onRendered(function () {
 
 Template.timeDurationSelector.helpers({
   getTaskDuration: function () {
-    return HospoHero.dateUtils.humanizeTimeDuration(this.duration);
+    return !!this.duration ? HospoHero.dateUtils.humanizeTimeDuration(this.duration) : false;
   }
 });

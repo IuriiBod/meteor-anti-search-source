@@ -23,9 +23,6 @@ Accounts.onCreateUser(function (options, user) {
     delete user.profile.pinCode;
   }
 
-  // if this is the first user ever, make him an owner
-  var role = Roles.getRoleByName('Owner');
-  user.roles = {defaultRole: role._id};
   return user;
 });
 
@@ -179,26 +176,45 @@ Meteor.methods({
     }
   },
 
-  changeUserRole: function (userId, newRoleId) {
-    if (!HospoHero.isManager()) {
+  changeUserRole: function (userId, newRoleId, areaId) {
+    if (!HospoHero.canUser('edit users', Meteor.userId())) {
       logger.error("User not permitted to change roles");
       throw new Meteor.Error(403, "User not permitted to change roles");
     }
 
     check(userId, HospoHero.checkers.MongoId);
-    if (!Meteor.users.findOne(userId)) {
-      throw new Meteor.Error("User not found ", userId);
-    }
-
     check(newRoleId, HospoHero.checkers.MongoId);
-    if (!Meteor.roles.findOne(newRoleId)) {
-      throw new Meteor.Error("Role not found", newRoleId);
+
+    areaId = areaId || HospoHero.getCurrentAreaId();
+
+    var area = Areas.findOne({_id: areaId});
+
+    /**
+     * check if the user is organization owner
+     * and there is at least one owner besides him
+     */
+    var organization = Organizations.findOne({
+      _id: area.organizationId,
+      owners: userId
+    });
+
+    if (!!organization && organization.owners.length === 1) {
+      throw new Meteor.Error('This is the last organization owner. You can remove it.');
     }
 
     var updateQuery = {};
-    updateQuery["roles." + HospoHero.getCurrentAreaId()] = newRoleId;
-
+    updateQuery["roles." + areaId] = newRoleId;
     Meteor.users.update({_id: userId}, {$set: updateQuery});
+
+    var updateOrganizationQuery;
+
+    // when selected role is Owner - add userId to the organization's owners
+    if (Roles.hasAction(newRoleId, 'all rights')) {
+      updateOrganizationQuery = {$addToSet: {owners: userId}};
+    } else {
+      updateOrganizationQuery = {$pull: {owners: userId}};
+    }
+    Organizations.update({_id: area.organizationId}, updateOrganizationQuery);
   },
 
   toggleUserTrainingSection: function (userId, sectionId, isAddingSection) {

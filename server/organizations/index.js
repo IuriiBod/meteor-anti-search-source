@@ -12,7 +12,7 @@ Meteor.methods({
     // Create organization
     var orgId = Organizations.insert({
       name: orgName,
-      owner: Meteor.userId(),
+      owners: [Meteor.userId()],
       createdAt: Date.now()
     });
 
