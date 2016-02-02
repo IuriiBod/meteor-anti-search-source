@@ -19,7 +19,7 @@ Template.menuItemJobsList.onCreated(function () {
         return jobItem;
       });
     } else if (action === 'remove') {
-      jobItemsList = _.filter(stockItems, function (jobItem) {
+      jobItemsList = _.filter(jobItemsList, function (jobItem) {
         return jobItem._id !== jobItemId;
       });
     }
@@ -35,16 +35,19 @@ Template.menuItemJobsList.helpers({
       quantity: this.quantity,
       onJobItemUpdate: Template.instance().onJobItemUpdate
     };
-  },
+  }
+});
 
-  idsToExclude: function () {
-    return _.pluck(this.jobItems, '_id');
-  },
-
-  getOnJobItemsAdded: function () {
-    var tmpl = Template.instance();
-    return function (jobItemId) {
-      tmpl.onJobItemUpdate('add', jobItemId);
+Template.menuItemJobsList.events({
+  'click .add-job-item-button': function(event, tmpl) {
+    var idsToExclude = _.pluck(tmpl.data.jobItems, '_id');
+    var onItemsAdded = function(jobItemId) {
+        tmpl.onJobItemUpdate('add', jobItemId);
     };
+
+    FlyoutManager.open('addJobItem', {
+      idsToExclude: idsToExclude,
+      onItemsAdded: onItemsAdded
+    });
   }
 });

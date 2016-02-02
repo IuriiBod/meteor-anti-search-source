@@ -1,20 +1,19 @@
 //context: item (JobItem), onSelectionStateChanged(function), isSelected(boolean)
-Template.jobItemsModalListItem.onRendered(function () {
+Template.jobListItem.onRendered(function () {
   this.$('.i-checks.selected-prep').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
 });
 
-Template.jobItemsModalListItem.helpers({
+Template.jobListItem.helpers({
 });
 
-Template.jobItemsModalListItem.events({
+Template.jobListItem.events({
   'ifChecked .job-select-checkbox': function (event, tmpl) {
     tmpl.data.onJobItemSelect(tmpl.data.item._id);
   }
 });
 
-
-Template.jobItemsModalListItem.onDestroyed(function () {
+Template.jobListItem.onDestroyed(function () {
   this.$('.job-select-checkbox').iCheck('destroy');
 });

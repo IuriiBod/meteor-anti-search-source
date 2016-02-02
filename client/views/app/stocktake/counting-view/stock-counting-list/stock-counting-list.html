@@ -49,13 +49,6 @@
     {{/if}}
   </div>
 
-  {{#if stockTakeCountingContext.activeSpecialArea}}
-  <div class="modal fade" id="stocksListModal" tabindex="-1" role="dialog" aria-labelledby="stockslistModal"
-       aria-hidden="true">
-    {{> stocksModalList name="stockModal" modalStockListParams=modalStockListParams}}
-  </div>
-  {{/if}}
-
   <div class="modal fade" id="addNewGeneralAreaModal" tabindex="-1" role="dialog" aria-labelledby="areasModal"
        aria-hidden="true">
     {{> newAreaModal name="general"}}
