@@ -1,0 +1,44 @@
+<template name="menuItemsListByType">
+  <div class="ibox panel panel-default">
+    <div class="ibox-title">
+      <h5>{{type}}</h5>
+      <div class="ibox-tools">
+        {{#if canEditMenu}}
+          <a class="btn btn-xs btn-primary" href="#addPrepStockModal" data-toggle="modal">Add prep or stock</a>
+        {{/if}}
+        <a data-toggle="collapse" data-target="#{{type}}" aria-expanded="false" aria-controls="{{type}}">
+          <i class="fa fa-chevron-up"></i>
+        </a>
+      </div>
+    </div>
+    <div class="ibox-content no-padding white-bg" id="{{type}}" aria-expanded="false">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          {{#if canEditMenu}}
+            <th></th>
+          {{/if}}
+          <th>Name</th>
+          <th>Type</th>
+          <th>Quantity</th>
+          <th>Measure</th>
+          <th>Price</th>
+          {{#if canEditMenu}}
+            <th></th>
+          {{/if}}
+        </tr>
+        </thead>
+        <tbody>
+          {{#each jobItems}}
+            {{> menuItemIngredientRow item=jobItem quantity=quantity type="prep" setCurrentEditedIngredient=setCurrentEditedIngredient}}
+          {{/each}}
+          {{#each ingredients}}
+            {{> menuItemIngredientRow item=ingredient quantity=quantity type="ings" setCurrentEditedIngredient=setCurrentEditedIngredient}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {{> addPrepStockModal jobItems=jobItems ingredients=ingredients}}
+</template>
