@@ -71,11 +71,6 @@ Meteor.publish("receiptOrders", function (receiptId) {
   return StockOrders.find({"orderReceipt": receiptId, "countOrdered": {$gt: 0}});
 });
 
-Meteor.publish("currentStocks", function (ids) {
-  logger.info("Current stocks published ", ids);
-  return CurrentStocks.find({"_id": {$in: ids}});
-});
-
 Meteor.publish('stocktakeList', function (areaId) {
   return [
     StocktakeMain.find({
