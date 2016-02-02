@@ -1,0 +1,34 @@
+<template name="stocksList">
+  <div class="flyout-header">
+    {{> CloseFlyoutButton}}
+    <div class="col-xs-11 col-xs-offset-1">
+      Select Stocks
+    </div>
+  </div>
+  <div class="flyout-content">
+    {{#if canViewStock}}
+      <input type="text" class="form-control input-lg search-for-stocks-input" placeholder="Search for stocks..."><br>
+      <table class="table table-striped ingredients-table">
+        <thead>
+        <tr>
+          <th>Action</th>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Supplier</th>
+          <th>Unit used</th>
+          <th>Unit cost</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each ingredients}}
+          {{> stocksListItem stock=this onAddStockItem=onAddStockItem}}
+        {{/each}}
+        </tbody>
+      </table>
+      <div class="alert alert-warning">If your stock item is not in the list,
+        <a class="alert-link add-new-ingredient">click here</a> to add it. Once you save it, it will appear next
+        time you search.
+      </div>
+    {{/if}}
+  </div>
+</template>

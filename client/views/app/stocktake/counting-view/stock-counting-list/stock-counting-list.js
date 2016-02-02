@@ -70,19 +70,6 @@ Template.stockCountingList.helpers({
         hasOrderReceipts: main.orderReceipts && main.orderReceipts.length > 0
       }
     }
-  },
-
-  modalStockListParams: function() {
-    var currentSpecialAreaId = Template.instance().get('activeSpecialArea');
-    if(currentSpecialAreaId) {
-      var specialArea = SpecialAreas.findOne({_id: currentSpecialAreaId});
-      if (specialArea) {
-        return {
-          activeSpecialArea: currentSpecialAreaId,
-          stockItemsInListIds: specialArea.stocks
-        }
-      }
-    }
   }
 });
 
@@ -113,6 +100,16 @@ Template.stockCountingList.events({
 
   'click .addStock': function (event, tmpl) {
     event.preventDefault();
-    tmpl.$("#stocksListModal").modal("show");
+    var currentSpecialAreaId = tmpl.get('activeSpecialArea');
+    var currentSpecialArea = SpecialAreas.findOne({_id: currentSpecialAreaId});
+    var idsOfItemsInList = currentSpecialArea.stocks;
+    var onAddStockItem = function(stockId) {
+      Meteor.call("assignStocksToAreas", stockId, currentSpecialAreaId, HospoHero.handleMethodResult());
+    };
+
+    FlyoutManager.open('stocksList', {
+      onAddStockItem: onAddStockItem,
+      idsToExclude: idsOfItemsInList
+    });
   }
 });

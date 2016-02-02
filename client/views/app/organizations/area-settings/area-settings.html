@@ -4,7 +4,7 @@
     {{area.name}} settings
   </div>
 
-  <div class="flyout-content">
+  <div class="flyout-content area-settings">
 
     <div class="name-editable-wrapper">
       <h1 class="area-name" style="display: inline-block;">{{area.name}}</h1>
@@ -22,7 +22,7 @@
         <div class="user-profile-image-container">
           <a href="/user/profile/{{_id}}">
             <img src="{{profilePicture _id}}" alt="Profile photo of {{username _id}}" class="user-photo-min"
-                 title="{{username _id}}"/>
+                 title="{{username _id}}" data-toggle="tooltip"/>
           </a>
         </div>
       {{/each}}
@@ -37,11 +37,13 @@
       {{/if}}
     {{/if}}
 
-    <ul class="list-group" style="display: block;">
-      <li class="list-group-item">
-        <a href="{{pathFor 'posSettings'}}">POS / Menu Linking</a>
-      </li>
-    </ul>
+    <div class="row">
+      <div class="col-md-12" style="display: block;">
+        <ul class="list-group" style="display: block;">
+          <li class="list-group-item show-pos-settings">POS / Menu Linking</li>
+        </ul>
+      </div>
+    </div>
 
     {{#if isManager}}
       <button class="btn btn-danger col-xs-12 delete-area">Delete Area</button>

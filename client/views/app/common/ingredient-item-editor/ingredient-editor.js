@@ -1,5 +1,5 @@
 //context: ingredient (Ingredient/undefined)
-Template.ingredientItemEditor.onCreated(function () {
+Template.ingredientEditor.onCreated(function () {
   this.changeIngredientState = function (newState) {
     var self = this;
     Meteor.call("archiveIngredient", this.data.ingredient._id, newState, HospoHero.handleMethodResult(function () {
@@ -31,9 +31,7 @@ Template.ingredientItemEditor.onCreated(function () {
 });
 
 
-Template.ingredientItemEditor.onRendered(function () {
-  this.modalInstance = ModalManager.getInstanceByElement(this.$('.ingredient-item-editor'));
-
+Template.ingredientEditor.onRendered(function () {
   this.$('.unit-ordered-popover').popover({
     content: "Put the amount that you usually order in here. If it's a 20kg bag of flour, put '20kg bag'. If it's a 1lt bottle, put '1lt Bottle."
   });
@@ -43,15 +41,10 @@ Template.ingredientItemEditor.onRendered(function () {
   this.$('.unit-size-popover').popover({
     content: "If you use mls of milk and order 1lt you'd put 1000 in this box, as there is 1000 mls in every litre. If you use grams of flour and order 20kg bags you'd put 20000, as there is 20000 grams in 20kgs."
   });
-
-  //it's important to raise the backdrop of current modal window above another modal windows
-  Meteor.setTimeout(function() {
-    $('.modal-backdrop.fade.in').last().css('cssText', 'z-index: 3000 !important');
-  }, 200);
 });
 
 
-Template.ingredientItemEditor.helpers({
+Template.ingredientEditor.helpers({
   unitsCaptions: function () {
     return {
       ordered: Template.instance().unitOrdered.get(),
@@ -91,7 +84,7 @@ Template.ingredientItemEditor.helpers({
 });
 
 
-Template.ingredientItemEditor.events({
+Template.ingredientEditor.events({
   'submit form': function (event, tmpl) {
     event.preventDefault();
     event.stopPropagation();
@@ -108,15 +101,15 @@ Template.ingredientItemEditor.events({
 
     info.costPerPortion = HospoHero.misc.rounding(info.costPerPortion);
 
-    var handleMethodResultCb = HospoHero.handleMethodResult(function () {
-      tmpl.modalInstance.close();
+    var handleMethodResultClose = HospoHero.handleMethodResult(function () {
+      FlyoutManager.getInstanceByElement(event.target).close();
     });
 
     var oldIngredient = tmpl.data.ingredient;
     if (oldIngredient) {
-      Meteor.call("editIngredient", oldIngredient._id, info, handleMethodResultCb);
+      Meteor.call("editIngredient", oldIngredient._id, info, handleMethodResultClose);
     } else {
-      Meteor.call("createIngredients", info, handleMethodResultCb);
+      Meteor.call("createIngredients", info, handleMethodResultClose);
     }
   },
 
@@ -142,6 +135,9 @@ Template.ingredientItemEditor.events({
     if (confirm('Are you sure you want to delete this ingredient?')) {
       tmpl.changeIngredientState('delete');
     }
+  },
+  'click .cancel-button': function (event) {
+    FlyoutManager.getInstanceByElement(event.target).close();
   }
 });
 

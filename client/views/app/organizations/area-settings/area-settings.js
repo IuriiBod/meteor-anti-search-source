@@ -20,6 +20,7 @@ Template.areaSettings.onRendered(function () {
       Meteor.call('editArea', area, HospoHero.handleMethodResult());
     }
   });
+  $('[data-toggle="tooltip"]').tooltip();
 });
 
 Template.areaSettings.helpers({
@@ -117,5 +118,9 @@ Template.areaSettings.events({
       userId: user._id,
       areaId: tmpl.data.areaId
     });
+  },
+  'click .show-pos-settings': function() {
+    event.preventDefault();
+    Router.go('posSettings');
   }
 });
