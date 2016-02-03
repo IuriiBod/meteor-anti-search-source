@@ -3,6 +3,10 @@ var canClockInOut = function (shiftId, user) {
   return (assignedTo && (assignedTo === user._id || HospoHero.canUser('edit roster')))
 };
 
+var linkToWeeklyRosterHelper = function () {
+  return NotificationSender.urlFor('weeklyRoster', {date: this.rosterDate}, this);
+}
+
 Meteor.methods({
   clockIn: function (id) {
     var user = Meteor.user();
@@ -90,8 +94,7 @@ Meteor.methods({
         multi: true
       });
 
-      var shiftDate = shiftDateQuery.$gte;
-      shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDate, locationId);
+      var shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDateQuery.$gte, locationId);
 
       Object.keys(usersToNotify).forEach(function (key) {
         new NotificationSender(
@@ -102,7 +105,7 @@ Meteor.methods({
             shifts: usersToNotify[key],
             openShifts: openShifts,
             publishedByName: HospoHero.username(Meteor.userId()),
-            linkToItem: Router.url('weeklyRoster', {date: shiftDate}),
+            rosterDate: shiftDate,
             areaName: HospoHero.getCurrentArea().name
           },
           {
@@ -113,7 +116,8 @@ Meteor.methods({
               },
               dateFormatter: function (shift) {
                 return HospoHero.dateUtils.shiftDateInterval(shift)
-              }
+              },
+              rosterUrl: linkToWeeklyRosterHelper
             }
           }
         ).sendBoth(key);
@@ -188,26 +192,24 @@ var sendNotification = function (shift, userIds) {
   var area = Areas.findOne({_id: shift.relations.areaId});
   var section = Sections.findOne({_id: shift.section});
 
-  var rosterDate = HospoHero.dateUtils.getDateStringForRoute(shift.startTime, shift.relations.locationId);
-  var rosterUrl = Router.url('weeklyRoster', {date: rosterDate});
-
   var params = {
     date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId),
     username: HospoHero.username(userId),
     areaName: area.name,
     sectionName: section && section.name || 'open',
-    rosterUrl: rosterUrl
+    rosterDate: HospoHero.dateUtils.getDateStringForRoute(shift.startTime, shift.relations.locationId)
   };
 
   var options = {
     interactive: true,
     helpers: {
       confirmClaimUrl: function () {
-        return NotificationSender.actionUrlFor('approveClaimShift', this._notificationId, 'confirm');
+        return NotificationSender.actionUrlFor('approveClaimShift', 'confirm', this);
       },
       rejectClaimUrl: function () {
-        return NotificationSender.actionUrlFor('approveClaimShift', this._notificationId, 'reject');
-      }
+        return NotificationSender.actionUrlFor('approveClaimShift', 'reject', this);
+      },
+      rosterUrl: linkToWeeklyRosterHelper
     },
     meta: {
       shiftId: shift._id,
