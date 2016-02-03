@@ -1,62 +1,45 @@
-<template name="menuDetailWidgets">
-  <div class="col-md-6 col-md-offset-6">
-    <div class="widget style1 lazur-bg">
-      <div class="row">
-        <div class="col-xs-12 text-right">
-          <span>Sale Price</span>
-
-          <h2 class="font-bold">
-            $ {{#if canEditMenu}} <a href="#" class="edit-item-price">{{salesPrice}}</a> {{else}} {{salesPrice}} {{/if}}
-          </h2>
-        </div>
+<template name="menuDetailPerformance">
+  <div class="ibox panel panel-default">
+    <div class="ibox-title">
+      <h5>Performance Snapshot</h5>
+      <div class="ibox-tools">
+        <a class="btn btn-xs btn-link" href="#">View MenuRank Report</a>
+        <a data-toggle="collapse" data-target="#MenuItemPerformance" aria-expanded="false" aria-controls="MenuItemPerformance">
+          <i class="fa fa-chevron-up"></i>
+        </a>
       </div>
     </div>
-  </div>
-  <div class="col-md-4">
-    <div class="widget style1 red-bg">
-      <div class="row">
-        <div class="col-xs-12 text-right">
-          <span>Prep</span>
-
-          <h2 class="font-bold">$ {{menuItemStats.prepCost}}</h2>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="widget style1 red-bg">
-      <div class="row">
-        <div class="col-xs-12 text-right">
-          <span>Ingredient</span>
-
-          <h2 class="font-bold">$ {{menuItemStats.ingCost}}</h2>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="widget style1 red-bg">
-      <div class="row">
-        <div class="col-xs-12 text-right">
-          <span>GST</span>
-
-          <h2 class="font-bold">$ {{menuItemStats.tax}}</h2>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-12">
-    <div class="widget style1 navy-bg">
-      <div class="row">
-        <div class="col-xs-4">
-          <i class="fa fa-check fa-4x"></i>
-        </div>
-        <div class="col-xs-8 text-right">
-          <span>Contribution</span>
-
-          <h2 class="font-bold">$ {{menuItemStats.contribution}}</h2>
-        </div>
-      </div>
+    <div class="ibox-content no-padding" id="MenuItemPerformance" aria-expanded="false">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-lg-1 col-md-12 col-sm-12 col-xs-6">
+              <h4>Costing</h4>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6">
+              <h4>{{salesPrice}} <small>Sale Price</small></h4>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+              <h4> - $ {{menuItemStats.ingCost}} <small>Ing</small></h4>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+              <h4> - $ {{menuItemStats.prepCost}} <small>Prep</small></h4>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+              <h4> - $ {{menuItemStats.tax}} <small>Tax</small></h4>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+              <h4> = $ {{menuItemStats.contribution}} <small>Contribution</small></h4>
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <h4>Menu Rank <small>(last 7 days)</small></h4>
+        </li>
+        <li class="list-group-item">
+          <h4>Contribution <small>(last 7 days)</small></h4>
+        </li>
+      </ul>
     </div>
   </div>
 </template>

@@ -1,4 +1,4 @@
-Template.menuDetailWidgets.onRendered(function () {
+Template.menuDetailPerformance.onRendered(function () {
   var self = this;
   var onPriceEditSuccess = function (response, newValue) {
     var menuItem = MenuItems.findOne({_id: self.data._id});
@@ -16,7 +16,7 @@ Template.menuDetailWidgets.onRendered(function () {
   });
 });
 
-Template.menuDetailWidgets.helpers({
+Template.menuDetailPerformance.helpers({
   menuItemStats: function () {
     var menu = this;
 
