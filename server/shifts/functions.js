@@ -203,10 +203,10 @@ var sendNotification = function (shift, userIds) {
     interactive: true,
     helpers: {
       confirmClaimUrl: function () {
-        return NotificationSender.actionUrlFor('approveClaimShift', this._notificationId, 'confirm');
+        return NotificationSender.actionUrlFor('approveClaimShift', 'confirm', this);
       },
       rejectClaimUrl: function () {
-        return NotificationSender.actionUrlFor('approveClaimShift', this._notificationId, 'reject');
+        return NotificationSender.actionUrlFor('approveClaimShift', 'reject', this);
       }
     },
     meta: {

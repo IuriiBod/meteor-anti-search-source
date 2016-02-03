@@ -81,10 +81,10 @@ var sendNotification = function (insertedLeaveRequestId) {
     interactive: true,
     helpers: {
       approveLeaveRequestUrl: function () {
-        return NotificationSender.actionUrlFor('changeLeaveRequestStatus', insertedLeaveRequestId, 'approved');
+        return NotificationSender.actionUrlFor('changeLeaveRequestStatus', 'approved', this);
       },
       declineLeaveRequestUrl: function () {
-        return NotificationSender.actionUrlFor('changeLeaveRequestStatus', insertedLeaveRequestId, 'declined');
+        return NotificationSender.actionUrlFor('changeLeaveRequestStatus', 'declined', this);
       }
     },
     meta: {
