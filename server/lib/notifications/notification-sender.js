@@ -51,18 +51,18 @@
  * @param {string} subject notification's subject/title
  * @param {string} templateName handlebars template name
  * @param {*|object} templateData data to render on template
- * @param {*|object} options additional configuration
+ * @param {*|object} [options] additional configuration
  * @param {*|string} options.senderId user that sanded notification
  * @param {*|object} options.metadata additional notification data
  * @param {*|boolean} options.interactive deny automatic reading (usually if notification requires an action)
  * @param {*|object} options.helpers define you own formatting helpers
  * @constructor
  */
-NotificationSender = function (subject, templateName, templateData, options) {
-  this._options = _.extend(options || {}, {
+NotificationSender = function (subject, templateName, templateData = {}, options = {}) {
+  this._options = _.extend(options, {
     subject: subject,
     templateName: templateName,
-    templateData: templateData || {}
+    templateData: templateData
   });
 
   //register current notification helpers

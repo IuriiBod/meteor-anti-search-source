@@ -3,6 +3,10 @@ var canClockInOut = function (shiftId, user) {
   return (assignedTo && (assignedTo === user._id || HospoHero.canUser('edit roster')))
 };
 
+var linkToWeeklyRosterHelper = function () {
+  return NotificationSender.urlFor('weeklyRoster', {date: this.rosterDate}, this);
+}
+
 Meteor.methods({
   clockIn: function (id) {
     var user = Meteor.user();
@@ -90,8 +94,7 @@ Meteor.methods({
         multi: true
       });
 
-      var shiftDate = shiftDateQuery.$gte;
-      shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDate, locationId);
+      var shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDateQuery.$gte, locationId);
 
       Object.keys(usersToNotify).forEach(function (key) {
         new NotificationSender(
@@ -102,7 +105,7 @@ Meteor.methods({
             shifts: usersToNotify[key],
             openShifts: openShifts,
             publishedByName: HospoHero.username(Meteor.userId()),
-            linkToItem: Router.url('weeklyRoster', {date: shiftDate}),
+            rosterDate: shiftDate,
             areaName: HospoHero.getCurrentArea().name
           },
           {
@@ -113,7 +116,8 @@ Meteor.methods({
               },
               dateFormatter: function (shift) {
                 return HospoHero.dateUtils.shiftDateInterval(shift)
-              }
+              },
+              rosterUrl: linkToWeeklyRosterHelper
             }
           }
         ).sendBoth(key);
@@ -205,9 +209,7 @@ var sendNotification = function (shift, userIds) {
       rejectClaimUrl: function () {
         return NotificationSender.actionUrlFor('approveClaimShift', 'reject', this);
       },
-      rosterUrl: function () {
-        return NotificationSender.urlFor('weeklyRoster', {date: this.rosterDate}, this);
-      }
+      rosterUrl: linkToWeeklyRosterHelper
     },
     meta: {
       shiftId: shift._id,
