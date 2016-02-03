@@ -1,5 +1,5 @@
 //context: MenuItem
-Template.prepList.onCreated(function () {
+Template.prepsList.onCreated(function () {
   this.jobItemsSearch = this.AntiSearchSource({
     collection: 'jobItems',
     fields: ['name'],
@@ -10,7 +10,7 @@ Template.prepList.onCreated(function () {
   this.jobItemsSearch.search('');
 });
 
-Template.prepList.helpers({
+Template.prepsList.helpers({
   jobItems() {
     let tmpl = Template.instance();
     let query = {_id: {$nin: tmpl.idsToExclude.get()}};
@@ -34,7 +34,7 @@ Template.prepList.helpers({
   }
 });
 
-Template.prepList.events({
+Template.prepsList.events({
   'keyup .prep-stock-search': _.throttle(function (event, tmpl) {
     let text = event.target.value.trim();
     tmpl.jobItemsSearch.search(text);

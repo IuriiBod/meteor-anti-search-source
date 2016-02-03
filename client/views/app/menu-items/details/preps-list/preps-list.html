@@ -1,4 +1,4 @@
-<template name="prepList">
+<template name="prepsList">
   <div class="flyout-header">
     {{> CloseFlyoutButton}}
     <div class="col-xs-11 col-xs-offset-1">
@@ -19,7 +19,7 @@
         </thead>
         <tbody>
         {{#each jobItems}}
-          {{> prepListItem item=this onAddPrepItem=onAddPrepItem}}
+          {{> prepsListItem item=this onAddPrepItem=onAddPrepItem}}
         {{/each}}
         </tbody>
       </table>

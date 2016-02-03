@@ -1,10 +1,10 @@
-Template.prepListItem.onRendered(function () {
+Template.prepsListItem.onRendered(function () {
   this.$('.i-checks').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
 });
 
-Template.prepListItem.helpers({
+Template.prepsListItem.helpers({
   activeTime: function () {
     return this.item.activeTime / 60;
   },
@@ -14,12 +14,12 @@ Template.prepListItem.helpers({
 });
 
 
-Template.prepListItem.events({
+Template.prepsListItem.events({
   'ifChecked .add-prep-checkbox': function (event, tmpl) {
     tmpl.data.onAddPrepItem(tmpl.data.item._id);
   }
 });
 
-Template.prepListItem.onDestroyed(function () {
+Template.prepsListItem.onDestroyed(function () {
   this.$('.i-checks').iCheck('destroy');
 });
