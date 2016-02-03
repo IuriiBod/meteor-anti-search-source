@@ -21,7 +21,7 @@ Meteor.methods({
       createdAt: Date.now()
     };
 
-    var id = Invitations.insert(invitation);
+    var invitationId = Invitations.insert(invitation);
 
     new NotificationSender(
       'Added to the ' + area.name + ' area',
@@ -29,8 +29,15 @@ Meteor.methods({
       {
         name: invitationData.name,
         areaName: area.name,
-        url: Router.url('invitationAccept', {_id: id}),
+        invitationId: invitationId,
         sender: HospoHero.username(senderId)
+      },
+      {
+        helpers: {
+          url: function () {
+            return NotificationSender.urlFor('invitationAccept', {_id: this.invitationId}, this);
+          }
+        }
       }
     ).sendEmail(invitationData.email);
   },

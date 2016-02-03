@@ -27,7 +27,10 @@ Meteor.methods({
         taskItem: 'taskList'
       };
       var routeName = routesRelations[referenceType];
-      return referenceType === 'taskItem' ? Router.url(routeName, {_id: referenceId}) : Router.url(routeName);
+      return referenceType === 'taskItem' ? {
+        route: routeName,
+        params: {_id: referenceId}
+      } : {route: routeName, params: {}};
     };
 
     var getItemName = function (reference, refType) {
@@ -54,7 +57,6 @@ Meteor.methods({
     logger.info("Comment inserted", id);
 
     var reference = getReferenceObject(refType, comment.reference);
-    var linkToItem = getLinkToReference(refType, comment.reference);
     var itemName = getItemName(reference, refType);
 
     var notificationSender = new NotificationSender(
@@ -63,13 +65,19 @@ Meteor.methods({
       {
         itemName: itemName,
         username: HospoHero.username(Meteor.userId()),
-        linkToItem: linkToItem
+        itemLinkData: getLinkToReference(refType, comment.reference)
+      }, {
+        helpers: {
+          linkToItem: function () {
+            return NotificationSender.urlFor(this.itemLinkData.route, this.itemLinkData.params, this);
+          }
+        }
       }
     );
 
     if (recipients.length) {
       recipients.forEach(function (recipient) {
-        notificationSender.sendNotification(recipient ._id);
+        notificationSender.sendNotification(recipient._id);
       });
     }
     return id;
