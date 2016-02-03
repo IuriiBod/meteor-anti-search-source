@@ -1,10 +1,10 @@
 <template name="menuItemsListByType">
   <div class="ibox panel panel-default">
     <div class="ibox-title">
-      <h5>{{type}}</h5>
+      <h5>{{itemsName}}</h5>
       <div class="ibox-tools">
         {{#if canEditMenu}}
-          <button id="showIngsOrPrepList" class="btn btn-xs btn-primary" type="button">Add {{type}}</button>
+          <button id="showIngsOrPrepList" class="btn btn-xs btn-primary" type="button">Add {{itemsName}}</button>
         {{/if}}
         <a data-toggle="collapse" data-target="#{{type}}" aria-expanded="false" aria-controls="{{type}}">
           <i class="fa fa-chevron-up"></i>

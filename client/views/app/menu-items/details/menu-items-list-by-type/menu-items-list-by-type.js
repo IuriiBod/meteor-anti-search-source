@@ -19,6 +19,10 @@ Template.menuItemsListByType.onCreated(function () {
 });
 
 Template.menuItemsListByType.helpers({
+  itemsName() {
+    return this.type === 'ings' ? 'Ingredients' : 'Prep Jobs';
+  },
+
   ingredient() {
     return Ingredients.findOne({_id: this._id});
   },
