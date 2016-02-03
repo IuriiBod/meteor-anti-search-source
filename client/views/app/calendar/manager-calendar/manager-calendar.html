@@ -1,6 +1,10 @@
 <template name="managerCalendar">
   {{> calendarHeader date=date type="day" isManagerCalendar=true userId=123}}
 
+  <div class="job-items-palette">
+    {{> jobItemsPalette}}
+  </div>
+
   <div class="calendar-container text-center">
     {{#if users.length}}
       {{> calendarItem resources=users date=date type="day"}}

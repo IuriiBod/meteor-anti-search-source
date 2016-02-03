@@ -1,4 +1,22 @@
-CalendarEventsManager = function () {
+CalendarEventsManager = function () {};
+
+/**
+ * Removes all events from calendar by query
+ * @param query - remove query
+ * @returns {boolean}
+ */
+CalendarEventsManager.prototype.removeEvents = function (query) {
+  query = query || {};
+  return CalendarEvents.remove(query);
+};
+
+/**
+ * Finds events by query
+ * @param query - search query
+ * @returns {Cursor}
+ */
+CalendarEventsManager.prototype.findEvents = function(query) {
+  return CalendarEvents.find(query);
 };
 
 /**
@@ -106,7 +124,7 @@ CalendarEventsManager.prototype._anotherJobExistsAtThisTime = function (jobStart
  * Finds recurring jobs from the shift and place it onto user's calendar
  * @param {Object} shift
  */
-CalendarEventsManager.prototype.addJobsToCalendar = function (shift) {
+CalendarEventsManager.prototype.addRecurringJobsToCalendar = function (shift) {
   if (shift.section && shift.assignedTo) {
     var userId = shift.assignedTo;
     var locationId = shift.relations.locationId;
@@ -123,13 +141,13 @@ CalendarEventsManager.prototype.addJobsToCalendar = function (shift) {
     // Remove existed recurring job event for current shift.
     // Need to ensure that inserted event will have the last
     // version of job item and shift information
-    CalendarEvents.remove({
+    this.removeEvents({
       shiftId: shift._id,
       type: 'recurring job'
     });
 
     // find all placed jobs for other users
-    var placedJobs = CalendarEvents.find({
+    var placedJobs = this.findEvents({
       startTime: TimeRangeQueryBuilder.forDay(shiftTime, locationId),
       type: 'recurring job'
     }).map(function (event) {

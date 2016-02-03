@@ -9,6 +9,10 @@ Template.managerCalendar.helpers({
           $ne: null
         },
         'relations.areaId': areaId
+      }, {
+        sort: {
+          'profile.firstname': 1
+        }
       }).map(function (shift) {
         return shift.assignedTo;
       });

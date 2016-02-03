@@ -11,6 +11,7 @@ Namespace('HospoHero.calendar', {
       eventSettings: {
         titleField: 'name',
         backgroundColor: '#1AB394',
+        borderColor: '#1AB394',
         textColor: '#FFF',
         flyoutTemplate: 'eventRecurringJob'
       },
@@ -27,9 +28,10 @@ Namespace('HospoHero.calendar', {
       },
       eventSettings: {
         titleField: 'name',
-        backgroundColor: '#2077C5',
+        backgroundColor: '#23C6C8',
+        borderColor: '#23C6C8',
         textColor: '#FFF',
-        flyoutTemplate: 'eventRecurringJob'
+        flyoutTemplate: 'eventPrepJob'
       },
       manualAllocating: true
     }

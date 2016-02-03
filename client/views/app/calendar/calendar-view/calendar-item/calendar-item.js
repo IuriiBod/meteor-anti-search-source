@@ -58,26 +58,29 @@ Template.calendarItem.helpers({
     var area = HospoHero.getCurrentArea();
     if (area) {
       var tmpl = Template.instance();
-      var location = Locations.findOne({_id: area.locationId});
+      var managerCalendarId = 'manager-calendar';
 
       var calendarOptions = {
         schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
 
-        id: this.userId || 'manager-calendar',
+        id: this.userId || managerCalendarId,
         header: false,
         defaultView: this.type === 'day' ? 'agendaDay' : 'agendaWeek',
         defaultDate: this.date,
         firstDay: 1,
         displayTime: true,
         allDaySlot: false,
+        slotDuration: "00:30",
         eventOverlap: false,
         height: 700,
         scrollTime: 0,
 
-        editable: true,
+        eventStartEditable: true,
+        eventDurationEditable: false,
+        droppable: true,
 
         columnFormat: 'ddd DD/MM',
-        timezone: location.timezone,
+        timezone: 'local',
 
         events: function (start, end, timezone, callback) {
           var events = tmpl.getCalendarEvents();
@@ -86,6 +89,36 @@ Template.calendarItem.helpers({
 
         eventClick: function (eventObject) {
           FlyoutManager.open('eventItemFlyout', {eventObject: eventObject});
+        },
+
+        eventReceive: function (receivedObject) {
+          var event = {
+            itemId: receivedObject.id,
+            startTime: receivedObject.start.toDate(),
+            endTime: receivedObject.end.toDate(),
+            type: receivedObject.type,
+            userId: receivedObject.resourceId,
+            locationId: area.locationId,
+            areaId: area._id
+          };
+
+          tmpl.$('#' + managerCalendarId).fullCalendar('removeEvents', receivedObject.id);
+          Meteor.call('addCalendarEvent', event, HospoHero.handleMethodResult());
+        },
+
+        eventDrop: function (newEventObject) {
+          var eventObject = newEventObject.item;
+          _.extend(eventObject, {
+            startTime: newEventObject.start.toDate(),
+            endTime: newEventObject.end.toDate(),
+            userId: newEventObject.resourceId
+          });
+          Meteor.call('editCalendarEvent', eventObject, function (error) {
+            if (error) {
+              HospoHero.error(error);
+              tmpl.$('#' + managerCalendarId).fullCalendar('refetchEvents');
+            }
+          });
         }
       };
 

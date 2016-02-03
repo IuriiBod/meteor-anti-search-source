@@ -1,6 +1,8 @@
 Template.addEventItemFlyout.onCreated(function () {
   var eventNames = HospoHero.calendar.getEventNames(true);
   this.eventType = new ReactiveVar(eventNames[0]);
+
+  this.displayPickItemButton = new ReactiveVar(false);
 });
 
 Template.addEventItemFlyout.onRendered(function () {
@@ -31,6 +33,10 @@ Template.addEventItemFlyout.helpers({
         name: item[eventObject.eventSettings.titleField]
       }
     });
+  },
+
+  displayPickItemButton: function () {
+    return Template.instance().displayPickItemButton.get();
   }
 });
 
@@ -41,6 +47,11 @@ Template.addEventItemFlyout.events({
   },
 
   'change .events-selector': function (event, tmpl) {
-    tmpl.data.onEventChange(tmpl.eventType.get(), event.target.value);
+    if (event.target.value) {
+      tmpl.data.onEventChange(tmpl.eventType.get(), event.target.value);
+      tmpl.displayPickItemButton.set(true);
+    } else {
+      tmpl.displayPickItemButton.set(false);
+    }
   }
 });
