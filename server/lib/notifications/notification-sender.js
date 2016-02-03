@@ -213,5 +213,19 @@ NotificationSender.actionUrlFor = function (methodName, action, templateRootCont
   var query = _.map(queryMap, function (value, property) {
     return property + '=' + value;
   }).join('&');
-  return Router[templateRootContext._isEmail ? 'url' : 'path']('notificationAction', {}, {query: query});
+
+  return NotificationSender.urlFor('notificationAction', {}, templateRootContext, {query: query});
+};
+
+/**
+ * Returns URL for specified route and it's params
+ * This method is preferable for using while rendering notifications
+ *
+ * @param {string} routeName
+ * @param {object} routeParams
+ * @param {object} templateRootContext contains `_notificationId` and `_isEmail`
+ * @param {object} [routeOptions]
+ */
+NotificationSender.urlFor = function (routeName, routeParams, templateRootContext, routeOptions = {}) {
+  return Router[templateRootContext._isEmail ? 'url' : 'path'](routeName, routeParams, routeOptions);
 };

@@ -74,7 +74,7 @@ var sendNotification = function (insertedLeaveRequestId) {
     recipientName: HospoHero.username(currentLeaveRequest.notifyManagerId),
     startDate: moment(currentLeaveRequest.startDate).format('ddd, DD MMM'),
     endDate: moment(currentLeaveRequest.endDate).format('ddd, DD MMM'),
-    leaveRequestLink: Router.url('viewLeaveRequest', {id: insertedLeaveRequestId})
+    leaveRequestId: insertedLeaveRequestId
   };
 
   var options = {
@@ -85,6 +85,9 @@ var sendNotification = function (insertedLeaveRequestId) {
       },
       declineLeaveRequestUrl: function () {
         return NotificationSender.actionUrlFor('changeLeaveRequestStatus', 'declined', this);
+      },
+      leaveRequestLink: function () {
+        return NotificationSender.urlFor('viewLeaveRequest', {id: this.leaveRequestId}, this);
       }
     },
     meta: {

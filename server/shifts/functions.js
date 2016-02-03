@@ -188,15 +188,12 @@ var sendNotification = function (shift, userIds) {
   var area = Areas.findOne({_id: shift.relations.areaId});
   var section = Sections.findOne({_id: shift.section});
 
-  var rosterDate = HospoHero.dateUtils.getDateStringForRoute(shift.startTime, shift.relations.locationId);
-  var rosterUrl = Router.url('weeklyRoster', {date: rosterDate});
-
   var params = {
     date: HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, 'ddd, Do MMMM', shift.relations.locationId),
     username: HospoHero.username(userId),
     areaName: area.name,
     sectionName: section && section.name || 'open',
-    rosterUrl: rosterUrl
+    rosterDate: HospoHero.dateUtils.getDateStringForRoute(shift.startTime, shift.relations.locationId)
   };
 
   var options = {
@@ -207,6 +204,9 @@ var sendNotification = function (shift, userIds) {
       },
       rejectClaimUrl: function () {
         return NotificationSender.actionUrlFor('approveClaimShift', 'reject', this);
+      },
+      rosterUrl: function () {
+        return NotificationSender.urlFor('weeklyRoster', {date: this.rosterDate}, this);
       }
     },
     meta: {
