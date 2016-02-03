@@ -35,7 +35,7 @@ Template.prepsList.helpers({
 });
 
 Template.prepsList.events({
-  'keyup .prep-stock-search': _.throttle(function (event, tmpl) {
+  'keyup .search-for-preps-input': _.throttle(function (event, tmpl) {
     let text = event.target.value.trim();
     tmpl.jobItemsSearch.search(text);
   }, 500)

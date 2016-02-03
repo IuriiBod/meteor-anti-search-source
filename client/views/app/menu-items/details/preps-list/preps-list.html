@@ -7,13 +7,12 @@
   </div>
   <div class="flyout-content">
     {{#if canViewJob}}
-      <input type="text" class="form-control input-lg search-for-stocks-input" placeholder="Search for stocks..."><br>
+      <input type="text" class="form-control input-lg search-for-preps-input" placeholder="Search for preps..."><br>
       <table class="table table-striped">
         <thead>
         <tr>
-          <th>Action</th>
+          <th></th>
           <th>Name</th>
-          <th>Type</th>
           <th>Active Time</th>
         </tr>
         </thead>
@@ -23,10 +22,6 @@
         {{/each}}
         </tbody>
       </table>
-      <!--<div class="alert alert-warning">If your stock item is not in the list,-->
-        <!--<a class="alert-link add-new-ingredient">click here</a> to add it. Once you save it, it will appear next-->
-        <!--time you search.-->
-      <!--</div>-->
     {{/if}}
   </div>
 </template>

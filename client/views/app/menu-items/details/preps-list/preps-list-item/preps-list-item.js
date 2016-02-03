@@ -7,9 +7,6 @@ Template.prepsListItem.onRendered(function () {
 Template.prepsListItem.helpers({
   activeTime: function () {
     return this.item.activeTime / 60;
-  },
-  itemName: function () {
-    return this.item.name;
   }
 });
 
