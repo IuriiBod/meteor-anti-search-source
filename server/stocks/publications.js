@@ -3,9 +3,6 @@ Meteor.publish('ingredients', function (ids, areaId, status) {
     var query = {
       'relations.areaId': areaId
     };
-    var options = {
-      sort: {'code': 1}
-    };
 
     if (ids && ids.length > 0) {
       query._id = {$in: ids};
@@ -15,7 +12,7 @@ Meteor.publish('ingredients', function (ids, areaId, status) {
       query.status = status;
     }
 
-    return Ingredients.find(query, options);
+    return Ingredients.find(query);
   } else {
     this.ready();
   }

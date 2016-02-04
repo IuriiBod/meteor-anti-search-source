@@ -58,32 +58,37 @@ Meteor.publishAuthorized("shift", function (id) {
 });
 
 // New publisher for shifts
-Meteor.publishAuthorized('shifts', function (type, userId, areaId) {
+Meteor.publishAuthorized('shifts', function (type, userId, areaId, date) {
   var query = {
     assignedTo: userId,
     type: null,
     'relations.areaId': areaId
   };
 
-  var todayDate = new Date();
+  var todayDate = date || new Date();
   if (type == 'future' || type == 'opened') {
     query.startTime = {$gte: todayDate};
+
     if (type == 'opened') {
-      query.assignedTo = {$in: [null, undefined]};
-      query.published = true;
+      _.extend(query, {
+        assignedTo: {$in: [null, undefined]},
+        published: true
+      })
     }
   } else if (type == 'past') {
-    query.startTime = {$lte: todayDate};
-    query.endTime = {$lte: todayDate};
+    _.extend(query, {
+      startTime: {$lte: todayDate},
+      endTime: {$lte: todayDate}
+    })
   } else if (type == 'today') {
     var currentArea = Areas.findOne({_id: areaId});
+
     if (currentArea) {
       var locationId = currentArea.locationId;
       query.startTime = TimeRangeQueryBuilder.forDay(todayDate, locationId);
     }
   } else {
     this.ready();
-    return;
   }
 
   logger.info('Rostered ', type, ' shifts for user ', userId, ' have been published');

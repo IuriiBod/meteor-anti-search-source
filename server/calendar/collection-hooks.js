@@ -34,7 +34,7 @@ var jobItemUpdate = function (newJobItem, oldJobItem) {
     // finding shifts, which depends on changed job item
     Shifts.find(query).forEach(function (shift) {
       if (newJobItem.status === 'active') {
-        calendarEventsManager.addJobsToCalendar(shift);
+        calendarEventsManager.addRecurringJobsToCalendar(shift);
       } else {
         CalendarEvents.remove({shiftId: shift._id});
       }
@@ -66,7 +66,7 @@ Shifts.after.update(function (userId, newShift) {
       }, {multi: true});
     } else {
       CalendarEvents.remove({shiftId: newShift._id});
-      calendarEventsManager.addJobsToCalendar(newShift);
+      calendarEventsManager.addRecurringJobsToCalendar(newShift);
     }
   }
 });
