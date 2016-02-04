@@ -5,7 +5,7 @@ Template.menuItemIngredientRow.helpers({
   },
 
   itemMeasure: function () {
-    return this.type === 'ings' && this.item.portionUsed || 'N/A';
+    return this.type === 'ings' && this.item.portionUsed || 'portion';
   },
 
   price: function () {

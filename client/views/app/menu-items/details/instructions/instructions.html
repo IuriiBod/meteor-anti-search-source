@@ -11,7 +11,7 @@
       {{#if state$isEditMode}}
         {{> textEditor id='menuItemEditorDetail' initialHtml=instructions}}
       {{else}}
-        <p>{{{instructionsStr}}}</p>
+        <p class="activate-text-edit-mode">{{{instructionsStr}}}</p>
       {{/if}}
       {{#if canEditMenu}}
         <div class="panel-footer">

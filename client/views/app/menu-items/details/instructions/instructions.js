@@ -31,13 +31,18 @@ Template.menuItemInstructions.helpers({
 
 
 Template.menuItemInstructions.events({
-  'click .edit-close-button': function (event, tmpl) {
+  'click .activate-text-edit-mode': function (event, tmpl) {
     event.preventDefault();
-    tmpl.set('isEditMode', !tmpl.get('isEditMode'));
+    tmpl.set('isEditMode', true);
 
     if (tmpl.typingInstruction.get()) {
       tmpl.typingInstruction.set(false);
     }
+  },
+
+  'click': function (event, tmpl) {
+    if (tmpl.get('isEditMode'))
+    tmpl.set('isEditMode', false);
   },
 
   'keyup .note-editor': function(event, tmpl) {

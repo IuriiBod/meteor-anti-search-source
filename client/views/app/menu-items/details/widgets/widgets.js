@@ -17,9 +17,40 @@ Template.menuDetailPerformance.onRendered(function () {
 });
 
 Template.menuDetailPerformance.helpers({
-  menuItemStats: function () {
-    var menu = this;
+  menuItemStats() {
+    let menu = this;
+    let analyzedItem = HospoHero.analyze.menuItem(menu);
+    return {
+      ingCost: `- $ ${analyzedItem.ingCost}`,
+      prepCost: `- $ ${analyzedItem.prepCost}`,
+      tax: `- $ ${analyzedItem.tax}`,
+      contribution: `= $ ${analyzedItem.contribution}`
+    }
+  },
 
-    return HospoHero.analyze.menuItem(menu);
+  itemRank() {
+    let weeklyRanks = this.weeklyRanks;
+    if (weeklyRanks) {
+      let lastSevenDaysRank = weeklyRanks[weeklyRanks.length - 1];
+      let beforeLastWeekRank = weeklyRanks[weeklyRanks.length - 2];
+      let changedPoints;
+
+      if (beforeLastWeekRank > lastSevenDaysRank) {
+        changedPoints = beforeLastWeekRank - lastSevenDaysRank;
+      } else {
+        changedPoints = lastSevenDaysRank - beforeLastWeekRank;
+      }
+
+      return {
+        lastSevenDays: lastSevenDaysRank,
+        changedPoints: changedPoints,
+        up: beforeLastWeekRank > lastSevenDaysRank,
+        notChanged: beforeLastWeekRank === lastSevenDaysRank
+      }
+    }
+  },
+
+  startDate() {
+    return HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'));
   }
 });
