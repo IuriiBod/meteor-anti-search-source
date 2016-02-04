@@ -1,81 +1,104 @@
-Invitations = new Mongo.Collection("invitations");
+let extractFirstAndLastName = function (username) {
+  var tokenizeName = username.split(' ');
+  var firstName = tokenizeName.splice(0, 1)[0];
+  var lastName = tokenizeName.join(' ');
+  return {
+    firstname: firstName,
+    lastname: lastName
+  }
+};
 
-Meteor.methods({
-  inviteNewUserToArea: function (invitationData) {
-    //todo: security check
-    var area = Areas.findOne({_id: invitationData.areaId});
-    var senderId = Meteor.userId();
-    var invitedUserName = invitationData.name;
-    var splittedUserName = [];
 
-    if (invitedUserName.indexOf(' ') > 0) {
-      splittedUserName = invitedUserName.split(' ');
-    }
+let randomPassword = function () {
+  return Math.random().toString(36).slice(-8); // generates random 8 characters password
+};
 
-    var invitation = {
-      firstname: splittedUserName[0] || invitationData.name,
-      lastname: splittedUserName[2] ? splittedUserName[1] + splittedUserName[2] : splittedUserName[1] || null,
-      email: invitationData.email,
-      invitedBy: senderId,
-      areaId: invitationData.areaId,
-      organizationId: area.organizationId,
-      roleId: invitationData.roleId,
-      accepted: false,
-      createdAt: Date.now()
-    };
 
-    var invitationId = Invitations.insert(invitation);
+let createNewUser = function (newUserDocument, roleId, area) {
+  var userId = Accounts.createUser(newUserDocument);
 
-    new NotificationSender(
-      'Added to the ' + area.name + ' area',
-      'invitation-email',
-      {
-        name: invitationData.name,
-        areaName: area.name,
-        invitationId: invitationId,
-        sender: HospoHero.username(senderId)
-      },
-      {
-        helpers: {
-          url: function () {
-            return NotificationSender.urlFor('', {_id: this.invitationId}, this); //todo
-          }
+  var updateObject = {
+    roles: {
+      [area._id]: roleId
+    },
+    relations: {
+      organizationIds: [area.organizationId],
+      locationIds: [area.locationId],
+      areaIds: [area._id]
+    },
+    currentAreaId: area._id
+  };
+
+  Meteor.users.update({_id: userId}, {$set: updateObject});
+};
+
+
+let sendEmailInvitation = function (newUserDocument, email, area) {
+  var sender = Meteor.user();
+
+  let notificationSender = new NotificationSender(
+    'You was added to the ' + area.name + ' area',
+    'invitation-email',
+    {
+      firstName: newUserDocument.profile.firstname,
+      password: newUserDocument.password,
+      email: email,
+      areaName: area.name,
+      invitationSender: {
+        name: `${sender.profile.firstname} ${sender.profile.lastname}`,
+        tel: sender.profile.tel,
+        email: sender.emails[0].address
+      }
+    },
+    {
+      helpers: {
+        signInUrl: function () {
+          return NotificationSender.urlFor('signIn', {}, this);
         }
       }
-    ).sendEmail(invitationData.email);
+    }
+  );
 
-    //todo random password: Math.random().toString(36).slice(-8);
+  notificationSender.sendEmail(email);
+};
 
-  },
 
-  acceptInvitation: function (id, response) {
-    var nonProfileItems = ['email', 'password'];
-    var user = {
-      profile: {}
-    };
-
-    _.extend(user, _.pick(response, nonProfileItems));
-    _.extend(user.profile, _.omit(response, nonProfileItems));
-
-    var userId = Accounts.createUser(user);
-
-    Invitations.update({_id: id}, {
-      $set: {accepted: true}
+Meteor.methods({
+  inviteNewUserToArea: function (invitationMeta) {
+    check(invitationMeta, {
+      name: HospoHero.checkers.forNonEmptyString('Name'),
+      email: HospoHero.checkers.Email,
+      areaId: HospoHero.checkers.MongoId,
+      roleId: HospoHero.checkers.MongoId
     });
 
-    var invitation = Invitations.findOne({_id: id});
-    var area = Areas.findOne({_id: invitation.areaId});
+    if (this.userId && HospoHero.canUser("invite users", this.userId)) {
+      //check if user with specified email exists
+      let existingUser = Meteor.users.findOne({'emails.address': invitationMeta.email});
+      if (existingUser) {
+        //simply add him to specified area
+        Meteor.call('addUserToArea', {
+          userId: existingUser._id,
+          areaId: invitationMeta.areaId,
+          roleId: invitationMeta.roleId
+        });
+      } else {
+        var area = Areas.findOne({_id: invitationMeta.areaId});
 
-    var updateObject = {
-      roles: {},
-      relations: {
-        organizationIds: [area.organizationId, Meteor.users.findOne({_id: userId}).relations.organizationIds],
-        locationIds: [area.locationId],
-        areaIds: [area._id]
-      },
-      currentAreaId: area._id
-    };
-    updateObject.roles[area._id] = invitation.roleId;
-    Meteor.users.update({_id: userId}, {$set: updateObject});
+        //create new user
+        var newUserDocument = {
+          email: invitationMeta.email,
+          password: randomPassword(),
+          profile: extractFirstAndLastName(invitationMeta.name)
+        };
+
+        createNewUser(newUserDocument, invitationMeta.roleId, area);
+
+        //notify user about his new account
+        sendEmailInvitation(newUserDocument, invitationMeta.email, area);
+      }
+    } else {
+      throw new Meteor.Error('You cannot invite users');
+    }
   }
 });

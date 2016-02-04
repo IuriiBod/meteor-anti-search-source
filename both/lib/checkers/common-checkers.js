@@ -20,6 +20,27 @@ var RgbColor = Match.Where(function (color) {
   return /rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)/.test(color);
 });
 
+
+var Email = Match.Where(function (email) {
+  if (_.isString(email) && /.+@(.+){2,}\.(.+){2,}/.test(email)) {
+
+    return true;
+  } else {
+    throw new Meteor.Error('Incorrect email');
+  }
+});
+
+var forNonEmptyString = function (propertyName) {
+  return Match.Where(function (value) {
+    if (_.isString(value) && value.trim().length > 0) {
+      return true;
+    } else {
+      throw new Meteor.Error(propertyName + ' is required!');
+    }
+  });
+};
+
+
 var ShiftId = Match.Where(function (id) {
   check(id, HospoHero.checkers.MongoId);
   if (!Shifts.findOne({_id: id})) {
@@ -92,5 +113,13 @@ Namespace('HospoHero.checkers', {
   /**
    * Shift exist checker
    */
-  ShiftId: ShiftId
+  ShiftId: ShiftId,
+  Email: Email,
+
+  /**
+   * Parametrized checker for non empty string
+   *
+   * @param {string} propertyName
+   */
+  forNonEmptyString: forNonEmptyString
 });

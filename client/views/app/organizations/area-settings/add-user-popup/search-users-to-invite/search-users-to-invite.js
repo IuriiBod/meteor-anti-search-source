@@ -68,7 +68,7 @@ Template.searchUsersToInvite.events({
   'submit form': function (event, tmpl) {
     event.preventDefault();
 
-    var data = HospoHero.misc.getValuesFromEvent(event, [
+    var invitationMeta = HospoHero.misc.getValuesFromEvent(event, [
       {
         name: 'addUserName',
         newName: 'email'
@@ -81,9 +81,9 @@ Template.searchUsersToInvite.events({
         newName: 'roleId'
       }
     ], true);
+    invitationMeta.areaId = tmpl.data.areaId;
 
-    data.areaId = tmpl.data.areaId;
-    Meteor.call('inviteNewUserToArea', data, HospoHero.handleMethodResult(function () {
+    Meteor.call('inviteNewUserToArea', invitationMeta, HospoHero.handleMethodResult(function () {
       HospoHero.success('The user was notified');
       tmpl.$('input[name="addUserName"]').val('').focus();
       tmpl.setSearchAndInviteState(false, false);
