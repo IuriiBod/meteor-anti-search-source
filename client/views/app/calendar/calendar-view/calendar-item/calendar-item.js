@@ -1,55 +1,10 @@
 Template.calendarItem.onCreated(function () {
-  // returns events need to render to the calendar
-  this.getCalendarEvents = function () {
-    var queryType = this.data.type === 'day' ? 'forDay' : 'forWeek';
+  this.calendarId = this.data.userId || 'manager-calendar';
+});
 
-    /**
-     * Returns array of events object of selected user and date
-     * @param userId
-     * @param date
-     * @returns {Array}
-     */
-    var getEvents = function (userId, date) {
-      return CalendarEvents.find({
-        userId: userId,
-        startTime: TimeRangeQueryBuilder[queryType](date)
-      }).map(function (event) {
 
-        var currentEventItem = HospoHero.calendar.getEventByType(event.type);
-        var eventSettings = currentEventItem.eventSettings;
-        var item = Mongo.Collection.get(currentEventItem.collection).findOne({_id: event.itemId});
-
-        if (item) {
-          return {
-            id: event._id,
-            resourceId: userId,
-            title: item[eventSettings.titleField],
-            start: moment(event.startTime),
-            end: moment(event.endTime),
-            backgroundColor: eventSettings.backgroundColor,
-            textColor: eventSettings.textColor,
-            item: event
-          }
-        } else {
-          return {};
-        }
-      });
-    };
-
-    var date = this.data.date;
-
-    if (this.data.userId) {
-      // get events only for one user
-      return getEvents(this.data.userId, date);
-    } else if (this.data.resources && this.data.resources.length) {
-      // get event for array of users
-      return _.flatten(_.map(this.data.resources, function (resource) {
-        return getEvents(resource.id, date);
-      }));
-    } else {
-      return [];
-    }
-  };
+Template.calendarItem.onRendered(function () {
+  this.calendar = this.$('#' + this.calendarId);
 });
 
 
@@ -58,12 +13,11 @@ Template.calendarItem.helpers({
     var area = HospoHero.getCurrentArea();
     if (area) {
       var tmpl = Template.instance();
-      var managerCalendarId = 'manager-calendar';
 
       var calendarOptions = {
         schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
 
-        id: this.userId || managerCalendarId,
+        id: tmpl.calendarId,
         header: false,
         defaultView: this.type === 'day' ? 'agendaDay' : 'agendaWeek',
         defaultDate: this.date,
@@ -83,7 +37,7 @@ Template.calendarItem.helpers({
         timezone: 'local',
 
         events: function (start, end, timezone, callback) {
-          var events = tmpl.getCalendarEvents();
+          var events = HospoHero.calendar.getCalendarEvents(tmpl.data);
           callback(events);
         },
 
@@ -97,28 +51,34 @@ Template.calendarItem.helpers({
             startTime: receivedObject.start.toDate(),
             endTime: receivedObject.end.toDate(),
             type: receivedObject.type,
-            userId: receivedObject.resourceId,
+            userId: tmpl.data.userId || receivedObject.resourceId,
             locationId: area.locationId,
             areaId: area._id
           };
 
-          tmpl.$('#' + managerCalendarId).fullCalendar('removeEvents', receivedObject.id);
+          tmpl.calendar.fullCalendar('removeEvents', receivedObject.id);
           Meteor.call('addCalendarEvent', event, HospoHero.handleMethodResult());
         },
 
         eventDrop: function (newEventObject) {
           var eventObject = newEventObject.item;
-          _.extend(eventObject, {
-            startTime: newEventObject.start.toDate(),
-            endTime: newEventObject.end.toDate(),
-            userId: newEventObject.resourceId
-          });
-          Meteor.call('editCalendarEvent', eventObject, function (error) {
-            if (error) {
-              HospoHero.error(error);
-              tmpl.$('#' + managerCalendarId).fullCalendar('refetchEvents');
-            }
-          });
+          var eventSettings = HospoHero.calendar.getEventByType(eventObject.type);
+
+          // allow moving only manual allocating events
+          if (eventSettings.manualAllocating) {
+            _.extend(eventObject, {
+              startTime: newEventObject.start.toDate(),
+              endTime: newEventObject.end.toDate(),
+              userId: newEventObject.resourceId
+            });
+            Meteor.call('editCalendarEvent', eventObject, function (error) {
+              if (error) {
+                HospoHero.error(error);
+              }
+            });
+          }
+
+          tmpl.calendar.fullCalendar('refetchEvents');
         }
       };
 
@@ -143,6 +103,14 @@ Template.calendarItem.events({
       type: 'day',
       date: HospoHero.dateUtils.shortDateFormat(selectedDateMoment),
       userId: tmpl.data.userId
+    });
+  },
+
+  'click .fc-resource-cell': function (event, tmpl) {
+    Router.go('calendar', {
+      type: 'day',
+      date: HospoHero.dateUtils.shortDateFormat(tmpl.data.date),
+      userId: event.target.dataset.resourceId
     });
   }
 });

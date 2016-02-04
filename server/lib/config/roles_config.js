@@ -72,7 +72,8 @@ var defaultRoles = [
       "view stocks",
       "be rosted",
       "receive deliveries",
-      "view calendar"
+      "view calendar",
+      "edit calendar"
     ]
   }
 ];

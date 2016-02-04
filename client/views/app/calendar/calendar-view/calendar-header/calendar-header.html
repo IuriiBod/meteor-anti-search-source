@@ -1,7 +1,13 @@
 <template name="calendarHeader">
   <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-xs-6">
-      <h2>{{dayFormat date}}</h2>
+      <h2>
+        {{#if isManagerCalendar}}
+          {{dayFormat date}}
+        {{else}}
+          Calendar of {{username userId}}
+        {{/if}}
+      </h2>
     </div>
 
     <div class="col-xs-6 title-action">

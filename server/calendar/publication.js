@@ -1,5 +1,5 @@
 Meteor.publishComposite('calendarEvents', function (date, queryType, locationId, userId) {
-  queryType = queryType === 'day' ? 'forDay' : 'forWeek';
+  queryType = HospoHero.calendar.getQueryType(queryType);
 
   return {
     // shifts publishing

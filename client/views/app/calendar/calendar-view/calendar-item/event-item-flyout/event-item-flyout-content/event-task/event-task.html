@@ -1,0 +1,52 @@
+<template name="eventTask">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 event-description-row">
+        <div class="col-xs-6">
+          <strong>Title</strong>
+        </div>
+        <div class="col-xs-6 text-right">{{task.title}}</div>
+      </div>
+
+      <div class="col-xs-12 event-description-row">
+        <div class="col-xs-6">
+          <strong>Duration</strong>
+        </div>
+        <div class="col-xs-6 text-right">{{humanizeTimeDuration task.duration 'minutes'}}</div>
+      </div>
+
+      {{#if task.description}}
+        <div class="col-xs-12 event-description-row">
+          <div class="col-xs-12">
+            <strong>Description</strong>
+          </div>
+          <div class="col-xs-12 job-description">{{{task.description}}}</div>
+        </div>
+      {{/if}}
+
+      <div class="col-xs-12 event-description-row">
+        <div class="col-xs-6">
+          <strong>Status</strong>
+        </div>
+
+        <div class="col-xs-6 text-right">
+          {{#if task.done}}
+            <span class="label label-primary">done</span> by <b>{{username task.completedBy}}</b>
+          {{else}}
+            <span class="label label-default">in progress</span>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="col-xs-12 event-description-row">
+        <button class="btn {{#if task.done}}btn-default{{else}}btn-primary{{/if}} done-task">
+          {{#if task.done}}
+            <i class="fa fa-times"></i> Undone
+          {{else}}
+            <i class="fa fa-check"></i> Done
+          {{/if}}
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
