@@ -8,30 +8,32 @@
       </div>
     {{/if}}
 
-    <div class="col-md-12 hidden-print task-list-content">
+    <div class="ibox hidden-print task-list-content">
       <hr>
-      <div class="ibox">
-        <div class="ibox-title">
-          Tasks
-          <a href="#" class="create-task">
-            <i class="fa fa-plus"></i>
+      <div class="ibox-title">
+        <h5>Tasks &nbsp;</h5>
+        <div class="ibox-tools">
+          <button class="btn btn-primary btn-xs pull-left create-task">Add Task</button>
+          <a data-toggle="collapse" data-target="#Tasks" aria-expanded="false" aria-controls="Tasks">
+            <i class="fa fa-chevron-up"></i>
           </a>
         </div>
-        <div class="ibox-content">
-          <div class="row">
-            {{#if tasks.count}}
-              <div class="table-responsive">
-                <table class="table table-hover table-mail task-list-container">
-                  {{#each tasks}}
-                    {{> taskItem task=this onEditTaskAction=onEditTaskAction}}
-                  {{/each}}
-                </table>
-              </div>
-            {{else}}
-              <h3>No tasks here</h3>
-            {{/if}}
+
+      </div>
+      <div id="Tasks" class="ibox-content no-padding" aria-expanded="false">
+        {{#if tasks.count}}
+          <div class="table-responsive">
+            <table class="table table-hover table-mail task-list-container">
+              <tbody>
+              {{#each tasks}}
+                {{> taskItem task=this onEditTaskAction=onEditTaskAction}}
+              {{/each}}
+              </tbody>
+            </table>
           </div>
-        </div>
+        {{else}}
+          <h3>No tasks here</h3>
+        {{/if}}
       </div>
     </div>
   </div>
