@@ -26,7 +26,7 @@ ecmascript
 less
 reactive-var
 
-#force-ssl
+force-ssl
 crosswalk
 
 accounts-ui
