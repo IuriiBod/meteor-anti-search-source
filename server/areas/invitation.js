@@ -13,6 +13,10 @@ let randomPassword = function () {
   return Math.random().toString(36).slice(-8); // generates random 8 characters password
 };
 
+let randomPinCode = function () {
+  return Math.random().toString(10).slice(-4);  // for digit PIN
+};
+
 
 let createNewUser = function (newUserDocument, roleId, area) {
   var userId = Accounts.createUser(newUserDocument);
@@ -42,6 +46,7 @@ let sendEmailInvitation = function (newUserDocument, email, area) {
     {
       firstName: newUserDocument.profile.firstname,
       password: newUserDocument.password,
+      pinCode: newUserDocument.profile.pinCode,
       email: email,
       areaName: area.name,
       invitationSender: {
@@ -89,7 +94,9 @@ Meteor.methods({
         var newUserDocument = {
           email: invitationMeta.email,
           password: randomPassword(),
-          profile: extractFirstAndLastName(invitationMeta.name)
+          profile: _.extend(extractFirstAndLastName(invitationMeta.name), {
+            pinCode: randomPinCode()
+          })
         };
 
         createNewUser(newUserDocument, invitationMeta.roleId, area);
