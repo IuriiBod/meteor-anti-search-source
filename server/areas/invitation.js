@@ -1,5 +1,8 @@
+Invitations = new Mongo.Collection("invitations");
+
 Meteor.methods({
-  createInvitation: function (invitationData) {
+  inviteNewUserToArea: function (invitationData) {
+    //todo: security check
     var area = Areas.findOne({_id: invitationData.areaId});
     var senderId = Meteor.userId();
     var invitedUserName = invitationData.name;
@@ -35,15 +38,14 @@ Meteor.methods({
       {
         helpers: {
           url: function () {
-            return NotificationSender.urlFor('invitationAccept', {_id: this.invitationId}, this);
+            return NotificationSender.urlFor('', {_id: this.invitationId}, this); //todo
           }
         }
       }
     ).sendEmail(invitationData.email);
-  },
 
-  deleteInvitation: function (id) {
-    Invitations.remove({_id: id});
+    //todo random password: Math.random().toString(36).slice(-8);
+
   },
 
   acceptInvitation: function (id, response) {
@@ -63,16 +65,6 @@ Meteor.methods({
 
     var invitation = Invitations.findOne({_id: id});
     var area = Areas.findOne({_id: invitation.areaId});
-
-    // send a notification to the user
-    new NotificationSender(
-      'Invitation accepted',
-      'invitation-accepted',
-      {
-        username: invitation.lastname ? invitation.firstname + " " + invitation.lastname : invitation.firstname,
-        areaName: area.name
-      }
-    ).sendBoth(invitation.invitedBy);
 
     var updateObject = {
       roles: {},

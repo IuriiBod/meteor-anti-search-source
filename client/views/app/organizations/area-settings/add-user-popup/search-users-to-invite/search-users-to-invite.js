@@ -83,7 +83,7 @@ Template.searchUsersToInvite.events({
     ], true);
 
     data.areaId = tmpl.data.areaId;
-    Meteor.call('createInvitation', data, HospoHero.handleMethodResult(function () {
+    Meteor.call('inviteNewUserToArea', data, HospoHero.handleMethodResult(function () {
       HospoHero.success('The user was notified');
       tmpl.$('input[name="addUserName"]').val('').focus();
       tmpl.setSearchAndInviteState(false, false);
