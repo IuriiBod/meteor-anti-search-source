@@ -58,26 +58,30 @@ Meteor.publishComposite('taskList', function (userId) {
   }
 });
 
-Meteor.publishAuthorized('todayTasks', function () {
-  var user = Meteor.users.findOne({_id: this.userId});
-  var area = Areas.findOne({_id: user.currentAreaId});
-  var today;
+Meteor.publish('todayTasks', function () {
+  if (this.userId) {
+    var user = Meteor.users.findOne({_id: this.userId});
+    var area = Areas.findOne({_id: user.currentAreaId});
+    var today;
 
-  if (area) {
-    today = HospoHero.dateUtils.getDateMomentForLocation(new Date(), area.locationId);
-    today = moment(today).endOf('day').toDate();
+    if (area) {
+      today = HospoHero.dateUtils.getDateMomentForLocation(new Date(), area.locationId);
+      today = moment(today).endOf('day').toDate();
+    } else {
+      today = moment().endOf('day').toDate();
+    }
+
+    var sharingQuery = HospoHero.misc.getTasksQuery(this.userId);
+    var dueDateQuery = {
+      dueDate: {
+        $lte: today
+      },
+      done: false
+    };
+
+    var query = _.extend(dueDateQuery, sharingQuery);
+    return TaskList.find(query);
   } else {
-    today = moment().endOf('day').toDate();
+    this.ready();
   }
-
-  var sharingQuery = HospoHero.misc.getTasksQuery(this.userId);
-  var dueDateQuery = {
-    dueDate: {
-      $lte: today
-    },
-    done: false
-  };
-
-  var query = _.extend(dueDateQuery, sharingQuery);
-  return TaskList.find(query);
 });
