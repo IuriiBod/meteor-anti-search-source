@@ -1,0 +1,6 @@
+<template name="staffCostPercentagesTr">
+  {{#with percentages}}
+    <td>{{roundCount forecast}}%</td>
+    <td class="{{statusClass}}">{{roundCount actual}}%</td>
+  {{/with}}
+</template>

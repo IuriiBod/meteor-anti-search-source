@@ -1,0 +1,74 @@
+<template name="menuItemDetailedMainView">
+  <!-- Page heading -->
+  {{> pageHeading title=name category='Menus' name="menuDetails" id=_id}}
+
+  <div class="wrapper wrapper-content animated">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="row">
+
+          <div class="col-lg-4 col-xs-12 pull-right">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Settings</h3>
+              </div>
+              <div class="panel-body">
+                {{> menuItemSettings}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-8 col-xs-12">
+            {{> menuItemInstructions}}
+          </div>
+        </div>
+
+        <hr>
+        <h1>Ingredients</h1>
+
+        <p>Add the prep jobs and stock items that are used in this recipe.</p>
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            {{#if canEditMenu}}
+              <th></th>
+            {{/if}}
+            <th>Name</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Measure</th>
+            <th>Price</th>
+            {{#if canEditMenu}}
+              <th></th>
+            {{/if}}
+          </tr>
+          </thead>
+          <tbody>
+          {{#each jobItems}}
+            {{> menuItemIngredientRow item=jobItem quantity=quantity type="prep" setCurrentEditedIngredient=setCurrentEditedIngredient}}
+          {{/each}}
+          {{#each ingredients}}
+            {{> menuItemIngredientRow item=ingredient quantity=quantity type="ings" setCurrentEditedIngredient=setCurrentEditedIngredient}}
+          {{/each}}
+          </tbody>
+        </table>
+        {{#if canEditMenu}}
+          <a class="btn btn-primary" href="#addPrepStockModal" data-toggle="modal">Add prep or stock</a>
+        {{/if}}
+      </div>
+      {{> menuDetailWidgets}}
+
+      <div class="col-lg-6">
+        {{> taskWidget type='menus' itemId=_id}}
+      </div>
+
+      <div class="col-lg-6">
+        {{> commentsPanel id=_id type='menu'}}
+      </div>
+    </div>
+  </div>
+
+  <!-- SHOW LIST OF INGS AND PREPS -->
+  {{> addPrepStockModal jobItems=jobItems ingredients=ingredients}}
+  <!-- /SHOW LIST OF INGS AND PREPS -->
+</template>

@@ -1,0 +1,38 @@
+<template name="menuFilters">
+  <div class="row m-b menu-filters">
+    <div class="col-md-3">
+      <button data-toggle="dropdown"
+              class="btn btn-white dropdown-toggle form-control text-capitalize text-align-left">
+        {{selectedCategory.name}}
+      </button>
+      <span class="caret caret-pulled-right pull-right"></span>
+      <ul class="dropdown-menu text-capitalize filter-menus">
+        {{#each categories}}
+          <li><a href="{{pathFor route='menuItemsMaster' category=_id status=../status}}">{{name}}</a></li>
+        {{/each}}
+        {{#if canEditMenu}}
+          <li class="divider"></li>
+          <li><a data-toggle="modal" data-target="#addCategoryModal">Add new category</a></li>
+        {{/if}}
+      </ul>
+    </div>
+    <div class="col-md-3 col-md-offset-6">
+      <button data-toggle="dropdown"
+              class="btn btn-white dropdown-toggle form-control text-capitalize text-align-left">
+        {{status}}
+      </button>
+      <span class="caret caret-pulled-right pull-right"></span>
+      <ul class="dropdown-menu text-capitalize filter-menus">
+        {{#each statuses}}
+          <li>
+            <a href="{{pathFor route='menuItemsMaster' category=../category status=this}}">{{this}}</a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+
+  <!-- ADD CATEGORY MODAL -->
+  {{> addNewCategory}}
+  <!-- /ADD CATEGORY MODAL -->
+</template>

@@ -1,0 +1,9 @@
+<template name="productItem">
+  <tr>
+    <td><a href="#" class="editProduct">{{ingredient.code}}</a></td>
+    <td>{{ingredient.description}}</td>
+    <td>{{dateFormat ingredient.createdOn}}</td>
+    <td>{{ingredient.portionOrdered}}</td>
+    <td>${{ingredient.costPerPortion}}</td>
+  </tr>
+</template>

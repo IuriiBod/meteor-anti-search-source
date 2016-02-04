@@ -1,0 +1,27 @@
+<template name="pinCode">
+  <div>
+    {{> profilePhotoAndName userId=userId}}
+    <p>Enter your PIN to unlock</p>
+
+    <form class="m-t" role="form">
+      <div class="form-group">
+        <input type="password"
+               class="form-control"
+               placeholder="****"
+               required=""
+               id="pin-code"
+               maxlength="4"
+               pattern="^\d{4}$"
+               title="Required four-digit PIN.">
+      </div>
+      <button type="submit" class="btn btn-primary block full-width">
+        Unlock
+      </button>
+      <hr/>
+      <h3>Not you?</h3>
+      <button type="button" class="btn block full-width btn-warning" id="switch-user">
+        Switch User
+      </button>
+    </form>
+  </div>
+</template>

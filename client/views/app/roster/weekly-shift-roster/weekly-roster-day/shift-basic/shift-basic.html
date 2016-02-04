@@ -1,0 +1,39 @@
+<template name="shiftBasic">
+  <li class="success-element shift-basic-component {{#if canEditRoster}}can-edit{{/if}}">
+    {{#if canEditRoster}}
+      <div class="box-wrapper pull-right shift-remove-wrapper">
+        <span class="box-remove glyphicon glyphicon-remove remove-shift-button"></span>
+      </div>
+    {{/if}}
+
+    <div class="agile-detail">
+      <i class="fa fa-user"></i>
+      {{#if canEditRoster}}
+        {{> shiftBasicWorkerEditable}}
+      {{else}}
+        {{#if assignedTo}}
+          {{username assignedTo}}
+        {{else}}
+          Open
+        {{/if}}
+      {{/if}}
+    </div>
+
+    <div class="agile-detail">
+      {{#if canEditRoster}}
+        {{> comboTimeEditable params=comboDateParams}}
+      {{else}}
+        <i class="fa fa-clock-o"></i> {{timeFormat startTime}} - {{timeFormat endTime}}
+      {{/if}}
+    </div>
+
+    <div class="agile-detail">
+      <i class="fa fa-angle-double-right"></i>
+      {{#if canEditRoster}}
+        {{> shiftBasicSectionEditable}}
+      {{else}}
+        {{sectionById section}}
+      {{/if}}
+    </div>
+  </li>
+</template>

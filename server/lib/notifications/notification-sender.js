@@ -13,6 +13,7 @@
  * link notification's metadata with notification itself.
  * This feature may be used in server side routes for
  * processing any notification's actions.
+ * Use `{{_notificationId}}` - in templates and `this._notificationId` - in helpers
  *
  * Template data helpers
  * You can also define you own helpers
@@ -50,18 +51,18 @@
  * @param {string} subject notification's subject/title
  * @param {string} templateName handlebars template name
  * @param {*|object} templateData data to render on template
- * @param {*|object} options additional configuration
+ * @param {*|object} [options] additional configuration
  * @param {*|string} options.senderId user that sanded notification
  * @param {*|object} options.metadata additional notification data
  * @param {*|boolean} options.interactive deny automatic reading (usually if notification requires an action)
  * @param {*|object} options.helpers define you own formatting helpers
  * @constructor
  */
-NotificationSender = function (subject, templateName, templateData, options) {
-  this._options = _.extend(options || {}, {
+NotificationSender = function (subject, templateName, templateData = {}, options = {}) {
+  this._options = _.extend(options, {
     subject: subject,
     templateName: templateName,
-    templateData: templateData || {}
+    templateData: templateData
   });
 
   //register current notification helpers
@@ -81,14 +82,17 @@ NotificationSender.prototype._isInteractive = function () {
 };
 
 
-NotificationSender.prototype._renderTemplateWithData = function (notificationId) {
+NotificationSender.prototype._renderTemplateWithData = function (notificationId, isMobile, isEmail) {
   var templateData = this._options.templateData;
 
   if (this._isInteractive()) {
     templateData._notificationId = notificationId
   }
+  templateData._isEmail = !!isEmail; //convert undefined to false if argument was missed
 
-  return Handlebars.templates[this._options.templateName](templateData);
+  var templateName = this._options.templateName + (isMobile ? '-m' : '');
+
+  return Handlebars.templates[templateName](templateData);
 };
 
 
@@ -123,22 +127,27 @@ NotificationSender.prototype._insertNotification = function (receiverId, markAsR
     createdOn: Date.now()
   };
 
-  var html = false;
+  var notificationId = Notifications.insert(notificationOptions);
 
-  if (this._isInteractive()) {
-    var notificationId = Notifications.insert(notificationOptions);
+  var html = this._renderTemplateWithData(notificationId);
 
-    html = this._renderTemplateWithData(notificationId);
+  Notifications.update({_id: notificationId}, {
+    $set: {text: html}
+  });
 
-    Notifications.update({_id: notificationId}, {
-      $set: {text: html}
-    });
-  } else {
-    html = this._renderTemplateWithData();
-    notificationOptions.text = html;
-    Notifications.insert(notificationOptions);
+  try {
+    var pushSender = new PushNotificationSender(notificationOptions.to);
+    if (pushSender.isDeviceRegistered()) {
+      pushSender.send({
+        title: notificationOptions.title,
+        text: this._renderTemplateWithData(notificationId, true)
+      });
+    }
+  } catch (err) {
+    logger.error('Error while trying to send mobile notification', err);
   }
-  return html;
+
+  return notificationId;
 };
 
 
@@ -160,14 +169,13 @@ NotificationSender.prototype._sendEmailBasic = function (receiver, text) {
  * @param receiver - user ID or email
  */
 NotificationSender.prototype.sendEmail = function (receiver) {
-  var html;
+  let notificationId = null;
 
   if (this._isInteractive()) {
-    html = this._insertNotification(receiver, true);
-  } else {
-    html = this._renderTemplateWithData();
+    notificationId = this._insertNotification(receiver, true);
   }
 
+  let html = this._renderTemplateWithData(notificationId, false, true);
   this._sendEmailBasic(receiver, html);
 };
 
@@ -182,7 +190,8 @@ NotificationSender.prototype.sendNotification = function (receiverId) {
 
 
 NotificationSender.prototype.sendBoth = function (receiverId) {
-  var html = this._insertNotification(receiverId, false);
+  var notificationId = this._insertNotification(receiverId, false);
+  let html = this._renderTemplateWithData(notificationId, false, true);
   this._sendEmailBasic(receiverId, html);
 };
 
@@ -192,17 +201,31 @@ NotificationSender.prototype.sendBoth = function (receiverId) {
  * and notification ID
  *
  * @param {string} methodName
- * @param {string} notificationId
  * @param {string} action
+ * @param {object} templateRootContext contains `_notificationId` and `_isEmail`
  */
-NotificationSender.actionUrlFor = function (methodName, notificationId, action) {
+NotificationSender.actionUrlFor = function (methodName, action, templateRootContext) {
   var queryMap = {
     method: methodName,
-    id: notificationId,
+    id: templateRootContext._notificationId,
     action: action
   };
   var query = _.map(queryMap, function (value, property) {
     return property + '=' + value;
   }).join('&');
-  return Router.url('notificationAction', {}, {query: query});
+
+  return NotificationSender.urlFor('notificationAction', {}, templateRootContext, {query: query});
+};
+
+/**
+ * Returns URL for specified route and it's params
+ * This method is preferable for using while rendering notifications
+ *
+ * @param {string} routeName
+ * @param {object} routeParams
+ * @param {object} templateRootContext contains `_notificationId` and `_isEmail`
+ * @param {object} [routeOptions]
+ */
+NotificationSender.urlFor = function (routeName, routeParams, templateRootContext, routeOptions = {}) {
+  return Router[templateRootContext._isEmail ? 'url' : 'path'](routeName, routeParams, routeOptions);
 };

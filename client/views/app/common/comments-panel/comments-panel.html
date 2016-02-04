@@ -1,0 +1,24 @@
+<template name="commentsPanel">
+  <div class="col-md-12 hidden-print comments-panel">
+    <div class="ibox chat-view">
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="chat-discussion">
+              {{#if commentsList.count}}
+                {{#each commentsList}}
+                  {{> comment}}
+                {{/each}}
+              {{else}}
+                <div class="middle-box text-center">
+                  <h5 class="font-bold">Be the first to add a comment.</h5>
+                </div>
+              {{/if}}
+            </div>
+            {{> submitComment}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

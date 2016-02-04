@@ -6,7 +6,6 @@ Router.route('signIn', {
     if (Meteor.userId()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
   }
 });
 
@@ -14,28 +13,20 @@ Router.route('signIn', {
 Router.route('signUp', {
   path: '/register',
   layoutTemplate: 'blankLayout',
-  template: 'signUp'
-});
-
-
-Router.route('pinLock', {
-  path: '/pinLock/:userId',
-  layoutTemplate: 'blankLayout',
-  template: 'pinLock',
-  waitOn: function () {
-    return Meteor.subscribe('profileUser', this.params.userId);
-  },
+  template: 'signUp',
   data: function () {
-    return {
-      backwardUrl: this.params.query.backwardUrl
-    };
+    if (Meteor.userId()) {
+      Router.go('/');
+    }
   }
 });
 
+
 Router.route('logout', {
   'path': '/logout',
-  data: function () {
-    return Meteor.logout();
+  action: function () {
+    StaleSession._removeTokenById(Meteor.userId());
+    Meteor.logout();
   }
 });
 
@@ -50,7 +41,6 @@ Router.route('invitationAccept', {
     if (Meteor.userId()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
   }
 });
 
@@ -60,9 +50,13 @@ Router.route('switchUser', {
   layoutTemplate: 'blankLayout',
   template: 'switchUserView',
   waitOn: function () {
-    var usersIds = Session.get('loggedUsers') || {};
-    usersIds = _.keys(usersIds);
-    return Meteor.subscribe('selectedUsersList', usersIds);
+    return Meteor.subscribe('selectedUsersList', StaleSession.getStoredUsersIds());
+  },
+  data: function () {
+    StaleSession._lockWithPin();
+    return {
+      users: Meteor.users.find({_id: {$in: StaleSession.getStoredUsersIds()}})
+    };
   }
 });
 
@@ -76,11 +70,31 @@ Router.route('profile', {
       Meteor.subscribe('profileUser', this.params._id),
       Meteor.subscribe('shifts', 'future', this.params._id, currentAreaId),
       Meteor.subscribe('shifts', 'opened', null, currentAreaId),
-      Meteor.subscribe('sections', currentAreaId)
+      Meteor.subscribe('sections', currentAreaId),
+      Meteor.subscribe('userAllLeaveRequests', this.params._id)
     ];
+  }
+});
+
+
+Router.route('forgotPassword', {
+  path: '/forgotPassword',
+  layoutTemplate: 'blankLayout',
+  template: 'forgotPassword'
+});
+
+
+Router.route('pinLock', {
+  path: '/pin-lock/:userId',
+  layoutTemplate: 'blankLayout',
+  template: 'pinLock',
+  waitOn: function () {
+    return Meteor.subscribe('profileUser', this.params.userId);
   },
   data: function () {
-    Session.set('profileUser', this.params._id);
-    Session.set('editStockTake', false);
+    return {
+      userId: this.params.userId,
+      backwardUrl: this.params.query.backwardUrl
+    };
   }
 });

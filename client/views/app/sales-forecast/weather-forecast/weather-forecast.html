@@ -1,0 +1,12 @@
+<template name="weatherForecast">
+  <td colspan="3" class="weather-forecast-cell">
+    {{#if hasForecast}}
+      <div class="weather-icon-wrapper">
+        <i class='{{iconClass}}'></i>
+      </div>
+      {{main}}, {{roundedTemperature}}&deg;C
+    {{else}}
+      <i>No weather data</i>
+    {{/if}}
+  </td>
+</template>

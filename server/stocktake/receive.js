@@ -24,21 +24,6 @@ Meteor.methods({
       }
     );
     logger.info("Order receipt marked as received", receiptId);
-
-
-    var orders = StockOrders.find({"orderReceipt": receiptId}).fetch();
-    if (orders && orders.length > 0) {
-      orders.forEach(function (order) {
-        var note = "Order receive on receipt " + receiptId;
-        var quantity = order.countOrdered;
-        if (order.hasOwnProperty("countDelivered")) {
-          quantity = order.countDelivered;
-        }
-        var date = moment(date).format("YYYY-MM-DD");
-        Meteor.call("updateCurrentStock", order.stockId, note, quantity, date);
-
-      });
-    }
   },
 
   updateOrderItems: function (id, receiptId, status, info) {
@@ -98,8 +83,6 @@ Meteor.methods({
     }
     StockOrders.update({"_id": id, "orderReceipt": receiptId}, query);
     logger.info("Stock order updated", id, status);
-
-    Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, new Date());
   },
 
   receiveOrderItems: function (id, receiptId, info) {

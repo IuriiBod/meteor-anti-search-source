@@ -10,7 +10,7 @@ Namespace('HospoHero', {
 
     var hasPermission = function (action, userId) {
       try {
-        userId = userId ? userId : Meteor.userId();
+        userId = userId || Meteor.userId();
       } catch (err) {
         return false;
       }
@@ -31,7 +31,7 @@ Namespace('HospoHero', {
 
     var checkPermission = function (userId) {
       // Organization's owner can't be rosted
-      return (action !== 'can be rosted' && HospoHero.isOrganizationOwner(userId)) || hasPermission(action, userId);
+      return (action !== 'be rosted' && HospoHero.isOrganizationOwner(userId)) || hasPermission(action, userId);
     };
 
     // arguments[1] - userId

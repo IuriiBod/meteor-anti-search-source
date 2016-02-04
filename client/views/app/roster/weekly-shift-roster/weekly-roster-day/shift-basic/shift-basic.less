@@ -1,0 +1,21 @@
+.shift-basic-component {
+  .shift-remove-wrapper {
+    display: none;
+  }
+
+  &:hover {
+    .shift-remove-wrapper {
+      display: block;
+    }
+  }
+
+  &.can-edit {
+    cursor: move;
+  }
+
+  .select-worker[data-value="Open"] {
+    color: #DD1144;
+    font-style: italic;
+    font-weight: normal;
+  }
+}

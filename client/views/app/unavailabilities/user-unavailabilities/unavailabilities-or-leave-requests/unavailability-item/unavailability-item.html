@@ -1,0 +1,45 @@
+<template name="unavailabilityItem">
+  <div class="row item-wrapper">
+    <!-- Date -->
+    <div class="col-xs-3 unavailability-item-date">
+      {{date}}
+    </div>
+
+    <!-- Item details -->
+    <div class="col-xs-9 item-details-wrapper">
+      <div class="row">
+        <div class="col-xs-11 item-details">
+          <!-- Repeat -->
+          {{#if repeat}}
+            <div>
+              Every {{repeat}} since {{date}}
+            </div>
+          {{/if}}
+
+          <!-- Comment -->
+          <div>
+            {{#if comment}}
+              <span class="text">{{comment}}</span>
+            {{else}}
+              <span class="text-muted">There is no comment</span>
+            {{/if}}
+          </div>
+
+          <!-- Start and end time -->
+          <div>
+            {{#if isAllDay}}
+              All day
+            {{else}}
+              {{time.startTime}} - {{time.endTime}}
+            {{/if}}
+          </div>
+        </div>
+
+        <!-- Delete button -->
+        <div class="col-xs-1 item-actions">
+          <i class="remove-unavailability-button fa fa-trash-o delete-icon pull-right" role="button"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

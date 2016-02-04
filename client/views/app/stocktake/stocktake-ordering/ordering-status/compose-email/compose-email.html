@@ -1,0 +1,54 @@
+<template name="composeStocktakeOrderingEmail">
+  <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="composeStocktakeOrderingEmail"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close close-modal-button" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Compose mail</h4>
+        </div>
+
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">To:</label>
+
+              <div class="col-sm-10">
+                <input type="text" class="form-control emailTo" value="{{supplier.email}}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Subject:</label>
+
+              <div class="col-sm-10">
+                <input type="text" class="form-control emailSubject" value="{{subject}}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Reply To:</label>
+
+              <div class="col-sm-10">
+                <input type="text" class="form-control replyTo" value="{{replyToEmail}}">
+              </div>
+            </div>
+          </form>
+          <div class="clearfix"></div>
+          {{> textEditor initialHtml=state$initialHtml}}
+        </div>
+
+        <div class="modal-footer text-right">
+          <a href="#" class="btn btn-white btn-sm close-modal-button" data-toggle="tooltip" data-placement="top"
+             title="Discard email">
+            <i class="fa fa-times"></i> Discard
+          </a>
+          <a href="#" class="btn btn-sm btn-primary send-email-button" data-toggle="tooltip" data-placement="top"
+             title="Send">
+            <i class="fa fa-share"></i> Send
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

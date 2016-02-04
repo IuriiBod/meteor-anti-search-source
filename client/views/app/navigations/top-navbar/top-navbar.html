@@ -1,0 +1,58 @@
+<template name="topNavbar">
+  <div class="row border-bottom">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+      <div class="navbar-header">
+        <a id="navbar-minimalize" class="minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+      </div>
+      <ul class="nav navbar-top-links navbar-right">
+        {{#if isInOrganization}}
+          {{#if getCurrentAreaId}}
+            <li>
+              <span class="organization-structure-flyout">
+                <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
+                {{getCurrentArea.name}}
+              </span>
+            </li>
+          {{else}}
+            {{#if isOrganizationOwner}}
+              <li>
+                <a class="organization-structure-flyout">
+                  <i class="fa fa-sitemap"></i>
+                </a>
+              </li>
+            {{/if}}
+          {{/if}}
+        {{/if}}
+
+        <li class="dropdown">
+          <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user"></i>
+          </a>
+          {{> settingsDropdownMenu menuItems=profileMenuItems}}
+        </li>
+
+        <li>
+          <a href="{{pathFor 'calendar' type="day" date=shortDateFormat}}"><i class="fa fa-calendar"></i></a>
+        </li>
+
+        <li>
+          <a href="{{pathFor 'taskList'}}" class="count-info">
+            <i class="fa fa-check-square-o"></i>
+            {{#if tasksCount}}
+              <span class="label label-danger">{{tasksCount}}</span>
+            {{/if}}
+          </a>
+        </li>
+
+        <li>
+          <a class="count-info notifi-toggler" href="#">
+            <i class="fa fa-bell"></i>
+            {{#if count}}
+              <span class="label label-primary">{{count}}</span>
+            {{/if}}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</template>

@@ -71,13 +71,14 @@ Meteor.publish("receiptOrders", function (receiptId) {
   return StockOrders.find({"orderReceipt": receiptId, "countOrdered": {$gt: 0}});
 });
 
-Meteor.publish("currentStocks", function (ids) {
-  logger.info("Current stocks published ", ids);
-  return CurrentStocks.find({"_id": {$in: ids}});
-});
-
 Meteor.publish('stocktakeList', function (areaId) {
-  return Stocktakes.find({
-    'relations.areaId': areaId
-  });
+  return [
+    StocktakeMain.find({
+      "stocktakeDate": new Date(moment().format("YYYY-MM-DD")).getTime(), // Need to pass moment instance to round unix time
+      "relations.areaId": areaId
+    }),
+    Stocktakes.find({
+      'relations.areaId': areaId
+    })
+  ];
 });

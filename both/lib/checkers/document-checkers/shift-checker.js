@@ -2,7 +2,6 @@ var ShiftDocument = Match.Where(function (shift) {
   check(shift, {
     startTime: Date,
     endTime: Date,
-    shiftDate: Date,
     type: Match.OneOf(String, null),
 
     //optional properties
@@ -11,14 +10,14 @@ var ShiftDocument = Match.Where(function (shift) {
     createdBy: HospoHero.checkers.OptionalNullableMongoId,
     assignedTo: HospoHero.checkers.OptionalNullableMongoId,
     assignedBy: HospoHero.checkers.OptionalNullableMongoId,
-    jobs: Match.Optional([HospoHero.checkers.MongoId]),
     status: Match.Optional(Match.OneOf('draft', 'started', 'finished')),
     published: Match.Optional(Boolean),
     publishedOn: Match.Optional(Number),
     startedAt: Match.Optional(Date),
     finishedAt: Match.Optional(Date),
     order: Match.Optional(Number),
-    relations: Match.Optional(HospoHero.checkers.Relations)
+    relations: Match.Optional(HospoHero.checkers.Relations),
+    claimedBy: Match.Optional([HospoHero.checkers.MongoId])
   });
 
   var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(shift, Shifts);
@@ -35,16 +34,60 @@ var ShiftDocument = Match.Where(function (shift) {
     }
   });
 
+
   //check if worker already assigned
   if (shift.assignedTo) {
-    checkerHelper.checkPropertiesGroup(['assignedTo', 'shiftDate'], function () {
-      var assignedWorker = Meteor.users.findOne({_id: shift.assignedTo});
+
+    var assignedUserId = shift.assignedTo;
+    var occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
+
+    checkerHelper.checkPropertiesGroup(['startTime', 'endTime'], function () {
+
+      var isUserHasUnavailability = !!Meteor.users.findOne({
+        _id: assignedUserId,
+        $or: [
+          {
+            'unavailabilities.startDate': occupiedTimeRange
+          }, {
+            'unavailabilities.endDate': occupiedTimeRange
+          }, {
+            'unavailabilities.startDate': {$lte: shift.startTime},
+            'unavailabilities.endDate': {$gte: shift.endTime}
+          }
+        ]
+      });
+
+      var isUserHasApprovedLeaveRequest = !!LeaveRequests.findOne({
+        userId: assignedUserId,
+        status: "approved",
+        $or: [
+          {
+            startDate: occupiedTimeRange
+          }, {
+            endDate: occupiedTimeRange
+          }, {
+            startDate: {$lte: shift.startTime},
+            endDate: {$gte: shift.endTime}
+          }
+        ]
+      });
+
+      if (isUserHasUnavailability || isUserHasApprovedLeaveRequest) {
+        logger.error("User unavailable at selected time", {
+          "startTime": shift.startTime,
+          "endTime": shift.endTime
+        });
+        throw new Meteor.Error('This user unavailable at this time!');
+      }
+    });
+
+    checkerHelper.checkPropertiesGroup(['assignedTo', 'startTime', 'endTime'], function () {
+      var assignedWorker = Meteor.users.findOne({_id: assignedUserId});
       if (!assignedWorker) {
         logger.error("Worker not found");
         throw new Meteor.Error(404, "Worker not found");
       }
 
-      var occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
       var existInShift = !!Shifts.findOne({
         _id: {$ne: shift._id},
         $or: [
@@ -55,10 +98,10 @@ var ShiftDocument = Match.Where(function (shift) {
             endTime: {$gte: shift.endTime}
           }
         ],
-        assignedTo: shift.assignedTo
+        assignedTo: assignedUserId
       });
       if (existInShift) {
-        logger.error("User already exist in a shift", {"date": shift.shiftDate});
+        logger.error("User already exist in a shift", {date: shift.startTime});
         throw new Meteor.Error(404, "Worker has already been assigned to a shift");
       }
     });
@@ -66,7 +109,7 @@ var ShiftDocument = Match.Where(function (shift) {
     if (shift.section) {
       checkerHelper.checkPropertiesGroup(['assignedTo', 'section'], function () {
         if (!Meteor.users.findOne({_id: shift.assignedTo, 'profile.sections': shift.section})) {
-          logger.error("User not trained for this section", {"sectionId": shift.section});
+          logger.error("User not trained for this section", {sectionId: shift.section});
           throw new Meteor.Error(404, "User not trained for this section");
         }
       });

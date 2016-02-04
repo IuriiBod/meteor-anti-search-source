@@ -1,0 +1,21 @@
+<template name="orderingStatus">
+  <h2 class="ordering-status">
+    {{supplierName activeSupplierId}}
+    <small class="text-info pull-right">
+      {{#if deliveryDate}}
+        Expect delivery on
+        {{> expectedDeliveryDatePicker deliveryDate=deliveryDate receipt=receipt}}
+      {{/if}}
+      {{#if receipt}}
+        <i class="fa fa-fw fa-check"></i> Status: {{orderSentDetails receipt}}
+      {{else}}
+        <a class="btn btn-primary order-emailed-button">
+          <i class="fa fa-envelope-o fa-fw fa-lg"></i>Send email
+        </a>
+        <a class="btn btn-primary order-phoned-button">
+          <i class="fa fa-fw fa-lg fa-phone"></i>Mark as phoned through
+        </a>
+      {{/if}}
+    </small>
+  </h2>
+</template>

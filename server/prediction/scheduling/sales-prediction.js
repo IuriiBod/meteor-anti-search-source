@@ -81,7 +81,8 @@ ForecastMaker.prototype._predictFor = function (days) {
   logger.info('Make prediction', {days: days, locationId: this._locationId});
 
   var today = new Date();
-  var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), this._location).startOf('day');
+  var dateToMakePredictionFrom = HospoHero.prediction.getDateThreshold(); // new Date() default
+  var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(dateToMakePredictionFrom, this._location).startOf('day');
   var self = this;
 
   var areas = Areas.find({locationId: this._locationId});
@@ -96,8 +97,8 @@ ForecastMaker.prototype._predictFor = function (days) {
       var notificationSender = self._getNotificationSender(area);
 
       items.forEach(function (menuItem) {
-        var dataVector = [currentWeather.temp, currentWeather.main, dateMoment.format('ddd'), dateMoment.dayOfYear()];
-        var quantity = self._predictionApi.makePrediction(menuItem._id, dataVector);
+        let dataVector = new DataVector(dateMoment, currentWeather);
+        let quantity = self._predictionApi.makePrediction(menuItem._id, dataVector.getTestingData());
 
         logger.info('Made prediction', {menuItem: menuItem.name, date: dateMoment.toDate(), predictedQty: quantity});
 
@@ -162,7 +163,7 @@ ForecastMaker.prototype.makeForecast = function () {
   });
 };
 
-ForecastMaker.prototype._updateDayIntervals = [14];//[84, 7, 2];
+ForecastMaker.prototype._updateDayIntervals = Meteor.settings.prediction.forecastIntervals;
 
 
 updateForecastForLocation = function (location) {
@@ -173,16 +174,11 @@ updateForecastForLocation = function (location) {
 };
 
 
-if (HospoHero.isProductionMode()) {
+if (!HospoHero.isDevelopmentMode()) {
   HospoHero.LocationScheduler.addDailyJob('Update forecast', function (location) {
     return 3; //3:00 AM
   }, function (location) {
-    logger.error('Started forecast generation', {locationId: location._id});
-    //updateForecastForLocation(location);
+    logger.info('Started forecast generation', {locationId: location._id});
+    updateForecastForLocation(location);
   });
-}
-
-
-if (HospoHero.isDevelopmentMode()) {
-  ForecastMaker.prototype._updateDayIntervals = [7];
 }

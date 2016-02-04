@@ -21,7 +21,10 @@ var actions = {
   "All Rights": "all rights",
   "Edit users payrate": "edit user's payrate",
   "View Reports": "view reports",
-  "Receive Deliveries": "receive deliveries"
+  "Receive Deliveries": "receive deliveries",
+  "Approve leave requests": "approve leave requests",
+  "View calendar": "view calendar",
+  "Edit calendar": "edit calendar"
 };
 
 var defaultRoles = [
@@ -53,7 +56,10 @@ var defaultRoles = [
       "be rosted",
       "edit user's payrate",
       "view reports",
-      "receive deliveries"
+      "receive deliveries",
+      "approve leave requests",
+      "view calendar",
+      "edit calendar"
     ]
   },
 
@@ -65,7 +71,8 @@ var defaultRoles = [
       "view roster",
       "view stocks",
       "be rosted",
-      "receive deliveries"
+      "receive deliveries",
+      "view calendar"
     ]
   }
 ];

@@ -7,9 +7,8 @@ Router.route('/stocklist', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allSuppliers', currentAreaId),
-      //Meteor.subscribe("ingredients", null, 'active'),
-      //Meteor.subscribe("ingredientsRelatedJobs"),
-      Meteor.subscribe('ingredients', null, currentAreaId)
+      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe("ingredientsRelatedJobs")
     ];
   },
   data: function () {

@@ -4,13 +4,13 @@ Meteor.publish(null, function () {
     var fields = {
       "services.google": 1,
       profile: 1,
-      username: 1,
       emails: 1,
       isActive: 1,
       relations: 1,
       createdAt: 1,
       currentAreaId: 1,
-      roles: 1
+      roles: 1,
+      unavailabilities: 1
     };
 
     return Meteor.users.find({
@@ -31,18 +31,14 @@ Meteor.publish('profileUser', function (userId) {
       var fields = {
         "services.google": 1,
         profile: 1,
-        username: 1,
         emails: 1,
         isActive: 1,
         relations: 1,
         createdAt: 1,
         currentAreaId: 1,
-        "roles.defaultRole": 1
+        unavailabilities: 1,
+        roles: 1
       };
-
-      if (user.currentAreaId) {
-        fields["roles." + user.currentAreaId] = 1;
-      }
 
       return Meteor.users.find({
         _id: userId
@@ -58,16 +54,22 @@ Meteor.publish('profileUser', function (userId) {
 Meteor.publish('usersList', function (areaId) {
   if (this.userId) {
     var options = {
-      username: 1,
       emails: 1,
       isActive: 1,
-      "profile.payrates": 1,
-      "profile.resignDate": 1,
-      currentAreaId: 1
+      'profile.firstname': 1,
+      'profile.lastname': 1,
+      'profile.payrates': 1,
+      'profile.resignDate': 1,
+      currentAreaId: 1,
+      roles: 1
     };
 
-    options["roles." + areaId] = 1;
-    var users = Meteor.users.find({'relations.areaIds': areaId}, {fields: options});
+    var query = {};
+    if (areaId) {
+      query['relations.areaIds'] = areaId;
+    }
+
+    var users = Meteor.users.find(query, {fields: options});
     logger.info("Userlist published");
     return users;
   } else {
@@ -77,7 +79,6 @@ Meteor.publish('usersList', function (areaId) {
 
 Meteor.publish("selectedUsersList", function (usersIds) {
   var options = {
-    username: 1,
     emails: 1,
     isActive: 1,
     profile: 1,
@@ -99,11 +100,11 @@ Meteor.publishComposite('workers', function (areaId) {
       if (this.userId) {
         var user = Meteor.users.findOne(this.userId);
 
-        if (user && user.relations && user.relations.organizationId) {
+        if (user && user.relations && user.relations.organizationIds) {
           return Meteor.roles.find({
             actions: 'be rosted',
             $or: [
-              {'relations.organizationId': user.relations.organizationId},
+              {'relations.organizationId': {$in: user.relations.organizationIds}},
               {default: true}
             ]
           });

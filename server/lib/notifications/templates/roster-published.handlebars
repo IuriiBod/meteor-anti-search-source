@@ -20,12 +20,12 @@
 </style>
 
 <div>
-  <b>{{publishedByName}}</b> just published the roster for the week starting <b>{{date}}</b>.
+  <b>{{publishedByName}}</b> just published the roster {{#if areaName}} in <b>{{areaName}}</b> {{/if}} for the week starting <b>{{date}}</b>.
   <br><br>
   Here's your shifts:
   <ul>
     {{#each shifts}}
-      <li>{{dateFormatter this}}</li>
+      <li>{{dateFormatter this}} {{#if section}} in {{sectionNameFormatter this}} section{{/if}}</li>
     {{/each}}
   </ul>
 
@@ -33,12 +33,12 @@
     And check open shifts. You can claim them from the dashboard.
     <ul>
       {{#each openShifts}}
-        <li>{{dateFormatter this}}</li>
+        <li>{{dateFormatter this}} {{#if section}} in {{sectionNameFormatter this}} section{{/if}}</li>
       {{/each}}
     </ul>
   {{/if}}
 
   <p class="button-container">
-    <a href="{{linkToItem}}" class="claim-button confirm-button">Go to the roster</a>
+    <a href="{{rosterUrl}}" class="claim-button confirm-button" data-link-type="navigation">Go to the roster</a>
   </p>
 </div>

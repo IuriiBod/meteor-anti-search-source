@@ -1,3 +1,0 @@
-Template.productItem.events({
-
-});

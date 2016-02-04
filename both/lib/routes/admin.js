@@ -1,21 +1,3 @@
-Router.route('usersSettings', {
-  path: '/settings/users',
-  template: "adminMainView",
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return Meteor.subscribe('usersList', currentAreaId);
-  },
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
-    return {
-      component: 'usersList',
-      title: 'Users'
-    }
-  }
-});
-
 Router.route('rolesSettings', {
   path: '/settings/roles',
   template: "adminMainView",
@@ -25,7 +7,7 @@ Router.route('rolesSettings', {
     }
 
     return {
-      component: 'rolesSettings',
+      template: 'rolesSettings',
       title: 'Roles'
     }
   }
@@ -41,9 +23,8 @@ Router.route('sectionsSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
-      component: 'sections',
+      template: 'sections',
       title: 'Sections'
     }
   }
@@ -59,9 +40,8 @@ Router.route('stockAreasSettings', {
     if (!Meteor.userId() || !HospoHero.isManager()) {
       Router.go('/');
     }
-    Session.set('editStockTake', false);
     return {
-      component: 'stockAreas',
+      template: 'stockAreas',
       title: 'Stock Areas'
     }
   }
@@ -75,7 +55,7 @@ Router.route('inactivityTimeoutSettings', {
       Router.go('/');
     }
     return {
-      component: 'inactivityTimeoutField',
+      template: 'inactivityTimeoutField',
       title: 'Inactivity Timeout'
     }
   }
@@ -96,7 +76,7 @@ Router.route('posSettings', {
       Router.go('/');
     }
     return {
-      component: 'posMenuLinking',
+      template: 'posMenuLinking',
       title: 'POS / Menu Linking'
     }
   }
@@ -116,7 +96,7 @@ Router.route('archivingSettings', {
       Router.go('/');
     }
     return {
-      component: 'locationAreaArchiving',
+      template: 'locationAreaArchiving',
       title: 'Locations/Areas archiving'
     }
   }

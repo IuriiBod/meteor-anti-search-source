@@ -1,61 +1,85 @@
 Meteor.methods({
-  'createComment': function (text, ref, refType, recipients) {
-    if (!Meteor.userId()) {
-      logger.error('No user has logged in');
-      throw new Meteor.Error(401, "User not logged in");
+  createComment: function (comment, refType, recipients) {
+    if (!HospoHero.isInOrganization(Meteor.userId())) {
+      logger.error('User can\'t leave comments');
+      throw new Meteor.Error(403, 'User can\'t leave comments');
     }
-    if (!text) {
-      logger.error("Text field not found");
-      throw new Meteor.Error(404, "Text field not found");
-    }
-    if (!ref) {
-      logger.error("Reference field not found");
-      throw new Meteor.Error(404, "Reference field not found");
-    }
-    var doc = {
-      text: text,
-      createdOn: Date.now(),
+    check(comment, HospoHero.checkers.CommentChecker);
+
+
+    var getReferenceObject = function (referenceType, referenceId) {
+      var typeCollectionRelations = {
+        menu: MenuItems,
+        job: JobItems,
+        stockOrders: StocktakeMain,
+        supplier: Suppliers,
+        taskItem: TaskList
+      };
+      return typeCollectionRelations[referenceType].findOne({_id: referenceId});
+    };
+
+    var getLinkToReference = function (referenceType, referenceId) {
+      var routesRelations = {
+        menu: 'menuItemDetail',
+        job: 'jobItemDetailed',
+        stockOrders: 'stocktakeOrdering',
+        supplier: 'supplierProfile',
+        taskItem: 'taskList'
+      };
+      var routeName = routesRelations[referenceType];
+      return referenceType === 'taskItem' ? {
+        route: routeName,
+        params: {_id: referenceId}
+      } : {route: routeName, params: {}};
+    };
+
+    var getItemName = function (reference, refType) {
+      if (reference.name) {
+        return reference.name;
+      } else if (refType === 'taskItem') {
+        return ' task ' + reference.title;
+      } else if (refType === 'stockOrders') {
+        return 'stocktake from ' + HospoHero.dateUtils.dateFormat(reference.date);
+      } else {
+        return '';
+      }
+    };
+
+
+    var additionalCommentInfo = {
+      createdOn: new Date(),
       createdBy: Meteor.userId(),
-      reference: ref,
       relations: HospoHero.getRelationsObject()
     };
-    var id = Comments.insert(doc);
+    comment = _.extend(comment, additionalCommentInfo);
+
+    var id = Comments.insert(comment);
     logger.info("Comment inserted", id);
 
-    var typeCollectionRelations = {
-      menu: MenuItems,
-      job: JobItems,
-      workerJob: Jobs,
-      supplier: Suppliers
-    };
-    var reference = typeCollectionRelations[refType].findOne({_id: ref});
-
-    var routesRelations = {
-      menu: 'menuItemDetail',
-      job: 'jobItemDetailed',
-      workerJob: '',
-      supplier: 'supplierProfile'
-    };
-    var routeName = routesRelations[refType];
-    var linkToItem = Router.url(routeName, {_id: ref});
+    var reference = getReferenceObject(refType, comment.reference);
+    var itemName = getItemName(reference, refType);
 
     var notificationSender = new NotificationSender(
       'New comment',
       'new-comment',
       {
-        itemName: reference.name,
+        itemName: itemName,
         username: HospoHero.username(Meteor.userId()),
-        linkToItem: linkToItem
+        itemLinkData: getLinkToReference(refType, comment.reference)
+      }, {
+        helpers: {
+          linkToItem: function () {
+            return NotificationSender.urlFor(this.itemLinkData.route, this.itemLinkData.params, this);
+          }
+        }
       }
     );
 
     if (recipients.length) {
-      recipients.forEach(function (recipientName) {
-        var user = Meteor.users.findOne({username: recipientName});
-        notificationSender.sendNotification(user._id);
+      recipients.forEach(function (recipient) {
+        notificationSender.sendNotification(recipient._id);
       });
     }
-
     return id;
   }
 });

@@ -9,7 +9,9 @@ Namespace('HospoHero.roles', {
       return role._id;
     });
 
-    var query = {};
+    var query = {
+      isActive: true
+    };
     query['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
 
     return Meteor.users.find(query).map(function (user) {
@@ -23,10 +25,15 @@ Namespace('HospoHero.roles', {
     userId = userId || Meteor.userId();
     areaId = areaId || HospoHero.getCurrentAreaId(userId);
 
-    var user = Meteor.users.findOne({_id: userId});
-    var roleId = user.roles.defaultRole || user.roles[areaId];
-    var role = Roles.getRoleById(roleId);
-    return role && role.name || '';
+    var area = Areas.findOne({_id: areaId});
+    if (!!Organizations.findOne({_id: area.organizationId, owners: userId})) {
+      return 'Owner';
+    } else {
+      var user = Meteor.users.findOne({_id: userId});
+      var roleId = user.roles[areaId] || false;
+      var role = Roles.getRoleById(roleId);
+      return role && role.name || '';
+    }
   },
 
   actions: {
@@ -44,15 +51,18 @@ Namespace('HospoHero.roles', {
     "Edit Users": "edit users",
     "View Forecast": "view forecast",
     "Edit Areas": "edit areas",
-    "View Areas Reports": "view areas reports",
+    "View Area Reports": "view area reports",
     "View areas financial info": "view area's financial info",
     "Edit Locations": "edit locations",
-    //"Billing Account": "edit billing account",
+    "Billing Account": "edit billing account",
     "Edit Organization": "edit organization settings",
+    "All Rights": "all rights",
     "Edit users payrate": "edit user's payrate",
-    //"All Rights": "all rights",
     "View Reports": "view reports",
-    "Receive Deliveries": "receive deliveries"
+    "Receive Deliveries": "receive deliveries",
+    "Approve leave requests": "approve leave requests",
+    "Edit calendar": "edit calendar",
+    "View calendar": "view calendar"
   },
 
   getActions: function () {

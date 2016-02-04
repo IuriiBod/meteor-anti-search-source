@@ -4,16 +4,17 @@
   <div id="wrapper">
 
     {{> FlyoutManager}}
+    {{> ModalManager}}
 
     <!-- Navigation -->
     {{#if currentUser}}
-      {{> render component="navigation" }}
+      {{> navigation}}
     {{/if}}
     <!-- Page wraper -->
     <div id="page-wrapper" class="gray-bg">
 
       <!-- Page wrapper -->
-      {{> render component="topNavbar" }}
+      {{> topNavbar}}
 
       <!-- Main view  -->
       {{> yield}}
@@ -28,7 +29,12 @@
 
   {{# if currentUser}}
     <script>
-      var _elev = window._elev || {};(function() {var i,e;i=document.createElement("script"),i.type='text/javascript';i.async=1,i.src="https://static.elev.io/js/v3.js",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(i,e);})();
+      var _elev = window._elev || {};
+      (function () {
+        var i, e;
+        i = document.createElement("script"), i.type = 'text/javascript';
+        i.async = 1, i.src = "https://static.elev.io/js/v3.js", e = document.getElementsByTagName("script")[0], e.parentNode.insertBefore(i, e);
+      })();
       _elev.account_id = '565bff7ce209b';
     </script>
   {{/if}}

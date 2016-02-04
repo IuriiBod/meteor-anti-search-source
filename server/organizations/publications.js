@@ -1,8 +1,8 @@
 Meteor.publish('currentOrganization', function () {
   if (this.userId) {
     var user = Meteor.users.findOne(this.userId);
-    if (user.relations && user.relations.organizationId) {
-      return Organizations.find({_id: user.relations.organizationId});
+    if (user.relations && user.relations.organizationIds) {
+      return Organizations.find({_id: HospoHero.isInOrganization(user._id)});
     } else {
       this.ready();
     }
@@ -18,15 +18,18 @@ Meteor.publishComposite('organizationInfo', {
   find: function () {
     if (this.userId) {
       var user = Meteor.users.findOne(this.userId);
-      if (user.relations && user.relations.organizationId) {
+      if (user.relations && user.relations.organizationIds) {
         var fields = {};
 
         if (!HospoHero.canUser('edit organization settings', this.userId)) {
-          fields.name = 1;
+          _.extend(fields, {
+            name: 1,
+            owners: 1
+          });
         }
 
         return Organizations.find({
-          _id: user.relations.organizationId
+          _id: {$in: user.relations.organizationIds}
         }, {
           fields: fields
         });
@@ -73,13 +76,14 @@ Meteor.publishComposite('organizationInfo', {
         if (this.userId && (HospoHero.canUser('edit areas', this.userId) || HospoHero.canUser('edit locations', this.userId))) {
           return Meteor.users.find({
             isActive: true,
-            "relations.organizationId": organization._id
+            "relations.organizationIds": {$in: [organization._id]}
           }, {
             fields: {
-              username: 1,
+              isActive: 1,
               "services.google.picture": 1,
               profile: 1,
-              relations: 1
+              relations: 1,
+              roles: 1
             }
           });
         }
@@ -101,6 +105,7 @@ Meteor.publishComposite('organizationInfo', {
             if (!HospoHero.canUser('edit locations', this.userId)) {
               fields.name = 1;
               fields.organizationId = 1;
+              fields.timezone = 1;
             }
           }
           return Locations.find(query, {fields: fields});

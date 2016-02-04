@@ -1,7 +1,7 @@
 //--------------------HOME
 Router.route('/', {
-  name: 'home',
-  template: 'home',
+  name: 'dashboard',
+  template: 'dashboard',
   path: '/',
   waitOn: function () {
     if (Meteor.userId()) {
@@ -10,16 +10,15 @@ Router.route('/', {
         Meteor.subscribe('shifts', 'future', Meteor.userId(), currentAreaId),
         Meteor.subscribe('shifts', 'past', Meteor.userId(), currentAreaId),
         Meteor.subscribe('shifts', 'opened', null, currentAreaId),
-        Meteor.subscribe('shifts', 'today', Meteor.userId(), currentAreaId),
         Meteor.subscribe('sections', currentAreaId),
         Meteor.subscribe('usersList', currentAreaId),
         Meteor.subscribe('comments', Meteor.userId(), currentAreaId),
         Meteor.subscribe('newsfeeds'),
-        Meteor.subscribe('daily', moment().format('YYYY-MM-DD'), currentAreaId, Meteor.userId())
+        Meteor.subscribe('daily', HospoHero.dateUtils.shortDateFormat(moment()), currentAreaId, Meteor.userId()),
+        Meteor.subscribe('userAllLeaveRequests', Meteor.userId())
       ];
     }
   },
   data: function () {
-    Session.set('editStockTake', false);
   }
 });

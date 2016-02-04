@@ -13,17 +13,36 @@ Meteor.methods({
   updatePredictionModel: function () {
     checkOrganizationOwner(this.userId);
     var locations = Locations.find({archived: {$ne: true}});
-    locations.forEach(updateTrainingDataForLocation);
+
+    locations.forEach((location) => {
+      logger.info('Force prediction model update for', {_id: location._id, name: location.name});
+      MenuItems.update({'relations.locationId': location._id}, {$unset: {lastForecastModelUpdateDate: ''}}, {multi: true});
+      updateTrainingDataForLocation(location);
+    });
+
     return true;
   },
 
-  resetForecastData: function () {
-    checkOrganizationOwner(this.userId);
-    var currentArea = HospoHero.getCurrentArea(this.userId);
-    var importer = new ActualSalesImporter(currentArea.locationId);
-    importer._resetActualSales();
-    return true;
-  },
+  //resetForecastData: function () {
+  //  checkOrganizationOwner(this.userId);
+  //  var currentArea = HospoHero.getCurrentArea(this.userId);
+  //
+  //  //remove only sales with actual quantity
+  //  DailySales.remove({
+  //    predictionQuantity: {$exists: false},
+  //    'relations.locationId': currentArea.locationId
+  //  });
+  //
+  //  DailySales.update({
+  //    'relations.locationId': currentArea.locationId
+  //  }, {
+  //    $unset: {
+  //      actualQuantity: ''
+  //    }
+  //  }, {multi: true});
+  //
+  //  return true;
+  //},
 
   updatePredictions: function () {
     checkOrganizationOwner(this.userId);
@@ -57,17 +76,33 @@ Meteor.methods({
 
   importRawOrders: function () {
     checkOrganizationOwner(this.userId);
-    //remove old data
-    RawOrders.remove({});
+
+    var lastOrderItem = RawOrders.findOne({}, {sort: {created_date: -1}});
+
+    var isLastSynced = function (orderItem) {
+      return lastOrderItem && lastOrderItem.created_date === orderItem.created_date
+        && lastOrderItem.quantity === orderItem.quantity
+        && lastOrderItem.resource_uri === orderItem.resource_uri;
+    };
 
     var area = HospoHero.getCurrentArea(this.userId);
     var location = Locations.findOne({_id: area.locationId});
     var revelApi = new Revel(location.pos);
+
+    var toContinue = true;
     revelApi.uploadRawOrderItems(function (orderItems) {
-      orderItems.forEach(function (item) {
-        RawOrders.insert(item);
+      orderItems.every(function (item) {
+        if (isLastSynced(item) || !toContinue) {
+          toContinue = false;
+          return false;
+        } else {
+          RawOrders.insert(item);
+          return true;
+        }
       });
+      return toContinue;
     });
+
     return true;
   }
 });

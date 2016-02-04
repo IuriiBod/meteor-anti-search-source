@@ -24,8 +24,3 @@ Meteor.publish('allCategories', function (areaId) {
     this.ready();
   }
 });
-
-Meteor.publish('allStatuses', function () {
-  logger.info("Statuses published");
-  return Statuses.find();
-});

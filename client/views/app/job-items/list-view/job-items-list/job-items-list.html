@@ -1,0 +1,36 @@
+<template name="jobItemsList">
+
+  <div class="panel-body no-top-border">
+    <div class="row m-t-sm m-b-sm">
+      <div class="col-sm-12">
+        <input type="text" class="form-control col-sm-8 search-job-items-box"
+               placeholder="Search...">
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Action</th>
+          <th>Name</th>
+          <th>Active Time (mins)</th>
+          {{#if isRecurring}}
+            <th>Section</th>
+            <th>Frequency</th>
+          {{else}}
+            <th>Shelf Life (Days)</th>
+            <th>Portions</th>
+            <th>Cost per Portion ($)</th>
+          {{/if}}
+        </tr>
+        </thead>
+        <tbody>
+        {{#each jobItems}}
+          {{> jobItemDetailed jobitem=this}}
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <a href="#" class="btn btn-block btn-outline btn-primary hide load-more-items">Load More</a>
+  </div>
+</template>

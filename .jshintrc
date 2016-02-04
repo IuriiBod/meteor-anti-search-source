@@ -126,14 +126,6 @@
     "Router": false,                // iron:router
     "Iron": false,                  // iron:router
     "RouteController": false,       // iron:router
-    "FlowComponents": false,        // meteorhacks:flow-components
-    "Gagarin": false,               // anti:gagarin
-    "describe": false,              // anti:gagarin
-    "it": false,                    // anti:gagarin
-    "expect": false,                // anti:gagarin
-    "meteor": false,                // anti:gagarin
-    "ddp": false,                   // anti:gagarin
-    "browser": false,               // anti:gagarin
     "sweetAlert": false,            // kevohagan:sweetalert
     "moment": false,                // momentjs:moment
     "SearchSource": false,          // meteorhacks:search-source
@@ -142,7 +134,6 @@
     "Autocomplete": false,          // mizzao:autocomplete
     "Autolinker": false,            // konecty:autolinker
     "IronRouterAutoscroll": false,  // okgrow:iron-router-autoscroll
-    "Kadira": false,                // meteorhacks:kadira
     "IntercomSettings": false,      // percolate:intercom
     "IntercomHash": false,          // percolate:intercom
     "StaleSessionConfigs": false,   // hospohero:stale-session
@@ -155,38 +146,28 @@
     "T9n": false,                   // softwarerero:accounts-t9n
 
     // Collections
-    "Menus": true,
     "MenuItems": true,
     "Ingredients": true,
     "JobItems": true,
-    "Jobs": true,
     "Shifts": true,
-    "SalesForecast": true,
-    "ActualSales": true,
-    "Sales": true,
-    "SalesCalibration": true,
-    "ForecastCafe": true,
-    "ForecastCatering": true,
+    "DailySales": true,
     "Comments": true,
     "Notifications": true,
     "Subscriptions": true,
     "Categories": true,
     "JobTypes": true,
     "Sections": true,
-    "Statuses": true,
     "GeneralAreas": true,
     "SpecialAreas": true,
-    "Payroll": true,
     "Posts": true,
     "StocktakeMain": true,
     "Stocktakes": true,
-    "CurrentStocks": true,
-    "CurrentStocksLocal": true,
     "StockOrders": true,
     "OrderReceipts": true,
     "Suppliers": true,
 
     // Other global variables
-    "logger": true
+    "logger": true,
+    "HospoHero": true
   }
 }

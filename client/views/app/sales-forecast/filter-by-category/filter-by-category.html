@@ -1,0 +1,17 @@
+<template name="FilterByCategory">
+  <div class="col-xs-3">
+    <button data-toggle="dropdown"
+            class="btn btn-white dropdown-toggle form-control text-capitalize current-category-button">
+      {{currentCategory}}
+    </button>
+    <span class="caret caret-pulled-right pull-right"></span>
+    <ul class="dropdown-menu text-capitalize filter-menus">
+      {{#each categories}}
+        <li>
+          <a href="{{pathFor route="salesPrediction" date=../date category=this._id}}"
+             class="">{{this.name}}</a>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

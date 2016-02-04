@@ -1,0 +1,25 @@
+<template name="notifiText">
+  <div class="feed-element" data-shift="{{notification._id}}" style="border-bottom: none; padding-bottom: 0;">
+    <a href="#" class="pull-left">
+      <img alt="image" class="img-circle" src="{{profilePicture notification.createdBy}}">
+    </a>
+
+    <div class="media-body ">
+      <small class="pull-right text-navy">{{timeFromNow notification.createdOn}}</small>
+      {{{notification.title}}}
+      <br>
+      <small class="text-muted">
+        {{timeFormat notification.createdOn}}
+      </small>
+      <div>
+        {{{notification.text}}}
+      </div>
+
+      {{#unless notification.interactive}}
+        <div class="mark-as-read text-warning">
+          <button class="btn btn-xs btn-warning readNotification">Mark as read</button>
+        </div>
+      {{/unless}}
+    </div>
+  </div>
+</template>

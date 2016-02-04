@@ -1,0 +1,37 @@
+<style>
+  .button-container {
+    margin-top: 5px;
+  }
+
+  .claim-button {
+    margin-top: 5px;
+    padding: 3px 5px;
+    color: #fff;
+    border-radius: 4px;
+  }
+
+  .claim-button:hover {
+    color: #fff;
+  }
+
+  .confirm-button {
+    background-color: #1AB394;
+  }
+
+  .reject-button {
+    background-color: #ED5565;
+  }
+</style>
+
+<p>
+<p>Hello, {{recipientName}}</p>
+
+<p>I want to take time off from {{startDate}} to {{endDate}}</p>
+
+<p>Please, review my <a type="link" href="{{leaveRequestLink}}">leave request</a>.</p>
+
+<p class="button-container">
+  <a href="{{approveLeaveRequestUrl}}" class="claim-button confirm-button">Confirm</a>
+  <a href="{{declineLeaveRequestUrl}}" class="claim-button reject-button">Reject</a>
+</p>
+</div>

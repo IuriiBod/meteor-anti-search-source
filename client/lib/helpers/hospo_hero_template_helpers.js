@@ -3,9 +3,28 @@ Namespace('HospoHero.template', {
     return (a === b);
   },
 
-  profilePicture: function (userId) {
-    userId = userId ? userId : Meteor.userId();
-    var user = Meteor.users.findOne(userId);
+  or: function () {
+    var res = false;
+    for (var i = 0; i < arguments.length; i++) {
+      res = res || arguments[i];
+    }
+    return res;
+  },
+
+  and: function () {
+    var res = true;
+    for (var i = 0; i < arguments.length; i++) {
+      res = !!(res && arguments[i]);
+    }
+    return res;
+  },
+
+  profilePicture: function (user) {
+    user = user || Meteor.userId();
+    if (_.isString(user)) {
+      user = Meteor.users.findOne({_id: user});
+    }
+
     if (user) {
       if (user.profile && user.profile.image) {
         return user.profile.image;
@@ -30,7 +49,7 @@ Namespace('HospoHero.template', {
   },
 
   roundCount: function (count) {
-    return count ? Math.round(count * 100) / 100 : 0;
+    return count ? HospoHero.misc.rounding(count) : 0;
   },
 
   sectionById: function (id) {

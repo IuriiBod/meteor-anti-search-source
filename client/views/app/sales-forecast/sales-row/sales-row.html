@@ -1,0 +1,8 @@
+<template name="predictionSalesRow">
+  <tr class="sales-row">
+    <td>{{{menuItem.name}}}</td>
+    {{#each weekPrediction}}
+      {{> predictionSalesCell}}
+    {{/each}}
+  </tr>
+</template>

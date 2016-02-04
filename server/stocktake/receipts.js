@@ -1,5 +1,5 @@
 Meteor.methods({
-  generateReceipts: function (version, supplier, info) {
+  generateReceipts: function (version, supplierId, info) {
     if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(403, "User not permitted to generate receipts");
@@ -13,7 +13,7 @@ Meteor.methods({
       logger.error("Stocktake main should exist");
       throw new Meteor.Error("Stocktake main should exist");
     }
-    if (!supplier) {
+    if (!supplierId) {
       logger.error("Supplier should exist");
       throw new Meteor.Error("Supplier should exist");
     }
@@ -21,7 +21,7 @@ Meteor.methods({
       logger.error("Order method should exist");
       throw new Meteor.Error("Order method should exist");
     }
-    if (!info.deliveryDate) {
+    if (!info.expectedDeliveryDate) {
       logger.error("Expected delivery date should exist");
       throw new Meteor.Error("Expected delivery date should exist");
     }
@@ -29,7 +29,7 @@ Meteor.methods({
     var orderedMethod;
     var ordersExist = StockOrders.findOne({
       "version": version,
-      "supplier": supplier,
+      "supplier": supplierId,
       "countOrdered": {$gt: 0}
     });
     if (!ordersExist) {
@@ -38,7 +38,7 @@ Meteor.methods({
     }
 
     var ordersReceiptExist = OrderReceipts.findOne({
-      "supplier": supplier,
+      "supplier": supplierId,
       "version": version
     });
 
@@ -57,13 +57,14 @@ Meteor.methods({
           logger.error("Email text does not exist");
           throw new Meteor.Error(404, "Email text does not exist");
         }
+        
         Email.send({
-          "to": info.to,
-          "from": Meteor.user().emails[0].address,
-          "subject": "Order from [Hospo Hero]",
-          "html": info.emailText
+          to: info.to,
+          from: Meteor.user().emails[0].address,
+          subject: info.title,
+          html: info.emailText
         });
-        logger.info("Email sent to supplier", supplier);
+        logger.info("Email sent to supplier", supplierId);
       }
     }
 
@@ -85,7 +86,7 @@ Meteor.methods({
             $set: {
               "orderedThrough": orderedMethod,
               "orderPlacedBy": Meteor.userId(),
-              "expectedDeliveryDate": info.deliveryDate
+              "expectedDeliveryDate": info.expectedDeliveryDate
             }
           }
         );
@@ -99,13 +100,13 @@ Meteor.methods({
       };
       //generating order receipt
       var id = OrderReceipts.insert({
-        "date": Date.now(),
+        "date": new Date(),
         "version": version,
         "stocktakeDate": stocktakeMain.stocktakeDate,
-        "supplier": supplier,
+        "supplier": supplierId,
         "orderedThrough": orderedMethod,
         "orderPlacedBy": Meteor.userId(),
-        "expectedDeliveryDate": info.deliveryDate,
+        "expectedDeliveryDate": info.expectedDeliveryDate,
         "received": false,
         "receivedDate": null,
         "invoiceFaceValue": 0,
@@ -115,12 +116,12 @@ Meteor.methods({
     }
     //update orders
     StockOrders.update(
-      {"version": version, "supplier": supplier},
+      {"version": version, "supplier": supplierId},
       {
         $set: {
           "orderedThrough": orderedMethod,
-          "orderedOn": Date.now(),
-          "expectedDeliveryDate": info.deliveryDate,
+          "orderedOn": new Date(),
+          "expectedDeliveryDate": info.expectedDeliveryDate,
           "received": false,
           "receivedDate": null,
           "orderReceipt": id
@@ -128,7 +129,7 @@ Meteor.methods({
       },
       {multi: true}
     );
-    logger.info("Orders updated", {"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplier});
+    logger.info("Orders updated", {"stocktakeDate": stocktakeMain.stocktakeDate, "supplier": supplierId});
     StocktakeMain.update({"_id": version}, {$addToSet: {"orderReceipts": id}});
   },
 
@@ -180,7 +181,7 @@ Meteor.methods({
           throw new Meteor.Error(404, "Stocktake main does not exist");
         }
         var doc = {
-          "date": Date.now(),
+          "date": new Date(),
           "version": info.version,
           "stocktakeDate": stocktakeMain.stocktakeDate,
           "supplier": info.supplier,

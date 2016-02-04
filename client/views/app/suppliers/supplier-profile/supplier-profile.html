@@ -1,0 +1,40 @@
+<template name="supplierProfile">
+  <div class="col-lg-12">
+    <div class="wrapper wrapper-content">
+      <div class="ibox">
+        <div class="ibox-content">
+          {{> basics id=supplierId}}
+          <div class="row m-t-sm">
+            <div class="col-lg-12">
+              <div class="panel blank-panel">
+                <div class="panel-heading">
+                  <div class="panel-options">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#tab_1" data-toggle="tab">Products</a></li>
+                      <li class=""><a href="#tab_2" data-toggle="tab">Receipts</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="tab-content">
+                    {{> receiptsList id=supplierId}}
+                    {{> productsList id=supplierId}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            {{> taskWidget type="suppliers" itemId=supplierId}}
+          </div>
+
+          <div class="col-lg-6">
+            {{> commentsPanel id=supplierId type='supplier'}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -3,17 +3,15 @@
  */
 var ShiftPropertyChangeLogger = {
   trackedProperties: {
-    startTime: 'start time',
+    startTime: 'start date and time',
     endTime: 'end time',
-    shiftDate: 'shift date',
     assignedTo: 'assignment'
   },
 
   _formatProperty: function (shift, property) {
     var propertiesFormatters = {
-      startTime: HospoHero.dateUtils.timeFormat,
+      startTime: HospoHero.dateUtils.fullDateFormat,
       endTime: HospoHero.dateUtils.timeFormat,
-      shiftDate: HospoHero.dateUtils.shortDateFormat,
       assignedTo: HospoHero.username
     };
 
@@ -34,18 +32,22 @@ var ShiftPropertyChangeLogger = {
 
   _sendNotification: function (message, shift, fromUserId, toUserId) {
     var notificationText = this._notificationTitle(shift) + ': ' + message;
-    var weekStartMoment = HospoHero.dateUtils.getDateMomentForLocation(shift.startTime, HospoHero.getCurrentArea().locationId).startOf('isoWeek');
-    var routeParams = {
-      week: moment(weekStartMoment).week(),
-      year: moment(weekStartMoment).year()
-    };
+
+    var weekStartDateStr = HospoHero.dateUtils.getDateStringForRoute(shift.startTime, HospoHero.getCurrentArea().locationId);
 
     new NotificationSender(
       'Update on shift',
       'update-on-shift',
       {
         text: notificationText,
-        linkToItem: Router.url('weeklyRoster', routeParams)
+        shiftDate: weekStartDateStr
+      },
+      {
+        helpers: {
+          linkToItem: function () {
+            return NotificationSender.urlFor('weeklyRoster', {date: this.shiftDate}, this);
+          }
+        }
       }
     ).sendNotification(toUserId);
   },
@@ -112,21 +114,20 @@ Meteor.methods({
 
     check(newShiftInfo, HospoHero.checkers.ShiftDocument);
 
-    var shiftsCount = Shifts.find({"shiftDate": TimeRangeQueryBuilder.forWeek(newShiftInfo.shiftDate)}).count();
+    var shiftsCount = Shifts.find({startTime: TimeRangeQueryBuilder.forWeek(newShiftInfo.startTime)}).count();
 
     // publish new shift if other shifts of this week are published
     var isRosterPublished = !!Shifts.findOne({
-      "shiftDate": TimeRangeQueryBuilder.forWeek(newShiftInfo.shiftDate),
-      "published": true,
+      startTime: TimeRangeQueryBuilder.forWeek(newShiftInfo.startTime),
+      published: true,
       "relations.areaId": HospoHero.getCurrentAreaId()
     });
 
     var defaultShiftProperties = {
-      "createdBy": Meteor.userId(),
-      "jobs": [],
-      "status": "draft",
-      "published": isRosterPublished,
-      "order": shiftsCount,
+      createdBy: Meteor.userId(),
+      status: "draft",
+      published: isRosterPublished,
+      order: shiftsCount,
       relations: HospoHero.getRelationsObject()
     };
 
@@ -139,8 +140,8 @@ Meteor.methods({
     var createdShiftId = Shifts.insert(newShiftDocument);
 
     logger.info("Shift inserted", {
-      "shiftId": createdShiftId,
-      "date": newShiftInfo.shiftDate
+      shiftId: createdShiftId,
+      date: newShiftInfo.startTime
     });
 
     return createdShiftId;
@@ -174,9 +175,9 @@ Meteor.methods({
     var shift = Shifts.findOne(shiftToDeleteId);
 
     if (shift) {
-      if (shift.assignedTo || shift.jobs.length > 0) {
-        logger.error("Can't delete a shift with assigned worker or jobs", {"id": shiftToDeleteId});
-        throw new Meteor.Error(404, "Can't delete a shift with assigned worker or jobs");
+      if (shift.assignedTo) {
+        logger.error("Can't delete a shift with assigned worker", {"id": shiftToDeleteId});
+        throw new Meteor.Error(404, "Can't delete a shift with assigned worker");
       }
 
       Shifts.remove({_id: shiftToDeleteId});

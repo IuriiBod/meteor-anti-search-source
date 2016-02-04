@@ -17,19 +17,27 @@ GoogleCloud = function GoogleCloud(menuItem, trainingFileName) {
 };
 
 
-GoogleCloud.prototype.uploadSalesData = function () {
+GoogleCloud.prototype.uploadSalesData = function (uploadToFile = false) {
   logger.info('Started uploading sales data on cloud storage', {
     menuItemId: this._menuItem._id,
     name: this._menuItem.name
   });
 
-  var trainingDataWriteStream = new through();
-  trainingDataWriteStream.pipe(this._cloudFile.createWriteStream());
+  let trainingDataWriteStream = new through();
+
+  if (!uploadToFile) {
+    trainingDataWriteStream.pipe(this._cloudFile.createWriteStream());
+  } else {
+    let fs = Npm.require('fs');
+    let csvFilePath = `${process.env.PWD}/menu-item-${this._menuItem.name}.csv`;
+    trainingDataWriteStream.pipe(fs.createWriteStream(csvFilePath));
+  }
 
   var predictionModelDataGenerator = new PredictionModelDataGenerator(this._menuItem);
 
   var locationId = this._menuItem.relations.locationId;
-  var nowMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), locationId);
+  var dateToStartUploadFrom = HospoHero.prediction.getDateThreshold(); // new Date() default
+  var nowMoment = HospoHero.dateUtils.getDateMomentForLocation(dateToStartUploadFrom, locationId);
   var indexMoment = moment(nowMoment);
 
 
@@ -110,13 +118,7 @@ PredictionModelDataGenerator.prototype.getDataForSale = function (dailySale) {
     return false;
   }
 
-  var valuesVector = [
-    dailySale.actualQuantity,
-    weather.temp,
-    weather.main,
-    localDateMoment.format('ddd'),
-    localDateMoment.dayOfYear()
-  ];
+  let dataVector = new DataVector(localDateMoment, weather);
 
-  return this._convertValueVectorToString(valuesVector);
+  return this._convertValueVectorToString(dataVector.getTrainingData(dailySale));
 };

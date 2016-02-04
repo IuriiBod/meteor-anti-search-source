@@ -45,7 +45,7 @@ Meteor.methods({
   activateReactivateSuppliers: function (id) {
     if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
       logger.error("User not permitted to create ingredients");
-      throw new Meteor.Error(403, "User not permitted to create ingredients");
+      throw new Meteor.Error(403, "User not permitted to change supplier status");
     }
 
     check(id, HospoHero.checkers.MongoId);

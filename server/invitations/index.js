@@ -1,30 +1,45 @@
 Meteor.methods({
-  createInvitation: function (email, name, areaId, roleId) {
-    var area = Areas.findOne({_id: areaId});
-    var senderInfo = Meteor.user();
+  createInvitation: function (invitationData) {
+    var area = Areas.findOne({_id: invitationData.areaId});
+    var senderId = Meteor.userId();
+    var invitedUserName = invitationData.name;
+    var splittedUserName = [];
+
+    if (invitedUserName.indexOf(' ') > 0) {
+      splittedUserName = invitedUserName.split(' ');
+    }
+
     var invitation = {
-      name: name,
-      email: email,
-      invitedBy: senderInfo._id,
-      areaId: areaId,
+      firstname: splittedUserName[0] || invitationData.name,
+      lastname: splittedUserName[2] ? splittedUserName[1] + splittedUserName[2] : splittedUserName[1] || null,
+      email: invitationData.email,
+      invitedBy: senderId,
+      areaId: invitationData.areaId,
       organizationId: area.organizationId,
-      roleId: roleId,
+      roleId: invitationData.roleId,
       accepted: false,
       createdAt: Date.now()
     };
 
-    var id = Invitations.insert(invitation);
+    var invitationId = Invitations.insert(invitation);
 
     new NotificationSender(
       'Added to the ' + area.name + ' area',
       'invitation-email',
       {
-        name: name,
+        name: invitationData.name,
         areaName: area.name,
-        url: Router.url('invitationAccept', {_id: id}),
-        sender: HospoHero.username(Meteor.userId())
+        invitationId: invitationId,
+        sender: HospoHero.username(senderId)
+      },
+      {
+        helpers: {
+          url: function () {
+            return NotificationSender.urlFor('invitationAccept', {_id: this.invitationId}, this);
+          }
+        }
       }
-    ).sendEmail(email);
+    ).sendEmail(invitationData.email);
   },
 
   deleteInvitation: function (id) {
@@ -32,7 +47,7 @@ Meteor.methods({
   },
 
   acceptInvitation: function (id, response) {
-    var nonProfileItems = ['username', 'email', 'password'];
+    var nonProfileItems = ['email', 'password'];
     var user = {
       profile: {}
     };
@@ -54,7 +69,7 @@ Meteor.methods({
       'Invitation accepted',
       'invitation-accepted',
       {
-        username: invitation.name,
+        username: invitation.lastname ? invitation.firstname + " " + invitation.lastname : invitation.firstname,
         areaName: area.name
       }
     ).sendBoth(invitation.invitedBy);
@@ -62,10 +77,11 @@ Meteor.methods({
     var updateObject = {
       roles: {},
       relations: {
-        organizationId: area.organizationId,
+        organizationIds: [area.organizationId, Meteor.users.findOne({_id: userId}).relations.organizationIds],
         locationIds: [area.locationId],
         areaIds: [area._id]
-      }
+      },
+      currentAreaId: area._id
     };
     updateObject.roles[area._id] = invitation.roleId;
     Meteor.users.update({_id: userId}, {$set: updateObject});
