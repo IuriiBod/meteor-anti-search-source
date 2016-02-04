@@ -37,7 +37,8 @@ Meteor.publish('profileUser', function (userId) {
         createdAt: 1,
         currentAreaId: 1,
         unavailabilities: 1,
-        roles: 1
+        roles: 1,
+        lastLoginDate: 1
       };
 
       return Meteor.users.find({
