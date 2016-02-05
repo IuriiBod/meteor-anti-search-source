@@ -34,20 +34,24 @@ let createNewUser = function (newUserDocument, roleId, area) {
   };
 
   Meteor.users.update({_id: userId}, {$set: updateObject});
+
+  return Meteor.users.findOne({_id: userId});
 };
 
 
-let sendEmailInvitation = function (newUserDocument, email, area) {
+let sendEmailInvitation = function (createdUser, area) {
   var sender = Meteor.user();
+
+  let createdUserEmail = createdUser.emails[0].address;
 
   let notificationSender = new NotificationSender(
     'You was added to the ' + area.name + ' area',
     'invitation-email',
     {
-      firstName: newUserDocument.profile.firstname,
-      password: newUserDocument.password,
-      pinCode: newUserDocument.profile.pinCode,
-      email: email,
+      firstName: createdUser.profile.firstname,
+      password: createdUser.password,
+      pinCode: createdUser.pinCode,
+      email: createdUserEmail,
       areaName: area.name,
       invitationSender: {
         name: `${sender.profile.firstname} ${sender.profile.lastname}`,
@@ -64,7 +68,7 @@ let sendEmailInvitation = function (newUserDocument, email, area) {
     }
   );
 
-  notificationSender.sendEmail(email);
+  notificationSender.sendEmail(createdUserEmail);
 };
 
 
@@ -95,14 +99,13 @@ Meteor.methods({
           email: invitationMeta.email,
           password: randomPassword(),
           profile: _.extend(extractFirstAndLastName(invitationMeta.name), {
-            pinCode: randomPinCode()
+            pinCode: randomPinCode() // write PIN code into profile because of /server/users/index.js:22
           })
         };
-
-        createNewUser(newUserDocument, invitationMeta.roleId, area);
+        var createdUser = createNewUser(newUserDocument, invitationMeta.roleId, area);
 
         //notify user about his new account
-        sendEmailInvitation(newUserDocument, invitationMeta.email, area);
+        sendEmailInvitation(createdUser, area);
       }
     } else {
       throw new Meteor.Error('You cannot invite users');
