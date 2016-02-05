@@ -22,7 +22,7 @@
         <div class="col-lg-12">
           <hr>
           <div class="jumbotron">
-            <h1>Welcome to Hospo Hero</h1>
+            <h1>Welcome to Hospo Hero.</h1>
 
             <p>
               Thanks for coming. Please, choose your area{{#if isOrganizationOwner}} or create a new one{{/if}} in the
@@ -38,12 +38,24 @@
                   class="fa fa-plus"></i> icon
               </p>
             {{/if}}
+
+            <p>
+              You can change your password and PIN code on your profile page.
+            </p>
+
+            <p>
+              <a class="btn btn-primary btn-lg"
+                 href="{{pathFor route="profile" _id=currentUser._id}}"
+                 role="button">
+                Visit your profile
+              </a>
+            </p>
           </div>
         </div>
       {{/if}}
     {{else}}
       <div class="col-lg-12">
-        <hr>
+        <hr/>
         <div class="jumbotron">
           <h1>Welcome to Hospo Hero.</h1>
 

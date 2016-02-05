@@ -101,7 +101,14 @@ Meteor.methods({
       throw new Meteor.Error(403, 'User not permitted to add users to area');
     }
 
+    let userToAdd = Meteor.users.findOne({_id: addedUserInfo.userId});
+
     var area = Areas.findOne({_id: addedUserInfo.areaId});
+
+    //check if user already added
+    if (userToAdd.relations.areaIds.indexOf(addedUserInfo.areaId) > -1) {
+      throw new Meteor.Error(`${userToAdd.profile.firstname} is already invited to ${area.name}`);
+    }
 
     var updateUserDocument = {
       $set: {
