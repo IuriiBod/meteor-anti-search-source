@@ -20,7 +20,6 @@ Template.areaSettings.onRendered(function () {
       Meteor.call('editArea', area, HospoHero.handleMethodResult());
     }
   });
-  $('[data-toggle="tooltip"]').tooltip();
 });
 
 Template.areaSettings.helpers({
@@ -92,7 +91,7 @@ Template.areaSettings.events({
       }
       Meteor.call('deleteArea', areaId, HospoHero.handleMethodResult(function () {
         var flyout = FlyoutManager.getInstanceByElement(event.target);
-        sweetAlert('Ok!', nameOfArea + ' was deleted!', 'success');
+        sweetAlert('OK!', nameOfArea + ' was deleted!', 'success');
         flyout.close();
       }));
     });
@@ -102,23 +101,6 @@ Template.areaSettings.events({
     tmpl.addUser.set(!tmpl.addUser.get());
   },
 
-  'click .user-profile-image-container': function (event, tmpl) {
-    event.preventDefault();
-
-    var user = Blaze.getData(event.target);
-    var target = $(event.currentTarget);
-
-    Modal.show('userPopup', {
-      target: {
-        width: target.width(),
-        height: target.height(),
-        left: Math.round(target.offset().left),
-        top: Math.round(target.offset().top)
-      },
-      userId: user._id,
-      areaId: tmpl.data.areaId
-    });
-  },
   'click .show-pos-settings': function() {
     event.preventDefault();
     Router.go('posSettings');
