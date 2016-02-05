@@ -83,7 +83,7 @@ Namespace('HospoHero.misc', {
   },
 
   getMenuItemsStatuses: function (includeArchived) {
-    var statuses = ['ideas', 'active'];
+    var statuses = ['active', 'ideas'];
     if (includeArchived) {
       statuses.push('archived');
     }
