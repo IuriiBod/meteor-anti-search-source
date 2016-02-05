@@ -17,7 +17,6 @@ ejson
 spacebars
 check
 http
-force-ssl
 jquery
 email
 underscore
@@ -27,6 +26,7 @@ ecmascript
 less
 reactive-var
 
+force-ssl
 crosswalk
 
 accounts-ui

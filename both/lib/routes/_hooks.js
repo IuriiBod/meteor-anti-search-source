@@ -78,8 +78,21 @@ let requireLogIn = function () {
       goOptions.query = `backwardUrl=${backwardUrl}`;
     }
 
-    Router.go('signIn', {}, goOptions);
-    return this.next();
+    //if we have PIN locked users => go to pin lock
+    let pinLockedUsers = StaleSession.getStoredUsersIds();
+    if (pinLockedUsers.length > 0) {
+      if (pinLockedUsers.length == 1) {
+        //there is only one use can be logged in with pin
+        Router.go('pinLock', {userId: pinLockedUsers[0]}, goOptions);
+      } else {
+        //we don't know who want to log in with pin
+        Router.go('switchUser', {}, goOptions);
+      }
+    } else {
+      Router.go('signIn', {}, goOptions);
+      return this.next();
+    }
+
   }
 };
 
