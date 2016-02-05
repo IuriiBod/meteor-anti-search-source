@@ -1,16 +1,15 @@
 Template.menuItemInstructions.onCreated(function () {
   this.set('isEditMode', false);
   this.instructionSaved = new ReactiveVar(false);
-  this.timeout = new ReactiveVar(null);
   this.typingInstruction = new ReactiveVar(false);
   this.uiStatesManager = new UIStatesManager('menuItems');
-
-  this.setTimeout = (executeFunction, hasTimeout) => {
-    if (hasTimeout) {
-      Meteor.clearTimeout(this.timeout.get());
-      this.timeout.set(Meteor.setTimeout(executeFunction, 1500));
-    } else {
-      this.timeout.set(Meteor.setTimeout(executeFunction, 1500));
+  this.timer = {
+    timeout: 0,
+    setTimeout(executeFunc, timeout) {
+      this.timeout = Meteor.setTimeout(executeFunc, timeout);
+    },
+    clearTimeout() {
+      Meteor.clearTimeout(this.timeout);
     }
   };
 });
@@ -68,7 +67,8 @@ Template.menuItemInstructions.events({
       }));
     };
 
-    tmpl.timeout.get() ? tmpl.setTimeout(saveChanges, true) : tmpl.setTimeout(saveChanges());
+    tmpl.timer.clearTimeout();
+    tmpl.timer.setTimeout(saveChanges, 1500);
   },
 
   'shown.bs.collapse #Instructions': _.throttle(function (event, tmpl) {
