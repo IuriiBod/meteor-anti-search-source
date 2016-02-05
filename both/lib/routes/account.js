@@ -30,20 +30,6 @@ Router.route('logout', {
   }
 });
 
-Router.route('invitationAccept', {
-  path: '/invitations/:_id',
-  layoutTemplate: 'blankLayout',
-  template: 'invitationAccept',
-  waitOn: function () {
-    return Meteor.subscribe('invitationById', this.params._id);
-  },
-  data: function () {
-    if (Meteor.userId()) {
-      Router.go('/');
-    }
-  }
-});
-
 
 Router.route('profile', {
   path: '/user/profile/:_id',
