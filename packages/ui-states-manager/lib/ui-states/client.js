@@ -1,21 +1,30 @@
 UIStatesManager = function (category) {
-  this.userId = Meteor.userId();
+  this.user = Meteor.user();
   this.category = category;
+  var subscription = () => Meteor.subscribe('usersUIStates', this.user._id);
+
+  subscription();
 };
 
 UIStatesManager.prototype.get = function (element) {
-  var user = Meteor.users.findOne({_id: this.userId});
-  return user.profile.uiStates[this.category][element];
+  if (this.user && this.user.profile.uiStates) {
+    return this.user.profile.uiStates[this.category][element];
+  } else {
+    return false;
+  }
 };
 
 UIStatesManager.prototype.set = function (element, state) {
-  if (this.userId) {
+  if (this.user) {
     var item = {
       category: this.category,
       element: element,
       state: state
     };
 
-    Meteor.call('updateUiState', item);
+    Meteor.call('updateUiState', item, (err, res) => {
+      console.log('res -> ', res);
+      this.user = res;
+    });
   }
 };

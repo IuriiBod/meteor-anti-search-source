@@ -5,12 +5,8 @@ Template.menuItemInstructions.onCreated(function () {
   this.uiStatesManager = new UIStatesManager('menuItems');
   this.timer = {
     timeout: 0,
-    setTimeout(executeFunc, timeout) {
-      this.timeout = Meteor.setTimeout(executeFunc, timeout);
-    },
-    clearTimeout() {
-      Meteor.clearTimeout(this.timeout);
-    }
+    setTimeout: (executeFunc, timeout) => this.timeout = Meteor.setTimeout(executeFunc, timeout),
+    clearTimeout: () => Meteor.clearTimeout(this.timeout)
   };
 });
 
@@ -33,7 +29,7 @@ Template.menuItemInstructions.onRendered(function () {
 
 
 Template.menuItemInstructions.helpers({
-  instructionsStr: function () {
+  instructionsStr() {
     return this.instructions || "Add instructions here";
   },
 
@@ -42,6 +38,10 @@ Template.menuItemInstructions.helpers({
       saved: Template.instance().instructionSaved.get(),
       typing: Template.instance().typingInstruction.get()
     }
+  },
+
+  uiState() {
+    console.log(Template.instance().uiStatesManager.get('instructions'));
   }
 });
 
