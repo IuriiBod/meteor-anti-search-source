@@ -12,6 +12,23 @@ Template.menuItemInstructions.onCreated(function () {
     } else {
       this.timeout.set(Meteor.setTimeout(executeFunction, 1500));
     }
+  };
+});
+
+Template.menuItemInstructions.onRendered(function () {
+  if (HospoHero.canUser('edit menus')) {
+    this.onBodyClick = (event) => {
+      if (this.$('.note-editor').length) {
+        var isClickOnNoteEditor = $.contains(this.$('.note-editor')[0], event.target);
+        if (!isClickOnNoteEditor) {
+          this.set('isEditMode', false);
+          this.instructionSaved.set(false);
+          this.typingInstruction.set(false);
+        }
+      }
+    };
+
+    $('body').bind('click', this.onBodyClick);
   }
 });
 
@@ -33,16 +50,9 @@ Template.menuItemInstructions.helpers({
 Template.menuItemInstructions.events({
   'click .activate-text-edit-mode': function (event, tmpl) {
     event.preventDefault();
-    tmpl.set('isEditMode', true);
-
-    if (tmpl.typingInstruction.get()) {
-      tmpl.typingInstruction.set(false);
+    if (HospoHero.canUser('edit menus')) {
+      tmpl.set('isEditMode', true);
     }
-  },
-
-  'click': function (event, tmpl) {
-    if (tmpl.get('isEditMode'))
-    tmpl.set('isEditMode', false);
   },
 
   'keyup .note-editor': function(event, tmpl) {
@@ -68,4 +78,8 @@ Template.menuItemInstructions.events({
   'hidden.bs.collapse #Instructions': _.throttle(function (event, tmpl) {
     tmpl.uiStatesManager.set('instructions', false);
   }, 1000)
+});
+
+Template.menuItemInstructions.onDestroyed(function () {
+  $('body').unbind('click', this.onBodyClick);
 });
