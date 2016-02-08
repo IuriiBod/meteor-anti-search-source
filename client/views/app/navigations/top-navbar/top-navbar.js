@@ -37,10 +37,12 @@ Template.topNavbar.helpers({
 
   tasksCount: function () {
     var today = moment().endOf('day').toDate();
-    return TaskList.find({
+    var query = {
       dueDate: {$lte: today},
-      done: false
-    }).count();
+      done: false,
+      assignedTo: Meteor.userId()
+    };
+    return TaskList.find(query).count();
   },
 
   notifications: function () {

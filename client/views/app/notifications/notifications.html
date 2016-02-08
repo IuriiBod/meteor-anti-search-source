@@ -1,22 +1,22 @@
 <template name="notifiFlyout">
   <div class="flyout-header">
-    <button class="close-flyout-button">
-      <i class="fa fa-angle-right"></i>
-    </button>
+    {{> CloseFlyoutButton}}
     Notifications
   </div>
 
   <div class="flyout-content">
     {{#if count}}
-      {{#each notifications}}
-        <div class="ibox float-e-margins" style="margin-bottom: 0;">
-          <div class="ibox-content" style="padding-bottom: 10px;">
-            <div class="feed-activity-list">
-              {{> notifiText notification=this}}
+      <div class="notifications-list">
+        {{#each notifications}}
+          <div class="ibox float-e-margins" style="margin-bottom: 0;">
+            <div class="ibox-content" style="padding-bottom: 10px;">
+              <div class="feed-activity-list">
+                {{> notifiText notification=this}}
+              </div>
             </div>
           </div>
-        </div>
-      {{/each}}
+        {{/each}}
+      </div>
       <div class="text-center link-block" style="border-top: 1px solid #E7EAEC; padding-top: 15px;">
         <a href="#" class="markAllAsRead">
           <strong>Mark All As Read</strong>

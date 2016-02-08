@@ -1,31 +1,41 @@
-var RoutePermissionChecker = function (routeInstance) {
-  this._user = Meteor.user();
-  this._routeName = routeInstance.route.getName();
+let RoutePermissionChecker = class RoutePermissionChecker {
+  constructor(routeInstance) {
+    this._user = Meteor.user();
+    this._routeName = routeInstance.route.getName();
+  }
+
+  isOrganizationOwner() {
+    return !!Organizations.findOne({owners: this._user._id});
+  }
+
+  checkRoutePermissions() {
+    return this._checkCurrentAreaNotArchived() && this._checkUserPermissionForRoute();
+  }
+
+  _checkUserPermissionForRoute() {
+    const permission = RoutePermissionChecker._permissionsByRouteName[this._routeName];
+    return permission && HospoHero.canUser(permission, this._user._id) || !permission;
+  }
+
+  _checkCurrentAreaNotArchived() {
+    if (this._user.currentAreaId && Areas.findOne()) {
+      return !!Areas.findOne({_id: this._user.currentAreaId, archived: {$ne: true}});
+    } else {
+      //in case if there is no areas yet we return true
+      //because we will be able to check user permissions
+      //again after subscriptions will be finished
+      return true;
+    }
+  }
+
+  checkIsUserInOrganization() {
+    return HospoHero.isInOrganization(this._user._id);
+  }
 };
 
-RoutePermissionChecker.prototype.isOrganizationOwner = function () {
-  return !!Organizations.findOne({owner: this._user._id});
-};
 
-RoutePermissionChecker.prototype.checkRoutePermissions = function () {
-  return this._checkCurrentAreaNotArchived() && this._checkUserPermissionForRoute();
-};
-
-RoutePermissionChecker.prototype._checkUserPermissionForRoute = function () {
-  var permission = this._permissionsByRouteName[this._routeName];
-  return permission && HospoHero.canUser(permission, this._user._id) || !permission;
-};
-
-RoutePermissionChecker.prototype._checkCurrentAreaNotArchived = function () {
-  return this._user.currentAreaId && Areas.findOne({_id: this._user.currentAreaId, archived: {$ne: "true"}});
-};
-
-RoutePermissionChecker.prototype.checkIsUserInOrganization = function () {
-  return this._user.relations && this._user.relations.organizationId;
-};
-
-RoutePermissionChecker.prototype._permissionsByRouteName = {
-  // route_name : 'permission to check',
+RoutePermissionChecker._permissionsByRouteName = {
+  // routeName : 'permission to check',
   teamHours: 'edit roster',
   weeklyRoster: 'view roster',
   templateWeeklyRoster: 'edit roster',
@@ -33,11 +43,10 @@ RoutePermissionChecker.prototype._permissionsByRouteName = {
   stocktakeCounting: 'edit stocks',
   orderReceive: 'receive deliveries',
   stocktakeOrdering: 'receive deliveries'
-  //todo: add other routes and their permissions
 };
 
 
-var requireLogIn = function () {
+let requireLogIn = function () {
   if (Meteor.loggingIn()) {
     this.render(this.loadingTemplate);
   } else if (Meteor.userId()) {
@@ -47,7 +56,7 @@ var requireLogIn = function () {
       if (permissionChecker.checkRoutePermissions()) {
         return this.next();
       } else {
-        Router.go("dashboard");
+        Router.go('dashboard');
         return this.next();
       }
     } else {
@@ -59,13 +68,31 @@ var requireLogIn = function () {
       }
     }
   } else {
-    var backwardUrl = HospoHero.misc.getBackwardUrl();
-    var goOptions = {};
-    if (backwardUrl !== '/' && backwardUrl !== '/logout') {
-      goOptions.query = 'backwardUrl=' + backwardUrl;
+    let goOptions = {};
+    let backwardUrl = HospoHero.misc.getBackwardUrl();
+    let backwardUrlParameter = 'enableBackwardsUrl=true';
+    let enableBackwardUrl = backwardUrl.includes(backwardUrlParameter);
+
+    if (enableBackwardUrl && backwardUrl !== '/' && backwardUrl !== '/logout') {
+      backwardUrl = backwardUrl.replace(backwardUrlParameter, '');
+      goOptions.query = `backwardUrl=${backwardUrl}`;
     }
-    Router.go('signIn', {}, goOptions);
-    return this.next();
+
+    //if we have PIN locked users => go to pin lock
+    let pinLockedUsers = StaleSession.getStoredUsersIds();
+    if (pinLockedUsers.length > 0) {
+      if (pinLockedUsers.length == 1) {
+        //there is only one use can be logged in with pin
+        Router.go('pinLock', {userId: pinLockedUsers[0]}, goOptions);
+      } else {
+        //we don't know who want to log in with pin
+        Router.go('switchUser', {}, goOptions);
+      }
+    } else {
+      Router.go('signIn', {}, goOptions);
+      return this.next();
+    }
+
   }
 };
 

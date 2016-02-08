@@ -1,6 +1,6 @@
 Template.unavailabilitiesList.helpers({
   unavailabilities: function () {
-    var today = new Date();
+    var today = moment().startOf('day').toDate();
     var user = Meteor.users.findOne({_id: this._id});
     var unavailabilities = user && user.unavailabilities || false;
 

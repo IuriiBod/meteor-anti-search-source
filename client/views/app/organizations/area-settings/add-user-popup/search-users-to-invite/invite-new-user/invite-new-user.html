@@ -1,8 +1,7 @@
 <template name="inviteNewUser">
   <input type="text"
-         class="form-control input-field"
+         class="form-control input-field user-name-input"
          placeholder="Name"
-         name="newUserName"
          required="required"
          pattern=".{3,}"
          title="Minimum name length: 3">
@@ -10,7 +9,7 @@
   <div class="input-field">
     {{> userRolesSelect}}
   </div>
-  <button class="btn btn-primary col-xs-12" type="submit">
+  <button class="btn btn-primary col-xs-12 invite-user-button">
     <i class="fa fa-check"></i>
   </button>
 </template>

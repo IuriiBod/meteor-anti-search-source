@@ -1,64 +1,21 @@
 //context: user (User), tableViewMode ("shifts"/"hours"), weekDate (WeekDate)
 Template.teamHoursItem.onCreated(function () {
-  this.getUserPayRate = function (date) {
-    var user = this.data.user;
-    if (user.profile && user.profile.payrates) {
-      var wageDoc = user.profile.payrates;
-
-      var currentWeekDay = moment(date).format('dddd').toLowerCase();
-
-      var rate = wageDoc[currentWeekDay];
-      if (!rate) {
-        rate = wageDoc['weekdays']
-      }
-      return rate;
-    } else {
-      return 0;
-    }
-  };
-
   this.getTotalTimeAndWage = function (templateData) {
-    var dateForWeek = HospoHero.dateUtils.getDateByWeekDate(templateData.weekDate);
+    let dateForWeek = HospoHero.dateUtils.getDateByWeekDate(templateData.weekDate);
 
-    var weekShifts = Shifts.find({
+    let weekShifts = Shifts.find({
       assignedTo: templateData.user._id,
       startTime: TimeRangeQueryBuilder.forWeek(dateForWeek)
     });
 
-    var self = this;
-    var dailyHoursManager = getDailyHoursManager();
-    var totalMinutes = 0;
-    var totalWage = 0;
-
-    weekShifts.forEach(function (shift) {
-      if (shift.startedAt || shift.finishedAt) {
-        var locationStart = moment(shift.startedAt);
-        var locationFinish = moment(shift.finishedAt);
-
-        var shiftDuration = locationFinish.diff(locationStart, 'minutes');
-
-        totalMinutes += shiftDuration;
-        totalWage += (self.getUserPayRate(locationStart) / 60) * shiftDuration;
-        dailyHoursManager.addMinutes(locationStart, shiftDuration);
-      }
-    });
-
-    if (weekShifts.count() > 0) {
-      return {
-        wage: HospoHero.misc.rounding(totalWage),
-        time: HospoHero.misc.rounding(totalMinutes / 60), // convert to hours and round
-        dailyHours: dailyHoursManager.getHours()
-      };
-    } else {
-      return false;
-    }
+    let wageCalculator = new WageCalculator(this.data.user, weekShifts);
+    return wageCalculator.getTotalTimeAndWage();
   };
 
-  var tmpl = this;
-  this.autorun(function () {
-    var data = Template.currentData();
-    var weeklyValues = tmpl.getTotalTimeAndWage(data);
-    tmpl.set('weeklyValues', weeklyValues);
+  this.autorun(() => {
+    let data = Template.currentData();
+    let weeklyValues = this.getTotalTimeAndWage(data);
+    this.set('weeklyValues', weeklyValues);
   });
 });
 
@@ -78,22 +35,65 @@ Template.teamHoursItem.helpers({
   }
 });
 
-var getDailyHoursManager = function () {
-  var res = [];
-  for (var i = 0; i < 7; i++) {
-    res[i] = 0;
+
+let WageCalculator = class {
+  constructor(user, weekShifts) {
+    this.user = user;
+    this.weekShifts = weekShifts;
+    this.DailyHoursManager = class {
+      constructor() {
+        this._minutes = [0, 0, 0, 0, 0, 0, 0];
+      }
+
+      addMinutes(date, duration) {
+        var dayNumber = date.weekday();
+        this._minutes[dayNumber] += duration;
+      }
+
+      getHours() {
+        return this._minutes.map((value) => HospoHero.misc.rounding(value / 60))
+      }
+    }
   }
 
-  return {
-    _minutes: res,
-    addMinutes: function (date, duration) {
-      var dayNumber = moment(date).day() - 1; //because week in moment starts from sunday
-      this._minutes[dayNumber] += duration;
-    },
-    getHours: function () {
-      return this._minutes.map(function (minutesValue) {
-        return HospoHero.misc.rounding(minutesValue / 60);
-      })
-    }
+  _calculateWageForShift(shiftStartDate, shiftDurationInMinutes) {
+    let userPayRatePerHour = HospoHero.misc.getUserPayRate(this.user, shiftStartDate);
+    let userPayRatePerMinute = userPayRatePerHour / 60;
+    return userPayRatePerMinute * shiftDurationInMinutes;
   };
+
+  _getShiftDuration(startDate, finishDate) {
+    let shiftDurationInHours = finishDate.diff(startDate, 'hours');
+    if (shiftDurationInHours > 24) { // If duration is more than 24 hours it means error in saving clock out time
+      finishDate = finishDate.subtract(24, 'hours');
+    }
+    return shiftDuration = finishDate.diff(startDate, 'minutes');
+  }
+
+  getTotalTimeAndWage() {
+    if (this.weekShifts.count() <= 0) {
+      return false;
+    }
+
+    let dailyHoursManager = new this.DailyHoursManager();
+    let totalMinutes = 0;
+    let totalWage = 0;
+
+    this.weekShifts.forEach((shift) => {
+      if (shift.startedAt || shift.finishedAt) {
+        let locationStart = HospoHero.dateUtils.getDateMomentForLocation(shift.startedAt, shift.relations.locationId);
+        let locationFinish = HospoHero.dateUtils.getDateMomentForLocation(shift.finishedAt, shift.relations.locationId);
+
+        totalMinutes += this._getShiftDuration(locationStart, locationFinish);
+        totalWage += this._calculateWageForShift(locationStart, shiftDuration);
+        dailyHoursManager.addMinutes(locationStart, shiftDuration);
+      }
+    });
+
+    return {
+      wage: HospoHero.misc.rounding(totalWage),
+      time: HospoHero.misc.rounding(totalMinutes / 60),
+      dailyHours: dailyHoursManager.getHours()
+    }
+  }
 };

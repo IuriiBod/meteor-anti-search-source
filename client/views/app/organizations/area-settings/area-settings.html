@@ -1,12 +1,10 @@
 <template name="areaSettings">
   <div class="flyout-header">
-    <button class="close-flyout-button">
-      <i class="fa fa-angle-right"></i>
-    </button>
+    {{> CloseFlyoutButton}}
     {{area.name}} settings
   </div>
 
-  <div class="flyout-content">
+  <div class="flyout-content area-settings">
 
     <div class="name-editable-wrapper">
       <h1 class="area-name" style="display: inline-block;">{{area.name}}</h1>
@@ -14,6 +12,7 @@
 
     <div class="form-group">
       <label class="col-sm-2 control-label">Area Color</label>
+
       <div class="col-sm-10">
         {{> colorPicker onColorChange=onColorChange checkedColor=areaColor}}
       </div>
@@ -21,33 +20,22 @@
 
     <div class="area-users">
       {{#each areaUsers}}
-        <div class="user-profile-image-container">
-          <a href="/user/profile/{{_id}}">
-            <img src="{{profilePicture _id}}" alt="Profile photo of {{username _id}}" class="user-photo-min"
-                 title="{{username _id}}"/>
-          </a>
-        </div>
+        {{> areaUserEntry}}
       {{/each}}
     </div>
 
     {{#if isManager}}
-      <button class="btn btn-white col-xs-12 add-user">
+      <button class="btn btn-white col-xs-12 area-flyout-button add-user">
         <i class="fa fa-user-plus"></i> Add User
       </button>
-      <br/>
-      {{#if state$addUser}}
+      {{#if addUser}}
         {{> addUserPopup areaId=area._id}}
       {{/if}}
-    {{/if}}
 
-    <br/>
-    <ul class="list-group" style="display: block;">
-      <li class="list-group-item">
-        <a href="{{pathFor 'posSettings'}}">POS / Menu Linking</a>
-      </li>
-    </ul>
+      <button class="btn btn-white col-xs-12 area-flyout-button show-pos-settings">
+        POS / Menu Linking
+      </button>
 
-    {{#if isManager}}
       <button class="btn btn-danger col-xs-12 delete-area">Delete Area</button>
     {{/if}}
   </div>

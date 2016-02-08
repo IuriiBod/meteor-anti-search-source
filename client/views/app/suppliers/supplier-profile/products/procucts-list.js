@@ -5,9 +5,9 @@ Template.productsList.helpers({
 });
 
 Template.productsList.events({
-  'click .editProduct': function (event, tmpl) {
+  'click .editProduct': function (event) {
     event.preventDefault();
     var ingredient = Ingredients.findOne({_id: this.ingredientId});
-    tmpl.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', {ingredient: ingredient});
+    FlyoutManager.open('ingredientEditor', {ingredient: ingredient});
   }
 });

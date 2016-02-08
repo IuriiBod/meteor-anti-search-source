@@ -1,13 +1,12 @@
 <template name="userPopup">
-  <div class="modal fade">
+  <div class="user-popup modal">
     <div class="modal-dialog">
       {{#if Template.subscriptionsReady}}
       <div class="modal-content">
          <div class="modal-header">
           <div class="row">
             <div class="col-xs-4">
-              <img src="{{profilePicture userId}}" alt="Profile photo of {{username userId}}" class="user-photo"
-                   title="{{username userId}}"/>
+              <img src="{{profilePicture userId}}" alt="Profile photo of {{username userId}}" class="user-photo"/>
             </div>
             <div class="col-xs-4">
               <h3>{{username userId}}</h3>
@@ -38,8 +37,8 @@
           </div>
           {{#if isManager}}
             <div class="row">
-              <div class="col-xs-12 remove-user-from-area">
-                <a href="#">Remove From Area</a>
+              <div class="col-xs-12">
+                <a class="remove-user-from-area" href="#">Remove From Area</a>
               </div>
             </div>
           {{/if}}

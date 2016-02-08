@@ -22,7 +22,6 @@ NewsFeeds = new Mongo.Collection("newsFeeds");
 
 StocktakeMain = new Mongo.Collection("stocktakeMain");
 Stocktakes = new Mongo.Collection("stocktakes");
-CurrentStocks = new Mongo.Collection("currentStocks");
 StockOrders = new Mongo.Collection("stockOrders");
 OrderReceipts = new Mongo.Collection("orderReceipts");
 
@@ -32,7 +31,6 @@ Suppliers = new Mongo.Collection("suppliers");
 Organizations = new Mongo.Collection("organizations");
 Locations = new Mongo.Collection("locations");
 Areas = new Mongo.Collection("areas");
-Invitations = new Mongo.Collection("invitations");
 
 //new forecast functionality
 WeatherForecast = new Mongo.Collection("weatherForecast");
@@ -41,4 +39,6 @@ PosMenuItems = new Mongo.Collection('posMenuItems');
 
 LeaveRequests = new Mongo.Collection('leaveRequests');
 
+// calendar functionality
+CalendarEvents = new Mongo.Collection('calendarEvents');
 TaskList = new Mongo.Collection('taskList');

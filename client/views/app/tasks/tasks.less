@@ -1,0 +1,133 @@
+.task-list-content {
+
+  .task-list-filter {
+    margin: 18px 0 20px;
+
+    .dropdown-menu {
+      .task-filter-switcher.active {
+        a {
+          background-color: #18A689;
+        }
+      }
+    }
+
+    .select2 {
+      margin-left: 10px;
+      margin-top: 1px;
+
+      .select2-selection {
+        border-radius: 0;
+      }
+    }
+  }
+
+  .float-with-padding {
+    float: left;
+    padding-right: 10px;
+  }
+
+  h3 {
+    padding: 20px 0 15px 20px;
+  }
+
+  .task-list-container {
+    margin-bottom: 0;
+
+    tr {
+      td {
+        padding: 17px 10px 10px;
+      }
+    }
+
+    .comments-panel {
+      .chat-discussion {
+        height: auto;
+        max-height: 400px;
+
+        .middle-box {
+          padding-top: 0;
+        }
+      }
+    }
+
+    .edit-task {
+      cursor: pointer;
+    }
+
+    .task-title.done {
+      text-decoration: line-through;
+    }
+
+    .mail-date {
+      position: relative;
+
+      .task-comment-count {
+        .label {
+          line-height: 12px;
+          padding: 0 4px;
+          position: absolute;
+          margin-top: -7px;
+          right: 0;
+        }
+      }
+    }
+  }
+}
+
+.create-new-task-container {
+  position: absolute;
+  top: -15px;
+  left: 0;
+  background-color: #fff;
+  z-index: 30;
+  border-bottom: 1px solid #CBD5DD;
+  padding: 20px;
+  width: 100%;
+
+  form {
+    .form-group {
+      margin-top: -1px;
+
+      textarea {
+        resize: none;
+      }
+
+      .user-selector-container {
+        margin: -16px 0 10px;
+
+        .select2-selection {
+          border-radius: 0;
+        }
+      }
+
+      .task-buttons-container {
+        margin-top: 10px;
+      }
+
+      .time-duration-popover {
+        position: absolute;
+        top: 10px;
+        right: 0;
+      }
+    }
+
+    .input-group {
+      .input-group-btn {
+        .date-picker-input {
+          visibility: hidden;
+          position: absolute;
+        }
+
+        .date-picker-button {
+          border-radius: 0;
+        }
+      }
+    }
+  }
+}
+
+.task-list-widget {
+  .create-new-task-container {
+    top: 40px;
+  }
+}

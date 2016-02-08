@@ -30,7 +30,7 @@ Meteor.methods({
 
   deleteArea: function (areaId) {
     if (!HospoHero.isOrganizationOwner()
-        && !HospoHero.isManager(Meteor.userId(), areaId)) {
+      && !HospoHero.isManager(Meteor.userId(), areaId)) {
       logger.error('User not permitted to delete this area');
       throw new Meteor.Error(403, 'User not permitted to delete this area');
     }
@@ -40,23 +40,30 @@ Meteor.methods({
 
     //updating user in Meteor.users collection requires user id
     var usersIdsRelatedToArea = Meteor.users
-        .find({'relations.areaIds': areaId}, {fields: {_id: 1}})
-        .map(function (user) { return user._id });
+      .find({'relations.areaIds': areaId}, {fields: {_id: 1}})
+      .map(function (user) {
+        return user._id
+      });
 
     Meteor.users.update({
       _id: {$in: usersIdsRelatedToArea}
-    },{
+    }, {
       $pull: {'relations.areaIds': areaId}
-    },{
+    }, {
       multi: true
     });
 
+    var usersIdsWithCurrentAreaId = Meteor.users
+      .find({currentAreaId: areaId})
+      .map(function (user) {
+        return user._id
+      });
+
     Meteor.users.update({
-      _id: {$in: usersIdsRelatedToArea},
-      currentAreaId: areaId
-    },{
+      _id: {$in: usersIdsWithCurrentAreaId}
+    }, {
       $unset: {currentAreaId: ''}
-    },{
+    }, {
       multi: true
     });
 
@@ -68,8 +75,6 @@ Meteor.methods({
         }
       }
     };
-
-    Invitations.remove({areaId: areaId});
 
     removeDocumentsRelatedToArea(areaId);
 
@@ -96,19 +101,25 @@ Meteor.methods({
       throw new Meteor.Error(403, 'User not permitted to add users to area');
     }
 
+    let userToAdd = Meteor.users.findOne({_id: addedUserInfo.userId});
+
     var area = Areas.findOne({_id: addedUserInfo.areaId});
 
+    //check if user already added
+    if (userToAdd.relations.areaIds.indexOf(addedUserInfo.areaId) > -1) {
+      throw new Meteor.Error(`${userToAdd.profile.firstname} is already invited to ${area.name}`);
+    }
+
     var updateUserDocument = {
-      $set: {},
-      $addToSet: {}
+      $set: {
+        [`roles.${addedUserInfo.areaId}`]: addedUserInfo.roleId
+      },
+      $addToSet: {
+        'relations.organizationIds': area.organizationId,
+        'relations.locationIds': area.locationId,
+        'relations.areaIds': addedUserInfo.areaId
+      }
     };
-
-    updateUserDocument.$set['roles.' + addedUserInfo.areaId] = addedUserInfo.roleId;
-
-    updateUserDocument.$set['relations.organizationId'] = area.organizationId;
-
-    updateUserDocument.$addToSet['relations.locationIds'] = area.locationId;
-    updateUserDocument.$addToSet['relations.areaIds'] = addedUserInfo.areaId;
 
     Meteor.users.update({_id: addedUserInfo.userId}, updateUserDocument);
 
@@ -128,16 +139,18 @@ Meteor.methods({
     check(userId, HospoHero.checkers.MongoId);
     check(areaId, HospoHero.checkers.MongoId);
 
+    let userToRemove = Meteor.users.findOne({_id: userId});
+
     var updateObject = {
       $pull: {
         'relations.areaIds': areaId
       },
-      $unset: {}
+      $unset: {
+        [`roles.${areaId}`]: ''
+      }
     };
 
-    updateObject.$unset['roles.' + areaId] = '';
-
-    if (!!Meteor.users.findOne({_id: userId, currentAreaId: areaId})) {
+    if (userToRemove.currentAreaId === areaId) {
       updateObject.$unset.currentAreaId = '';
     }
 

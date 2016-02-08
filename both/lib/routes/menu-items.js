@@ -33,7 +33,7 @@ Router.route('menuItemDetail', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('ingredients', null, currentAreaId),
       Meteor.subscribe('jobItems', null, currentAreaId),
-      Meteor.subscribe('taskList', Meteor.userId())
+      Meteor.subscribe('taskList')
     ];
   },
   data: function () {
@@ -55,4 +55,3 @@ Router.route('submitMenuItem', {
     ];
   }
 });
-

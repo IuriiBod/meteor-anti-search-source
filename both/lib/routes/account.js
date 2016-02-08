@@ -30,36 +30,6 @@ Router.route('logout', {
   }
 });
 
-Router.route('invitationAccept', {
-  path: '/invitations/:_id',
-  layoutTemplate: 'blankLayout',
-  template: 'invitationAccept',
-  waitOn: function () {
-    return Meteor.subscribe('invitationById', this.params._id);
-  },
-  data: function () {
-    if (Meteor.userId()) {
-      Router.go('/');
-    }
-  }
-});
-
-
-Router.route('switchUser', {
-  path: '/switchUser',
-  layoutTemplate: 'blankLayout',
-  template: 'switchUserView',
-  waitOn: function () {
-    return Meteor.subscribe('selectedUsersList', StaleSession.getStoredUsersIds());
-  },
-  data: function () {
-    StaleSession._lockWithPin();
-    return {
-      users: Meteor.users.find({_id: {$in: StaleSession.getStoredUsersIds()}})
-    };
-  }
-});
-
 
 Router.route('profile', {
   path: '/user/profile/:_id',
@@ -81,6 +51,22 @@ Router.route('forgotPassword', {
   path: '/forgotPassword',
   layoutTemplate: 'blankLayout',
   template: 'forgotPassword'
+});
+
+
+Router.route('switchUser', {
+  path: '/switchUser',
+  layoutTemplate: 'blankLayout',
+  template: 'switchUserView',
+  waitOn: function () {
+    return Meteor.subscribe('selectedUsersList', StaleSession.getStoredUsersIds());
+  },
+  data: function () {
+    StaleSession._lockWithPin();
+    return {
+      users: Meteor.users.find({_id: {$in: StaleSession.getStoredUsersIds()}})
+    };
+  }
 });
 
 

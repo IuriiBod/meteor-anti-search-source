@@ -1,17 +1,20 @@
 Meteor.publishComposite('taskList', function (userId) {
   return {
+    // publish all user's tasks
     find: function () {
+      var query = {};
+
       if (userId) {
         var user = Meteor.users.findOne({_id: userId});
         var relations = user && user.relations;
-        var query = getTasksQuery(relations, userId);
-        return TaskList.find(query);
-      } else {
-        this.ready();
+        query = getTasksQuery(relations, userId);
       }
+
+      return TaskList.find(query);
     },
     children: [
       {
+        // publish reference of the task
         find: function (task) {
           if (task) {
             var reference = task.reference;
@@ -33,13 +36,11 @@ Meteor.publishComposite('taskList', function (userId) {
         }
       },
       {
+        // publish comments to the task
         find: function (task) {
           if (task) {
             return Comments.find({
               reference: task._id
-            }, {
-              sort: {"createdOn": -1},
-              limit: 10
             });
           }
         },
@@ -57,60 +58,30 @@ Meteor.publishComposite('taskList', function (userId) {
   }
 });
 
-Meteor.publishAuthorized('todayTasks', function () {
-  var user = Meteor.users.findOne({_id: this.userId});
-  var area = Areas.findOne({_id: user.currentAreaId});
-  var today;
+Meteor.publish('todayTasks', function () {
+  if (this.userId) {
+    var user = Meteor.users.findOne({_id: this.userId});
+    var area = Areas.findOne({_id: user.currentAreaId});
+    var today;
 
-  if (area) {
-    today = HospoHero.dateUtils.getDateMomentForLocation(new Date(), area.locationId);
-    today = moment(today).endOf('day').toDate();
-  } else {
-    today = moment().endOf('day').toDate();
-  }
+    if (area) {
+      today = HospoHero.dateUtils.getDateMomentForLocation(new Date(), area.locationId);
+      today = moment(today).endOf('day').toDate();
+    } else {
+      today = moment().endOf('day').toDate();
+    }
 
-  var relations = user && user.relations;
-  var sharingQuery = getTasksQuery(relations, this.userId);
-
-  var dueDateQuery = {
-    dueDate: {
-      $lte: today
-    },
-    done: false
-  };
-
-  var query = _.extend(dueDateQuery, sharingQuery);
-  return TaskList.find(query);
-});
-
-var getTasksQuery = function (relations, userId) {
-  var query = {};
-
-  if (relations && relations.organizationId) {
-    var sharingOptions = {
-      user: {
-        sharingIds: userId
+    var sharingQuery = HospoHero.misc.getTasksQuery(this.userId);
+    var dueDateQuery = {
+      dueDate: {
+        $lte: today
       },
-      organization: {
-        sharingType: 'organization',
-        sharingIds: relations.organizationId
-      },
-      location: {
-        sharingType: 'location'
-      },
-      area: {
-        sharingType: 'area'
-      }
+      done: false
     };
 
-    if (relations.locationIds) {
-      sharingOptions.location.sharingIds = {$in: relations.locationIds};
-    }
-    if (relations.areaIds) {
-      sharingOptions.area.sharingIds = {$in: relations.areaIds};
-    }
-    query.$or = _.values(sharingOptions);
+    var query = _.extend(dueDateQuery, sharingQuery);
+    return TaskList.find(query);
+  } else {
+    this.ready();
   }
-
-  return query;
-};
+});

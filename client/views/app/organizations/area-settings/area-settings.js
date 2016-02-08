@@ -1,5 +1,5 @@
 Template.areaSettings.onCreated(function () {
-  this.set('addUser', false);
+  this.addUser = new ReactiveVar(false);
 
   this.area = function () {
     return Areas.findOne({_id: this.data.areaId});
@@ -33,7 +33,7 @@ Template.areaSettings.helpers({
         $or: [
           {'relations.areaIds': this.areaId},
           {
-            'relations.organizationId': area.organizationId,
+            'relations.organizationIds': {$in: [area.organizationId]},
             'relations.locationIds': null,
             'relations.areaIds': null
           }
@@ -57,6 +57,10 @@ Template.areaSettings.helpers({
         Meteor.call('editArea', area, HospoHero.handleMethodResult());
       }
     }
+  },
+
+  addUser: function () {
+    return Template.instance().addUser.get();
   }
 });
 
@@ -87,32 +91,18 @@ Template.areaSettings.events({
       }
       Meteor.call('deleteArea', areaId, HospoHero.handleMethodResult(function () {
         var flyout = FlyoutManager.getInstanceByElement(event.target);
-        sweetAlert('Ok!', nameOfArea + ' was deleted!', 'success');
+        sweetAlert('OK!', nameOfArea + ' was deleted!', 'success');
         flyout.close();
       }));
     });
   },
 
   'click .add-user': function (event, tmpl) {
-    tmpl.set('addUser', !tmpl.get('addUser'));
+    tmpl.addUser.set(!tmpl.addUser.get());
   },
 
-  'click .user-profile-image-container': function (event, tmpl) {
+  'click .show-pos-settings': function() {
     event.preventDefault();
-
-    var user = Blaze.getData(event.target);
-    var area = tmpl.area();
-    var target = $(event.currentTarget);
-
-    Modal.show('userPopup', {
-      target: {
-        width: target.width(),
-        height: target.height(),
-        left: Math.round(target.offset().left),
-        top: Math.round(target.offset().top)
-      },
-      userId: user._id,
-      areaId: area._id
-    });
+    Router.go('posSettings');
   }
 });

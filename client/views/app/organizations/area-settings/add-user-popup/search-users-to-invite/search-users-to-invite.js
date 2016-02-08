@@ -3,12 +3,9 @@ Template.searchUsersToInvite.onCreated(function () {
 
   var selector = {
     _id: {$ne: Meteor.userId()},
-    isActive: true
+    isActive: true,
+    'relations.areaIds': {$ne: this.data.areaId}
   };
-
-  var area = HospoHero.getCurrentArea();
-  selector['relations.organizationId'] = area.organizationId;
-  selector['relations.areaIds'] = {$ne: area._id};
 
   this.searchSource = this.AntiSearchSource({
     collection: Meteor.users,
@@ -20,15 +17,8 @@ Template.searchUsersToInvite.onCreated(function () {
 
   this.usersCount = 0;
 
-  this.set('displaySearchResults', false);
-  this.set('isNewUserAdding', false);
-
-  this.setSearchAndInviteState = function (searchState, inviteState) {
-    this.set('displaySearchResults', searchState);
-    this.set('isNewUserAdding', inviteState);
-  };
-
-  this.searchSource.search('');
+  this.searchText = new ReactiveVar('');
+  this.isNewUserAdding = new ReactiveVar(false);
 });
 
 Template.searchUsersToInvite.helpers({
@@ -36,58 +26,48 @@ Template.searchUsersToInvite.helpers({
     var users = Template.instance().searchSource.searchResult({
       sort: {'profile.firstname': 1}
     });
+
     Template.instance().usersCount = users.count();
     return users;
   },
   isNewUserAdding: function () {
-    return Template.instance().get('isNewUserAdding');
+    return Template.instance().isNewUserAdding.get();
   },
-  displaySearchResults: function () {
-    return Template.instance().get('displaySearchResults');
+  displaySearchResults: function (searchedUsers) {
+    return searchedUsers.count() > 0 && Template.instance().searchText.get().length > 0;
   }
 });
 
 Template.searchUsersToInvite.events({
   'keyup .add-user-name': function (event, tmpl) {
     var searchText = tmpl.$(event.target).val();
+    tmpl.searchText.set(searchText);
 
     if (searchText.length > 0) {
-      // If search text is an email, display form for adding user name for a new user
-      if (searchText.indexOf('@') > -1 && !tmpl.usersCount) {
-        tmpl.setSearchAndInviteState(false, true);
-      }
-      // else search users depend on search text
-      else {
-        tmpl.setSearchAndInviteState(true, false);
+      if (searchText.indexOf('@') > -1 && tmpl.usersCount === 0) {
+        tmpl.isNewUserAdding.set(true);
+      } else {
         tmpl.searchSource.search(searchText);
+        tmpl.isNewUserAdding.set(false);
       }
     } else {
-      tmpl.setSearchAndInviteState(false, false);
+      tmpl.isNewUserAdding.set(false);
     }
   },
 
-  'submit form': function (event, tmpl) {
-    event.preventDefault();
+  'click .invite-user-button': function (event, tmpl) {
+    var invitationMeta = {
+      name: tmpl.$('.user-name-input').val(),
+      email: tmpl.$('.add-user-name').val(),
+      roleId: tmpl.$('[name="userRole"]').val(),
+      areaId: tmpl.data.areaId
+    };
 
-    var data = HospoHero.misc.getValuesFromEvent(event, [
-      {
-        name: 'addUserName',
-        newName: 'email'
-      },
-      {
-        name: 'newUserName',
-        newName: 'name'
-      }, {
-        name: 'userRole',
-        newName: 'roleId'
-      }
-    ], true);
-
-    data.areaId = tmpl.data.areaId;
-    Meteor.call('createInvitation', data, HospoHero.handleMethodResult(function () {
+    Meteor.call('inviteNewUserToArea', invitationMeta, HospoHero.handleMethodResult(function () {
       HospoHero.success('The user was notified');
       tmpl.$('input[name="addUserName"]').val('').focus();
-      tmpl.setSearchAndInviteState(false, false);
+      tmpl.isNewUserAdding.set(false);
+      tmpl.searchText.set('');
     }));
   }
 });

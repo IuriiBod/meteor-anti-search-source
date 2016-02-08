@@ -1,19 +1,16 @@
 <template name="organizationStructure">
   <div class="flyout-header">
-    <button class="close-flyout-button">
-      <i class="fa fa-angle-right"></i>
-    </button>
+    {{> CloseFlyoutButton}}
     <div class="col-xs-11 col-xs-offset-1">
-      {{>organizationButtons hasLocations=hasLocations
-         organizationId=state$organization._id}}
+      {{>organizationButtons hasLocations=hasLocations organizationId=organization._id}}
     </div>
   </div>
 
   <div class="flyout-content">
-    <h1>{{state$organization.name}}</h1>
+    <h1>{{organization.name}}</h1>
     {{#each locations}}
       <ul class="list-group" style="display: block;">
-        {{#if isOrganizationOwner}}
+        {{#if isManagerInLocation _id}}
           <li class="list-group-item lead location-settings"
               style="display: block; cursor: pointer;">
             {{name}}
@@ -29,9 +26,9 @@
               style="display: block; border-left-color: {{areaColor _id}};">
             <a href="#" class="change-current-area{{#if isCurrentArea _id}} active{{/if}}">{{name}}</a>
 
-            {{#if isManager}}
+            {{#if isManagerInArea _id}}
               <span class="badge open-flyout area-settings" data-id="areaSettings" data-params="id='{{_id}}'"><i
-                class="fa fa-fw fa-cog"></i></span>
+                  class="fa fa-fw fa-cog"></i></span>
             {{/if}}
           </li>
         {{/each}}

@@ -13,7 +13,7 @@ var menuEntries = [
     permission: 'view forecast',
     params: function () {
       return {
-        date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD'),
+        date: HospoHero.dateUtils.getDateStringForRoute(),
         category: 'all'
       }
     }
@@ -29,7 +29,7 @@ var menuEntries = [
         route: 'weeklyRoster',
         params: function () {
           return {
-            date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD')
+            date: HospoHero.dateUtils.getDateStringForRoute()
           }
         }
       },
@@ -99,18 +99,44 @@ var menuEntries = [
     title: 'Reports',
     icon: 'fa-line-chart',
     permission: 'view reports',
-    activeOnRoutes: ['teamHours', 'currentStocks'],
+    activeOnRoutes: ['teamHours', 'currentStocks', 'menuItemsRankReport'],
     subMenuEntries: [
       {
         title: 'Team Hours',
         route: 'teamHours',
         params: function () {
           return {
-            date: HospoHero.dateUtils.startOfWeekMoment().format('YYYY-MM-DD')
+            date: HospoHero.dateUtils.getDateStringForRoute()
           }
         }
+      },
+      {
+        title: 'Menu Rank <span class="label label-info pull-right">NEW</span>',
+        route: 'menuItemsRankReport',
+        params: function () {
+          return {
+            category: 'all',
+            rangeType: 'yesterday',
+            startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
+          }
+        }
+      },
+      {
+        title: 'Stock Report <span class="label label-info pull-right">NEW</span>',
+        route: 'stockReport'
       }
     ]
+  },
+  {
+    title: 'Manger Calendar',
+    icon: 'fa-calendar',
+    route: 'managerCalendar',
+    permission: 'edit calendar',
+    params: function () {
+      return {
+        date: HospoHero.dateUtils.shortDateFormat(new Date())
+      }
+    }
   }
 ];
 

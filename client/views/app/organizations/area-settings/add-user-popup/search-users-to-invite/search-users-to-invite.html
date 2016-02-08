@@ -1,13 +1,14 @@
 <template name="searchUsersToInvite">
-  <form class="add-user-to-area-form">
-    <input type="text" class="form-control input-field add-user-name" placeholder="e.g. john@gmail.com" name="addUserName" required="required">
+  <div class="add-user-to-area">
+    <input type="text" class="form-control input-field add-user-name" placeholder="e.g. john@gmail.com"
+           name="addUserName" required="required">
     {{#if isNewUserAdding}}
       {{> inviteNewUser}}
     {{/if}}
-  </form>
+  </div>
 
   <div>
-    {{#if displaySearchResults}}
+    {{#if displaySearchResults searchedUsers}}
       {{#if searchedUsers.count}}
         <div class="search-results">
           <b>Select to add</b>

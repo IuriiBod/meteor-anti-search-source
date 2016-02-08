@@ -1,12 +1,10 @@
 Template.listOfStocksMasterMainView.onCreated(function () {
   this.onIngredientIdChange = function () {
-    var self = this;
-
     return function (ingredient) {
       if (ingredient) {
         ingredient = Ingredients.findOne({_id: ingredient});
       }
-      self.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', {ingredient: ingredient});
+      FlyoutManager.open('ingredientEditor', {ingredient: ingredient});
     }
   }
 });

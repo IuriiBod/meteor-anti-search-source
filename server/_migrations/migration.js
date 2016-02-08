@@ -6,6 +6,6 @@ Migrations.utils = {
 };
 
 Meteor.startup(function () {
-  console.log('Database version: ', Migrations.getVersion());
+  logger.warn('Database version: ', Migrations.getVersion());
   Migrations.migrateTo('latest');
 });

@@ -27,7 +27,7 @@ Namespace('HospoHero.dateUtils', {
     return moment(date).format(format);
   },
 
-  shortDateFormat: function (date) {
+  shortDateFormat: function (date = new Date()) {
     return moment(date).format('YYYY-MM-DD');
   },
 
@@ -82,9 +82,7 @@ Namespace('HospoHero.dateUtils', {
     return date ? moment(date).format('hh:mm A') : '-';
   },
 
-  shiftDate: function (date, isTemplate) {
-    date = date ? date : moment().startOf('d');
-
+  shiftDate: function (date = moment().startOf('d'), isTemplate = false) {
     var dateMoment;
     if (isTemplate) {
       dateMoment = moment(0).week(2).startOf('isoweek').day(moment(date).day()); //1970 year
@@ -181,8 +179,7 @@ Namespace('HospoHero.dateUtils', {
     return moment(time).fromNow();
   },
 
-  startOfWeekMoment: function (date, location) {
-    date = date ? moment(date) : moment();
+  startOfWeekMoment: function (date = moment(), location = false) {
     if (location) {
       date = HospoHero.dateUtils.getDateMomentForLocation(date, location);
     }
@@ -192,5 +189,47 @@ Namespace('HospoHero.dateUtils', {
   getDateStringForRoute: function (date, location) {
     date = HospoHero.dateUtils.startOfWeekMoment(date, location);
     return HospoHero.dateUtils.shortDateFormat(date);
+  },
+
+  getSeasonOfTheYear: (month) => {
+    let seasons = ['Winter', 'Winter',
+      'Spring', 'Spring', 'Spring',
+      'Summer', 'Summer', 'Summer',
+      'Fall', 'Fall', 'Fall',
+      'Winter'];
+    return seasons[parseInt(month) - 1];
+  },
+
+  /**
+   * * Converts the duration to the hours and minutes string
+   * e.g. duration = 65, result will be 1h 5m
+   * @param {number} duration - time duration
+   * @param {string|'minutes'} timeUnit - the unit of duration measure (minutes, hours, ...)
+   * @returns {string}
+   */
+  humanizeTimeDuration: function (duration, timeUnit = 'minutes') {
+    duration = moment.duration(duration, timeUnit);
+
+    var durationResult = [];
+    var hours = duration.hours();
+    var minutes = duration.minutes();
+
+    if (hours > 0) {
+      durationResult.push(hours + 'h');
+    }
+
+    if (minutes > 0) {
+      durationResult.push(minutes + 'm');
+    }
+
+    return durationResult.length ? durationResult.join(' ') : '0m';
+  },
+
+  truncateTimestamp: (timestamp = new Date().getTime()) => {
+    return parseInt((timestamp).toString().substr(0, 10));
+  },
+
+  formatTimestamp: (timestamp = new Date().getTime()) => {
+    return moment.unix(HospoHero.dateUtils.truncateTimestamp(timestamp)).format('DD/MM/YY');
   }
 });

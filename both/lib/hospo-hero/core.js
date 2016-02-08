@@ -2,7 +2,12 @@ Namespace('HospoHero', {
   isInOrganization: function (userId) {
     userId = userId ? userId : Meteor.userId();
     var user = Meteor.users.findOne({_id: userId});
-    return user && user.relations && user.relations.organizationId ? user.relations.organizationId : false;
+    return user &&
+    user.relations &&
+    user.relations.organizationIds ?
+      user.relations.organizationIds.length === 1 ?
+        user.relations.organizationIds[0] : HospoHero.getOrganizationIdBasedOnCurrentArea()
+      : false;
   },
 
   isOrganizationOwner: function (userId) {
@@ -13,8 +18,11 @@ Namespace('HospoHero', {
         return false;
       }
     }
-    var orgId = HospoHero.isInOrganization(userId);
-    return !!Organizations.findOne({_id: orgId, owner: userId});
+    return !!Organizations.findOne({owners: userId});
+  },
+
+  getOrganizationIdBasedOnCurrentArea: function (userId) {
+    return HospoHero.getCurrentArea(userId).organizationId;
   },
 
   isInRole: function (roleName, userId, areaId) {
@@ -24,7 +32,7 @@ Namespace('HospoHero', {
     }
     if (!areaId) {
       var user = Meteor.users.findOne({_id: userId});
-      areaId = user && user.currentAreaId ? user.currentAreaId : 'defaultRole';
+      areaId = user && user.currentAreaId || false;
     }
 
     var query = {
@@ -32,7 +40,7 @@ Namespace('HospoHero', {
     };
     var role = Roles.getRoleByName(roleName);
 
-    if (role) {
+    if (areaId && role) {
       query['roles.' + areaId] = role._id;
       return !!Meteor.users.findOne(query);
     } else {
@@ -40,14 +48,10 @@ Namespace('HospoHero', {
     }
   },
 
-  isOwner: function (userId, areaId) {
-    return HospoHero.isInRole('Owner', userId, areaId);
-  },
-
   isManager: function (userId, areaId) {
     return HospoHero.isInRole('Manager', userId, areaId) ||
       HospoHero.isOrganizationOwner(userId) ||
-      HospoHero.isOwner(userId, areaId);
+      HospoHero.isOrganizationOwner(userId);
   },
 
   isWorker: function (userId, areaId) {

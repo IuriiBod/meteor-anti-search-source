@@ -1,0 +1,25 @@
+<template name="jobItemsPalette">
+
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <a role="button" data-toggle="collapse" href="#prep-jobs-palette" class="text-primary">
+        <h4 class="panel-title">
+          Add Prep Job
+        </h4>
+      </a>
+    </div>
+    <div id="prep-jobs-palette" class="panel-collapse collapse" role="tabpanel">
+      <div class="panel-body">
+        <div class="form-group">
+          <input type="text" class="job-items-palette-filter form-control" placeholder="Search..."/>
+        </div>
+
+        <div class="job-items-palette-content">
+          {{#each jobItems}}
+            {{> jobItemsPaletteItem this}}
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

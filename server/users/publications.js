@@ -37,7 +37,8 @@ Meteor.publish('profileUser', function (userId) {
         createdAt: 1,
         currentAreaId: 1,
         unavailabilities: 1,
-        roles: 1
+        roles: 1,
+        lastLoginDate: 1
       };
 
       return Meteor.users.find({
@@ -60,13 +61,13 @@ Meteor.publish('usersList', function (areaId) {
       'profile.lastname': 1,
       'profile.payrates': 1,
       'profile.resignDate': 1,
-      currentAreaId: 1
+      currentAreaId: 1,
+      roles: 1
     };
 
     var query = {};
     if (areaId) {
       query['relations.areaIds'] = areaId;
-      options["roles." + areaId] = 1;
     }
 
     var users = Meteor.users.find(query, {fields: options});
@@ -100,11 +101,11 @@ Meteor.publishComposite('workers', function (areaId) {
       if (this.userId) {
         var user = Meteor.users.findOne(this.userId);
 
-        if (user && user.relations && user.relations.organizationId) {
+        if (user && user.relations && user.relations.organizationIds) {
           return Meteor.roles.find({
             actions: 'be rosted',
             $or: [
-              {'relations.organizationId': user.relations.organizationId},
+              {'relations.organizationId': {$in: user.relations.organizationIds}},
               {default: true}
             ]
           });

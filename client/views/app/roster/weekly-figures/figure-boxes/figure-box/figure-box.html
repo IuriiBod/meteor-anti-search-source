@@ -1,0 +1,30 @@
+<template name="figureBox">
+  <div class="col-md-4" data-pg-collapsed>
+    <div class="ibox">
+      <div class="ibox-content">
+        <button class="btn btn-sm pull-right btn-link" data-toggle="popover" data-placement="top" type="button">
+          <i class="fa fa-question-circle pull-right"></i>
+        </button>
+        {{#with main}}
+          <h5>{{label}}</h5>
+
+          <h1 class="no-margins">
+            {{value}}
+          </h1>
+        {{/with}}
+
+        {{#with percent}}
+          <div class="stat-percent font-bold {{color}}">{{value}}%
+            <i class="fa {{icon}}"></i>
+          </div>
+        {{/with}}
+
+        <small>
+          {{#with bottom}}
+            {{label}}: {{value}}
+          {{/with}}
+        </small>
+      </div>
+    </div>
+  </div>
+</template>
