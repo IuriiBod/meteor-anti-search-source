@@ -24,10 +24,10 @@ Template.calendarItem.helpers({
         firstDay: 1,
         displayTime: true,
         allDaySlot: false,
-        slotDuration: "00:30",
+        slotDuration: "00:05",
         eventOverlap: false,
         height: 700,
-        scrollTime: 0,
+        scrollTime: "08:00",
 
         eventStartEditable: true,
         eventDurationEditable: false,
@@ -42,7 +42,9 @@ Template.calendarItem.helpers({
         },
 
         eventClick: function (eventObject) {
-          FlyoutManager.open('eventItemFlyout', {eventObject: eventObject});
+          if (eventObject.item.type !== 'busy') {
+            FlyoutManager.open('eventItemFlyout', {eventObject: eventObject});
+          }
         },
 
         eventReceive: function (receivedObject) {

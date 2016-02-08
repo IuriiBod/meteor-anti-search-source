@@ -77,9 +77,19 @@ Namespace('HospoHero.calendar', {
       collection: 'taskList',
       queryOptions: function (date, calendarType, userId) {
         var queryType = HospoHero.calendar.getQueryType(calendarType);
+        var currentDate = TimeRangeQueryBuilder[queryType](date);
+
+        var placedTasks = CalendarEvents.find({startTime: currentDate}).map(function (event) {
+          return event.itemId
+        });
+
         var query = HospoHero.misc.getTasksQuery(userId);
+
         return _.extend(query, {
-          dueDate: TimeRangeQueryBuilder[queryType](date),
+          _id: {
+            $nin: placedTasks
+          },
+          dueDate: currentDate,
           done: false
         });
       },
@@ -136,6 +146,7 @@ Namespace('HospoHero.calendar', {
    */
   getCalendarEvents: function (calendarTemplateData) {
     var queryType = this.getQueryType(calendarTemplateData.type);
+    var taskQuery = HospoHero.misc.getTasksQuery(Meteor.userId());
 
     /**
      * Returns array of events object of selected user and date
@@ -150,19 +161,40 @@ Namespace('HospoHero.calendar', {
       }).map(function (event) {
         var currentEventItem = HospoHero.calendar.getEventByType(event.type);
         var eventSettings = currentEventItem.eventSettings;
+
+        var defaultEvent = {
+          id: event._id,
+          resourceId: userId,
+          start: moment(event.startTime),
+          end: moment(event.endTime),
+          backgroundColor: eventSettings.backgroundColor,
+          borderColor: eventSettings.borderColor,
+          textColor: eventSettings.textColor,
+          item: event
+        };
+
+        var taskItem = false;
+        if (event.type === 'task') {
+          var taskQueryCopy = _.clone(taskQuery);
+          taskQueryCopy._id = event.itemId;
+          taskQueryCopy.$or.push({assignedTo: Meteor.userId()});
+          taskItem = Mongo.Collection.get(currentEventItem.collection).findOne(taskQueryCopy);
+        }
+
         var item = Mongo.Collection.get(currentEventItem.collection).findOne({_id: event.itemId});
 
-        if (item) {
-          return {
-            id: event._id,
-            resourceId: userId,
-            title: item[eventSettings.titleField],
-            start: moment(event.startTime),
-            end: moment(event.endTime),
-            backgroundColor: eventSettings.backgroundColor,
-            textColor: eventSettings.textColor,
-            item: event
-          }
+
+        if (event.type === 'task' && taskItem || event.type !== 'task' && item) {
+          return _.extend(defaultEvent, {
+            title: item[eventSettings.titleField]
+          });
+        } else if (event.type === 'task' && !taskItem && item) {
+          defaultEvent.item.type = 'busy';
+          return _.extend(defaultEvent, {
+            title: "Busy",
+            backgroundColor: '#9C9C9C',
+            borderColor: '#9C9C9C'
+          });
         } else {
           return {};
         }
@@ -173,7 +205,7 @@ Namespace('HospoHero.calendar', {
 
     if (calendarTemplateData.userId) {
       // get events only for one user
-      return getEvents(calendarTemplateData.userId, date);
+      return _.flatten(getEvents(calendarTemplateData.userId, date));
     } else if (calendarTemplateData.resources && calendarTemplateData.resources.length) {
       // get event for array of users
       return _.flatten(_.map(calendarTemplateData.resources, function (resource) {

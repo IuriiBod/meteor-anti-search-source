@@ -9,6 +9,11 @@ Template.eventTask.onCreated(function () {
 Template.eventTask.helpers({
   task: function () {
     return Template.instance().task();
+  },
+
+  taskDuration: function () {
+    var duration = Template.instance().task().duration;
+    return duration > 0 ? HospoHero.dateUtils.humanizeTimeDuration(duration, 'minutes') : 'an hour';
   }
 });
 
