@@ -4,14 +4,14 @@
       <b>Users</b>
     </div>
     <div class="panel-body">
-      {{#unless state$selectedUser}}
+      {{#unless selectedUser}}
         <p class="text-muted add-user-info">
           Search for a person in organization by name or email address, or enter an email address to invite someone
           new.
         </p>
-        {{> searchUsersToInvite areaId=state$areaId}}
+        {{> searchUsersToInvite}}
       {{else}}
-        {{> userPermissions selectedUser=state$selectedUser areaId=state$areaId onPermissionSelect=onPermissionSelect}}
+        {{> userPermissions selectedUser=selectedUser areaId=areaId onPermissionSelect=onPermissionSelect}}
       {{/unless}}
     </div>
   </div>

@@ -65,12 +65,6 @@ Meteor.publishComposite('organizationInfo', {
       }
     },
     {
-      // Publishing invitations fot current organization
-      find: function (organization) {
-        return Invitations.find({organizationId: organization._id});
-      }
-    },
-    {
       // Publishing users of current organization
       find: function (organization) {
         if (this.userId && (HospoHero.canUser('edit areas', this.userId) || HospoHero.canUser('edit locations', this.userId))) {

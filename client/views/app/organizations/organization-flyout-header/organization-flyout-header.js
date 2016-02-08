@@ -3,10 +3,6 @@ Template.organizationButtons.events({
     FlyoutManager.open('organizationDetailsPage', {organizationId: tmpl.data.organizationId});
   },
 
-  'click .invitation-flyout': function (event, tmpl) {
-    FlyoutManager.open('invitationsList', {organizationId: tmpl.data.organizationId});
-  },
-
   'click .create-location-flyout': function (event, tmpl) {
     FlyoutManager.open('createLocation', {organizationId: tmpl.data.organizationId});
   },

@@ -31,7 +31,6 @@ Suppliers = new Mongo.Collection("suppliers");
 Organizations = new Mongo.Collection("organizations");
 Locations = new Mongo.Collection("locations");
 Areas = new Mongo.Collection("areas");
-Invitations = new Mongo.Collection("invitations");
 
 //new forecast functionality
 WeatherForecast = new Mongo.Collection("weatherForecast");

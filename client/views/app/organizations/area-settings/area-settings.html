@@ -12,6 +12,7 @@
 
     <div class="form-group">
       <label class="col-sm-2 control-label">Area Color</label>
+
       <div class="col-sm-10">
         {{> colorPicker onColorChange=onColorChange checkedColor=areaColor}}
       </div>
@@ -19,33 +20,22 @@
 
     <div class="area-users">
       {{#each areaUsers}}
-        <div class="user-profile-image-container">
-          <a href="/user/profile/{{_id}}">
-            <img src="{{profilePicture _id}}" alt="Profile photo of {{username _id}}" class="user-photo-min"
-                 title="{{username _id}}" data-toggle="tooltip"/>
-          </a>
-        </div>
+        {{> areaUserEntry}}
       {{/each}}
     </div>
 
     {{#if isManager}}
-      <button class="btn btn-white col-xs-12 add-user">
+      <button class="btn btn-white col-xs-12 area-flyout-button add-user">
         <i class="fa fa-user-plus"></i> Add User
       </button>
       {{#if addUser}}
         {{> addUserPopup areaId=area._id}}
       {{/if}}
-    {{/if}}
 
-    <div class="row">
-      <div class="col-md-12" style="display: block;">
-        <ul class="list-group" style="display: block;">
-          <li class="list-group-item show-pos-settings">POS / Menu Linking</li>
-        </ul>
-      </div>
-    </div>
+      <button class="btn btn-white col-xs-12 area-flyout-button show-pos-settings">
+        POS / Menu Linking
+      </button>
 
-    {{#if isManager}}
       <button class="btn btn-danger col-xs-12 delete-area">Delete Area</button>
     {{/if}}
   </div>
