@@ -1,14 +1,3 @@
-Template.calendarHeader.onCreated(function () {
-  this.onEventChange = function () {
-    var self = this;
-
-    return function (eventType, itemId) {
-      console.log('ARGS', arguments);
-    }
-  }
-});
-
-
 Template.calendarHeader.helpers({
   onDateChanged: function () {
     var self = this;
