@@ -5,21 +5,24 @@ Template.menuItemReport.onCreated(function () {
 });
 
 Template.menuItemReport.onRendered(function() {
-  var itemWeeklyRanks = this.data.item.weeklyRanks;
-  var itemsTotalCount = this.data.itemsCount;
+  let itemWeeklyRanks = this.data.item.weeklyRanks;
+  let itemsTotalCount = this.data.itemsCount;
 
   if (itemWeeklyRanks && itemWeeklyRanks.length) {
-    var itemRankValues = {};
+    let itemRankValues = {};
+    let invertedItemRanks = [];
 
     itemWeeklyRanks.forEach(function (item) {
-      itemRankValues[item] = itemsTotalCount - item + 1;
+      let invertedItemValue = itemsTotalCount - item;
+      itemRankValues[invertedItemValue] = item;
+      invertedItemRanks.push(invertedItemValue);
     });
 
-    this.$('.sparkline').sparkline(itemWeeklyRanks, {
+    this.$('.sparkline').sparkline(invertedItemRanks, {
       type: 'line',
       'width': 100,
-      chartRangeMin: 0,
-      chartRangeMax: itemWeeklyRanks && itemWeeklyRanks.length || 0,
+      chartRangeMin: -itemsTotalCount,
+      chartRangeMax: itemWeeklyRanks.length,
       tooltipFormat: '<span style="color: {{color}}">&#9679;</span> {{y:itemRankValues}}</span>',
       tooltipValueLookups: {
         itemRankValues: itemRankValues

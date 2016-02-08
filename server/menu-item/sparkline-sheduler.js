@@ -37,7 +37,7 @@ updateMenuItemsRank = function (location) {
 
     if (menuItemsStats.length) {
       menuItemsStats.sort(function (a, b) {
-        return a.totalContribution - b.totalContribution;
+        return b.totalContribution - a.totalContribution;
       });
 
       menuItemsStats.forEach(function (item, index) {
