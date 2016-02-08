@@ -231,5 +231,16 @@ Namespace('HospoHero.dateUtils', {
 
   formatTimestamp: (timestamp = new Date().getTime()) => {
     return moment.unix(HospoHero.dateUtils.truncateTimestamp(timestamp)).format('DD/MM/YY');
+  },
+
+  dateInterval: function (startTime, endTime) {
+    var dayFormat = 'DD/MM/YY';
+    var timeFormat = 'H:mm';
+
+    var day = HospoHero.dateUtils.formatDate(startTime, dayFormat);
+    startTime = HospoHero.dateUtils.formatDate(startTime, timeFormat);
+    endTime = HospoHero.dateUtils.formatDate(endTime, timeFormat);
+
+    return day + ' ' + startTime + ' - ' + endTime;
   }
 });

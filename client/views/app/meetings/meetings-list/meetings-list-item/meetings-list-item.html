@@ -1,0 +1,13 @@
+<template name="meetingsListItem">
+  <tr>
+    <td>{{dateInterval startTime endTime}}</td>
+    <td>{{title}}</td>
+    <td class="project-people hidden-xs">
+      <a href="" class="pull-left">
+        {{#each attendees}}
+          <img alt="{{username this}}" class="img-circle" src="{{profilePicture this}}">
+        {{/each}}
+      </a>
+    </td>
+  </tr>
+</template>
