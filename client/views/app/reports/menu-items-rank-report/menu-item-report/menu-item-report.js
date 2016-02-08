@@ -7,28 +7,24 @@ Template.menuItemReport.onCreated(function () {
 Template.menuItemReport.onRendered(function() {
   let itemWeeklyRanks = this.data.item.weeklyRanks;
   let itemsTotalCount = this.data.itemsCount;
+  let itemRankValues = {};
 
-  if (itemWeeklyRanks && itemWeeklyRanks.length) {
-    let itemRankValues = {};
-    let invertedItemRanks = [];
+  let invertedItemRanks = itemWeeklyRanks.map((item) => {
+    let itemValue = itemsTotalCount - item + 1;
+    itemRankValues[itemValue] = item;
+    return itemValue;
+  });
 
-    itemWeeklyRanks.forEach(function (item) {
-      let invertedItemValue = itemsTotalCount - item;
-      itemRankValues[invertedItemValue] = item;
-      invertedItemRanks.push(invertedItemValue);
-    });
-
-    this.$('.sparkline').sparkline(invertedItemRanks, {
-      type: 'line',
-      'width': 100,
-      chartRangeMin: -itemsTotalCount,
-      chartRangeMax: itemWeeklyRanks.length,
-      tooltipFormat: '<span style="color: {{color}}">&#9679;</span> {{y:itemRankValues}}</span>',
-      tooltipValueLookups: {
-        itemRankValues: itemRankValues
-      }
-    });
-  }
+  this.$('.sparkline').sparkline(invertedItemRanks, {
+    type: 'line',
+    width: 100,
+    chartRangeMin: 0,
+    chartRangeMax: 10,
+    tooltipFormat: '<span style="color: {{color}}">&#9679;</span> {{y:itemRankValues}}</span>',
+    tooltipValueLookups: {
+      itemRankValues: itemRankValues
+    }
+  });
 });
 
 Template.menuItemReport.helpers({
