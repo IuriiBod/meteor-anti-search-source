@@ -11,8 +11,6 @@
  * the shift was removed, it was updated before it (removed
  * assigned user). So, that's why only update hook uses.
  */
-var calendarEventsManager = new CalendarEventsManager();
-
 var jobItemUpdate = function (newJobItem, oldJobItem) {
   if (newJobItem.frequency) {
     var today = HospoHero.dateUtils.getDateMomentForLocation(new Date(), newJobItem.relations.locationId);
@@ -34,7 +32,7 @@ var jobItemUpdate = function (newJobItem, oldJobItem) {
     // finding shifts, which depends on changed job item
     Shifts.find(query).forEach(function (shift) {
       if (newJobItem.status === 'active') {
-        calendarEventsManager.addRecurringJobsToCalendar(shift);
+        CalendarEventsManager.addRecurringJobsToCalendar(shift);
       } else {
         CalendarEvents.remove({shiftId: shift._id});
       }
@@ -66,7 +64,7 @@ Shifts.after.update(function (userId, newShift) {
       }, {multi: true});
     } else {
       CalendarEvents.remove({shiftId: newShift._id});
-      calendarEventsManager.addRecurringJobsToCalendar(newShift);
+      CalendarEventsManager.addRecurringJobsToCalendar(newShift);
     }
   }
 });

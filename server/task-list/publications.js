@@ -5,9 +5,7 @@ Meteor.publishComposite('taskList', function (userId) {
       var query = {};
 
       if (userId) {
-        var user = Meteor.users.findOne({_id: userId});
-        var relations = user && user.relations;
-        query = getTasksQuery(relations, userId);
+        query = HospoHero.misc.getTasksQuery(userId);
       }
 
       return TaskList.find(query);
