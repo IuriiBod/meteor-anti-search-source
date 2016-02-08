@@ -19,6 +19,7 @@ Template.searchUsersToInvite.onCreated(function () {
 
   this.searchText = new ReactiveVar('');
   this.isNewUserAdding = new ReactiveVar(false);
+  this.isInviteInProgress = new ReactiveVar(false);
 });
 
 Template.searchUsersToInvite.helpers({
@@ -35,6 +36,9 @@ Template.searchUsersToInvite.helpers({
   },
   displaySearchResults: function (searchedUsers) {
     return searchedUsers.count() > 0 && Template.instance().searchText.get().length > 0;
+  },
+  isInviteInProgress: function () {
+    return Template.instance().isInviteInProgress.get();
   }
 });
 
@@ -63,11 +67,13 @@ Template.searchUsersToInvite.events({
       areaId: tmpl.data.areaId
     };
 
+    tmpl.isInviteInProgress.set(true);
     Meteor.call('inviteNewUserToArea', invitationMeta, HospoHero.handleMethodResult(function () {
-      HospoHero.success('The user was notified');
       tmpl.$('input[name="addUserName"]').val('').focus();
-      tmpl.isNewUserAdding.set(false);
       tmpl.searchText.set('');
+      tmpl.isNewUserAdding.set(false);
+      tmpl.isInviteInProgress.set(false);
+      HospoHero.success('The user was notified');
     }));
   }
 });
