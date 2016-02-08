@@ -137,6 +137,14 @@ var menuEntries = [
         date: HospoHero.dateUtils.shortDateFormat(new Date())
       }
     }
+  },
+  {
+    title: 'Meetings',
+    icon: 'fa-users',
+    route: 'meetings',
+    params: function () {
+      return {};
+    }
   }
 ];
 
