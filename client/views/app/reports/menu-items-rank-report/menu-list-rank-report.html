@@ -32,23 +32,27 @@
       </div>
     </div>
     <hr>
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            {{#each theadItems}}
-              <td>{{{this}}}</td>
-            {{/each}}
-          </tr>
-        </thead>
-        <tbody class="table-hover">
-          {{#each menuItems}}
+    {{#if menuItems}}
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
             <tr>
-              {{> menuItemReport item=this itemsCount=../menuItemsCount}}
+              {{#each theadItems}}
+                <td>{{{this}}}</td>
+              {{/each}}
             </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody class="table-hover">
+            {{#each menuItems}}
+              <tr>
+                {{> menuItemReport item=this itemsCount=../menuItemsCount}}
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    {{else}}
+      <h4 class="text-center">Menu items ranks for {{startDate}} {{#if endDate}} - {{endDate}}{{/if}} are not available now</h4>
+    {{/if}}
   </div>
 </template>
