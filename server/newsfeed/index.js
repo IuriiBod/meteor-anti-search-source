@@ -17,6 +17,14 @@ Meteor.methods({
     var id = NewsFeeds.insert(doc);
     logger.info("NewsFeed text inserted", id);
 
+    let notificationSenderOptions = {
+      helpers: {
+        linkToItem: function () {
+          return NotificationSender.urlFor('dashboard', {}, this);
+        }
+      }
+    };
+
     if (ref) {
       var feed = NewsFeeds.findOne({_id: ref});
       if (feed.createdBy != Meteor.userId()) {
@@ -24,9 +32,9 @@ Meteor.methods({
           'New comment',
           'new-newsfeed-comment',
           {
-            username: HospoHero.username(Meteor.userId()),
-            linkToItem: Router.url('dashboard')
-          }
+            username: HospoHero.username(Meteor.userId())
+          },
+          notificationSenderOptions
         ).sendNotification(feed.createdBy);
       }
     }
@@ -35,9 +43,9 @@ Meteor.methods({
         'Mention in a newsfeed',
         'mention-in-a-newsfeed',
         {
-          username: HospoHero.username(Meteor.userId()),
-          linkToItem: Router.url('dashboard')
-        }
+          username: HospoHero.username(Meteor.userId())
+        },
+        notificationSenderOptions
       );
       recipients.forEach(function (recipient) {
         notificationSender.sendNotification(recipient._id);

@@ -311,5 +311,11 @@ Namespace('HospoHero.misc', {
     } else {
       return {};
     }
+  },
+
+  renameObjectProperty(object, oldKeyName, newKeyName) {
+    object[newKeyName] = object[oldKeyName];
+    delete object[oldKeyName];
+    return object;
   }
 });

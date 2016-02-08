@@ -62,12 +62,12 @@ iron:url@1.0.11
 joshowens:timezone-picker@0.1.2
 jquery@1.11.4
 jquery-sparkline@2.1.2
-jss:anti-search-source@0.2.3
+jss:anti-search-source@0.2.5
 jss:blaze-states@0.0.1
 jss:meteor-google-prediction@0.2.2
 jss:moment-timezone@0.5.0
 jss:publish-authorized@0.1.1
-jss:reactive-fullcalendar@1.0.0
+jss:reactive-fullcalendar@1.1.0
 jss:suncalc@0.0.1
 jss:through@0.0.1
 jss:ui-states@0.1.1
@@ -79,6 +79,7 @@ less@2.5.1
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
+manuel:reactivearray@1.0.5
 matb33:collection-hooks@0.8.1
 meteor@1.1.10
 meteor-base@1.0.1

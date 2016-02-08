@@ -32,18 +32,22 @@ var ShiftPropertyChangeLogger = {
 
   _sendNotification: function (message, shift, fromUserId, toUserId) {
     var notificationText = this._notificationTitle(shift) + ': ' + message;
-    var weekStartMoment = HospoHero.dateUtils.getDateMomentForLocation(shift.startTime, HospoHero.getCurrentArea().locationId).startOf('isoWeek');
-    var routeParams = {
-      week: moment(weekStartMoment).week(),
-      year: moment(weekStartMoment).year()
-    };
+
+    var weekStartDateStr = HospoHero.dateUtils.getDateStringForRoute(shift.startTime, HospoHero.getCurrentArea().locationId);
 
     new NotificationSender(
       'Update on shift',
       'update-on-shift',
       {
         text: notificationText,
-        linkToItem: Router.url('weeklyRoster', routeParams)
+        shiftDate: weekStartDateStr
+      },
+      {
+        helpers: {
+          linkToItem: function () {
+            return NotificationSender.urlFor('weeklyRoster', {date: this.shiftDate}, this);
+          }
+        }
       }
     ).sendNotification(toUserId);
   },

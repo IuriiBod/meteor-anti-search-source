@@ -26,6 +26,12 @@ Accounts.onCreateUser(function (options, user) {
   return user;
 });
 
+
+Accounts.onLogin(function (loginInfo) {
+  Meteor.users.update({_id: loginInfo.user._id}, {$set: {lastLoginDate: new Date()}});
+});
+
+
 Meteor.methods({
   changePinCode: function (newPinCode) {
     Meteor.users.update({

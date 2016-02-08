@@ -120,8 +120,23 @@ var menuEntries = [
             startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
           }
         }
+      },
+      {
+        title: 'Stock Report <span class="label label-info pull-right">NEW</span>',
+        route: 'stockReport'
       }
     ]
+  },
+  {
+    title: 'Manger Calendar',
+    icon: 'fa-calendar',
+    route: 'managerCalendar',
+    permission: 'edit calendar',
+    params: function () {
+      return {
+        date: HospoHero.dateUtils.shortDateFormat(new Date())
+      }
+    }
   }
 ];
 
