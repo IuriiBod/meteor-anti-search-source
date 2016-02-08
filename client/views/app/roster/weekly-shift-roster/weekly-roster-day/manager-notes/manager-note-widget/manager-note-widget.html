@@ -1,0 +1,24 @@
+<template name="managerNoteWidget">
+  <div class="note-list-widget">
+    {{#if isNoteEditing}}
+      {{> managerNoteEditor}}
+    {{/if}}
+    <div class="col-md-12 hidden-print task-list-content">
+      <div class="ibox">
+        {{#unless isNoteEditing}}
+          <div class="ibox-title">
+            Notes
+            <a href="#" class="create-note">
+              <i class="fa fa-plus"></i>
+            </a>
+          </div>
+        {{/unless}}
+        <div class="ibox-content">
+          <div class="row">
+            <h3>No notes here</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

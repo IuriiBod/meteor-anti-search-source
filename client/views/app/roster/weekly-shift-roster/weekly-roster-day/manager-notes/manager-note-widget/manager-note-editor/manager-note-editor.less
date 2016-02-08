@@ -1,0 +1,21 @@
+.manager-note-editor {
+  .input-group {
+    .input-group-btn {
+      .date-picker-input {
+        visibility: hidden;
+        position: absolute;
+      }
+
+      .date-picker-button {
+        border-radius: 0;
+      }
+    }
+  }
+}
+
+//fixes positions of dropdown tail
+.datepicker-dropdown.datepicker-orient-right:before,
+.datepicker-dropdown.datepicker-orient-right:after {
+  right: 7px;
+  left: 200px;
+}
