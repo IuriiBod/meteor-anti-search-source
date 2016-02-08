@@ -3,11 +3,12 @@
       <div class="ibox-title">
         <h5>Settings</h5>
         <div class="ibox-tools">
-          <a data-toggle="collapse" data-target="#Settings" aria-expanded="false" aria-controls="Settings">
-            <i class="fa fa-chevron-up"></i></a>
+          <a class="{{#if collapsed}}collapsed{{/if}}" data-toggle="collapse" data-target="#Settings"
+             aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}" aria-controls="Settings">
+            <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i></a>
         </div>
       </div>
-      <div class="collapse" id="Settings" aria-expanded="false">
+      <div class="collapse {{#if collapsed}}in{{/if}}" id="Settings" aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
         <ul class="list-group white-bg">
           <li class="list-group-item">
             <div class="row">
@@ -16,7 +17,7 @@
               </div>
               <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                 {{#if canEditMenu}}
-                  {{> ghostEditableSelect values=categoryOptions selected=category onValueChanged=getOnCategoryChanged}}
+                  {{> ghostEditableSelect values=categoryOptions selected=item.category onValueChanged=getOnCategoryChanged}}
                 {{else}}
                   <p>{{currentCategory.name}}</p>
                 {{/if}}
@@ -34,7 +35,7 @@
                   <p>archived</p>
                 {{else}}
                   {{#if canEditMenu}}
-                    {{> ghostEditableSelect values=statusOptions selected=status onValueChanged=getOnStatusChanged}}
+                    {{> ghostEditableSelect values=statusOptions selected=item.status onValueChanged=getOnStatusChanged}}
                   {{else}}
                     <p>{{status}}</p>
                   {{/if}}

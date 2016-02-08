@@ -8,21 +8,22 @@
             <i class="fa fa-cloud-upload"></i>
           </a>
         {{/if}}
-        <a data-toggle="collapse" data-target="#Image" aria-expanded="false" aria-controls="Image">
-          <i class="fa fa-chevron-up"></i>
-        </a>
+        <a class="{{#if collapsed}}collapsed{{/if}}" data-toggle="collapse" data-target="#Image"
+           aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}" aria-controls="Image">
+          <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i></a>
       </div>
     </div>
-    <div class="ibox-content panel-body collapse editorPanel" id="Image" aria-expanded="false">
+    <div class="ibox-content panel-body collapse {{#if collapsed}}in{{/if}} editorPanel" id="Image"
+         aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
       <div class="col-sm-9">
         <div class="menuImageDiv">
           <div class="uploadedImageDiv">
-            {{#if image}}
+            {{#if item.image}}
               <a href="#">
                 <span class="corner"></span>
 
                 <div class="image">
-                  <img src="{{image}}" class="img-responsive menu-item-image">
+                  <img src="{{item.image}}" class="img-responsive menu-item-image">
                 </div>
               </a>
             {{/if}}

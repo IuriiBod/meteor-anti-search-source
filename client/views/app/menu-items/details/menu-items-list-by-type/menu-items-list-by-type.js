@@ -18,6 +18,16 @@ Template.menuItemsListByType.onCreated(function () {
   }
 });
 
+Template.menuItemsListByType.onRendered(function () {
+  this.$(`#${this.data.type}`).on('shown.bs.collapse', _.throttle(() => {
+    this.data.uiStates.setUIState(this.data.type, true);
+  }, 1000));
+
+  this.$(`#${this.data.type}`).on('hidden.bs.collapse', _.throttle(() => {
+    this.data.uiStates.setUIState(this.data.type, false);
+  }, 1000))
+});
+
 Template.menuItemsListByType.helpers({
   itemsName() {
     return this.type === 'ings' ? 'Ingredients' : 'Prep Jobs';
@@ -50,6 +60,10 @@ Template.menuItemsListByType.helpers({
 
   analyzeItemCost() {
     return Template.instance().analyzeItemCost;
+  },
+
+  collapsed() {
+    return this.uiStates.getUIState(this.type);
   }
 });
 

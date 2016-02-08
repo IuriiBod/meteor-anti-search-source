@@ -1,7 +1,7 @@
 Template.menuDetailPerformance.onRendered(function () {
   var self = this;
   var onPriceEditSuccess = function (response, newValue) {
-    var menuItem = MenuItems.findOne({_id: self.data._id});
+    var menuItem = MenuItems.findOne({_id: self.data.item._id});
     menuItem.salesPrice = parseFloat(newValue);
     Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
   };
@@ -18,7 +18,7 @@ Template.menuDetailPerformance.onRendered(function () {
 
 Template.menuDetailPerformance.helpers({
   menuItemStats() {
-    let menu = this;
+    let menu = this.item;
     let analyzedItem = HospoHero.analyze.menuItem(menu);
     return {
       ingCost: `- $ ${analyzedItem.ingCost}`,
@@ -29,7 +29,7 @@ Template.menuDetailPerformance.helpers({
   },
 
   itemRank() {
-    let weeklyRanks = this.weeklyRanks;
+    let weeklyRanks = this.item.weeklyRanks;
     if (weeklyRanks) {
       let lastSevenDaysRank = weeklyRanks[weeklyRanks.length - 1];
       let beforeLastWeekRank = weeklyRanks[weeklyRanks.length - 2];
@@ -52,5 +52,19 @@ Template.menuDetailPerformance.helpers({
 
   startDate() {
     return HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'));
+  },
+
+  collapsed() {
+    return this.uiStates.getUIState('performance');
   }
+});
+
+Template.menuDetailPerformance.events({
+  'shown.bs.collapse #MenuItemPerformance': _.throttle(function (event, tmpl) {
+    tmpl.data.uiStates.setUIState('performance', true);
+  }, 1000),
+
+  'hidden.bs.collapse #MenuItemPerformance': _.throttle(function (event, tmpl) {
+    tmpl.data.uiStates.setUIState('performance', false);
+  }, 1000)
 });

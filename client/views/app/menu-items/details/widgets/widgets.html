@@ -7,12 +7,13 @@
            href="{{pathFor route='menuItemsRankReport' category='all' rangeType='yesterday' startDate=startDate}}">
           View Menu Rank Report
         </a>
-        <a data-toggle="collapse" data-target="#MenuItemPerformance" aria-expanded="false" aria-controls="MenuItemPerformance">
-          <i class="fa fa-chevron-up"></i>
-        </a>
+        <a class="{{#if collapsed}}collapsed{{/if}}" data-toggle="collapse" data-target="#MenuItemPerformance"
+           aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}" aria-controls="MenuItemPerformance">
+          <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i></a>
       </div>
     </div>
-    <div class="ibox-content no-padding" id="MenuItemPerformance" aria-expanded="false">
+    <div class="ibox-content no-padding collapse {{#if collapsed}}in{{/if}}" id="MenuItemPerformance"
+         aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
       <ul class="list-group">
         <li class="list-group-item">
           <div class="row">
@@ -41,7 +42,7 @@
             <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
               <h4>Menu Rank <small>(last 7 days)</small></h4>
             </div>
-            {{#if weeklyRanks}}
+            {{#if item.weeklyRanks}}
               <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
                 <h4 class="pull-right">{{itemRank.lastSevenDays}}</h4>
               </div>

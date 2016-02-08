@@ -16,7 +16,8 @@
 .panel-body > img,
 .note-editable > div > img,
 .note-editable > img,
-.content > p > div > img {
+.content > p > div > img,
+.autosave-text-editor-container > div > div > img {
     max-width: 30%;
     height: auto;
 }

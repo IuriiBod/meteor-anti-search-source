@@ -3,24 +3,14 @@
     <div class="ibox-title">
       <h5>Instructions</h5>
       <div class="ibox-tools">
-        {{uiState}}
-        {{#if instruction.typing}}
-          {{#if instruction.saved}}
-            <span class="text-navy pull-left"> &nbsp; Saved</span>
-          {{else}}
-            <span class="text-warning pull-left"> &nbsp; Saving...</span>
-          {{/if}}
-        {{/if}}
-        <a data-toggle="collapse" data-target="#Instructions" aria-expanded="false" aria-controls="Instructions">
-          <i class="fa fa-chevron-up"></i></a>
+        <a class="{{#if collapsed}}collapsed{{/if}}" data-toggle="collapse" data-target="#Instructions"
+           aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}" aria-controls="Instructions">
+          <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i></a>
       </div>
     </div>
-    <div class="ibox-content panel-body collapse editorPanel" id="Instructions" aria-expanded="false">
-      {{#if state$isEditMode}}
-        {{> textEditor id='menuItemEditorDetail' initialHtml=instructions}}
-      {{else}}
-        <p class="activate-text-edit-mode">{{{instructionsStr}}}</p>
-      {{/if}}
+    <div class="ibox-content panel-body collapse {{#if collapsed}}in{{/if}} editorPanel" id="Instructions"
+         aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
+      {{> autosaveTextEditor text=instructionsStr saveChanges=saveChanges}}
     </div>
   </div>
 </template>

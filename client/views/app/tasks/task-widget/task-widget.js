@@ -48,6 +48,10 @@ Template.taskWidget.helpers({
       self.task = task;
       self.isNewTaskCreating.set(true);
     }
+  },
+
+  collapsed() {
+    return this.uiStates.getUIState('tasks');
   }
 });
 
@@ -58,5 +62,13 @@ Template.taskWidget.events({
       reference: tmpl.getReferenceObject()
     };
     tmpl.isNewTaskCreating.set(true);
-  }
+  },
+
+  'shown.bs.collapse #Tasks': _.throttle(function (event, tmpl) {
+    tmpl.data.uiStates.setUIState('tasks', true);
+  }, 1000),
+
+  'hidden.bs.collapse #Tasks': _.throttle(function (event, tmpl) {
+    tmpl.data.uiStates.setUIState('tasks', false);
+  }, 1000)
 });
