@@ -1,6 +1,6 @@
 Migrations.add({
   version: 61,
-  name: 'built menu items rank for last 7 days - reversed',
+  name: 'menu item rank - update of migration v53 (changed sort order of items)',
   up: function () {
     var menuItemsStatsInCurrentArea = function (areaId, dateInterval) {
       var menuItemsStats = [];
