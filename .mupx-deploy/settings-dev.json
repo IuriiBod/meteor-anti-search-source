@@ -24,10 +24,10 @@
     }
   ],
   "GCM": {"key": "AIzaSyCBw7Db9feI3lrSbncwqkqhxFXUbKN295o"},
-  "logLevel": "warn",
+  "logLevel": "info",
   "prediction": {
     "useRawOrders": true,
-    "forecastIntervals": [1],
-    "threshold": "2016-01-18"
+    "forecastIntervals": [14],
+    "threshold": "2016-01-25"
   }
 }

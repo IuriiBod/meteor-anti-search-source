@@ -11,13 +11,13 @@ DataVector = class DataVector {
   }
 
   getTestingData() {
+    let weekday = this.date.weekday();
     return [
-      this.date.weekday() * 5,
-      this.date.weekday() % 6 == 0 ? 'yes' : 'no',
+      this.date.format('ddd'),
+      weekday === 6 || weekday === 5 ? 'yes' : 'no',
       Math.round(SunCalc.getMoonIllumination(this.date.toDate()).phase * 10),
       this.weather.temp,
-      this._getSimplifiedWeatherDescription(),
-      this._getSeasonOfTheYear()
+      this._getSimplifiedWeatherDescription()
     ]
   }
 

@@ -7,9 +7,8 @@ updateTrainingDataForLocation = function (location, forceUpdate) {
     var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.locationId': location._id}, true);
 
     //import missed actual sales
-    //todo:
-    //var salesImporter = new ActualSalesImporter(location._id);
-    //salesImporter.importAll();
+    var salesImporter = new ActualSalesImporter(location._id);
+    salesImporter.importAll();
 
     //try to update prediction model
     var predictionApi = new GooglePredictionApi(location._id);
