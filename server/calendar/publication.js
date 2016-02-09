@@ -1,13 +1,15 @@
-Meteor.publishComposite('calendarEvents', function (date, queryType, locationId, userId) {
+Meteor.publishComposite('calendarEvents', function (date, queryType, areaId, userId) {
   queryType = HospoHero.calendar.getQueryType(queryType);
+  let area = Areas.findOne({_id: areaId});
 
   return {
     // shifts publishing
     find: function () {
-      if (this.userId) {
+      if (this.userId && !!area) {
         var query = {
-          startTime: TimeRangeQueryBuilder[queryType](date, locationId),
-          published: true
+          startTime: TimeRangeQueryBuilder[queryType](date, area.locationId),
+          //published: true,
+          'relations.areaId': areaId
         };
 
         if (userId) {
@@ -24,6 +26,8 @@ Meteor.publishComposite('calendarEvents', function (date, queryType, locationId,
       {
         // events publication
         find: function (shift) {
+          console.log('SH', shift);
+
           return CalendarEvents.find({
             shiftId: shift._id
           });
