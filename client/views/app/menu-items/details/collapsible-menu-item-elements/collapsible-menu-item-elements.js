@@ -1,4 +1,4 @@
-Template.ItemsToCollapse.onRendered(function () {
+Template.collapsibleMenuItemElements.onRendered(function () {
   this.$(`#${this.data.options.type}`).on('shown.bs.collapse', _.throttle(() => {
     this.data.uiStates.setUIState(this.data.options.type, true);
   }, 1000));
@@ -9,7 +9,7 @@ Template.ItemsToCollapse.onRendered(function () {
 });
 
 
-Template.ItemsToCollapse.helpers({
+Template.collapsibleMenuItemElements.helpers({
   collapsed() {
     return this.uiStates.getUIState(this.options.type);
   },
