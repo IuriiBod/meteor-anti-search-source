@@ -20,11 +20,17 @@ Template.menuDetailPerformance.helpers({
   menuItemStats() {
     let menu = this.item;
     let analyzedItem = HospoHero.analyze.menuItem(menu);
+    let totalQuantitySales = 0;
+    DailySales.find().forEach((item) => {
+      totalQuantitySales += item.actualQuantity;
+    });
+
     return {
       ingCost: `- $ ${analyzedItem.ingCost}`,
       prepCost: `- $ ${analyzedItem.prepCost}`,
       tax: `- $ ${analyzedItem.tax}`,
-      contribution: `= $ ${analyzedItem.contribution}`
+      contribution: `= $ ${analyzedItem.contribution}`,
+      lastSevenDaysContribution: `$ ${analyzedItem.contribution * totalQuantitySales}`
     }
   },
 
@@ -58,14 +64,4 @@ Template.menuDetailPerformance.helpers({
       startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
     }
   }
-});
-
-Template.menuDetailPerformance.events({
-  'shown.bs.collapse #MenuItemPerformance': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('performance', true);
-  }, 1000),
-
-  'hidden.bs.collapse #MenuItemPerformance': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('performance', false);
-  }, 1000)
 });

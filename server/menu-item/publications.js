@@ -16,13 +16,13 @@ Meteor.publishAuthorized('menuList', function (areaId, categoryId, status) {
   return MenuItems.find(query, {sort: {"name": 1}});
 });
 
-Meteor.publishComposite('menuItem', function (id) {
+Meteor.publishComposite('menuItem', function (id, currentAreaId) {
   return {
     find: function () {
       if (this.userId) {
         return MenuItems.find({
           _id: id,
-          "relations.areaId": HospoHero.getCurrentAreaId(this.userId)
+          "relations.areaId": currentAreaId
         });
       } else {
         this.ready();
@@ -48,6 +48,22 @@ Meteor.publishComposite('menuItem', function (id) {
               return jobItem._id;
             });
             return JobItems.find({_id: {$in: jobs}});
+          } else {
+            this.ready();
+          }
+        }
+      },
+      {
+        find: function (menuItem) {
+          if (menuItem) {
+            let yesterdayDate = moment().subtract(1, 'days');
+            let weekAgoDate = moment(yesterdayDate).subtract(7, 'days');
+            let dateInterval = TimeRangeQueryBuilder.forInterval(weekAgoDate, yesterdayDate);
+            return DailySales.find({
+              date: dateInterval,
+              menuItemId: menuItem._id,
+              actualQuantity: {$exists: true}
+            });
           } else {
             this.ready();
           }
