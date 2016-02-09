@@ -9,5 +9,17 @@
     <td>
       {{username note.createdBy}}
     </td>
+    <td class="text-right">
+      <a class="note-comment-count" href="#comments-{{note._id}}" data-toggle="collapse" aria-expanded="false">
+        <i class="fa fa-comments-o fa-fw fa-lg comments-toggler">
+          <span class="label label-primary">0</span>
+        </i>
+      </a>
+    </td>
+  </tr>
+  <tr class="collapse" id="comments-{{note._id}}">
+    <td colspan="4">
+      Comments
+    </td>
   </tr>
 </template>

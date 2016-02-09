@@ -3,10 +3,7 @@
     {{> CloseFlyoutButton}}
     Notes on {{dayFormat date}}
   </div>
-
   <div class="flyout-content">
-    {{# if canEditRoster}}
-      {{> managerNoteWidget date=date}}
-    {{/if}}
+    {{> managerNoteWidget date=date}}
   </div>
 </template>

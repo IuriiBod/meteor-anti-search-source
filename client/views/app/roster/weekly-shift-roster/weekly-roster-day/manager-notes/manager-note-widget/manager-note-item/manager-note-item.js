@@ -10,9 +10,8 @@ Template.managerNoteItem.helpers({
 });
 
 Template.managerNoteItem.events({
-  'click .manager-note-item': function(event, tmpl) {
+  'click .manager-note-item td:not(:last-child)': function(event, tmpl) {
     event.preventDefault();
-    console.log(tmpl.data.note);
     tmpl.data.onEditNote(tmpl.data.note);
   }
 });

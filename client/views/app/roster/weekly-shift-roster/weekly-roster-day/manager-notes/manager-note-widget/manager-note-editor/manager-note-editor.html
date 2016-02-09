@@ -8,18 +8,20 @@
 
       <div class="form-group">
         <div class="text-right">
-          {{#if note._id}}
-            <a href="#" class="btn btn-link text-danger remove-note">
-              Remove
-            </a>
-          {{/if}}
-          <button type="submit" class="btn btn-primary">
+          {{# if canEditRoster}}
             {{#if note._id}}
-              Save
-            {{else}}
-              Create
+              <a href="#" class="btn btn-link text-danger remove-note">
+                Remove
+              </a>
             {{/if}}
-          </button>
+            <button type="submit" class="btn btn-primary">
+              {{#if note._id}}
+                Save
+              {{else}}
+                Create
+              {{/if}}
+            </button>
+          {{/if}}
           <button type="button" class="btn btn-default close-manager-note-editor">Close</button>
         </div>
       </div>
