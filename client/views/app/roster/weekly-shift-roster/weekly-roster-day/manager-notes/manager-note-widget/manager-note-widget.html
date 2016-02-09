@@ -1,7 +1,7 @@
 <template name="managerNoteWidget">
   <div class="note-list-widget">
     {{#if isNoteEditing}}
-      {{> managerNoteEditor onCloseEditor=onCloseEditor date=date}}
+      {{> managerNoteEditor onCloseEditor=onCloseEditor}}
     {{/if}}
     <div class="col-md-12 hidden-print task-list-content">
       <div class="ibox">

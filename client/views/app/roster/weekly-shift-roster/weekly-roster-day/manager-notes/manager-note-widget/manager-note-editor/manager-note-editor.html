@@ -1,28 +1,14 @@
 <template name="managerNoteEditor">
   <div class="manager-note-editor">
     <form>
-      <div class="input-group">
+      <div class="form-group">
         <input type="text" class="form-control note-title" name="note-title" placeholder="Title"
-               value="{{note.title}}" required="required">
-
-          <span class="input-group-btn">
-            <input type="text" class="form-control date-picker-input"/>
-            <button type="button"
-                    class="btn btn-white date-picker-button">
-              <span class="fa fa-calendar"></span>
-              {{formatDate noteDate 'MMMM Do YYYY'}}
-            </button>
-          </span>
+               value="{{note.title}}" required="required"/>
       </div>
       <!-- /input-group -->
       <div class="form-group">
           <textarea name="new-task-description" cols="30" rows="10" class="form-control"
                     placeholder="Description ...">{{note.description}}</textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="task-sharing" class="float-with-padding">Sharing:</label>
-        {{> ghostEditableSelect values=taskSharingOptions selected=selectedOption onValueChanged=onSelectChange}}
       </div>
 
       <div class="form-group">
