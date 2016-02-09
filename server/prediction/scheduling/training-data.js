@@ -1,4 +1,4 @@
-updateTrainingDataForLocation = function (location) {
+updateTrainingDataForLocation = function (location, forceUpdate) {
   var predictionEnabled = HospoHero.prediction.isAvailableForLocation(location);
 
   if (predictionEnabled) {
@@ -7,12 +7,13 @@ updateTrainingDataForLocation = function (location) {
     var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.locationId': location._id}, true);
 
     //import missed actual sales
-    var salesImporter = new ActualSalesImporter(location._id);
-    salesImporter.importAll();
+    //todo:
+    //var salesImporter = new ActualSalesImporter(location._id);
+    //salesImporter.importAll();
 
     //try to update prediction model
     var predictionApi = new GooglePredictionApi(location._id);
-    predictionApi.updatePredictionModel(menuItemsQuery);
+    predictionApi.updatePredictionModel(menuItemsQuery, forceUpdate);
   }
 };
 
@@ -22,6 +23,6 @@ if (!HospoHero.isDevelopmentMode()) {
     return 1; //at 1:00 AM
   }, function (location) {
     logger.info('Started updating of prediction model', {locationId: location._id});
-    updateTrainingDataForLocation(location);
+    updateTrainingDataForLocation(location, false);
   });
 }
