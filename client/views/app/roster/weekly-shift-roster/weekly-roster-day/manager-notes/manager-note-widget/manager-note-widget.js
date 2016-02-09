@@ -5,6 +5,12 @@ Template.managerNoteWidget.onCreated(function() {
 Template.managerNoteWidget.helpers({
   isNoteEditing: function() {
     return Template.instance().isNoteEditing.get();
+  },
+  onCloseEditor: function() {
+    var self = Template.instance();
+    return function() {
+      self.isNoteEditing.set(false);
+    }
   }
 });
 

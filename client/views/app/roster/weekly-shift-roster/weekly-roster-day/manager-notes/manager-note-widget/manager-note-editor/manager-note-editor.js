@@ -4,7 +4,8 @@ Template.managerNoteEditor.onCreated(function () {
     description: 'Description'
   };
 
-  this.noteDate = new ReactiveVar(new Date());
+  var noteDate = this.data.date || new Date();
+  this.noteDate = new ReactiveVar(noteDate);
   this.sharingType = new ReactiveVar('private');
 });
 
@@ -55,11 +56,17 @@ Template.managerNoteEditor.helpers({
 
 Template.managerNoteEditor.events({
   'click .date-picker-button': function (event, tmpl) {
+    event.preventDefault();
     tmpl.datepicker.datepicker('show');
   },
 
   'changeDate .date-picker-input': function (event, tmpl) {
+    event.preventDefault();
     Template.instance().noteDate.set(event.date);
     tmpl.datepicker.datepicker('hide');
+  },
+  'click .close-manager-note-editor': function(event, tmpl) {
+    event.preventDefault();
+    tmpl.data.onCloseEditor();
   }
 });
