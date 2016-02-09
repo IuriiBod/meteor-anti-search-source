@@ -2,10 +2,10 @@ Template.shiftBasic.onCreated(function () {
   var self = this;
 
   self.editShiftTime = function (newStartTime, newEndTime) {
-    var shift = this.data;
+    let shift = this.data;
 
-    HospoHero.dateUtils.adjustShiftTime(shift, 'startTime', newStartTime);
-    HospoHero.dateUtils.adjustShiftTime(shift, 'endTime', newEndTime);
+    shift.startTime = HospoHero.dateUtils.applyTimeToDate(shift.startTime, newStartTime);
+    shift.endTime = HospoHero.dateUtils.applyTimeToDate(shift.endTime, newEndTime);
 
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
