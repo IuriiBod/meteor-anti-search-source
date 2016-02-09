@@ -19,7 +19,7 @@
         {{/if}}
       {{/if}}
     {{/if}}
-      <a class="show-hide-content {{#if collapsed}}collapsed{{/if}}" data-toggle="collapse" data-target="#{{options.type}}"
+      <a class="{{#if collapsed}}collapsed{{/if}}" data-toggle="collapse" data-target="#{{options.type}}"
          aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}" aria-controls="{{options.type}}">
         <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i></a>
     </div>

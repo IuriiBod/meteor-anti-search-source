@@ -1,6 +1,6 @@
 <template name="menuItemsListByType">
   <div class="ibox panel panel-default">
-    {{#ItemsToCollapse options=options uiStates=uiStates}}
+    {{#collapsibleMenuItemElements options=options uiStates=uiStates}}
       <table class="table table-striped">
         <thead>
         <tr>
@@ -33,6 +33,6 @@
         {{/each}}
         </tbody>
       </table>
-    {{/ItemsToCollapse}}
+    {{/collapsibleMenuItemElements}}
   </div>
 </template>

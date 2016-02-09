@@ -1,6 +1,6 @@
 <template name="menuItemImage">
   <div class="ibox panel panel-default">
-    {{#ItemsToCollapse options=imageOptions uiStates=uiStates}}
+    {{#collapsibleMenuItemElements options=imageOptions uiStates=uiStates}}
       <div class="col-sm-9">
         <div class="menuImageDiv">
           <div class="uploadedImageDiv">
@@ -16,6 +16,6 @@
           </div>
         </div>
       </div>
-    {{/ItemsToCollapse}}
+    {{/collapsibleMenuItemElements}}
   </div>
 </template>

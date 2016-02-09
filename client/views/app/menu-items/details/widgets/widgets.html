@@ -1,6 +1,6 @@
 <template name="menuDetailPerformance">
   <div class="ibox panel panel-default">
-    {{#ItemsToCollapse options=performanceOptions uiStates=uiStates}}
+    {{#collapsibleMenuItemElements options=performanceOptions uiStates=uiStates}}
       <ul class="list-group">
         <li class="list-group-item">
           <div class="row">
@@ -76,6 +76,6 @@
           </div>
         </li>
       </ul>
-    {{/ItemsToCollapse}}
+    {{/collapsibleMenuItemElements}}
   </div>
 </template>
