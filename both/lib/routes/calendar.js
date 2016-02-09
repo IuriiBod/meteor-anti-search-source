@@ -4,12 +4,12 @@ Router.route('calendar', {
 
   waitOn: function () {
     var userId = this.params.userId;
-    var area = HospoHero.getCurrentArea();
-    if (!!area) {
+    var areaId = HospoHero.getCurrentAreaId();
+    if (areaId) {
       return [
-        Meteor.subscribe('calendarEvents', this.params.date, this.params.type, area.locationId, userId),
-        Meteor.subscribe('sections', area._id),
-        Meteor.subscribe('jobItems', null, area._id),
+        Meteor.subscribe('calendarEvents', this.params.date, this.params.type, areaId, userId),
+        Meteor.subscribe('sections', areaId),
+        Meteor.subscribe('jobItems', null, areaId),
         Meteor.subscribe('taskList')
       ]
     }
@@ -28,15 +28,13 @@ Router.route('managerCalendar', {
   path: '/manager-calendar/:date',
   template: 'managerCalendar',
   waitOn: function () {
-    var area = HospoHero.getCurrentArea();
+    var areaId = HospoHero.getCurrentAreaId();
     var date = this.params.date;
-    if (!!area) {
+    if (areaId) {
       return [
-        Meteor.users.find().map(function (user) {
-          return Meteor.subscribe('calendarEvents', date, 'day', area.locationId, user._id);
-        }),
-        Meteor.subscribe('sections', area._id),
-        Meteor.subscribe('jobItems', null, area._id),
+        Meteor.subscribe('calendarEvents', date, 'day', areaId),
+        Meteor.subscribe('sections', areaId),
+        Meteor.subscribe('jobItems', null, areaId),
         Meteor.subscribe('taskList')
       ]
     }

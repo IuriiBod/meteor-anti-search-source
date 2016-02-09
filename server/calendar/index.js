@@ -12,7 +12,7 @@ Meteor.methods({
       var shift = Shifts.findOne({
         startTime: shiftTimeRange,
         assignedTo: eventObject.userId,
-        published: true,
+        //published: true,
         'relations.areaId': areaId
       });
 
