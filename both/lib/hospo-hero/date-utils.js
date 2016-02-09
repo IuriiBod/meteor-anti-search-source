@@ -82,33 +82,16 @@ Namespace('HospoHero.dateUtils', {
     return date ? moment(date).format('hh:mm A') : '-';
   },
 
-  shiftDate: function (date = moment().startOf('d'), isTemplate = false) {
-    var dateMoment;
-    if (isTemplate) {
-      dateMoment = moment(0).week(2).startOf('isoweek').day(moment(date).day()); //1970 year
-    } else {
-      dateMoment = moment(date);
-    }
+  applyTimeToDate: function (date, newTime) {
+    // new Date lets us to avoid bugs with initial date modification
+    // because moment doesn't copy initial date by itself
+    let dateMoment = moment(new Date(date));
+    let timeMoment = moment(new Date(newTime));
 
-    //be careful, because this method may bring bug with time
+    dateMoment.hours(timeMoment.hours());
+    dateMoment.minutes(timeMoment.minutes());
+
     return dateMoment.toDate();
-  },
-
-  /**
-   * Ensures that all shift times have the same date based on `startTime`
-   *
-   * @param shift shift to adjust
-   * @param timePropertyName property should be adjusted
-   * @param newTime new time to apply
-   */
-  adjustShiftTime: function (shift, timePropertyName, newTime) {
-    newTime = moment(newTime);
-
-    var adjustedMoment = moment(shift.startTime);
-    adjustedMoment.hours(newTime.hours());
-    adjustedMoment.minutes(newTime.minutes());
-
-    shift[timePropertyName] = adjustedMoment.toDate();
   },
 
   getDateByWeekDate: function (weekDate) {
@@ -123,13 +106,6 @@ Namespace('HospoHero.dateUtils', {
       weekStart.add(1, 'day');
     }
     return weekDays;
-  },
-
-  getWeekStartEnd: function (date) {
-    return {
-      monday: moment(date).startOf('isoWeek').toDate(),
-      sunday: moment(date).endOf('isoWeek').toDate()
-    }
   },
 
   weekDateName: function (date) {
