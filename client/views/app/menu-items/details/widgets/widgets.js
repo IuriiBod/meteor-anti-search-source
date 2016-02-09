@@ -50,12 +50,13 @@ Template.menuDetailPerformance.helpers({
     }
   },
 
-  startDate() {
-    return HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'));
-  },
-
-  collapsed() {
-    return this.uiStates.getUIState('performance');
+  performanceOptions() {
+    return {
+      type: 'performance',
+      name: 'Performance Snapshot',
+      padding: 'no-padding',
+      startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
+    }
   }
 });
 

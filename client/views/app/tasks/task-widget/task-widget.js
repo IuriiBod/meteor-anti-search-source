@@ -50,8 +50,13 @@ Template.taskWidget.helpers({
     }
   },
 
-  collapsed() {
-    return this.uiStates.getUIState('tasks');
+  tasksOptions() {
+    return {
+      type: 'tasks',
+      name: 'Task',
+      padding: 'no-padding',
+      pull: 'pull-left'
+    }
   }
 });
 
@@ -62,13 +67,5 @@ Template.taskWidget.events({
       reference: tmpl.getReferenceObject()
     };
     tmpl.isNewTaskCreating.set(true);
-  },
-
-  'shown.bs.collapse #Tasks': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('tasks', true);
-  }, 1000),
-
-  'hidden.bs.collapse #Tasks': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('tasks', false);
-  }, 1000)
+  }
 });

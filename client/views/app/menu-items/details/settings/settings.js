@@ -43,8 +43,12 @@ Template.menuItemSettings.helpers({
     return this.item.status == "archived";
   },
 
-  collapsed() {
-    return this.uiStates.getUIState('settings');
+  settingsOptions() {
+    return {
+      type: 'settings',
+      name: 'Settings',
+      padding: 'no-padding'
+    }
   }
 });
 
@@ -53,15 +57,7 @@ Template.menuItemSettings.events({
     var menuItem = MenuItems.findOne({_id: tmpl.data.item._id});
     menuItem.image = '';
     Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
-  },
-
-  'shown.bs.collapse #Settings': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('settings', true);
-  }, 1000),
-
-  'hidden.bs.collapse #Settings': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('settings', false);
-  }, 1000)
+  }
 });
 
 

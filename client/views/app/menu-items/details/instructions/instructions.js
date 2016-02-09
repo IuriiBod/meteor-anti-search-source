@@ -12,18 +12,10 @@ Template.menuItemInstructions.helpers({
     }
   },
 
-  collapsed() {
-    return this.uiStates.getUIState('instructions');
+  instructionsOptions() {
+    return {
+      type: 'instructions',
+      name: 'Instructions'
+    }
   }
-});
-
-
-Template.menuItemInstructions.events({
-  'shown.bs.collapse #Instructions': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('instructions', true);
-  }, 1000),
-
-  'hidden.bs.collapse #Instructions': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('instructions', false);
-  }, 1000)
 });

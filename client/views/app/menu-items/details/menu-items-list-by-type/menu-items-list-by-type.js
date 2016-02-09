@@ -18,19 +18,13 @@ Template.menuItemsListByType.onCreated(function () {
   }
 });
 
-Template.menuItemsListByType.onRendered(function () {
-  this.$(`#${this.data.type}`).on('shown.bs.collapse', _.throttle(() => {
-    this.data.uiStates.setUIState(this.data.type, true);
-  }, 1000));
-
-  this.$(`#${this.data.type}`).on('hidden.bs.collapse', _.throttle(() => {
-    this.data.uiStates.setUIState(this.data.type, false);
-  }, 1000))
-});
-
 Template.menuItemsListByType.helpers({
-  itemsName() {
-    return this.type === 'ings' ? 'Ingredients' : 'Prep Jobs';
+  options() {
+    return {
+      type: this.type,
+      name: this.type === 'ings' ? 'Ingredients' : 'Prep Jobs',
+      padding: 'no-padding'
+    }
   },
 
   ingredient() {
@@ -38,7 +32,6 @@ Template.menuItemsListByType.helpers({
   },
 
   jobItem() {
-    //return JobItems.findOne({_id: this._id});
     return Template.instance().getJobItem(this._id);
   },
 
@@ -60,29 +53,25 @@ Template.menuItemsListByType.helpers({
 
   analyzeItemCost() {
     return Template.instance().analyzeItemCost;
-  },
-
-  collapsed() {
-    return this.uiStates.getUIState(this.type);
   }
 });
 
 Template.menuItemsListByType.events({
-  'click #showIngsOrPrepList': function (event, tmpl) {
+  'click .add-ings': function (event, tmpl) {
     event.preventDefault();
+    let idsOfItemsInList = _.pluck(tmpl.data.ingredients, '_id');
+    FlyoutManager.open('stocksList', {
+      onAddStockItem: tmpl.onAddItem,
+      idsToExclude: idsOfItemsInList
+    });
+  },
 
-    if (tmpl.data.type === 'ings') {
-      let idsOfItemsInList = _.pluck(tmpl.data.ingredients, '_id');
-      FlyoutManager.open('stocksList', {
-        onAddStockItem: tmpl.onAddItem,
-        idsToExclude: idsOfItemsInList
-      });
-    } else {
-      let idsOfItemsInList = _.pluck(tmpl.data.jobItems, '_id');
-      FlyoutManager.open('prepsList', {
-        onAddPrepItem: tmpl.onAddItem,
-        idsToExclude: idsOfItemsInList
-      });
-    }
+  'click .add-prep': function (event, tmpl) {
+    event.preventDefault();
+    let idsOfItemsInList = _.pluck(tmpl.data.jobItems, '_id');
+    FlyoutManager.open('prepsList', {
+      onAddPrepItem: tmpl.onAddItem,
+      idsToExclude: idsOfItemsInList
+    });
   }
 });

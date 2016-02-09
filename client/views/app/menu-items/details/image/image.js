@@ -1,6 +1,9 @@
 Template.menuItemImage.helpers({
-  collapsed() {
-    return this.uiStates.getUIState('images');
+  imageOptions() {
+    return {
+      type: 'images',
+      name: 'Image'
+    }
   }
 });
 
@@ -17,13 +20,5 @@ Template.menuItemImage.events({
           Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
         }
       });
-  },
-
-  'shown.bs.collapse #Image': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('images', true);
-  }, 1000),
-
-  'hidden.bs.collapse #Image': _.throttle(function (event, tmpl) {
-    tmpl.data.uiStates.setUIState('images', false);
-  }, 1000)
+  }
 });

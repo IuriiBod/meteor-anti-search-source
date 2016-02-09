@@ -1,19 +1,6 @@
 <template name="menuItemsListByType">
   <div class="ibox panel panel-default">
-    <div class="ibox-title">
-      <h5>{{itemsName}}</h5>
-      <div class="ibox-tools">
-        {{#if canEditMenu}}
-          <button id="showIngsOrPrepList" class="btn btn-xs btn-primary" type="button">Add {{itemsName}}</button>
-        {{/if}}
-        <a class="{{#if collapsed}}collapsed{{/if}}" data-toggle="collapse" data-target="#{{type}}"
-           aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}" aria-controls="{{type}}">
-          <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i>
-        </a>
-      </div>
-    </div>
-    <div class="ibox-content no-padding white-bg collapse {{#if collapsed}}in{{/if}}" id="{{type}}"
-         aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
+    {{#ItemsToCollapse options=options uiStates=uiStates}}
       <table class="table table-striped">
         <thead>
         <tr>
@@ -29,23 +16,23 @@
         </tr>
         </thead>
         <tbody>
-            {{#each jobItems}}
-              {{> menuItemIngredientRow item=jobItem quantity=quantity type=../type analyzeItemCost=analyzeItemCost}}
-            {{/each}}
-            {{#if jobItems}}
-              <tr>
-                <td></td>
-                <td></td>
-                <td class="text-right">Total</td>
-                <td>$ {{jobItemsTotalPrice}}</td>
-                <td></td>
-              </tr>
-            {{/if}}
-            {{#each ingredients}}
-              {{> menuItemIngredientRow item=ingredient quantity=quantity type=../type analyzeItemCost=analyzeItemCost}}
-            {{/each}}
+        {{#each jobItems}}
+          {{> menuItemIngredientRow item=jobItem quantity=quantity type=../type analyzeItemCost=analyzeItemCost}}
+        {{/each}}
+        {{#if jobItems}}
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="text-right">Total</td>
+            <td>$ {{jobItemsTotalPrice}}</td>
+            <td></td>
+          </tr>
+        {{/if}}
+        {{#each ingredients}}
+          {{> menuItemIngredientRow item=ingredient quantity=quantity type=../type analyzeItemCost=analyzeItemCost}}
+        {{/each}}
         </tbody>
       </table>
-    </div>
+    {{/ItemsToCollapse}}
   </div>
 </template>
