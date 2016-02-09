@@ -1,11 +1,11 @@
 <template name="managerNoteWidget">
   <div class="note-list-widget">
-    {{#if isNoteEditing}}
-      {{> managerNoteEditor onCloseEditor=onCloseEditor}}
+    {{#if currentNote}}
+      {{> managerNoteEditor onCloseEditor=onCloseEditor note=currentNote}}
     {{/if}}
-    <div class="col-md-12 hidden-print task-list-content">
+    <div class="hidden-print task-list-content">
       <div class="ibox">
-        {{#unless isNoteEditing}}
+        {{#unless currentNote}}
           <div class="ibox-title">
             Notes
             <a href="#" class="create-note">
@@ -15,7 +15,17 @@
         {{/unless}}
         <div class="ibox-content">
           <div class="row">
-            <h3>No notes here</h3>
+            {{#if notes}}
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  {{#each notes}}
+                    {{> managerNoteItem note=this onEditNote=onEditNote}}
+                  {{/each}}
+                </table>
+              </div>
+            {{else}}
+              <h3>No notes here</h3>
+            {{/if}}
           </div>
         </div>
       </div>

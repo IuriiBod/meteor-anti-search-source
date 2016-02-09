@@ -1,0 +1,13 @@
+<template name="managerNoteItem">
+  <tr class="manager-note-item">
+    <td>
+      {{dateFormat note.createdAt}}
+    </td>
+    <td>
+      {{trimText note.text}}
+    </td>
+    <td>
+      {{username note.createdBy}}
+    </td>
+  </tr>
+</template>

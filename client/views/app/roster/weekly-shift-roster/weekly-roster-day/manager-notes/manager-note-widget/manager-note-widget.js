@@ -1,15 +1,27 @@
 Template.managerNoteWidget.onCreated(function() {
-  this.isNoteEditing = new ReactiveVar(false);
+  this.currentNote = new ReactiveVar(null);
 });
 
 Template.managerNoteWidget.helpers({
-  isNoteEditing: function() {
-    return Template.instance().isNoteEditing.get();
+  currentNote: function() {
+    return Template.instance().currentNote.get();
   },
   onCloseEditor: function() {
     var self = Template.instance();
     return function() {
-      self.isNoteEditing.set(false);
+      self.currentNote.set(null);
+    }
+  },
+  notes: function () {
+    return ManagerNotes.find({
+      noteDate: this.date,
+      'relations.areaId': HospoHero.getCurrentAreaId()
+    });
+  },
+  onEditNote: function() {
+    var tmpl = Template.instance();
+    return function(note) {
+      tmpl.currentNote.set(note);
     }
   }
 });
@@ -17,6 +29,9 @@ Template.managerNoteWidget.helpers({
 Template.managerNoteWidget.events({
   'click .create-note': function(event, tmpl) {
     event.preventDefault();
-    tmpl.isNoteEditing.set(true);
+
+    tmpl.currentNote.set({
+      noteDate: tmpl.data.date
+    });
   }
 });
