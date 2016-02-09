@@ -4,7 +4,7 @@ Template.managerCalendar.helpers({
     if (areaId) {
       var assignedUsers = Shifts.find({
         startTime: TimeRangeQueryBuilder.forDay(this.date),
-        published: true,
+        //published: true,
         assignedTo: {
           $ne: null
         },

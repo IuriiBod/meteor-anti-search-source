@@ -26,7 +26,9 @@ Meteor.methods({
       let options = {
         interactive: true,
         helpers: {
-          url: NotificationSender.urlFor('meeting', {id: meetingId}, this),
+          url () {
+            return NotificationSender.urlFor('meetingDetails', {id: meetingId}, this);
+          },
 
           yesUrl () {
             return NotificationSender.actionUrlFor('accept-meeting-invite', 'yes', this);
@@ -56,20 +58,42 @@ Meteor.methods({
 
   'accept-meeting-invite' (notificationId, action) {
     let userId = Meteor.userId();
+
+    let fields = {
+      yes: 'accepted',
+      maybe: 'maybeAccepted',
+      no: 'rejected'
+    };
+    delete fields[action];
+
+    console.log('FI', fields);
+    
+
+    fields = _.map(fields, (value) => {
+      return {
+        [value]: userId
+      }
+    });
+
+    console.log('FIELDS', fields);
+
+
+    let query = {
+      $push: {
+        [action]: userId
+      },
+
+      $pop: fields
+    };
+
+    console.log('QUERY', query);
+
+    return false;
     let notification = Notifications.findOne({_id: notificationId});
 
     if (notification) {
       let meetingId = notification.meta.meetingId;
-      let meeting = Meetings.findOne({_id: meetingId, attendees: userId});
-
-      if (meeting) {
-        let actionField = action === 'yes' ? 'accepted' : action === 'maybe' ? 'maybeAccepted' : 'rejected';
-        meeting[actionField].push(userId);
-        Meetings.update({_id: meetingId}, {$set: meeting});
-      } else {
-        throw new Meteor.Error(403, 'You are not invited on this meeting');
-      }
-
+      Meetings.update({_id: meetingId, attendees: userId}, {$set: query});
       Notifications.remove({_id: notificationId});
     }
   }

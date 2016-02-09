@@ -8,3 +8,17 @@ Router.route('meetings', {
     }
   }
 });
+
+Router.route('meetingDetails', {
+  path: '/meeting-details/:id',
+  template: 'meetingDetails',
+  waitOn () {
+    return Meteor.subscribe('meeting', this.params.id, Meteor.userId());
+  },
+
+  data () {
+    return {
+      id: this.params.id
+    }
+  }
+});

@@ -1,0 +1,80 @@
+<template name="meetingDetails">
+  {{> pageHeading title='Meeting'}}
+
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="wrapper wrapper-content fadeInUp">
+        <div class="ibox">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>Meeting Details:</h5>
+              <div class="ibox-tools">
+                <a class="collapse-link" data-toggle="collapse"><i class="fa fa-chevron-up"></i></a>
+              </div>
+            </div>
+            <div class="ibox-content no-padding">
+              <table class="table">
+                <thead>
+                <tr>
+                  <td><b>Title:</b></td>
+                  <td>{{meeting.title}}</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td><b>Date & Time:</b></td>
+                  <td>{{dateInterval meeting.startTime meeting.endTime}}</td>
+                </tr>
+                <tr>
+                  <td><b>Location:</b></td>
+                  <td>{{meeting.location}}</td>
+                </tr>
+                <tr>
+                  <td><b>Attendees:</b></td>
+                  <td class="project-people">
+                    <a href="" class="pull-left">
+                      {{#each meeting.attendees}}
+                        <img alt="{{username this}}" class="img-circle" src="{{profilePicture this}}">
+                      {{/each}}
+                    </a>
+                    <div class="col-md-4">
+                      <button type="button" class="btn btn-default btn-sm pull-left">Add</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Are You Attending?</b></td>
+                  <td>
+                    <button type="button" class="btn btn-default {{#if buttonClass 'yes'}}btn-primary{{/if}}">Yes</button>
+                    <button type="button" class="btn btn-default {{#if buttonClass 'maybe'}}btn-warning{{/if}}">Maybe</button>
+                    <button type="button" class="btn btn-default {{#if buttonClass 'no'}}btn-danger{{/if}}">No</button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+          <div class="row m-t-sm">
+            <div class="col-lg-12">
+              <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                  <h5>Agenda &amp; Minutes</h5>
+                  <div class="ibox-tools">
+                    <a class="collapse-link" data-toggle="collapse"><i class="fa fa-chevron-up"></i></a>
+                  </div>
+                </div>
+                <div class="ibox-content" style="display: block;">
+                  {{> autosaveTextEditor text="some text"}}
+                </div>
+              </div>
+              <hr class="">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
