@@ -112,13 +112,13 @@ SortableHelper.prototype.getSortedShift = function () {
     var shift = this._draggedShift;
     var newDate = this._draggedToDate;
 
-    shift.startTime = HospoHero.dateUtils.applyTimeToDate(newDate, shift.startTime);
-    shift.endTime = HospoHero.dateUtils.applyTimeToDate(newDate, shift.endTime);
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
+      start: newDate,
+      end: newDate
+    }, shift.startTime, shift.endTime);
 
-    //in case startTime > endTime => we suppose shift should end after midnight
-    if (moment(shift.startTime).isAfter(shift.endTime)) {
-      shift.endTime = moment(shift.endTime).add(1, 'day').toDate();
-    }
+    shift.startTime = newShiftDuration.start;
+    shift.endTime = newShiftDuration.end;
 
     shift.order = this._getOrder();
 

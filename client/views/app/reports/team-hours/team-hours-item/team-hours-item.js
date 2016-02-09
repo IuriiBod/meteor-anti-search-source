@@ -1,7 +1,7 @@
 //context: user (User), tableViewMode ("shifts"/"hours"), weekDate (WeekDate)
 Template.teamHoursItem.onCreated(function () {
   this.getTotalTimeAndWage = function (templateData) {
-    let dateForWeek = HospoHero.dateUtils.getDateByWeekDate(templateData.weekDate);
+    let dateForWeek = moment(templateData.weekDate).toDate();
 
     let weekShifts = Shifts.find({
       assignedTo: templateData.user._id,
@@ -60,7 +60,9 @@ let WageCalculator = class {
     let userPayRatePerHour = HospoHero.misc.getUserPayRate(this.user, shiftStartDate);
     let userPayRatePerMinute = userPayRatePerHour / 60;
     return userPayRatePerMinute * shiftDurationInMinutes;
-  };
+  }
+
+;
 
   _getShiftDuration(startDate, finishDate) {
     let shiftDurationInHours = finishDate.diff(startDate, 'hours');

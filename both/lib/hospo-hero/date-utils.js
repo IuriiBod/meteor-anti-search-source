@@ -93,13 +93,34 @@ Namespace('HospoHero.dateUtils', {
 
     return dateMoment.toDate();
   },
+  /**
+   * Updates interval's start and end times
+   *
+   * Warning: Current implementation is working only
+   * for intervals with duration less than 12 hours
+   *
+   * @param {object} oldInterval
+   * @param {date} oldInterval.start
+   * @param {date} oldInterval.end
+   * @param {date} newStartTime
+   * @param {date} newEndTime
+   */
+  updateTimeInterval: function (oldInterval, newStartTime, newEndTime) {
+    let newInterval = {
+      start: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newStartTime),
+      end: HospoHero.dateUtils.applyTimeToDate(oldInterval.end, newEndTime)
+    };
 
-  getDateByWeekDate: function (weekDate) {
-    return moment(weekDate).toDate();
+    //in case start > end => we suppose interval should end after midnight
+    if (moment(newInterval.start).isAfter(newInterval.end)) {
+      newInterval.end = moment(newInterval.end).add(1, 'day').toDate();
+    }
+
+    return newInterval;
   },
 
   getWeekDays: function (weekDate) {
-    var weekStart = moment(this.getDateByWeekDate(weekDate)).startOf('isoWeek');
+    var weekStart = moment(weekDate).startOf('isoWeek');
     var weekDays = [];
     for (var i = 0; i < 7; i++) {
       weekDays.push(new Date(weekStart.toDate()));
@@ -130,24 +151,6 @@ Namespace('HospoHero.dateUtils', {
 
   secondsToMinutes: function (secs) {
     return secs / 60;
-  },
-
-  // This method also aren't used
-  timeDuration: function (time) {
-    var hours = moment.duration(time).hours();
-    var mins = moment.duration(time).minutes();
-
-    var timeFormat = function (value, name) {
-      if (value > 0) {
-        var result = value + ' ' + name;
-        return value == 1 ? result : result + 's';
-      } else {
-        return '';
-      }
-    };
-
-    var durationText = timeFormat(hours, 'hour') + ' ' + timeFormat(mins, 'minute');
-    return durationText.trim();
   },
 
   //Formatted time with Ago

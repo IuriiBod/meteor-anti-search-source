@@ -78,6 +78,23 @@ Template.shiftItem.helpers({
   formatLocationTime: function (time) {
     var area = HospoHero.getCurrentArea();
     return HospoHero.dateUtils.locationTimeFormat(time, area.locationId);
+  },
+
+  timeDuration: function (time) {
+    var hours = moment.duration(time).hours();
+    var mins = moment.duration(time).minutes();
+
+    var timeFormat = function (value, name) {
+      if (value > 0) {
+        var result = value + ' ' + name;
+        return value == 1 ? result : result + 's';
+      } else {
+        return '';
+      }
+    };
+
+    var durationText = timeFormat(hours, 'hour') + ' ' + timeFormat(mins, 'minute');
+    return durationText.trim();
   }
 });
 

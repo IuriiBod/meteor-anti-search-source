@@ -4,8 +4,13 @@ Template.shiftBasic.onCreated(function () {
   self.editShiftTime = function (newStartTime, newEndTime) {
     let shift = this.data;
 
-    shift.startTime = HospoHero.dateUtils.applyTimeToDate(shift.startTime, newStartTime);
-    shift.endTime = HospoHero.dateUtils.applyTimeToDate(shift.endTime, newEndTime);
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
+      start: shift.startTime,
+      end: shift.endTime
+    }, newStartTime, newEndTime);
+
+    shift.startTime = newShiftDuration.start;
+    shift.endTime = newShiftDuration.end;
 
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
@@ -18,6 +23,7 @@ Template.shiftBasic.helpers({
       firstTime: tmpl.data.startTime,
       secondTime: tmpl.data.endTime,
       minuteStepping: 15,
+      ignoreDateRangeCheck: true,
       onSubmit: function (startTime, endTime) {
         tmpl.editShiftTime(startTime, endTime);
       }
@@ -28,6 +34,6 @@ Template.shiftBasic.helpers({
 Template.shiftBasic.events({
   'click .remove-shift-button': function (event, tmpl) {
     event.preventDefault();
-    Meteor.call("deleteShift", tmpl.data._id, HospoHero.handleMethodResult());
+    Meteor.call('deleteShift', tmpl.data._id, HospoHero.handleMethodResult());
   }
 });
