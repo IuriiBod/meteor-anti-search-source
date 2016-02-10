@@ -58,7 +58,8 @@ Template.weeklyRosterDay.helpers({
 
 Template.weeklyRosterDay.events({
   'click .add-shift-button': function (event, tmpl) {
-    var zeroMoment = new Date(tmpl.data.currentDate);
+    //copy currentDate and convert to moment
+    var zeroMoment = moment(new Date(tmpl.data.currentDate));
 
     var startHour = new Date(zeroMoment.hours(8));
     var endHour = new Date(zeroMoment.hours(17));

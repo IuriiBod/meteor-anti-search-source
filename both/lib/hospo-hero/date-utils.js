@@ -108,7 +108,7 @@ Namespace('HospoHero.dateUtils', {
   updateTimeInterval: function (oldInterval, newStartTime, newEndTime) {
     let newInterval = {
       start: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newStartTime),
-      end: HospoHero.dateUtils.applyTimeToDate(oldInterval.end, newEndTime)
+      end: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newEndTime)
     };
 
     //in case start > end => we suppose interval should end after midnight
