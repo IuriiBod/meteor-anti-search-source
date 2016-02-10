@@ -10,7 +10,11 @@ UIStates = {
       getState: function (category) {
         statesDep.depend();
         var user = Meteor.user();
-        return user && user.profile.uiStates ? user.profile.uiStates[uiStateManager.namespace][category] : false;
+        if (user && user.profile.uiStates && user.profile.uiStates[uiStateManager.namespace]) {
+          return user.profile.uiStates[uiStateManager.namespace][category];
+        } else {
+          return false;
+        }
       },
 
       setState: function (category, state) {
