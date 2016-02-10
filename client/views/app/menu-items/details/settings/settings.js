@@ -47,7 +47,7 @@ Template.menuItemSettings.helpers({
     return {
       type: 'settings',
       name: 'Settings',
-      padding: 'no-padding'
+      contentPadding: 'no-padding'
     }
   }
 });

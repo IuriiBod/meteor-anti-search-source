@@ -7,13 +7,13 @@
       <div class="col-lg-12">
         <div class="row">
           <div class="col-lg-8 col-md-8 col-xs-12 col-sm-12">
-            {{> menuItemInstructions item=this uiStates=uiStatesManager}}
-            {{> menuItemImage item=this uiStates=uiStatesManager}}
-            {{> menuItemSettings item=this uiStates=uiStatesManager}}
-            {{> menuItemsListByType type='prep' jobItems=jobItems uiStates=uiStatesManager}}
-            {{> menuItemsListByType type='ings' ingredients=ingredients uiStates=uiStatesManager}}
-            {{> menuDetailPerformance item=this uiStates=uiStatesManager}}
-            {{> taskWidget type='menus' itemId=_id uiStates=uiStatesManager}}
+            {{> menuItemInstructions item=this}}
+            {{> menuItemImage item=this}}
+            {{> menuItemSettings item=this}}
+            {{> menuItemsListByType type='prep' jobItems=jobItems}}
+            {{> menuItemsListByType type='ings' ingredients=ingredients}}
+            {{> menuDetailPerformance item=this}}
+            {{> taskWidget type='menus' itemId=_id}}
           </div>
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 no-padding">
             {{> commentsPanel id=_id type='menu'}}

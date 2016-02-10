@@ -1,11 +1,13 @@
 Template.menuItemsListByType.onCreated(function () {
   this.getJobItem = (id) => JobItems.findOne({_id: id});
+
   this.analyzeItemCost = (item, itemType, itemQty) => {
     let isPrep = itemType === 'prep';
     let analyzeResult = HospoHero.analyze[isPrep ? 'jobItem' : 'ingredient'](item);
     let targetValue = analyzeResult[isPrep ? 'prepCostPerPortion' : 'costPerPortionUsed'];
     return targetValue * itemQty;
   };
+
   this.onAddItem = (itemId) => {
     var query = {};
     query[this.data.type === 'prep' ? 'jobItems' : 'ingredients'] = {
@@ -20,10 +22,14 @@ Template.menuItemsListByType.onCreated(function () {
 
 Template.menuItemsListByType.helpers({
   options() {
+    let isIngredientType = this.type === 'ings';
     return {
       type: this.type,
-      name: this.type === 'ings' ? 'Ingredients' : 'Prep Jobs',
-      padding: 'no-padding'
+      name: isIngredientType ? 'Ingredients' : 'Prep Jobs',
+      contentPadding: 'no-padding',
+      url: '#',
+      className: `add-${this.type} btn btn-primary btn-xs`,
+      text: isIngredientType ? 'Add Ingredient' : 'Add Prep Job'
     }
   },
 

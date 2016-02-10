@@ -2,7 +2,10 @@ Template.menuItemImage.helpers({
   imageOptions() {
     return {
       type: 'images',
-      name: 'Image'
+      name: 'Image',
+      url: '#',
+      className: 'upload-image-button',
+      icon: 'fa fa-cloud-upload'
     }
   }
 });

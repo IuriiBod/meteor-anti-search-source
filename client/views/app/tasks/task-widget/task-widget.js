@@ -53,15 +53,17 @@ Template.taskWidget.helpers({
   tasksOptions() {
     return {
       type: 'tasks',
-      name: 'Task',
-      padding: 'no-padding',
-      pull: 'pull-left'
+      name: 'Tasks',
+      contentPadding: 'no-padding',
+      className: 'add-task btn btn-primary btn-xs pull-left',
+      url: '#',
+      text: 'Add Task'
     }
   }
 });
 
 Template.taskWidget.events({
-  'click .create-task': function (event, tmpl) {
+  'click .add-task': function (event, tmpl) {
     event.preventDefault();
     tmpl.task = {
       reference: tmpl.getReferenceObject()

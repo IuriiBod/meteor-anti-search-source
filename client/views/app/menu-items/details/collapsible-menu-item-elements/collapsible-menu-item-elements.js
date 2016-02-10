@@ -1,25 +1,21 @@
-Template.collapsibleMenuItemElements.onRendered(function () {
-  this.$(`#${this.data.options.type}`).on('shown.bs.collapse', _.throttle(() => {
-    this.data.uiStates.setUIState(this.data.options.type, true);
-  }, 1000));
-
-  this.$(`#${this.data.options.type}`).on('hidden.bs.collapse', _.throttle(() => {
-    this.data.uiStates.setUIState(this.data.options.type, false);
-  }, 1000))
+Template.collapsibleMenuItemElements.onCreated(function () {
+  this.uiStatesManager = UIStates.getManagerFor('menuItem');
 });
-
 
 Template.collapsibleMenuItemElements.helpers({
   collapsed() {
-    return this.uiStates.getUIState(this.options.type);
-  },
-
-  type() {
-    let type = this.options.type;
-    return {
-      image: type === 'images',
-      notInstructionsOrSettings: type !== 'instructions' && type !== 'settings' && type !== 'performance',
-      performance: type === 'performance'
-    }
+    return Template.instance().uiStatesManager.getState(this.options.type);
   }
+});
+
+Template.collapsibleMenuItemElements.events({
+  'shown.bs.collapse .show-content': _.throttle((event, tmpl) => {
+    event.preventDefault();
+    tmpl.uiStatesManager.setState(tmpl.data.options.type, true);
+  }, 1000),
+
+  'hidden.bs.collapse .hide-content': _.throttle((event, tmpl) => {
+    event.preventDefault();
+    tmpl.uiStatesManager.setState(tmpl.data.options.type, false);
+  }, 1000)
 });
