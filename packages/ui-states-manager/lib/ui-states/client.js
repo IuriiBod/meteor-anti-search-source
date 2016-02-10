@@ -1,30 +1,35 @@
-UIStatesManager = function (category) {
-  this.user = Meteor.user();
-  this.category = category;
-  this.statesDep = new Tracker.Dependency;
-  Meteor.subscribe('usersUIStates', this.user._id);
+var UIStatesManager = function (namespace) {
+  this.namespace = namespace;
 };
 
-UIStatesManager.prototype.getUIState = function (element) {
-  this.statesDep.depend();
-  if (this.user && this.user.profile.uiStates) {
-    return this.user.profile.uiStates[this.category][element];
-  } else {
-    return false;
-  }
-};
+UIStates = {
+  getManagerFor: function (namespace) {
+    var uiStateManager = new UIStatesManager(namespace);
+    var statesDep = new Tracker.Dependency;
+    return {
+      getState: function (category) {
+        statesDep.depend();
+        var user = Meteor.user();
+        return user && user.profile.uiStates ? user.profile.uiStates[uiStateManager.namespace][category] : false;
+      },
 
-UIStatesManager.prototype.setUIState = function (component, state) {
-  if (this.user) {
-    var item = {
-      category: this.category,
-      component: component,
-      state: state
-    };
+      setState: function (category, state) {
+        if (Meteor.userId()) {
+          var item = {
+            namespace: uiStateManager.namespace,
+            category: category,
+            state: state
+          };
 
-    Meteor.call('updateUiState', item, (err, res) => {
-      this.user = res;
-      this.statesDep.changed();
-    });
+          Meteor.call('updateUIState', item, (err, res) => {
+            if (err) {
+              console.log(err);
+            } else {
+              statesDep.changed();
+            }
+          });
+        }
+      }
+    }
   }
 };

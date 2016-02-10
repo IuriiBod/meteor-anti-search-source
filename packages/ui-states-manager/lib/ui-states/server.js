@@ -1,8 +1,8 @@
 Meteor.methods({
-  updateUiState: function (item) {
+  updateUIState: function (item) {
     let userId = Meteor.userId();
     if (userId) {
-      let key = `profile.uiStates.${item.category}.${item.component}`;
+      let key = `profile.uiStates.${item.namespace}.${item.category}`;
       Meteor.users.update({
         _id: userId
       }, {
@@ -10,7 +10,6 @@ Meteor.methods({
           [key]: item.state
         }
       });
-      return Meteor.users.findOne({_id: userId});
     }
   }
 });
