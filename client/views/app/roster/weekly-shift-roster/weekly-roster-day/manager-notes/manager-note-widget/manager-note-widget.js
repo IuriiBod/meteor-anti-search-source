@@ -17,12 +17,6 @@ Template.managerNoteWidget.helpers({
       noteDate: this.date,
       'relations.areaId': HospoHero.getCurrentAreaId()
     });
-  },
-  onEditNote: function() {
-    var tmpl = Template.instance();
-    return function(note) {
-      tmpl.currentNote.set(note);
-    }
   }
 });
 

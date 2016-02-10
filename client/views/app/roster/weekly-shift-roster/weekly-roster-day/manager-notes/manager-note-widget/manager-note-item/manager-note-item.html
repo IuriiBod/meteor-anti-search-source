@@ -12,14 +12,23 @@
     <td class="text-right">
       <a class="note-comment-count" href="#comments-{{note._id}}" data-toggle="collapse" aria-expanded="false">
         <i class="fa fa-comments-o fa-fw fa-lg comments-toggler">
-          <span class="label label-primary">0</span>
+          {{#if commentsCount}}
+            <span class="label label-primary">{{commentsCount}}</span>
+          {{/if}}
         </i>
       </a>
     </td>
   </tr>
+  {{#if isNoteEditing}}
+    <tr>
+      <td colspan="4">
+        {{> managerNoteEditor onCloseEditor=onCloseEditor note=note}}
+      </td>
+    </tr>
+  {{/if}}
   <tr class="collapse" id="comments-{{note._id}}">
     <td colspan="4">
-      Comments
+      {{> commentsPanel id=note._id type='noteItem'}}
     </td>
   </tr>
 </template>

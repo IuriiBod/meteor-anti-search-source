@@ -7,24 +7,30 @@
       <div class="ibox">
         {{#unless currentNote}}
           <div class="ibox-title">
-            Notes
-            <a href="#" class="create-note">
-              <i class="fa fa-plus"></i>
-            </a>
+            <div class="row">
+              <div class="col-md-6">
+                <h4>Notes</h4>
+              </div>
+              <div class="col-md-6">
+                <button type="button" class="btn btn-primary pull-right create-note">
+                  <i class="fa fa-plus"></i> Add note
+                </button>
+              </div>
+            </div>
           </div>
         {{/unless}}
         <div class="ibox-content">
           <div class="row">
-            {{#if notes}}
+            {{#if notes.count}}
               <div class="table-responsive">
                 <table class="table table-hover manager-note-list">
                   {{#each notes}}
-                    {{> managerNoteItem note=this onEditNote=onEditNote}}
+                    {{> managerNoteItem note=this}}
                   {{/each}}
                 </table>
               </div>
             {{else}}
-              <h3>No notes here</h3>
+              <h4>No notes here</h4>
             {{/if}}
           </div>
         </div>
