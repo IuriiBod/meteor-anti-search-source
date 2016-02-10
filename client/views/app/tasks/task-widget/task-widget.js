@@ -52,6 +52,7 @@ Template.taskWidget.helpers({
 
   tasksOptions() {
     return {
+      namespace: this.type,
       type: 'tasks',
       name: 'Tasks',
       contentPadding: 'no-padding',
