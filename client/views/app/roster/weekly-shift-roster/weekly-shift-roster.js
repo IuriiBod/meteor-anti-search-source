@@ -5,7 +5,7 @@ Template.weeklyShiftRoster.onCreated(function () {
 
 Template.weeklyShiftRoster.helpers({
   datesOfWeek: function () {
-    var weekDate = this.date ? moment(this.date) : moment();
+    var weekDate = this.type !== 'template' ? moment(this.date) : moment(0).week(2).startOf('isoweek');
     return HospoHero.dateUtils.getWeekDays(weekDate);
   }
 });

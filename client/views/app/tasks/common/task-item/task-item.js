@@ -93,7 +93,7 @@ Template.taskItem.events({
     var task = tmpl.data.task;
     task = _.extend(task, {
       done: !task.done,
-      completedBy: task.done ? Meteor.userId() : null
+      completedBy: !task.done ? Meteor.userId() : null
     });
     Meteor.call('editTask', task);
   },

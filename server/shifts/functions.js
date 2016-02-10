@@ -77,8 +77,7 @@ Meteor.methods({
           }
 
           // Create events in user's calendar
-          var calendarEventsManager = new CalendarEventsManager();
-          calendarEventsManager.addRecurringJobsToCalendar(shift);
+          CalendarEventsManager.addRecurringJobsToCalendar(shift);
         } else {
           openShifts.push(shift);
         }

@@ -99,12 +99,7 @@ var PredictionModelDataGenerator = function PredictionModelDataGenerator(menuIte
 
 
 PredictionModelDataGenerator.prototype._convertValueVectorToString = function (vector) {
-  return vector.map(function (value) {
-      if (_.isString(value)) {
-        value = '"' + value + '"';
-      }
-      return value;
-    }).join(', ') + '\n';
+  return vector.map(value => _.isNumber(value) ? value : '"' + value + '"').join(', ') + '\n';
 };
 
 

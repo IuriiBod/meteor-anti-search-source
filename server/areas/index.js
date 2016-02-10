@@ -103,32 +103,37 @@ Meteor.methods({
 
     let userToAdd = Meteor.users.findOne({_id: addedUserInfo.userId});
 
-    var area = Areas.findOne({_id: addedUserInfo.areaId});
+    if (userToAdd) {
+      var area = Areas.findOne({_id: addedUserInfo.areaId});
 
-    //check if user already added
-    if (userToAdd.relations.areaIds.indexOf(addedUserInfo.areaId) > -1) {
-      throw new Meteor.Error(`${userToAdd.profile.firstname} is already invited to ${area.name}`);
-    }
-
-    var updateUserDocument = {
-      $set: {
-        [`roles.${addedUserInfo.areaId}`]: addedUserInfo.roleId
-      },
-      $addToSet: {
-        'relations.organizationIds': area.organizationId,
-        'relations.locationIds': area.locationId,
-        'relations.areaIds': addedUserInfo.areaId
+      //check if user already added
+      if (userToAdd.relations && userToAdd.relations.areaIds &&
+        userToAdd.relations.areaIds.indexOf(addedUserInfo.areaId) > -1) {
+        throw new Meteor.Error(`${userToAdd.profile.firstname} is already invited to ${area.name}`);
       }
-    };
 
-    Meteor.users.update({_id: addedUserInfo.userId}, updateUserDocument);
+      var updateUserDocument = {
+        $set: {
+          [`roles.${addedUserInfo.areaId}`]: addedUserInfo.roleId
+        },
+        $addToSet: {
+          'relations.organizationIds': area.organizationId,
+          'relations.locationIds': area.locationId,
+          'relations.areaIds': addedUserInfo.areaId
+        }
+      };
 
-    // Send notification to the invited user
-    new NotificationSender(
-      'New invitation',
-      'add-user-to-area',
-      {areaName: area.name}
-    ).sendBoth(addedUserInfo.userId);
+      Meteor.users.update({_id: addedUserInfo.userId}, updateUserDocument);
+
+      // Send notification to the invited user
+      new NotificationSender(
+        'New invitation',
+        'add-user-to-area',
+        {areaName: area.name}
+      ).sendBoth(addedUserInfo.userId);
+    } else {
+      throw new Meteor.Error('User not found');
+    }
   },
 
   removeUserFromArea: function (userId, areaId) {

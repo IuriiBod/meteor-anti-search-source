@@ -128,7 +128,7 @@ Meteor.methods({
       throw new Meteor.Error("User not found ", id);
     }
 
-    val = HospoHero.dateUtils.shiftDate(val);
+    val = new Date(val);
 
     if (type == "set" || type == "update") {
       Meteor.users.update({_id: id}, {

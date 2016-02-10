@@ -12,7 +12,7 @@ Meteor.methods({
       var shift = Shifts.findOne({
         startTime: shiftTimeRange,
         assignedTo: eventObject.userId,
-        published: true,
+        //published: true,
         'relations.areaId': areaId
       });
 
@@ -36,7 +36,7 @@ Meteor.methods({
   editCalendarEvent: function (eventObject) {
     check(eventObject, HospoHero.checkers.CalendarEventDocument);
 
-    if (!HospoHero.canUser('view calendar', Meteor.userId())) {
+    if (!HospoHero.canUser('edit calendar', Meteor.userId())) {
       logger.error("User not permitted to edit calendar items");
       throw new Meteor.Error(403, "User not permitted to edit calendar items");
     } else {
