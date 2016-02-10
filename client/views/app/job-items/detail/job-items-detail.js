@@ -108,7 +108,8 @@ Template.jobItemDetail.helpers({
   },
 
   relatedMenus: function () {
-    return MenuItems.find().fetch();
+    var jobItemId = Template.currentData().jobItem._id;
+    return MenuItems.find({jobItems: {$elemMatch: {_id: jobItemId}}}).fetch();
   },
 
   getCategory: function (id) {
