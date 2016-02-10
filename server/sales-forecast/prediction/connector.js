@@ -149,7 +149,7 @@ GooglePredictionApi.prototype._removeAllPredictionModels = function () {
     var self = this;
     modelsList.items.forEach(function (model) {
       self._client.remove(model.id);
-      logger.info('Removed prediction model ', {name: model.id});
+      logger.warn('Removed prediction model ', {name: model.id});
     });
   }
 };
