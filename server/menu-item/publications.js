@@ -57,7 +57,7 @@ Meteor.publishComposite('menuItem', function (id, currentAreaId) {
         find: function (menuItem) {
           if (menuItem) {
             let yesterdayDate = moment().subtract(1, 'days');
-            let weekAgoDate = moment(yesterdayDate).subtract(7, 'days');
+            let weekAgoDate = moment(yesterdayDate).subtract(14, 'days');
             let dateInterval = TimeRangeQueryBuilder.forInterval(weekAgoDate, yesterdayDate);
             return DailySales.find({
               date: dateInterval,
