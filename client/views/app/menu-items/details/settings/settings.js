@@ -45,6 +45,7 @@ Template.menuItemSettings.helpers({
 
   settingsOptions() {
     return {
+      namespace: 'menus',
       type: 'settings',
       name: 'Settings',
       contentPadding: 'no-padding'

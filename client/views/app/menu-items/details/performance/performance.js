@@ -91,6 +91,7 @@ Template.menuDetailPerformance.helpers({
       startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
     };
     return {
+      namespace: 'menus',
       type: 'performance',
       name: 'Performance Snapshot',
       contentPadding: 'no-padding',

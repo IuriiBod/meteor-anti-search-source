@@ -1,6 +1,7 @@
 Template.menuItemImage.helpers({
   imageOptions() {
     return {
+      namespace: 'menus',
       type: 'images',
       name: 'Image',
       url: '#',

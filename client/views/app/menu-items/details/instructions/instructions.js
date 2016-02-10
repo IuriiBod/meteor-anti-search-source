@@ -14,6 +14,7 @@ Template.menuItemInstructions.helpers({
 
   instructionsOptions() {
     return {
+      namespace: 'menus',
       type: 'instructions',
       name: 'Instructions'
     }

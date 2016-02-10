@@ -24,6 +24,7 @@ Template.menuItemsListByType.helpers({
   options() {
     let isIngredientType = this.type === 'ings';
     return {
+      namespace: 'menus',
       type: this.type,
       name: isIngredientType ? 'Ingredients' : 'Prep Jobs',
       contentPadding: 'no-padding',

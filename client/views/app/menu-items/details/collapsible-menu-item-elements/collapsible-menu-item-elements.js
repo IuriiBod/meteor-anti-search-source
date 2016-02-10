@@ -1,5 +1,5 @@
 Template.collapsibleMenuItemElements.onCreated(function () {
-  this.uiStatesManager = UIStates.getManagerFor('menuItem');
+  this.uiStatesManager = UIStates.getManagerFor(this.data.options.namespace);
 });
 
 Template.collapsibleMenuItemElements.helpers({
