@@ -170,15 +170,6 @@ Namespace('HospoHero.dateUtils', {
     return HospoHero.dateUtils.shortDateFormat(date);
   },
 
-  getSeasonOfTheYear: (month) => {
-    let seasons = ['Winter', 'Winter',
-      'Spring', 'Spring', 'Spring',
-      'Summer', 'Summer', 'Summer',
-      'Fall', 'Fall', 'Fall',
-      'Winter'];
-    return seasons[parseInt(month) - 1];
-  },
-
   /**
    * * Converts the duration to the hours and minutes string
    * e.g. duration = 65, result will be 1h 5m
