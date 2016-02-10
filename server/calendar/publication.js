@@ -26,8 +26,6 @@ Meteor.publishComposite('calendarEvents', function (date, queryType, areaId, use
       {
         // events publication
         find: function (shift) {
-          console.log('SH', shift);
-
           return CalendarEvents.find({
             shiftId: shift._id
           });
