@@ -27,6 +27,7 @@ Router.route('logout', {
   action: function () {
     StaleSession._removeTokenById(Meteor.userId());
     Meteor.logout();
+    Router.go('/');
   }
 });
 
