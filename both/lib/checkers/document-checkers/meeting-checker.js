@@ -10,6 +10,7 @@ var MeetingChecker = Match.Where(function (meeting) {
     accepted: Match.Optional([HospoHero.checkers.MongoId]),
     maybeAccepted: Match.Optional([HospoHero.checkers.MongoId]),
     rejected: Match.Optional([HospoHero.checkers.MongoId]),
+    agendaAndMinutes: Match.Optional(String),
     createdBy: HospoHero.checkers.OptionalMongoId,
     createdAt: Match.Optional(Date)
   });

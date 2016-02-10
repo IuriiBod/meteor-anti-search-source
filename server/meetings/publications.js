@@ -68,6 +68,14 @@ Meteor.publishComposite('meeting', function (meetingId, userId) {
             this.ready();
           }
         }
+      },
+      
+      {
+        find (meeting) {
+          return Comments.find({
+            reference: meeting._id
+          });
+        }
       }
     ]
   }
