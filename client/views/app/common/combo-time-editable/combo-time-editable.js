@@ -3,10 +3,31 @@ Template.comboTimeEditable.onCreated(function () {
 
   self.isEditMode = new ReactiveVar(false);
 
+  self.exitFromEditMode = function () {
+    self.isEditMode.set(false);
+  };
+
+  self.isTimeRangeMode = function () {
+    return !!self.data.params.secondTime;
+  };
+
+  let checkTimeRange = function (firstTime, secondTime) {
+    return moment(secondTime).isAfter(firstTime);
+  };
+
   self.submitTime = function () {
     var firstTime = self.getTimeFromCombodate('.first-time');
     var secondTime = self.isTimeRangeMode() ? self.getTimeFromCombodate('.second-time') : null;
-    if (!secondTime || secondTime && self.checkFirstSecondDate(firstTime, secondTime)) {
+
+    if (secondTime && !self.data.params.ignoreDateRangeCheck) {
+      let isRangeValid = checkTimeRange(firstTime, secondTime);
+      if (!isRangeValid) {
+        HospoHero.error('Start time should be less than end time!');
+        return;
+      }
+    }
+
+    if (firstTime) {
       self.data.params.onSubmit(firstTime, secondTime);
       self.exitFromEditMode();
     }
@@ -20,22 +41,6 @@ Template.comboTimeEditable.onCreated(function () {
     var ampm = $combodate.find('.ampm').val();
 
     return new Date(moment(self.data.params.date).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm);
-  };
-
-  self.exitFromEditMode = function () {
-    self.isEditMode.set(false);
-  };
-
-  self.isTimeRangeMode = function () {
-    return !!self.data.params.secondTime;
-  };
-
-  self.checkFirstSecondDate = function (firstTime, secondTime) {
-    if (secondTime < firstTime) {
-      HospoHero.error('Start time should be less than end time!');
-      return false;
-    }
-    return true;
   };
 });
 

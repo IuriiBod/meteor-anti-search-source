@@ -14,7 +14,8 @@ Meteor.methods({
         stockOrders: StocktakeMain,
         supplier: Suppliers,
         taskItem: TaskList,
-        meeting: Meetings
+        meeting: Meetings,
+        noteItem: ManagerNotes
       };
       return typeCollectionRelations[referenceType].findOne({_id: referenceId});
     };

@@ -6,6 +6,7 @@
 .idea
 .dump
 .mupx-deploy/ssl
+.raw-data
 
 #bash
 db_remote_restore.sh

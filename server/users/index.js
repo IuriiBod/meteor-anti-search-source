@@ -128,7 +128,7 @@ Meteor.methods({
       throw new Meteor.Error("User not found ", id);
     }
 
-    val = HospoHero.dateUtils.shiftDate(val);
+    val = new Date(val);
 
     if (type == "set" || type == "update") {
       Meteor.users.update({_id: id}, {
@@ -208,9 +208,11 @@ Meteor.methods({
       throw new Meteor.Error('This is the last organization owner. You can remove it.');
     }
 
-    var updateQuery = {};
-    updateQuery["roles." + areaId] = newRoleId;
-    Meteor.users.update({_id: userId}, {$set: updateQuery});
+    Meteor.users.update({_id: userId}, {
+      $set: {
+        [`roles.${areaId}`]: newRoleId
+      }
+    });
 
     var updateOrganizationQuery;
 
@@ -233,16 +235,11 @@ Meteor.methods({
       throw new Meteor.Error('User not permitted to edit other users', {userId: Meteor.userId()});
     }
 
-    var query = {};
-    if (isAddingSection) {
-      query.$addToSet = {
+    var query = {
+      [isAddingSection ? '$addToSet' : '$pull']: {
         'profile.sections': sectionId
       }
-    } else {
-      query.$pull = {
-        'profile.sections': sectionId
-      }
-    }
+    };
     Meteor.users.update({_id: userId}, query);
   }
 });

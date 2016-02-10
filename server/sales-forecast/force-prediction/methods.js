@@ -17,7 +17,7 @@ Meteor.methods({
     locations.forEach((location) => {
       logger.info('Force prediction model update for', {_id: location._id, name: location.name});
       MenuItems.update({'relations.locationId': location._id}, {$unset: {lastForecastModelUpdateDate: ''}}, {multi: true});
-      updateTrainingDataForLocation(location);
+      updateTrainingDataForLocation(location, true);
     });
 
     return true;

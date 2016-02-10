@@ -20,9 +20,7 @@ Meteor.methods({
     Meteor.users.update({_id: Meteor.userId()}, {
       $set: {
         relations: {
-          organizationIds: [orgId],
-          locationIds: null,
-          areaIds: null
+          organizationIds: [orgId]
         }
       }
     });
