@@ -82,7 +82,7 @@ Namespace('HospoHero.analyze', {
       accuracy = Math.round((Math.abs(actual - prediction) / Math.max(prediction, actual)) * 100);
       accuracy = accuracy.toString() + '%';
     } else {
-      accuracy = '-';
+      accuracy = '0%';
     }
 
     return accuracy;

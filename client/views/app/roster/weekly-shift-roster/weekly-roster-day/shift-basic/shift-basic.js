@@ -28,6 +28,9 @@ Template.shiftBasic.helpers({
         tmpl.editShiftTime(startTime, endTime);
       }
     };
+  },
+  isMidnight: function () {
+    return !moment(this.startTime).isSame(this.endTime, 'day');
   }
 });
 

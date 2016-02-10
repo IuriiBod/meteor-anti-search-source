@@ -108,7 +108,7 @@ Namespace('HospoHero.dateUtils', {
   updateTimeInterval: function (oldInterval, newStartTime, newEndTime) {
     let newInterval = {
       start: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newStartTime),
-      end: HospoHero.dateUtils.applyTimeToDate(oldInterval.end, newEndTime)
+      end: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newEndTime)
     };
 
     //in case start > end => we suppose interval should end after midnight
@@ -168,15 +168,6 @@ Namespace('HospoHero.dateUtils', {
   getDateStringForRoute: function (date, location) {
     date = HospoHero.dateUtils.startOfWeekMoment(date, location);
     return HospoHero.dateUtils.shortDateFormat(date);
-  },
-
-  getSeasonOfTheYear: (month) => {
-    let seasons = ['Winter', 'Winter',
-      'Spring', 'Spring', 'Spring',
-      'Summer', 'Summer', 'Summer',
-      'Fall', 'Fall', 'Fall',
-      'Winter'];
-    return seasons[parseInt(month) - 1];
   },
 
   /**

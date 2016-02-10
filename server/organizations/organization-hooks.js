@@ -23,13 +23,12 @@ Organizations.after.update(function (userId, newOrganization) {
       return location._id;
     });
 
-    /**
+    /*
      * Save the user role object in format:
      * {
      *   areaId: roleId,
      *   ...
      * }
-     * @type {Object}
      */
     var newUserRoles = {};
     Areas.find({organizationId: newOrganization._id}).forEach(function (area) {
