@@ -3,11 +3,15 @@
     <td>{{dateInterval startTime endTime}}</td>
     <td>{{title}}</td>
     <td class="project-people hidden-xs">
-      <a href="" class="pull-left">
-        {{#each attendees}}
-          <img alt="{{username this}}" class="img-circle" src="{{profilePicture this}}">
-        {{/each}}
-      </a>
+      <span class="pull-left">
+        {{#if accepted.length}}
+          {{#each accepted}}
+            <img alt="{{username this}}" title="{{username this}}" class="img-circle" src="{{profilePicture this}}">
+          {{/each}}
+        {{else}}
+          No attendees yet
+        {{/if}}
+      </span>
     </td>
   </tr>
 </template>

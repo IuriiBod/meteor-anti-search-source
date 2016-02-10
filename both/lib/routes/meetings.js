@@ -1,5 +1,5 @@
 Router.route('meetings', {
-  path: '/meetings/:filter?',
+  path: '/meetings',
   template: 'meetingsList',
   waitOn () {
     let area = HospoHero.getCurrentArea(Meteor.userId());

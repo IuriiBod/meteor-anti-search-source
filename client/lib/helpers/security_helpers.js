@@ -24,7 +24,8 @@ Meteor.startup(function () {
     canViewReports: HospoHero.canUser('view reports'),
     canEditAreas: HospoHero.canUser("edit areas"),
     canEditLocations: HospoHero.canUser("edit locations"),
-    canEditOrganization: HospoHero.canUser("edit organization settings")
+    canEditOrganization: HospoHero.canUser("edit organization settings"),
+    canCreateMeetings: HospoHero.canUser("create meetings")
   };
 
   Object.keys(securityHelpers).forEach(function (helperName) {
