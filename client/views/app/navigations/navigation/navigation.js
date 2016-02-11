@@ -151,12 +151,9 @@ Template.navigation.helpers({
 });
 
 Template.navigation.events({
-  'click .open-self-help': function(event, tmpl) {
+  'click .open-elevio-module': function(event) {
     event.preventDefault();
-    window._elev.openModule('articles');
-  },
-  'click .open-chat-with-support': function(event, tmpl) {
-    event.preventDefault();
-    window._elev.openModule('intercom');
+    var moduleName = event.currentTarget.getAttribute('data-elevio-module-name');
+    window._elev.openModule(moduleName);
   }
 });
