@@ -32,7 +32,17 @@
                 <tbody>
                 <tr>
                   <td><b>Date & Time:</b></td>
-                  <td>{{dateInterval meeting.startTime meeting.endTime}}</td>
+                  <td>
+                    {{#if isMeetingCreator}}
+                      {{> dateEditor date=meeting.startTime allowEditing=isMeetingCreator onDateChange=onDateChange}}
+
+                      <div class="time-editor">
+                        {{> comboTimeEditable params=timeComboEditableParams}}
+                      </div>
+                    {{else}}
+                      {{dateInterval meeting.startTime meeting.endTime}}
+                    {{/if}}
+                  </td>
                 </tr>
                 <tr>
                   <td><b>Location:</b></td>

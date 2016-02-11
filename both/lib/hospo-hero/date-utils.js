@@ -28,7 +28,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   shortDateFormat: function (date = new Date()) {
-    return moment(date).format('YYYY-MM-DD');
+    return moment(date).format('YYYY/MM/DD');
   },
 
   hours: function () {
@@ -79,7 +79,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   timeFormat: function (date) {
-    return date ? moment(date).format('hh:mm A') : '-';
+    return date ? moment(date).format('h:mm a') : '-';
   },
 
   applyTimeToDate: function (date, newTime) {
@@ -205,7 +205,7 @@ Namespace('HospoHero.dateUtils', {
 
   dateInterval: function (startTime, endTime) {
     var dayFormat = 'DD/MM/YY';
-    var timeFormat = 'H:mm';
+    var timeFormat = 'h:mm a';
 
     var day = HospoHero.dateUtils.formatDate(startTime, dayFormat);
     startTime = HospoHero.dateUtils.formatDate(startTime, timeFormat);

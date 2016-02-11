@@ -54,6 +54,30 @@ Template.meetingDetails.helpers({
     return (agendaAndMinutes) => {
       tmpl.saveMeeting('agendaAndMinutes', agendaAndMinutes);
     }
+  },
+
+  onDateChange () {
+    let meeting = Template.instance().meeting();
+
+    return (newDate) => {
+      meeting.startTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.startTime);
+      meeting.endTime  = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.endTime );
+      Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
+    }
+  },
+
+  timeComboEditableParams () {
+    let meeting = Template.instance().meeting();
+    return {
+      minuteStepping: 10,
+      firstTime: meeting.startTime,
+      secondTime: meeting.endTime,
+      onSubmit: function (startTime, endTime) {
+        meeting.startTime = startTime;
+        meeting.endTime = endTime;
+        Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
+      }
+    }
   }
 });
 
