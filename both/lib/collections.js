@@ -42,3 +42,5 @@ LeaveRequests = new Mongo.Collection('leaveRequests');
 // calendar functionality
 CalendarEvents = new Mongo.Collection('calendarEvents');
 TaskList = new Mongo.Collection('taskList');
+RelatedItems = new Mongo.Collection('relatedItems');
+Files = new Mongo.Collection('files');

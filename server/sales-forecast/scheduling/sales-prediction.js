@@ -156,11 +156,12 @@ ForecastMaker.prototype._needToUpdate = function (interval) {
 ForecastMaker.prototype.makeForecast = function () {
   var self = this;
 
-  this._updateDayIntervals.forEach(function (interval) {
+  this._updateDayIntervals.every(function (interval) {
     if (self._needToUpdate(interval)) {
       self._predictFor(interval);
       return false;
     }
+    return true;
   });
 };
 

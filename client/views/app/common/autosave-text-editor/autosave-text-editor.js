@@ -16,7 +16,7 @@ Template.autosaveTextEditor.onCreated(function () {
 
 Template.autosaveTextEditor.onRendered(function () {
   this.saveChanges = () => {
-    if (_.isFunction(this.data.saveChanges)) {
+    if (!this.data.readOnly && _.isFunction(this.data.saveChanges)) {
       var text = this.$('.summernote').summernote('code');
       this.data.saveChanges(text);
       this.statusText.set('Saved');
