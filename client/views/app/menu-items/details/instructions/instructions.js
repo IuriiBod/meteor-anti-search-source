@@ -18,5 +18,9 @@ Template.menuItemInstructions.helpers({
       uiStateId: 'instructions',
       title: 'Instructions'
     }
+  },
+
+  readOnly() {
+    return !HospoHero.canUser(`edit menus`, Meteor.userId());
   }
 });

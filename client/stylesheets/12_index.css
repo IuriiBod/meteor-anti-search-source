@@ -17,7 +17,8 @@
 .note-editable > div > img,
 .note-editable > img,
 .content > p > div > img,
-.autosave-text-editor-container > div > div > img {
+.autosave-text-editor-container > div > img,
+.autosave-text-editor-container .text-editor-content > div > img {
     max-width: 30%;
     height: auto;
 }
