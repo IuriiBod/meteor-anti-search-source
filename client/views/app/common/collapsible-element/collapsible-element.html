@@ -1,4 +1,4 @@
-<template name="collapsibleMenuItemElement">
+<template name="collapsibleElement">
   <div class="ibox-title">
     <h5>{{options.title}} &nbsp;</h5>
     <div class="ibox-tools">
@@ -15,7 +15,7 @@
         <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i></a>
     </div>
   </div>
-  <div id="{{options.uiStateId}}" class="{{#if collapsed}}hide{{else}}show{{/if}}-content ibox-content panel-body
+  <div id="{{options.uiStateId}}" class="content {{#if collapsed}}hide{{else}}show{{/if}}-content ibox-content panel-body
                                     {{options.contentPadding}} collapse {{#if collapsed}}in{{/if}}"
        aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
     {{> Template.contentBlock}}
