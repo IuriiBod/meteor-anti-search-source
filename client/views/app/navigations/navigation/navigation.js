@@ -140,6 +140,10 @@ var menuEntries = [
   }
 ];
 
+Template.navigation.onCreated(function() {
+
+});
+
 Template.navigation.helpers({
   dashboardEntry: function () {
     return dashboardEntry;
