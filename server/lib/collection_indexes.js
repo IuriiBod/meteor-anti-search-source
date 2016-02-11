@@ -21,5 +21,5 @@ Meteor.startup(function () {
 
   Subscriptions._ensureIndex({subscribers: 1});
 
-  Meteor.users._ensureIndex({isAdmin: 1, isManager: 1, isWorker: 1});
+  DailySales._ensureIndex({date: 1});
 });
