@@ -1,7 +1,6 @@
 Template.searchUsersToInvite.onCreated(function () {
   var selector = {
     _id: {$ne: Meteor.userId()},
-    isActive: true,
     'relations.areaIds': {$ne: this.data.areaId}
   };
 

@@ -69,7 +69,6 @@ Meteor.publishComposite('organizationInfo', {
       find: function (organization) {
         if (this.userId && (HospoHero.canUser('edit areas', this.userId) || HospoHero.canUser('edit locations', this.userId))) {
           return Meteor.users.find({
-            isActive: true,
             "relations.organizationIds": {$in: [organization._id]}
           }, {
             fields: HospoHero.security.getPublishFieldsFor('users')
