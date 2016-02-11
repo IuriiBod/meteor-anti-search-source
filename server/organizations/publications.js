@@ -72,13 +72,7 @@ Meteor.publishComposite('organizationInfo', {
             isActive: true,
             "relations.organizationIds": {$in: [organization._id]}
           }, {
-            fields: {
-              isActive: 1,
-              "services.google.picture": 1,
-              profile: 1,
-              relations: 1,
-              roles: 1
-            }
+            fields: HospoHero.security.getPublishFieldsFor('users')
           });
         }
       }

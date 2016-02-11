@@ -1,6 +1,4 @@
 Template.searchUsersToInvite.onCreated(function () {
-  this.subscribe('usersList');
-
   var selector = {
     _id: {$ne: Meteor.userId()},
     isActive: true,

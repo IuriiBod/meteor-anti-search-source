@@ -68,8 +68,7 @@ Template.textArea.helpers({
         collection: Meteor.users,
         field: ["profile.firstname", "profile.lastname"],
         filter: {
-          "_id": {$nin: [Meteor.userId()]},
-          "isActive": true
+          "_id": {$nin: [Meteor.userId()]}
         },
         sort: true,
         template: Template.username,

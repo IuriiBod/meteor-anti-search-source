@@ -21,6 +21,8 @@ Meteor.publishComposite('comments', function (ref, areaId) {
         find: function (comment) {
           return Meteor.users.find({
             _id: comment.createdBy
+          }, {
+            fields: HospoHero.security.getPublishFieldsFor('users')
           });
         }
       }

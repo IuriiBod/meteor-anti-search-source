@@ -1,8 +1,3 @@
-Meteor.publish('userAllUnavailabilities', function () {
-  return Meteor.users.find({_id: this.userId},
-    {fields: {'unavailabilities': 1}});
-});
-
 Meteor.publish('userAllLeaveRequests', function () {
   return LeaveRequests.find({userId: this.userId});
 });
@@ -28,10 +23,6 @@ Meteor.publish('leaveRequestsApprovers', function () {
   var query = {};
   query['roles.' + areaId] = {$in: roleIds};
   return Meteor.users.find(query, {
-    fields: {
-      profile: 1,
-      roles: 1,
-      relations: 1
-    }
+    fields: HospoHero.security.getPublishFieldsFor('users')
   });
 });
