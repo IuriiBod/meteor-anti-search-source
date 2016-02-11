@@ -149,3 +149,14 @@ Template.navigation.helpers({
     return menuEntries;
   }
 });
+
+Template.navigation.events({
+  'click .open-self-help': function(event, tmpl) {
+    event.preventDefault();
+    window._elev.openModule('articles');
+  },
+  'click .open-chat-with-support': function(event, tmpl) {
+    event.preventDefault();
+    window._elev.openModule('intercom');
+  }
+});
