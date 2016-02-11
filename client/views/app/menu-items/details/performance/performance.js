@@ -75,12 +75,16 @@ Template.menuDetailPerformance.helpers({
     let date = instance.date;
     let totalContributionBeforeLastWeek = instance.getTotalQuantityByDate(date.interval(date.beforeLastWeekDate, date.weekAgoDate));
     let totalContributionLastSevenDays = instance.getTotalQuantityByDate(date.interval(date.weekAgoDate, date.yesterdayDate));
-    let difference = (((totalContributionLastSevenDays * 100) / totalContributionBeforeLastWeek) - 100);
 
-    return {
-      up: difference > 0,
-      notChanged: difference === 0,
-      difference: `${HospoHero.misc.rounding(difference < 0 ? difference * (-1) : difference)} % `
+    if (!totalContributionBeforeLastWeek || !totalContributionLastSevenDays) {
+      return false;
+    } else {
+      let difference = (((totalContributionLastSevenDays * 100) / totalContributionBeforeLastWeek) - 100);
+      return {
+        up: difference > 0,
+        notChanged: difference === 0,
+        difference: `${HospoHero.misc.rounding(difference < 0 ? difference * (-1) : difference)} % `
+      }
     }
   },
 
@@ -92,8 +96,8 @@ Template.menuDetailPerformance.helpers({
     };
     return {
       namespace: 'menus',
-      type: 'performance',
-      name: 'Performance Snapshot',
+      uiStateId: 'performance',
+      title: 'Performance Snapshot',
       contentPadding: 'no-padding',
       url: Router.url('menuItemsRankReport', params),
       className: 'btn btn-xs btn-link',

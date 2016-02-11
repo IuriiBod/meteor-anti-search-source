@@ -53,8 +53,8 @@ Template.taskWidget.helpers({
   tasksOptions() {
     return {
       namespace: this.type,
-      type: 'tasks',
-      name: 'Tasks',
+      uiStateId: 'task',
+      title: 'Tasks',
       contentPadding: 'no-padding',
       className: 'add-task btn btn-primary btn-xs pull-left',
       url: '#',

@@ -1,6 +1,6 @@
 <template name="menuDetailPerformance">
   <div class="ibox panel panel-default">
-    {{#collapsibleMenuItemElements options=performanceOptions}}
+    {{#collapsibleMenuItemElement options=performanceOptions}}
       <ul class="list-group">
         <li class="list-group-item">
           <div class="row">
@@ -70,18 +70,24 @@
                 <small>(last 7 days)</small>
               </h4>
             </div>
-            <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
-              <h4 class="pull-right">{{menuItemStats.lastSevenDaysContribution}}</h4>
-            </div>
-            <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
-              <h4 class="{{#if contribution.up}}text-navy{{else}}{{#if contribution.notChanged}}text-primary{{/if}}text-danger{{/if}}
-               pull-right">{{contribution.difference}}
-                {{#unless contribution.notChanged}}<i class="fa fa-arrow-{{#if contribution.up}}up{{else}}down{{/if}}"></i>{{/unless}}
-              </h4>
-            </div>
+            {{#if contribution}}
+              <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                <h4 class="pull-right">{{menuItemStats.lastSevenDaysContribution}}</h4>
+              </div>
+              <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                <h4 class="{{#if contribution.up}}text-navy{{else}}{{#if contribution.notChanged}}text-primary{{/if}}text-danger{{/if}}
+                 pull-right">{{contribution.difference}}
+                  {{#unless contribution.notChanged}}<i class="fa fa-arrow-{{#if contribution.up}}up{{else}}down{{/if}}"></i>{{/unless}}
+                </h4>
+              </div>
+            {{else}}
+              <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                <h4>No contribution for item</h4>
+              </div>
+            {{/if}}
           </div>
         </li>
       </ul>
-    {{/collapsibleMenuItemElements}}
+    {{/collapsibleMenuItemElement}}
   </div>
 </template>

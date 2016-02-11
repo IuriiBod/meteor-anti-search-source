@@ -46,8 +46,8 @@ Template.menuItemSettings.helpers({
   settingsOptions() {
     return {
       namespace: 'menus',
-      type: 'settings',
-      name: 'Settings',
+      uiStateId: 'settings',
+      title: 'Settings',
       contentPadding: 'no-padding'
     }
   }

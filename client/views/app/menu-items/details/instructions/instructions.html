@@ -1,7 +1,7 @@
 <template name="menuItemInstructions">
   <div class="ibox panel panel-default">
-    {{#collapsibleMenuItemElements options=instructionsOptions}}
+    {{#collapsibleMenuItemElement options=instructionsOptions}}
       {{> autosaveTextEditor text=instructionsStr saveChanges=saveChanges}}
-    {{/collapsibleMenuItemElements}}
+    {{/collapsibleMenuItemElement}}
   </div>
 </template>

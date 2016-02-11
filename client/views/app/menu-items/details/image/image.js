@@ -2,8 +2,8 @@ Template.menuItemImage.helpers({
   imageOptions() {
     return {
       namespace: 'menus',
-      type: 'images',
-      name: 'Image',
+      uiStateId: 'images',
+      title: 'Image',
       url: '#',
       className: 'upload-image-button',
       icon: 'fa fa-cloud-upload'

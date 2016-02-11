@@ -25,8 +25,8 @@ Template.menuItemsListByType.helpers({
     let isIngredientType = this.type === 'ings';
     return {
       namespace: 'menus',
-      type: this.type,
-      name: isIngredientType ? 'Ingredients' : 'Prep Jobs',
+      uiStateId: this.type,
+      title: isIngredientType ? 'Ingredients' : 'Prep Jobs',
       contentPadding: 'no-padding',
       url: '#',
       className: `add-${this.type} btn btn-primary btn-xs`,
@@ -47,7 +47,8 @@ Template.menuItemsListByType.helpers({
   },
 
   jobItemsTotalPrice() {
-    let [jobItems, totalCost] = [this.jobItems, 0];
+    let jobItems = this.jobItems;
+    let totalCost = 0;
     let tmpl = Template.instance();
     if (jobItems) {
       jobItems.forEach((jobItem) => {

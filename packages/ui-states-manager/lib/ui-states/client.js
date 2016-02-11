@@ -17,11 +17,11 @@ UIStates = {
         }
       },
 
-      setState: function (category, state) {
+      setState: function (uiStateId, state) {
         if (Meteor.userId()) {
           var item = {
             namespace: uiStateManager.namespace,
-            category: category,
+            uiStateId: uiStateId,
             state: state
           };
 

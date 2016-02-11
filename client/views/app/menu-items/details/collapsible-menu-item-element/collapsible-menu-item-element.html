@@ -1,0 +1,23 @@
+<template name="collapsibleMenuItemElement">
+  <div class="ibox-title">
+    <h5>{{options.title}} &nbsp;</h5>
+    <div class="ibox-tools">
+      {{#if userCanEdit}}
+        {{#if options.url}}
+          <a href="{{options.url}}" class="{{options.className}}">
+            {{#if options.icon}}<i class="{{options.icon}}"></i>{{/if}}
+            {{#if options.text}}{{options.text}}{{/if}}
+          </a>
+        {{/if}}
+      {{/if}}
+      <a class="{{#if collapsed}}collapsed{{/if}}" data-toggle="collapse" data-target="#{{options.uiStateId}}"
+         aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}" aria-controls="{{options.uiStateId}}">
+        <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i></a>
+    </div>
+  </div>
+  <div id="{{options.uiStateId}}" class="{{#if collapsed}}hide{{else}}show{{/if}}-content ibox-content panel-body
+                                    {{options.contentPadding}} collapse {{#if collapsed}}in{{/if}}"
+       aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
+    {{> Template.contentBlock}}
+  </div>
+</template>

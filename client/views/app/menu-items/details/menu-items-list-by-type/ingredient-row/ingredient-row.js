@@ -1,7 +1,7 @@
 //context: item (Ingredient/JobItem), type ("ing"/"prep"), quantity (number), setCurrentEditedIngredient (function)
 Template.menuItemIngredientRow.helpers({
   itemName: function () {
-    return this.type == 'prep' ?  this.item.name : this.item.description;
+    return this.type === 'prep' ?  this.item.name : this.item.description;
   },
 
   itemMeasure: function () {
