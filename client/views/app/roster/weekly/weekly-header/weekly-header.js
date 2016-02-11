@@ -2,7 +2,7 @@ Template.weeklyHeader.onCreated(function () {
   var currentDate = moment(HospoHero.getParamsFromRoute('date'));
   this.set('currentDate', currentDate);
   this.set('collapseIn', false);
-  this.set('selectedWeekDate', HospoHero.dateUtils.getDateByWeekDate(currentDate));
+  this.set('selectedWeekDate', moment(currentDate).toDate());
 });
 
 Template.weeklyHeader.helpers({

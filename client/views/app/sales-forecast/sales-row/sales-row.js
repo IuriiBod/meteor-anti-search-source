@@ -2,7 +2,7 @@ Template.predictionSalesRow.helpers({
   weekPrediction: function () {
     var menuItemId = this.menuItem._id;
 
-    var monday = moment(HospoHero.dateUtils.getDateByWeekDate(this.currentWeekDate));
+    var monday = moment(this.currentWeekDate);
 
     var dates = HospoHero.dateUtils.getWeekDays(this.currentWeekDate);
 
