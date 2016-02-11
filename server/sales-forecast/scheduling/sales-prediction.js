@@ -127,14 +127,15 @@ ForecastMaker.prototype._predictFor = function (days) {
 
 
 ForecastMaker.prototype._getPredictionUpdatedDate = function (interval) {
-  var predictionDate = moment();
+  var predictionDate = moment(HospoHero.prediction.getDateThreshold());
   predictionDate.add(interval, 'day');
 
   var menuItemFromCurrentLocation = MenuItems.findOne({'relations.locationId': this._locationId});
 
   var dailySale = DailySales.findOne({
     menuItemId: menuItemFromCurrentLocation._id,
-    date: TimeRangeQueryBuilder.forDay(predictionDate, this._locationId)
+    date: TimeRangeQueryBuilder.forDay(predictionDate, this._locationId),
+    predictionQuantity: {$gte: 0}
   });
 
   if (dailySale) {

@@ -1,6 +1,8 @@
 <template name="searchUsersToInvite">
   {{#if isInviteInProgress}}
-    <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+    <div class="text-center invite-progress-wrapper">
+      <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+    </div>
   {{else}}
     <div class="add-user-to-area">
       <input type="text" class="form-control input-field add-user-name" placeholder="e.g. john@gmail.com"

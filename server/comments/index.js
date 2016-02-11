@@ -13,7 +13,8 @@ Meteor.methods({
         job: JobItems,
         stockOrders: StocktakeMain,
         supplier: Suppliers,
-        taskItem: TaskList
+        taskItem: TaskList,
+        noteItem: ManagerNotes
       };
       return typeCollectionRelations[referenceType].findOne({_id: referenceId});
     };
