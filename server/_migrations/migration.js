@@ -17,7 +17,7 @@ Migrations.utils = {
     ];
 
     removeTargets.forEach(place => {
-      collection.remove({[place.property]: {$in: userIds}});
+      place.collection.remove({[place.property]: {$in: userIds}});
     });
   }
 };
