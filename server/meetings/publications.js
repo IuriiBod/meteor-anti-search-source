@@ -43,7 +43,10 @@ Meteor.publishComposite('meeting', function (meetingId, userId) {
       if (this.userId) {
         return Meetings.find({
           _id: meetingId,
-          attendees: userId
+          $or: [
+            {attendees: userId},
+            {createdBy:userId}
+          ]
         });
       } else {
         this.ready();

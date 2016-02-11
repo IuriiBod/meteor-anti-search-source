@@ -47,7 +47,7 @@ Template.attendingButtons.helpers({
         } else {
           array = _.without(array, userId)
         }
-        return array;
+        return _.uniq(array);
       };
 
       let meeting = tmpl.data.meeting;

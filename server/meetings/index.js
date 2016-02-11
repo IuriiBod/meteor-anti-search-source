@@ -1,3 +1,95 @@
+class MeetingPropertyChangeLogger {
+  constructor(meeting, userId) {
+    this.meeting = meeting;
+    this.userId = userId;
+
+    this.trackedProperties = {
+      title: 'title',
+      location: 'location',
+      startTime: 'start date and time',
+      endTime: 'end time'
+    };
+  }
+
+  _formatProperty(meeting, property) {
+    var propertiesFormatters = {
+      startTime: HospoHero.dateUtils.fullDateFormat,
+      endTime: HospoHero.dateUtils.timeFormat
+    };
+    return !!propertiesFormatters[property] ? propertiesFormatters[property](meeting[property]) : meeting[property];
+  }
+
+  _notificationTitle(meeting) {
+    return 'Update on meeting dated ' + HospoHero.dateUtils.dateInterval(meeting.startTime, meeting.endTime);
+  }
+
+  _notificationChangeMessage(newMeeting, propertyName) {
+    return this.trackedProperties[propertyName] + ' has been updated to ' + this._formatProperty(newMeeting, propertyName);
+  }
+
+  _sendNotification(message, meeting, toUserId) {
+    var notificationText = this._notificationTitle(meeting) + ': ' + message;
+
+    new NotificationSender(
+      'Update on meeting',
+      'update-on-meeting',
+      {
+        text: notificationText
+      },
+      {
+        helpers: {
+          linkToItem: function () {
+            return NotificationSender.urlFor('meetingDetails', {id: meeting._id}, this);
+          }
+        }
+      }
+    ).sendNotification(toUserId);
+  }
+
+  _trackUserRemovedFromMeeting(oldMeeting, newMeeting, userId) {
+    let diffUser = _.difference(oldMeeting.attendees, newMeeting.attendees);
+    if (diffUser.length) {
+      let message;
+
+      if (oldMeeting.attendees.length > newMeeting.attendees.length) {
+        message = 'You have been removed from this meeting';
+      } else {
+        message = 'You have been added to this meeting';
+      }
+
+      this._sendNotification(message, oldMeeting, diffUser[0]);
+    }
+  }
+
+  trackChanges () {
+    let oldMeeting = Meetings.findOne({_id: this.meeting._id});
+
+    var isPropertyChanged = (propertyName) => {
+      let oldPropertyValue = oldMeeting[propertyName];
+      let newPropertyValue = this.meeting[propertyName];
+
+      if (_.isDate(oldPropertyValue)) {
+        oldPropertyValue = oldPropertyValue.valueOf();
+        newPropertyValue = newPropertyValue.valueOf();
+      }
+      return oldPropertyValue !== newPropertyValue;
+    };
+
+    let shiftChangesMessages = Object.keys(this.trackedProperties).filter((propertyName) => {
+      return isPropertyChanged(propertyName);
+    }).map((propertyName) => {
+      return this._notificationChangeMessage(this.meeting, propertyName);
+    });
+
+    if (shiftChangesMessages.length) {
+      let fullMessage = shiftChangesMessages.join(', ');
+      this._sendNotification(fullMessage, oldMeeting, this.userId, this.meeting.assignedTo);
+      this._trackUserRemovedFromMeeting(oldMeeting, this.meeting, this.userId);
+    }
+  }
+}
+
+
 Meteor.methods({
   createMeeting (meetingDoc) {
     check(meetingDoc, HospoHero.checkers.MeetingChecker);
@@ -65,6 +157,8 @@ Meteor.methods({
     if (!HospoHero.canUser('create meetings')) {
       throw new Meteor.Error('Yot can\'t edit the meeting');
     } else {
+      let meetingLogger = new MeetingPropertyChangeLogger(newMeetingObject, Meteor.userId());
+      meetingLogger.trackChanges();
       Meetings.update({_id: newMeetingObject._id}, {$set: newMeetingObject});
     }
   },
@@ -84,10 +178,10 @@ Meteor.methods({
           } else {
             array = _.without(array, userId)
           }
-          return array;
+          return _.uniq(array);
         };
 
-        ['accepted','maybeAccepted','rejected'].forEach((field) => {
+        ['accepted', 'maybeAccepted', 'rejected'].forEach((field) => {
           meeting[field] = changeArrayValue(meeting[field], field === action);
         });
 
