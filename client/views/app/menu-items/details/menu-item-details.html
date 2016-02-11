@@ -7,12 +7,12 @@
       <div class="col-lg-12">
         <div class="row">
           <div class="col-lg-8 col-md-8 col-xs-12 col-sm-12">
-            {{> menuItemInstructions item=this}}
-            {{> menuItemImage item=this}}
-            {{> menuItemSettings item=this}}
+            {{> menuItemInstructions}}
+            {{> menuItemImage}}
+            {{> menuItemSettings}}
             {{> menuItemsListByType type='prep' jobItems=jobItems}}
             {{> menuItemsListByType type='ings' ingredients=ingredients}}
-            {{> menuDetailPerformance item=this}}
+            {{> menuDetailPerformance}}
             {{> taskWidget type='menus' itemId=_id}}
           </div>
           <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 no-padding">

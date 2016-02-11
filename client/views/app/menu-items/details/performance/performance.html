@@ -10,9 +10,9 @@
             <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6">
               <h4>
                 {{#if canEditMenu}}
-                  <a href="#" class="edit-item-price"> {{item.salesPrice}} </a>
+                  <a href="#" class="edit-item-price"> {{salesPrice}} </a>
                 {{else}}
-                  {{item.salesPrice}}
+                  {{salesPrice}}
                 {{/if}}
                 <small>Sale Price</small>
               </h4>
@@ -46,7 +46,7 @@
                 <small>(last 7 days)</small>
               </h4>
             </div>
-            {{#if item.weeklyRanks}}
+            {{#if weeklyRanks}}
               <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
                 <h4 class="pull-right">{{itemRank.lastSevenDays}}</h4>
               </div>

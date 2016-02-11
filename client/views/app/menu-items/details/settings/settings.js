@@ -24,7 +24,7 @@ Template.menuItemSettings.helpers({
   getOnCategoryChanged() {
     var tmpl = Template.instance();
     return function (newCategory) {
-      var menuItem = MenuItems.findOne({_id: tmpl.data.item._id});
+      var menuItem = MenuItems.findOne({_id: tmpl.data._id});
       menuItem.category = newCategory;
       Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
     };
@@ -33,14 +33,14 @@ Template.menuItemSettings.helpers({
   getOnStatusChanged() {
     var tmpl = Template.instance();
     return function (newStatus) {
-      var menuItem = MenuItems.findOne({_id: tmpl.data.item._id});
+      var menuItem = MenuItems.findOne({_id: tmpl.data._id});
       menuItem.status = newStatus;
       Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
     }
   },
 
   isArchived() {
-    return this.item.status == "archived";
+    return this.status === "archived";
   },
 
   settingsOptions() {
@@ -55,7 +55,7 @@ Template.menuItemSettings.helpers({
 
 Template.menuItemSettings.events({
   'click .remove-image': function (event, tmpl) {
-    var menuItem = MenuItems.findOne({_id: tmpl.data.item._id});
+    var menuItem = MenuItems.findOne({_id: tmpl.data._id});
     menuItem.image = '';
     Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
   }

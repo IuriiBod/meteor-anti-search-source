@@ -9,7 +9,7 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
               {{#if canEditMenu}}
-                {{> ghostEditableSelect values=categoryOptions selected=item.category onValueChanged=getOnCategoryChanged}}
+                {{> ghostEditableSelect values=categoryOptions selected=category onValueChanged=getOnCategoryChanged}}
               {{else}}
                 <p>{{currentCategory.name}}</p>
               {{/if}}
@@ -27,7 +27,7 @@
                 <p>archived</p>
               {{else}}
                 {{#if canEditMenu}}
-                  {{> ghostEditableSelect values=statusOptions selected=item.status onValueChanged=getOnStatusChanged}}
+                  {{> ghostEditableSelect values=statusOptions selected=status onValueChanged=getOnStatusChanged}}
                 {{else}}
                   <p>{{status}}</p>
                 {{/if}}

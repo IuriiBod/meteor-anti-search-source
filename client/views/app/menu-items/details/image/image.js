@@ -19,7 +19,7 @@ Template.menuItemImage.events({
       function (InkBlobs) {
         var doc = (InkBlobs);
         if (doc && doc.length) {
-          var menuItem = MenuItems.findOne({_id: tmpl.data.item._id});
+          var menuItem = MenuItems.findOne({_id: tmpl.data._id});
           menuItem.image = doc[0].url;
           Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
         }

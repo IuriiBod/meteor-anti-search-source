@@ -1,5 +1,5 @@
 Template.menuDetailPerformance.onCreated(function () {
-  this.analyzedItem = () => HospoHero.analyze.menuItem(this.data.item);
+  this.analyzedItem = () => HospoHero.analyze.menuItem(this.data);
   this.getTotalQuantityByDate = (date) => {
     let totalQuantitySales = 0;
     DailySales.find({date: date}).forEach((item) => {
@@ -18,7 +18,7 @@ Template.menuDetailPerformance.onCreated(function () {
 
 Template.menuDetailPerformance.onRendered(function () {
   var onPriceEditSuccess = (response, newValue) => {
-    var menuItem = MenuItems.findOne({_id: this.data.item._id});
+    var menuItem = MenuItems.findOne({_id: this.data._id});
     menuItem.salesPrice = parseFloat(newValue);
     Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
   };
@@ -49,7 +49,7 @@ Template.menuDetailPerformance.helpers({
   },
 
   itemRank() {
-    let weeklyRanks = this.item.weeklyRanks;
+    let weeklyRanks = this.weeklyRanks;
     if (weeklyRanks) {
       let lastSevenDaysRank = weeklyRanks[weeklyRanks.length - 1];
       let beforeLastWeekRank = weeklyRanks[weeklyRanks.length - 2];
