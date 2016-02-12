@@ -12,7 +12,7 @@ Template.menuItemInstructions.helpers({
     }
   },
 
-  instructionsOptions() {
+  instructionsSettings() {
     return {
       namespace: 'menus',
       uiStateId: 'instructions',

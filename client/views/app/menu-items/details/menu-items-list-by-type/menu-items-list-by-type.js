@@ -21,16 +21,23 @@ Template.menuItemsListByType.onCreated(function () {
 });
 
 Template.menuItemsListByType.helpers({
-  options() {
-    let isIngredientType = this.type === 'ings';
+  settings() {
+    let buttons = [];
+    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+      let addIngsOrPreps = {
+        url: '#',
+        className: `add-${this.type} btn btn-primary btn-xs`,
+        text: this.type === 'ings' ? 'Add Ingredient' : 'Add Prep Job'
+      };
+      buttons.push(addIngsOrPreps);
+    }
+
     return {
       namespace: 'menus',
       uiStateId: this.type,
-      title: isIngredientType ? 'Ingredients' : 'Prep Jobs',
+      title: this.type === 'ings' ? 'Ingredients' : 'Prep Jobs',
       contentPadding: 'no-padding',
-      url: '#',
-      className: `add-${this.type} btn btn-primary btn-xs`,
-      text: isIngredientType ? 'Add Ingredient' : 'Add Prep Job'
+      buttons: buttons
     }
   },
 

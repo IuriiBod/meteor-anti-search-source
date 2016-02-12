@@ -88,20 +88,28 @@ Template.menuDetailPerformance.helpers({
     }
   },
 
-  performanceOptions() {
-    let params = {
-      category: 'all',
-      rangeType: 'yesterday',
-      startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
-    };
+  performanceSettings() {
+    let buttons = [];
+    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+      let params = {
+        category: 'all',
+        rangeType: 'yesterday',
+        startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
+      };
+      let menuItemRankLink = {
+        url: Router.url('menuItemsRankReport', params),
+        className: 'btn btn-xs btn-link',
+        text: 'View Menu Rank Report'
+      };
+      buttons.push(menuItemRankLink);
+    }
+
     return {
       namespace: 'menus',
       uiStateId: 'performance',
       title: 'Performance Snapshot',
       contentPadding: 'no-padding',
-      url: Router.url('menuItemsRankReport', params),
-      className: 'btn btn-xs btn-link',
-      text: 'View Menu Rank Report'
+      buttons: buttons
     }
   }
 });

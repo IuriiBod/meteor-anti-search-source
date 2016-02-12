@@ -1,12 +1,20 @@
 Template.menuItemImage.helpers({
-  imageOptions() {
+  imageSettings() {
+    let buttons = [];
+    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+      let imageUpload = {
+        url: '#',
+        className: 'upload-image-button',
+        icon: 'fa fa-cloud-upload'
+      };
+      buttons.push(imageUpload);
+    }
+
     return {
       namespace: 'menus',
       uiStateId: 'images',
       title: 'Image',
-      url: '#',
-      className: 'upload-image-button',
-      icon: 'fa fa-cloud-upload'
+      buttons: buttons
     }
   }
 });

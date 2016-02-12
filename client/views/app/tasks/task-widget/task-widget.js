@@ -50,15 +50,22 @@ Template.taskWidget.helpers({
     }
   },
 
-  tasksOptions() {
+  tasksSettings() {
+    let buttons = [];
+    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+      let addTask = {
+        className: 'add-task btn btn-primary btn-xs pull-left',
+        url: '#',
+        text: 'Add Task'
+      };
+      buttons.push(addTask);
+    }
     return {
       namespace: this.type,
       uiStateId: 'task',
       title: 'Tasks',
       contentPadding: 'no-padding',
-      className: 'add-task btn btn-primary btn-xs pull-left',
-      url: '#',
-      text: 'Add Task'
+      buttons: buttons
     }
   }
 });
