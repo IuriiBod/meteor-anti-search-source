@@ -12,11 +12,12 @@ Template.menuItemInstructions.helpers({
     }
   },
 
-  instructionsOptions() {
+  instructionsSettings() {
     return {
       namespace: 'menus',
       uiStateId: 'instructions',
-      title: 'Instructions'
+      title: 'Instructions',
+      contentPadding: '20px'
     }
   },
 

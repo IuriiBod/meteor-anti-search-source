@@ -1,6 +1,4 @@
 Template.menuItemsListByType.onCreated(function () {
-  this.getJobItem = (id) => JobItems.findOne({_id: id});
-
   this.analyzeItemCost = (item, itemType, itemQty) => {
     let isPrep = itemType === 'prep';
     let analyzeResult = HospoHero.analyze[isPrep ? 'jobItem' : 'ingredient'](item);
@@ -21,16 +19,22 @@ Template.menuItemsListByType.onCreated(function () {
 });
 
 Template.menuItemsListByType.helpers({
-  options() {
-    let isIngredientType = this.type === 'ings';
+  settings() {
+    let buttons = [];
+    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+      let addIngsOrPreps = {
+        url: '#',
+        className: `add-${this.type} btn btn-primary btn-xs`,
+        text: this.type === 'ings' ? 'Add Ingredient' : 'Add Prep Job'
+      };
+      buttons.push(addIngsOrPreps);
+    }
+
     return {
       namespace: 'menus',
       uiStateId: this.type,
-      title: isIngredientType ? 'Ingredients' : 'Prep Jobs',
-      contentPadding: 'no-padding',
-      url: '#',
-      className: `add-${this.type} btn btn-primary btn-xs`,
-      text: isIngredientType ? 'Add Ingredient' : 'Add Prep Job'
+      title: this.type === 'ings' ? 'Ingredients' : 'Prep Jobs',
+      buttons: buttons
     }
   },
 
@@ -38,25 +42,23 @@ Template.menuItemsListByType.helpers({
     return Ingredients.findOne({_id: this._id});
   },
 
-  jobItem() {
-    return Template.instance().getJobItem(this._id);
-  },
-
   tableHeader() {
     return this.type === 'ings' ? ['Name', 'Quantity', 'Measure', 'Price'] : ['Name', 'Qty', 'Price'];
   },
 
-  jobItemsTotalPrice() {
+  jobItems() {
     let jobItems = this.jobItems;
     let totalCost = 0;
-    let tmpl = Template.instance();
-    if (jobItems) {
+    if (jobItems && jobItems.length) {
       jobItems.forEach((jobItem) => {
-        let item = tmpl.getJobItem(jobItem._id);
-        totalCost += tmpl.analyzeItemCost(item, this.type, jobItem.quantity);
+        totalCost += Template.instance().analyzeItemCost(jobItem, this.type, jobItem.quantity);
       });
-      return HospoHero.misc.rounding(totalCost);
+      let jobItemsTotalCost = {
+        totalCost: HospoHero.misc.rounding(totalCost)
+      };
+      jobItems.push(jobItemsTotalCost);
     }
+    return jobItems;
   },
 
   analyzeItemCost() {
