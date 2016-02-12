@@ -29,7 +29,7 @@ Router.route('menuItemDetail', {
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('allCategories', currentAreaId),
       Meteor.subscribe('userSubscriptions', currentAreaId),
-      Meteor.subscribe('usersList', currentAreaId),
+      Meteor.subscribe('areaUsersList', currentAreaId),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('ingredients', null, currentAreaId),
       Meteor.subscribe('jobItems', null, currentAreaId),

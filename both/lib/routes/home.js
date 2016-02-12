@@ -13,7 +13,7 @@ Router.route('/', {
           Meteor.subscribe('shifts', 'past', Meteor.userId(), currentAreaId),
           Meteor.subscribe('shifts', 'opened', null, currentAreaId),
           Meteor.subscribe('sections', currentAreaId),
-          Meteor.subscribe('usersList', currentAreaId),
+          Meteor.subscribe('areaUsersList', currentAreaId),
           Meteor.subscribe('comments', Meteor.userId(), currentAreaId),
           Meteor.subscribe('newsfeeds'),
           Meteor.subscribe('daily', HospoHero.dateUtils.shortDateFormat(moment()), currentAreaId, Meteor.userId()),

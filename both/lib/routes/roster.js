@@ -6,7 +6,7 @@ Router.route('/roster/weekly/:date', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     var subscriptions = [
       Meteor.subscribe('weeklyRoster', weekRange, currentAreaId),
-      Meteor.subscribe('workers', currentAreaId),
+      Meteor.subscribe('areaUsersList', currentAreaId),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('areaMenuItems', currentAreaId),
       Meteor.subscribe('managerNotes', weekRange, currentAreaId),
@@ -33,7 +33,7 @@ Router.route('/roster/template/weekly', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('weeklyRosterTemplate', currentAreaId),
-      Meteor.subscribe('workers', currentAreaId),
+      Meteor.subscribe('areaUsersList', currentAreaId),
       Meteor.subscribe('sections', currentAreaId)
     ];
   }

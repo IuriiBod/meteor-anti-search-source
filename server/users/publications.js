@@ -29,7 +29,7 @@ Meteor.publish('profileUser', function (userId) {
 });
 
 
-Meteor.publish('usersList', function (areaId) {
+Meteor.publish('areaUsersList', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
   //todo: any security (permissions) checks here?
@@ -39,7 +39,7 @@ Meteor.publish('usersList', function (areaId) {
     'profile.resignDate': 1
   });
 
-  logger.info("UserList published");
+  logger.info('UserList published', {areaId: areaId});
 
   return Meteor.users.find({
     'relations.areaIds': areaId
@@ -49,50 +49,17 @@ Meteor.publish('usersList', function (areaId) {
 });
 
 
-Meteor.publish("selectedUsersList", function (usersIds) {
+Meteor.publish('selectedUsersList', function (usersIds) {
   check(usersIds, [HospoHero.checkers.MongoId]);
 
   //no security checks required: this method is relatively safe
 
   let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users');
 
-  logger.info("SelectedUsersList published");
+  logger.info('SelectedUsersList published', {ids: usersIds});
   return Meteor.users.find({
     _id: {$in: usersIds}
   }, {
     fields: fieldsToPublish
   });
-});
-
-
-//managers and workers that should be assigned to shifts
-Meteor.publish('workers', function (areaId) {
-  check(areaId, HospoHero.checkers.MongoId);
-
-  //todo: any security (permissions) checks here?
-
-  var user = this.userId && Meteor.users.findOne(this.userId);
-  if (!(user && user.relations && user.relations.organizationIds)) {
-    this.ready();
-    return;
-  }
-
-  let rostedRoleIds = Meteor.roles.find({
-    actions: 'be rosted',
-    $or: [
-      {
-        'relations.organizationId': {
-          $in: user.relations.organizationIds
-        }
-      },
-      {'default': true}
-    ]
-  }).map(role => role._id);
-
-  let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users');
-
-  return Meteor.users.find({
-    'relations.areaIds': areaId,
-    [`roles.${areaId}`]: {$in: rostedRoleIds}
-  }, {fields: fieldsToPublish});
 });

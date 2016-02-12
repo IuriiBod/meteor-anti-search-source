@@ -22,7 +22,7 @@ Router.route('/supplier/profile/:_id', {
     return [
       Meteor.subscribe("supplierProfile", this.params._id),
       Meteor.subscribe('comments', this.params._id, currentAreaId),
-      Meteor.subscribe('usersList', currentAreaId)
+      Meteor.subscribe('areaUsersList', currentAreaId)
     ];
   },
   data: function () {
