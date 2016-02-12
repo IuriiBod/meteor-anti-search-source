@@ -1,25 +1,25 @@
 Template.collapsibleElement.onCreated(function () {
-  this.uiStatesManager = UIStates.getManagerFor(this.data.options.namespace);
+  this.uiStatesManager = UIStates.getManagerFor(this.data.settings.namespace);
 });
 
 Template.collapsibleElement.helpers({
   collapsed() {
-    return Template.instance().uiStatesManager.getState(this.options.uiStateId);
+    return Template.instance().uiStatesManager.getState(this.settings.uiStateId);
   },
 
-  userCanEdit() {
-    return HospoHero.canUser(`edit ${this.options.namespace}`, Meteor.userId());
+  panelBodyClasses(collapsed) {
+    return `collapse ${collapsed ? 'in' : ''}`;
   }
 });
 
 Template.collapsibleElement.events({
-  'shown.bs.collapse .show-content': _.throttle((event, tmpl) => {
+  'shown.bs.collapse .collapsible-element-content': _.throttle((event, tmpl) => {
     event.preventDefault();
-    tmpl.uiStatesManager.setState(tmpl.data.options.uiStateId, true);
+    tmpl.uiStatesManager.setState(tmpl.data.settings.uiStateId, true);
   }, 1000),
 
-  'hidden.bs.collapse .hide-content': _.throttle((event, tmpl) => {
+  'hidden.bs.collapse .collapsible-element-content': _.throttle((event, tmpl) => {
     event.preventDefault();
-    tmpl.uiStatesManager.setState(tmpl.data.options.uiStateId, false);
+    tmpl.uiStatesManager.setState(tmpl.data.settings.uiStateId, false);
   }, 1000)
 });
