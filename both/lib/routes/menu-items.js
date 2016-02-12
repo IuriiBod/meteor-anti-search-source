@@ -23,18 +23,20 @@ Router.route('menuItemDetail', {
   template: "menuItemDetailedMainView",
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('menuItem', this.params._id),
-      Meteor.subscribe('comments', this.params._id, currentAreaId),
-      Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('allCategories', currentAreaId),
-      Meteor.subscribe('userSubscriptions', currentAreaId),
-      Meteor.subscribe('areaUsersList', currentAreaId),
-      Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('jobItems', null, currentAreaId),
-      Meteor.subscribe('taskList')
-    ];
+    if (currentAreaId) {
+      return [
+        Meteor.subscribe('menuItem', this.params._id),
+        Meteor.subscribe('comments', this.params._id, currentAreaId),
+        Meteor.subscribe('allSuppliers', currentAreaId),
+        Meteor.subscribe('allCategories', currentAreaId),
+        Meteor.subscribe('userSubscriptions', currentAreaId),
+        Meteor.subscribe('areaUsersList', currentAreaId),
+        Meteor.subscribe('jobTypes'),
+        Meteor.subscribe('ingredients', null, currentAreaId),
+        Meteor.subscribe('jobItems', null, currentAreaId),
+        Meteor.subscribe('taskList')
+      ];
+    }
   },
   data: function () {
     return MenuItems.findOne({_id: this.params._id});

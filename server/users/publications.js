@@ -29,7 +29,7 @@ Meteor.publish('profileUser', function (userId) {
 });
 
 
-Meteor.publish('areaUsersList', function (areaId) {
+let publishAreaUsersFn = function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
   //todo: any security (permissions) checks here?
@@ -46,7 +46,12 @@ Meteor.publish('areaUsersList', function (areaId) {
   }, {
     fields: fieldsToPublish
   });
-});
+};
+
+// we made 2 subscriptions with same function in order to be able
+// subscribe on 2 different documents sets simultaneously
+Meteor.publish('areaDetailsUsers', publishAreaUsersFn); // used primarily on area's settings flyout
+Meteor.publish('areaUsersList', publishAreaUsersFn); // used anywhere else
 
 
 Meteor.publish('selectedUsersList', function (usersIds) {

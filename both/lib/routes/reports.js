@@ -4,10 +4,12 @@ Router.route('/reports/:date', {
   waitOn: function () {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('areaUsersList', currentAreaId),
-      Meteor.subscribe('weeklyRoster', weekRange, currentAreaId)
-    ];
+    if (currentAreaId) {
+      return [
+        Meteor.subscribe('areaUsersList', currentAreaId),
+        Meteor.subscribe('weeklyRoster', weekRange, currentAreaId)
+      ];
+    }
   },
   data: function () {
     return {

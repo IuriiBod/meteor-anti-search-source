@@ -4,6 +4,11 @@ Router.route('/roster/weekly/:date', {
   waitOn: function () {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+
+    if (!currentAreaId) {
+      return [];
+    }
+
     var subscriptions = [
       Meteor.subscribe('weeklyRoster', weekRange, currentAreaId),
       Meteor.subscribe('areaUsersList', currentAreaId),
@@ -31,11 +36,13 @@ Router.route('/roster/template/weekly', {
   template: "weeklyRosterTemplateMainView",
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('weeklyRosterTemplate', currentAreaId),
-      Meteor.subscribe('areaUsersList', currentAreaId),
-      Meteor.subscribe('sections', currentAreaId)
-    ];
+    if (currentAreaId) {
+      return [
+        Meteor.subscribe('weeklyRosterTemplate', currentAreaId),
+        Meteor.subscribe('areaUsersList', currentAreaId),
+        Meteor.subscribe('sections', currentAreaId)
+      ];
+    }
   }
 });
 
