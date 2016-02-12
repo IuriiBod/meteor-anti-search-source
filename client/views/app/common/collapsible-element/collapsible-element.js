@@ -9,6 +9,11 @@ Template.collapsibleElement.helpers({
 
   userCanEdit() {
     return HospoHero.canUser(`edit ${this.options.namespace}`, Meteor.userId());
+  },
+
+  panelBodyClasses(collapsed) {
+    let contentClass = `${collapsed ? 'hide' : 'show'}-content`;
+    return `${contentClass} ${this.options.contentPadding} collapse ${collapsed ? 'in' : ''}`;
   }
 });
 

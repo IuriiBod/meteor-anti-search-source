@@ -1,6 +1,7 @@
 <template name="collapsibleElement">
   <div class="ibox-title">
     <h5>{{options.title}} &nbsp;</h5>
+
     <div class="ibox-tools">
       {{#if userCanEdit}}
         {{#if options.url}}
@@ -10,13 +11,17 @@
           </a>
         {{/if}}
       {{/if}}
-      <a class="{{#if collapsed}}collapsed{{/if}}" data-toggle="collapse" data-target="#{{options.uiStateId}}"
-         aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}" aria-controls="{{options.uiStateId}}">
-        <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i></a>
+      <a class="{{#if collapsed}}collapsed{{/if}}"
+         data-toggle="collapse"
+         data-target="#{{options.uiStateId}}"
+         aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}"
+         aria-controls="{{options.uiStateId}}">
+        <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i>
+      </a>
     </div>
   </div>
-  <div id="{{options.uiStateId}}" class="content {{#if collapsed}}hide{{else}}show{{/if}}-content ibox-content panel-body
-                                    {{options.contentPadding}} collapse {{#if collapsed}}in{{/if}}"
+  <div id="{{options.uiStateId}}"
+       class="ibox-content panel-body content {{panelBodyClasses collapsed}}"
        aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
     {{> Template.contentBlock}}
   </div>
