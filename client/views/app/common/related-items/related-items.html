@@ -1,20 +1,17 @@
-<template name="relatedItems">
+<template name="relatedItemsWidget">
   <div class="ibox float-e-margins">
-    <div class="ibox-title">
-      <h5>Related Items</h5>
-      <div class="ibox-tools pull-right">
-        <a class="btn btn-primary btn-xs pull-left attach-item" href="#">Attach Item</a>
-        <a class="collapse-link" data-toggle="collapse"><i class="fa fa-chevron-up"></i></a>
-      </div>
-    </div>
-    {{#if relatedItems.count}}
-      <div class="ibox-content no-padding white-bg">
-        <ul class="list-group">
-          {{#each relatedItems}}
-            {{> relatedItem this}}
-          {{/each}}
-        </ul>
-      </div>
-    {{/if}}
+    {{#collapsibleElement options=relatedItemsOptions}}
+      {{#if relatedItems.count}}
+        <div class="ibox-content no-padding white-bg">
+          <ul class="list-group">
+            {{#each relatedItems}}
+              {{> relatedItemsWidgetItem this}}
+            {{/each}}
+          </ul>
+        </div>
+      {{else}}
+        <h4 class="text-center">No related items yet</h4>
+      {{/if}}
+    {{/collapsibleElement}}
   </div>
 </template>
