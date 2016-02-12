@@ -1,22 +1,16 @@
 //context: item (Ingredient/JobItem), type ("ing"/"prep"), quantity (number), setCurrentEditedIngredient (function)
-Template.menuItemIngredientRow.onCreated(function () {
-});
-
-
 Template.menuItemIngredientRow.helpers({
   itemName: function () {
-    return this.item && (this.type == 'prep' && this.item.name || this.item.description);
+    return this.type === 'prep' ?  this.item.name : this.item.description;
   },
 
   itemMeasure: function () {
-    return this.item && (this.type == "prep" && this.item.measure || this.item.portionUsed);
+    return this.type === 'ings' && this.item.portionUsed || 'portion';
   },
 
   price: function () {
-    var isPrep = this.type === 'prep';
-    var analyzeResult = HospoHero.analyze[isPrep ? 'jobItem' : 'ingredient'](this.item);
-    var targetValue = analyzeResult[isPrep ? 'prepCostPerPortion' : 'costPerPortionUsed'];
-    return HospoHero.misc.rounding(targetValue * this.quantity);
+    let itemCost = this.analyzeItemCost(this.item, this.type, this.quantity);
+    return HospoHero.misc.rounding(itemCost);
   },
 
   getOnQuantityEditableSuccess: function () {

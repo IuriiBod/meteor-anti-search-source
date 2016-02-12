@@ -1,15 +1,9 @@
 {
   "public": {
-    "intercom": {
-      "id": "rc6uoqw0"
-    },
-    "GCM": {
-      "senderId": "24418709828"
-    }
+    "intercom": {"id": "rc6uoqw0"},
+    "GCM": {"senderId": "24418709828"}
   },
-  "intercom": {
-    "secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"
-  },
+  "intercom": {"secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"},
   "GoogleCloud": {
     "PROJECT_NAME": "HospoHero",
     "PROJECT_ID": "hospohero",
@@ -29,9 +23,7 @@
       "secret": "ALNUwQE9u31XHqj31fMYXxVb"
     }
   ],
-  "GCM": {
-    "key": "AIzaSyCBw7Db9feI3lrSbncwqkqhxFXUbKN295o"
-  },
+  "GCM": {"key": "AIzaSyCBw7Db9feI3lrSbncwqkqhxFXUbKN295o"},
   "logLevel": "info",
   "prediction": {
     "useRawOrders": false,

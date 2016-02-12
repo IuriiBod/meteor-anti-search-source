@@ -22,9 +22,9 @@ Router.route('menuItemDetail', {
   path: '/menuItem/:_id',
   template: "menuItemDetailedMainView",
   waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('menuItem', this.params._id),
+      Meteor.subscribe('menuItem', this.params._id, currentAreaId),
       Meteor.subscribe('comments', this.params._id, currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('allCategories', currentAreaId),
