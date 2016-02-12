@@ -78,6 +78,23 @@ Template.meetingDetails.helpers({
         Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
       }
     }
+  },
+
+  meetingDetailsOptions () {
+    return {
+      namespace: 'meeting',
+      uiStateId: 'details',
+      title: 'Meeting Details',
+      contentPadding: 'no-padding'
+    }
+  },
+
+  agendaOptions () {
+    return {
+      namespace: 'meeting',
+      uiStateId: 'agenda',
+      title: 'Agenda & Minutes'
+    }
   }
 });
 
