@@ -19,11 +19,13 @@ Router.route('/supplier/profile/:_id', {
   template: "supplierProfileMainView",
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe("supplierProfile", this.params._id),
-      Meteor.subscribe('comments', this.params._id, currentAreaId),
-      Meteor.subscribe('usersList', currentAreaId)
-    ];
+    if (currentAreaId) {
+      return [
+        Meteor.subscribe("supplierProfile", this.params._id),
+        Meteor.subscribe('comments', this.params._id, currentAreaId),
+        Meteor.subscribe('areaUsersList', currentAreaId)
+      ];
+    }
   },
   data: function () {
     if (!Meteor.userId()) {
