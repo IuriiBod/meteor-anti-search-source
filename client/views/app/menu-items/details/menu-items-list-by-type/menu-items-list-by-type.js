@@ -1,6 +1,4 @@
 Template.menuItemsListByType.onCreated(function () {
-  this.getJobItem = (id) => JobItems.findOne({_id: id});
-
   this.analyzeItemCost = (item, itemType, itemQty) => {
     let isPrep = itemType === 'prep';
     let analyzeResult = HospoHero.analyze[isPrep ? 'jobItem' : 'ingredient'](item);
@@ -44,25 +42,23 @@ Template.menuItemsListByType.helpers({
     return Ingredients.findOne({_id: this._id});
   },
 
-  jobItem() {
-    return Template.instance().getJobItem(this._id);
-  },
-
   tableHeader() {
     return this.type === 'ings' ? ['Name', 'Quantity', 'Measure', 'Price'] : ['Name', 'Qty', 'Price'];
   },
 
-  jobItemsTotalPrice() {
+  jobItems() {
     let jobItems = this.jobItems;
     let totalCost = 0;
-    let tmpl = Template.instance();
-    if (jobItems) {
+    if (jobItems && jobItems.length) {
       jobItems.forEach((jobItem) => {
-        let item = tmpl.getJobItem(jobItem._id);
-        totalCost += tmpl.analyzeItemCost(item, this.type, jobItem.quantity);
+        totalCost += Template.instance().analyzeItemCost(jobItem, this.type, jobItem.quantity);
       });
-      return HospoHero.misc.rounding(totalCost);
+      let jobItemsTotalCost = {
+        totalCost: HospoHero.misc.rounding(totalCost)
+      };
+      jobItems.push(jobItemsTotalCost);
     }
+    return jobItems;
   },
 
   analyzeItemCost() {

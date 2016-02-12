@@ -8,11 +8,7 @@ Template.collapsibleElement.helpers({
   },
 
   panelBodyClasses(collapsed) {
-    return `${this.settings.contentPadding ? '' : 'no-padding'} collapse ${collapsed ? 'in' : ''}`;
-  },
-
-  contentPadding() {
-    return this.settings.contentPadding;
+    return `collapse ${collapsed ? 'in' : ''}`;
   }
 });
 

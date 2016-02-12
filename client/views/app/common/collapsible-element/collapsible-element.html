@@ -18,9 +18,10 @@
     </div>
   </div>
   <div id="{{settings.uiStateId}}"
-       class=".collapsible-element-content ibox-content panel-body {{panelBodyClasses collapsed}}"
-       style="{{#if contentPadding}}padding: {{contentPadding}}{{/if}}"
+       class="collapsible-element-content ibox-content panel-body no-padding {{panelBodyClasses collapsed}}"
        aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
-    {{> Template.contentBlock}}
+    <div style="{{#if settings.contentPadding}}padding: {{settings.contentPadding}}{{/if}}">
+      {{> Template.contentBlock}}
+    </div>
   </div>
 </template>

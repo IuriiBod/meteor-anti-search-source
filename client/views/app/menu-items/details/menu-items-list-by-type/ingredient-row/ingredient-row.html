@@ -2,25 +2,35 @@
   <tr>
     {{#if canEditMenu}}
       <td>
+        {{#if item.totalCost}}
+        {{else}}
         <a class="btn btn-primary btn-xs view-button" href="#">
           <i class="fa fa-edit fa-fw"></i>
           Edit
         </a>
+        {{/if}}
       </td>
     {{/if}}
     <td>{{itemName}}</td>
-    <td>
-      {{#if canEditMenu}}
-        {{> ingredientRowQuantityEditable quantity=quantity onQuantityEditableSuccess=getOnQuantityEditableSuccess}}
+    <td class="{{#if item.totalCost}}text-right{{/if}}">
+      {{#if item.totalCost}}
+        Total
       {{else}}
-        {{quantity}}
+        {{#if canEditMenu}}
+          {{> ingredientRowQuantityEditable quantity=quantity onQuantityEditableSuccess=getOnQuantityEditableSuccess}}
+        {{else}}
+          {{quantity}}
+        {{/if}}
       {{/if}}
     </td>
     {{#if equal type 'ings'}}<td>{{itemMeasure}}</td>{{/if}}
     <td>$ {{price}}</td>
     {{#if canEditMenu}}
       <td>
+        {{#if item.totalCost}}
+        {{else}}
         <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>
+        {{/if}}
       </td>
     {{/if}}
   </tr>
