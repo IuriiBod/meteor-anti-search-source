@@ -38,3 +38,17 @@ Router.route('/roster/template/weekly', {
     ];
   }
 });
+
+
+Router.route('sectionsSettings', {
+  path: '/settings/sections',
+  template: 'sections',
+  waitOn: function () {
+    return Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId()));
+  },
+  data: function () {
+    if (!Meteor.userId() || !HospoHero.isManager()) {
+      Router.go('/');
+    }
+  }
+});
