@@ -16,8 +16,6 @@ Meteor.publish(null, function () {
     return;
   }
 
-  //let fieldsToPublish = _.extend({'profile.uiStates': 1}, fullPublicProfileFields);
-
   return Meteor.users.find({_id: this.userId}, {fields: fullPublicProfileFields});
 });
 

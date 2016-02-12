@@ -76,7 +76,7 @@ Template.addNewUnavailability.events({
     }));
   },
   'change .all-day-checkbox': function (event, tmpl) {
-    var value = $(event.currentTarget).property('checked');
+    var value = $(event.currentTarget).prop('checked');
 
     tmpl.set('isAllDay', value);
     var timepickerVisibilityClass = value ? 'hide' : '';
