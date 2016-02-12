@@ -14,6 +14,13 @@ var references = {
     collection: JobItems,
     icon: 'fa-spoon',
     route: 'jobItemDetailed'
+  },
+  meetings: {
+    collection: Meetings,
+    icon: 'fa-users',
+    route: 'meetingDetails',
+    routeIdParam: 'id',
+    nameField: 'title'
   }
 };
 
@@ -59,11 +66,12 @@ Template.taskItem.helpers({
     if (Object.keys(taskReference).length) {
       var reference = references[taskReference.type];
       var referenceItem = reference.collection.findOne({_id: taskReference.id});
+      var nameField = reference.nameField || 'name';
 
       return {
         icon: reference.icon,
-        name: referenceItem.name,
-        route: Router.url(reference.route, {_id: taskReference.id})
+        name: referenceItem[nameField],
+        route: Router.url(reference.route, {[reference.routeIdParam || '_id']: taskReference.id})
       };
     } else {
       return false;

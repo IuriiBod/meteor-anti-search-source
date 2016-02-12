@@ -1,10 +1,8 @@
 Template.taskWidget.onCreated(function () {
   this.getReferenceObject = function () {
-    var referenceId = HospoHero.getParamsFromRoute('_id');
-    var referenceType = this.data.type;
     return {
-      id: referenceId,
-      type: referenceType
+      id: this.data.itemId,
+      type: this.data.type
     };
   };
 
