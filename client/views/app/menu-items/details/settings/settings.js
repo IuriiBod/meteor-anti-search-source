@@ -1,9 +1,9 @@
 Template.menuItemSettings.helpers({
-  currentCategory: function () {
+  currentCategory() {
     return Categories.findOne({_id: this.category});
   },
 
-  categoryOptions: function () {
+  categoryOptions() {
     return Categories.find().map(function (category) {
       return {
         value: category._id,
@@ -12,7 +12,7 @@ Template.menuItemSettings.helpers({
     });
   },
 
-  statusOptions: function () {
+  statusOptions() {
     return HospoHero.misc.getMenuItemsStatuses(false).map(function (status) {
       return {
         value: status,
@@ -21,7 +21,7 @@ Template.menuItemSettings.helpers({
     });
   },
 
-  getOnCategoryChanged: function () {
+  getOnCategoryChanged() {
     var tmpl = Template.instance();
     return function (newCategory) {
       var menuItem = MenuItems.findOne({_id: tmpl.data._id});
@@ -30,7 +30,7 @@ Template.menuItemSettings.helpers({
     };
   },
 
-  getOnStatusChanged: function () {
+  getOnStatusChanged() {
     var tmpl = Template.instance();
     return function (newStatus) {
       var menuItem = MenuItems.findOne({_id: tmpl.data._id});
@@ -39,26 +39,20 @@ Template.menuItemSettings.helpers({
     }
   },
 
-  isArchived: function () {
-    return this.status == "archived";
+  isArchived() {
+    return this.status === "archived";
+  },
+
+  settings() {
+    return {
+      namespace: 'menus',
+      uiStateId: 'settings',
+      title: 'Settings'
+    }
   }
 });
 
 Template.menuItemSettings.events({
-  'click .upload-image-button': function (event, tmpl) {
-    filepicker.pickAndStore(
-      {mimetype: "image/*", services: ['COMPUTER']},
-      {},
-      function (InkBlobs) {
-        var doc = (InkBlobs);
-        if (doc && doc.length) {
-          var menuItem = MenuItems.findOne({_id: tmpl.data._id});
-          menuItem.image = doc[0].url;
-          Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
-        }
-      });
-  },
-
   'click .remove-image': function (event, tmpl) {
     var menuItem = MenuItems.findOne({_id: tmpl.data._id});
     menuItem.image = '';

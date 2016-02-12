@@ -25,7 +25,7 @@ Router.route('menuItemDetail', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     if (currentAreaId) {
       return [
-        Meteor.subscribe('menuItem', this.params._id),
+        Meteor.subscribe('menuItem', this.params._id, currentAreaId),
         Meteor.subscribe('comments', this.params._id, currentAreaId),
         Meteor.subscribe('allSuppliers', currentAreaId),
         Meteor.subscribe('allCategories', currentAreaId),

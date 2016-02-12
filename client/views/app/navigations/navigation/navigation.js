@@ -140,6 +140,10 @@ var menuEntries = [
   }
 ];
 
+Template.navigation.onCreated(function() {
+
+});
+
 Template.navigation.helpers({
   dashboardEntry: function () {
     return dashboardEntry;
@@ -147,5 +151,13 @@ Template.navigation.helpers({
 
   menuEntries: function () {
     return menuEntries;
+  }
+});
+
+Template.navigation.events({
+  'click .open-elevio-module': function(event) {
+    event.preventDefault();
+    var moduleName = event.currentTarget.getAttribute('data-elevio-module-name');
+    window._elev.openModule(moduleName);
   }
 });

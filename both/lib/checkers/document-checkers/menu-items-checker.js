@@ -19,7 +19,8 @@ var MenuItemDocument = Match.Where(function (menuItem) {
     relations: Match.Optional(HospoHero.checkers.Relations),
     posNames: Match.Optional([String]),
     isNotSyncedWithPos: Match.Optional(Boolean),
-    lastForecastModelUpdateDate: Match.Optional(Date)
+    lastForecastModelUpdateDate: Match.Optional(Date),
+    weeklyRanks: Match.Optional([Number])
   });
 
   var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(menuItem, MenuItems);
