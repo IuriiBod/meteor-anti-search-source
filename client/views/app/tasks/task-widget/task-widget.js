@@ -64,7 +64,6 @@ Template.taskWidget.helpers({
       namespace: this.type,
       uiStateId: 'task',
       title: 'Tasks',
-      contentPadding: 'no-padding',
       buttons: buttons
     }
   }

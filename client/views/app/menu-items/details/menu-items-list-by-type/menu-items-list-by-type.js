@@ -36,7 +36,6 @@ Template.menuItemsListByType.helpers({
       namespace: 'menus',
       uiStateId: this.type,
       title: this.type === 'ings' ? 'Ingredients' : 'Prep Jobs',
-      contentPadding: 'no-padding',
       buttons: buttons
     }
   },

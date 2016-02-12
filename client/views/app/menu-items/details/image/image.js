@@ -14,6 +14,7 @@ Template.menuItemImage.helpers({
       namespace: 'menus',
       uiStateId: 'images',
       title: 'Image',
+      contentPadding: '20px',
       buttons: buttons
     }
   }

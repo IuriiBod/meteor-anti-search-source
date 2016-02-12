@@ -5,6 +5,14 @@ Template.collapsibleElement.onCreated(function () {
 Template.collapsibleElement.helpers({
   collapsed() {
     return Template.instance().uiStatesManager.getState(this.settings.uiStateId);
+  },
+
+  panelBodyClasses(collapsed) {
+    return `${this.settings.contentPadding ? '' : 'no-padding'} collapse ${collapsed ? 'in' : ''}`;
+  },
+
+  contentPadding() {
+    return this.settings.contentPadding;
   }
 });
 

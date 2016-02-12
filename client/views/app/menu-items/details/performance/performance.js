@@ -108,7 +108,6 @@ Template.menuDetailPerformance.helpers({
       namespace: 'menus',
       uiStateId: 'performance',
       title: 'Performance Snapshot',
-      contentPadding: 'no-padding',
       buttons: buttons
     }
   }
