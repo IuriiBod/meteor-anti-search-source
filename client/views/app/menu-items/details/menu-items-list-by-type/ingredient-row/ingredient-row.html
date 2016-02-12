@@ -2,13 +2,12 @@
   <tr>
     {{#if canEditMenu}}
       <td>
-        {{#if item.totalCost}}
-        {{else}}
+        {{#unless item.totalCost}}
         <a class="btn btn-primary btn-xs view-button" href="#">
           <i class="fa fa-edit fa-fw"></i>
           Edit
         </a>
-        {{/if}}
+        {{/unless}}
       </td>
     {{/if}}
     <td>{{itemName}}</td>
@@ -27,10 +26,9 @@
     <td>$ {{price}}</td>
     {{#if canEditMenu}}
       <td>
-        {{#if item.totalCost}}
-        {{else}}
+        {{#unless item.totalCost}}
         <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>
-        {{/if}}
+        {{/unless}}
       </td>
     {{/if}}
   </tr>
