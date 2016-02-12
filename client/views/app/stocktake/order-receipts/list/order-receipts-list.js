@@ -9,30 +9,27 @@ Template.ordersReceiptsList.helpers({
   },
 
   isCurrentPeriodOfOrders: function (period) {
-    var currentPeriod = Template.instance().periodOfOrders.get();
+    let currentPeriod = Template.instance().periodOfOrders.get();
     return currentPeriod === period;
   },
 
   receipts: function() {
-    var showsReceivedOrders = Template.instance().showsReceivedOrders.get();
-    var period = Template.instance().periodOfOrders.get();
-    var receipts;
+    let showsReceivedOrders = Template.instance().showsReceivedOrders.get();
+    let period = Template.instance().periodOfOrders.get();
+    let dateInterval;
 
-    if (period === 'week' || period === 'month') {
-      receipts = OrderReceipts.find({
-        'received': showsReceivedOrders,
-        'expectedDeliveryDate': {
-          $gte: moment().startOf(period).unix() * 1000,
-          $lte: moment().endOf(period).unix() * 1000
-        }
-      }, {sort: {'receivedDate': -1, 'supplier': 1}});
-    } else if (period === 'allTime') {
-      receipts = OrderReceipts.find({
-        'received': showsReceivedOrders
-      }, {sort: {'receivedDate': -1, 'supplier': 1}});
+    if (period === 'week') {
+      dateInterval = TimeRangeQueryBuilder.forWeek();
+    } else if (period === 'month') {
+      dateInterval = TimeRangeQueryBuilder.forMonth();
+    } else {
+      dateInterval = {};
     }
 
-    return receipts.fetch();
+    return OrderReceipts.find({
+      'received': showsReceivedOrders,
+      'expectedDeliveryDate': dateInterval
+    }, {sort: {'receivedDate': -1, 'supplier': 1}});
   }
 });
 
@@ -40,7 +37,7 @@ Template.ordersReceiptsList.events({
   'click .orders-status': function (event, tmpl) {
     event.preventDefault();
 
-    var status = event.currentTarget.getAttribute('data-orders-status');
+    let status = event.currentTarget.getAttribute('data-orders-status');
     if (status === 'received') {
       tmpl.showsReceivedOrders.set(true);  
     } else {
@@ -50,7 +47,7 @@ Template.ordersReceiptsList.events({
 
   'click .period-of-orders': function (event, tmpl) {
     event.preventDefault();
-    var period = event.currentTarget.getAttribute('data-period-of-orders');
+    let period = event.currentTarget.getAttribute('data-period-of-orders');
     tmpl.periodOfOrders.set(period);
   }
 });

@@ -6,25 +6,23 @@ Template.orderReceiptItem.helpers({
   orderedValue: function() {
     var cost = 0;
     StockOrders.find({"orderReceipt": this._id}).forEach(function (order) {
-      cost += parseFloat(order.countOrdered) * parseFloat(order.unitPrice);
+      let countOrdered = order.countOrdered || 0;
+      cost += parseFloat(countOrdered) * parseFloat(order.unitPrice);
     });
     return cost;
   },
 
   invoiceFaceValue: function() {
-    var cost = 0;
-    var orders = StockOrders.find({"orderReceipt": this._id}).fetch();
-    if (orders.length > 0) {
-      orders.forEach(function (order) {
-        if (order.received) {
-          var quantity = order.countOrdered;
-          if (order.countDelivered) {
-            quantity = order.countDelivered;
-          }
-          cost += parseFloat(quantity) * parseFloat(order.unitPrice)
+    let cost = 0;
+    StockOrders.find({"orderReceipt": this._id}).forEach((order) => {
+      if (order.received) {
+        var quantity = order.countOrdered;
+        if (order.countDelivered) {
+          quantity = order.countDelivered;
         }
-      });
-    }
+        cost += parseFloat(quantity) * parseFloat(order.unitPrice)
+      }
+    });
     return cost;
   }
 });
