@@ -43,12 +43,11 @@ Template.menuItemSettings.helpers({
     return this.status === "archived";
   },
 
-  settingsOptions() {
+  settings() {
     return {
       namespace: 'menus',
       uiStateId: 'settings',
-      title: 'Settings',
-      contentPadding: 'no-padding'
+      title: 'Settings'
     }
   }
 });

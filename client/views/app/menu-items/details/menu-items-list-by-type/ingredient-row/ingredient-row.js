@@ -9,8 +9,19 @@ Template.menuItemIngredientRow.helpers({
   },
 
   price: function () {
-    let itemCost = this.analyzeItemCost(this.item, this.type, this.quantity);
-    return HospoHero.misc.rounding(itemCost);
+    let price;
+    if (this.item.totalCost) {
+      price = this.item.totalCost;
+    } else {
+      let quantity = this.type === 'ings' ? this.quantity : this.item.quantity;
+      let itemCost = this.analyzeItemCost(this.item, this.type, quantity);
+      price = HospoHero.misc.rounding(itemCost);
+    }
+    return price;
+  },
+
+  quantity() {
+    return this.type === 'ings' ? this.quantity : this.item.quantity;
   },
 
   getOnQuantityEditableSuccess: function () {

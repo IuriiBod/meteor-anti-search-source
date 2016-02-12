@@ -1,6 +1,6 @@
 <template name="menuItemsListByType">
   <div class="ibox panel panel-default">
-    {{#collapsibleElement options=options}}
+    {{#collapsibleElement settings=settings}}
       <table class="table table-striped">
         <thead>
         <tr>
@@ -16,18 +16,9 @@
         </tr>
         </thead>
         <tbody>
-        {{#each jobItems}}
-          {{> menuItemIngredientRow item=jobItem quantity=quantity type=../type analyzeItemCost=analyzeItemCost}}
-        {{/each}}
-        {{#if jobItems}}
-          <tr>
-            <td></td>
-            <td></td>
-            <td class="text-right">Total</td>
-            <td>$ {{jobItemsTotalPrice}}</td>
-            <td></td>
-          </tr>
-        {{/if}}
+          {{#each jobItems}}
+            {{> menuItemIngredientRow item=this type=../type analyzeItemCost=analyzeItemCost}}
+          {{/each}}
         {{#each ingredients}}
           {{> menuItemIngredientRow item=ingredient quantity=quantity type=../type analyzeItemCost=analyzeItemCost}}
         {{/each}}
