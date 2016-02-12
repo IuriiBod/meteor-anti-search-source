@@ -1,32 +1,27 @@
-Template.menuItemInstructions.onCreated(function () {
-  this.set('isEditMode', false);
-});
-
-
 Template.menuItemInstructions.helpers({
-  instructionsStr: function () {
+  instructionsStr() {
     return this.instructions || "Add instructions here";
-  }
-});
+  },
 
-
-Template.menuItemInstructions.events({
-  'click .edit-save-button': function (event, tmpl) {
-    event.preventDefault();
-    var isEditMode = tmpl.get('isEditMode');
-
-    var toggleEditMode = function () {
-      tmpl.set('isEditMode', !isEditMode);
-    };
-
-    if (isEditMode) {
-      var menuItem = MenuItems.findOne({_id: tmpl.data._id});
-      menuItem.instructions = tmpl.$('.summernote').summernote('code');
-      Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult(function () {
-        toggleEditMode();
-      }));
-    } else {
-      toggleEditMode();
+  saveChanges() {
+    let self = this;
+    return function (instructions) {
+      let menuItem = MenuItems.findOne({_id: self._id});
+      menuItem.instructions = instructions;
+      Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
     }
+  },
+
+  instructionsSettings() {
+    return {
+      namespace: 'menus',
+      uiStateId: 'instructions',
+      title: 'Instructions',
+      contentPadding: '20px'
+    }
+  },
+
+  readOnly() {
+    return !HospoHero.canUser(`edit menus`, Meteor.userId());
   }
 });

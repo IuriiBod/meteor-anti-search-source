@@ -16,7 +16,7 @@ Template.taskWidget.onCreated(function () {
 
 
 Template.taskWidget.helpers({
-  tasks: function () {
+  tasks() {
     return TaskList.find({
       'reference.type': this.type,
       'reference.id': this.itemId
@@ -27,32 +27,50 @@ Template.taskWidget.helpers({
     });
   },
 
-  isNewTaskCreating: function () {
+  isNewTaskCreating() {
     return Template.instance().isNewTaskCreating.get();
   },
 
-  task: function () {
+  task() {
     return Template.instance().task;
   },
 
-  onCreateTaskAction: function () {
+  onCreateTaskAction() {
     var self = Template.instance();
     return function () {
       self.isNewTaskCreating.set(false);
     }
   },
 
-  onEditTaskAction: function () {
+  onEditTaskAction() {
     var self = Template.instance();
     return function (task) {
       self.task = task;
       self.isNewTaskCreating.set(true);
     }
+  },
+
+  tasksSettings() {
+    let buttons = [];
+    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+      let addTask = {
+        className: 'add-task btn btn-primary btn-xs pull-left',
+        url: '#',
+        text: 'Add Task'
+      };
+      buttons.push(addTask);
+    }
+    return {
+      namespace: this.type,
+      uiStateId: 'task',
+      title: 'Tasks',
+      buttons: buttons
+    }
   }
 });
 
 Template.taskWidget.events({
-  'click .create-task': function (event, tmpl) {
+  'click .add-task': function (event, tmpl) {
     event.preventDefault();
     tmpl.task = {
       reference: tmpl.getReferenceObject()
