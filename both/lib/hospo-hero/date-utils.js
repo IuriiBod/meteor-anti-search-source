@@ -28,7 +28,7 @@ Namespace('HospoHero.dateUtils', {
   },
 
   shortDateFormat: function (date = new Date()) {
-    return moment(date).format('YYYY/MM/DD');
+    return moment(date).format('YYYY-MM-DD');
   },
 
   hours: function () {
