@@ -25,7 +25,7 @@ UIStates = {
             state: state
           };
 
-          Meteor.call('updateUIState', item, (err, res) => {
+          Meteor.call('updateUIState', item, function (err, res) {
             if (err) {
               console.log(err);
             } else {
