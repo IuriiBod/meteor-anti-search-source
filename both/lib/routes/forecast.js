@@ -29,3 +29,21 @@ Router.route('forceForecast', {
     return this.subscribe('organizationInfo');
   }
 });
+
+
+Router.route('posSettings', {
+  path: '/settings/pos-mapping',
+  template: "posMenuLinking",
+  waitOn: function () {
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return [
+      Meteor.subscribe('menuItemsForPosLinking', currentAreaId),
+      Meteor.subscribe('posMenuItems', currentAreaId)
+    ]
+  },
+  data: function () {
+    if (!Meteor.userId() || !HospoHero.isManager()) {
+      Router.go('/');
+    }
+  }
+});

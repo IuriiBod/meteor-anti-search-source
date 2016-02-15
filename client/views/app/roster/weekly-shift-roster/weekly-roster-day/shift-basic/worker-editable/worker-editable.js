@@ -64,7 +64,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
     });
   };
 
-  var getTraindeWorkers = function (shift) {
+  var getTrainedWorkers = function (shift) {
     var shiftSection = shift.section;
 
     if (shiftSection) {
@@ -79,7 +79,6 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
   var sourceFn = function (getAvailableWorkers, showTrainedWorkers) {
     var shift = Shifts.findOne({_id: templateInstance.data._id});
     var workersQuery = {
-      "isActive": true,
       $or: [
         {"profile.resignDate": null},
         {"profile.resignDate": {$gt: shift.startTime}}
@@ -87,7 +86,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
     };
 
     var assignedWorkers = getAlreadyAssignedWorkersIds(shift);
-    var trainedWorkers = getTraindeWorkers(shift);
+    var trainedWorkers = getTrainedWorkers(shift);
     if (showTrainedWorkers) {
       assignedWorkers = _.difference(trainedWorkers, assignedWorkers);
     } else if (getAvailableWorkers) {

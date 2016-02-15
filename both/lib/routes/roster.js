@@ -4,9 +4,14 @@ Router.route('/roster/weekly/:date', {
   waitOn: function () {
     var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+
+    if (!currentAreaId) {
+      return [];
+    }
+
     var subscriptions = [
       Meteor.subscribe('weeklyRoster', weekRange, currentAreaId),
-      Meteor.subscribe('workers', currentAreaId),
+      Meteor.subscribe('areaUsersList', currentAreaId),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('areaMenuItems', currentAreaId),
       Meteor.subscribe('managerNotes', weekRange, currentAreaId),
@@ -31,10 +36,26 @@ Router.route('/roster/template/weekly', {
   template: "weeklyRosterTemplateMainView",
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('weeklyRosterTemplate', currentAreaId),
-      Meteor.subscribe('workers', currentAreaId),
-      Meteor.subscribe('sections', currentAreaId)
-    ];
+    if (currentAreaId) {
+      return [
+        Meteor.subscribe('weeklyRosterTemplate', currentAreaId),
+        Meteor.subscribe('areaUsersList', currentAreaId),
+        Meteor.subscribe('sections', currentAreaId)
+      ];
+    }
+  }
+});
+
+
+Router.route('sectionsSettings', {
+  path: '/settings/sections',
+  template: 'sections',
+  waitOn: function () {
+    return Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId()));
+  },
+  data: function () {
+    if (!Meteor.userId() || !HospoHero.isManager()) {
+      Router.go('/');
+    }
   }
 });

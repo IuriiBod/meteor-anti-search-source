@@ -1,6 +1,5 @@
 Accounts.onCreateUser(function (options, user) {
   user.profile = options.profile || {};
-  user.isActive = true;
   if (user.services.google) {
     var result = options.profile.name.indexOf(' ');
     if (result > 0) {
@@ -96,26 +95,6 @@ Meteor.methods({
     }
   },
 
-  changeStatus: function (id) {
-    if (!HospoHero.isManager()) {
-      logger.error("User not permitted to change user status");
-      throw new Meteor.Error(403, "User not permitted to create jobs");
-    }
-    var userDoc = Meteor.users.findOne(id);
-    if (!userDoc) {
-      logger.error("User not found", id);
-      throw new Meteor.Error("User not found");
-    }
-    var isActive = !userDoc.isActive;
-
-    Meteor.users.update({"_id": id}, {$set: {isActive: isActive}});
-    if (isActive) {
-      logger.info("User status activated", id);
-    } else {
-      logger.info("User status de-activated", id);
-    }
-  },
-
   resignDate: function (type, id, val) {
     if (!HospoHero.isManager()) {
       logger.error("User not permitted to resign workers");
@@ -133,8 +112,7 @@ Meteor.methods({
     if (type == "set" || type == "update") {
       Meteor.users.update({_id: id}, {
         $set: {
-          "profile.resignDate": val.getTime(),
-          isActive: false
+          "profile.resignDate": val.getTime()
         }
       });
 
@@ -150,23 +128,6 @@ Meteor.methods({
       }, {
         multi: true
       });
-    } else if (type == "remove") {
-      Meteor.users.update({_id: id}, {
-        $unset: {
-          "profile.resignDate": ""
-        },
-        $set: {
-          isActive: true
-        }
-      });
-    } else {
-      var nextShifts = Shifts.find({assignedTo: id, startTime: {$gte: val}}).fetch();
-      if (nextShifts && nextShifts.length > 0) {
-        return nextShifts;
-      }
-      if (type == "set" || type == "update") {
-        Meteor.users.update({_id: id}, {$set: {"profile.resignDate": val, "isActive": false}});
-      }
     }
   },
 
