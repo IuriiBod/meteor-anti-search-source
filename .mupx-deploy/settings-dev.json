@@ -28,6 +28,6 @@
   "prediction": {
     "useRawOrders": true,
     "forecastIntervals": [14],
-    "threshold": "2016-01-18"
+    "threshold": "2016-01-25"
   }
 }

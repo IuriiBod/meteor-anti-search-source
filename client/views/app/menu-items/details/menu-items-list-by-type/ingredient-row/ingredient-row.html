@@ -1,0 +1,27 @@
+<template name="menuItemIngredientRow">
+  <tr>
+    {{#if canEditMenu}}
+      <td>
+        <a class="btn btn-primary btn-xs view-button" href="#">
+          <i class="fa fa-edit fa-fw"></i>
+          Edit
+        </a>
+      </td>
+    {{/if}}
+    <td>{{itemName}}</td>
+    <td>
+      {{#if canEditMenu}}
+        {{> ingredientRowQuantityEditable quantity=quantity onQuantityEditableSuccess=getOnQuantityEditableSuccess}}
+      {{else}}
+        {{quantity}}
+      {{/if}}
+    </td>
+    {{#if equal type 'ings'}}<td>{{itemMeasure}}</td>{{/if}}
+    <td>$ {{price}}</td>
+    {{#if canEditMenu}}
+      <td>
+        <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>
+      </td>
+    {{/if}}
+  </tr>
+</template>

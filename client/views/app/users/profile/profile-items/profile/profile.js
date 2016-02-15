@@ -4,33 +4,33 @@ Template.profile.onRendered(function () {
 });
 
 Template.profile.helpers({
-  user: function() {
+  user: function () {
     return this;
   },
-  firstName: function() {
+  firstName: function () {
     if (this && this.profile && this.profile.firstname) {
       return this.profile.firstname;
     } else {
       return "";
     }
   },
-  lastName: function() {
+  lastName: function () {
     if (this && this.profile && this.profile.lastname) {
       return this.profile.lastname;
     } else {
       return "";
     }
   },
-  email: function() {
+  email: function () {
     if (this && this.emails) {
       return this.emails[0].address;
     }
   },
   //permitted for profile owner and admins
-  isEditPermitted: function() {
+  isEditPermitted: function () {
     return HospoHero.isManager() || HospoHero.isMe(this._id);
   },
-  shiftsPerWeek: function() {
+  shiftsPerWeek: function () {
     var user = this;
     var shifts = [1, 2, 3, 4, 5, 6, 7];
     var formattedShifts = [];
@@ -44,12 +44,15 @@ Template.profile.helpers({
     });
     return formattedShifts;
   },
-  hasResignDate: function() {
+  hasResignDate: function () {
     return !!this.profile.resignDate;
   },
-  resignDate: function() {
+  resignDate: function () {
     var resignDate = this.profile.resignDate;
     return resignDate ? moment(resignDate).format("MM/DD/YYYY") : null;
+  },
+  lastLoginDate: function () {
+    return this.lastLoginDate && moment.duration(moment().diff(this.lastLoginDate)).humanize() || 'never';
   }
 });
 

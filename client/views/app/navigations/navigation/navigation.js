@@ -126,8 +126,23 @@ var menuEntries = [
         route: 'stockReport'
       }
     ]
+  },
+  {
+    title: 'Manger Calendar',
+    icon: 'fa-calendar',
+    route: 'managerCalendar',
+    permission: 'edit calendar',
+    params: function () {
+      return {
+        date: HospoHero.dateUtils.shortDateFormat(new Date())
+      }
+    }
   }
 ];
+
+Template.navigation.onCreated(function() {
+
+});
 
 Template.navigation.helpers({
   dashboardEntry: function () {
@@ -136,5 +151,13 @@ Template.navigation.helpers({
 
   menuEntries: function () {
     return menuEntries;
+  }
+});
+
+Template.navigation.events({
+  'click .open-elevio-module': function(event) {
+    event.preventDefault();
+    var moduleName = event.currentTarget.getAttribute('data-elevio-module-name');
+    window._elev.openModule(moduleName);
   }
 });

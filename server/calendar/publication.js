@@ -1,18 +1,22 @@
-Meteor.publishComposite('calendarEvents', function (date, queryType, locationId, userId) {
-  queryType = queryType === 'day' ? 'forDay' : 'forWeek';
+Meteor.publishComposite('calendarEvents', function (date, queryType, areaId, userId) {
+  queryType = HospoHero.calendar.getQueryType(queryType);
+  let area = Areas.findOne({_id: areaId});
 
   return {
+    // shifts publishing
     find: function () {
-      if (this.userId) {
+      if (this.userId && !!area) {
         var query = {
-          startTime: TimeRangeQueryBuilder[queryType](date, locationId)
+          startTime: TimeRangeQueryBuilder[queryType](date, area.locationId),
+          //published: true,
+          'relations.areaId': areaId
         };
 
         if (userId) {
-          query.userId = userId;
+          query.assignedTo = userId;
         }
 
-        return CalendarEvents.find(query);
+        return Shifts.find(query);
       } else {
         this.ready();
       }
@@ -20,12 +24,11 @@ Meteor.publishComposite('calendarEvents', function (date, queryType, locationId,
 
     children: [
       {
-        find: function (event) {
-          var itemCollections = {
-            'recurring job': JobItems
-          };
-
-          return itemCollections[event.type].find({_id: event.itemId});
+        // events publication
+        find: function (shift) {
+          return CalendarEvents.find({
+            shiftId: shift._id
+          });
         }
       }
     ]

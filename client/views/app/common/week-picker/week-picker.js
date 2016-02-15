@@ -1,6 +1,7 @@
 //context: year (number), week (number), onDateChanged (Function)
 Template.weekPicker.onCreated(function () {
   this.oldDate = getWeekDateByMoment(this.data.date);
+  this.dayStep = this.data.type === 'day' ? 1 : 7;
 });
 
 
@@ -12,11 +13,16 @@ Template.weekPicker.onRendered(function () {
   /**
    * Update picked moment after changing date in datepicker
    * @param {String} [action=add|subtract] - action to do with current date. null for do nothing.
-   * @param {Number} [dateChangeStep=7] - number of days to add/subtract
+   * @param {Number} [dateChangeStep] - number of days to add/subtract
    */
-  this.updatePickedMoment = function (action, dateChangeStep = 7) {
+  this.updatePickedMoment = function (action, dateChangeStep) {
+    dateChangeStep = dateChangeStep || this.dayStep;
+
     var currentMoment = moment(this.datePicker.datepicker('getDate'));
-    currentMoment = HospoHero.dateUtils.startOfWeekMoment(currentMoment);
+
+    if (this.data.type !== 'day') {
+      currentMoment = HospoHero.dateUtils.startOfWeekMoment(currentMoment);
+    }
 
     var applyChangeToCurrentMoment = function () {
       if (action) {
@@ -56,21 +62,27 @@ Template.weekPicker.onRendered(function () {
 
 Template.weekPicker.helpers({
   weekDateStr: function (date) {
-    var weekStartEnd = moment(date);
-    var firstDay = moment(weekStartEnd).startOf('isoweek');
-    var lastDay = moment(weekStartEnd).endOf('isoweek');
-
     var currentDate;
-    if (firstDay.year() != lastDay.year()) {
-      currentDate = firstDay.format('D MMM YYYY - ') + lastDay.format('D MMM YYYY');
-    } else {
-      if (firstDay.month() != lastDay.month()) {
-        currentDate = firstDay.format('D MMM - ') + lastDay.format('D MMM YYYY');
+
+    if (this.type !== 'day') {
+      var weekStartEnd = moment(date);
+      var firstDay = moment(weekStartEnd).startOf('isoweek');
+      var lastDay = moment(weekStartEnd).endOf('isoweek');
+
+      if (firstDay.year() != lastDay.year()) {
+        currentDate = firstDay.format('D MMM YYYY - ') + lastDay.format('D MMM YYYY');
       } else {
-        currentDate = firstDay.format('D - ') + lastDay.format('D MMM YYYY');
+        if (firstDay.month() != lastDay.month()) {
+          currentDate = firstDay.format('D MMM - ') + lastDay.format('D MMM YYYY');
+        } else {
+          currentDate = firstDay.format('D - ') + lastDay.format('D MMM YYYY');
+        }
       }
+      currentDate += ", week " + weekStartEnd.week();
+    } else {
+      currentDate = HospoHero.dateUtils.dayFormat(date);
     }
-    currentDate += ", week " + weekStartEnd.week();
+
     return currentDate.toUpperCase();
   }
 });
@@ -97,9 +109,11 @@ Template.weekPicker.events({
   },
 
   'show .date-picker-input': function (event, tmpl) {
-    //mark all selected week before showing
-    var activeDayClass = $('.day.active').length === 0 ? '.day.today' : '.day.active';
-    $(activeDayClass).siblings('.day').addClass('week');
+    if (tmpl.data.type !== 'day') {
+      //mark all selected week before showing
+      var activeDayClass = $('.day.active').length === 0 ? '.day.today' : '.day.active';
+      $(activeDayClass).siblings('.day').addClass('week');
+    }
   }
 });
 

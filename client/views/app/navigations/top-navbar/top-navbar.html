@@ -14,13 +14,11 @@
               </span>
             </li>
           {{else}}
-            {{#if isOrganizationOwner}}
-              <li>
-                <a class="organization-structure-flyout">
-                  <i class="fa fa-sitemap"></i>
-                </a>
-              </li>
-            {{/if}}
+            <li>
+              <a class="organization-structure-flyout">
+                <i class="fa fa-sitemap"></i>
+              </a>
+            </li>
           {{/if}}
         {{/if}}
 
@@ -32,7 +30,7 @@
         </li>
 
         <li>
-          <a href="{{pathFor 'calendar' type="day" date=shortDateFormat}}"><i class="fa fa-calendar"></i></a>
+          <a href="{{pathFor 'calendar' type="day" date=shortDateFormat userId=currentUser._id}}"><i class="fa fa-calendar"></i></a>
         </li>
 
         <li>

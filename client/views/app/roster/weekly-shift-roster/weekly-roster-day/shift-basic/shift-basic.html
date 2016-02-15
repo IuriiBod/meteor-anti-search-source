@@ -27,6 +27,10 @@
       {{/if}}
     </div>
 
+    {{#if isMidnight}}
+      <i class="fa fa-moon-o midnight-icon" title="Midnight shift"></i>
+    {{/if}}
+
     <div class="agile-detail">
       <i class="fa fa-angle-double-right"></i>
       {{#if canEditRoster}}

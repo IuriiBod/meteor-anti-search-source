@@ -31,7 +31,6 @@ Suppliers = new Mongo.Collection("suppliers");
 Organizations = new Mongo.Collection("organizations");
 Locations = new Mongo.Collection("locations");
 Areas = new Mongo.Collection("areas");
-Invitations = new Mongo.Collection("invitations");
 
 //new forecast functionality
 WeatherForecast = new Mongo.Collection("weatherForecast");
@@ -43,3 +42,5 @@ LeaveRequests = new Mongo.Collection('leaveRequests');
 // calendar functionality
 CalendarEvents = new Mongo.Collection('calendarEvents');
 TaskList = new Mongo.Collection('taskList');
+RelatedItems = new Mongo.Collection('relatedItems');
+Files = new Mongo.Collection('files');

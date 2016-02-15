@@ -8,31 +8,23 @@
       </div>
     {{/if}}
 
-    <div class="col-md-12 hidden-print task-list-content">
+    <div class="ibox hidden-print task-list-content">
       <hr>
-      <div class="ibox">
-        <div class="ibox-title">
-          Tasks
-          <a href="#" class="create-task">
-            <i class="fa fa-plus"></i>
-          </a>
-        </div>
-        <div class="ibox-content">
-          <div class="row">
-            {{#if tasks.count}}
-              <div class="table-responsive">
-                <table class="table table-hover table-mail task-list-container">
-                  {{#each tasks}}
-                    {{> taskItem task=this onEditTaskAction=onEditTaskAction}}
-                  {{/each}}
-                </table>
-              </div>
-            {{else}}
-              <h3>No tasks here</h3>
-            {{/if}}
+      {{#collapsibleElement options=tasksOptions}}
+        {{#if tasks.count}}
+          <div class="table-responsive">
+            <table class="table table-hover table-mail task-list-container">
+              <tbody>
+              {{#each tasks}}
+                {{> taskItem task=this onEditTaskAction=onEditTaskAction}}
+              {{/each}}
+              </tbody>
+            </table>
           </div>
-        </div>
-      </div>
+        {{else}}
+          <h3>No tasks here</h3>
+        {{/if}}
+      {{/collapsibleElement}}
     </div>
   </div>
 </template>
