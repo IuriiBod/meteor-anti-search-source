@@ -31,15 +31,6 @@ ForecastMaker.prototype._updateForecastEntry = function (newForecastInfo) {
 
 
 ForecastMaker.prototype._getNotificationSender = function (area) {
-  var roleManagerId = Roles.getRoleByName('Manager')._id;
-  var getReceivers = function () {
-    var receiversQuery = {};
-    receiversQuery[area._id] = roleManagerId;
-    return Meteor.users.find({roles: receiversQuery}).map(function (user) {
-      return user._id;
-    });
-  };
-
   var self = this;
   var changes = [];
 
@@ -64,7 +55,7 @@ ForecastMaker.prototype._getNotificationSender = function (area) {
 
     send: function () {
       if (changes.length > 0) {
-        var receiversIds = getReceivers();
+        var receiversIds = Roles.getUsersByActionForArea('view forecast', area._id).map(user => user._id);
         logger.info('Notify about prediction change', {receivers: receiversIds, changes: changes});
         var notificationTitle = 'Some predictions have been changed';
         var notificationSender = new NotificationSender(notificationTitle, 'forecast-update', changes);

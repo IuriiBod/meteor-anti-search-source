@@ -27,7 +27,10 @@
   "logLevel": "warn",
   "prediction": {
     "useRawOrders": true,
-    "forecastIntervals": [14],
+    "forecastIntervals": [
+      7,
+      4
+    ],
     "threshold": "2016-01-25"
   }
 }
