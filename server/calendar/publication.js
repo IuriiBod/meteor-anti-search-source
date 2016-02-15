@@ -30,6 +30,12 @@ Meteor.publishComposite('calendarEvents', function (date, queryType, areaId, use
             shiftId: shift._id
           });
         }
+      },
+      {
+        find: function (shift) {
+          let fields = HospoHero.security.getPublishFieldsFor('users', {});
+          return Meteor.users.find({_id: shift.assignedTo}, {fields});
+        }
       }
     ]
   }
