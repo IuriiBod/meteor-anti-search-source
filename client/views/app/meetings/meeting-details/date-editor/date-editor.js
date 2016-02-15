@@ -1,8 +1,7 @@
 Template.dateEditor.onRendered(function () {
   this.datepicker = this.$('.date-editor-open');
   this.datepicker.datepicker({
-    format: 'YYYY-MM-DD',
-    startDate: new Date()
+    format: 'YYYY-MM-DD'
   });
   this.datepicker.datepicker('setDate', this.data.date);
 });

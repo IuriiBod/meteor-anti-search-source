@@ -22,9 +22,7 @@ Meteor.publishComposite('comments', function (ref, areaId) {
           return Meteor.users.find({
             _id: comment.createdBy
           }, {
-            fields: {
-              'profile.uiStates': 0
-            }
+            fields: HospoHero.security.getPublishFieldsFor('users')
           });
         }
       }

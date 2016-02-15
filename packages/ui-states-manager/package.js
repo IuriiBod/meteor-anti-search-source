@@ -8,7 +8,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('METEOR@1.2');
-  api.addFiles(['lib/ui-states/client.js'], 'client');
-  api.addFiles(['lib/ui-states/server.js'], 'server');
+  api.addFiles(['lib/client.js'], 'client');
+  api.addFiles(['lib/server.js'], 'server');
   api.export('UIStates', 'client');
 });

@@ -1,17 +1,3 @@
-Meteor.publish('currentOrganization', function () {
-  if (this.userId) {
-    var user = Meteor.users.findOne(this.userId);
-    if (user.relations && user.relations.organizationIds) {
-      return Organizations.find({_id: HospoHero.isInOrganization(user._id)});
-    } else {
-      this.ready();
-    }
-  } else {
-    this.ready();
-  }
-});
-
-
 // Publishing organization and all what depends on it
 Meteor.publishComposite('organizationInfo', {
   // Publishing current organization
@@ -61,25 +47,6 @@ Meteor.publishComposite('organizationInfo', {
           });
         } else {
           this.ready();
-        }
-      }
-    },
-    {
-      // Publishing users of current organization
-      find: function (organization) {
-        if (this.userId && (HospoHero.canUser('edit areas', this.userId) || HospoHero.canUser('edit locations', this.userId))) {
-          return Meteor.users.find({
-            isActive: true,
-            "relations.organizationIds": {$in: [organization._id]}
-          }, {
-            fields: {
-              isActive: 1,
-              "services.google.picture": 1,
-              profile: 1,
-              relations: 1,
-              roles: 1
-            }
-          });
         }
       }
     },

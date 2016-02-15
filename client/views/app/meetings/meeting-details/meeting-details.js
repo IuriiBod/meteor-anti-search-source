@@ -73,8 +73,8 @@ Template.meetingDetails.helpers({
       firstTime: meeting.startTime,
       secondTime: meeting.endTime,
       onSubmit: function (startTime, endTime) {
-        meeting.startTime = startTime;
-        meeting.endTime = endTime;
+        meeting.startTime = HospoHero.dateUtils.applyTimeToDate(meeting.startTime, startTime);
+        meeting.endTime = HospoHero.dateUtils.applyTimeToDate(meeting.endTime, endTime);
         Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
       }
     }
@@ -84,8 +84,7 @@ Template.meetingDetails.helpers({
     return {
       namespace: 'meeting',
       uiStateId: 'details',
-      title: 'Meeting Details',
-      contentPadding: 'no-padding'
+      title: 'Meeting Details'
     }
   },
 
@@ -93,7 +92,8 @@ Template.meetingDetails.helpers({
     return {
       namespace: 'meeting',
       uiStateId: 'agenda',
-      title: 'Agenda & Minutes'
+      title: 'Agenda & Minutes',
+      contentPadding: '20px'
     }
   }
 });

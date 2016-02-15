@@ -6,7 +6,7 @@
       <div class="wrapper wrapper-content fadeInUp">
         <div class="ibox">
           <div class="ibox float-e-margins">
-            {{#collapsibleElement options=meetingDetailsOptions}}
+            {{#collapsibleElement settings=meetingDetailsOptions}}
               <table class="table">
                 <thead>
                 <tr>
@@ -83,7 +83,7 @@
           <div class="row m-t-sm">
             <div class="col-lg-12">
               <div class="ibox float-e-margins">
-                {{#collapsibleElement options=agendaOptions}}
+                {{#collapsibleElement settings=agendaOptions}}
                   {{> autosaveTextEditor text=agendaAndMinutes saveChanges=saveChanges}}
                 {{/collapsibleElement}}
               </div>
@@ -100,13 +100,13 @@
 
       <div class="row m-t-sm">
         <div class="col-xs-12">
-          {{> files referenceId=id type="meeting"}}
+          {{> filesWidget referenceId=id type="meeting"}}
         </div>
       </div>
 
       <div class="row m-t-sm">
         <div class="col-xs-12">
-          {{> relatedItems referenceId=id type="meeting"}}
+          {{> relatedItemsWidget referenceId=id type="meeting"}}
         </div>
       </div>
     </div>
