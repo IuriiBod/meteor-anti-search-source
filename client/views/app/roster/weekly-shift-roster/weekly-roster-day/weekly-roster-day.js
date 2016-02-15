@@ -52,6 +52,9 @@ Template.weeklyRosterDay.helpers({
   },
   shiftDateFormat: function (date) {
     return HospoHero.dateUtils.shortDateFormat(moment(date));
+  },
+  hasCopiedShift: function () {
+    return !!Session.get('copiedShift');
   }
 });
 
@@ -75,6 +78,28 @@ Template.weeklyRosterDay.events({
 
   'click .manager-note-flyout': function (event, tmpl) {
     FlyoutManager.open('managerNotes', {date: tmpl.data.currentDate});
+  },
+
+  'click .paste-shift-button': function (event, tmpl) {
+    let zeroMoment = moment(new Date(tmpl.data.currentDate));
+
+    let pastedShiftInfo = Session.get('copiedShift');
+    delete pastedShiftInfo._id;
+
+    let startHours = pastedShiftInfo.startTime.getHours();
+    let endHours = pastedShiftInfo.endTime.getHours();
+
+    pastedShiftInfo.startTime = new Date(zeroMoment.hours(startHours));
+
+    let endMoment = zeroMoment.hours(endHours);
+    //check if endTime would be next day
+    if (startHours > endHours) {
+      endMoment.add(1, 'd');
+    }
+
+    pastedShiftInfo.endTime = new Date(endMoment);
+
+    Meteor.call("createShift", pastedShiftInfo, HospoHero.handleMethodResult());
   }
 });
 

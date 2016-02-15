@@ -38,5 +38,10 @@ Template.shiftBasic.events({
   'click .remove-shift-button': function (event, tmpl) {
     event.preventDefault();
     Meteor.call('deleteShift', tmpl.data._id, HospoHero.handleMethodResult());
+  },
+  'click .copy-shift-button': function (event) {
+    event.preventDefault();
+
+    Session.set('copiedShift', this);
   }
 });
