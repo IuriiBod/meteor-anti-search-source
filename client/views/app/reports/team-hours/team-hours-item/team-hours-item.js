@@ -37,6 +37,14 @@ Template.teamHoursItem.helpers({
   },
   isShowShifts: function () {
     return this.tableViewMode === 'shifts';
+  },
+  dailyShift: function () {
+    let userId = Template.parentData(1).user._id;
+    let currentDate = this;
+    return Shifts.findOne({
+      assignedTo: userId,
+      startTime: TimeRangeQueryBuilder.forDay(currentDate)
+    });
   }
 });
 
