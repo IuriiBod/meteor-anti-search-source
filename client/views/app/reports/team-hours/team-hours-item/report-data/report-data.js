@@ -5,12 +5,14 @@ Template.reportData.helpers({
     let shift = this.shift;
     let getShiftProperty = (propertyName, defaultValue) => shift && shift[propertyName] || defaultValue;
 
+    let isMidnight = this.shift && !moment(this.shift.finishedAt).isSame(this.shift.startedAt, 'day');
     return {
       firstTime: getShiftProperty('startedAt', 'Start'),
       secondTime: getShiftProperty('finishedAt', 'End'),
       minuteStepping: 5,
       date: defaultDate,
       ignoreDateRangeCheck: true,
+      icon: isMidnight ? 'fa-moon-o midnight-icon' : false,
       onSubmit: function (newStartTime, newEndTime) {
         let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
           start: getShiftProperty('startedAt', defaultDate),
@@ -26,9 +28,6 @@ Template.reportData.helpers({
   },
   isClockedIn: function () {
     return this.shift && this.shift.status === 'started';
-  },
-  isMidnight: function () {
-    return this.shift && !moment(this.shift.finishedAt).isSame(this.shift.startedAt, 'day');
   }
 });
 

@@ -2,10 +2,6 @@
   {{#if shift}}
     {{> comboTimeEditable params=startedTimeParams}}
 
-    {{#if isMidnight}}
-      <i class="fa fa-moon-o midnight-icon" title="Midnight shift"></i>
-    {{/if}}
-
     {{#if isClockedIn}}
       <a href="#" class="stop-current-shift-button">Stop</a>
     {{/if}}
