@@ -14,11 +14,12 @@ Template.relatedItemsWidget.helpers({
     return {
       namespace: this.type,
       uiStateId: 'relatedItems',
-      contentPadding: 'no-padding',
       title: 'Related Items',
-      className: 'btn btn-primary btn-xs pull-left attach-item',
-      url: '#',
-      text: 'Attach Item'
+      buttons: [{
+        url: '#',
+        className: 'btn btn-primary btn-xs pull-left attach-item',
+        text: 'Attach Item'
+      }]
     }
   }
 });

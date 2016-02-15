@@ -14,11 +14,12 @@ Template.filesWidget.helpers({
     return {
       namespace: this.type,
       uiStateId: 'files',
-      contentPadding: 'no-padding',
       title: 'Files',
-      className: 'btn btn-primary btn-xs pull-left attach-file',
-      url: '#',
-      text: 'Attach File'
+      buttons: [{
+        url: '#',
+        className: 'btn btn-primary btn-xs pull-left attach-file',
+        text: 'Attach File'
+      }]
     }
   }
 });
