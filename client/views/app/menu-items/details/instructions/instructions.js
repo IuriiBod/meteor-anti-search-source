@@ -22,6 +22,6 @@ Template.menuItemInstructions.helpers({
   },
 
   readOnly() {
-    return !HospoHero.canUser(`edit menus`, Meteor.userId());
+    return !HospoHero.canUser('edit menus', Meteor.userId());
   }
 });
