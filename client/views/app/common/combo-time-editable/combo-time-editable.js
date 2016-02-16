@@ -64,6 +64,9 @@ Template.comboTimeEditable.helpers({
   secondTime: function () {
     var secondTime = Template.instance().data.params.secondTime;
     return _.isDate(secondTime) ? HospoHero.dateUtils.timeFormat(secondTime) : secondTime;
+  },
+  icon: function () {
+    return this.params.icon || 'fa-clock-o';
   }
 });
 

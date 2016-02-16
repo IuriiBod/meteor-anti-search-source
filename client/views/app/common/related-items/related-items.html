@@ -1,21 +1,17 @@
-<template name="relatedItems">
-  <div class="col-xs-12 no-padding">
-    <h3>
-      Related Items:
-      <button type="button" class="btn pull-right btn-xs btn-primary attach-item">
-        Attach Item
-      </button>
-    </h3>
-
-    {{#if relatedItems.count}}
-      <div class="ibox-content no-padding">
-        <ul class="list-group">
-          {{#each relatedItems}}
-            {{> relatedItem this}}
-          {{/each}}
-        </ul>
-        <hr>
-      </div>
-    {{/if}}
+<template name="relatedItemsWidget">
+  <div class="ibox float-e-margins">
+    {{#collapsibleElement settings=relatedItemsOptions}}
+      {{#if relatedItems.count}}
+        <div class="ibox-content no-padding white-bg">
+          <ul class="list-group">
+            {{#each relatedItems}}
+              {{> relatedItemsWidgetItem this}}
+            {{/each}}
+          </ul>
+        </div>
+      {{else}}
+        <h4 class="text-center">No related items yet</h4>
+      {{/if}}
+    {{/collapsibleElement}}
   </div>
 </template>

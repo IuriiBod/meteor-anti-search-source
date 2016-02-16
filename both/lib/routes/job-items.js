@@ -47,17 +47,19 @@ Router.route('/jobItem/:_id', {
   template: 'jobItemDetail',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('jobItem', this.params._id),
-      Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('comments', this.params._id, currentAreaId),
-      Meteor.subscribe('usersList', currentAreaId),
-      Meteor.subscribe('userSubscriptions', currentAreaId),
-      Meteor.subscribe('allCategories', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('jobsRelatedMenus', this.params._id),
-      Meteor.subscribe('taskList')
-    ];
+    if (currentAreaId) {
+      return [
+        Meteor.subscribe('jobItem', this.params._id),
+        Meteor.subscribe('jobTypes'),
+        Meteor.subscribe('comments', this.params._id, currentAreaId),
+        Meteor.subscribe('areaUsersList', currentAreaId),
+        Meteor.subscribe('userSubscriptions', currentAreaId),
+        Meteor.subscribe('allCategories', currentAreaId),
+        Meteor.subscribe('ingredients', null, currentAreaId),
+        Meteor.subscribe('jobsRelatedMenus', this.params._id),
+        Meteor.subscribe('taskList')
+      ];
+    }
   },
   data: function () {
     return {

@@ -1,51 +1,43 @@
 //context: date (Date), userId (User._id)
-
-Template.reportData.onCreated(function () {
-  this.currentDate = this.data.date;
-  this.getCurrentShift = function () {
-    return Shifts.findOne({
-      assignedTo: this.data.userId,
-      startTime: TimeRangeQueryBuilder.forDay(this.data.date)
-    });
-  };
-});
-
-
 Template.reportData.helpers({
-  shift: function () {
-    return Template.instance().getCurrentShift();
-  },
+  startedTimeParams: function () {
+    let defaultDate = this.date;
+    let shift = this.shift;
+    let getShiftProperty = (propertyName, defaultValue) => shift && shift[propertyName] || defaultValue;
 
-  startedTimeParams: function (shift) {
-    let changeShiftHours = function (baseDate = newTime, newTime) {
-      let newShiftTime = moment(newTime);
-      return moment(baseDate)
-        .hours(newShiftTime.hours())
-        .minutes(newShiftTime.minutes())
-        .toDate();
-    };
-
+    let isMidnight = this.shift && !moment(this.shift.finishedAt).isSame(this.shift.startedAt, 'day');
     return {
-      firstTime: shift.startedAt || 'Start',
-      secondTime: shift.finishedAt || 'End',
+      firstTime: getShiftProperty('startedAt', 'Start'),
+      secondTime: getShiftProperty('finishedAt', 'End'),
       minuteStepping: 5,
-      date: Template.instance().currentDate,
+      date: defaultDate,
+      ignoreDateRangeCheck: true,
+      icon: isMidnight ? 'fa-moon-o midnight-icon' : false,
       onSubmit: function (newStartTime, newEndTime) {
-        shift.startedAt = changeShiftHours(shift.startedAt, newStartTime);
-        shift.finishedAt = changeShiftHours(shift.finishedAt, newEndTime);
+        let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
+          start: getShiftProperty('startedAt', defaultDate),
+          end: getShiftProperty('finishedAt', defaultDate)
+        }, newStartTime, newEndTime);
+
+        shift.startedAt = newShiftDuration.start;
+        shift.finishedAt = newShiftDuration.end;
+
         Meteor.call('editShift', shift, HospoHero.handleMethodResult());
       }
     };
+  },
+  isClockedIn: function () {
+    return this.shift && this.shift.status === 'started';
   }
 });
 
 
 Template.reportData.events({
-  'click .stopCurrentShift': function (event, tmpl) {
+  'click .stop-current-shift-button': function (event, tmpl) {
     event.preventDefault();
     var confirmClockOut = confirm('Are you sure you want to clock out this shift?');
     if (confirmClockOut) {
-      var id = tmpl.getCurrentShift()._id;
+      var id = tmpl.data.shift._id;
       Meteor.call('clockOut', id, HospoHero.handleMethodResult());
     }
   }

@@ -17,10 +17,10 @@ var UserChecker = Match.Where(function (user) {
     createdAt: Date,
     services: Object,
     profile: Object,
-    isActive: Boolean,
     emails: Array,
     relations: UserRelations,
-    roles: Match.Optional(Object)
+    roles: Match.Optional(Object),
+    lastLoginDate: Match.Optional(Date)
   });
 
   return true;
