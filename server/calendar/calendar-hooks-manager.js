@@ -1,4 +1,4 @@
-class calendarHooksManager {
+CalendarHooksManager = class CalendarHooksManager {
   constructor(oldItem, newItem, itemSettings) {
     this.oldItem = oldItem;
     this.newItem = newItem;

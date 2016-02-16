@@ -37,7 +37,7 @@ Meteor.startup(() => {
   collectionHooksSettings.forEach((collectionHook) => {
     Mongo.Collection.get(collectionHook.collection).after.update(function (userId, newItem) {
       let oldItem = this.previous;
-      let checker = new calendarHooksManager(oldItem, newItem, collectionHook);
+      let checker = new CalendarHooksManager(oldItem, newItem, collectionHook);
       checker.check();
     })
   });
