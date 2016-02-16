@@ -16,8 +16,8 @@ Template.ordersReceiptsList.onCreated(function () {
     let dateInterval = ordersPeriod.getCurrentPeriod(period);
 
     return OrderReceipts.find({
-      'received': this.showsReceivedOrders.get(),
-      'expectedDeliveryDate': dateInterval
+      received: this.showsReceivedOrders.get(),
+      expectedDeliveryDate: dateInterval
     }, {
       sort: {
         expectedDeliveryDate: 1, supplier: 1
@@ -28,7 +28,7 @@ Template.ordersReceiptsList.onCreated(function () {
 });
 
 Template.ordersReceiptsList.helpers({
-  receivingOrdersButtons: function () {
+  receivingOrdersButtons() {
     let showsReceivedOrders = Template.instance().showsReceivedOrders.get();
     let className = 'btn btn-white orders-status';
     return [
@@ -45,7 +45,7 @@ Template.ordersReceiptsList.helpers({
     ];
   },
 
-  periodOfOrders: function () {
+  periodOfOrders() {
     let currentPeriod = Template.instance().periodOfOrders.get();
     let className = 'btn btn-white period-of-orders';
     return [
@@ -71,7 +71,7 @@ Template.ordersReceiptsList.helpers({
     return ['Date expected', 'Supplier', 'Ordered Value', 'Received Amount', 'Received', 'Invoice Uploaded'];
   },
 
-  receipts: function () {
+  receipts() {
     return Template.instance().getOrderReceipts();
   },
 
