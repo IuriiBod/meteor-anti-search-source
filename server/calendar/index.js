@@ -19,7 +19,13 @@ Meteor.methods({
       if (shift) {
         eventObject.shiftId = shift._id;
       } else {
-        throw new Meteor.Error(404, 'Shift for user not found');
+        eventObject.shiftId = Meteor.call('createShift', {
+          type: null,
+          startTime: eventObject.startTime,
+          endTime: eventObject.endTime,
+          assignedTo: eventObject.userId
+        });
+
       }
     }
 
