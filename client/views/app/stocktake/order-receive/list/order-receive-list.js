@@ -10,11 +10,11 @@ Template.orderReceive.helpers({
   total: function () {
     var orders = StockOrders.find({"orderReceipt": this.currentReceipt._id}).fetch();
     var cost = 0;
-    var count;
     if (orders.length > 0) {
       orders.forEach(function (order) {
-        count = order.countDelivered || order.countOrdered;
-        cost += parseInt(count) * parseFloat(order.unitPrice)
+        var count = order.countDelivered;
+        if (count === undefined) count = order.countOrdered;
+        cost += parseInt(count) * parseFloat(order.unitPrice);
       });
     }
     return cost;
