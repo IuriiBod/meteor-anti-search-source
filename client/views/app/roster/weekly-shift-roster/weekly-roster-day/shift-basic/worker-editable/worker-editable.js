@@ -4,7 +4,7 @@ Template.shiftBasicWorkerEditable.onRendered(function () {
 
 Template.shiftBasicWorkerEditable.helpers({
   assignedTo: function () {
-    return this.assignedTo ? this.assignedTo : 'Open';
+    return this.shift.assignedTo ? this.shift.assignedTo : 'Open';
   }
 });
 
@@ -77,7 +77,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
   };
 
   var sourceFn = function (getAvailableWorkers, showTrainedWorkers) {
-    var shift = Shifts.findOne({_id: templateInstance.data._id});
+    var shift = Shifts.findOne({_id: templateInstance.data.shift._id});
     var workersQuery = {
       $or: [
         {"profile.resignDate": null},
@@ -118,7 +118,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
 
 var createSelectWorkerEditableConfig = function (templateInstance) {
   var assignWorkerToShift = function (workerId) {
-    var shift = Shifts.findOne({_id: templateInstance.data._id});
+    var shift = Shifts.findOne({_id: templateInstance.data.shift._id});
     shift.assignedTo = workerId;
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };

@@ -42,7 +42,7 @@
 
     <ul class="sortable-list agile-list" data-current-date="{{currentDate}}">
       {{#each shifts}}
-        {{> shiftBasic}}
+        {{> shiftBasic shift=this onCopyShift=onCopyShift}}
       {{/each}}
     </ul>
   </div>

@@ -1,9 +1,11 @@
-//context: type ("template"/null), currentDate (Date)
+//context: type ("template"/null), currentDate (Date), shiftBuffer (ReactiveVar), onCopyShift (function)
 
 Template.weeklyRosterDay.onCreated(function () {
   this.hasTemplateType = function () {
     return this.data.type === 'template';
-  }
+  };
+
+  this.data.shiftBuffer = new ReactiveVar(null);
 });
 
 Template.weeklyRosterDay.onRendered(function () {
@@ -54,8 +56,12 @@ Template.weeklyRosterDay.helpers({
     return HospoHero.dateUtils.shortDateFormat(moment(date));
   },
   hasCopiedShift: function () {
-    return !!Session.get('copiedShift');
+    return !!Template.instance().data.shiftBuffer;
+  },
+  onCopyShift: function () {
+    return Template.instance().data.onCopyShift;
   }
+
 });
 
 
@@ -83,23 +89,17 @@ Template.weeklyRosterDay.events({
   'click .paste-shift-button': function (event, tmpl) {
     let zeroMoment = moment(new Date(tmpl.data.currentDate));
 
-    let pastedShiftInfo = Session.get('copiedShift');
-    delete pastedShiftInfo._id;
+    let pastedShift = Template.instance().data.shiftBuffer;
 
-    let startHours = pastedShiftInfo.startTime.getHours();
-    let endHours = pastedShiftInfo.endTime.getHours();
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
+      start: zeroMoment,
+      end: zeroMoment
+    }, pastedShift.startTime, pastedShift.endTime);
 
-    pastedShiftInfo.startTime = new Date(zeroMoment.hours(startHours));
+    pastedShift.startTime = newShiftDuration.start;
+    pastedShift.endTime = newShiftDuration.end;
 
-    let endMoment = zeroMoment.hours(endHours);
-    //check if endTime would be next day
-    if (startHours > endHours) {
-      endMoment.add(1, 'd');
-    }
-
-    pastedShiftInfo.endTime = new Date(endMoment);
-
-    Meteor.call("createShift", pastedShiftInfo, HospoHero.handleMethodResult());
+    Meteor.call("createShift", pastedShift, HospoHero.handleMethodResult());
   }
 });
 
@@ -153,3 +153,4 @@ SortableHelper.prototype.getSortedShift = function () {
     return shift;
   }
 };
+
