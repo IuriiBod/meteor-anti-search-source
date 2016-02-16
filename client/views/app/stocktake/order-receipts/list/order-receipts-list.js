@@ -45,7 +45,7 @@ Template.ordersReceiptsList.helpers({
     ];
   },
 
-  periodOfOrders() {
+  periodOfOrdersButtons() {
     let currentPeriod = Template.instance().periodOfOrders.get();
     let className = 'btn btn-white period-of-orders';
     return [
