@@ -39,35 +39,23 @@ Meteor.methods({
 
     check(organizationId, HospoHero.checkers.MongoId);
 
-    //updating user in Meteor.users collection requires user id
-    var organizationOwnerId = Meteor.userId();
-    var usersIdsRelatedToOrganization = Meteor.users
-      .find({'relations.organizationIds': {$in: [organizationId]}}, {fields: {_id: 1}})
-      .map(function (user) {
-        return user._id
-      });
-
-    usersIdsRelatedToOrganization.forEach(function (userId) {
-      if (userId !== organizationOwnerId) {
-        Notifications.remove({$or: [{to: userId}, {createdBy: userId}]});
-        Meteor.users.remove({_id: userId});
-      }
+    Locations.find({organizationId: organizationId}, {
+      fields: {_id: 1}
+    }).forEach(function (location) {
+      Meteor.call('deleteLocation', location._id);
     });
 
-    var locationsIdsRelatedToOrganization = Locations
-      .find({organizationId: organizationId}, {fields: {_id: 1}})
-      .map(function (location) {
-        return location._id;
-      });
-
-    locationsIdsRelatedToOrganization.forEach(function (id) {
-      Meteor.call('deleteLocation', id);
-    });
-
-    Meteor.users.update({
-      _id: organizationOwnerId
+    //remove organization's members from it
+    let organizationMembersIds = Meteor.users.find({
+      'relations.organizationIds': organizationId
     }, {
+      fields: {_id: 1}
+    }).map(user => user._id);
+
+    Meteor.users.update({_id: {$in: organizationMembersIds}}, {
       $pull: {'relations.organizationIds': organizationId}
+    },{
+      multi: true
     });
 
     Organizations.remove({_id: organizationId});

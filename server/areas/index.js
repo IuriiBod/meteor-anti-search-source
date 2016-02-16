@@ -37,27 +37,24 @@ Meteor.methods({
 
     check(areaId, HospoHero.checkers.MongoId);
 
+    let getDocumentId = document => document._id;
 
     //updating user in Meteor.users collection requires user id
-    var usersIdsRelatedToArea = Meteor.users
-      .find({'relations.areaIds': areaId}, {fields: {_id: 1}})
-      .map(function (user) {
-        return user._id
-      });
+    var areaMembersIds = Meteor.users.find({
+      'relations.areaIds': areaId
+    }, {
+      fields: {_id: 1}
+    }).map(getDocumentId);
 
     Meteor.users.update({
-      _id: {$in: usersIdsRelatedToArea}
+      _id: {$in: areaMembersIds}
     }, {
       $pull: {'relations.areaIds': areaId}
     }, {
       multi: true
     });
 
-    var usersIdsWithCurrentAreaId = Meteor.users
-      .find({currentAreaId: areaId})
-      .map(function (user) {
-        return user._id
-      });
+    var usersIdsWithCurrentAreaId = Meteor.users.find({currentAreaId: areaId}).map(getDocumentId);
 
     Meteor.users.update({
       _id: {$in: usersIdsWithCurrentAreaId}
@@ -66,6 +63,10 @@ Meteor.methods({
     }, {
       multi: true
     });
+
+    //todo: implement removing of prediction models in area
+    //var googlePrediction = new GooglePredictionApi(locationId);
+    //googlePrediction.removePredictionModel();
 
     var removeDocumentsRelatedToArea = function (areaId) {
       var globals = Function('return this')();
