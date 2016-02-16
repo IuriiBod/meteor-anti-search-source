@@ -3,8 +3,8 @@ Template.orderReceiptItem.helpers({
     return this.hasOwnProperty("invoiceImage");
   },
 
-  orderedValue: function() {
-    var cost = 0;
+  orderedValue() {
+    let cost = 0;
     StockOrders.find({"orderReceipt": this._id}).forEach(function (order) {
       let countOrdered = order.countOrdered || 0;
       cost += parseFloat(countOrdered) * parseFloat(order.unitPrice);
@@ -12,7 +12,7 @@ Template.orderReceiptItem.helpers({
     return cost;
   },
 
-  invoiceFaceValue: function() {
+  invoiceFaceValue() {
     let cost = 0;
     StockOrders.find({"orderReceipt": this._id}).forEach((order) => {
       if (order.received) {
