@@ -12,20 +12,13 @@ Meteor.methods({
       var shift = Shifts.findOne({
         startTime: shiftTimeRange,
         assignedTo: eventObject.userId,
-        //published: true,
         'relations.areaId': areaId
       });
 
       if (shift) {
         eventObject.shiftId = shift._id;
       } else {
-        eventObject.shiftId = Meteor.call('createShift', {
-          type: null,
-          startTime: eventObject.startTime,
-          endTime: eventObject.endTime,
-          assignedTo: eventObject.userId
-        });
-
+        throw new Meteor.Error(404, 'No shift for today');
       }
     }
 

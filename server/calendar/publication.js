@@ -8,7 +8,6 @@ Meteor.publishComposite('calendarEvents', function (date, queryType, areaId, use
       if (this.userId && !!area) {
         var query = {
           startTime: TimeRangeQueryBuilder[queryType](date, area.locationId),
-          //published: true,
           'relations.areaId': areaId
         };
 

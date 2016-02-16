@@ -40,10 +40,6 @@ Template.meetingDetails.helpers({
     return Template.instance().meeting();
   },
 
-  isMeetingCreator () {
-    return Template.instance().meeting().createdBy === Meteor.userId();
-  },
-
   agendaAndMinutes () {
     let meeting = Template.instance().meeting();
     return meeting.agendaAndMinutes || 'Click to edit...';
@@ -53,30 +49,6 @@ Template.meetingDetails.helpers({
     let tmpl = Template.instance();
     return (agendaAndMinutes) => {
       tmpl.saveMeeting('agendaAndMinutes', agendaAndMinutes);
-    }
-  },
-
-  onDateChange () {
-    let meeting = Template.instance().meeting();
-
-    return (newDate) => {
-      meeting.startTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.startTime);
-      meeting.endTime  = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.endTime );
-      Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
-    }
-  },
-
-  timeComboEditableParams () {
-    let meeting = Template.instance().meeting();
-    return {
-      minuteStepping: 10,
-      firstTime: meeting.startTime,
-      secondTime: meeting.endTime,
-      onSubmit: function (startTime, endTime) {
-        meeting.startTime = HospoHero.dateUtils.applyTimeToDate(meeting.startTime, startTime);
-        meeting.endTime = HospoHero.dateUtils.applyTimeToDate(meeting.endTime, endTime);
-        Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
-      }
     }
   },
 
@@ -95,26 +67,5 @@ Template.meetingDetails.helpers({
       title: 'Agenda & Minutes',
       contentPadding: '20px'
     }
-  }
-});
-
-
-Template.meetingDetails.events({
-  'click .add-user' (event, tmpl) {
-    let meeting = tmpl.meeting();
-
-    let onUserSelect = () => {
-      return (userId) => {
-        meeting.attendees.push(userId);
-        Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult(function () {
-          HospoHero.success('User have been added to the meeting');
-        }));
-      }
-    };
-
-    FlyoutManager.open('usersSearchFlyout', {
-      selectedUsers: meeting.attendees,
-      onUserSelect: onUserSelect
-    });
   }
 });

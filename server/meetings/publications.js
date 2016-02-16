@@ -1,13 +1,16 @@
-Meteor.publishComposite('meetings', function (userId, locationId) {
+Meteor.publishComposite('meetings', function (userId) {
   return {
     find () {
       if (this.userId) {
-        return Meetings.find({
-          $or: [
+        let query = {};
+
+        if (userId) {
+          query.$or = [
             {attendees: userId},
             {createdBy:userId}
-          ]
-        });
+          ];
+        }
+        return Meetings.find(query);
       } else {
         this.ready();
       }

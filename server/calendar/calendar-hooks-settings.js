@@ -32,13 +32,18 @@ let collectionHooksSettings = [
   }
 ];
 
+
 // Set hooks on startup
 Meteor.startup(() => {
   collectionHooksSettings.forEach((collectionHook) => {
     Mongo.Collection.get(collectionHook.collection).after.update(function (userId, newItem) {
       let oldItem = this.previous;
-      let checker = new CalendarHooksManager(oldItem, newItem, collectionHook);
+      let checker = new CalendarHooksManager(userId, oldItem, newItem, collectionHook);
       checker.check();
-    })
+    });
+
+    Mongo.Collection.get(collectionHook.collection).after.remove(function (userId, item) {
+      CalendarEvents.remove({itemId: item._id});
+    });
   });
 });

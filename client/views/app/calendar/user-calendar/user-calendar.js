@@ -4,7 +4,7 @@ Template.userCalendar.helpers({
     return !!Shifts.findOne({
       assignedTo: this.userId,
       startTime: TimeRangeQueryBuilder[queryType](this.date),
-      published: true,
+      //published: true,
       'relations.areaId': HospoHero.getCurrentAreaId()
     });
   },

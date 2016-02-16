@@ -6,10 +6,10 @@ var CalendarEventDocument = Match.Where(function (calendarEvent) {
     type: String,
     userId: HospoHero.checkers.MongoId,
     locationId: HospoHero.checkers.MongoId,
-    shiftId: HospoHero.checkers.OptionalMongoId,
 
     // Optional
     _id: HospoHero.checkers.OptionalMongoId,
+    shiftId: HospoHero.checkers.OptionalMongoId,
     doneCheckListItems: Match.Optional([Number])
   });
 
@@ -21,7 +21,7 @@ var CalendarEventDocument = Match.Where(function (calendarEvent) {
   };
 
   // check event time is between shift start and end time
-  if (isBetween(calendarEvent.startTime) && isBetween(calendarEvent.endTime)) {
+  if (shift && isBetween(calendarEvent.startTime) && isBetween(calendarEvent.endTime)) {
     return true;
   } else {
     throw new Meteor.Error('Event must be placed in shift time');
