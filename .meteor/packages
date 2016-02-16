@@ -88,6 +88,7 @@ zephraph:namespace
 alonoslav:roles
 jss:anti-search-source
 jss:moment-timezone
+jss:ui-states
 
 # ===========> new
 settinghead:auto-nprogress

@@ -1,0 +1,27 @@
+<template name="collapsibleElement">
+  <div class="ibox-title">
+    <h5>{{settings.title}} &nbsp;</h5>
+    <div class="ibox-tools pull-right">
+      {{#each settings.buttons}}
+        <a href="{{url}}" class="{{className}}">
+          {{#if icon}}<i class="{{icon}}"></i>{{/if}}
+          {{#if text}}{{text}}{{/if}}
+        </a>
+      {{/each}}
+      <a class="{{#if collapsed}}collapsed{{/if}}"
+         data-toggle="collapse"
+         data-target="#{{settings.uiStateId}}"
+         aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}"
+         aria-controls="{{settings.uiStateId}}">
+        <i class="fa fa-chevron-{{#if collapsed}}up{{else}}down{{/if}}"></i>
+      </a>
+    </div>
+  </div>
+  <div id="{{settings.uiStateId}}"
+       class="collapsible-element-content ibox-content panel-body no-padding {{panelBodyClasses collapsed}}"
+       aria-expanded="{{#if collapsed}}true{{else}}false{{/if}}">
+    <div style="{{#if settings.contentPadding}}padding: {{settings.contentPadding}}{{/if}}">
+      {{> Template.contentBlock}}
+    </div>
+  </div>
+</template>

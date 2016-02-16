@@ -1,0 +1,21 @@
+<template name="menuItemImage">
+  <div class="ibox panel panel-default">
+    {{#collapsibleElement settings=imageSettings}}
+      <div class="col-sm-9">
+        <div class="menuImageDiv">
+          <div class="uploadedImageDiv">
+            {{#if image}}
+              <a href="#">
+                <span class="corner"></span>
+
+                <div class="image">
+                  <img src="{{image}}" class="img-responsive menu-item-image">
+                </div>
+              </a>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    {{/collapsibleElement}}
+  </div>
+</template>
