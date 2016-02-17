@@ -58,7 +58,9 @@ Meteor.methods({
         throw new Meteor.Error(401, "Price not found");
       }
       setQuery['unitPrice'] = info.price;
-      if (!order.originalPrice) setQuery['originalPrice'] = order.unitPrice;
+      if (!order.originalPrice) {
+        setQuery['originalPrice'] = order.unitPrice;
+      }
       setQuery['priceUpdatedBy'] = Meteor.userId();
       setQuery['stockPriceUpdated'] = info.stockPriceUpdated;
     } else if (status == "Wrong Quantity") {

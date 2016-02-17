@@ -13,7 +13,9 @@ Template.orderReceive.helpers({
     if (orders.length > 0) {
       orders.forEach(function (order) {
         var count = order.countDelivered;
-        if (count === undefined) count = order.countOrdered;
+        if (count === undefined) {
+          count = order.countOrdered;
+        }
         cost += parseInt(count) * parseFloat(order.unitPrice);
       });
     }
