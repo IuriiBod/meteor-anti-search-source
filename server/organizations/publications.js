@@ -1,10 +1,11 @@
+//todo: add location/area details subscribtion
+
 // Publishing organization and all what depends on it
 Meteor.publishComposite('organizationInfo', function () {
   logger.info('Organization info subscription');
 
-  console.log('Organization info subscription');
-
-  var user = this.userId && Meteor.users.findOne(this.userId);
+  let user = this.userId && Meteor.users.findOne(this.userId);
+  let isOrganizationOwner = (organization) => organization.owners.indexOf(user._id) > -1;
 
   if (user) {
     let compositeConfig = [
@@ -47,31 +48,38 @@ Meteor.publishComposite('organizationInfo', function () {
           {
             // Publishing locations of organization
             find: function (organization) {
-              if (user.relations.locationIds) {
-                return Locations.find({
-                  _id: {$in: user.relations.locationIds},
-                  organizationId: organization._id,
-                  archived: {$ne: true}
-                }, {
-                  fields: {
-                    name: 1,
-                    organizationId: 1,
-                    timezone: 1
-                  }
-                });
-              } else {
-                this.ready()
+              let query = {
+                organizationId: organization._id,
+                archived: {$ne: true}
+              };
+
+              if (!isOrganizationOwner(organization)) {
+                // in case user isn't organization owner
+                query._id = {$in: user.relations.locationIds};
               }
+
+              return Locations.find(query, {
+                fields: {
+                  name: 1,
+                  organizationId: 1,
+                  timezone: 1
+                }
+              });
             },
             children: [
               {
                 // Publishing areas of locations
-                find: function (location) {
-                  return Areas.find({
-                    _id: {$in: user.relations.areaIds},
+                find: function (location, organization) {
+                  let query = {
                     locationId: location._id,
                     archived: {$ne: true}
-                  }, {
+                  };
+
+                  if (!isOrganizationOwner(organization)) {
+                    query._id = {$in: user.relations.areaIds}
+                  }
+
+                  return Areas.find(query, {
                     fields: {
                       name: 1,
                       locationId: 1,
