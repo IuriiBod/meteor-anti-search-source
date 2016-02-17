@@ -1,6 +1,6 @@
 Template.shiftBasic.onCreated(function () {
   var self = this;
-  console.log(this, this.data);
+
   self.editShiftTime = function (newStartTime, newEndTime) {
     let shift = this.data.shift;
 
@@ -41,7 +41,6 @@ Template.shiftBasic.events({
   },
   'click .copy-shift-button': function (event, tmpl) {
     event.preventDefault();
-    console.log(tmpl.data, tmpl);
     tmpl.data.onCopyShift(tmpl.data.shift);
   }
 });
