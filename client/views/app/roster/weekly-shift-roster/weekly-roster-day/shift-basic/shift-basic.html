@@ -10,7 +10,7 @@
     <div class="agile-detail">
       <i class="fa fa-user"></i>
       {{#if canEditRoster}}
-        {{> shiftBasicWorkerEditable}}
+        {{> shiftBasicWorkerEditable shift}}
       {{else}}
         {{#if assignedTo}}
           {{username assignedTo}}
@@ -35,7 +35,7 @@
     <div class="agile-detail">
       <i class="fa fa-angle-double-right"></i>
       {{#if canEditRoster}}
-        {{> shiftBasicSectionEditable}}
+        {{> shiftBasicSectionEditable shift}}
       {{else}}
         {{sectionById section}}
       {{/if}}
