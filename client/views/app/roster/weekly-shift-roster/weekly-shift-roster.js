@@ -14,9 +14,11 @@ Template.weeklyShiftRoster.helpers({
   },
   onCopyShift: function () {
     const self = Template.instance();
-    return shift => {
-      delete shift._id;
-      self.shiftBuffer.set(shift);
+    return function (shift) {
+      if (shift) {
+        delete shift._id;
+        self.shiftBuffer.set(shift);
+      }
     };
   }
 });

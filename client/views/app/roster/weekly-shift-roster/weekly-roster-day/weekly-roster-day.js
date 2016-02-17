@@ -5,7 +5,11 @@ Template.weeklyRosterDay.onCreated(function () {
     return this.data.type === 'template';
   };
 
-  this.data.shiftBuffer = new ReactiveVar(null);
+  this.hasCopiedShift = function () {
+    return this.data.shiftBuffer;
+  };
+
+  this.onCopyShift = this.data.onCopyShift;
 });
 
 Template.weeklyRosterDay.onRendered(function () {
@@ -55,11 +59,13 @@ Template.weeklyRosterDay.helpers({
   shiftDateFormat: function (date) {
     return HospoHero.dateUtils.shortDateFormat(moment(date));
   },
+
   hasCopiedShift: function () {
-    return !!Template.instance().data.shiftBuffer;
+    return Template.instance().hasCopiedShift();
   },
+
   onCopyShift: function () {
-    return Template.instance().data.onCopyShift;
+    return Template.instance().onCopyShift;
   }
 
 });
@@ -89,7 +95,7 @@ Template.weeklyRosterDay.events({
   'click .paste-shift-button': function (event, tmpl) {
     let zeroMoment = moment(new Date(tmpl.data.currentDate));
 
-    let pastedShift = Template.instance().data.shiftBuffer;
+    let pastedShift = tmpl.data.shiftBuffer;
 
     let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
       start: zeroMoment,
