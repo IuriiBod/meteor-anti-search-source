@@ -137,7 +137,26 @@ var menuEntries = [
         date: HospoHero.dateUtils.shortDateFormat(new Date())
       }
     }
+  },
+  {
+    title: "Help",
+    icon: 'fa-question',
+    subMenuEntries: [
+      {
+        title: 'Self Help',
+        callback: function () {
+          window._elev.openModule('articles');
+        }
+      },
+      {
+        title: 'Chat with Support',
+        callback: function () {
+          window._elev.openModule('intercom');
+        }
+      }
+    ]
   }
+
 ];
 
 Template.navigation.helpers({

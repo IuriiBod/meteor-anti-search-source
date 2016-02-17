@@ -1,4 +1,6 @@
 Template.areaSettings.onCreated(function () {
+  this.subscribe('areaDetailsUsers', this.data.areaId);
+
   this.addUser = new ReactiveVar(false);
 
   this.area = function () {
@@ -101,7 +103,7 @@ Template.areaSettings.events({
     tmpl.addUser.set(!tmpl.addUser.get());
   },
 
-  'click .show-pos-settings': function() {
+  'click .show-pos-settings': function () {
     event.preventDefault();
     Router.go('posSettings');
   }

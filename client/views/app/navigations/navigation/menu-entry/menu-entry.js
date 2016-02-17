@@ -39,6 +39,10 @@ Template.menuEntry.helpers({
     var activeOnRoutes = this.activeOnRoutes || this.route;
 
     return _.isArray(activeOnRoutes) && activeOnRoutes.join('|') || activeOnRoutes;
+  },
+
+  hasRoute: function () {
+    return !!(this.activeOnRoutes || this.route);
   }
 });
 
@@ -47,6 +51,10 @@ Template.menuEntry.events({
     showSubMenu(tmpl);
     if (isMobile() && !haveSubMenu(event)) {
       hideSideMenu();
+    }
+
+    if (tmpl.data.callback) {
+      tmpl.data.callback();
     }
   }
 });
