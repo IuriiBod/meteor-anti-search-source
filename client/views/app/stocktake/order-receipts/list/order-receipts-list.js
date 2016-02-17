@@ -31,7 +31,7 @@ Template.ordersReceiptsList.helpers({
   receivingOrdersButtons() {
     let showsReceivedOrders = Template.instance().showsReceivedOrders.get();
     let defaultButton = 'btn btn-white orders-status';
-    let activeButton = 'btn btn-white orders-status active';
+    let activeButton = `${defaultButton} active`;
     return [
       {
         status: 'toBeReceived',
@@ -49,7 +49,7 @@ Template.ordersReceiptsList.helpers({
   periodOfOrdersButtons() {
     let currentPeriod = Template.instance().periodOfOrders.get();
     let defaultButton = 'btn btn-white period-of-orders';
-    let activeButton = 'btn btn-white period-of-orders active';
+    let activeButton = `${defaultButton} active`;
     return [
       {
         period: 'week',
