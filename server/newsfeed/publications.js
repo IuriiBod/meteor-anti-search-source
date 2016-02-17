@@ -17,9 +17,7 @@ Meteor.publishComposite('newsfeeds', {
         return Meteor.users.find({
           _id: newsfeed.createdBy
         }, {
-          fields: {
-            profile: 1
-          }
+          fields: HospoHero.security.getPublishFieldsFor('users')
         });
       }
     }

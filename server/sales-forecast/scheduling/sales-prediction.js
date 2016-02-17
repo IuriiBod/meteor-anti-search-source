@@ -31,15 +31,6 @@ ForecastMaker.prototype._updateForecastEntry = function (newForecastInfo) {
 
 
 ForecastMaker.prototype._getNotificationSender = function (area) {
-  var roleManagerId = Roles.getRoleByName('Manager')._id;
-  var getReceivers = function () {
-    var receiversQuery = {};
-    receiversQuery[area._id] = roleManagerId;
-    return Meteor.users.find({roles: receiversQuery}).map(function (user) {
-      return user._id;
-    });
-  };
-
   var self = this;
   var changes = [];
 
@@ -64,10 +55,13 @@ ForecastMaker.prototype._getNotificationSender = function (area) {
 
     send: function () {
       if (changes.length > 0) {
-        var receiversIds = getReceivers();
+        var receiversIds = Roles.getUsersByActionForArea('view forecast', area._id).map(user => user._id);
+
         logger.info('Notify about prediction change', {receivers: receiversIds, changes: changes});
+
         var notificationTitle = 'Some predictions have been changed';
         var notificationSender = new NotificationSender(notificationTitle, 'forecast-update', changes);
+
         receiversIds.forEach(function (receiverId) {
           notificationSender.sendNotification(receiverId);
         });
@@ -77,8 +71,8 @@ ForecastMaker.prototype._getNotificationSender = function (area) {
 };
 
 
-ForecastMaker.prototype._predictFor = function (days) {
-  logger.info('Make prediction', {days: days, locationId: this._locationId});
+ForecastMaker.prototype._predictFor = function (totalDaysCount) {
+  logger.info('Make prediction', {days: totalDaysCount, locationId: this._locationId});
 
   var today = new Date();
   var dateToMakePredictionFrom = HospoHero.prediction.getDateThreshold(); // new Date() default
@@ -87,8 +81,8 @@ ForecastMaker.prototype._predictFor = function (days) {
 
   var areas = Areas.find({locationId: this._locationId});
 
-  for (var i = 0; i < days; i++) {
-    var currentWeather = this._getWeatherForecast(i, dateMoment.toDate());
+  for (var currentDayNumber = 0; currentDayNumber < totalDaysCount; currentDayNumber++) {
+    var currentWeather = this._getWeatherForecast(currentDayNumber, dateMoment.toDate());
 
     areas.forEach(function (area) {
       var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id}, true);
@@ -112,8 +106,7 @@ ForecastMaker.prototype._predictFor = function (days) {
 
         self._updateForecastEntry(predictItem);
 
-        //checking need for notification push
-        if (i < 14) {
+        if (currentDayNumber < 14) {
           notificationSender.addChange(predictItem, menuItem);
         }
       });
@@ -130,37 +123,34 @@ ForecastMaker.prototype._getPredictionUpdatedDate = function (interval) {
   var predictionDate = moment(HospoHero.prediction.getDateThreshold());
   predictionDate.add(interval, 'day');
 
-  var menuItemFromCurrentLocation = MenuItems.findOne({'relations.locationId': this._locationId});
-
   var dailySale = DailySales.findOne({
-    menuItemId: menuItemFromCurrentLocation._id,
+    'relations.locationId': this._locationId,
     date: TimeRangeQueryBuilder.forDay(predictionDate, this._locationId),
     predictionQuantity: {$gte: 0}
   });
 
-  if (dailySale) {
-    return dailySale.predictionUpdatedAt;
-  }
+  return dailySale && dailySale.predictionUpdatedAt;
 };
 
 
 ForecastMaker.prototype._needToUpdate = function (interval) {
-  var halfOfInterval = parseInt(interval / 2);
+  var halfOfInterval = Math.round(interval / 2);
   var predictionUpdatedDate = this._getPredictionUpdatedDate(halfOfInterval + 1) || false;
-  var shouldBeUpdatedBy = moment().subtract(halfOfInterval, 'day');
+  var shouldBeUpdatedBy = moment(HospoHero.prediction.getDateThreshold()).subtract(halfOfInterval, 'day');
 
-  return !predictionUpdatedDate || moment(predictionUpdatedDate) < shouldBeUpdatedBy;
+  return !predictionUpdatedDate || moment(predictionUpdatedDate).isBefore(shouldBeUpdatedBy);
 };
 
 
 ForecastMaker.prototype.makeForecast = function () {
   var self = this;
 
-  this._updateDayIntervals.forEach(function (interval) {
+  this._updateDayIntervals.every(function (interval) {
     if (self._needToUpdate(interval)) {
       self._predictFor(interval);
       return false;
     }
+    return true;
   });
 };
 

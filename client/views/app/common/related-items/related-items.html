@@ -1,0 +1,17 @@
+<template name="relatedItemsWidget">
+  <div class="ibox float-e-margins">
+    {{#collapsibleElement settings=relatedItemsOptions}}
+      {{#if relatedItems.count}}
+        <div class="ibox-content no-padding white-bg">
+          <ul class="list-group">
+            {{#each relatedItems}}
+              {{> relatedItemsWidgetItem this}}
+            {{/each}}
+          </ul>
+        </div>
+      {{else}}
+        <h4 class="text-center">No related items yet</h4>
+      {{/if}}
+    {{/collapsibleElement}}
+  </div>
+</template>
