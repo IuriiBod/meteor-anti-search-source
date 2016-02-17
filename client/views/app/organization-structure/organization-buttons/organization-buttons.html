@@ -1,14 +1,10 @@
 <template name="organizationButtons">
-  <span>Organization</span>
-
   <div class="organization-buttons-container">
 
     {{#if isOrganizationOwner}}
       <span class="pull-right btn btn-sm btn-link organization-details-flyout organization-settings-buttons"><i
-        class="fa fa-fw fa-cog"></i></span>
-    {{/if}}
+          class="fa fa-fw fa-cog"></i></span>
 
-    {{#if isOrganizationOwner}}
       <div class="btn-group pull-right organization-settings-buttons">
         <button type="button" class="btn dropdown-toggle btn-link" data-toggle="dropdown" aria-expanded="false">
           <i class="fa fa-fw fa-plus"></i>

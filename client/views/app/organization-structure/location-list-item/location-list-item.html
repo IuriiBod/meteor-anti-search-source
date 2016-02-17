@@ -1,0 +1,16 @@
+<template name="locationListItem">
+  <ul class="list-group" style="display: block;">
+    <li class="list-group-item lead"
+        style="display: block; cursor: pointer;">
+      {{name}}
+
+      {{#if canEditLocation}}
+        <span class="badge location-settings-button"><i class="fa fa-fw fa-cog"></i></span>
+      {{/if}}
+    </li>
+
+    {{#each areas}}
+      {{> areaListItem}}
+    {{/each}}
+  </ul>
+</template>

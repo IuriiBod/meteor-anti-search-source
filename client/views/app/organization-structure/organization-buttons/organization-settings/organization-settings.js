@@ -1,6 +1,4 @@
 Template.organizationDetailsPage.onCreated(function() {
-  this.subscribe('locationsOfOrganization');
-  this.subscribe('areasOfOrganization');
 });
 
 Template.organizationDetailsPage.events({
