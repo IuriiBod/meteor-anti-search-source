@@ -6,13 +6,16 @@
   </div>
 
   <div class="calendar-container col-md-9 text-center">
-    {{#if displayCalendar}}
+    <!--{{#if displayCalendar}}-->
+      <!--{{> calendarItem userId=userId date=date type=type}}-->
+    <!--{{else}}-->
+      <!--<h3>No shifts for {{#if equal type "day"}}today{{else}}this week{{/if}}</h3>-->
+      <!--{{#if canEditRoster userId}}-->
+        <!--<a href="{{pathFor route='weeklyRoster' date=startOfWeekDate}}">you can create one</a>-->
+      <!--{{/if}}-->
+    <!--{{/if}}-->
+
       {{> calendarItem userId=userId date=date type=type}}
-    {{else}}
-      <h3>No shifts for {{#if equal type "day"}}today{{else}}this week{{/if}}</h3>
-      {{#if canEditRoster userId}}
-        <a href="{{pathFor route='weeklyRoster' date=startOfWeekDate}}">you can create one</a>
-      {{/if}}
-    {{/if}}
+
   </div>
 </template>

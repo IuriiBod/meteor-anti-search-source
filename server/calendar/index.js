@@ -18,7 +18,13 @@ Meteor.methods({
       if (shift) {
         eventObject.shiftId = shift._id;
       } else {
-        throw new Meteor.Error(404, 'No shift for today');
+        // if there are no shifts, create a one
+        shift = _.pick(eventObject, ['startTime', 'endTime']);
+        _.extend(shift, {
+          type: null,
+          assignedTo: eventObject.userId
+        });
+        eventObject.shiftId = Meteor.call('createShift', shift);
       }
     }
 
@@ -28,7 +34,7 @@ Meteor.methods({
       logger.error("User not permitted to add items onto calendar");
       throw new Meteor.Error(403, "User not permitted to add items onto calendar");
     } else {
-      CalendarEvents.insert(eventObject);
+      let id = CalendarEvents.insert(eventObject);
     }
   },
 

@@ -51,7 +51,6 @@ JobItems.after.update(function (userId, newJobItem) {
 
 
 Shifts.after.update(function (userId, newShift) {
-  if (newShift.published) {
     var oldShift = this.previous;
 
     // when the assigned user was changed,
@@ -63,8 +62,75 @@ Shifts.after.update(function (userId, newShift) {
         }
       }, {multi: true});
     } else {
-      CalendarEvents.remove({shiftId: newShift._id});
+      CalendarEvents.remove({shiftId: newShift._id, type: 'recurring job'});
       CalendarEventsManager.addRecurringJobsToCalendar(newShift);
     }
+});
+
+let isPropertyChanged = function (propertyName, object1, object2) {
+  if (_.isArray(object1[propertyName])) {
+    return object1[propertyName].length !== object2[propertyName].length;
+  } else if (_.isDate(object1[propertyName])) {
+    return object1[propertyName].valueOf() !== object2[propertyName].valueOf();
+  } else {
+    return object1[propertyName] !== object2[propertyName];
+  }
+};
+
+Meetings.after.update(function (userId, newMeeting) {
+  let oldMeeting = this.previous;
+
+  // check start/end time of meetings
+  if (isPropertyChanged(oldMeeting, newMeeting, 'startTime') || isPropertyChanged(oldMeeting, newMeeting, 'endTime')) {
+    CalendarEvents.find({itemId: newMeeting._id}).forEach((event) => {
+      _.extend(event, {
+        startTime: newMeeting.startTime,
+        endTime: newMeeting.endTime
+      });
+      Meteor.call('editCalendarEvent', event);
+    });
+  }
+
+  // check accepted users count
+  let oldAccepted = oldMeeting.accepted;
+  let newAccepted = newMeeting.accepted;
+
+  let changedUserId = HospoHero.misc.arrayDifference(oldMeeting.accepted, newMeeting.accepted)[0];
+  if (changedUserId) {
+    if (oldAccepted.length > newAccepted.length) {
+      // the user was removed from meeting
+      CalendarEvents.remove({itemId: newMeeting._id, userId: changedUserId});
+    } else {
+      let area = HospoHero.getCurrentArea(Meteor.userId());
+
+      // the user was added to the meeting
+      let event = {
+        itemId: newMeeting._id,
+        startTime: newMeeting.startTime,
+        endTime: newMeeting.endTime,
+        type: 'meeting',
+        userId: changedUserId,
+        locationId: area.locationId,
+        areaId: area._id
+      };
+
+      Meteor.call('addCalendarEvent', event);
+    }
+  }
+});
+
+TaskList.after.update(function (userId, newTask) {
+  let oldTask = this.previous;
+
+  if (isPropertyChanged('dueDate', oldTask, newTask) || isPropertyChanged('duration', oldTask, newTask)) {
+    CalendarEvents.find({itemId: newTask._id}).forEach((event) => {
+      let taskStartTime = HospoHero.dateUtils.applyTimeToDate(newTask.dueDate, event.startTime);
+
+      _.extend(event, {
+        startTime: taskStartTime,
+        endTime: moment(taskStartTime).add(newTask.duration, 'minutes').toDate()
+      });
+      Meteor.call('editCalendarEvent', event);
+    });
   }
 });

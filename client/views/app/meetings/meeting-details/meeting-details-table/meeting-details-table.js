@@ -26,9 +26,11 @@ Template.meetingDetailsTable.helpers({
     let meeting = this.meeting;
 
     return (newDate) => {
-      meeting.startTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.startTime);
-      meeting.endTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.endTime);
-      Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
+      if (meeting.startTime.valueOf() !== newDate.valueOf()) {
+        meeting.startTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.startTime);
+        meeting.endTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.endTime);
+        Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
+      }
     }
   }
 });
