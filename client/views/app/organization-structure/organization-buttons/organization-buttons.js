@@ -1,18 +1,22 @@
 Template.organizationButtons.helpers({
   hasLocations: function () {
     return !!Locations.findOne({organizationId: this._id});
+  },
+  isOrganizationCurrent: function () {
+    let currentArea = HospoHero.getCurrentArea();
+    return currentArea && currentArea.organizationId === this._id;
   }
 });
 Template.organizationButtons.events({
   'click .organization-details-flyout': function (event, tmpl) {
-    FlyoutManager.open('organizationDetailsPage', {organizationId: tmpl.data.organizationId});
+    FlyoutManager.open('organizationDetailsPage', {organizationId: tmpl.data._id});
   },
 
   'click .create-location-flyout': function (event, tmpl) {
-    FlyoutManager.open('createLocation', {organizationId: tmpl.data.organizationId});
+    FlyoutManager.open('createLocation', {organization: tmpl.data});
   },
 
   'click .create-area-flyout': function (event, tmpl) {
-    FlyoutManager.open('createArea', {organizationId: tmpl.data.organizationId, locationId: null});
+    FlyoutManager.open('createArea', {organization: tmpl.data});
   }
 });
