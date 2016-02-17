@@ -6,11 +6,16 @@
     </div>
   </div>
 
-  <div class="flyout-content">
+  <div class="flyout-content organizations-list">
     {{#each organizations}}
-      <h1>{{name}}</h1>
+      <h1>
+        <div class="organization-name">
+          {{name}}
+        </div>
 
-      {{> organizationButtons}}
+        {{> organizationButtons}}
+      </h1>
+
 
       {{#each locations}}
         {{> locationListItem}}

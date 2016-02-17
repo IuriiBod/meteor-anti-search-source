@@ -1,6 +1,6 @@
 Template.areaListItem.helpers({
   canEditArea: function () {
-    return Roles.hasAction(user.roles[this._id], 'edit areas');
+    return HospoHero.isOrganizationOwner() || Roles.hasAction(user.roles[this._id], 'edit areas');
   },
   isCurrentArea: function () {
     return HospoHero.getCurrentAreaId() === this._id;

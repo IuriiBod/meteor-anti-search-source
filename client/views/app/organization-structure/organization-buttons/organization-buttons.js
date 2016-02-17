@@ -1,7 +1,6 @@
 Template.organizationButtons.helpers({
   hasLocations: function () {
-    var locations = Template.instance().locations();
-    return locations && locations.count() > 0;
+    return !!Locations.findOne({organizationId: this._id});
   }
 });
 Template.organizationButtons.events({

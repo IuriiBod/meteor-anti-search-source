@@ -14,5 +14,31 @@
   .area-flyout-button {
     margin-bottom: 20px;
   }
+
+  .area-users {
+    padding: 50px 10px 20px;
+
+    .user-profile-image-container {
+      display: inline-block;
+      position: relative;
+
+      .remove-user-from-area {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: #fff;
+        padding: 1px 3px;
+        cursor: pointer;
+        opacity: 0;
+      }
+    }
+
+    .user-photo-min {
+      max-height: 30px;
+      max-width: 30px;
+      border-radius: 5px;
+    }
+  }
 }
 
