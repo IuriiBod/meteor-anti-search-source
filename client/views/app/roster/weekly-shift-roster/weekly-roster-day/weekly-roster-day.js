@@ -1,6 +1,7 @@
 //context: type ("template"/null), currentDate (Date)
 
 Template.weeklyRosterDay.onCreated(function () {
+  this.subscribe('managerNote', this.data.currentDate, HospoHero.getCurrentAreaId());
   this.hasTemplateType = function () {
     return this.data.type === 'template';
   }

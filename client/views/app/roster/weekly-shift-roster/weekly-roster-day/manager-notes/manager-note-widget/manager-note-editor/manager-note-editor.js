@@ -11,7 +11,6 @@ Template.managerNoteEditor.events({
     event.preventDefault();
 
     var note = tmpl.data.note;
-
     var text = tmpl.$('textarea[name=note-text]').val().trim();
 
     if (!text) return;

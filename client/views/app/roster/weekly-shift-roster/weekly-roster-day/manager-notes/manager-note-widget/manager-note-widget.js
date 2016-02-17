@@ -1,4 +1,5 @@
 Template.managerNoteWidget.onCreated(function() {
+  this.subscribe('managerNote', this.data.date, HospoHero.getCurrentAreaId());
   this.currentNote = new ReactiveVar(null);
 });
 
