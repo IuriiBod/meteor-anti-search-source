@@ -1,4 +1,6 @@
 Template.locationSettings.onCreated(function () {
+  this.subscribe('locationDetails', this.data.locationId);
+
   this.closeFlyoutByEvent = function (event) {
     var flyout = FlyoutManager.getInstanceByElement(event.target);
     flyout.close();

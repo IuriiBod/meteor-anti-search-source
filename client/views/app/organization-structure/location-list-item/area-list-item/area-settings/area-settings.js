@@ -1,5 +1,6 @@
 Template.areaSettings.onCreated(function () {
   this.subscribe('areaDetailsUsers', this.data.areaId);
+  this.subscribe('areaDetails', this.data.areaId);
 
   this.addUser = new ReactiveVar(false);
 

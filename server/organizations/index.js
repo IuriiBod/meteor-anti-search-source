@@ -18,11 +18,7 @@ Meteor.methods({
 
     // Create relations between user and organization
     Meteor.users.update({_id: Meteor.userId()}, {
-      $set: {
-        relations: {
-          organizationIds: [orgId]
-        }
-      }
+      $addToSet: {'relations.organizationIds': orgId}
     });
     return true;
   },
@@ -54,7 +50,7 @@ Meteor.methods({
 
     Meteor.users.update({_id: {$in: organizationMembersIds}}, {
       $pull: {'relations.organizationIds': organizationId}
-    },{
+    }, {
       multi: true
     });
 

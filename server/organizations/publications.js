@@ -1,5 +1,3 @@
-//todo: add location/area details subscribtion
-
 // Publishing organization and all what depends on it
 Meteor.publishComposite('organizationInfo', function () {
   logger.info('Organization info subscription');
@@ -20,18 +18,20 @@ Meteor.publishComposite('organizationInfo', function () {
       {
         // Publishing current organization
         find: function () {
+          let query = {
+            $or: [{owners: user._id}]
+          };
+
           if (user.relations && user.relations.organizationIds) {
-            return Organizations.find({
-              _id: {$in: user.relations.organizationIds}
-            }, {
-              fields: {
-                name: 1,
-                owners: 1
-              }
-            });
-          } else {
-            this.ready();
+            query.$or.push({_id: {$in: user.relations.organizationIds}});
           }
+
+          return Organizations.find(query, {
+            fields: {
+              name: 1,
+              owners: 1
+            }
+          });
         },
         children: [
           {
