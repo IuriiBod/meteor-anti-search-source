@@ -23,7 +23,7 @@ Template.orderReceive.helpers({
   },
 
   isReceived() {
-    return !!this.currentReceipt.received;
+    return this.currentReceipt.received;
   },
 
   receivedNote() {
@@ -54,9 +54,9 @@ Template.orderReceive.events({
     event.preventDefault();
     if (event.keyCode == 13) {
       let receiptId = tmpl.data.currentReceipt._id;
-      let text = $(event.target).val();
+      let text = event.target.value;
       let info = {
-        "receiveNote": text.trim()
+        receiveNote: text.trim()
       };
       Meteor.call("updateReceipt", receiptId, info, HospoHero.handleMethodResult());
     }

@@ -1,20 +1,20 @@
 Template.orderReceiptItem.helpers({
-  isInvoiceUploaded: function() {
+  isInvoiceUploaded() {
     return this.hasOwnProperty("invoiceImage");
   },
 
   orderedValue() {
     let cost = 0;
-    StockOrders.find({"orderReceipt": this._id}).forEach(function (order) {
+    StockOrders.find({orderReceipt: this._id}).forEach(function (order) {
       let countOrdered = order.countOrdered || 0;
       cost += parseFloat(countOrdered) * parseFloat(order.unitPrice);
     });
     return cost;
   },
 
-  invoiceFaceValue() {
+  receivedAmount() {
     let cost = 0;
-    StockOrders.find({"orderReceipt": this._id}).forEach((order) => {
+    StockOrders.find({orderReceipt: this._id}).forEach((order) => {
       if (order.received) {
         var quantity = order.countOrdered;
         if (order.countDelivered) {
@@ -32,7 +32,7 @@ Template.orderReceiptItem.events({
     event.preventDefault();
 
     if (this._id) {
-      Router.go("orderReceive", {"_id": this._id});
+      Router.go("orderReceive", {_id: this._id});
     }
   }
 });

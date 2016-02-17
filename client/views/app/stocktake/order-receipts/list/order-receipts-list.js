@@ -6,14 +6,14 @@ Template.ordersReceiptsList.onCreated(function () {
   let ordersPeriod = {
     forWeek: TimeRangeQueryBuilder.forWeek(),
     forMonth: TimeRangeQueryBuilder.forMonth(),
-    getCurrentPeriod(period) {
+    transformPeriodToQuery(period) {
       return period === 'week' ? this.forWeek : period === 'month' ? this.forMonth : {};
     }
   };
 
   this.getOrderReceipts = () => {
     let period = this.periodOfOrders.get();
-    let dateInterval = ordersPeriod.getCurrentPeriod(period);
+    let dateInterval = ordersPeriod.transformPeriodToQuery(period);
 
     return OrderReceipts.find({
       received: this.showsReceivedOrders.get(),
@@ -30,39 +30,41 @@ Template.ordersReceiptsList.onCreated(function () {
 Template.ordersReceiptsList.helpers({
   receivingOrdersButtons() {
     let showsReceivedOrders = Template.instance().showsReceivedOrders.get();
-    let className = 'btn btn-white orders-status';
+    let defaultButton = 'btn btn-white orders-status';
+    let activeButton = 'btn btn-white orders-status active';
     return [
       {
         status: 'toBeReceived',
         text: 'To be received',
-        className: !showsReceivedOrders ? className + ' active' : className
+        className: !showsReceivedOrders ? activeButton : defaultButton
       },
       {
         status: 'received',
         text: 'Received',
-        className: showsReceivedOrders ? className + ' active' : className
+        className: showsReceivedOrders ? activeButton : defaultButton
       }
     ];
   },
 
   periodOfOrdersButtons() {
     let currentPeriod = Template.instance().periodOfOrders.get();
-    let className = 'btn btn-white period-of-orders';
+    let defaultButton = 'btn btn-white period-of-orders';
+    let activeButton = 'btn btn-white period-of-orders active';
     return [
       {
         period: 'week',
         text: 'This week',
-        className: currentPeriod === 'week' ? className + ' active' : className
+        className: currentPeriod === 'week' ? activeButton : defaultButton
       },
       {
         period: 'month',
         text: 'This month',
-        className: currentPeriod === 'month' ? className + ' active' : className
+        className: currentPeriod === 'month' ? activeButton : defaultButton
       },
       {
         period: 'allTime',
         text: 'All time',
-        className: currentPeriod === 'allTime' ? className + ' active' : className
+        className: currentPeriod === 'allTime' ? activeButton : defaultButton
       }
     ];
   },
