@@ -145,12 +145,27 @@ var menuEntries = [
     params: function () {
       return {};
     }
+  },
+  {
+    title: "Help",
+    icon: 'fa-question',
+    subMenuEntries: [
+      {
+        title: 'Self Help',
+        callback: function () {
+          window._elev.openModule('articles');
+        }
+      },
+      {
+        title: 'Chat with Support',
+        callback: function () {
+          window._elev.openModule('intercom');
+        }
+      }
+    ]
   }
+
 ];
-
-Template.navigation.onCreated(function() {
-
-});
 
 Template.navigation.helpers({
   dashboardEntry: function () {
@@ -159,13 +174,5 @@ Template.navigation.helpers({
 
   menuEntries: function () {
     return menuEntries;
-  }
-});
-
-Template.navigation.events({
-  'click .open-elevio-module': function(event) {
-    event.preventDefault();
-    var moduleName = event.currentTarget.getAttribute('data-elevio-module-name');
-    window._elev.openModule(moduleName);
   }
 });
