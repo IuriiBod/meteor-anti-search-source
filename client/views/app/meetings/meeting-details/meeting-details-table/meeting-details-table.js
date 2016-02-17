@@ -24,15 +24,11 @@ Template.meetingDetailsTable.helpers({
 
   onDateChange () {
     let meeting = this.meeting;
-    let meetingDate = moment(meeting.startTime).startOf('day');
 
     return (newDate) => {
-      // prevent first change date event on rendered
-      if (!meetingDate.isSame(newDate)) {
-        meeting.startTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.startTime);
-        meeting.endTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.endTime);
-        Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
-      }
+      meeting.startTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.startTime);
+      meeting.endTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.endTime);
+      Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
     }
   }
 });

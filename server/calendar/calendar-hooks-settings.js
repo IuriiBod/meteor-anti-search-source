@@ -15,18 +15,37 @@ let collectionHooksSettings = [
     collection: 'meetings',
     fieldsToCheck: {
       time() {
-        return {
-          start: 'startTime',
-          end: 'endTime'
+        if (this.oldItem.startTime !== this.newItem.startTime || this.oldItem.endTime !== this.newValue.endTime) {
+          return {
+            start: 'startTime',
+            end: 'endTime'
+          }
         }
       },
 
       assignedTo() {
+        let changedUser = HospoHero.misc.arrayDifference(this.oldItem.accepted, this.newItem.accepted)[0];
+        if (changedUser) {
+          return {
+            type: 'meeting',
+            field: 'accepted',
+            value: changedUser
+          };
+        }
+      }
+    }
+  },
+
+  // Tasks checker
+  {
+    collection: 'taskList',
+    fieldsToCheck: {
+      duration() {
         return {
-          type: 'meeting',
-          field: 'accepted',
-          value: HospoHero.misc.arrayDifference(this.oldItem.accepted, this.newItem.accepted)[0]
-        };
+          time: 'dueDate',
+          duration: 'duration',
+          durationTimeUnit: 'minutes'
+        }
       }
     }
   }
@@ -44,6 +63,21 @@ Meteor.startup(() => {
 
     Mongo.Collection.get(collectionHook.collection).after.remove(function (userId, item) {
       CalendarEvents.remove({itemId: item._id});
+    });
+
+    CalendarEvents.before.insert(function (userId, event) {
+      let checker = new CalendarHooksManager(userId, event, event, {
+        collection: 'calendarEvents',
+        fieldsToCheck: {
+          shiftExistsAndTimeChecker() {
+            return {
+              start: event.startTime,
+              end: event.endTime
+            }
+          }
+        }
+      });
+      checker.check();
     });
   });
 });

@@ -13,7 +13,19 @@ var CalendarEventDocument = Match.Where(function (calendarEvent) {
     doneCheckListItems: Match.Optional([Number])
   });
 
-  var shift = Shifts.findOne({_id: calendarEvent.shiftId});
+  var shift = Shifts.findOne({
+    $or: [
+      {_id: calendarEvent.shiftId},
+      {
+        startTime: TimeRangeQueryBuilder.forDay(calendarEvent.startTime, calendarEvent.locationId),
+        assignedTo: calendarEvent.userId
+      }
+    ]
+  });
+
+  console.log('CAL', calendarEvent);
+  console.log('SHI', shift);
+
 
   var isBetween = function (date) {
     date = moment(date);
