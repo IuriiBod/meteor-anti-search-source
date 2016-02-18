@@ -41,7 +41,8 @@ Template.textEditor.onRendered(function () {
       ['table', ['table']],
       ['insert', ['link']]
     ],
-    oninit: onSummernoteInit
+    oninit: onSummernoteInit,
+    minHeight: 200
   });
 
   this.autorun(function () {
