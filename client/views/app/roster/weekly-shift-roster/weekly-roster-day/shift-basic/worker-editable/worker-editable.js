@@ -23,20 +23,32 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
       return shiftEntry.assignedTo;
     });
 
-    var unavailableUserIds = Meteor.users.find({
-      $or: [
-        {
-          'unavailabilities.startDate': occupiedTimeRange
-        }, {
-          'unavailabilities.endDate': occupiedTimeRange
-        }, {
-          'unavailabilities.startDate': {$lte: shift.startTime},
-          'unavailabilities.endDate': {$gte: shift.endTime}
-        }
-      ]
-    }).map(function (user) {
-      return user._id;
+    // this is a very strange functionality for checking
+    // if the shift is placed in unavailable for user time
+    // need to refactor
+    var unavailableUserIds = Meteor.users.find().map(function (user) {
+      let isUserHasUnavailability = false;
+
+      if (user.unavailabilities && user.unavailabilities.length) {
+        user.unavailabilities.forEach((unavailability) => {
+          let shiftStart = shift.startTime;
+          let shiftEnd = shift.endTime;
+          let unavailabilityStart = unavailability.startDate;
+          let unavailabilityEnd = unavailability.endDate;
+
+          if (shiftStart.isAfter(unavailabilityStart) && shiftEnd.isBefore(unavailabilityEnd) ||
+            shiftStart.isBetween(unavailabilityStart, unavailabilityEnd) ||
+            shiftEnd.isBetween(unavailabilityStart, unavailabilityEnd) ||
+            shiftStart.isBefore(unavailabilityStart) && shiftEnd.isAfter(unavailabilityEnd)
+          ) {
+            isUserHasUnavailability = true;
+            return false;
+          }
+        });
+      }
+      return isUserHasUnavailability ? user._id : false;
     });
+    unavailableUserIds = _.compact(unavailableUserIds);
 
     var leaveRequestsUserIds = LeaveRequests.find({
       status: "approved",
