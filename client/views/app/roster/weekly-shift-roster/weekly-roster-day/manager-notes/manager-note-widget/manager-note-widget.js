@@ -1,19 +1,33 @@
 //Context: date (Date)
 
 Template.managerNoteWidget.onCreated(function () {
-  this.subscribe('managerNote', this.data.date, HospoHero.getCurrentAreaId());
-  this.note = function () {
-    return ManagerNotes.findOne({
-      noteDate: this.data.date,
-      'relations.areaId': HospoHero.getCurrentAreaId()
+  var self = this;
+
+  self.note = new ReactiveVar();
+
+  self.subscribe('managerNote', self.data.date, HospoHero.getCurrentAreaId(), function onReady () {
+    self.autorun(function () {
+      var note = ManagerNotes.findOne({
+        noteDate: self.data.date,
+        'relations.areaId': HospoHero.getCurrentAreaId()
+      });
+
+      if (!note) return;
+
+      self.note.set(note);
+
+      self.subscribe('comments', note._id, HospoHero.getCurrentAreaId(), function onReady () {
+        console.log('comments for note ' + note._id);
+      });
     });
-  };
-  this.isTextOfNoteChanged = new ReactiveVar(false);
+  });
+
+  self.isTextOfNoteChanged = new ReactiveVar(false);
 });
 
 Template.managerNoteWidget.helpers({
   note: function () {
-    return Template.instance().note();
+    return Template.instance().note.get();
   },
   isTextOfNoteChanged: function () {
     return Template.instance().isTextOfNoteChanged.get();
@@ -22,7 +36,7 @@ Template.managerNoteWidget.helpers({
 
 Template.managerNoteWidget.events({
   'keyup textarea[name=note-text]': function (event, tmpl) {
-    var note = tmpl.note() || {text: ''};
+    var note = tmpl.note.get() || {text: ''};
 
     if (note.text !== event.target.value) {
       tmpl.isTextOfNoteChanged.set(true);
@@ -36,7 +50,7 @@ Template.managerNoteWidget.events({
     var text = tmpl.$('textarea[name=note-text]').val();
     if (!text) return;
 
-    var note = tmpl.note() || {};
+    var note = tmpl.note.get() || {};
     note.text = text;
 
     if (!note._id) {
@@ -46,13 +60,14 @@ Template.managerNoteWidget.events({
       note.relations = HospoHero.getRelationsObject();
     }
 
-    Meteor.call('upsertManagerNote', note);
-    tmpl.isTextOfNoteChanged.set(false);
+    Meteor.call('upsertManagerNote', note, HospoHero.handleMethodResult(function () {
+      tmpl.isTextOfNoteChanged.set(false);
+    }));
   },
   'click .cancel-changes': function (event, tmpl) {
     event.preventDefault();
 
-    var note = tmpl.note() || {text: ''};
+    var note = tmpl.note.get() || {text: ''};
 
     tmpl.$('textarea[name=note-text]').val(note.text);
     tmpl.isTextOfNoteChanged.set(false);
@@ -60,7 +75,7 @@ Template.managerNoteWidget.events({
   'click .remove-note': function (event, tmpl) {
     event.preventDefault();
 
-    var note = tmpl.note();
+    var note = tmpl.note.get();
     if (!note) return;
 
     Meteor.call('deleteManagerNote', note._id);

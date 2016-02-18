@@ -19,11 +19,19 @@
             </div>
           </div>
         </form>
+        {{#if note}}
+          {{> commentsPanel id=note._id type='noteItem'}}
+        {{/if}}
       {{else}}
         {{#if note}}
-          {{note.text}}
+          <div class="col-md-12">
+            <p>{{note.text}}</p>
+          </div>
+          {{> commentsPanel id=note._id type='noteItem'}}
         {{else}}
-          No notes
+          <div class="col-md-12">
+            <p>No notes</p>
+          </div>
         {{/if}}
       {{/if}}
     {{/if}}
