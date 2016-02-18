@@ -2,6 +2,7 @@
 
 Template.managerNoteWidget.onCreated(function () {
   var self = this;
+  var commentsSubscription;
 
   self.note = new ReactiveVar();
 
@@ -12,13 +13,13 @@ Template.managerNoteWidget.onCreated(function () {
         'relations.areaId': HospoHero.getCurrentAreaId()
       });
 
-      if (!note) return;
-
-      self.note.set(note);
-
-      self.subscribe('comments', note._id, HospoHero.getCurrentAreaId(), function onReady () {
-        console.log('comments for note ' + note._id);
-      });
+      if (note) {
+        self.note.set(note);
+        commentsSubscription = Meteor.subscribe('comments', note._id, HospoHero.getCurrentAreaId());
+      } else if (commentsSubscription) {
+        self.note.set(null);
+        commentsSubscription.stop();
+      }
     });
   });
 
