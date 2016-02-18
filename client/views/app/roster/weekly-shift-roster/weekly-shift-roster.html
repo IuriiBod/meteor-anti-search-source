@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-lg-12">
       {{#each datesOfWeek}}
-        {{> weeklyRosterDay currentDate=this type=../type}}
+        {{> weeklyRosterDay currentDate=this type=../type shiftBuffer=shiftBuffer onCopyShift=onCopyShift}}
       {{/each}}
     </div>
   </div>
