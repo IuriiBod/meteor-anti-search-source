@@ -1,11 +1,11 @@
-CalendarEventsManager = function () {};
+CalendarRecurringJobsManager = function () {};
 
 /**
  * Removes all events from calendar by query
  * @param query - remove query
  * @returns {boolean}
  */
-CalendarEventsManager.removeEvents = function (query) {
+CalendarRecurringJobsManager.removeEvents = function (query) {
   query = query || {};
   return CalendarEvents.remove(query);
 };
@@ -15,7 +15,7 @@ CalendarEventsManager.removeEvents = function (query) {
  * @param query - search query
  * @returns {Cursor}
  */
-CalendarEventsManager.findEvents = function(query) {
+CalendarRecurringJobsManager.findEvents = function(query) {
   return CalendarEvents.find(query);
 };
 
@@ -26,7 +26,7 @@ CalendarEventsManager.findEvents = function(query) {
  * @param {String} dateUnits - the date units to count difference (date, week~...)
  * @returns {number}
  */
-CalendarEventsManager._diffDates = function (firstDate, secondDate, dateUnits) {
+CalendarRecurringJobsManager._diffDates = function (firstDate, secondDate, dateUnits) {
   return Math.abs(moment(firstDate)[dateUnits]() - moment(secondDate)[dateUnits]());
 };
 
@@ -36,17 +36,17 @@ CalendarEventsManager._diffDates = function (firstDate, secondDate, dateUnits) {
  * @param {Date} shiftTime - the date of shift
  * @returns {boolean}
  */
-CalendarEventsManager._isJobEnded = function (job, shiftTime) {
+CalendarRecurringJobsManager._isJobEnded = function (job, shiftTime) {
   if (job.endsOn && job.endsOn.after) {
     var jobStarts = job.startsOn;
     var endsAfter = job.endsOn.after;
 
     var frequencies = {
       daily: function () {
-        return CalendarEventsManager._diffDates(shiftTime, jobStarts, 'date');
+        return CalendarRecurringJobsManager._diffDates(shiftTime, jobStarts, 'date');
       },
       weekly: function () {
-        return CalendarEventsManager._diffDates(shiftTime, jobStarts, 'week');
+        return CalendarRecurringJobsManager._diffDates(shiftTime, jobStarts, 'week');
       },
       everyXWeeks: function () {
         return Math.floor(diffDates(shiftTime, jobStarts, 'week')) / job.repeatEvery;
@@ -69,7 +69,7 @@ CalendarEventsManager._isJobEnded = function (job, shiftTime) {
  * @param {Date} date - date object for interested date
  * @returns {boolean}
  */
-CalendarEventsManager._isJobActiveToday = function (job, date) {
+CalendarRecurringJobsManager._isJobActiveToday = function (job, date) {
   if (job.frequency === 'weekly') {
     // check if the repeating weekday is equal to the shift date
     var shiftWeekday = moment(date).format('ddd');
@@ -78,7 +78,7 @@ CalendarEventsManager._isJobActiveToday = function (job, date) {
     }
   } else if (job.frequency === 'everyXWeeks') {
     // check if the repeating week is equal to the shift date
-    if (CalendarEventsManager._diffDates(date, job.startsOn, 'week') % job.repeatEvery !== 0) {
+    if (CalendarRecurringJobsManager._diffDates(date, job.startsOn, 'week') % job.repeatEvery !== 0) {
       return false;
     }
   }
@@ -90,7 +90,7 @@ CalendarEventsManager._isJobActiveToday = function (job, date) {
  * @param {Date} oldTime - job date
  * @param {Date} newTime - shiftDate
  */
-CalendarEventsManager._adjustJobTime = function (oldTime, newTime) {
+CalendarRecurringJobsManager._adjustJobTime = function (oldTime, newTime) {
   newTime = moment(newTime);
 
   var adjustTime = moment(oldTime);
@@ -107,7 +107,7 @@ CalendarEventsManager._adjustJobTime = function (oldTime, newTime) {
  * @param {Date|moment} jobEndTime
  * @returns {boolean}
  */
-CalendarEventsManager._anotherJobExistsAtThisTime = function (jobStartTime, jobEndTime) {
+CalendarRecurringJobsManager._anotherJobExistsAtThisTime = function (jobStartTime, jobEndTime) {
   var jobStartEndInterval = TimeRangeQueryBuilder.forInterval(jobStartTime, jobEndTime);
   return !!CalendarEvents.findOne({
     $or: [
@@ -123,7 +123,7 @@ CalendarEventsManager._anotherJobExistsAtThisTime = function (jobStartTime, jobE
  * Finds recurring jobs from the shift and place it onto user's calendar
  * @param {Object} shift
  */
-CalendarEventsManager.addRecurringJobsToCalendar = function (shift) {
+CalendarRecurringJobsManager.addRecurringJobsToCalendar = function (shift) {
   if (shift.section && shift.assignedTo) {
     var userId = shift.assignedTo;
     var locationId = shift.relations.locationId;
@@ -140,13 +140,13 @@ CalendarEventsManager.addRecurringJobsToCalendar = function (shift) {
     // Remove existed recurring job event for current shift.
     // Need to ensure that inserted event will have the last
     // version of job item and shift information
-    CalendarEventsManager.removeEvents({
+    CalendarRecurringJobsManager.removeEvents({
       shiftId: shift._id,
       type: 'recurring job'
     });
 
     // find all placed jobs for other users
-    var placedJobs = CalendarEventsManager.findEvents({
+    var placedJobs = CalendarRecurringJobsManager.findEvents({
       startTime: TimeRangeQueryBuilder.forDay(shiftTime, locationId),
       type: 'recurring job'
     }).map(function (event) {
@@ -165,14 +165,14 @@ CalendarEventsManager.addRecurringJobsToCalendar = function (shift) {
 
     // Place found jobs into the calendar
     notPlacedJobs.forEach(function (job) {
-      if (CalendarEventsManager._isJobEnded(job, shiftTime)) {
+      if (CalendarRecurringJobsManager._isJobEnded(job, shiftTime)) {
         return false;
       } else {
-        if (!CalendarEventsManager._isJobActiveToday(job, shiftTime)) {
+        if (!CalendarRecurringJobsManager._isJobActiveToday(job, shiftTime)) {
           return false;
         }
 
-        var jobStartTime = CalendarEventsManager._adjustJobTime(job.repeatAt, shiftTime);
+        var jobStartTime = CalendarRecurringJobsManager._adjustJobTime(job.repeatAt, shiftTime);
         var jobEndTime = moment(jobStartTime).add(job.activeTime, 'seconds');
 
         // check if the job start time is less than shift start time
@@ -181,7 +181,7 @@ CalendarEventsManager.addRecurringJobsToCalendar = function (shift) {
           return false;
         }
 
-        if (CalendarEventsManager._anotherJobExistsAtThisTime(jobStartTime, jobEndTime)) {
+        if (CalendarRecurringJobsManager._anotherJobExistsAtThisTime(jobStartTime, jobEndTime)) {
           return false;
         }
 

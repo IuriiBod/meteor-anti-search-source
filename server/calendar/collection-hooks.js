@@ -32,7 +32,7 @@ var jobItemUpdate = function (newJobItem, oldJobItem) {
     // finding shifts, which depends on changed job item
     Shifts.find(query).forEach(function (shift) {
       if (newJobItem.status === 'active') {
-        CalendarEventsManager.addRecurringJobsToCalendar(shift);
+        CalendarRecurringJobsManager.addRecurringJobsToCalendar(shift);
       } else {
         CalendarEvents.remove({shiftId: shift._id});
       }
@@ -51,20 +51,20 @@ JobItems.after.update(function (userId, newJobItem) {
 
 
 Shifts.after.update(function (userId, newShift) {
-    var oldShift = this.previous;
+  var oldShift = this.previous;
 
-    // when the assigned user was changed,
-    // move old user's jobs to the new user
-    if (newShift.assignedTo !== oldShift.assignedTo) {
-      CalendarEvents.update({shiftId: newShift._id}, {
-        $set: {
-          userId: newShift.assignedTo
-        }
-      }, {multi: true});
-    } else {
-      CalendarEvents.remove({shiftId: newShift._id, type: 'recurring job'});
-      CalendarEventsManager.addRecurringJobsToCalendar(newShift);
-    }
+  // when the assigned user was changed,
+  // move old user's jobs to the new user
+  if (newShift.assignedTo !== oldShift.assignedTo) {
+    CalendarEvents.update({shiftId: newShift._id}, {
+      $set: {
+        userId: newShift.assignedTo
+      }
+    }, {multi: true});
+  } else {
+    CalendarEvents.remove({shiftId: newShift._id, type: 'recurring job'});
+    CalendarRecurringJobsManager.addRecurringJobsToCalendar(newShift);
+  }
 });
 
 let isPropertyChanged = function (propertyName, object1, object2) {
@@ -134,3 +134,36 @@ TaskList.after.update(function (userId, newTask) {
     });
   }
 });
+
+// TODO: Change repeated code on class methods call
+class CalendarEventsManager {
+  constructor() {}
+
+  static insert(item, type, userId) {
+    const area = HospoHero.getCurrentArea(Meteor.userId());
+
+    // the user was added to the meeting
+    let event = {
+      itemId: item._id,
+      startTime: item.startTime,
+      endTime: item.endTime,
+      type: type,
+      userId: userId,
+      locationId: area.locationId,
+      areaId: area._id
+    };
+
+    Meteor.call('addCalendarEvent', event);
+  }
+
+  static update(itemId, updateObject) {
+    CalendarEvents.find({itemId: itemId}).forEach((event) => {
+      _.extend(event, updateObject);
+      Meteor.call('editCalendarEvent', event);
+    });
+  }
+
+  static remove(removeQuery) {
+    CalendarEvents.remove(removeQuery);
+  }
+}

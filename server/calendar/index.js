@@ -34,7 +34,7 @@ Meteor.methods({
       logger.error("User not permitted to add items onto calendar");
       throw new Meteor.Error(403, "User not permitted to add items onto calendar");
     } else {
-      let id = CalendarEvents.insert(eventObject);
+      CalendarEvents.insert(eventObject);
     }
   },
 
