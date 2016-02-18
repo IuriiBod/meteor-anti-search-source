@@ -1,40 +1,31 @@
 <template name="managerNoteWidget">
   <div class="manager-note-widget">
-    {{#if currentNote}}
-      {{> managerNoteEditor onCloseEditor=onCloseEditor note=currentNote}}
-    {{/if}}
-    <div class="hidden-print task-list-content">
-      <div class="ibox">
-        {{#unless currentNote}}
-          <div class="ibox-title">
-            <div class="row">
-              <div class="col-md-6">
-                <h4>Notes</h4>
-              </div>
-              <div class="col-md-6">
-                <button type="button" class="btn btn-primary pull-right create-note">
-                  <i class="fa fa-plus"></i> Add note
-                </button>
-              </div>
+    {{#if Template.subscriptionsReady}}
+      {{#if canEditRoster}}
+        <form>
+          <div class="form-group">
+            <textarea name="note-text" cols="30" rows="10" class="form-control"
+                      placeholder="Description...">{{#if note}}{{note.text}}{{/if}}</textarea>
+          </div>
+          <div class="form-group">
+            <div class="text-right">
+              {{#if note}}
+                <a href="#" class="btn btn-link text-danger remove-note">Remove</a>
+              {{/if}}
+              {{#if isTextOfNoteChanged}}
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-default cancel-changes">Cancel</button>
+              {{/if}}
             </div>
           </div>
-        {{/unless}}
-        <div class="ibox-content">
-          <div class="row">
-            {{#if notes.count}}
-              <div class="table-responsive">
-                <table class="table table-hover manager-note-list">
-                  {{#each notes}}
-                    {{> managerNoteItem note=this}}
-                  {{/each}}
-                </table>
-              </div>
-            {{else}}
-              <h4>No notes here</h4>
-            {{/if}}
-          </div>
-        </div>
-      </div>
-    </div>
+        </form>
+      {{else}}
+        {{#if note}}
+          {{note.text}}
+        {{else}}
+          No notes
+        {{/if}}
+      {{/if}}
+    {{/if}}
   </div>
 </template>
