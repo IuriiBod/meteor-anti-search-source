@@ -1,27 +1,27 @@
+const ranges = [
+  {
+    value: 'yesterday',
+    text: 'Yesterday'
+  },
+  {
+    value: 'current-week',
+    text: 'Current Week'
+  },
+  {
+    value: 'last-week',
+    text: 'Last Week'
+  },
+  {
+    value: 'custom-range',
+    text: 'Custom Date Range'
+  }
+];
+
 Template.menuListRankReport.onCreated(function () {
   this.customRange = new ReactiveVar();
   this.data.rangeType === 'custom-range' ? this.customRange.set(true) : this.customRange.set(false);
 
-  this.ranges = [
-    {
-      value: 'yesterday',
-      text: 'Yesterday'
-    },
-    {
-      value: 'current-week',
-      text: 'Current Week'
-    },
-    {
-      value: 'last-week',
-      text: 'Last Week'
-    },
-    {
-      value: 'custom-range',
-      text: 'Custom Date Range'
-    }
-  ];
-
-  const current = _.find(this.ranges, obj => {
+  const current = _.find(ranges, obj => {
     return this.data.rangeType === obj.value;
   });
 
@@ -82,7 +82,7 @@ Template.menuListRankReport.helpers({
   },
 
   ranges: function () {
-    return Template.instance().ranges;
+    return ranges;
   },
 
   selectedRange: function () {
