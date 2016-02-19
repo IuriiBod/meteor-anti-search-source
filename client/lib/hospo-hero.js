@@ -1,10 +1,8 @@
 Namespace('HospoHero', {
-  handleMethodResult: function (onSuccess, onError = HospoHero.error) {
+  handleMethodResult: function (onSuccess) {
     return function (err, res) {
       if (err) {
-        if (_.isFunction(onError)) {
-          onError(err);
-        }
+        HospoHero.error(err);
       } else {
         if (_.isFunction(onSuccess)) {
           onSuccess(res);

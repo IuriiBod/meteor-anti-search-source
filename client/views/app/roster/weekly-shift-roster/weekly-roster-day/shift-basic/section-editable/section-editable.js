@@ -13,29 +13,33 @@ Template.shiftBasicSectionEditable.helpers({
   }
 });
 
-var onEditError = function (shift, error) {
-  if (error.reason === 'User not trained for this section') {
-    return sweetAlert({
-      title: 'Error!',
-      text: `${error.reason}\nDo you want to mark user as trained for this section?`,
-      type: "error",
-      showCancelButton: true,
-      cancelButtonText: 'No',
-      confirmButtonText: 'Yes',
-      closeOnConfirm: true
-    }, () => {
-      Meteor.call(
-        'toggleUserTrainingSection',
-        shift.assignedTo,
-        shift.section,
-        true,
-        HospoHero.handleMethodResult()
-      );
+var onEditError = function (shift) {
+  return function (err, res) {
+    if (err) {
+      if (err.reason === 'User not trained for this section') {
+        return sweetAlert({
+          title: 'Error!',
+          text: `${err.reason}\nDo you want to mark user as trained for this section?`,
+          type: "error",
+          showCancelButton: true,
+          cancelButtonText: 'No',
+          confirmButtonText: 'Yes',
+          closeOnConfirm: true
+        }, () => {
+          Meteor.call(
+            'toggleUserTrainingSection',
+            shift.assignedTo,
+            shift.section,
+            true,
+            HospoHero.handleMethodResult()
+          );
 
-      Meteor.call('editShift', shift, HospoHero.handleMethodResult(null, onEditError.bind(null, shift)));
-    });
-  } else {
-    HospoHero.error(error);
+          Meteor.call('editShift', shift, HospoHero.handleMethodResult());
+        });
+      } else {
+        HospoHero.error(err);
+      }
+    }
   }
 };
 
@@ -60,7 +64,7 @@ var createSectionToAssignEditableConfig = function (shiftId) {
     newSection = newSection === "Open" ? null : newSection;
 
     shift.section = newSection;
-    Meteor.call('editShift', shift, HospoHero.handleMethodResult(null, onEditError.bind(null, shift)));
+    Meteor.call('editShift', shift, onEditError(shift));
   };
 
   var editableConfig = {
