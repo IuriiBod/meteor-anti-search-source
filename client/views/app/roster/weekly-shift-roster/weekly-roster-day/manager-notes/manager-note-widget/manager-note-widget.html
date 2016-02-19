@@ -21,6 +21,7 @@
         </form>
         {{#if note}}
           {{> commentsPanel id=note._id type='noteItem'}}
+          {{> taskWidget type='managerNotes' itemId=note._id dueDate=date}}
         {{/if}}
       {{else}}
         {{#if note}}
