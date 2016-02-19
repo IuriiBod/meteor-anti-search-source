@@ -18,7 +18,7 @@ Template.orderReceiptItem.helpers({
       orders.forEach(function (order) {
         if (order.received) {
           var quantity = order.countOrdered;
-          if (_.isNumber(order.countDelivered)) {
+          if (_.isFinite(order.countDelivered) && order.countDelivered >= 0) {
             quantity = order.countDelivered;
           }
           cost += parseFloat(quantity) * parseFloat(order.unitPrice)

@@ -82,8 +82,12 @@ Meteor.methods({
     if (order.unitPrice === order.originalPrice && order.countDelivered === order.countOrdered) {
       newStatus.push('Delivered Correctly');
     } else {
-      if (order.unitPrice !== order.originalPrice) newStatus.push('Wrong Price');
-      if (order.countDelivered !== order.countOrdered) newStatus.push('Wrong Quantity');
+      if (order.unitPrice !== order.originalPrice) {
+        newStatus.push('Wrong Price');
+      }
+      if (order.countDelivered !== order.countOrdered) {
+        newStatus.push('Wrong Quantity');
+      }
     }
     StockOrders.update({"_id": id, "orderReceipt": receiptId}, {
       $set: {deliveryStatus: newStatus}

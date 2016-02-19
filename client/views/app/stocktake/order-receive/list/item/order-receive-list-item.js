@@ -13,7 +13,9 @@ Template.orderReceiveItem.helpers({
 
   unitTotalPrice: function () {
     var quantity = this.item.countDelivered;
-    if (quantity === undefined ) quantity = this.item.countOrdered;
+    if (!_.isFinite(quantity) || quantity < 0) {
+      quantity = this.item.countOrdered;
+    }
     return this.item.unitPrice * quantity;
   },
 
