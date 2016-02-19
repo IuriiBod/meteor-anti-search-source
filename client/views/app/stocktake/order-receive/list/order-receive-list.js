@@ -13,7 +13,7 @@ Template.orderReceive.helpers({
     if (orders.count()) {
       orders.forEach(function (order) {
         var count = order.countDelivered;
-        if (count === undefined) {
+        if (!_.isFinite(count) || count < 0) {
           count = order.countOrdered;
         }
         cost += parseInt(count) * parseFloat(order.unitPrice);
