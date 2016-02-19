@@ -3,14 +3,14 @@ Template.orderReceive.onCreated(function () {
 });
 
 Template.orderReceive.helpers({
-  list: function () {
-    return StockOrders.find({"orderReceipt": this.currentReceipt._id, "countOrdered": {$gt: 0}});
+  list() {
+    return StockOrders.find({orderReceipt: this.currentReceipt._id, countOrdered: {$gt: 0}});
   },
 
-  total: function () {
-    var orders = StockOrders.find({"orderReceipt": this.currentReceipt._id}).fetch();
-    var cost = 0;
-    if (orders.length > 0) {
+  total() {
+    let orders = StockOrders.find({orderReceipt: this.currentReceipt._id});
+    let cost = 0;
+    if (orders.count()) {
       orders.forEach(function (order) {
         var count = order.countDelivered;
         if (count === undefined) {
@@ -22,27 +22,27 @@ Template.orderReceive.helpers({
     return cost;
   },
 
-  receipt: function () {
+  receipt() {
     return this.currentReceipt;
   },
 
-  isReceived: function () {
-    return !!this.currentReceipt.received;
+  isReceived() {
+    return this.currentReceipt.received;
   },
 
-  receivedNote: function () {
+  receivedNote() {
     return this.currentReceipt.receiveNote;
   },
 
-  currentOrderCallback: function () {
-    var instance = Template.instance();
+  currentOrderCallback() {
+    let instance = Template.instance();
     return function (orderId) {
       instance.currentOrderId.set(orderId);
     }
   },
 
-  currentOrder: function () {
-    var orderId = Template.instance().currentOrderId.get();
+  currentOrder() {
+    let orderId = Template.instance().currentOrderId.get();
     return StockOrders.findOne({_id: orderId});
   }
 });
@@ -50,17 +50,17 @@ Template.orderReceive.helpers({
 Template.orderReceive.events({
   'click .markDeliveryReceived': function (event, tmpl) {
     event.preventDefault();
-    var receiptId = tmpl.data.currentReceipt._id;
+    let receiptId = tmpl.data.currentReceipt._id;
     Meteor.call("receiveDelivery", receiptId, HospoHero.handleMethodResult());
   },
 
   'keyup #orderReceiveNotes': function (event, tmpl) {
     event.preventDefault();
     if (event.keyCode == 13) {
-      var receiptId = tmpl.data.currentReceipt._id;
-      var text = $(event.target).val();
-      var info = {
-        "receiveNote": text.trim()
+      let receiptId = tmpl.data.currentReceipt._id;
+      let text = event.target.value;
+      let info = {
+        receiveNote: text.trim()
       };
       Meteor.call("updateReceipt", receiptId, info, HospoHero.handleMethodResult());
     }

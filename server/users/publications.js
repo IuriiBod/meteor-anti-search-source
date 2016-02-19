@@ -36,7 +36,8 @@ let publishAreaUsersFn = function (areaId) {
 
   let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users', {
     'profile.payrates': 1,
-    'profile.resignDate': 1
+    'profile.resignDate': 1,
+    unavailabilities: 1
   });
 
   logger.info('UserList published', {areaId: areaId});
