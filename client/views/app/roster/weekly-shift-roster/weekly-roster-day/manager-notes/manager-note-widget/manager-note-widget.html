@@ -1,40 +1,7 @@
 <template name="managerNoteWidget">
   <div class="manager-note-widget">
     {{#if Template.subscriptionsReady}}
-      {{#if canEditRoster}}
-        <form>
-          <div class="form-group">
-            <textarea name="note-text" cols="30" rows="10" class="form-control"
-                      placeholder="Description...">{{#if note}}{{note.text}}{{/if}}</textarea>
-          </div>
-          <div class="form-group">
-            <div class="text-right">
-              {{#if note}}
-                <a href="#" class="btn btn-link text-danger remove-note">Remove</a>
-              {{/if}}
-              {{#if isTextOfNoteChanged}}
-                <button type="submit" class="btn btn-primary">Save</button>
-                <button type="button" class="btn btn-default cancel-changes">Cancel</button>
-              {{/if}}
-            </div>
-          </div>
-        </form>
-        {{#if note}}
-          {{> commentsPanel id=note._id type='noteItem'}}
-          {{> taskWidget type='managerNotes' itemId=note._id dueDate=date}}
-        {{/if}}
-      {{else}}
-        {{#if note}}
-          <div class="col-md-12">
-            <p>{{note.text}}</p>
-          </div>
-          {{> commentsPanel id=note._id type='noteItem'}}
-        {{else}}
-          <div class="col-md-12">
-            <p>No notes</p>
-          </div>
-        {{/if}}
-      {{/if}}
+      {{> autosaveTextEditor text=note.text saveChanges=saveNote readOnly=readOnly}}
     {{/if}}
   </div>
 </template>
