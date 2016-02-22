@@ -70,8 +70,8 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
   };
 
   // Get roles which can be rosted
-  var getCanBeRostedRoles = function () {
-    return Roles.getRolesByAction('be rosted').map(function (role) {
+  var getCanBeRostedRoles = function (areaId) {
+    return Roles.getRolesByAction('be rosted', areaId).map(function (role) {
       return role._id;
     });
   };
@@ -107,7 +107,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
 
     workersQuery._id = getAvailableWorkers ? {$nin: assignedWorkers} : {$in: assignedWorkers};
 
-    workersQuery["roles." + HospoHero.getCurrentAreaId()] = {$in: getCanBeRostedRoles()};
+    workersQuery["roles." + shift.relations.areaId] = {$in: getCanBeRostedRoles(shift.relations.areaId)};
 
     return Meteor.users.find(workersQuery, {sort: {"profile.firstname": 1}}).map(function (worker) {
       return {
