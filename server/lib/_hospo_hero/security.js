@@ -4,7 +4,7 @@ Namespace('HospoHero.security', {
       'profile.firstname': 1,
       'profile.lastname': 1,
       'profile.image': 1,
-      "services.google.picture": 1,
+      'services.google.picture': 1,
       relations: 1,
       createdAt: 1,
       currentAreaId: 1,

@@ -25,6 +25,8 @@ Roles.getRoleByName = function (roleName) {
  * @returns CollectionCursor
  */
 Roles.getRolesByAction = function (actions, areaId) {
+  const area = Areas.findOne({_id: areaId});
+
   if (Array.isArray(actions)) {
     actions = {$in: actions};
   }
@@ -32,7 +34,7 @@ Roles.getRolesByAction = function (actions, areaId) {
   var $or = [{'default': true}];
 
   if (areaId) {
-    $or.push({'relations.areaId': areaId});
+    $or.push({'relations.organizationId': area.organizationId});
   }
 
   return Meteor.roles.find({actions: actions, $or: $or});
