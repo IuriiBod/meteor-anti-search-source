@@ -4,8 +4,6 @@
       {{> autosaveTextEditor text=textOfNote saveChanges=saveNote readOnly=readOnly}}
       {{> commentsPanel id=note._id type='noteItem'}}
       {{> taskWidget type='managerNotes' itemId=note._id dueDate=date}}
-    {{else}}
-      No subscribe
     {{/if}}
   </div>
 </template>
