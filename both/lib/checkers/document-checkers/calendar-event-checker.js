@@ -13,6 +13,9 @@ var CalendarEventDocument = Match.Where(function (calendarEvent) {
     doneCheckListItems: Match.Optional([Number])
   });
 
+  // I've commented this code to make calendar events
+  // flexible, not depending on shift time
+
   //var shift = Shifts.findOne({
   //  $or: [
   //    {_id: calendarEvent.shiftId},

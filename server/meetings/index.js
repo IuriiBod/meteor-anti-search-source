@@ -1,3 +1,4 @@
+// TODO: Need a universal property change logger
 class MeetingPropertyChangeLogger {
   constructor(meeting, userId) {
     this.meeting = meeting;

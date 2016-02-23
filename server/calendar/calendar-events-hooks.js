@@ -1,3 +1,9 @@
+/**
+ * Uses for update shift start/end time if the event doesn't
+ * fit in shift time
+ * @param {String} userId - ID of user which create/update event
+ * @param {Object} event - CalendarEvent object
+ */
 let calendarEventInsertUpdateHook = function (userId, event) {
   let areaId = HospoHero.getCurrentAreaId(userId);
   let shift = Shifts.findOne({
