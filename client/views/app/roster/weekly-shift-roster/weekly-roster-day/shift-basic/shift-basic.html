@@ -2,6 +2,7 @@
   <li class="success-element shift-basic-component {{#if canEditRoster}}can-edit{{/if}}">
     {{#if canEditRoster}}
       <div class="box-wrapper pull-right shift-remove-wrapper">
+        <i class="fa fa-files-o copy-shift-button"></i>
         <span class="box-remove glyphicon glyphicon-remove remove-shift-button"></span>
       </div>
     {{/if}}
@@ -9,7 +10,7 @@
     <div class="agile-detail">
       <i class="fa fa-user"></i>
       {{#if canEditRoster}}
-        {{> shiftBasicWorkerEditable}}
+        {{> shiftBasicWorkerEditable shift}}
       {{else}}
         {{#if assignedTo}}
           {{username assignedTo}}
@@ -34,7 +35,7 @@
     <div class="agile-detail">
       <i class="fa fa-angle-double-right"></i>
       {{#if canEditRoster}}
-        {{> shiftBasicSectionEditable}}
+        {{> shiftBasicSectionEditable shift}}
       {{else}}
         {{sectionById section}}
       {{/if}}
