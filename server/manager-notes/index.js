@@ -14,6 +14,14 @@ Meteor.methods({
     }
   },
 
+  insertEmptyManagerNote: function (date) {
+    check(date, Date);
+    return ManagerNotes.insert({
+      noteDate: date,
+      relations: HospoHero.getRelationsObject()
+    });
+  },
+
   deleteManagerNote: function (noteId) {
     check(noteId, HospoHero.checkers.MongoId);
 

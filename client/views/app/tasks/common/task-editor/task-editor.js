@@ -99,6 +99,12 @@ Template.taskEditor.events({
 
   'submit form': function (event, tmpl) {
     var getReference = function () {
+      var task = tmpl.data.task;
+
+      if (task && task.reference && task.reference.id && task.reference.type) {
+        return task.reference;
+      }
+
       var $referenceSelector = tmpl.$('.reference-selector');
       if ($referenceSelector.val() !== '') {
         // get reference type (menu, job or supplier) based on parent optgroup label

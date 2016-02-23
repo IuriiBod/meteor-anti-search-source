@@ -6,18 +6,3 @@
   }
 }
 
-//for correct displaying active links of current elevio module
-.elevio-open {
-  body:not(.intercom-messenger-active){
-    a[data-elevio-module-name=articles] {
-      background: lighten(@navy, 3%) !important;
-      color: white !important;
-    }
-  }
-  body.intercom-messenger-active {
-    a[data-elevio-module-name=intercom] {
-      background: lighten(@navy, 3%) !important;
-      color: white !important;
-    }
-  }
-}
