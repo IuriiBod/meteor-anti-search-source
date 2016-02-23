@@ -1,6 +1,7 @@
+//context: organization (Organization)
 Template.createArea.onCreated(function () {
-  this.set('locationId', this.data.locationId);
-  this.set('color', null);
+  this.locationId = new ReactiveVar(this.data.locationId);
+  this.color = new ReactiveVar(null);
 
   this.closeFlyout = function (event) {
     var flyout = FlyoutManager.getInstanceByElement(event.target);
@@ -8,28 +9,32 @@ Template.createArea.onCreated(function () {
   };
 });
 
+
 Template.createArea.onRendered(function () {
-  this.$("input[name='name']").focus();
+  this.$('input[name="name"]').focus();
 });
+
 
 Template.createArea.helpers({
   locations: function () {
-    var locations = Locations.find({
+    return Locations.find({
       organizationId: this.organizationId,
       archived: {$ne: true}
-    }).fetch();
-
-    if (locations) {
-      return _.map(locations, function (location) {
-        return {value: location._id, text: location.name}
-      });
-    }
+    }).map((location) => {
+      return {value: location._id, text: location.name}
+    });
   },
   onColorChange: function () {
-    var self = Template.instance();
+    const self = Template.instance();
     return function (color) {
-      self.set('color', color);
+      self.color.set(color);
     }
+  },
+  color: function () {
+    return Template.instance().color.get();
+  },
+  locationId: function () {
+    return Template.instance().locationId.get();
   }
 });
 
@@ -44,7 +49,7 @@ Template.createArea.events({
     var areaInfo = HospoHero.misc.getValuesFromEvent(event, ['name', 'locationId'], true);
 
     areaInfo.organizationId = tmpl.data.organizationId;
-    areaInfo.color = tmpl.get('color');
+    areaInfo.color = tmpl.color.get();
     areaInfo.archived = false;
 
     Meteor.call("createArea", areaInfo, HospoHero.handleMethodResult(function () {

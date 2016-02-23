@@ -13,6 +13,6 @@ Template.organizationButtons.events({
   },
 
   'click .create-area-flyout': function (event, tmpl) {
-    FlyoutManager.open('createArea', {organization: tmpl.data});
+    FlyoutManager.open('createArea', {organizationId: tmpl.data._id});
   }
 });
