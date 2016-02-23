@@ -1,4 +1,4 @@
-//context: organization (Organization)
+//context: organizationId (MongoID), locationId (MongoID)
 Template.createArea.onCreated(function () {
   this.locationId = new ReactiveVar(this.data.locationId);
   this.color = new ReactiveVar(null);
