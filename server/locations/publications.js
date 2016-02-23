@@ -10,10 +10,8 @@ Meteor.publishAuthorized('locationDetails', function (locationId) {
   const hasPermission = location && HospoHero.security.isOrganizationOwner(location.organizationId, this.userId);
 
   if (hasPermission) {
-    console.log('ready');
     return locationCursor;
   } else {
-    console.log('error;');
     this.error(new Meteor.Error('Access denied. Not enough permissions.'));
   }
 });
