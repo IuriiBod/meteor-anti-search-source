@@ -22,7 +22,6 @@ Template.managerNoteWidget.onCreated(function () {
 
 Template.managerNoteWidget.helpers({
   note () {
-    console.log(Template.instance().note());
     return Template.instance().note();
   },
   textOfNote () {
