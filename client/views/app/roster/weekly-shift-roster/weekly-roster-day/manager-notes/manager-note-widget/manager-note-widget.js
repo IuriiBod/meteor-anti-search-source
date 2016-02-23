@@ -3,40 +3,52 @@
 Template.managerNoteWidget.onCreated(function () {
   let self = this;
 
-  self.note = new ReactiveVar();
+  self.note = () => {
+    return ManagerNotes.findOne({
+      noteDate: self.data.date,
+      'relations.areaId': HospoHero.getCurrentAreaId()
+    });
+  };
 
   self.subscribe('managerNote', self.data.date, HospoHero.getCurrentAreaId(), function onReady () {
-    self.autorun(() => {
-      let note = ManagerNotes.findOne({
-        noteDate: self.data.date,
-        'relations.areaId': HospoHero.getCurrentAreaId()
-      });
+    let note = self.note();
+    let noteId = note ? note._id : Meteor.call('insertEmptyManagerNote', self.data.date);
 
-      if (note) {
-        self.note.set(note);
-      } else {
-        self.note.set({text: 'Leave your note here'});
-      }
-    });
+    commentsSubscription = Meteor.subscribe('comments', noteId, HospoHero.getCurrentAreaId());
   });
+
+  self.textForEmptyEditor = 'Leave your note here';
 });
 
 Template.managerNoteWidget.helpers({
   note () {
-    return Template.instance().note.get();
+    console.log(Template.instance().note());
+    return Template.instance().note();
+  },
+  textOfNote () {
+    let note = Template.instance().note();
+    if (note && _.isString(note.text) && $.trim(note.text)) {
+      return note.text;
+    }
+    let canUserEditRoster = HospoHero.canUser('edit roster', Meteor.userId());
+    return canUserEditRoster ? Template.instance().textForEmptyEditor : 'No notes';
   },
   saveNote () {
     let tmpl = Template.instance();
 
     return (text) => {
-      let note = tmpl.note.get();
+
+      if (text === tmpl.textForEmptyEditor) return;
+
+      let note = tmpl.note();
       note.text = text;
 
-      if (!note._id) {
-        note.noteDate = tmpl.data.date;
+      if (!note.createdAt) {
         note.createdAt = new Date();
+      }
+
+      if (!note.createdBy) {
         note.createdBy = Meteor.userId();
-        note.relations = HospoHero.getRelationsObject();
       }
 
       Meteor.call('upsertManagerNote', note);

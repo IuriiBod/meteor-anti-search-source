@@ -1,7 +1,10 @@
 <template name="managerNoteWidget">
   <div class="manager-note-widget">
     {{#if Template.subscriptionsReady}}
-      {{> autosaveTextEditor text=note.text saveChanges=saveNote readOnly=readOnly}}
+      {{> autosaveTextEditor text=textOfNote saveChanges=saveNote readOnly=readOnly}}
+      {{> commentsPanel id=note._id type='noteItem'}}
+    {{else}}
+      No subscribe
     {{/if}}
   </div>
 </template>
