@@ -47,6 +47,7 @@ Template.weeklyRosterDay.helpers({
 
   managerNotesCount: function () {
     return ManagerNotes.find({
+      text: {$exists: true},
       noteDate: this.currentDate,
       'relations.areaId': HospoHero.getCurrentAreaId()
     }).count();
