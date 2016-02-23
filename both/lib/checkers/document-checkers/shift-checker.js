@@ -45,28 +45,10 @@ var ShiftDocument = Match.Where(function (shift) {
 
       // this is a very strange functionality for checking
       // if the shift is placed in unavailable for user time
-      let user = Meteor.users.findOne({_id: assignedUserId});
-      let isUserHasUnavailability = false;
+      const user = Meteor.users.findOne({_id: assignedUserId});
 
-      if (user.unavailabilities && user.unavailabilities.length) {
-        user.unavailabilities.forEach((unavailability) => {
-          let shiftStart = shift.startTime;
-          let shiftEnd = shift.endTime;
-          let unavailabilityStart = unavailability.startDate;
-          let unavailabilityEnd = unavailability.endDate;
-
-          if (shiftStart.isAfter(unavailabilityStart) && shiftEnd.isBefore(unavailabilityEnd) ||
-              shiftStart.isBetween(unavailabilityStart, unavailabilityEnd) ||
-              shiftEnd.isBetween(unavailabilityStart, unavailabilityEnd) ||
-              shiftStart.isBefore(unavailabilityStart) && shiftEnd.isAfter(unavailabilityEnd)
-          ) {
-            isUserHasUnavailability = true;
-            return false;
-          }
-        });
-      }
-
-      var isUserHasApprovedLeaveRequest = !!LeaveRequests.findOne({
+      const isUserHasUnavailability = HospoHero.misc.hasUnavailability(user.unavailabilities, shift);
+      const isUserHasApprovedLeaveRequest = !!LeaveRequests.findOne({
         userId: assignedUserId,
         status: "approved",
         $or: [
