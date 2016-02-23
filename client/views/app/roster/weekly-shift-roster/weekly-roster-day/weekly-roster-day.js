@@ -1,6 +1,7 @@
 //context: type ("template"/null), currentDate (Date), shiftBuffer (ReactiveVar), onCopyShift (function)
 
 Template.weeklyRosterDay.onCreated(function () {
+  this.subscribe('managerNote', this.data.currentDate, HospoHero.getCurrentAreaId());
   this.hasTemplateType = function () {
     return this.data.type === 'template';
   };
@@ -52,6 +53,7 @@ Template.weeklyRosterDay.helpers({
 
   managerNotesCount: function () {
     return ManagerNotes.find({
+      text: {$exists: true},
       noteDate: this.currentDate,
       'relations.areaId': HospoHero.getCurrentAreaId()
     }).count();

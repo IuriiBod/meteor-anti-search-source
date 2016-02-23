@@ -1,40 +1,9 @@
 <template name="managerNoteWidget">
   <div class="manager-note-widget">
-    {{#if currentNote}}
-      {{> managerNoteEditor onCloseEditor=onCloseEditor note=currentNote}}
+    {{#if Template.subscriptionsReady}}
+      {{> autosaveTextEditor text=textOfNote saveChanges=saveNote readOnly=readOnly}}
+      {{> commentsPanel id=note._id type='noteItem'}}
+      {{> taskWidget type='managerNotes' itemId=note._id dueDate=date}}
     {{/if}}
-    <div class="hidden-print task-list-content">
-      <div class="ibox">
-        {{#unless currentNote}}
-          <div class="ibox-title">
-            <div class="row">
-              <div class="col-md-6">
-                <h4>Notes</h4>
-              </div>
-              <div class="col-md-6">
-                <button type="button" class="btn btn-primary pull-right create-note">
-                  <i class="fa fa-plus"></i> Add note
-                </button>
-              </div>
-            </div>
-          </div>
-        {{/unless}}
-        <div class="ibox-content">
-          <div class="row">
-            {{#if notes.count}}
-              <div class="table-responsive">
-                <table class="table table-hover manager-note-list">
-                  {{#each notes}}
-                    {{> managerNoteItem note=this}}
-                  {{/each}}
-                </table>
-              </div>
-            {{else}}
-              <h4>No notes here</h4>
-            {{/if}}
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
