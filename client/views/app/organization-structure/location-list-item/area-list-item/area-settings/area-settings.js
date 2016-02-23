@@ -12,7 +12,7 @@ Template.areaSettings.onCreated(function () {
 Template.areaSettings.onRendered(function () {
   var self = this;
   $('.area-name').editable({
-    type: "text",
+    type: 'text',
     title: 'Edit area name',
     display: false,
     showbuttons: true,
@@ -73,6 +73,24 @@ Template.areaSettings.events({
 
     var areaId = tmpl.data.areaId;
     var nameOfArea = Template.instance().area().name;
+
+    let onAreaDeleteSuccess = function () {
+      sweetAlert(`Done! ${nameOfArea} was deleted.`, 'success');
+
+      var flyout = FlyoutManager.getInstanceByElement(event.target);
+      flyout.close();
+    };
+
+    let processSwInput = function (inputValue) {
+      if (inputValue === '') {
+        sweetAlert.showInputError('You need to write name of area!');
+      } else if (inputValue !== nameOfArea) {
+        sweetAlert.showInputError("It isn't name of current area!");
+      } else {
+        Meteor.call('deleteArea', areaId, HospoHero.handleMethodResult(onAreaDeleteSuccess));
+      }
+    };
+
     sweetAlert({
       title: 'Are you absolutely sure?',
       text: 'Please type in the name of the area to confirm.',
@@ -83,21 +101,7 @@ Template.areaSettings.events({
       confirmButtonColor: '#ec4758',
       animation: 'slide-from-top',
       inputPlaceholder: 'Name of area'
-    }, function (inputValue) {
-      if (inputValue === '') {
-        sweetAlert.showInputError('You need to write name of area!');
-        return false
-      }
-      if (inputValue !== nameOfArea) {
-        sweetAlert.showInputError("It isn't name of current area!");
-        return false;
-      }
-      Meteor.call('deleteArea', areaId, HospoHero.handleMethodResult(function () {
-        var flyout = FlyoutManager.getInstanceByElement(event.target);
-        sweetAlert('OK!', nameOfArea + ' was deleted!', 'success');
-        flyout.close();
-      }));
-    });
+    }, processSwInput);
   },
 
   'click .add-user': function (event, tmpl) {

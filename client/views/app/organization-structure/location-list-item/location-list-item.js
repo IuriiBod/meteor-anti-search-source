@@ -1,8 +1,7 @@
 Template.locationListItem.helpers({
   canEditLocation: function () {
-    let locationAreasIds = Areas.find({locationId: this._id}).map(area => area._id);
-    return HospoHero.isOrganizationOwner()
-      || locationAreasIds.some(areaId => Roles.hasAction(user.roles[areaId], 'edit areas'));
+    let permissionChecker = new HospoHero.security.PermissionChecker();
+    return permissionChecker.hasPermissionInLocation(this._id, 'edit areas');
   },
 
   areas: function () {

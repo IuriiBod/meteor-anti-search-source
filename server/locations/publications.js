@@ -1,17 +1,12 @@
 Meteor.publishAuthorized('locationDetails', function (locationId) {
   check(locationId, HospoHero.checkers.MongoId);
 
-  let locationCursor = Locations.find({_id: locationId});
-  let location = locationCursor.count() > 0 && locationCursor.fetch()[0];
+  let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
 
-  //todo: security checks improvements
-  // right now it is impossible to check: there is no clear way to check
-  // if manager is able to edit location in case if there is no areas in location
-  const hasPermission = location && HospoHero.security.isOrganizationOwner(location.organizationId, this.userId);
-
-  if (hasPermission) {
-    return locationCursor;
+  if (permissionChecker.hasPermissionInLocation(locationId, 'edit areas')) {
+    return Locations.find({_id: locationId});
   } else {
+    logger.error('Permission denied: publish [locationDetails] ', {locationId: locationId, userId: this.userId});
     this.error(new Meteor.Error('Access denied. Not enough permissions.'));
   }
 });

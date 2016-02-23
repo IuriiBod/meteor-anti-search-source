@@ -1,7 +1,9 @@
 Template.areaListItem.helpers({
   canEditArea: function () {
-    return HospoHero.isOrganizationOwner() || Roles.hasAction(user.roles[this._id], 'edit areas');
+    let permissionChecker = new HospoHero.security.PermissionChecker();
+    return permissionChecker.hasPermissionInArea(this._id, 'edit areas');
   },
+
   isCurrentArea: function () {
     return HospoHero.getCurrentAreaId() === this._id;
   }

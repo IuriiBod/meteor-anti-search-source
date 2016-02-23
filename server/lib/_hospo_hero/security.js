@@ -19,10 +19,5 @@ Namespace('HospoHero.security', {
     } else {
       throw new Meteor.Error('Collection name expected');
     }
-  },
-
-  isOrganizationOwner(organizationId, userId = Meteor.userId()) {
-    let organization = Organizations.findOne({_id: organizationId});
-    return organization && _.isArray(organization.owners) && organization.owners.indexOf(userId) > -1;
   }
 });
