@@ -1,3 +1,4 @@
+//context: organization (Organization)
 Template.createLocation.onCreated(function () {
   this.closeFlyoutByEvent = function (event) {
     var flyout = FlyoutManager.getInstanceByElement(event.target);
@@ -7,15 +8,17 @@ Template.createLocation.onCreated(function () {
 
 Template.createLocation.helpers({
   onLocationSubmit: function () {
-    var self = Template.instance();
+    const self = Template.instance();
     return function (newLocationDoc, event) {
+      newLocationDoc.organizationId = self.data.organization._id;
+
       Meteor.call("createLocation", newLocationDoc, HospoHero.handleMethodResult(function () {
         self.closeFlyoutByEvent(event);
       }));
     };
   },
   onCancel: function () {
-    var self = Template.instance();
+    const self = Template.instance();
     return function (event) {
       self.closeFlyoutByEvent(event);
     };

@@ -94,8 +94,6 @@ Template.editLocationForm.events({
     ], true);
     updateLocationDoc.closingTime = moment(updateLocationDoc.closingTime).toDate();
 
-    updateLocationDoc.organizationId = HospoHero.getOrganization()._id;
-
     if (_.isFunction(tmpl.data.onSubmit)) {
       var locationDoc = tmpl.data.locationDoc || {};
       _.extend(locationDoc, updateLocationDoc);

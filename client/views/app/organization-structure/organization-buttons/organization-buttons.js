@@ -1,10 +1,6 @@
 Template.organizationButtons.helpers({
   hasLocations: function () {
     return !!Locations.findOne({organizationId: this._id});
-  },
-  isOrganizationCurrent: function () {
-    let currentArea = HospoHero.getCurrentArea();
-    return currentArea && currentArea.organizationId === this._id;
   }
 });
 Template.organizationButtons.events({
