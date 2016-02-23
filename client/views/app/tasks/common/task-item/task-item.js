@@ -65,6 +65,11 @@ Template.taskItem.helpers({
 
     if (Object.keys(taskReference).length) {
       var reference = references[taskReference.type];
+
+      if (!reference) {
+        return false;
+      }
+
       var referenceItem = reference.collection.findOne({_id: taskReference.id});
       var nameField = reference.nameField || 'name';
 

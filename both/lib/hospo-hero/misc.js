@@ -247,7 +247,6 @@ Namespace('HospoHero.misc', {
     return object;
   },
 
-
   /**
    * Returns different values of two passed arrays
    * @param {Array} array1
@@ -259,6 +258,34 @@ Namespace('HospoHero.misc', {
       return _.difference(array1, array2);
     } else {
       return _.difference(array2, array1);
+    }
+  },
+
+  hasUnavailability (unavailabilities, {startTime: shiftStart, endTime: shiftEnd}) {
+    let isBetween = function (date, dateStart, dateEnd) {
+      return date.valueOf() >= dateStart && date.valueOf() <= dateEnd;
+    };
+
+    let isBefore = function (date1, date2) {
+      return date1.valueOf() < date2.valueOf();
+    };
+
+    let isAfter = function (date1, date2) {
+      return date1.valueOf() > date2.valueOf();
+    };
+
+    if (unavailabilities && unavailabilities.length) {
+      return unavailabilities.some((unavailability) => {
+        let unavailabilityStart = unavailability.startDate;
+        let unavailabilityEnd = unavailability.endDate;
+
+        return isAfter(shiftStart, unavailabilityStart) && isBefore(shiftEnd, unavailabilityEnd) ||
+          isBetween(shiftStart, unavailabilityStart, unavailabilityEnd) ||
+          isBetween(shiftEnd, unavailabilityStart, unavailabilityEnd) ||
+          isBefore(shiftStart, unavailabilityStart) && isAfter(shiftEnd, unavailabilityEnd);
+      });
+    } else {
+      return false;
     }
   }
 });

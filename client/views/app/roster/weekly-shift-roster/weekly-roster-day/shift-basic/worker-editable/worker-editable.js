@@ -23,20 +23,13 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
       return shiftEntry.assignedTo;
     });
 
-    var unavailableUserIds = Meteor.users.find({
-      $or: [
-        {
-          'unavailabilities.startDate': occupiedTimeRange
-        }, {
-          'unavailabilities.endDate': occupiedTimeRange
-        }, {
-          'unavailabilities.startDate': {$lte: shift.startTime},
-          'unavailabilities.endDate': {$gte: shift.endTime}
-        }
-      ]
-    }).map(function (user) {
-      return user._id;
+    // this is a very strange functionality for checking
+    // if the shift is placed in unavailable for user time
+    // need to refactor
+    var unavailableUserIds = Meteor.users.find().map(function (user) {
+      return HospoHero.misc.hasUnavailability(user.unavailabilities, shift) ? user._id : false;
     });
+    unavailableUserIds = _.compact(unavailableUserIds);
 
     var leaveRequestsUserIds = LeaveRequests.find({
       status: "approved",
@@ -58,8 +51,8 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
   };
 
   // Get roles which can be rosted
-  var getCanBeRostedRoles = function () {
-    return Roles.getRolesByAction('be rosted').map(function (role) {
+  var getCanBeRostedRoles = function (areaId) {
+    return Roles.getRolesByAction('be rosted', areaId).map(function (role) {
       return role._id;
     });
   };
@@ -95,7 +88,7 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
 
     workersQuery._id = getAvailableWorkers ? {$nin: assignedWorkers} : {$in: assignedWorkers};
 
-    workersQuery["roles." + HospoHero.getCurrentAreaId()] = {$in: getCanBeRostedRoles()};
+    workersQuery["roles." + shift.relations.areaId] = {$in: getCanBeRostedRoles(shift.relations.areaId)};
 
     return Meteor.users.find(workersQuery, {sort: {"profile.firstname": 1}}).map(function (worker) {
       return {

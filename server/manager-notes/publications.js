@@ -13,3 +13,13 @@ Meteor.publish('managerNotes', function (weekRange, areaId) {
     'relations.areaId': areaId
   });
 });
+
+Meteor.publish('managerNote', function (date, areaId) {
+  check(date, Date);
+  check(areaId, HospoHero.checkers.MongoId);
+
+  return ManagerNotes.find({
+    noteDate: date,
+    'relations.areaId': areaId
+  });
+});

@@ -1,8 +1,10 @@
 Template.taskWidget.onCreated(function () {
   this.getReferenceObject = function () {
+    var referenceId = this.data.itemId || HospoHero.getParamsFromRoute('_id');
+    var referenceType = this.data.type;
     return {
-      id: this.data.itemId,
-      type: this.data.type
+      id: referenceId,
+      type: referenceType
     };
   };
 
@@ -73,6 +75,9 @@ Template.taskWidget.events({
     tmpl.task = {
       reference: tmpl.getReferenceObject()
     };
+    if (tmpl.data.dueDate) {
+      tmpl.task.dueDate = tmpl.data.dueDate;
+    }
     tmpl.isNewTaskCreating.set(true);
   }
 });
