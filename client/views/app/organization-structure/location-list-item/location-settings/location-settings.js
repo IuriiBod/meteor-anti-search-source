@@ -1,5 +1,6 @@
 Template.locationSettings.onCreated(function () {
-  this.subscribe('locationDetails', this.data.locationId);
+  this.isTemplateRendered = new ReactiveVar(false);
+  this.detailsSubsHandle = this.subscribe('locationDetails', this.data.locationId);
 
   this.closeFlyoutByEvent = function (event) {
     var flyout = FlyoutManager.getInstanceByElement(event.target);
@@ -7,26 +8,37 @@ Template.locationSettings.onCreated(function () {
   };
 
   this.location = function () {
-    if (this.data.locationId) {
-      return Locations.findOne({_id: this.data.locationId});
-    }
+    return Locations.findOne({_id: this.data.locationId});
   }
 });
 
+Template.locationSettings.onRendered(function () {
+  //compensate flyout animation while rendering location details form
+  // animation duration .5s
+  Meteor.setTimeout(() => this.isTemplateRendered.set(true), 500);
+});
+
 Template.locationSettings.helpers({
+  isLocationDetailsLoaded: function () {
+    const tmpl = Template.instance();
+    return tmpl.isTemplateRendered.get() && tmpl.detailsSubsHandle.ready();
+  },
+
   location: function () {
     return Template.instance().location();
   },
+
   onLocationSubmit: function () {
-    var self = Template.instance();
+    const self = Template.instance();
     return function (newLocationDoc, event) {
       Meteor.call('editLocation', newLocationDoc, HospoHero.handleMethodResult(function () {
         self.closeFlyoutByEvent(event);
       }));
     };
   },
+
   onCancel: function () {
-    var self = Template.instance();
+    const self = Template.instance();
     return function (event) {
       self.closeFlyoutByEvent(event);
     };
