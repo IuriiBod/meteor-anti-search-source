@@ -45,7 +45,7 @@
                                     </tr>
                                     <tr>
                                         <td class="content-block">
-                                            <p>Hi {{publishedByName}},</p>
+                                            <p>Hi {{publishedForName}},</p>
                                             <p> <b>{{publishedByName}}</b>  just published the roster {{#if areaName}} in <b>{{areaName}}</b> {{/if}}  for the week starting <b>{{date}}</b>.</p>
 
                                             <p>Here's a list of your shifts:</p>
@@ -70,7 +70,10 @@
                                     </tr>
                                     <tr>
                                         <td class="content-block">
-                                            [User who sent invitation]<br>User Email<br>User Phone<br>[organisation]
+                                            {{publishedByName}}
+                                            <br>{{publishedByEmailsFormatter publishedByEmails}}
+                                            <br>{{publishedByPhone}}
+                                            <br>{{organizationName}}
                                         </td>
                                     </tr>
                                 </table>

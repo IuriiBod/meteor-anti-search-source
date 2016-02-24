@@ -36,6 +36,7 @@ Meteor.methods({
    * @param {Date} shiftDateQuery - Range of week
    */
   publishRoster: function (shiftDateQuery) {
+    debugger
     check(shiftDateQuery, HospoHero.checkers.WeekRange);
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User not permitted to publish shifts");
@@ -104,8 +105,12 @@ Meteor.methods({
             shifts: usersToNotify[key],
             openShifts: openShifts,
             publishedByName: HospoHero.username(Meteor.userId()),
+            publishedByEmails: Meteor.users.findOne({_id:Meteor.userId()}).emails,
+            publishedByPhone: Meteor.users.findOne({_id:Meteor.userId()}).profile.phone,
+            publishedForName:HospoHero.username(key),
             rosterDate: shiftDate,
-            areaName: HospoHero.getCurrentArea().name
+            areaName: HospoHero.getCurrentArea().name,
+            organizationName:HospoHero.getOrganization().name
           },
           {
             helpers: {
@@ -115,6 +120,15 @@ Meteor.methods({
               },
               dateFormatter: function (shift) {
                 return HospoHero.dateUtils.shiftDateInterval(shift)
+              },
+              publishedByEmailsFormatter: function (emails) {
+                var res = '';
+                for(var i=0; i<emails.length;i++){
+                  if(emails[i].verified){
+                    res = emails[i].address + i === emails.length ? ' ': ', '
+                  }
+                }
+                return res;
               },
               rosterUrl: linkToWeeklyRosterHelper
             }
