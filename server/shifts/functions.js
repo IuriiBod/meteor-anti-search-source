@@ -36,7 +36,6 @@ Meteor.methods({
    * @param {Date} shiftDateQuery - Range of week
    */
   publishRoster: function (shiftDateQuery) {
-    debugger
     check(shiftDateQuery, HospoHero.checkers.WeekRange);
     if (!HospoHero.canUser('edit roster', Meteor.userId())) {
       logger.error("User not permitted to publish shifts");
