@@ -1,0 +1,31 @@
+@import "theme-globals.import.less";
+
+.btn.btn-full-width {
+  width: 100%;
+}
+
+.btn.btn-half-width {
+  width: 50%;
+}
+
+.submit-textarea, .extra-top-margin {
+  margin-top: 10px;
+}
+
+@media (max-width: 992px) {
+  .margin-top-20 {
+    margin-top: 20px;
+  }
+}
+
+#elevio-base-menu {
+  z-index: 100;
+  ul {
+    z-index: 100 !important;
+  }
+}
+
+//for hiding help button of elevio, it is impossible to do by api
+.elevio-button-cta {
+  display: none !important;
+}
