@@ -241,10 +241,8 @@ Namespace('HospoHero.misc', {
     }
   },
 
-  renameObjectProperty(object, oldKeyName, newKeyName) {
-    object[newKeyName] = object[oldKeyName];
-    delete object[oldKeyName];
-    return object;
+  escapeRegExpString: function (str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
   },
 
   hasUnavailability (unavailabilities, {startTime: shiftStart, endTime: shiftEnd}) {

@@ -23,7 +23,7 @@
             </a>
           {{/if}}
         </li>
-        {{#if canEditJob}}
+        {{#if hasPermissionInAreaTo 'edit jobs'}}
           <li>
             <a href="" class="hidden-print copy-job-item-button">
               <i class="fa fa-copy"></i> Copy
@@ -35,7 +35,7 @@
             <i class="fa fa-print"></i> Print
           </a>
         </li>
-        {{#if canEditJob}}
+        {{#if hasPermissionInAreaTo 'edit jobs'}}
           <li role="separator" class="divider"></li>
           {{#if isArchived}}
             <li>

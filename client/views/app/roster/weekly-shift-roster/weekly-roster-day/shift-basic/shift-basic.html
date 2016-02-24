@@ -1,7 +1,7 @@
 <template name="shiftBasic">
   {{#with shift}}
-    <li class="success-element shift-basic-component {{#if canEditRoster}}can-edit{{/if}}">
-      {{#if canEditRoster}}
+    <li class="success-element shift-basic-component {{#if hasPermissionInAreaTo 'edit roster'}}can-edit{{/if}}">
+      {{#if hasPermissionInAreaTo 'edit roster'}}
         <div class="box-wrapper pull-right shift-remove-wrapper">
           <i class="fa fa-files-o copy-shift-button"></i>
           <span class="box-remove glyphicon glyphicon-remove remove-shift-button"></span>
@@ -10,7 +10,7 @@
 
       <div class="agile-detail">
         <i class="fa fa-user"></i>
-        {{#if canEditRoster}}
+        {{#if hasPermissionInAreaTo 'edit roster'}}
           {{> shiftBasicWorkerEditable}}
         {{else}}
           {{#if assignedTo}}
@@ -22,7 +22,7 @@
       </div>
 
       <div class="agile-detail">
-        {{#if canEditRoster}}
+        {{#if hasPermissionInAreaTo 'edit roster'}}
           {{> comboTimeEditable params=comboDateParams}}
         {{else}}
           <i class="fa fa-clock-o"></i> {{timeFormat startTime}} - {{timeFormat endTime}}
@@ -35,7 +35,7 @@
 
       <div class="agile-detail">
         <i class="fa fa-angle-double-right"></i>
-        {{#if canEditRoster}}
+        {{#if hasPermissionInAreaTo 'edit roster'}}
           {{> shiftBasicSectionEditable}}
         {{else}}
           {{sectionById section}}

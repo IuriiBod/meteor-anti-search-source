@@ -22,7 +22,7 @@
       </table>
     </div>
     <!-- ADD NEW SUPPLIER-->
-    {{#if canEditStock}}
+    {{#if hasPermissionInAreaTo 'edit stocks'}}
       <div class="modal fade" id="addNewSupplierModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
            aria-hidden="true">
         {{> newSupplier}}

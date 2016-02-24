@@ -14,7 +14,7 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" style="margin-left: -56px;">
-          {{#if canEditJob}}
+          {{#if hasPermissionInAreaTo 'edit jobs'}}
             <li>
               <a href="{{pathFor route='jobItemsMaster' status='archived'}}">Archived
                 Items</a>
