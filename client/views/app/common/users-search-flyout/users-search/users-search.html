@@ -3,11 +3,9 @@
     <input type="text" class="form-control search-user-name" placeholder="Enter the name..."/>
   </div>
 
-  {{#if searchTextLength}}
-    <div class="search-results">
-      {{#each searchResults}}
-        {{> searchUserInfo user=this}}
-      {{/each}}
-    </div>
-  {{/if}}
+  <div class="search-results">
+    {{#each searchResults}}
+      {{> searchUserInfo user=this}}
+    {{/each}}
+  </div>
 </template>
