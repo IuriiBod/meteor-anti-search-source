@@ -3,15 +3,7 @@
     <td>{{dateInterval startTime endTime}}</td>
     <td>{{title}}</td>
     <td class="project-people hidden-xs">
-      <span class="pull-left">
-        {{#if accepted.length}}
-          {{#each accepted}}
-            {{> userCircleIcon this}}
-          {{/each}}
-        {{else}}
-          No attendees yet
-        {{/if}}
-      </span>
+      {{> meetingAttendees this}}
     </td>
   </tr>
 </template>

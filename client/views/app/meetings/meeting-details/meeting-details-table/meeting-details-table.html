@@ -44,15 +44,7 @@
     <tr>
       <td><b>Attendees:</b></td>
       <td class="project-people">
-        <div class="pull-left">
-          {{#if meeting.accepted.length}}
-            {{#each meeting.accepted}}
-              {{> userCircleIcon this}}
-            {{/each}}
-          {{else}}
-            No attendees yet
-          {{/if}}
-        </div>
+        {{> meetingAttendees meeting}}
 
         <div class="col-md-4">
           <button type="button" class="btn btn-default btn-sm pull-left add-user">
