@@ -95,18 +95,19 @@ Meteor.methods({
 
       var shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDateQuery.$gte, locationId);
 
-      Object.keys(usersToNotify).forEach(function (key) {
+      Object.keys(usersToNotify).forEach(function (notificationReceiverId) {
+        var user = Meteor.users.findOne({_id:Meteor.userId()});
         new NotificationSender(
           'Weekly roster published',
           'roster-published',
           {
             date: HospoHero.dateUtils.formatDateWithTimezone(shiftDate, 'ddd, Do MMMM', locationId),
-            shifts: usersToNotify[key],
+            shifts: usersToNotify[notificationReceiverId],
             openShifts: openShifts,
             publishedByName: HospoHero.username(Meteor.userId()),
-            publishedByEmails: Meteor.users.findOne({_id:Meteor.userId()}).emails,
-            publishedByPhone: Meteor.users.findOne({_id:Meteor.userId()}).profile.phone,
-            publishedForName:HospoHero.username(key),
+            publishedByEmail: user.emails[0].address,
+            publishedByPhone: user.profile.phone,
+            publishedForName:HospoHero.username(notificationReceiverId),
             rosterDate: shiftDate,
             areaName: HospoHero.getCurrentArea().name,
             organizationName:HospoHero.getOrganization().name
@@ -120,19 +121,10 @@ Meteor.methods({
               dateFormatter: function (shift) {
                 return HospoHero.dateUtils.shiftDateInterval(shift)
               },
-              publishedByEmailsFormatter: function (emails) {
-                var res = '';
-                for(var i=0; i<emails.length;i++){
-                  if(emails[i].verified){
-                    res = emails[i].address + i === emails.length ? ' ': ', '
-                  }
-                }
-                return res;
-              },
               rosterUrl: linkToWeeklyRosterHelper
             }
           }
-        ).sendBoth(key);
+        ).sendBoth(notificationReceiverId);
       });
     }
   },
