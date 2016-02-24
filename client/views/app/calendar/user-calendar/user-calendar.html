@@ -10,7 +10,7 @@
       {{> calendarItem userId=userId date=date type=type}}
     {{else}}
       <h3>No shifts for {{#if equal type "day"}}today{{else}}this week{{/if}}</h3>
-      {{#if canEditRoster userId}}
+      {{#if hasPermissionInAreaTo 'edit roster'}}
         <a href="{{pathFor route='weeklyRoster' date=startOfWeekDate}}">you can create one</a>
       {{/if}}
     {{/if}}

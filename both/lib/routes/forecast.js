@@ -36,10 +36,5 @@ Router.route('posSettings', {
       Meteor.subscribe('menuItemsForPosLinking', currentAreaId),
       Meteor.subscribe('posMenuItems', currentAreaId)
     ]
-  },
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
   }
 });

@@ -1,3 +1,11 @@
+Namespace('HospoHero.security',{
+  hasPermissionInAreaTo: function (permission) {
+    let permissionChecker = new HospoHero.security.PermissionChecker();
+    let currentAreaId = HospoHero.getCurrentAreaId();
+    return permissionChecker.hasPermissionInArea(currentAreaId, permission);
+  }
+});
+
 Namespace('HospoHero', {
   handleMethodResult: function (onSuccess) {
     return function (err, res) {

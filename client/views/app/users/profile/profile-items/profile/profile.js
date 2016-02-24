@@ -28,7 +28,8 @@ Template.profile.helpers({
   },
   //permitted for profile owner and admins
   isEditPermitted: function () {
-    return HospoHero.isManager() || Meteor.userId() && Meteor.userId() === this._id;
+    return HospoHero.security.hasPermissionInAreaTo("edit user's payrate")
+      || Meteor.userId() && Meteor.userId() === this._id;
   },
   isMe: function (userId) {
     return Meteor.userId() && Meteor.userId() === userId;

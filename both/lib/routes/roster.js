@@ -53,10 +53,5 @@ Router.route('sectionsSettings', {
   template: 'sections',
   waitOn: function () {
     return Meteor.subscribe('sections', HospoHero.getCurrentAreaId(Meteor.userId()));
-  },
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
   }
 });
