@@ -58,13 +58,6 @@ Namespace('HospoHero', {
     return HospoHero.isInRole('Worker', userId, areaId);
   },
 
-  isMe: function (userId) {
-    var currentUserId = Meteor.userId();
-    if (currentUserId) {
-      return (currentUserId == userId);
-    }
-  },
-
   getOrganization: function (organizationId) {
     organizationId = organizationId ? organizationId : HospoHero.isInOrganization();
     return Organizations.findOne({_id: organizationId});

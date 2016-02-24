@@ -7,7 +7,6 @@ Meteor.startup(function () {
     isWorker: HospoHero.isWorker,
     getCurrentArea: HospoHero.getCurrentArea,
     getCurrentAreaId: HospoHero.getCurrentAreaId,
-    isMe: HospoHero.isMe,
 
     canBeRosted: HospoHero.canUser('be rosted'),
     canInvite: HospoHero.canUser('invite users'),
