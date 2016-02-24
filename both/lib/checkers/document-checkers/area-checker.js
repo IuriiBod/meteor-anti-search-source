@@ -10,10 +10,10 @@ var AreaDocument = Match.Where(function (area) {
     name: String,
     locationId: HospoHero.checkers.MongoId,
     organizationId: HospoHero.checkers.MongoId,
-    createdAt: Number,
-    inactivityTimeout: InactivityTimeout,
-    archived: Match.Optional(Boolean),
-    color: HospoHero.checkers.RgbColor
+    color: HospoHero.checkers.RgbColor,
+    createdAt: Match.Optional(Number),
+    inactivityTimeout: Match.Optional(InactivityTimeout),
+    archived: Match.Optional(Boolean)
   });
 
   var checkerHelper = new HospoHero.checkerUtils.DocumentCheckerHelper(area, Areas);
