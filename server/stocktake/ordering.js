@@ -1,6 +1,11 @@
+var canUserReceiveDeliveries = function() {
+  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'receive deliveries');
+};
+
 Meteor.methods({
   generateOrders: function (stocktakeVersion) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries()) {
       logger.error("User not permitted to generate orders");
       throw new Meteor.Error(403, "User not permitted to generate orders");
     }
@@ -79,7 +84,7 @@ Meteor.methods({
   },
 
   editOrderingCount: function (orderId, count) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries()) {
       logger.error("User not permitted to edit ordering count");
       throw new Meteor.Error(404, "User not permitted to edit ordering count");
     }
@@ -96,7 +101,7 @@ Meteor.methods({
   },
 
   'removeOrder': function (id) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries()) {
       logger.error("User not permitted to remove placed orders");
       throw new Meteor.Error(403, "User not permitted to remove placed orders");
     }

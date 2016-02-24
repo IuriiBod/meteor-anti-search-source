@@ -1,7 +1,11 @@
 Template.menuItemImage.helpers({
   imageSettings() {
     let buttons = [];
-    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+    let userId = Meteor.userId();
+    let checker = new HospoHero.security.PermissionChecker(userId);
+    let areaId = HospoHero.getCurrentAreaId(userId);
+
+    if (checker.hasPermissionInArea(areaId, `edit menus`)) {
       let imageUpload = {
         url: '#',
         className: 'upload-image-button',

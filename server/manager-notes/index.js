@@ -2,7 +2,7 @@ Meteor.methods({
   upsertManagerNote: function (noteObject) {
     check(noteObject, HospoHero.checkers.ManagerNotesDocument);
 
-    if (!HospoHero.canUser('edit roster')) {
+    if (!canUserEditRoster()) {
       logger.error('User not permitted to add manager notes!', {userId: Meteor.userId()});
       throw new Meteor.Error('User not permitted to add manager notes!', {userId: Meteor.userId()});
     } else {
@@ -17,7 +17,7 @@ Meteor.methods({
   deleteManagerNote: function (noteId) {
     check(noteId, HospoHero.checkers.MongoId);
 
-    if (!HospoHero.canUser('edit roster')) {
+    if (!canUserEditRoster()) {
       logger.error('User not permitted to delete manager notes!', {userId: Meteor.userId()});
       throw new Meteor.Error('User not permitted to delete manager notes!', {userId: Meteor.userId()});
     } else {
@@ -25,3 +25,8 @@ Meteor.methods({
     }
   }
 });
+
+function canUserEditRoster() {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit roster');
+}

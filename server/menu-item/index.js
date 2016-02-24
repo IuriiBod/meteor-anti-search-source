@@ -5,7 +5,7 @@ var menuItemLinkHelper = function () {
 
 Meteor.methods({
   togglePosNameToMenuItem: function (menuItemId, posMenuItemNameOrId, action) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    if (!canUserEditMenus()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -29,7 +29,7 @@ Meteor.methods({
   },
 
   createMenuItem: function (menuItem) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    if (!canUserEditMenus()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -71,7 +71,7 @@ Meteor.methods({
   },
 
   editMenuItem: function (menuItem) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    if (!canUserEditMenus()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -107,7 +107,7 @@ Meteor.methods({
   },
 
   deleteMenuItem: function (menuItem) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    if (!canUserEditMenus()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -136,7 +136,7 @@ Meteor.methods({
   },
 
   editItemOfMenu: function (menuId, itemObject, action, type) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    if (!canUserEditMenus()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -160,7 +160,7 @@ Meteor.methods({
   },
 
   duplicateMenuItem: function (menuItem, areaId) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    if (!canUserEditMenus()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -203,3 +203,8 @@ var duplicateMenuCategory = function (menuCategoryId, areaId) {
   }
   return menuCategoryId;
 };
+
+function canUserEditMenus() {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit menus');
+}

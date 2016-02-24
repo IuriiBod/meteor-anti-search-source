@@ -1,6 +1,6 @@
 var checkForecastPermissions = function (userId) {
-  var haveAccess = HospoHero.canUser('view forecast', userId);
-  if (!haveAccess) {
+  var checker = new HospoHero.security.PermissionChecker(userId);
+  if (!checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'view forecast')) {
     throw new Meteor.Error(403, 'Access Denied');
   }
 };

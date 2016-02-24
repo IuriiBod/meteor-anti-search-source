@@ -19,8 +19,7 @@ Meteor.methods({
   editArea: function (updatedArea) {
     check(updatedArea, HospoHero.checkers.AreaDocument);
 
-    var userId = Meteor.userId();
-    if (!HospoHero.canUser('edit areas', userId)) {
+    if (!canUser('edit areas')) {
       logger.error(403, 'User not permitted to edit areas');
     }
 
@@ -100,7 +99,7 @@ Meteor.methods({
       roleId: mongoIdChecker
     });
 
-    if (!HospoHero.canUser('invite users')) {
+    if (!canUser('invite users')) {
       throw new Meteor.Error(403, 'User not permitted to add users to area');
     }
 
@@ -140,7 +139,7 @@ Meteor.methods({
   },
 
   removeUserFromArea: function (userId, areaId) {
-    if (!HospoHero.canUser('invite users')) {
+    if (!canUser('invite users')) {
       throw new Meteor.Error(403, 'User not permitted to remove users from area');
     }
 
@@ -165,3 +164,8 @@ Meteor.methods({
     Meteor.users.update({_id: userId}, updateObject);
   }
 });
+
+function canUser(permission) {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), permission);
+}

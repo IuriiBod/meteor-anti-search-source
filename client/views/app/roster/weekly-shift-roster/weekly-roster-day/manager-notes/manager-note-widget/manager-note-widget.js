@@ -28,8 +28,7 @@ Template.managerNoteWidget.helpers({
     if (note && _.isString(note.text) && $.trim(note.text)) {
       return note.text;
     }
-    let canUserEditRoster = HospoHero.canUser('edit roster', Meteor.userId());
-    return canUserEditRoster ? Template.instance().textForEmptyEditor : 'No notes';
+    return canUserEditRoster() ? Template.instance().textForEmptyEditor : 'No notes';
   },
   saveNote () {
     let tmpl = Template.instance();
@@ -53,6 +52,11 @@ Template.managerNoteWidget.helpers({
     }
   },
   readOnly () {
-    return !HospoHero.canUser('edit roster', Meteor.userId());
+    return !canUserEditRoster();
   }
 });
+
+function canUserEditRoster() {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), `edit roster`);
+}

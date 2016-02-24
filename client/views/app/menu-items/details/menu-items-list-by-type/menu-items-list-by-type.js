@@ -21,7 +21,11 @@ Template.menuItemsListByType.onCreated(function () {
 Template.menuItemsListByType.helpers({
   settings() {
     let buttons = [];
-    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+    let userId = Meteor.userId();
+    let checker = new HospoHero.security.PermissionChecker(userId);
+    let areaId = HospoHero.getCurrentAreaId(userId);
+
+    if (checker.hasPermissionInArea(areaId, `edit menus`)) {
       let addIngsOrPreps = {
         url: '#',
         className: `add-${this.type} btn btn-primary btn-xs`,

@@ -29,7 +29,7 @@ Meteor.methods({
   },
 
   createSection: function (name) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error("User not permitted to add sections");
       throw new Meteor.Error(403, "User not permitted to add sections");
     }
@@ -53,7 +53,7 @@ Meteor.methods({
   },
 
   deleteSection: function (id) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error("User not permitted to add job items");
       throw new Meteor.Error(404, "User not permitted to add jobs");
     }
@@ -78,7 +78,7 @@ Meteor.methods({
   },
 
   editSection: function (id, name) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error("User not permitted to add job items");
       throw new Meteor.Error(404, "User not permitted to add jobs");
     }
@@ -95,3 +95,8 @@ Meteor.methods({
     return Handlebars.templates[tmplName](tmplData);
   }
 });
+
+function canUserEditRoster() {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit roster');
+}

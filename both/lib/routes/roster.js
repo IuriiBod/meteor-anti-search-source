@@ -19,7 +19,9 @@ Router.route('/roster/weekly/:date', {
       Meteor.subscribe('taskList', Meteor.userId())
     ];
 
-    if (HospoHero.canUser('view forecast', Meteor.userId())) {
+
+    var checker = new HospoHero.security.PermissionChecker();
+    if (checker.hasPermissionInArea(currentAreaId, 'view forecast')) {
       subscriptions.push(Meteor.subscribe('dailySales', weekRange, currentAreaId));
     }
     return subscriptions;

@@ -14,7 +14,9 @@ let RoutePermissionChecker = class RoutePermissionChecker {
 
   _checkUserPermissionForRoute() {
     const permission = RoutePermissionChecker._permissionsByRouteName[this._routeName];
-    return permission && HospoHero.canUser(permission, this._user._id) || !permission;
+    const checker = new HospoHero.security.PermissionChecker(this._user._id);
+    const areaId = HospoHero.getCurrentAreaId(this._user._id);
+    return permission && checker.hasPermissionInArea(areaId, permission) || !permission;
   }
 
   _checkCurrentAreaNotArchived() {
