@@ -10,11 +10,10 @@ Template.managerNoteWidget.onCreated(function () {
     });
   };
 
-  self.subscribe('managerNote', self.data.date, HospoHero.getCurrentAreaId(), function onReady () {
-    let note = self.note();
-    let noteId = note ? note._id : Meteor.call('insertEmptyManagerNote', self.data.date);
+  let weekRange = TimeRangeQueryBuilder.forWeek(self.data.date);
 
-    commentsSubscription = Meteor.subscribe('comments', noteId, HospoHero.getCurrentAreaId());
+  self.subscribe('managerNotes', weekRange, HospoHero.getCurrentAreaId(), function onReady () {
+    self.subscribe('comments', self.note()._id, HospoHero.getCurrentAreaId());
   });
 
   self.textForEmptyEditor = 'Leave your note here';
