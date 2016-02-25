@@ -10,7 +10,7 @@
         {{#each categories}}
           <li><a href="{{pathFor route='menuItemsMaster' category=_id status=../status}}">{{name}}</a></li>
         {{/each}}
-        {{#if canEditMenu}}
+        {{#if hasPermissionInAreaTo 'edit menus'}}
           <li class="divider"></li>
           <li><a data-toggle="modal" data-target="#addCategoryModal">Add new category</a></li>
         {{/if}}

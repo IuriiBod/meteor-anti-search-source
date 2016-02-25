@@ -9,7 +9,7 @@
             </div>
             <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6">
               <h4>
-                {{#if canEditMenu}}
+                {{#if hasPermissionInAreaTo 'edit menus'}}
                   <a href="#" class="edit-item-price"> {{salesPrice}} </a>
                 {{else}}
                   {{salesPrice}}

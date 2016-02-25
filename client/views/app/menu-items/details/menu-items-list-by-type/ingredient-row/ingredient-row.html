@@ -1,6 +1,6 @@
 <template name="menuItemIngredientRow">
   <tr>
-    {{#if canEditMenu}}
+    {{#if hasPermissionInAreaTo 'edit menus'}}
       <td>
         {{#unless item.totalCost}}
         <a class="btn btn-primary btn-xs view-button" href="#">
@@ -15,7 +15,7 @@
       {{#if item.totalCost}}
         Total
       {{else}}
-        {{#if canEditMenu}}
+        {{#if hasPermissionInAreaTo 'edit menus'}}
           {{> ingredientRowQuantityEditable quantity=quantity onQuantityEditableSuccess=getOnQuantityEditableSuccess}}
         {{else}}
           {{quantity}}
@@ -24,7 +24,7 @@
     </td>
     {{#if equal type 'ings'}}<td>{{itemMeasure}}</td>{{/if}}
     <td>$ {{price}}</td>
-    {{#if canEditMenu}}
+    {{#if hasPermissionInAreaTo 'edit menus'}}
       <td>
         {{#unless item.totalCost}}
         <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>

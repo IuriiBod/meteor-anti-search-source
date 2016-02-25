@@ -4,13 +4,13 @@
       <table class="table table-striped">
         <thead>
         <tr>
-          {{#if canEditMenu}}
+          {{#if hasPermissionInAreaTo 'edit menus'}}
             <th></th>
           {{/if}}
           {{#each tableHeader}}
             <th><b>{{this}}</b></th>
           {{/each}}
-          {{#if canEditMenu}}
+          {{#if hasPermissionInAreaTo 'edit menus'}}
             <th></th>
           {{/if}}
         </tr>

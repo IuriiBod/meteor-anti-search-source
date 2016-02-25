@@ -14,7 +14,7 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu list-header-dropdown">
-          {{#if canEditMenu}}
+          {{#if hasPermissionInAreaTo 'edit menus'}}
             <li>
               {{#linkTo route="menuItemsMaster" category="all" status="archived"}}
                 Archive Items

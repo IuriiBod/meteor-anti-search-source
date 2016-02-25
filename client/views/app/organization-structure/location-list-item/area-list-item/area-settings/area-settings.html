@@ -24,7 +24,7 @@
       {{/each}}
     </div>
 
-    {{#if isManager}}
+    {{#if hasPermissionInAreaTo 'invite users'}}
       <button class="btn btn-white col-xs-12 area-flyout-button add-user">
         <i class="fa fa-user-plus"></i> Add User
       </button>
