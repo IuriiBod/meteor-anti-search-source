@@ -37,8 +37,10 @@ Template.calendarItem.helpers({
         timezone: 'local',
 
         events: function (start, end, timezone, callback) {
-          var events = HospoHero.calendar.getCalendarEvents(tmpl.data);
-          callback(events);
+          let events = HospoHero.calendar.getCalendarEvents(tmpl.data);
+          let backgroundEvents = HospoHero.calendar.getBackgroundEvents(tmpl.data);
+
+          callback(_.union(events, backgroundEvents));
         },
 
         eventClick: function (eventObject) {
