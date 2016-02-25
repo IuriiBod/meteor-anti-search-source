@@ -1,6 +1,11 @@
+var canUserEditStocks = function() {
+  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit stocks');
+};
+
 Meteor.methods({
   'createMainStocktake': function (date) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to generate stocktakes");
       throw new Meteor.Error(403, "User not permitted to generate stocktakes");
     }
@@ -33,7 +38,7 @@ Meteor.methods({
   },
 
   'generateStocktakes': function (stocktakeDate) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to generate stocktakes");
       throw new Meteor.Error(403, "User not permitted to generate stocktakes");
     }
@@ -96,7 +101,7 @@ Meteor.methods({
   },
 
   'updateStocktake': function (id, info, newValue) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to update stocktakes");
       throw new Meteor.Error(403, "User not permitted to update stocktakes");
     }
@@ -178,7 +183,7 @@ Meteor.methods({
   },
 
   removeStocktake: function (stocktakeId) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to remove stocktakes");
       throw new Meteor.Error(403, "User not permitted to remove stocktakes");
     }
@@ -196,7 +201,7 @@ Meteor.methods({
   },
 
   stocktakePositionUpdate: function (sortedStockItems) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to update stocktake position");
       throw new Meteor.Error(403, "User not permitted to update stocktake position");
     }

@@ -52,7 +52,8 @@ Template.taskWidget.helpers({
 
   tasksSettings() {
     let buttons = [];
-    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+    let checker = new HospoHero.security.PermissionChecker();
+    if (checker.hasPermissionInArea(null, `edit menus`)) {
       let addTask = {
         className: 'add-task btn btn-primary btn-xs pull-left',
         url: '#',

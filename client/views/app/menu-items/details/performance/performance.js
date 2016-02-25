@@ -90,7 +90,9 @@ Template.menuDetailPerformance.helpers({
 
   performanceSettings() {
     let buttons = [];
-    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+    let checker = new HospoHero.security.PermissionChecker();
+
+    if (checker.hasPermissionInArea(null, `edit menus`)) {
       let params = {
         category: 'all',
         rangeType: 'yesterday',

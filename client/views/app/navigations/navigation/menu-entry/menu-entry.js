@@ -85,5 +85,8 @@ var checkPermission = function (permission) {
   if (!permission) {
     return true;
   }
-  return HospoHero.canUser(permission, Meteor.userId());
+
+  var checker = new HospoHero.security.PermissionChecker();
+
+  return checker.hasPermissionInArea(null, permission);
 };

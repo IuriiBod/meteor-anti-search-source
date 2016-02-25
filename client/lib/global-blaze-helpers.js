@@ -72,7 +72,12 @@ Namespace('HospoHero.template', {
     } else {
       return "Not assigned";
     }
-  }
+  },
+
+  getCurrentArea: HospoHero.getCurrentArea,
+  getCurrentAreaId: HospoHero.getCurrentAreaId,
+
+  hasPermissionInAreaTo: HospoHero.security.hasPermissionInAreaTo
 });
 
 Object.keys(HospoHero.template).forEach(function (helper) {

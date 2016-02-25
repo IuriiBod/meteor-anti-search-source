@@ -102,13 +102,17 @@ var adjustShiftStatus = function (updatedShift) {
   }
 };
 
+var canUserEditRoster = function() {
+  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit roster');
+};
 
 /*
  * Shift modification methods
  */
 Meteor.methods({
   createShift: function (newShiftInfo) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error(403, "User not permitted to create shifts");
     }
 
@@ -151,8 +155,7 @@ Meteor.methods({
   editShift: function (updatedShift) {
     check(updatedShift, HospoHero.checkers.ShiftDocument);
 
-    var userId = Meteor.userId();
-    if (!HospoHero.canUser('edit roster', userId)) {
+    if (!canUserEditRoster()) {
       logger.error(403, "User not permitted to edit shifts");
     }
 
@@ -168,7 +171,7 @@ Meteor.methods({
   deleteShift: function (shiftToDeleteId) {
     check(shiftToDeleteId, HospoHero.checkers.MongoId);
 
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error(403, "User not permitted to delete shifts");
     }
 

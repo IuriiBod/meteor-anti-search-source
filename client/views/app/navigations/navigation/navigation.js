@@ -164,6 +164,10 @@ Template.navigation.helpers({
     return dashboardEntry;
   },
 
+  isUserInAnyOrganization: function () {
+    return HospoHero.security.isUserInAnyOrganization();
+  },
+
   menuEntries: function () {
     return menuEntries;
   }

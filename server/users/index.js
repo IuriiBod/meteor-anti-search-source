@@ -1,3 +1,9 @@
+var canUserEditUsers = function() {
+  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit users');
+};
+
+
 Accounts.onCreateUser(function (options, user) {
   user.profile = options.profile || {};
   if (user.services.google) {
@@ -151,7 +157,7 @@ Meteor.methods({
   },
 
   changeUserRole: function (userId, newRoleId, areaId) {
-    if (!HospoHero.canUser('edit users', Meteor.userId())) {
+    if (!canUserEditUsers()) {
       logger.error("User not permitted to change roles");
       throw new Meteor.Error(403, "User not permitted to change roles");
     }
@@ -198,7 +204,7 @@ Meteor.methods({
     check(sectionId, HospoHero.checkers.MongoId);
     check(isAddingSection, Boolean);
 
-    if (!HospoHero.canUser('edit users', Meteor.userId())) {
+    if (!canUserEditUsers()) {
       logger.error('User not permitted to edit other users', {userId: Meteor.userId()});
       throw new Meteor.Error('User not permitted to edit other users', {userId: Meteor.userId()});
     }

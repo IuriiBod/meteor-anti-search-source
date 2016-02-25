@@ -1,6 +1,11 @@
+var canUserEditJobs = function () {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit jobs');
+};
+
 Meteor.methods({
   'createJobItem': function (newJobItemInfo) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+    if (!canUserEditJobs()) {
       logger.error(403, "User not permitted to create jobs");
     }
 
@@ -25,7 +30,7 @@ Meteor.methods({
   },
 
   'editJobItem': function (newJobItemInfo) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+    if (!canUserEditJobs()) {
       logger.error(403, "User not permitted to edit jobs");
     }
     check(newJobItemInfo, HospoHero.checkers.JobItemDocument);
@@ -40,7 +45,7 @@ Meteor.methods({
   },
 
   'deleteJobItem': function (id) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+    if (!canUserEditJobs()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -76,7 +81,7 @@ Meteor.methods({
   },
 
   duplicateJobItem: function (jobItemId, areaId, quantity) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+    if (!canUserEditJobs()) {
       logger.error("User not permitted to duplicate job items");
       throw new Meteor.Error(403, "User not permitted to duplicate job items");
     }
@@ -132,7 +137,7 @@ Meteor.methods({
     /* end of defining additional function */
 
 
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+    if (!canUserEditJobs()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -154,3 +159,4 @@ Meteor.methods({
     return statusToSet;
   }
 });
+
