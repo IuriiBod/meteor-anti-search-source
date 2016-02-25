@@ -1,3 +1,10 @@
+Template.userCalendar.onCreated(function () {
+  const calendarUiStatesManager = UIStates.getManagerFor('calendar');
+  calendarUiStatesManager.setState('lastViewDate', this.data.date);
+  calendarUiStatesManager.setState('type', this.data.type);
+});
+
+
 Template.userCalendar.helpers({
   displayCalendar: function () {
     var queryType = HospoHero.calendar.getQueryType(this.type);
