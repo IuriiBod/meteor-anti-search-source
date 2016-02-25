@@ -1,4 +1,6 @@
 Namespace('HospoHero', {
+  //todo: this method may case incorrect behaviour (because there may be multiple organizations) and should be splitted on 2
+  //todo: separate methods: isInAnyOrganization and getCurrentOrganization
   isInOrganization: function (userId) {
     userId = userId ? userId : Meteor.userId();
     var user = Meteor.users.findOne({_id: userId});
@@ -23,29 +25,6 @@ Namespace('HospoHero', {
 
   getOrganizationIdBasedOnCurrentArea: function (userId) {
     return HospoHero.getCurrentArea(userId).organizationId;
-  },
-
-  isInRole: function (roleName, userId, areaId) {
-    userId = userId ? userId : Meteor.userId();
-    if (!userId) {
-      return false;
-    }
-    if (!areaId) {
-      var user = Meteor.users.findOne({_id: userId});
-      areaId = user && user.currentAreaId || false;
-    }
-
-    var query = {
-      _id: userId
-    };
-    var role = Roles.getRoleByName(roleName);
-
-    if (areaId && role) {
-      query['roles.' + areaId] = role._id;
-      return !!Meteor.users.findOne(query);
-    } else {
-      return false;
-    }
   },
 
   getOrganization: function (organizationId) {
@@ -73,24 +52,31 @@ Namespace('HospoHero', {
     };
   },
 
-  // Returns username. user can be user ID or user object
+  /**
+   * Returns user's full name
+   *
+   * @param {Object|string} user user's ID or document
+   * @returns {string}
+   */
   username: function (user) {
-    var userNameString = '';
+    let fullNameStr = false;
+    let appendName = namePart =>
+      fullNameStr = (fullNameStr ? fullNameStr : '') + namePart;
+
     if (_.isString(user)) {
-      userNameString = user;
       user = Meteor.users.findOne({_id: user});
     }
 
-    if (_.isObject(user)) {
-      if (user.profile.firstname && user.profile.lastname) {
-        return user.profile.firstname + " " + user.profile.lastname;
-      } else if (user.profile.firstname && !user.profile.lastname) {
-        return user.profile.firstname;
-      } else {
-        return 'No name';
+    if (_.isObject(user) && user.profile) {
+      if (user.profile.firstname) {
+        appendName(user.profile.firstname);
       }
-    } else {
-      return userNameString;
+
+      if (user.profile.lastname) {
+        appendName(user.profile.lastname);
+      }
     }
+
+    return fullNameStr || 'No name';
   }
 });

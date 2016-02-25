@@ -5,7 +5,8 @@
  */
 class PermissionChecker {
   /**
-   * @param {string} [userId] user we are going to check permission for
+   * @param {string} [userId] user we are going to check permission for.
+   * If argument is missing `Meteor.userId()` will be used.
    */
   constructor(userId) {
     if (!userId) {
@@ -37,11 +38,16 @@ class PermissionChecker {
   }
 
   /**
-   * @param {string} areaId area to check
+   * @param {string} areaId area to check. If `null` is passed
+   * `currentAreaId` will be used.
    * @param {string} permission permission to check
    * @returns {boolean}
    */
   hasPermissionInArea(areaId, permission) {
+    if (areaId === null) {
+      areaId = HospoHero.getCurrentAreaId(this._user._id);
+    }
+
     let area = Areas.findOne({_id: areaId});
 
     return this.isAuthorized()
