@@ -12,9 +12,7 @@ Template.managerCalendar.helpers({
         sort: {
           'profile.firstname': 1
         }
-      }).map(function (shift) {
-        return shift.assignedTo;
-      });
+      }).map(shift => shift.assignedTo);
 
       return _.map(_.uniq(assignedUsers), function (userId) {
         return {
