@@ -1,6 +1,6 @@
-var canUser = function (permission) {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), permission);
+var hasUserPermissionInArea = function (areaId, permission) {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, permission);
 };
 
 Meteor.methods({
@@ -27,7 +27,7 @@ Meteor.methods({
   editArea: function (updatedArea) {
     check(updatedArea, HospoHero.checkers.AreaDocument);
 
-    if (!canUser('edit areas')) {
+    if (!hasUserPermissionInArea(updatedArea._id, 'edit areas')) {
       logger.error(403, 'User not permitted to edit areas');
     }
 
@@ -107,7 +107,7 @@ Meteor.methods({
       roleId: mongoIdChecker
     });
 
-    if (!canUser('invite users')) {
+    if (!hasUserPermissionInArea(addedUserInfo.areaId, 'invite users')) {
       throw new Meteor.Error(403, 'User not permitted to add users to area');
     }
 
@@ -147,12 +147,12 @@ Meteor.methods({
   },
 
   removeUserFromArea: function (userId, areaId) {
-    if (!canUser('invite users')) {
-      throw new Meteor.Error(403, 'User not permitted to remove users from area');
-    }
-
     check(userId, HospoHero.checkers.MongoId);
     check(areaId, HospoHero.checkers.MongoId);
+
+    if (!hasUserPermissionInArea(areaId, 'invite users')) {
+      throw new Meteor.Error(403, 'User not permitted to remove users from area');
+    }
 
     let userToRemove = Meteor.users.findOne({_id: userId});
 
