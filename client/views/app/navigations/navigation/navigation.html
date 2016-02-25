@@ -11,7 +11,7 @@
 
         {{> menuEntry dashboardEntry}}
 
-        {{#if isInOrganization}}
+        {{#if isUserInAnyOrganization}}
           {{#if getCurrentAreaId}}
             {{#each menuEntries}}
               {{> menuEntry}}

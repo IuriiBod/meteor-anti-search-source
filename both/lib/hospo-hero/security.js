@@ -95,5 +95,13 @@ class PermissionChecker {
 }
 
 Namespace('HospoHero.security', {
-  PermissionChecker: PermissionChecker
+  PermissionChecker: PermissionChecker,
+
+  isUserInAnyOrganization(userId = Meteor.userId()) {
+    var user = Meteor.users.findOne({_id: userId});
+    return user
+      && user.relations
+      && _.isArray(user.relations.organizationIds)
+      && user.relations.organizationIds.length > 0;
+  }
 });

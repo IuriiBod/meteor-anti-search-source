@@ -9,10 +9,13 @@ Meteor.methods({
       createdAt: Date.now(),
       inactivityTimeout: 600000
     };
+
     var newAreaDocument = _.extend(areaInfo, defaultAreaProperties);
+
     check(newAreaDocument, HospoHero.checkers.AreaDocument);
 
-    if (!HospoHero.isOrganizationOwner()) {
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    if (!permissionChecker.isOrganizationOwner(newAreaDocument.organizationId)) {
       throw new Meteor.Error(403, 'User not permitted to create area');
     }
 

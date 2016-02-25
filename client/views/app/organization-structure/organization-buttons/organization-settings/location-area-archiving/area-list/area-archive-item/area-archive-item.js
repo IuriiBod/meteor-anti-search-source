@@ -1,8 +1,7 @@
 Template.areaArchiveItem.events({
   'click .archive-area-btn': function (e, tmpl) {
     e.stopPropagation();
-    var area = tmpl.data.area;
-    Meteor.call('switchArchiveArea', area);
+    Meteor.call('switchArchiveArea', tmpl.data.area._id);
   }
 });
 

@@ -1,35 +1,6 @@
 Namespace('HospoHero', {
-  //todo: this method may case incorrect behaviour (because there may be multiple organizations) and should be splitted on 2
-  //todo: separate methods: isInAnyOrganization and getCurrentOrganization
-  isInOrganization: function (userId) {
-    userId = userId ? userId : Meteor.userId();
-    var user = Meteor.users.findOne({_id: userId});
-    return user &&
-    user.relations &&
-    user.relations.organizationIds ?
-      user.relations.organizationIds.length === 1 ?
-        user.relations.organizationIds[0] : HospoHero.getOrganizationIdBasedOnCurrentArea()
-      : false;
-  },
-
-  isOrganizationOwner: function (userId) {
-    if (!userId) {
-      try {
-        userId = Meteor.userId();
-      } catch (error) {
-        return false;
-      }
-    }
-    return !!Organizations.findOne({owners: userId});
-  },
-
   getOrganizationIdBasedOnCurrentArea: function (userId) {
     return HospoHero.getCurrentArea(userId).organizationId;
-  },
-
-  getOrganization: function (organizationId) {
-    organizationId = organizationId ? organizationId : HospoHero.isInOrganization();
-    return Organizations.findOne({_id: organizationId});
   },
 
   getCurrentAreaId: function (userId) {

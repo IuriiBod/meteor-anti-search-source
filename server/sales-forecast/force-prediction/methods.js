@@ -1,5 +1,7 @@
 var checkOrganizationOwner = function (userId) {
-  if (!HospoHero.isOrganizationOwner(userId)) {
+  let currentOrganizationId = HospoHero.getOrganizationIdBasedOnCurrentArea(userId);
+  let permissionChecker = new HospoHero.security.PermissionChecker(userId);
+  if (!permissionChecker.isOrganizationOwner(currentOrganizationId)) {
     throw new Meteor.Error(403, 'You have no power here!');
   }
 };
