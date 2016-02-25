@@ -139,6 +139,16 @@ var menuEntries = [
     }
   },
   {
+    title: 'Projects',
+    icon: 'fa-file-text-o',
+    route: 'projects',
+    params: function () {
+      return {
+        date: HospoHero.dateUtils.shortDateFormat(new Date())
+      }
+    }
+  },
+  {
     title: "Help",
     icon: 'fa-question',
     subMenuEntries: [
