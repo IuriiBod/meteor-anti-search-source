@@ -1,0 +1,9 @@
+<template name="meetingButton">
+  <button type="button" class="btn {{buttonClass}}">
+    {{#if isActiveButton}}
+      <b>{{button.title}}</b>
+    {{else}}
+      {{button.title}}
+    {{/if}}
+  </button>
+</template>

@@ -139,6 +139,14 @@ var menuEntries = [
     }
   },
   {
+    title: 'Meetings',
+    icon: 'fa-users',
+    route: 'meetings',
+    params: function () {
+      return {};
+    }
+  },
+  {
     title: "Help",
     icon: 'fa-question',
     subMenuEntries: [

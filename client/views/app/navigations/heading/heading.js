@@ -13,7 +13,8 @@ var headingComponentsMap = {
   stocktakeList: 'stocktakeHeader',
   suppliersListHeader: 'suppliersListHeader',
   posMenuLinking: 'posMenuLinkingHeader',
-  taskList: 'taskListHeader'
+  taskList: 'taskListHeader',
+  meetings: 'meetingsHeader'
 };
 
 Template.pageHeading.onCreated(function () {
