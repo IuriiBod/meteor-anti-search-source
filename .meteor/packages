@@ -22,13 +22,10 @@ email
 underscore
 random
 ecmascript
-
-force-ssl
-
 less
 reactive-var
 
-force-ssl
+#force-ssl
 crosswalk
 
 accounts-ui
@@ -83,7 +80,6 @@ jss:through
 jss:meteor-google-prediction
 jss:publish-authorized
 jss:suncalc
-jss:apns
 
 
 # ===========> both
@@ -97,8 +93,8 @@ jss:ui-states
 
 
 # ===========> new
-settinghead:auto-nprogress
 matb33:collection-hooks
 dburles:mongo-collection-instances
 manuel:reactivearray
 dsyko:jquery-ui-touch-punch
+raix:push
