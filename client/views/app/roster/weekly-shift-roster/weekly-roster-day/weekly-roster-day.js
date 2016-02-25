@@ -14,9 +14,9 @@ Template.weeklyRosterDay.onCreated(function () {
 });
 
 Template.weeklyRosterDay.onRendered(function () {
-  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  var checker = new HospoHero.security.PermissionChecker();
 
-  if (checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), `edit roster`)) {
+  if (checker.hasPermissionInArea(null, `edit roster`)) {
     this.$(".sortable-list").sortable({
       connectWith: ".sortable-list",
       revert: true,

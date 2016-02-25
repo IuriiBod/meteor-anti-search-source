@@ -22,8 +22,7 @@ Template.menuItemInstructions.helpers({
   },
 
   readOnly() {
-    const checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-    const areaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return !checker.hasPermissionInArea(areaId, 'edit menus');
+    const checker = new HospoHero.security.PermissionChecker();
+    return !checker.hasPermissionInArea(null, 'edit menus');
   }
 });
