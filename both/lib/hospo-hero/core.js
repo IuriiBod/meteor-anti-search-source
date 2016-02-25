@@ -44,7 +44,7 @@ Namespace('HospoHero', {
       }
 
       if (user.profile.lastname) {
-        appendName(user.profile.lastname);
+        appendName(' ' + user.profile.lastname);
       }
     }
 
