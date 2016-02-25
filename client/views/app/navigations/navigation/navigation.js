@@ -141,7 +141,9 @@ var menuEntries = [
   {
     title: 'Projects',
     icon: 'fa-file-text-o',
-    route: 'projects',
+    route: 'projectsList',
+    activeOnRoutes: ['projectsList', 'createProject', 'projectDetails'],
+
     params: function () {
       return {
         date: HospoHero.dateUtils.shortDateFormat(new Date())
