@@ -2,6 +2,11 @@ var menuItemLinkHelper = function () {
   return NotificationSender.urlFor('menuItemDetail', {_id: this.menuItemId}, this);
 };
 
+var canUserEditMenus = function () {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit menus');
+};
+
 
 Meteor.methods({
   togglePosNameToMenuItem: function (menuItemId, posMenuItemNameOrId, action) {
@@ -203,8 +208,3 @@ var duplicateMenuCategory = function (menuCategoryId, areaId) {
   }
   return menuCategoryId;
 };
-
-function canUserEditMenus() {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit menus');
-}

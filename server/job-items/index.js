@@ -1,3 +1,8 @@
+var canUserEditJobs = function () {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit jobs');
+};
+
 Meteor.methods({
   'createJobItem': function (newJobItemInfo) {
     if (!canUserEditJobs()) {
@@ -155,7 +160,3 @@ Meteor.methods({
   }
 });
 
-function canUserEditJobs() {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit jobs');
-}

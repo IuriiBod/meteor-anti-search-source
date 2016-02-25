@@ -1,3 +1,8 @@
+var canUserEditRoster = function () {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit roster');
+};
+
 Meteor.methods({
   createCategory: function (name) {
     check(name, String);
@@ -96,7 +101,3 @@ Meteor.methods({
   }
 });
 
-function canUserEditRoster() {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit roster');
-}

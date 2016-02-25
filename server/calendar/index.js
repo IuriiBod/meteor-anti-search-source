@@ -1,3 +1,8 @@
+var canUserEditCalendar = function () {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit calendar');
+};
+
 Meteor.methods({
   addCalendarEvent: function (eventObject) {
     // when we don't know the shift ID
@@ -55,8 +60,3 @@ Meteor.methods({
     }
   }
 });
-
-function canUserEditCalendar() {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit calendar');
-}

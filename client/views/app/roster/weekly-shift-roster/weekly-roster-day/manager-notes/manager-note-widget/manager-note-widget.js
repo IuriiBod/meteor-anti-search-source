@@ -1,3 +1,8 @@
+var canUserEditRoster = function () {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), `edit roster`);
+};
+
 //Context: date (Date)
 
 Template.managerNoteWidget.onCreated(function () {
@@ -55,8 +60,3 @@ Template.managerNoteWidget.helpers({
     return !canUserEditRoster();
   }
 });
-
-function canUserEditRoster() {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), `edit roster`);
-}

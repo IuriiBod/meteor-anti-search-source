@@ -1,3 +1,8 @@
+var canUser = function (permission) {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), permission);
+};
+
 Meteor.methods({
   createArea: function (areaInfo) {
     var defaultAreaProperties = {
@@ -164,8 +169,3 @@ Meteor.methods({
     Meteor.users.update({_id: userId}, updateObject);
   }
 });
-
-function canUser(permission) {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), permission);
-}

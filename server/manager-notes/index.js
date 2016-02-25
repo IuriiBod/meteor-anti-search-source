@@ -1,3 +1,8 @@
+var canUserEditRoster = function () {
+  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
+  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit roster');
+};
+
 Meteor.methods({
   upsertManagerNote: function (noteObject) {
     check(noteObject, HospoHero.checkers.ManagerNotesDocument);
@@ -25,8 +30,3 @@ Meteor.methods({
     }
   }
 });
-
-function canUserEditRoster() {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit roster');
-}
