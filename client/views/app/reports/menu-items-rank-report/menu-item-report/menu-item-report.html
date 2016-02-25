@@ -1,0 +1,9 @@
+<template name="menuItemReport">
+  {{#each item}}
+    {{#if equal this 'sparkline'}}
+      <td><span class="sparkline"></span></td>
+    {{else}}
+      <td>{{this}}</td>
+    {{/if}}
+  {{/each}}
+</template>

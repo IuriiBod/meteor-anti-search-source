@@ -1,0 +1,93 @@
+<template name="menuDetailPerformance">
+  <div class="ibox panel panel-default">
+    {{#collapsibleElement settings=performanceSettings}}
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-lg-2 col-md-12 col-sm-12 col-xs-6">
+              <h4>Costing</h4>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6">
+              <h4>
+                {{#if hasPermissionInAreaTo 'edit menus'}}
+                  <a href="#" class="edit-item-price"> {{salesPrice}} </a>
+                {{else}}
+                  {{salesPrice}}
+                {{/if}}
+                <small>Sale Price</small>
+              </h4>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+              <h4>{{menuItemStats.ingCost}}
+                <small>Ing</small>
+              </h4>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+              <h4>{{menuItemStats.prepCost}}
+                <small>Prep</small>
+              </h4>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+              <h4>{{menuItemStats.tax}}
+                <small>Tax</small>
+              </h4>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+              <h4>{{menuItemStats.contribution}}
+                <small>Contribution</small>
+              </h4>
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+              <h4>Menu Rank
+                <small>(last 7 days)</small>
+              </h4>
+            </div>
+            {{#if weeklyRanks}}
+              <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                <h4 class="pull-right">{{itemRank.lastSevenDays}}</h4>
+              </div>
+              <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                <h4 class="{{#if itemRank.up}}text-navy{{else}}{{#if itemRank.notChanged}}text-primary{{/if}}text-danger{{/if}} pull-right">
+                  {{itemRank.changedPoints}} &nbsp;
+                  {{#unless itemRank.notChanged}}<i class="fa fa-arrow-{{#if itemRank.up}}up{{else}}down{{/if}}"></i>{{/unless}}
+                </h4>
+              </div>
+            {{else}}
+              <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                <h4>No rank for item</h4>
+              </div>
+            {{/if}}
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+              <h4>Contribution
+                <small>(last 7 days)</small>
+              </h4>
+            </div>
+            {{#if contribution}}
+              <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                <h4 class="pull-right">{{menuItemStats.lastSevenDaysContribution}}</h4>
+              </div>
+              <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                <h4 class="{{#if contribution.up}}text-navy{{else}}{{#if contribution.notChanged}}text-primary{{/if}}text-danger{{/if}}
+                 pull-right">{{contribution.difference}}
+                  {{#unless contribution.notChanged}}<i class="fa fa-arrow-{{#if contribution.up}}up{{else}}down{{/if}}"></i>{{/unless}}
+                </h4>
+              </div>
+            {{else}}
+              <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                <h4>No contribution for item</h4>
+              </div>
+            {{/if}}
+          </div>
+        </li>
+      </ul>
+    {{/collapsibleElement}}
+  </div>
+</template>

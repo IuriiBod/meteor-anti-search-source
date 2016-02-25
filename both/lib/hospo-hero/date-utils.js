@@ -27,8 +27,7 @@ Namespace('HospoHero.dateUtils', {
     return moment(date).format(format);
   },
 
-  shortDateFormat: function (date) {
-    date = date || new Date();
+  shortDateFormat: function (date = new Date()) {
     return moment(date).format('YYYY-MM-DD');
   },
 
@@ -83,56 +82,51 @@ Namespace('HospoHero.dateUtils', {
     return date ? moment(date).format('hh:mm A') : '-';
   },
 
-  shiftDate: function (date, isTemplate) {
-    date = date ? date : moment().startOf('d');
+  applyTimeToDate: function (date, newTime) {
+    // new Date lets us to avoid bugs with initial date modification
+    // because moment doesn't copy initial date by itself
+    let dateMoment = moment(new Date(date));
+    let timeMoment = moment(new Date(newTime));
 
-    var dateMoment;
-    if (isTemplate) {
-      dateMoment = moment(0).week(2).startOf('isoweek').day(moment(date).day()); //1970 year
-    } else {
-      dateMoment = moment(date);
-    }
+    dateMoment.hours(timeMoment.hours());
+    dateMoment.minutes(timeMoment.minutes());
 
-    //be careful, because this method may bring bug with time
     return dateMoment.toDate();
   },
-
   /**
-   * Ensures that all shift times have the same date based on `startTime`
+   * Updates interval's start and end times
    *
-   * @param shift shift to adjust
-   * @param timePropertyName property should be adjusted
-   * @param newTime new time to apply
+   * Warning: Current implementation is working only
+   * for intervals with duration less than 12 hours
+   *
+   * @param {object} oldInterval
+   * @param {date} oldInterval.start
+   * @param {date} oldInterval.end
+   * @param {date} newStartTime
+   * @param {date} newEndTime
    */
-  adjustShiftTime: function (shift, timePropertyName, newTime) {
-    newTime = moment(newTime);
+  updateTimeInterval: function (oldInterval, newStartTime, newEndTime) {
+    let newInterval = {
+      start: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newStartTime),
+      end: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newEndTime)
+    };
 
-    var adjustedMoment = moment(shift.startTime);
-    adjustedMoment.hours(newTime.hours());
-    adjustedMoment.minutes(newTime.minutes());
+    //in case start > end => we suppose interval should end after midnight
+    if (moment(newInterval.start).isAfter(newInterval.end)) {
+      newInterval.end = moment(newInterval.end).add(1, 'day').toDate();
+    }
 
-    shift[timePropertyName] = adjustedMoment.toDate();
-  },
-
-  getDateByWeekDate: function (weekDate) {
-    return moment(weekDate).toDate();
+    return newInterval;
   },
 
   getWeekDays: function (weekDate) {
-    var weekStart = moment(this.getDateByWeekDate(weekDate)).startOf('isoWeek');
+    var weekStart = moment(weekDate).startOf('isoWeek');
     var weekDays = [];
     for (var i = 0; i < 7; i++) {
       weekDays.push(new Date(weekStart.toDate()));
       weekStart.add(1, 'day');
     }
     return weekDays;
-  },
-
-  getWeekStartEnd: function (date) {
-    return {
-      monday: moment(date).startOf('isoWeek').toDate(),
-      sunday: moment(date).endOf('isoWeek').toDate()
-    }
   },
 
   weekDateName: function (date) {
@@ -159,31 +153,12 @@ Namespace('HospoHero.dateUtils', {
     return secs / 60;
   },
 
-  // This method also aren't used
-  timeDuration: function (time) {
-    var hours = moment.duration(time).hours();
-    var mins = moment.duration(time).minutes();
-
-    var timeFormat = function (value, name) {
-      if (value > 0) {
-        var result = value + ' ' + name;
-        return value == 1 ? result : result + 's';
-      } else {
-        return '';
-      }
-    };
-
-    var durationText = timeFormat(hours, 'hour') + ' ' + timeFormat(mins, 'minute');
-    return durationText.trim();
-  },
-
   //Formatted time with Ago
   timeFromNow: function (time) {
     return moment(time).fromNow();
   },
 
-  startOfWeekMoment: function (date, location) {
-    date = date ? moment(date) : moment();
+  startOfWeekMoment: function (date = moment(), location = false) {
     if (location) {
       date = HospoHero.dateUtils.getDateMomentForLocation(date, location);
     }
@@ -195,16 +170,36 @@ Namespace('HospoHero.dateUtils', {
     return HospoHero.dateUtils.shortDateFormat(date);
   },
 
-  getSeasonOfTheYear: (month) => {
-    let seasons = ['Winter', 'Winter',
-      'Spring', 'Spring', 'Spring',
-      'Summer', 'Summer', 'Summer',
-      'Fall', 'Fall', 'Fall',
-      'Winter'];
-    return seasons[parseInt(month) - 1];
+  /**
+   * * Converts the duration to the hours and minutes string
+   * e.g. duration = 65, result will be 1h 5m
+   * @param {number} duration - time duration
+   * @param {string|'minutes'} timeUnit - the unit of duration measure (minutes, hours, ...)
+   * @returns {string}
+   */
+  humanizeTimeDuration: function (duration, timeUnit = 'minutes') {
+    duration = moment.duration(duration, timeUnit);
+
+    var durationResult = [];
+    var hours = duration.hours();
+    var minutes = duration.minutes();
+
+    if (hours > 0) {
+      durationResult.push(hours + 'h');
+    }
+
+    if (minutes > 0) {
+      durationResult.push(minutes + 'm');
+    }
+
+    return durationResult.length ? durationResult.join(' ') : '0m';
   },
 
-  humanizeTimeDuration: function (duration) {
-    moment.duration(duration, 'hours').humanize();
+  truncateTimestamp: (timestamp = new Date().getTime()) => {
+    return parseInt((timestamp).toString().substr(0, 10));
+  },
+
+  formatTimestamp: (timestamp = new Date().getTime()) => {
+    return moment.unix(HospoHero.dateUtils.truncateTimestamp(timestamp)).format('DD/MM/YY');
   }
 });

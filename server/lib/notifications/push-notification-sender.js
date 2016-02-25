@@ -143,5 +143,19 @@ Meteor.methods({
     if (this.userId) {
       PushNotificationSender.removeDeviceToken(this.userId, token);
     }
+  },
+
+  testNotification: function (userId, title, text) {
+    check(userId, HospoHero.checkers.MongoId);
+
+    if (!HospoHero.isOrganizationOwner(this.userId)) {
+      throw new Meteor.Error(403, 'You have no power here!');
+    }
+
+    var pushSender = new PushNotificationSender(userId);
+    pushSender.send({
+      title: title || 'Test title',
+      text: text || 'this is test notification'
+    });
   }
 });

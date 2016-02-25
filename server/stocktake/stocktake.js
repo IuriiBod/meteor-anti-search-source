@@ -109,17 +109,20 @@ Meteor.methods({
     var stockTakeExists = Stocktakes.findOne(id);
     if (stockTakeExists) {
       var setQuery = {};
-      if (info.hasOwnProperty("counting")) {
-        var counting = parseFloat(info.counting);
-        if (counting != counting) {
-          counting = 0;
-        }
-        setQuery['counting'] = counting;
-        if (stockTakeExists.status) {
-          setQuery['status'] = false;
-          setQuery['orderedCount'] = stockTakeExists.counting;
-        }
+      /**
+       * Just save this for history
+       *
+       * var counting = parseFloat(info.counting);
+       * if (counting != counting) {
+       *   counting = 0;
+       * }
+       */
+      setQuery['counting'] = parseFloat(info.counting) || 0;
+      if (stockTakeExists.status) {
+        setQuery['status'] = false;
+        setQuery['orderedCount'] = stockTakeExists.counting;
       }
+
       if (info.hasOwnProperty("place")) {
         setQuery['place'] = info.place;
       }
@@ -172,7 +175,6 @@ Meteor.methods({
       });
       logger.info("Stocktake main updated with areas", info.version);
     }
-    Meteor.call("resetCurrentStock",info.stockId, "New stock count", newValue, main.stocktakeDate)
   },
 
   removeStocktake: function (stocktakeId) {
@@ -198,7 +200,6 @@ Meteor.methods({
       logger.error("User not permitted to update stocktake position");
       throw new Meteor.Error(403, "User not permitted to update stocktake position");
     }
-    console.log();
     check(sortedStockItems, {
       draggedItem: Match.OneOf(String, {
         id: Match.Optional(String),
@@ -208,12 +209,12 @@ Meteor.methods({
       activeSpecialArea: Match.Optional(String)
     });
 
-    if(sortedStockItems.draggedItem.place) {
+    if (sortedStockItems.draggedItem.place) {
       Stocktakes.update({"_id": sortedStockItems.draggedItem.id}, {$set: {"place": sortedStockItems.draggedItem.place}});
       logger.info("Stocktake position updated");
     }
 
-    if(sortedStockItems.stocks) {
+    if (sortedStockItems.stocks) {
       SpecialAreas.update({"_id": sortedStockItems.activeSpecialArea}, {$set: {"stocks": sortedStockItems.stocks}});
     }
 

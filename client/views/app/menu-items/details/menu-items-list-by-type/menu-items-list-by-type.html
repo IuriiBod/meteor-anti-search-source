@@ -1,0 +1,29 @@
+<template name="menuItemsListByType">
+  <div class="ibox panel panel-default">
+    {{#collapsibleElement settings=settings}}
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          {{#if hasPermissionInAreaTo 'edit menus'}}
+            <th></th>
+          {{/if}}
+          {{#each tableHeader}}
+            <th><b>{{this}}</b></th>
+          {{/each}}
+          {{#if hasPermissionInAreaTo 'edit menus'}}
+            <th></th>
+          {{/if}}
+        </tr>
+        </thead>
+        <tbody>
+          {{#each jobItems}}
+            {{> menuItemIngredientRow item=this type=../type analyzeItemCost=analyzeItemCost}}
+          {{/each}}
+        {{#each ingredients}}
+          {{> menuItemIngredientRow item=ingredient quantity=quantity type=../type analyzeItemCost=analyzeItemCost}}
+        {{/each}}
+        </tbody>
+      </table>
+    {{/collapsibleElement}}
+  </div>
+</template>

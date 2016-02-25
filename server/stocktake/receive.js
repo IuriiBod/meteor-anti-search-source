@@ -24,21 +24,6 @@ Meteor.methods({
       }
     );
     logger.info("Order receipt marked as received", receiptId);
-
-
-    var orders = StockOrders.find({"orderReceipt": receiptId}).fetch();
-    if (orders && orders.length > 0) {
-      orders.forEach(function (order) {
-        var note = "Order receive on receipt " + receiptId;
-        var quantity = order.countOrdered;
-        if (order.hasOwnProperty("countDelivered")) {
-          quantity = order.countDelivered;
-        }
-        var date = moment(date).format("YYYY-MM-DD");
-        Meteor.call("updateCurrentStock", order.stockId, note, quantity, date);
-
-      });
-    }
   },
 
   updateOrderItems: function (id, receiptId, status, info) {
@@ -63,13 +48,8 @@ Meteor.methods({
       logger.error("Order not found");
       throw new Meteor.Error(401, "Order not found");
     }
-    if (order.deliveryStatus && order.deliveryStatus.indexOf("Delivered Correctly") >= 0) {
-      StockOrders.update({"_id": id, "orderReceipt": receiptId}, {$pull: {"deliveryStatus": "Delivered Correctly"}});
-    }
 
-    var query = {
-      $addToSet: {"deliveryStatus": status}
-    };
+    var query = {};
     var setQuery = {};
 
     if (status == "Wrong Price") {
@@ -77,29 +57,43 @@ Meteor.methods({
         logger.error("Price not found");
         throw new Meteor.Error(401, "Price not found");
       }
-      if (order.unitPrice != info.price) {
-        setQuery['unitPrice'] = info.price;
+      setQuery['unitPrice'] = info.price;
+      if (!order.originalPrice) {
         setQuery['originalPrice'] = order.unitPrice;
-        setQuery['priceUpdatedBy'] = Meteor.userId();
-        setQuery['stockPriceUpdated'] = info.stockPriceUpdated;
       }
+      setQuery['priceUpdatedBy'] = Meteor.userId();
+      setQuery['stockPriceUpdated'] = info.stockPriceUpdated;
     } else if (status == "Wrong Quantity") {
-      if (!info.quantity) {
+      if (info.quantity < 0) {
         logger.error("Quantity not found");
         throw new Meteor.Error(401, "Quantity not found");
       }
-      if (order.countOrdered != info.quantity) {
-        setQuery['countDelivered'] = info.quantity;
-        setQuery['countDeliveredUpdatedBy'] = Meteor.userId();
-      }
+      setQuery['countDelivered'] = info.quantity;
+      setQuery['countDeliveredUpdatedBy'] = Meteor.userId();
     }
     if (Object.keys(setQuery).length > 0) {
       query['$set'] = setQuery;
     }
-    StockOrders.update({"_id": id, "orderReceipt": receiptId}, query);
-    logger.info("Stock order updated", id, status);
 
-    Meteor.call("updateCurrentStock", order.stockId, "Stock receive", order.countOrdered, new Date());
+    StockOrders.update({"_id": id, "orderReceipt": receiptId}, query);
+
+    order = StockOrders.findOne(id);
+    var newStatus = [];
+    if (order.unitPrice === order.originalPrice && order.countDelivered === order.countOrdered) {
+      newStatus.push('Delivered Correctly');
+    } else {
+      if (order.unitPrice !== order.originalPrice) {
+        newStatus.push('Wrong Price');
+      }
+      if (order.countDelivered !== order.countOrdered) {
+        newStatus.push('Wrong Quantity');
+      }
+    }
+    StockOrders.update({"_id": id, "orderReceipt": receiptId}, {
+      $set: {deliveryStatus: newStatus}
+    });
+
+    logger.info("Stock order updated", id, status);
   },
 
   receiveOrderItems: function (id, receiptId, info) {

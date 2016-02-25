@@ -36,9 +36,8 @@ if [[ $1 != "d" ]]; then
   mongodump -u "${MONGO_USER}" -h "${MONGO_DOMAIN}" -d "${MONGO_DB}" -p "${MONGO_PASSWORD}" -o "${DEST_DIR}"
 fi
 
-
-meteor reset
-
+#remove old database instead of `meteor reset`
+rm -rf .meteor/local/db
 mkdir .meteor/local .meteor/local/db
 
 echo "Starting local database ..."

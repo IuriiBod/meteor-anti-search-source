@@ -11,25 +11,51 @@ Roles.getRoleById = function (roleId) {
 
 /**
  * Returns role by its name
- * @param roleName
+ * @param {string} roleName
  * @returns {any}
  */
-Roles.getRoleByName = function(roleName) {
+Roles.getRoleByName = function (roleName) {
   return Meteor.roles.findOne({name: roleName});
 };
 
 /**
  * Return roles by permission key or array of permission keys
- * @param actions
- * @returns Array
+ * @param {string/Array} actions
+ * @param {string} [areaId] area's ID
+ * @returns CollectionCursor
  */
-Roles.getRolesByAction = function(actions) {
-  if(Array.isArray(actions)) {
+Roles.getRolesByAction = function (actions, areaId) {
+  const area = Areas.findOne({_id: areaId});
+
+  if (Array.isArray(actions)) {
     actions = {$in: actions};
   }
 
-  return Meteor.roles.find({
-    actions: actions
+  var $or = [{'default': true}];
+
+  if (areaId) {
+    $or.push({'relations.organizationId': area.organizationId});
+  }
+
+  return Meteor.roles.find({actions: actions, $or: $or});
+};
+
+/**
+ *
+ * @param {string/Array} actions
+ * @param {string} areaId area's ID
+ * @returns CollectionCursor
+ */
+Roles.getUsersByActionForArea = function (actions, areaId) {
+  var permissionRolesIds = Roles.getRolesByAction(actions, area._id).map(function (role) {
+    return role._id
+  });
+
+  var rolesQuery = {};
+  rolesQuery[areaId] = {$in: permissionRolesIds};
+
+  return Meteor.users.find({
+    roles: rolesQuery
   });
 };
 
@@ -38,7 +64,7 @@ Roles.getRolesByAction = function(actions) {
  * @param roleId
  * @returns {*|Roles.permissions|{}|Array}
  */
-Roles.getPermissionsById = function(roleId) {
+Roles.getPermissionsById = function (roleId) {
   var role = Roles.getRoleById(roleId);
   return role ? role.permissions : [];
 };
@@ -49,7 +75,7 @@ Roles.getPermissionsById = function(roleId) {
  * @param action
  * @returns {boolean}
  */
-Roles.hasAction = function(roleId, action) {
+Roles.hasAction = function (roleId, action) {
   return !!Meteor.roles.findOne({
     _id: roleId,
     actions: action

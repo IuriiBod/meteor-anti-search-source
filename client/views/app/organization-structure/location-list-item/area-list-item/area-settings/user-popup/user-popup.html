@@ -1,0 +1,53 @@
+<template name="userPopup">
+  <div class="user-popup modal">
+    <div class="modal-dialog">
+      {{#if Template.subscriptionsReady}}
+      <div class="modal-content">
+         <div class="modal-header">
+          <div class="row">
+            <div class="col-xs-4">
+              <img src="{{profilePicture userId}}" alt="Profile photo of {{username userId}}" class="user-photo"/>
+            </div>
+            <div class="col-xs-4">
+              <h3>{{username userId}}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row role-select">
+            <label class="col-xs-2 control-label">Role</label>
+            <div class="col-xs-10">
+              <button data-toggle="dropdown"
+                      class="btn btn-white dropdown-toggle form-control text-capitalize
+                      {{#unless hasPermissionInAreaTo 'edit areas'}}disabled{{/unless}}">
+                {{userRole}}
+              </button>
+              <span class="caret caret-pulled-right pull-right"></span>
+              <ul class="dropdown-menu text-capitalize filter-menus">
+                {{#each roles}}
+                  <li><a href="#" data-role-id="{{_id}}">{{name}}</a></li>
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <a href="/user/profile/{{userId}}">View User Profile</a>
+            </div>
+          </div>
+          {{#if hasPermissionInAreaTo 'edit areas'}}
+            <div class="row">
+              <div class="col-xs-12">
+                <a class="remove-user-from-area" href="#">Remove From Area</a>
+              </div>
+            </div>
+          {{/if}}
+        </div>
+        <button type="button" class="btn btn-white close-button" data-dismiss="modal">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</template>

@@ -3,45 +3,31 @@
     <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
       <div class="navbar-header">
         <a id="navbar-minimalize" class="minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-        <form role="search" class="navbar-form-custom" action="">
-          <div class="form-group">
-            <input placeholder="Search for something..." class="form-control" name="top-search" id="top-search" type="text">
-          </div>
-        </form>
       </div>
       <ul class="nav navbar-top-links navbar-right">
-        {{#if isInOrganization}}
-          {{#if getCurrentAreaId}}
-            <li>
-              <span class="organization-structure-flyout">
-                <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
-                {{getCurrentArea.name}}
-              </span>
-            </li>
-          {{else}}
-            {{#if isOrganizationOwner}}
-              <li>
-                <a class="organization-structure-flyout">
+        <li>
+              <span class="open-organization-structure-button">
+                {{#if getCurrentAreaId}}
+                  <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
+                  {{getCurrentArea.name}}
+                {{else}}
                   <i class="fa fa-sitemap"></i>
-                </a>
-              </li>
-            {{/if}}
-          {{/if}}
-        {{/if}}
+                {{/if}}
+              </span>
+        </li>
+
         <li class="dropdown">
           <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-user"></i>
           </a>
           {{> settingsDropdownMenu menuItems=profileMenuItems}}
         </li>
+
         <li>
-          <a class="count-info notifi-toggler" href="#">
-            <i class="fa fa-bell"></i>
-            {{#if count}}
-              <span class="label label-primary">{{count}}</span>
-            {{/if}}
-          </a>
+          <a href="{{pathFor 'calendar' type="day" date=shortDateFormat userId=currentUser._id}}"><i
+              class="fa fa-calendar"></i></a>
         </li>
+
         <li>
           <a href="{{pathFor 'taskList'}}" class="count-info">
             <i class="fa fa-check-square-o"></i>
@@ -50,8 +36,14 @@
             {{/if}}
           </a>
         </li>
+
         <li>
-          <a href="{{pathFor 'calendar' type="day" date=shortDateFormat}}"><i class="fa fa-calendar"></i></a>
+          <a class="count-info notifi-toggler" href="#">
+            <i class="fa fa-bell"></i>
+            {{#if count}}
+              <span class="label label-primary">{{count}}</span>
+            {{/if}}
+          </a>
         </li>
       </ul>
     </nav>

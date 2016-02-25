@@ -99,7 +99,7 @@ var menuEntries = [
     title: 'Reports',
     icon: 'fa-line-chart',
     permission: 'view reports',
-    activeOnRoutes: ['teamHours', 'currentStocks'],
+    activeOnRoutes: ['teamHours', 'currentStocks', 'menuItemsRankReport'],
     subMenuEntries: [
       {
         title: 'Team Hours',
@@ -109,9 +109,54 @@ var menuEntries = [
             date: HospoHero.dateUtils.getDateStringForRoute()
           }
         }
+      },
+      {
+        title: 'Menu Rank <span class="label label-info pull-right">NEW</span>',
+        route: 'menuItemsRankReport',
+        params: function () {
+          return {
+            category: 'all',
+            rangeType: 'yesterday',
+            startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
+          }
+        }
+      },
+      {
+        title: 'Stock Report <span class="label label-info pull-right">NEW</span>',
+        route: 'stockReport'
+      }
+    ]
+  },
+  {
+    title: 'Manger Calendar',
+    icon: 'fa-calendar',
+    route: 'managerCalendar',
+    permission: 'edit calendar',
+    params: function () {
+      return {
+        date: HospoHero.dateUtils.shortDateFormat(new Date())
+      }
+    }
+  },
+  {
+    title: "Help",
+    icon: 'fa-question',
+    subMenuEntries: [
+      {
+        title: 'Self Help',
+        callback: function () {
+          window._elev.openModule('articles');
+        }
+      },
+      {
+        title: 'Chat with Support',
+        callback: function () {
+          window._elev.openModule('intercom');
+        }
       }
     ]
   }
+
 ];
 
 Template.navigation.helpers({

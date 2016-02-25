@@ -39,8 +39,12 @@ Template.taskItem.helpers({
     return this.task.assignedTo.indexOf(userId) > -1;
   },
 
+  canEditTask: function () {
+    return this.task.createdBy === Meteor.userId();
+  },
+
   taskDuration: function () {
-    return HospoHero.dateUtils.humanizeTimeDuration(this.task.duration);
+    return !!this.task.duration ? HospoHero.dateUtils.humanizeTimeDuration(this.task.duration) : false;
   },
 
   commentsCount: function () {
@@ -54,6 +58,11 @@ Template.taskItem.helpers({
 
     if (Object.keys(taskReference).length) {
       var reference = references[taskReference.type];
+
+      if (!reference) {
+        return false;
+      }
+
       var referenceItem = reference.collection.findOne({_id: taskReference.id});
 
       return {
@@ -89,7 +98,7 @@ Template.taskItem.events({
     var task = tmpl.data.task;
     task = _.extend(task, {
       done: !task.done,
-      completedBy: task.done ? Meteor.userId() : null
+      completedBy: !task.done ? Meteor.userId() : null
     });
     Meteor.call('editTask', task);
   },

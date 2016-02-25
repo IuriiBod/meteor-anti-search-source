@@ -1,0 +1,18 @@
+<template name="autosaveTextEditor">
+  <div class="autosave-text-editor-container">
+    {{#if readOnly}}
+      {{{text}}}
+    {{else}}
+      {{# if isEditableMode}}
+        <div>
+          <div class="status-text text-muted">{{statusText}}</div>
+          {{> textEditor initialHtml=text}}
+        </div>
+      {{else}}
+        <div class="text-editor-content">
+          {{{text}}}
+        </div>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>

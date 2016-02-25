@@ -1,9 +1,9 @@
 Template.profileImage.helpers({
-  isMe: function() {
-    return HospoHero.isMe(this._id);
+  isMe: function () {
+    return Meteor.userId() && Meteor.userId() === this._id;
   },
 
-  image: function() {
+  image: function () {
     if (this) {
       if (this.profile.image) {
         return this.profile.image;
@@ -15,7 +15,7 @@ Template.profileImage.helpers({
     }
   },
 
-  imageExists: function() {
+  imageExists: function () {
     if (this) {
       if (this.profile.image) {
         return true;

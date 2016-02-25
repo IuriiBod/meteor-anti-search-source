@@ -6,7 +6,7 @@ Template.stockHeader.helpers({
 });
 
 Template.stockHeader.events({
-  'click .add-new-ingredient': function (event, tmpl) {
-    tmpl.ingredientItemEditorModal = ModalManager.open('ingredientItemEditor', {ingredient: null});
+  'click .add-new-ingredient': function () {
+    FlyoutManager.open('ingredientEditor', {ingredient: null});
   }
 });

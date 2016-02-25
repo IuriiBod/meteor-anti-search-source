@@ -1,9 +1,16 @@
-//context: type ("template"/null), currentDate (Date)
+//context: type ("template"/null), currentDate (Date), shiftBuffer (ReactiveVar), onCopyShift (function)
 
 Template.weeklyRosterDay.onCreated(function () {
+  this.subscribe('managerNote', this.data.currentDate, HospoHero.getCurrentAreaId());
   this.hasTemplateType = function () {
     return this.data.type === 'template';
-  }
+  };
+
+  this.hasCopiedShift = function () {
+    return this.data.shiftBuffer;
+  };
+
+  this.onCopyShift = this.data.onCopyShift;
 });
 
 Template.weeklyRosterDay.onRendered(function () {
@@ -35,11 +42,8 @@ Template.weeklyRosterDay.helpers({
   },
 
   shifts: function () {
-    var isTemplate = Template.instance().hasTemplateType();
-    var shiftDate = HospoHero.dateUtils.shiftDate(this.currentDate, isTemplate);
-
     return Shifts.find({
-      startTime: TimeRangeQueryBuilder.forDay(shiftDate),
+      startTime: TimeRangeQueryBuilder.forDay(this.currentDate),
       type: this.type,
       "relations.areaId": HospoHero.getCurrentAreaId()
     }, {
@@ -49,19 +53,30 @@ Template.weeklyRosterDay.helpers({
 
   managerNotesCount: function () {
     return ManagerNotes.find({
+      text: {$exists: true},
       noteDate: this.currentDate,
       'relations.areaId': HospoHero.getCurrentAreaId()
     }).count();
   },
   shiftDateFormat: function (date) {
     return HospoHero.dateUtils.shortDateFormat(moment(date));
+  },
+
+  hasCopiedShift: function () {
+    return Template.instance().hasCopiedShift();
+  },
+
+  onCopyShift: function () {
+    return Template.instance().onCopyShift;
   }
+
 });
 
 
 Template.weeklyRosterDay.events({
   'click .add-shift-button': function (event, tmpl) {
-    var zeroMoment = moment(HospoHero.dateUtils.shiftDate(tmpl.data.currentDate, tmpl.hasTemplateType()));
+    //copy currentDate and convert to moment
+    var zeroMoment = moment(new Date(tmpl.data.currentDate));
 
     var startHour = new Date(zeroMoment.hours(8));
     var endHour = new Date(zeroMoment.hours(17));
@@ -77,6 +92,22 @@ Template.weeklyRosterDay.events({
 
   'click .manager-note-flyout': function (event, tmpl) {
     FlyoutManager.open('managerNotes', {date: tmpl.data.currentDate});
+  },
+
+  'click .paste-shift-button': function (event, tmpl) {
+    let zeroMoment = moment(new Date(tmpl.data.currentDate));
+
+    let pastedShift = tmpl.data.shiftBuffer;
+
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
+      start: zeroMoment,
+      end: zeroMoment
+    }, pastedShift.startTime, pastedShift.endTime);
+
+    pastedShift.startTime = newShiftDuration.start;
+    pastedShift.endTime = newShiftDuration.end;
+
+    Meteor.call("createShift", pastedShift, HospoHero.handleMethodResult());
   }
 });
 
@@ -93,6 +124,7 @@ SortableHelper.prototype._getDataByItem = function (item) {
   var element = item[0];
   return element ? Blaze.getData(element) : null;
 };
+
 
 SortableHelper.prototype._getOrder = function () {
   var order = 0;
@@ -112,22 +144,21 @@ SortableHelper.prototype._getOrder = function () {
 SortableHelper.prototype.getSortedShift = function () {
   if (this._draggedShift) {
     var shift = this._draggedShift;
-    var oldStartTimeMoment = moment(shift.startTime);
-    var newStartMoment = moment(this._draggedToDate);
+    var newDate = this._draggedToDate;
 
-    newStartMoment.year(oldStartTimeMoment.year());
-    newStartMoment.week(oldStartTimeMoment.week());
-    newStartMoment.hours(oldStartTimeMoment.hours());
-    newStartMoment.minutes(oldStartTimeMoment.minutes());
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
+      start: newDate,
+      end: newDate
+    }, shift.startTime, shift.endTime);
+
+    shift.startTime = newShiftDuration.start;
+    shift.endTime = newShiftDuration.end;
 
     shift.order = this._getOrder();
-    shift.startTime = newStartMoment.toDate();
-
-    //apply new date to end time
-    HospoHero.dateUtils.adjustShiftTime(shift, 'endTime', shift.endTime);
 
     check(shift, HospoHero.checkers.ShiftDocument);
 
     return shift;
   }
 };
+

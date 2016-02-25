@@ -5,7 +5,7 @@
       {{weekDateName currentDate}}
 
       {{#unless hasTemplateType}}
-        {{#if canViewRoster}}
+        {{#if hasPermissionInAreaTo 'view roster'}}
           <span class="manager-note-flyout">
           <i class="fa fa-sticky-note"></i>
             {{#if managerNotesCount}}
@@ -22,19 +22,27 @@
       <h4>{{shiftDateFormat currentDate}}</h4>
     {{/unless}}
 
-    {{#if canEditRoster}}
+    {{#if hasPermissionInAreaTo 'edit roster'}}
       <div class="input-group">
           <span class="input-group-btn">
             <button type="button" class="btn btn-sm btn-white btn-block add-shift-button">
               <i class="fa fa-plus"></i> Add Shift
             </button>
           </span>
+
+        {{#if hasCopiedShift}}
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-sm btn-white btn-block paste-shift-button">
+              <i class="fa fa-clipboard"></i>
+            </button>
+          </span>
+        {{/if}}
       </div>
     {{/if}}
 
     <ul class="sortable-list agile-list" data-current-date="{{currentDate}}">
       {{#each shifts}}
-        {{> shiftBasic}}
+        {{> shiftBasic shift=this onCopyShift=onCopyShift}}
       {{/each}}
     </ul>
   </div>

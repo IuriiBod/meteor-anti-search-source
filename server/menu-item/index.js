@@ -1,3 +1,8 @@
+var menuItemLinkHelper = function () {
+  return NotificationSender.urlFor('menuItemDetail', {_id: this.menuItemId}, this);
+};
+
+
 Meteor.methods({
   togglePosNameToMenuItem: function (menuItemId, posMenuItemNameOrId, action) {
     if (!HospoHero.canUser('edit menus', Meteor.userId())) {
@@ -47,7 +52,12 @@ Meteor.methods({
       {
         itemName: menuItem.name,
         username: HospoHero.username(Meteor.userId()),
-        linkToItem: Router.url('menuItemDetail', {_id: menuId})
+        menuItemId: menuId
+      },
+      {
+        helpers: {
+          linkToItem: menuItemLinkHelper
+        }
       }
     );
 
@@ -76,7 +86,12 @@ Meteor.methods({
       {
         itemName: menuItem.name,
         username: HospoHero.username(Meteor.userId()),
-        linkToItem: Router.url('menuItemDetail', {_id: id})
+        menuItemId: id
+      },
+      {
+        helpers: {
+          linkToItem: menuItemLinkHelper
+        }
       }
     );
 
@@ -136,7 +151,7 @@ Meteor.methods({
       var items = MenuItems.findOne({_id: menuId})[type];
 
       query.$set = {};
-      query.$set[type] = _.map(items, function(item) {
+      query.$set[type] = _.map(items, function (item) {
         return item._id === itemObject._id ? itemObject : item;
       });
     } else {

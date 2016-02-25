@@ -1,31 +1,37 @@
-Meteor.publishComposite('managerNotes', function (weekRange, areaId) {
-  return {
-    find: function () {
-      if (this.userId) {
-        return ManagerNotes.find({
-          noteDate: weekRange,
-          'relations.areaId': areaId
-        });
-      }
-      else {
-        this.ready();
-      }
-    },
-    children: [
-      {
-        find: function (note) {
-          if (this.userId) {
-            return Meteor.users.find({_id: note.createdBy}, {
-              fields: {
-                'profile.firstName': 1,
-                'profile.lastName': 1
-              }
-            });
-          } else {
-            this.ready();
-          }
-        }
-      }
-    ]
+Meteor.publish('managerNotes', function (weekRange, areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+  check(weekRange, HospoHero.checkers.WeekRange);
+
+  //todo: any security checks here?
+
+  let weekNotes = () => {
+    return ManagerNotes.find({
+      noteDate: weekRange,
+      'relations.areaId': areaId
+    });
+  };
+
+  let notes = weekNotes();
+
+  if (notes.fetch().length >= 7) {
+    return notes;
   }
+
+  let daysOfWeek = HospoHero.dateUtils.getWeekDays(weekRange.$gte);
+
+  daysOfWeek.forEach((date) => {
+    let note = ManagerNotes.find({
+      noteDate: date,
+      'relations.areaId': areaId
+    });
+
+    if (!note.fetch().length) {
+      ManagerNotes.insert({
+        noteDate: date,
+        relations: HospoHero.getRelationsObject(areaId)
+      });
+    }
+  });
+
+  return weekNotes();
 });

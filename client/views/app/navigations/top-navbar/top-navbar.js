@@ -37,11 +37,11 @@ Template.topNavbar.helpers({
 
   tasksCount: function () {
     var today = moment().endOf('day').toDate();
-    var query = HospoHero.misc.getTasksQuery(Meteor.userId());
-    query = _.extend(query, {
+    var query = {
       dueDate: {$lte: today},
-      done: false
-    });
+      done: false,
+      assignedTo: Meteor.userId()
+    };
     return TaskList.find(query).count();
   },
 
@@ -73,7 +73,7 @@ Template.topNavbar.events({
     FlyoutManager.open('notifiFlyout', {});
   },
 
-  'click .organization-structure-flyout': function () {
+  'click .open-organization-structure-button': function () {
     FlyoutManager.open('organizationStructure', {});
   },
 

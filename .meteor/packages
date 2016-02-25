@@ -17,16 +17,18 @@ ejson
 spacebars
 check
 http
-#force-ssl
 jquery
 email
 underscore
 random
 ecmascript
 
+force-ssl
+
 less
 reactive-var
 
+force-ssl
 crosswalk
 
 accounts-ui
@@ -67,6 +69,7 @@ trsdln:flyouts
 jss:blaze-states
 trsdln:modals
 jss:reactive-fullcalendar
+jquery-sparkline
 
 # ===========> backend
 micah:google-cloud
@@ -90,6 +93,12 @@ zephraph:namespace
 alonoslav:roles
 jss:anti-search-source
 jss:moment-timezone
+jss:ui-states
 
 
 # ===========> new
+settinghead:auto-nprogress
+matb33:collection-hooks
+dburles:mongo-collection-instances
+manuel:reactivearray
+dsyko:jquery-ui-touch-punch

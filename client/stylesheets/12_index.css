@@ -16,7 +16,9 @@
 .panel-body > img,
 .note-editable > div > img,
 .note-editable > img,
-.content > p > div > img {
+.content > p > div > img,
+.autosave-text-editor-container > div > img,
+.autosave-text-editor-container .text-editor-content > div > img {
     max-width: 30%;
     height: auto;
 }
@@ -92,10 +94,6 @@
 
 .m-l-xxxxl {
     margin-left: 110px;
-}
-
-span {
-    cursor: pointer;
 }
 
 .notifi-ul {

@@ -1,6 +1,9 @@
 Namespace('HospoHero', {
   /**
    * Check whether user is able to perform specified action
+   *
+   * DEPRECATED!
+   *
    * @param {String} action
    * @param {String} [userId]
    * @returns {Function|Boolean}
@@ -10,7 +13,7 @@ Namespace('HospoHero', {
 
     var hasPermission = function (action, userId) {
       try {
-        userId = userId ? userId : Meteor.userId();
+        userId = userId || Meteor.userId();
       } catch (err) {
         return false;
       }

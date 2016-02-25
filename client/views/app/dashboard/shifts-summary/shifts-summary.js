@@ -26,7 +26,7 @@ Template.shiftsSummary.helpers({
       open: {
         assignedTo: {$in: [null, undefined]},
         published: true,
-        startTime: {$gte: HospoHero.dateUtils.shiftDate()},
+        startTime: {$gte: moment().startOf('d').toDate()},
         "relations.areaId": HospoHero.getCurrentAreaId()
       }
     };

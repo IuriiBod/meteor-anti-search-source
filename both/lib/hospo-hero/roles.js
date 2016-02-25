@@ -9,10 +9,10 @@ Namespace('HospoHero.roles', {
       return role._id;
     });
 
-    var query = {
-      isActive: true
+    let currentAreaId = HospoHero.getCurrentAreaId();
+    let query = {
+      [`roles.${currentAreaId}`]: {$in: roleIds}
     };
-    query['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
 
     return Meteor.users.find(query).map(function (user) {
       if (user._id != Meteor.userId()) {
@@ -25,10 +25,15 @@ Namespace('HospoHero.roles', {
     userId = userId || Meteor.userId();
     areaId = areaId || HospoHero.getCurrentAreaId(userId);
 
-    var user = Meteor.users.findOne({_id: userId});
-    var roleId = user.roles.defaultRole || user.roles[areaId];
-    var role = Roles.getRoleById(roleId);
-    return role && role.name || '';
+    var area = Areas.findOne({_id: areaId});
+    if (!!Organizations.findOne({_id: area.organizationId, owners: userId})) {
+      return 'Owner';
+    } else {
+      var user = Meteor.users.findOne({_id: userId});
+      var roleId = user.roles[areaId] || false;
+      var role = Roles.getRoleById(roleId);
+      return role && role.name || '';
+    }
   },
 
   actions: {

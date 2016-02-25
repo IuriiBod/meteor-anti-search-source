@@ -83,7 +83,7 @@ Namespace('HospoHero.misc', {
   },
 
   getMenuItemsStatuses: function (includeArchived) {
-    var statuses = ['ideas', 'active'];
+    var statuses = ['active', 'ideas'];
     if (includeArchived) {
       statuses.push('archived');
     }
@@ -204,78 +204,6 @@ Namespace('HospoHero.misc', {
     return Math.round(number * increment) / increment;
   },
 
-  simplifyWeatherDescription: (weather) => {
-    let weatherRepresentation = '';
-    switch (weather) {
-      case weather == "Moderate or heavy snow in area with thunder":
-      case weather == "Patchy light snow in area with thunder":
-      case weather == "Blowing snow":
-      case weather == "Heavy snow":
-      case weather == "Moderate or heavy sleet showers":
-      case weather == "Moderate or heavy snow showers":
-      case weather == "Moderate or heavy showers of ice pellets":
-      case weather == "Ice pellets":
-      case weather == "Patchy moderate snow":
-      case weather == "Light snow showers":
-      case weather == "Light sleet showers":
-      case weather == "Light showers of ice pellets":
-      case weather == "Patchy light snow":
-      case weather == "Moderate or heavy sleet":
-      case weather == "Blizzard":
-      case weather == "Moderate snow":
-      case weather == "Patchy snow nearby":
-      case weather == "Light snow":
-      case weather == "Patchy sleet nearby":
-      case weather == "Patchy heavy snow":
-        weatherRepresentation = 'snow';
-        break;
-
-      case weather == "Heavy rain":
-      case weather == "Heavy rain at times":
-      case weather == "Moderate or heavy rain in area with thunder":
-      case weather == "Patchy light rain in area with thunder":
-      case weather == "Moderate or Heavy freezing rain":
-      case weather == "Heavy freezing drizzle":
-      case weather == "Torrential rain shower":
-      case weather == "Moderate or heavy rain shower":
-      case weather == "Thundery outbreaks in nearby":
-      case weather == "Light rain shower":
-      case weather == "Light freezing rain":
-      case weather == "Moderate rain":
-      case weather == "Light rain":
-      case weather == "Freezing drizzle":
-      case weather == "Light drizzle":
-      case weather == "Patchy freezing drizzle nearby":
-      case weather == "Light sleet":
-      case weather == "Patchy light rain":
-      case weather == "Patchy light drizzle":
-      case weather == "Patchy rain nearby":
-      case weather == "Moderate rain at times":
-        weatherRepresentation = 'rain';
-        break;
-
-      case weather == "Fog":
-      case weather == "Freezing fog":
-      case weather == "Mist":
-        weatherRepresentation = 'fog';
-        break;
-
-      case weather == "Overcast":
-      case weather == "Cloudy":
-      case weather == "Partly Cloudy":
-        weatherRepresentation = 'clouds';
-        break;
-
-      case weather == "Clear":
-      case weather == "Clear/Sunny":
-      case weather == "Sunny":
-        weatherRepresentation = 'sunny';
-        break;
-    }
-
-    return weatherRepresentation;
-  },
-
   /**
    * Returns query for task list only for passed user
    * @param userId - ID of needed user
@@ -286,34 +214,62 @@ Namespace('HospoHero.misc', {
     var relations = user && user.relations;
 
     if (relations && relations.organizationIds) {
-      var allowedSharingTypes = ['area', 'location'];
-      var allowedSharingIds = _.union(userId, relations.organizationIds);
+      var sharingObject = {
+        'private': [userId],
+        organization: relations.organizationIds
+      };
 
       if (relations.locationIds) {
-        allowedSharingIds = _.union(allowedSharingIds, relations.locationIds);
+        sharingObject.location = relations.locationIds;
       }
       if (relations.areaIds) {
-        allowedSharingIds = _.union(allowedSharingIds, relations.areaIds);
+        sharingObject.area = relations.areaIds;
       }
-      return {
-        $or: [
-          {
-            'sharing.type': {
-              $in: allowedSharingTypes
-            }
-          },
-          {
-            'sharing.id': {
-              $in: allowedSharingIds
-            }
-          },
-          {
-            assignedTo: userId
+
+      var or = _.map(sharingObject, function (value, key) {
+        return {
+          'sharing.type': key,
+          'sharing.id': {
+            $in: value
           }
-        ]
-      };
+        }
+      });
+
+      return {$or: or};
     } else {
       return {};
+    }
+  },
+
+  escapeRegExpString: function (str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  },
+
+  hasUnavailability (unavailabilities, {startTime: shiftStart, endTime: shiftEnd}) {
+    let isBetween = function (date, dateStart, dateEnd) {
+      return date.valueOf() >= dateStart && date.valueOf() <= dateEnd;
+    };
+
+    let isBefore = function (date1, date2) {
+      return date1.valueOf() < date2.valueOf();
+    };
+
+    let isAfter = function (date1, date2) {
+      return date1.valueOf() > date2.valueOf();
+    };
+
+    if (unavailabilities && unavailabilities.length) {
+      return unavailabilities.some((unavailability) => {
+        let unavailabilityStart = unavailability.startDate;
+        let unavailabilityEnd = unavailability.endDate;
+
+        return isAfter(shiftStart, unavailabilityStart) && isBefore(shiftEnd, unavailabilityEnd) ||
+          isBetween(shiftStart, unavailabilityStart, unavailabilityEnd) ||
+          isBetween(shiftEnd, unavailabilityStart, unavailabilityEnd) ||
+          isBefore(shiftStart, unavailabilityStart) && isAfter(shiftEnd, unavailabilityEnd);
+      });
+    } else {
+      return false;
     }
   }
 });

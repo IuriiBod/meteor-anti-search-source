@@ -1,0 +1,40 @@
+<template name="locationSettings">
+  <div class="flyout-header">
+    {{> CloseFlyoutButton}}
+    {{location.name}} location settings
+  </div>
+
+  <div class="flyout-content">
+    <div class="container-fluid">
+      <h1>{{location.name}}</h1>
+
+      <div class="row">
+        <div class="col-xs-12">
+          <button class="btn btn-primary btn-full-width create-area-flyout">
+            Create Area
+          </button>
+        </div>
+      </div>
+
+      {{#if isLocationDetailsLoaded}}
+        {{> editLocationForm locationDoc=location submitCaption="Save" onSubmit=onLocationSubmit onCancel=onCancel}}
+      {{else}}
+        <div class="text-center">
+          <h1>
+            <i class="fa fa-spinner fa-pulse"></i>
+          </h1>
+        </div>
+      {{/if}}
+
+      {{#if isOrganizationOwner}}
+        <div class="row">
+          <div class="col-xs-12">
+            <button class="btn btn-danger btn-full-width delete-location">
+              Delete Location
+            </button>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</template>

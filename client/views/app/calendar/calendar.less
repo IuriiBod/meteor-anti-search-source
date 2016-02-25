@@ -1,16 +1,78 @@
-.fc{
-  td.fc-today {
-    background-color: #fff;
+.page-heading {
+  h2 {
+    margin-top: 28px;
+  }
+}
+
+.calendar-container {
+  margin-top: 20px;
+  padding: 0 0 38px 0;
+  background-color: #fff;
+
+  h3 {
+    padding-top: 45px;
   }
 
-  .fc-icon {
-    &.fc-icon-right-single-arrow, &.fc-icon-left-single-arrow {
-      height: 100%;
+  .fc {
+    .fc-resource-cell {
+      cursor: pointer;
+    }
 
-      &:after {
-        font-size: 100%;
-        top: 4px;
+    th.fc-day-header {
+      cursor: pointer;
+    }
+
+    td.fc-today {
+      background-color: #fff;
+    }
+
+    .fc-icon {
+      &.fc-icon-right-single-arrow, &.fc-icon-left-single-arrow {
+        height: 100%;
+
+        &:after {
+          font-size: 100%;
+          top: 4px;
+        }
       }
     }
+  }
+}
+
+.flyout-container {
+  .event-description-row {
+    margin-top: 10px;
+
+    .job-description {
+      border: 1px solid #E8E8E8;
+      padding: 15px 20px;
+      margin-top: 5px;
+    }
+
+    .job-checklist {
+      .checklist-item-done {
+        text-decoration: line-through;
+      }
+    }
+  }
+}
+
+.items-palette {
+  margin-top: 20px;
+
+  //.panel-body {
+  //  max-height: 500px;
+  //  overflow-y: auto;
+  //}
+
+  .draggable-item {
+    display: inline-block;
+    padding: 5px;
+    background-color: #59D4D5;
+    border: 1px solid #23C6C8;
+    color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 2px;
   }
 }

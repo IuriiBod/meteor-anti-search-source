@@ -1,0 +1,25 @@
+<template name="organizationStructure">
+  <div class="flyout-header">
+    {{> CloseFlyoutButton}}
+    <div class="col-xs-11 col-xs-offset-1">
+      <span>Organizations</span>
+    </div>
+  </div>
+
+  <div class="flyout-content organizations-list">
+    {{#each organizations}}
+      <h1>
+        <div class="organization-name">
+          {{name}}
+        </div>
+
+        {{> organizationButtons}}
+      </h1>
+
+
+      {{#each locations}}
+        {{> locationListItem}}
+      {{/each}}
+    {{/each}}
+  </div>
+</template>
