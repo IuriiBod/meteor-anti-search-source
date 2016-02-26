@@ -115,6 +115,28 @@ NotificationSender.prototype._getUserEmail = function (userId) {
   return user && user.emails && user.emails.length ? user.emails[0].address : false;
 };
 
+/**
+ * Sends push notification using raix:push package
+ * @param notificationId
+ * @param notificationOptions
+ * @private
+ */
+NotificationSender.prototype._sendPushNotification = function (notificationId, notificationOptions) {
+  let senderId = notificationOptions.createdBy;
+
+  let pushNotificationOptions = {
+    from: senderId && HospoHero.username(senderId) || 'HospoHero',
+    title: notificationOptions.title,
+    text: this._renderTemplateWithData(notificationId, true),
+    badge: 12,
+    query: {
+      userId: notificationOptions.to
+    }
+  };
+
+  Push.send(pushNotificationOptions);
+};
+
 
 NotificationSender.prototype._insertNotification = function (receiverId, markAsRead) {
   var notificationOptions = {
@@ -135,17 +157,7 @@ NotificationSender.prototype._insertNotification = function (receiverId, markAsR
     $set: {text: html}
   });
 
-  try {
-    var pushSender = new PushNotificationSender(notificationOptions.to);
-    if (pushSender.isDeviceRegistered()) {
-      pushSender.send({
-        title: notificationOptions.title,
-        text: this._renderTemplateWithData(notificationId, true)
-      });
-    }
-  } catch (err) {
-    logger.error('Error while trying to send mobile notification', err);
-  }
+  this._sendPushNotification(notificationId, notificationOptions);
 
   return notificationId;
 };
