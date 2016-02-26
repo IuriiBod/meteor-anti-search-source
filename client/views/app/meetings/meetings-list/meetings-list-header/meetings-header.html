@@ -1,6 +1,6 @@
 <template name="meetingsHeader">
   <div class="title-action">
-    {{#if canCreateMeetings}}
+    {{#if hasPermissionInAreaTo 'create meetings'}}
       <button class="btn btn-primary create-new-meeting">
         <i class="fa fa-plus"></i>
         Meeting

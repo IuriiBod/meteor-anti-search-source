@@ -10,11 +10,19 @@ Meetings.after.update(function (userId, newMeeting) {
     });
   }
 
+  let arrayDifference = (array1, array2) => {
+    if (array1.length > array2.length) {
+      return _.difference(array1, array2);
+    } else {
+      return _.difference(array2, array1);
+    }
+  };
+
   // check accepted users count
   let oldAccepted = oldMeeting.accepted;
   let newAccepted = newMeeting.accepted;
 
-  let changedUserId = HospoHero.misc.arrayDifference(oldMeeting.accepted, newMeeting.accepted)[0];
+  let changedUserId = arrayDifference(oldMeeting.accepted, newMeeting.accepted)[0];
   if (changedUserId) {
     if (oldAccepted.length > newAccepted.length) {
       // the user was removed from meeting

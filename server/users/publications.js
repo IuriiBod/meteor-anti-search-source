@@ -63,6 +63,10 @@ Meteor.publish('selectedUsersList', function (usersIds) {
 
   let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users');
 
+  _.extend(fieldsToPublish, {
+    emails: 1
+  });
+
   logger.info('SelectedUsersList published', {ids: usersIds});
   return Meteor.users.find({
     _id: {$in: usersIds}
