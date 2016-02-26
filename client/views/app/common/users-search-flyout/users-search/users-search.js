@@ -1,13 +1,11 @@
 Template.usersSearch.onCreated(function () {
-  this.subscribe('usersList');
-
   let selector = {
     _id: {$ne: Meteor.userId()},
     isActive: true
   };
 
   this.searchSource = this.AntiSearchSource({
-    collection: Meteor.users,
+    collection: 'users',
     fields: ['profile.firstname', 'profile.lastname', 'emails.address'],
     searchMode: 'global',
     mongoQuery: selector,
@@ -15,14 +13,16 @@ Template.usersSearch.onCreated(function () {
   });
 
   this.autorun(() => {
+    Template.currentData();
+
     this.searchSource.setMongoQuery({
       _id: {
         $nin: this.data.selectedUsers
       }
-    })
-  });
+    });
 
-  this.searchSource.search('');
+    this.searchSource.search('');
+  });
 });
 
 
