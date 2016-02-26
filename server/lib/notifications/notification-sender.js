@@ -122,7 +122,10 @@ NotificationSender.prototype._getUserEmail = function (userId) {
  * @private
  */
 NotificationSender.prototype._sendPushNotification = function (notificationId, notificationOptions) {
+  let senderId = notificationOptions.createdBy;
+
   let pushNotificationOptions = {
+    from: senderId && HospoHero.username(senderId) || 'HospoHero',
     title: notificationOptions.title,
     text: this._renderTemplateWithData(notificationId, true),
     badge: 12,
@@ -130,11 +133,6 @@ NotificationSender.prototype._sendPushNotification = function (notificationId, n
       userId: notificationOptions.to
     }
   };
-
-  if (notificationOptions.createdBy) {
-    let senderDoc = Meteor.users.findOne({_id: notificationOptions.createdBy}, {fields: {profile: 1}});
-    pushNotificationOptions.from = senderDoc.profile.firstname;
-  }
 
   Push.send(pushNotificationOptions);
 };
