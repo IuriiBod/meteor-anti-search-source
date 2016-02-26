@@ -9,7 +9,6 @@ Router.route('/create-project', {
 
   data() {
     return {
-      createMode: true,
       id: null
     }
   }
@@ -21,7 +20,6 @@ Router.route('/project/:id', {
 
   data() {
     return {
-      createMode: false,
       id: this.params.id
     }
   }

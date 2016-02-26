@@ -1,5 +1,5 @@
 Template.projectsList.onCreated(function () {
-  let activeFilter = 'Future Meeting';
+  let activeFilter = 'Future Projects';
   this.projectType = new ReactiveVar(activeFilter);
 
   this.searchSource = this.AntiSearchSource({

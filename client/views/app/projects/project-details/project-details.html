@@ -10,8 +10,8 @@
       <div class="wrapper wrapper-content fadeInUp">
         <div class="ibox">
           <div class="ibox float-e-margins">
-            {{#collapsibleElement settings=meetingDetailsOptions}}
-              {{> projectCreateEdit createMode=createMode id=id}}
+            {{#collapsibleElement settings=projectDetailsOptions}}
+              {{> projectCreateEdit project=project saveProject=saveProject}}
             {{/collapsibleElement}}
           </div>
         </div>

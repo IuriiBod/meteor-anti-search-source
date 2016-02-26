@@ -143,9 +143,7 @@ var menuEntries = [
     icon: 'fa-users',
     route: 'meetings',
     params: function () {
-      return {
-        //date: HospoHero.dateUtils.shortDateFormat(new Date())
-      };
+      return {};
     }
   },
   {
@@ -153,11 +151,8 @@ var menuEntries = [
     icon: 'fa-file-text-o',
     route: 'projectsList',
     activeOnRoutes: ['projectsList', 'createProject', 'projectDetails'],
-
     params: function () {
-      return {
-        date: HospoHero.dateUtils.shortDateFormat(new Date())
-      }
+      return {}
     }
   },
   {
