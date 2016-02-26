@@ -162,7 +162,13 @@ Template.taskEditor.events({
         }
       }
 
-      return durationInMinutes;
+      // when we've got only a number like a 30, consider that this is
+      // a duration in minutes
+      if (durationInMinutes === 0 && !_.isNaN(parseInt(durationString))) {
+        return parseInt(durationString);
+      } else {
+        return durationInMinutes;
+      }
     };
 
 

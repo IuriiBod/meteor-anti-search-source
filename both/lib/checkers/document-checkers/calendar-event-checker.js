@@ -6,26 +6,38 @@ var CalendarEventDocument = Match.Where(function (calendarEvent) {
     type: String,
     userId: HospoHero.checkers.MongoId,
     locationId: HospoHero.checkers.MongoId,
-    shiftId: HospoHero.checkers.OptionalMongoId,
 
     // Optional
     _id: HospoHero.checkers.OptionalMongoId,
+    shiftId: HospoHero.checkers.OptionalMongoId,
     doneCheckListItems: Match.Optional([Number])
   });
 
-  var shift = Shifts.findOne({_id: calendarEvent.shiftId});
+  // I've commented this code to make calendar events
+  // flexible, not depending on shift time
 
-  var isBetween = function (date) {
-    date = moment(date);
-    return date.isSameOrAfter(shift.startTime) && date.isSameOrBefore(shift.endTime);
-  };
-
-  // check event time is between shift start and end time
-  if (isBetween(calendarEvent.startTime) && isBetween(calendarEvent.endTime)) {
-    return true;
-  } else {
-    throw new Meteor.Error('Event must be placed in shift time');
-  }
+  //var shift = Shifts.findOne({
+  //  $or: [
+  //    {_id: calendarEvent.shiftId},
+  //    {
+  //      startTime: TimeRangeQueryBuilder.forDay(calendarEvent.startTime, calendarEvent.locationId),
+  //      assignedTo: calendarEvent.userId
+  //    }
+  //  ]
+  //});
+  //
+  //var isBetween = function (date) {
+  //  date = moment(date);
+  //  return date.isSameOrAfter(shift.startTime) && date.isSameOrBefore(shift.endTime);
+  //};
+  //
+  //// check event time is between shift start and end time
+  //if (shift && isBetween(calendarEvent.startTime) && isBetween(calendarEvent.endTime)) {
+  //  return true;
+  //} else {
+  //  throw new Meteor.Error('Event must be placed in shift time');
+  //}
+  return true;
 });
 
 Namespace('HospoHero.checkers', {

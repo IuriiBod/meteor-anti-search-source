@@ -62,7 +62,8 @@ Namespace('HospoHero.roles', {
     "Receive Deliveries": "receive deliveries",
     "Approve leave requests": "approve leave requests",
     "Edit calendar": "edit calendar",
-    "View calendar": "view calendar"
+    "View calendar": "view calendar",
+    "Create meetings": "create meetings"
   },
 
   getActions: function () {

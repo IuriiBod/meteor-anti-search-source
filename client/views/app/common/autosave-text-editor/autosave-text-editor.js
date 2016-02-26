@@ -30,6 +30,7 @@ Template.autosaveTextEditor.onRendered(function () {
         this.editableMode.set(false);
         this.timer.clearTimeout();
         this.saveChanges();
+        this.statusText.set('');
       }
     }
   };

@@ -8,7 +8,6 @@ Meteor.publishComposite('calendarEvents', function (date, queryType, areaId, use
       if (this.userId && !!area) {
         var query = {
           startTime: TimeRangeQueryBuilder[queryType](date, area.locationId),
-          //published: true,
           'relations.areaId': areaId
         };
 
@@ -29,6 +28,12 @@ Meteor.publishComposite('calendarEvents', function (date, queryType, areaId, use
           return CalendarEvents.find({
             shiftId: shift._id
           });
+        }
+      },
+      {
+        find: function (shift) {
+          let fields = HospoHero.security.getPublishFieldsFor('users', {});
+          return Meteor.users.find({_id: shift.assignedTo}, {fields});
         }
       }
     ]

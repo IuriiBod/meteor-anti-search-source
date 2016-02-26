@@ -1,0 +1,12 @@
+<template name="eventMeeting">
+  <div class="container-fluid">
+    <div class="row">
+      {{> meetingDetailsTable meeting=meeting}}
+
+      <div class="col-xs-12 event-description-row">
+        {{> eventGoTo route="meetingDetails" templateData=goToItemTemplateData}}
+        {{> eventRemove}}
+      </div>
+    </div>
+  </div>
+</template>

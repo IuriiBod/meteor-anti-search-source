@@ -5,8 +5,7 @@
 }
 
 .calendar-container {
-  margin-top: 20px;
-  padding: 0 0 38px 0;
+  padding: 0;
   background-color: #fff;
 
   h3 {
@@ -39,6 +38,12 @@
   }
 }
 
+@media (max-width: 841px) {
+  .calendar-container {
+    padding: 0 0 38px 0;
+  }
+}
+
 .flyout-container {
   .event-description-row {
     margin-top: 10px;
@@ -58,13 +63,6 @@
 }
 
 .items-palette {
-  margin-top: 20px;
-
-  //.panel-body {
-  //  max-height: 500px;
-  //  overflow-y: auto;
-  //}
-
   .draggable-item {
     display: inline-block;
     padding: 5px;
