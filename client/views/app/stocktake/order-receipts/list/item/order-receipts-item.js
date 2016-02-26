@@ -17,7 +17,7 @@ Template.orderReceiptItem.helpers({
     StockOrders.find({orderReceipt: this._id}).forEach((order) => {
       if (order.received) {
         var quantity = order.countOrdered;
-        if (order.countDelivered) {
+        if (_.isFinite(order.countDelivered) && order.countDelivered >= 0) {
           quantity = order.countDelivered;
         }
         cost += parseFloat(quantity) * parseFloat(order.unitPrice)

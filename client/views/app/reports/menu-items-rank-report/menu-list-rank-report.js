@@ -1,6 +1,31 @@
+const ranges = [
+  {
+    value: 'yesterday',
+    text: 'Yesterday'
+  },
+  {
+    value: 'current-week',
+    text: 'Current Week'
+  },
+  {
+    value: 'last-week',
+    text: 'Last Week'
+  },
+  {
+    value: 'custom-range',
+    text: 'Custom Date Range'
+  }
+];
+
 Template.menuListRankReport.onCreated(function () {
   this.customRange = new ReactiveVar();
   this.data.rangeType === 'custom-range' ? this.customRange.set(true) : this.customRange.set(false);
+
+  const current = _.find(ranges, obj => {
+    return this.data.rangeType === obj.value;
+  });
+
+  this.selectedRange = new ReactiveVar(current);
 
   this.getDaysOfWeek = function (daysOfWeek) {
     return  {
@@ -8,10 +33,6 @@ Template.menuListRankReport.onCreated(function () {
       endDate: HospoHero.dateUtils.shortDateFormat(daysOfWeek[daysOfWeek.length - 1])
     }
   }
-});
-
-Template.menuListRankReport.onRendered(function () {
-  this.$('.date').val(this.data.rangeType);
 });
 
 Template.menuListRankReport.helpers({
@@ -58,14 +79,24 @@ Template.menuListRankReport.helpers({
     } else {
       return {name: 'All', _id: 'all'};
     }
+  },
+
+  ranges: function () {
+    return ranges;
+  },
+
+  selectedRange: function () {
+    return Template.instance().selectedRange.get();
   }
 });
 
 Template.menuListRankReport.events({
-  'change .date': function (event, tmpl) {
+  'click .date': function (event, tmpl) {
     event.preventDefault();
 
-    var rangeType = tmpl.$(event.target).val();
+    tmpl.selectedRange.set(this);
+
+    var rangeType = this.value;
     var date = moment();
 
     var params = {
@@ -87,7 +118,6 @@ Template.menuListRankReport.events({
       _.extend(params, tmpl.getDaysOfWeek(daysOfLastWeek));
     } else {
       tmpl.customRange.set(true);
-      return false;
     }
 
     Router.go('menuItemsRankReport', params);

@@ -116,13 +116,13 @@ StaffCostCalculator.prototype._calculateTotalFigures = function (weekFigures) {
   let today = moment();
 
   weekFigures.forEach(function (dailyFigures) {
-    totalFigures.sales.actual += dailyFigures.sales.actual;
-    totalFigures.sales.forecast += dailyFigures.sales.forecast;
-
-    totalFigures.staff.forecast += dailyFigures.staff.forecast;
-
     let useForecast = today.isSame(dailyFigures.date, 'day') || today.isBefore(dailyFigures.date);
     let actualStaffProperty = useForecast ? 'forecast' : 'actual';
+
+    totalFigures.sales.forecast += dailyFigures.sales.forecast;
+    totalFigures.sales.actual += dailyFigures.sales[actualStaffProperty];
+
+    totalFigures.staff.forecast += dailyFigures.staff.forecast;
     totalFigures.staff.actual += dailyFigures.staff[actualStaffProperty];
   });
 

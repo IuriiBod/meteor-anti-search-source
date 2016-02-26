@@ -31,6 +31,15 @@ Accounts.onLogin(function (loginInfo) {
 });
 
 
+AntiSearchSource.allow('users', {
+  maxLimit: 15,
+  securityCheck (userId, configs) {
+    return !!userId;
+  },
+  allowedFields: ['profile.firstname', 'profile.lastname', 'emails.address']
+});
+
+
 Meteor.methods({
   changePinCode: function (newPinCode) {
     Meteor.users.update({
@@ -43,10 +52,15 @@ Meteor.methods({
   },
 
   editBasicDetails: function (id, editDetails) {
-    if (!HospoHero.isManager()) {
+    check(id, HospoHero.checkers.MongoId);
+
+    let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    if (!permissionChecker.hasPermissionInArea(currentAreaId, "edit user's payrate")) {
       logger.error("User not permitted to edit users details");
       throw new Meteor.Error(403, "User not permitted to edit users details");
     }
+
     if (!id) {
       logger.error('No user has found');
       throw new Meteor.Error(401, "User not found");
@@ -96,7 +110,9 @@ Meteor.methods({
   },
 
   resignDate: function (type, id, val) {
-    if (!HospoHero.isManager()) {
+    let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    if (!permissionChecker.hasPermissionInArea(currentAreaId, "edit user's payrate")) {
       logger.error("User not permitted to resign workers");
       throw new Meteor.Error(403, "User not permitted to resign workers");
     }

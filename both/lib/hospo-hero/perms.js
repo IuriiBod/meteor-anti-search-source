@@ -1,6 +1,9 @@
 Namespace('HospoHero', {
   /**
    * Check whether user is able to perform specified action
+   *
+   * DEPRECATED!
+   *
    * @param {String} action
    * @param {String} [userId]
    * @returns {Function|Boolean}

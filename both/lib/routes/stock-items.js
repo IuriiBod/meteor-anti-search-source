@@ -46,10 +46,5 @@ Router.route('stockAreasSettings', {
   template: "stockAreas",
   waitOn: function () {
     return Meteor.subscribe('allAreas', HospoHero.getCurrentAreaId(Meteor.userId()));
-  },
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
   }
 });

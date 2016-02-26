@@ -26,31 +26,27 @@ Meteor.methods({
 
     check(locationId, HospoHero.checkers.MongoId);
 
+    //remove location's members
     //updating user in Meteor.users collection requires user id
-    var usersIdsRelatedToLocation = Meteor.users
-        .find({'relations.locationIds': locationId}, {fields: {_id: 1}})
-        .map(function (user) { return user._id });
+    let locationMembersIds = Meteor.users.find({'relations.locationIds': locationId}, {
+      fields: {_id: 1}
+    }).map(user => user._id);
 
     Meteor.users.update({
-      _id: {$in: usersIdsRelatedToLocation}
-    },{
+      _id: {$in: locationMembersIds}
+    }, {
       $pull: {'relations.locationIds': locationId}
-    },{
+    }, {
       multi: true
     });
 
-    var areasIdsRelatedToLocation = Areas
-        .find({locationId: locationId}, {fields: {_id: 1}})
-        .map(function (area) { return area._id; });
-
-    areasIdsRelatedToLocation.forEach(function (areaId) {
-      Meteor.call('deleteArea', areaId);
+    Areas.find({locationId: locationId}, {
+      fields: {_id: 1}
+    }).forEach(area => {
+      Meteor.call('deleteArea', area._id);
     });
 
     WeatherForecast.remove({locationId: locationId});
-
-    var googlePrediction = new GooglePredictionApi(locationId);
-    googlePrediction.removePredictionModel();
 
     Locations.remove({_id: locationId});
     logger.info('Location was deleted', {locationId: locationId});

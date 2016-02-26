@@ -6,34 +6,3 @@
   }
 }
 
-//for correct displaying active links of current elevio module
-.elevio-open {
-  body:not(.intercom-messenger-active){
-    #side-menu > li:last-child {
-      li:nth-child(1) {
-        .menu-entry-title {
-          background: #18a689;
-        }
-      }
-    }
-  }
-  body.intercom-messenger-active {
-    #side-menu > li:last-child {
-      li:nth-child(2) {
-        .menu-entry-title {
-          background: #18a689;
-        }
-      }
-    }
-  }
-}
-
-#side-menu > li:last-child {
-  .menu-entry-title {
-    background: lighten(@navy, 3%);
-    color: white;
-  }
-  .menu-entry-title:hover {
-    background: #18a689;
-  }
-}

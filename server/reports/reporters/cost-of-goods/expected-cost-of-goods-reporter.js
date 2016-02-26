@@ -1,3 +1,9 @@
+let _renameObjectProperty = function (object, oldKeyName, newKeyName) {
+  object[newKeyName] = object[oldKeyName];
+  delete object[oldKeyName];
+  return object;
+};
+
 ExpectedCostOfGoodsReporter = class {
   /**
    * @param {string} fromDate DD/MM/YY
@@ -78,7 +84,7 @@ ExpectedCostOfGoodsReporter = class {
 
     let menuItemsSales = DailySales.find(findQuery, queryOptions).fetch();
     return _.map(menuItemsSales, (item) => {
-      return HospoHero.misc.renameObjectProperty(item, 'actualQuantity', 'soldAmount')
+      return _renameObjectProperty(item, 'actualQuantity', 'soldAmount')
     });
   }
 

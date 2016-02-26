@@ -12,7 +12,11 @@ Template.orderReceive.helpers({
     let cost = 0;
     if (orders.count()) {
       orders.forEach(function (order) {
-        cost += parseInt(order.countOrdered) * parseFloat(order.unitPrice)
+        var count = order.countDelivered;
+        if (!_.isFinite(count) || count < 0) {
+          count = order.countOrdered;
+        }
+        cost += parseInt(count) * parseFloat(order.unitPrice);
       });
     }
     return cost;

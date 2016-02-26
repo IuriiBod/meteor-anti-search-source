@@ -1,25 +1,29 @@
 Meteor.methods({
   createCategory: function (name) {
-    if (!HospoHero.isManager()) {
+    check(name, String);
+
+    let currentAreaId = HospoHero.getCurrentAreaId();
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    if (!permissionChecker.hasPermissionInArea(currentAreaId, 'edit menus')) {
       logger.error("User not permitted to add categories");
       throw new Meteor.Error(403, "User not permitted to add categories");
     }
-    if (!name) {
-      logger.error("Category should have a name");
-      return new Meteor.Error("Category should have a name");
-    }
+
     var exist = Categories.findOne({
       name: name,
-      "relations.areaId": HospoHero.getCurrentAreaId()
+      "relations.areaId": currentAreaId
     });
+
     if (exist) {
       logger.error('Category name should be unique', exist);
       throw new Meteor.Error("Category name should be unique");
     }
+
     var id = Categories.insert({
       name: name,
       relations: HospoHero.getRelationsObject()
     });
+
     logger.info("New Category created", id);
     return id;
   },
