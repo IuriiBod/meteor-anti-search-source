@@ -17,8 +17,8 @@ var updateMenuItemsPriceFromPos = function (locationId) {
 
 Meteor.methods({
   updatePosMenuItems: function () {
-    var checker = new HospoHero.security.PermissionChecker(this.userId);
-    if (!checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'view forecast')) {
+    var checker = new HospoHero.security.PermissionChecker();
+    if (!checker.hasPermissionInArea(null, 'view forecast')) {
       throw new Meteor.Error('Access denied');
     }
 

@@ -1,6 +1,11 @@
-var canUserEditStocks = function() {
-  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit stocks');
+var canUserEditStocks = function(areaId = null) {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'edit stocks');
+};
+
+var getAreaIdFromStocktake = function(stocktakeId) {
+  var stocktake = Stocktakes.findOne({_id: stocktakeId});
+  return (stocktake && stocktake.relations) ? stocktake.relations.areaId : null;
 };
 
 Meteor.methods({
@@ -101,7 +106,7 @@ Meteor.methods({
   },
 
   'updateStocktake': function (id, info, newValue) {
-    if (!canUserEditStocks()) {
+    if (!canUserEditStocks(getAreaIdFromStocktake(id))) {
       logger.error("User not permitted to update stocktakes");
       throw new Meteor.Error(403, "User not permitted to update stocktakes");
     }
@@ -183,7 +188,7 @@ Meteor.methods({
   },
 
   removeStocktake: function (stocktakeId) {
-    if (!canUserEditStocks()) {
+    if (!canUserEditStocks(getAreaIdFromStocktake(stocktakeId))) {
       logger.error("User not permitted to remove stocktakes");
       throw new Meteor.Error(403, "User not permitted to remove stocktakes");
     }

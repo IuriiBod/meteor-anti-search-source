@@ -1,6 +1,6 @@
 var canUserEditRoster = function() {
-  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit roster');
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit roster');
 };
 
 var canClockInOut = function (shiftId, user) {

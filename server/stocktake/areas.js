@@ -1,6 +1,6 @@
 var canUserEditStocks = function() {
-  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit stocks');
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit stocks');
 };
 
 Meteor.methods({

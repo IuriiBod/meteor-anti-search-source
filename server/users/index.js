@@ -1,6 +1,6 @@
-var canUserEditUsers = function() {
-  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit users');
+var canUserEditUsers = function(areaId = null) {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'edit users');
 };
 
 
@@ -157,15 +157,15 @@ Meteor.methods({
   },
 
   changeUserRole: function (userId, newRoleId, areaId) {
-    if (!canUserEditUsers()) {
-      logger.error("User not permitted to change roles");
-      throw new Meteor.Error(403, "User not permitted to change roles");
-    }
-
     check(userId, HospoHero.checkers.MongoId);
     check(newRoleId, HospoHero.checkers.MongoId);
 
     areaId = areaId || HospoHero.getCurrentAreaId();
+
+    if (!canUserEditUsers(areaId)) {
+      logger.error("User not permitted to change roles");
+      throw new Meteor.Error(403, "User not permitted to change roles");
+    }
 
     var area = Areas.findOne({_id: areaId});
 
