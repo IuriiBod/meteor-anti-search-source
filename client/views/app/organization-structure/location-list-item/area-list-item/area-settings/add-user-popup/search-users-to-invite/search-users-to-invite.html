@@ -20,7 +20,7 @@
             <hr/>
             <div class="search-users-container">
               {{# each searchedUsers}}
-                {{> searchUserInfo}}
+                {{> searchUserInfo user=this}}
               {{/each}}
             </div>
           </div>

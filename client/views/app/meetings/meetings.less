@@ -1,0 +1,39 @@
+.attendees-container {
+  .attendees {
+    padding: 5px;
+    border: 1px solid #eeeeee;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    .attendee-container {
+      border-bottom: 1px solid #eeeeee;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+.meetings-list {
+  .table {
+    margin-bottom: 0;
+
+    .meeting-list-item {
+      cursor: pointer;
+    }
+  }
+}
+
+.meeting-attendees {
+  position: relative;
+  display: inline-block;
+
+  .attendee-status {
+    font-size: 10px;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}

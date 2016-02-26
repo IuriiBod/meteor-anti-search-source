@@ -1,0 +1,21 @@
+{
+  "apn": {
+    "passphrase": "hh123apnsPassword",
+    "key": "ios/apns-prod-key.pem",
+    "cert": "ios/apns-prod-cert.pem"
+  },
+  "apn-dev": {
+    "passphrase": "hh123apnsDevPassword",
+    "key": "ios/apns-dev-key.pem",
+    "cert": "ios/apns-dev-cert.pem"
+  },
+  "gcm": {
+    "apiKey": "AIzaSyCBw7Db9feI3lrSbncwqkqhxFXUbKN295o",
+    "projectNumber": "24418709828"
+  },
+  "production": false,
+  "badge": true,
+  "sound": true,
+  "alert": true,
+  "vibrate": true
+}

@@ -1,0 +1,50 @@
+<template name="meetingsList">
+  {{> pageHeading title='Meetings' name='meetings'}}
+
+  <!-- Meetings filter -->
+  <div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 m-t-sm m-b-sm">
+      <input type="text" class="form-control meetings-search" placeholder="Search">
+    </div>
+    <div class="col-lg-2 col-sm-4 col-md-4 m-t-sm m-b-sm col-xs-12">
+      {{> taskDateFilter onFilterChange=onFilterChange filterTypes=filterTypes activeFilter=activeFilter}}
+    </div>
+  </div>
+  <!-- /Meetings filter -->
+
+  <!-- Meetings list -->
+  {{#if meetings.count}}
+    <div class="row meetings-list">
+      <div class="float-e-margins col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="ibox-content no-padding">
+          <div class="table-responsive">
+            <table class="table text-left table-hover">
+              <thead>
+              <tr>
+                <th>Date</th>
+                <th>Title</th>
+                <th class="hidden-xs">Attendees</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              {{#each meetings}}
+                {{> meetingsListItem this}}
+              {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="text-muted">
+          <h3>No meetings</h3>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+  <!-- /Meetings list -->
+</template>

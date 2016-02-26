@@ -7,15 +7,25 @@ Template.referenceSelector.onRendered(function () {
 
 
 Template.referenceSelector.helpers({
-  menuItems: function () {
+  menuItems () {
     return MenuItems.find().fetch();
   },
 
-  jobItems: function () {
+  jobItems () {
     return JobItems.find().fetch();
   },
 
-  suppliers: function () {
+  suppliers () {
     return Suppliers.find().fetch();
+  },
+
+  meetings () {
+    let userId = Meteor.userId();
+    return Meetings.find({
+      $or: [
+        {attendees: userId},
+        {createdBy: userId}
+      ]
+    }).fetch();
   }
 });

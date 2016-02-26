@@ -139,6 +139,16 @@ var menuEntries = [
     }
   },
   {
+    title: 'Meetings',
+    icon: 'fa-users',
+    route: 'meetings',
+    params: function () {
+      return {
+        //date: HospoHero.dateUtils.shortDateFormat(new Date())
+      };
+    }
+  },
+  {
     title: 'Projects',
     icon: 'fa-file-text-o',
     route: 'projectsList',

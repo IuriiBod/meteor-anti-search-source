@@ -22,23 +22,33 @@ Template.breadcrumbs.helpers({
   }
 });
 
-// TODO: Change this code
 Template.breadcrumbs.events({
   'click .breadcrumbCategory': function (event) {
     event.preventDefault();
-    var category = this.heading.category;
-    if (category == "Jobs") {
-      Router.go("jobItemsMaster");
-    } else if (category == "Menus") {
-      Router.go("menuItemsMaster", {category: 'all', status: 'all'});
-    } else if (category == "Settings") {
-      Router.go("dashboard");
-    } else if (category == "Stocktake List") {
-      Router.go("stocktakeList");
-    } else if (category == "Stocktake") {
-      Router.go("orderReceiptsList");
-    } else if (category == "Stocks") {
-      Router.go("suppliersList");
+
+    let category = this.heading.category;
+    let categories = {
+      Jobs: 'jobItemsMaster',
+      Menus: {
+        name: 'menuItemsMaster',
+        params: {category: 'all', status: 'all'}
+      },
+      'Stocktake List': 'stocktakeList',
+      Stocktake: 'orderReceiptsList',
+      Stocks: 'suppliersList',
+      Meetings: 'meetings'
+    };
+
+    let route = _.has(categories, category) && categories[category];
+
+    if (route) {
+      if (_.isString(route)) {
+        Router.go(route);
+      } else if (_.isObject(route)) {
+        Router.go(route.name, route.params);
+      } else {
+        return false;
+      }
     }
   },
 

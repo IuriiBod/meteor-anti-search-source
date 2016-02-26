@@ -1,0 +1,49 @@
+<style>
+  .button-container {
+    margin-top: 5px;
+  }
+
+  .claim-button {
+    margin-top: 5px;
+    padding: 3px 5px;
+    color: #fff;
+    border-radius: 4px;
+  }
+
+  .claim-button:hover {
+    color: #fff;
+  }
+
+  .confirm-button {
+    background-color: #1AB394;
+  }
+
+  .maybe-button {
+    background-color: #F8AC59;
+  }
+
+  .reject-button {
+    background-color: #ED5565;
+  }
+
+  .go-to-button, .go-to-button:hover {
+    color: #23527c;
+  }
+</style>
+
+<div>
+  <p>
+    You have been invite on the meeting <b>{{meeting.title}}</b> in <b>{{meeting.location}}</b> location on
+    <b>{{meeting.time}}</b>
+  </p>
+
+  <p>Are you attending?</p>
+
+  <p class="button-container">
+    <a href="{{yesUrl}}" class="claim-button confirm-button">Confirm</a>
+    <a href="{{maybeUrl}}" class="claim-button maybe-button">Maybe</a>
+    <a href="{{noUrl}}" class="claim-button reject-button">Reject</a>
+
+    <a href="{{url}}" class="claim-button go-to-button" data-link-type="navigation">Go to the meeting page</a>
+  </p>
+</div>

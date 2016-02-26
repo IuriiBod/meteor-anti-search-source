@@ -1,18 +1,11 @@
 <template name="userCalendar">
   {{> calendarHeader date=date type=type isManagerCalendar=false userId=userId}}
 
-  <div class="items-palette tasks-items-palette col-md-3">
+  <div class="items-palette tasks-items-palette col-md-3 m-t-sm">
     {{> itemsPalette type='task'  calendarType=type}}
   </div>
 
-  <div class="calendar-container col-md-9 text-center">
-    {{#if displayCalendar}}
-      {{> calendarItem userId=userId date=date type=type}}
-    {{else}}
-      <h3>No shifts for {{#if equal type "day"}}today{{else}}this week{{/if}}</h3>
-      {{#if hasPermissionInAreaTo 'edit roster'}}
-        <a href="{{pathFor route='weeklyRoster' date=startOfWeekDate}}">you can create one</a>
-      {{/if}}
-    {{/if}}
+  <div class="calendar-container col-md-9 text-center m-t-sm">
+    {{> calendarItem userId=userId date=date type=type}}
   </div>
 </template>

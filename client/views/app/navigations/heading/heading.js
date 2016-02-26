@@ -14,6 +14,7 @@ var headingComponentsMap = {
   suppliersListHeader: 'suppliersListHeader',
   posMenuLinking: 'posMenuLinkingHeader',
   taskList: 'taskListHeader',
+  meetings: 'meetingsHeader',
   projects: 'projectsListHeader'
 };
 
