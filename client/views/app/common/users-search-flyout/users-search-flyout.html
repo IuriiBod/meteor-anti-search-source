@@ -1,0 +1,10 @@
+<template name="usersSearchFlyout">
+  <div class="flyout-header">
+    {{> CloseFlyoutButton}}
+    Searching users
+  </div>
+
+  <div class="flyout-content">
+    {{> usersSearch selectedUsers=selectedUsers onUserSelect=onUserSelect}}
+  </div>
+</template>

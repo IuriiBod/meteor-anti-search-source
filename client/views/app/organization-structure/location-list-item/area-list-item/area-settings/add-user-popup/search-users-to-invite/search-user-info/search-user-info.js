@@ -1,5 +1,9 @@
 Template.searchUserInfo.helpers({
   userEmail: function () {
-    return this.emails && this.emails[0].address;
+    return this.user && this.user.emails && this.user.emails[0].address;
+  },
+
+  isRemovingUser: function () {
+    return this.removeUser || false;
   }
 });

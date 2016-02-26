@@ -63,11 +63,16 @@ Namespace('HospoHero.calendar', {
           start: moment(event.startTime),
           end: moment(event.endTime),
           backgroundColor: eventSettings.backgroundColor,
-          borderColor: eventSettings.borderColor,
+          borderColor: eventSettings.backgroundColor,
           textColor: eventSettings.textColor,
           item: event
         };
 
+        // WARNING!
+        // THE FOC (full of crutches) CODE HERE!
+        // DO NOT READ!
+        // TODO: Need to refactor this... Move it away, maybe.. Or something smarter
+        // 1) check if the current event is a task
         var taskItem = false;
         if (event.type === 'task') {
           var taskQueryCopy = _.clone(taskQuery);
@@ -78,12 +83,13 @@ Namespace('HospoHero.calendar', {
 
         var item = Mongo.Collection.get(currentEventItem.collection).findOne({_id: event.itemId});
 
-
+        // 2) than, check if a manager user can view this task
         if (event.type === 'task' && taskItem || event.type !== 'task' && item) {
           return _.extend(defaultEvent, {
             title: item[eventSettings.titleField]
           });
         } else if (event.type === 'task' && !taskItem && item) {
+          // 3) if not - change the event view to Busy
           defaultEvent.item.type = 'busy';
           return _.extend(defaultEvent, {
             title: "Busy",
@@ -96,14 +102,15 @@ Namespace('HospoHero.calendar', {
       });
     };
 
-    var date = calendarTemplateData.date;
+    let date = calendarTemplateData.date;
+    let calendarResources = calendarTemplateData.resources;
 
     if (calendarTemplateData.userId) {
       // get events only for one user
       return _.flatten(getEvents(calendarTemplateData.userId, date));
-    } else if (calendarTemplateData.resources && calendarTemplateData.resources.length) {
+    } else if (calendarResources && calendarResources.length) {
       // get event for array of users
-      return _.flatten(_.map(calendarTemplateData.resources, function (resource) {
+      return _.flatten(_.map(calendarResources, function (resource) {
         return getEvents(resource.id, date);
       }));
     } else {

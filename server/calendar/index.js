@@ -17,14 +17,19 @@ Meteor.methods({
       var shift = Shifts.findOne({
         startTime: shiftTimeRange,
         assignedTo: eventObject.userId,
-        //published: true,
         'relations.areaId': areaId
       });
 
       if (shift) {
         eventObject.shiftId = shift._id;
       } else {
-        throw new Meteor.Error(404, 'Shift for user not found');
+        // if there are no shifts, create a one
+        shift = _.pick(eventObject, ['startTime', 'endTime']);
+        _.extend(shift, {
+          type: null,
+          assignedTo: eventObject.userId
+        });
+        eventObject.shiftId = Meteor.call('createShift', shift);
       }
     }
 
