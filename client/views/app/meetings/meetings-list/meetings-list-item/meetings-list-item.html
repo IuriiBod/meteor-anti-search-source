@@ -1,0 +1,9 @@
+<template name="meetingsListItem">
+  <tr class="meeting-list-item">
+    <td>{{dateInterval startTime endTime}}</td>
+    <td>{{title}}</td>
+    <td class="project-people hidden-xs">
+      {{> meetingAttendees this}}
+    </td>
+  </tr>
+</template>

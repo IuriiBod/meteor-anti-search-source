@@ -37,6 +37,15 @@ Accounts.onLogin(function (loginInfo) {
 });
 
 
+AntiSearchSource.allow('users', {
+  maxLimit: 15,
+  securityCheck (userId, configs) {
+    return !!userId;
+  },
+  allowedFields: ['profile.firstname', 'profile.lastname', 'emails.address']
+});
+
+
 Meteor.methods({
   changePinCode: function (newPinCode) {
     Meteor.users.update({

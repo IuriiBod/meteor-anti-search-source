@@ -1,0 +1,14 @@
+<template name="meetingAttendees">
+  <div class="pull-left">
+    {{#if attendees.length}}
+      {{#each attendees}}
+        <span class="meeting-attendees">
+          <i class="fa fa-circle attendee-status {{attendeeStatus this}}"></i>
+          {{> userCircleIcon this}}
+        </span>
+      {{/each}}
+    {{else}}
+      No attendees yet
+    {{/if}}
+  </div>
+</template>

@@ -1,3 +1,6 @@
+//enable push notification using raix:push package
+Push.enabled(true);
+
 //accounts config
 Accounts.ui.config({
   requestPermissions: {

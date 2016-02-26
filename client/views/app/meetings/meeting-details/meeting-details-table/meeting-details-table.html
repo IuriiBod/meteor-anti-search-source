@@ -1,0 +1,64 @@
+<template name="meetingDetailsTable">
+  <table class="table">
+    <thead>
+    <tr>
+      <td><b>Title:</b></td>
+      <td>
+        {{#if isMeetingCreator}}
+          <a href="#" class="meeting-title-editable">
+            {{meeting.title}}
+          </a>
+        {{else}}
+          {{meeting.title}}
+        {{/if}}
+      </td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><b>Date & Time:</b></td>
+      <td>
+        {{#if isMeetingCreator}}
+          {{> dateEditor date=meeting.startTime allowEditing=isMeetingCreator onDateChange=onDateChange}}
+
+          <div class="time-editor">
+            {{> comboTimeEditable params=timeComboEditableParams}}
+          </div>
+        {{else}}
+          {{dateInterval meeting.startTime meeting.endTime}}
+        {{/if}}
+      </td>
+    </tr>
+    <tr>
+      <td><b>Location:</b></td>
+      <td>
+        {{#if isMeetingCreator}}
+          <a href="#" class="meeting-location-editable">
+            {{meeting.location}}
+          </a>
+        {{else}}
+          {{meeting.location}}
+        {{/if}}
+      </td>
+    </tr>
+    <tr>
+      <td><b>Attendees:</b></td>
+      <td class="project-people">
+        {{> meetingAttendees meeting}}
+
+        <div class="col-md-4">
+          <button type="button" class="btn btn-default btn-sm pull-left add-user">
+            Add
+          </button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><b>Are You Attending?</b></td>
+      <td>
+        {{> attendingButtons meeting=meeting}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</template>
