@@ -6,7 +6,7 @@ Template.stockReport.onCreated(function () {
     Meteor.call('getNextStocktakeReport', this.lastReportedStocktakeMainId, HospoHero.handleMethodResult((result) => {
       if (result) {
         this.reports.push(result.report);
-        this.lastReportedStocktakeMainId = result.lastStocktakeMainId;
+        this.lastReportedStocktakeMainId = result.report.secondStocktake.stocktakeMainId;
       }
     }));
   };
@@ -29,8 +29,7 @@ Template.stockReport.events({
     event.preventDefault();
 
     let stocktakeDate = this.secondStocktake.date.replace(/\//g, '-');
-    let stocktakeMainId = tmpl.lastReportedStocktakeMainId;
-
+    let stocktakeMainId = this.secondStocktake.stocktakeMainId;
     Router.go('stockTotalValueDetails', {stocktakeMainId: stocktakeMainId, date: stocktakeDate});
   }
 });

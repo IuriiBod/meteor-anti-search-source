@@ -9,15 +9,15 @@
               <table class="table table-condensed table-hover table-striped">
                 <thead>
                 <tr>
-                  <th>Menu Item</th>
-                  <th>Expected Stock Used</th>
+                  <th>Stock Item Name</th>
+                  <th>Stock Item Cost</th>
                 </tr>
                 </thead>
                 <tbody>
-                {{#each menuItems}}
+                {{#each stocks}}
                   <tr>
-                    <td>-</td>
-                    <td>-</td>
+                    <td>{{description}}</td>
+                    <td>{{stockTotalValue}}</td>
                   </tr>
                 {{/each}}
                 </tbody>
