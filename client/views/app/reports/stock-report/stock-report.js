@@ -25,11 +25,19 @@ Template.stockReport.events({
     tmpl.uploadNextStockReport();
   },
 
-  'click .second-stocktake-value': function (event, tmpl) {
+  'click .first-stocktake-total, click .second-stocktake-total': function (event, tmpl) {
     event.preventDefault();
+    let params = {};
+    let firstStocktakeTotal = event.target.className === 'first-stocktake-total';
 
-    let stocktakeDate = this.secondStocktake.date.replace(/\//g, '-');
-    let stocktakeMainId = this.secondStocktake.stocktakeMainId;
-    Router.go('stockTotalValueDetails', {stocktakeMainId: stocktakeMainId, date: stocktakeDate});
+    if (firstStocktakeTotal) {
+      params.date = this.firstStocktake.date.replace(/\//g, '-');
+      params.stocktakeMainId = this.firstStocktake.stocktakeMainId;
+    } else {
+      params.date = this.secondStocktake.date.replace(/\//g, '-');
+      params.stocktakeMainId = this.secondStocktake.stocktakeMainId;
+    }
+
+    Router.go('stockTotalValueDetails', params);
   }
 });
