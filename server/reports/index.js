@@ -71,9 +71,8 @@ let getReportForStocktakeMain = function (areaId, stocktakeMainId) {
     let secondStocktake = stocktakeIterator.getNextStocktakeGroup(firstStocktake.stocktakeMainId);
 
     if (secondStocktake) {
-      let stocktakesReporter = new StocktakesReporter(firstStocktake.group, secondStocktake.group, areaId);
+      let stocktakesReporter = new StocktakesReporter(firstStocktake, secondStocktake, areaId);
       return {
-        lastStocktakeMainId: secondStocktake.stocktakeMainId,
         report: stocktakesReporter.getReport()
       };
     }
@@ -82,15 +81,9 @@ let getReportForStocktakeMain = function (areaId, stocktakeMainId) {
 
 let getDetailedReportStockTakeTotal = (stocktakeMainId) => {
   let stocktakesCursor = Stocktakes.find({version: stocktakeMainId}, {sort: {date: -1}});
-
   let stocktakeTotalDetailedReport = new StocktakeTotalDetailedReport(stocktakesCursor.fetch());
-  let report = stocktakeTotalDetailedReport.getReport();
-  console.log(report.length);
-  let counter = 0;
-  report.forEach((item) => {
-    counter += item.stockTotalValue;
-  });
-  console.log(counter);
+  
+  return stocktakeTotalDetailedReport.getReport();
 };
 
 Meteor.methods({
