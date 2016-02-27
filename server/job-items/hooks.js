@@ -32,9 +32,9 @@ var jobItemUpdate = function (newJobItem, oldJobItem) {
     // finding shifts, which depends on changed job item
     Shifts.find(query).forEach(function (shift) {
       if (newJobItem.status === 'active') {
-        CalendarEventsManager.addRecurringJobsToCalendar(shift);
+        CalendarRecurringJobsManager.addRecurringJobsToCalendar(shift);
       } else {
-        CalendarEvents.remove({shiftId: shift._id});
+        CalendarEventsManager.remove({shiftId: shift._id});
       }
     });
   }
@@ -47,24 +47,4 @@ JobItems.after.insert(function (userId, jobItem) {
 JobItems.after.update(function (userId, newJobItem) {
   var oldJobItem = this.previous;
   jobItemUpdate(newJobItem, oldJobItem);
-});
-
-
-Shifts.after.update(function (userId, newShift) {
-  if (newShift.published) {
-    var oldShift = this.previous;
-
-    // when the assigned user was changed,
-    // move old user's jobs to the new user
-    if (newShift.assignedTo !== oldShift.assignedTo) {
-      CalendarEvents.update({shiftId: newShift._id}, {
-        $set: {
-          userId: newShift.assignedTo
-        }
-      }, {multi: true});
-    } else {
-      CalendarEvents.remove({shiftId: newShift._id});
-      CalendarEventsManager.addRecurringJobsToCalendar(newShift);
-    }
-  }
 });

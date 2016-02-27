@@ -245,6 +245,20 @@ Namespace('HospoHero.misc', {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
   },
 
+  /**
+   * Returns different values of two passed arrays
+   * @param {Array} array1
+   * @param {Array} array2
+   * @returns {Array}
+   */
+  arrayDifference: function (array1, array2) {
+    if (array1.length > array2.length) {
+      return _.difference(array1, array2);
+    } else {
+      return _.difference(array2, array1);
+    }
+  },
+
   hasUnavailability (unavailabilities, {startTime: shiftStart, endTime: shiftEnd}) {
     let isBetween = function (date, dateStart, dateEnd) {
       return date.valueOf() >= dateStart && date.valueOf() <= dateEnd;

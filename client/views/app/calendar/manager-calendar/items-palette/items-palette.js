@@ -18,14 +18,15 @@ Template.itemsPalette.onCreated(function () {
 
 
 Template.itemsPalette.onRendered(function () {
-  // Sorry, Taras
-  var eventItemSettings = this.item.eventSettings;
+  let eventItemSettings = this.item.eventSettings;
+  let color = eventItemSettings.backgroundColor;
+
   this.$('.panel-heading').css({
-    'background-color': eventItemSettings.backgroundColor,
-    'border-color': eventItemSettings.borderColor
+    'background-color': color,
+    'border-color': color
   });
 
-  this.$('.panel').css('border-color', eventItemSettings.borderColor);
+  this.$('.panel').css('border-color', color);
 });
 
 

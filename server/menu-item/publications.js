@@ -109,11 +109,14 @@ Meteor.publishAuthorized("areaMenuItems", function (areaId, categoryId) {
 });
 
 
-AntiSearchSource.queryTransform('menuItems', function (userId, query) {
-  return _.extend(query, {
-    'relations.areaId': HospoHero.getCurrentAreaId(userId)
-  });
+AntiSearchSource.allow('menuItems', {
+  queryTransform: function (userId, query) {
+    return _.extend(query, {
+      'relations.areaId': HospoHero.getCurrentAreaId(userId)
+    });
+  }
 });
+
 
 Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, status) {
   if (this.userId) {

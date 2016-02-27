@@ -4,6 +4,27 @@ Template.calendarHeader.helpers({
     return function (date) {
       routerReload(self.type, date, self.userId);
     };
+  },
+
+  isTodayDate() {
+    return this.date === HospoHero.dateUtils.shortDateFormat();
+  },
+
+  routeName() {
+    return this.userId ? 'calendar' : 'managerCalendar';
+  },
+
+  todayCalendarRouteData() {
+    let routeData = {
+      date: HospoHero.dateUtils.shortDateFormat()
+    };
+
+    if (this.userId) {
+      routeData.type = 'day';
+      routeData.userId = Meteor.userId();
+    }
+
+    return routeData;
   }
 });
 
