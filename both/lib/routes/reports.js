@@ -53,3 +53,13 @@ Router.route('/stock-report', {
   name: "stockReport",
   template: "stockReport"
 });
+
+Router.route('/stock-report/details/:stocktakeMainId/:date', {
+  name: 'stockTotalValueDetails',
+  template: 'totalValueDetails',
+  data() {
+    return {
+      stocktakeMainId: this.params.stocktakeMainId
+    }
+  }
+});

@@ -80,6 +80,19 @@ let getReportForStocktakeMain = function (areaId, stocktakeMainId) {
   }
 };
 
+let getDetailedReportStockTakeTotal = (stocktakeMainId) => {
+  let stocktakesCursor = Stocktakes.find({version: stocktakeMainId}, {sort: {date: -1}});
+
+  let stocktakeTotalDetailedReport = new StocktakeTotalDetailedReport(stocktakesCursor.fetch());
+  let report = stocktakeTotalDetailedReport.getReport();
+  console.log(report.length);
+  let counter = 0;
+  report.forEach((item) => {
+    counter += item.stockTotalValue;
+  });
+  console.log(counter);
+};
+
 Meteor.methods({
   /**
    * @param {String|null} firstStocktakeMainId stocktake ID to start from
@@ -92,6 +105,17 @@ Meteor.methods({
       let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
       if (currentAreaId) {
         return getReportForStocktakeMain(currentAreaId, firstStocktakeMainId);
+      }
+    } else {
+      throw new Meteor.Error('Not authorized.');
+    }
+  },
+
+  getStocktakeTotalValueDetails(stocktakeMainId) {
+    if (this.userId) {
+      let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+      if (currentAreaId) {
+        return getDetailedReportStockTakeTotal(stocktakeMainId);
       }
     } else {
       throw new Meteor.Error('Not authorized.');
