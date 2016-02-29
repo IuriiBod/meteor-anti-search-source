@@ -1,6 +1,16 @@
+var canUserReceiveDeliveries = function(areaId = null) {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'receive deliveries');
+};
+
+var getAreaIdFromReceipt = function(receiptId) {
+  var receipt = StockOrders.findOne({_id: receiptId});
+  return (receipt && receipt.relations) ? receipt.relations.areaId : null;
+};
+
 Meteor.methods({
   generateReceipts: function (version, supplierId, info) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries()) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(403, "User not permitted to generate receipts");
     }
@@ -134,7 +144,7 @@ Meteor.methods({
   },
 
   updateReceipt: function (id, info) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries(getAreaIdFromReceipt(id))) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(404, "User not permitted to generate receipts");
     }
@@ -210,7 +220,7 @@ Meteor.methods({
   },
 
   uploadInvoice: function (id, info) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries(getAreaIdFromReceipt(id))) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(404, "User not permitted to generate receipts");
     }
