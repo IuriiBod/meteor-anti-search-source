@@ -80,7 +80,9 @@ Meteor.methods({
       roleId: HospoHero.checkers.MongoId
     });
 
-    if (this.userId && HospoHero.canUser("invite users", this.userId)) {
+    let checker = new HospoHero.security.PermissionChecker(this.userId);
+
+    if (this.userId && checker.hasPermissionInArea(invitationMeta.areaId, 'invite users')) {
       //check if user with specified email exists
       let existingUser = Meteor.users.findOne({'emails.address': invitationMeta.email});
       if (existingUser) {

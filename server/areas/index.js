@@ -1,13 +1,21 @@
+var hasUserPermissionInArea = function (areaId, permission) {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, permission);
+};
+
 Meteor.methods({
   createArea: function (areaInfo) {
     var defaultAreaProperties = {
       createdAt: Date.now(),
       inactivityTimeout: 600000
     };
+
     var newAreaDocument = _.extend(areaInfo, defaultAreaProperties);
+
     check(newAreaDocument, HospoHero.checkers.AreaDocument);
 
-    if (!HospoHero.isOrganizationOwner()) {
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    if (!permissionChecker.isOrganizationOwner(newAreaDocument.organizationId)) {
       throw new Meteor.Error(403, 'User not permitted to create area');
     }
 
@@ -19,8 +27,7 @@ Meteor.methods({
   editArea: function (updatedArea) {
     check(updatedArea, HospoHero.checkers.AreaDocument);
 
-    var userId = Meteor.userId();
-    if (!HospoHero.canUser('edit areas', userId)) {
+    if (!hasUserPermissionInArea(updatedArea._id, 'edit areas')) {
       logger.error(403, 'User not permitted to edit areas');
     }
 
@@ -31,8 +38,7 @@ Meteor.methods({
   deleteArea: function (areaId) {
     check(areaId, HospoHero.checkers.MongoId);
 
-    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
-    if (!permissionChecker.hasPermissionInArea(areaId, 'edit areas')) {
+    if (!hasUserPermissionInArea(areaId, 'edit areas')) {
       logger.error('User not permitted to delete this area');
       throw new Meteor.Error(403, 'User not permitted to delete this area');
     }
@@ -100,7 +106,7 @@ Meteor.methods({
       roleId: mongoIdChecker
     });
 
-    if (!HospoHero.canUser('invite users')) {
+    if (!hasUserPermissionInArea(addedUserInfo.areaId, 'invite users')) {
       throw new Meteor.Error(403, 'User not permitted to add users to area');
     }
 
@@ -140,12 +146,12 @@ Meteor.methods({
   },
 
   removeUserFromArea: function (userId, areaId) {
-    if (!HospoHero.canUser('invite users')) {
-      throw new Meteor.Error(403, 'User not permitted to remove users from area');
-    }
-
     check(userId, HospoHero.checkers.MongoId);
     check(areaId, HospoHero.checkers.MongoId);
+
+    if (!hasUserPermissionInArea(areaId, 'invite users')) {
+      throw new Meteor.Error(403, 'User not permitted to remove users from area');
+    }
 
     let userToRemove = Meteor.users.findOne({_id: userId});
 

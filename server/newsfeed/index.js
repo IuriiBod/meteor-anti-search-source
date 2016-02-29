@@ -1,6 +1,6 @@
 Meteor.methods({
   createNewsfeed: function (text, ref, recipients) {
-    if (!HospoHero.isInOrganization()) {
+    if (!HospoHero.getCurrentAreaId(this.userId)) {
       logger.error('No user has logged in');
       throw new Meteor.Error(403, "User not permitted to create post");
     }
@@ -55,10 +55,11 @@ Meteor.methods({
   },
 
   updateNewsfeed: function (id, userId) {
-    if (!HospoHero.isInOrganization()) {
+    if (!HospoHero.getCurrentAreaId(this.userId)) {
       logger.error('No user has logged in');
       throw new Meteor.Error(403, "User not permitted to update post");
     }
+
     check(id, HospoHero.checkers.MongoId);
     check(userId, HospoHero.checkers.MongoId);
 

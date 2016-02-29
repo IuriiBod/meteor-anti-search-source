@@ -102,13 +102,22 @@ var adjustShiftStatus = function (updatedShift) {
   }
 };
 
+var canUserEditRoster = function(areaId = null) {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'edit roster');
+};
+
+var getAreaIdFromShift = function (shiftId) {
+  let shift = Shifts.findOne({_id: shiftId});
+  return shift ? shift.relations.areaId : null;
+};
 
 /*
  * Shift modification methods
  */
 Meteor.methods({
   createShift: function (newShiftInfo) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error(403, "User not permitted to create shifts");
     }
 
@@ -151,12 +160,11 @@ Meteor.methods({
   editShift: function (updatedShift) {
     check(updatedShift, HospoHero.checkers.ShiftDocument);
 
-    var userId = Meteor.userId();
-    if (!HospoHero.canUser('edit roster', userId)) {
+    if (!canUserEditRoster(getAreaIdFromShift(updatedShift._id))) {
       logger.error(403, "User not permitted to edit shifts");
     }
 
-    ShiftPropertyChangeLogger.trackChanges(updatedShift, userId);
+    ShiftPropertyChangeLogger.trackChanges(updatedShift, Meteor.userId());
 
     adjustShiftStatus(updatedShift);
 
@@ -168,7 +176,7 @@ Meteor.methods({
   deleteShift: function (shiftToDeleteId) {
     check(shiftToDeleteId, HospoHero.checkers.MongoId);
 
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster(getAreaIdFromShift(shiftToDeleteId))) {
       logger.error(403, "User not permitted to delete shifts");
     }
 

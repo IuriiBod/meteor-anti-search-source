@@ -1,6 +1,21 @@
+var canUserReceiveDeliveries = function(areaId = null) {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'receive deliveries');
+};
+
+var getAreaIdFromOrder = function(orderId) {
+  var order = StockOrders.findOne({_id: orderId});
+  return (order && order.relations) ? order.relations.areaId : null;
+};
+
+var getAreaIdFromReceipt = function(receiptId) {
+  var receipt = StockOrders.findOne({_id: receiptId});
+  return (receipt && receipt.relations) ? receipt.relations.areaId : null;
+};
+
 Meteor.methods({
   receiveDelivery: function (receiptId) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries(getAreaIdFromReceipt(receiptId))) {
       logger.error("User not permitted to receive delivery");
       throw new Meteor.Error(403, "User not permitted to receive delivery");
     }
@@ -27,7 +42,7 @@ Meteor.methods({
   },
 
   updateOrderItems: function (id, receiptId, status, info) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries(getAreaIdFromOrder(id))) {
       logger.error("User not permitted to update oreder items");
       throw new Meteor.Error(403, "User not permitted to update oreder items");
     }
@@ -97,7 +112,7 @@ Meteor.methods({
   },
 
   receiveOrderItems: function (id, receiptId, info) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries(getAreaIdFromOrder(id))) {
       logger.error("User not permitted to receive oreder items");
       throw new Meteor.Error(403, "User not permitted to receive oreder items");
     }

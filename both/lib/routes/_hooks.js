@@ -1,11 +1,10 @@
 let RoutePermissionChecker = class RoutePermissionChecker {
   constructor(routeInstance) {
     this._user = Meteor.user();
-    this._routeName = routeInstance.route.getName();
-  }
 
-  isOrganizationOwner() {
-    return !!Organizations.findOne({owners: this._user._id});
+    let routeName = routeInstance.route.getName();
+    this._currentRoutePermission = RoutePermissionChecker._permissionsByRouteName[routeName];
+    this._permissionChecker = new HospoHero.security.PermissionChecker();
   }
 
   checkRoutePermissions() {
@@ -13,8 +12,8 @@ let RoutePermissionChecker = class RoutePermissionChecker {
   }
 
   _checkUserPermissionForRoute() {
-    const permission = RoutePermissionChecker._permissionsByRouteName[this._routeName];
-    return permission && HospoHero.canUser(permission, this._user._id) || !permission;
+    let permission = this._currentRoutePermission;
+    return permission && this._permissionChecker.hasPermissionInArea(null, permission) || !permission;
   }
 
   _checkCurrentAreaNotArchived() {
@@ -29,7 +28,11 @@ let RoutePermissionChecker = class RoutePermissionChecker {
   }
 
   checkIsUserInOrganization() {
-    return HospoHero.isInOrganization(this._user._id);
+    return HospoHero.security.isUserInAnyOrganization();
+  }
+
+  isOrganizationOwner() {
+    return HospoHero.security.isCurrentOrganizationOwner();
   }
 };
 
@@ -60,12 +63,9 @@ let requireLogIn = function () {
         return this.next();
       }
     } else {
-      if (permissionChecker.isOrganizationOwner()) {
-        return this.next();
-      } else {
-        Router.go('createOrganization');
-        return this.next();
-      }
+      // if user isn't invited to any organization
+      Router.go('createOrganization');
+      return this.next();
     }
   } else {
     let goOptions = {};
@@ -92,7 +92,6 @@ let requireLogIn = function () {
       Router.go('signIn', {}, goOptions);
       return this.next();
     }
-
   }
 };
 
