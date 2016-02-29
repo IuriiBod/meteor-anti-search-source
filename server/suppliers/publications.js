@@ -15,3 +15,7 @@ Meteor.publishAuthorized("supplierProfile", function (id) {
     OrderReceipts.find({"supplier": id})
   ];
 });
+
+Meteor.publishAuthorized('suppliersNamesList', function (areaId) {
+  return Suppliers.find({'relations.areaId': areaId}, {fields: {_id: 1, name: 1}});
+});

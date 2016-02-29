@@ -79,9 +79,9 @@ let getReportForStocktakeMain = function (areaId, stocktakeMainId) {
   }
 };
 
-let getDetailedReportStockTakeTotal = (stocktakeMainId) => {
-  let stocktakesCursor = Stocktakes.find({version: stocktakeMainId}, {sort: {date: -1}});
-  let stocktakeTotalDetailedReport = new StocktakeTotalDetailedReport(stocktakesCursor.fetch());
+let getDetailedReportStockTakeTotal = (params) => {
+  let stocktakesCursor = Stocktakes.find({version: params.stocktakeMainId}, {sort: {date: -1}});
+  let stocktakeTotalDetailedReport = new StocktakeTotalDetailedReport(stocktakesCursor.fetch(), params);
   
   return stocktakeTotalDetailedReport.getReport();
 };
@@ -104,11 +104,11 @@ Meteor.methods({
     }
   },
 
-  getStocktakeTotalValueDetails(stocktakeMainId) {
+  getStocktakeTotalValueDetails(params) {
     if (this.userId) {
       let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
       if (currentAreaId) {
-        return getDetailedReportStockTakeTotal(stocktakeMainId);
+        return getDetailedReportStockTakeTotal(params);
       }
     } else {
       throw new Meteor.Error('Not authorized.');
