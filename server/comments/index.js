@@ -1,9 +1,10 @@
 Meteor.methods({
   createComment: function (comment, refType, recipients) {
-    if (!HospoHero.isInOrganization(Meteor.userId())) {
+    if (!HospoHero.getCurrentAreaId(this.userId)) {
       logger.error('User can\'t leave comments');
       throw new Meteor.Error(403, 'User can\'t leave comments');
     }
+
     check(comment, HospoHero.checkers.CommentChecker);
 
 

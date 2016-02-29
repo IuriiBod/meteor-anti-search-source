@@ -1,11 +1,16 @@
+var canUserEditRoster = function() {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit roster');
+};
+
 var canClockInOut = function (shiftId, user) {
   var assignedTo = Shifts.findOne({_id: shiftId}).assignedTo;
-  return (assignedTo && (assignedTo === user._id || HospoHero.canUser('edit roster')))
+  return (assignedTo && (assignedTo === user._id || canUserEditRoster()));
 };
 
 var linkToWeeklyRosterHelper = function () {
   return NotificationSender.urlFor('weeklyRoster', {date: this.rosterDate}, this);
-}
+};
 
 Meteor.methods({
   clockIn: function (id) {
@@ -37,7 +42,7 @@ Meteor.methods({
    */
   publishRoster: function (shiftDateQuery) {
     check(shiftDateQuery, HospoHero.checkers.WeekRange);
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error("User not permitted to publish shifts");
       throw new Meteor.Error(403, "User not permitted to publish shifts ");
     }
@@ -126,7 +131,8 @@ Meteor.methods({
 
   claimShift: function (shiftId) {
     var userId = Meteor.userId();
-    if (!HospoHero.canUser('be rosted', userId)) {
+    var checker = new HospoHero.security.PermissionChecker(userId);
+    if (!checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'be rosted')) {
       logger.error('User can\'t be rosted onto shifts');
       throw new Meteor.Error(404, 'User can\'t be rosted onto shifts');
     }

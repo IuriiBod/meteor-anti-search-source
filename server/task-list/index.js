@@ -1,6 +1,6 @@
 Meteor.methods({
   createTask: function (task) {
-    if (!HospoHero.isInOrganization()) {
+    if (!HospoHero.security.isUserInAnyOrganization(this.userId)) {
       logger.error('User not permitted to create tasks', {userId: Meteor.userId()});
       throw new Meteor.Error(403, 'User not permitted to create tasks', {userId: Meteor.userId()});
     }
@@ -10,7 +10,7 @@ Meteor.methods({
   },
 
   editTask: function (task) {
-    if (!HospoHero.isInOrganization()) {
+    if (!HospoHero.security.isUserInAnyOrganization(this.userId)) {
       logger.error('User not permitted to edit tasks', {userId: Meteor.userId()});
       throw new Meteor.Error(403, 'User not permitted to edit tasks', {userId: Meteor.userId()});
     }
@@ -20,7 +20,7 @@ Meteor.methods({
   },
 
   removeTask: function (task) {
-    if (!HospoHero.isInOrganization()) {
+    if (!HospoHero.security.isUserInAnyOrganization(this.userId)) {
       logger.error('User not permitted to remove tasks', {userId: Meteor.userId()});
       throw new Meteor.Error(403, 'User not permitted to remove tasks', {userId: Meteor.userId()});
     }

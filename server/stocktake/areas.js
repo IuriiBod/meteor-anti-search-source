@@ -1,6 +1,11 @@
+var canUserEditStocks = function() {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit stocks');
+};
+
 Meteor.methods({
   createGeneralArea: function (name) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to create general Areas");
       throw new Meteor.Error(403, "User not permitted to create general Areas");
     }
@@ -28,7 +33,7 @@ Meteor.methods({
   },
 
   editGeneralArea: function (id, newName) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to edit general areas");
       throw new Meteor.Error(403, "User not permitted to edit general areas");
     }
@@ -55,7 +60,7 @@ Meteor.methods({
   },
 
   deleteGeneralArea: function (id) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to delete general areas");
       throw new Meteor.Error(403, "User not permitted to delete general areas");
     }
@@ -81,7 +86,7 @@ Meteor.methods({
   },
 
   createSpecialArea: function (name, gareaId) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to create special areas");
       throw new Meteor.Error(403, "User not permitted to create special areas");
     }
@@ -134,7 +139,7 @@ Meteor.methods({
   },
 
   editSpecialArea: function (id, newName) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to edit special areas");
       throw new Meteor.Error(403, "User not permitted to edit special areas");
     }
@@ -163,7 +168,7 @@ Meteor.methods({
   },
 
   assignStocksToAreas: function (stockId, sareaId) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to assign stock to areas");
       throw new Meteor.Error(403, "User not permitted to assign stock to areas");
     }
@@ -191,7 +196,7 @@ Meteor.methods({
   },
 
   removeStocksFromAreas: function (stockId, sareaId, stockRefId) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to remove stocks from areas");
       throw new Meteor.Error(404, "User not permitted to remove stocks from areas");
     }
@@ -226,7 +231,7 @@ Meteor.methods({
   },
 
   deleteSpecialArea: function (id) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to delete general areas");
       throw new Meteor.Error(403, "User not permitted to delete general areas");
     }

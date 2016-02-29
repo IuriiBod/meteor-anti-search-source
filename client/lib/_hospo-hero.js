@@ -1,8 +1,12 @@
-Namespace('HospoHero.security',{
+Namespace('HospoHero.security', {
   hasPermissionInAreaTo: function (permission) {
     let permissionChecker = new HospoHero.security.PermissionChecker();
-    let currentAreaId = HospoHero.getCurrentAreaId();
-    return permissionChecker.hasPermissionInArea(currentAreaId, permission);
+    return permissionChecker.hasPermissionInArea(null, permission);
+  },
+  isCurrentOrganizationOwner: function () {
+    let currentOrganization = HospoHero.getOrganizationIdBasedOnCurrentArea(Meteor.userId());
+    let permissionChecker = new HospoHero.security.PermissionChecker();
+    return permissionChecker.isOrganizationOwner(currentOrganization);
   }
 });
 
