@@ -38,8 +38,7 @@ Meteor.methods({
   deleteArea: function (areaId) {
     check(areaId, HospoHero.checkers.MongoId);
 
-    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
-    if (!permissionChecker.hasPermissionInArea(areaId, 'edit areas')) {
+    if (!hasUserPermissionInArea(areaId, 'edit areas')) {
       logger.error('User not permitted to delete this area');
       throw new Meteor.Error(403, 'User not permitted to delete this area');
     }

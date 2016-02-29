@@ -1,6 +1,6 @@
 var canUserEditRoster = function () {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit roster');
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit roster');
 };
 
 Meteor.methods({

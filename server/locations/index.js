@@ -62,8 +62,8 @@ Meteor.methods({
   editLocation: function (updatedLocation) {
     check(updatedLocation, HospoHero.checkers.LocationDocument);
 
-    let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-    if (!checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit locations')) {
+    let checker = new HospoHero.security.PermissionChecker();
+    if (!checker.hasPermissionInLocation(updatedLocation._id, 'edit locations')) {
       throw new Meteor.Error(403, 'User not permitted to edit locations');
     }
 
