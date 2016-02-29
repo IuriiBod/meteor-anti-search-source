@@ -16,7 +16,7 @@ Template.orderReceive.helpers({
         if (!_.isFinite(count) || count < 0) {
           count = order.countOrdered;
         }
-        cost += parseInt(count) * parseFloat(order.unitPrice);
+        cost += parseFloat(count) * parseFloat(order.unitPrice);
       });
     }
     return cost;
