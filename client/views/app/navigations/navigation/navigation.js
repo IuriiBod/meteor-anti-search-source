@@ -22,8 +22,18 @@ var menuEntries = [
     title: 'Schedules',
     icon: 'fa-calendar-o',
     permission: 'view roster',
-    activeOnRoutes: ['weeklyRoster', 'templateWeeklyRoster'],
+    activeOnRoutes: ['managerCalendar', 'weeklyRoster', 'templateWeeklyRoster'],
     subMenuEntries: [
+      {
+        title: 'Daily',
+        route: 'managerCalendar',
+        permission: 'edit calendar',
+        params: function () {
+          return {
+            date: HospoHero.dateUtils.shortDateFormat(new Date())
+          }
+        }
+      },
       {
         title: 'Weekly',
         route: 'weeklyRoster',
@@ -128,17 +138,6 @@ var menuEntries = [
     ]
   },
   {
-    title: 'Daily Calendar',
-    icon: 'fa-calendar',
-    route: 'managerCalendar',
-    permission: 'edit calendar',
-    params: function () {
-      return {
-        date: HospoHero.dateUtils.shortDateFormat(new Date())
-      }
-    }
-  },
-  {
     title: 'Meetings',
     icon: 'fa-users',
     route: 'meetings',
@@ -170,6 +169,10 @@ var menuEntries = [
 Template.navigation.helpers({
   dashboardEntry: function () {
     return dashboardEntry;
+  },
+
+  isUserInAnyOrganization: function () {
+    return HospoHero.security.isUserInAnyOrganization();
   },
 
   menuEntries: function () {

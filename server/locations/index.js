@@ -1,3 +1,8 @@
+const checkOrganizationOwner = function (organizationId, userId) {
+  let permissionChecker = new HospoHero.security.PermissionChecker(userId);
+  return permissionChecker.isOrganizationOwner(organizationId);
+};
+
 Meteor.methods({
   createLocation: function (location) {
     var defaultLocation = {
@@ -10,21 +15,23 @@ Meteor.methods({
 
     check(location, HospoHero.checkers.LocationDocument);
 
-    if (!HospoHero.isOrganizationOwner()) {
+    if (!checkOrganizationOwner(location.organizationId, this.userId)) {
       throw new Meteor.Error(403, 'User not permitted to create location');
     }
+
     // Create location
     var id = Locations.insert(location);
     logger.info('Location was created', {locationId: id});
   },
 
   deleteLocation: function (locationId) {
-    if (!HospoHero.isOrganizationOwner()) {
+    check(locationId, HospoHero.checkers.MongoId);
+
+    let location = Locations.findOne({_id: locationId});
+    if (!checkOrganizationOwner(location.organizationId,this.userId)) {
       logger.error("User not permitted to delete this location");
       throw new Meteor.Error(403, "User not permitted to delete this location");
     }
-
-    check(locationId, HospoHero.checkers.MongoId);
 
     //remove location's members
     //updating user in Meteor.users collection requires user id
@@ -55,8 +62,8 @@ Meteor.methods({
   editLocation: function (updatedLocation) {
     check(updatedLocation, HospoHero.checkers.LocationDocument);
 
-    var userId = Meteor.userId();
-    if (!HospoHero.canUser('edit locations', userId)) {
+    let checker = new HospoHero.security.PermissionChecker();
+    if (!checker.hasPermissionInLocation(updatedLocation._id, 'edit locations')) {
       throw new Meteor.Error(403, 'User not permitted to edit locations');
     }
 
