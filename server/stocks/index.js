@@ -1,6 +1,11 @@
-var canUserEditStocks = function() {
-  var checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit stocks');
+var canUserEditStocks = function(areaId = null) {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'edit stocks');
+};
+
+var getAreaIdFromIngredient = function (ingredientId) {
+  var ingredient = Ingredients.findOne({_id: ingredientId});
+  return (ingredient && ingredient.relations) ? ingredient.relations.areaId : null;
 };
 
 Meteor.methods({
@@ -52,12 +57,13 @@ Meteor.methods({
   },
 
   editIngredient: function (id, info) {
-    if (!canUserEditStocks()) {
+    check(id, HospoHero.checkers.MongoId);
+
+    if (!canUserEditStocks(getAreaIdFromIngredient(id))) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
 
-    check(id, HospoHero.checkers.MongoId);
 
     var item = Ingredients.findOne({_id: id});
     if (!item) {
@@ -113,7 +119,7 @@ Meteor.methods({
   },
 
   archiveIngredient: function (id, status) {
-    if (!canUserEditStocks()) {
+    if (!canUserEditStocks(getAreaIdFromIngredient(id))) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
@@ -172,6 +178,12 @@ Meteor.methods({
   },
 
   duplicateIngredient: function (ingredientId, areaId, quantity) {
+
+    if (!canUserEditStocks(areaId)) {
+      logger.error("User not permitted to create ingredients");
+      throw new Meteor.Error(403, "User not permitted to create ingredients");
+    }
+
     var ingredient = Ingredients.findOne({_id: ingredientId});
 
     if (ingredient && ingredient.relations.areaId != areaId) {

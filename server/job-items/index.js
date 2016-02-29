@@ -1,10 +1,10 @@
 var canUserEditJobs = function () {
-  let checker = new HospoHero.security.PermissionChecker(Meteor.userId());
-  return checker.hasPermissionInArea(HospoHero.getCurrentAreaId(), 'edit jobs');
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit jobs');
 };
 
 Meteor.methods({
-  'createJobItem': function (newJobItemInfo) {
+  createJobItem: function (newJobItemInfo) {
     if (!canUserEditJobs()) {
       logger.error(403, "User not permitted to create jobs");
     }
@@ -18,7 +18,7 @@ Meteor.methods({
       status: 'active'
     };
 
-    var newJobItemInfo = _.extend(newJobItemInfo, defaultJobItemProperties);
+    newJobItemInfo = _.extend(newJobItemInfo, defaultJobItemProperties);
 
     var createdJobItemId = JobItems.insert(newJobItemInfo);
 
@@ -29,7 +29,7 @@ Meteor.methods({
     return createdJobItemId;
   },
 
-  'editJobItem': function (newJobItemInfo) {
+  editJobItem: function (newJobItemInfo) {
     if (!canUserEditJobs()) {
       logger.error(403, "User not permitted to edit jobs");
     }
@@ -44,7 +44,7 @@ Meteor.methods({
     return newJobItemInfo._id;
   },
 
-  'deleteJobItem': function (id) {
+  deleteJobItem: function (id) {
     if (!canUserEditJobs()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
@@ -110,7 +110,7 @@ Meteor.methods({
     return quantity === false ? jobItemId : {_id: jobItemId, quantity: quantity};
   },
 
-  'archiveJobItem': function (id) {
+  archiveJobItem: function (id) {
     var checkIfJobItemExistInActiveMenu = function () {
       /* defining additional function */
       var existInActiveMenus = MenuItems.find({
