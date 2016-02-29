@@ -62,7 +62,7 @@ iron:url@1.0.11
 joshowens:timezone-picker@0.1.2
 jquery@1.11.4
 jquery-sparkline@2.1.2
-jss:anti-search-source@1.0.1
+jss:anti-search-source@0.2.5
 jss:blaze-states@0.0.1
 jss:meteor-google-prediction@0.3.0
 jss:moment-timezone@0.5.0

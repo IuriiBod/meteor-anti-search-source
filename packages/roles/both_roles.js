@@ -42,21 +42,27 @@ Roles.getRolesByAction = function (actions, areaId) {
 
 /**
  *
- * @param {string/Array} actions
- * @param {string} areaId area's ID
+ * @param {string|Array} actions
+ * @param {string|Array} areaIds area's ID
  * @returns CollectionCursor
  */
-Roles.getUsersByActionForArea = function (actions, areaId) {
-  var permissionRolesIds = Roles.getRolesByAction(actions, area._id).map(function (role) {
+Roles.getUsersByActionForArea = function (actions, areaIds) {
+  var rolesIds = Roles.getRolesByAction(actions, area._id).map(function (role) {
     return role._id
   });
 
-  var rolesQuery = {};
-  rolesQuery[areaId] = {$in: permissionRolesIds};
+  if (!Array.isArray(areaIds)) {
+    areaIds = [areaIds];
+  }
 
-  return Meteor.users.find({
-    roles: rolesQuery
+  var query = {};
+  query.$or.areaIds.map(function (areaId) {
+    var queryEntry = {};
+    queryEntry['roles.' + areaId] = {$in: rolesIds};
+    return queryEntry;
   });
+
+  return Meteor.users.find(query);
 };
 
 /**
