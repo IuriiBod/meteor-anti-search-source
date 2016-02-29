@@ -11,7 +11,7 @@ Template.calendarHeader.helpers({
   },
 
   routeName() {
-    return this.userId ? 'calendar' : 'managerCalendar';
+    return this.isManagerCalendar ? 'managerCalendar' : 'calendar';
   },
 
   todayCalendarRouteData() {
@@ -19,7 +19,7 @@ Template.calendarHeader.helpers({
       date: HospoHero.dateUtils.shortDateFormat()
     };
 
-    if (this.userId) {
+    if (!this.isManagerCalendar) {
       routeData.type = 'day';
       routeData.userId = Meteor.userId();
     }
