@@ -28,9 +28,8 @@ Template.stockReport.events({
   'click .first-stocktake-total, click .second-stocktake-total': function (event, tmpl) {
     event.preventDefault();
     let params = {};
-    let firstStocktakeTotal = event.target.className === 'first-stocktake-total';
 
-    if (firstStocktakeTotal) {
+    if (event.target.className === 'first-stocktake-total') {
       params.date = this.firstStocktake.date.replace(/\//g, '-');
       params.stocktakeMainId = this.firstStocktake.stocktakeMainId;
     } else {

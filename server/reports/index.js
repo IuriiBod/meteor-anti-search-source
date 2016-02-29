@@ -105,6 +105,12 @@ Meteor.methods({
   },
 
   getStocktakeTotalValueDetails(params) {
+    check(params, {
+      stocktakeMainId: HospoHero.checkers.MongoId,
+      supplierId: HospoHero.checkers.NullableMongoId,
+      searchText: Match.OneOf(String, null)
+    });
+
     if (this.userId) {
       let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
       if (currentAreaId) {

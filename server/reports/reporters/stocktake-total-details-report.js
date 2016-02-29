@@ -7,6 +7,10 @@ StocktakeTotalDetailedReport = class {
     this._getAllIngredients();
   }
 
+  getReport() {
+    return this._getIngsOfCurrentStocktake();
+  }
+
   _query() {
     let query = {};
     if (this._supplierId) {
@@ -22,6 +26,7 @@ StocktakeTotalDetailedReport = class {
   _getAllIngredients() {
     this._ingredientsList = Ingredients.find(this._query()).fetch();
   }
+
   _getIngsOfCurrentStocktake() {
     let ingredientsList = [];
 
@@ -44,9 +49,5 @@ StocktakeTotalDetailedReport = class {
 
   _filterIngredient(stockId) {
     return _.filter(this._ingredientsList, (ingredient) => ingredient._id === stockId);
-  }
-
-  getReport() {
-    return this._getIngsOfCurrentStocktake();
   }
 };
