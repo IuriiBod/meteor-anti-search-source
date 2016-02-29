@@ -5,7 +5,7 @@
       <td><b>Project Name:</b></td>
       <td>
         {{#if projectCreator}}
-          {{> ghostEditable value=project.title onValueChanged=saveProject}}
+          {{> ghostEditable value=project.title onValueChanged=onValueChanged}}
         {{else}}
           {{project.title}}
         {{/if}}
@@ -31,7 +31,7 @@
       <td><b>Status:</b></td>
       <td>
         {{#each projectStatusButtons}}
-          {{> projectStatusButton button=this activeButton=project.status onButtonClick=onStatusChange}}
+          {{> projectStatusButton button=this activeButton=activeButton onButtonClick=onStatusChange}}
         {{/each}}
       </td>
     </tr>

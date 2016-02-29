@@ -18,6 +18,19 @@ Template.projectDetails.onCreated(function () {
       return Projects.findOne({_id: this.data.id});
     }
   };
+
+  this.saveProject = () => {
+    return (field, newValue) => {
+      let project = this.project();
+      project[field] = newValue;
+
+      if (!this.data.id) {
+        this.createProjectObject.set(project);
+      } else {
+        Meteor.call('updateProject', project, HospoHero.handleMethodResult());
+      }
+    }
+  }
 });
 
 
@@ -34,21 +47,7 @@ Template.projectDetails.helpers({
     }
   },
 
-  // TODO: Fix a strange bug with cycling
-  //saveProject() {
-  //  const tmpl = Template.instance();
-  //
-  //  return (field, newValue) => {
-  //    console.log('ne', newValue);
-  //
-  //    let project = tmpl.project();
-  //    project[field] = newValue;
-  //
-  //    if (!tmpl.data.id) {
-  //      tmpl.createProjectObject.set(project);
-  //    } else {
-  //      Meteor.call('updateProject', project, HospoHero.handleMethodResult());
-  //    }
-  //  }
-  //}
+  saveProject() {
+    return Template.instance().saveProject;
+  }
 });

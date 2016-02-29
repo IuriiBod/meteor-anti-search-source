@@ -8,20 +8,24 @@ const projectStatusButtons = {
 
 Template.projectCreateEdit.helpers({
   onValueChanged() {
-    return () => {
-      return this.saveProject;
-    };
+    let saveProject = this.saveProject();
+    return (newValue) => {
+      saveProject('title', newValue);
+    }
+  },
+
+  activeButton () {
+    const templateData = Template.parentData(1);
+    return templateData.project.status;
   },
 
   projectCreator() {
-    console.log('JHG', !this.project._id || this.project.createdBy === Meteor.userId());
-
     return !this.project._id || this.project.createdBy === Meteor.userId();
   },
 
   timeComboEditableParams () {
     let project = this.project;
-
+    let saveProject = this.saveProject();
     return {
       withoutIcon: true,
       minuteStepping: 10,
@@ -29,20 +33,21 @@ Template.projectCreateEdit.helpers({
       secondTime: project.endTime,
       onSubmit: function (startTime, endTime) {
         let applyTime = HospoHero.dateUtils.applyTimeToDate;
-        this.saveProject('startTime', applyTime(project.startTime, startTime));
-        this.saveProject('endTime', applyTime(project.endTime, endTime));
+        saveProject('startTime', applyTime(project.startTime, startTime));
+        saveProject('endTime', applyTime(project.endTime, endTime));
       }
     }
   },
 
   onDateChange () {
     let project = this.project;
+    let saveProject = this.saveProject();
 
     return (newDate) => {
       if (project.startTime.valueOf() !== newDate.valueOf()) {
         let applyTimeToDate = HospoHero.dateUtils.applyTimeToDate;
-        this.saveProject('startTime', applyTimeToDate(newDate, project.startTime));
-        this.saveProject('endTime', applyTimeToDate(newDate, project.endTime));
+        saveProject('startTime', applyTimeToDate(newDate, project.startTime));
+        saveProject('endTime', applyTimeToDate(newDate, project.endTime));
       }
     }
   },
@@ -57,8 +62,10 @@ Template.projectCreateEdit.helpers({
   },
 
   onStatusChange () {
+    let saveProject = Template.parentData(1).saveProject();
+
     return (newStatus) => {
-      this.saveProject('status', newStatus);
+      saveProject('status', newStatus);
     }
   }
 });
@@ -74,14 +81,17 @@ Template.projectCreateEdit.events({
   }
 });
 
-function addMemberToTheProject (tmplData, memberType) {
+
+function addMemberToTheProject(tmplData, memberType) {
   let project = tmplData.project;
+  let saveProject = tmplData.saveProject();
+
   const selectedUsers = _.union(project.lead, project.team);
 
   let onUserSelect = () => {
     return (userId) => {
       project[memberType].push(userId);
-      tmplData.saveProject(memberType, project[memberType]);
+      saveProject(memberType, project[memberType]);
     }
   };
 
