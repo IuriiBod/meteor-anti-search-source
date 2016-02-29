@@ -1,12 +1,12 @@
 Template.stockReport.onCreated(function () {
   this.reports = new ReactiveArray();
-  this.lastReportedStocktakeMainId = null;
+  let lastReportedStocktakeMainId = null;
 
   this.uploadNextStockReport = function () {
-    Meteor.call('getNextStocktakeReport', this.lastReportedStocktakeMainId, HospoHero.handleMethodResult((result) => {
+    Meteor.call('getNextStocktakeReport', lastReportedStocktakeMainId, HospoHero.handleMethodResult((result) => {
       if (result) {
         this.reports.push(result.report);
-        this.lastReportedStocktakeMainId = result.report.secondStocktake.stocktakeMainId;
+        lastReportedStocktakeMainId = result.report.secondStocktake.stocktakeMainId;
       }
     }));
   };
