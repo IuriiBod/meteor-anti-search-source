@@ -26,7 +26,7 @@ Template.totalValueDetails.onRendered(function () {
 Template.totalValueDetails.helpers({
   stocks() {
     let stocksList = Template.instance().stocks.get();
-    return stocksList.length && stocksList.sort((a, b) => b.stockTotalValue - a.stockTotalValue);
+    return stocksList && stocksList.length && stocksList.sort((a, b) => b.stockTotalValue - a.stockTotalValue);
   },
 
   suppliers() {

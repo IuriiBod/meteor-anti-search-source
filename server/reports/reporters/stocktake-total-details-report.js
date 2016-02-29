@@ -13,7 +13,7 @@ StocktakeTotalDetailedReport = class {
       query.suppliers = this._supplierId;
     }
     if (this._searchText) {
-      query.description = {$regex: `${this._searchText}`, $options: 'ig'};
+      query.description = {$regex: `${this._searchText}`, $options: 'i'};
     }
 
     return query;
