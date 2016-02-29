@@ -61,8 +61,10 @@ Template.projectCreateEdit.helpers({
       secondTime: project.endTime,
       onSubmit: function (startTime, endTime) {
         let applyTime = HospoHero.dateUtils.applyTimeToDate;
-        saveProject('startTime', applyTime(project.startTime, startTime));
-        saveProject('endTime', applyTime(project.endTime, endTime));
+        saveProject({
+          startTime: applyTime(project.startTime, startTime),
+          endTime: applyTime(project.endTime, endTime)
+        });
       }
     }
   },
@@ -74,8 +76,11 @@ Template.projectCreateEdit.helpers({
     return (newDate) => {
       if (project.startTime.valueOf() !== newDate.valueOf()) {
         let applyTimeToDate = HospoHero.dateUtils.applyTimeToDate;
-        saveProject('startTime', applyTimeToDate(newDate, project.startTime));
-        saveProject('endTime', applyTimeToDate(newDate, project.endTime));
+
+        let startTime = applyTimeToDate(newDate, project.startTime);
+        let endTime = applyTimeToDate(newDate, project.endTime);
+
+        saveProject({startTime: startTime, endTime: endTime});
       }
     }
   },

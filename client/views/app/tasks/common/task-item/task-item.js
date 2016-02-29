@@ -21,6 +21,13 @@ var references = {
     route: 'meetingDetails',
     routeIdParam: 'id',
     nameField: 'title'
+  },
+  projects: {
+    collection: Projects,
+    icon: 'fa-file-o',
+    route: 'projectDetails',
+    routeIdParam: 'id',
+    nameField: 'title'
   }
 };
 

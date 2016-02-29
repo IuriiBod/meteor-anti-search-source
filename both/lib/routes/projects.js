@@ -1,6 +1,10 @@
 Router.route('/projects', {
   name: 'projectsList',
-  template: 'projectsList'
+  template: 'projectsList',
+
+  waitOn() {
+    return Meteor.subscribe('projects', Meteor.userId())
+  }
 });
 
 Router.route('/create-project', {
@@ -17,6 +21,10 @@ Router.route('/create-project', {
 Router.route('/project/:id', {
   name: 'projectDetails',
   template: 'projectDetails',
+
+  waitOn() {
+    return Meteor.subscribe('project', this.params.id, Meteor.userId())
+  },
 
   data() {
     return {

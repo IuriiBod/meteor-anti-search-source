@@ -15,7 +15,8 @@ Meteor.methods({
         supplier: Suppliers,
         taskItem: TaskList,
         meeting: Meetings,
-        noteItem: ManagerNotes
+        noteItem: ManagerNotes,
+        project: Projects
       };
       return typeCollectionRelations[referenceType].findOne({_id: referenceId});
     };
@@ -27,7 +28,8 @@ Meteor.methods({
         stockOrders: 'stocktakeOrdering',
         supplier: 'supplierProfile',
         taskItem: 'taskList',
-        meeting: 'meetingDetails'
+        meeting: 'meetingDetails',
+        project: 'projectDerails'
       };
       var routeName = routesRelations[referenceType];
       return referenceType === 'taskItem' ? {

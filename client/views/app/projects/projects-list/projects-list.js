@@ -32,8 +32,7 @@ Template.projectsList.onCreated(function () {
 
 Template.projectsList.helpers({
   projects() {
-    //return Template.instance().searchSource.searchResult({sort: {startTime: 1}});
-    return [];
+    return Template.instance().searchSource.searchResult({sort: {startTime: 1}});
   },
 
   filterTypes () {
