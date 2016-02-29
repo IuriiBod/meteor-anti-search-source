@@ -6,7 +6,7 @@ Template.totalValueDetails.onCreated(function () {
   this.getValueDetails = (searchText) => {
     let params = {
       stocktakeMainId: this.data.stocktakeMainId,
-      supplierId: this.supplier.get() === 'All Suppliers' ? null : this.supplier.get()._id,
+      supplierId: this.supplier.get() === 'All Suppliers' ? null : this.supplier.get(),
       searchText: searchText && searchText.length ? searchText : null
     };
     Meteor.call('getStocktakeTotalValueDetails', params, HospoHero.handleMethodResult((result) => {
@@ -19,18 +19,18 @@ Template.totalValueDetails.onCreated(function () {
   this.getValueDetails();
 });
 
+Template.totalValueDetails.onRendered(function () {
+  this.$('.suppliers-list').select2();
+});
+
 Template.totalValueDetails.helpers({
   stocks() {
-    return Template.instance().stocks.get();
+    let stocksList = Template.instance().stocks.get();
+    return stocksList.length && stocksList.sort((a, b) => b.stockTotalValue - a.stockTotalValue);
   },
 
   suppliers() {
     return Suppliers.find();
-  },
-
-  currentSupplier() {
-    let supplier = Template.instance().supplier.get();
-    return supplier.name || supplier;
   }
 });
 
@@ -45,11 +45,12 @@ Template.totalValueDetails.events({
     tmpl.timer.setTimeout(callFunc, 300);
   },
 
-  'click .supplier': function (event, tmpl) {
+  'change .suppliers-list': function (event, tmpl) {
     event.preventDefault();
+    let supplierId = event.target.value;
 
     tmpl.$('.search-stock-items').val('');
-    tmpl.supplier.set(this._id ? this : 'All Suppliers');
+    tmpl.supplier.set(supplierId);
     tmpl.getValueDetails();
   }
 });

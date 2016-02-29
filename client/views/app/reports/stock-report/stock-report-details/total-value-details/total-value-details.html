@@ -8,16 +8,12 @@
             <input type="text" class="form-control search-stock-items" placeholder="Search" />
           </div>
           <div class="col-lg-3">
-            <button data-toggle="dropdown" class="btn btn-white form-control dropdown-toggle">
-              {{currentSupplier}}
-            </button>
-            <span class="caret caret-pulled-right pull-right"></span>
-            <ul class="dropdown-menu filter-menus">
-              <li class="supplier"><a href='#'>All</a></li>
+            <select class="btn btn-white suppliers-list">
+              <option value="All Suppliers">All Suppliers</option>
               {{#each suppliers}}
-                <li class="supplier"><a href='#'>{{name}}</a></li>
+                <option value={{_id}}>{{name}}</option>
               {{/each}}
-            </ul>
+            </select>
           </div>
         </div>
         <div class="ibox">
