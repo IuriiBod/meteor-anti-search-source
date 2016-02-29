@@ -6,6 +6,34 @@ const projectStatusButtons = {
 };
 
 
+Template.projectCreateEdit.onCreated(function () {
+  const project = this.data.project;
+  this.selectedUsers = new ReactiveArray(_.union(project.lead, project.team));
+
+  this.autorun(() => {
+    this.selectedUsers.depend();
+    this.subscribe('selectedUsersList', this.selectedUsers.array());
+  });
+
+  this.addMemberToTheProject = (memberType) => {
+    let saveProject = this.data.saveProject();
+
+    let onUserSelect = () => {
+      return (userId) => {
+        project[memberType].push(userId);
+        saveProject(memberType, project[memberType]);
+        this.selectedUsers.push(userId);
+      }
+    };
+
+    FlyoutManager.open('usersSearchFlyout', {
+      selectedUsers: this.selectedUsers.array(),
+      onUserSelect: onUserSelect
+    });
+  };
+});
+
+
 Template.projectCreateEdit.helpers({
   onValueChanged() {
     let saveProject = this.saveProject();
@@ -73,30 +101,14 @@ Template.projectCreateEdit.helpers({
 
 Template.projectCreateEdit.events({
   'click .add-lead' (event, tmpl) {
-    addMemberToTheProject(tmpl.data, 'lead');
+    tmpl.addMemberToTheProject('lead');
   },
 
   'click .add-team' (event, tmpl) {
-    addMemberToTheProject(tmpl.data, 'team');
+    tmpl.addMemberToTheProject('team');
   }
 });
 
-
-function addMemberToTheProject(tmplData, memberType) {
-  let project = tmplData.project;
-  let saveProject = tmplData.saveProject();
-
-  const selectedUsers = _.union(project.lead, project.team);
-
-  let onUserSelect = () => {
-    return (userId) => {
-      project[memberType].push(userId);
-      saveProject(memberType, project[memberType]);
-    }
-  };
-
-  FlyoutManager.open('usersSearchFlyout', {
-    selectedUsers: selectedUsers,
-    onUserSelect: onUserSelect
-  });
-}
+Template.projectCreateEdit.onDestroyed(function () {
+  this.selectedUsers.clear();
+});
