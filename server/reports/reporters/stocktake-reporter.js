@@ -1,10 +1,8 @@
 StocktakesReporter = class {
-  constructor(firstStocktake, secondStocktake, areaId) {
+  constructor(firstStocktakeGroup, secondStocktakeGroup, areaId) {
     this._areaId = areaId;
-    this._firstStocktakeMainId = firstStocktake.stocktakeMainId;
-    this._secondStocktakeMainId = secondStocktake.stocktakeMainId;
-    this._firstStocktakeGroup = firstStocktake.group;
-    this._secondStocktakeGroup = secondStocktake.group;
+    this._firstStocktakeGroup = firstStocktakeGroup;
+    this._secondStocktakeGroup = secondStocktakeGroup;
 
     this._setDates();
   }
@@ -30,12 +28,12 @@ StocktakesReporter = class {
 
     return {
       firstStocktake: {
-        stocktakeMainId: this._firstStocktakeMainId,
+        stocktakeMainId: this._firstStocktakeGroup[0].version,
         date: this._fromDate,
         total: actualReporter.firstStocktakeTotal
       },
       secondStocktake: {
-        stocktakeMainId: this._secondStocktakeMainId,
+        stocktakeMainId: this._secondStocktakeGroup[0].version,
         date: this._toDate,
         total: actualReporter.secondStocktakeTotal
       },

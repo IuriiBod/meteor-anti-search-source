@@ -1,18 +1,17 @@
 StocktakeTotalDetailedReport = class {
-  constructor(stocktakeGroup, searchingParams) {
+  constructor(stocktakeGroup, areaId, searchingParams) {
     this._stocktakeGroup = stocktakeGroup;
     this._supplierId = searchingParams.supplierId;
     this._searchText = searchingParams.searchText;
+    this._areaId = areaId;
 
     this._getAllIngredients();
   }
 
-  getReport() {
-    return this._getIngsOfCurrentStocktake();
-  }
-
   _query() {
-    let query = {};
+    let query = {
+      'relations.areaId': this._areaId
+    };
     if (this._supplierId) {
       query.suppliers = this._supplierId;
     }
@@ -23,13 +22,25 @@ StocktakeTotalDetailedReport = class {
     return query;
   }
 
-  _getAllIngredients() {
-    this._ingredientsList = Ingredients.find(this._query()).fetch();
+  _options() {
+    return {
+      fields: {
+        _id: 1,
+        description: 1
+      }
+    }
   }
 
-  _getIngsOfCurrentStocktake() {
-    let ingredientsList = [];
+  _getAllIngredients() {
+    this._ingredientsList = Ingredients.find(this._query(), this._options()).fetch();
+  }
 
+  _filterIngredient(stockId) {
+    return _.filter(this._ingredientsList, (ingredient) => ingredient._id === stockId);
+  }
+
+  getIngredientsOfCurrentStocktake() {
+    let ingredientsList = [];
     this._stocktakeGroup.forEach((stock) => {
       let filteredIng = this._filterIngredient(stock.stockId);
       if (filteredIng.length) {
@@ -45,9 +56,5 @@ StocktakeTotalDetailedReport = class {
     });
 
     return ingredientsList;
-  }
-
-  _filterIngredient(stockId) {
-    return _.filter(this._ingredientsList, (ingredient) => ingredient._id === stockId);
   }
 };
