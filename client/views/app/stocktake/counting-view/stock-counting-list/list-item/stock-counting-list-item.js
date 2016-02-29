@@ -13,7 +13,7 @@ Template.stockCountingListItem.onRendered(function() {
     var stockRefId = tmpl.data.stocktakeItem ? tmpl.data.stocktakeItem._id : tmpl.getIngredientFromStock() && tmpl.getIngredientFromStock()._id;
     var stockId = tmpl.data.stocktakeItem ? tmpl.data.stocktakeItem.stockId : tmpl.data.ingredient._id;
     if (newValue) {
-      var count = isNaN(newValue) ? 0 : parseFloat(newValue);
+      var count = isNaN(newValue) ? 0 : Math.round(parseFloat(newValue) * 100) / 100;
       var info = {
         version: tmpl.data.stockTakeData.stockTakeId,
         generalArea: tmpl.data.stockTakeData.activeGeneralArea,
@@ -40,6 +40,7 @@ Template.stockCountingListItem.onRendered(function() {
     defaultValue: 0,
     autotext: 'auto',
     display: function (value, response) {
+
     },
     success: onCountChanged
   });

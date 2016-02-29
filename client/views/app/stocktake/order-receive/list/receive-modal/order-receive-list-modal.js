@@ -63,7 +63,7 @@ Template.receiveModal.events({
     var receipt = tmpl.data.receipt;
     var order = tmpl.data.order;
     var info = {
-      'quantity': parseInt(invoiceQuantity)
+      'quantity': Math.round(parseFloat(invoiceQuantity) * 100) / 100
     };
 
     if (invoiceQuantity && order._id && receipt._id) {
