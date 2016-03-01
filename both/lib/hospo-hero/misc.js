@@ -293,5 +293,17 @@ Namespace('HospoHero.misc', {
     } else {
       return _.difference(array2, array1);
     }
+  },
+
+  timer() {
+    return {
+      timeoutId: 0,
+      setTimeout(executeFunc, timeout) {
+        this.timeoutId = Meteor.setTimeout(executeFunc, timeout);
+      },
+      clearTimeout() {
+        Meteor.clearTimeout(this.timeoutId);
+      }
+    }
   }
 });
