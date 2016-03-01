@@ -47,13 +47,19 @@ Roles.getRolesByAction = function (actions, areaId) {
  * @returns CollectionCursor
  */
 Roles.getUsersByActionForArea = function (actions, areaIds) {
-  var rolesIds = Roles.getRolesByAction(actions, area._id).map(function (role) {
-    return role._id
-  });
 
   if (!Array.isArray(areaIds)) {
     areaIds = [areaIds];
   }
+
+  var rolesIds = [];
+  areaIds.forEach(function (areaId) {
+    var currentAreaRoles = Roles.getRolesByAction(actions, areaId).map(function (role) {
+      return role._id
+    });
+
+    rolesIds = rolesIds.concat(currentAreaRoles);
+  });
 
   var query = {};
   query.$or = areaIds.map(function (areaId) {

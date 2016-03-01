@@ -4,7 +4,6 @@
  * @param locationId
  * @constructor
  */
-
 ActualSalesImporter = class ActualSalesImporter {
   constructor(locationId) {
     this._location = Locations.findOne({_id: locationId});
