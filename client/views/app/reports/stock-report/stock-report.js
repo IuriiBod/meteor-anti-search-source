@@ -23,5 +23,11 @@ Template.stockReport.helpers({
 Template.stockReport.events({
   'click #load-stocktake-report': function (event, tmpl) {
     tmpl.uploadNextStockReport();
+  },
+
+  'click .difference-text': function (event, tmpl) {
+    event.preventDefault();
+
+    Router.go('stockVarianceReport');
   }
 });

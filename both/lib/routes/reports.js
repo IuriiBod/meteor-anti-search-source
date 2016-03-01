@@ -53,3 +53,8 @@ Router.route('/stock-report', {
   name: "stockReport",
   template: "stockReport"
 });
+
+Router.route('/stock-variance-report', {
+  name: 'stockVarianceReport',
+  template: 'stockVarianceReport'
+});
