@@ -1,5 +1,5 @@
 <template name="meetingDetailsTable">
-  <table class="table">
+  <table class="table m-n">
     <thead>
     <tr>
       <td><b>Title:</b></td>
@@ -53,12 +53,14 @@
         </div>
       </td>
     </tr>
-    <tr>
-      <td><b>Are You Attending?</b></td>
-      <td>
-        {{> attendingButtons meeting=meeting}}
-      </td>
-    </tr>
+    {{# if canAttendInMeeting}}
+      <tr>
+        <td><b>Are You Attending?</b></td>
+        <td>
+          {{> attendingButtons meeting=meeting}}
+        </td>
+      </tr>
+    {{/if}}
     </tbody>
   </table>
 </template>

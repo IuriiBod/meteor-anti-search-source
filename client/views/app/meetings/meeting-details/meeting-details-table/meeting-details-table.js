@@ -3,6 +3,10 @@ Template.meetingDetailsTable.helpers({
     return this.meeting.createdBy === Meteor.userId();
   },
 
+  canAttendInMeeting () {
+    return this.meeting.attendees.indexOf(Meteor.userId()) > -1;
+  },
+
   timeComboEditableParams () {
     let meeting = this.meeting;
     return {

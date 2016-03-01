@@ -132,9 +132,9 @@ Namespace('HospoHero.calendar', {
       },
       eventSettings: {
         titleField: 'title',
-        backgroundColor: '#b35cd6',
+        backgroundColor: '#F1B755',
         textColor: '#FFF',
-        flyoutTemplate: 'eventMeeting'
+        flyoutTemplate: 'eventProject'
       },
       manualAllocating: false
     }
