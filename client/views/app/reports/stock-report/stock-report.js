@@ -45,6 +45,11 @@ Template.stockReport.events({
   'click .difference-text': function (event, tmpl) {
     event.preventDefault();
 
-    Router.go('stockVarianceReport');
+    let params = {
+        firstStocktakeDate: this.firstStocktake.date.replace(/\//g, '-'),
+        secondStocktakeDate: this.secondStocktake.date.replace(/\//g, '-')
+    };
+
+    Router.go('stockVarianceReport', params);
   }
 });

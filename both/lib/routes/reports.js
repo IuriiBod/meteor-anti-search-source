@@ -70,7 +70,13 @@ Router.route('/stock-report/details/:stocktakeMainId/:date', {
   }
 });
 
-Router.route('/stock-variance-report', {
+Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', {
   name: 'stockVarianceReport',
-  template: 'stockVarianceReport'
+  template: 'stockVarianceReport',
+  data() {
+    return {
+      firstStocktakeDate: this.params.firstStocktakeDate,
+      secondStocktakeDate: this.params.secondStocktakeDate
+    }
+  }
 });
