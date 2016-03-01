@@ -56,7 +56,7 @@ Roles.getUsersByActionForArea = function (actions, areaIds) {
   }
 
   var query = {};
-  query.$or.areaIds.map(function (areaId) {
+  query.$or = areaIds.map(function (areaId) {
     var queryEntry = {};
     queryEntry['roles.' + areaId] = {$in: rolesIds};
     return queryEntry;
