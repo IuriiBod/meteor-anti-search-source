@@ -47,6 +47,13 @@ Template.projectDetails.helpers({
     return !this.id;
   },
 
+  canNotEditProjectDetails () {
+    const userId = Meteor.userId();
+    const project = Template.instance().project();
+    // the user can't edit project details if he is not a creator and not in project lead
+    return project.createdBy !== userId && project.lead.indexOf(userId) === -1;
+  },
+
   project () {
     return Template.instance().project();
   },

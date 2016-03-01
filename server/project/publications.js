@@ -68,7 +68,8 @@ function usersPublication (project) {
   }, {
     fields: {
       _id: 1,
-      profile: 1
+      profile: 1,
+      'services.google.picture': 1
     }
   });
 }
