@@ -1,7 +1,7 @@
 <template name="projectPeople">
   {{#if members.length}}
     {{#each members}}
-      {{> projectMember this}}
+      {{> projectMember member=this}}
     {{/each}}
   {{else}}
     No members yet

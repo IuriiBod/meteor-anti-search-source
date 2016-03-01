@@ -15,9 +15,8 @@ Template.projectCreateEdit.onCreated(function () {
     this.subscribe('selectedUsersList', this.selectedUsers.array());
   });
 
+  let saveProject = this.data.saveProject();
   this.addMemberToTheProject = (memberType) => {
-    let saveProject = this.data.saveProject();
-
     let onUserSelect = () => {
       return (userId) => {
         project[memberType].push(userId);
@@ -31,6 +30,12 @@ Template.projectCreateEdit.onCreated(function () {
       onUserSelect: onUserSelect
     });
   };
+
+  this.removeUserFormProject = (userId, teamType) => {
+    project[teamType].splice(project[teamType].indexOf(userId), 1);
+    saveProject(teamType, project[teamType]);
+    this.selectedUsers.remove(userId);
+  }
 });
 
 
@@ -99,6 +104,27 @@ Template.projectCreateEdit.helpers({
 
     return (newStatus) => {
       saveProject('status', newStatus);
+    }
+  },
+
+  allowRemoveUser () {
+    const project = this.project;
+    const userId = Meteor.userId();
+    return project.createdBy === userId ||
+      project.lead.indexOf(userId) > -1;
+  },
+
+  onLeadMemberRemove () {
+    const tmpl = Template.instance();
+    return (userId) => {
+      tmpl.removeUserFormProject(userId, 'lead');
+    }
+  },
+
+  onTeamMemberRemove () {
+    const tmpl = Template.instance();
+    return (userId) => {
+      tmpl.removeUserFormProject(userId, 'team');
     }
   }
 });

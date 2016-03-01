@@ -1,5 +1,11 @@
 <template name="projectMember">
-  <span class="meeting-attendees">
-    {{> userCircleIcon this}}
+  <span class="project-member">
+    {{#if allowRemove}}
+      <a href="#" class="remove-user">
+        {{> userCircleIcon member}}
+      </a>
+    {{else}}
+      {{> userCircleIcon member}}
+    {{/if}}
   </span>
 </template>
