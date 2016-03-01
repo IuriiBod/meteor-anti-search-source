@@ -2,11 +2,18 @@ Template.stockReport.onCreated(function () {
   this.reports = new ReactiveArray();
   let lastReportedStocktakeMainId = null;
 
-  this.uploadNextStockReport = function () {
+  this.getRouteParams = (currentStocktake) => {
+    return {
+      date: currentStocktake.date.replace(/\//g, '-'),
+      stocktakeMainId: currentStocktake.stocktakeMainId
+    }
+  };
+
+  this.uploadNextStockReport = () => {
     Meteor.call('getNextStocktakeReport', lastReportedStocktakeMainId, HospoHero.handleMethodResult((result) => {
       if (result) {
         this.reports.push(result.report);
-        lastReportedStocktakeMainId = result.lastStocktakeMainId;
+        lastReportedStocktakeMainId = result.report.secondStocktake.stocktakeMainId;
       }
     }));
   };
@@ -23,6 +30,16 @@ Template.stockReport.helpers({
 Template.stockReport.events({
   'click #load-stocktake-report': function (event, tmpl) {
     tmpl.uploadNextStockReport();
+  },
+
+  'click .first-stocktake-total': function (event, tmpl) {
+    event.preventDefault();
+    Router.go('stockTotalValueDetails', tmpl.getRouteParams(this.firstStocktake));
+  },
+
+  'click .second-stocktake-total': function (event, tmpl) {
+    event.preventDefault();
+    Router.go('stockTotalValueDetails', tmpl.getRouteParams(this.secondStocktake));
   },
 
   'click .difference-text': function (event, tmpl) {

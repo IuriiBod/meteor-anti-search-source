@@ -54,6 +54,22 @@ Router.route('/stock-report', {
   template: "stockReport"
 });
 
+Router.route('/stock-report/details/:stocktakeMainId/:date', {
+  name: 'stockTotalValueDetails',
+  template: 'totalValueDetails',
+  waitOn() {
+    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return [
+      Meteor.subscribe('suppliersNamesList', currentAreaId)
+    ];
+  },
+  data() {
+    return {
+      stocktakeMainId: this.params.stocktakeMainId
+    }
+  }
+});
+
 Router.route('/stock-variance-report', {
   name: 'stockVarianceReport',
   template: 'stockVarianceReport'
