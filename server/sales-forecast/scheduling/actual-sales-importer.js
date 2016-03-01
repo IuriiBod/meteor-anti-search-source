@@ -60,23 +60,25 @@ ActualSalesImporter = class ActualSalesImporter {
       let areasIds = Areas.find({locationId: this._location._id}).map(area => area._id);
       let receivers = Roles.getUsersByActionForArea('view forecast', areasIds).map(user => user._id);
 
-      receivers.forEach(receiverId => {
-        //todo make it sharable notification
-        new NotificationSender(
-          `Sales occurring but not mapped in ${this._location.name}`,
-          'unmapped-pos-items',
-          {
-            unmappedPosItemsNames,
-            locationName: this._location.name
-          },
-          {
-            helpers: {
-              posMenuLinkingUrl: function () {
-                return NotificationSender.urlFor('posSettings', {}, this);
-              }
+      let notificationSender = new NotificationSender(
+        `Sales occurring but not mapped in ${this._location.name}`,
+        'unmapped-pos-items',
+        {
+          unmappedPosItemsNames,
+          locationName: this._location.name
+        },
+        {
+          shareable: true,
+          helpers: {
+            posMenuLinkingUrl: function () {
+              return NotificationSender.urlFor('posSettings', {}, this);
             }
           }
-        ).sendNotification(receiverId);
+        }
+      );
+
+      receivers.forEach(receiverId => {
+        notificationSender.sendNotification(receiverId);
       });
     }
   }

@@ -20,7 +20,13 @@ Meteor.methods({
       throw new Meteor.Error(404, 'Notification requires your action. Can\'t mark read');
     }
 
-    Notifications.remove({'_id': notificationId, 'to': userId});
-    logger.info("Notification read", {"user": userId, "notification": notificationId});
+    Notifications.remove({_id: notificationId, to: userId});
+
+    //notification is sharable between multiple users
+    if (notification.shareId) {
+      Notifications.remove({shareId: notification.shareId});
+    }
+
+    logger.info("Notification read", {userId, notificationId});
   }
 });

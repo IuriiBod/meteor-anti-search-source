@@ -50,12 +50,14 @@
  *
  * @param {string} subject notification's subject/title
  * @param {string} templateName handlebars template name
- * @param {*|object} templateData data to render on template
- * @param {*|object} [options] additional configuration
- * @param {*|string} options.senderId user that sanded notification
- * @param {*|object} options.metadata additional notification data
- * @param {*|boolean} options.interactive deny automatic reading (usually if notification requires an action)
- * @param {*|object} options.helpers define you own formatting helpers
+ * @param {object} [templateData] data to render on template
+ * @param {object} [options] additional configuration
+ * @param {string} [options.senderId] user that sanded notification
+ * @param {object} [options.metadata] additional notification data
+ * @param {boolean} [options.interactive] deny automatic reading (usually if notification requires an action)
+ * @param {object} [options.helpers] define you own formatting helpers
+ * @param {boolean} [options.shareable] if one of recipients marks notification as read it will be removed
+ * in others too
  * @constructor
  */
 NotificationSender = function (subject, templateName, templateData = {}, options = {}) {
@@ -70,6 +72,10 @@ NotificationSender = function (subject, templateName, templateData = {}, options
     _.each(options.helpers, function (helperFn, helperName) {
       OriginalHandlebars.registerHelper(helperName, helperFn);
     });
+  }
+
+  if (options.shareable) {
+    this._options.shareId = Random.id();
   }
 };
 
@@ -148,6 +154,10 @@ NotificationSender.prototype._insertNotification = function (receiverId, markAsR
     meta: this._options.meta,
     createdOn: Date.now()
   };
+
+  if (this._options.shareId) {
+    notificationOptions.shareId = this._options.shareId;
+  }
 
   var notificationId = Notifications.insert(notificationOptions);
 
