@@ -68,7 +68,7 @@ Namespace('HospoHero.calendar', {
       }
     },
 
-    'task': {
+    task: {
       title: 'Task',
       collection: 'taskList',
       queryOptions: function (date, calendarType, userId) {
@@ -101,6 +101,42 @@ Namespace('HospoHero.calendar', {
         field: 'duration',
         timeUnits: 'minutes'
       }
+    },
+
+    meeting: {
+      title: 'Meeting',
+      collection: 'meetings',
+      queryOptions: function (date, calendarType, userId) {
+        return {
+          attendees: userId,
+          accepted: userId
+        }
+      },
+      eventSettings: {
+        titleField: 'title',
+        backgroundColor: '#b35cd6',
+        textColor: '#FFF',
+        flyoutTemplate: 'eventMeeting'
+      },
+      manualAllocating: false
+    },
+
+    project: {
+      title: 'Project',
+      collection: 'projects',
+      queryOptions: function (date, calendarType, userId) {
+        return {
+          lead: userId,
+          team: userId
+        }
+      },
+      eventSettings: {
+        titleField: 'title',
+        backgroundColor: '#b35cd6',
+        textColor: '#FFF',
+        flyoutTemplate: 'eventMeeting'
+      },
+      manualAllocating: false
     }
   }
 });

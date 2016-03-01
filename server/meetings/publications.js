@@ -18,22 +18,7 @@ Meteor.publishComposite('meetings', function (userId) {
 
     children: [
       {
-        find (meeting) {
-          if (meeting.attendees && meeting.attendees.length) {
-            return Meteor.users.find({
-              _id: {
-                $in: meeting.attendees
-              }
-            }, {
-              fields: {
-                _id: 1,
-                profile: 1
-              }
-            });
-          } else {
-            this.ready();
-          }
-        }
+        find: usersPublication
       }
     ]
   }
@@ -58,22 +43,7 @@ Meteor.publishComposite('meeting', function (meetingId, userId) {
 
     children: [
       {
-        find (meeting) {
-          if (meeting.attendees && meeting.attendees.length) {
-            return Meteor.users.find({
-              _id: {
-                $in: meeting.attendees
-              }
-            }, {
-              fields: {
-                _id: 1,
-                profile: 1
-              }
-            });
-          } else {
-            this.ready();
-          }
-        }
+        find: usersPublication
       },
       
       {
@@ -86,3 +56,21 @@ Meteor.publishComposite('meeting', function (meetingId, userId) {
     ]
   }
 });
+
+function usersPublication (meeting) {
+  if (meeting.attendees && meeting.attendees.length) {
+    return Meteor.users.find({
+      _id: {
+        $in: meeting.attendees
+      }
+    }, {
+      fields: {
+        _id: 1,
+        profile: 1,
+        'services.google.picture': 1
+      }
+    });
+  } else {
+    this.ready();
+  }
+}
