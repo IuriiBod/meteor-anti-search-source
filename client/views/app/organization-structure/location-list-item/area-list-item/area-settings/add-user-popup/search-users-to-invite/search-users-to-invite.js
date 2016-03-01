@@ -25,14 +25,15 @@ Template.searchUsersToInvite.helpers({
       sort: {'profile.firstname': 1}
     });
 
-    Template.instance().usersCount = users.count();
-    return users;
+    if (users) {
+      return users;
+    }
   },
   isNewUserAdding: function () {
     return Template.instance().isNewUserAdding.get();
   },
-  displaySearchResults: function (searchedUsers) {
-    return searchedUsers.count() > 0 && Template.instance().searchText.get().length > 0;
+  searchText: function () {
+    return Template.instance().searchText.get();
   },
   isInviteInProgress: function () {
     return Template.instance().isInviteInProgress.get();

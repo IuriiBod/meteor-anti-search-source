@@ -11,10 +11,9 @@
         {{> inviteNewUser}}
       {{/if}}
     </div>
-
     <div>
-      {{#if displaySearchResults searchedUsers}}
-        {{#if searchedUsers.count}}
+      {{#if searchText}}
+        {{#if searchedUsers}}
           <div class="search-results">
             <b>Select to add</b>
             <hr/>
