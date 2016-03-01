@@ -1,3 +1,11 @@
+let projectQueryByUserId = (userId) => {
+  return [
+    {lead: userId},
+    {team: userId},
+    {createdBy: userId}
+  ];
+};
+
 Meteor.publishComposite('projects', function (userId) {
   return {
     find () {
@@ -5,11 +13,7 @@ Meteor.publishComposite('projects', function (userId) {
         let query = {};
 
         if (userId) {
-          query.$or = [
-            {lead: userId},
-            {team: userId},
-            {createdBy: userId}
-          ];
+          query.$or = projectQueryByUserId(userId);
         }
         return Projects.find(query);
       } else {
@@ -32,11 +36,7 @@ Meteor.publishComposite('project', function (projectId, userId) {
       if (this.userId) {
         return Projects.find({
           _id: projectId,
-          $or: [
-            {lead: userId},
-            {team: userId},
-            {createdBy: userId}
-          ]
+          $or: projectQueryByUserId(userId)
         });
       } else {
         this.ready();
@@ -59,7 +59,7 @@ Meteor.publishComposite('project', function (projectId, userId) {
   }
 });
 
-function usersPublication (project) {
+function usersPublication(project) {
   const userIdsToPublish = _.union(project.lead, project.team);
   return Meteor.users.find({
     _id: {
