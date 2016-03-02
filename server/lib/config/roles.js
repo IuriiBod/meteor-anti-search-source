@@ -25,7 +25,8 @@ var actions = {
   "Approve leave requests": "approve leave requests",
   "View calendar": "view calendar",
   "Edit calendar": "edit calendar",
-  "Create meetings": "create meetings"
+  "Create meetings": "create meetings",
+  "Edit projects": "edit projects"
 };
 
 var defaultRoles = [
@@ -61,7 +62,8 @@ var defaultRoles = [
       "approve leave requests",
       "view calendar",
       "edit calendar",
-      "create meetings"
+      "create meetings",
+      "edit projects"
     ]
   },
 

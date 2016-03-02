@@ -1,0 +1,51 @@
+<template name="projectsList">
+  {{> pageHeading title='Projects' name='projects'}}
+
+  <!-- Projects filter -->
+  <div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 m-t-sm m-b-sm">
+      <input type="text" class="form-control projects-search" placeholder="Search">
+    </div>
+    <div class="col-lg-2 col-sm-4 col-md-4 m-t-sm m-b-sm col-xs-12">
+      {{> taskDateFilter onFilterChange=onFilterChange filterTypes=filterTypes activeFilter=activeFilter}}
+    </div>
+  </div>
+  <!-- /Projects filter -->
+
+  <!-- Projects list -->
+  {{#if projects.count}}
+    <div class="row projects-list">
+      <div class="float-e-margins col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="ibox-content no-padding">
+          <div class="table-responsive">
+            <table class="table text-left table-hover m-b-none">
+              <thead>
+              <tr>
+                <th>Project Name</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th class="hidden-xs">Project Lead</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              {{#each projects}}
+                {{> projectsListItem this}}
+              {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="text-muted">
+          <h3>No projects</h3>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+  <!-- /Projects list -->
+</template>

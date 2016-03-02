@@ -20,10 +20,21 @@ Template.referenceSelector.helpers({
   },
 
   meetings () {
-    let userId = Meteor.userId();
+    const userId = Meteor.userId();
     return Meetings.find({
       $or: [
         {attendees: userId},
+        {createdBy: userId}
+      ]
+    }).fetch();
+  },
+
+  projects () {
+    const userId = Meteor.userId();
+    return Projects.find({
+      $or: [
+        {lead: userId},
+        {team: userId},
         {createdBy: userId}
       ]
     }).fetch();
