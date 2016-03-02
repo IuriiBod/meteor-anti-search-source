@@ -5,30 +5,51 @@
     </div>
   {{else}}
     <div class="add-user-to-area">
-      <input type="text" class="form-control input-field add-user-name" placeholder="e.g. john@gmail.com"
-             name="addUserName" required="required">
-      {{#if isNewUserAdding}}
-        {{> inviteNewUser}}
+      {{#if selectedUser}}
+        {{> searchUserInfo user=selectedUser removeUser=true onUserSelect=unselectUser}}
+        {{> userRolesSelect}}
+      {{else}}
+        <input type="text"
+               class="form-control input-field user-search-input"
+               placeholder="e.g. john@gmail.com"
+               name="addUserName"
+               required="required">
+        {{#if selectedEmail}}
+          <input type="text"
+                 class="form-control input-field user-name-input"
+                 placeholder="Name"
+                 required="required"
+                 pattern=".{3,}"
+                 title="Minimum name length: 3">
+          {{> userRolesSelect}}
+        {{/if}}
+      {{/if}}
+      {{#if isReadyToInviteUser}}
+        <button class="btn btn-primary col-xs-12 invite-user-button">
+          <i class="fa fa-check"></i>
+        </button>
       {{/if}}
     </div>
     <div>
-      {{#if searchText}}
-        {{#if searchedUsers}}
-          <div class="search-results">
-            <b>Select to add</b>
-            <hr/>
-            <div class="search-users-container">
-              {{# each searchedUsers}}
-                {{> searchUserInfo user=this}}
-              {{/each}}
+      {{#unless isReadyToInviteUser}}
+        {{#if searchText}}
+          {{#if searchedUsers}}
+            <div class="search-results">
+              <b>Select to add</b>
+              <hr/>
+              <div class="search-users-container">
+                {{# each searchedUsers}}
+                  {{> searchUserInfo user=this onUserSelect=selectUser}}
+                {{/each}}
+              </div>
             </div>
-          </div>
-        {{else}}
-          <div class="text-muted text-center no-results">
-            <b>No results</b>
-          </div>
+          {{else}}
+            <div class="text-muted text-center no-results">
+              <b>No results</b>
+            </div>
+          {{/if}}
         {{/if}}
-      {{/if}}
+      {{/unless}}
     </div>
   {{/if}}
 </template>

@@ -1,5 +1,10 @@
 Template.searchUsersToInvite.onCreated(function () {
-  var selector = {
+  this.searchText = new ReactiveVar('');
+  this.selectedUser = new ReactiveVar(null);
+  this.selectedEmail = new ReactiveVar(null);
+  this.isInviteInProgress = new ReactiveVar(false);
+
+  let selector = {
     _id: {$ne: Meteor.userId()},
     'relations.areaIds': {$ne: this.data.areaId}
   };
@@ -7,16 +12,15 @@ Template.searchUsersToInvite.onCreated(function () {
   this.searchSource = this.AntiSearchSource({
     collection: Meteor.users,
     fields: ['profile.firstname', 'profile.lastname', 'emails.address'],
-    searchMode: 'local',
+    searchMode: 'global',
     mongoQuery: selector,
     limit: 10
   });
 
-  this.usersCount = 0;
-
-  this.searchText = new ReactiveVar('');
-  this.isNewUserAdding = new ReactiveVar(false);
-  this.isInviteInProgress = new ReactiveVar(false);
+  this.autorun(() => {
+    let text = this.searchText.get();
+    this.searchSource.search(text);
+  });
 });
 
 Template.searchUsersToInvite.helpers({
@@ -29,47 +33,73 @@ Template.searchUsersToInvite.helpers({
       return users;
     }
   },
-  isNewUserAdding: function () {
-    return Template.instance().isNewUserAdding.get();
+  selectedUser: function () {
+    return Template.instance().selectedUser.get();
+  },
+  selectedEmail: function () {
+    return Template.instance().selectedEmail.get();
   },
   searchText: function () {
     return Template.instance().searchText.get();
   },
   isInviteInProgress: function () {
     return Template.instance().isInviteInProgress.get();
+  },
+  selectUser: function () {
+    let tmpl = Template.instance();
+    return function (user) {
+      tmpl.selectedUser.set(user);
+      tmpl.selectedEmail.set(null);
+      tmpl.searchText.set('');
+    }
+  },
+  unselectUser: function () {
+    let tmpl = Template.instance();
+    return function () {
+      tmpl.selectedUser.set(null);
+    }
+  },
+  isReadyToInviteUser: function () {
+    let tmpl = Template.instance();
+    return !!tmpl.selectedEmail.get() || !!tmpl.selectedUser.get();
   }
 });
 
 Template.searchUsersToInvite.events({
-  'keyup .add-user-name': function (event, tmpl) {
-    var searchText = tmpl.$(event.target).val();
-    tmpl.searchText.set(searchText);
-
-    if (searchText.length > 0) {
-      if (searchText.indexOf('@') > -1 && tmpl.usersCount === 0) {
-        tmpl.isNewUserAdding.set(true);
-      } else {
-        tmpl.searchSource.search(searchText);
-        tmpl.isNewUserAdding.set(false);
-      }
+  'keyup .user-search-input': function (event, tmpl) {
+    let searchStr = event.target.value;
+    let emailRegExp = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
+    if (emailRegExp.test(searchStr)) {
+      tmpl.selectedEmail.set(searchStr);
+      tmpl.selectedUser.set(null);
     } else {
-      tmpl.isNewUserAdding.set(false);
+      tmpl.searchText.set(searchStr);
+      tmpl.selectedEmail.set(false);
     }
   },
 
   'click .invite-user-button': function (event, tmpl) {
-    var invitationMeta = {
-      name: tmpl.$('.user-name-input').val(),
-      email: tmpl.$('.add-user-name').val(),
+    let invitationMeta = {
       roleId: tmpl.$('[name="userRole"]').val(),
       areaId: tmpl.data.areaId
     };
+
+    let currentUser = tmpl.selectedUser.get();
+
+    if (currentUser) {
+      invitationMeta.name = HospoHero.username(currentUser);
+      invitationMeta.email = currentUser.emails[0].address;
+    } else {
+      invitationMeta.name = tmpl.$('.user-name-input').val();
+      invitationMeta.email = tmpl.$('.user-search-input').val();
+    }
 
     tmpl.isInviteInProgress.set(true);
     Meteor.call('inviteNewUserToArea', invitationMeta, HospoHero.handleMethodResult(function () {
       tmpl.$('input[name="addUserName"]').val('').focus();
       tmpl.searchText.set('');
-      tmpl.isNewUserAdding.set(false);
+      tmpl.selectedUser.set(null);
+      tmpl.selectedEmail.set(null);
       tmpl.isInviteInProgress.set(false);
       HospoHero.success('The user was notified');
     }));
