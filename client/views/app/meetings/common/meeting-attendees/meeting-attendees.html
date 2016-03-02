@@ -1,11 +1,8 @@
 <template name="meetingAttendees">
   <div class="pull-left">
-    {{#if attendees.length}}
-      {{#each attendees}}
-        <span class="meeting-attendees">
-          <i class="fa fa-circle attendee-status {{attendeeStatus this}}"></i>
-          {{> userCircleIcon this}}
-        </span>
+    {{#if meeting.attendees.length}}
+      {{#each meeting.attendees}}
+        {{> meetingAttendee member=this allowRemove=../allowRemove onUserRemove=onUserRemove}}
       {{/each}}
     {{else}}
       No attendees yet

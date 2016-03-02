@@ -36,6 +36,16 @@ Template.meetingDetailsTable.helpers({
         Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
       }
     }
+  },
+
+  onUserRemove () {
+    let meeting = this.meeting;
+
+    return (userId) => {
+      let removeUserIdFromArray = (field) => meeting[field].splice(meeting[field].indexOf(userId), 1);
+      ['attendees', 'accepted', 'maybeAccepted', 'rejected'].forEach((field) => removeUserIdFromArray(field));
+      Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
+    }
   }
 });
 
@@ -47,9 +57,7 @@ Template.meetingDetailsTable.events({
     let onUserSelect = () => {
       return (userId) => {
         meeting.attendees.push(userId);
-        Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult(function () {
-          HospoHero.success('User have been added to the meeting');
-        }));
+        Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
       }
     };
 
