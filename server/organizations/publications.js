@@ -76,7 +76,7 @@ Meteor.publishComposite('organizationInfo', function () {
                   };
 
                   if (!isOrganizationOwner(organization)) {
-                    query._id = {$in: user.relations.areaIds}
+                    query._id = {$in: user.relations.areaIds};
                   }
 
                   return Areas.find(query, {

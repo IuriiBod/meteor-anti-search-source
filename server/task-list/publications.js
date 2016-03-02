@@ -57,7 +57,7 @@ Meteor.publishComposite('taskList', function (userId) {
         ]
       }
     ]
-  }
+  };
 });
 
 Meteor.publish('todayTasks', function () {

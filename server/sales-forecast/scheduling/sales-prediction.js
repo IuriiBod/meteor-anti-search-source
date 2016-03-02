@@ -77,43 +77,43 @@ ForecastMaker.prototype._predictFor = function (totalDaysCount) {
   var today = new Date();
   var dateToMakePredictionFrom = HospoHero.prediction.getDateThreshold(); // new Date() default
   var dateMoment = HospoHero.dateUtils.getDateMomentForLocation(dateToMakePredictionFrom, this._location).startOf('day');
-  var self = this;
 
   var areas = Areas.find({locationId: this._locationId});
 
-  for (var currentDayNumber = 0; currentDayNumber < totalDaysCount; currentDayNumber++) {
-    var currentWeather = this._getWeatherForecast(currentDayNumber, dateMoment.toDate());
+  var self = this;
+  let createProcessAreaFn = (currentDayNumber, currentWeather) => (area) => {
+    var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id}, true);
+    var items = MenuItems.find(menuItemsQuery, {_id: 1, relations: 1, status: 1, name: 1}); //get menu items for current area
 
-    areas.forEach(function (area) {
-      var menuItemsQuery = HospoHero.prediction.getMenuItemsForPredictionQuery({'relations.areaId': area._id}, true);
-      var items = MenuItems.find(menuItemsQuery, {_id: 1, relations: 1, status: 1, name: 1}); //get menu items for current area
+    var notificationSender = self._getNotificationSender(area);
 
-      var notificationSender = self._getNotificationSender(area);
+    items.forEach(function (menuItem) {
+      let dataVector = new DataVector(dateMoment, currentWeather);
+      let quantity = self._predictionApi.makePrediction(menuItem._id, dataVector.getTestingData());
 
-      items.forEach(function (menuItem) {
-        let dataVector = new DataVector(dateMoment, currentWeather);
-        let quantity = self._predictionApi.makePrediction(menuItem._id, dataVector.getTestingData());
+      logger.info('Made prediction', {menuItem: menuItem.name, date: dateMoment.toDate(), predictedQty: quantity});
 
-        logger.info('Made prediction', {menuItem: menuItem.name, date: dateMoment.toDate(), predictedQty: quantity});
+      var predictItem = {
+        date: moment(dateMoment).toDate(),
+        predictionQuantity: quantity,
+        predictionUpdatedAt: today,
+        menuItemId: menuItem._id,
+        relations: menuItem.relations
+      };
 
-        var predictItem = {
-          date: moment(dateMoment).toDate(),
-          predictionQuantity: quantity,
-          predictionUpdatedAt: today,
-          menuItemId: menuItem._id,
-          relations: menuItem.relations
-        };
+      self._updateForecastEntry(predictItem);
 
-        self._updateForecastEntry(predictItem);
-
-        if (currentDayNumber < 14) {
-          notificationSender.addChange(predictItem, menuItem);
-        }
-      });
-
-      notificationSender.send();
+      if (currentDayNumber < 14) {
+        notificationSender.addChange(predictItem, menuItem);
+      }
     });
 
+    notificationSender.send();
+  };
+
+  for (let currentDayNumber = 0; currentDayNumber < totalDaysCount; currentDayNumber++) {
+    let currentWeather = this._getWeatherForecast(currentDayNumber, dateMoment.toDate());
+    areas.forEach(createProcessAreaFn(currentDayNumber, currentWeather));
     dateMoment.add(1, 'day');
   }
 };
@@ -166,7 +166,7 @@ updateForecastForLocation = function (location) {
 
 
 if (!HospoHero.isDevelopmentMode()) {
-  HospoHero.LocationScheduler.addDailyJob('Update forecast', function (location) {
+  HospoHero.LocationScheduler.addDailyJob('Update forecast', function () {
     return 3; //3:00 AM
   }, function (location) {
     logger.info('Started forecast generation', {locationId: location._id});

@@ -42,7 +42,7 @@ ActualSalesImporter = class ActualSalesImporter {
 
     var lastMoment;
     if (lastImportedSale) {
-      lastMoment = HospoHero.dateUtils.getDateMomentForLocation(lastImportedSale.date, this._location._id)
+      lastMoment = HospoHero.dateUtils.getDateMomentForLocation(lastImportedSale.date, this._location._id);
     } else {
       // if there is no imported data the import whole year
       lastMoment = moment().subtract(1, 'year');
@@ -91,7 +91,6 @@ ActualSalesImporter = class ActualSalesImporter {
       processSalesFn(salesData) {
         //check if we need to stop
         if (lastMomentToImport.isAfter(salesData.createdMoment)) {
-          logger.warn('Ignored order items', {count: ignoredOrderItemsCount});
           return false;
         }
 
@@ -118,7 +117,9 @@ ActualSalesImporter = class ActualSalesImporter {
       },
 
       onUploadFinished(){
-        self._sendUnmappedPosItemsNotification(Object.keys(ignoredPosMenuItems));
+        let ignoredItemsNames = Object.keys(ignoredPosMenuItems);
+        logger.info('Send notification about ignored order items', {count: ignoredItemsNames.length});
+        self._sendUnmappedPosItemsNotification(ignoredItemsNames);
       }
     };
   }

@@ -36,7 +36,7 @@ Meteor.publishComposite('meetings', function (userId) {
         }
       }
     ]
-  }
+  };
 });
 
 
@@ -84,5 +84,5 @@ Meteor.publishComposite('meeting', function (meetingId, userId) {
         }
       }
     ]
-  }
+  };
 });

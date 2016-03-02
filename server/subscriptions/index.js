@@ -46,7 +46,7 @@ var updateSubscription = function (subscriptionParams, unsubscribeTrigger) {
 
     //// removeItemsFromSubscription implementation
     //
-    if (existingSubscription.itemIds == 'all') {
+    if (existingSubscription.itemIds === 'all') {
       var allSubscribedItemIds = getItemIdsForSubscription(existingSubscription.type);
       var itemsWithoutUnsubscribed = _.difference(allSubscribedItemIds, itemToRemoveIds);
       Subscriptions.update({_id: existingSubscription._id}, {$set: {itemIds: itemsWithoutUnsubscribed}});
@@ -63,10 +63,10 @@ var updateSubscription = function (subscriptionParams, unsubscribeTrigger) {
    * @param {Array|String} itemToRemoveIds - array with items id's, that should be added to existing subscription
    */
   var addItemsToSubscription = function (existingSubscription, itemToAddIds) {
-    if (existingSubscription.itemIds == 'all') {
+    if (existingSubscription.itemIds === 'all') {
       throw new Meteor.Error('This item already subscribed');
     } else {
-      if (itemToAddIds == 'all') {
+      if (itemToAddIds === 'all') {
         Subscriptions.update({_id: existingSubscription._id}, {$set: {itemIds: 'all'}});
       } else {
         Subscriptions.update({_id: existingSubscription._id}, {$addToSet: {itemIds: {$each: itemToAddIds}}});
@@ -79,7 +79,7 @@ var updateSubscription = function (subscriptionParams, unsubscribeTrigger) {
   check(subscriptionParams, HospoHero.checkers.SubscriptionDocument);
   subscriptionParams.subscriber = subscriptionParams.subscriber || Meteor.userId();
 
-  if (subscriptionParams.itemIds != 'all' && !_.isArray(subscriptionParams.itemIds)) {
+  if (subscriptionParams.itemIds !== 'all' && !_.isArray(subscriptionParams.itemIds)) {
     subscriptionParams.itemIds = [subscriptionParams.itemIds];
   }
 
@@ -94,7 +94,7 @@ var updateSubscription = function (subscriptionParams, unsubscribeTrigger) {
 
     // unsubscribe
     if (existingSubscription) {
-      if (subscriptionParams.itemIds == 'all') {
+      if (subscriptionParams.itemIds === 'all') {
         // delete subscription
         Subscriptions.remove({_id: existingSubscription._id});
       } else {

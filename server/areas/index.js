@@ -77,7 +77,8 @@ Meteor.methods({
     //googlePrediction.removePredictionModel();
 
     var removeDocumentsRelatedToArea = function (areaId) {
-      var globals = Function('return this')();
+      //this eval is safe
+      var globals = Function('return this')();// jshint ignore:line
       for (var globalObject in globals) {
         if (globals[globalObject] instanceof Meteor.Collection) {
           globals[globalObject].remove({'relations.areaId': areaId});

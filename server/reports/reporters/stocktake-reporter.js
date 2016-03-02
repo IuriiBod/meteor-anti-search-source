@@ -43,7 +43,7 @@ StocktakesReporter = class {
         actual: actualReport
       },
       difference: this._getExpectedActualDifference(actualReport, expectedReport)
-    }
+    };
   }
 
   _getExpectedActualDifference(actualCostOfGoodsReport, expectedCostOfGoodsReport) {
@@ -57,6 +57,6 @@ StocktakesReporter = class {
     return {
       amount: HospoHero.misc.rounding(report.amount, 10),
       ratio: HospoHero.misc.rounding(report.ratio, 100)
-    }
+    };
   }
 };
