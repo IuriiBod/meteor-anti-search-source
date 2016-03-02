@@ -28,10 +28,12 @@ StocktakesReporter = class {
 
     return {
       firstStocktake: {
+        stocktakeMainId: this._firstStocktakeGroup[0].version,
         date: this._fromDate,
         total: actualReporter.firstStocktakeTotal
       },
       secondStocktake: {
+        stocktakeMainId: this._secondStocktakeGroup[0].version,
         date: this._toDate,
         total: actualReporter.secondStocktakeTotal
       },

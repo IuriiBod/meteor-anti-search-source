@@ -15,3 +15,12 @@ Meteor.publishAuthorized("supplierProfile", function (id) {
     OrderReceipts.find({"supplier": id})
   ];
 });
+
+Meteor.publishAuthorized('suppliersNamesList', function (areaId) {
+  let checkPermission = new HospoHero.security.PermissionChecker(this.userId);
+  if (checkPermission.hasPermissionInArea(areaId, "view area reports")) {
+    return Suppliers.find({'relations.areaId': areaId}, {fields: {_id: 1, name: 1}});
+  } else {
+    this.ready();
+  }
+});

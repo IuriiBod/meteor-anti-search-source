@@ -10,13 +10,9 @@ class PermissionChecker {
    */
   constructor(userId) {
     if (!userId) {
-      try {
-        userId = Meteor.userId();
-      } catch (err) {
-        //probably was called in subscription
-        //so user isn't authorized
-        userId = false;
-      }
+      // we don't suppress exceptions, so developers will know
+      // if they using this class in wrong way
+      userId = Meteor.userId();
     }
 
     this._user = userId && Meteor.users.findOne({_id: userId});
