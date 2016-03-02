@@ -13,11 +13,7 @@ Template.projectDetails.onCreated(function () {
   this.createProjectObject = new ReactiveVar(defaultProjectObject);
 
   this.project = () => {
-    if (!this.data.id) {
-      return this.createProjectObject.get();
-    } else {
-      return Projects.findOne({_id: this.data.id});
-    }
+    return this.data.project || this.createProjectObject.get();
   };
 
   this.saveProject = () => {
@@ -32,7 +28,7 @@ Template.projectDetails.onCreated(function () {
         project[args[0]] = args[1];
       }
 
-      if (!this.data.id) {
+      if (!this.data.project) {
         this.createProjectObject.set(project);
       } else {
         Meteor.call('updateProject', project, HospoHero.handleMethodResult());
@@ -44,7 +40,7 @@ Template.projectDetails.onCreated(function () {
 
 Template.projectDetails.helpers({
   createMode () {
-    return !this.id;
+    return !this.project;
   },
 
   canNotEditProjectDetails () {

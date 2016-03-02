@@ -13,7 +13,7 @@ Router.route('/create-project', {
 
   data() {
     return {
-      id: null
+      project: null
     }
   }
 });
@@ -28,7 +28,7 @@ Router.route('/project/:id', {
 
   data() {
     return {
-      id: this.params.id
+      project: Projects.findOne({_id: this.params.id})
     }
   }
 });
