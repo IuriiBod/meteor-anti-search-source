@@ -94,7 +94,8 @@ GooglePredictionApi.prototype.makePrediction = function (menuItemId, inputData) 
 
 /**
  * The current status of the training job. This can be one of following:
- * RUNNING - Only returned when retraining a model; for a new model, a trainedmodels.get call will return HTTP 200 before training is complete.
+ * RUNNING - Only returned when retraining a model; for a new model, a
+ * trainedmodels.get call will return HTTP 200 before training is complete.
  * DONE
  * ERROR
  * ERROR: NO VALID DATA INSTANCES

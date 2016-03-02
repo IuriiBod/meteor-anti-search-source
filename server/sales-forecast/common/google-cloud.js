@@ -74,7 +74,7 @@ GoogleCloud.prototype.uploadSalesData = function (uploadToFile = false) {
 
 
 GoogleCloud.prototype.removeModelFile = function () {
-  this._cloudFile.delete(function (err, apiResponse) {
+  this._cloudFile.delete(function (err) {
     if (err) {
       logger.error('error while removing training file', {error: err});
     }
