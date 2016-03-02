@@ -12,7 +12,7 @@ Router.route('calendar', {
         Meteor.subscribe('jobItems', null, areaId),
         Meteor.subscribe('taskList'),
         Meteor.subscribe('meetings', userId)
-      ]
+      ];
     }
   },
 
@@ -38,12 +38,12 @@ Router.route('managerCalendar', {
         Meteor.subscribe('jobItems', null, areaId),
         Meteor.subscribe('taskList'),
         Meteor.subscribe('meetings')
-      ]
+      ];
     }
   },
   data: function () {
     return {
       date: this.params.date
-    }
+    };
   }
 });

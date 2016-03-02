@@ -28,7 +28,7 @@ Namespace('HospoHero.calendar', {
           frequency: {
             $exists: true
           }
-        }
+        };
       },
       eventSettings: {
         titleField: 'name',
@@ -52,7 +52,7 @@ Namespace('HospoHero.calendar', {
           frequency: {
             $exists: false
           }
-        }
+        };
       },
       eventSettings: {
         titleField: 'name',
@@ -76,7 +76,7 @@ Namespace('HospoHero.calendar', {
         var currentDate = TimeRangeQueryBuilder[queryType](date);
 
         var placedTasks = CalendarEvents.find({startTime: currentDate}).map(function (event) {
-          return event.itemId
+          return event.itemId;
         });
 
         var query = HospoHero.misc.getTasksQuery(userId);

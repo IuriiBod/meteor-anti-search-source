@@ -129,7 +129,7 @@ Namespace('HospoHero.calendar', {
         return {
           start: shift.startTime,
           end: shift.endTime
-        }
+        };
       } else {
         return false;
       }
@@ -160,7 +160,7 @@ Namespace('HospoHero.calendar', {
     let getBackgroundEvents = (userId, areaId) => {
       const shiftTime = getUsersShiftTime(userId, areaId);
       if (shiftTime) {
-        return getBackgroundEventsObject(shiftTime, userId)
+        return getBackgroundEventsObject(shiftTime, userId);
       } else {
         return [];
       }

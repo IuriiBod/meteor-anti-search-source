@@ -1,4 +1,4 @@
-RelatedItemDocument = Match.Where(function (relatedItem) {
+var RelatedItemDocument = Match.Where(function (relatedItem) {
   check(relatedItem, {
     name: String,
     url: String,

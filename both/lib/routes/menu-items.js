@@ -13,7 +13,7 @@ Router.route('menuItemsMaster', {
     return {
       category: this.params.category,
       status: this.params.status.toLowerCase()
-    }
+    };
   }
 });
 

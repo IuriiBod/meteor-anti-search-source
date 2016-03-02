@@ -22,7 +22,7 @@ Router.route('stocktakeCounting', {
   data: function () {
     return {
       stocktakeId: this.params._id
-    }
+    };
   }
 });
 
@@ -42,7 +42,7 @@ Router.route('stocktakeCountingEdit', {
   data: function () {
     return {
       stocktakeId: this.params._id
-    }
+    };
   }
 });
 
