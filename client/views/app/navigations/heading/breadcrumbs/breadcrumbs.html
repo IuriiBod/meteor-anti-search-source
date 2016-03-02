@@ -3,7 +3,7 @@
   <div class="col-sm-6 col-xs-12">
     <h2>
       {{#if isMenuDetailed}}
-        {{#if canEditMenu}}
+        {{#if hasPermissionInAreaTo 'edit menus'}}
           <a href="#"
              class="editMenuItemName"
              style="color: #676a6c; border-color: #676a6c;">

@@ -1,5 +1,5 @@
 <template name="stocktakeHeader">
-  {{#if canEditStock}}
+  {{#if hasPermissionInAreaTo 'edit stocks'}}
     <div class="title-action">
       <a href="#" class="btn btn-primary" id="startNewStocktake">
         Start New Stocktake

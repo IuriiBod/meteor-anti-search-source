@@ -11,6 +11,11 @@
     </div>
 
     <div class="col-xs-6 title-action">
+
+      {{#unless isTodayDate}}
+        <a href="{{pathFor route=routeName data=todayCalendarRouteData}}" class="btn btn-warning btn-sm">today</a>
+      {{/unless}}
+
       {{#unless isManagerCalendar}}
         <button class="calendar-day btn btn-sm {{#if equal type "day"}}btn-primary{{/if}}">day</button>
         <button class="calendar-week btn btn-sm {{#if equal type "week"}}btn-primary{{/if}}">week</button>

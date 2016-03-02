@@ -54,6 +54,14 @@ Template.topNavbar.helpers({
     if (area) {
       return area.color;
     }
+  },
+
+  calendar() {
+    const calendarUiStatesManager = UIStates.getManagerFor('calendar');
+    return {
+      date: calendarUiStatesManager.getState('lastViewDate') || HospoHero.dateUtils.shortDateFormat(),
+      type: calendarUiStatesManager.getState('type') || 'day'
+    }
   }
 });
 
@@ -73,7 +81,7 @@ Template.topNavbar.events({
     FlyoutManager.open('notifiFlyout', {});
   },
 
-  'click .organization-structure-flyout': function () {
+  'click .open-organization-structure-button': function () {
     FlyoutManager.open('organizationStructure', {});
   },
 

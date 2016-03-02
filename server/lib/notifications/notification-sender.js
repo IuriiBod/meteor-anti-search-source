@@ -50,12 +50,14 @@
  *
  * @param {string} subject notification's subject/title
  * @param {string} templateName handlebars template name
- * @param {*|object} templateData data to render on template
- * @param {*|object} [options] additional configuration
- * @param {*|string} options.senderId user that sanded notification
- * @param {*|object} options.metadata additional notification data
- * @param {*|boolean} options.interactive deny automatic reading (usually if notification requires an action)
- * @param {*|object} options.helpers define you own formatting helpers
+ * @param {object} [templateData] data to render on template
+ * @param {object} [options] additional configuration
+ * @param {string} [options.senderId] user that sanded notification
+ * @param {object} [options.metadata] additional notification data
+ * @param {boolean} [options.interactive] deny automatic reading (usually if notification requires an action)
+ * @param {object} [options.helpers] define you own formatting helpers
+ * @param {boolean} [options.shareable] if one of recipients marks notification as read it will be removed
+ * in others too
  * @constructor
  */
 NotificationSender = function (subject, templateName, templateData = {}, options = {}) {
@@ -70,6 +72,10 @@ NotificationSender = function (subject, templateName, templateData = {}, options
     _.each(options.helpers, function (helperFn, helperName) {
       OriginalHandlebars.registerHelper(helperName, helperFn);
     });
+  }
+
+  if (options.shareable) {
+    this._options.shareId = Random.id();
   }
 };
 
@@ -115,6 +121,28 @@ NotificationSender.prototype._getUserEmail = function (userId) {
   return user && user.emails && user.emails.length ? user.emails[0].address : false;
 };
 
+/**
+ * Sends push notification using raix:push package
+ * @param notificationId
+ * @param notificationOptions
+ * @private
+ */
+NotificationSender.prototype._sendPushNotification = function (notificationId, notificationOptions) {
+  let senderId = notificationOptions.createdBy;
+
+  let pushNotificationOptions = {
+    from: senderId && HospoHero.username(senderId) || 'HospoHero',
+    title: notificationOptions.title,
+    text: this._renderTemplateWithData(notificationId, true),
+    badge: 12,
+    query: {
+      userId: notificationOptions.to
+    }
+  };
+
+  Push.send(pushNotificationOptions);
+};
+
 
 NotificationSender.prototype._insertNotification = function (receiverId, markAsRead) {
   var notificationOptions = {
@@ -127,6 +155,10 @@ NotificationSender.prototype._insertNotification = function (receiverId, markAsR
     createdOn: Date.now()
   };
 
+  if (this._options.shareId) {
+    notificationOptions.shareId = this._options.shareId;
+  }
+
   var notificationId = Notifications.insert(notificationOptions);
 
   var html = this._renderTemplateWithData(notificationId);
@@ -135,17 +167,7 @@ NotificationSender.prototype._insertNotification = function (receiverId, markAsR
     $set: {text: html}
   });
 
-  try {
-    var pushSender = new PushNotificationSender(notificationOptions.to);
-    if (pushSender.isDeviceRegistered()) {
-      pushSender.send({
-        title: notificationOptions.title,
-        text: this._renderTemplateWithData(notificationId, true)
-      });
-    }
-  } catch (err) {
-    logger.error('Error while trying to send mobile notification', err);
-  }
+  this._sendPushNotification(notificationId, notificationOptions);
 
   return notificationId;
 };

@@ -1,6 +1,11 @@
+var canUserEditJobs = function () {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit jobs');
+};
+
 Meteor.methods({
-  'createJobItem': function (newJobItemInfo) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+  createJobItem: function (newJobItemInfo) {
+    if (!canUserEditJobs()) {
       logger.error(403, "User not permitted to create jobs");
     }
 
@@ -13,7 +18,7 @@ Meteor.methods({
       status: 'active'
     };
 
-    var newJobItemInfo = _.extend(newJobItemInfo, defaultJobItemProperties);
+    newJobItemInfo = _.extend(newJobItemInfo, defaultJobItemProperties);
 
     var createdJobItemId = JobItems.insert(newJobItemInfo);
 
@@ -24,8 +29,8 @@ Meteor.methods({
     return createdJobItemId;
   },
 
-  'editJobItem': function (newJobItemInfo) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+  editJobItem: function (newJobItemInfo) {
+    if (!canUserEditJobs()) {
       logger.error(403, "User not permitted to edit jobs");
     }
     check(newJobItemInfo, HospoHero.checkers.JobItemDocument);
@@ -39,8 +44,8 @@ Meteor.methods({
     return newJobItemInfo._id;
   },
 
-  'deleteJobItem': function (id) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+  deleteJobItem: function (id) {
+    if (!canUserEditJobs()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -76,7 +81,7 @@ Meteor.methods({
   },
 
   duplicateJobItem: function (jobItemId, areaId, quantity) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+    if (!canUserEditJobs()) {
       logger.error("User not permitted to duplicate job items");
       throw new Meteor.Error(403, "User not permitted to duplicate job items");
     }
@@ -105,7 +110,7 @@ Meteor.methods({
     return quantity === false ? jobItemId : {_id: jobItemId, quantity: quantity};
   },
 
-  'archiveJobItem': function (id) {
+  archiveJobItem: function (id) {
     var checkIfJobItemExistInActiveMenu = function () {
       /* defining additional function */
       var existInActiveMenus = MenuItems.find({
@@ -132,7 +137,7 @@ Meteor.methods({
     /* end of defining additional function */
 
 
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+    if (!canUserEditJobs()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -154,3 +159,4 @@ Meteor.methods({
     return statusToSet;
   }
 });
+

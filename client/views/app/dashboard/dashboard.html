@@ -1,6 +1,6 @@
 <template name="dashboard">
   <div class="wrapper wrapper-content">
-    {{#if isInOrganization}}
+    {{#if isUserInAnyOrganization}}
       {{#if getCurrentArea}}
         <div class="row">
           <div class="col-md-7 col-xs-12 pull-left">
@@ -25,14 +25,14 @@
             <h1>Welcome to Hospo Hero.</h1>
 
             <p>
-              Thanks for coming. Please, choose your area{{#if isOrganizationOwner}} or create a new one{{/if}} in the
+              Thanks for coming. Please, choose your area{{#if isCurrentOrganizationOwner}} or create a new one{{/if}} in the
               top menu first
             </p>
 
             <p>
               To choose the area, click on the <i class="fa fa-sitemap"></i> icon and then click on area's name
             </p>
-            {{#if isOrganizationOwner}}
+            {{#if isCurrentOrganizationOwner}}
               <p>
                 To create new area or location, click on the <i class="fa fa-sitemap"></i> icon and then click on <i
                   class="fa fa-plus"></i> icon

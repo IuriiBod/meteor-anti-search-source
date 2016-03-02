@@ -1,10 +1,12 @@
-var checkForecastPermission = function (subscribtion) {
-  var haveAccess = HospoHero.canUser('view forecast', subscribtion.userId);
+var checkForecastPermission = function (userId, areaId) {
+  var checker = new HospoHero.security.PermissionChecker(userId);
+  var haveAccess = checker.hasPermissionInArea(areaId, 'view forecast');
   if (!haveAccess) {
     subscribtion.error(new Meteor.Error(403, 'Access Denied'));
   }
   return haveAccess;
 };
+
 
 
 Meteor.publish('weatherForecast', function (weekRange, areaId) {
@@ -13,7 +15,7 @@ Meteor.publish('weatherForecast', function (weekRange, areaId) {
 
   logger.info('Weather subscribe ', weekRange);
 
-  if (checkForecastPermission(this)) {
+  if (checkForecastPermission(this.userId, areaId)) {
     var currentArea = Areas.findOne({_id: areaId});
 
     if (currentArea) {

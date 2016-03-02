@@ -1,0 +1,62 @@
+<template name="createMeeting">
+  <div class="flyout-header">
+    {{> CloseFlyoutButton}}
+    Create Meeting
+  </div>
+
+  <div class="flyout-content">
+    <form>
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" name="title" required="required"/>
+      </div>
+
+      <div class="form-group">
+        <label for="date">Meeting Date</label>
+        <button type="button" class="btn btn-white datepicker form-control">{{meetingDate}}</button>
+      </div>
+
+      <div class="form-group">
+        <label>Meeting Time</label>
+
+        <div class="meeting-time-picker">
+          {{> comboTimeEditable params=timeComboEditableParams}}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" class="form-control" name="location" required="required"/>
+      </div>
+
+      <div class="form-group">
+        <label>Attendees</label>
+        <a href="#" class="add-attendee">
+          <i class="fa fa-{{#if addNewAttendee}}minus{{else}}plus{{/if}}"></i>
+        </a>
+
+        <div class="attendees-container">
+          {{#if addNewAttendee}}
+            {{> usersSearch selectedUsers=attendees onUserSelect=onUserSelect}}
+          {{/if}}
+
+          {{#if attendees.length}}
+            <div class="attendees">
+              {{#each attendees}}
+                {{> attendee userId=this onUserRemove=onUserRemove}}
+              {{/each}}
+            </div>
+          {{else}}
+            <div class="text-muted">
+              <b>No attendees yet</b>
+            </div>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </form>
+  </div>
+</template>

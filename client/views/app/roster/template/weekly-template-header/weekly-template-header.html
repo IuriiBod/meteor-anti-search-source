@@ -1,5 +1,5 @@
 <template name="weeklyTemplateHeader">
-  {{#if canEditRoster}}
+  {{#if hasPermissionInAreaTo 'edit roster'}}
     <div class="title-action">
       <a href="#" class="btn btn-primary week-selector-opener">
         Copy template shifts to week

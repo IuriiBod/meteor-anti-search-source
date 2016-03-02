@@ -1,9 +1,10 @@
 Meteor.methods({
   createComment: function (comment, refType, recipients) {
-    if (!HospoHero.isInOrganization(Meteor.userId())) {
+    if (!HospoHero.getCurrentAreaId(this.userId)) {
       logger.error('User can\'t leave comments');
       throw new Meteor.Error(403, 'User can\'t leave comments');
     }
+
     check(comment, HospoHero.checkers.CommentChecker);
 
 
@@ -14,6 +15,7 @@ Meteor.methods({
         stockOrders: StocktakeMain,
         supplier: Suppliers,
         taskItem: TaskList,
+        meeting: Meetings,
         noteItem: ManagerNotes
       };
       return typeCollectionRelations[referenceType].findOne({_id: referenceId});
@@ -25,7 +27,8 @@ Meteor.methods({
         job: 'jobItemDetailed',
         stockOrders: 'stocktakeOrdering',
         supplier: 'supplierProfile',
-        taskItem: 'taskList'
+        taskItem: 'taskList',
+        meeting: 'meetingDetails'
       };
       var routeName = routesRelations[referenceType];
       return referenceType === 'taskItem' ? {

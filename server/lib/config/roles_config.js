@@ -24,7 +24,8 @@ var actions = {
   "Receive Deliveries": "receive deliveries",
   "Approve leave requests": "approve leave requests",
   "View calendar": "view calendar",
-  "Edit calendar": "edit calendar"
+  "Edit calendar": "edit calendar",
+  "Create meetings": "create meetings"
 };
 
 var defaultRoles = [
@@ -59,7 +60,8 @@ var defaultRoles = [
       "receive deliveries",
       "approve leave requests",
       "view calendar",
-      "edit calendar"
+      "edit calendar",
+      "create meetings"
     ]
   },
 

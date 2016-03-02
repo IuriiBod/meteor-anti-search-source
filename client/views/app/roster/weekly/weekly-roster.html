@@ -2,7 +2,7 @@
   <!-- Page heading -->
   {{> pageHeading title="Weekly Roster" category='Roster' name="weeklyroster"}}
 
-  {{#if canViewForecast}}
+  {{#if hasPermissionInAreaTo 'view forecast'}}
     {{> weeklyFigures date=date}}
   {{/if}}
 

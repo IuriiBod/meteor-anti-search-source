@@ -22,12 +22,11 @@ email
 underscore
 random
 ecmascript
-
 less
 reactive-var
 
 force-ssl
-crosswalk
+#crosswalk
 
 accounts-ui
 accounts-google
@@ -60,6 +59,7 @@ russ:weather-icons
 joshowens:timezone-picker
 natestrauser:animate-css
 peppelg:bootstrap-3-modal
+settinghead:auto-nprogress
 
 hospohero:stale-session
 trsdln:flyouts
@@ -81,6 +81,7 @@ jss:meteor-google-prediction
 jss:publish-authorized
 jss:suncalc
 
+
 # ===========> both
 iron:router
 zephraph:namespace
@@ -90,9 +91,10 @@ jss:anti-search-source
 jss:moment-timezone
 jss:ui-states
 
+
 # ===========> new
-settinghead:auto-nprogress
 matb33:collection-hooks
 dburles:mongo-collection-instances
 manuel:reactivearray
 dsyko:jquery-ui-touch-punch
+raix:push

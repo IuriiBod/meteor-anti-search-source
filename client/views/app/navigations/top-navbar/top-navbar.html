@@ -5,22 +5,16 @@
         <a id="navbar-minimalize" class="minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
       </div>
       <ul class="nav navbar-top-links navbar-right">
-        {{#if isInOrganization}}
-          {{#if getCurrentAreaId}}
-            <li>
-              <span class="organization-structure-flyout">
-                <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
-                {{getCurrentArea.name}}
+        <li>
+              <span class="open-organization-structure-button">
+                {{#if getCurrentAreaId}}
+                  <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
+                  {{getCurrentArea.name}}
+                {{else}}
+                  <i class="fa fa-sitemap"></i>
+                {{/if}}
               </span>
-            </li>
-          {{else}}
-            <li>
-              <a class="organization-structure-flyout">
-                <i class="fa fa-sitemap"></i>
-              </a>
-            </li>
-          {{/if}}
-        {{/if}}
+        </li>
 
         <li class="dropdown">
           <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -30,7 +24,8 @@
         </li>
 
         <li>
-          <a href="{{pathFor 'calendar' type="day" date=shortDateFormat userId=currentUser._id}}"><i class="fa fa-calendar"></i></a>
+          <a href="{{pathFor 'calendar' type=calendar.type date=calendar.date userId=currentUser._id}}"><i
+              class="fa fa-calendar"></i></a>
         </li>
 
         <li>

@@ -1,3 +1,9 @@
+var canUserEditUsers = function(areaId = null) {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'edit users');
+};
+
+
 Accounts.onCreateUser(function (options, user) {
   user.profile = options.profile || {};
   if (user.services.google) {
@@ -31,6 +37,15 @@ Accounts.onLogin(function (loginInfo) {
 });
 
 
+AntiSearchSource.allow('users', {
+  maxLimit: 15,
+  securityCheck (userId, configs) {
+    return !!userId;
+  },
+  allowedFields: ['profile.firstname', 'profile.lastname', 'emails.address']
+});
+
+
 Meteor.methods({
   changePinCode: function (newPinCode) {
     Meteor.users.update({
@@ -43,10 +58,15 @@ Meteor.methods({
   },
 
   editBasicDetails: function (id, editDetails) {
-    if (!HospoHero.isManager()) {
+    check(id, HospoHero.checkers.MongoId);
+
+    let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    if (!permissionChecker.hasPermissionInArea(currentAreaId, "edit user's payrate")) {
       logger.error("User not permitted to edit users details");
       throw new Meteor.Error(403, "User not permitted to edit users details");
     }
+
     if (!id) {
       logger.error('No user has found');
       throw new Meteor.Error(401, "User not found");
@@ -96,7 +116,9 @@ Meteor.methods({
   },
 
   resignDate: function (type, id, val) {
-    if (!HospoHero.isManager()) {
+    let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    if (!permissionChecker.hasPermissionInArea(currentAreaId, "edit user's payrate")) {
       logger.error("User not permitted to resign workers");
       throw new Meteor.Error(403, "User not permitted to resign workers");
     }
@@ -144,15 +166,15 @@ Meteor.methods({
   },
 
   changeUserRole: function (userId, newRoleId, areaId) {
-    if (!HospoHero.canUser('edit users', Meteor.userId())) {
-      logger.error("User not permitted to change roles");
-      throw new Meteor.Error(403, "User not permitted to change roles");
-    }
-
     check(userId, HospoHero.checkers.MongoId);
     check(newRoleId, HospoHero.checkers.MongoId);
 
     areaId = areaId || HospoHero.getCurrentAreaId();
+
+    if (!canUserEditUsers(areaId)) {
+      logger.error("User not permitted to change roles");
+      throw new Meteor.Error(403, "User not permitted to change roles");
+    }
 
     var area = Areas.findOne({_id: areaId});
 
@@ -191,7 +213,7 @@ Meteor.methods({
     check(sectionId, HospoHero.checkers.MongoId);
     check(isAddingSection, Boolean);
 
-    if (!HospoHero.canUser('edit users', Meteor.userId())) {
+    if (!canUserEditUsers()) {
       logger.error('User not permitted to edit other users', {userId: Meteor.userId()});
       throw new Meteor.Error('User not permitted to edit other users', {userId: Meteor.userId()});
     }

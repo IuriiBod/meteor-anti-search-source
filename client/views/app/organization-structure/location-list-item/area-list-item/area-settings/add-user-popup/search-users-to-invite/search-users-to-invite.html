@@ -1,0 +1,35 @@
+<template name="searchUsersToInvite">
+  {{#if isInviteInProgress}}
+    <div class="text-center invite-progress-wrapper">
+      <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+    </div>
+  {{else}}
+    <div class="add-user-to-area">
+      <input type="text" class="form-control input-field add-user-name" placeholder="e.g. john@gmail.com"
+             name="addUserName" required="required">
+      {{#if isNewUserAdding}}
+        {{> inviteNewUser}}
+      {{/if}}
+    </div>
+
+    <div>
+      {{#if displaySearchResults searchedUsers}}
+        {{#if searchedUsers.count}}
+          <div class="search-results">
+            <b>Select to add</b>
+            <hr/>
+            <div class="search-users-container">
+              {{# each searchedUsers}}
+                {{> searchUserInfo user=this}}
+              {{/each}}
+            </div>
+          </div>
+        {{else}}
+          <div class="text-muted text-center no-results">
+            <b>No results</b>
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
+  {{/if}}
+</template>

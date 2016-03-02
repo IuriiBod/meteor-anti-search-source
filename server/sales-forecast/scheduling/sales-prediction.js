@@ -60,7 +60,7 @@ ForecastMaker.prototype._getNotificationSender = function (area) {
         logger.info('Notify about prediction change', {receivers: receiversIds, changes: changes});
 
         var notificationTitle = 'Some predictions have been changed';
-        var notificationSender = new NotificationSender(notificationTitle, 'forecast-update', changes);
+        var notificationSender = new NotificationSender(notificationTitle, 'forecast-update', {changes: changes});
 
         receiversIds.forEach(function (receiverId) {
           notificationSender.sendNotification(receiverId);

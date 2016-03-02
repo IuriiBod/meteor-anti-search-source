@@ -19,6 +19,6 @@ Template.profileMainView.helpers({
 
   me: function () {
     var id = HospoHero.getParamsFromRoute('_id');
-    return HospoHero.isMe(id);
+    return Meteor.userId() && Meteor.userId() === id;
   }
 });

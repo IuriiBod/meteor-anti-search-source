@@ -1,0 +1,11 @@
+<template name="usersSearch">
+  <div class="search-container form-group">
+    <input type="text" class="form-control search-user-name" placeholder="Enter the name..."/>
+  </div>
+
+  <div class="search-results">
+    {{#each searchResults}}
+      {{> searchUserInfo user=this}}
+    {{/each}}
+  </div>
+</template>

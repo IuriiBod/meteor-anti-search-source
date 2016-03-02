@@ -241,10 +241,22 @@ Namespace('HospoHero.misc', {
     }
   },
 
-  renameObjectProperty(object, oldKeyName, newKeyName) {
-    object[newKeyName] = object[oldKeyName];
-    delete object[oldKeyName];
-    return object;
+  escapeRegExpString: function (str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  },
+
+  /**
+   * Returns different values of two passed arrays
+   * @param {Array} array1
+   * @param {Array} array2
+   * @returns {Array}
+   */
+  arrayDifference: function (array1, array2) {
+    if (array1.length > array2.length) {
+      return _.difference(array1, array2);
+    } else {
+      return _.difference(array2, array1);
+    }
   },
 
   hasUnavailability (unavailabilities, {startTime: shiftStart, endTime: shiftEnd}) {
@@ -272,6 +284,18 @@ Namespace('HospoHero.misc', {
       });
     } else {
       return false;
+    }
+  },
+
+  timer() {
+    return {
+      timeoutId: 0,
+      setTimeout(executeFunc, timeout) {
+        this.timeoutId = Meteor.setTimeout(executeFunc, timeout);
+      },
+      clearTimeout() {
+        Meteor.clearTimeout(this.timeoutId);
+      }
     }
   }
 });

@@ -19,11 +19,21 @@ var menuEntries = [
     }
   },
   {
-    title: 'Roster',
+    title: 'Schedules',
     icon: 'fa-calendar-o',
     permission: 'view roster',
-    activeOnRoutes: ['weeklyRoster', 'templateWeeklyRoster'],
+    activeOnRoutes: ['managerCalendar', 'weeklyRoster', 'templateWeeklyRoster'],
     subMenuEntries: [
+      {
+        title: 'Daily',
+        route: 'managerCalendar',
+        permission: 'edit calendar',
+        params: function () {
+          return {
+            date: HospoHero.dateUtils.shortDateFormat(new Date())
+          }
+        }
+      },
       {
         title: 'Weekly',
         route: 'weeklyRoster',
@@ -128,14 +138,11 @@ var menuEntries = [
     ]
   },
   {
-    title: 'Manger Calendar',
-    icon: 'fa-calendar',
-    route: 'managerCalendar',
-    permission: 'edit calendar',
+    title: 'Meetings',
+    icon: 'fa-users',
+    route: 'meetings',
     params: function () {
-      return {
-        date: HospoHero.dateUtils.shortDateFormat(new Date())
-      }
+      return {};
     }
   },
   {
@@ -162,6 +169,10 @@ var menuEntries = [
 Template.navigation.helpers({
   dashboardEntry: function () {
     return dashboardEntry;
+  },
+
+  isUserInAnyOrganization: function () {
+    return HospoHero.security.isUserInAnyOrganization();
   },
 
   menuEntries: function () {
