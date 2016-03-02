@@ -62,9 +62,9 @@ let updateMenuItemsRank = function (location) {
 };
 
 if (HospoHero.isDevelopmentMode()) {
-  HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function (location) {
+  HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function () {
     return 4;
   }, function (location) {
     updateMenuItemsRank(location);
-  })
+  });
 }

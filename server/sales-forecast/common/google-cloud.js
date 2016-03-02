@@ -1,3 +1,5 @@
+/*jshint camelcase: false */
+
 GoogleCloud = function GoogleCloud(menuItem, trainingFileName) {
   this._menuItem = menuItem;
 

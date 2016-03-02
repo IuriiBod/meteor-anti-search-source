@@ -18,7 +18,7 @@ updateTrainingDataForLocation = function (location, forceUpdate) {
 
 
 if (!HospoHero.isDevelopmentMode()) {
-  HospoHero.LocationScheduler.addDailyJob('Training data uploading', function (location) {
+  HospoHero.LocationScheduler.addDailyJob('Training data uploading', function () {
     return 1; //at 1:00 AM
   }, function (location) {
     logger.info('Started updating of prediction model', {locationId: location._id});

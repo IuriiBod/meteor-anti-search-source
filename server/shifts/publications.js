@@ -48,7 +48,7 @@ Meteor.publishComposite('daily', function (date, areaId, worker) {
 
       return Shifts.find(query);
     }
-  }
+  };
 });
 
 Meteor.publishAuthorized("shift", function (id) {
@@ -66,21 +66,21 @@ Meteor.publishAuthorized('shifts', function (type, userId, areaId, date) {
   };
 
   var todayDate = date || new Date();
-  if (type == 'future' || type == 'opened') {
+  if (type === 'future' || type === 'opened') {
     query.startTime = {$gte: todayDate};
 
-    if (type == 'opened') {
+    if (type === 'opened') {
       _.extend(query, {
         assignedTo: {$in: [null, undefined]},
         published: true
-      })
+      });
     }
-  } else if (type == 'past') {
+  } else if (type === 'past') {
     _.extend(query, {
       startTime: {$lte: todayDate},
       endTime: {$lte: todayDate}
-    })
-  } else if (type == 'today') {
+    });
+  } else if (type === 'today') {
     var currentArea = Areas.findOne({_id: areaId});
 
     if (currentArea) {

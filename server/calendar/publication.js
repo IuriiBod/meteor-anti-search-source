@@ -37,5 +37,5 @@ Meteor.publishComposite('calendarEvents', function (date, queryType, areaId, use
         }
       }
     ]
-  }
+  };
 });

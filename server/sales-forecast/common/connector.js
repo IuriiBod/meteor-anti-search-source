@@ -8,7 +8,7 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
 
   this._client = new GooglePrediction(authOptions);
   this._locationId = locationId;
-  this._bucketName = cloudSettings.BUCKET
+  this._bucketName = cloudSettings.BUCKET;
 };
 
 
@@ -55,8 +55,8 @@ GooglePredictionApi.prototype.updatePredictionModel = function (menuItemsQuery, 
     //find out if we need to update prediction model (every half year)
     var lastForecastModelUpdateDate = menuItem.lastForecastModelUpdateDate || false;
 
-    var needToUpdateModel = !lastForecastModelUpdateDate
-      || moment(lastForecastModelUpdateDate).add(182, 'day').isBefore(moment());
+    var needToUpdateModel = !lastForecastModelUpdateDate ||
+      moment(lastForecastModelUpdateDate).add(182, 'day').isBefore(moment());
 
     if (needToUpdateModel || isForcedUpdate) {
       self._buildPredictionModelForMenuItem(menuItem);

@@ -36,6 +36,6 @@ Meteor.methods({
 
     var newStatus = !area.archived;
     Areas.update({_id: area._id}, {$set: {archived: newStatus}});
-    Meteor.users.update({currentAreaId: area._id}, {$unset: {currentAreaId: ''}})
+    Meteor.users.update({currentAreaId: area._id}, {$unset: {currentAreaId: ''}});
   }
 });

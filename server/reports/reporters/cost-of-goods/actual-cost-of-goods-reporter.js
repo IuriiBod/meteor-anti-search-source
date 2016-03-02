@@ -29,8 +29,8 @@ ActualCostOfGoodsReporter = class {
   }
 
   _getTotalActualCost() {
-    return this._getTotalAmountOrdersReceived()
-      + (this.firstStocktakeTotal - this.secondStocktakeTotal);
+    return this._getTotalAmountOrdersReceived() +
+      this.firstStocktakeTotal - this.secondStocktakeTotal;
   }
 
   _getTotalAmountOrdersReceived() {
@@ -46,5 +46,5 @@ ActualCostOfGoodsReporter = class {
       return memo + (stocktake.counting * stocktake.unitCost);
     }, 0);
     return HospoHero.misc.rounding(stocktakeTotalValue, 100);
-  };
+  }
 };
