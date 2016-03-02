@@ -21,10 +21,10 @@ Meteor.methods({
 
     if (!StocktakeMain.findOne(stocktakeVersion)) {
       logger.error("Stocktake version should exist");
-      throw new Meteor.Error("Stocktake version should exist")
+      throw new Meteor.Error("Stocktake version should exist");
     }
     var stocktakes = Stocktakes.find({"version": stocktakeVersion}).fetch();
-    if (stocktakes.length == 0) {
+    if (stocktakes.length === 0) {
       logger.error("No recorded stocktakes found");
       throw new Meteor.Error(404, "No recorded stocktakes found");
     }
@@ -55,7 +55,7 @@ Meteor.methods({
         var orderRef = null;
         if (existingOrder) {
           orderRef = existingOrder._id;
-          StockOrders.update({"_id": existingOrder._id}, {$inc: {"countOnHand": count}})
+          StockOrders.update({"_id": existingOrder._id}, {$inc: {"countOnHand": count}});
         } else {
           var newOrder = {
             "stockId": stock.stockId,

@@ -1,3 +1,6 @@
+// disable camelcase warnings
+/*jshint camelcase: false */
+
 Revel = function Revel(posCredentials) {
   this._posCredentials = posCredentials;
   this.DATA_LIMIT = 5000;
@@ -72,7 +75,7 @@ Revel.prototype.loadProductItems = function () {
         posId: item.id,
         name: item.name,
         price: item.price
-      }
+      };
     });
 };
 
@@ -84,7 +87,7 @@ Revel.prototype.loadProductItems = function () {
  */
 Revel.prototype.loadOrderItems = function (offset) {
   var queryOptions = {
-    order_by: '-created_date',
+    'order_by': '-created_date',
     fields: [
       'created_date',
       'quantity',
@@ -108,9 +111,18 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived) {
 
   var bucket = new RevelSalesDataBucket();
 
+  let processEntry = function (entry) {
+    if (!bucket.put(entry)) {
+      toContinue = onDateReceived(bucket.getDataAndReset());
+      bucket.put(entry); //put next day entry
+      return toContinue;
+    }
+    return true;
+  };
+
   while (offset <= totalCount && toContinue) {
 
-    var result = this.loadOrderItems(offset);
+    let result = this.loadOrderItems(offset);
 
     //handle Revel API error
     if (result === false) {
@@ -124,14 +136,7 @@ Revel.prototype.uploadAndReduceOrderItems = function (onDateReceived) {
 
     logger.info('Requested to Revel', {offset: offset, total: totalCount});
 
-    result.objects.every(function (entry) {
-      if (!bucket.put(entry)) {
-        toContinue = onDateReceived(bucket.getDataAndReset());
-        bucket.put(entry); //put next day entry
-        return toContinue;
-      }
-      return true;
-    });
+    result.objects.every(processEntry);
 
     offset += this.DATA_LIMIT;
   }

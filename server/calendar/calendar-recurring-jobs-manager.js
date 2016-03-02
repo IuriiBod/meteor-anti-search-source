@@ -49,7 +49,7 @@ CalendarRecurringJobsManager._isJobEnded = function (job, shiftTime) {
         return CalendarRecurringJobsManager._diffDates(shiftTime, jobStarts, 'week');
       },
       everyXWeeks: function () {
-        return Math.floor(diffDates(shiftTime, jobStarts, 'week')) / job.repeatEvery;
+        return Math.floor(CalendarRecurringJobsManager._diffDates(shiftTime, jobStarts, 'week')) / job.repeatEvery;
       }
     };
 

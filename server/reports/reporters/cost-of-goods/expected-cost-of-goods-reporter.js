@@ -84,7 +84,7 @@ ExpectedCostOfGoodsReporter = class {
 
     let menuItemsSales = DailySales.find(findQuery, queryOptions).fetch();
     return _.map(menuItemsSales, (item) => {
-      return _renameObjectProperty(item, 'actualQuantity', 'soldAmount')
+      return _renameObjectProperty(item, 'actualQuantity', 'soldAmount');
     });
   }
 

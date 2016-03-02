@@ -47,7 +47,7 @@ class MeetingPropertyChangeLogger {
     ).sendNotification(toUserId);
   }
 
-  _trackUserRemovedFromMeeting(oldMeeting, newMeeting, userId) {
+  _trackUserRemovedFromMeeting(oldMeeting, newMeeting) {
     let diffUser = _.difference(oldMeeting.attendees, newMeeting.attendees);
     if (diffUser.length) {
       let message;
@@ -149,7 +149,7 @@ Meteor.methods({
           if (isAddingNewValue) {
             array.push(userId);
           } else {
-            array = _.without(array, userId)
+            array = _.without(array, userId);
           }
           return _.uniq(array);
         };

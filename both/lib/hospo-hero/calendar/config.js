@@ -37,7 +37,7 @@ Namespace('HospoHero.calendar', {
         textColor: '#FFF',
         flyoutTemplate: 'eventRecurringJob'
       },
-      manualAllocating: false,
+      manualAllocating: true,
       duration: {
         field: 'activeTime',
         timeUnits: 'seconds'

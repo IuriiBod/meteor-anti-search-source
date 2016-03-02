@@ -92,7 +92,7 @@ NotificationSender.prototype._renderTemplateWithData = function (notificationId,
   var templateData = this._options.templateData;
 
   if (this._isInteractive()) {
-    templateData._notificationId = notificationId
+    templateData._notificationId = notificationId;
   }
   templateData._isEmail = !!isEmail; //convert undefined to false if argument was missed
 

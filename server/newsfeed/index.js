@@ -6,13 +6,13 @@ Meteor.methods({
     }
 
     var doc = {
-      "text": text,
-      "createdOn": Date.now(),
-      "createdBy": Meteor.userId(),
-      "likes": [],
+      text: text,
+      createdOn: Date.now(),
+      createdBy: Meteor.userId(),
+      likes: [],
       relations: HospoHero.getRelationsObject()
     };
-    doc["reference"] = ref ? ref : null;
+    doc.reference = ref ? ref : null;
 
     var id = NewsFeeds.insert(doc);
     logger.info("NewsFeed text inserted", id);
@@ -27,12 +27,12 @@ Meteor.methods({
 
     if (ref) {
       var feed = NewsFeeds.findOne({_id: ref});
-      if (feed.createdBy != Meteor.userId()) {
+      if (feed.createdBy !== this.userId) {
         new NotificationSender(
           'New comment',
           'new-newsfeed-comment',
           {
-            username: HospoHero.username(Meteor.userId())
+            username: HospoHero.username(this.userId)
           },
           notificationSenderOptions
         ).sendNotification(feed.createdBy);
@@ -43,7 +43,7 @@ Meteor.methods({
         'Mention in a newsfeed',
         'mention-in-a-newsfeed',
         {
-          username: HospoHero.username(Meteor.userId())
+          username: HospoHero.username(this.userId)
         },
         notificationSenderOptions
       );

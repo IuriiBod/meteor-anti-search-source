@@ -27,7 +27,7 @@ var menuEntries = [
       {
         title: 'Daily',
         route: 'managerCalendar',
-        permission: 'edit calendar',
+        permission: 'edit roster',
         params: function () {
           return {
             date: HospoHero.dateUtils.shortDateFormat(new Date())
