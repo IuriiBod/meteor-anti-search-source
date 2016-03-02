@@ -17,16 +17,9 @@ Template.projectDetails.onCreated(function () {
   };
 
   this.saveProject = () => {
-    return (...args) => {
+    return (detailsToUpdate) => {
       let project = this.project();
-
-      if (args.length === 1 && _.isObject(args[0])) {
-        _.extend(project, args[0]);
-      } else if (args.length === 2) {
-        // args[0] - field name
-        // args[1] - new value
-        project[args[0]] = args[1];
-      }
+      _.extend(project, detailsToUpdate);
 
       if (!this.data.project) {
         this.createProjectObject.set(project);
@@ -84,7 +77,7 @@ Template.projectDetails.helpers({
     let saveProject = Template.instance().saveProject();
 
     return function (newAgendaText) {
-      saveProject('agendaAndMinutes', newAgendaText);
+      saveProject({agendaAndMinutes: newAgendaText});
     }
   }
 });

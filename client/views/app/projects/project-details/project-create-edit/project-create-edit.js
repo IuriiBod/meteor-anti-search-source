@@ -20,7 +20,7 @@ Template.projectCreateEdit.onCreated(function () {
     let onUserSelect = () => {
       return (userId) => {
         project[memberType].push(userId);
-        saveProject(memberType, project[memberType]);
+        saveProject({[memberType]: project[memberType]});
         this.selectedUsers.push(userId);
       }
     };
@@ -33,7 +33,7 @@ Template.projectCreateEdit.onCreated(function () {
 
   this.removeUserFormProject = (userId, teamType) => {
     project[teamType].splice(project[teamType].indexOf(userId), 1);
-    saveProject(teamType, project[teamType]);
+    saveProject({[teamType]: project[teamType]});
     this.selectedUsers.remove(userId);
   }
 });
@@ -43,7 +43,7 @@ Template.projectCreateEdit.helpers({
   onValueChanged() {
     let saveProject = this.saveProject();
     return (newValue) => {
-      saveProject('title', newValue);
+      saveProject({title: newValue});
     }
   },
 
@@ -103,7 +103,7 @@ Template.projectCreateEdit.helpers({
     let saveProject = Template.parentData(1).saveProject();
 
     return (newStatus) => {
-      saveProject('status', newStatus);
+      saveProject({status: newStatus});
     }
   },
 
