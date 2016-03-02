@@ -115,7 +115,7 @@ Meteor.methods({
             publishedForName:HospoHero.username(notificationReceiverId),
             rosterDate: shiftDate,
             areaName: HospoHero.getCurrentArea().name,
-            organizationName:HospoHero.getOrganization().name
+            organizationName:Organizations.findOne({_id:HospoHero.getCurrentArea().organizationId}).name
           },
           {
             helpers: {

@@ -45,7 +45,7 @@ let sendEmailInvitation = function (createdUser, password, area) {
 
   let notificationSender = new NotificationSender(
     'You was added to the ' + area.name + ' area',
-    'invitation-email',
+    'invitation',
     {
       firstName: createdUser.profile.firstname,
       password: password,

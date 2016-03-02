@@ -87,17 +87,40 @@ NotificationSender.prototype._isInteractive = function () {
   return this._options.interactive;
 };
 
-
-NotificationSender.prototype._renderTemplateWithData = function (notificationId, isMobile, isEmail) {
+/**
+ * Rebder template html
+ * @param {String}
+ * @param {String} 'mobile' - mobile template | 'email' - template that sending to email | undefined - default template
+ * @returns {String}
+ * @private
+ */
+NotificationSender.prototype._renderTemplateWithData = function (notificationId, type) {
   var templateData = this._options.templateData;
+  var templateName  = '';
+  templateData._isEmail = false;
 
   if (this._isInteractive()) {
     templateData._notificationId = notificationId
   }
-  templateData._isEmail = !!isEmail; //convert undefined to false if argument was missed
 
-  var templateName = this._options.templateName + (isMobile ? '-m' : '');
+  switch (type){
+    case 'mobile' : {
+      templateName = this._options.templateName + '-mobile';
+      break;
+    }
+    case 'email' : {
+      templateData._isEmail = true;
 
+      // If exist email template use him, else use default template
+      templateName = Handlebars.templates[this._options.templateName + '-email']  ?
+         this._options.templateName + '-email' :  this._options.templateName;
+      break;
+    }
+    case undefined : {
+      templateName = this._options.templateName;
+      break;
+    }
+  }
   return Handlebars.templates[templateName](templateData);
 };
 
@@ -133,7 +156,7 @@ NotificationSender.prototype._sendPushNotification = function (notificationId, n
   let pushNotificationOptions = {
     from: senderId && HospoHero.username(senderId) || 'HospoHero',
     title: notificationOptions.title,
-    text: this._renderTemplateWithData(notificationId, true),
+    text: this._renderTemplateWithData(notificationId, 'mobile'),
     badge: 12,
     query: {
       userId: notificationOptions.to
@@ -197,7 +220,7 @@ NotificationSender.prototype.sendEmail = function (receiver) {
     notificationId = this._insertNotification(receiver, true);
   }
 
-  let html = this._renderTemplateWithData(notificationId, false, true);
+  let html = this._renderTemplateWithData(notificationId, 'email');
   this._sendEmailBasic(receiver, html);
 };
 
@@ -213,7 +236,7 @@ NotificationSender.prototype.sendNotification = function (receiverId) {
 
 NotificationSender.prototype.sendBoth = function (receiverId) {
   var notificationId = this._insertNotification(receiverId, false);
-  let html = this._renderTemplateWithData(notificationId, false, true);
+  let html = this._renderTemplateWithData(notificationId, 'email');
   this._sendEmailBasic(receiverId, html);
 };
 
@@ -251,3 +274,4 @@ NotificationSender.actionUrlFor = function (methodName, action, templateRootCont
 NotificationSender.urlFor = function (routeName, routeParams, templateRootContext, routeOptions = {}) {
   return Router[templateRootContext._isEmail ? 'url' : 'path'](routeName, routeParams, routeOptions);
 };
+
