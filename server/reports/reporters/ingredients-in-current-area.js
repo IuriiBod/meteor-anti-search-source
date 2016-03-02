@@ -6,9 +6,10 @@ IngredientsFromArea = class {
 
   _initCache() {
     this._cache = Ingredients.find({'relations.areaId': this._areaId}, {
-      //fields: {
-      //
-      //}
+      fields: {
+        _id: 1,
+        description: 1
+      }
     }).fetch();
   }
 
