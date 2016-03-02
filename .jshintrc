@@ -146,8 +146,18 @@
     "through": true,
     "gcloud": true,
     "SunCalc": true,
-    "GooglePrediction": true,
-    "OriginalHandlebars": true,
+    "GooglePrediction": false,
+    "OriginalHandlebars": false,
+    "sweetAlert": false,
+    "IntercomSettings": false,
+    "FlyoutManager": false,
+    "UIStates": false,
+    "filepicker": false,
+    "ModalManager": false,
+    "TimezonePicker": false,
+    "ReactiveArray": false,
+    "StaleSession": false,
+    "AccountsTemplates": false,
 
     //collections
     "MenuItems": true,
@@ -202,6 +212,8 @@
     "ActualCostOfGoodsReporter": true,
     "ExpectedCostOfGoodsReporter": true,
     "OrdersReporter": true,
+    "StaffCostCalculator": true,
+    "DocumentCheckerHelper": true,
 
     //temporal globals
     "RawOrders": true,
