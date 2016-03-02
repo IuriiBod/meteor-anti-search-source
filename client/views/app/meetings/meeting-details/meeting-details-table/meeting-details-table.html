@@ -44,7 +44,7 @@
     <tr>
       <td><b>Attendees:</b></td>
       <td class="project-people">
-        {{> meetingAttendees meeting}}
+        {{> meetingAttendees meeting=meeting allowRemove=isMeetingCreator onUserRemove=onUserRemove}}
 
         <div class="col-md-4">
           <button type="button" class="btn btn-default btn-sm pull-left add-user">
@@ -53,12 +53,15 @@
         </div>
       </td>
     </tr>
-    <tr>
-      <td><b>Are You Attending?</b></td>
-      <td>
-        {{> attendingButtons meeting=meeting}}
-      </td>
-    </tr>
+
+    {{#if canAttendInMeeting}}
+      <tr>
+        <td><b>Are You Attending?</b></td>
+        <td>
+          {{> attendingButtons meeting=meeting}}
+        </td>
+      </tr>
+    {{/if}}
     </tbody>
   </table>
 </template>
