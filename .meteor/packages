@@ -78,7 +78,6 @@ reywood:publish-composite
 
 jss:through
 jss:meteor-google-prediction
-jss:publish-authorized
 jss:suncalc
 
 

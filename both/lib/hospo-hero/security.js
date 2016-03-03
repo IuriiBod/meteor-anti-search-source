@@ -40,11 +40,11 @@ class PermissionChecker {
    * @returns {boolean}
    */
   hasPermissionInArea(areaId, permission) {
-    if (areaId === null) {
+    if (areaId === null && this._user) {
       areaId = HospoHero.getCurrentAreaId(this._user._id);
     }
 
-    let area = Areas.findOne({_id: areaId});
+    let area = areaId && Areas.findOne({_id: areaId});
 
     return this.isAuthorized()
       && area
