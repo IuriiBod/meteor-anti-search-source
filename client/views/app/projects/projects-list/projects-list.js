@@ -47,7 +47,7 @@ Template.projectsList.helpers({
     var tmpl = Template.instance();
     return function (newFilterType) {
       tmpl.projectType.set(newFilterType);
-    }
+    };
   }
 });
 
