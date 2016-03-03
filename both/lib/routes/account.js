@@ -25,7 +25,7 @@ Router.route('signUp', {
 Router.route('logout', {
   'path': '/logout',
   action: function () {
-    StaleSession._removeTokenById(Meteor.userId());
+    StaleSession.pinLockManager._removeTokenById(Meteor.userId());
     Meteor.logout();
     Router.go('/');
   }
@@ -60,12 +60,12 @@ Router.route('switchUser', {
   layoutTemplate: 'blankLayout',
   template: 'switchUserView',
   waitOn: function () {
-    return Meteor.subscribe('selectedUsersList', StaleSession.getStoredUsersIds());
+    return Meteor.subscribe('selectedUsersList', StaleSession.pinLockManager.getStoredUsersIds());
   },
   data: function () {
-    StaleSession._lockWithPin();
+    StaleSession.pinLockManager.lockWithPin();
     return {
-      users: Meteor.users.find({_id: {$in: StaleSession.getStoredUsersIds()}})
+      users: Meteor.users.find({_id: {$in: StaleSession.pinLockManager.getStoredUsersIds()}})
     };
   }
 });

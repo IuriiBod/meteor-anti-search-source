@@ -4,12 +4,12 @@
     Notifications
   </div>
 
-  <div class="flyout-content">
+  <div class="flyout-content notifications-list-flyout">
     {{#if count}}
       <div class="notifications-list">
         {{#each notifications}}
-          <div class="ibox float-e-margins" style="margin-bottom: 0;">
-            <div class="ibox-content" style="padding-bottom: 10px;">
+          <div class="ibox float-e-margins">
+            <div class="ibox-content">
               <div class="feed-activity-list">
                 {{> notifiText notification=this}}
               </div>
@@ -17,14 +17,14 @@
           </div>
         {{/each}}
       </div>
-      <div class="text-center link-block" style="border-top: 1px solid #E7EAEC; padding-top: 15px;">
+      <div class="text-center link-block mark-all-as-read-wrapper">
         <a href="#" class="markAllAsRead">
           <strong>Mark All As Read</strong>
         </a>
       </div>
     {{else}}
       <div class="text-center link-block">
-        <strong>No unread notifications</strong>
+        <strong>Hooray! You have no unread notifications.</strong>
       </div>
     {{/if}}
   </div>
