@@ -19,7 +19,7 @@ const ranges = [
 
 Template.menuListRankReport.onCreated(function () {
   this.customRange = new ReactiveVar();
-  this.data.rangeType === 'custom-range' ? this.customRange.set(true) : this.customRange.set(false);
+  this.customRange.set(this.data.rangeType === 'custom-range');
 
   const current = _.find(ranges, obj => {
     return this.data.rangeType === obj.value;
@@ -28,7 +28,7 @@ Template.menuListRankReport.onCreated(function () {
   this.selectedRange = new ReactiveVar(current);
 
   this.getDaysOfWeek = function (daysOfWeek) {
-    return  {
+    return {
       startDate: HospoHero.dateUtils.shortDateFormat(daysOfWeek[0]),
       endDate: HospoHero.dateUtils.shortDateFormat(daysOfWeek[daysOfWeek.length - 1])
     };
@@ -36,7 +36,7 @@ Template.menuListRankReport.onCreated(function () {
 });
 
 Template.menuListRankReport.helpers({
-  menuItems: function() {
+  menuItems: function () {
     var rankedMenuItems = [];
     var category = this.selectedCategoryId;
     var index = 0;
@@ -51,9 +51,9 @@ Template.menuListRankReport.helpers({
 
   theadItems: function () {
     return [
-        'Item Name', 'Sparkline of Ranking', 'Ranking', '<b>Item Sales</b>', '<b>Item Price</b>',
-        '<b>Total Sales</b>', '<b>Prep (Item)</b>', '<b>Total Prep</b>', '<b>Cost of Goods (Item)</b>', '<b>Total Cost of Goods</b>',
-        '<b>Tax</b>', '<b>Profit (Item)</b>', '<b>Total Profit</b>'
+      'Item Name', 'Sparkline of Ranking', 'Ranking', '<b>Item Sales</b>', '<b>Item Price</b>',
+      '<b>Total Sales</b>', '<b>Prep (Item)</b>', '<b>Total Prep</b>', '<b>Cost of Goods (Item)</b>', '<b>Total Cost of Goods</b>',
+      '<b>Tax</b>', '<b>Profit (Item)</b>', '<b>Total Profit</b>'
     ];
   },
 
@@ -106,7 +106,7 @@ Template.menuListRankReport.events({
 
     if (rangeType === 'yesterday') {
       _.extend(params, {
-          startDate: HospoHero.dateUtils.shortDateFormat(date.subtract(1, 'days'))
+        startDate: HospoHero.dateUtils.shortDateFormat(date.subtract(1, 'days'))
       });
     } else if (rangeType === 'current-week') {
       var daysOfCurrentWeek = HospoHero.dateUtils.getWeekDays(date);
