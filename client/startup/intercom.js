@@ -1,3 +1,6 @@
+// disable camelcase warnings
+/*jshint camelcase: false */
+
 Meteor.startup(function () {
   IntercomSettings.userInfo = function (user, info) {
     if (!user.intercomHash) {
