@@ -19,21 +19,51 @@ StockVarianceReport = class {
     this._toDate = formatDate(this._secondStocktakeGroup[0].date);
   }
 
+  _cacheMenuItems() {
+    this._menuItemsCache = MenuItems.find({'relations.areaId': this._areaId}, {
+      fields: {
+        ingredients: 1,
+        salesPrice: 1
+      }
+    }).fetch();
+  }
+
+  _getMenuItemsFromCache(menuItemId) {
+    return _.findWhere(this._menuItemsCache, {_id: menuItemId});
+  }
+
+  _getFilteredItem(collection, key, keyForComparison) {
+    return _.filter(collection, (collectionItem) => collectionItem[key] === keyForComparison);
+  }
+
+  getReport() {
+    let expectedGostOfGoods = this._getTotalExpectedCostOfIngredient();
+    let actualCostOfGoods = this._getActualCostOfGoods();
+  }
+
+  /**
+   * Expected Cost Of Ingredients
+   */
   _getTotalExpectedCostOfIngredient() {
     let stocks = this._expectedIngredientCostOfMenuItems();
     let stocksIds = _.uniq(_.pluck(stocks, '_id'));
+    let expectedCostOfIngredient = [];
 
-    return _.compact(stocksIds.map((stockId) => {
-      let ingredientTotalExpectedCost = _.filter(stocks, (stock) => stockId === stock._id)
+    stocksIds.forEach((stockId) => {
+      let ingredientTotalExpectedCost = this._getFilteredItem(stocks, '_id', stockId)
           .reduce((memo, stock) => memo + stock.ingExpectedCost, 0);
+
       let stockFromCache = this._ingredientsCache.searchByIngredientId(stockId);
+
       if (stockFromCache) {
-        return {
+        expectedCostOfIngredient.push({
           stockId: stockFromCache.description,
           totalExpectedCost: ingredientTotalExpectedCost
-        }
+        });
       }
-    }));
+    });
+
+    return expectedCostOfIngredient;
   }
 
   _expectedIngredientCostOfMenuItems() {
@@ -71,16 +101,44 @@ StockVarianceReport = class {
     return DailySales.find(query, options).fetch();
   }
 
-  _cacheMenuItems() {
-    this._menuItemsCache = MenuItems.find({'relations.areaId': this._areaId}, {
-      fields: {
-        ingredients: 1,
-        salesPrice: 1
+  /**
+   * Actual Cost of Goods
+   */
+
+  _getActualCostOfGoods() {
+    let firstStocktakeDetailedReport = this._getStocktakeDetailedReport(this._firstStocktakeGroup, this._areaId);
+    let secondStocktakeDetailedReport = this._getStocktakeDetailedReport(this._secondStocktakeGroup, this._areaId);
+    let actualCostOfGoods = [];
+
+    firstStocktakeDetailedReport.forEach((ingredient) => {
+      let filterIngById = this._getFilteredItem(secondStocktakeDetailedReport, '_id', ingredient._id);
+      if (filterIngById.length) {
+        let filterIngByOrders = this._getFilteredItem(this._getStocktakesOrdersReceived(), 'stockId', ingredient._id);
+        let ordersReceived = filterIngByOrders.length ? filterIngByOrders[0].price : 0;
+        actualCostOfGoods.push({
+          _id: ingredient._id,
+          ordersReceived: `$ ${ordersReceived}`,
+          description: ingredient.description,
+          actualCost: HospoHero.misc.rounding(ordersReceived + (ingredient.stockTotalValue - filterIngById[0].stockTotalValue))
+        });
       }
-    }).fetch();
+    });
+
+    return actualCostOfGoods;
   }
 
-  _getMenuItemsFromCache(menuItemId) {
-    return _.findWhere(this._menuItemsCache, {_id: menuItemId});
+  _getStocktakeDetailedReport(stocktakeGroup, areaId) {
+    let currentStocktakeReport = new StocktakeTotalDetailedReport(stocktakeGroup, areaId, {});
+    return currentStocktakeReport.getIngredientsOfCurrentStocktake();
   }
-};
+
+  /**
+   *  received Orders for two Stocktakes
+   */
+
+  _getStocktakesOrdersReceived() {
+    let stocktakesOrders = new OrdersReporter(this._fromDate, this._toDate, this._areaId);
+    return stocktakesOrders.getDetailedOrdersReceived();
+  }
+}
+;

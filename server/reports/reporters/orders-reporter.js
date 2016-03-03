@@ -21,6 +21,15 @@ OrdersReporter = class {
     return HospoHero.misc.rounding(totalOrdersReceived, 100);
   }
 
+  getDetailedOrdersReceived() {
+    return this._getStockOrders().map((item) => {
+      return {
+        stockId: item.stockId,
+        price: HospoHero.misc.rounding(item.unitPrice * item.countOrdered)
+      }
+    });
+  }
+
   _getStockOrders() {
     let orderReceiptsIds = this._getOrderReceiptsIds();
     let findQuery = {
@@ -33,6 +42,7 @@ OrdersReporter = class {
       fields: {
         _id: 0,
         unitPrice: 1,
+        stockId: 1,
         countOrdered: 1
       }
     };

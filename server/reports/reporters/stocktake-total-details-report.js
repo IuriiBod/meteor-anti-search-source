@@ -45,6 +45,7 @@ StocktakeTotalDetailedReport = class {
       let filteredIng = this._filterIngredient(stock.stockId);
       if (filteredIng.length) {
         let ingredient = {
+          _id: stock.stockId,
           description: filteredIng[0].description,
           qty: stock.counting,
           purchasePrice: `${stock.unitCost} / ${stock.unit}`,
