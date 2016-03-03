@@ -151,7 +151,7 @@ var menuEntries = [
     route: 'projectsList',
     activeOnRoutes: ['projectsList', 'createProject', 'projectDetails'],
     params: function () {
-      return {}
+      return {};
     }
   },
   {

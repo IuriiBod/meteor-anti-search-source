@@ -22,7 +22,7 @@ Template.projectCreateEdit.onCreated(function () {
         project[memberType].push(userId);
         saveProject({[memberType]: project[memberType]});
         this.selectedUsers.push(userId);
-      }
+      };
     };
 
     FlyoutManager.open('usersSearchFlyout', {
@@ -35,7 +35,7 @@ Template.projectCreateEdit.onCreated(function () {
     project[teamType].splice(project[teamType].indexOf(userId), 1);
     saveProject({[teamType]: project[teamType]});
     this.selectedUsers.remove(userId);
-  }
+  };
 });
 
 
@@ -44,7 +44,7 @@ Template.projectCreateEdit.helpers({
     let saveProject = this.saveProject();
     return (newValue) => {
       saveProject({title: newValue});
-    }
+    };
   },
 
   activeButton () {
@@ -71,7 +71,7 @@ Template.projectCreateEdit.helpers({
           endTime: applyTime(project.endTime, endTime)
         });
       }
-    }
+    };
   },
 
   onDateChange () {
@@ -87,7 +87,7 @@ Template.projectCreateEdit.helpers({
 
         saveProject({startTime: startTime, endTime: endTime});
       }
-    }
+    };
   },
 
   projectStatusButtons () {
@@ -95,7 +95,7 @@ Template.projectCreateEdit.helpers({
       return {
         title: projectStatusButtons[statusKey],
         value: statusKey
-      }
+      };
     });
   },
 
@@ -104,7 +104,7 @@ Template.projectCreateEdit.helpers({
 
     return (newStatus) => {
       saveProject({status: newStatus});
-    }
+    };
   },
 
   allowRemoveUser () {
@@ -118,14 +118,14 @@ Template.projectCreateEdit.helpers({
     const tmpl = Template.instance();
     return (userId) => {
       tmpl.removeUserFormProject(userId, 'lead');
-    }
+    };
   },
 
   onTeamMemberRemove () {
     const tmpl = Template.instance();
     return (userId) => {
       tmpl.removeUserFormProject(userId, 'team');
-    }
+    };
   }
 });
 

@@ -10,8 +10,8 @@ Template.eventProject.onCreated(function () {
       let project = this.project();
       _.extend(project, detailsToUpdate);
       Meteor.call('updateProject', project, HospoHero.handleMethodResult());
-    }
-  }
+    };
+  };
 });
 
 
@@ -23,7 +23,7 @@ Template.eventProject.helpers({
   goToItemTemplateData() {
     return {
       id: this.eventObject.item.itemId
-    }
+    };
   },
 
   saveProject () {

@@ -26,8 +26,8 @@ Template.projectDetails.onCreated(function () {
       } else {
         Meteor.call('updateProject', project, HospoHero.handleMethodResult());
       }
-    }
-  }
+    };
+  };
 });
 
 
@@ -52,7 +52,7 @@ Template.projectDetails.helpers({
       namespace: 'project',
       uiStateId: 'details',
       title: 'Project Details'
-    }
+    };
   },
 
   saveProject() {
@@ -65,7 +65,7 @@ Template.projectDetails.helpers({
       uiStateId: 'agenda',
       title: 'Agenda & Minutes',
       contentPadding: '20px'
-    }
+    };
   },
 
   agendaAndMinutes () {
@@ -78,7 +78,7 @@ Template.projectDetails.helpers({
 
     return function (newAgendaText) {
       saveProject({agendaAndMinutes: newAgendaText});
-    }
+    };
   }
 });
 
