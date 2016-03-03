@@ -79,7 +79,7 @@ let requireLogIn = function () {
     }
 
     //if we have PIN locked users => go to pin lock
-    let pinLockedUsers = StaleSession.getStoredUsersIds();
+    let pinLockedUsers = StaleSession.pinLockManager.getStoredUsersIds();
     if (pinLockedUsers.length > 0) {
       if (pinLockedUsers.length == 1) {
         //there is only one use can be logged in with pin

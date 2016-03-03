@@ -1,3 +1,13 @@
+var LoginTokens = Match.Where(function (loginTokens) {
+  check(loginTokens, [{
+    userId: String,
+    token: String
+  }]);
+
+  return loginTokens.length < 51;// probably this is enough
+});
+
+
 Meteor.methods({
   '__StaleSession.loginWithPin': function (userId, pinCode) {
     //check if current user has specified pin
@@ -25,5 +35,16 @@ Meteor.methods({
 
       return stampedToken.token;
     }
+  },
+
+  '__StaleSession.checkLoginTokens': function (loginTokens) {
+    check(loginTokens, LoginTokens);
+
+    return loginTokens.filter(function (loginTokenEntry) {
+      return !!Meteor.users.find({
+        _id: loginTokenEntry.userId,
+        'services.resume.loginTokens.token': loginTokenEntry.token
+      });
+    });
   }
 });
