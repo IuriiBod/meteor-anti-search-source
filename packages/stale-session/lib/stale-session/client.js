@@ -98,6 +98,12 @@ StaleSession = {
     Meteor.setTimeout(this.start.bind(this), this.heartbeatInterval);
   },
 
+  mockExpiredSession: function () {
+    this.onSessionExpiration();
+    this._lockWithPin();
+    this.sessionExpired = true;
+  },
+
   _lockWithPin: function () {
     var self = this;
     Meteor.call('__StaleSession.retainTokenForPinLogin', function (err, token) {

@@ -5,7 +5,7 @@
  * @param publicationFn
  */
 Meteor.publishAuthorized = function (publicationName, publicationFn) {
-  let wrapPublishFunction = function () {
+  let wrappedPublishFunction = function () {
     if (this.userId) {
       return publicationFn.apply(this, arguments);
     } else {
@@ -14,6 +14,5 @@ Meteor.publishAuthorized = function (publicationName, publicationFn) {
     }
   };
 
-  let wrappedPublishFn = wrapPublishFunction(publicationFn);
-  Meteor.publish(publicationName, wrappedPublishFn);
+  Meteor.publish(publicationName, wrappedPublishFunction);
 };
