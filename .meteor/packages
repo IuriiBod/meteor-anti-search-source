@@ -60,6 +60,9 @@ joshowens:timezone-picker
 natestrauser:animate-css
 peppelg:bootstrap-3-modal
 settinghead:auto-nprogress
+dsyko:jquery-ui-touch-punch
+fronteed:icheck
+manuel:reactivearray
 
 hospohero:stale-session
 trsdln:flyouts
@@ -68,6 +71,7 @@ trsdln:modals
 jss:reactive-fullcalendar
 jquery-sparkline
 
+
 # ===========> backend
 micah:google-cloud
 votercircle:winston
@@ -75,6 +79,7 @@ cmather:handlebars-server
 percolate:migrations
 percolate:synced-cron
 reywood:publish-composite
+matb33:collection-hooks
 
 jss:through
 jss:meteor-google-prediction
@@ -84,6 +89,8 @@ jss:suncalc
 # ===========> both
 iron:router
 zephraph:namespace
+dburles:mongo-collection-instances
+raix:push
 
 alonoslav:roles
 jss:anti-search-source
@@ -92,8 +99,3 @@ jss:ui-states
 
 
 # ===========> new
-matb33:collection-hooks
-dburles:mongo-collection-instances
-manuel:reactivearray
-dsyko:jquery-ui-touch-punch
-raix:push
