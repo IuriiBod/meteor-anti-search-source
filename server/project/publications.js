@@ -26,7 +26,7 @@ Meteor.publishComposite('projects', function (userId) {
         find: usersPublication
       }
     ]
-  }
+  };
 });
 
 
@@ -56,7 +56,7 @@ Meteor.publishComposite('project', function (projectId, userId) {
         }
       }
     ]
-  }
+  };
 });
 
 function usersPublication(project) {
