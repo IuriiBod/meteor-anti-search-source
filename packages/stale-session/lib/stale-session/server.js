@@ -40,11 +40,13 @@ Meteor.methods({
   '__StaleSession.checkLoginTokens': function (loginTokens) {
     check(loginTokens, LoginTokens);
 
-    return loginTokens.filter(function (loginTokenEntry) {
-      return !!Meteor.users.find({
+    var validtokens = loginTokens.filter(function (loginTokenEntry) {
+      return !!Meteor.users.findOne({
         _id: loginTokenEntry.userId,
         'services.resume.loginTokens.token': loginTokenEntry.token
       });
     });
+
+    return validtokens;
   }
 });
