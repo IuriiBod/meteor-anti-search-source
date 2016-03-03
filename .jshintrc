@@ -158,6 +158,8 @@
     "ReactiveArray": false,
     "StaleSession": false,
     "AccountsTemplates": false,
+    "Autolinker": false,
+    "Modal": false,
 
     //collections
     "MenuItems": true,
