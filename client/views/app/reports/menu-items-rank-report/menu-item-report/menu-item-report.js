@@ -1,7 +1,7 @@
 Template.menuItemReport.onCreated(function () {
   this.round = function (value) {
     return HospoHero.misc.rounding(value);
-  }
+  };
 });
 
 Template.menuItemReport.onRendered(function() {

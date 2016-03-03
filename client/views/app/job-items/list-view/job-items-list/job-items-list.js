@@ -36,7 +36,7 @@ Template.jobItemsList.helpers({
     return Template.instance().searchSource.searchResult({sort: {name: 1}});
   },
   isRecurring: function () {
-    return Template.instance().data.type == 'Recurring';
+    return Template.instance().data.type === 'Recurring';
   }
 });
 

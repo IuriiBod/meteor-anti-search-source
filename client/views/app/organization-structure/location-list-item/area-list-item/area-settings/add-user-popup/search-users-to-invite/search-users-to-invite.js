@@ -51,13 +51,13 @@ Template.searchUsersToInvite.helpers({
       tmpl.selectedUser.set(user);
       tmpl.selectedEmail.set(null);
       tmpl.searchText.set('');
-    }
+    };
   },
   unselectUser: function () {
     let tmpl = Template.instance();
     return function () {
       tmpl.selectedUser.set(null);
-    }
+    };
   },
   isReadyToInviteUser: function () {
     let tmpl = Template.instance();

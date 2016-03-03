@@ -9,7 +9,7 @@ Template.figureBoxes.helpers({
         value: value.toFixed(2),
         color: 'text-' + (isBad ? 'danger' : 'navy'),
         icon: 'fa-angle-' + (isBad ? 'down' : 'up')
-      }
+      };
     };
 
     var calculateStaffPercent = function (staffCost, sales) {
@@ -63,6 +63,6 @@ Template.figureBoxes.helpers({
         helpText: "The figure shows the % of wages compared to sales. It take the actual results " +
         "from past days and forecasts from future days."
       }
-    ]
+    ];
   }
 });

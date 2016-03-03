@@ -36,6 +36,6 @@ Template.eventRecurringJob.helpers({
       tmpl.checkedItems.set(doneCheckListItems);
 
       Meteor.call('editCalendarEvent', eventObject, HospoHero.handleMethodResult());
-    }
+    };
   }
 });

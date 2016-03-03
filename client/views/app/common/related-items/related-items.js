@@ -20,7 +20,7 @@ Template.relatedItemsWidget.helpers({
         className: 'btn btn-primary btn-xs pull-left attach-item',
         text: 'Attach Item'
       }]
-    }
+    };
   }
 });
 

@@ -69,10 +69,10 @@ Template.weekPicker.helpers({
       var firstDay = moment(weekStartEnd).startOf('isoweek');
       var lastDay = moment(weekStartEnd).endOf('isoweek');
 
-      if (firstDay.year() != lastDay.year()) {
+      if (firstDay.year() !== lastDay.year()) {
         currentDate = firstDay.format('D MMM YYYY - ') + lastDay.format('D MMM YYYY');
       } else {
-        if (firstDay.month() != lastDay.month()) {
+        if (firstDay.month() !== lastDay.month()) {
           currentDate = firstDay.format('D MMM - ') + lastDay.format('D MMM YYYY');
         } else {
           currentDate = firstDay.format('D - ') + lastDay.format('D MMM YYYY');

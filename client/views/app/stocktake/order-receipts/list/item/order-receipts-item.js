@@ -20,7 +20,7 @@ Template.orderReceiptItem.helpers({
         if (_.isFinite(order.countDelivered) && order.countDelivered >= 0) {
           quantity = order.countDelivered;
         }
-        cost += parseFloat(quantity) * parseFloat(order.unitPrice)
+        cost += parseFloat(quantity) * parseFloat(order.unitPrice);
       }
     });
     return cost;

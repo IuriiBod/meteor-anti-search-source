@@ -18,7 +18,7 @@ Template.menuItemImage.helpers({
       title: 'Image',
       contentPadding: '20px',
       buttons: buttons
-    }
+    };
   }
 });
 

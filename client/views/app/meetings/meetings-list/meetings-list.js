@@ -46,7 +46,7 @@ Template.meetingsList.helpers({
     var tmpl = Template.instance();
     return function (newFilterType) {
       tmpl.meetingType.set(newFilterType);
-    }
+    };
   }
 });
 

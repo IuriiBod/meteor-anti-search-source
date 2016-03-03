@@ -45,7 +45,7 @@ Template.menuDetailPerformance.helpers({
       tax: `- $ ${analyzedItem.tax}`,
       contribution: `= $ ${analyzedItem.contribution}`,
       lastSevenDaysContribution: `$ ${instance.getTotalQuantityByDate(dateInterval)}`
-    }
+    };
   },
 
   itemRank() {
@@ -66,7 +66,7 @@ Template.menuDetailPerformance.helpers({
         changedPoints: changedPoints,
         up: beforeLastWeekRank > lastSevenDaysRank,
         notChanged: beforeLastWeekRank === lastSevenDaysRank
-      }
+      };
     }
   },
 
@@ -84,7 +84,7 @@ Template.menuDetailPerformance.helpers({
         up: difference > 0,
         notChanged: difference === 0,
         difference: `${HospoHero.misc.rounding(difference < 0 ? difference * (-1) : difference)} % `
-      }
+      };
     }
   },
 
@@ -111,6 +111,6 @@ Template.menuDetailPerformance.helpers({
       uiStateId: 'performance',
       title: 'Performance Snapshot',
       buttons: buttons
-    }
+    };
   }
 });

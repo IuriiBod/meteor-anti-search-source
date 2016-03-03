@@ -21,14 +21,14 @@ Template.createArea.helpers({
       organizationId: this.organizationId,
       archived: {$ne: true}
     }).map((location) => {
-      return {value: location._id, text: location.name}
+      return {value: location._id, text: location.name};
     });
   },
   onColorChange: function () {
     const self = Template.instance();
     return function (color) {
       self.color.set(color);
-    }
+    };
   },
   color: function () {
     return Template.instance().color.get();

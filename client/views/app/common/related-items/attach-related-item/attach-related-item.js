@@ -43,7 +43,7 @@ Template.attachRelatedItem.helpers({
       return {
         id: item._id,
         name: item[itemSettings.nameField]
-      }
+      };
     });
 
     // set the default value of reference object
@@ -69,7 +69,7 @@ Template.attachRelatedItem.events({
     tmpl.relatedItem = {
       id: id,
       name: name
-    }
+    };
   },
 
   'submit form' (event, tmpl) {

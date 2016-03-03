@@ -23,7 +23,7 @@ Template.meetingDetailsTable.helpers({
 
         Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
       }
-    }
+    };
   },
 
   onDateChange () {
@@ -35,7 +35,7 @@ Template.meetingDetailsTable.helpers({
         meeting.endTime = HospoHero.dateUtils.applyTimeToDate(newDate, meeting.endTime);
         Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
       }
-    }
+    };
   },
 
   onUserRemove () {
@@ -45,7 +45,7 @@ Template.meetingDetailsTable.helpers({
       let removeUserIdFromArray = (field) => meeting[field].splice(meeting[field].indexOf(userId), 1);
       ['attendees', 'accepted', 'maybeAccepted', 'rejected'].forEach((field) => removeUserIdFromArray(field));
       Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
-    }
+    };
   }
 });
 
@@ -58,7 +58,7 @@ Template.meetingDetailsTable.events({
       return (userId) => {
         meeting.attendees.push(userId);
         Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
-      }
+      };
     };
 
     FlyoutManager.open('usersSearchFlyout', {

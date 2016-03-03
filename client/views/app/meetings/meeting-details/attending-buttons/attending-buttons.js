@@ -20,14 +20,14 @@ Template.attendingButtons.helpers({
         field: 'rejected',
         class: 'btn-danger'
       }
-    ]
+    ];
   },
 
   isActiveButton () {
     let meeting = Template.parentData(1).meeting;
     return function () {
       return meeting[this.button.field].indexOf(Meteor.userId()) > -1;
-    }
+    };
   },
 
   onButtonClick () {
@@ -45,7 +45,7 @@ Template.attendingButtons.helpers({
         if (isAddingNewValue) {
           array.push(userId);
         } else {
-          array = _.without(array, userId)
+          array = _.without(array, userId);
         }
         return _.uniq(array);
       };
@@ -56,6 +56,6 @@ Template.attendingButtons.helpers({
       });
 
       Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
-    }
+    };
   }
 });

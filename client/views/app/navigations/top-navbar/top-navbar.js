@@ -61,13 +61,13 @@ Template.topNavbar.helpers({
     return {
       date: calendarUiStatesManager.getState('lastViewDate') || HospoHero.dateUtils.shortDateFormat(),
       type: calendarUiStatesManager.getState('type') || 'day'
-    }
+    };
   }
 });
 
 
 Template.topNavbar.events({
-  'click #navbar-minimalize': function (event, tmpl) {
+  'click #navbar-minimalize': function () {
     var forceShow = 'force-show-sidebar ', forceHide = 'force-hide-sidebar';
     var body = $('#wrapper');
     if (body.is('.' + forceHide)) {

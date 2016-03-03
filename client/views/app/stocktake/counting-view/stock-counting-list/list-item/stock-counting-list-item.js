@@ -10,7 +10,8 @@ Template.stockCountingListItem.onRendered(function() {
   var tmpl = this;
   var onCountChanged = function (response, newValue) {
     var element = this;
-    var stockRefId = tmpl.data.stocktakeItem ? tmpl.data.stocktakeItem._id : tmpl.getIngredientFromStock() && tmpl.getIngredientFromStock()._id;
+    var stockRefId = tmpl.data.stocktakeItem ?
+        tmpl.data.stocktakeItem._id : tmpl.getIngredientFromStock() && tmpl.getIngredientFromStock()._id;
     var stockId = tmpl.data.stocktakeItem ? tmpl.data.stocktakeItem.stockId : tmpl.data.ingredient._id;
     if (newValue) {
       var count = isNaN(newValue) ? 0 : Math.round(parseFloat(newValue) * 100) / 100;
@@ -39,9 +40,7 @@ Template.stockCountingListItem.onRendered(function() {
     mode: 'inline',
     defaultValue: 0,
     autotext: 'auto',
-    display: function (value, response) {
-
-    },
+    display: function () {},
     success: onCountChanged
   });
 });
@@ -52,13 +51,13 @@ Template.stockCountingListItem.helpers({
       return {
         inStock: Template.instance().getIngredientFromStock(),
         data: this.ingredient
-      }
+      };
     }
     if(this.stocktakeItem) {
       return {
         inStock: this.stocktakeItem,
         data: Ingredients.findOne({_id: this.stocktakeItem.stockId})
-      }
+      };
     }
   },
 
@@ -76,7 +75,9 @@ Template.stockCountingListItem.helpers({
 Template.stockCountingListItem.events({
   'click .removeFromList': function (event, tmpl) {
     event.preventDefault();
-    var confrimDelete = confirm("This action will remove this stock item from this area. Are you sure you want to continue?");
+    var confrimDelete = confirm(
+        "This action will remove this stock item from this area. Are you sure you want to continue?"
+    );
     if (confrimDelete) {
       var id = this.ingredient._id;
       var sareaId = tmpl.data.stockTakeData.activeSpecialArea;
@@ -84,7 +85,7 @@ Template.stockCountingListItem.events({
       var stocktake = Stocktakes.findOne({_id: stockRefId});
       if (stocktake) {
         if (stocktake.status || stocktake.orderRef) {
-          return alert("Order has been created. You can't delete this stocktake item.")
+          return alert("Order has been created. You can't delete this stocktake item.");
         }
       }
       Meteor.call("removeStocksFromAreas", id, sareaId, stockRefId, HospoHero.handleMethodResult());

@@ -12,7 +12,7 @@ var defineEditableComponents = function (tmpl) {
     },
     validate: function (value) {
       if (!/.+@(.+){2,}\.(.+){2,}/.test(value)) {
-        return 'Only email!'
+        return 'Only email!';
       }
     }
   });

@@ -20,7 +20,7 @@ Template.filesWidget.helpers({
         className: 'btn btn-primary btn-xs pull-left attach-file',
         text: 'Attach File'
       }]
-    }
+    };
   }
 });
 

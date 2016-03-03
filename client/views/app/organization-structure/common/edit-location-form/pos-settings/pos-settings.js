@@ -6,7 +6,7 @@ Template.posSettings.onCreated(function() {
   if (this.locationDoc.pos && this.locationDoc.pos.type) {
     currentPosType = this.locationDoc.pos.type;
   } else {
-    currentPosType = this.posSystemTypes[0]
+    currentPosType = this.posSystemTypes[0];
   }
   this.currentPosSystemName = new ReactiveVar(currentPosType);
 });
