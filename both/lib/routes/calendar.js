@@ -13,7 +13,7 @@ Router.route('calendar', {
         Meteor.subscribe('taskList'),
         Meteor.subscribe('meetings', userId),
         Meteor.subscribe('projects', userId)
-      ]
+      ];
     }
   },
 
@@ -40,7 +40,7 @@ Router.route('managerCalendar', {
         Meteor.subscribe('taskList'),
         Meteor.subscribe('meetings'),
         Meteor.subscribe('projects')
-      ]
+      ];
     }
   },
   data: function () {

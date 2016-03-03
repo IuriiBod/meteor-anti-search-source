@@ -110,7 +110,7 @@ Namespace('HospoHero.calendar', {
         return {
           attendees: userId,
           accepted: userId
-        }
+        };
       },
       eventSettings: {
         titleField: 'title',
@@ -128,7 +128,7 @@ Namespace('HospoHero.calendar', {
         return {
           lead: userId,
           team: userId
-        }
+        };
       },
       eventSettings: {
         titleField: 'title',
