@@ -14,11 +14,12 @@ var headingComponentsMap = {
   suppliersListHeader: 'suppliersListHeader',
   posMenuLinking: 'posMenuLinkingHeader',
   taskList: 'taskListHeader',
-  meetings: 'meetingsHeader'
+  meetings: 'meetingsHeader',
+  projects: 'projectsListHeader'
 };
 
 Template.pageHeading.onCreated(function () {
-
+  this.subscribe('todayTasks');
 });
 
 Template.pageHeading.helpers({

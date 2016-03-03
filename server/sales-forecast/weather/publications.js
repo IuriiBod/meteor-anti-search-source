@@ -1,5 +1,5 @@
 var checkForecastPermission = function (areaId, context) {
-  var checker = new HospoHero.security.PermissionChecker(this.userId);
+  var checker = new HospoHero.security.PermissionChecker(context.userId);
   var haveAccess = checker.hasPermissionInArea(areaId, 'view forecast');
 
   if (!haveAccess) {

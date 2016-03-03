@@ -21,6 +21,13 @@ var references = {
     route: 'meetingDetails',
     routeIdParam: 'id',
     nameField: 'title'
+  },
+  projects: {
+    collection: Projects,
+    icon: 'fa-file-o',
+    route: 'projectDetails',
+    routeIdParam: 'id',
+    nameField: 'title'
   }
 };
 
@@ -103,12 +110,7 @@ Template.taskItem.helpers({
 
 Template.taskItem.events({
   'ifClicked .task-checkbox': function (event, tmpl) {
-    var task = tmpl.data.task;
-    task = _.extend(task, {
-      done: !task.done,
-      completedBy: !task.done ? Meteor.userId() : null
-    });
-    Meteor.call('editTask', task);
+    Meteor.call('markTaskAsDone', tmpl.data.task);
   },
 
   'click .edit-task': function (event, tmpl) {

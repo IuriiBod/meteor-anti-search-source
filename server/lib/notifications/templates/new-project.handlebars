@@ -1,0 +1,31 @@
+<style>
+  .button-container {
+    margin-top: 5px;
+  }
+
+  .claim-button {
+    margin-top: 5px;
+    padding: 3px 5px;
+    color: #fff;
+    border-radius: 4px;
+  }
+
+  .claim-button:hover {
+    color: #fff;
+  }
+
+  .confirm-button {
+    background-color: #1AB394;
+  }
+</style>
+
+<div>
+  <p>
+    You were invited to the project <b>{{project.title}}</b> {{project.teamType}} on
+    <b>{{project.time}}</b>
+  </p>
+
+  <p class="button-container">
+    <a href="{{url}}" class="claim-button confirm-button" data-link-type="navigation">Go to the project page</a>
+  </p>
+</div>

@@ -287,6 +287,14 @@ Namespace('HospoHero.misc', {
     }
   },
 
+  arrayDifference (array1, array2) {
+    if (array1.length > array2.length) {
+      return _.difference(array1, array2);
+    } else {
+      return _.difference(array2, array1);
+    }
+  },
+
   timer() {
     return {
       timeoutId: 0,

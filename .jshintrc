@@ -191,6 +191,7 @@
     "Meetings": true,
     "RelatedItems": true,
     "Files": true,
+    "Projects": true,
 
     //misc
     "HospoHero": true,
