@@ -16,7 +16,7 @@ Meteor.publishComposite('taskList', function (userId) {
         find: function (task) {
           if (task) {
             var reference = task.reference;
-            if (Object.keys(reference).length) {
+            if (reference && Object.keys(reference).length) {
               var references = {
                 suppliers: Suppliers,
                 menus: MenuItems,

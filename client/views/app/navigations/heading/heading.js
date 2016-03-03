@@ -19,7 +19,7 @@ var headingComponentsMap = {
 };
 
 Template.pageHeading.onCreated(function () {
-
+  this.subscribe('todayTasks');
 });
 
 Template.pageHeading.helpers({
