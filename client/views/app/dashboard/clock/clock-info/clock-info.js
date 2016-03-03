@@ -35,7 +35,7 @@ Template.clockInfo.onCreated(function () {
     }
 
     clockInfo() {
-      let recordedTime = moment(shift.finishedAt).diff(this.shift.startedAt);
+      let recordedTime = moment(this.shift.finishedAt).diff(this.shift.startedAt);
       let howManyMinutes = moment.duration(recordedTime).humanize();
       return `Recorded ${howManyMinutes}`;
     }
