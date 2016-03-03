@@ -46,6 +46,6 @@ Router.route('managerCalendar', {
   data: function () {
     return {
       date: this.params.date
-    }
+    };
   }
 });

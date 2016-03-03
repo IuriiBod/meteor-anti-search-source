@@ -134,7 +134,7 @@
     "ServiceConfiguration": false,
 
     //app's packages
-    "logger": false,           //winston logger
+    "logger": true,           //winston logger
     "Migrations": false,       //migrations package
     "moment": false,
     "Namespace": false,

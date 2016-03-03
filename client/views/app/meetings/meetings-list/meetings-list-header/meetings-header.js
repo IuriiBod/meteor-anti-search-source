@@ -1,5 +1,5 @@
 Template.meetingsHeader.events({
-  'click .create-new-meeting' (event, tmpl) {
+  'click .create-new-meeting' () {
     FlyoutManager.open('createMeeting');
   }
 });

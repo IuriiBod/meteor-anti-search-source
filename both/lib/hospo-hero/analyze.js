@@ -1,6 +1,8 @@
 Namespace('HospoHero.analyze', {
   ingredient: function (ingredient) {
-    if (!ingredient) return false;
+    if (!ingredient) {
+      return false;
+    }
 
     var hasRequiredValues = ingredient.costPerPortion > 0 && ingredient.unitSize > 0;
 
@@ -14,7 +16,9 @@ Namespace('HospoHero.analyze', {
   },
 
   jobItem: function (jobItem) {
-    if (!jobItem) return false;
+    if (!jobItem) {
+      return false;
+    }
 
     var round = HospoHero.misc.rounding;
 
@@ -38,7 +42,9 @@ Namespace('HospoHero.analyze', {
   },
 
   menuItem: function (menuItem) {
-    if (!menuItem) return {};
+    if (!menuItem) {
+      return {};
+    }
 
     var self = this;
     var round = HospoHero.misc.rounding;

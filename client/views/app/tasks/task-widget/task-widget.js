@@ -39,7 +39,7 @@ Template.taskWidget.helpers({
     var self = Template.instance();
     return function () {
       self.isNewTaskCreating.set(false);
-    }
+    };
   },
 
   onEditTaskAction() {
@@ -47,7 +47,7 @@ Template.taskWidget.helpers({
     return function (task) {
       self.task = task;
       self.isNewTaskCreating.set(true);
-    }
+    };
   },
 
   tasksSettings() {
@@ -66,7 +66,7 @@ Template.taskWidget.helpers({
       uiStateId: 'task',
       title: 'Tasks',
       buttons: buttons
-    }
+    };
   }
 });
 

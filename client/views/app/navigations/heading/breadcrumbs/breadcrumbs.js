@@ -1,5 +1,5 @@
 Template.breadcrumbs.onRendered(function () {
-  if (this.data.type == 'menuDetails') {
+  if (this.data.type === 'menuDetails') {
     var menuId = HospoHero.getParamsFromRoute('_id');
     this.$('.editMenuItemName').editable({
       type: "text",
@@ -18,7 +18,7 @@ Template.breadcrumbs.onRendered(function () {
 
 Template.breadcrumbs.helpers({
   isMenuDetailed: function () {
-    return this.type == 'menuDetails';
+    return this.type === 'menuDetails';
   }
 });
 
@@ -56,9 +56,9 @@ Template.breadcrumbs.events({
     event.preventDefault();
     var category = $(event.target).attr("data-category");
     var id = $(event.target).attr("data-id");
-    if (category == "Jobs") {
+    if (category === "Jobs") {
       Router.go("jobItemDetailed", {"_id": id});
-    } else if (category == "Menus") {
+    } else if (category === "Menus") {
       Router.go("menuItemDetail", {"_id": id});
     }
   }

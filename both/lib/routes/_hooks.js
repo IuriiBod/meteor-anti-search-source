@@ -81,7 +81,7 @@ let requireLogIn = function () {
     //if we have PIN locked users => go to pin lock
     let pinLockedUsers = StaleSession.pinLockManager.getStoredUsersIds();
     if (pinLockedUsers.length > 0) {
-      if (pinLockedUsers.length == 1) {
+      if (pinLockedUsers.length === 1) {
         //there is only one use can be logged in with pin
         Router.go('pinLock', {userId: pinLockedUsers[0]}, goOptions);
       } else {
@@ -95,4 +95,6 @@ let requireLogIn = function () {
   }
 };
 
-Router.onBeforeAction(requireLogIn, {except: ['signIn', 'signUp', 'invitationAccept', 'switchUser', 'claim', 'pinLock', 'forgotPassword']});
+Router.onBeforeAction(requireLogIn, {
+  except: ['signIn', 'signUp', 'invitationAccept', 'switchUser', 'claim', 'pinLock', 'forgotPassword']
+});

@@ -38,7 +38,7 @@ Template.pageHeading.helpers({
   },
   title: function () {
     var title = this.title;
-    if (Router.current().params.type == "archive" || Router.current().params.status == "archived") {
+    if (Router.current().params.type === "archive" || Router.current().params.status === "archived") {
       title = "Archived " + title;
     }
     return title;

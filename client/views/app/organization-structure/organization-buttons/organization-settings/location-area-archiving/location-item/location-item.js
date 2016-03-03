@@ -1,6 +1,6 @@
 Template.locationItem.helpers({
   isCurrentLocation: function (locationId) {
-    return HospoHero.getCurrentArea().locationId === locationId
+    return HospoHero.getCurrentArea().locationId === locationId;
   }
 });
 

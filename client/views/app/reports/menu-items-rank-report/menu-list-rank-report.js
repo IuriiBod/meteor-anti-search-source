@@ -31,8 +31,8 @@ Template.menuListRankReport.onCreated(function () {
     return  {
       startDate: HospoHero.dateUtils.shortDateFormat(daysOfWeek[0]),
       endDate: HospoHero.dateUtils.shortDateFormat(daysOfWeek[daysOfWeek.length - 1])
-    }
-  }
+    };
+  };
 });
 
 Template.menuListRankReport.helpers({
@@ -54,7 +54,7 @@ Template.menuListRankReport.helpers({
         'Item Name', 'Sparkline of Ranking', 'Ranking', '<b>Item Sales</b>', '<b>Item Price</b>',
         '<b>Total Sales</b>', '<b>Prep (Item)</b>', '<b>Total Prep</b>', '<b>Cost of Goods (Item)</b>', '<b>Total Cost of Goods</b>',
         '<b>Tax</b>', '<b>Profit (Item)</b>', '<b>Total Profit</b>'
-    ]
+    ];
   },
 
   customRangeSelected: function () {
@@ -74,7 +74,7 @@ Template.menuListRankReport.helpers({
   },
 
   selectedCategory: function () {
-    if (this.selectedCategoryId != 'all') {
+    if (this.selectedCategoryId !== 'all') {
       return Categories.findOne({_id: this.selectedCategoryId});
     } else {
       return {name: 'All', _id: 'all'};

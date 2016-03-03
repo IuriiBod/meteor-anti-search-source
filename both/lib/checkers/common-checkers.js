@@ -36,7 +36,7 @@ var ShiftId = Match.Where(function (id) {
   if (!Shifts.findOne({_id: id})) {
     throw new Meteor.Error(404, "Shift not found");
   }
-  return true
+  return true;
 });
 
 Namespace('HospoHero.checkers', {

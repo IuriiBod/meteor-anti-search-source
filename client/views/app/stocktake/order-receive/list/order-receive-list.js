@@ -38,7 +38,7 @@ Template.orderReceive.helpers({
     let instance = Template.instance();
     return function (orderId) {
       instance.currentOrderId.set(orderId);
-    }
+    };
   },
 
   currentOrder() {
@@ -56,7 +56,7 @@ Template.orderReceive.events({
 
   'keyup #orderReceiveNotes': function (event, tmpl) {
     event.preventDefault();
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       let receiptId = tmpl.data.currentReceipt._id;
       let text = event.target.value;
       let info = {
@@ -83,12 +83,13 @@ Template.orderReceive.events({
             var urls = null;
             if (doc) {
               var type = null;
-              var convertedUrl = null;
-              if (doc.mimetype == "application/pdf") {
+              if (doc.mimetype === "application/pdf") {
                 type = "pdf";
-              } else if (doc.mimetype == "text/csv") {
+              } else if (doc.mimetype === "text/csv") {
                 type = "csv";
-              } else if (doc.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || doc.mimetype == "application/msword") {
+              } else if (doc.mimetype ===
+                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                  doc.mimetype === "application/msword") {
                 type = "doc";
               } else {
                 type = "image";
@@ -96,10 +97,10 @@ Template.orderReceive.events({
               urls = {
                 "originalUrl": doc.url,
                 "type": type
-              }
+              };
 
-              if (type == "doc") {
-                urls['originalUrl'] = doc.url + "/convert?format=pdf";
+              if (type === "doc") {
+                urls.originalUrl = doc.url + "/convert?format=pdf";
               }
 
               //converting url to image
@@ -119,9 +120,9 @@ Template.orderReceive.events({
                   compress: true,
                   quality: 100
                 },
-                function (new_Blob) {
+                function (newBlob) {
                   var receiptId = tmpl.data.currentReceipt._id;
-                  urls['convertedUrl'] = new_Blob.url;
+                  urls.convertedUrl = newBlob.url;
                   Meteor.call("uploadInvoice", receiptId, urls, HospoHero.handleMethodResult());
                 }
               );

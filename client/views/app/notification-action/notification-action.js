@@ -9,7 +9,7 @@ Template.notificationAction.onCreated(function () {
       action: String
     });
 
-    Meteor.call(routerQuery.method, routerQuery.id, routerQuery.action, HospoHero.handleMethodResult(function (result) {
+    Meteor.call(routerQuery.method, routerQuery.id, routerQuery.action, HospoHero.handleMethodResult(function () {
       Router.go('dashboard');
     }));
 
@@ -20,6 +20,6 @@ Template.notificationAction.onCreated(function () {
 
 Template.notificationAction.helpers({
   actionResult: function () {
-    return Template.instance().actionResult.get()
+    return Template.instance().actionResult.get();
   }
 });

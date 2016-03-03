@@ -7,7 +7,7 @@ Template.areaItem.helpers({
 
 Template.areaItem.events({
   'keypress .special-area': function (e, tmpl) {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       var $nameInput = $(e.target);
       var name = $nameInput.val();
       var id = tmpl.data.area._id;

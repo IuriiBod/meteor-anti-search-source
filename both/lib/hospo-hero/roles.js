@@ -15,7 +15,7 @@ Namespace('HospoHero.roles', {
     };
 
     return Meteor.users.find(query).map(function (user) {
-      if (user._id != Meteor.userId()) {
+      if (user._id !== Meteor.userId()) {
         return user._id;
       }
     });

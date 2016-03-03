@@ -7,7 +7,7 @@ Template.meetingAttendee.onRendered(function () {
       content: `<button type="button" class="btn btn-danger accept-remove">Remove ${username}</button>`,
       html: true,
       placement: 'bottom'
-    })
+    });
   }
 });
 

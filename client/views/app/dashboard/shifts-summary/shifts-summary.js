@@ -31,7 +31,7 @@ Template.shiftsSummary.helpers({
       }
     };
 
-    return Shifts.find(shiftsQueries[state], {sort: {startTime: state == "past" ? -1 : 1}});
+    return Shifts.find(shiftsQueries[state], {sort: {startTime: state === "past" ? -1 : 1}});
   }
 });
 

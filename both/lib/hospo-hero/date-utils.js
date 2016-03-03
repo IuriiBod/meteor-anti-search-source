@@ -18,7 +18,7 @@ Namespace('HospoHero.dateUtils', {
    */
   getDateMomentForLocation: function (date, location) {
     if (_.isString(location)) {
-      location = Locations.findOne({_id: location}, {fields: {timezone: 1}})
+      location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
     }
     return moment(date).tz(location.timezone);
   },

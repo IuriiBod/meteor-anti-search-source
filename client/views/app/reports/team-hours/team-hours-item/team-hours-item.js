@@ -64,9 +64,9 @@ let WageCalculator = class {
       }
 
       getHours() {
-        return this._minutes.map((value) => HospoHero.misc.rounding(value / 60))
+        return this._minutes.map((value) => HospoHero.misc.rounding(value / 60));
       }
-    }
+    };
   }
 
   _calculateWageForShift(shiftStartDate, shiftDurationInMinutes) {
@@ -104,6 +104,6 @@ let WageCalculator = class {
       wage: HospoHero.misc.rounding(totalWage),
       time: HospoHero.misc.rounding(totalMinutes / 60),
       dailyHours: dailyHoursManager.getHours()
-    }
+    };
   }
 };

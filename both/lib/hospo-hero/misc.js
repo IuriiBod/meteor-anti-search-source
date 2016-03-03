@@ -27,10 +27,10 @@ Namespace('HospoHero.misc', {
 
       if (!_.isString(field)) {
         if (field.parse) {
-          value = field.parse == 'int' ? parseInt(value) : parseFloat(value);
+          value = field.parse === 'int' ? parseInt(value) : parseFloat(value);
         }
 
-        if (field.type && field.type == 'number') {
+        if (field.type && field.type === 'number') {
           value = isNaN(value) ? 0 : value;
         }
 
@@ -104,7 +104,7 @@ Namespace('HospoHero.misc', {
 
       var rate = wageDoc[currentWeekDay];
       if (!rate) {
-        rate = wageDoc['weekdays']
+        rate = wageDoc.weekdays;
       }
       return rate;
     } else {
@@ -190,7 +190,7 @@ Namespace('HospoHero.misc', {
         text: "United States of America",
         value: "United States of America"
       }
-    ]
+    ];
   },
 
   /**
@@ -232,7 +232,7 @@ Namespace('HospoHero.misc', {
           'sharing.id': {
             $in: value
           }
-        }
+        };
       });
 
       return {$or: or};
@@ -304,6 +304,6 @@ Namespace('HospoHero.misc', {
       clearTimeout() {
         Meteor.clearTimeout(this.timeoutId);
       }
-    }
+    };
   }
 });
