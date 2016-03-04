@@ -1,5 +1,5 @@
 Template.weeklyTemplateHeader.events({
-  'click .week-selector-opener': function (event, tmpl) {
+  'click .week-selector-opener': function () {
     ModalManager.open('weekSelector');
   }
 });

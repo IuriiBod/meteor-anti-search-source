@@ -5,7 +5,7 @@ let extractFirstAndLastName = function (username) {
   return {
     firstname: firstName,
     lastname: lastName
-  }
+  };
 };
 
 

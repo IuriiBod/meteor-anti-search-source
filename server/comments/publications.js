@@ -27,5 +27,5 @@ Meteor.publishComposite('comments', function (ref, areaId) {
         }
       }
     ]
-  }
+  };
 });

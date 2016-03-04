@@ -30,7 +30,7 @@ Router.route('/stocklist/:type', {
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('ingredientsRelatedJobs'),
       Meteor.subscribe('ingredients', null, currentAreaId, 'archived')
-    ]
+    ];
   },
   data: function () {
     if (!Meteor.userId()) {

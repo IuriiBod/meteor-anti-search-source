@@ -68,7 +68,7 @@ Template.stockCountingList.helpers({
       return {
         date: main.stocktakeDate,
         hasOrderReceipts: main.orderReceipts && main.orderReceipts.length > 0
-      }
+      };
     }
   }
 });
@@ -93,7 +93,7 @@ Template.stockCountingList.events({
     var version = tmpl.data.stocktakeId;
     if (version) {
       Meteor.call("generateOrders", version, HospoHero.handleMethodResult(function () {
-        Router.go("stocktakeOrdering", {"_id": version})
+        Router.go("stocktakeOrdering", {"_id": version});
       }));
     }
   },

@@ -1,7 +1,24 @@
 @import "../../../stylesheets/theme-globals.import.less";
 
-.mark-as-read {
-  display: inline-block;
-  float: right;
-  margin-top: -30px;
+.notifications-list-flyout {
+  .notifications-list {
+    .ibox {
+      margin-bottom: 0;
+
+      .ibox-content {
+        padding-bottom: 10px;
+      }
+    }
+  }
+
+  .mark-all-as-read-wrapper {
+    border-top: 1px solid #E7EAEC;
+    padding-top: 15px;
+
+    .mark-as-read {
+      display: inline-block;
+      float: right;
+      margin-top: -30px;
+    }
+  }
 }

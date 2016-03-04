@@ -25,19 +25,19 @@ Template.jobItemDetail.helpers({
 
   isPrep: function () {
     var type = Template.instance().jobType;
-    return type && type.name == 'Prep';
+    return type && type.name === 'Prep';
   },
 
   isRecurring: function () {
     var type = Template.instance().jobType;
-    return type && type.name == 'Recurring';
+    return type && type.name === 'Recurring';
   },
 
   endsOn: function () {
     var item = Template.instance().data.jobItem;
     var ends = null;
     if (item.endsOn) {
-      if (item.endsOn.on == 'endsNever') {
+      if (item.endsOn.on === 'endsNever') {
         ends = 'Never';
       } else if (item.endsOn.after) {
         ends = 'After ' + item.endsOn.after + ' occurrences';
@@ -50,7 +50,7 @@ Template.jobItemDetail.helpers({
 
   isWeekly: function () {
     var item = Template.instance().data.jobItem;
-    return item ? item.frequency == 'weekly' : false;
+    return item ? item.frequency === 'weekly' : false;
   },
 
   frequency: function () {
@@ -58,10 +58,8 @@ Template.jobItemDetail.helpers({
     switch (item.frequency) {
       case 'everyXWeeks':
         return 'Every ' + item.repeatEvery + ' weeks';
-        break;
       case 'weekly':
         return 'Weekly';
-        break;
       case 'daily':
         return 'Daily';
     }
@@ -72,8 +70,8 @@ Template.jobItemDetail.helpers({
 
     var repeatOnDays = item.repeatOn;
     if (_.isArray(repeatOnDays)) {
-      if (repeatOnDays.length == 7) {
-        return 'Every Day'
+      if (repeatOnDays.length === 7) {
+        return 'Every Day';
       } else if (repeatOnDays.length > 0) {
         return repeatOnDays.join(', ');
       }
@@ -93,8 +91,8 @@ Template.jobItemDetail.helpers({
           var analyzedIngredient = HospoHero.analyze
             .ingredient(Ingredients.findOne({_id: ingredientInJobItem._id}));
           if (analyzedIngredient) {
-            totalIngCost += parseFloat(analyzedIngredient.costPerPortionUsed)
-              * parseFloat(ingredientInJobItem.quantity);
+            totalIngCost += parseFloat(analyzedIngredient.costPerPortionUsed) *
+                parseFloat(ingredientInJobItem.quantity);
           }
         });
         return totalIngCost;

@@ -24,7 +24,7 @@ Template.addJobItem.helpers({
       idsToExclude.push(jobItemId);
       tmpl.idsToExclude.set(idsToExclude);
       tmpl.data.onItemsAdded(jobItemId);
-    }
+    };
   }
 });
 

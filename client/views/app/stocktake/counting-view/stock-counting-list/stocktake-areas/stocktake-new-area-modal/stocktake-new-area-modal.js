@@ -11,11 +11,11 @@ Template.newAreaModal.onCreated(function() {
       } else if (this.data.name === "special" && this.data.generalArea) {
         Meteor.call("createSpecialArea", areaName, this.data.generalArea, HospoHero.handleMethodResult(function () {
           tmpl.$("#specialareaName").val("");
-          $("#addNewSpecialAreaModal").modal("hide")
+          $("#addNewSpecialAreaModal").modal("hide");
         }));
       }
     }
-  }
+  };
 });
 
 Template.newAreaModal.events({

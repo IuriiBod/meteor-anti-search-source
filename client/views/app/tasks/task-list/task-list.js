@@ -46,7 +46,7 @@ Template.taskList.helpers({
     return function () {
       self.task = {};
       self.isNewTaskCreating.set(!self.isNewTaskCreating.get());
-    }
+    };
   },
 
   onEditTaskAction: function () {
@@ -54,7 +54,7 @@ Template.taskList.helpers({
     return function (task) {
       self.task = task;
       self.isNewTaskCreating.set(true);
-    }
+    };
   },
 
   isNewTaskCreating: function () {
@@ -99,13 +99,13 @@ Template.taskList.helpers({
     var self = Template.instance();
     return function (filterType) {
       self.filterType.set(filterType);
-    }
+    };
   },
 
   onUserFilterChange: function () {
     var self = Template.instance();
     return function (user) {
       self.filterUser.set(user);
-    }
+    };
   }
 });

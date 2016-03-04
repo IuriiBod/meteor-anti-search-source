@@ -18,24 +18,24 @@ Template.clockInfo.onCreated(function () {
 
   this.ClockInfo = class {
     constructor(shift) {
-      this.shift = shift
+      this.shift = shift;
     }
 
     clockIn() {
-      let startTimeMoment = moment(shift.startTime);
+      let startTimeMoment = moment(this.shift.startTime);
       let howLongAgoWord = startTimeMoment.fromNow();
       let startWord = startTimeMoment.isAfter(new Date()) ? 'starts' : 'started';
       return `Today shift ${startWord} ${howLongAgoWord}`;
     }
 
     clockOut() {
-      let recordedTime = moment().diff(shift.startedAt);
+      let recordedTime = moment().diff(this.shift.startedAt);
       let howManyMinutes = moment.duration(recordedTime).humanize();
       return `Recording ${howManyMinutes}`;
     }
 
     clockInfo() {
-      let recordedTime = moment(shift.finishedAt).diff(shift.startedAt);
+      let recordedTime = moment(this.shift.finishedAt).diff(this.shift.startedAt);
       let howManyMinutes = moment.duration(recordedTime).humanize();
       return `Recorded ${howManyMinutes}`;
     }
@@ -43,7 +43,7 @@ Template.clockInfo.onCreated(function () {
     getByStatus(status) {
       return this[status]();
     }
-  }
+  };
 });
 
 Template.clockInfo.helpers({
@@ -61,7 +61,7 @@ Template.clockInfo.helpers({
 
   clockInfoByStatus: function (status) {
     let ClockInfo = Template.instance().ClockInfo;
-    return new ClockInfo(shift = this).getByStatus(status);
+    return new ClockInfo(this).getByStatus(status);
   }
 });
 

@@ -39,7 +39,7 @@ Template.viewLeaveRequest.helpers({
   },
 
   isReviewMode: function (leaveRequest) {
-    return this.mode == 'review' && leaveRequest;
+    return this.mode === 'review' && leaveRequest;
   },
 
   canBeApprovedOrDeclined: function (isReviewMode) {
@@ -49,7 +49,7 @@ Template.viewLeaveRequest.helpers({
   managers: function () {
     var managersIds = HospoHero.roles.getUserIdsByAction('approve leave requests');
     managersIds = _.reject(managersIds, function (id) {
-      return id == Meteor.userId();
+      return id === Meteor.userId();
     });
 
     return Meteor.users.find({_id: {$in: managersIds}});

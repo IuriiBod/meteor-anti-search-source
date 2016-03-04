@@ -11,7 +11,7 @@ Template.addUserPopup.helpers({
     var self = Template.instance();
     return function (selectedUserId) {
       self.selectedUser.set(selectedUserId);
-    }
+    };
   },
   selectedUser: function () {
     return Template.instance().selectedUser.get();

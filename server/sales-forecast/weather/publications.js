@@ -1,12 +1,13 @@
-var checkForecastPermission = function (userId, areaId) {
-  var checker = new HospoHero.security.PermissionChecker(userId);
+var checkForecastPermission = function (areaId, context) {
+  var checker = new HospoHero.security.PermissionChecker(context.userId);
   var haveAccess = checker.hasPermissionInArea(areaId, 'view forecast');
+
   if (!haveAccess) {
-    subscribtion.error(new Meteor.Error(403, 'Access Denied'));
+    context.error(new Meteor.Error(403, 'Access Denied'));
   }
+
   return haveAccess;
 };
-
 
 
 Meteor.publish('weatherForecast', function (weekRange, areaId) {
@@ -15,14 +16,16 @@ Meteor.publish('weatherForecast', function (weekRange, areaId) {
 
   logger.info('Weather subscribe ', weekRange);
 
-  if (checkForecastPermission(this.userId, areaId)) {
+  if (checkForecastPermission(areaId, this)) {
     var currentArea = Areas.findOne({_id: areaId});
 
-    if (currentArea) {
-      var locationId = currentArea.locationId;
-      new WeatherManager(locationId).updateForecast();
+    if (!currentArea) {
+      this.ready();
+      return;
     }
 
+    var locationId = currentArea.locationId;
+    new WeatherManager(locationId).updateForecast();
     return WeatherForecast.find({date: weekRange, locationId: locationId});
   }
 });

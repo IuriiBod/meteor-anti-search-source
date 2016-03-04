@@ -9,7 +9,7 @@ Template.profileMainView.helpers({
     var user = Meteor.users.findOne(id);
     var loggedIn = Meteor.user();
     if (user) {
-      if (user._id == loggedIn._id) {
+      if (user._id === loggedIn._id) {
         return "My Profile";
       } else {
         return user.profile.firstname + "'s Profile";

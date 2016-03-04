@@ -19,7 +19,7 @@ Template.menuDetailsHeader.helpers({
 
   isArchived: function () {
     var menu = MenuItems.findOne({_id: Template.instance().getMenuItemId()});
-    return menu && menu.status == "archived";
+    return menu && menu.status === "archived";
   }
 });
 
@@ -47,7 +47,7 @@ Template.menuDetailsHeader.events({
         Meteor.call("duplicateMenuItem", menuItem, areaId, HospoHero.handleMethodResult(function () {
           HospoHero.success("Menu item has successfully copied!");
         }));
-      }
+      };
     };
     ModalManager.open('areaChooser', {
       onAreaSelected: onAreaSelected()
@@ -74,7 +74,7 @@ Template.menuDetailsHeader.events({
     event.preventDefault();
     var menuItem = MenuItems.findOne({_id: tmpl.getMenuItemId()});
     menuItem.status = menuItem.status === 'archived' ? 'active' : 'archived';
-    Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult(function (status) {
+    Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult(function () {
       HospoHero.info("Menu item " + menuItem.status);
     }));
   }

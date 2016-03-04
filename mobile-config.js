@@ -47,7 +47,7 @@ App.launchScreens({
   'android_xhdpi_landscape': 'public/mobile/res/screens/android/screen-xhdpi-landscape.png'
 });
 
-App.setPreference('SplashScreenDelay', 5000);
+App.setPreference('SplashScreenDelay', 10000);
 App.setPreference('StatusBarOverlaysWebView', 'false');
 
 App.accessRule('*');

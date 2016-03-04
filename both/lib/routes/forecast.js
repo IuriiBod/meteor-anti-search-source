@@ -35,6 +35,6 @@ Router.route('posSettings', {
     return [
       Meteor.subscribe('menuItemsForPosLinking', currentAreaId),
       Meteor.subscribe('posMenuItems', currentAreaId)
-    ]
+    ];
   }
 });

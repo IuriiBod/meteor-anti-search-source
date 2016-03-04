@@ -3,7 +3,8 @@ Template.areasProgressBar.helpers({
     var progress;
     var self = this;
     var getSpecialArea = function() {
-      return self.itemClass === 'garea-filter' ? SpecialAreas.find({"generalArea": self.itemId}) : SpecialAreas.findOne({_id: self.itemId});
+      return self.itemClass === 'garea-filter' ?
+          SpecialAreas.find({"generalArea": self.itemId}) : SpecialAreas.findOne({_id: self.itemId});
     };
 
     var getStocksCount = function(specialArea) {

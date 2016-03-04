@@ -1,8 +1,8 @@
-var checkForecastPermission = function (userId, areaId) {
-  var checker = new HospoHero.security.PermissionChecker(userId);
+var checkForecastPermission = function (areaId, context) {
+  var checker = new HospoHero.security.PermissionChecker(context.userId);
   var haveAccess = checker.hasPermissionInArea(areaId, 'view forecast');
   if (!haveAccess) {
-    subscribtion.error(new Meteor.Error(403, 'Access Denied'));
+    context.error(new Meteor.Error(403, 'Access Denied'));
   }
   return haveAccess;
 };
@@ -11,7 +11,7 @@ var checkForecastPermission = function (userId, areaId) {
 Meteor.publishAuthorized('posMenuItems', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
-  if (checkForecastPermission(this.userId, areaId)) {
+  if (checkForecastPermission(areaId, this)) {
     var relationsObj = HospoHero.getRelationsObject(areaId);
     return PosMenuItems.find({
       'relations.locationId': relationsObj.locationId
@@ -23,7 +23,7 @@ Meteor.publishAuthorized('posMenuItems', function (areaId) {
 Meteor.publish('menuItemsForPosLinking', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
-  if (checkForecastPermission(this.userId, areaId)) {
+  if (checkForecastPermission(areaId, this)) {
     logger.info('Menu items for POS menu linking', {areaId: areaId});
 
     var query = HospoHero.prediction.getMenuItemsForPredictionQuery({
