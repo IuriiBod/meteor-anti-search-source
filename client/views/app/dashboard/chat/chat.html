@@ -7,11 +7,13 @@
     <div class="ibox-content">
       <div class="row">
         <div class="col-md-9 ">
-          {{#if Template.subscriptionsReady}}
-            {{#each messages}}
-              <strong>{{username userId}}:</strong> {{body}}<br>
-            {{/each}}
-          {{/if}}
+          <div class="chat-discussion">
+            {{#if Template.subscriptionsReady}}
+              {{#each messages}}
+                {{> chatMessage}}
+              {{/each}}
+            {{/if}}
+          </div>
         </div>
         <div class="col-md-3">
           <div class="chat-users">

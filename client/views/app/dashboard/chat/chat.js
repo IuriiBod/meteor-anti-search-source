@@ -19,9 +19,11 @@ Template.chat.helpers({
 Template.chat.events({
   'click .send-message': (event, tmpl) => {
     event.preventDefault();
-    let message = tmpl.find('.message-input').value;
+    let messageInput = tmpl.find('.message-input');
+    let message = messageInput.value;
     if (message.length) {
       tmpl.conversation.sendMessage(message);
+      messageInput.value = '';
     }
   }
 });
