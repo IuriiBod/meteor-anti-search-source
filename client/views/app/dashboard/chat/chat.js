@@ -5,6 +5,7 @@ Template.chat.onCreated(function() {
     if (!self.conversation) {
       self.conversation = new Conversation().save();
     }
+    Meteor.conversations.update({_id: self.conversation._id}, {$set: {type: 'private'}});
     self.subscribe('messagesFor', self.conversation._id);
   });
 });
