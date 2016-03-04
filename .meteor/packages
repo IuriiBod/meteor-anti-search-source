@@ -26,7 +26,7 @@ less
 reactive-var
 
 force-ssl
-crosswalk
+#crosswalk
 
 accounts-ui
 accounts-google
