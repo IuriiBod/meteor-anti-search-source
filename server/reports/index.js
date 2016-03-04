@@ -92,8 +92,7 @@ let stockVarianceReport = (currentAreaId, params) => {
   let secondStocktakeGroup = getStocktakeGroup(params.secondStocktakeDate);
 
   let stockVarianceReport = new StockVarianceReport(currentAreaId, firstStocktakeGroup, secondStocktakeGroup);
-  let report = stockVarianceReport.getReport();
-  //console.log(report);
+  return stockVarianceReport.getReport();
 };
 
 Meteor.methods({

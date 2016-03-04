@@ -1,4 +1,5 @@
 Template.stockVarianceReport.onCreated(function () {
+  this.report = new ReactiveVar();
   let makeTimeStampQueryFromDate = (date) => {
     let transformToTimeStamp = (object, key) => new Date(object[key]).getTime();
     let timeRangeQuery = TimeRangeQueryBuilder.forDay(moment(date, 'DD-MM-YY'));
@@ -16,7 +17,9 @@ Template.stockVarianceReport.onCreated(function () {
     };
 
     Meteor.call('getStockVarianceReport', params, HospoHero.handleMethodResult((result) => {
-
+      if (result) {
+        this.report.set(result);
+      }
     }));
   };
 
@@ -24,6 +27,11 @@ Template.stockVarianceReport.onCreated(function () {
 });
 
 Template.stockVarianceReport.helpers({
+  stockItems() {
+    let stockItems = Template.instance().report.get();
+    return stockItems && stockItems.sort((firstItem, secondItem) => secondItem.variance - firstItem.variance);
+  },
+
   tableHeader() {
     return ['Stock Item Name', 'Stocktake Total', 'Orders Received', 'Stocktake Total',
             'Expected COGS', 'Actual COGS', 'Variance', 'Variance %']

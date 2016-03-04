@@ -4,13 +4,8 @@ StockVarianceReport = class {
     this._firstStocktakeGroup = firstStocktakeGroup;
     this._secondStocktakeGroup = secondStocktakeGroup;
 
-    this._initCache();
     this._cacheMenuItems();
     this._setDates();
-  }
-
-  _initCache() {
-    this._ingredientsCache = new IngredientsFromArea(this._areaId);
   }
 
   _setDates() {
@@ -36,9 +31,44 @@ StockVarianceReport = class {
     return _.filter(collection, (collectionItem) => collectionItem[key] === keyForComparison);
   }
 
+  _getStocktakesIngredients() {
+    let firstStocktakeDetails = this._getStocktakeDetailedReport(this._firstStocktakeGroup, this._areaId);
+    let secondStocktakeDetails = this._getStocktakeDetailedReport(this._secondStocktakeGroup, this._areaId);
+    let stocktakesIngredients = [];
+
+    firstStocktakeDetails.forEach((ingredient) => {
+      let filterIngById = this._getFilteredItem(secondStocktakeDetails, '_id', ingredient._id);
+      if (filterIngById.length) {
+        stocktakesIngredients.push({
+          _id: ingredient._id,
+          costInFirstStocktake: ingredient.stockTotalValue,
+          costInSecondStocktake: filterIngById[0].stockTotalValue,
+          description: ingredient.description
+        });
+      }
+    });
+
+    return stocktakesIngredients;
+  }
+
   getReport() {
-    let expectedGostOfGoods = this._getTotalExpectedCostOfIngredient();
-    let actualCostOfGoods = this._getActualCostOfGoods();
+    let ingredientsList = this._getStocktakesIngredients();
+    let expectedCostOfEachIngredient = this._getTotalExpectedCostOfIngredient();
+    let round = HospoHero.misc.rounding;
+
+    return ingredientsList.map((ingredient) => {
+      let getExpectedCost = this._getFilteredItem(expectedCostOfEachIngredient, 'stockId', ingredient._id);
+      let expectedCost = getExpectedCost.length ? getExpectedCost[0].expectedCost : 0;
+      let ordersReceived = this._getOrderReceived(ingredient._id);
+      let actualCost = ordersReceived + (ingredient.costInFirstStocktake - ingredient.costInSecondStocktake);
+
+      return _.extend(ingredient, {
+        ordersReceived: ordersReceived,
+        expectedCost: round(expectedCost),
+        actualCost: round(actualCost),
+        variance: round(expectedCost - actualCost)
+      });
+    });
   }
 
   /**
@@ -47,23 +77,16 @@ StockVarianceReport = class {
   _getTotalExpectedCostOfIngredient() {
     let stocks = this._expectedIngredientCostOfMenuItems();
     let stocksIds = _.uniq(_.pluck(stocks, '_id'));
-    let expectedCostOfIngredient = [];
 
-    stocksIds.forEach((stockId) => {
+    return stocksIds.map((stockId) => {
       let ingredientTotalExpectedCost = this._getFilteredItem(stocks, '_id', stockId)
           .reduce((memo, stock) => memo + stock.ingExpectedCost, 0);
 
-      let stockFromCache = this._ingredientsCache.searchByIngredientId(stockId);
-
-      if (stockFromCache) {
-        expectedCostOfIngredient.push({
-          stockId: stockFromCache.description,
-          totalExpectedCost: ingredientTotalExpectedCost
-        });
-      }
+      return {
+        stockId: stockId,
+        expectedCost: ingredientTotalExpectedCost
+      };
     });
-
-    return expectedCostOfIngredient;
   }
 
   _expectedIngredientCostOfMenuItems() {
@@ -73,7 +96,7 @@ StockVarianceReport = class {
       let menuItemDoc = this._getMenuItemsFromCache(menuItem.menuItemId);
       menuItemDoc.ingredients.forEach((ingredient) => {
         if (ingredient._id) {
-          let ingExpectedCost = HospoHero.misc.rounding(menuItem.predictionQuantity * ingredient.quantity);
+          let ingExpectedCost = menuItem.predictionQuantity * ingredient.quantity;
           stockItems.push({_id: ingredient._id, ingExpectedCost: ingExpectedCost});
         }
       });
@@ -101,32 +124,6 @@ StockVarianceReport = class {
     return DailySales.find(query, options).fetch();
   }
 
-  /**
-   * Actual Cost of Goods
-   */
-
-  _getActualCostOfGoods() {
-    let firstStocktakeDetailedReport = this._getStocktakeDetailedReport(this._firstStocktakeGroup, this._areaId);
-    let secondStocktakeDetailedReport = this._getStocktakeDetailedReport(this._secondStocktakeGroup, this._areaId);
-    let actualCostOfGoods = [];
-
-    firstStocktakeDetailedReport.forEach((ingredient) => {
-      let filterIngById = this._getFilteredItem(secondStocktakeDetailedReport, '_id', ingredient._id);
-      if (filterIngById.length) {
-        let filterIngByOrders = this._getFilteredItem(this._getStocktakesOrdersReceived(), 'stockId', ingredient._id);
-        let ordersReceived = filterIngByOrders.length ? filterIngByOrders[0].price : 0;
-        actualCostOfGoods.push({
-          _id: ingredient._id,
-          ordersReceived: `$ ${ordersReceived}`,
-          description: ingredient.description,
-          actualCost: HospoHero.misc.rounding(ordersReceived + (ingredient.stockTotalValue - filterIngById[0].stockTotalValue))
-        });
-      }
-    });
-
-    return actualCostOfGoods;
-  }
-
   _getStocktakeDetailedReport(stocktakeGroup, areaId) {
     let currentStocktakeReport = new StocktakeTotalDetailedReport(stocktakeGroup, areaId, {});
     return currentStocktakeReport.getIngredientsOfCurrentStocktake();
@@ -136,9 +133,13 @@ StockVarianceReport = class {
    *  received Orders for two Stocktakes
    */
 
-  _getStocktakesOrdersReceived() {
+  _stocktakesOrdersReceivedReport() {
     let stocktakesOrders = new OrdersReporter(this._fromDate, this._toDate, this._areaId);
     return stocktakesOrders.getDetailedOrdersReceived();
   }
-}
-;
+
+  _getOrderReceived(stockId) {
+    let foundStock =  _.findWhere(this._stocktakesOrdersReceivedReport(), {stockId});
+    return foundStock && foundStock.price || 0;
+  }
+};
