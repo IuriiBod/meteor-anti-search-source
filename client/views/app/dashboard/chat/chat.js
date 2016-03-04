@@ -1,16 +1,18 @@
-Template.chat.onCreated(function () {
-  let conversation = new Conversation().save();
-  this.conversationId = conversation._id;
-  console.log(this.conversation);
+Template.chat.onCreated(function() {
+  let self = this;
+  self.subscribe('conversations', function onReady() {
+    self.conversation = Meteor.conversations.findOne();
+    if (!self.conversation) {
+      self.conversation = new Conversation().save();
+    }
+    self.subscribe('messagesFor', self.conversation._id);
+  });
 });
 
 Template.chat.helpers({
   messages: () => {
-    let conversationId = Template.instance().conversationId;
-    let conversation = Meteor.conversations.findOne({_id: conversationId});
-    if (conversation) {
-      return Meteor.conversations.findOne({_id: conversationId}).messages();
-    }
+    let tmpl = Template.instance();
+    return tmpl.conversation.messages();
   }
 });
 
@@ -18,9 +20,8 @@ Template.chat.events({
   'click .send-message': (event, tmpl) => {
     event.preventDefault();
     let message = tmpl.find('.message-input').value;
-    let conversation = Meteor.conversations.findOne({_id: tmpl.conversationId});
     if (message.length) {
-      conversation.sendMessage(message);
+      tmpl.conversation.sendMessage(message);
     }
   }
 });
