@@ -1,16 +1,14 @@
 <template name="chat">
   <div class="ibox chat-view">
-    {{#if Template.subscriptionsReady}}
-      <div class="ibox-title">
-        Chat room panel
-      </div>
-      <div class="ibox-content">
-        {{#if isConversationSelected}}
-          {{> conversation id=currentConversationId}}
-        {{else}}
-          {{> conversationsList conversations=conversations onConversationSelected=setCurrentConversationId}}
-        {{/if}}
-      </div>
-    {{/if}}
+    <div class="ibox-title">
+      Chat room panel
+    </div>
+    <div class="ibox-content">
+      {{#if isConversationSelected}}
+        {{> conversation id=currentConversationId}}
+      {{else}}
+        {{> conversationsList conversations=conversations onConversationSelected=setCurrentConversationId}}
+      {{/if}}
+    </div>
   </div>
 </template>
