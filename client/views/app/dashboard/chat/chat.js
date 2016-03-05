@@ -1,19 +1,23 @@
 Template.chat.onCreated(function() {
-  let self = this;
-  self.subscribe('conversations', function onReady() {
-    self.conversation = Meteor.conversations.findOne();
-    if (!self.conversation) {
-      self.conversation = new Conversation().save();
-    }
-    Meteor.conversations.update({_id: self.conversation._id}, {$set: {type: 'private'}});
-    self.subscribe('messagesFor', self.conversation._id);
-  });
+  this.subscribe('conversations');
+  this.currentConversationId = new ReactiveVar(null);
 });
 
 Template.chat.helpers({
-  messages: () => {
+  conversations: () => {
+    return Meteor.conversations.find();
+  },
+  currentConversationId: () => {
+    return Template.instance().currentConversationId.get();
+  },
+  setCurrentConversationId: () => {
     let tmpl = Template.instance();
-    return tmpl.conversation.messages();
+    return (conversationId) => {
+      tmpl.currentConversationId.set(conversationId);
+    }
+  },
+  isConversationSelected: () => {
+    return !!Template.instance().currentConversationId.get();
   }
 });
 
