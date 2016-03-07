@@ -1,7 +1,11 @@
 <template name="chat">
   <div class="ibox chat-view">
     <div class="ibox-title">
-      Chat room panel
+      {{#if isConversationSelected}}
+        <a class="pull-right show-all-conversations" href="#">All conversations</a>
+      {{else}}
+        <a class="pull-right new-conversation" href="#">New conversation</a>
+      {{/if}}
     </div>
     <div class="ibox-content">
       {{#if isConversationSelected}}

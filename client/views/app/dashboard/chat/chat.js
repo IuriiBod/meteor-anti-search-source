@@ -29,5 +29,14 @@ Template.chat.events({
       tmpl.conversation.sendMessage(message);
       messageInput.value = '';
     }
+  },
+  'click .show-all-conversations': (event, tmpl) => {
+    event.preventDefault();
+    tmpl.currentConversationId.set(null);
+  },
+  'click .new-conversation': (event, tmpl) => {
+    event.preventDefault();
+    let newConversation = new Conversation().save();
+    tmpl.currentConversationId.set(newConversation._id);
   }
 });
