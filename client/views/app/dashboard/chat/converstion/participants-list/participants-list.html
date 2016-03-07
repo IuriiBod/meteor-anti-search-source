@@ -1,0 +1,13 @@
+<template name="participantsList">
+  <div class="search-container form-group">
+    <input type="text" class="form-control search-user-name" placeholder="Enter the name..."/>
+  </div>
+  {{#each searchedUsers}}
+    {{> searchUserInfo user=this onUserSelect=addParticipant}}
+  {{/each}}
+  {{#with conversation}}
+    {{#each participants}}
+      {{> searchUserInfo user=user}}
+    {{/each}}
+  {{/with}}
+</template>

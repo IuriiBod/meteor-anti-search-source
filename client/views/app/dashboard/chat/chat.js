@@ -4,7 +4,7 @@ Template.chat.onCreated(function() {
 
 Template.chat.helpers({
   conversations: () => {
-    return Meteor.conversations.find();
+    return Meteor.conversations.find().fetch();
   },
   currentConversationId: () => {
     return Template.instance().currentConversationId.get();

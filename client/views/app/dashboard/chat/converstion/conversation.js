@@ -5,16 +5,19 @@ Template.conversation.onCreated(function() {
 
 Template.conversation.helpers({
   messages: () => {
-    let tmpl = Template.instance();
-    return tmpl.conversation.messages(5, 0, 'date', -1);
+    const tmpl = Template.instance();
+    return tmpl.conversation.messages(5, 0, 'date', 1);
+  },
+  conversation: () => {
+    return Template.instance().conversation;
   }
 });
 
 Template.conversation.events({
   'click .send-message': (event, tmpl) => {
     event.preventDefault();
-    let messageInput = tmpl.find('.message-input');
-    let message = messageInput.value;
+    const messageInput = tmpl.find('.message-input');
+    const message = messageInput.value;
     if (message.length) {
       tmpl.conversation.sendMessage(message);
       messageInput.value = '';

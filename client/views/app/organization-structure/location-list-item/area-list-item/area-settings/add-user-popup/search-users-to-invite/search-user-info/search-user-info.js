@@ -11,6 +11,7 @@ Template.searchUserInfo.helpers({
 Template.searchUserInfo.events({
   'click .search-user-info-content': function (event, tmpl) {
     event.preventDefault();
-    tmpl.data.onUserSelect(tmpl.data.user);
+    console.log(tmpl.data.user._id);
+    tmpl.data.onUserSelect(tmpl.data.user._id);
   }
 });
