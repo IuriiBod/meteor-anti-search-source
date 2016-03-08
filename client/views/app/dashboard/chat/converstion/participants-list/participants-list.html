@@ -1,13 +1,31 @@
 <template name="participantsList">
-  <div class="search-container form-group">
-    <input type="text" class="form-control search-user-name" placeholder="Enter the name..."/>
+  <div class="chat-users">
+    <div class="search-container form-group">
+      <input type="text" class="form-control search-user-name" placeholder="Enter the name..."/>
+    </div>
+    <div class="users-list">
+      {{#if searchedUsers}}
+        <b>Select to add</b>
+        {{#each searchedUsers}}
+          {{> searchUserInfo user=this onUserSelect=addParticipant}}
+        {{/each}}
+        <hr>
+      {{/if}}
+      {{#with conversation}}
+        {{#if participants.count}}
+          <b>Participants ({{participants.count}})</b>
+          {{#each participants}}
+            <div class="chat-user">
+              <img class="chat-avatar" src="{{profilePicture user}}" alt="Profile image">
+              <div class="chat-user-name">
+                <a href="#">{{username user}}</a>
+              </div>
+            </div>
+          {{/each}}
+        {{else}}
+          <b>No other participants</b>
+        {{/if}}
+      {{/with}}
+    </div>
   </div>
-  {{#each searchedUsers}}
-    {{> searchUserInfo user=this onUserSelect=addParticipant}}
-  {{/each}}
-  {{#with conversation}}
-    {{#each participants}}
-      {{> searchUserInfo user=user}}
-    {{/each}}
-  {{/with}}
 </template>

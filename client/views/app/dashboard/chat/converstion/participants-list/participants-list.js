@@ -7,7 +7,6 @@ Template.participantsList.onCreated(function() {
   };
 
   this.autorun(() => {
-    console.log('autorun');
     const participants = this.data.conversation.participants();
     const participantsIds = participants.map(participant => participant.userId);
     this.subscribe('selectedUsersList', participantsIds);
@@ -33,6 +32,13 @@ Template.participantsList.onCreated(function() {
   });
 });
 
+Template.participantsList.onRendered(function() {
+  this.cleanSearchInput = () => {
+    this.find('.search-user-name').value = '';
+    this.searchName.set('');
+  }
+});
+
 Template.participantsList.helpers({
   searchedUsers () {
     const tmpl = Template.instance();
@@ -46,6 +52,7 @@ Template.participantsList.helpers({
     const tmpl = Template.instance();
     return (userId) => {
       tmpl.addParticipant(userId);
+      tmpl.cleanSearchInput();
     }
   }
 });

@@ -4,11 +4,11 @@ Template.conversation.onCreated(function() {
 });
 
 Template.conversation.helpers({
-  messages: () => {
+  messages () {
     const tmpl = Template.instance();
     return tmpl.conversation.messages(5, 0, 'date', 1);
   },
-  conversation: () => {
+  conversation () {
     return Template.instance().conversation;
   }
 });
