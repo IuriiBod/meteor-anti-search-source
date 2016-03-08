@@ -1,12 +1,17 @@
 Template.participantsList.onCreated(function() {
-  this.subscribe('selectedUsersList', this.data.conversation._participants);
-
   this.addParticipant = (userId) => {
     const conversation = this.data.conversation;
     this.subscribe('profileUser', userId, function onReady () {
       conversation.addParticipant(Meteor.users.findOne(userId));
     });
   };
+
+  this.autorun(() => {
+    console.log('autorun');
+    const participants = this.data.conversation.participants();
+    const participantsIds = participants.map(participant => participant.userId);
+    this.subscribe('selectedUsersList', participantsIds);
+  });
 
   this.searchName = new ReactiveVar('');
 
@@ -43,10 +48,6 @@ Template.participantsList.helpers({
       tmpl.addParticipant(userId);
     }
   }
-  //participants () {
-  //  const participantsIds = this.conversation._participants;
-  //  return Meteor.users.find({_id: {$in: participantsIds}});
-  //}
 });
 
 Template.participantsList.events({
