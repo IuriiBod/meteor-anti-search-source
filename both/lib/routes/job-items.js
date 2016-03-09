@@ -5,11 +5,12 @@ Router.route('/jobItems', {
   template: 'jobItemsListMainView',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    var status = this.params.status  ? this.params.status : 'active';
     return [
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('userSubscriptions', currentAreaId),
-      Meteor.subscribe('jobItems', null, currentAreaId),
+      Meteor.subscribe('jobItems', null, currentAreaId, status),
       Meteor.subscribe('ingredients', null, currentAreaId)
     ];
   },
