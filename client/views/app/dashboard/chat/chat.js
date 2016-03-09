@@ -36,6 +36,6 @@ Template.chat.events({
     const currentConversationId = tmpl.currentConversationId.get();
     Meteor.call('removeCurrentUserFromConversations', currentConversationId);
 
-    //tmpl.currentConversationId.set(null);
+    tmpl.currentConversationId.set(null);
   }
 });
