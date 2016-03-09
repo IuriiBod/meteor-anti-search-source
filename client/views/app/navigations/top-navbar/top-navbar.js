@@ -18,7 +18,7 @@ Template.topNavbar.helpers({
       },
       {
         title: 'Availability & Leave',
-        class: 'user-unavailabilities-flyout'
+        'class': 'user-unavailabilities-flyout'
       },
       {
         route: 'switchUser',
