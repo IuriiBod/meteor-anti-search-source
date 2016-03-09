@@ -10,8 +10,7 @@ Router.route('/jobItems', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('userSubscriptions', currentAreaId),
-      Meteor.subscribe('jobItems', null, currentAreaId, status),
-      Meteor.subscribe('ingredients', null, currentAreaId)
+      Meteor.subscribe('jobItems', null, currentAreaId, status)
     ];
   },
   data: function () {
@@ -50,14 +49,9 @@ Router.route('/jobItem/:_id', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('jobItem', this.params._id),
-      Meteor.subscribe('jobTypes'),
       Meteor.subscribe('comments', this.params._id, currentAreaId),
       Meteor.subscribe('usersList', currentAreaId),
-      Meteor.subscribe('userSubscriptions', currentAreaId),
-      Meteor.subscribe('allCategories', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('jobsRelatedMenus', this.params._id),
-      Meteor.subscribe('taskList')
+      Meteor.subscribe('userSubscriptions', currentAreaId)
     ];
   },
   data: function () {
@@ -74,8 +68,8 @@ Router.route('/jobItem/:_id/edit', {
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('jobTypes'),
       Meteor.subscribe('jobItem', this.params._id),
+      Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('ingredients', null, currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId)

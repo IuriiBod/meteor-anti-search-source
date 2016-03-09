@@ -49,18 +49,33 @@ Meteor.publishComposite('jobItem', function (id) {
             this.ready();
           }
         }
+      },
+      {
+        find: function (jobItem) {
+            return TaskList.find({'reference.id': jobItem._id});
+        }
+      },
+      {
+        find: function (jobItem) {
+          return JobTypes.find({_id: jobItem.type});
+        }
+      },
+      {
+        find: function (jobItem) {
+          if (this.userId) {
+            return MenuItems.find({'jobItems._id': jobItem._id});
+          } else {
+            this.ready();
+          }
+        },
+        children:[{
+            find: function (menuItem) {
+              return Categories.find({_id:menuItem.category});
+            }
+          }
+        ]
       }
+
     ]
   };
-});
-
-Meteor.publish("jobsRelatedMenus", function (id) {
-  if (this.userId) {
-    logger.info("Related menus published", {"id": id});
-    return MenuItems.find({"jobItems._id": id});
-  } else {
-    this.ready();
-  }
-  logger.info("Related menus published", {"id": id});
-  return MenuItems.find({"jobItems._id": id});
 });
