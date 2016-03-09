@@ -13,7 +13,7 @@ Template.basics.onCreated(function () {
 
   this.triggerUpdateSupplier = function (field, value) {
     $('.test-element').trigger('updateSupplier', [field, value]);
-  }
+  };
 });
 
 
@@ -77,7 +77,7 @@ Template.basics.events({
       }
     }, HospoHero.handleMethodResult(function () {
       $('.uploadedPriceList').removeClass('hide');
-      $('#uploadedImageUrl').attr('src', url);
+      //$('#uploadedImageUrl').attr('src', url);
     }));
   },
 

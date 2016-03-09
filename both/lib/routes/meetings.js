@@ -19,6 +19,6 @@ Router.route('meetingDetails', {
   data () {
     return {
       id: this.params.id
-    }
+    };
   }
 });

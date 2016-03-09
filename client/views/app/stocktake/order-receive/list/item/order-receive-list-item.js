@@ -6,7 +6,7 @@ Template.orderReceiveItem.helpers({
   stock: function () {
     var ingredient = Ingredients.findOne({_id: this.item.stockId});
     if (ingredient) {
-      this.item['description'] = ingredient.description;
+      this.item.description = ingredient.description;
     }
     return this.item;
   },

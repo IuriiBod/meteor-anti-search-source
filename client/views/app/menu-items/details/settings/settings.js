@@ -36,7 +36,7 @@ Template.menuItemSettings.helpers({
       var menuItem = MenuItems.findOne({_id: tmpl.data._id});
       menuItem.status = newStatus;
       Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
-    }
+    };
   },
 
   isArchived() {
@@ -48,7 +48,7 @@ Template.menuItemSettings.helpers({
       namespace: 'menus',
       uiStateId: 'settings',
       title: 'Settings'
-    }
+    };
   }
 });
 

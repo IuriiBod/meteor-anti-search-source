@@ -6,7 +6,7 @@ Template.areaSettings.onCreated(function () {
 
   this.area = function () {
     return Areas.findOne({_id: this.data.areaId});
-  }
+  };
 });
 
 Template.areaSettings.onRendered(function () {
@@ -59,7 +59,7 @@ Template.areaSettings.helpers({
         area.color = color;
         Meteor.call('editArea', area, HospoHero.handleMethodResult());
       }
-    }
+    };
   },
 
   addUser: function () {

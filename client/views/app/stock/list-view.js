@@ -5,8 +5,8 @@ Template.listOfStocksMasterMainView.onCreated(function () {
         ingredient = Ingredients.findOne({_id: ingredient});
       }
       FlyoutManager.open('ingredientEditor', {ingredient: ingredient});
-    }
-  }
+    };
+  };
 });
 
 Template.listOfStocksMasterMainView.helpers({

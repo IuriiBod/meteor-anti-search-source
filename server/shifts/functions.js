@@ -119,7 +119,7 @@ Meteor.methods({
                 return section && section.name || 'open';
               },
               dateFormatter: function (shift) {
-                return HospoHero.dateUtils.shiftDateInterval(shift)
+                return HospoHero.dateUtils.shiftDateInterval(shift);
               },
               rosterUrl: linkToWeeklyRosterHelper
             }

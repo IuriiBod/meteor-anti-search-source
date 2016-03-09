@@ -2,7 +2,7 @@ Template.jobItemDetailed.helpers({
   isRecurring: function () {
     var id = Template.instance().data.jobitem.type;
     var type = JobTypes.findOne({_id: id});
-    return !!type && type.name == "Recurring";
+    return !!type && type.name === "Recurring";
   },
 
   job: function () {
@@ -15,15 +15,12 @@ Template.jobItemDetailed.helpers({
     switch (frequency) {
       case 'daily':
         return 'Daily';
-        break;
       case 'weekly':
         return 'Weekly';
-        break;
       case 'everyXWeeks':
         return 'Every ' + jobItem.repeatEvery + ' weeks';
-        break;
       default :
-        false;
+        return false;
     }
   },
 
@@ -44,8 +41,8 @@ Template.jobItemDetailed.helpers({
             var analyzedIngredient = HospoHero.analyze
               .ingredient(Ingredients.findOne({_id: ingredientInJobItem._id}));
             if (analyzedIngredient) {
-              analyzedIngredient.totalCost = parseFloat(analyzedIngredient.costPerPortionUsed)
-                * parseFloat(ingredientInJobItem.quantity);
+              analyzedIngredient.totalCost = parseFloat(analyzedIngredient.costPerPortionUsed) *
+                  parseFloat(ingredientInJobItem.quantity);
               jobItem.totalIngCost += parseFloat(analyzedIngredient.totalCost);
             }
           });
@@ -63,7 +60,7 @@ Template.jobItemDetailed.helpers({
   },
 
   isArchive: function () {
-    return Template.instance().data.jobitem.status == "archived";
+    return Template.instance().data.jobitem.status === "archived";
   }
 });
 

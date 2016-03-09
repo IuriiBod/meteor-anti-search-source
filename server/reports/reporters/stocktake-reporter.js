@@ -28,10 +28,12 @@ StocktakesReporter = class {
 
     return {
       firstStocktake: {
+        stocktakeMainId: this._firstStocktakeGroup[0].version,
         date: this._fromDate,
         total: actualReporter.firstStocktakeTotal
       },
       secondStocktake: {
+        stocktakeMainId: this._secondStocktakeGroup[0].version,
         date: this._toDate,
         total: actualReporter.secondStocktakeTotal
       },
@@ -41,7 +43,7 @@ StocktakesReporter = class {
         actual: actualReport
       },
       difference: this._getExpectedActualDifference(actualReport, expectedReport)
-    }
+    };
   }
 
   _getExpectedActualDifference(actualCostOfGoodsReport, expectedCostOfGoodsReport) {
@@ -55,6 +57,6 @@ StocktakesReporter = class {
     return {
       amount: HospoHero.misc.rounding(report.amount, 10),
       ratio: HospoHero.misc.rounding(report.ratio, 100)
-    }
+    };
   }
 };

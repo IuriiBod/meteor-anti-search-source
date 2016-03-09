@@ -18,7 +18,7 @@ Template.userPopup.onRendered(function() {
       return {
         width: modalRect.width,
         height: modalRect.height
-      }
+      };
     }
     return null;
   };
@@ -45,7 +45,7 @@ Template.userPopup.onRendered(function() {
         fitModalToWindow(modalSize, modalPosition);
         $(popup).css('visibility', 'visible');
       }
-    }, 200)
+    }, 200);
   };
 
   checkModalPosition();

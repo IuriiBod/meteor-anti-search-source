@@ -47,7 +47,7 @@ class MeetingPropertyChangeLogger {
     ).sendNotification(toUserId);
   }
 
-  _trackUserRemovedFromMeeting(oldMeeting, newMeeting, userId) {
+  _trackUserRemovedFromMeeting(oldMeeting, newMeeting) {
     let diffUser = _.difference(oldMeeting.attendees, newMeeting.attendees);
     if (diffUser.length) {
       let message;
@@ -90,12 +90,20 @@ class MeetingPropertyChangeLogger {
   }
 }
 
+let canUserCreateMeetings = (areaId = null) => {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'create meetings');
+};
+
+let isAttendeeInMeeting = (attendees = []) => {
+  return attendees.indexOf(Meteor.userId()) > -1;
+};
 
 Meteor.methods({
   createMeeting (meetingDoc) {
     check(meetingDoc, HospoHero.checkers.MeetingChecker);
 
-    if (!HospoHero.canUser("create meetings")) {
+    if (!canUserCreateMeetings()) {
       throw new Meteor.Error('You can\'t create meetings');
     } else {
       let defaultMeeting = {
@@ -119,7 +127,7 @@ Meteor.methods({
   editMeeting (newMeetingObject) {
     check(newMeetingObject, HospoHero.checkers.MeetingChecker);
 
-    if (!HospoHero.canUser('create meetings')) {
+    if (!(isAttendeeInMeeting(newMeetingObject.attendees) || canUserCreateMeetings())) {
       throw new Meteor.Error('Yot can\'t edit the meeting');
     } else {
       let meetingLogger = new MeetingPropertyChangeLogger(newMeetingObject, Meteor.userId());
@@ -141,7 +149,7 @@ Meteor.methods({
           if (isAddingNewValue) {
             array.push(userId);
           } else {
-            array = _.without(array, userId)
+            array = _.without(array, userId);
           }
           return _.uniq(array);
         };

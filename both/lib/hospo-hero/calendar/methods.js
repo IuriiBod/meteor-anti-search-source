@@ -13,22 +13,6 @@ Namespace('HospoHero.calendar', {
   },
 
   /**
-   * Returns an array of events' names
-   * @param onlyManualAllocated - if true - returns only manually allocated events' names
-   * @returns {Array}
-   */
-  getEventNames: function (onlyManualAllocated) {
-    var events = _.map(this.events, function (eventObject, eventName) {
-      if (!onlyManualAllocated || onlyManualAllocated && eventObject.manualAllocating) {
-        return eventName;
-      } else {
-        return false;
-      }
-    });
-    return _.compact(events);
-  },
-
-  /**
    * Returns events need to render to the calendar
    * @param {Object} calendarTemplateData
    * @param {String} calendarTemplateData.type - type of the calendar (day or week)
@@ -129,7 +113,7 @@ Namespace('HospoHero.calendar', {
         return {
           start: shift.startTime,
           end: shift.endTime
-        }
+        };
       } else {
         return false;
       }
@@ -160,7 +144,7 @@ Namespace('HospoHero.calendar', {
     let getBackgroundEvents = (userId, areaId) => {
       const shiftTime = getUsersShiftTime(userId, areaId);
       if (shiftTime) {
-        return getBackgroundEventsObject(shiftTime, userId)
+        return getBackgroundEventsObject(shiftTime, userId);
       } else {
         return [];
       }

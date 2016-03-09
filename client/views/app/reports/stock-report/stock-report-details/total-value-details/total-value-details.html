@@ -1,0 +1,48 @@
+<template name="totalValueDetails">
+  {{> pageHeading title="Total Value Details" category="Stock" name="stocktake"}}
+  <div class="wrapper wrapper-content animated value-details-report">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="row m-b-sm m-t-sm">
+          <div class="col-lg-8">
+            <input type="text" class="form-control search-stock-items" placeholder="Search" />
+          </div>
+          <div class="col-lg-3">
+            <select class="btn btn-white suppliers-list">
+              <option value="All Suppliers">All Suppliers</option>
+              {{#each suppliers}}
+                <option value={{_id}}>{{name}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+        <div class="ibox">
+          <div class="ibox-content no-padding">
+            <div class="table-responsive">
+              <table class="table table-condensed table-hover table-striped">
+                <thead>
+                <tr>
+                  <th>Stock Item Name</th>
+                  <th>Qty</th>
+                  <th>Purchase Price</th>
+                  <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each stocks}}
+                  <tr>
+                    <td>{{description}}</td>
+                    <td>{{qty}}</td>
+                    <td>$ {{purchasePrice}}</td>
+                    <td>$ {{stockTotalValue}}</td>
+                  </tr>
+                {{/each}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

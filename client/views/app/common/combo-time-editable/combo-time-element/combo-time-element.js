@@ -41,7 +41,7 @@ Template.comboTimeElement.helpers({
     for (var i = 1; i <= 12; i++) {
       var hour = {};
       hour.value = i;
-      hour.selected = Template.instance().timeObject.hours == i ? 'selected' : '';
+      hour.selected = Template.instance().timeObject.hours === i ? 'selected' : '';
 
       hours.push(hour);
     }
@@ -54,7 +54,7 @@ Template.comboTimeElement.helpers({
     for (var i = 0; i < 60; i = i + minuteStepping || 1) {
       var minute = {};
       minute.value = i < 10 ? '0' + i : i;
-      minute.selected = Template.instance().timeObject.minutes == i ? 'selected' : '';
+      minute.selected = Template.instance().timeObject.minutes === i ? 'selected' : '';
 
       minutes.push(minute);
     }
@@ -70,7 +70,7 @@ Template.comboTimeElement.helpers({
     }];
 
     return _.map(ampm, function (item) {
-      item.selected = item.value == Template.instance().timeObject.ampm ? 'selected' : '';
+      item.selected = item.value === Template.instance().timeObject.ampm ? 'selected' : '';
       return item;
     });
   }

@@ -1,6 +1,6 @@
 Template.meetingDetails.onCreated(function () {
   this.meeting = () => {
-    return Meetings.findOne({_id: this.data.id})
+    return Meetings.findOne({_id: this.data.id});
   };
 });
 
@@ -49,7 +49,7 @@ Template.meetingDetails.helpers({
     let tmpl = Template.instance();
     return (agendaAndMinutes) => {
       tmpl.saveMeeting('agendaAndMinutes', agendaAndMinutes);
-    }
+    };
   },
 
   meetingDetailsOptions () {
@@ -57,7 +57,7 @@ Template.meetingDetails.helpers({
       namespace: 'meeting',
       uiStateId: 'details',
       title: 'Meeting Details'
-    }
+    };
   },
 
   agendaOptions () {
@@ -66,6 +66,6 @@ Template.meetingDetails.helpers({
       uiStateId: 'agenda',
       title: 'Agenda & Minutes',
       contentPadding: '20px'
-    }
+    };
   }
 });

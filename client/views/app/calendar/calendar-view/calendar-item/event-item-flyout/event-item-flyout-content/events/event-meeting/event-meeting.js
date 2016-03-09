@@ -8,6 +8,6 @@ Template.eventMeeting.helpers({
   goToItemTemplateData() {
     return {
       id: this.eventObject.item.itemId
-    }
+    };
   }
 });

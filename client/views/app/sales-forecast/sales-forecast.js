@@ -42,7 +42,7 @@ Template.salesForecastMainView.helpers({
   menuItems: function () {
     return Template.instance().menuItemsSearchSource.searchResult({
       transform: function (matchText, regExp) {
-        return matchText.replace(regExp, "<b>$&</b>")
+        return matchText.replace(regExp, "<b>$&</b>");
       },
       sort: {name: 1}
     });

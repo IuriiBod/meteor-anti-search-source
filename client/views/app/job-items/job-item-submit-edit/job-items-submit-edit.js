@@ -51,7 +51,7 @@ Template.submitEditJobItem.helpers({
       onSubmit: function (time) {
         tmpl.repeatAt.set(time);
       }
-    }
+    };
   },
 
   checkListItems: function () {
@@ -112,8 +112,8 @@ Template.submitEditJobItem.helpers({
   endsOn: function () {
     var endsOn = moment().add(1, 'days');
     if (this.jobItem.endsOn) {
-      endsOn = moment(this.jobItem.endsOn.lastDate)
-        || moment(this.jobItem.startsOn).add(1, 'days');
+      endsOn = moment(this.jobItem.endsOn.lastDate) ||
+          moment(this.jobItem.startsOn).add(1, 'days');
     }
     return HospoHero.dateUtils.shortDateFormat(endsOn);
   },
@@ -127,11 +127,11 @@ Template.submitEditJobItem.helpers({
         return {
           day: day,
           checked: true
-        }
+        };
       }
       return {
         day: day
-      }
+      };
     });
   },
 
@@ -171,28 +171,28 @@ Template.submitEditJobItem.events({
         var getSelectedDays = function () {
           var $selectedDays = tmpl.$('.repeat-on-checkbox:checked');
           return _.map($selectedDays, function (item) {
-            return $(item).val()
+            return $(item).val();
           });
         };
         var getEndsOnDate = function () {
           var $checkedButton = tmpl.$('.ends-on-radio:checked');
           var checkedButtonFor = $checkedButton.val();
 
-          if (checkedButtonFor == 'never') {
+          if (checkedButtonFor === 'never') {
             return {
               on: 'endsNever'
-            }
-          } else if (checkedButtonFor == 'occurrences') {
+            };
+          } else if (checkedButtonFor === 'occurrences') {
             var afterOccurrences = parseInt(tmpl.$('.occurrences-number-input').val());
             return {
               after: afterOccurrences
-            }
+            };
 
-          } else if (checkedButtonFor == 'on-date') {
+          } else if (checkedButtonFor === 'on-date') {
             var lastDate = tmpl.$('.ends-on-date-picker').datepicker('getDate');
             return {
               lastDate: lastDate
-            }
+            };
           }
         };
 
@@ -203,11 +203,11 @@ Template.submitEditJobItem.events({
         jobItem.frequency = tmpl.selectedFrequency.get();
 
         // if repeat every week
-        if (tmpl.selectedFrequency.get() == 'weekly' || 'everyXWeeks') {
+        if (tmpl.selectedFrequency.get() === 'weekly' || 'everyXWeeks') {
           jobItem.repeatOn = getSelectedDays();
 
           // if repeat every X weeks
-          if (tmpl.selectedFrequency.get() == 'everyXWeeks') {
+          if (tmpl.selectedFrequency.get() === 'everyXWeeks') {
             jobItem.repeatEvery = parseInt(tmpl.$('.repeat-every-weeks-input').val()) || 0;
           }
         }
@@ -250,8 +250,12 @@ Template.submitEditJobItem.events({
 
       var closeFlyoutOrGoToDetails  = function(jobItemId) {
         var isFlyout = tmpl.data.isPlacedInFlyout;
-        if (isFlyout) FlyoutManager.getInstanceByElement(e.target).close();
-        else Router.go('jobItemDetailed', {_id: jobItemId});
+        if (isFlyout) {
+          FlyoutManager.getInstanceByElement(e.target).close();
+        }
+        else {
+          Router.go('jobItemDetailed', {_id: jobItemId});
+        }
       };
 
       if (tmpl.data.jobItem._id) {
@@ -276,7 +280,7 @@ Template.submitEditJobItem.events({
       tmpl.checklistItems.set(items);
     };
 
-    if (event.keyCode == 10 || event.keyCode == 13) {
+    if (event.keyCode === 10 || event.keyCode === 13) {
       var $input = $(event.target);
       var item = $input.val().trim();
       if (item) {
@@ -289,7 +293,7 @@ Template.submitEditJobItem.events({
     var removeCheckListItem = function (itemToRemove) {
       var items = tmpl.checklistItems.get();
       items = _.reject(items, function (item) {
-        return item == itemToRemove;
+        return item === itemToRemove;
       });
       tmpl.checklistItems.set(items);
     };
