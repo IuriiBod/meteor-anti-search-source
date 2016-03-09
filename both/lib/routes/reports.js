@@ -73,6 +73,12 @@ Router.route('/stock-report/details/:stocktakeMainId/:date', {
 Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', {
   name: 'stockVarianceReport',
   template: 'stockVarianceReport',
+  waitOn() {
+    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return [
+      Meteor.subscribe('suppliersNamesList', currentAreaId)
+    ];
+  },
   data() {
     return {
       firstStocktakeDate: this.params.firstStocktakeDate,

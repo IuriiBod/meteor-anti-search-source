@@ -1,8 +1,10 @@
 StockVarianceReport = class {
-  constructor(areaId, firstStocktakeGroup, secondStocktakeGroup) {
+  constructor(areaId, firstStocktakeGroup, secondStocktakeGroup, supplierId, searchText) {
     this._areaId = areaId;
     this._firstStocktakeGroup = firstStocktakeGroup;
     this._secondStocktakeGroup = secondStocktakeGroup;
+    this._supplierId = supplierId;
+    this._searchText = searchText;
 
     this._cacheMenuItems();
     this._setDates();
@@ -125,7 +127,11 @@ StockVarianceReport = class {
   }
 
   _getStocktakeDetailedReport(stocktakeGroup, areaId) {
-    let currentStocktakeReport = new StocktakeTotalDetailedReport(stocktakeGroup, areaId, {});
+    let searchingParams = {
+      supplierId: this._supplierId,
+      searchText: this._searchText
+    };
+    let currentStocktakeReport = new StocktakeTotalDetailedReport(stocktakeGroup, areaId, searchingParams);
     return currentStocktakeReport.getIngredientsOfCurrentStocktake();
   }
 

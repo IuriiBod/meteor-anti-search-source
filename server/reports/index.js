@@ -91,7 +91,13 @@ let stockVarianceReport = (currentAreaId, params) => {
   let firstStocktakeGroup = getStocktakeGroup(params.firstStocktakeDate);
   let secondStocktakeGroup = getStocktakeGroup(params.secondStocktakeDate);
 
-  let stockVarianceReport = new StockVarianceReport(currentAreaId, firstStocktakeGroup, secondStocktakeGroup);
+  let stockVarianceReport = new StockVarianceReport(
+      currentAreaId,
+      firstStocktakeGroup,
+      secondStocktakeGroup,
+      params.supplierId,
+      params.searchText
+  );
   return stockVarianceReport.getReport();
 };
 
@@ -133,7 +139,9 @@ Meteor.methods({
   getStockVarianceReport(params) {
     check(params, {
       firstStocktakeDate: Object,
-      secondStocktakeDate: Object
+      secondStocktakeDate: Object,
+      supplierId: HospoHero.checkers.NullableMongoId,
+      searchText: Match.OneOf(String, null)
     });
 
     if (this.userId) {
