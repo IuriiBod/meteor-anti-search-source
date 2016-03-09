@@ -16,7 +16,7 @@ Router.route('/jobItems', {
   data: function () {
     return {
       status: this.params.status
-    }
+    };
   }
 });
 
@@ -37,7 +37,7 @@ Router.route('/jobItem/submit', {
     return {
       jobItem: {},
       mode: 'submit'
-    }
+    };
   }
 });
 
@@ -47,17 +47,19 @@ Router.route('/jobItem/:_id', {
   template: 'jobItemDetail',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('jobItem', this.params._id),
-      Meteor.subscribe('comments', this.params._id, currentAreaId),
-      Meteor.subscribe('usersList', currentAreaId),
-      Meteor.subscribe('userSubscriptions', currentAreaId)
-    ];
+    if (currentAreaId) {
+      return [
+        Meteor.subscribe('jobItem', this.params._id),
+        Meteor.subscribe('comments', this.params._id, currentAreaId),
+        Meteor.subscribe('usersList', currentAreaId),
+        Meteor.subscribe('userSubscriptions', currentAreaId)
+      ];
+    }  
   },
   data: function () {
     return {
       jobItem: JobItems.findOne({_id: this.params._id})
-    }
+    };
   }
 });
 
@@ -78,6 +80,6 @@ Router.route('/jobItem/:_id/edit', {
   data: function () {
     return {
       jobItem: JobItems.findOne({_id: this.params._id})
-    }
+    };
   }
 });

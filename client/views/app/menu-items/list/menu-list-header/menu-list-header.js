@@ -1,7 +1,7 @@
 Template.menuListHeader.helpers({
   isArchived: function () {
     var archive = Router.current().params.status;
-    return archive && archive == 'archived';
+    return archive && archive === 'archived';
   }
 });
 

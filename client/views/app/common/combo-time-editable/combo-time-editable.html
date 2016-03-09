@@ -18,7 +18,10 @@
         </div>
       </div>
     {{else}}
-      <i class="fa fa-clock-o"></i>
+      {{#unless params.withoutIcon}}
+        <i class="fa {{icon}}"></i>
+      {{/unless}}
+
       <a href="#" class="time">
         {{firstTime}}
         {{#if isTimeRangeMode}}

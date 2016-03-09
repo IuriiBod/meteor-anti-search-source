@@ -1,31 +1,40 @@
+var canUserEditRoster = function () {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit roster');
+};
+
 Meteor.methods({
   createCategory: function (name) {
-    if (!HospoHero.isManager()) {
+    check(name, String);
+
+    let currentAreaId = HospoHero.getCurrentAreaId();
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    if (!permissionChecker.hasPermissionInArea(currentAreaId, 'edit menus')) {
       logger.error("User not permitted to add categories");
       throw new Meteor.Error(403, "User not permitted to add categories");
     }
-    if (!name) {
-      logger.error("Category should have a name");
-      return new Meteor.Error("Category should have a name");
-    }
+
     var exist = Categories.findOne({
       name: name,
-      "relations.areaId": HospoHero.getCurrentAreaId()
+      "relations.areaId": currentAreaId
     });
+
     if (exist) {
       logger.error('Category name should be unique', exist);
       throw new Meteor.Error("Category name should be unique");
     }
+
     var id = Categories.insert({
       name: name,
       relations: HospoHero.getRelationsObject()
     });
+
     logger.info("New Category created", id);
     return id;
   },
 
   createSection: function (name) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error("User not permitted to add sections");
       throw new Meteor.Error(403, "User not permitted to add sections");
     }
@@ -49,7 +58,7 @@ Meteor.methods({
   },
 
   deleteSection: function (id) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error("User not permitted to add job items");
       throw new Meteor.Error(404, "User not permitted to add jobs");
     }
@@ -74,7 +83,7 @@ Meteor.methods({
   },
 
   editSection: function (id, name) {
-    if (!HospoHero.canUser('edit roster', Meteor.userId())) {
+    if (!canUserEditRoster()) {
       logger.error("User not permitted to add job items");
       throw new Meteor.Error(404, "User not permitted to add jobs");
     }
@@ -91,3 +100,4 @@ Meteor.methods({
     return Handlebars.templates[tmplName](tmplData);
   }
 });
+

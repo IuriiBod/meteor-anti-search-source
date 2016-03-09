@@ -1,21 +1,25 @@
 <template name="managerCalendar">
   {{> calendarHeader date=date type="day" isManagerCalendar=true userId=123}}
 
-  <div class="col-md-3">
-    <div class="items-palette job-items-palette">
-      {{> itemsPalette type='prep job'}}
-    </div>
+  <div class="wrapper wrapper-content">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="items-palette job-items-palette m-t-sm">
+          {{> itemsPalette type='prep job'}}
+        </div>
 
-    <div class="items-palette tasks-items-palette">
-      {{> itemsPalette type='task' calendarType="day"}}
-    </div>
-  </div>
+        <div class="items-palette tasks-items-palette">
+          {{> itemsPalette type='task' calendarType="day"}}
+        </div>
+      </div>
 
-  <div class="calendar-container text-center col-md-9">
-    {{#if users.length}}
-      {{> calendarItem resources=users date=date type="day"}}
-    {{else}}
-      <h3>No shifts for today</h3>
-    {{/if}}
+      <div class="calendar-container m-t-sm text-center col-md-9">
+        {{#if users.length}}
+          {{> calendarItem resources=users date=date type="day"}}
+        {{else}}
+          <h3>No shifts for today</h3>
+        {{/if}}
+      </div>
+    </div>
   </div>
 </template>

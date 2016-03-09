@@ -1,7 +1,20 @@
 <template name="posMenuLinking">
-  <div class="container-fluid pos-menu-link-component">
-    {{#each menuItems}}
-      {{> revelLinkMenuItem}}
-    {{/each}}
+  <!-- Page heading -->
+  {{> pageHeading title="POS / Menu Linking" category="Settings" name="POS / Menu Linking"}}
+
+  <div class="wrapper wrapper-content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="ibox">
+          <div class="ibox-content">
+            <div class="container-fluid pos-menu-link-component">
+              {{#each menuItems}}
+                {{> revelLinkMenuItem}}
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

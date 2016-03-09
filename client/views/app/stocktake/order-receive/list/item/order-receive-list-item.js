@@ -6,13 +6,16 @@ Template.orderReceiveItem.helpers({
   stock: function () {
     var ingredient = Ingredients.findOne({_id: this.item.stockId});
     if (ingredient) {
-      this.item['description'] = ingredient.description;
+      this.item.description = ingredient.description;
     }
     return this.item;
   },
 
   unitTotalPrice: function () {
-    var quantity = this.item.countDelivered || this.item.countOrdered;
+    var quantity = this.item.countDelivered;
+    if (!_.isFinite(quantity) || quantity < 0) {
+      quantity = this.item.countOrdered;
+    }
     return this.item.unitPrice * quantity;
   },
 

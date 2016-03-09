@@ -1,143 +1,104 @@
-Meteor.publish('currentOrganization', function () {
-  if (this.userId) {
-    var user = Meteor.users.findOne(this.userId);
-    if (user.relations && user.relations.organizationIds) {
-      return Organizations.find({_id: HospoHero.isInOrganization(user._id)});
-    } else {
-      this.ready();
-    }
-  } else {
-    this.ready();
-  }
-});
-
-
 // Publishing organization and all what depends on it
-Meteor.publishComposite('organizationInfo', {
-  // Publishing current organization
-  find: function () {
-    if (this.userId) {
-      var user = Meteor.users.findOne(this.userId);
-      if (user.relations && user.relations.organizationIds) {
-        var fields = {};
+Meteor.publishComposite('organizationInfo', function () {
+  logger.info('Organization info subscription');
 
-        if (!HospoHero.canUser('edit organization settings', this.userId)) {
-          _.extend(fields, {
-            name: 1,
-            owners: 1
-          });
-        }
+  let user = this.userId && Meteor.users.findOne(this.userId);
+  let isOrganizationOwner = (organization) => organization.owners.indexOf(user._id) > -1;
 
-        return Organizations.find({
-          _id: {$in: user.relations.organizationIds}
-        }, {
-          fields: fields
-        });
-      } else {
-        this.ready();
-      }
-    } else {
-      this.ready();
-    }
-  },
-  children: [
-    {
-      // Publishing organization roles
-      find: function (organization) {
-        return Meteor.roles.find({
-          $or: [
-            {'default': true},
-            {"relations.organizationId": organization._id}
-          ]
-        });
-      }
-    },
-    {
-      // Publishing notifications for current user
-      find: function () {
-        if (this.userId) {
+  if (user) {
+    let compositeConfig = [
+      {
+        // Publishing notifications for current user
+        find: function () {
           return Notifications.find({
             to: this.userId
           });
-        } else {
-          this.ready();
-        }
-      }
-    },
-    {
-      // Publishing users of current organization
-      find: function (organization) {
-        if (this.userId && (HospoHero.canUser('edit areas', this.userId) || HospoHero.canUser('edit locations', this.userId))) {
-          return Meteor.users.find({
-            isActive: true,
-            "relations.organizationIds": {$in: [organization._id]}
-          }, {
-            fields: {
-              isActive: 1,
-              "services.google.picture": 1,
-              profile: 1,
-              relations: 1,
-              roles: 1
-            }
-          });
-        }
-      }
-    },
-    {
-      // Publishing locations of organization
-      find: function (organization) {
-        if (this.userId) {
-          var fields = {};
-          var query = {
-            organizationId: organization._id,
-            archived: {$ne: true}
-          };
-
-          var user = Meteor.users.findOne(this.userId);
-          if (user && user.relations && user.relations.locationIds) {
-            query._id = {$in: user.relations.locationIds};
-            if (!HospoHero.canUser('edit locations', this.userId)) {
-              fields.name = 1;
-              fields.organizationId = 1;
-              fields.timezone = 1;
-            }
-          }
-          return Locations.find(query, {fields: fields});
-        } else {
-          this.ready();
         }
       },
-      children: [
-        {
-          // Publishing areas of locations
-          find: function (location) {
-            if (this.userId) {
-              var fields = {};
-              var query = {
-                locationId: location._id,
+      {
+        // Publishing current organization
+        find: function () {
+          let query = {
+            $or: [{owners: user._id}]
+          };
+
+          if (user.relations && user.relations.organizationIds) {
+            query.$or.push({_id: {$in: user.relations.organizationIds}});
+          }
+
+          return Organizations.find(query, {
+            fields: {
+              name: 1,
+              owners: 1
+            }
+          });
+        },
+        children: [
+          {
+            // Publishing organization roles
+            find: function (organization) {
+              return Meteor.roles.find({
+                $or: [
+                  {'default': true},
+                  {"relations.organizationId": organization._id}
+                ]
+              });
+            }
+          },
+          {
+            // Publishing locations of organization
+            find: function (organization) {
+              let query = {
+                organizationId: organization._id,
                 archived: {$ne: true}
               };
 
-              var user = Meteor.users.findOne(this.userId);
+              if (!isOrganizationOwner(organization)) {
+                // in case user isn't organization owner
+                query._id = {$in: user.relations.locationIds};
+              }
 
-              if (user && user.relations && user.relations.areaIds) {
-                if (!HospoHero.canUser('edit areas', this.userId)) {
-                  fields.name = 1;
-                  fields.locationId = 1;
-                  fields.organizationId = 1;
-                  fields.color = 1;
-                  fields.archived = 1;
-                  fields.inactivityTimeout = 1;
-                  query._id = {$in: user.relations.areaIds};
+              return Locations.find(query, {
+                fields: {
+                  name: 1,
+                  organizationId: 1,
+                  timezone: 1
+                }
+              });
+            },
+            children: [
+              {
+                // Publishing areas of locations
+                find: function (location, organization) {
+                  let query = {
+                    locationId: location._id,
+                    archived: {$ne: true}
+                  };
+
+                  if (!isOrganizationOwner(organization)) {
+                    query._id = {$in: user.relations.areaIds};
+                  }
+
+                  return Areas.find(query, {
+                    fields: {
+                      name: 1,
+                      locationId: 1,
+                      organizationId: 1,
+                      color: 1,
+                      archived: 1,
+                      inactivityTimeout: 1
+                    }
+                  });
                 }
               }
-              return Areas.find(query, {fields: fields});
-            } else {
-              this.ready();
-            }
+            ]
           }
-        }
-      ]
-    }
-  ]
+        ]
+      }
+    ];
+
+    return compositeConfig;
+  } else {
+    this.ready();
+  }
 });

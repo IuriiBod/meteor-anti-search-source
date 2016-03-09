@@ -9,18 +9,20 @@ Template.menuItemInstructions.helpers({
       let menuItem = MenuItems.findOne({_id: self._id});
       menuItem.instructions = instructions;
       Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
-    }
+    };
   },
 
-  instructionsOptions() {
+  instructionsSettings() {
     return {
       namespace: 'menus',
       uiStateId: 'instructions',
-      title: 'Instructions'
-    }
+      title: 'Instructions',
+      contentPadding: '20px'
+    };
   },
 
   readOnly() {
-    return !HospoHero.canUser(`edit menus`, Meteor.userId());
+    const checker = new HospoHero.security.PermissionChecker();
+    return !checker.hasPermissionInArea(null, 'edit menus');
   }
 });

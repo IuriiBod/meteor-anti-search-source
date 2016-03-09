@@ -1,6 +1,6 @@
 <template name="menuEntry">
   {{#if permission}}
-    <li class="nav-first-level-item {{isActiveRoute regex=activeOnRoutes}}">
+    <li class="nav-first-level-item {{#if hasRoute}}{{isActiveRoute regex=activeOnRoutes}}{{/if}}">
       <a class="menu-entry-title" href="{{hrefPath}}">
         {{#if icon}}
           <i class="fa {{icon}}"></i>

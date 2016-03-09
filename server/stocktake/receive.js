@@ -1,6 +1,21 @@
+var canUserReceiveDeliveries = function (areaId = null) {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'receive deliveries');
+};
+
+var getAreaIdFromOrder = function (orderId) {
+  var order = StockOrders.findOne({_id: orderId});
+  return (order && order.relations) ? order.relations.areaId : null;
+};
+
+var getAreaIdFromReceipt = function (receiptId) {
+  var receipt = StockOrders.findOne({_id: receiptId});
+  return (receipt && receipt.relations) ? receipt.relations.areaId : null;
+};
+
 Meteor.methods({
   receiveDelivery: function (receiptId) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries(getAreaIdFromReceipt(receiptId))) {
       logger.error("User not permitted to receive delivery");
       throw new Meteor.Error(403, "User not permitted to receive delivery");
     }
@@ -14,12 +29,12 @@ Meteor.methods({
       throw new Meteor.Error("Receipt  not found");
     }
     OrderReceipts.update(
-      {"_id": receiptId},
+      {_id: receiptId},
       {
         $set: {
-          "received": true,
-          "receivedDate": Date.now(),
-          "receivedBy": Meteor.userId()
+          received: true,
+          receivedDate: Date.now(),
+          receivedBy: Meteor.userId()
         }
       }
     );
@@ -27,7 +42,7 @@ Meteor.methods({
   },
 
   updateOrderItems: function (id, receiptId, status, info) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries(getAreaIdFromOrder(id))) {
       logger.error("User not permitted to update oreder items");
       throw new Meteor.Error(403, "User not permitted to update oreder items");
     }
@@ -48,45 +63,56 @@ Meteor.methods({
       logger.error("Order not found");
       throw new Meteor.Error(401, "Order not found");
     }
-    if (order.deliveryStatus && order.deliveryStatus.indexOf("Delivered Correctly") >= 0) {
-      StockOrders.update({"_id": id, "orderReceipt": receiptId}, {$pull: {"deliveryStatus": "Delivered Correctly"}});
-    }
 
-    var query = {
-      $addToSet: {"deliveryStatus": status}
-    };
+    var query = {};
     var setQuery = {};
 
-    if (status == "Wrong Price") {
+    if (status === "Wrong Price") {
       if (!info.price) {
         logger.error("Price not found");
         throw new Meteor.Error(401, "Price not found");
       }
-      if (order.unitPrice != info.price) {
-        setQuery['unitPrice'] = info.price;
-        setQuery['originalPrice'] = order.unitPrice;
-        setQuery['priceUpdatedBy'] = Meteor.userId();
-        setQuery['stockPriceUpdated'] = info.stockPriceUpdated;
+      setQuery.unitPrice = info.price;
+      if (!order.originalPrice) {
+        setQuery.originalPrice = order.unitPrice;
       }
-    } else if (status == "Wrong Quantity") {
-      if (!info.quantity) {
+      setQuery.priceUpdatedBy = Meteor.userId();
+      setQuery.stockPriceUpdated = info.stockPriceUpdated;
+    } else if (status === "Wrong Quantity") {
+      if (info.quantity < 0) {
         logger.error("Quantity not found");
         throw new Meteor.Error(401, "Quantity not found");
       }
-      if (order.countOrdered != info.quantity) {
-        setQuery['countDelivered'] = info.quantity;
-        setQuery['countDeliveredUpdatedBy'] = Meteor.userId();
-      }
+      setQuery.countDelivered = info.quantity;
+      setQuery.countDeliveredUpdatedBy = Meteor.userId();
     }
     if (Object.keys(setQuery).length > 0) {
-      query['$set'] = setQuery;
+      query.$set = setQuery;
     }
-    StockOrders.update({"_id": id, "orderReceipt": receiptId}, query);
+
+    StockOrders.update({_id: id, orderReceipt: receiptId}, query);
+
+    order = StockOrders.findOne(id);
+    var newStatus = [];
+    if (order.unitPrice === order.originalPrice && order.countDelivered === order.countOrdered) {
+      newStatus.push('Delivered Correctly');
+    } else {
+      if (order.unitPrice !== order.originalPrice) {
+        newStatus.push('Wrong Price');
+      }
+      if (order.countDelivered !== order.countOrdered) {
+        newStatus.push('Wrong Quantity');
+      }
+    }
+    StockOrders.update({_id: id, orderReceipt: receiptId}, {
+      $set: {deliveryStatus: newStatus}
+    });
+
     logger.info("Stock order updated", id, status);
   },
 
   receiveOrderItems: function (id, receiptId, info) {
-    if (!HospoHero.canUser('receive deliveries', Meteor.userId())) {
+    if (!canUserReceiveDeliveries(getAreaIdFromOrder(id))) {
       logger.error("User not permitted to receive oreder items");
       throw new Meteor.Error(403, "User not permitted to receive oreder items");
     }
@@ -104,18 +130,20 @@ Meteor.methods({
       throw new Meteor.Error(401, "Order not found");
     }
     var updateQuery = {
-      "received": info.received,
-      "receivedBy": Meteor.userId(),
-      "receivedDate": Date.now()
+      received: info.received,
+      receivedBy: Meteor.userId(),
+      receivedDate: Date.now()
     };
-    if (!order.deliveryStatus || order.deliveryStatus.length < 0) {
-      updateQuery['deliveryStatus'] = ['Delivered Correctly'];
-      updateQuery["receivedBy"] = Meteor.userId();
-      updateQuery["receivedDate"] = Date.now();
+    if (!order.deliveryStatus || order.deliveyStatus.length < 0) {
+      _.extend(updateQuery, {
+        deliveryStatus: ['Delivered Correctly'],
+        receivedBy: Meteor.userId(),
+        receivedDate: Date.now()
+      });
     }
 
     StockOrders.update(
-      {"_id": id, "orderReceipt": receiptId},
+      {_id: id, orderReceipt: receiptId},
       {$set: updateQuery}
     );
     logger.info("Stock order received", id);

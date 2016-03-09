@@ -1,0 +1,25 @@
+<template name="organizationButtons">
+  <div class="organization-buttons-container">
+    {{#if isOwner}}
+      <div class="btn-group organization-settings-buttons">
+        <button type="button" class="btn dropdown-toggle btn-link" data-toggle="dropdown" aria-expanded="false">
+          <i class="fa fa-fw fa-plus"></i>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a href="#" class="create-location-flyout">Add Location</a>
+          </li>
+          {{#if hasLocations}}
+            <li>
+              <a href="#" class="create-area-flyout">Add Area</a>
+            </li>
+          {{/if}}
+        </ul>
+
+        <span class="btn btn-sm btn-link organization-details-flyout organization-settings-buttons">
+          <i class="fa fa-fw fa-cog"></i>
+        </span>
+      </div>
+    {{/if}}
+  </div>
+</template>

@@ -1,18 +1,31 @@
-Template.files.onCreated(function () {
+Template.filesWidget.onCreated(function () {
   this.subscribe('files', this.data.referenceId);
 });
 
 
-Template.files.helpers({
+Template.filesWidget.helpers({
   files () {
     return Files.find({
       referenceId: this.referenceId
     });
+  },
+
+  filesOptions() {
+    return {
+      namespace: this.type,
+      uiStateId: 'files',
+      title: 'Files',
+      buttons: [{
+        url: '#',
+        className: 'btn btn-primary btn-xs pull-left attach-file',
+        text: 'Attach File'
+      }]
+    };
   }
 });
 
 
-Template.files.events({
+Template.filesWidget.events({
   'click .attach-file' (event, tmpl) {
     filepicker.pickAndStore(
       {

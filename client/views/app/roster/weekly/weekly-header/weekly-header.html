@@ -1,6 +1,6 @@
 <template name="weeklyHeader">
   <div class="title-action" data-type="weeklyroster">
-    {{#if canEditRoster}}
+    {{#if hasPermissionInAreaTo 'edit roster'}}
       <button class="btn btn-link showHideButton" type="button" data-target="#collapse" data-toggle="collapse">
         {{#if state$collapseIn}}
           Hide

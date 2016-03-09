@@ -1,19 +1,17 @@
 <template name="switchUser">
-  <div class="switch-user">
-    <div class="row">
-      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center">
-        <div class="user-bio other-user">
-          <div class="m-b-md">
-            <img src="/images/sign_in.png" alt="Other user">
-          </div>
-          <h3>Someone else?</h3>
+  <div class="row switch-user">
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2 text-center">
+      <div class="user-bio other-user">
+        <div class="m-b-md">
+          <img src="/images/sign_in.png" alt="Other user">
         </div>
+        <h3>Someone else?</h3>
       </div>
-      {{# each users}}
-        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center">
-          {{> profilePhotoAndName userId=_id onClick=switchUserOnClick}}
-        </div>
-      {{/ each}}
     </div>
+    {{# each users}}
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2 text-center">
+        {{> profilePhotoAndName userId=_id onClick=switchUserOnClick}}
+      </div>
+    {{/ each}}
   </div>
 </template>

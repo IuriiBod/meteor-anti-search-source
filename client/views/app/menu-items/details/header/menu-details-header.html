@@ -16,9 +16,9 @@
             <a href="#" class="hidden-print subscribe-button"><i class="fa fa-lg fa-rss"></i> Subscribe</a>
           </li>
         {{/if}}
-        {{#if canEditMenu}}
+        {{#if hasPermissionInAreaTo 'edit menus'}}
           <li>
-            <a href="" class="hidden-print copy-item-modal-opener">
+            <a href="#" class="hidden-print copy-item-modal-opener">
               <i class="fa fa-copy"></i> Copy
             </a>
           </li>
@@ -28,7 +28,7 @@
             <i class="fa fa-print"></i> Print
           </a>
         </li>
-        {{#if canEditMenu}}
+        {{#if hasPermissionInAreaTo 'edit menus'}}
           <li role="separator" class="divider"></li>
           {{#if isArchived}}
             <li>

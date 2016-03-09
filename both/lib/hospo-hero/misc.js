@@ -27,10 +27,10 @@ Namespace('HospoHero.misc', {
 
       if (!_.isString(field)) {
         if (field.parse) {
-          value = field.parse == 'int' ? parseInt(value) : parseFloat(value);
+          value = field.parse === 'int' ? parseInt(value) : parseFloat(value);
         }
 
-        if (field.type && field.type == 'number') {
+        if (field.type && field.type === 'number') {
           value = isNaN(value) ? 0 : value;
         }
 
@@ -104,7 +104,7 @@ Namespace('HospoHero.misc', {
 
       var rate = wageDoc[currentWeekDay];
       if (!rate) {
-        rate = wageDoc['weekdays']
+        rate = wageDoc.weekdays;
       }
       return rate;
     } else {
@@ -190,7 +190,7 @@ Namespace('HospoHero.misc', {
         text: "United States of America",
         value: "United States of America"
       }
-    ]
+    ];
   },
 
   /**
@@ -232,7 +232,7 @@ Namespace('HospoHero.misc', {
           'sharing.id': {
             $in: value
           }
-        }
+        };
       });
 
       return {$or: or};
@@ -241,9 +241,61 @@ Namespace('HospoHero.misc', {
     }
   },
 
-  renameObjectProperty(object, oldKeyName, newKeyName) {
-    object[newKeyName] = object[oldKeyName];
-    delete object[oldKeyName];
-    return object;
+  escapeRegExpString: function (str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  },
+
+  /**
+   * Returns different values of two passed arrays
+   * @param {Array} array1
+   * @param {Array} array2
+   * @returns {Array}
+   */
+  arrayDifference: function (array1, array2) {
+    if (array1.length > array2.length) {
+      return _.difference(array1, array2);
+    } else {
+      return _.difference(array2, array1);
+    }
+  },
+
+  hasUnavailability (unavailabilities, {startTime: shiftStart, endTime: shiftEnd}) {
+    let isBetween = function (date, dateStart, dateEnd) {
+      return date.valueOf() >= dateStart && date.valueOf() <= dateEnd;
+    };
+
+    let isBefore = function (date1, date2) {
+      return date1.valueOf() < date2.valueOf();
+    };
+
+    let isAfter = function (date1, date2) {
+      return date1.valueOf() > date2.valueOf();
+    };
+
+    if (unavailabilities && unavailabilities.length) {
+      return unavailabilities.some((unavailability) => {
+        let unavailabilityStart = unavailability.startDate;
+        let unavailabilityEnd = unavailability.endDate;
+
+        return isAfter(shiftStart, unavailabilityStart) && isBefore(shiftEnd, unavailabilityEnd) ||
+          isBetween(shiftStart, unavailabilityStart, unavailabilityEnd) ||
+          isBetween(shiftEnd, unavailabilityStart, unavailabilityEnd) ||
+          isBefore(shiftStart, unavailabilityStart) && isAfter(shiftEnd, unavailabilityEnd);
+      });
+    } else {
+      return false;
+    }
+  },
+
+  timer() {
+    return {
+      timeoutId: 0,
+      setTimeout(executeFunc, timeout) {
+        this.timeoutId = Meteor.setTimeout(executeFunc, timeout);
+      },
+      clearTimeout() {
+        Meteor.clearTimeout(this.timeoutId);
+      }
+    };
   }
 });

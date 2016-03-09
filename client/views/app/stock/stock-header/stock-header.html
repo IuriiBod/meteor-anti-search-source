@@ -6,7 +6,7 @@
         <i class="fa fa-long-arrow-left"></i> Active Items
       </a>
     {{else}}
-      {{#if canEditStock}}
+      {{#if hasPermissionInAreaTo 'edit stocks'}}
         <div class="btn-group">
           <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                   aria-expanded="false">

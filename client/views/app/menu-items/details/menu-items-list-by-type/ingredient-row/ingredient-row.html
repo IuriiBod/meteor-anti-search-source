@@ -1,26 +1,34 @@
 <template name="menuItemIngredientRow">
   <tr>
-    {{#if canEditMenu}}
+    {{#if hasPermissionInAreaTo 'edit menus'}}
       <td>
+        {{#unless item.totalCost}}
         <a class="btn btn-primary btn-xs view-button" href="#">
           <i class="fa fa-edit fa-fw"></i>
           Edit
         </a>
+        {{/unless}}
       </td>
     {{/if}}
     <td>{{itemName}}</td>
-    <td>
-      {{#if canEditMenu}}
-        {{> ingredientRowQuantityEditable quantity=quantity onQuantityEditableSuccess=getOnQuantityEditableSuccess}}
+    <td class="{{#if item.totalCost}}text-right{{/if}}">
+      {{#if item.totalCost}}
+        Total
       {{else}}
-        {{quantity}}
+        {{#if hasPermissionInAreaTo 'edit menus'}}
+          {{> ingredientRowQuantityEditable quantity=quantity onQuantityEditableSuccess=getOnQuantityEditableSuccess}}
+        {{else}}
+          {{quantity}}
+        {{/if}}
       {{/if}}
     </td>
     {{#if equal type 'ings'}}<td>{{itemMeasure}}</td>{{/if}}
     <td>$ {{price}}</td>
-    {{#if canEditMenu}}
+    {{#if hasPermissionInAreaTo 'edit menus'}}
       <td>
+        {{#unless item.totalCost}}
         <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>
+        {{/unless}}
       </td>
     {{/if}}
   </tr>

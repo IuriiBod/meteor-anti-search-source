@@ -15,6 +15,8 @@ Package.onUse(function (api) {
     'ogourment:settings'
   ], 'client');
 
+  api.use(['check'], 'server');
+
   api.addFiles(['lib/stale-session/client.js'], 'client');
   api.addFiles(['lib/stale-session/server.js'], 'server');
   api.addFiles(['lib/stale-session/both.js']);

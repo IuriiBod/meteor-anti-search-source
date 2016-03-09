@@ -1,3 +1,8 @@
+const checkOrganizationOwner = function (organizationId, userId) {
+  let permissionChecker = new HospoHero.security.PermissionChecker(userId);
+  return permissionChecker.isOrganizationOwner(organizationId);
+};
+
 Meteor.methods({
   createLocation: function (location) {
     var defaultLocation = {
@@ -10,47 +15,45 @@ Meteor.methods({
 
     check(location, HospoHero.checkers.LocationDocument);
 
-    if (!HospoHero.isOrganizationOwner()) {
+    if (!checkOrganizationOwner(location.organizationId, this.userId)) {
       throw new Meteor.Error(403, 'User not permitted to create location');
     }
+
     // Create location
     var id = Locations.insert(location);
     logger.info('Location was created', {locationId: id});
   },
 
   deleteLocation: function (locationId) {
-    if (!HospoHero.isOrganizationOwner()) {
+    check(locationId, HospoHero.checkers.MongoId);
+
+    let location = Locations.findOne({_id: locationId});
+    if (!checkOrganizationOwner(location.organizationId,this.userId)) {
       logger.error("User not permitted to delete this location");
       throw new Meteor.Error(403, "User not permitted to delete this location");
     }
 
-    check(locationId, HospoHero.checkers.MongoId);
-
+    //remove location's members
     //updating user in Meteor.users collection requires user id
-    var usersIdsRelatedToLocation = Meteor.users
-        .find({'relations.locationIds': locationId}, {fields: {_id: 1}})
-        .map(function (user) { return user._id });
+    let locationMembersIds = Meteor.users.find({'relations.locationIds': locationId}, {
+      fields: {_id: 1}
+    }).map(user => user._id);
 
     Meteor.users.update({
-      _id: {$in: usersIdsRelatedToLocation}
-    },{
+      _id: {$in: locationMembersIds}
+    }, {
       $pull: {'relations.locationIds': locationId}
-    },{
+    }, {
       multi: true
     });
 
-    var areasIdsRelatedToLocation = Areas
-        .find({locationId: locationId}, {fields: {_id: 1}})
-        .map(function (area) { return area._id; });
-
-    areasIdsRelatedToLocation.forEach(function (areaId) {
-      Meteor.call('deleteArea', areaId);
+    Areas.find({locationId: locationId}, {
+      fields: {_id: 1}
+    }).forEach(area => {
+      Meteor.call('deleteArea', area._id);
     });
 
     WeatherForecast.remove({locationId: locationId});
-
-    var googlePrediction = new GooglePredictionApi(locationId);
-    googlePrediction.removePredictionModel();
 
     Locations.remove({_id: locationId});
     logger.info('Location was deleted', {locationId: locationId});
@@ -59,8 +62,8 @@ Meteor.methods({
   editLocation: function (updatedLocation) {
     check(updatedLocation, HospoHero.checkers.LocationDocument);
 
-    var userId = Meteor.userId();
-    if (!HospoHero.canUser('edit locations', userId)) {
+    let checker = new HospoHero.security.PermissionChecker();
+    if (!checker.hasPermissionInLocation(updatedLocation._id, 'edit locations')) {
       throw new Meteor.Error(403, 'User not permitted to edit locations');
     }
 

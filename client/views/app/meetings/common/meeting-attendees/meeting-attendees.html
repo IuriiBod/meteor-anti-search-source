@@ -1,0 +1,11 @@
+<template name="meetingAttendees">
+  <div class="pull-left">
+    {{#if meeting.attendees.length}}
+      {{#each meeting.attendees}}
+        {{> meetingAttendee member=this allowRemove=../allowRemove onUserRemove=onUserRemove}}
+      {{/each}}
+    {{else}}
+      No attendees yet
+    {{/if}}
+  </div>
+</template>

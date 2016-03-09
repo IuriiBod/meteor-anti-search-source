@@ -9,8 +9,19 @@ Template.menuItemIngredientRow.helpers({
   },
 
   price: function () {
-    let itemCost = this.analyzeItemCost(this.item, this.type, this.quantity);
-    return HospoHero.misc.rounding(itemCost);
+    let price;
+    if (this.item.totalCost) {
+      price = this.item.totalCost;
+    } else {
+      let quantity = this.type === 'ings' ? this.quantity : this.item.quantity;
+      let itemCost = this.analyzeItemCost(this.item, this.type, quantity);
+      price = HospoHero.misc.rounding(itemCost);
+    }
+    return price;
+  },
+
+  quantity() {
+    return this.type === 'ings' ? this.quantity : this.item.quantity;
   },
 
   getOnQuantityEditableSuccess: function () {
@@ -42,7 +53,7 @@ Template.menuItemIngredientRow.events({
 
     var confirmRemove = confirm("Are you sure you want to remove this item?");
     if (confirmRemove) {
-      var queryProperty = tmpl.data.type == 'prep' ? 'jobItems' : 'ingredients';
+      var queryProperty = tmpl.data.type === 'prep' ? 'jobItems' : 'ingredients';
       var query = {};
       query[queryProperty] = {_id: tmpl.data.item._id};
 
@@ -52,7 +63,7 @@ Template.menuItemIngredientRow.events({
 
   'click .view-button': function (event, tmpl) {
     event.preventDefault();
-    if (tmpl.data.type == 'prep') {
+    if (tmpl.data.type === 'prep') {
       Router.go('jobItemEdit', {_id: tmpl.data.item._id});
     } else {
       FlyoutManager.open('ingredientEditor', {ingredient: tmpl.data.item});

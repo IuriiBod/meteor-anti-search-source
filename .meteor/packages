@@ -22,12 +22,11 @@ email
 underscore
 random
 ecmascript
-
 less
 reactive-var
 
 force-ssl
-crosswalk
+#crosswalk
 
 accounts-ui
 accounts-google
@@ -60,6 +59,10 @@ russ:weather-icons
 joshowens:timezone-picker
 natestrauser:animate-css
 peppelg:bootstrap-3-modal
+settinghead:auto-nprogress
+dsyko:jquery-ui-touch-punch
+fronteed:icheck
+manuel:reactivearray
 
 hospohero:stale-session
 trsdln:flyouts
@@ -68,6 +71,7 @@ trsdln:modals
 jss:reactive-fullcalendar
 jquery-sparkline
 
+
 # ===========> backend
 micah:google-cloud
 votercircle:winston
@@ -75,23 +79,24 @@ cmather:handlebars-server
 percolate:migrations
 percolate:synced-cron
 reywood:publish-composite
+matb33:collection-hooks
 
 jss:through
 jss:meteor-google-prediction
-jss:publish-authorized
 jss:suncalc
+
 
 # ===========> both
 iron:router
 zephraph:namespace
+dburles:mongo-collection-instances
+raix:push
 
 alonoslav:roles
 jss:anti-search-source
 jss:moment-timezone
 jss:ui-states
 
+
 # ===========> new
-settinghead:auto-nprogress
-matb33:collection-hooks
-dburles:mongo-collection-instances
-manuel:reactivearray
+socialize:messaging

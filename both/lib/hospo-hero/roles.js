@@ -9,13 +9,13 @@ Namespace('HospoHero.roles', {
       return role._id;
     });
 
-    var query = {
-      isActive: true
+    let currentAreaId = HospoHero.getCurrentAreaId();
+    let query = {
+      [`roles.${currentAreaId}`]: {$in: roleIds}
     };
-    query['roles.' + HospoHero.getCurrentAreaId()] = {$in: roleIds};
 
     return Meteor.users.find(query).map(function (user) {
-      if (user._id != Meteor.userId()) {
+      if (user._id !== Meteor.userId()) {
         return user._id;
       }
     });
@@ -62,7 +62,9 @@ Namespace('HospoHero.roles', {
     "Receive Deliveries": "receive deliveries",
     "Approve leave requests": "approve leave requests",
     "Edit calendar": "edit calendar",
-    "View calendar": "view calendar"
+    "View calendar": "view calendar",
+    "Create meetings": "create meetings",
+    "Edit projects": "edit projects"
   },
 
   getActions: function () {

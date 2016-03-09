@@ -1,8 +1,10 @@
 <template name="reportData">
   {{#if shift}}
-    {{#with startedTimeParams shift}}
-      {{> comboTimeEditable params=this}}
-    {{/with}}
+    {{> comboTimeEditable params=startedTimeParams}}
+
+    {{#if isClockedIn}}
+      <a href="#" class="stop-current-shift-button">Stop</a>
+    {{/if}}
   {{else}}
     -
   {{/if}}

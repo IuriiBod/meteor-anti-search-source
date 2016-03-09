@@ -1,0 +1,12 @@
+<template name="permissionsChecklist">
+  {{#each actions}}
+    <div class="col-xs-3 col-sm-4 col-md-4 col-lg-3">
+      <div class="permission-checkbox-wrapper">
+        <input type="checkbox" name="permissions" value="{{value}}" id="perm-{{value}}"/>
+        <label for="perm-{{value}}">
+          {{text}}
+        </label>
+      </div>
+    </div>
+  {{/each}}
+</template>

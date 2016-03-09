@@ -30,7 +30,7 @@ Template.areaItemEdit.helpers({
       activeGeneralArea: currentActiveGeneralArea === itemId,
       activeSpecialArea: currentActiveSpecialArea === itemId,
       inActiveArea: (currentActiveSpecialArea !== itemId) && (currentActiveGeneralArea !== itemId)
-    }
+    };
   }
 });
 

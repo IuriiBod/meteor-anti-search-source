@@ -1,0 +1,12 @@
+<template name="projectsListItem">
+  <tr class="project-list-item">
+    <td>{{title}}</td>
+    <td>{{dateInterval startTime endTime}}</td>
+    <td>
+      <span class="label label-default">{{status}}</span>
+    </td>
+    <td class="project-people hidden-xs">
+      {{> projectPeople members=lead}}
+    </td>
+  </tr>
+</template>

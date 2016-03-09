@@ -54,7 +54,7 @@
           <h4>Pay rates</h4>
 
           <p>Weekdays ($):
-            {{#if isManager}}
+            {{#if hasPermissionInAreaTo "edit user's payrate"}}
               <a href="#" id="weekdaysrate" data-id="{{user._id}}"
                  class="editable">{{user.profile.payrates.weekdays}}</a>
             {{else}}
@@ -67,7 +67,7 @@
           </p>
 
           <p>Saturday ($):
-            {{#if isManager}}
+            {{#if hasPermissionInAreaTo "edit user's payrate"}}
               <a href="#" id="saturdayrate" data-id="{{user._id}}"
                  class="editable">{{user.profile.payrates.saturday}}</a>
             {{else}}
@@ -80,7 +80,7 @@
           </p>
 
           <p>Sunday ($):
-            {{#if isManager}}
+            {{#if hasPermissionInAreaTo "edit user's payrate"}}
               <a href="#" id="sundayrate" data-id="{{user._id}}"
                  class="editable">{{user.profile.payrates.sunday}}</a>
             {{else}}
@@ -95,7 +95,7 @@
           <br>
 
           <h4>No. of shifts per week</h4>
-          {{#if isManager}}
+          {{#if hasPermissionInAreaTo "edit user's payrate"}}
             <select class="form-control shiftsPerWeek" data-id="{{user._id}}">
               {{#each shiftsPerWeek}}
                 <option selected="{{user.selected}}">{{user.shift}}</option>
@@ -109,7 +109,7 @@
             {{/if}}
           {{/if}}
 
-          {{#if isManager}}
+          {{#if hasPermissionInAreaTo "edit user's payrate"}}
             {{#if isMe state$id}}
               {{#if hasResignDate}}
                 <br/>

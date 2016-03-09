@@ -5,7 +5,7 @@
         <h5>Training</h5>
       </div>
       <div class="ibox-content">
-        {{#if canEditUsers}}
+        {{#if hasPermissionInAreaTo 'edit users'}}
           {{#each sections}}
             <div class="form-group">
               {{#if isSelectedSection _id}}

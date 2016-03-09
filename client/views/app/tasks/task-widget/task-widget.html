@@ -10,7 +10,7 @@
 
     <div class="ibox hidden-print task-list-content">
       <hr>
-      {{#collapsibleElement options=tasksOptions}}
+      {{#collapsibleElement settings=tasksSettings}}
         {{#if tasks.count}}
           <div class="table-responsive">
             <table class="table table-hover table-mail task-list-container">
@@ -22,7 +22,7 @@
             </table>
           </div>
         {{else}}
-          <h3>No tasks here</h3>
+          <h4 class="text-center">No tasks yet</h4>
         {{/if}}
       {{/collapsibleElement}}
     </div>

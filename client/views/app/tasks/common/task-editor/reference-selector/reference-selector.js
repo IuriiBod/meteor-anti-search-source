@@ -7,15 +7,36 @@ Template.referenceSelector.onRendered(function () {
 
 
 Template.referenceSelector.helpers({
-  menuItems: function () {
+  menuItems () {
     return MenuItems.find().fetch();
   },
 
-  jobItems: function () {
+  jobItems () {
     return JobItems.find().fetch();
   },
 
-  suppliers: function () {
+  suppliers () {
     return Suppliers.find().fetch();
+  },
+
+  meetings () {
+    const userId = Meteor.userId();
+    return Meetings.find({
+      $or: [
+        {attendees: userId},
+        {createdBy: userId}
+      ]
+    }).fetch();
+  },
+
+  projects () {
+    const userId = Meteor.userId();
+    return Projects.find({
+      $or: [
+        {lead: userId},
+        {team: userId},
+        {createdBy: userId}
+      ]
+    }).fetch();
   }
 });

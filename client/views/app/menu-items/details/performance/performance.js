@@ -45,7 +45,7 @@ Template.menuDetailPerformance.helpers({
       tax: `- $ ${analyzedItem.tax}`,
       contribution: `= $ ${analyzedItem.contribution}`,
       lastSevenDaysContribution: `$ ${instance.getTotalQuantityByDate(dateInterval)}`
-    }
+    };
   },
 
   itemRank() {
@@ -66,7 +66,7 @@ Template.menuDetailPerformance.helpers({
         changedPoints: changedPoints,
         up: beforeLastWeekRank > lastSevenDaysRank,
         notChanged: beforeLastWeekRank === lastSevenDaysRank
-      }
+      };
     }
   },
 
@@ -84,24 +84,33 @@ Template.menuDetailPerformance.helpers({
         up: difference > 0,
         notChanged: difference === 0,
         difference: `${HospoHero.misc.rounding(difference < 0 ? difference * (-1) : difference)} % `
-      }
+      };
     }
   },
 
-  performanceOptions() {
-    let params = {
-      category: 'all',
-      rangeType: 'yesterday',
-      startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
-    };
+  performanceSettings() {
+    let buttons = [];
+    let checker = new HospoHero.security.PermissionChecker();
+
+    if (checker.hasPermissionInArea(null, `edit menus`)) {
+      let params = {
+        category: 'all',
+        rangeType: 'yesterday',
+        startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
+      };
+      let menuItemRankLink = {
+        url: Router.url('menuItemsRankReport', params),
+        className: 'btn btn-xs btn-link',
+        text: 'View Menu Rank Report'
+      };
+      buttons.push(menuItemRankLink);
+    }
+
     return {
       namespace: 'menus',
       uiStateId: 'performance',
       title: 'Performance Snapshot',
-      contentPadding: 'no-padding',
-      url: Router.url('menuItemsRankReport', params),
-      className: 'btn btn-xs btn-link',
-      text: 'View Menu Rank Report'
-    }
+      buttons: buttons
+    };
   }
 });

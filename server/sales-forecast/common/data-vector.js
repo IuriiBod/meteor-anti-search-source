@@ -18,7 +18,7 @@ DataVector = class DataVector {
       Math.round(SunCalc.getMoonIllumination(this.date.toDate()).phase * 10),
       this.weather.temp,
       this._getSimplifiedWeatherDescription()
-    ]
+    ];
   }
 
   _getSeasonOfTheYear() {
@@ -96,6 +96,8 @@ DataVector = class DataVector {
       case "Clear":
       case "Clear/Sunny":
       case "Sunny":
+        weatherRepresentation = 'sunny';
+        break;
       default:
         weatherRepresentation = 'sunny';
         break;

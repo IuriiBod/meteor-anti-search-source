@@ -48,8 +48,8 @@ Meteor.publishComposite('allOrderReceipts', function (areaId) {
       return OrderReceipts.find({
         'relations.areaId': areaId
       }, {
-        sort: {"date": -1}, limit: 10
-      })
+        sort: {"date": -1}
+      });
     },
     children: [
       {

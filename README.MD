@@ -2,6 +2,8 @@
 
 ## Importing database
 
+In order to import database you need to execute this command inside of project's root directory (requires MongoDB v3.x.x):
+
 ```
 $ ./reset_db.sh
 ```

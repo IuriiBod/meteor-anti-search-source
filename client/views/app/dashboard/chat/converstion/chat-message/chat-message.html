@@ -1,0 +1,10 @@
+<template name="chatMessage">
+  <div class="chat-message right">
+    <img class="message-avatar" src="{{profilePicture userId}}" alt="">
+    <div class="message">
+      <a class="message-author" href="#">{{username userId}}</a>
+      <span class="message-date">{{timeFormattedWithDate date}}</span>
+      <span class="message-content">{{body}}</span>
+    </div>
+  </div>
+</template>

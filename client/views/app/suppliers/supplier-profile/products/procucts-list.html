@@ -20,7 +20,7 @@
     </table>
   </div>
   <!-- EDIT INGREDIENT-->
-  {{#if canViewStock}}
+  {{#if hasPermissionInAreaTo 'view stocks'}}
     <div id="ingredientItemEditorPlaceHolder"></div>
   {{/if}}
   <!-- /EDIT INGREDIENT -->
