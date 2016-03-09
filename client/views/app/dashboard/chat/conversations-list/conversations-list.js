@@ -1,3 +1,9 @@
+Template.conversationsList.helpers({
+  conversations () {
+    return Meteor.conversations.find({_participants: Meteor.userId()}).fetch();
+  }
+});
+
 Template.conversationsList.events({
   'click .conversation': (event, tmpl) => {
     event.preventDefault();

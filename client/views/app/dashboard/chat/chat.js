@@ -3,9 +3,6 @@ Template.chat.onCreated(function() {
 });
 
 Template.chat.helpers({
-  conversations () {
-    return Meteor.conversations.find({_participants: Meteor.userId()}).fetch();
-  },
   currentConversationId () {
     return Template.instance().currentConversationId.get();
   },

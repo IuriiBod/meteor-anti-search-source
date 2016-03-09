@@ -14,7 +14,7 @@
       {{#if isConversationSelected}}
         {{> conversation id=currentConversationId}}
       {{else}}
-        {{> conversationsList conversations=conversations onConversationSelected=setCurrentConversationId}}
+        {{> conversationsList onConversationSelected=setCurrentConversationId}}
       {{/if}}
     </div>
   </div>
