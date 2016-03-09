@@ -95,6 +95,5 @@ let requireLogIn = function () {
   }
 };
 
-Router.onBeforeAction(requireLogIn, {
-  except: ['signIn', 'signUp', 'invitationAccept', 'switchUser', 'claim', 'pinLock', 'forgotPassword']
-});
+let publicRoutes = ['signIn', 'signUp', 'invitationAccept', 'switchUser', 'claim', 'pinLock', 'forgotPassword'];
+Router.onBeforeAction(requireLogIn, {except: publicRoutes});

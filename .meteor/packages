@@ -26,7 +26,7 @@ less
 reactive-var
 
 force-ssl
-crosswalk
+#crosswalk
 
 accounts-ui
 accounts-google
@@ -99,3 +99,4 @@ jss:ui-states
 
 
 # ===========> new
+socialize:messaging

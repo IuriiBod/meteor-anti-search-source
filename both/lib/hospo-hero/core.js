@@ -3,10 +3,9 @@ Namespace('HospoHero', {
     return HospoHero.getCurrentArea(userId).organizationId;
   },
 
-  getCurrentAreaId: function (userId) {
-    userId = userId ? userId : Meteor.userId();
-    var user = userId ? Meteor.users.findOne({_id: userId}) : Meteor.user();
-    return user && user.currentAreaId ? user.currentAreaId : false;
+  getCurrentAreaId: function (userId = Meteor.userId()) {
+    var user = userId && Meteor.users.findOne({_id: userId});
+    return user && user.currentAreaId;
   },
 
   getCurrentArea: function (userId) {
