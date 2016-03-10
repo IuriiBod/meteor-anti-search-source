@@ -1,5 +1,7 @@
 //context: user (User), tableViewMode ("shifts"/"hours"), weekDate (WeekDate)
 Template.teamHoursItem.onCreated(function () {
+  this.weeklyValues = new ReactiveVar(false);
+
   this.getTotalTimeAndWage = function (templateData) {
     let dateForWeek = moment(templateData.weekDate).toDate();
 
@@ -15,12 +17,15 @@ Template.teamHoursItem.onCreated(function () {
   this.autorun(() => {
     let data = Template.currentData();
     let weeklyValues = this.getTotalTimeAndWage(data);
-    this.set('weeklyValues', weeklyValues);
+    this.weeklyValues.set(weeklyValues);
   });
 });
 
 
 Template.teamHoursItem.helpers({
+  weeklyValues: function () {
+    return Template.instance().weeklyValues.get();
+  },
   hasActiveTime: function () {
     return this > 0;
   },
@@ -32,6 +37,14 @@ Template.teamHoursItem.helpers({
   },
   isShowShifts: function () {
     return this.tableViewMode === 'shifts';
+  },
+  dailyShift: function () {
+    let userId = Template.parentData(1).user._id;
+    let currentDate = this;
+    return Shifts.findOne({
+      assignedTo: userId,
+      startTime: TimeRangeQueryBuilder.forDay(currentDate)
+    });
   }
 });
 
@@ -51,9 +64,9 @@ let WageCalculator = class {
       }
 
       getHours() {
-        return this._minutes.map((value) => HospoHero.misc.rounding(value / 60))
+        return this._minutes.map((value) => HospoHero.misc.rounding(value / 60));
       }
-    }
+    };
   }
 
   _calculateWageForShift(shiftStartDate, shiftDurationInMinutes) {
@@ -62,14 +75,8 @@ let WageCalculator = class {
     return userPayRatePerMinute * shiftDurationInMinutes;
   }
 
-;
-
-  _getShiftDuration(startDate, finishDate) {
-    let shiftDurationInHours = finishDate.diff(startDate, 'hours');
-    if (shiftDurationInHours > 24) { // If duration is more than 24 hours it means error in saving clock out time
-      finishDate = finishDate.subtract(24, 'hours');
-    }
-    return shiftDuration = finishDate.diff(startDate, 'minutes');
+  _getShiftDuration(shift) {
+    return moment(shift.finishedAt).diff(shift.startedAt, 'minutes');
   }
 
   getTotalTimeAndWage() {
@@ -82,13 +89,14 @@ let WageCalculator = class {
     let totalWage = 0;
 
     this.weekShifts.forEach((shift) => {
-      if (shift.startedAt || shift.finishedAt) {
-        let locationStart = HospoHero.dateUtils.getDateMomentForLocation(shift.startedAt, shift.relations.locationId);
-        let locationFinish = HospoHero.dateUtils.getDateMomentForLocation(shift.finishedAt, shift.relations.locationId);
+      if (shift.startedAt && shift.finishedAt) {
+        let shiftDuration = this._getShiftDuration(shift);
+        totalMinutes += shiftDuration;
 
-        totalMinutes += this._getShiftDuration(locationStart, locationFinish);
-        totalWage += this._calculateWageForShift(locationStart, shiftDuration);
-        dailyHoursManager.addMinutes(locationStart, shiftDuration);
+        let locationStartedAt = HospoHero.dateUtils.getDateMomentForLocation(shift.startedAt, shift.relations.locationId);
+
+        totalWage += this._calculateWageForShift(locationStartedAt, shiftDuration);
+        dailyHoursManager.addMinutes(locationStartedAt, shiftDuration);
       }
     });
 
@@ -96,6 +104,6 @@ let WageCalculator = class {
       wage: HospoHero.misc.rounding(totalWage),
       time: HospoHero.misc.rounding(totalMinutes / 60),
       dailyHours: dailyHoursManager.getHours()
-    }
+    };
   }
 };

@@ -36,20 +36,19 @@ Template.menuItemSettings.helpers({
       var menuItem = MenuItems.findOne({_id: tmpl.data._id});
       menuItem.status = newStatus;
       Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
-    }
+    };
   },
 
   isArchived() {
     return this.status === "archived";
   },
 
-  settingsOptions() {
+  settings() {
     return {
       namespace: 'menus',
       uiStateId: 'settings',
-      title: 'Settings',
-      contentPadding: 'no-padding'
-    }
+      title: 'Settings'
+    };
   }
 });
 

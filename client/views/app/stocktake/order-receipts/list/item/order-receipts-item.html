@@ -3,7 +3,7 @@
     <td>{{dateFormat expectedDeliveryDate}}</td>
     <td>{{supplierName supplier}}</td>
     <td>$ {{roundCount orderedValue}}</td>
-    <td>$ {{roundCount invoiceFaceValue}}</td>
+    <td>$ {{roundCount receivedAmount}}</td>
     <td>
       {{#if received}}
         <a class="btn btn-link receive-delivery">Delivery received by {{username receivedBy}}

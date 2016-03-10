@@ -6,7 +6,7 @@ Template.stockItemsListSortable.onRendered(function() {
         Meteor.call("stocktakePositionUpdate", sortedStockItems, HospoHero.handleMethodResult());
       }
     }
-  })
+  });
 });
 
 var SortableItemsHelper = function (ui) {

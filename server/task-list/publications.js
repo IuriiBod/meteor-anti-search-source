@@ -16,11 +16,14 @@ Meteor.publishComposite('taskList', function (userId) {
         find: function (task) {
           if (task) {
             var reference = task.reference;
-            if (Object.keys(reference).length) {
+            if (reference && Object.keys(reference).length) {
               var references = {
                 suppliers: Suppliers,
                 menus: MenuItems,
-                jobs: JobItems
+                jobs: JobItems,
+                meetings: Meetings,
+                managerNotes: ManagerNotes,
+                project: Projects
               };
 
               var referenceCollection = references[reference.type];
@@ -47,13 +50,15 @@ Meteor.publishComposite('taskList', function (userId) {
             find: function (comment) {
               return Meteor.users.find({
                 _id: comment.createdBy
+              }, {
+                fields: HospoHero.security.getPublishFieldsFor('users')
               });
             }
           }
         ]
       }
     ]
-  }
+  };
 });
 
 Meteor.publish('todayTasks', function () {

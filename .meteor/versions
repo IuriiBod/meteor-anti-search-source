@@ -22,7 +22,6 @@ check@1.1.0
 claudiojulio:blueimp-gallery@2.16.0
 cmather:handlebars-server@2.0.0
 coffeescript@1.0.11
-crosswalk@1.3.1
 dandv:caret-position@2.1.1
 dbarrett:dropzonejs@4.2.0
 dbernhard:jquery-ui-draggable@0.1.2
@@ -35,6 +34,7 @@ ddp-server@1.2.2
 deepwell:bootstrap-datepicker2@1.3.0
 deps@1.0.9
 diff-sequence@1.0.1
+dsyko:jquery-ui-touch-punch@1.2.4
 ecmascript@0.1.6
 ecmascript-runtime@0.2.6
 ejson@1.0.7
@@ -42,6 +42,7 @@ email@1.0.8
 fastclick@1.0.7
 force-ssl@1.0.6
 fortawesome:fontawesome@4.5.0
+fronteed:icheck@1.0.2
 geojson-utils@1.0.4
 google@1.1.7
 handlebars@1.0.4
@@ -62,11 +63,10 @@ iron:url@1.0.11
 joshowens:timezone-picker@0.1.2
 jquery@1.11.4
 jquery-sparkline@2.1.2
-jss:anti-search-source@0.2.5
+jss:anti-search-source@1.0.2
 jss:blaze-states@0.0.1
-jss:meteor-google-prediction@0.2.2
+jss:meteor-google-prediction@0.3.0
 jss:moment-timezone@0.5.0
-jss:publish-authorized@0.1.1
 jss:reactive-fullcalendar@1.1.0
 jss:suncalc@0.0.1
 jss:through@0.0.1
@@ -114,6 +114,9 @@ percolate:migrations@0.9.8
 percolate:synced-cron@1.3.0
 planettraining:jquery-fullcalendar@2.5.0
 promise@0.5.1
+raix:eventemitter@0.1.3
+raix:eventstate@0.0.4
+raix:push@3.0.2
 random@1.0.5
 rate-limit@1.0.0
 reactive-dict@1.1.3

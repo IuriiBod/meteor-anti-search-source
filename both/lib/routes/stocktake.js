@@ -22,7 +22,7 @@ Router.route('stocktakeCounting', {
   data: function () {
     return {
       stocktakeId: this.params._id
-    }
+    };
   }
 });
 
@@ -42,7 +42,7 @@ Router.route('stocktakeCountingEdit', {
   data: function () {
     return {
       stocktakeId: this.params._id
-    }
+    };
   }
 });
 
@@ -71,14 +71,16 @@ Router.route('stocktakeOrdering', {
   template: 'stocktakeOrdering',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('ordersPlaced', this.params._id),
-      Meteor.subscribe('orderReceiptsByVersion', this.params._id, currentAreaId),
-      Meteor.subscribe('comments', this.params._id, currentAreaId),
-      Meteor.subscribe('usersList', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId),
-      Meteor.subscribe('allSuppliers', currentAreaId)
-    ];
+    if (currentAreaId) {
+      return [
+        Meteor.subscribe('ordersPlaced', this.params._id),
+        Meteor.subscribe('orderReceiptsByVersion', this.params._id, currentAreaId),
+        Meteor.subscribe('comments', this.params._id, currentAreaId),
+        Meteor.subscribe('areaUsersList', currentAreaId),
+        Meteor.subscribe('ingredients', null, currentAreaId),
+        Meteor.subscribe('allSuppliers', currentAreaId)
+      ];
+    }
   },
   data: function () {
     return {

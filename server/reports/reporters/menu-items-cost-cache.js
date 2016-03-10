@@ -21,7 +21,7 @@ MenuItemsCostCache = class {
         totalIngredientCost: menuItemAnalysis.ingCost,
         totalPreparationCost: menuItemAnalysis.prepCost,
         salePrice: menuItemAnalysis.salesPrice
-      }
+      };
     });
   }
 

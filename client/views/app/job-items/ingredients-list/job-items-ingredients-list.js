@@ -3,13 +3,13 @@ Template.listOfIngredients.helpers({
     var tmpl = Template.instance();
     return function (operationType, changedItem) {
       var stockItems = tmpl.data.ingredients;
-      if (operationType == 'removed') {
+      if (operationType === 'removed') {
         stockItems = _.reject(stockItems, function (item) {
-          return item._id == changedItem._id;
+          return item._id === changedItem._id;
         });
-      } else if (operationType == 'changed') {
+      } else if (operationType === 'changed') {
         return _.map(stockItems, function (item) {
-          item.quantity = item._id == changedItem._id ? item.quantity = changedItem.quantity : item.quantity;
+          item.quantity = item._id === changedItem._id ? item.quantity = changedItem.quantity : item.quantity;
           return item;
         });
       }

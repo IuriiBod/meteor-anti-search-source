@@ -19,6 +19,7 @@ Router.route('/stocklist', {
   }
 });
 
+
 Router.route('/stocklist/:type', {
   name: "ingredientsListType",
   path: '/stocklist/:type',
@@ -29,12 +30,21 @@ Router.route('/stocklist/:type', {
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('ingredientsRelatedJobs'),
       Meteor.subscribe('ingredients', null, currentAreaId, 'archived')
-    ]
+    ];
   },
   data: function () {
     if (!Meteor.userId()) {
       Router.go("/");
     }
     Session.set("editStockTake", false);
+  }
+});
+
+
+Router.route('stockAreasSettings', {
+  path: '/settings/stock-areas',
+  template: "stockAreas",
+  waitOn: function () {
+    return Meteor.subscribe('allAreas', HospoHero.getCurrentAreaId(Meteor.userId()));
   }
 });

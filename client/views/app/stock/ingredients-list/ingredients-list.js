@@ -40,7 +40,7 @@ Template.ingredientsList.helpers({
       tmpl.onIngredientIdChange(ingredientId);
       var text = tmpl.$("#searchIngBox").val().trim();
       tmpl.searchSource.search(text);
-    }
+    };
   }
 });
 

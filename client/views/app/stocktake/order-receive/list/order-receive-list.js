@@ -3,42 +3,46 @@ Template.orderReceive.onCreated(function () {
 });
 
 Template.orderReceive.helpers({
-  list: function () {
-    return StockOrders.find({"orderReceipt": this.currentReceipt._id, "countOrdered": {$gt: 0}});
+  list() {
+    return StockOrders.find({orderReceipt: this.currentReceipt._id, countOrdered: {$gt: 0}});
   },
 
-  total: function () {
-    var orders = StockOrders.find({"orderReceipt": this.currentReceipt._id}).fetch();
-    var cost = 0;
-    if (orders.length > 0) {
+  total() {
+    let orders = StockOrders.find({orderReceipt: this.currentReceipt._id});
+    let cost = 0;
+    if (orders.count()) {
       orders.forEach(function (order) {
-        cost += parseInt(order.countOrdered) * parseFloat(order.unitPrice)
+        var count = order.countDelivered;
+        if (!_.isFinite(count) || count < 0) {
+          count = order.countOrdered;
+        }
+        cost += parseFloat(count) * parseFloat(order.unitPrice);
       });
     }
     return cost;
   },
 
-  receipt: function () {
+  receipt() {
     return this.currentReceipt;
   },
 
-  isReceived: function () {
-    return !!this.currentReceipt.received;
+  isReceived() {
+    return this.currentReceipt.received;
   },
 
-  receivedNote: function () {
+  receivedNote() {
     return this.currentReceipt.receiveNote;
   },
 
-  currentOrderCallback: function () {
-    var instance = Template.instance();
+  currentOrderCallback() {
+    let instance = Template.instance();
     return function (orderId) {
       instance.currentOrderId.set(orderId);
-    }
+    };
   },
 
-  currentOrder: function () {
-    var orderId = Template.instance().currentOrderId.get();
+  currentOrder() {
+    let orderId = Template.instance().currentOrderId.get();
     return StockOrders.findOne({_id: orderId});
   }
 });
@@ -46,17 +50,17 @@ Template.orderReceive.helpers({
 Template.orderReceive.events({
   'click .markDeliveryReceived': function (event, tmpl) {
     event.preventDefault();
-    var receiptId = tmpl.data.currentReceipt._id;
+    let receiptId = tmpl.data.currentReceipt._id;
     Meteor.call("receiveDelivery", receiptId, HospoHero.handleMethodResult());
   },
 
   'keyup #orderReceiveNotes': function (event, tmpl) {
     event.preventDefault();
-    if (event.keyCode == 13) {
-      var receiptId = tmpl.data.currentReceipt._id;
-      var text = $(event.target).val();
-      var info = {
-        "receiveNote": text.trim()
+    if (event.keyCode === 13) {
+      let receiptId = tmpl.data.currentReceipt._id;
+      let text = event.target.value;
+      let info = {
+        receiveNote: text.trim()
       };
       Meteor.call("updateReceipt", receiptId, info, HospoHero.handleMethodResult());
     }
@@ -79,12 +83,13 @@ Template.orderReceive.events({
             var urls = null;
             if (doc) {
               var type = null;
-              var convertedUrl = null;
-              if (doc.mimetype == "application/pdf") {
+              if (doc.mimetype === "application/pdf") {
                 type = "pdf";
-              } else if (doc.mimetype == "text/csv") {
+              } else if (doc.mimetype === "text/csv") {
                 type = "csv";
-              } else if (doc.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || doc.mimetype == "application/msword") {
+              } else if (doc.mimetype ===
+                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                  doc.mimetype === "application/msword") {
                 type = "doc";
               } else {
                 type = "image";
@@ -92,10 +97,10 @@ Template.orderReceive.events({
               urls = {
                 "originalUrl": doc.url,
                 "type": type
-              }
+              };
 
-              if (type == "doc") {
-                urls['originalUrl'] = doc.url + "/convert?format=pdf";
+              if (type === "doc") {
+                urls.originalUrl = doc.url + "/convert?format=pdf";
               }
 
               //converting url to image
@@ -115,9 +120,9 @@ Template.orderReceive.events({
                   compress: true,
                   quality: 100
                 },
-                function (new_Blob) {
+                function (newBlob) {
                   var receiptId = tmpl.data.currentReceipt._id;
-                  urls['convertedUrl'] = new_Blob.url;
+                  urls.convertedUrl = newBlob.url;
                   Meteor.call("uploadInvoice", receiptId, urls, HospoHero.handleMethodResult());
                 }
               );

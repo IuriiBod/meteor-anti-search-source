@@ -1,140 +1,76 @@
-// Publishing current user
-Meteor.publish(null, function () {
-  if (this.userId) {
-    var fields = {
-      "services.google": 1,
-      profile: 1,
-      emails: 1,
-      isActive: 1,
-      relations: 1,
-      createdAt: 1,
-      currentAreaId: 1,
-      roles: 1,
-      unavailabilities: 1
-    };
-
-    return Meteor.users.find({
-      _id: this.userId
-    }, {
-      fields: fields
-    });
-  } else {
-    this.ready();
-  }
+let fullPublicProfileFields = HospoHero.security.getPublishFieldsFor('users', {
+  'profile.payrates': 1,
+  'profile.resignDate': 1,
+  'profile.phone': 1,
+  'profile.sections': 1,
+  'profile.shiftsPerWeek': 1,
+  emails: 1,
+  unavailabilities: 1,
+  lastLoginDate: 1
 });
+
+// current user
+Meteor.publish(null, function () {
+  if (!this.userId) {
+    this.ready();
+    return;
+  }
+
+  return Meteor.users.find({_id: this.userId}, {fields: fullPublicProfileFields});
+});
+
 
 Meteor.publish('profileUser', function (userId) {
-  if (userId) {
-    var user = Meteor.users.findOne(userId);
+  check(userId, HospoHero.checkers.MongoId);
 
-    if (user) {
-      var fields = {
-        "services.google": 1,
-        profile: 1,
-        emails: 1,
-        isActive: 1,
-        relations: 1,
-        createdAt: 1,
-        currentAreaId: 1,
-        unavailabilities: 1,
-        roles: 1,
-        lastLoginDate: 1
-      };
+  //todo: any security (permissions) checks here?
 
-      return Meteor.users.find({
-        _id: userId
-      }, {
-        fields: fields
-      });
-    }
-  } else {
-    this.ready();
-  }
+  return Meteor.users.find({_id: userId}, {fields: fullPublicProfileFields});
 });
 
-Meteor.publish('usersList', function (areaId) {
-  if (this.userId) {
-    var options = {
-      emails: 1,
-      isActive: 1,
-      'profile.firstname': 1,
-      'profile.lastname': 1,
-      'profile.payrates': 1,
-      'profile.resignDate': 1,
-      currentAreaId: 1,
-      roles: 1
-    };
 
-    var query = {};
-    if (areaId) {
-      query['relations.areaIds'] = areaId;
-    }
+let publishAreaUsersFn = function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
 
-    var users = Meteor.users.find(query, {fields: options});
-    logger.info("Userlist published");
-    return users;
-  } else {
-    this.ready();
-  }
-});
+  //todo: any security (permissions) checks here?
 
-Meteor.publish("selectedUsersList", function (usersIds) {
-  var options = {
-    emails: 1,
-    isActive: 1,
-    profile: 1,
-    currentAreaId: 1
-  };
+  let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users', {
+    'profile.payrates': 1,
+    'profile.resignDate': 1,
+    'profile.sections': 1,
+    unavailabilities: 1
+  });
 
-  logger.info("SelectedUserlist published");
+  logger.info('UserList published', {areaId: areaId});
+
+  return Meteor.users.find({
+    'relations.areaIds': areaId
+  }, {
+    fields: fieldsToPublish
+  });
+};
+
+// we made 2 subscriptions with same function in order to be able
+// subscribe on 2 different documents sets simultaneously
+Meteor.publish('areaDetailsUsers', publishAreaUsersFn); // used primarily on area's settings flyout
+Meteor.publish('areaUsersList', publishAreaUsersFn); // used anywhere else
+
+
+Meteor.publish('selectedUsersList', function (usersIds) {
+  check(usersIds, [HospoHero.checkers.MongoId]);
+
+  //no security checks required: this method is relatively safe
+
+  let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users');
+
+  _.extend(fieldsToPublish, {
+    emails: 1
+  });
+
+  logger.info('SelectedUsersList published', {ids: usersIds});
   return Meteor.users.find({
     _id: {$in: usersIds}
   }, {
-    fields: options
+    fields: fieldsToPublish
   });
-});
-
-//managers and workers that should be assigned to shifts
-Meteor.publishComposite('workers', function (areaId) {
-  return {
-    find: function () {
-      if (this.userId) {
-        var user = Meteor.users.findOne(this.userId);
-
-        if (user && user.relations && user.relations.organizationIds) {
-          return Meteor.roles.find({
-            actions: 'be rosted',
-            $or: [
-              {'relations.organizationId': {$in: user.relations.organizationIds}},
-              {default: true}
-            ]
-          });
-        } else {
-          this.ready();
-        }
-      }
-    },
-    children: [
-      {
-        find: function (role) {
-          if (areaId) {
-            var query = {'relations.areaIds': areaId};
-            query["roles." + areaId] = role._id;
-            return Meteor.users.find(query);
-          } else {
-            this.ready();
-          }
-        }
-      }
-    ]
-  };
-});
-
-Meteor.publish("selectedUsers", function (ids) {
-  if (this.userId) {
-    logger.info("Selected users published", ids);
-    return Meteor.users.find({"_id": {$in: ids}});
-  } else {
-    this.ready();
-  }
 });

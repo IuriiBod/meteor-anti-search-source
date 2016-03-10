@@ -1,6 +1,11 @@
+var canUserEditJobs = function () {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit jobs');
+};
+
 Meteor.methods({
-  'createJobItem': function (newJobItemInfo) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+  createJobItem: function (newJobItemInfo) {
+    if (!canUserEditJobs()) {
       logger.error(403, "User not permitted to create jobs");
     }
 
@@ -13,7 +18,7 @@ Meteor.methods({
       status: 'active'
     };
 
-    var newJobItemInfo = _.extend(newJobItemInfo, defaultJobItemProperties);
+    newJobItemInfo = _.extend(newJobItemInfo, defaultJobItemProperties);
 
     var createdJobItemId = JobItems.insert(newJobItemInfo);
 
@@ -24,8 +29,8 @@ Meteor.methods({
     return createdJobItemId;
   },
 
-  'editJobItem': function (newJobItemInfo) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+  editJobItem: function (newJobItemInfo) {
+    if (!canUserEditJobs()) {
       logger.error(403, "User not permitted to edit jobs");
     }
     check(newJobItemInfo, HospoHero.checkers.JobItemDocument);
@@ -39,8 +44,8 @@ Meteor.methods({
     return newJobItemInfo._id;
   },
 
-  'deleteJobItem': function (id) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+  deleteJobItem: function (id) {
+    if (!canUserEditJobs()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -53,18 +58,20 @@ Meteor.methods({
       throw new Meteor.Error(404, "Job Item not found");
     }
 
+    let currentUserId = this.userId;
+
     var notificationSender = new NotificationSender(
       'Job item deleted',
       'job-item-deleted',
       {
         itemName: job.name,
-        username: HospoHero.username(Meteor.userId())
+        username: HospoHero.username(currentUserId)
       }
     );
 
     var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('job', id);
     subscriberIds.forEach(function (subscription) {
-      if (subscription.subscriber != Meteor.userId()) {
+      if (subscription.subscriber !== currentUserId) {
         notificationSender.sendNotification(subscription.subscriber);
       }
       subscription.itemIds = id;
@@ -72,11 +79,11 @@ Meteor.methods({
     });
 
     JobItems.remove({'_id': id});
-    logger.info("Job Item removed", {"id": id});
+    logger.info("Job Item removed", {id: id});
   },
 
   duplicateJobItem: function (jobItemId, areaId, quantity) {
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+    if (!canUserEditJobs()) {
       logger.error("User not permitted to duplicate job items");
       throw new Meteor.Error(403, "User not permitted to duplicate job items");
     }
@@ -90,7 +97,7 @@ Meteor.methods({
     }
 
     var jobItem = JobItems.findOne({_id: jobItemId});
-    if (!quantity || jobItem.relations.areaId != areaId) {
+    if (!quantity || jobItem.relations.areaId !== areaId) {
       jobItem = HospoHero.misc.omitAndExtend(jobItem, ['_id', 'editedOn', 'editedBy', 'relations'], areaId);
 
       jobItem.ingredients = HospoHero.misc.itemsMapperWithCallback(jobItem.ingredients, function (item) {
@@ -105,7 +112,7 @@ Meteor.methods({
     return quantity === false ? jobItemId : {_id: jobItemId, quantity: quantity};
   },
 
-  'archiveJobItem': function (id) {
+  archiveJobItem: function (id) {
     var checkIfJobItemExistInActiveMenu = function () {
       /* defining additional function */
       var existInActiveMenus = MenuItems.find({
@@ -132,7 +139,7 @@ Meteor.methods({
     /* end of defining additional function */
 
 
-    if (!HospoHero.canUser('edit jobs', Meteor.userId())) {
+    if (!canUserEditJobs()) {
       logger.error("User not permitted to create job items");
       throw new Meteor.Error(403, "User not permitted to create jobs");
     }
@@ -144,9 +151,9 @@ Meteor.methods({
       throw new Meteor.Error(403, 'Job item is not exist');
     }
 
-    var statusToSet = (jobItem.status == "archived") ? "active" : "archived";
+    var statusToSet = (jobItem.status === "archived") ? "active" : "archived";
 
-    if (statusToSet == 'archived') {
+    if (statusToSet === 'archived') {
       checkIfJobItemExistInActiveMenu();
     }
 
@@ -154,3 +161,4 @@ Meteor.methods({
     return statusToSet;
   }
 });
+

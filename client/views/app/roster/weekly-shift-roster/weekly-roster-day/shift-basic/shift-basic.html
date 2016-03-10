@@ -1,43 +1,46 @@
 <template name="shiftBasic">
-  <li class="success-element shift-basic-component {{#if canEditRoster}}can-edit{{/if}}">
-    {{#if canEditRoster}}
-      <div class="box-wrapper pull-right shift-remove-wrapper">
-        <span class="box-remove glyphicon glyphicon-remove remove-shift-button"></span>
-      </div>
-    {{/if}}
+  {{#with shift}}
+    <li class="success-element shift-basic-component {{#if hasPermissionInAreaTo 'edit roster'}}can-edit{{/if}}">
+      {{#if hasPermissionInAreaTo 'edit roster'}}
+        <div class="box-wrapper pull-right shift-remove-wrapper">
+          <i class="fa fa-files-o copy-shift-button"></i>
+          <span class="box-remove glyphicon glyphicon-remove remove-shift-button"></span>
+        </div>
+      {{/if}}
 
-    <div class="agile-detail">
-      <i class="fa fa-user"></i>
-      {{#if canEditRoster}}
-        {{> shiftBasicWorkerEditable}}
-      {{else}}
-        {{#if assignedTo}}
-          {{username assignedTo}}
+      <div class="agile-detail">
+        <i class="fa fa-user"></i>
+        {{#if hasPermissionInAreaTo 'edit roster'}}
+          {{> shiftBasicWorkerEditable}}
         {{else}}
-          Open
+          {{#if assignedTo}}
+            {{username assignedTo}}
+          {{else}}
+            Open
+          {{/if}}
         {{/if}}
-      {{/if}}
-    </div>
+      </div>
 
-    <div class="agile-detail">
-      {{#if canEditRoster}}
-        {{> comboTimeEditable params=comboDateParams}}
-      {{else}}
-        <i class="fa fa-clock-o"></i> {{timeFormat startTime}} - {{timeFormat endTime}}
-      {{/if}}
-    </div>
+      <div class="agile-detail">
+        {{#if hasPermissionInAreaTo 'edit roster'}}
+          {{> comboTimeEditable params=comboDateParams}}
+        {{else}}
+          <i class="fa fa-clock-o"></i> {{timeFormat startTime}} - {{timeFormat endTime}}
+        {{/if}}
+      </div>
 
-    {{#if isMidnight}}
-      <i class="fa fa-moon-o midnight-icon" title="Midnight shift"></i>
-    {{/if}}
-
-    <div class="agile-detail">
-      <i class="fa fa-angle-double-right"></i>
-      {{#if canEditRoster}}
-        {{> shiftBasicSectionEditable}}
-      {{else}}
-        {{sectionById section}}
+      {{#if isMidnight}}
+        <i class="fa fa-moon-o midnight-icon" title="Midnight shift"></i>
       {{/if}}
-    </div>
-  </li>
+
+      <div class="agile-detail">
+        <i class="fa fa-angle-double-right"></i>
+        {{#if hasPermissionInAreaTo 'edit roster'}}
+          {{> shiftBasicSectionEditable}}
+        {{else}}
+          {{sectionById section}}
+        {{/if}}
+      </div>
+    </li>
+  {{/with}}
 </template>

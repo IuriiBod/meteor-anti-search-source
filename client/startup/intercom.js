@@ -1,17 +1,14 @@
+// disable camelcase warnings
+/*jshint camelcase: false */
+
 Meteor.startup(function () {
   IntercomSettings.userInfo = function (user, info) {
     if (!user.intercomHash) {
       return false;
     } else {
-      // add properties to the info object, for instance:
-      if (user.services && user.services.google) {
-        info.email = user.services.google.email;
-        info.name = user.services.google.given_name + ' ' + user.services.google.family_name;
-      } else {
-        info.email = user.emails[0].address;
-        info.name = user.profile.firstname + ' ' + user.profile.lastname;
-      }
-      info['created_at'] = new Date(user.createdAt).getTime();
+      info.email = user.emails[0].address;
+      info.name = user.profile.firstname + ' ' + user.profile.lastname;
+      info.created_at = new Date(user.createdAt).getTime();
     }
   };
 });

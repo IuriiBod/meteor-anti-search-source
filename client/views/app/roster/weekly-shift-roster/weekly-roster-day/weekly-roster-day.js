@@ -1,13 +1,22 @@
-//context: type ("template"/null), currentDate (Date)
+//context: type ("template"/null), currentDate (Date), shiftBuffer (ReactiveVar), onCopyShift (function)
 
 Template.weeklyRosterDay.onCreated(function () {
+  this.subscribe('managerNote', this.data.currentDate, HospoHero.getCurrentAreaId());
   this.hasTemplateType = function () {
     return this.data.type === 'template';
-  }
+  };
+
+  this.hasCopiedShift = function () {
+    return this.data.shiftBuffer;
+  };
+
+  this.onCopyShift = this.data.onCopyShift;
 });
 
 Template.weeklyRosterDay.onRendered(function () {
-  if (HospoHero.canUser('edit roster', Meteor.userId())) {
+  var checker = new HospoHero.security.PermissionChecker();
+
+  if (checker.hasPermissionInArea(null, `edit roster`)) {
     this.$(".sortable-list").sortable({
       connectWith: ".sortable-list",
       revert: true,
@@ -46,13 +55,23 @@ Template.weeklyRosterDay.helpers({
 
   managerNotesCount: function () {
     return ManagerNotes.find({
+      text: {$exists: true},
       noteDate: this.currentDate,
       'relations.areaId': HospoHero.getCurrentAreaId()
     }).count();
   },
   shiftDateFormat: function (date) {
     return HospoHero.dateUtils.shortDateFormat(moment(date));
+  },
+
+  hasCopiedShift: function () {
+    return Template.instance().hasCopiedShift();
+  },
+
+  onCopyShift: function () {
+    return Template.instance().onCopyShift;
   }
+
 });
 
 
@@ -75,6 +94,22 @@ Template.weeklyRosterDay.events({
 
   'click .manager-note-flyout': function (event, tmpl) {
     FlyoutManager.open('managerNotes', {date: tmpl.data.currentDate});
+  },
+
+  'click .paste-shift-button': function (event, tmpl) {
+    let zeroMoment = moment(new Date(tmpl.data.currentDate));
+
+    let pastedShift = tmpl.data.shiftBuffer;
+
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
+      start: zeroMoment,
+      end: zeroMoment
+    }, pastedShift.startTime, pastedShift.endTime);
+
+    pastedShift.startTime = newShiftDuration.start;
+    pastedShift.endTime = newShiftDuration.end;
+
+    Meteor.call("createShift", pastedShift, HospoHero.handleMethodResult());
   }
 });
 
@@ -128,3 +163,4 @@ SortableHelper.prototype.getSortedShift = function () {
     return shift;
   }
 };
+

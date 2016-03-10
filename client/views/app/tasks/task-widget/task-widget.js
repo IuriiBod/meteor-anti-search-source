@@ -1,6 +1,6 @@
 Template.taskWidget.onCreated(function () {
   this.getReferenceObject = function () {
-    var referenceId = HospoHero.getParamsFromRoute('_id');
+    var referenceId = this.data.itemId;
     var referenceType = this.data.type;
     return {
       id: referenceId,
@@ -39,7 +39,7 @@ Template.taskWidget.helpers({
     var self = Template.instance();
     return function () {
       self.isNewTaskCreating.set(false);
-    }
+    };
   },
 
   onEditTaskAction() {
@@ -47,19 +47,26 @@ Template.taskWidget.helpers({
     return function (task) {
       self.task = task;
       self.isNewTaskCreating.set(true);
-    }
+    };
   },
 
-  tasksOptions() {
+  tasksSettings() {
+    let buttons = [];
+    let checker = new HospoHero.security.PermissionChecker();
+    if (checker.hasPermissionInArea(null, `edit menus`)) {
+      let addTask = {
+        className: 'add-task btn btn-primary btn-xs pull-left',
+        url: '#',
+        text: 'Add Task'
+      };
+      buttons.push(addTask);
+    }
     return {
       namespace: this.type,
       uiStateId: 'task',
       title: 'Tasks',
-      contentPadding: 'no-padding',
-      className: 'add-task btn btn-primary btn-xs pull-left',
-      url: '#',
-      text: 'Add Task'
-    }
+      buttons: buttons
+    };
   }
 });
 
@@ -69,6 +76,9 @@ Template.taskWidget.events({
     tmpl.task = {
       reference: tmpl.getReferenceObject()
     };
+    if (tmpl.data.dueDate) {
+      tmpl.task.dueDate = tmpl.data.dueDate;
+    }
     tmpl.isNewTaskCreating.set(true);
   }
 });

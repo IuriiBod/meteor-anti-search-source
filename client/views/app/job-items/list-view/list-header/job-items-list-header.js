@@ -5,7 +5,7 @@ Template.jobListHeader.helpers({
     });
   },
   isArchived: function () {
-    return this.status == 'archived';
+    return this.status === 'archived';
   }
 });
 

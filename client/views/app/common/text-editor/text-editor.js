@@ -11,7 +11,7 @@ Template.textEditor.onRendered(function () {
     tmpl.$('#uploadImage').tooltip({container: 'body', placement: 'bottom'});
 
     // Button events
-    tmpl.$('#uploadImage').click(function (event) {
+    tmpl.$('#uploadImage').click(function () {
       filepicker.pickAndStore(
         {
           extensions: ['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'],
@@ -41,7 +41,8 @@ Template.textEditor.onRendered(function () {
       ['table', ['table']],
       ['insert', ['link']]
     ],
-    oninit: onSummernoteInit
+    oninit: onSummernoteInit,
+    minHeight: 200
   });
 
   this.autorun(function () {

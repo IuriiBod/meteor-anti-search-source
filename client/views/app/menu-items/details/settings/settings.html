@@ -1,6 +1,6 @@
 <template name="menuItemSettings">
   <div class="ibox panel panel-default">
-    {{#collapsibleElement options=settingsOptions}}
+    {{#collapsibleElement settings=settings}}
       <ul class="list-group white-bg">
         <li class="list-group-item">
           <div class="row">
@@ -8,7 +8,7 @@
               <p>Category</p>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-              {{#if canEditMenu}}
+              {{#if hasPermissionInAreaTo 'edit menus'}}
                 {{> ghostEditableSelect values=categoryOptions selected=category onValueChanged=getOnCategoryChanged}}
               {{else}}
                 <p>{{currentCategory.name}}</p>
@@ -26,7 +26,7 @@
               {{#if isArchived}}
                 <p>archived</p>
               {{else}}
-                {{#if canEditMenu}}
+                {{#if hasPermissionInAreaTo 'edit menus'}}
                   {{> ghostEditableSelect values=statusOptions selected=status onValueChanged=getOnStatusChanged}}
                 {{else}}
                   <p>{{status}}</p>

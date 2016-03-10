@@ -1,19 +1,17 @@
-<template name="files">
-  <div class="col-xs-12 no-padding">
-    <h3>
-      Files
-      <button type="button" class="btn pull-right btn-xs btn-primary attach-file">Attach File</button>
-    </h3>
-
-    {{#if files.count}}
-    <div class="ibox-content no-padding">
-      <ul class="list-group">
-        {{#each files}}
-          {{> fileItem this}}
-        {{/each}}
-      </ul>
-    </div>
-    {{/if}}
-    <hr>
+<template name="filesWidget">
+  <div class="ibox float-e-margins">
+    {{#collapsibleElement settings=filesOptions}}
+      <div class="ibox-content no-padding white-bg">
+        {{#if files.count}}
+          <ul class="list-group">
+            {{#each files}}
+              {{> filesWidgetItem this}}
+            {{/each}}
+          </ul>
+        {{else}}
+          <h4 class="text-center">No files yet</h4>
+        {{/if}}
+      </div>
+    {{/collapsibleElement}}
   </div>
 </template>

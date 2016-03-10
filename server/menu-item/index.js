@@ -2,10 +2,20 @@ var menuItemLinkHelper = function () {
   return NotificationSender.urlFor('menuItemDetail', {_id: this.menuItemId}, this);
 };
 
+var canUserEditMenus = function (areaId = null) {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, 'edit menus');
+};
+
+var getAreaIdFromMenuItem = function (menuItemId) {
+  let menuItem = MenuItems.findOne({_id: menuItemId});
+  return (menuItem && menuItem.relations) ? menuItem.relations.areaId : null;
+};
+
 
 Meteor.methods({
   togglePosNameToMenuItem: function (menuItemId, posMenuItemNameOrId, action) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    if (!canUserEditMenus(getAreaIdFromMenuItem(menuItemId))) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -29,7 +39,7 @@ Meteor.methods({
   },
 
   createMenuItem: function (menuItem) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    if (!canUserEditMenus()) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -63,7 +73,7 @@ Meteor.methods({
 
     var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('menu');
     subscriberIds.forEach(function (subscription) {
-      if (subscription.subscriber != Meteor.userId()) {
+      if (subscription.subscriber !== Meteor.userId()) {
         notificationSender.sendNotification(subscription.subscriber);
       }
     });
@@ -71,12 +81,12 @@ Meteor.methods({
   },
 
   editMenuItem: function (menuItem) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    check(menuItem, HospoHero.checkers.MenuItemDocument);
+
+    if (!canUserEditMenus(menuItem.relations.areaId)) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
-
-    check(menuItem, HospoHero.checkers.MenuItemDocument);
 
     var id = menuItem._id;
 
@@ -97,7 +107,7 @@ Meteor.methods({
 
     var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('menu', id);
     subscriberIds.forEach(function (subscription) {
-      if (subscription.subscriber != Meteor.userId()) {
+      if (subscription.subscriber !== Meteor.userId()) {
         notificationSender.sendNotification(subscription.subscriber);
       }
     });
@@ -107,7 +117,7 @@ Meteor.methods({
   },
 
   deleteMenuItem: function (menuItem) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    if (!canUserEditMenus(menuItem.relations.areaId)) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
@@ -124,7 +134,7 @@ Meteor.methods({
 
     var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('menu', menuItem._id);
     subscriberIds.forEach(function (subscription) {
-      if (subscription.subscriber != Meteor.userId()) {
+      if (subscription.subscriber !== Meteor.userId()) {
         notificationSender.sendNotification(subscription.subscriber);
       }
       subscription.itemIds = menuItem._id;
@@ -136,11 +146,12 @@ Meteor.methods({
   },
 
   editItemOfMenu: function (menuId, itemObject, action, type) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    check(menuId, HospoHero.checkers.MongoId);
+
+    if (!canUserEditMenus(getAreaIdFromMenuItem(menuId))) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
-    check(menuId, HospoHero.checkers.MongoId);
 
     var query = {};
     if (action === 'add') {
@@ -154,18 +165,19 @@ Meteor.methods({
       query.$set[type] = _.map(items, function (item) {
         return item._id === itemObject._id ? itemObject : item;
       });
-    } else {
     }
+
     MenuItems.update({_id: menuId}, query);
   },
 
   duplicateMenuItem: function (menuItem, areaId) {
-    if (!HospoHero.canUser('edit menus', Meteor.userId())) {
+    check(menuItem, HospoHero.checkers.MenuItemDocument);
+    check(areaId, HospoHero.checkers.MongoId);
+
+    if (!canUserEditMenus(areaId)) {
       logger.error("User not permitted to create menu items");
       throw new Meteor.Error(403, "User not permitted to create menu");
     }
-    check(menuItem, HospoHero.checkers.MenuItemDocument);
-    check(areaId, HospoHero.checkers.MongoId);
 
     if (!Areas.findOne(areaId)) {
       logger.error("Area not found!");
@@ -192,7 +204,7 @@ Meteor.methods({
 
 var duplicateMenuCategory = function (menuCategoryId, areaId) {
   var category = Categories.findOne({_id: menuCategoryId});
-  if (category.relations.areaId != areaId) {
+  if (category.relations.areaId !== areaId) {
     var existsCategory = Categories.findOne({'relations.areaId': areaId, name: category.name});
     if (existsCategory) {
       menuCategoryId = existsCategory._id;

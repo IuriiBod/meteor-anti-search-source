@@ -6,7 +6,7 @@ var UserRelations = Match.Where(function (relation) {
       areaIds: Match.OneOf([HospoHero.checkers.MongoId], null)
     });
   } catch (err) {
-    HospoHero.checkerUtils.checkError('Incorrect user relations object!')
+    HospoHero.checkerUtils.checkError('Incorrect user relations object!');
   }
   return true;
 });
@@ -17,10 +17,10 @@ var UserChecker = Match.Where(function (user) {
     createdAt: Date,
     services: Object,
     profile: Object,
-    isActive: Boolean,
     emails: Array,
     relations: UserRelations,
-    roles: Match.Optional(Object)
+    roles: Match.Optional(Object),
+    lastLoginDate: Match.Optional(Date)
   });
 
   return true;

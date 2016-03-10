@@ -1,0 +1,5 @@
+<template name="attendingButtons">
+  {{#each attendingButtons}}
+    {{> meetingButton button=this isActiveButton=isActiveButton onButtonClick=onButtonClick}}
+  {{/each}}
+</template>

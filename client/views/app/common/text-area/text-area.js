@@ -12,8 +12,11 @@ Template.textArea.onRendered(function () {
       textArea.val('');
 
       //find tagged users
-      var mentionRegExp = /(?:^|\W)@(\w+)(?!\w)/g, match, matches = [];
-      while (match = mentionRegExp.exec(text)) {
+      var mentionRegExp = /(?:^|\W)@(\w+)(?!\w)/g;
+      var match;
+      var matches = [];
+      while (mentionRegExp.exec(text)) {
+        match = mentionRegExp.exec(text);
         var user = Meteor.users.findOne({
           'profile.firstname': match[1],
           "relations.areaIds": {$all: [HospoHero.getCurrentAreaId()]}
@@ -42,9 +45,9 @@ Template.textArea.onRendered(function () {
 
       var linkedText = autolinker.link(textHtml);
 
-      if (this.data.type == "newsFeedMainTextBox" || this.data.type == "newsFeedSubTextBox") {
+      if (this.data.type === "newsFeedMainTextBox" || this.data.type === "newsFeedSubTextBox") {
         Meteor.call("createNewsfeed", linkedText, this.data.reference, matches, HospoHero.handleMethodResult());
-      } else if (this.data.type == "submitComment") {
+      } else if (this.data.type === "submitComment") {
         var comment = {
           text: linkedText,
           reference: this.data.reference,
@@ -53,7 +56,7 @@ Template.textArea.onRendered(function () {
         Meteor.call("createComment", comment, this.data.refType, matches, HospoHero.handleMethodResult());
       }
     }
-  }
+  };
 });
 
 Template.textArea.helpers({
@@ -68,8 +71,7 @@ Template.textArea.helpers({
         collection: Meteor.users,
         field: ["profile.firstname", "profile.lastname"],
         filter: {
-          "_id": {$nin: [Meteor.userId()]},
-          "isActive": true
+          "_id": {$nin: [Meteor.userId()]}
         },
         sort: true,
         template: Template.username,
@@ -77,9 +79,9 @@ Template.textArea.helpers({
       }]
     };
 
-    if (this.type == "newsFeedMainTextBox" || this.type == "newsFeedSubTextBox") {
+    if (this.type === "newsFeedMainTextBox" || this.type === "newsFeedSubTextBox") {
       settingsBundle.position = "bottom";
-    } else if (this.type == "submitComment") {
+    } else if (this.type === "submitComment") {
       settingsBundle.position = "top";
     }
 
@@ -94,7 +96,7 @@ Template.textArea.events({
   },
 
   'keypress .message-area': function (event, tmpl) {
-    if (event.keyCode == 10 || event.keyCode == 13) {
+    if (event.keyCode === 10 || event.keyCode === 13) {
       event.preventDefault();
       tmpl.sendNewsfeed(event);
     }

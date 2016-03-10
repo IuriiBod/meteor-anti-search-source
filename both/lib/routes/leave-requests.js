@@ -7,6 +7,6 @@ Router.route('viewLeaveRequest', {
   data: function () {
     return {
       leaveRequest: LeaveRequests.findOne({_id: this.params.id})
-    }
+    };
   }
 });

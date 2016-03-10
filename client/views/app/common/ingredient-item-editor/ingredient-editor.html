@@ -3,7 +3,7 @@
     {{> CloseFlyoutButton}}
     <div class="col-xs-11 col-xs-offset-1">
       {{#if ingredient}}
-        {{#if canEditStock}} Edit {{/if}}
+        {{#if hasPermissionInAreaTo 'edit stocks'}} Edit {{/if}}
       {{else}}
         Add
       {{/if}}
@@ -15,13 +15,13 @@
       <div class="form-group">
         <label class="col-sm-12 control-label">Supplier's Code</label>
 
-        {{#if canEditStock}}
+        {{#if hasPermissionInAreaTo 'edit stocks'}}
         {{else}}
           <div class="form-control">{{ingredient.code}}</div>
         {{/if}}
 
         <div class="col-sm-12">
-          {{#if canEditStock}}
+          {{#if hasPermissionInAreaTo 'edit stocks'}}
             <input type="text" name="code" class="form-control" placeholder="Add Code"
                    value="{{ingredient.code}}">
           {{else}}
@@ -34,7 +34,7 @@
         <label class="col-sm-12 control-label">Name</label>
 
         <div class="col-sm-12">
-          {{#if canEditStock}}
+          {{#if hasPermissionInAreaTo 'edit stocks'}}
             <input type="text" name="name" class="form-control" placeholder="Add Name"
                    value="{{ingredient.description}}">
           {{else}}
@@ -47,7 +47,7 @@
         <label class="col-sm-12 control-label">Supplier</label>
 
         <div class="col-sm-12">
-          {{#if canEditStock}}
+          {{#if hasPermissionInAreaTo 'edit stocks'}}
             <select name="supplier" class="form-control">
               {{#each supplierOptions}}
                 <option {{suppliersOptionAttrs}}>{{name}}</option>
@@ -68,12 +68,12 @@
       <div class="form-group">
         <label class="col-sm-12 control-label">
           Unit Ordered
-          <i class="fa fa-question-circle pull-right unit-ordered-popover btn-link" data-toggle="popover"
+          <i class="fa fa-question-circle unit-ordered-popover btn-link" data-toggle="popover"
              data-placement="top" data-trigger="focus" tabindex="0" role="button"></i>
         </label>
 
         <div class="col-sm-12">
-          {{#if canEditStock}}
+          {{#if hasPermissionInAreaTo 'edit stocks'}}
             <input type="text" name="unitOrdered" class="form-control" placeholder="Type a unit"
                    value="{{ingredient.portionOrdered}}"/>
           {{else}}
@@ -86,7 +86,7 @@
         <label class="col-sm-12 control-label">How much does each {{unitsCaptions.ordered}} cost?</label>
 
         <div class="col-sm-12">
-          {{#if canEditStock}}
+          {{#if hasPermissionInAreaTo 'edit stocks'}}
             <div class="input-group">
               <span class="input-group-addon">$</span>
               <input type="text" name="costPerPortion" class="form-control"
@@ -102,12 +102,12 @@
       <div class="form-group">
         <label class="col-sm-12 control-label">
           Unit Used
-          <i class="fa fa-question-circle pull-right btn-link unit-used-popover" data-toggle="popover"
+          <i class="fa fa-question-circle btn-link unit-used-popover" data-toggle="popover"
              data-placement="top" data-trigger="focus" tabindex="0" role="button"></i>
         </label>
 
         <div class="col-sm-12">
-          {{#if canEditStock}}
+          {{#if hasPermissionInAreaTo 'edit stocks'}}
             <input type="text" name="unitUsed" placeholder="Type a unit" class="form-control"
                    value="{{ingredient.portionUsed}}"/>
           {{else}}
@@ -119,12 +119,12 @@
       <div class="form-group">
         <label class="col-sm-12 control-label">
           How many {{unitsCaptions.used}} are there in a {{unitsCaptions.ordered}}?
-          <i class="fa fa-question-circle pull-right btn-link unit-size-popover" data-toggle="popover"
+          <i class="fa fa-question-circle btn-link unit-size-popover" data-toggle="popover"
              data-placement="top" data-trigger="focus" tabindex="0" role="button"></i>
         </label>
 
         <div class="col-sm-12">
-          {{#if canEditStock}}
+          {{#if hasPermissionInAreaTo 'edit stocks'}}
             <input type="text" name="unitSize" class="form-control" placeholder="Unit Size"
                    value="{{ingredient.unitSize}}">
           {{else}}

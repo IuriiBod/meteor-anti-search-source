@@ -1,13 +1,13 @@
-var checkForecastPermissions = function (userId) {
-  var haveAccess = HospoHero.canUser('view forecast', userId);
-  if (!haveAccess) {
+var checkForecastPermissions = function () {
+  var checker = new HospoHero.security.PermissionChecker();
+  if (!checker.hasPermissionInArea(null, 'view forecast')) {
     throw new Meteor.Error(403, 'Access Denied');
   }
 };
 
 Meteor.methods({
   synchronizeActualSales: function () {
-    checkForecastPermissions(this.userId);
+    checkForecastPermissions();
 
     //find out current area
     var area = HospoHero.getCurrentArea(this.userId);
@@ -19,7 +19,7 @@ Meteor.methods({
     var locationId = area.locationId;
 
     if (!HospoHero.prediction.isAvailableForLocation(locationId)) {
-      throw new Meteor.Error("Current location hadn't connected POS system")
+      throw new Meteor.Error("Current location hadn't connected POS system");
     }
 
     //find out which items should be synchronized
@@ -47,7 +47,7 @@ Meteor.methods({
     check(date, Date);
     check(predictedQuantity, Number);
 
-    checkForecastPermissions(this.userId);
+    checkForecastPermissions();
 
     var menuItem = MenuItems.findOne({_id: menuItemId}, {fields: {relations: 1, _id: 1}});
     if (menuItem) {
@@ -73,7 +73,7 @@ Meteor.methods({
   removeManualForecast: function (dailySaleId) {
     check(dailySaleId, HospoHero.checkers.MongoId);
 
-    checkForecastPermissions(this.userId);
+    checkForecastPermissions();
 
     DailySales.update({_id: dailySaleId}, {$unset: {manualPredictionQuantity: ''}});
   }

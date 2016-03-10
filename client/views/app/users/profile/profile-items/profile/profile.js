@@ -28,7 +28,11 @@ Template.profile.helpers({
   },
   //permitted for profile owner and admins
   isEditPermitted: function () {
-    return HospoHero.isManager() || HospoHero.isMe(this._id);
+    return HospoHero.security.hasPermissionInAreaTo("edit user's payrate") ||
+        Meteor.userId() && Meteor.userId() === this._id;
+  },
+  isMe: function (userId) {
+    return Meteor.userId() && Meteor.userId() === userId;
   },
   shiftsPerWeek: function () {
     var user = this;
@@ -39,7 +43,7 @@ Template.profile.helpers({
       var doc = {
         "shift": shift
       };
-      doc.selected = user && user.profile.shiftsPerWeek == shift;
+      doc.selected = user && user.profile.shiftsPerWeek === shift;
       formattedShifts.push(doc);
     });
     return formattedShifts;
@@ -95,7 +99,7 @@ Template.profile.events({
     }));
   },
 
-  'click #remove-resign-date': function (e, tpl) {
+  'click #remove-resign-date': function (e) {
     e.preventDefault();
     var id = Router.current().params._id;
     Meteor.call("resignDate", "remove", id, '', HospoHero.handleMethodResult());
@@ -166,8 +170,7 @@ function makeInputsEditable(userId) {
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function (value, sourceData) {
-    }
+    display: function () {}
   });
 
   $('#email').editable({
@@ -184,8 +187,7 @@ function makeInputsEditable(userId) {
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function (value, sourceData) {
-    }
+    display: function () {}
   });
 
   $('#weekdaysrate').editable({
@@ -204,8 +206,7 @@ function makeInputsEditable(userId) {
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function (value, sourceData) {
-    }
+    display: function () {}
   });
 
   $('#saturdayrate').editable({
@@ -224,8 +225,7 @@ function makeInputsEditable(userId) {
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function (value, sourceData) {
-    }
+    display: function () {}
   });
 
   $('#sundayrate').editable({
@@ -244,8 +244,7 @@ function makeInputsEditable(userId) {
         updateBasicDetails(id, editDetail);
       }
     },
-    display: function (value, sourceData) {
-    }
+    display: function () {}
   });
 }
 

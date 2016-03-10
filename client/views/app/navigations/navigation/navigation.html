@@ -11,7 +11,7 @@
 
         {{> menuEntry dashboardEntry}}
 
-        {{#if isInOrganization}}
+        {{#if isUserInAnyOrganization}}
           {{#if getCurrentAreaId}}
             {{#each menuEntries}}
               {{> menuEntry}}
@@ -19,16 +19,6 @@
           {{/if}}
         {{/if}}
 
-        <li>
-          <a href="#" class="open-elevio-module" data-elevio-module-name="articles">
-            <i class="fa fa-question"></i> Self Help
-          </a>
-        </li>
-        <li>
-          <a href="#" class="open-elevio-module" data-elevio-module-name="intercom">
-            <i class="fa fa-comments-o"></i> Chat with Support
-          </a>
-        </li>
       </ul>
     </div>
   </nav>

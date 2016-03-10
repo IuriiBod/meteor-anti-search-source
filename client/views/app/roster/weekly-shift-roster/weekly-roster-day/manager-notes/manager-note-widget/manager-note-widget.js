@@ -1,31 +1,64 @@
-Template.managerNoteWidget.onCreated(function() {
-  this.currentNote = new ReactiveVar(null);
+var canUserEditRoster = function () {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, `edit roster`);
+};
+
+//Context: date (Date)
+
+Template.managerNoteWidget.onCreated(function () {
+  let self = this;
+
+  self.note = () => {
+    return ManagerNotes.findOne({
+      noteDate: self.data.date,
+      'relations.areaId': HospoHero.getCurrentAreaId()
+    });
+  };
+
+  let weekRange = TimeRangeQueryBuilder.forWeek(self.data.date);
+
+  self.subscribe('managerNotes', weekRange, HospoHero.getCurrentAreaId(), function onReady () {
+    self.subscribe('comments', self.note()._id, HospoHero.getCurrentAreaId());
+  });
+
+  self.textForEmptyEditor = 'Leave your note here';
 });
 
 Template.managerNoteWidget.helpers({
-  currentNote: function() {
-    return Template.instance().currentNote.get();
+  note () {
+    return Template.instance().note();
   },
-  onCloseEditor: function() {
-    var self = Template.instance();
-    return function() {
-      self.currentNote.set(null);
+  textOfNote () {
+    let note = Template.instance().note();
+    if (note && _.isString(note.text) && $.trim(note.text)) {
+      return note.text;
     }
+    return canUserEditRoster() ? Template.instance().textForEmptyEditor : 'No notes';
   },
-  notes: function () {
-    return ManagerNotes.find({
-      noteDate: this.date,
-      'relations.areaId': HospoHero.getCurrentAreaId()
-    });
-  }
-});
+  saveNote () {
+    let tmpl = Template.instance();
 
-Template.managerNoteWidget.events({
-  'click .create-note': function(event, tmpl) {
-    event.preventDefault();
+    return (text) => {
 
-    tmpl.currentNote.set({
-      noteDate: tmpl.data.date
-    });
+      if (text === tmpl.textForEmptyEditor) {
+        return;
+      }
+
+      let note = tmpl.note();
+      note.text = text;
+
+      if (!note.createdAt) {
+        note.createdAt = new Date();
+      }
+
+      if (!note.createdBy) {
+        note.createdBy = Meteor.userId();
+      }
+
+      Meteor.call('upsertManagerNote', note);
+    };
+  },
+  readOnly () {
+    return !canUserEditRoster();
   }
 });

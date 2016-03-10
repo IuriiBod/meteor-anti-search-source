@@ -1,13 +1,24 @@
 Template.menuItemImage.helpers({
-  imageOptions() {
+  imageSettings() {
+    let buttons = [];
+    let checker = new HospoHero.security.PermissionChecker();
+
+    if (checker.hasPermissionInArea(null, `edit menus`)) {
+      let imageUpload = {
+        url: '#',
+        className: 'upload-image-button',
+        icon: 'fa fa-cloud-upload'
+      };
+      buttons.push(imageUpload);
+    }
+
     return {
       namespace: 'menus',
       uiStateId: 'images',
       title: 'Image',
-      url: '#',
-      className: 'upload-image-button',
-      icon: 'fa fa-cloud-upload'
-    }
+      contentPadding: '20px',
+      buttons: buttons
+    };
   }
 });
 

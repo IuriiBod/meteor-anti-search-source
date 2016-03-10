@@ -1,38 +1,85 @@
-Template.ordersReceiptsList.onCreated(function() {
+Template.ordersReceiptsList.onCreated(function () {
   this.showsReceivedOrders = new ReactiveVar(false);
   this.periodOfOrders = new ReactiveVar('week');
+  this.ordersToShowLimit = new ReactiveVar(10);
+
+  let ordersPeriod = {
+    forWeek: TimeRangeQueryBuilder.forWeek(),
+    forMonth: TimeRangeQueryBuilder.forMonth(),
+    transformPeriodToQuery(period) {
+      return period === 'week' ? this.forWeek : period === 'month' ? this.forMonth : {};
+    }
+  };
+
+  this.getOrderReceipts = () => {
+    let period = this.periodOfOrders.get();
+    let dateInterval = ordersPeriod.transformPeriodToQuery(period);
+
+    return OrderReceipts.find({
+      received: this.showsReceivedOrders.get(),
+      expectedDeliveryDate: dateInterval
+    }, {
+      sort: {
+        expectedDeliveryDate: 1, supplier: 1
+      },
+      limit: this.ordersToShowLimit.get()
+    });
+  };
 });
 
 Template.ordersReceiptsList.helpers({
-  showsReceivedOrders: function () {
-    return Template.instance().showsReceivedOrders.get();
+  receivingOrdersButtons() {
+    let showsReceivedOrders = Template.instance().showsReceivedOrders.get();
+    let defaultButton = 'btn btn-white orders-status';
+    let activeButton = `${defaultButton} active`;
+    return [
+      {
+        status: 'toBeReceived',
+        text: 'To be received',
+        className: !showsReceivedOrders ? activeButton : defaultButton
+      },
+      {
+        status: 'received',
+        text: 'Received',
+        className: showsReceivedOrders ? activeButton : defaultButton
+      }
+    ];
   },
 
-  isCurrentPeriodOfOrders: function (period) {
-    var currentPeriod = Template.instance().periodOfOrders.get();
-    return currentPeriod === period;
+  periodOfOrdersButtons() {
+    let currentPeriod = Template.instance().periodOfOrders.get();
+    let defaultButton = 'btn btn-white period-of-orders';
+    let activeButton = `${defaultButton} active`;
+    return [
+      {
+        period: 'week',
+        text: 'This week',
+        className: currentPeriod === 'week' ? activeButton : defaultButton
+      },
+      {
+        period: 'month',
+        text: 'This month',
+        className: currentPeriod === 'month' ? activeButton : defaultButton
+      },
+      {
+        period: 'allTime',
+        text: 'All time',
+        className: currentPeriod === 'allTime' ? activeButton : defaultButton
+      }
+    ];
   },
 
-  receipts: function() {
-    var showsReceivedOrders = Template.instance().showsReceivedOrders.get();
-    var period = Template.instance().periodOfOrders.get();
-    var receipts;
+  tableHeaderItems() {
+    return ['Date expected', 'Supplier', 'Ordered Value', 'Received Amount', 'Received', 'Invoice Uploaded'];
+  },
 
-    if (period === 'week' || period === 'month') {
-      receipts = OrderReceipts.find({
-        'received': showsReceivedOrders,
-        'expectedDeliveryDate': {
-          $gte: moment().startOf(period).unix() * 1000,
-          $lte: moment().endOf(period).unix() * 1000
-        }
-      }, {sort: {'receivedDate': -1, 'supplier': 1}});
-    } else if (period === 'allTime') {
-      receipts = OrderReceipts.find({
-        'received': showsReceivedOrders
-      }, {sort: {'receivedDate': -1, 'supplier': 1}});
-    }
+  receipts() {
+    return Template.instance().getOrderReceipts();
+  },
 
-    return receipts.fetch();
+  showLoadMoreOrdersButton() {
+    let instance = Template.instance();
+    return instance.getOrderReceipts().count() < instance.ordersToShowLimit.get();
   }
 });
 
@@ -40,17 +87,19 @@ Template.ordersReceiptsList.events({
   'click .orders-status': function (event, tmpl) {
     event.preventDefault();
 
-    var status = event.currentTarget.getAttribute('data-orders-status');
-    if (status === 'received') {
-      tmpl.showsReceivedOrders.set(true);  
-    } else {
-      tmpl.showsReceivedOrders.set(false);
-    }    
+    let status = this.status;
+    status = status === 'received';
+    tmpl.showsReceivedOrders.set(status);
   },
 
   'click .period-of-orders': function (event, tmpl) {
     event.preventDefault();
-    var period = event.currentTarget.getAttribute('data-period-of-orders');
-    tmpl.periodOfOrders.set(period);
+    tmpl.periodOfOrders.set(this.period);
+    tmpl.ordersToShowLimit.set(10);
+  },
+
+  'click .load-more-orders': function (event, tmpl) {
+    event.preventDefault();
+    tmpl.ordersToShowLimit.set(tmpl.ordersToShowLimit.get() + 10);
   }
 });
