@@ -28,6 +28,7 @@ claudiojulio:blueimp-gallery@2.16.0
 cmather:handlebars-server@2.0.0
 coffeescript@1.0.11
 dandv:caret-position@2.1.1
+dbarrett:dropzonejs@4.2.1
 dbernhard:jquery-ui-draggable@0.1.2
 dburles:mongo-collection-instances@0.3.5
 ddp@1.2.2
@@ -90,6 +91,7 @@ meteor@1.1.10
 meteor-base@1.0.1
 meteorhacks:meteorx@1.0.2
 meteorhacks:unblock@1.1.0
+micah:google-cloud@0.0.1
 minifiers@1.1.7
 minimongo@1.0.10
 mizzao:autocomplete@0.5.1
