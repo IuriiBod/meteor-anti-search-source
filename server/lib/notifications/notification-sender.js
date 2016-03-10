@@ -89,8 +89,8 @@ NotificationSender.prototype._isInteractive = function () {
 
 /**
  * Rebder template html
- * @param {String}
- * @param {String} 'mobile' - mobile template | 'email' - template that sending to email | undefined - default template
+ * @param {String} notificationId
+ * @param {String} type
  * @returns {String}
  * @private
  */
@@ -116,7 +116,7 @@ NotificationSender.prototype._renderTemplateWithData = function (notificationId,
          this._options.templateName + '-email' :  this._options.templateName;
       break;
     }
-    case undefined : {
+    default : {
       templateName = this._options.templateName;
       break;
     }
