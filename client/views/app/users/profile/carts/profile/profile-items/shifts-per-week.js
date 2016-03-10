@@ -8,7 +8,7 @@ Template.profileShiftsPerWeek.helpers({
             var doc = {
                 "shift": shift
             };
-            doc.selected = user && user.profile.shiftsPerWeek == shift;
+            doc.selected = user && user.profile.shiftsPerWeek === shift;
             formattedShifts.push(doc);
         });
         return formattedShifts;
@@ -18,6 +18,7 @@ Template.profileShiftsPerWeek.events({
     'change .shiftsPerWeek': function (event) {
         var id = $(event.target).attr("data-id");
         var value = $(event.target).val();
-        Meteor.call("editBasicDetails", id, {"shiftsPerWeek": value}, HospoHero.handleMethodResult());
+        Meteor.call("editBasicDetails",
+            id, {"shiftsPerWeek": value}, HospoHero.handleMethodResult());
     }
 });

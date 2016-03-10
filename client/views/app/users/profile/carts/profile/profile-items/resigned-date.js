@@ -30,18 +30,21 @@ Template.profileResignedDate.events({
         var val = tpl.$(".open-resigned-date-picker").val();
 
         if (!val) {
-            tpl.$(".open-resigned-date-picker").focus().parent().removeClass("has-success").addClass("has-error");
+            tpl.$(".open-resigned-date-picker")
+                .focus().parent().removeClass("has-success").addClass("has-error");
             return;
         } else {
-            tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
+            tpl.$(".open-resigned-date-picker")
+                .parent().removeClass("has-error").addClass("has-success");
         }
 
         Meteor.call("resignDate", "update", id, val, HospoHero.handleMethodResult(function () {
-            tpl.$(".open-resigned-date-picker").parent().removeClass("has-error").addClass("has-success");
+            tpl.$(".open-resigned-date-picker")
+                .parent().removeClass("has-error").addClass("has-success");
         }));
     },
 
-    'click #remove-resign-date': function (e, tpl) {
+    'click #remove-resign-date': function (e) {
         e.preventDefault();
         var id = Router.current().params._id;
         Meteor.call("resignDate", "remove", id, '', HospoHero.handleMethodResult());

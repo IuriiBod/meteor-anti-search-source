@@ -6,4 +6,4 @@ Template.profileChangePin.events({
             HospoHero.info("PIN has been changed");
         }));
     }
-})
+});

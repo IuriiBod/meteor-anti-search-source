@@ -14,7 +14,7 @@ Template.profileChangePassword.events({
         var $oldPassword = t.find("#old-password");
         var $newPassword = t.find("#new-password");
 
-        if(!$(event.target)[0].checkValidity()) { return };
+        if(!$(event.target)[0].checkValidity()) { return; }
 
         Accounts.changePassword($oldPassword.value,
             $newPassword.value, HospoHero.handleMethodResult(function () {

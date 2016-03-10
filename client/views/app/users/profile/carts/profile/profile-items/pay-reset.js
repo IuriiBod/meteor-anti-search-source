@@ -17,8 +17,6 @@ function makeInputsEditable() {
                 var editDetail = {"weekdaysrate": newRate};
                 Meteor.call("editBasicDetails", id, editDetail, HospoHero.handleMethodResult());
             }
-        },
-        display: function (value, sourceData) {
         }
     });
 
@@ -37,8 +35,6 @@ function makeInputsEditable() {
                 var editDetail = {"saturdayrate": newRate};
                 Meteor.call("editBasicDetails", id, editDetail, HospoHero.handleMethodResult());
             }
-        },
-        display: function (value, sourceData) {
         }
     });
 
@@ -57,8 +53,6 @@ function makeInputsEditable() {
                 var editDetail = {"sundayrate": newRate};
                 Meteor.call("editBasicDetails", id, editDetail, HospoHero.handleMethodResult());
             }
-        },
-        display: function (value, sourceData) {
         }
     });
 }

@@ -77,8 +77,6 @@ function makeInputsEditable() {
                 var editDetail = {"phone": newValue};
                 Meteor.call("editBasicDetails", id, editDetail, HospoHero.handleMethodResult());
             }
-        },
-        display: function (value, sourceData) {
         }
     });
 
@@ -95,8 +93,6 @@ function makeInputsEditable() {
                 var editDetail = {"email": newValue};
                 Meteor.call("editBasicDetails", id, editDetail, HospoHero.handleMethodResult());
             }
-        },
-        display: function (value, sourceData) {
         }
     });
 }
