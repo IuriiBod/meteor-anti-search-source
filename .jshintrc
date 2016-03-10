@@ -160,6 +160,7 @@
     "AccountsTemplates": false,
     "Autolinker": false,
     "Modal": false,
+    "Conversation": false,
 
     //collections
     "MenuItems": true,
