@@ -4,10 +4,10 @@ Meteor.publishComposite('organizationInfo', function () {
 
   let user = this.userId && Meteor.users.findOne(this.userId);
 
-  let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
-  let isOrganizationOwner = (organization) => permissionChecker.isOrganizationOwner(organization._id);
-
   if (user) {
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    let isOrganizationOwner = (organization) => permissionChecker.isOrganizationOwner(organization._id);
+
     let findNotifications = function () {
       return Notifications.find({
         to: this.userId

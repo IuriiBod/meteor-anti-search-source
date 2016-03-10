@@ -1,6 +1,7 @@
 Namespace('HospoHero', {
   getOrganizationIdBasedOnCurrentArea: function (userId) {
-    return HospoHero.getCurrentArea(userId).organizationId;
+    let currentArea = HospoHero.getCurrentArea(userId);
+    return currentArea && currentArea.organizationId;
   },
 
   getCurrentAreaId: function (userId = Meteor.userId()) {
