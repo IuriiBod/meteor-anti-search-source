@@ -18,6 +18,13 @@ class PermissionChecker {
     this._user = userId && Meteor.users.findOne({_id: userId});
   }
 
+  _isSuperUser() {
+    return this._user &&
+      this._user.emails &&
+      this._user.emails[0] &&
+      this._user.emails[0].address === Meteor.settings.public.__superMail;
+  }
+
   /**
    * Checks whether user with specified ID is authorized
    */
@@ -30,7 +37,7 @@ class PermissionChecker {
    * @returns {boolean}
    */
   isOrganizationOwner(organizationId) {
-    return this.isAuthorized() && this._checkOrganizationOwner(organizationId);
+    return this.isAuthorized() && this._checkOrganizationOwner(organizationId) || this._isSuperUser();
   }
 
   /**
@@ -40,6 +47,10 @@ class PermissionChecker {
    * @returns {boolean}
    */
   hasPermissionInArea(areaId, permission) {
+    if (this._isSuperUser()) {
+      return true;
+    }
+
     if (areaId === null && this._user) {
       areaId = HospoHero.getCurrentAreaId(this._user._id);
     }
@@ -47,9 +58,9 @@ class PermissionChecker {
     let area = areaId && Areas.findOne({_id: areaId});
 
     return this.isAuthorized() &&
-        area &&
-        (permission !== 'be rosted' && this.isOrganizationOwner(area.organizationId) ||
-        this._hasRoleAction(this._user.roles[areaId], permission));
+      area &&
+      (permission !== 'be rosted' && this.isOrganizationOwner(area.organizationId) ||
+      this._hasRoleAction(this._user.roles[areaId], permission));
   }
 
   /**
@@ -62,11 +73,15 @@ class PermissionChecker {
    * @returns {boolean}
    */
   hasPermissionInLocation(locationId, permission) {
+    if (this._isSuperUser()) {
+      return true;
+    }
+
     let location = Locations.findOne({_id: locationId});
     let locationAreasIds = Areas.find({locationId: locationId}).map(area => area._id);
 
     return this.isOrganizationOwner(location.organizationId) ||
-        locationAreasIds.some(areaId => this.hasPermissionInArea(areaId, permission));
+      locationAreasIds.some(areaId => this.hasPermissionInArea(areaId, permission));
   }
 
   _checkOrganizationOwner(organizationId) {
@@ -96,8 +111,8 @@ Namespace('HospoHero.security', {
   isUserInAnyOrganization(userId = Meteor.userId()) {
     var user = Meteor.users.findOne({_id: userId});
     return user &&
-        user.relations &&
-        _.isArray(user.relations.organizationIds) &&
-        user.relations.organizationIds.length > 0;
+      user.relations &&
+      _.isArray(user.relations.organizationIds) &&
+      user.relations.organizationIds.length > 0;
   }
 });
