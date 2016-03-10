@@ -52,30 +52,42 @@ Meteor.publishComposite('jobItem', function (id) {
       },
       {
         find: function (jobItem) {
+          if (jobItem && jobItem._id) {
             return TaskList.find({'reference.id': jobItem._id});
+          } else {
+            this.ready();
+          }
         }
       },
       {
         find: function (jobItem) {
-          return JobTypes.find({_id: jobItem.type});
+          if (jobItem && jobItem.type) {
+            return JobTypes.find({_id: jobItem.type});
+          } else {
+            this.ready();
+          }
         }
       },
       {
         find: function (jobItem) {
-          if (this.userId) {
+          if (jobItem && jobItem._id) {
             return MenuItems.find({'jobItems._id': jobItem._id});
           } else {
             this.ready();
           }
         },
-        children:[{
+        children:[
+          {
             find: function (menuItem) {
-              return Categories.find({_id:menuItem.category});
+              if (menuItem && menuItem.category) {
+                return Categories.find({_id:menuItem.category});
+              } else {
+                this.ready();
+              }
             }
           }
         ]
       }
-
     ]
   };
 });
