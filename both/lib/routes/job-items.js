@@ -49,9 +49,9 @@ Router.route('/jobItem/:_id', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     if (currentAreaId) {
       return [
-        Meteor.subscribe('jobItem', this.params._id),
+        Meteor.subscribe('jobItem', this.params._id, currentAreaId),
         Meteor.subscribe('comments', this.params._id, currentAreaId),
-        Meteor.subscribe('usersList', currentAreaId),
+        Meteor.subscribe('areaUsersList', currentAreaId),
         Meteor.subscribe('userSubscriptions', currentAreaId)
       ];
     }  
@@ -70,7 +70,7 @@ Router.route('/jobItem/:_id/edit', {
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('jobItem', this.params._id),
+      Meteor.subscribe('jobItem', this.params._id,currentAreaId),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('ingredients', null, currentAreaId),

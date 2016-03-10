@@ -45,7 +45,7 @@ var JobItemDocument = Match.Where(function (jobItem) {
       createdOn: Match.Optional(Date),
       editedBy: HospoHero.checkers.OptionalNullableMongoId,
       editedOn: Match.Optional(Date),
-      status: Match.Optional(String),
+      status: Match.Optional(HospoHero.checkers.status),
 
       recipe: String,
       ingredients: [{

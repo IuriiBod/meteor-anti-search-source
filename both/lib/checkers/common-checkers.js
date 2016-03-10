@@ -30,6 +30,8 @@ var forNonEmptyString = function (propertyName) {
   });
 };
 
+var status  = Match.OneOf('active','archived');
+
 
 var ShiftId = Match.Where(function (id) {
   check(id, HospoHero.checkers.MongoId);
@@ -119,5 +121,7 @@ Namespace('HospoHero.checkers', {
    *
    * @param {string} propertyName
    */
-  forNonEmptyString: forNonEmptyString
+  forNonEmptyString: forNonEmptyString,
+
+  status: status
 });
