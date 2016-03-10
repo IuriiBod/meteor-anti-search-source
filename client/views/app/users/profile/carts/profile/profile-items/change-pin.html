@@ -1,0 +1,16 @@
+<template name="profileChangePin">
+    <form id="change-pin">
+        <div class="form-group">
+            <label for="new-pin">New PIN</label>
+            <input type="password"
+                   class="form-control"
+                   placeholder="****"
+                   required=""
+                   id="new-pin"
+                   maxlength="4"
+                   pattern="^\d{4}$"
+                   title="Required four-digit PIN.">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+</template>

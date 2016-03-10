@@ -1,0 +1,27 @@
+<template name="profile">
+  <div class="col-sm-12 col-md-6 col-lg-4">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h5>Profile Detail</h5>
+      </div>
+      <div>
+        {{> profileImage this}}
+        <div class="ibox-content profile-content">
+            {{> profileContent this }}
+          <br>
+            {{> profileChangePin }}
+          <br>
+            {{> profileChangePassword }}
+          <br>
+            {{> profilePayReset this }}
+          <br>
+            {{> profileShiftsPerWeek this }}
+          <br>
+            {{> profileResignedDate this }}
+          <br>
+            <h4>Last login: {{ lastLoginDate }}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
