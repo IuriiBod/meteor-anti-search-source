@@ -51,6 +51,36 @@
           </form>
           <br>
 
+          <form id="change-password">
+              <div class="form-group">
+                  <label for="old-password">Old password</label>
+                  <input type="password"
+                         class="form-control"
+                         placeholder="******"
+                         required
+                         id="old-password" >
+              </div>
+              <div class="form-group">
+                  <label for="new-password">New password</label>
+                  <input type="password"
+                         class="form-control"
+                         placeholder="Password"
+                         required
+                         pattern="^[a-zA-Z0-9]\w{3,14}$"
+                         title="From 3 to 14 characters."
+                         id="new-password" >
+              </div>
+              <div class="form-group">
+                  <input type="password"
+                         class="form-control"
+                         placeholder="Confirm"
+                         required
+                         id="confirm-password" >
+              </div>
+              <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+          <br>
+
           <h4>Pay rates</h4>
 
           <p>Weekdays ($):
