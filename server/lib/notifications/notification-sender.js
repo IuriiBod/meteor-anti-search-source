@@ -103,24 +103,12 @@ NotificationSender.prototype._renderTemplateWithData = function (notificationId,
     templateData._notificationId = notificationId
   }
 
-  switch (type){
-    case 'mobile' : {
-      templateName = this._options.templateName + '-mobile';
-      break;
-    }
-    case 'email' : {
-      templateData._isEmail = true;
 
-      // If exist email template use him, else use default template
-      templateName = Handlebars.templates[this._options.templateName + '-email']  ?
-         this._options.templateName + '-email' :  this._options.templateName;
-      break;
-    }
-    default : {
-      templateName = this._options.templateName;
-      break;
-    }
-  }
+  templateName = type && Handlebars.templates[this._options.templateName + '-' + type] ?
+      this._options.templateName + '-' + type  :
+      this._options.templateName;
+  if(type === 'email')  templateData._isEmail = true;
+
   return Handlebars.templates[templateName](templateData);
 };
 
