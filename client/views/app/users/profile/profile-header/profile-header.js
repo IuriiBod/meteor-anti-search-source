@@ -9,6 +9,6 @@ Template.profileHeader.helpers({
       'relations.areaIds': HospoHero.getCurrentAreaId()
     }, {
       sort: {'profile.firstname': 1}
-    }).fetch();
+    });
   }
 });
