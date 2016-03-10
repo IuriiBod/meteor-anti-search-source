@@ -15,7 +15,8 @@ var headingComponentsMap = {
   posMenuLinking: 'posMenuLinkingHeader',
   taskList: 'taskListHeader',
   meetings: 'meetingsHeader',
-  projects: 'projectsListHeader'
+  projects: 'projectsListHeader',
+  profile: 'profileHeader'
 };
 
 Template.pageHeading.onCreated(function () {
