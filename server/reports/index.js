@@ -87,10 +87,12 @@ let getDetailedReportStockTakeTotal = (areaId, params) => {
 };
 
 let stockVarianceReport = (currentAreaId, params) => {
+  console.log('params => ', params);
   let getStocktakeGroup = (date) => Stocktakes.find({date: date}).fetch();
   let firstStocktakeGroup = getStocktakeGroup(params.firstStocktakeDate);
   let secondStocktakeGroup = getStocktakeGroup(params.secondStocktakeDate);
-
+  console.log('firstStocktakeGroup => ', firstStocktakeGroup.length);
+  console.log('secondStocktakeGroup => ', secondStocktakeGroup.length);
   let stockVarianceReport = new StockVarianceReport(
       currentAreaId,
       firstStocktakeGroup,

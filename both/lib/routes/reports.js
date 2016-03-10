@@ -75,14 +75,23 @@ Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', 
   template: 'stockVarianceReport',
   waitOn() {
     let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    let datePeriod = moment().subtract(3, 'month').startOf('day').toDate();
     return [
-      Meteor.subscribe('suppliersNamesList', currentAreaId)
+      Meteor.subscribe('suppliersNamesList', currentAreaId),
+      Meteor.subscribe('stocktakeDates', currentAreaId, datePeriod)
     ];
   },
   data() {
+    let stocktakesDates = _.uniq(StocktakeMain.find({}, {
+      sort: {
+        date: -1
+      }
+    }).map((item) => HospoHero.dateUtils.formatDate(item.date, 'DD-MM-YY')));
+
     return {
       firstStocktakeDate: this.params.firstStocktakeDate,
-      secondStocktakeDate: this.params.secondStocktakeDate
+      secondStocktakeDate: this.params.secondStocktakeDate,
+      stocktakesDates: stocktakesDates
     }
   }
 });

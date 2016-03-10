@@ -15,12 +15,22 @@
               {{/each}}
             </select>
           </div>
-          <div class="col-lg-6">
-            <div class="input-daterange input-group" id="datepicker">
-              <input type="text" class="input form-control" name="start" placeholder="first stocktake date" />
-              <span class="input-group-addon">to</span>
-              <input type="text" class="input form-control" name="end" placeholder="second stocktake date"/>
-            </div>
+          <div class="col-lg-3">
+            <select class="first-stocktake">
+              {{#each firstStocktakesDateSelector}}
+                <option value={{this}}>{{this}}</option>
+              {{/each}}
+            </select>
+          </div>
+          <div class="col-lg-3">
+            <select class="second-stocktake">
+              {{#unless secondStocktakesDateSelector}}
+                <option>{{secondStocktakeDate}}</option>
+              {{/unless}}
+              {{#each secondStocktakesDateSelector}}
+                <option value={{this}}>{{this}}</option>
+              {{/each}}
+            </select>
           </div>
         </div>
         <div class="ibox">

@@ -82,3 +82,16 @@ Meteor.publish('stocktakeList', function (areaId) {
     })
   ];
 });
+
+Meteor.publish('stocktakeDates', function (areaId, timePeriod) {
+  return StocktakeMain.find({
+    'relations.areaId': areaId,
+    date: {
+      $gte: timePeriod
+    }
+  }, {
+    fields: {
+      date: 1
+    }
+  });
+});
