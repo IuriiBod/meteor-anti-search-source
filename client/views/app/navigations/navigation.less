@@ -1,14 +1,37 @@
 @import "../../../stylesheets/theme-globals.import.less";
 
+@media (max-width: 767px) {
+  #wrapper {
+    &.force-show-sidebar {
+      #page-wrapper {
+        position: inherit;
+        margin: 0;
+      }
+      .navbar-header {
+        margin-left: @sidebar-width;
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  #wrapper {
+    &.force-show-sidebar {
+      #page-wrapper {
+        position: inherit;
+        margin: 0 0 0 @sidebar-width;
+      }
+    }
+  }
+}
+
+
 #wrapper {
   &.force-show-sidebar {
-    #page-wrapper {
-      position: inherit;
-      margin: 0 0 0 @sidebar-width;
-    }
-
     #side-menu-nav-wrapper {
       width: @sidebar-width;
+      z-index: 10000;
+      background: @nav-bg;
     }
   }
 
@@ -80,6 +103,7 @@
     }
   }
 }
+
 
 
 
