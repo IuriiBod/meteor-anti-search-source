@@ -28,7 +28,6 @@ function makeInputsEditable() {
         mode: 'inline',
         emptytext: 'Empty',
         success: function (response, newValue) {
-            debugger
             var self = this;
             if (newValue) {
                 var id = $(self).attr("data-id");

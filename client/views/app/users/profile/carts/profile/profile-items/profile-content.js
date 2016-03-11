@@ -31,8 +31,6 @@ function makeInputsEditable() {
     $('#firstname').editable({
         type: 'text',
         title: 'Edit first name',
-        display: function () {
-        },
         showbuttons: true,
         mode: 'inline',
         placeholder: "Enter first name here",
@@ -50,8 +48,6 @@ function makeInputsEditable() {
     $('#lastname').editable({
         type: 'text',
         title: 'Edit last name',
-        display: function () {
-        },
         showbuttons: true,
         mode: 'inline',
         placeholder: "Enter last name here",
