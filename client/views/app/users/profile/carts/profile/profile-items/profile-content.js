@@ -43,7 +43,8 @@ function makeInputsEditable() {
                 var editDetail = {"firstname": newValue.trim()};
                 Meteor.call("editBasicDetails", id, editDetail, HospoHero.handleMethodResult());
             }
-        }
+        },
+        display: false
     });
 
     $('#lastname').editable({
@@ -61,7 +62,8 @@ function makeInputsEditable() {
                 var editDetail = {"lastname": newValue.trim()};
                 Meteor.call("editBasicDetails", id, editDetail, HospoHero.handleMethodResult());
             }
-        }
+        },
+        display: false
     });
 
     $('#phone').editable({
@@ -77,7 +79,8 @@ function makeInputsEditable() {
                 var editDetail = {"phone": newValue};
                 Meteor.call("editBasicDetails", id, editDetail, HospoHero.handleMethodResult());
             }
-        }
+        },
+        display: false
     });
 
     $('#email').editable({
@@ -93,6 +96,7 @@ function makeInputsEditable() {
                 var editDetail = {"email": newValue};
                 Meteor.call("editBasicDetails", id, editDetail, HospoHero.handleMethodResult());
             }
-        }
+        },
+        display: false
     });
 }
