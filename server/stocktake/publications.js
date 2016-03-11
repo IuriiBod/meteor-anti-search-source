@@ -84,14 +84,19 @@ Meteor.publish('stocktakeList', function (areaId) {
 });
 
 Meteor.publish('stocktakeDates', function (areaId, timePeriod) {
-  return StocktakeMain.find({
-    'relations.areaId': areaId,
-    date: {
-      $gte: timePeriod
-    }
-  }, {
-    fields: {
-      date: 1
-    }
-  });
+  let checkPermission = new HospoHero.security.PermissionChecker(this.userId);
+  if (checkPermission.hasPermissionInArea(areaId, "view area reports")) {
+    return StocktakeMain.find({
+      'relations.areaId': areaId,
+      date: {
+        $gte: timePeriod
+      }
+    }, {
+      fields: {
+        date: 1
+      }
+    });
+  } else {
+    this.ready();
+  }
 });

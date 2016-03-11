@@ -58,7 +58,7 @@ StockVarianceReport = class {
       let getExpectedCost = _.filter(expectedCostOfEachIngredient, (stock) => stock.stockId === ingredient._id);
       let expectedCost = getExpectedCost.length ? getExpectedCost[0].expectedCost : 0;
       let ordersReceived = this._getOrderReceived(ingredient._id);
-      let actualCost = ordersReceived + (ingredient.costInFirstStocktake - ingredient.costInSecondStocktake);
+      let actualCost = ordersReceived + (ingredient.costInFirstStocktake - ingredient.costInSecondStocktake); // calculations for actual cost for each ingredient
 
       return _.extend(ingredient, {
         ordersReceived: ordersReceived,
@@ -70,8 +70,9 @@ StockVarianceReport = class {
   }
 
   /**
-   * Expected Cost Of Ingredients
+   * Calculations for Expected Cost Of Ingredients
    */
+
   _getTotalExpectedCostOfIngredient() {
     let stocks = this._expectedIngredientCostOfMenuItems();
     let stocksIds = _.uniq(_.pluck(stocks, '_id'));
@@ -91,8 +92,8 @@ StockVarianceReport = class {
     let menuItemSales = this._getForecastedMenuItemsSales();
     let stockItems = [];
     menuItemSales.forEach((menuItem) => {
-      let menuItemDoc = this._getMenuItemsFromCache(menuItem.menuItemId);
-      menuItemDoc.ingredients.forEach((ingredient) => {
+      let menuItems = this._getMenuItemsFromCache(menuItem.menuItemId);
+      menuItems.ingredients.forEach((ingredient) => {
         if (ingredient._id) {
           let ingExpectedCost = menuItem.predictionQuantity * ingredient.quantity;
           stockItems.push({_id: ingredient._id, ingExpectedCost: ingExpectedCost});

@@ -98,6 +98,7 @@ Template.stockVarianceReport.events({
   'change .first-stocktake': function (event, tmpl) {
     let firstStocktakeDate = tmpl.$('.first-stocktake').val();
     let dates = _.clone(tmpl.data.stocktakesDates);
+
     tmpl.datesToSelect.set(dates.slice(0, dates.indexOf(firstStocktakeDate)));
   },
 

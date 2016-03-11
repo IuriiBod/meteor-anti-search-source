@@ -94,11 +94,11 @@ let stockVarianceReport = (currentAreaId, params) => {
 
   if (firstStocktakeGroup.length && secondStocktakeGroup.length) {
     let stockVarianceReport = new StockVarianceReport(
-        currentAreaId,
-        firstStocktakeGroup,
-        secondStocktakeGroup,
-        params.supplierId,
-        params.searchText
+      currentAreaId,
+      firstStocktakeGroup,
+      secondStocktakeGroup,
+      params.supplierId,
+      params.searchText
     );
     result = stockVarianceReport.getVarianceReport();
   } else {
