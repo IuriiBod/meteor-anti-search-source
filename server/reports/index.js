@@ -87,20 +87,34 @@ let getDetailedReportStockTakeTotal = (areaId, params) => {
 };
 
 let stockVarianceReport = (currentAreaId, params) => {
-  console.log('params => ', params);
   let getStocktakeGroup = (date) => Stocktakes.find({date: date}).fetch();
   let firstStocktakeGroup = getStocktakeGroup(params.firstStocktakeDate);
   let secondStocktakeGroup = getStocktakeGroup(params.secondStocktakeDate);
-  console.log('firstStocktakeGroup => ', firstStocktakeGroup.length);
-  console.log('secondStocktakeGroup => ', secondStocktakeGroup.length);
-  let stockVarianceReport = new StockVarianceReport(
-      currentAreaId,
-      firstStocktakeGroup,
-      secondStocktakeGroup,
-      params.supplierId,
-      params.searchText
-  );
-  return stockVarianceReport.getReport();
+  let result;
+
+  if (firstStocktakeGroup.length && secondStocktakeGroup.length) {
+    let stockVarianceReport = new StockVarianceReport(
+        currentAreaId,
+        firstStocktakeGroup,
+        secondStocktakeGroup,
+        params.supplierId,
+        params.searchText
+    );
+    result = stockVarianceReport.getVarianceReport();
+  } else {
+    result = {
+      stocktakes: {
+        first: {
+          elementsCount: firstStocktakeGroup.length
+        },
+        second: {
+          elementsCount: secondStocktakeGroup.length
+        }
+      }
+    };
+  }
+
+  return result;
 };
 
 Meteor.methods({

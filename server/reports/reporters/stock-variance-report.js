@@ -29,17 +29,13 @@ StockVarianceReport = class {
     return _.findWhere(this._menuItemsCache, {_id: menuItemId});
   }
 
-  _getFilteredItem(collection, key, keyForComparison) {
-    return _.filter(collection, (collectionItem) => collectionItem[key] === keyForComparison);
-  }
-
   _getStocktakesIngredients() {
     let firstStocktakeDetails = this._getStocktakeDetailedReport(this._firstStocktakeGroup, this._areaId);
     let secondStocktakeDetails = this._getStocktakeDetailedReport(this._secondStocktakeGroup, this._areaId);
     let stocktakesIngredients = [];
 
     firstStocktakeDetails.forEach((ingredient) => {
-      let filterIngById = this._getFilteredItem(secondStocktakeDetails, '_id', ingredient._id);
+      let filterIngById = _.filter(secondStocktakeDetails, (stock) => stock._id === ingredient._id);
       if (filterIngById.length) {
         stocktakesIngredients.push({
           _id: ingredient._id,
@@ -53,13 +49,13 @@ StockVarianceReport = class {
     return stocktakesIngredients;
   }
 
-  getReport() {
+  getVarianceReport() {
     let ingredientsList = this._getStocktakesIngredients();
     let expectedCostOfEachIngredient = this._getTotalExpectedCostOfIngredient();
     let round = HospoHero.misc.rounding;
 
     return ingredientsList.map((ingredient) => {
-      let getExpectedCost = this._getFilteredItem(expectedCostOfEachIngredient, 'stockId', ingredient._id);
+      let getExpectedCost = _.filter(expectedCostOfEachIngredient, (stock) => stock.stockId === ingredient._id);
       let expectedCost = getExpectedCost.length ? getExpectedCost[0].expectedCost : 0;
       let ordersReceived = this._getOrderReceived(ingredient._id);
       let actualCost = ordersReceived + (ingredient.costInFirstStocktake - ingredient.costInSecondStocktake);
@@ -81,7 +77,7 @@ StockVarianceReport = class {
     let stocksIds = _.uniq(_.pluck(stocks, '_id'));
 
     return stocksIds.map((stockId) => {
-      let ingredientTotalExpectedCost = this._getFilteredItem(stocks, '_id', stockId)
+      let ingredientTotalExpectedCost = _.filter(stocks, (stock) => stock._id === stockId)
           .reduce((memo, stock) => memo + stock.ingExpectedCost, 0);
 
       return {

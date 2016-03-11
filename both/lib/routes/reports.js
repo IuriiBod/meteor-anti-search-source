@@ -92,6 +92,6 @@ Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', 
       firstStocktakeDate: this.params.firstStocktakeDate,
       secondStocktakeDate: this.params.secondStocktakeDate,
       stocktakesDates: stocktakesDates
-    }
+    };
   }
 });

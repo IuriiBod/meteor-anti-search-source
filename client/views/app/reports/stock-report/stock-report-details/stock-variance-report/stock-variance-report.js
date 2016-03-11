@@ -1,9 +1,4 @@
 Template.stockVarianceReport.onCreated(function () {
-  this.report = new ReactiveVar();
-  this.searchText = new ReactiveVar();
-  this.datesToSelect = new ReactiveVar();
-  this.supplier = new ReactiveVar('All Suppliers');
-
   let makeTimeStampQueryFromDate = (date) => {
     let transformToTimeStamp = (object, key) => new Date(object[key]).getTime();
     let timeRangeQuery = TimeRangeQueryBuilder.forDay(moment(date, 'DD-MM-YY'));
@@ -11,8 +6,13 @@ Template.stockVarianceReport.onCreated(function () {
     return {
       $gte: transformToTimeStamp(timeRangeQuery, '$gte'),
       $lte: transformToTimeStamp(timeRangeQuery, '$lte')
-    }
+    };
   };
+
+  this.report = new ReactiveVar();
+  this.searchText = new ReactiveVar();
+  this.datesToSelect = new ReactiveVar();
+  this.supplier = new ReactiveVar('All Suppliers');
 
   this.getStockVariance = () => {
     let currentData = Template.currentData();
@@ -47,12 +47,19 @@ Template.stockVarianceReport.onRendered(function () {
 Template.stockVarianceReport.helpers({
   stockItems() {
     let stockItems = Template.instance().report.get();
-    return stockItems && stockItems.sort((firstItem, secondItem) => secondItem.variance - firstItem.variance);
+    let result;
+    if (stockItems && stockItems.stocktakes) {
+      let emptyStocktake = stockItems.stocktakes.first.elementsCount ? this.secondStocktakeDate : this.firstStocktakeDate;
+      result = {emptyStocktake: `There's no data to compare. Stocktake by ${emptyStocktake} is empty`};
+    } else {
+      result = stockItems && stockItems.sort((firstItem, secondItem) => secondItem.variance - firstItem.variance);
+    }
+    return result;
   },
 
   tableHeader() {
     return ['Stock Item Name', 'Stocktake Total', 'Orders Received', 'Stocktake Total',
-            'Expected COGS', 'Actual COGS', 'Variance']
+            'Expected COGS', 'Actual COGS', 'Variance'];
   },
 
   suppliers() {
