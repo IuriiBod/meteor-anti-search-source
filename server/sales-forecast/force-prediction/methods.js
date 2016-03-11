@@ -1,3 +1,5 @@
+/*jshint camelcase: false */
+
 var checkOrganizationOwner = function (userId) {
   let currentOrganizationId = HospoHero.getOrganizationIdBasedOnCurrentArea(userId);
   let permissionChecker = new HospoHero.security.PermissionChecker(userId);
@@ -82,9 +84,9 @@ Meteor.methods({
     var lastOrderItem = RawOrders.findOne({}, {sort: {created_date: -1}});
 
     var isLastSynced = function (orderItem) {
-      return lastOrderItem && lastOrderItem.created_date === orderItem.created_date
-        && lastOrderItem.quantity === orderItem.quantity
-        && lastOrderItem.resource_uri === orderItem.resource_uri;
+      return lastOrderItem && lastOrderItem.created_date === orderItem.created_date &&
+        lastOrderItem.quantity === orderItem.quantity &&
+        lastOrderItem.resource_uri === orderItem.resource_uri;
     };
 
     var area = HospoHero.getCurrentArea(this.userId);

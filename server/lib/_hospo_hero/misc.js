@@ -2,7 +2,7 @@ Namespace('HospoHero.misc', {
   omitAndExtend: function (item, blackListFields, areaId) {
     var defaultItemObject = {
       createdBy: Meteor.userId(),
-      createdOn: Date.now(),
+      createdOn: new Date(),
       relations: HospoHero.getRelationsObject(areaId)
     };
     item = _.omit(item, blackListFields);

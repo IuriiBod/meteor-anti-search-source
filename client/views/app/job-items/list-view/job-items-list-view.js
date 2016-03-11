@@ -14,6 +14,6 @@ Template.jobItemsListMainView.helpers({
     return {
       status: Template.instance().data.status,
       type: Template.instance().selectedType.get()
-    }
+    };
   }
 });

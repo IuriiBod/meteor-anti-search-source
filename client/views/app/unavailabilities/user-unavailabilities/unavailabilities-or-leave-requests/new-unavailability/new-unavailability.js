@@ -24,7 +24,7 @@ Template.addNewUnavailability.onCreated(function () {
   this.setTimeToSelectedDate = function (date, time) {
     time = moment(time);
     return moment(date).hours(time.hours()).minutes(time.minutes()).toDate();
-  }
+  };
 });
 
 Template.addNewUnavailability.onRendered(function () {
@@ -45,7 +45,7 @@ Template.addNewUnavailability.helpers({
         tmpl.set('startTime', startTime);
         tmpl.set('endTime', endTime);
       }
-    }
+    };
   }
 });
 

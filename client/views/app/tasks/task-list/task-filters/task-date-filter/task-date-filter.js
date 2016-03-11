@@ -5,6 +5,6 @@ Template.taskDateFilter.helpers({
       item: Template.currentData(),
       activeFilter: parentData.activeFilter,
       onFilterChange: parentData.onFilterChange
-    }
+    };
   }
 });

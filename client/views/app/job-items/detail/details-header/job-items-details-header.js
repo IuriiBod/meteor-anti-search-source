@@ -8,7 +8,7 @@ Template.jobDetailsHeader.helpers({
   },
   isArchived: function () {
     var job = JobItems.findOne({_id: this.id});
-    return job && job.status == 'archived';
+    return job && job.status === 'archived';
   }
 });
 
@@ -47,7 +47,7 @@ Template.jobDetailsHeader.events({
         Meteor.call("duplicateJobItem", jobItemId, areaId, HospoHero.handleMethodResult(function () {
           HospoHero.success("Job item has successfully copied!");
         }));
-      }
+      };
     };
     ModalManager.open('areaChooser', {
       onAreaSelected: onAreaSelected()

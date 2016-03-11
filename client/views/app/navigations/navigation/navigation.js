@@ -15,7 +15,7 @@ var menuEntries = [
       return {
         date: HospoHero.dateUtils.getDateStringForRoute(),
         category: 'all'
-      }
+      };
     }
   },
   {
@@ -27,11 +27,11 @@ var menuEntries = [
       {
         title: 'Daily',
         route: 'managerCalendar',
-        permission: 'edit calendar',
+        permission: 'edit roster',
         params: function () {
           return {
             date: HospoHero.dateUtils.shortDateFormat(new Date())
-          }
+          };
         }
       },
       {
@@ -40,7 +40,7 @@ var menuEntries = [
         params: function () {
           return {
             date: HospoHero.dateUtils.getDateStringForRoute()
-          }
+          };
         }
       },
       {
@@ -65,7 +65,7 @@ var menuEntries = [
       return {
         category: 'all',
         status: 'all'
-      }
+      };
     }
   },
   {
@@ -117,7 +117,7 @@ var menuEntries = [
         params: function () {
           return {
             date: HospoHero.dateUtils.getDateStringForRoute()
-          }
+          };
         }
       },
       {
@@ -128,7 +128,7 @@ var menuEntries = [
             category: 'all',
             rangeType: 'yesterday',
             startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
-          }
+          };
         }
       },
       {
@@ -141,6 +141,15 @@ var menuEntries = [
     title: 'Meetings',
     icon: 'fa-users',
     route: 'meetings',
+    params: function () {
+      return {};
+    }
+  },
+  {
+    title: 'Projects',
+    icon: 'fa-file-text-o',
+    route: 'projectsList',
+    activeOnRoutes: ['projectsList', 'createProject', 'projectDetails'],
     params: function () {
       return {};
     }
@@ -162,6 +171,11 @@ var menuEntries = [
         }
       }
     ]
+  },
+  {
+    title: "Chat",
+    icon: 'fa-comment',
+    route: 'chat'
   }
 
 ];

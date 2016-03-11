@@ -64,15 +64,15 @@ Template.shiftItem.helpers({
   },
 
   activeShift: function () {
-    return !!(this.shift && this.shift.status == 'started');
+    return !!(this.shift && this.shift.status === 'started');
   },
 
   open: function () {
-    return this.shiftState == 'open';
+    return this.shiftState === 'open';
   },
 
   past: function () {
-    return this.shiftState == 'past';
+    return this.shiftState === 'past';
   },
 
   formatLocationTime: function (time) {
@@ -87,7 +87,7 @@ Template.shiftItem.helpers({
     var timeFormat = function (value, name) {
       if (value > 0) {
         var result = value + ' ' + name;
-        return value == 1 ? result : result + 's';
+        return value === 1 ? result : result + 's';
       } else {
         return '';
       }

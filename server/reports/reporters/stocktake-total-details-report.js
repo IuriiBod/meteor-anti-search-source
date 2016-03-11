@@ -28,7 +28,7 @@ StocktakeTotalDetailedReport = class {
         _id: 1,
         description: 1
       }
-    }
+    };
   }
 
   _getAllIngredients() {

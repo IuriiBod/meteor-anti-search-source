@@ -7,7 +7,7 @@ Template.areaItemView.helpers({
       activeGeneralArea: currentActiveGeneralArea === itemId,
       activeSpecialArea: currentActiveSpecialArea === itemId,
       inActiveArea: (currentActiveSpecialArea !== itemId) && (currentActiveGeneralArea !== itemId)
-    }
+    };
   }
 });
 

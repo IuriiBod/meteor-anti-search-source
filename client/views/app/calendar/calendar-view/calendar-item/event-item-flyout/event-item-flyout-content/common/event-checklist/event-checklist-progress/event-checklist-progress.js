@@ -5,6 +5,6 @@ Template.eventChecklistProgress.helpers({
     return {
       percent: progress,
       class: progressClass
-    }
+    };
   }
 });

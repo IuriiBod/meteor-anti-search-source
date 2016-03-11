@@ -17,7 +17,7 @@ Template.prepsList.helpers({
     tmpl.jobItemsSearch.setMongoQuery(query);
     return tmpl.jobItemsSearch.searchResult({
       transform: function (matchText, regExp) {
-        return matchText.replace(regExp, "<b>$&</b>")
+        return matchText.replace(regExp, "<b>$&</b>");
       },
       sort: {name: 1}
     });

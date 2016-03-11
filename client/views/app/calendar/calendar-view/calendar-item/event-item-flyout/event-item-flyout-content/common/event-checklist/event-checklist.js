@@ -6,7 +6,7 @@ Template.eventChecklist.helpers({
     return function (itemIndex) {
       return doneCheckListItems &&
         doneCheckListItems.indexOf(itemIndex) > -1;
-    }
+    };
   }
 });
 

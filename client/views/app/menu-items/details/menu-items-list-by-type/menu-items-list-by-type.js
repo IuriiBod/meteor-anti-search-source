@@ -15,7 +15,7 @@ Template.menuItemsListByType.onCreated(function () {
 
     var menuItemId = HospoHero.getParamsFromRoute('_id');
     Meteor.call("editItemOfMenu", menuItemId, query, 'add', HospoHero.handleMethodResult());
-  }
+  };
 });
 
 Template.menuItemsListByType.helpers({
@@ -37,7 +37,7 @@ Template.menuItemsListByType.helpers({
       uiStateId: this.type,
       title: this.type === 'ings' ? 'Ingredients' : 'Prep Jobs',
       buttons: buttons
-    }
+    };
   },
 
   ingredient() {

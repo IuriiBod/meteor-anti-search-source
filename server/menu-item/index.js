@@ -73,7 +73,7 @@ Meteor.methods({
 
     var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('menu');
     subscriberIds.forEach(function (subscription) {
-      if (subscription.subscriber != Meteor.userId()) {
+      if (subscription.subscriber !== Meteor.userId()) {
         notificationSender.sendNotification(subscription.subscriber);
       }
     });
@@ -107,7 +107,7 @@ Meteor.methods({
 
     var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('menu', id);
     subscriberIds.forEach(function (subscription) {
-      if (subscription.subscriber != Meteor.userId()) {
+      if (subscription.subscriber !== Meteor.userId()) {
         notificationSender.sendNotification(subscription.subscriber);
       }
     });
@@ -134,7 +134,7 @@ Meteor.methods({
 
     var subscriberIds = HospoHero.databaseUtils.getSubscriberIds('menu', menuItem._id);
     subscriberIds.forEach(function (subscription) {
-      if (subscription.subscriber != Meteor.userId()) {
+      if (subscription.subscriber !== Meteor.userId()) {
         notificationSender.sendNotification(subscription.subscriber);
       }
       subscription.itemIds = menuItem._id;
@@ -165,8 +165,8 @@ Meteor.methods({
       query.$set[type] = _.map(items, function (item) {
         return item._id === itemObject._id ? itemObject : item;
       });
-    } else {
     }
+
     MenuItems.update({_id: menuId}, query);
   },
 
@@ -204,7 +204,7 @@ Meteor.methods({
 
 var duplicateMenuCategory = function (menuCategoryId, areaId) {
   var category = Categories.findOne({_id: menuCategoryId});
-  if (category.relations.areaId != areaId) {
+  if (category.relations.areaId !== areaId) {
     var existsCategory = Categories.findOne({'relations.areaId': areaId, name: category.name});
     if (existsCategory) {
       menuCategoryId = existsCategory._id;

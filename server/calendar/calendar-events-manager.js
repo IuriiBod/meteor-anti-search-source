@@ -22,7 +22,7 @@ CalendarEventsManager = class CalendarEventsManager {
     CalendarEvents.find({itemId: itemId}).forEach((event) => {
       _.extend(event, updateObject);
       Meteor.call('editCalendarEvent', event);
-    }, {multi: true});
+    });
   }
 
   static remove(removeQuery) {

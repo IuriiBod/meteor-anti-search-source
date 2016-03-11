@@ -20,16 +20,6 @@ var RgbColor = Match.Where(function (color) {
   return /rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)/.test(color);
 });
 
-
-var Email = Match.Where(function (email) {
-  if (_.isString(email) && /.+@(.+){2,}\.(.+){2,}/.test(email)) {
-
-    return true;
-  } else {
-    throw new Meteor.Error('Incorrect email');
-  }
-});
-
 var forNonEmptyString = function (propertyName) {
   return Match.Where(function (value) {
     if (_.isString(value) && value.trim().length > 0) {
@@ -46,7 +36,7 @@ var ShiftId = Match.Where(function (id) {
   if (!Shifts.findOne({_id: id})) {
     throw new Meteor.Error(404, "Shift not found");
   }
-  return true
+  return true;
 });
 
 Namespace('HospoHero.checkers', {
@@ -114,7 +104,15 @@ Namespace('HospoHero.checkers', {
    * Shift exist checker
    */
   ShiftId: ShiftId,
-  Email: Email,
+
+  Email: Match.Where(function (email) {
+    if (_.isString(email) && /.+@(.+){2,}\.(.+){2,}/.test(email)) {
+
+      return true;
+    } else {
+      throw new Meteor.Error('Incorrect email');
+    }
+  }),
 
   /**
    * Parametrized checker for non empty string

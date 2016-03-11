@@ -11,6 +11,6 @@ Template.staffCostPercentagesTr.helpers({
       forecast: forecast,
       actual: actual,
       statusClass: 'text-' + (actual <= forecast ? 'info' : 'danger')
-    }
+    };
   }
 });

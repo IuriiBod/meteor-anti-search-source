@@ -2,8 +2,9 @@ Meteor.methods({
   addUnavailability: function (newUnavailability) {
     check(newUnavailability, HospoHero.checkers.UnavailabilityObject);
 
-    Meteor.users.update({_id: this.userId}, {$push: {unavailabilities: newUnavailability}})
+    Meteor.users.update({_id: this.userId}, {$push: {unavailabilities: newUnavailability}});
   },
+
   removeUnavailability: function (unavailability) {
     check(unavailability, HospoHero.checkers.UnavailabilityObject);
 
@@ -26,6 +27,7 @@ Meteor.methods({
       sendNotification(inserterLeaveRequestId);
     });
   },
+
   removeLeaveRequest: function (leaveRequestId) {
     if (!this.userId) {
       throw new Meteor.Error('Permission denied', 'You are not logged in!');
@@ -34,21 +36,22 @@ Meteor.methods({
 
     var thisLeaveRequest = findLeaveRequest(leaveRequestId);
 
-    if (thisLeaveRequest.notifyManagerId == this.userId || this.userId == thisLeaveRequest.userId) {
+    if (thisLeaveRequest.notifyManagerId === this.userId || this.userId === thisLeaveRequest.userId) {
       LeaveRequests.remove({_id: leaveRequestId});
       Notifications.remove({'meta.leaveRequestId': leaveRequestId});
     } else {
       throw new Meteor.Error('Permission denied', 'You can\'t remove this leave request!');
     }
   },
+
   changeLeaveRequestStatus: function (leaveRequestId, newStatus) {
     var thisLeaveRequest = findLeaveRequest(leaveRequestId);
 
-    if (thisLeaveRequest.status != 'awaiting') {
+    if (thisLeaveRequest.status !== 'awaiting') {
       throw new Meteor.Error("'This request already approved/declined'");
     }
 
-    if (thisLeaveRequest.notifyManagerId != this.userId) {
+    if (thisLeaveRequest.notifyManagerId !== this.userId) {
       throw new Meteor.Error("'You can't approve or decline this request'");
     }
 

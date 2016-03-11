@@ -1,7 +1,14 @@
 //.jshintrc
 {
+  // JSHint Meteor Configuration File
+  // Match the Meteor Style Guide
+  //
+  // By @raix with contributions from @aldeed and @awatson1978
+  // Source https://github.com/raix/Meteor-jshintrc
+  //
+  // See http://jshint.com/docs/ for more details
 
-  "maxerr"        : 50,       // {int} Maximum error before stopping
+  "maxerr"        : 20,       // {int} Maximum error before stopping
 
   // Enforcing
   "bitwise"       : true,     // true: Prohibit bitwise operators (&, |, ^, etc.)
@@ -30,7 +37,7 @@
   "maxdepth"      : false,    // {int} Max depth of nested blocks (within functions)
   "maxstatements" : false,    // {int} Max number statements per function
   "maxcomplexity" : false,    // {int} Max cyclomatic complexity per function
-  "maxlen"        : 100,       // {int} Max number of characters per line
+  "maxlen"        : 135,       // {int} Max number of characters per line
 
   // Relaxing
   "asi"           : false,     // true: Tolerate Automatic Semicolon Insertion (no semicolons)
@@ -81,6 +88,8 @@
   "passfail"      : false,    // true: Stop on first error
   "white"         : false,    // true: Check against strict whitespace and indentation rules
 
+  "esversion": 6, //enable ES6 support
+
   // Custom globals, from http://docs.meteor.com, in the order they appear there
   "globals"       : {
     "Meteor": false,
@@ -101,7 +110,6 @@
     "Email": false,
     "Assets": false,
     "Handlebars": false,      // https://github.com/meteor/meteor/wiki/Handlebars
-    "Spacebars": false,
     "Package": false,
     "App": false, //mobile-config.js
 
@@ -111,7 +119,6 @@
     "Log": false,
     "MongoInternals": false,
     "process": false,
-    "main": false,
     "WebApp": false,
     "WebAppInternals": false,
 
@@ -119,38 +126,48 @@
     "Npm": false,
     "Tinytest": false,
 
-    // Meteor packages
-    "Random": false,                // random
-    "_": false,                     // underscore
-    "$": false,                     // jquery
-    "Router": false,                // iron:router
-    "Iron": false,                  // iron:router
-    "RouteController": false,       // iron:router
-    "sweetAlert": false,            // kevohagan:sweetalert
-    "moment": false,                // momentjs:moment
-    "SearchSource": false,          // meteorhacks:search-source
-    "FastRender": false,            // meteorhacks:fast-render
-    "ServiceConfiguration": false,  // service-configuration
-    "Autocomplete": false,          // mizzao:autocomplete
-    "Autolinker": false,            // konecty:autolinker
-    "IronRouterAutoscroll": false,  // okgrow:iron-router-autoscroll
-    "IntercomSettings": false,      // percolate:intercom
-    "IntercomHash": false,          // percolate:intercom
-    "StaleSessionConfigs": false,   // hospohero:stale-session
-    "StaleSession": false,          // hospohero:stale-session
-    "MeteorSettings": false,        // ogourment:settings
-    "Async": false,                 // meteorhacks:async
-    "AccountsTemplates": false,     // useraccounts:core
-    "ActiveRoute": false,           // zimme:active-route
-    "HTML": false,                  // htmljs:HTML
-    "T9n": false,                   // softwarerero:accounts-t9n
+    // common Meteor packages
+    "Random": false,
+    "_": false,               // Underscore.js
+    "$": false,               // jQuery
+    "Router": false,          // iron-router
+    "ServiceConfiguration": false,
 
-    // Collections
+    //app's packages
+    "logger": true,           //winston logger
+    "Migrations": false,       //migrations package
+    "moment": false,
+    "Namespace": false,
+    "SyncedCron": false,
+    "Roles": true,
+    "Push": false,            //raix:push
+    "AntiSearchSource": true,
+    "MenuItemsCostCache": true,
+    "through": true,
+    "gcloud": true,
+    "SunCalc": true,
+    "GooglePrediction": false,
+    "OriginalHandlebars": false,
+    "sweetAlert": false,
+    "IntercomSettings": false,
+    "FlyoutManager": false,
+    "UIStates": false,
+    "filepicker": false,
+    "ModalManager": false,
+    "TimezonePicker": false,
+    "ReactiveArray": false,
+    "StaleSession": false,
+    "AccountsTemplates": false,
+    "Autolinker": false,
+    "Modal": false,
+    "Conversation": false,
+
+    //collections
     "MenuItems": true,
     "Ingredients": true,
     "JobItems": true,
     "Shifts": true,
-    "DailySales": true,
+    "ManagerNotes": true,
     "Comments": true,
     "Notifications": true,
     "Subscriptions": true,
@@ -159,15 +176,53 @@
     "Sections": true,
     "GeneralAreas": true,
     "SpecialAreas": true,
-    "Posts": true,
+    "NewsFeeds": true,
     "StocktakeMain": true,
     "Stocktakes": true,
     "StockOrders": true,
     "OrderReceipts": true,
     "Suppliers": true,
+    "Organizations": true,
+    "Locations": true,
+    "Areas": true,
+    "WeatherForecast": true,
+    "DailySales": true,
+    "PosMenuItems": true,
+    "LeaveRequests": true,
+    "CalendarEvents": true,
+    "TaskList": true,
+    "Meetings": true,
+    "RelatedItems": true,
+    "Files": true,
+    "Projects": true,
 
-    // Other global variables
-    "logger": true,
-    "HospoHero": true
+    //misc
+    "HospoHero": true,
+    "NotificationSender": true,
+    "TimeRangeQueryBuilder": true,
+
+    //should be removed from global scope
+    "CalendarRecurringJobsManager": true,
+    "GoogleCloud": true,
+    "WeatherManager": true,
+    "WorldWeather": true,
+    "GooglePredictionApi": true,
+    "ActualSalesImporter": true,
+    "DataVector": true,
+    "Revel": true,
+    "CalendarEventsManager": true,
+    "StocktakesReporter": true,
+    "StocktakeTotalDetailedReport": true,
+    "ActualCostOfGoodsReporter": true,
+    "ExpectedCostOfGoodsReporter": true,
+    "OrdersReporter": true,
+    "StaffCostCalculator": true,
+    "DocumentCheckerHelper": true,
+
+    //temporal globals
+    "RawOrders": true,
+    "hardResetUserPassword": true,
+    "updateTrainingDataForLocation": true,
+    "updateForecastForLocation": true
   }
 }

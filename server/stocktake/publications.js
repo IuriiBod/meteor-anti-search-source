@@ -49,7 +49,7 @@ Meteor.publishComposite('allOrderReceipts', function (areaId) {
         'relations.areaId': areaId
       }, {
         sort: {"date": -1}
-      })
+      });
     },
     children: [
       {

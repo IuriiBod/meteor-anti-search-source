@@ -40,7 +40,9 @@ Template.managerNoteWidget.helpers({
 
     return (text) => {
 
-      if (text === tmpl.textForEmptyEditor) return;
+      if (text === tmpl.textForEmptyEditor) {
+        return;
+      }
 
       let note = tmpl.note();
       note.text = text;
@@ -54,7 +56,7 @@ Template.managerNoteWidget.helpers({
       }
 
       Meteor.call('upsertManagerNote', note);
-    }
+    };
   },
   readOnly () {
     return !canUserEditRoster();

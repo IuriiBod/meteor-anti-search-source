@@ -9,7 +9,7 @@ Template.locationSettings.onCreated(function () {
 
   this.location = function () {
     return Locations.findOne({_id: this.data.locationId});
-  }
+  };
 });
 
 Template.locationSettings.onRendered(function () {
@@ -70,7 +70,7 @@ Template.locationSettings.events({
     }, function (inputValue) {
       if (inputValue === '') {
         sweetAlert.showInputError('You need to write name of location!');
-        return false
+        return false;
       }
       if (inputValue !== nameOfLocation) {
         sweetAlert.showInputError("It isn't name of current location!");

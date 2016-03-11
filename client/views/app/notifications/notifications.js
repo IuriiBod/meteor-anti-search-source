@@ -15,7 +15,7 @@ Template.notifiFlyout.helpers({
 });
 
 Template.notifiFlyout.events({
-  'click .markAllAsRead': function (event, tmpl) {
+  'click .markAllAsRead': function (event) {
     event.preventDefault();
 
     var notificationsCursor = Notifications.find({read: false, to: Meteor.userId()});
@@ -24,9 +24,9 @@ Template.notifiFlyout.events({
     });
   },
 
-  'click .notifications-list a[data-link-type="navigation"]': function (event, tmpl) {
+  'click .notifications-list a[data-link-type="navigation"]': function (event) {
     //close flyout if notification navigation link was clicked (UX improvement for mobile)
     let notificationsFlyout = FlyoutManager.getInstanceByElement(event.target);
-    notificationsFlyout.close()
+    notificationsFlyout.close();
   }
 });

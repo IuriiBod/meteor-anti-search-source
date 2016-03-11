@@ -9,14 +9,14 @@ Template.orderingStatus.onCreated(function () {
 
   this.getDeliveryDate = function () {
     var receipt = this.getCurrentReceipt();
-    return receipt && receipt.expectedDeliveryDate && new Date(receipt.expectedDeliveryDate)
+    return receipt && receipt.expectedDeliveryDate && new Date(receipt.expectedDeliveryDate);
   };
 });
 
 Template.orderingStatus.onRendered(function () {
   this.generateReceipts = function (orderType) {
     var supplierId = this.data.activeSupplierId;
-    if (orderType == 'emailed') {
+    if (orderType === 'emailed') {
       ModalManager.open('composeStocktakeOrderingEmail', {
         stocktakeMainId: this.data.stocktakeMainId,
         supplier: Suppliers.findOne({_id: supplierId})
@@ -35,7 +35,7 @@ Template.orderingStatus.onRendered(function () {
 
 Template.orderingStatus.helpers({
   receipt: function () {
-    return Template.instance().getCurrentReceipt()
+    return Template.instance().getCurrentReceipt();
   },
 
   deliveryDate: function () {
@@ -43,7 +43,7 @@ Template.orderingStatus.helpers({
   },
 
   orderSentDetails: function (receipt) {
-    return receipt && receipt.orderedThrough.through == "emailed" && "Email sent " || "Phoned " +
+    return receipt && receipt.orderedThrough.through === "emailed" && "Email sent " || "Phoned " +
       moment(receipt.date).format("MMMM Do YYYY, h:mm:ss a");
   }
 });

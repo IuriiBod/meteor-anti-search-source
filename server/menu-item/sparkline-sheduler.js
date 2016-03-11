@@ -1,4 +1,4 @@
-var menuItemsStatsInCurrentArea = function (areaId) {
+let menuItemsStatsInCurrentArea = function (areaId) {
   var yesterdayDate = moment().subtract(1, 'days');
   var twoWeeksAgoDate = moment(yesterdayDate).subtract(14, 'days');
   var dateInterval = TimeRangeQueryBuilder.forInterval(twoWeeksAgoDate, yesterdayDate);
@@ -31,7 +31,7 @@ var menuItemsStatsInCurrentArea = function (areaId) {
   return menuItemsStats;
 };
 
-updateMenuItemsRank = function (location) {
+let updateMenuItemsRank = function (location) {
   Areas.find({locationId: location._id}).forEach(function (area) {
     var menuItemsStats = menuItemsStatsInCurrentArea(area._id);
 
@@ -62,9 +62,9 @@ updateMenuItemsRank = function (location) {
 };
 
 if (HospoHero.isDevelopmentMode()) {
-  HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function (location) {
+  HospoHero.LocationScheduler.addDailyJob('Analyze Menu Items rank for sparkline', function () {
     return 4;
   }, function (location) {
     updateMenuItemsRank(location);
-  })
+  });
 }

@@ -1,23 +1,18 @@
 Template.usersSearch.onCreated(function () {
-  let selector = {
-    _id: {$ne: Meteor.userId()},
-    isActive: true
-  };
+  this.users = new ReactiveArray(this.data.selectedUsers);
 
   this.searchSource = this.AntiSearchSource({
     collection: 'users',
     fields: ['profile.firstname', 'profile.lastname', 'emails.address'],
     searchMode: 'global',
-    mongoQuery: selector,
     limit: 15
   });
 
   this.autorun(() => {
-    Template.currentData();
-
+    this.users.depend();
     this.searchSource.setMongoQuery({
       _id: {
-        $nin: this.data.selectedUsers
+        $nin: this.users.array()
       }
     });
 
@@ -50,6 +45,7 @@ Template.usersSearch.events({
     if (_.isFunction(tmpl.data.onUserSelect)) {
       tmpl.$(".search-user-name").val('').focus();
       tmpl.data.onUserSelect(this.user._id);
+      tmpl.users.push(this.user._id);
     }
   }
 });

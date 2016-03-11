@@ -6,7 +6,7 @@ Template.stockReport.onCreated(function () {
     return {
       date: currentStocktake.date.replace(/\//g, '-'),
       stocktakeMainId: currentStocktake.stocktakeMainId
-    }
+    };
   };
 
   this.uploadNextStockReport = () => {

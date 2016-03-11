@@ -35,7 +35,7 @@ Template.createMeeting.helpers({
         tmpl.startTime.set(startTime);
         tmpl.endTime.set(endTime);
       }
-    }
+    };
   },
 
   addNewAttendee () {
@@ -52,7 +52,7 @@ Template.createMeeting.helpers({
       let attendees = tmpl.attendees.get();
       attendees.push(userId);
       tmpl.attendees.set(attendees);
-    }
+    };
   },
 
   onUserRemove () {
@@ -61,7 +61,7 @@ Template.createMeeting.helpers({
       let attendees = tmpl.attendees.get();
       attendees.splice(attendees.indexOf(userId), 1);
       tmpl.attendees.set(attendees);
-    }
+    };
   }
 });
 

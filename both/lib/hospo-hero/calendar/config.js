@@ -28,7 +28,7 @@ Namespace('HospoHero.calendar', {
           frequency: {
             $exists: true
           }
-        }
+        };
       },
       eventSettings: {
         titleField: 'name',
@@ -37,7 +37,7 @@ Namespace('HospoHero.calendar', {
         textColor: '#FFF',
         flyoutTemplate: 'eventRecurringJob'
       },
-      manualAllocating: false,
+      manualAllocating: true,
       duration: {
         field: 'activeTime',
         timeUnits: 'seconds'
@@ -52,7 +52,7 @@ Namespace('HospoHero.calendar', {
           frequency: {
             $exists: false
           }
-        }
+        };
       },
       eventSettings: {
         titleField: 'name',
@@ -68,7 +68,7 @@ Namespace('HospoHero.calendar', {
       }
     },
 
-    'task': {
+    task: {
       title: 'Task',
       collection: 'taskList',
       queryOptions: function (date, calendarType, userId) {
@@ -76,7 +76,7 @@ Namespace('HospoHero.calendar', {
         var currentDate = TimeRangeQueryBuilder[queryType](date);
 
         var placedTasks = CalendarEvents.find({startTime: currentDate}).map(function (event) {
-          return event.itemId
+          return event.itemId;
         });
 
         var query = HospoHero.misc.getTasksQuery(userId);
@@ -101,6 +101,42 @@ Namespace('HospoHero.calendar', {
         field: 'duration',
         timeUnits: 'minutes'
       }
+    },
+
+    meeting: {
+      title: 'Meeting',
+      collection: 'meetings',
+      queryOptions: function (date, calendarType, userId) {
+        return {
+          attendees: userId,
+          accepted: userId
+        };
+      },
+      eventSettings: {
+        titleField: 'title',
+        backgroundColor: '#b35cd6',
+        textColor: '#FFF',
+        flyoutTemplate: 'eventMeeting'
+      },
+      manualAllocating: false
+    },
+
+    project: {
+      title: 'Project',
+      collection: 'projects',
+      queryOptions: function (date, calendarType, userId) {
+        return {
+          lead: userId,
+          team: userId
+        };
+      },
+      eventSettings: {
+        titleField: 'title',
+        backgroundColor: '#F1B755',
+        textColor: '#FFF',
+        flyoutTemplate: 'eventProject'
+      },
+      manualAllocating: false
     }
   }
 });
