@@ -1,14 +1,14 @@
 Template.submitEditJobItem.onCreated(function () {
   var jobItem = this.data.jobItem;
 
-  this.preselectedJobType = jobItem.type;
+  this.preselectedJobType = jobItem ? jobItem.type : undefined;
 
   // Write data into reactive var
   this.selectedJobTypeId = new ReactiveVar(this.preselectedJobType || JobTypes.findOne()._id);
-  this.selectedFrequency = new ReactiveVar(jobItem.frequency || 'daily');
-  this.addedIngredientsToThisJob = new ReactiveVar(jobItem.ingredients || []);
-  this.repeatAt = new ReactiveVar(jobItem.repeatAt || moment().hours(8).minutes(0).toDate());
-  this.checklistItems = new ReactiveVar(jobItem.checklist || []);
+  this.selectedFrequency = new ReactiveVar((jobItem && jobItem.frequency) || 'daily');
+  this.addedIngredientsToThisJob = new ReactiveVar((jobItem && jobItem.ingredients) || []);
+  this.repeatAt = new ReactiveVar((jobItem && jobItem.repeatAt) || moment().hours(8).minutes(0).toDate());
+  this.checklistItems = new ReactiveVar((jobItem && jobItem.checklist) || []);
 
   this.isSelectedJobType = function (typeName) {
     var selectedJobType = JobTypes.findOne({_id: this.selectedJobTypeId.get()});
@@ -106,12 +106,12 @@ Template.submitEditJobItem.helpers({
   },
 
   startsOn: function () {
-    var startsOn = moment(this.jobItem.startsOn) || moment();
+    var startsOn = this.jobItem ? moment(this.jobItem.startsOn) : moment();
     return HospoHero.dateUtils.shortDateFormat(startsOn);
   },
   endsOn: function () {
     var endsOn = moment().add(1, 'days');
-    if (this.jobItem.endsOn) {
+    if (this.jobItem && this.jobItem.endsOn) {
       endsOn = moment(this.jobItem.endsOn.lastDate) ||
           moment(this.jobItem.startsOn).add(1, 'days');
     }
@@ -136,8 +136,8 @@ Template.submitEditJobItem.helpers({
   },
 
   activeTime: function () {
-    var activeTime = this.jobItem.activeTime;
-    return activeTime ? activeTime / 60 : false;
+    return this.jobItem && this.jobItem.activeTime ?
+      this.jobItem.activeTime / 60 : false;
   }
 });
 

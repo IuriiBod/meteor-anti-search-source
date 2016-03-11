@@ -1,12 +1,24 @@
 <template name="submitEditJobItem">
   <!-- Page heading -->
-  {{#unless isPlacedInFlyout}}
+  {{#if isPlacedInFlyout}}
+    <div class="flyout-header">
+      {{> CloseFlyoutButton}}
+        <div class="col-xs-11 col-xs-offset-1">
+          {{#if ingredient}}
+            {{#if hasPermissionInAreaTo 'edit jobj'}} Edit {{/if}}
+          {{else}}
+              Add
+          {{/if}}
+            Job
+        </div>
+    </div>
+  {{else}}
     {{#if isEditMode}}
       {{> pageHeading title="Edit Job" category="Jobs" name="jobedit" subCategory=jobItem.name id=jobItem._id}}
     {{else}}
       {{> pageHeading title="Submit Job" category="Job" name="jobsubmit"}}
     {{/if}}
-  {{/unless}}
+  {{/if}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
@@ -151,12 +163,12 @@
                     <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                       {{#each week}}
                         <div class="checkbox">
-                          {{#if checked}}
-                            <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}" checked>
-                          {{else }}
-                            <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}">
-                          {{/if}}
                           <label for="{{day}}">
+                            {{#if checked}}
+                              <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}" checked>
+                            {{else }}
+                              <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}">
+                            {{/if}}
                             {{day}}
                           </label>
                         </div>
@@ -195,31 +207,34 @@
                   <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
 
                     <div class="radio">
-                      {{#if isEditMode}}
-                        {{#if jobItem.endsOn.on}}
-                          <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
-                                 value="never" checked>
+                      <label for="radio">
+                        {{#if isEditMode}}
+                          {{#if jobItem.endsOn.on}}
+                            <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                   value="never" checked>
+                          {{else}}
+                            <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                   value="never">
+                          {{/if}}
                         {{else}}
                           <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
-                                 value="never">
+                                 value="never" checked>
                         {{/if}}
-                      {{else}}
-                        <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="never" checked>
-                      {{/if}}
 
-                      <label for="radio">Never</label>
+                        Never
+                      </label>
                     </div>
 
                     <div class="radio">
-                      {{#if jobItem.endsOn.after}}
-                        <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="occurrences" checked>
-                      {{else}}
-                        <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="occurrences">
-                      {{/if}}
                       <label for="radio">
+                        {{#if jobItem.endsOn.after}}
+                          <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="occurrences" checked>
+                        {{else}}
+                          <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="occurrences">
+                        {{/if}}
+
                         After
                         <input type="number" name="occurrences" class="occurrences-number-input"
                                value="{{jobItem.endsOn.after}}">
@@ -228,14 +243,15 @@
                     </div>
 
                     <div class="radio">
-                      {{#if jobItem.endsOn.lastDate}}
-                        <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="on-date" checked>
-                      {{else}}
-                        <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="on-date">
-                      {{/if}}
                       <label for="radio">
+                        {{#if jobItem.endsOn.lastDate}}
+                          <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="on-date" checked>
+                        {{else}}
+                          <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="on-date">
+                        {{/if}}
+
                         On {{> reactiveDateTimePicker selector="ends-on-date-picker" value=endsOn}}
                       </label>
                     </div>
@@ -314,7 +330,9 @@
               <!-- Buttons -->
               <div class="row">
                 <div class="{{#if isPlacedInFlyout}}col-sm-10{{else}}col-sm-4 col-sm-offset-2{{/if}}">
-                  <a href="{{pathFor route="jobItemsMaster"}}" class="btn btn-white" type="button">Cancel</a>
+                 {{#unless isPlacedInFlyout }}
+                    <a href="{{pathFor route="jobItemsMaster"}}" class="btn btn-white" type="button">Cancel</a>
+                 {{/unless}}
                   <button class="btn btn-primary submit-button" type="submit">Save changes</button>
                 </div>
               </div>
