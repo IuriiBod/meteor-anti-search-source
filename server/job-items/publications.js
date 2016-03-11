@@ -1,36 +1,37 @@
-Meteor.publish('jobItems', function (ids, areaId, status){
+Meteor.publish('jobItemsInArea', function (areaId, status){
   check(areaId, HospoHero.checkers.MongoId);
+  check(status, Match.Optional(HospoHero.checkers.status));
+
   var permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
   if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'view jobs')) {
+
     var query = {
       'relations.areaId': areaId
     };
 
-    if (ids && ids.length) {
-      check(ids, [HospoHero.checkers.MongoId]);
-      query._id = {$in: ids};
-    }
-
     //if status isn't defined when function called status = {}
     if (status && !_.isEmpty(status)) {
-      check(status, Match.Optional(HospoHero.checkers.status));
       query.status = status;
     }
-
     return JobItems.find(query, {sort: {'name': 1}});
+
   } else {
-    logger.error('Permission denied: publish [jobItems] ', {areaId: areaId, userId: this.userId});
+    logger.error('Permission denied: publish [jobItemsInArea] ', {areaId: areaId, userId: this.userId});
     this.error(new Meteor.Error('Access denied. Not enough permissions.'));
   }
 });
 
-Meteor.publishComposite('jobItem', function (id,areaId) {
+Meteor.publishComposite('jobItem', function (id) {
   return {
     find: function () {
-      check(id, HospoHero.checkers.MongoId);
-      check(areaId, HospoHero.checkers.MongoId);
+      check(id, HospoHero.checkers.MongoId)
+
+      var jobItem = JobItems.findOne({_id:id});
       var permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
-      if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'view jobs')) {
+
+      if (permissionChecker && permissionChecker.
+              hasPermissionInArea(jobItem  && jobItem.relations
+                  ? jobItem.relations.areaId : '', 'view jobs')) {
         return JobItems.find({_id: id});
       } else {
         logger.error('Permission denied: publish [jobItem] ', {areaId: areaId, userId: this.userId});
