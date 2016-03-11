@@ -2,8 +2,9 @@ Meteor.publishComposite('newsfeeds', {
   find: function () {
     if (this.userId) {
       logger.info("NewsFeeds published");
+      let currentArea = HospoHero.getCurrentArea(this.userId);
       return NewsFeeds.find({
-        "relations.organizationId": HospoHero.isInOrganization(this.userId)
+        "relations.organizationId": currentArea.organizationId
       }, {
         sort: {"createdOn": -1}
       });

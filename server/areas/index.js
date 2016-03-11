@@ -1,13 +1,21 @@
+var hasUserPermissionInArea = function (areaId, permission) {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, permission);
+};
+
 Meteor.methods({
   createArea: function (areaInfo) {
     var defaultAreaProperties = {
       createdAt: Date.now(),
       inactivityTimeout: 600000
     };
+
     var newAreaDocument = _.extend(areaInfo, defaultAreaProperties);
+
     check(newAreaDocument, HospoHero.checkers.AreaDocument);
 
-    if (!HospoHero.isOrganizationOwner()) {
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+    if (!permissionChecker.isOrganizationOwner(newAreaDocument.organizationId)) {
       throw new Meteor.Error(403, 'User not permitted to create area');
     }
 
@@ -19,8 +27,7 @@ Meteor.methods({
   editArea: function (updatedArea) {
     check(updatedArea, HospoHero.checkers.AreaDocument);
 
-    var userId = Meteor.userId();
-    if (!HospoHero.canUser('edit areas', userId)) {
+    if (!hasUserPermissionInArea(updatedArea._id, 'edit areas')) {
       logger.error(403, 'User not permitted to edit areas');
     }
 
@@ -29,35 +36,33 @@ Meteor.methods({
   },
 
   deleteArea: function (areaId) {
-    if (!HospoHero.isOrganizationOwner()
-      && !HospoHero.isManager(Meteor.userId(), areaId)) {
+    check(areaId, HospoHero.checkers.MongoId);
+
+    if (!hasUserPermissionInArea(areaId, 'edit areas')) {
       logger.error('User not permitted to delete this area');
       throw new Meteor.Error(403, 'User not permitted to delete this area');
     }
 
     check(areaId, HospoHero.checkers.MongoId);
 
+    let getDocumentId = document => document._id;
 
     //updating user in Meteor.users collection requires user id
-    var usersIdsRelatedToArea = Meteor.users
-      .find({'relations.areaIds': areaId}, {fields: {_id: 1}})
-      .map(function (user) {
-        return user._id
-      });
+    var areaMembersIds = Meteor.users.find({
+      'relations.areaIds': areaId
+    }, {
+      fields: {_id: 1}
+    }).map(getDocumentId);
 
     Meteor.users.update({
-      _id: {$in: usersIdsRelatedToArea}
+      _id: {$in: areaMembersIds}
     }, {
       $pull: {'relations.areaIds': areaId}
     }, {
       multi: true
     });
 
-    var usersIdsWithCurrentAreaId = Meteor.users
-      .find({currentAreaId: areaId})
-      .map(function (user) {
-        return user._id
-      });
+    var usersIdsWithCurrentAreaId = Meteor.users.find({currentAreaId: areaId}).map(getDocumentId);
 
     Meteor.users.update({
       _id: {$in: usersIdsWithCurrentAreaId}
@@ -67,8 +72,13 @@ Meteor.methods({
       multi: true
     });
 
+    //todo: implement removing of prediction models in area
+    //var googlePrediction = new GooglePredictionApi(locationId);
+    //googlePrediction.removePredictionModel();
+
     var removeDocumentsRelatedToArea = function (areaId) {
-      var globals = Function('return this')();
+      //this eval is safe
+      var globals = Function('return this')();// jshint ignore:line
       for (var globalObject in globals) {
         if (globals[globalObject] instanceof Meteor.Collection) {
           globals[globalObject].remove({'relations.areaId': areaId});
@@ -97,7 +107,7 @@ Meteor.methods({
       roleId: mongoIdChecker
     });
 
-    if (!HospoHero.canUser('invite users')) {
+    if (!hasUserPermissionInArea(addedUserInfo.areaId, 'invite users')) {
       throw new Meteor.Error(403, 'User not permitted to add users to area');
     }
 
@@ -137,12 +147,12 @@ Meteor.methods({
   },
 
   removeUserFromArea: function (userId, areaId) {
-    if (!HospoHero.canUser('invite users')) {
-      throw new Meteor.Error(403, 'User not permitted to remove users from area');
-    }
-
     check(userId, HospoHero.checkers.MongoId);
     check(areaId, HospoHero.checkers.MongoId);
+
+    if (!hasUserPermissionInArea(areaId, 'invite users')) {
+      throw new Meteor.Error(403, 'User not permitted to remove users from area');
+    }
 
     let userToRemove = Meteor.users.findOne({_id: userId});
 

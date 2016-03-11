@@ -8,25 +8,25 @@ var processMethodResult = function (err, res) {
 
 
 Template.forceForecast.events({
-  'click .import-raw': function (event, tmpl) {
+  'click .import-raw': function () {
     if (confirm('Are you sure?')) {
-      Meteor.call('importRawOrders', processMethodResult)
+      Meteor.call('importRawOrders', processMethodResult);
     }
   },
 
-  'click .update-prediction': function (event, tmpl) {
-    Meteor.call('updatePredictionModel', processMethodResult)
+  'click .update-prediction': function () {
+    Meteor.call('updatePredictionModel', processMethodResult);
   },
 
-  'click .get-status': function (event, tmpl) {
-    Meteor.call('getPredictionModelStatus', processMethodResult)
+  'click .get-status': function () {
+    Meteor.call('getPredictionModelStatus', processMethodResult);
   },
 
-  'click .update-forecast': function (event, tmpl) {
-    Meteor.call('updatePredictions', processMethodResult)
+  'click .update-forecast': function () {
+    Meteor.call('updatePredictions', processMethodResult);
   },
 
-  'click .reset-data': function (event, tmpl) {
+  'click .reset-data': function () {
     if (confirm('Resetting forecast data... \nAre you sure?')) {
       Meteor.call('resetForecastData', processMethodResult);
     }

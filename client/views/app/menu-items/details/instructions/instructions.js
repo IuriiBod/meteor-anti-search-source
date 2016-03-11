@@ -9,7 +9,7 @@ Template.menuItemInstructions.helpers({
       let menuItem = MenuItems.findOne({_id: self._id});
       menuItem.instructions = instructions;
       Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
-    }
+    };
   },
 
   instructionsSettings() {
@@ -18,10 +18,11 @@ Template.menuItemInstructions.helpers({
       uiStateId: 'instructions',
       title: 'Instructions',
       contentPadding: '20px'
-    }
+    };
   },
 
   readOnly() {
-    return !HospoHero.canUser('edit menus', Meteor.userId());
+    const checker = new HospoHero.security.PermissionChecker();
+    return !checker.hasPermissionInArea(null, 'edit menus');
   }
 });

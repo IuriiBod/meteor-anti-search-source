@@ -16,7 +16,7 @@ Template.teamHoursMainView.helpers({
     var tmpl = Template.instance();
     return function (searchText) {
       tmpl.set('searchText', searchText);
-    }
+    };
   },
   users: function (searchText) {
     var query = {

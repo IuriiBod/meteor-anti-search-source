@@ -4,7 +4,9 @@ Template.collapsibleElement.onCreated(function () {
 
 Template.collapsibleElement.helpers({
   collapsed() {
-    return Template.instance().uiStatesManager.getState(this.settings.uiStateId);
+    let uiStatesManager = Template.instance().uiStatesManager;
+    //by default panel should be not collapsed
+    return uiStatesManager.getState(this.settings.uiStateId, true);
   },
 
   panelBodyClasses(collapsed) {

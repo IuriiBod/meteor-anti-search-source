@@ -11,7 +11,6 @@
 #bash
 db_remote_restore.sh
 backup_dump.sh
-build.sh
 run-mobile.sh
 create-template.sh
 
@@ -20,4 +19,3 @@ packages/modals
 packages/anti-search-source
 packages/flyouts
 packages/meteor-google-prediction
-

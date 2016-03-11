@@ -15,22 +15,32 @@ var menuEntries = [
       return {
         date: HospoHero.dateUtils.getDateStringForRoute(),
         category: 'all'
-      }
+      };
     }
   },
   {
-    title: 'Roster',
+    title: 'Schedules',
     icon: 'fa-calendar-o',
     permission: 'view roster',
-    activeOnRoutes: ['weeklyRoster', 'templateWeeklyRoster'],
+    activeOnRoutes: ['managerCalendar', 'weeklyRoster', 'templateWeeklyRoster'],
     subMenuEntries: [
+      {
+        title: 'Daily',
+        route: 'managerCalendar',
+        permission: 'edit roster',
+        params: function () {
+          return {
+            date: HospoHero.dateUtils.shortDateFormat(new Date())
+          };
+        }
+      },
       {
         title: 'Weekly',
         route: 'weeklyRoster',
         params: function () {
           return {
             date: HospoHero.dateUtils.getDateStringForRoute()
-          }
+          };
         }
       },
       {
@@ -55,7 +65,7 @@ var menuEntries = [
       return {
         category: 'all',
         status: 'all'
-      }
+      };
     }
   },
   {
@@ -107,7 +117,7 @@ var menuEntries = [
         params: function () {
           return {
             date: HospoHero.dateUtils.getDateStringForRoute()
-          }
+          };
         }
       },
       {
@@ -118,7 +128,7 @@ var menuEntries = [
             category: 'all',
             rangeType: 'yesterday',
             startDate: HospoHero.dateUtils.shortDateFormat(moment().subtract(1, 'days'))
-          }
+          };
         }
       },
       {
@@ -128,14 +138,20 @@ var menuEntries = [
     ]
   },
   {
-    title: 'Manger Calendar',
-    icon: 'fa-calendar',
-    route: 'managerCalendar',
-    permission: 'edit calendar',
+    title: 'Meetings',
+    icon: 'fa-users',
+    route: 'meetings',
     params: function () {
-      return {
-        date: HospoHero.dateUtils.shortDateFormat(new Date())
-      }
+      return {};
+    }
+  },
+  {
+    title: 'Projects',
+    icon: 'fa-file-text-o',
+    route: 'projectsList',
+    activeOnRoutes: ['projectsList', 'createProject', 'projectDetails'],
+    params: function () {
+      return {};
     }
   },
   {
@@ -155,6 +171,11 @@ var menuEntries = [
         }
       }
     ]
+  },
+  {
+    title: "Chat",
+    icon: 'fa-comment',
+    route: 'chat'
   }
 
 ];
@@ -162,6 +183,10 @@ var menuEntries = [
 Template.navigation.helpers({
   dashboardEntry: function () {
     return dashboardEntry;
+  },
+
+  isUserInAnyOrganization: function () {
+    return HospoHero.security.isUserInAnyOrganization();
   },
 
   menuEntries: function () {

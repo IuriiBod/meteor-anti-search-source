@@ -13,11 +13,14 @@ var headingComponentsMap = {
   stocktakeList: 'stocktakeHeader',
   suppliersListHeader: 'suppliersListHeader',
   posMenuLinking: 'posMenuLinkingHeader',
-  taskList: 'taskListHeader'
+  taskList: 'taskListHeader',
+  meetings: 'meetingsHeader',
+  projects: 'projectsListHeader',
+  profile: 'profileHeader'
 };
 
 Template.pageHeading.onCreated(function () {
-
+  this.subscribe('todayTasks');
 });
 
 Template.pageHeading.helpers({
@@ -36,7 +39,7 @@ Template.pageHeading.helpers({
   },
   title: function () {
     var title = this.title;
-    if (Router.current().params.type == "archive" || Router.current().params.status == "archived") {
+    if (Router.current().params.type === "archive" || Router.current().params.status === "archived") {
       title = "Archived " + title;
     }
     return title;

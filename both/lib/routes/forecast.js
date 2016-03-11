@@ -6,7 +6,6 @@ Router.route('salesPrediction', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     if (currentAreaId) {
       return [
-        this.subscribe('organizationInfo'),
         this.subscribe('areaMenuItems', currentAreaId, this.params.category),
         this.subscribe('allCategories', currentAreaId),
         this.subscribe('weatherForecast', weekRange, currentAreaId),
@@ -24,10 +23,7 @@ Router.route('salesPrediction', {
 //temporal route
 Router.route('forceForecast', {
   path: '/force',
-  template: 'forceForecast',
-  waitOn: function () {
-    return this.subscribe('organizationInfo');
-  }
+  template: 'forceForecast'
 });
 
 
@@ -39,11 +35,6 @@ Router.route('posSettings', {
     return [
       Meteor.subscribe('menuItemsForPosLinking', currentAreaId),
       Meteor.subscribe('posMenuItems', currentAreaId)
-    ]
-  },
-  data: function () {
-    if (!Meteor.userId() || !HospoHero.isManager()) {
-      Router.go('/');
-    }
+    ];
   }
 });

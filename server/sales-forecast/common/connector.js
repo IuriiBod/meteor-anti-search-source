@@ -8,7 +8,7 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
 
   this._client = new GooglePrediction(authOptions);
   this._locationId = locationId;
-  this._bucketName = cloudSettings.BUCKET
+  this._bucketName = cloudSettings.BUCKET;
 };
 
 
@@ -55,8 +55,8 @@ GooglePredictionApi.prototype.updatePredictionModel = function (menuItemsQuery, 
     //find out if we need to update prediction model (every half year)
     var lastForecastModelUpdateDate = menuItem.lastForecastModelUpdateDate || false;
 
-    var needToUpdateModel = !lastForecastModelUpdateDate
-      || moment(lastForecastModelUpdateDate).add(182, 'day').isBefore(moment());
+    var needToUpdateModel = !lastForecastModelUpdateDate ||
+      moment(lastForecastModelUpdateDate).add(182, 'day').isBefore(moment());
 
     if (needToUpdateModel || isForcedUpdate) {
       self._buildPredictionModelForMenuItem(menuItem);
@@ -94,7 +94,8 @@ GooglePredictionApi.prototype.makePrediction = function (menuItemId, inputData) 
 
 /**
  * The current status of the training job. This can be one of following:
- * RUNNING - Only returned when retraining a model; for a new model, a trainedmodels.get call will return HTTP 200 before training is complete.
+ * RUNNING - Only returned when retraining a model; for a new model, a
+ * trainedmodels.get call will return HTTP 200 before training is complete.
  * DONE
  * ERROR
  * ERROR: NO VALID DATA INSTANCES

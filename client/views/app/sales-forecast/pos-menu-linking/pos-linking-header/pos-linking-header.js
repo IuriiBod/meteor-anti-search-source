@@ -5,10 +5,10 @@ Template.posMenuLinkingHeader.helpers({
 });
 
 Template.posMenuLinkingHeader.events({
-  'click .update-pos-menu-items-button': function (event, tmpl) {
+  'click .update-pos-menu-items-button': function () {
     Meteor.call('updatePosMenuItems', HospoHero.handleMethodResult());
   },
-  'click .sync-sales-button': function (event, tmpl) {
+  'click .sync-sales-button': function () {
     Meteor.call('synchronizeActualSales', HospoHero.handleMethodResult());
   }
 });

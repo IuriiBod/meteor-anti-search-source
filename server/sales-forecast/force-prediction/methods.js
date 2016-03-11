@@ -1,5 +1,9 @@
+/*jshint camelcase: false */
+
 var checkOrganizationOwner = function (userId) {
-  if (!HospoHero.isOrganizationOwner(userId)) {
+  let currentOrganizationId = HospoHero.getOrganizationIdBasedOnCurrentArea(userId);
+  let permissionChecker = new HospoHero.security.PermissionChecker(userId);
+  if (!permissionChecker.isOrganizationOwner(currentOrganizationId)) {
     throw new Meteor.Error(403, 'You have no power here!');
   }
 };
@@ -80,9 +84,9 @@ Meteor.methods({
     var lastOrderItem = RawOrders.findOne({}, {sort: {created_date: -1}});
 
     var isLastSynced = function (orderItem) {
-      return lastOrderItem && lastOrderItem.created_date === orderItem.created_date
-        && lastOrderItem.quantity === orderItem.quantity
-        && lastOrderItem.resource_uri === orderItem.resource_uri;
+      return lastOrderItem && lastOrderItem.created_date === orderItem.created_date &&
+        lastOrderItem.quantity === orderItem.quantity &&
+        lastOrderItem.resource_uri === orderItem.resource_uri;
     };
 
     var area = HospoHero.getCurrentArea(this.userId);

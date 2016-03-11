@@ -71,7 +71,7 @@ Template.taskEditor.helpers({
       }
 
       self.sharingIds.set(sharingIds);
-    }
+    };
   },
 
   taskDate: function () {
@@ -148,21 +148,32 @@ Template.taskEditor.events({
           }
         };
 
-        while (duration = durationRegEx.exec(durationString)) {
-          var timeUnitsNumber = duration[1];
-          var timeUnitName = duration[2];
-
-          Object.keys(timeUnits).forEach(function (key) {
+        var helper = function () {
+          return function (key) {
             var timeUnit = timeUnits[key];
             if (timeUnit.names.indexOf(timeUnitName) > -1) {
               timeUnitsNumber *= timeUnit.multiplier;
               durationInMinutes += timeUnitsNumber;
             }
-          });
+          };
+        };
+
+        while (durationRegEx.exec(durationString)) {
+          duration = durationRegEx.exec(durationString);
+          var timeUnitsNumber = duration[1];
+          var timeUnitName = duration[2];
+
+          Object.keys(timeUnits).forEach(helper());
         }
       }
 
-      return durationInMinutes;
+      // when we've got only a number like a 30, consider that this is
+      // a duration in minutes
+      if (durationInMinutes === 0 && !_.isNaN(parseInt(durationString))) {
+        return parseInt(durationString);
+      } else {
+        return durationInMinutes;
+      }
     };
 
 

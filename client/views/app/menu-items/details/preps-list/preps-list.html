@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="flyout-content">
-    {{#if canViewJob}}
+    {{#if hasPermissionInAreaTo 'view jobs'}}
       <input type="text" class="form-control input-lg search-for-preps-input" placeholder="Search for preps..."><br>
       <table class="table table-striped">
         <thead>

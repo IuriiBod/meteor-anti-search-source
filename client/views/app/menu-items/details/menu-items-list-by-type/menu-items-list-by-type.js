@@ -15,13 +15,15 @@ Template.menuItemsListByType.onCreated(function () {
 
     var menuItemId = HospoHero.getParamsFromRoute('_id');
     Meteor.call("editItemOfMenu", menuItemId, query, 'add', HospoHero.handleMethodResult());
-  }
+  };
 });
 
 Template.menuItemsListByType.helpers({
   settings() {
     let buttons = [];
-    if (HospoHero.canUser(`edit menus`, Meteor.userId())) {
+    let checker = new HospoHero.security.PermissionChecker();
+
+    if (checker.hasPermissionInArea(null, `edit menus`)) {
       let addIngsOrPreps = {
         url: '#',
         className: `add-${this.type} btn btn-primary btn-xs`,
@@ -35,7 +37,7 @@ Template.menuItemsListByType.helpers({
       uiStateId: this.type,
       title: this.type === 'ings' ? 'Ingredients' : 'Prep Jobs',
       buttons: buttons
-    }
+    };
   },
 
   ingredient() {

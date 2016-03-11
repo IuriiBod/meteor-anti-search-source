@@ -28,7 +28,7 @@ Template.menuFilters.helpers({
 
   selectedCategory: function () {
     var selectedCategoryId = this.category;
-    if (selectedCategoryId != 'all') {
+    if (selectedCategoryId !== 'all') {
       return Categories.findOne({_id: selectedCategoryId});
     } else {
       return {name: 'All', _id: 'all'};

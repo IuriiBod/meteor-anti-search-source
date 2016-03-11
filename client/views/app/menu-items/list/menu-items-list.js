@@ -4,7 +4,7 @@ Template.menuItemsListMainView.onCreated(function () {
 
   var mongoQuery = {};
 
-  if (category && category != 'all') {
+  if (category && category !== 'all') {
     mongoQuery.category = category;
   }
 

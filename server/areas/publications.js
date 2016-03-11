@@ -1,12 +1,12 @@
-Meteor.publish('areasOfOrganization', function () {
-  if (this.userId) {
-    var user = Meteor.users.findOne(this.userId);
-    if (user && user.relations && user.relations.organizationIds) {
-      return Areas.find({organizationId: HospoHero.isInOrganization(user._id)});
-    } else {
-      this.ready();
-    }
+Meteor.publishAuthorized('areaDetails', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
+  let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+
+  if (permissionChecker.hasPermissionInArea(areaId, 'edit areas')) {
+    return Areas.find({_id: areaId});
   } else {
-    this.ready();
+    logger.error('Permission denied: publish [areaDetails] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
   }
 });

@@ -1,6 +1,11 @@
+var canUserEditStocks = function() {
+  var checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, 'edit stocks');
+};
+
 Meteor.methods({
   createSupplier: function (doc) {
-    if (!HospoHero.canUser('edit stocks', this.userId)) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
@@ -19,7 +24,7 @@ Meteor.methods({
   },
 
   editSupplier: function (updatedSupplier) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
@@ -31,7 +36,7 @@ Meteor.methods({
   },
 
   addPriceList: function (supplierId, files) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to create ingredients");
     }
@@ -43,7 +48,7 @@ Meteor.methods({
   },
 
   activateReactivateSuppliers: function (id) {
-    if (!HospoHero.canUser('edit stocks', Meteor.userId())) {
+    if (!canUserEditStocks()) {
       logger.error("User not permitted to create ingredients");
       throw new Meteor.Error(403, "User not permitted to change supplier status");
     }

@@ -14,6 +14,20 @@ var references = {
     collection: JobItems,
     icon: 'fa-spoon',
     route: 'jobItemDetailed'
+  },
+  meetings: {
+    collection: Meetings,
+    icon: 'fa-users',
+    route: 'meetingDetails',
+    routeIdParam: 'id',
+    nameField: 'title'
+  },
+  projects: {
+    collection: Projects,
+    icon: 'fa-file-o',
+    route: 'projectDetails',
+    routeIdParam: 'id',
+    nameField: 'title'
   }
 };
 
@@ -64,11 +78,12 @@ Template.taskItem.helpers({
       }
 
       var referenceItem = reference.collection.findOne({_id: taskReference.id});
+      var nameField = reference.nameField || 'name';
 
       return {
         icon: reference.icon,
-        name: referenceItem.name,
-        route: Router.url(reference.route, {_id: taskReference.id})
+        name: referenceItem[nameField],
+        route: Router.url(reference.route, {[reference.routeIdParam || '_id']: taskReference.id})
       };
     } else {
       return false;
@@ -95,12 +110,7 @@ Template.taskItem.helpers({
 
 Template.taskItem.events({
   'ifClicked .task-checkbox': function (event, tmpl) {
-    var task = tmpl.data.task;
-    task = _.extend(task, {
-      done: !task.done,
-      completedBy: !task.done ? Meteor.userId() : null
-    });
-    Meteor.call('editTask', task);
+    Meteor.call('markTaskAsDone', tmpl.data.task);
   },
 
   'click .edit-task': function (event, tmpl) {

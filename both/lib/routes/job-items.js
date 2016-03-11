@@ -16,7 +16,7 @@ Router.route('/jobItems', {
   data: function () {
     return {
       status: this.params.status
-    }
+    };
   }
 });
 
@@ -37,7 +37,7 @@ Router.route('/jobItem/submit', {
     return {
       jobItem: {},
       mode: 'submit'
-    }
+    };
   }
 });
 
@@ -64,7 +64,7 @@ Router.route('/jobItem/:_id', {
   data: function () {
     return {
       jobItem: JobItems.findOne({_id: this.params._id})
-    }
+    };
   }
 });
 
@@ -85,6 +85,6 @@ Router.route('/jobItem/:_id/edit', {
   data: function () {
     return {
       jobItem: JobItems.findOne({_id: this.params._id})
-    }
+    };
   }
 });

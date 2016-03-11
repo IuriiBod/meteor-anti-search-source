@@ -3,12 +3,12 @@ Meteor.publishAuthorized('menuList', function (areaId, categoryId, status) {
     'relations.areaId': areaId
   };
 
-  if (categoryId && categoryId != "all") {
+  if (categoryId && categoryId !== "all") {
     query.category = categoryId;
   }
 
   if (status) {
-    query.status = (status && status != 'all') ? status : {$ne: 'archived'};
+    query.status = (status && status !== 'all') ? status : {$ne: 'archived'};
   }
 
   logger.info('Menu Items list published', categoryId, status);
@@ -96,7 +96,7 @@ Meteor.publishAuthorized("areaMenuItems", function (areaId, categoryId) {
       status: "active"
     };
 
-    if (categoryId && categoryId != "all") {
+    if (categoryId && categoryId !== "all") {
       query.category = categoryId;
     }
 
@@ -109,11 +109,14 @@ Meteor.publishAuthorized("areaMenuItems", function (areaId, categoryId) {
 });
 
 
-AntiSearchSource.queryTransform('menuItems', function (userId, query) {
-  return _.extend(query, {
-    'relations.areaId': HospoHero.getCurrentAreaId(userId)
-  });
+AntiSearchSource.allow('menuItems', {
+  queryTransform: function (userId, query) {
+    return _.extend(query, {
+      'relations.areaId': HospoHero.getCurrentAreaId(userId)
+    });
+  }
 });
+
 
 Meteor.publish('menuItemsSales', function (dailySalesDate, areaId, categoryId, status) {
   if (this.userId) {

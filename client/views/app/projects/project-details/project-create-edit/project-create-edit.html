@@ -1,0 +1,68 @@
+<template name="projectCreateEdit">
+  <table class="table border-bottom">
+    <thead>
+    <tr>
+      <td><b>Project Name:</b></td>
+      <td>
+        {{#if projectCreator}}
+          {{> ghostEditable value=project.title onValueChanged=onValueChanged}}
+        {{else}}
+          {{project.title}}
+        {{/if}}
+      </td>
+    </tr>
+    </thead>
+    <tbody class="">
+    <tr>
+      <td><b>Due Date:</b></td>
+      <td>
+        {{#if projectCreator}}
+          {{> dateEditor date=project.startTime allowEditing=true onDateChange=onDateChange}}
+
+          <div class="time-editor">
+            {{> comboTimeEditable params=timeComboEditableParams}}
+          </div>
+        {{else}}
+          {{dateInterval project.startTime project.endTime}}
+        {{/if}}
+      </td>
+    </tr>
+    <tr class="">
+      <td><b>Status:</b></td>
+      <td>
+        {{#each projectStatusButtons}}
+          {{> projectStatusButton button=this activeButton=activeButton onButtonClick=onStatusChange}}
+        {{/each}}
+      </td>
+    </tr>
+    <tr>
+      <td><b>Project Lead:</b></td>
+      <td class="project-people">
+        <div class="pull-left">
+          {{> projectPeople members=project.lead allowRemove=allowRemoveUser onMemberRemove=onLeadMemberRemove}}
+        </div>
+
+        <div class="col-md-4">
+          <button type="button" class="btn btn-default btn-sm pull-left add-lead">
+            Add
+          </button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><b>Project Team:</b></td>
+      <td class="project-people">
+        <div class="pull-left">
+          {{> projectPeople members=project.team allowRemove=allowRemoveUser onMemberRemove=onTeamMemberRemove}}
+        </div>
+
+        <div class="col-md-4">
+          <button type="button" class="btn btn-default btn-sm pull-left add-team">
+            Add
+          </button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</template>

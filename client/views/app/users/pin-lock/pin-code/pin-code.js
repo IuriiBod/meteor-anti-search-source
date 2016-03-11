@@ -9,7 +9,7 @@ Template.pinCode.events({
     var userId = tmpl.data.userId;
     var pinCode = tmpl.find('#pin-code').value;
 
-    StaleSession.loginWithPin(userId, pinCode, HospoHero.handleMethodResult(function () {
+    StaleSession.pinLockManager.loginWithPin(userId, pinCode, HospoHero.handleMethodResult(function () {
       Router.go(backwardUrl);
     }));
   },

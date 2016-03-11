@@ -14,7 +14,7 @@ Router.route('/reports/:date', {
   data: function () {
     return {
       date: HospoHero.getParamsFromRoute('date', this)
-    }
+    };
   }
 });
 
@@ -33,7 +33,7 @@ Router.route('menuItemsRankReport', {
     return [
       Meteor.subscribe('allCategories', currentAreaId),
       Meteor.subscribe('menuItemsSales', dateInterval, currentAreaId, 'all', 'all')
-    ]
+    ];
   },
   data: function () {
     var menuItems = MenuItems.find({stats: {$exists: true}}, {sort: {'stats.totalContribution': -1}});
@@ -45,11 +45,27 @@ Router.route('menuItemsRankReport', {
       rangeType: this.params.rangeType,
       startDate: this.params.startDate,
       endDate: this.params.endDate
-    }
+    };
   }
 });
 
 Router.route('/stock-report', {
   name: "stockReport",
   template: "stockReport"
+});
+
+Router.route('/stock-report/details/:stocktakeMainId/:date', {
+  name: 'stockTotalValueDetails',
+  template: 'totalValueDetails',
+  waitOn() {
+    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return [
+      Meteor.subscribe('suppliersNamesList', currentAreaId)
+    ];
+  },
+  data() {
+    return {
+      stocktakeMainId: this.params.stocktakeMainId
+    };
+  }
 });

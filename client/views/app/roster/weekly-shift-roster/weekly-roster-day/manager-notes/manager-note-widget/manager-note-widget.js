@@ -1,3 +1,8 @@
+var canUserEditRoster = function () {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(null, `edit roster`);
+};
+
 //Context: date (Date)
 
 Template.managerNoteWidget.onCreated(function () {
@@ -10,11 +15,10 @@ Template.managerNoteWidget.onCreated(function () {
     });
   };
 
-  self.subscribe('managerNote', self.data.date, HospoHero.getCurrentAreaId(), function onReady () {
-    let note = self.note();
-    let noteId = note ? note._id : Meteor.call('insertEmptyManagerNote', self.data.date);
+  let weekRange = TimeRangeQueryBuilder.forWeek(self.data.date);
 
-    commentsSubscription = Meteor.subscribe('comments', noteId, HospoHero.getCurrentAreaId());
+  self.subscribe('managerNotes', weekRange, HospoHero.getCurrentAreaId(), function onReady () {
+    self.subscribe('comments', self.note()._id, HospoHero.getCurrentAreaId());
   });
 
   self.textForEmptyEditor = 'Leave your note here';
@@ -29,15 +33,16 @@ Template.managerNoteWidget.helpers({
     if (note && _.isString(note.text) && $.trim(note.text)) {
       return note.text;
     }
-    let canUserEditRoster = HospoHero.canUser('edit roster', Meteor.userId());
-    return canUserEditRoster ? Template.instance().textForEmptyEditor : 'No notes';
+    return canUserEditRoster() ? Template.instance().textForEmptyEditor : 'No notes';
   },
   saveNote () {
     let tmpl = Template.instance();
 
     return (text) => {
 
-      if (text === tmpl.textForEmptyEditor) return;
+      if (text === tmpl.textForEmptyEditor) {
+        return;
+      }
 
       let note = tmpl.note();
       note.text = text;
@@ -51,9 +56,9 @@ Template.managerNoteWidget.helpers({
       }
 
       Meteor.call('upsertManagerNote', note);
-    }
+    };
   },
   readOnly () {
-    return !HospoHero.canUser('edit roster', Meteor.userId());
+    return !canUserEditRoster();
   }
 });

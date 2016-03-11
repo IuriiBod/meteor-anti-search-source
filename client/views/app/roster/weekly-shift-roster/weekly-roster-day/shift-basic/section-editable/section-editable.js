@@ -14,7 +14,7 @@ Template.shiftBasicSectionEditable.helpers({
 });
 
 var onEditError = function (shift) {
-  return function (err, res) {
+  return function (err) {
     if (err) {
       if (err.reason === 'User not trained for this section') {
         return sweetAlert({
@@ -40,7 +40,7 @@ var onEditError = function (shift) {
         HospoHero.error(err);
       }
     }
-  }
+  };
 };
 
 var sectionSourceAssignMixin = function (editableConfig) {
