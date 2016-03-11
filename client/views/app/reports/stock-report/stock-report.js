@@ -40,5 +40,16 @@ Template.stockReport.events({
   'click .second-stocktake-total': function (event, tmpl) {
     event.preventDefault();
     Router.go('stockTotalValueDetails', tmpl.getRouteParams(this.secondStocktake));
+  },
+
+  'click .difference-text': function (event, tmpl) {
+    event.preventDefault();
+
+    let params = {
+        firstStocktakeDate: this.firstStocktake.date.replace(/\//g, '-'),
+        secondStocktakeDate: this.secondStocktake.date.replace(/\//g, '-')
+    };
+
+    Router.go('stockVarianceReport', params);
   }
 });
