@@ -96,7 +96,7 @@ Template.textArea.events({
   },
 
   'keypress .message-area': function (event, tmpl) {
-    if (event.keyCode === 10 || event.keyCode === 13) {
+    if (event.keyCode === 10) {
       event.preventDefault();
       tmpl.sendNewsfeed(event);
     }
