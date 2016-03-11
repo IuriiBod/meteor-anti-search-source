@@ -5,21 +5,21 @@
         <h5>Profile Detail</h5>
       </div>
       <div>
-        {{> profileImage this}}
+        {{> profileImage}}
         <div class="ibox-content profile-content">
-            {{> profileContent this }}
+          {{> profilePersonalInfo}}
           <br>
-            {{> profileChangePin }}
+          {{> profileChangePin}}
           <br>
-            {{> profileChangePassword }}
+          {{> profileChangePassword}}
           <br>
-            {{> profilePayReset this }}
+          {{> profilePayRates}}
           <br>
-            {{> profileShiftsPerWeek this }}
+          {{> profileShiftsPerWeek}}
           <br>
-            {{> profileResignedDate this }}
+          {{> profileResignedDate}}
           <br>
-            <h4>Last login: {{ lastLoginDate }}</h4>
+          <h4>Last login: {{lastLoginDate}}</h4>
         </div>
       </div>
     </div>

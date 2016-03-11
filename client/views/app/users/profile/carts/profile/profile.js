@@ -12,6 +12,6 @@ Template.profile.onRendered(function () {
 Template.profile.helpers({
   lastLoginDate: function () {
     return this.lastLoginDate &&
-        moment.duration(moment().diff(this.lastLoginDate)).humanize() || 'never';
+      moment.duration(moment().diff(this.lastLoginDate)).humanize() || 'never';
   }
 });

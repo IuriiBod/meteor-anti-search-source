@@ -38,7 +38,7 @@ Template.profileImage.events({
           var url = doc[0].url;
           var userId = tmpl.data._id;
           Meteor.call("editBasicDetails",
-              userId, {"profileImage": url}, HospoHero.handleMethodResult());
+            userId, {"profileImage": url}, HospoHero.handleMethodResult());
         }
       }
     );
