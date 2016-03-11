@@ -2,41 +2,41 @@
     <h4>Pay rates</h4>
 
     <p>Weekdays ($):
-      {{#if isManager}}
-          <a href="#" id="weekdaysrate" data-id="{{_id}}"
-             class="editable">{{profile.payrates.weekdays}}</a>
-      {{else}}
-        {{#if profile.payrates.weekdays}}
-          {{profile.payrates.weekdays}}
+        {{#if hasPermissionInAreaTo "edit user's payrate"}}
+            <a href="#" id="weekdaysrate" data-id="{{_id}}"
+               class="editable">{{profile.payrates.weekdays}}</a>
         {{else}}
-            Not added
+            {{#if profile.payrates.weekdays}}
+                {{profile.payrates.weekdays}}
+            {{else}}
+                Not added
+            {{/if}}
         {{/if}}
-      {{/if}}
     </p>
 
     <p>Saturday ($):
-      {{#if isManager}}
-          <a href="#" id="saturdayrate" data-id="{{_id}}"
-             class="editable">{{profile.payrates.saturday}}</a>
-      {{else}}
-        {{#if profile.payrates.saturday}}
-          222
+        {{#if hasPermissionInAreaTo "edit user's payrate"}}
+            <a href="#" id="saturdayrate" data-id="{{_id}}"
+               class="editable">{{profile.payrates.saturday}}</a>
         {{else}}
-            Not added
+            {{#if profile.payrates.saturday}}
+                {{profile.payrates.saturday}}
+            {{else}}
+                Not added
+            {{/if}}
         {{/if}}
-      {{/if}}
     </p>
 
     <p>Sunday ($):
-      {{#if isManager}}
-          <a href="#" id="sundayrate" data-id="{{_id}}"
-             class="editable">{{profile.payrates.sunday}}</a>
-      {{else}}
-        {{#if profile.payrates.sunday}}
-          {{profile.payrates.sunday}}
+        {{#if hasPermissionInAreaTo "edit user's payrate"}}
+            <a href="#" id="sundayrate" data-id="{{_id}}"
+               class="editable">{{profile.payrates.sunday}}</a>
         {{else}}
-            Not added
+            {{#if profile.payrates.sunday}}
+                {{profile.payrates.sunday}}
+            {{else}}
+                Not added
+            {{/if}}
         {{/if}}
-      {{/if}}
     </p>
 </template>

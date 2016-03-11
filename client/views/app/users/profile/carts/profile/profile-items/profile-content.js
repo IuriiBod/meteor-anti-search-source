@@ -1,7 +1,8 @@
 Template.profileContent.helpers({
     //permitted for profile owner and admins
     isEditPermitted: function () {
-        return HospoHero.isManager() || HospoHero.isMe(this._id);
+        return HospoHero.security.hasPermissionInAreaTo("edit user's payrate") ||
+            Meteor.userId() && Meteor.userId() === this._id;
     },
     firstName: function () {
         if (this && this.profile && this.profile.firstname) {

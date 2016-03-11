@@ -5,6 +5,9 @@ Template.profileResignedDate.helpers({
     resignDate: function () {
         var resignDate = this.profile.resignDate;
         return resignDate ? moment(resignDate).format("MM/DD/YYYY") : null;
+    },
+    isMe: function (userId) {
+        return Meteor.userId() && Meteor.userId() === userId;
     }
 });
 
