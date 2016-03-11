@@ -100,14 +100,14 @@ NotificationSender.prototype._renderTemplateWithData = function (notificationId,
   templateData._isEmail = false;
 
   if (this._isInteractive()) {
-    templateData._notificationId = notificationId
+    templateData._notificationId = notificationId;
   }
 
 
   templateName = type && Handlebars.templates[this._options.templateName + '-' + type] ?
       this._options.templateName + '-' + type  :
       this._options.templateName;
-  if(type === 'email')  templateData._isEmail = true;
+  if(type === 'email')  { templateData._isEmail = true; }
 
   return Handlebars.templates[templateName](templateData);
 };
