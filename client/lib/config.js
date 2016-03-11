@@ -56,5 +56,7 @@ Meteor.startup(function () {
 
   Accounts.onLogin(function () {
     StaleSession.reset();
+    Meteor.subscribe('organizationInfo');
+    Meteor.subscribe('todayTasks');
   });
 });
