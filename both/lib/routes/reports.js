@@ -82,16 +82,9 @@ Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', 
     ];
   },
   data() {
-    let stocktakesDates = _.uniq(StocktakeMain.find({}, {
-      sort: {
-        date: -1
-      }
-    }).map((item) => HospoHero.dateUtils.formatDate(item.date, 'DD-MM-YY')));
-
     return {
       firstStocktakeDate: this.params.firstStocktakeDate,
-      secondStocktakeDate: this.params.secondStocktakeDate,
-      stocktakesDates: stocktakesDates
+      secondStocktakeDate: this.params.secondStocktakeDate
     };
   }
 });

@@ -9,9 +9,22 @@ Template.stockVarianceReport.onCreated(function () {
     };
   };
 
+  this.getStocktakesDates = (fromDate) => {
+    let query = {};
+
+    if (fromDate) {
+      query.date = TimeRangeQueryBuilder.forInterval(moment(fromDate, 'DD-MM-YY'), moment());
+    }
+
+    let stocktakesDates = StocktakeMain.find(query, {sort: {date: -1}})
+        .map((item) => HospoHero.dateUtils.formatDate(item.date, 'DD-MM-YY'));
+
+    return _.uniq(stocktakesDates);
+  };
+
   this.report = new ReactiveVar();
   this.searchText = new ReactiveVar();
-  this.datesToSelect = new ReactiveVar();
+  this.firstSelectedDate = new ReactiveVar();
   this.supplier = new ReactiveVar('All Suppliers');
 
   this.getStockVariance = () => {
@@ -33,28 +46,26 @@ Template.stockVarianceReport.onCreated(function () {
     }));
   };
 
-  this.autorun(() => {
-    this.report.set();
-    this.getStockVariance();
-  });
+  this.autorun(() => this.getStockVariance());
 });
 
 Template.stockVarianceReport.onRendered(function () {
   this.$('.suppliers-list').select2();
-  this.$(`.first-stocktake option[value=${this.data.firstStocktakeDate}]`).attr('selected', 'selected');
 });
 
 Template.stockVarianceReport.helpers({
   stockItems() {
     let stockItems = Template.instance().report.get();
-    let result;
+    return stockItems && stockItems.sort((firstItem, secondItem) => secondItem.variance - firstItem.variance);
+
+  },
+
+  emptyStocktake() {
+    let stockItems = Template.instance().report.get();
     if (stockItems && stockItems.stocktakes) {
       let emptyStocktake = stockItems.stocktakes.first.elementsCount ? this.secondStocktakeDate : this.firstStocktakeDate;
-      result = {emptyStocktake: `There's no data to compare. Stocktake by ${emptyStocktake} is empty`};
-    } else {
-      result = stockItems && stockItems.sort((firstItem, secondItem) => secondItem.variance - firstItem.variance);
+      return `There's no data to compare. Stocktake by ${emptyStocktake} is empty`;
     }
-    return result;
   },
 
   tableHeader() {
@@ -67,12 +78,14 @@ Template.stockVarianceReport.helpers({
   },
 
   firstStocktakesDateSelector() {
-    let stocktakesDates = _.clone(this.stocktakesDates);
-    return stocktakesDates.shift() && stocktakesDates;
+    let dates = Template.instance().getStocktakesDates();
+    return dates.length && dates.shift() && dates;
   },
 
   secondStocktakesDateSelector() {
-    return Template.instance().datesToSelect.get();
+    let instance = Template.instance();
+    let selectedDate = instance.firstSelectedDate.get();
+    return selectedDate ? instance.getStocktakesDates(selectedDate) : [this.secondStocktakeDate];
   }
 });
 
@@ -97,14 +110,14 @@ Template.stockVarianceReport.events({
 
   'change .first-stocktake': function (event, tmpl) {
     let firstStocktakeDate = tmpl.$('.first-stocktake').val();
-    let dates = _.clone(tmpl.data.stocktakesDates);
-
-    tmpl.datesToSelect.set(dates.slice(0, dates.indexOf(firstStocktakeDate)));
+    tmpl.firstSelectedDate.set(firstStocktakeDate);
   },
 
-  'change .second-stocktake': function (event, tmpl) {
+  'click .change-reports-dates': function (event, tmpl) {
+    event.preventDefault();
     let firstStocktakeDate = tmpl.$('.first-stocktake').val();
     let secondStocktakeDate = tmpl.$('.second-stocktake').val();
+    tmpl.report.set();
 
     Router.go('stockVarianceReport', {
       firstStocktakeDate: firstStocktakeDate,
