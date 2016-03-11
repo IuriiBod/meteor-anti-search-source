@@ -1,3 +1,9 @@
+Template.profileChangePassword.helpers({
+    'passwordPattern':function () {
+        return HospoHero.regexes.toHtmlString(HospoHero.regexes.password);
+    }
+});
+
 Template.profileChangePassword.events({
     'change input#confirm-password': function (e,t) {
         var $password = t.find("#new-password");

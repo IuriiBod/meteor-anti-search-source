@@ -242,7 +242,7 @@ Namespace('HospoHero.misc', {
   },
 
   escapeRegExpString: function (str) {
-    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    return str.replace(HospoHero.regexes.escape, "\\$&");
   },
 
   /**
