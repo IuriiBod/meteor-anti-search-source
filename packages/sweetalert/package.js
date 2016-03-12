@@ -11,15 +11,10 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-
   api.versionsFrom("METEOR@0.9.1.1");
 
   api.add_files([
     'dist/sweetalert.css',
     'dist/sweetalert-dev.js'
   ], ['client']);
-
-  if(api.export){
-
-  }
-})
+});
