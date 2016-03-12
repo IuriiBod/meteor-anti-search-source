@@ -1,7 +1,6 @@
 Template.addUserPopup.onCreated(function () {
   this.selectedUser = new ReactiveVar(null);
   this.selectedEmail = new ReactiveVar(null);
-  this.isInviteInProgress = new ReactiveVar(false);
 
   let selector = {
     _id: {$ne: Meteor.userId()},
@@ -15,24 +14,35 @@ Template.addUserPopup.onCreated(function () {
     mongoQuery: selector,
     limit: 10
   });
+
+  this.focusOnSearchInput = () => this.$('input.user-search-input').focus();
+
+  this.onSubmitInviteClose = () => {
+    this.selectedUser.set(null);
+    this.selectedEmail.set(false);
+
+    this.focusOnSearchInput();
+    this.$('input.user-search-input').val('');
+
+    //refresh search to remove invited user from list
+    this.searchSource.search('');
+  };
 });
+
 
 Template.addUserPopup.onRendered(function () {
-  this.$('input[name="addUserName"]').focus();
+  this.focusOnSearchInput();
 });
 
+
 Template.addUserPopup.helpers({
-  searchedUsers: function () {
+  searchedUsers() {
     return Template.instance().searchSource.searchResult({
       sort: {'profile.firstname': 1}
     });
   },
 
-  isInviteInProgress: function () {
-    return Template.instance().isInviteInProgress.get();
-  },
-
-  onUserSelect: function () {
+  onUserSelect() {
     let tmpl = Template.instance();
     return function (user) {
       tmpl.selectedUser.set(user);
@@ -40,7 +50,7 @@ Template.addUserPopup.helpers({
     };
   },
 
-  submitInviteContext: function () {
+  submitInviteContext() {
     let tmpl = Template.instance();
     let user = tmpl.selectedUser.get();
     let email = tmpl.selectedEmail.get();
@@ -48,27 +58,17 @@ Template.addUserPopup.helpers({
         user,
         email,
         areaId: this.areaId,
-        onSubmitInviteClose () {
-          tmpl.selectedUser.set(null);
-          tmpl.selectedEmail.set(false);
-        }
+        onSubmitInviteClose: tmpl.onSubmitInviteClose
       };
   }
 });
 
 Template.addUserPopup.events({
-  'click .search-user-info-content': function (event, tmpl) {
-    tmpl.selectedUser.set(this._id);
-  },
-
-  'click .back-to-select-user': function (event, tmpl) {
-    tmpl.$('input[name="addUserName"]').focus();
-    tmpl.selectedUser.set(null);
-  },
-
-  'keyup .user-search-input': function (event, tmpl) {
-    let searchStr = event.target.value;
+  'keyup .user-search-input': _.throttle(function (event, tmpl) {
+    let searchStr = $('.user-search-input').val();
     let emailRegExp = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
+
+    console.log('search', searchStr);
 
     if (emailRegExp.test(searchStr)) {
       tmpl.selectedEmail.set(searchStr);
@@ -77,5 +77,5 @@ Template.addUserPopup.events({
       tmpl.searchSource.search(searchStr);
       tmpl.selectedEmail.set(false);
     }
-  }
+  }, 300, {leading: false})
 });

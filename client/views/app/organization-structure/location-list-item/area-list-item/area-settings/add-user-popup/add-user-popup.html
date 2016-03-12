@@ -12,16 +12,14 @@
       <div class="add-user-to-area">
         <input type="text"
                class="form-control input-field user-search-input"
-               placeholder="Name or email"
-               name="addUserName"
-               required="required">
+               placeholder="Name or email">
       </div>
 
       {{# if submitInviteContext}}
         {{> submitAreaInvite submitInviteContext}}
       {{else}}
         <div class="invite-search-results">
-          {{#if searchedUsers.count}}
+          {{#if searchedUsers.length}}
             <div class="search-results">
               <b>Select to add</b>
               <hr/>

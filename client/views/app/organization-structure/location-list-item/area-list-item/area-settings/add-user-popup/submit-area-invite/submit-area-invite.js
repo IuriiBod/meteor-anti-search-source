@@ -1,4 +1,13 @@
 //context: email (string) or user (UserDocument)
+Template.submitAreaInvite.onCreated(function () {
+  this.isInviteInProgress = new ReactiveVar(false);
+});
+
+Template.submitAreaInvite.helpers({
+  isInviteInProgress() {
+    return Template.instance().isInviteInProgress.get();
+  }
+});
 
 Template.submitAreaInvite.events({
   'click .invite-user-button': function (event, tmpl) {
@@ -14,17 +23,21 @@ Template.submitAreaInvite.events({
       invitationMeta.email = currentUser.emails[0].address;
     } else {
       invitationMeta.name = tmpl.$('.user-name-input').val();
-      invitationMeta.email = tmpl.$('.user-search-input').val();
+      invitationMeta.email = tmpl.data.email;
     }
 
     tmpl.isInviteInProgress.set(true);
-    Meteor.call('inviteNewUserToArea', invitationMeta, HospoHero.handleMethodResult(() => {
+    Meteor.call('inviteNewUserToArea', invitationMeta, (err) => {
       tmpl.isInviteInProgress.set(false);
-      tmpl.data.onSubmitInviteClose();
-      HospoHero.success('The user was notified');
-    }));
+      if (err) {
+        HospoHero.error(err);
+      } else {
+        tmpl.data.onSubmitInviteClose();
+        HospoHero.success('The user was notified');
+      }
+    });
   },
-  
+
   'click .back-button': function (event, tmpl) {
     tmpl.data.onSubmitHook();
   }

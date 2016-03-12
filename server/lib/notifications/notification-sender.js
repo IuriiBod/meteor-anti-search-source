@@ -62,7 +62,7 @@ NotificationSender = class NotificationSender {
    * in others too
    * @constructor
    */
-  constructor(subject, templateName, templateData, options) {
+  constructor(subject, templateName, templateData, options = {}) {
     this._options = _.extend(options, {
       subject,
       templateName,
