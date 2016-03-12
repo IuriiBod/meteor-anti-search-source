@@ -38,9 +38,6 @@ Template.submitEditJobItem.onRendered(function () {
 });
 
 Template.submitEditJobItem.helpers({
-  isPlacedInFlyout: function() {
-    return !!Template.currentData().isPlacedInFlyout;
-  },
   isJobTypePreselected: function() {
     return !!Template.instance().preselectedJobType;
   },

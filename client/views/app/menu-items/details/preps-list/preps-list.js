@@ -40,10 +40,13 @@ Template.prepsList.events({
     tmpl.jobItemsSearch.search(text);
   }, 500),
   'click a[data-action="add-new-job-item"]': function () {
-    FlyoutManager.open('submitEditJobItem', {
-      isPlacedInFlyout: true,
-      isEditMode:false,
-      jobItem: null
+    FlyoutManager.open('wrapperFlyout', {
+      template:'submitEditJobItem',
+      title:"Add Job",
+      data: {
+        inFlyout: true,
+        jobItem: null
+      }
     });
   }
 });
