@@ -38,7 +38,17 @@ Template.prepsList.events({
   'keyup .search-for-preps-input': _.throttle(function (event, tmpl) {
     let text = event.target.value.trim();
     tmpl.jobItemsSearch.search(text);
-  }, 500)
+  }, 500),
+  'click a[data-action="add-new-job-item"]': function () {
+    FlyoutManager.open('wrapperFlyout', {
+      template:'submitEditJobItem',
+      title:"Add Job",
+      data: {
+        inFlyout: true,
+        jobItem: null
+      }
+    });
+  }
 });
 
 
