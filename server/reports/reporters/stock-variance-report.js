@@ -58,7 +58,8 @@ StockVarianceReport = class {
       let getExpectedCost = _.filter(expectedCostOfEachIngredient, (stock) => stock.stockId === ingredient._id);
       let expectedCost = getExpectedCost.length ? getExpectedCost[0].expectedCost : 0;
       let ordersReceived = this._getOrderReceived(ingredient._id);
-      let actualCost = ordersReceived + (ingredient.costInFirstStocktake - ingredient.costInSecondStocktake); // calculations for actual cost for each ingredient
+      let actualCost = ordersReceived +
+          (ingredient.costInFirstStocktake - ingredient.costInSecondStocktake); // calculations for actual cost for each ingredient
 
       return _.extend(ingredient, {
         ordersReceived: ordersReceived,

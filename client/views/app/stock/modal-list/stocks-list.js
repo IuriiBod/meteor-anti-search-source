@@ -35,11 +35,18 @@ Template.stocksList.helpers({
 
 Template.stocksList.events({
   'click .add-new-ingredient': function () {
-    FlyoutManager.open('ingredientEditor', {ingredient: null});
+    FlyoutManager.open('wrapperFlyout', {
+      template:'ingredientEditor',
+      title:"Add ingredient",
+      data: {
+        inFlyout: true,
+        ingredient: null
+      }
+    });
   },
   'keyup .search-for-stocks-input': _.throttle(function (event, tmpl) {
     var value = $(event.target).val();
     tmpl.ingredienstSearch.search(value);
-  }, 500)
+  }, 500, {leading: false})
 });
 

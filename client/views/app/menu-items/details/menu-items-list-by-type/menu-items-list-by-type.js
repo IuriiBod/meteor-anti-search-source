@@ -72,18 +72,28 @@ Template.menuItemsListByType.events({
   'click .add-ings': function (event, tmpl) {
     event.preventDefault();
     let idsOfItemsInList = _.pluck(tmpl.data.ingredients, '_id');
-    FlyoutManager.open('stocksList', {
-      onAddStockItem: tmpl.onAddItem,
-      idsToExclude: idsOfItemsInList
+    FlyoutManager.open('wrapperFlyout', {
+      template:'stocksList',
+      title:"Select Stocks",
+      data: {
+        inFlyout: true,
+        onAddStockItem: tmpl.onAddItem,
+        idsToExclude: idsOfItemsInList
+      }
     });
   },
 
   'click .add-prep': function (event, tmpl) {
     event.preventDefault();
     let idsOfItemsInList = _.pluck(tmpl.data.jobItems, '_id');
-    FlyoutManager.open('prepsList', {
-      onAddPrepItem: tmpl.onAddItem,
-      idsToExclude: idsOfItemsInList
+    FlyoutManager.open('wrapperFlyout', {
+      template:'prepsList',
+      title:"Select Preps",
+      data: {
+        inFlyout: true,
+        onAddPrepItem: tmpl.onAddItem,
+        idsToExclude: idsOfItemsInList
+      }
     });
   }
 });

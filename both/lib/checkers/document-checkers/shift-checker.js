@@ -1,3 +1,11 @@
+var ShiftId = Match.Where(function (id) {
+  check(id, HospoHero.checkers.MongoId);
+  if (!Shifts.findOne({_id: id})) {
+    throw new Meteor.Error(404, "Shift not found");
+  }
+  return true;
+});
+
 var ShiftDocument = Match.Where(function (shift) {
   check(shift, {
     startTime: Date,
@@ -110,9 +118,15 @@ var ShiftDocument = Match.Where(function (shift) {
   return true;
 });
 
+
 Namespace('HospoHero.checkers', {
   /**
    * Shift document checker
    */
-  ShiftDocument: ShiftDocument
+  ShiftDocument: ShiftDocument,
+
+  /**
+   * Shift exist checker
+   */
+  ShiftId: ShiftId
 });

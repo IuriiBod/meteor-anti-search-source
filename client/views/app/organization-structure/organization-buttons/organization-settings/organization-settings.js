@@ -11,7 +11,11 @@ Template.organizationDetailsPage.events({
     //}
   },
   'click .change-billing-account-flyout': function () {
-    FlyoutManager.open('changeBillingAccount');
+    FlyoutManager.open('wrapperFlyout', {
+      template:'changeBillingAccount',
+      title:"Change billing account",
+      data: {}
+    });
   },
   'click .open-roles-settings-flyout': function () {
     FlyoutManager.open('wrapperFlyout', {

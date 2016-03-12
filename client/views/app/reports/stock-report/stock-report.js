@@ -42,7 +42,7 @@ Template.stockReport.events({
     Router.go('stockTotalValueDetails', tmpl.getRouteParams(this.secondStocktake));
   },
 
-  'click .difference-text': function (event, tmpl) {
+  'click .difference-text': function (event) {
     event.preventDefault();
 
     let params = {

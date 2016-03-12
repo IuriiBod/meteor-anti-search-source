@@ -1,11 +1,5 @@
 <template name="stocksList">
-  <div class="flyout-header">
-    {{> CloseFlyoutButton}}
-    <div class="col-xs-11 col-xs-offset-1">
-      Select Stocks
-    </div>
-  </div>
-  <div class="flyout-content">
+  <div>
     {{#if hasPermissionInAreaTo 'view stocks'}}
       <input type="text" class="form-control input-lg search-for-stocks-input" placeholder="Search for stocks..."><br>
       <table class="table table-striped ingredients-table">
