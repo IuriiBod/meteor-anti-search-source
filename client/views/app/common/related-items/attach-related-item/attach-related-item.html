@@ -1,36 +1,29 @@
 <template name="attachRelatedItem">
-  <div class="flyout-header">
-    {{> CloseFlyoutButton}}
-    Attach item
-  </div>
+  <form>
+    <div class="from-group">
+      <label for="type">Type</label>
+      <select name="type" id="type" class="form-control">
+        {{#each types}}
+          <option value="{{this}}">{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
 
-  <div class="flyout-content">
-    <form>
-      <div class="from-group">
-        <label for="type">Type</label>
-        <select name="type" id="type" class="form-control">
-          {{#each types}}
-            <option value="{{this}}">{{this}}</option>
+    <div class="form-group">
+      <label for="reference">Item</label>
+      {{#if items.length}}
+        <select name="reference" id="reference" class="form-control">
+          {{#each items}}
+            <option value="{{id}}">{{name}}</option>
           {{/each}}
         </select>
-      </div>
+      {{else}}
+        <h4>No items</h4>
+      {{/if}}
+    </div>
 
-      <div class="form-group">
-        <label for="reference">Item</label>
-        {{#if items.length}}
-          <select name="reference" id="reference" class="form-control">
-            {{#each items}}
-              <option value="{{id}}">{{name}}</option>
-            {{/each}}
-          </select>
-        {{else}}
-          <h4>No items</h4>
-        {{/if}}
-      </div>
-
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary">Attach</button>
-      </div>
-    </form>
-  </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Attach</button>
+    </div>
+  </form>
 </template>

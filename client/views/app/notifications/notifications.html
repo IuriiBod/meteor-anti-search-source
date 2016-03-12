@@ -1,10 +1,5 @@
 <template name="notifiFlyout">
-  <div class="flyout-header">
-    {{> CloseFlyoutButton}}
-    Notifications
-  </div>
-
-  <div class="flyout-content notifications-list-flyout">
+  <div class="notifications-list-flyout">
     {{#if count}}
       <div class="notifications-list">
         {{#each notifications}}
