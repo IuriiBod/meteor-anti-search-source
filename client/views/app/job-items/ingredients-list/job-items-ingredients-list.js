@@ -52,7 +52,7 @@ Template.listOfIngredients.events({
       title:"Select Stocks",
       data: {
         inFlyout: true,
-        onAddStockItem: tmpl.onAddItem,
+        onAddStockItem: onAddStockItem,
         idsToExclude: idsOfItemsInList
       }
     });
