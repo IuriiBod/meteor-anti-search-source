@@ -29,7 +29,7 @@ Template.projectCreateEdit.onCreated(function () {
       template:'usersSearch',
       title:"Searching users",
       data: {
-        selectedUsers: meeting.attendees,
+        selectedUsers: this.selectedUsers.array(),
         onUserSelect: onUserSelect
       }
     });
