@@ -9,7 +9,7 @@ Router.route('calendar', {
       return [
         Meteor.subscribe('calendarEvents', this.params.date, this.params.type, areaId, userId),
         Meteor.subscribe('sections', areaId),
-        Meteor.subscribe('jobItemsInArea', areaId),
+        Meteor.subscribe('jobItemsInArea', areaId, null),
         Meteor.subscribe('taskList'),
         Meteor.subscribe('meetings', userId),
         Meteor.subscribe('projects', userId)
@@ -36,7 +36,7 @@ Router.route('managerCalendar', {
       return [
         Meteor.subscribe('calendarEvents', date, 'day', areaId),
         Meteor.subscribe('sections', areaId),
-        Meteor.subscribe('jobItemsInArea', areaId),
+        Meteor.subscribe('jobItemsInArea', areaId, null),
         Meteor.subscribe('taskList'),
         Meteor.subscribe('meetings'),
         Meteor.subscribe('projects')

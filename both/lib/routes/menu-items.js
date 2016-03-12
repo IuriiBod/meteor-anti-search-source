@@ -33,7 +33,7 @@ Router.route('menuItemDetail', {
         Meteor.subscribe('areaUsersList', currentAreaId),
         Meteor.subscribe('jobTypes'),
         Meteor.subscribe('ingredients', null, currentAreaId),
-        Meteor.subscribe('jobItemsInArea', currentAreaId),
+        Meteor.subscribe('jobItemsInArea', currentAreaId,null),
         Meteor.subscribe('taskList')
       ];
     }

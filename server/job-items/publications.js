@@ -1,8 +1,8 @@
-Meteor.publish('jobItemsInArea', function (areaId, status){
+Meteor.publish('jobItemsInArea', function (areaId, status) {
   check(areaId, HospoHero.checkers.MongoId);
-  check(status, Match.Optional(HospoHero.checkers.status));
+  check(status, Match.OneOf(HospoHero.checkers.JobItemStatus, null));
 
-  var permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+  let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
   if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'view jobs')) {
 
     var query = {
@@ -21,22 +21,25 @@ Meteor.publish('jobItemsInArea', function (areaId, status){
   }
 });
 
-Meteor.publishComposite('jobItem', function (id) {
+
+Meteor.publishComposite('jobItem', function (jobItemId) {
+  check(jobItemId, HospoHero.checkers.MongoId);
+
+  const permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
+
+  const jobItem = JobItems.findOne({_id: jobItemId});
+  const areaId = jobItem && HospoHero.utils.getNestedProperty(jobItem, 'relations.areaId', false);
+  const hasPermission = areaId && permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'view jobs');
+
+  if (!hasPermission) {
+    logger.error('Permission denied: publish [jobItem] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+    return;
+  }
+
   return {
     find: function () {
-      check(id, HospoHero.checkers.MongoId)
-
-      var jobItem = JobItems.findOne({_id:id});
-      var permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
-
-      if (permissionChecker && permissionChecker.
-              hasPermissionInArea(jobItem  && jobItem.relations
-                  ? jobItem.relations.areaId : '', 'view jobs')) {
-        return JobItems.find({_id: id});
-      } else {
-        logger.error('Permission denied: publish [jobItem] ', {areaId: areaId, userId: this.userId});
-        this.error(new Meteor.Error('Access denied. Not enough permissions.'));
-      }
+      return JobItems.find({_id: jobItemId});
     },
     children: [
       {
@@ -86,11 +89,11 @@ Meteor.publishComposite('jobItem', function (id) {
             this.ready();
           }
         },
-        children:[
+        children: [
           {
             find: function (menuItem) {
               if (menuItem && menuItem.category) {
-                return Categories.find({_id:menuItem.category});
+                return Categories.find({_id: menuItem.category});
               } else {
                 this.ready();
               }

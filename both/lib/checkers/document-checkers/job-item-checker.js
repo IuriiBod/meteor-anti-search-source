@@ -1,3 +1,5 @@
+let JobItemStatus = Match.OneOf('active', 'archived');
+
 var JobItemDocument = Match.Where(function (jobItem) {
   check(jobItem.type, HospoHero.checkers.MongoId);
   var jobItemType = JobTypes.findOne({_id: jobItem.type}).name;
@@ -45,7 +47,7 @@ var JobItemDocument = Match.Where(function (jobItem) {
       createdOn: Match.Optional(Date),
       editedBy: HospoHero.checkers.OptionalNullableMongoId,
       editedOn: Match.Optional(Date),
-      status: Match.Optional(HospoHero.checkers.status),
+      status: Match.Optional(HospoHero.checkers.JobItemStatus),
 
       recipe: String,
       ingredients: [{
@@ -70,8 +72,6 @@ var JobItemDocument = Match.Where(function (jobItem) {
 });
 
 Namespace('HospoHero.checkers', {
-  /**
-   * Shift document checker
-   */
-  JobItemDocument: JobItemDocument
+  JobItemDocument: JobItemDocument,
+  JobItemStatus: JobItemStatus
 });
