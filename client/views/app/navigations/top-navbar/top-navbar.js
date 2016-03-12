@@ -78,7 +78,11 @@ Template.topNavbar.events({
   },
 
   'click .notifi-toggler': function () {
-    FlyoutManager.open('notifiFlyout', {});
+    FlyoutManager.open('wrapperFlyout', {
+      template:'notifiFlyout',
+      title:"Notifications",
+      data: {}
+    });
   },
 
   'click .open-organization-structure-button': function () {
