@@ -88,6 +88,10 @@
     .form-group {
       margin-top: -1px;
 
+      & > div {
+        padding-left: 0;
+      }
+
       textarea {
         resize: none;
       }
@@ -123,6 +127,10 @@
         }
       }
     }
+
+    .select2 {
+      width: 100%;
+    }
   }
 }
 
@@ -151,5 +159,8 @@
     &::before, &::after {
       visibility: hidden;
     }
+  }
+  .select2 {
+    width: 100% !important;
   }
 }
