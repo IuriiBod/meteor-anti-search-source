@@ -69,3 +69,22 @@ Router.route('/stock-report/details/:stocktakeMainId/:date', {
     };
   }
 });
+
+Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', {
+  name: 'stockVarianceReport',
+  template: 'stockVarianceReport',
+  waitOn() {
+    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    let datePeriod = moment().subtract(3, 'month').startOf('day').toDate();
+    return [
+      Meteor.subscribe('suppliersNamesList', currentAreaId),
+      Meteor.subscribe('stocktakeDates', currentAreaId, datePeriod)
+    ];
+  },
+  data() {
+    return {
+      firstStocktakeDate: this.params.firstStocktakeDate,
+      secondStocktakeDate: this.params.secondStocktakeDate
+    };
+  }
+});

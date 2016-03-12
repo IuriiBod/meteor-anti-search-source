@@ -44,7 +44,7 @@ Template.jobItemsList.events({
   'keyup .search-job-items-box': _.throttle(function (event, tmpl) {
     var value = $(event.target).val();
     tmpl.searchSource.search(value);
-  }, 500),
+  }, 500, {leading: false}),
 
   'click .load-more-items': function (event, tmpl) {
     tmpl.searchSource.incrementLimit(10);

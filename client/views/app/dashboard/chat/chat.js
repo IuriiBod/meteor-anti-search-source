@@ -10,7 +10,7 @@ Template.chat.helpers({
     const tmpl = Template.instance();
     return (conversationId) => {
       tmpl.currentConversationId.set(conversationId);
-    }
+    };
   },
   isConversationSelected () {
     return !!Template.instance().currentConversationId.get();

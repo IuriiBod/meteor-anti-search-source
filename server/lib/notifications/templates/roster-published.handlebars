@@ -1,44 +1,41 @@
 <style>
-  .button-container {
-    margin-top: 5px;
-  }
-
-  .claim-button {
-    margin-top: 5px;
-    padding: 3px 5px;
-    color: #fff;
-    border-radius: 4px;
-  }
-
-  .claim-button:hover {
-    color: #fff;
-  }
-
-  .confirm-button {
-    background-color: #1AB394;
-  }
+    .button-container {
+        margin-top: 5px;
+    }
+    .claim-button {
+        margin-top: 5px;
+        padding: 3px 5px;
+        color: #fff;
+        border-radius: 4px;
+    }
+    .claim-button:hover {
+        color: #fff;
+    }
+    .confirm-button {
+        background-color: #1AB394;
+    }
 </style>
 
 <div>
-  <b>{{publishedByName}}</b> just published the roster {{#if areaName}} in <b>{{areaName}}</b> {{/if}} for the week starting <b>{{date}}</b>.
-  <br><br>
-  Here's your shifts:
-  <ul>
-    {{#each shifts}}
-      <li>{{dateFormatter this}} {{#if section}} in {{sectionNameFormatter this}} section{{/if}}</li>
-    {{/each}}
-  </ul>
-
-  {{#if openShifts}}
-    And check open shifts. You can claim them from the dashboard.
+    <b>{{publishedByName}}</b> just published the roster {{#if areaName}} in <b>{{areaName}}</b> {{/if}} for the week starting <b>{{date}}</b>.
+    <br><br>
+    Here's your shifts:
     <ul>
-      {{#each openShifts}}
-        <li>{{dateFormatter this}} {{#if section}} in {{sectionNameFormatter this}} section{{/if}}</li>
-      {{/each}}
+        {{#each shifts}}
+            <li>{{dateFormatter this}} {{#if section}} in {{sectionNameFormatter this}} section{{/if}}</li>
+        {{/each}}
     </ul>
-  {{/if}}
 
-  <p class="button-container">
-    <a href="{{rosterUrl}}" class="claim-button confirm-button" data-link-type="navigation">Go to the roster</a>
-  </p>
+    {{#if openShifts}}
+        And check open shifts. You can claim them from the dashboard.
+        <ul>
+            {{#each openShifts}}
+                <li>{{dateFormatter this}} {{#if section}} in {{sectionNameFormatter this}} section{{/if}}</li>
+            {{/each}}
+        </ul>
+    {{/if}}
+
+    <p class="button-container">
+        <a href="{{rosterUrl}}" class="claim-button confirm-button" data-link-type="navigation">Go to the roster</a>
+    </p>
 </div>

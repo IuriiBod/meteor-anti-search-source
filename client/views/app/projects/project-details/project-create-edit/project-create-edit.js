@@ -25,9 +25,13 @@ Template.projectCreateEdit.onCreated(function () {
       };
     };
 
-    FlyoutManager.open('usersSearchFlyout', {
-      selectedUsers: this.selectedUsers.array(),
-      onUserSelect: onUserSelect
+    FlyoutManager.open('wrapperFlyout', {
+      template:'usersSearch',
+      title:"Searching users",
+      data: {
+        selectedUsers: this.selectedUsers.array(),
+        onUserSelect: onUserSelect
+      }
     });
   };
 

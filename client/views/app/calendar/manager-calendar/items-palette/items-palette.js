@@ -54,5 +54,5 @@ Template.itemsPalette.events({
   'keyup .items-palette-filter': _.throttle(function (event, tmpl) {
     var value = tmpl.$(event.target).val();
     tmpl.searchSource.search(value);
-  }, 500)
+  }, 500, {leading: false})
 });

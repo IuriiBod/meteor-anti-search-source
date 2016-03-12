@@ -51,7 +51,7 @@ Template.menuItemsListMainView.events({
   'keyup #searchMenuItemsBox': _.throttle(function (event, tmpl) {
     var text = $("#searchMenuItemsBox").val().trim();
     tmpl.menuItemsSearch.search(text);
-  }, 200),
+  }, 200, {leading: false}),
 
   'click #loadMoreMenuItems': function (event, tmpl) {
     tmpl.menuItemsSearch.incrementLimit();

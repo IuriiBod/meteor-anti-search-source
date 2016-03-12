@@ -1,30 +1,28 @@
 <template name="submitEditJobItem">
   <!-- Page heading -->
-  {{#unless isPlacedInFlyout}}
+  {{#unless inFlyout}}
     {{#if isEditMode}}
       {{> pageHeading title="Edit Job" category="Jobs" name="jobedit" subCategory=jobItem.name id=jobItem._id}}
     {{else}}
       {{> pageHeading title="Submit Job" category="Job" name="jobsubmit"}}
     {{/if}}
   {{/unless}}
-
-  <div class="wrapper wrapper-content animated">
     <div class="row">
       <div class="col-lg-12">
         <div class="ibox float-e-margins">
-          {{#unless isPlacedInFlyout}}
+          {{#unless inFlyout}}
           <div class="ibox-title">
             <h5>Create a new job</h5>
           </div>
           {{/unless}}
-          <div class="{{#if isPlacedInFlyout}}placed-in-flayout{{else}}ibox-content{{/if}}">
+          <div class="{{#if inFlyout}}placed-in-flayout{{else}}ibox-content{{/if}}">
             <form class="form-horizontal job-item-submit-edit-form">
 
               <!-- Name -->
               <div class="form-group">
-                <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">Name</label>
+                <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">Name</label>
 
-                <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                   <input type="text" class="form-control name-input" placeholder="Enter Name for the job" required
                          value="{{jobItem.name}}">
                 </div>
@@ -32,9 +30,9 @@
 
               <!-- Type -->
               <div class="form-group">
-                <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">Type</label>
+                <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">Type</label>
 
-                <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                   <select class="form-control type-select" disabled="{{#if isJobTypePreselected}}disabled{{/if}}">
                     {{#each jobTypes}}
                       {{#if equal ../jobItem.type _id}}
@@ -50,10 +48,10 @@
               <!-- Sections -->
               {{#if isRecurring}}
                 <div class="form-group">
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Sections</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <select class="form-control sections-select">
                       {{#each sections}}
                         {{#if equal ../jobItem.section _id}}
@@ -70,17 +68,17 @@
               <!-- Recipe/Description-->
               <div class="form-group">
                 {{#if isPrep}}
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Recipe</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     {{> textEditor initialHtml= jobItem.recipe}} <!--  "Add recipe to job" -->
                   </div>
                 {{else}}
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Description</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     {{> textEditor initialHtml=jobItem.description}} <!-- "Add description to job" -->
                   </div>
                 {{/if}}
@@ -91,10 +89,10 @@
 
                 <!-- Checklist -->
                 <div class="form-group">
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Checklist</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <input type="text" class="form-control add-item-to-checklist"
                            placeholder="Add an item to checklist and press enter">
                     <br/>
@@ -112,10 +110,10 @@
 
                 <!-- Frequency -->
                 <div class="form-group">
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Frequency</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <select class="form-control frequency-select">
                       {{#each frequencies}}
                         {{#if equal ../jobItem.frequency value}}
@@ -133,9 +131,9 @@
 
                     <!-- Repeat every X weeks -->
                     <div class="form-group">
-                      <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label"></label>
+                      <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label"></label>
 
-                      <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                      <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                         <p>Repeat every <input type="number" class="repeat-every-weeks-input" min="2"
                                                value="{{../jobItem.repeatEvery}}"> weeks.
                         </p>
@@ -145,18 +143,18 @@
 
                   <!-- Repeat on -->
                   <div class="form-group">
-                    <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                    <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                       Repeat On</label>
 
-                    <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                    <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                       {{#each week}}
                         <div class="checkbox">
-                          {{#if checked}}
-                            <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}" checked>
-                          {{else }}
-                            <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}">
-                          {{/if}}
                           <label for="{{day}}">
+                            {{#if checked}}
+                              <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}" checked>
+                            {{else }}
+                              <input type="checkbox" id="{{day}}" class="repeat-on-checkbox" value="{{day}}">
+                            {{/if}}
                             {{day}}
                           </label>
                         </div>
@@ -167,10 +165,10 @@
 
                 <!-- Repeat at -->
                 <div class="form-group">
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Repeat At</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <div class="input-group">
                       {{> comboTimeEditable params=repeatAtComboEditableParams}}
                     </div>
@@ -179,47 +177,50 @@
 
                 <!-- Starts on-->
                 <div class="form-group">
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Starts On</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     {{> reactiveDateTimePicker selector="starts-on-date-picker" value=startsOn}}
                   </div>
                 </div>
 
                 <!-- Ends on -->
                 <div class="form-group">
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Ends</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
 
                     <div class="radio">
-                      {{#if isEditMode}}
-                        {{#if jobItem.endsOn.on}}
-                          <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
-                                 value="never" checked>
+                      <label for="radio">
+                        {{#if isEditMode}}
+                          {{#if jobItem.endsOn.on}}
+                            <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                   value="never" checked>
+                          {{else}}
+                            <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                   value="never">
+                          {{/if}}
                         {{else}}
                           <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
-                                 value="never">
+                                 value="never" checked>
                         {{/if}}
-                      {{else}}
-                        <input type="radio" id="never-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="never" checked>
-                      {{/if}}
 
-                      <label for="radio">Never</label>
+                        Never
+                      </label>
                     </div>
 
                     <div class="radio">
-                      {{#if jobItem.endsOn.after}}
-                        <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="occurrences" checked>
-                      {{else}}
-                        <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="occurrences">
-                      {{/if}}
                       <label for="radio">
+                        {{#if jobItem.endsOn.after}}
+                          <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="occurrences" checked>
+                        {{else}}
+                          <input type="radio" id="occurrences-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="occurrences">
+                        {{/if}}
+
                         After
                         <input type="number" name="occurrences" class="occurrences-number-input"
                                value="{{jobItem.endsOn.after}}">
@@ -228,14 +229,15 @@
                     </div>
 
                     <div class="radio">
-                      {{#if jobItem.endsOn.lastDate}}
-                        <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="on-date" checked>
-                      {{else}}
-                        <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
-                               value="on-date">
-                      {{/if}}
                       <label for="radio">
+                        {{#if jobItem.endsOn.lastDate}}
+                          <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="on-date" checked>
+                        {{else}}
+                          <input type="radio" id="on-date-radio-button" name="ends-radio-button" class="ends-on-radio"
+                                 value="on-date">
+                        {{/if}}
+
                         On {{> reactiveDateTimePicker selector="ends-on-date-picker" value=endsOn}}
                       </label>
                     </div>
@@ -247,19 +249,19 @@
 
                 <!-- Ingredients used -->
                 <div class="form-group">
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Ingredients used</label>
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     {{> listOfIngredients ingredients=ingredients onChange=editIngredientsListOnChange}}
                   </div>
                 </div>
 
                 <!-- Portions -->
                 <div class="form-group">
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Portions</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <input type="number" class="form-control portions" placeholder="No. of Portions"
                            value="{{jobItem.portions}}" required>
                   </div>
@@ -267,10 +269,10 @@
 
                 <!-- Shelf life -->
                 <div class="form-group">
-                  <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                     Shelf Life</label>
 
-                  <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                     <div class="input-group m-b">
                       <input type="number" class="form-control shelf-life" placeholder="Shelf Life"
                              value="{{jobItem.shelfLife}}" required>
@@ -284,10 +286,10 @@
 
               <!-- Active time -->
               <div class="form-group">
-                <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                   Active Time</label>
 
-                <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                   <div class="input-group m-b">
                     <input type="number" class="form-control active-time" placeholder="Active Time"
                            value="{{activeTime}}" required>
@@ -298,10 +300,10 @@
 
               <!-- labours wage -->
               <div class="form-group">
-                <label class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
                   Labours" Wage</label>
 
-                <div class="{{#if isPlacedInFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                   <div class="input-group m-b">
                     <span class="input-group-addon">$</span>
                     <input type="number" class="form-control avg-wage-per-hour"
@@ -313,8 +315,10 @@
 
               <!-- Buttons -->
               <div class="row">
-                <div class="{{#if isPlacedInFlyout}}col-sm-10{{else}}col-sm-4 col-sm-offset-2{{/if}}">
-                  <a href="{{pathFor route="jobItemsMaster"}}" class="btn btn-white" type="button">Cancel</a>
+                <div class="{{#if inFlyout}}col-sm-10{{else}}col-sm-4 col-sm-offset-2{{/if}}">
+                 {{#unless inFlyout }}
+                    <a href="{{pathFor route="jobItemsMaster"}}" class="btn btn-white" type="button">Cancel</a>
+                 {{/unless}}
                   <button class="btn btn-primary submit-button" type="submit">Save changes</button>
                 </div>
               </div>
@@ -324,5 +328,4 @@
         </div>
       </div>
     </div>
-  </div>
 </template>

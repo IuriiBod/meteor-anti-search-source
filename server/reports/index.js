@@ -86,6 +86,37 @@ let getDetailedReportStockTakeTotal = (areaId, params) => {
   return stocktakeTotalDetailedReport.getIngredientsOfCurrentStocktake();
 };
 
+let stockVarianceReport = (currentAreaId, params) => {
+  let getStocktakeGroup = (date) => Stocktakes.find({date: date}).fetch();
+  let firstStocktakeGroup = getStocktakeGroup(params.firstStocktakeDate);
+  let secondStocktakeGroup = getStocktakeGroup(params.secondStocktakeDate);
+  let result;
+
+  if (firstStocktakeGroup.length && secondStocktakeGroup.length) {
+    let stockVarianceReport = new StockVarianceReport(
+      currentAreaId,
+      firstStocktakeGroup,
+      secondStocktakeGroup,
+      params.supplierId,
+      params.searchText
+    );
+    result = stockVarianceReport.getVarianceReport();
+  } else {
+    result = {
+      stocktakes: {
+        first: {
+          elementsCount: firstStocktakeGroup.length
+        },
+        second: {
+          elementsCount: secondStocktakeGroup.length
+        }
+      }
+    };
+  }
+
+  return result;
+};
+
 Meteor.methods({
   /**
    * @param {String|null} firstStocktakeMainId stocktake ID to start from
@@ -115,6 +146,24 @@ Meteor.methods({
       let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
       if (currentAreaId) {
         return getDetailedReportStockTakeTotal(currentAreaId, params);
+      }
+    } else {
+      throw new Meteor.Error('Not authorized.');
+    }
+  },
+
+  getStockVarianceReport(params) {
+    check(params, {
+      firstStocktakeDate: Object,
+      secondStocktakeDate: Object,
+      supplierId: HospoHero.checkers.NullableMongoId,
+      searchText: Match.OneOf(String, null)
+    });
+
+    if (this.userId) {
+      let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
+      if (currentAreaId) {
+        return stockVarianceReport(currentAreaId, params);
       }
     } else {
       throw new Meteor.Error('Not authorized.');

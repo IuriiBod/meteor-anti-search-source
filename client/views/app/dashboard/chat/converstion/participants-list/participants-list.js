@@ -1,7 +1,7 @@
-Template.participantsList.onCreated(function() {
+Template.participantsList.onCreated(function () {
   this.addParticipant = (userId) => {
     const conversation = this.data.conversation;
-    this.subscribe('profileUser', userId, function onReady () {
+    this.subscribe('profileUser', userId, function onReady() {
       conversation.addParticipant(Meteor.users.findOne(userId));
     });
   };
@@ -32,11 +32,11 @@ Template.participantsList.onCreated(function() {
   });
 });
 
-Template.participantsList.onRendered(function() {
+Template.participantsList.onRendered(function () {
   this.cleanSearchInput = () => {
     this.find('.search-user-name').value = '';
     this.searchName.set('');
-  }
+  };
 });
 
 Template.participantsList.helpers({
@@ -53,7 +53,7 @@ Template.participantsList.helpers({
     return (userId) => {
       tmpl.addParticipant(userId);
       tmpl.cleanSearchInput();
-    }
+    };
   }
 });
 

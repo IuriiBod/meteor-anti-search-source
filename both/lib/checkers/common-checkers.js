@@ -15,11 +15,6 @@ var PosSecret = Match.Where(function (key) {
   return /[0-9a-zA-Z]{64}/.test(key);
 });
 
-var RgbColor = Match.Where(function (color) {
-  check(color, String);
-  return /rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)/.test(color);
-});
-
 var forNonEmptyString = function (propertyName) {
   return Match.Where(function (value) {
     if (_.isString(value) && value.trim().length > 0) {
@@ -29,15 +24,6 @@ var forNonEmptyString = function (propertyName) {
     }
   });
 };
-
-
-var ShiftId = Match.Where(function (id) {
-  check(id, HospoHero.checkers.MongoId);
-  if (!Shifts.findOne({_id: id})) {
-    throw new Meteor.Error(404, "Shift not found");
-  }
-  return true;
-});
 
 Namespace('HospoHero.checkers', {
   /**
@@ -98,16 +84,13 @@ Namespace('HospoHero.checkers', {
   /**
    * RGB color checker: rgb(255, 255, 255)
    */
-  RgbColor: RgbColor,
-
-  /**
-   * Shift exist checker
-   */
-  ShiftId: ShiftId,
+  RgbColor: Match.Where(function (color) {
+    check(color, String);
+    return /rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)/.test(color);
+  }),
 
   Email: Match.Where(function (email) {
-    if (_.isString(email) && /.+@(.+){2,}\.(.+){2,}/.test(email)) {
-
+    if (_.isString(email) && HospoHero.regExp.email.test(email)) {
       return true;
     } else {
       throw new Meteor.Error('Incorrect email');
