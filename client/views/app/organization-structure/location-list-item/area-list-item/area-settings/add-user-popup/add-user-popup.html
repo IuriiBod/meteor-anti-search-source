@@ -1,18 +1,43 @@
 <template name="addUserPopup">
   <div class="panel panel-default add-user-popup">
     <div class="panel-heading text-center">
-      <b>Users</b>
+      <b>Invite to area</b>
     </div>
     <div class="panel-body">
-      {{#unless selectedUser}}
-        <p class="text-muted add-user-info">
-          Search for a person in organization by name or email address, or enter an email address to invite someone
-          new.
-        </p>
-        {{> searchUsersToInvite}}
+      <p class="text-muted add-user-info">
+        Search for a person in organization by name or email address, or enter
+        an email address to invite someone new.
+      </p>
+
+      <div class="add-user-to-area">
+        <input type="text"
+               class="form-control input-field user-search-input"
+               placeholder="Name or email"
+               name="addUserName"
+               required="required">
+      </div>
+
+      {{# if submitInviteContext}}
+        {{> submitAreaInvite submitInviteContext}}
       {{else}}
-        {{> userPermissions selectedUser=selectedUser areaId=areaId onPermissionSelect=onPermissionSelect}}
-      {{/unless}}
+        <div class="invite-search-results">
+          {{#if searchedUsers.count}}
+            <div class="search-results">
+              <b>Select to add</b>
+              <hr/>
+              <div class="search-users-container">
+                {{# each searchedUsers}}
+                  {{> searchUserInfo user=this onUserSelect=onUserSelect}}
+                {{/each}}
+              </div>
+            </div>
+          {{else}}
+            <div class="text-muted text-center no-results">
+              <b>No results</b>
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
     </div>
   </div>
 </template>

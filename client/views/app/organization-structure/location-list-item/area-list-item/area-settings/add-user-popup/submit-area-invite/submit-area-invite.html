@@ -1,0 +1,27 @@
+<template name="submitAreaInvite">
+  {{#unless isInviteInProgress}}
+    <div class="user-permissions">
+      <div class="permission-title">
+        Permission
+      </div>
+      <hr/>
+
+      <input type="text"
+             class="form-control input-field user-name-input"
+             placeholder="Name"
+             required="required"
+             pattern=".{3,}"
+             title="Minimum name length: 3">
+
+      {{> userRolesSelect}}
+
+      <div class="btn-group col-xs-12">
+        <button class="btn btn-primary col-xs-12 add-existing-user">Invite</button>
+      </div>
+    </div>
+  {{else}}
+    <div class="text-center invite-progress-wrapper">
+      <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+    </div>
+  {{/unless}}
+</template>
