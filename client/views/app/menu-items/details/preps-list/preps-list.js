@@ -38,7 +38,7 @@ Template.prepsList.events({
   'keyup .search-for-preps-input': _.throttle(function (event, tmpl) {
     let text = event.target.value.trim();
     tmpl.jobItemsSearch.search(text);
-  }, 500)
+  }, 500, {leading: false})
 });
 
 

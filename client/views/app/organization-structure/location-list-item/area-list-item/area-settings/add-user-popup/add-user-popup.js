@@ -75,5 +75,5 @@ Template.addUserPopup.events({
       tmpl.searchSource.search(searchStr);
       tmpl.selectedEmail.set(false);
     }
-  }, 300, {leading: false})
+  }, 500, {leading: false})
 });

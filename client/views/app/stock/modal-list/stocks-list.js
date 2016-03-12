@@ -40,6 +40,6 @@ Template.stocksList.events({
   'keyup .search-for-stocks-input': _.throttle(function (event, tmpl) {
     var value = $(event.target).val();
     tmpl.ingredienstSearch.search(value);
-  }, 500)
+  }, 500, {leading: false})
 });
 
