@@ -68,8 +68,6 @@ Template.addUserPopup.events({
     let searchStr = $('.user-search-input').val();
     let emailRegExp = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
 
-    console.log('search', searchStr);
-
     if (emailRegExp.test(searchStr)) {
       tmpl.selectedEmail.set(searchStr);
       tmpl.selectedUser.set(null);
