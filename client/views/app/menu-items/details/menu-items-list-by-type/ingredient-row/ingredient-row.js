@@ -66,7 +66,15 @@ Template.menuItemIngredientRow.events({
     if (tmpl.data.type === 'prep') {
       Router.go('jobItemEdit', {_id: tmpl.data.item._id});
     } else {
-      FlyoutManager.open('ingredientEditor', {ingredient: tmpl.data.item});
+      FlyoutManager.open('wrapperFlyout', {
+        template:'ingredientEditor',
+        title:"Edit ingredient",
+        data: {
+          inFlyout: true,
+          editMode:true,
+          ingredient: tmpl.data.item
+        }
+      });
     }
   }
 });
