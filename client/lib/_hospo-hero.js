@@ -4,9 +4,9 @@ Namespace('HospoHero.security', {
     return permissionChecker.hasPermissionInArea(null, permission);
   },
   isCurrentOrganizationOwner: function () {
-    let currentOrganization = HospoHero.getOrganizationIdBasedOnCurrentArea(Meteor.userId());
+    let currentOrganizationId = HospoHero.getOrganizationIdBasedOnCurrentArea(Meteor.userId());
     let permissionChecker = new HospoHero.security.PermissionChecker();
-    return permissionChecker.isOrganizationOwner(currentOrganization);
+    return currentOrganizationId && permissionChecker.isOrganizationOwner(currentOrganizationId);
   }
 });
 

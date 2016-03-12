@@ -1,7 +1,6 @@
 Template.totalValueDetails.onCreated(function () {
   this.stocks = new ReactiveVar();
   this.supplier = new ReactiveVar('All Suppliers');
-  this.timer = HospoHero.misc.timer();
 
   this.getValueDetails = (searchText) => {
     let params = {
@@ -35,15 +34,12 @@ Template.totalValueDetails.helpers({
 });
 
 Template.totalValueDetails.events({
-  'keyup .search-stock-items': function (event, tmpl) {
+  'keyup .search-stock-items': _.throttle(function (event, tmpl) {
     event.preventDefault();
 
     let searchText = event.target.value;
-    let callFunc = () => tmpl.getValueDetails(searchText);
-
-    tmpl.timer.clearTimeout();
-    tmpl.timer.setTimeout(callFunc, 300);
-  },
+    tmpl.getValueDetails(searchText);
+  }, 500, {leading: false}),
 
   'change .suppliers-list': function (event, tmpl) {
     event.preventDefault();
