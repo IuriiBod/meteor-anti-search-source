@@ -39,6 +39,6 @@ Template.submitAreaInvite.events({
   },
 
   'click .back-button': function (event, tmpl) {
-    tmpl.data.onSubmitHook();
+    tmpl.data.onSubmitInviteClose();
   }
 });
