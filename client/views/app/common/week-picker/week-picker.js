@@ -78,12 +78,16 @@ Template.weekPicker.helpers({
           currentDate = firstDay.format('D - ') + lastDay.format('D MMM YYYY');
         }
       }
-      currentDate += ", week " + weekStartEnd.week();
+      //currentDate += ", week " + weekStartEnd.week();
     } else {
       currentDate = HospoHero.dateUtils.dayFormat(date);
     }
 
     return currentDate.toUpperCase();
+  },
+  numberOfWeekStr: function (date) {
+    var numberOfWeek = moment(date).week();
+    return 'WEEK ' + numberOfWeek;
   }
 });
 
