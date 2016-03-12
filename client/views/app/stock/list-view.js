@@ -4,7 +4,14 @@ Template.listOfStocksMasterMainView.onCreated(function () {
       if (ingredient) {
         ingredient = Ingredients.findOne({_id: ingredient});
       }
-      FlyoutManager.open('ingredientEditor', {ingredient: ingredient});
+      FlyoutManager.open('wrapperFlyout', {
+        template:'ingredientEditor',
+        title:"Add ingredient",
+        data: {
+          inFlyout: true,
+          ingredient: null
+        }
+      });
     };
   };
 });
