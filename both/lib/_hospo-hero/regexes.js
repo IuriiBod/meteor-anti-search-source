@@ -1,10 +1,10 @@
-Namespace('HospoHero.regexes', {
+Namespace('HospoHero.regExp', {
     /**
-     * Contains all regexes in app
+     * Contains all RegExp in app
      *
      */
     escape:/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,
-    email:/.+@(.+){2,}\.(.+){2,}/,
+    email:/^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/,
     password:/^[a-zA-Z0-9]\w{3,14}$/i,
     pin:/^\d{4}$/,
 

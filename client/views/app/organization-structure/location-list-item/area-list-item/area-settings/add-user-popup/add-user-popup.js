@@ -66,9 +66,7 @@ Template.addUserPopup.helpers({
 Template.addUserPopup.events({
   'keyup .user-search-input': _.throttle(function (event, tmpl) {
     let searchStr = $('.user-search-input').val();
-    let emailRegExp = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
-
-    if (emailRegExp.test(searchStr)) {
+    if (HospoHero.regExp.email.test(searchStr)) {
       tmpl.selectedEmail.set(searchStr);
       tmpl.selectedUser.set(null);
     } else {

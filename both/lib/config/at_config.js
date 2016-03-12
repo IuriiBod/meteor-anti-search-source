@@ -24,7 +24,7 @@ AccountsTemplates.addField({
   _id: 'email',
   type: 'email',
   required: true,
-  re: HospoHero.regexes.email,
+  re: HospoHero.regExp.email,
   errStr: 'error.accounts.Invalid email',
   trim: true,
   lowercase: true
@@ -45,7 +45,7 @@ AccountsTemplates.addField({
   displayName: "PIN code",
   required: true,
   minLength: 4,
-  re: HospoHero.regexes.pin,
+  re: HospoHero.regExp.pin,
   errStr: "Required four-digit PIN."
 });
 
@@ -55,7 +55,7 @@ AccountsTemplates.addField({
   type: 'password',
   required: true,
   minLength: 8,
-  re:HospoHero.regexes.password,
+  re:HospoHero.regExp.password,
   errStr: 'error.minChar'
 });
 

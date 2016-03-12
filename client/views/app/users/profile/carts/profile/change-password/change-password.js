@@ -1,6 +1,6 @@
 Template.profileChangePassword.helpers({
   passwordPattern: function () {
-    return HospoHero.regexes.toHtmlString(HospoHero.regexes.password);
+    return HospoHero.regExp.toHtmlString(HospoHero.regExp.password);
   }
 });
 
