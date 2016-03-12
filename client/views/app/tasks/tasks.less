@@ -131,3 +131,25 @@
     top: 40px;
   }
 }
+
+@media (max-width: 480px) {
+  .create-new-task-container {
+    .input-group:first-child {
+      width: 100%;
+    }
+    .new-task-title + span {
+      display: table;
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+  .datepicker {
+    z-index: 1000 !important;
+    &::before, &::after {
+      visibility: hidden;
+    }
+  }
+}
