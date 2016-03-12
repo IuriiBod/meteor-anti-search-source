@@ -86,7 +86,11 @@ Template.topNavbar.events({
   },
 
   'click .open-organization-structure-button': function () {
-    FlyoutManager.open('organizationStructure', {});
+    FlyoutManager.open('wrapperFlyout', {
+      template:'organizationStructure',
+      title:"Organizations",
+      data: {}
+    });
   },
 
   'click .user-unavailabilities-flyout': function () {
