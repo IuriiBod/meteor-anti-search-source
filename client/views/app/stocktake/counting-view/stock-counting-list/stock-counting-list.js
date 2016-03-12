@@ -107,9 +107,14 @@ Template.stockCountingList.events({
       Meteor.call("assignStocksToAreas", stockId, currentSpecialAreaId, HospoHero.handleMethodResult());
     };
 
-    FlyoutManager.open('stocksList', {
-      onAddStockItem: onAddStockItem,
-      idsToExclude: idsOfItemsInList
+    FlyoutManager.open('wrapperFlyout', {
+      template:'stocksList',
+      title:"Select Stocks",
+      data: {
+        inFlyout: true,
+        onAddStockItem: tmpl.onAddItem,
+        idsToExclude: idsOfItemsInList
+      }
     });
   }
 });
