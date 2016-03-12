@@ -1,16 +1,12 @@
 <template name="ingredientEditor">
-  <div class="flyout-header">
-    {{> CloseFlyoutButton}}
     <div class="col-xs-11 col-xs-offset-1">
-      {{#if ingredient}}
-        {{#if hasPermissionInAreaTo 'edit stocks'}} Edit {{/if}}
+      {{#unless inFlyout}}
+        {{#if hasPermissionInAreaTo 'edit stocks'}} Edit Stocks {{/if}}
       {{else}}
-        Add
-      {{/if}}
-      Stocks
+      {{/unless}}
     </div>
-  </div>
-  <div class="flyout-content ingredient-editor">
+
+  <div class="ingredient-editor">
     <form class="form-horizontal submit-ingredient-form">
       <div class="form-group">
         <label class="col-sm-12 control-label">Supplier's Code</label>
@@ -138,7 +134,7 @@
       <button type="submit" class="hide submit-form-button">save</button>
     </form>
     <div class="pull-right">
-      {{#if ingredient}} <!-- is edit mode -->
+      {{#unless inFlyout}} <!-- is edit mode -->
         <button type="button" class="btn btn-primary submit-ingredient-button">Save changes</button>
         {{#if isArchive}}
           <button type="button" class="btn btn-warning restore-button">Restore</button>
@@ -148,7 +144,7 @@
         {{/if}}
       {{else}} <!-- create mode -->
         <button class="btn btn-primary submit-ingredient-button">Add ingredient</button>
-      {{/if}}
+      {{/unless}}
       <button type="button" class="btn btn-default cancel-button">Cancel</button>
     </div>
   </div>
