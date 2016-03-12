@@ -48,7 +48,7 @@ Template.ingredientsList.events({
   'keyup #searchIngBox': _.throttle(function (event, tmpl) {
     var text = event.target.value.trim();
     tmpl.searchSource.search(text);
-  }, 500),
+  }, 500, {leading: false}),
 
   'click #loadMoreIngs': function (event, tmpl) {
     event.preventDefault();

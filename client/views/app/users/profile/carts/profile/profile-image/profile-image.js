@@ -29,7 +29,7 @@ Template.profileImage.helpers({
 Template.profileImage.events({
   'click #uploadImage': function (event, tmpl) {
     event.preventDefault();
-    filepicker.pickAndStore(
+    window.filepicker.pickAndStore(
       {mimetype: "image/*", services: ['COMPUTER']},
       {},
       function (InkBlobs) {
@@ -37,7 +37,8 @@ Template.profileImage.events({
         if (doc) {
           var url = doc[0].url;
           var userId = tmpl.data._id;
-          Meteor.call("editBasicDetails", userId, {"profileImage": url}, HospoHero.handleMethodResult());
+          Meteor.call("editBasicDetails",
+            userId, {"profileImage": url}, HospoHero.handleMethodResult());
         }
       }
     );
