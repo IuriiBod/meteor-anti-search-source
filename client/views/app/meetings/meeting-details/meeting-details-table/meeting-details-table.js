@@ -61,9 +61,13 @@ Template.meetingDetailsTable.events({
       };
     };
 
-    FlyoutManager.open('usersSearchFlyout', {
-      selectedUsers: meeting.attendees,
-      onUserSelect: onUserSelect
+    FlyoutManager.open('wrapperFlyout', {
+      template:'usersSearch',
+      title:"Searching users",
+      data: {
+        selectedUsers: meeting.attendees,
+        onUserSelect: onUserSelect
+      }
     });
   }
 });

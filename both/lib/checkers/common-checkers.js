@@ -90,7 +90,7 @@ Namespace('HospoHero.checkers', {
   }),
 
   Email: Match.Where(function (email) {
-    if (_.isString(email) && /.+@(.+){2,}\.(.+){2,}/.test(email)) {
+    if (_.isString(email) && HospoHero.regExp.email.test(email)) {
       return true;
     } else {
       throw new Meteor.Error('Incorrect email');

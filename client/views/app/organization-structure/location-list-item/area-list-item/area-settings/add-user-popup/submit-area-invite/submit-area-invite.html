@@ -1,0 +1,33 @@
+<template name="submitAreaInvite">
+  {{#unless isInviteInProgress}}
+    <div class="user-permissions">
+      <div class="permission-title">Send invite</div>
+      <hr/>
+      <h4 class="invitation-from-control">{{#if email}} {{email}} {{else}} {{username user}} {{/if}}</h4>
+
+      {{#if email}}
+        <input type="text"
+               class="form-control invitation-from-control user-name-input"
+               placeholder="Name"
+               required="required"
+               pattern=".{3,}"
+               title="Minimum name length: 3">
+      {{/if}}
+
+      <div class="permission-title">Role</div>
+      <hr/>
+
+      <div class="invitation-from-control">
+        {{> userRolesSelect}}
+      </div>
+
+      <button class="btn btn-primary invitation-from-control invite-user-button">Invite</button>
+
+      <button class="btn btn-default invitation-from-control back-button">Back</button>
+    </div>
+  {{else}}
+    <div class="text-center invite-progress-wrapper">
+      <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+    </div>
+  {{/unless}}
+</template>

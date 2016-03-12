@@ -26,7 +26,7 @@ OrdersReporter = class {
       return {
         stockId: item.stockId,
         price: HospoHero.misc.rounding(item.unitPrice * item.countOrdered)
-      }
+      };
     });
   }
 

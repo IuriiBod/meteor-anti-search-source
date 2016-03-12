@@ -10,14 +10,26 @@ Template.organizationButtons.helpers({
 
 Template.organizationButtons.events({
   'click .organization-details-flyout': function (event, tmpl) {
-    FlyoutManager.open('organizationDetailsPage', {organizationId: tmpl.data._id});
+    FlyoutManager.open('wrapperFlyout', {
+      template:'organizationDetailsPage',
+      title:"Organization details",
+      data: {organizationId: tmpl.data._id}
+    });
   },
 
   'click .create-location-flyout': function (event, tmpl) {
-    FlyoutManager.open('createLocation', {organization: tmpl.data});
+    FlyoutManager.open('wrapperFlyout', {
+      template:'createLocation',
+      title:" Add Location",
+      data: {organization: tmpl.data}
+    });
   },
 
   'click .create-area-flyout': function (event, tmpl) {
-    FlyoutManager.open('createArea', {organizationId: tmpl.data._id});
+    FlyoutManager.open('wrapperFlyout', {
+      template: 'createArea',
+      title: "Add Area",
+      data: {organizationId: tmpl.data._id}
+    });
   }
 });

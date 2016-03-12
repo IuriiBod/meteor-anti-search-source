@@ -64,9 +64,25 @@ Template.menuItemIngredientRow.events({
   'click .view-button': function (event, tmpl) {
     event.preventDefault();
     if (tmpl.data.type === 'prep') {
-      Router.go('jobItemEdit', {_id: tmpl.data.item._id});
+      FlyoutManager.open('wrapperFlyout', {
+        template:'submitEditJobItem',
+        title:"Edit Job",
+        data: {
+          inFlyout: true,
+          editMode:true,
+          jobItem: tmpl.data.item
+        }
+      });
     } else {
-      FlyoutManager.open('ingredientEditor', {ingredient: tmpl.data.item});
+      FlyoutManager.open('wrapperFlyout', {
+        template:'ingredientEditor',
+        title:"Edit ingredient",
+        data: {
+          inFlyout: true,
+          editMode:true,
+          ingredient: tmpl.data.item
+        }
+      });
     }
   }
 });
