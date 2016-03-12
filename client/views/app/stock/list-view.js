@@ -6,10 +6,11 @@ Template.listOfStocksMasterMainView.onCreated(function () {
       }
       FlyoutManager.open('wrapperFlyout', {
         template:'ingredientEditor',
-        title:"Add ingredient",
+        title: (ingredient ? 'Edit' : 'Add') + " ingredient",
         data: {
           inFlyout: true,
-          ingredient: null
+          editMode: ingredient !== undefined,
+          ingredient: ingredient
         }
       });
     };
