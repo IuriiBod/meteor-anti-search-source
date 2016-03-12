@@ -44,7 +44,15 @@ Template.addUserPopup.helpers({
     let tmpl = Template.instance();
     let user = tmpl.selectedUser.get();
     let email = tmpl.selectedEmail.get();
-    return !!(user || email) && {user, email};
+    return !!(user || email) && {
+        user,
+        email,
+        areaId: this.areaId,
+        onSubmitInviteClose () {
+          tmpl.selectedUser.set(null);
+          tmpl.selectedEmail.set(false);
+        }
+      };
   }
 });
 
