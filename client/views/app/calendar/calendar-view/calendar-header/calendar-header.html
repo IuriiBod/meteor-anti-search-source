@@ -1,6 +1,6 @@
 <template name="calendarHeader">
   <div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-xs-6">
+    <div class="col-sm-6 col-xs-12">
       <h2>
         {{#if isManagerCalendar}}
           {{dayFormat date}}
@@ -10,7 +10,7 @@
       </h2>
     </div>
 
-    <div class="col-xs-6 title-action">
+    <div class="col-sm-6 col-xs-12 title-action">
 
       {{#unless isTodayDate}}
         <a href="{{pathFor route=routeName data=todayCalendarRouteData}}" class="btn btn-warning btn-sm">today</a>
