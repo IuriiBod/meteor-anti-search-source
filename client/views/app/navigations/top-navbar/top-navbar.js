@@ -93,6 +93,10 @@ Template.topNavbar.events({
     });
   },
 
+  'click .open-chat': function () {
+    FlyoutManager.open('chat', {});
+  },
+
   'click .user-unavailabilities-flyout': function () {
     FlyoutManager.open('userUnavailability', {});
   }
