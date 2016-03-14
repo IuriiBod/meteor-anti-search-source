@@ -23,8 +23,10 @@ Template.listOfIngredients.helpers({
     var itemsInList = this.ingredients;
     itemsInList.forEach(function (item) {
       var ingredient = Ingredients.findOne({_id: item._id});
-      ingredient.quantity = item.quantity;
-      ingredientObjectsWithQuantity.push(ingredient);
+      if(ingredient) {
+        ingredient.quantity = item.quantity;
+        ingredientObjectsWithQuantity.push(ingredient);
+      }
     });
 
     return ingredientObjectsWithQuantity;
@@ -47,9 +49,14 @@ Template.listOfIngredients.events({
 
     var idsOfItemsInList = _.pluck(tmpl.data.ingredients, '_id');
 
-    FlyoutManager.open('stocksList', {
-      onAddStockItem: onAddStockItem,
-      idsToExclude: idsOfItemsInList
+    FlyoutManager.open('wrapperFlyout', {
+      template:'stocksList',
+      title:"Select Stocks",
+      data: {
+        inFlyout: true,
+        onAddStockItem: onAddStockItem,
+        idsToExclude: idsOfItemsInList
+      }
     });
   }
 });

@@ -242,7 +242,7 @@ Namespace('HospoHero.misc', {
   },
 
   escapeRegExpString: function (str) {
-    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    return str.replace(HospoHero.regExp.escape, "\\$&");
   },
 
   /**
@@ -285,17 +285,5 @@ Namespace('HospoHero.misc', {
     } else {
       return false;
     }
-  },
-
-  timer() {
-    return {
-      timeoutId: 0,
-      setTimeout(executeFunc, timeout) {
-        this.timeoutId = Meteor.setTimeout(executeFunc, timeout);
-      },
-      clearTimeout() {
-        Meteor.clearTimeout(this.timeoutId);
-      }
-    };
   }
 });

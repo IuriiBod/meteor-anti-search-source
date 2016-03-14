@@ -1,32 +1,24 @@
 <template name="addJobItem">
-  <div class="flyout-header">
-    {{> CloseFlyoutButton}}
-    <div class="col-xs-11 col-xs-offset-1">
-      Select Prep Items
-    </div>
-  </div>
-  <div class="flyout-content">
-    <form class="form-horizontal add-job-item" role="form">
-      <input type="text" class="form-control input-lg search-input"
-             placeholder="Search for job item..."><br>
-      <table class="table table-striped">
-        <thead>
-        <tr>
-          <th>Action</th>
-          <th>Name</th>
-          <th>Active Time (mins)</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each availableJobItems}}
-          {{> jobListItem item=this onJobItemSelect=onJobItemSelect}}
-        {{/each}}
-        </tbody>
-      </table>
-    </form>
-    <div class="alert alert-warning">If your job item is not in the list,
-      <a class="alert-link add-new-job">click here</a> to add it. Once you save it, it will appear next
-      time you search.
-    </div>
+  <form class="form-horizontal add-job-item" role="form">
+    <input type="text" class="form-control input-lg search-input"
+           placeholder="Search for job item..."><br>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Action</th>
+        <th>Name</th>
+        <th>Active Time (mins)</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each availableJobItems}}
+        {{> jobListItem item=this onJobItemSelect=onJobItemSelect}}
+      {{/each}}
+      </tbody>
+    </table>
+  </form>
+  <div class="alert alert-warning">If your job item is not in the list,
+    <a class="alert-link add-new-job">click here</a> to add it. Once you save it, it will appear next
+    time you search.
   </div>
 </template>

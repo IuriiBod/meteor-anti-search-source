@@ -25,7 +25,7 @@ Template.prepsList.helpers({
 
   onAddPrepItem() {
     let tmpl = Template.instance();
-    return function(stockId) {
+    return function (stockId) {
       let idsToExclude = tmpl.idsToExclude.get();
       idsToExclude.push(stockId);
       tmpl.idsToExclude.set(idsToExclude);
@@ -38,7 +38,18 @@ Template.prepsList.events({
   'keyup .search-for-preps-input': _.throttle(function (event, tmpl) {
     let text = event.target.value.trim();
     tmpl.jobItemsSearch.search(text);
-  }, 500)
+  }, 500, {leading: false}),
+
+  'click a[data-action="add-new-job-item"]': function () {
+    FlyoutManager.open('wrapperFlyout', {
+      template: 'submitEditJobItem',
+      title: "Add Job",
+      data: {
+        inFlyout: true,
+        jobItem: null
+      }
+    });
+  }
 });
 
 

@@ -74,9 +74,9 @@ jss:meteor-google-prediction@0.3.0
 jss:moment-timezone@0.5.0
 jss:reactive-fullcalendar@1.1.0
 jss:suncalc@0.0.1
+jss:sweetalert@0.0.1
 jss:through@0.0.1
 jss:ui-states@0.2.0
-kevohagan:sweetalert@1.0.0
 konecty:autolinker@1.0.3
 lai:collection-extensions@0.2.1_1
 launch-screen@1.0.4
