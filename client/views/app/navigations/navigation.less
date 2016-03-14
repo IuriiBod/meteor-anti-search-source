@@ -1,5 +1,17 @@
 @import "../../../stylesheets/theme-globals.import.less";
 
+@media (max-width: 480px) {
+  .page-heading {
+    h2 {
+      margin-top: 18px;
+      font-size: 18px;
+    }
+    .breadcrumb {
+      display: none;
+    }
+  }
+}
+
 @media (max-width: 767px) {
   #wrapper {
     &.force-show-sidebar {
