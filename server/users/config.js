@@ -10,18 +10,15 @@ Accounts.onCreateUser(function (options, user) {
       user.profile.firstname = options.profile.name;
       user.profile.lastname = '';
     }
-    user.emails = [{"address": null}];
+    user.emails = [{address: null}];
     user.emails[0].address = user.services.google.email;
     user.emails[0].verified = user.services.google.verified_email;// jshint ignore:line
     if (options.profile.picture) {
       user.profile.image = options.profile.picture;
     }
   }
-  if (user.profile.pinCode) {
-    user.pinCode = user.profile.pinCode;
-    delete user.profile.pinCode;
-  }
-
+  user.pinCode = user.profile.pinCode || '1111';
+  delete user.profile.pinCode;
   return user;
 });
 

@@ -1,0 +1,29 @@
+<template name="profileHeader">
+  <div class="title-action profile-header">
+    <div class="btn-group profiles">
+      <button type="button"
+              class="btn btn-white dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false">Profiles <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right">
+        <li>
+          <a href="/user/profile/{{currentUser._id}}">
+            <img src="{{profilePicture currentUser._id}}" class="user-photo-min">
+            My profile
+          </a>
+        </li>
+        <li role="separator" class="divider"></li>
+        {{#each profiles}}
+          <li>
+            <a href="/user/profile/{{_id}}">
+              <img src="{{profilePicture _id}}" class="user-photo-min">
+              {{username _id}}
+            </a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>

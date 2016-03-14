@@ -1,9 +1,9 @@
 <template name="profileMainView">
   <!-- Page heading -->
   {{#if me}}
-    {{> pageHeading title='My Profile'}}
+    {{> pageHeading title='My Profile' name='profile'}}
   {{else}}
-    {{> pageHeading title=name category="Settings"}}
+    {{> pageHeading title=name category="Settings" name='profile'}}
   {{/if}}
   <div class="wrapper wrapper-content">
     <div class="row animated">

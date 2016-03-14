@@ -9,7 +9,7 @@ Template.newJobItem.onCreated(function() {
 Template.newJobItem.helpers({
   getSettings: function () {
     var data = Template.currentData();
-    data.isPlacedInFlyout = true;
+    data.inFlyout = true;
     return data;
   }
 });

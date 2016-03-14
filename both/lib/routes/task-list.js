@@ -8,7 +8,7 @@ Router.route('/task', {
       return [
         Meteor.subscribe('taskList'),
         Meteor.subscribe('areaUsersList', currentAreaId),
-        Meteor.subscribe('jobItems', null, currentAreaId, 'active'),
+        Meteor.subscribe('jobItemsInArea', currentAreaId, 'active'),
         Meteor.subscribe('menuList', currentAreaId, 'all', 'all'),
         Meteor.subscribe('allSuppliers', currentAreaId),
         Meteor.subscribe('meetings', Meteor.userId(), area.locationId),
