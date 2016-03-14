@@ -7,7 +7,7 @@ Router.route('/stocklist', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('allIngredientsInArea', currentAreaId),
       Meteor.subscribe("ingredientsRelatedJobs")
     ];
   },
@@ -29,7 +29,7 @@ Router.route('/stocklist/:type', {
     return [
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('ingredientsRelatedJobs'),
-      Meteor.subscribe('ingredients', null, currentAreaId, 'archived')
+      Meteor.subscribe('allIngredientsInArea', currentAreaId, 'archived')
     ];
   },
   data: function () {
