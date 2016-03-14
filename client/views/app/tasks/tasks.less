@@ -88,6 +88,10 @@
     .form-group {
       margin-top: -1px;
 
+      & > div {
+        padding-left: 0;
+      }
+
       textarea {
         resize: none;
       }
@@ -123,11 +127,40 @@
         }
       }
     }
+
+    .select2 {
+      width: 100%;
+    }
   }
 }
 
 .task-list-widget {
   .create-new-task-container {
     top: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-new-task-container {
+    .input-group:first-child {
+      width: 100%;
+    }
+    .new-task-title + span {
+      display: table;
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+  .datepicker {
+    z-index: 1000 !important;
+    &::before, &::after {
+      visibility: hidden;
+    }
+  }
+  .select2 {
+    width: 100% !important;
   }
 }
