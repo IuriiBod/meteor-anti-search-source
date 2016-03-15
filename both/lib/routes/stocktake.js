@@ -16,7 +16,7 @@ Router.route('stocktakeCounting', {
       Meteor.subscribe("stocktakes", this.params._id),
       Meteor.subscribe('ordersPlaced', this.params._id),
       Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId)
+      Meteor.subscribe('allIngredientsInArea', currentAreaId, null)
     ];
   },
   data: function () {
@@ -36,7 +36,7 @@ Router.route('stocktakeCountingEdit', {
       Meteor.subscribe('stocktakes', this.params._id),
       Meteor.subscribe('ordersPlaced', this.params._id),
       Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('ingredients', null, currentAreaId)
+      Meteor.subscribe('allIngredientsInArea', currentAreaId, null)
     ];
   },
   data: function () {
@@ -55,7 +55,7 @@ Router.route('orderReceive', {
     return [
       Meteor.subscribe('receiptOrders', this.params._id),
       Meteor.subscribe("orderReceipts", [this.params._id]),
-      Meteor.subscribe('ingredients', null, currentAreaId),
+      Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
       Meteor.subscribe('allSuppliers', currentAreaId)
     ];
   },
@@ -77,7 +77,7 @@ Router.route('stocktakeOrdering', {
         Meteor.subscribe('orderReceiptsByVersion', this.params._id, currentAreaId),
         Meteor.subscribe('comments', this.params._id, currentAreaId),
         Meteor.subscribe('areaUsersList', currentAreaId),
-        Meteor.subscribe('ingredients', null, currentAreaId),
+        Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
         Meteor.subscribe('allSuppliers', currentAreaId)
       ];
     }
