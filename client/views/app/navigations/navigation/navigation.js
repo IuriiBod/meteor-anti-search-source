@@ -134,6 +134,10 @@ var menuEntries = [
       {
         title: 'Stock Report <span class="label label-info pull-right">NEW</span>',
         route: 'stockReport'
+      },
+      {
+        title: 'Leave Requests<span class="label label-info pull-right">NEW</span>',
+        route: 'leaveRequests'
       }
     ]
   },

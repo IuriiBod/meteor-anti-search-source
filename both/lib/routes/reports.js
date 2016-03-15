@@ -88,3 +88,8 @@ Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', 
     };
   }
 });
+
+Router.route('/leave-requests', {
+  name: "leaveRequests",
+  template: "leaveRequests"
+});
