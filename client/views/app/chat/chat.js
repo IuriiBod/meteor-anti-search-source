@@ -1,6 +1,18 @@
 Template.chat.onCreated(function() {
   this.subscribe('conversations');
   this.currentConversationId = new ReactiveVar(null);
+  this.currentParticipantsListFlyout = new ReactiveVar(null);
+
+  this.autorun(() => {
+    const conversationId = this.currentConversationId;
+    const participantsListFlyout = this.currentParticipantsListFlyout;
+
+    if (conversationId.get()) {
+      participantsListFlyout.set(null);
+    } else if (participantsListFlyout.get()) {
+      participantsListFlyout.get().close();
+    }
+  });
 });
 
 Template.chat.helpers({
@@ -12,6 +24,9 @@ Template.chat.helpers({
     const conversation = Meteor.conversations.findOne(conversationId);
     const participants = conversation.participants().fetch();
     return !participants.length;
+  },
+  isParticipantsListOpen() {
+    return !!Template.instance().currentParticipantsListFlyout.get();
   },
   currentConversationId () {
     return Template.instance().currentConversationId.get();
@@ -37,7 +52,12 @@ Template.chat.events({
   'click .add-participant': (event, tmpl) => {
     event.preventDefault();
 
-    FlyoutManager.open('participantsList', {conversationId: tmpl.currentConversationId.get()});
+    const participantsListFlyout = FlyoutManager.open('participantsList', {
+      conversationId: tmpl.currentConversationId.get(),
+      onCloseFlyout: () => tmpl.currentParticipantsListFlyout.set(null)
+    });
+
+    tmpl.currentParticipantsListFlyout.set(participantsListFlyout);
   },
   'click .show-all-conversations': (event, tmpl) => {
     event.preventDefault();
