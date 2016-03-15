@@ -1,7 +1,5 @@
 MenuItems = new Mongo.Collection("menuItems");
-
 Ingredients = new Mongo.Collection("ingredients");
-
 JobItems = new Mongo.Collection("jobItems");
 
 Shifts = new Mongo.Collection("shifts");
@@ -15,17 +13,26 @@ Categories = new Mongo.Collection("categories");
 JobTypes = new Mongo.Collection("jobTypes");
 Sections = new Mongo.Collection("sections");
 
-GeneralAreas = new Mongo.Collection("generalAreas");
-SpecialAreas = new Mongo.Collection("specialAreas");
-
 NewsFeeds = new Mongo.Collection("newsFeeds");
 
-StocktakeMain = new Mongo.Collection("stocktakeMain");
+//stocktake 2.0
+Suppliers = new Mongo.Collection("suppliers");
+
+StockAreas = new Mongo.Collection("stockAreas");
 Stocktakes = new Mongo.Collection("stocktakes");
+StockItems = new Mongo.Collection("stockItems");
+
+Orders = new Mongo.Collection("orders");
+OrderItems = new Mongo.Collection("orderItems");
+
+
+//todo: remove these declarations as well
+GeneralAreas = new Mongo.Collection("generalAreas");
+SpecialAreas = new Mongo.Collection("specialAreas");
+StocktakeMain = new Mongo.Collection("stocktakeMain");
 StockOrders = new Mongo.Collection("stockOrders");
 OrderReceipts = new Mongo.Collection("orderReceipts");
 
-Suppliers = new Mongo.Collection("suppliers");
 
 //new roles functionality
 Organizations = new Mongo.Collection("organizations");
