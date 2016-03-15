@@ -11,7 +11,9 @@
           <br>
           {{> profileChangePin}}
           <br>
-          {{> profileChangePassword}}
+          {{#if isCanChangePassword}}
+            {{> profileChangePassword}}
+          {{/if}}
           <br>
           {{> profilePayRates}}
           <br>
