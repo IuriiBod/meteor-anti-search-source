@@ -1,6 +1,13 @@
 <template name="leaveRequests">
   {{> pageHeading title="Leave Reports" category="Reports" name="leavereports"}}
     <div class="wrapper wrapper-content animated stock-report">
-      {{> leaveRequestsTable}}
+        <div class="row">
+            <div class="col-lg-6">
+              {{> leaveRequestsTable}}
+            </div>
+            <div class="col-lg-6">
+              {{> unavailabilitiesTable}}
+            </div>
+        </div>
     </div>
 </template>
