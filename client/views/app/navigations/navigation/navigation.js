@@ -138,23 +138,6 @@ var menuEntries = [
     ]
   },
   {
-    title: 'Meetings',
-    icon: 'fa-users',
-    route: 'meetings',
-    params: function () {
-      return {};
-    }
-  },
-  {
-    title: 'Projects',
-    icon: 'fa-file-text-o',
-    route: 'projectsList',
-    activeOnRoutes: ['projectsList', 'createProject', 'projectDetails'],
-    params: function () {
-      return {};
-    }
-  },
-  {
     title: "Help",
     icon: 'fa-question',
     subMenuEntries: [

@@ -62,6 +62,25 @@ Template.topNavbar.helpers({
       date: calendarUiStatesManager.getState('lastViewDate') || HospoHero.dateUtils.shortDateFormat(),
       type: calendarUiStatesManager.getState('type') || 'day'
     };
+  },
+
+  barsIconMenuItems() {
+    return [
+      {
+        route: 'meetings',
+        title: 'Meetings',
+        params: function () {
+          return {};
+        }
+      },
+      {
+        route: 'projectsList',
+        title: 'Projects',
+        params: function () {
+          return {};
+        }
+      }
+    ]
   }
 });
 
