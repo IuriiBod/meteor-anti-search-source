@@ -42,6 +42,9 @@ Template.participantsList.onRendered(function () {
 });
 
 Template.participantsList.helpers({
+  conversation () {
+    return Template.instance().conversation;
+  },
   searchedUsers () {
     const tmpl = Template.instance();
     if (tmpl.searchName.get()) {
@@ -52,8 +55,8 @@ Template.participantsList.helpers({
   },
   addParticipant () {
     const tmpl = Template.instance();
-    return (userId) => {
-      tmpl.addParticipant(userId);
+    return (user) => {
+      tmpl.addParticipant(user._id);
       tmpl.cleanSearchInput();
     };
   }
