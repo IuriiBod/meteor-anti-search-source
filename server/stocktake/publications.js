@@ -1,11 +1,15 @@
-Meteor.publish('allAreas', function (currentAreaId) {
-  if (this.userId) {
-    return [
-      GeneralAreas.find({'relations.areaId': currentAreaId}),
-      SpecialAreas.find({'relations.areaId': currentAreaId})
-    ];
+Meteor.publish('allStockAreas', function (currentAreaId) {
+  check(currentAreaId, HospoHero.checkers.MongoId);
+
+  let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
+  if (permissionChecker && permissionChecker.hasPermissionInArea(currentAreaId, 'view stocks')) {
+    this.ready();
+    return;
   }
+  
+  return StockAreas.find({'relations.areaId': currentAreaId});
 });
+//todo: write all subs in the same fashion as "allStockAreas"
 
 Meteor.publish('stocktakeMains', function (date) {
   if (this.userId) {

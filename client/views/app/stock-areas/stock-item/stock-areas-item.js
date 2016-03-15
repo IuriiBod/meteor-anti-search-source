@@ -1,7 +1,7 @@
 Template.areaItem.helpers({
   specialAreas: function () {
     var id = Template.instance().data.area._id;
-    return SpecialAreas.find({"generalArea": id}, {"sort": {"name": 1}});
+    return StockAreas.find({generalAreaId: id}, {sort: {name: 1}});
   }
 });
 

@@ -1,25 +1,27 @@
 Template.areasProgressBar.helpers({
-  widthOfBar: function() {
-    var progress;
-    var self = this;
-    var getSpecialArea = function() {
-      return self.itemClass === 'garea-filter' ?
-          SpecialAreas.find({"generalArea": self.itemId}) : SpecialAreas.findOne({_id: self.itemId});
-    };
+  widthOfBar: function () {
+    let isGeneralArea = this.itemClass === 'garea-filter';
 
-    var getStocksCount = function(specialArea) {
-      return Ingredients.find({"_id": {$in: specialArea.stocks}, "status": "active"}).count();
-    };
+    var getSpecialArea = () => StockAreas.find({
+      [isGeneralArea && 'generalAreaId' || '_id']: this.itemId
+    });
 
-    var specialAreaProgressBar = function() {
+    var getStocksCount = specialArea =>
+      Ingredients.find({_id: {$in: specialArea.stocks}, status: 'active'}).count();
+
+    let getOrderItemsCount = () =>
+      Stocktakes.find({version: this.stockTakeData.stockTakeId, generalArea: this.itemId}).count();
+
+    //todo: code below should be refactored
+    var specialAreaProgressBar = () => {
       var progressBar = 0;
       var specialArea = getSpecialArea();
       if (specialArea && specialArea.stocks && specialArea.stocks.length) {
         var stocktakes = Stocktakes.find({
-          "stockId": {$in: specialArea.stocks},
-          "version": self.stockTakeData.stockTakeId,
-          "specialArea": self.itemId,
-          "generalArea": self.stockTakeData.activeGeneralArea
+          stockId: {$in: specialArea.stocks},
+          version: this.stockTakeData.stockTakeId,
+          specialArea: this.itemId,
+          generalArea: this.stockTakeData.activeGeneralArea
         }).count();
         var stocks = getStocksCount(specialArea);
         if (stocks > 0) {
@@ -29,11 +31,11 @@ Template.areasProgressBar.helpers({
       return progressBar;
     };
 
-    var generalAreaProgressBar = function() {
-      var totalCount = 0;
-      var progressBar = 0;
-      var getStocks = function() {
+    var generalAreaProgressBar = () => {
+
+      var getStockItemsCount = function () {
         var specialAreas = getSpecialArea();
+        let totalCount = 0;
         if (specialAreas.count() > 0) {
           specialAreas.forEach(function (doc) {
             if (doc.stocks && doc.stocks.length) {
@@ -44,25 +46,15 @@ Template.areasProgressBar.helpers({
             }
           });
         }
+        return totalCount;
       };
 
-      var generalArea = GeneralAreas.findOne({_id: self.itemId});
-      if (generalArea) {
-        getStocks();
-      }
-      var stocktakes = Stocktakes.find({"version": self.stockTakeData.stockTakeId, "generalArea": self.itemId}).count();
-      if (stocktakes > 0) {
-        progressBar = (stocktakes / totalCount) * 100;
-      }
-      return progressBar;
+      let totalCount = getStockItemsCount();
+      let orderItemsCount = getOrderItemsCount();
+      return orderItemsCount > 0 ? (orderItemsCount / totalCount) * 100 : 0;
     };
 
-    if (this.itemClass === "sarea-filter") {
-      progress = specialAreaProgressBar();
-      return (progress + '%');
-    } else if (this.itemClass === "garea-filter") {
-      progress = generalAreaProgressBar();
-      return (progress + "%");
-    }
+    let progress = isGeneralArea ? generalAreaProgressBar() : specialAreaProgressBar();
+    return `${progress} %`;
   }
 });

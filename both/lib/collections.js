@@ -27,8 +27,6 @@ OrderItems = new Mongo.Collection("orderItems");
 
 
 //todo: move this collections to migration v65 file.
-GeneralAreas = new Mongo.Collection("generalAreas");
-SpecialAreas = new Mongo.Collection("specialAreas");
 StocktakeMain = new Mongo.Collection("stocktakeMain");
 StockOrders = new Mongo.Collection("stockOrders");
 OrderReceipts = new Mongo.Collection("orderReceipts");

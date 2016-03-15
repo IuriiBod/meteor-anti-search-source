@@ -39,7 +39,7 @@ Template.areaItemEdit.events({
     event.preventDefault();
     var id = this.item._id;
     tmpl.data.stockTakeData.makeGeneralAreaActive(id);
-    var sarea = SpecialAreas.findOne({generalArea: id}, {sort: {name: 1}});
+    var sarea = StockAreas.findOne({generalAreaId: id}, {sort: {name: 1}});
     tmpl.data.stockTakeData.makeSpecialAreaActive(sarea && sarea._id || null);
   },
 

@@ -1,6 +1,6 @@
 Template.stockAreas.helpers({
   areas: function () {
-    return GeneralAreas.find({}, {sort: {"createdAt": 1}});
+    return StockAreas.find({generalAreaId: {$exists: false}}, {sort: {createdAt: 1}});
   }
 });
 

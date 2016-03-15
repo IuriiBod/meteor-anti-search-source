@@ -12,7 +12,7 @@ Router.route('stocktakeCounting', {
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('allAreas', currentAreaId),
+      Meteor.subscribe('allStockAreas', currentAreaId),
       Meteor.subscribe("stocktakes", this.params._id),
       Meteor.subscribe('ordersPlaced', this.params._id),
       Meteor.subscribe('allSuppliers', currentAreaId),
@@ -32,7 +32,7 @@ Router.route('stocktakeCountingEdit', {
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('allAreas', currentAreaId),
+      Meteor.subscribe('allStockAreas', currentAreaId),
       Meteor.subscribe('stocktakes', this.params._id),
       Meteor.subscribe('ordersPlaced', this.params._id),
       Meteor.subscribe('allSuppliers', currentAreaId),

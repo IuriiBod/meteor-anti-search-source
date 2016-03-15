@@ -64,7 +64,7 @@ SortableItemsHelper.prototype.getSortedItems = function() {
   var nextItem = this._nextItem ? this._nextItem.ingredient._id : null;
   var previousItem = this._previousItem ? this._previousItem.ingredient._id : null;
 
-  var specialArea = SpecialAreas.findOne({_id: this._draggedItem.stockTakeData.activeSpecialArea});
+  var specialArea = StockAreas.findOne({_id: this._draggedItem.stockTakeData.activeSpecialArea});
   var stocks = specialArea.stocks;
   var stockOldPosition = stocks.indexOf(draggedItem);
   var newPosition = this._draggedItemNewPosition(stocks, previousItem, nextItem, draggedItem);

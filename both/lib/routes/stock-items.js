@@ -45,6 +45,6 @@ Router.route('stockAreasSettings', {
   path: '/settings/stock-areas',
   template: "stockAreas",
   waitOn: function () {
-    return Meteor.subscribe('allAreas', HospoHero.getCurrentAreaId(Meteor.userId()));
+    return Meteor.subscribe('allStockAreas', HospoHero.getCurrentAreaId(Meteor.userId()));
   }
 });

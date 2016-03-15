@@ -47,7 +47,7 @@ Template.stockCountingList.helpers({
     var gareaId = Template.instance().get('activeGeneralArea');
     var sareaId = Template.instance().get('activeSpecialArea');
     if (gareaId && sareaId) {
-      var sarea = SpecialAreas.findOne({_id: sareaId});
+      var sarea = StockAreas.findOne({_id: sareaId});
       var ings = [];
       if (sarea && sarea.stocks.length > 0) {
         var ids = sarea.stocks;
@@ -101,7 +101,7 @@ Template.stockCountingList.events({
   'click .addStock': function (event, tmpl) {
     event.preventDefault();
     var currentSpecialAreaId = tmpl.get('activeSpecialArea');
-    var currentSpecialArea = SpecialAreas.findOne({_id: currentSpecialAreaId});
+    var currentSpecialArea = StockAreas.findOne({_id: currentSpecialAreaId});
     var idsOfItemsInList = currentSpecialArea.stocks;
     var onAddStockItem = function(stockId) {
       Meteor.call("assignStocksToAreas", stockId, currentSpecialAreaId, HospoHero.handleMethodResult());

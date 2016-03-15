@@ -14,14 +14,21 @@ Meteor.methods({
       logger.error("User not permitted to generate stocktakes");
       throw new Meteor.Error(403, "User not permitted to generate stocktakes");
     }
+    let relationsObject = HospoHero.getRelationsObject();
     var doc = {
       stocktakeDate: new Date(date).getTime(),
       date: new Date(),
       generalAreas: [],
       specialAreas: [],
-      relations: HospoHero.getRelationsObject()
+      relations: relationsObject
     };
-    var generalAreas = GeneralAreas.find({active: true}).fetch();
+
+    var generalAreas = StockAreas.find({
+      generalAreaId: {$exists: false},
+      active: true,
+      'relations.areaId': relationsObject.areaId
+    }).fetch();
+
     if (generalAreas && generalAreas.length > 0) {
       generalAreas.forEach(function (area) {
         if (doc.generalAreas.indexOf(area._id) < 0) {
@@ -29,7 +36,12 @@ Meteor.methods({
         }
       });
     }
-    var specialAreas = SpecialAreas.find({"active": true}).fetch();
+    var specialAreas = StockAreas.find({
+      generalAreaId: {$exists: true},
+      active: true,
+      'relations.areaId': relationsObject.areaId
+    }).fetch();
+
     if (specialAreas && specialAreas.length > 0) {
       specialAreas.forEach(function (area) {
         if (doc.specialAreas.indexOf(area._id) < 0) {
@@ -83,12 +95,12 @@ Meteor.methods({
         logger.error("Stock item does not exist");
         throw new Meteor.Error(403, "Stock item does not exist");
       }
-      var generalArea = GeneralAreas.findOne(info.generalArea);
+      var generalArea = StockAreas.findOne({_id: info.generalArea});
       if (!generalArea) {
         logger.error("General area does not exist");
         throw new Meteor.Error(403, "General area does not exist");
       }
-      var specialArea = SpecialAreas.findOne(info.specialArea);
+      var specialArea = StockAreas.findOne({_id: info.specialArea});
       if (!specialArea) {
         logger.error("Special area does not exist");
         throw new Meteor.Error(403, "Special area does not exist");
@@ -162,7 +174,7 @@ Meteor.methods({
     }
 
     if (sortedStockItems.stocks) {
-      SpecialAreas.update({_id: sortedStockItems.activeSpecialArea}, {$set: {stocks: sortedStockItems.stocks}});
+      StockAreas.update({_id: sortedStockItems.activeSpecialArea}, {$set: {ingredients: sortedStockItems.stocks}});
     }
 
   }
