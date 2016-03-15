@@ -23,6 +23,13 @@
           {{> settingsDropdownMenu menuItems=profileMenuItems}}
         </li>
 
+        <li class="dropdown">
+          <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-bars"></i>
+          </a>
+          {{> settingsDropdownMenu menuItems=barsIconMenuItems}}
+        </li>
+
         <li>
           <a href="{{pathFor 'calendar' type=calendar.type date=calendar.date userId=currentUser._id}}">
             <i class="fa fa-calendar"></i>
