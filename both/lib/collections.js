@@ -26,7 +26,7 @@ Orders = new Mongo.Collection("orders");
 OrderItems = new Mongo.Collection("orderItems");
 
 
-//todo: remove these declarations as well
+//todo: move this collections to migration v65 file.
 GeneralAreas = new Mongo.Collection("generalAreas");
 SpecialAreas = new Mongo.Collection("specialAreas");
 StocktakeMain = new Mongo.Collection("stocktakeMain");
