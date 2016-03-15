@@ -30,7 +30,7 @@ Router.route('/jobItem/submit', {
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId)
+      Meteor.subscribe('allIngredientsInArea', currentAreaId, null)
     ];
   },
   data: function () {
@@ -73,7 +73,7 @@ Router.route('/jobItem/:_id/edit', {
       Meteor.subscribe('jobItem', this.params._id),
       Meteor.subscribe('jobTypes'),
       Meteor.subscribe('sections', currentAreaId),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId),
+      Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
       Meteor.subscribe('allSuppliers', currentAreaId)
     ];
   },

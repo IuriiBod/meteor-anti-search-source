@@ -1,5 +1,8 @@
 Meteor.publish('allIngredientsInArea', function (areaId, status) {
   if (this.userId) {
+    check(areaId, HospoHero.checkers.MongoId);
+    check(status, Match.OneOf(String, null));
+
     let checkPermission = new HospoHero.security.PermissionChecker(this.userId);
 
     if (checkPermission.hasPermissionInArea(areaId, "edit stocks")) {
@@ -12,8 +15,6 @@ Meteor.publish('allIngredientsInArea', function (areaId, status) {
       }
 
       return Ingredients.find(query);
-    } else {
-      this.ready();
     }
   } else {
     this.ready();
@@ -31,14 +32,16 @@ Meteor.publish('ingredientsRelatedJobs', function (id) {
 
 Meteor.publish('ingredient', function (id) {
   if (this.userId) {
-    let ingredientCursor = Ingredients.find({_id: id});
-    let ingredientAreaId = ingredientCursor.fetch()[0].relations.areaId;
-    let checkPermission = new HospoHero.security.PermissionChecker(this.userId);
+    check(id, HospoHero.checkers.MongoId);
 
-    if (checkPermission.hasPermissionInArea(ingredientAreaId, "edit stocks")) {
-      return ingredientCursor;
-    } else {
-      this.ready();
+    let ingredientCursor = Ingredients.find({_id: id});
+    if (ingredientCursor.count()) {
+      let ingredientAreaId = ingredientCursor.fetch()[0].relations.areaId;
+      let checkPermission = new HospoHero.security.PermissionChecker(this.userId);
+
+      if (checkPermission.hasPermissionInArea(ingredientAreaId, "edit stocks")) {
+        return ingredientCursor;
+      }
     }
   } else {
     this.ready();
