@@ -2,26 +2,23 @@
   <div class="conversation">
     <div class="ibox chat-view">
       <div class="row">
-        <div class="col-md-9 ">
+        <div class="col-md-12">
           <div class="chat-discussion">
             {{#each messages}}
               {{> chatMessage }}
             {{/each}}
           </div>
         </div>
-        <div class="col-md-3">
-          {{> participantsList conversation=conversation}}
-        </div>
       </div>
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
           <div class="chat-message-form">
             <div class="form-group">
               <textarea class="form-control message-input" placeholder="Enter message text"></textarea>
             </div>
           </div>
         </div>
-        <div class="col-lg-12">
+        <div class="col-md-12">
           <button class="btn btn-primary pull-right send-message">Send</button>
         </div>
       </div>

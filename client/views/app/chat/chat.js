@@ -7,6 +7,12 @@ Template.chat.helpers({
   isConversationSelected () {
     return !!Template.instance().currentConversationId.get();
   },
+  isNoOtherParticipants () {
+    const conversationId = Template.instance().currentConversationId.get();
+    const conversation = Meteor.conversations.findOne(conversationId);
+    const participants = conversation.participants().fetch();
+    return !participants.length;
+  },
   currentConversationId () {
     return Template.instance().currentConversationId.get();
   },
@@ -27,6 +33,11 @@ Template.chat.events({
 
     const newConversation = new Conversation().save();
     tmpl.currentConversationId.set(newConversation._id);
+  },
+  'click .add-participant': (event, tmpl) => {
+    event.preventDefault();
+
+    FlyoutManager.open('participantsList', {conversationId: tmpl.currentConversationId.get()});
   },
   'click .show-all-conversations': (event, tmpl) => {
     event.preventDefault();

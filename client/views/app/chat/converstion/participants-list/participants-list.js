@@ -1,13 +1,15 @@
 Template.participantsList.onCreated(function () {
+  this.conversation = Meteor.conversations.findOne(this.data.conversationId);
+
   this.addParticipant = (userId) => {
-    const conversation = this.data.conversation;
+    const conversation = this.conversation;
     this.subscribe('profileUser', userId, function onReady() {
       conversation.addParticipant(Meteor.users.findOne(userId));
     });
   };
 
   this.autorun(() => {
-    const participants = this.data.conversation.participants();
+    const participants = this.conversation.participants();
     const participantsIds = participants.map(participant => participant.userId);
     this.subscribe('selectedUsersList', participantsIds);
   });
@@ -25,7 +27,7 @@ Template.participantsList.onCreated(function () {
     const name = this.searchName.get();
     if (name) {
       this.searchSource.setMongoQuery({
-        _id: {$nin: this.data.conversation._participants}
+        _id: {$nin: this.conversation._participants}
       });
       this.searchSource.search(name);
     }
