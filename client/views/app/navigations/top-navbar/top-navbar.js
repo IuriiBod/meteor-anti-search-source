@@ -64,21 +64,15 @@ Template.topNavbar.helpers({
     };
   },
 
-  barsIconMenuItems() {
+  organizationScopeItems() {
     return [
       {
         route: 'meetings',
-        title: 'Meetings',
-        params: function () {
-          return {};
-        }
+        title: 'Meetings'
       },
       {
         route: 'projectsList',
-        title: 'Projects',
-        params: function () {
-          return {};
-        }
+        title: 'Projects'
       }
     ]
   }
@@ -98,16 +92,16 @@ Template.topNavbar.events({
 
   'click .notifi-toggler': function () {
     FlyoutManager.open('wrapperFlyout', {
-      template:'notifiFlyout',
-      title:"Notifications",
+      template: 'notifiFlyout',
+      title: "Notifications",
       data: {}
     });
   },
 
   'click .open-organization-structure-button': function () {
     FlyoutManager.open('wrapperFlyout', {
-      template:'organizationStructure',
-      title:"Organizations",
+      template: 'organizationStructure',
+      title: "Organizations",
       data: {}
     });
   },
