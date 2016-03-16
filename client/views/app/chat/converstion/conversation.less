@@ -1,0 +1,20 @@
+@chat-message-form-height: 130px;
+
+.conversation {
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+  margin-bottom: -@chat-message-form-height;
+  padding-bottom: @chat-message-form-height;
+
+  .chat-discussion {
+    position: relative;
+    height: 100%;
+    min-height: 100%;
+  }
+
+  .chat-message-form {
+    height: @chat-message-form-height;
+    width: 100%;
+  }
+}
