@@ -19,7 +19,10 @@ Template.leaveRequestsTable.helpers({
         var user = Meteor.users.findOne({_id:arguments[0]});
         return user && user.profile ?
             user.profile.firstname + ' ' + user.profile.lastname :
-            'undefined user name';
+            '-';
+    },
+    comment: function() {
+        return this.comment !== '' ? this.comment : '-' ;
     },
     isHasMoreItems:  function(){
         let itemPerPage = Template.instance()._itemPerPage;

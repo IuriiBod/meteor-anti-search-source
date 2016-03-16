@@ -14,7 +14,7 @@ Template.unavailabilitiesTable.onCreated(function () {
                     _.each(user.unavailabilities,function (unavailabilitie,i) {
                         if(i< (self._itemPerPage * self._page.get())) {
                             unavailabilitie.userId = user._id;
-                            self.unavailabilities.push(unavailabilitie)
+                            self.unavailabilities.push(unavailabilitie);
                         }
                     });
                 });
@@ -33,7 +33,10 @@ Template.unavailabilitiesTable.helpers({
         var user = Meteor.users.findOne({_id:arguments[0]});
         return user && user.profile ?
         user.profile.firstname + ' ' + user.profile.lastname :
-            'undefined user name';
+            '-';
+    },
+    comment: function() {
+        return this.comment !== '' ? this.comment : '-' ;
     },
     isHasMoreItems:  function(){
         let itemPerPage = Template.instance()._itemPerPage;

@@ -10,7 +10,9 @@
                                 <th>User</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
-                                <th>Status</th>
+                                <th>Is Repeat</th>
+                                <th>Is All Day</th>
+                                <th>Comment</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -19,6 +21,9 @@
                                     <td>{{username userId}}</td>
                                     <td><strong>{{date startDate}}</strong></td>
                                     <td><strong>{{date endDate}}</strong></td>
+                                    <td>{{repeat}}</td>
+                                    <td>{{#if isAllDay}}<i class="fa  fa-check"></i>{{/if}}</td>
+                                    <td>{{comment}}</td>
                                 </tr>
                             {{/each}}
                             </tbody>

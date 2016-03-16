@@ -58,7 +58,7 @@ Meteor.publish('areaUsersList', publishAreaUsersFn); // used anywhere else
 Meteor.publish('areaUnavailabilitiesList', function (areaId,filter) {
   check(areaId, HospoHero.checkers.MongoId);
   check(filter.limit, Number);
-  console.log('[pub - areaUnavailabilitiesList]...');
+  
   //todo: any security (permissions) checks here?
 
   let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users', {
@@ -72,8 +72,8 @@ Meteor.publish('areaUnavailabilitiesList', function (areaId,filter) {
   let countOfUnavailabilities = 0;
   query['relations.areaIds'] = areaId;
   query['unavailabilities.0'] = {'$exists':true};
-  newFilter['fields'] = fieldsToPublish;
-  newFilter['limit'] = 1;
+  newFilter.fields = fieldsToPublish;
+  newFilter.limit = 1;
   Meteor.users.find(query,filter).forEach(function (user) {
     countOfUnavailabilities += user.unavailabilities.length;
     if(countOfUnavailabilities < filter.limit){
