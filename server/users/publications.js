@@ -58,7 +58,7 @@ Meteor.publish('areaUsersList', publishAreaUsersFn); // used anywhere else
 Meteor.publish('areaUnavailabilitiesList', function (areaId,filter) {
   check(areaId, HospoHero.checkers.MongoId);
   check(filter.limit, Number);
-  
+
   //todo: any security (permissions) checks here?
 
   let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users', {

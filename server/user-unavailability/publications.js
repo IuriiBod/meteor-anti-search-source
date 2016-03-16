@@ -28,16 +28,17 @@ Meteor.publish('leaveRequestsApprovers', function () {
   });
 });
 
-Meteor.publishComposite('leaveRequests', function (areaId,filter) {
+Meteor.publishComposite('leaveRequests', function (areaId,limit) {
   check(areaId, HospoHero.checkers.MongoId);
-  check(filter.limit, Number);
+  check(limit, Number);
   const permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
-  if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'view reports')) {
-    const query =  {};
-    query['relations.areaId'] = areaId;
+  if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'approve leave requests')) {
+    const query = {
+      'relations.areaId':areaId
+    };
     return {
       find: function () {
-        return LeaveRequests.find(query,filter);
+        return LeaveRequests.find(query,{ limit:limit } );
       },
       children: [
         {

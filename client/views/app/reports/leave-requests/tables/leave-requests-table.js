@@ -1,10 +1,9 @@
 Template.leaveRequestsTable.onCreated(function () {
-    this._itemPerPage = 5;
     this._page = new Blaze.ReactiveVar(1);
     const currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     this.autorun(() => {
         this.subscribe('leaveRequests',currentAreaId,
-            { limit: this._page.get() * this._itemPerPage } );
+            this._page.get() * this.data.itemPerPage);
     });
 });
 
@@ -25,9 +24,8 @@ Template.leaveRequestsTable.helpers({
         return this.comment !== '' ? this.comment : '-' ;
     },
     isHasMoreItems:  function(){
-        let itemPerPage = Template.instance()._itemPerPage;
         let page = Template.instance()._page.get();
-        return  LeaveRequests.find().count() / (page * itemPerPage) >= 1;
+        return  LeaveRequests.find().count() / (page * this.itemPerPage) >= 1;
     }
 });
 Template.leaveRequestsTable.events({
