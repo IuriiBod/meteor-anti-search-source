@@ -14,11 +14,6 @@ let StocktakeDocument = Match.Where(function (stocktakeDoc) {
     date: Date,
     relations: HospoHero.checkers.Relations
   });
-
-  if (stocktakeDoc._id && !Stocktakes.findOne({_id: stocktakeDoc._id})) {
-    throw new Meteor.Error(500, "Stocktake doesn't exists");
-  }
-
   return true;
 });
 
@@ -44,10 +39,6 @@ let StockItemDocument = Match.Where(function (stockItemDoc) {
     ingredient: HospoHero.checkers.IngredientDocument,
     relations: HospoHero.checkers.Relations
   });
-
-  if (stockItemDoc._id && !StockItems.findOne({_id: stockItemDoc._id})) {
-    throw new Meteor.Error(500, "Stock item doesn't exists");
-  }
 
   return true;
 });
