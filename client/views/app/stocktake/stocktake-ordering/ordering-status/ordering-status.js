@@ -1,6 +1,6 @@
 Template.orderingStatus.onCreated(function () {
   this.getCurrentReceipt = function () {
-    return OrderReceipts.findOne({
+    return Orders.findOne({
       version: this.data.stocktakeMainId,
       supplier: this.data.activeSupplierId,
       'orderedThrough.through': {$ne: null}

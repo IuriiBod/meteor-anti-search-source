@@ -35,12 +35,12 @@ Meteor.publish('ordersPlaced', function (version) {
 
 Meteor.publish("orderReceipts", function (ids) {
   logger.info("Stock order receipts published ", ids);
-  return OrderReceipts.find({"_id": {$in: ids}});
+  return Orders.find({"_id": {$in: ids}});
 });
 
 Meteor.publish('orderReceiptsByVersion', function (version, areaId) {
   logger.info("Stock order receipts published by version", version);
-  return OrderReceipts.find({
+  return Orders.find({
     version: version,
     'relations.areaId': areaId
   });
@@ -49,7 +49,7 @@ Meteor.publish('orderReceiptsByVersion', function (version, areaId) {
 Meteor.publishComposite('allOrderReceipts', function (areaId) {
   return {
     find: function () {
-      return OrderReceipts.find({
+      return Orders.find({
         'relations.areaId': areaId
       }, {
         sort: {"date": -1}

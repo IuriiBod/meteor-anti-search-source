@@ -61,7 +61,7 @@ Router.route('orderReceive', {
   },
   data: function () {
     return {
-      currentReceipt: OrderReceipts.findOne({_id: this.params._id})
+      currentReceipt: Orders.findOne({_id: this.params._id})
     };
   }
 });

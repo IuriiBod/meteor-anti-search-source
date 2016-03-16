@@ -15,7 +15,7 @@ Template.ordersReceiptsList.onCreated(function () {
     let period = this.periodOfOrders.get();
     let dateInterval = ordersPeriod.transformPeriodToQuery(period);
 
-    return OrderReceipts.find({
+    return Orders.find({
       received: this.showsReceivedOrders.get(),
       expectedDeliveryDate: dateInterval
     }, {

@@ -32,7 +32,7 @@ Template.orderReceiveItem.helpers({
   },
 
   isReceived: function() {
-    var data = OrderReceipts.findOne({_id: this.item.orderReceipt});
+    var data = Orders.findOne({_id: this.item.orderReceipt});
     return data && data.received;
   },
 

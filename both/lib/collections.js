@@ -25,11 +25,6 @@ StockItems = new Mongo.Collection("stockItems");
 Orders = new Mongo.Collection("orders");
 OrderItems = new Mongo.Collection("orderItems");
 
-
-//todo: move this collections to migration v65 file.
-OrderReceipts = new Mongo.Collection("orderReceipts");
-
-
 //new roles functionality
 Organizations = new Mongo.Collection("organizations");
 Locations = new Mongo.Collection("locations");

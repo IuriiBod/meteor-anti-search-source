@@ -24,11 +24,11 @@ Meteor.methods({
       throw new Meteor.Error(401, "Receipt id not found");
     }
 
-    if (!OrderReceipts.findOne(receiptId)) {
+    if (!Orders.findOne(receiptId)) {
       logger.error("Receipt  not found");
       throw new Meteor.Error("Receipt  not found");
     }
-    OrderReceipts.update(
+    Orders.update(
       {_id: receiptId},
       {
         $set: {

@@ -37,7 +37,7 @@ Template.composeStocktakeOrderingEmail.onCreated(function () {
       type: HospoHero.roles.getUserRoleName(Meteor.userId(), HospoHero.getCurrentAreaId())
     };
 
-    var receipt = OrderReceipts.findOne({
+    var receipt = Orders.findOne({
       version: version,
       supplier: supplierId
     });

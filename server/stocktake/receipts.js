@@ -73,7 +73,7 @@ Meteor.methods({
       }
     }
 
-    var existingOrderReceipt = OrderReceipts.findOne({
+    var existingOrderReceipt = Orders.findOne({
       supplier: supplierId,
       version: stocktakeId
     });
@@ -91,7 +91,7 @@ Meteor.methods({
           through: info.through,
           details: info.details
         };
-        OrderReceipts.update({
+        Orders.update({
           _id: existingOrderReceipt._id
         }, {
           $set: {
@@ -108,7 +108,7 @@ Meteor.methods({
         details: info.details
       };
       //generating order receipt
-      orderReceiptId = OrderReceipts.insert({
+      orderReceiptId = Orders.insert({
         date: new Date(),
         version: stocktakeId,
         stocktakeDate: stocktakeMain.stocktakeDate,
@@ -150,7 +150,7 @@ Meteor.methods({
       throw new Meteor.Error(404, "User not permitted to generate receipts");
     }
 
-    if (OrderReceipts.findOne(id)) {
+    if (Orders.findOne(id)) {
       var query = {};
       if (info.hasOwnProperty("orderNote")) {
         query.orderNote = info.orderNote;
@@ -170,7 +170,7 @@ Meteor.methods({
       if (info.hasOwnProperty("temperature")) {
         query.temperature = info.temperature;
       }
-      OrderReceipts.update({"_id": id}, {$set: query});
+      Orders.update({"_id": id}, {$set: query});
       logger.info("Order receipt updated", id);
     } else {
       if (info.hasOwnProperty("orderNote") || info.hasOwnProperty("expectedDeliveryDate")) {
@@ -210,7 +210,7 @@ Meteor.methods({
         if (info.hasOwnProperty("expectedDeliveryDate")) {
           doc.expectedDeliveryDate = info.expectedDeliveryDate;
         }
-        var receiptId = OrderReceipts.insert(doc);
+        var receiptId = Orders.insert(doc);
         logger.info("New order receipt inserted ", receiptId);
         return receiptId;
       } else {
@@ -228,12 +228,12 @@ Meteor.methods({
 
     check(id, HospoHero.checkers.MongoId);
 
-    var receipt = OrderReceipts.findOne(id);
+    var receipt = Orders.findOne(id);
     if (!receipt) {
       logger.error('Receipt not found');
       throw new Meteor.Error("Receipt not found");
     }
-    OrderReceipts.update({"_id": id}, {$addToSet: {"invoiceImage": info}});
+    Orders.update({"_id": id}, {$addToSet: {"invoiceImage": info}});
     logger.info("Invoice uploaded", id);
   }
 });

@@ -63,7 +63,7 @@ Meteor.methods({
     var status = supplier.active;
     if (status) {
       var ingsExist = Ingredients.findOne({"suppliers": id});
-      var receipts = OrderReceipts.findOne({"supplier": id});
+      var receipts = Orders.findOne({"supplier": id});
       var orders = OrderItems.findOne({"supplier": id});
       if (ingsExist || receipts || orders) {
         logger.error("Supplier has past records. Can't be deleted. Archiving...");

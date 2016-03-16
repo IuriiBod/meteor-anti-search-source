@@ -17,7 +17,7 @@ Template.stocktakeOrdering.helpers({
   },
 
   orderNote: function (activeSupplierId) {
-    var data = OrderReceipts.findOne({
+    var data = Orders.findOne({
       version: this.stocktakeMainId,
       supplier: activeSupplierId
     });
@@ -43,7 +43,7 @@ Template.stocktakeOrdering.events({
         var activeSupplierId = tmpl.get('activeSupplierId');
         var version = tmpl.data.stocktakeMainId;
 
-        var receipt = OrderReceipts.findOne({supplier: activeSupplierId, version: version});
+        var receipt = Orders.findOne({supplier: activeSupplierId, version: version});
 
         if (receipt) {
           var info = {

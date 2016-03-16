@@ -30,7 +30,7 @@ Template.supplierFilter.helpers({
   },
 
   receiptExists: function () {
-    return !!OrderReceipts.findOne({
+    return !!Orders.findOne({
       version: Template.parentData(1).stocktakeMainId,
       supplier: this._id,
       'orderedThrough.through': {$ne: null}

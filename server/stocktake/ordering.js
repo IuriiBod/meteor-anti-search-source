@@ -111,7 +111,7 @@ Meteor.methods({
       throw new Meteor.Error("Order does not exist");
     }
 
-    if (OrderReceipts.findOne(order.orderReceipt)) {
+    if (Orders.findOne(order.orderReceipt)) {
       logger.error("You can't delete this order. This has a order receipt");
       throw new Meteor.Error("You can't delete this order. This has a order receipt");
     }
