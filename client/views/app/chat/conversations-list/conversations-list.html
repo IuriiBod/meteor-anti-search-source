@@ -1,8 +1,18 @@
 <template name="conversationsList">
-  <div class="list-group">
+  <div class="conversations-list">
     {{#if conversations}}
       {{#each conversations}}
-        <a class="list-group-item conversation" data-conversation-id="{{_id}}" href="#">{{_id}}</a>
+        <div class="conversations-list-item" data-conversation-id="{{_id}}">
+          {{#with lastMessage}}
+            <img class="message-sender-avatar" src="{{profilePicture user._id}}" alt="">
+            <div class="message-body">
+              <small class="pull-right">{{timeAgoStr this.date}}</small>
+              <strong>{{username user._id}}</strong>
+              <br>
+              <p>{{body}}</p>
+            </div>
+          {{/with}}
+        </div>
       {{/each}}
     {{else}}
       <div class="list-group-item">No conversations.</div>

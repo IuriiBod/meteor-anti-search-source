@@ -1,7 +1,13 @@
+Template.conversationsList.helpers({
+  timeAgoStr (date) {
+    return `${moment(date).toNow()} ago`.substr(3);
+  }
+});
+
 Template.conversationsList.events({
-  'click .conversation': (event, tmpl) => {
+  'click .conversations-list-item': (event, tmpl) => {
     event.preventDefault();
-    const conversationId = event.target.getAttribute('data-conversation-id');
+    const conversationId = event.currentTarget.getAttribute('data-conversation-id');
     tmpl.data.onConversationSelected(conversationId);
   }
 });
