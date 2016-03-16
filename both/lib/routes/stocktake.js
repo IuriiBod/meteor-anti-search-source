@@ -8,7 +8,7 @@ Router.route('stocktakeList', {
 
 Router.route('stocktakeCounting', {
   path: '/stocktake/:_id',
-  template: 'stocktakeCountingMainView',
+  template: 'stocktakeCounting',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
@@ -21,8 +21,8 @@ Router.route('stocktakeCounting', {
   },
   data: function () {
     return {
-      stocktakeId: this.params._id
-    };
+      stocktake: Stocktakes.findOne({_id: this.params._id})
+    }
   }
 });
 

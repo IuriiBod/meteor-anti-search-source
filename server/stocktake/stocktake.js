@@ -18,9 +18,9 @@ Meteor.methods({
       relations: relationsObject
     };
 
-    var id = Stocktakes.insert(newStocktakeDoc);
-    logger.info('Created new stocktake', date, id);
-    return id;
+    var newStocktakeId = Stocktakes.insert(newStocktakeDoc);
+    logger.info('Created new stocktake', newStocktakeId);
+    return newStocktakeId;
   },
 
   createStockItem: function (newStockItem) {
