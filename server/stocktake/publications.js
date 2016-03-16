@@ -14,23 +14,23 @@ Meteor.publish('allStockAreas', function (currentAreaId) {
 Meteor.publish('stocktakeMains', function (date) {
   if (this.userId) {
     var query = {
-      stocktakeDate: new Date(date).getTime(),
+      date: new Date(date).getTime(),
       'relations.areaId': HospoHero.getCurrentAreaId(this.userId)
     };
-    return StocktakeMain.find(query);
+    return Stocktakes.find(query);
   }
 });
 
-Meteor.publish('stocktakes', function (version) {
+Meteor.publish('stocktakes', function (stocktakeId) {
   return [
-    Stocktakes.find({version: version}),
-    StocktakeMain.find(version)
+    StockItems.find({stocktakeId: stocktakeId}),
+    Stocktakes.find(stocktakeId)
   ];
 });
 
 Meteor.publish('ordersPlaced', function (version) {
   logger.info('Stock orders published for version ', version);
-  return StockOrders.find({version: version});
+  return OrderItems.find({version: version});
 });
 
 Meteor.publish("orderReceipts", function (ids) {
@@ -63,25 +63,25 @@ Meteor.publishComposite('allOrderReceipts', function (areaId) {
       },
       {
         find: function (orderReceipt) {
-          return StockOrders.find({orderReceipt: orderReceipt._id});
+          return OrderItems.find({orderReceipt: orderReceipt._id});
         }
       }
     ]
   };
 });
 
-Meteor.publish("receiptOrders", function (receiptId) {
-  logger.info("Stock orders published for receipt ", {"ids": receiptId});
-  return StockOrders.find({"orderReceipt": receiptId, "countOrdered": {$gt: 0}});
+Meteor.publish("receiptOrders", function (orderId) {
+  logger.info("Stock orders published for receipt ", {"ids": orderId});
+  return OrderItems.find({"orderReceipt": orderId, countOrdered: {$gt: 0}});
 });
 
 Meteor.publish('stocktakeList', function (areaId) {
   return [
-    StocktakeMain.find({
-      "stocktakeDate": new Date(moment().format("YYYY-MM-DD")).getTime(), // Need to pass moment instance to round unix time
-      "relations.areaId": areaId
-    }),
     Stocktakes.find({
+      date: new Date(moment().format("YYYY-MM-DD")).getTime(), // Need to pass moment instance to round unix time
+      'relations.areaId': areaId
+    }),
+    StockItems.find({
       'relations.areaId': areaId
     })
   ];
@@ -90,7 +90,7 @@ Meteor.publish('stocktakeList', function (areaId) {
 Meteor.publish('stocktakeDates', function (areaId, timePeriod) {
   let checkPermission = new HospoHero.security.PermissionChecker(this.userId);
   if (checkPermission.hasPermissionInArea(areaId, "view area reports")) {
-    return StocktakeMain.find({
+    return Stocktakes.find({
       'relations.areaId': areaId,
       date: {
         $gte: timePeriod

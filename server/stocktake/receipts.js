@@ -4,21 +4,21 @@ var canUserReceiveDeliveries = function (areaId = null) {
 };
 
 var getAreaIdFromReceipt = function (receiptId) {
-  var receipt = StockOrders.findOne({_id: receiptId});
+  var receipt = OrderItems.findOne({_id: receiptId});
   return (receipt && receipt.relations) ? receipt.relations.areaId : null;
 };
 
 Meteor.methods({
-  generateReceipts: function (version, supplierId, info) {
+  generateReceipts: function (stocktakeId, supplierId, info) {
     if (!canUserReceiveDeliveries()) {
       logger.error("User not permitted to generate receipts");
       throw new Meteor.Error(403, "User not permitted to generate receipts");
     }
-    if (!version) {
+    if (!stocktakeId) {
       logger.error("Stocktake version should have a value");
       throw new Meteor.Error("Stocktake version should have a value");
     }
-    var stocktakeMain = StocktakeMain.findOne(version);
+    var stocktakeMain = Stocktakes.findOne({_id: stocktakeId});
     if (!stocktakeMain) {
       logger.error("Stocktake main should exist");
       throw new Meteor.Error("Stocktake main should exist");
@@ -37,8 +37,8 @@ Meteor.methods({
     }
 
     var orderedMethod;
-    var ordersExist = StockOrders.findOne({
-      version: version,
+    var ordersExist = OrderItems.findOne({
+      version: stocktakeId,
       supplier: supplierId,
       countOrdered: {$gt: 0}
     });
@@ -75,7 +75,7 @@ Meteor.methods({
 
     var existingOrderReceipt = OrderReceipts.findOne({
       supplier: supplierId,
-      version: version
+      version: stocktakeId
     });
 
     var orderReceiptId = existingOrderReceipt && existingOrderReceipt._id;
@@ -110,7 +110,7 @@ Meteor.methods({
       //generating order receipt
       orderReceiptId = OrderReceipts.insert({
         date: new Date(),
-        version: version,
+        version: stocktakeId,
         stocktakeDate: stocktakeMain.stocktakeDate,
         supplier: supplierId,
         orderedThrough: orderedMethod,
@@ -124,8 +124,8 @@ Meteor.methods({
       logger.info("Order receipt generated", orderReceiptId);
     }
     //update orders
-    StockOrders.update({
-      version: version,
+    OrderItems.update({
+      version: stocktakeId,
       supplier: supplierId
     }, {
       $set: {
@@ -141,7 +141,7 @@ Meteor.methods({
     });
 
     logger.info("Orders updated", {stocktakeDate: stocktakeMain.stocktakeDate, supplier: supplierId});
-    StocktakeMain.update({_id: version}, {$addToSet: {orderReceipts: orderReceiptId}});
+    Stocktakes.update({_id: stocktakeId}, {$addToSet: {orderReceipts: orderReceiptId}});
   },
 
   updateReceipt: function (id, info) {
@@ -186,7 +186,7 @@ Meteor.methods({
           logger.error("Supplier does not exist");
           throw new Meteor.Error(404, "Supplier does not exist");
         }
-        var stocktakeMain = StocktakeMain.findOne(info.version);
+        var stocktakeMain = Stocktakes.findOne({_id: info.version});
         if (!stocktakeMain) {
           logger.error("Stocktake main does not exist");
           throw new Meteor.Error(404, "Stocktake main does not exist");

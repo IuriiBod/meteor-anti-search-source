@@ -9,19 +9,24 @@ Template.areasProgressBar.helpers({
     var getStocksCount = specialArea =>
       Ingredients.find({_id: {$in: specialArea.stocks}, status: 'active'}).count();
 
-    let getOrderItemsCount = () =>
-      Stocktakes.find({version: this.stockTakeData.stockTakeId, generalArea: this.itemId}).count();
+    let getOrderItemsCount = () => {
+      let generalAreaId = this.itemId;
+      let specialAreaIds = StockAreas.find({generalAreaId: generalAreaId}).map(stockArea => stockArea._id);
+      return StockItems.find({
+        stocktakeId: this.stockTakeData.stockTakeId,
+        specialAreaId: {$in: specialAreaIds}
+      }).count();
+    };
 
-    //todo: code below should be refactored
+    //todo:stocktake code below should be refactored
     var specialAreaProgressBar = () => {
       var progressBar = 0;
       var specialArea = getSpecialArea();
-      if (specialArea && specialArea.stocks && specialArea.stocks.length) {
-        var stocktakes = Stocktakes.find({
-          stockId: {$in: specialArea.stocks},
-          version: this.stockTakeData.stockTakeId,
-          specialArea: this.itemId,
-          generalArea: this.stockTakeData.activeGeneralArea
+      if (specialArea && specialArea.ingredients && specialArea.ingredients.length) {
+        var stocktakes = StockItems.find({
+          'ingredient._id': {$in: specialArea.ingredients},
+          stocktakeId: this.stockTakeData.stockTakeId,
+          specialAreaId: this.itemId
         }).count();
         var stocks = getStocksCount(specialArea);
         if (stocks > 0) {

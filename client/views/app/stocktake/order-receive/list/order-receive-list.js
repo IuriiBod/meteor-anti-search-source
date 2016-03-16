@@ -4,11 +4,11 @@ Template.orderReceive.onCreated(function () {
 
 Template.orderReceive.helpers({
   list() {
-    return StockOrders.find({orderReceipt: this.currentReceipt._id, countOrdered: {$gt: 0}});
+    return OrderItems.find({orderReceipt: this.currentReceipt._id, countOrdered: {$gt: 0}});
   },
 
   total() {
-    let orders = StockOrders.find({orderReceipt: this.currentReceipt._id});
+    let orders = OrderItems.find({orderReceipt: this.currentReceipt._id});
     let cost = 0;
     if (orders.count()) {
       orders.forEach(function (order) {
@@ -43,7 +43,7 @@ Template.orderReceive.helpers({
 
   currentOrder() {
     let orderId = Template.instance().currentOrderId.get();
-    return StockOrders.findOne({_id: orderId});
+    return OrderItems.findOne({_id: orderId});
   }
 });
 

@@ -1,34 +1,21 @@
 Template.stockTakeMasterList.helpers({
   stocktakes: function () {
-    let getTotalStockValue = (stocktakesGroup) => {
-      return _.reduce(stocktakesGroup, (memo, stocktake) => {
-        return memo + (stocktake.counting * stocktake.unitCost);
+    let getTotalStockItemsCost = (stockItemsGroup) => {
+      return _.reduce(stockItemsGroup, (memo, stockItem) => {
+        return memo + (stockItem.count * stockItem.ingredient.costPerPortion);
       }, 0);
     };
 
-    var stocktakeList = [];
-    var stocktakes = Stocktakes.find({}, {
-      fields: {
-        date: 1,
-        counting: 1,
-        unitCost: 1,
-        version: 1
-      },
-      sort: {date: -1}
-    }).fetch();
+    var stockItems = StockItems.find({}).fetch();
 
-    var stocktakesGroupedByVersionId = _.groupBy(stocktakes, 'version');
+    var groupedStockItems = _.groupBy(stockItems, 'stocktakeId');
 
-    _.keys(stocktakesGroupedByVersionId).forEach((versionId) => {
-      let stocktakesGroup = stocktakesGroupedByVersionId[versionId];
-
-      stocktakeList.push({
-        _id: versionId,
-        date: stocktakesGroup[0].date,
-        totalStockValue: getTotalStockValue(stocktakesGroup)
-      });
+    return _.map(groupedStockItems, (stockItemsGroup, stocktakeId) => {
+      return {
+        _id: stocktakeId,
+        date: stockItemsGroup[0].date,
+        totalStockValue: getTotalStockItemsCost(stockItemsGroup)
+      };
     });
-
-    return stocktakeList;
   }
 });

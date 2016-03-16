@@ -17,7 +17,7 @@ Template.newStocktakeModal.events({
     tmpl.newStocktakemodalInstance.close();
     var date = moment().format("YYYY-MM-DD");
     date = new Date(date).getTime();
-    var stocktakeLatest = StocktakeMain.findOne({"stocktakeDate": date}, {sort: {"date": -1}});
+    var stocktakeLatest = Stocktakes.findOne({date: date}, {sort: {date: -1}});
     if (stocktakeLatest) {
       Router.go("stocktakeCounting", {"_id": stocktakeLatest._id});
     }

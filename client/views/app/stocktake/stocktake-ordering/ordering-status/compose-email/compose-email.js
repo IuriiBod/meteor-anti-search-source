@@ -15,7 +15,7 @@ Template.composeStocktakeOrderingEmail.onCreated(function () {
     };
 
     var total = 0;
-    var ordersData = StockOrders.find({
+    var ordersData = OrderItems.find({
       version: version,
       supplier: supplierId,
       'relations.areaId': HospoHero.getCurrentAreaId(),

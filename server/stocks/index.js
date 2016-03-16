@@ -1,4 +1,4 @@
-var canUserEditStocks = function(areaId = null) {
+var canUserEditStocks = function (areaId = null) {
   var checker = new HospoHero.security.PermissionChecker();
   return checker.hasPermissionInArea(areaId, 'edit stocks');
 };
@@ -152,8 +152,8 @@ Meteor.methods({
         logger.error(404, error.join(''));
         throw new Meteor.Error(404, error.join(''));
       }
-      var existInStocktakes = Stocktakes.findOne({stockId: id});
-      if (existInStocktakes) {
+      var existsInStockItems = StockItems.findOne({'ingredient._id': id});
+      if (existsInStockItems) {
         logger.error("Item found in stock counting, can't archive");
         throw new Meteor.Error("Item found in stock counting, can't archive");
       }

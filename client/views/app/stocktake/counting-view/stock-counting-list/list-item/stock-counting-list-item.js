@@ -1,6 +1,6 @@
 Template.stockCountingListItem.onCreated(function () {
   this.getIngredientFromStock = function () {
-    return Stocktakes.findOne({stockId: this.data.ingredient._id});
+    return StockItems.findOne({'ingredient._id': this.data.ingredient._id});
   };
 });
 
@@ -10,6 +10,7 @@ Template.stockCountingListItem.onRendered(function () {
   var tmpl = this;
   var onCountChanged = function (response, newValue) {
     var element = this;
+    //todo:stocktake refactor it
     var stockRefId = tmpl.data.stocktakeItem ?
       tmpl.data.stocktakeItem._id : tmpl.getIngredientFromStock() && tmpl.getIngredientFromStock()._id;
     var stockId = tmpl.data.stocktakeItem ? tmpl.data.stocktakeItem.stockId : tmpl.data.ingredient._id;
@@ -22,7 +23,7 @@ Template.stockCountingListItem.onRendered(function () {
         stockId: stockId,
         counting: count
       };
-      var main = StocktakeMain.findOne({_id: tmpl.data.stockTakeData.stockTakeId});
+      var main = Stocktakes.findOne({_id: tmpl.data.stockTakeData.stockTakeId});
       if (main) {
         Meteor.call("updateStocktake", stockRefId, info, newValue, HospoHero.handleMethodResult(function () {
           if ($(element).closest('li').next().length > 0) {
@@ -64,9 +65,9 @@ Template.stockCountingListItem.helpers({
 
   canEditIngredientsItem: function (id) {
     var permitted = true;
-    var stocktake = Stocktakes.findOne({_id: id});
+    var stocktake = StockItems.findOne({_id: id});
     if (stocktake && stocktake.orderRef) {
-      var order = StockOrders.findOne({_id: stocktake.orderRef});
+      var order = OrderItems.findOne({_id: stocktake.orderRef});
       permitted = order && order.orderReceipt;
     }
     return permitted;
@@ -83,7 +84,7 @@ Template.stockCountingListItem.events({
       var id = this.ingredient._id;
       var sareaId = tmpl.data.stockTakeData.activeSpecialArea;
       var stockRefId = tmpl.getIngredientFromStock() ? tmpl.getIngredientFromStock()._id : null;
-      var stocktake = Stocktakes.findOne({_id: stockRefId});
+      var stocktake = StockItems.findOne({_id: stockRefId});
       if (stocktake) {
         if (stocktake.status || stocktake.orderRef) {
           return alert("Order has been created. You can't delete this stocktake item.");

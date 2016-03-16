@@ -4,7 +4,7 @@ Template.stockCountingList.onCreated(function() {
   this.set('activeGeneralArea', null);
 
   this.getMainStock = function() {
-    return StocktakeMain.findOne({_id: this.data.stocktakeId});
+    return Stocktakes.findOne({_id: this.data.stocktakeId});
   };
 });
 
@@ -31,11 +31,10 @@ Template.stockCountingList.helpers({
     if (gareaId && sareaId) {
       var main = Template.instance().getMainStock();
       if (main && main.orderReceipts && main.orderReceipts.length > 0) {
-        var stocktakes = Stocktakes.find({
-          "version": this.stocktakeId,
-          "generalArea": gareaId,
-          "specialArea": sareaId
-        }, {sort: {"place": 1}});
+        var stocktakes = StockItems.find({
+          stocktakeId: this.stocktakeId,
+          specialAreaId: sareaId
+        }, {sort: {place: 1}});
         if (stocktakes) {
           return stocktakes;
         }

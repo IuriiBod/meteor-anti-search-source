@@ -2,7 +2,7 @@ let stockAreaSortOption = {sort: {createdAt: 1}};
 let generalStockAreasQuery = {generalAreaId: {$exists: false}};
 
 Template.stocktakeAreaFilter.onCreated(function () {
-  this.mainStocktake = StocktakeMain.findOne({_id: this.data.stocktakeId});
+  this.mainStocktake = Stocktakes.findOne({_id: this.data.stocktakeId});
 });
 
 

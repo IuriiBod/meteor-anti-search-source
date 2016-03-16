@@ -1,85 +1,76 @@
-var canUserReceiveDeliveries = function(areaId = null) {
+var canUserReceiveDeliveries = function (areaId = null) {
   var checker = new HospoHero.security.PermissionChecker();
   return checker.hasPermissionInArea(areaId, 'receive deliveries');
 };
 
-var getAreaIdFromOrder = function(orderId) {
-  var order = StockOrders.findOne({_id: orderId});
+var getAreaIdFromOrder = function (orderId) {
+  var order = OrderItems.findOne({_id: orderId});
   return (order && order.relations) ? order.relations.areaId : null;
 };
 
 Meteor.methods({
-  generateOrders: function (stocktakeVersion) {
+  generateOrders: function (stocktakeId) {
     if (!canUserReceiveDeliveries()) {
       logger.error("User not permitted to generate orders");
       throw new Meteor.Error(403, "User not permitted to generate orders");
     }
-    if (!stocktakeVersion) {
+    if (!stocktakeId) {
       logger.error("Stocktake version should have a value");
       throw new Meteor.Error("Stocktake version should have a value");
     }
 
-    if (!StocktakeMain.findOne(stocktakeVersion)) {
+    if (!Stocktakes.findOne({_id: stocktakeId})) {
       logger.error("Stocktake version should exist");
       throw new Meteor.Error("Stocktake version should exist");
     }
-    var stocktakes = Stocktakes.find({"version": stocktakeVersion}).fetch();
-    if (stocktakes.length === 0) {
+    var stockItems = StockItems.find({stocktakeId: stocktakeId}).fetch();
+    if (stockItems.length === 0) {
       logger.error("No recorded stocktakes found");
       throw new Meteor.Error(404, "No recorded stocktakes found");
     }
-    stocktakes.forEach(function (stock) {
-      if (!stock.status) {
-        var stockItem = Ingredients.findOne(stock.stockId);
-        if (!stockItem) {
-          logger.error("Stock item not found");
-          throw new Meteor.Error(404, "Stock item not found");
-        }
-
-        var count = stock.counting;
-        if (stock.hasOwnProperty("orderedCount")) {
-          //if count was reduced it will be minus value which will decrement the value
-          count = stock.counting - stock.orderedCount;
-        }
+    stockItems.forEach(function (stockItem) {
+      if (!stockItem.status) {
+        var ingredient = stockItem.ingredient;
+        var count = stockItem.count;
         var supplier = null;
-        if (stockItem && stockItem.hasOwnProperty("suppliers") && stockItem.suppliers) {
-          supplier = stockItem.suppliers;
+        if (ingredient && ingredient.hasOwnProperty("suppliers") && ingredient.suppliers) {
+          supplier = ingredient.suppliers;
         }
 
-        var existingOrder = StockOrders.findOne({
-          "stockId": stock.stockId,
-          "version": stocktakeVersion,
-          "supplier": supplier
+        var existingOrder = OrderItems.findOne({
+          stockId: ingredient.stockId,
+          version: stocktakeId,
+          supplier: supplier
         });
         //generate order
         var orderRef = null;
         if (existingOrder) {
           orderRef = existingOrder._id;
-          StockOrders.update({"_id": existingOrder._id}, {$inc: {"countOnHand": count}});
+          OrderItems.update({"_id": existingOrder._id}, {$inc: {"countOnHand": count}});
         } else {
           var newOrder = {
-            "stockId": stock.stockId,
-            "version": stocktakeVersion,
+            "stockId": ingredient.stockId,
+            "version": stocktakeId,
             "supplier": supplier,
             "countOnHand": count,
             "countNeeded": 0,
-            "unit": stockItem.portionOrdered,
-            "unitPrice": stockItem.costPerPortion,
+            "unit": ingredient.portionOrdered,
+            "unitPrice": ingredient.costPerPortion,
             "countOrdered": null,
             "orderReceipt": null,
             "received": false,
             relations: HospoHero.getRelationsObject()
           };
-          var id = StockOrders.insert(newOrder);
+          var id = OrderItems.insert(newOrder);
           orderRef = id;
           logger.info("New order created", id);
         }
 
         //update stocktake for order generated count
-        Stocktakes.update({"_id": stock._id}, {
+        StockItems.update({_id: ingredient._id}, {
           $set: {
             "status": true,
-            "orderedCount": stock.counting,
+            "orderedCount": ingredient.counting,
             "orderRef": orderRef
           }
         });
@@ -93,7 +84,7 @@ Meteor.methods({
       logger.error("User not permitted to edit ordering count");
       throw new Meteor.Error(404, "User not permitted to edit ordering count");
     }
-    var order = StockOrders.findOne(orderId);
+    var order = OrderItems.findOne(orderId);
     if (!order) {
       logger.error('Stock order not found');
       throw new Meteor.Error(401, "Stock order not found");
@@ -101,7 +92,7 @@ Meteor.methods({
 
     var countToOrder = parseFloat(count);
     countToOrder = !isNaN(countToOrder) ? countToOrder : 0;
-    StockOrders.update({"_id": orderId}, {$set: {"countOrdered": countToOrder}});
+    OrderItems.update({"_id": orderId}, {$set: {"countOrdered": countToOrder}});
     logger.info("Stock order count updated", orderId);
   },
 
@@ -114,7 +105,7 @@ Meteor.methods({
       logger.error('Stock order id not found');
       throw new Meteor.Error('Stock order id not found');
     }
-    var order = StockOrders.findOne(id);
+    var order = OrderItems.findOne(id);
     if (!order) {
       logger.error("Order does not exist");
       throw new Meteor.Error("Order does not exist");
@@ -124,9 +115,9 @@ Meteor.methods({
       logger.error("You can't delete this order. This has a order receipt");
       throw new Meteor.Error("You can't delete this order. This has a order receipt");
     }
-    StockOrders.remove({"_id": id});
-    Stocktakes.update({
-        "orderRef": id
+    OrderItems.remove({"_id": id});
+    StockItems.update({
+        orderId: id
       }, {
         $set: {
           "status": false,

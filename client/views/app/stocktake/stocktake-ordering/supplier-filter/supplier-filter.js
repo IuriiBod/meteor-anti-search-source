@@ -1,5 +1,5 @@
 Template.supplierFilter.onCreated(function () {
-  var stockOrder = StockOrders.findOne({
+  var stockOrder = OrderItems.findOne({
     version: this.data.stocktakeMainId
   }, {
     fields: {supplier: 1}, sort: {supplier: 1}
@@ -16,7 +16,7 @@ Template.supplierFilter.onCreated(function () {
 
 Template.supplierFilter.helpers({
   suppliers: function () {
-    var ordersList = StockOrders.find({
+    var ordersList = OrderItems.find({
       version: this.stocktakeMainId
     }, {
       fields: {supplier: 1}, sort: {supplier: 1}

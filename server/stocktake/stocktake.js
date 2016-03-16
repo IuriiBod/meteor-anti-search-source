@@ -3,8 +3,8 @@ var canUserEditStocks = function (areaId = null) {
   return checker.hasPermissionInArea(areaId, 'edit stocks');
 };
 
-var getAreaIdFromStocktake = function (stocktakeId) {
-  var stocktake = Stocktakes.findOne({_id: stocktakeId});
+var getAreaIdFromStocktake = function (stockItemId) {
+  var stocktake = StockItems.findOne({_id: stockItemId});
   return (stocktake && stocktake.relations) ? stocktake.relations.areaId : null;
 };
 
@@ -49,23 +49,23 @@ Meteor.methods({
         }
       });
     }
-    var id = StocktakeMain.insert(doc);
+    var id = Stocktakes.insert(doc);
     logger.info("Creating new stocktake", date, id);
     return id;
   },
 
-  updateStocktake: function (id, info) {
-    if (!canUserEditStocks(getAreaIdFromStocktake(id))) {
+  updateStocktake: function (stockItemId, info) {
+    if (!canUserEditStocks(getAreaIdFromStocktake(stockItemId))) {
       logger.error("User not permitted to update stocktakes");
       throw new Meteor.Error(403, "User not permitted to update stocktakes");
     }
-    var mainStocktake = StocktakeMain.findOne(info.version);
+    var mainStocktake = Stocktakes.findOne({_id: info.version});
     if (!mainStocktake) {
       logger.error('Stocktake main does not exist');
       throw new Meteor.Error('Stocktake main does not exist');
     }
 
-    var stockTakeExists = Stocktakes.findOne(id);
+    var stockTakeExists = StockItems.findOne({_id: stockItemId});
     if (stockTakeExists) {
       var setQuery = {};
       /**
@@ -86,7 +86,7 @@ Meteor.methods({
         setQuery.place = info.place;
       }
 
-      Stocktakes.update({_id: id}, {$set: setQuery});
+      StockItems.update({_id: stockItemId}, {$set: setQuery});
       logger.info("Stocktake updated", stockTakeExists._id);
 
     } else {
@@ -123,10 +123,10 @@ Meteor.methods({
         orderedCount: 0,
         relations: HospoHero.getRelationsObject()
       };
-      id = Stocktakes.insert(doc);
-      logger.info("New stocktake created", id, place);
+      stockItemId = StockItems.insert(doc);
+      logger.info("New stocktake created", stockItemId, place);
 
-      StocktakeMain.update({_id: info.version}, {
+      Stocktakes.update({_id: info.version}, {
         $addToSet: {
           generalAreas: info.generalArea,
           specialAreas: info.specialArea
@@ -136,22 +136,22 @@ Meteor.methods({
     }
   },
 
-  removeStocktake: function (stocktakeId) {
-    if (!canUserEditStocks(getAreaIdFromStocktake(stocktakeId))) {
+  removeStocktake: function (stockItemId) {
+    if (!canUserEditStocks(getAreaIdFromStocktake(stockItemId))) {
       logger.error("User not permitted to remove stocktakes");
       throw new Meteor.Error(403, "User not permitted to remove stocktakes");
     }
-    var stockItemExists = Stocktakes.findOne({_id: stocktakeId});
+    var stockItemExists = StockItems.findOne({_id: stockItemId});
     if (!stockItemExists) {
-      logger.error('Stocktake does not exist', {stocktakeId: stocktakeId});
+      logger.error('Stocktake does not exist', {stocktakeId: stockItemId});
       throw new Meteor.Error("Stock item does not exist in stocktake");
     }
     if (stockItemExists.status && stockItemExists.orderRef) {
       logger.error("Can't remove stocktake. Order has been placed already");
       throw new Meteor.Error("Can't remove stocktake. Order has been placed already");
     }
-    Stocktakes.remove({_id: stocktakeId});
-    logger.info("Stocktake removed", stocktakeId);
+    StockItems.remove({_id: stockItemId});
+    logger.info("Stocktake removed", stockItemId);
   },
 
   stocktakePositionUpdate: function (sortedStockItems) {
@@ -169,7 +169,7 @@ Meteor.methods({
     });
 
     if (sortedStockItems.draggedItem.place) {
-      Stocktakes.update({_id: sortedStockItems.draggedItem.id}, {$set: {place: sortedStockItems.draggedItem.place}});
+      StockItems.update({_id: sortedStockItems.draggedItem.id}, {$set: {place: sortedStockItems.draggedItem.place}});
       logger.info("Stocktake position updated");
     }
 

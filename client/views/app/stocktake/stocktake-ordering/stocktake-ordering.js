@@ -4,13 +4,13 @@ Template.stocktakeOrdering.onCreated(function () {
 
 Template.stocktakeOrdering.helpers({
   isNotEmpty: function () {
-    return !!StockOrders.findOne({
+    return !!OrderItems.findOne({
       version: this.stocktakeMainId
     });
   },
 
   stockOrdersList: function (activeSupplierId) {
-    return StockOrders.find({
+    return OrderItems.find({
       version: this.stocktakeMainId,
       supplier: activeSupplierId
     });

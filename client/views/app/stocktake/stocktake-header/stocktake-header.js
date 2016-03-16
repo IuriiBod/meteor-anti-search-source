@@ -2,9 +2,8 @@ Template.stocktakeHeader.events({
   'click #startNewStocktake': function (event, tmpl) {
     event.preventDefault();
     var date = moment().format("YYYY-MM-DD");
-    var stocktake = StocktakeMain.findOne({
-      "stocktakeDate": new Date(date).getTime(),
-      "relations.areaId": HospoHero.getCurrentAreaId()
+    var stocktake = Stocktakes.findOne({
+      date: new Date(date).getTime()
     });
 
     if (stocktake) {

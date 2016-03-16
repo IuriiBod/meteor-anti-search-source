@@ -5,7 +5,7 @@ Template.orderReceiptItem.helpers({
 
   orderedValue() {
     let cost = 0;
-    StockOrders.find({orderReceipt: this._id}).forEach(function (order) {
+    OrderItems.find({orderReceipt: this._id}).forEach(function (order) {
       let countOrdered = order.countOrdered || 0;
       cost += parseFloat(countOrdered) * parseFloat(order.unitPrice);
     });
@@ -14,7 +14,7 @@ Template.orderReceiptItem.helpers({
 
   receivedAmount() {
     let cost = 0;
-    StockOrders.find({orderReceipt: this._id}).forEach((order) => {
+    OrderItems.find({orderReceipt: this._id}).forEach((order) => {
       if (order.received) {
         var quantity = order.countOrdered;
         if (_.isFinite(order.countDelivered) && order.countDelivered >= 0) {

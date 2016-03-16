@@ -4,12 +4,12 @@ var canUserReceiveDeliveries = function (areaId = null) {
 };
 
 var getAreaIdFromOrder = function (orderId) {
-  var order = StockOrders.findOne({_id: orderId});
+  var order = OrderItems.findOne({_id: orderId});
   return (order && order.relations) ? order.relations.areaId : null;
 };
 
 var getAreaIdFromReceipt = function (receiptId) {
-  var receipt = StockOrders.findOne({_id: receiptId});
+  var receipt = OrderItems.findOne({_id: receiptId});
   return (receipt && receipt.relations) ? receipt.relations.areaId : null;
 };
 
@@ -58,7 +58,7 @@ Meteor.methods({
       logger.error("Status not found");
       throw new Meteor.Error(401, "Status not found");
     }
-    var order = StockOrders.findOne(id);
+    var order = OrderItems.findOne(id);
     if (!order) {
       logger.error("Order not found");
       throw new Meteor.Error(401, "Order not found");
@@ -90,9 +90,9 @@ Meteor.methods({
       query.$set = setQuery;
     }
 
-    StockOrders.update({_id: id, orderReceipt: receiptId}, query);
+    OrderItems.update({_id: id, orderReceipt: receiptId}, query);
 
-    order = StockOrders.findOne(id);
+    order = OrderItems.findOne(id);
     var newStatus = [];
     if (order.unitPrice === order.originalPrice && order.countDelivered === order.countOrdered) {
       newStatus.push('Delivered Correctly');
@@ -104,7 +104,7 @@ Meteor.methods({
         newStatus.push('Wrong Quantity');
       }
     }
-    StockOrders.update({_id: id, orderReceipt: receiptId}, {
+    OrderItems.update({_id: id, orderReceipt: receiptId}, {
       $set: {deliveryStatus: newStatus}
     });
 
@@ -124,7 +124,7 @@ Meteor.methods({
       logger.error("Receipt id not found");
       throw new Meteor.Error(401, "Receipt id not found");
     }
-    var order = StockOrders.findOne(id);
+    var order = OrderItems.findOne(id);
     if (!order) {
       logger.error("Order not found");
       throw new Meteor.Error(401, "Order not found");
@@ -142,7 +142,7 @@ Meteor.methods({
       });
     }
 
-    StockOrders.update(
+    OrderItems.update(
       {_id: id, orderReceipt: receiptId},
       {$set: updateQuery}
     );
