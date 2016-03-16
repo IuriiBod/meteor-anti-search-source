@@ -1,0 +1,22 @@
+<template name="unavailabilitiesList">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    {{#each users}}
+                        {{> unavailabilitiesListItem}}
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+  {{#if isHasMoreItems}}
+      <div class="row">
+          <div class="col-lg-12">
+              <div class="load-more-button-wrapper">
+                  <button data-action="load-more" class="btn btn-white center-block" type="button">Load more</button>
+              </div>
+          </div>
+      </div>
+  {{/if}}
+</template>

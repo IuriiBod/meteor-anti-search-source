@@ -1,0 +1,26 @@
+<template name="unavailabilitiesTable">
+    <div class="table-responsive">
+        <table class="table table-condensed table-hover table-striped">
+            <thead>
+            <tr>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Is Repeat</th>
+                <th>Is All Day</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each this}}
+                <tr>
+                    <td><strong>{{date startDate}}</strong></td>
+                    <td><strong>{{date endDate}}</strong></td>
+                    <td>{{repeat}}</td>
+                    <td>{{#if isAllDay}}<i class="fa  fa-check"></i>{{/if}}</td>
+                    <td>{{comment}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

@@ -1,4 +1,4 @@
-Template.leaveRequestsTable.onCreated(function () {
+Template.leaveRequestsList.onCreated(function () {
     this._page = new Blaze.ReactiveVar(1);
     const currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     this.autorun(() => {
@@ -7,7 +7,7 @@ Template.leaveRequestsTable.onCreated(function () {
     });
 });
 
-Template.leaveRequestsTable.helpers({
+Template.leaveRequestsList.helpers({
     leaveRequestsItems:function () {
         return LeaveRequests.find();
     },
@@ -28,7 +28,7 @@ Template.leaveRequestsTable.helpers({
         return  LeaveRequests.find().count() / (page * this.itemPerPage) >= 1;
     }
 });
-Template.leaveRequestsTable.events({
+Template.leaveRequestsList.events({
     'click [data-action="load-more"]': (e,t) => {
         e.preventDefault();
         var page =  t._page.get();

@@ -1,12 +1,26 @@
 <template name="leaveRequests">
   {{> pageHeading title="Leave Reports" category="Reports" name="leavereports"}}
-    <div class="wrapper wrapper-content animated stock-report">
+    <div class="wrapper wrapper-content">
         <div class="row">
-            <div class="col-lg-6">
-              {{> leaveRequestsTable}}
-            </div>
-            <div class="col-lg-6">
-              {{> unavailabilitiesTable}}
+            <div class="col-md-12">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs job-types-panel">
+                        <li  data-action="swap-tabs" data-name="requsts" class="active">
+                            <a data-toggle="tab" >Leave Requests </a>
+                        </li>
+                        <li  data-action="swap-tabs" data-name="unavailabilities">
+                            <a data-toggle="tab">User Unavailabilities </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                       {{#if isRequestTab}}
+                         {{> leaveRequestsList}}
+                       {{/if}}
+                      {{#if isUnavailabilitiesTab}}
+                        {{> unavailabilitiesList}}
+                      {{/if}}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

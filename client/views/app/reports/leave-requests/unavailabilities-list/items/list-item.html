@@ -1,0 +1,19 @@
+<template name="unavailabilitiesListItem">
+  <div class="ibox panel panel-default">
+    {{#collapsibleElement settings=collapseSettings}}
+      {{> unavailabilitiesTable unavailabilities}}
+      {{#if isHasMoreItems}}
+          <div class="row">
+              <div class="col-lg-12">
+                <div class="load-more-button-wrapper">
+                    <button data-action="load-more" class="btn btn-white pull-right center-block" type="button">
+                        <i class="fa fa-angle-down"></i>
+                        More
+                    </button>
+                </div>
+              </div>
+          </div>
+      {{/if}}
+    {{/collapsibleElement}}
+  </div>
+</template>

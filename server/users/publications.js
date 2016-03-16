@@ -55,33 +55,30 @@ let publishAreaUsersFn = function (areaId) {
 Meteor.publish('areaDetailsUsers', publishAreaUsersFn); // used primarily on area's settings flyout
 Meteor.publish('areaUsersList', publishAreaUsersFn); // used anywhere else
 
-Meteor.publish('areaUnavailabilitiesList', function (areaId,filter) {
+Meteor.publish('areaUnavailabilitiesList', function (areaId,limit) {
   check(areaId, HospoHero.checkers.MongoId);
-  check(filter.limit, Number);
+  check(limit, Number);
 
-  //todo: any security (permissions) checks here?
+  const permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
+  if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'approve leave requests')) {
 
-  let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users', {
-    'profile.payrates': 1,
-    'profile.resignDate': 1,
-    'profile.sections': 1,
-    unavailabilities: 1
-  });
-  let query = {};
-  let newFilter = {};
-  let countOfUnavailabilities = 0;
-  query['relations.areaIds'] = areaId;
-  query['unavailabilities.0'] = {'$exists':true};
-  newFilter.fields = fieldsToPublish;
-  newFilter.limit = 1;
-  Meteor.users.find(query,filter).forEach(function (user) {
-    countOfUnavailabilities += user.unavailabilities.length;
-    if(countOfUnavailabilities < filter.limit){
-      newFilter.limit++;
-    }
-  });
-  logger.info('UserList published', {areaId: areaId});
-  return Meteor.users.find(query,newFilter);
+    let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users', {
+       unavailabilities: 1
+    });
+
+    let query = {
+       'relations.areaIds': areaId,
+       'unavailabilities.0': {'$exists':true}
+    };
+    let filter = {
+      limit:limit,
+      fields: fieldsToPublish
+    };
+    return Meteor.users.find(query,filter);
+  } else {
+    logger.error('Permission denied: publish [areaUnavailabilitiesList] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
 });
 
 
