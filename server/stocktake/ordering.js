@@ -96,7 +96,7 @@ Meteor.methods({
     logger.info("Stock order count updated", orderId);
   },
 
-  'removeOrder': function (id) {
+  removeOrder: function (id) {
     if (!canUserReceiveDeliveries(getAreaIdFromOrder(id))) {
       logger.error("User not permitted to remove placed orders");
       throw new Meteor.Error(403, "User not permitted to remove placed orders");

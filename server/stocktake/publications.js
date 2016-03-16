@@ -1,95 +1,138 @@
-Meteor.publish('allStockAreas', function (currentAreaId) {
-  check(currentAreaId, HospoHero.checkers.MongoId);
+let checkViewStocksPermission = function (userId, areaId) {
+  let permissionChecker = userId && new HospoHero.security.PermissionChecker(userId);
+  return permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'view stocks');
+};
 
-  let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
-  if (permissionChecker && permissionChecker.hasPermissionInArea(currentAreaId, 'view stocks')) {
+let checkViewStocksPermissionByStocktakeId = function (userId, stocktakeId) {
+  let stocktake = Stocktakes.findOne({_id: stocktakeId});
+  return checkViewStocksPermission(userId, stocktake.relations.areaId);
+};
+
+Meteor.publish('allStockAreas', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
+  if (!checkViewStocksPermission(this.userId, areaId)) {
     this.ready();
     return;
   }
-  
-  return StockAreas.find({'relations.areaId': currentAreaId});
-});
-//todo: write all subs in the same fashion as "allStockAreas"
 
-Meteor.publish('stocktakeMains', function (date) {
-  if (this.userId) {
-    var query = {
-      date: new Date(date).getTime(),
-      'relations.areaId': HospoHero.getCurrentAreaId(this.userId)
-    };
-    return Stocktakes.find(query);
-  }
+  return StockAreas.find({'relations.areaId': areaId});
 });
+
 
 Meteor.publish('stocktakes', function (stocktakeId) {
+  check(stocktakeId, HospoHero.checkers.StocktakeId);
+
+  if (!checkViewStocksPermissionByStocktakeId(this.userId, stocktakeId)) {
+    this.ready();
+    return;
+  }
+
   return [
-    StockItems.find({stocktakeId: stocktakeId}),
-    Stocktakes.find(stocktakeId)
+    Stocktakes.find({_id: stocktakeId}),
+    StockItems.find({stocktakeId: stocktakeId})
   ];
 });
 
-Meteor.publish('ordersPlaced', function (version) {
-  logger.info('Stock orders published for version ', version);
-  return OrderItems.find({version: version});
+
+Meteor.publish('ordersPlaced', function (stocktakeId) {
+  check(stocktakeId, HospoHero.checkers.StocktakeId);
+
+  if (!checkViewStocksPermissionByStocktakeId(this.userId, stocktakeId)) {
+    this.ready();
+    return;
+  }
+
+  return OrderItems.find({stocktakeId: stocktakeId});
 });
 
-Meteor.publish("orderReceipts", function (ids) {
-  logger.info("Stock order receipts published ", ids);
-  return Orders.find({"_id": {$in: ids}});
+
+Meteor.publish('fullOrderInfo', function (orderId) {
+  check(orderId, HospoHero.checkers.OrderId);
+
+  let ordersCursor = Orders.find({_id: orderId});
+
+  let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
+  let areaId = ordersCursor.fetch()[0].relations.areaId;
+  if (!permissionChecker || !permissionChecker.hasPermissionInArea(areaId, 'receive deliveries')) {
+    this.ready();
+    return;
+  }
+
+  return [
+    ordersCursor,
+    OrderItems.find({orderId: orderId, countOrdered: {$gt: 0}})
+  ];
 });
 
-Meteor.publish('orderReceiptsByVersion', function (version, areaId) {
-  logger.info("Stock order receipts published by version", version);
-  return Orders.find({
-    version: version,
-    'relations.areaId': areaId
-  });
+Meteor.publish('allStocktakeOrders', function (stocktakeId) {
+  check(stocktakeId, HospoHero.checkers.StocktakeId);
+
+  if (!checkViewStocksPermissionByStocktakeId(this.userId, stocktakeId)) {
+    this.ready();
+    return;
+  }
+
+  return Orders.find({stocktakeId: stocktakeId});
 });
 
-Meteor.publishComposite('allOrderReceipts', function (areaId) {
+
+Meteor.publishComposite('allOrdersInArea', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
+  if (!checkViewStocksPermission(this.userId, areaId)) {
+    this.ready();
+    return;
+  }
+
   return {
     find: function () {
-      return Orders.find({
-        'relations.areaId': areaId
-      }, {
-        sort: {"date": -1}
-      });
+      return Orders.find({'relations.areaId': areaId});
     },
     children: [
       {
-        find: function (orderReceipt) {
-          return Suppliers.find({_id: orderReceipt.supplier});
+        find: function (order) {
+          return Suppliers.find({_id: order.supplierId});
         }
       },
       {
-        find: function (orderReceipt) {
-          return OrderItems.find({orderReceipt: orderReceipt._id});
+        find: function (order) {
+          return OrderItems.find({orderId: order._id});
         }
       }
     ]
   };
 });
 
-Meteor.publish("receiptOrders", function (orderId) {
-  logger.info("Stock orders published for receipt ", {"ids": orderId});
-  return OrderItems.find({"orderReceipt": orderId, countOrdered: {$gt: 0}});
-});
 
 Meteor.publish('stocktakeList', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
+  if (!checkViewStocksPermission(this.userId, areaId)) {
+    this.ready();
+    return;
+  }
+
   return [
+    //return last stocktake
     Stocktakes.find({
-      date: new Date(moment().format("YYYY-MM-DD")).getTime(), // Need to pass moment instance to round unix time
       'relations.areaId': areaId
-    }),
+    }, {limit: 1, sort: {date: -1}}),
+
+    //todo: Looks pretty rough to return all stock items here
     StockItems.find({
       'relations.areaId': areaId
     })
   ];
 });
 
+
 Meteor.publish('stocktakeDates', function (areaId, timePeriod) {
-  let checkPermission = new HospoHero.security.PermissionChecker(this.userId);
-  if (checkPermission.hasPermissionInArea(areaId, "view area reports")) {
+  check(areaId, HospoHero.checkers.MongoId);
+  check(timePeriod, Date);
+
+  let checkPermission = this.userId && new HospoHero.security.PermissionChecker(this.userId);
+  if (checkPermission && checkPermission.hasPermissionInArea(areaId, "view area reports")) {
     return Stocktakes.find({
       'relations.areaId': areaId,
       date: {
