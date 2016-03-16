@@ -1,0 +1,61 @@
+let StocktakeId = Match.Where(function (stocktakeId) {
+  check(stocktakeId, HospoHero.checkers.MongoId);
+
+  if (!Stocktakes.findOne({_id: stocktakeId})) {
+    throw new Meteor.Error(500, "Stocktake doesn't exists");
+  }
+
+  return true;
+});
+
+let StocktakeDocument = Match.Where(function (stocktakeDoc) {
+  check(stocktakeDoc, {
+    _id: Match.Optional(StocktakeId),
+    date: Date,
+    relations: HospoHero.checkers.Relations
+  });
+
+  if (stocktakeDoc._id && !Stocktakes.findOne({_id: stocktakeDoc._id})) {
+    throw new Meteor.Error(500, "Stocktake doesn't exists");
+  }
+
+  return true;
+});
+
+
+let StockItemId = Match.Where(function (stockItemId) {
+  check(stockItemId, HospoHero.checkers.MongoId);
+
+  if (!StockItems.findOne({_id: stockItemId})) {
+    throw new Meteor.Error(500, "Stock item doesn't exists");
+  }
+
+  return true;
+});
+
+let StockItemDocument = Match.Where(function (stockItemDoc) {
+  check(stockItemDoc, {
+    _id: Match.Optional(StockItemId),
+    orderItemId: HospoHero.checkers.OptionalMongoId,
+    stocktakeId: HospoHero.checkers.MongoId,
+    specialAreaId: HospoHero.checkers.MongoId,
+    count: Match.Optional(Number),
+    place: Match.Optional(Number),
+    ingredient: HospoHero.checkers.IngredientDocument,
+    relations: HospoHero.checkers.Relations
+  });
+
+  if (stockItemDoc._id && !StockItems.findOne({_id: stockItemDoc._id})) {
+    throw new Meteor.Error(500, "Stock item doesn't exists");
+  }
+
+  return true;
+});
+
+
+Namespace('HospoHero.checkers', {
+  StocktakeId:  StocktakeId,
+  StockItemId: StockItemId,
+  StocktakeDocument: StocktakeDocument,
+  StockItemDocument: StockItemDocument
+});
