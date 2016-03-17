@@ -17,17 +17,15 @@ Template.projectCreateEdit.onCreated(function () {
 
   let saveProject = this.data.saveProject();
   this.addMemberToTheProject = (memberType) => {
-    let onUserSelect = () => {
-      return (userId) => {
-        project[memberType].push(userId);
-        saveProject({[memberType]: project[memberType]});
-        this.selectedUsers.push(userId);
-      };
+    let onUserSelect = (userId) => {
+      project[memberType].push(userId);
+      saveProject({[memberType]: project[memberType]});
+      this.selectedUsers.push(userId);
     };
 
     FlyoutManager.open('wrapperFlyout', {
-      template:'usersSearch',
-      title:"Searching users",
+      template: 'usersSearch',
+      title: "Searching users",
       data: {
         selectedUsers: this.selectedUsers.array(),
         onUserSelect: onUserSelect
@@ -135,11 +133,11 @@ Template.projectCreateEdit.helpers({
 
 
 Template.projectCreateEdit.events({
-  'click .add-lead' (event, tmpl) {
+  'click .add-lead-button' (event, tmpl) {
     tmpl.addMemberToTheProject('lead');
   },
 
-  'click .add-team' (event, tmpl) {
+  'click .add-team-button' (event, tmpl) {
     tmpl.addMemberToTheProject('team');
   }
 });

@@ -1,4 +1,4 @@
-Template.unavailabilitiesList.helpers({
+Template.userUnavailabilitiesList.helpers({
   unavailabilities: function () {
     var today = moment().startOf('day').toDate();
     var user = Meteor.users.findOne({_id: this._id});
