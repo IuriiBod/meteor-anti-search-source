@@ -54,16 +54,14 @@ Template.meetingDetailsTable.events({
   'click .add-user' (event, tmpl) {
     let meeting = tmpl.data.meeting;
 
-    let onUserSelect = () => {
-      return (userId) => {
-        meeting.attendees.push(userId);
-        Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
-      };
+    let onUserSelect = (userId) => {
+      meeting.attendees.push(userId);
+      Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
     };
 
     FlyoutManager.open('wrapperFlyout', {
-      template:'usersSearch',
-      title:"Searching users",
+      template: 'usersSearch',
+      title: "Searching users",
       data: {
         selectedUsers: meeting.attendees,
         onUserSelect: onUserSelect
