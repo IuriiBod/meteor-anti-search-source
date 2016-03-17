@@ -1,4 +1,4 @@
-<template name="stocksList">
+<template name="ingredientsModalList">
   <div>
     {{#if hasPermissionInAreaTo 'view stocks'}}
       <input type="text" class="form-control input-lg search-for-stocks-input" placeholder="Search for stocks..."><br>
@@ -15,7 +15,7 @@
         </thead>
         <tbody>
         {{#each ingredients}}
-          {{> stocksListItem stock=this onAddStockItem=onAddStockItem}}
+          {{> ingredientsModalListItem stock=this onAddStockItem=onAddStockItem}}
         {{/each}}
         </tbody>
       </table>

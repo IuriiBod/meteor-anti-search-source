@@ -1,4 +1,4 @@
-Template.stocksListItem.onCreated(function () {
+Template.ingredientsModalListItem.onCreated(function () {
   this.getCostPerPortionUsed = function () {
     var costPerPortionUsed = 0;
     var stock = this.data.stock;
@@ -13,13 +13,13 @@ Template.stocksListItem.onCreated(function () {
   };
 });
 
-Template.stocksListItem.onRendered(function () {
+Template.ingredientsModalListItem.onRendered(function () {
   this.$('.i-checks').iCheck({
     checkboxClass: 'icheckbox_square-green'
   });
 });
 
-Template.stocksListItem.helpers({
+Template.ingredientsModalListItem.helpers({
   stockItem: function () {
     return Template.instance().data.stock;
   },
@@ -28,12 +28,12 @@ Template.stocksListItem.helpers({
   }
 });
 
-Template.stocksListItem.events({
+Template.ingredientsModalListItem.events({
   'ifChecked .add-ing-checkbox': function (event, tmpl) {
     tmpl.data.onAddStockItem(tmpl.data.stock._id);
   }
 });
 
-Template.stocksListItem.onDestroyed(function () {
+Template.ingredientsModalListItem.onDestroyed(function () {
   this.$('.i-checks').iCheck('destroy');
 });

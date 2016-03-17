@@ -1,4 +1,4 @@
-Template.stocksList.onCreated(function () {
+Template.ingredientsModalList.onCreated(function () {
   this.ingredienstSearch = this.AntiSearchSource({
     collection: 'ingredients',
     fields: ['code', 'description'],
@@ -10,7 +10,7 @@ Template.stocksList.onCreated(function () {
 });
 
 
-Template.stocksList.helpers({
+Template.ingredientsModalList.helpers({
   ingredients: function () {
     var tmpl = Template.instance();
     var query = {_id: {$nin: tmpl.idsToExclude.get()}};
@@ -33,7 +33,7 @@ Template.stocksList.helpers({
   }
 });
 
-Template.stocksList.events({
+Template.ingredientsModalList.events({
   'click .add-new-ingredient': function () {
     FlyoutManager.open('wrapperFlyout', {
       template:'ingredientEditor',

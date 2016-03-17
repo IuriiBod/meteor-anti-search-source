@@ -1,0 +1,26 @@
+<template name="stockItem">
+  <li class="list-group-item">
+    {{#if isEditMode}}
+      <i class="fa fa-fw fa-reorder"></i>
+    {{/if}}
+
+    {{ingredient.description}}
+
+    <small>({{supplierName ingredient.suppliers}})</small>
+
+    {{#if isEditMode}}
+      <i class="fa fa-trash pull-right removeFromList"></i>
+    {{/if}}
+
+    <span class="pull-right">
+      {{#if isStockItemEditable}}
+        <a href="" class="stock-item-count">{{stockItem.count}}</a> &nbsp; [{{ingredient.portionOrdered}}]
+      {{else}}
+        <p data-toggle="tooltip" data-placement="top"
+           title="You have already placed an order for this stockItem. Can't edit now. Create a new stocktake to place another order.">
+          {{stockItem.count}} &nbsp; [{{ingredient.portionOrdered}}]
+        </p>
+      {{/if}}
+    </span>
+  </li>
+</template>

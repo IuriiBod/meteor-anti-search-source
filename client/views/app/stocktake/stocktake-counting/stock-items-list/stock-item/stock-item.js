@@ -1,10 +1,10 @@
-Template.stockCountingListItem.onCreated(function () {
+Template.stockItem.onCreated(function () {
   this.getIngredientFromStock = function () {
     return StockItems.findOne({'ingredient._id': this.data.ingredient._id});
   };
 });
 
-Template.stockCountingListItem.onRendered(function () {
+Template.stockItem.onRendered(function () {
   this.$('[data-toggle="tooltip"]').tooltip();
 
   var tmpl = this;
@@ -34,7 +34,7 @@ Template.stockCountingListItem.onRendered(function () {
     }
   };
 
-  this.$(".counting").editable({
+  this.$(".stock-item-count").editable({
     type: "text",
     title: 'Edit count',
     showbuttons: false,
@@ -47,34 +47,14 @@ Template.stockCountingListItem.onRendered(function () {
   });
 });
 
-Template.stockCountingListItem.helpers({
-  ingredient: function () {
-    if (this.ingredient) {
-      return {
-        inStock: Template.instance().getIngredientFromStock(),
-        data: this.ingredient
-      };
-    }
-    if (this.stocktakeItem) {
-      return {
-        inStock: this.stocktakeItem,
-        data: Ingredients.findOne({_id: this.stocktakeItem.stockId})
-      };
-    }
-  },
-
-  canEditIngredientsItem: function (id) {
-    var permitted = true;
-    var stocktake = StockItems.findOne({_id: id});
-    if (stocktake && stocktake.orderRef) {
-      var order = OrderItems.findOne({_id: stocktake.orderRef});
-      permitted = order && order.orderReceipt;
-    }
-    return permitted;
+Template.stockItem.helpers({
+  isStockItemEditable: function () {
+    //todo: check here if order was generated for supplier of current ingredient
+    return true;
   }
 });
 
-Template.stockCountingListItem.events({
+Template.stockItem.events({
   'click .removeFromList': function (event, tmpl) {
     event.preventDefault();
     var confrimDelete = confirm(

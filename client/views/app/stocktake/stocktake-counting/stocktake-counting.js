@@ -70,14 +70,14 @@ Template.stocktakeCounting.events({
 
     let currentSpecialAreaId = tmpl.activeSpecialAreaId.get();
     let currentSpecialArea = StockAreas.findOne({_id: currentSpecialAreaId});
-    let idsOfItemsInList = currentSpecialArea.stocks;
+    let idsOfItemsInList = currentSpecialArea.ingredients;
 
     let onAddStockItem = function (ingredientId) {
       Meteor.call("assignIngredientToStockArea", ingredientId, currentSpecialAreaId, HospoHero.handleMethodResult());
     };
 
     FlyoutManager.open('wrapperFlyout', {
-      template: 'stocksList',
+      template: 'ingredientsModalList',
       title: 'Select Stocks',
       data: {
         inFlyout: true,

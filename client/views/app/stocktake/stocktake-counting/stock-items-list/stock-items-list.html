@@ -1,0 +1,9 @@
+<template name="stockItemsList">
+  <ul class="list-group">
+    {{#each stockAreaIngredients}}
+      {{> stockItem getStockItemContext}}
+    {{else}}
+      No items on this list
+    {{/each}}
+  </ul>
+</template>

@@ -1,7 +1,7 @@
 let stockAreaSortOption = {sort: {createdAt: 1}};
 let generalStockAreasQuery = {generalAreaId: {$exists: false}, active: true};
 
-Template.stocktakeAreaFilter.onCreated(function () {
+Template.stockAreasFilter.onCreated(function () {
   if (!this.data.activeAreas.general) {
     let defaultGeneralArea = StockAreas.findOne(generalStockAreasQuery, stockAreaSortOption);
     if (defaultGeneralArea) {
@@ -10,7 +10,7 @@ Template.stocktakeAreaFilter.onCreated(function () {
   }
 });
 
-Template.stocktakeAreaFilter.helpers({
+Template.stockAreasFilter.helpers({
   generalAreas: function () {
     return StockAreas.find(generalStockAreasQuery, stockAreaSortOption);
   },
@@ -19,7 +19,7 @@ Template.stocktakeAreaFilter.helpers({
 });
 
 
-Template.stocktakeAreaFilter.events({
+Template.stockAreasFilter.events({
   'click .add-general-area-button': function (event) {
     event.preventDefault();
 
