@@ -27,3 +27,38 @@ Meteor.publish('leaveRequestsApprovers', function () {
     fields: HospoHero.security.getPublishFieldsFor('users')
   });
 });
+
+Meteor.publishComposite('leaveRequests', function (areaId, limit) {
+  check(areaId, HospoHero.checkers.MongoId);
+  check(limit, Number);
+  const permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
+  if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'approve leave requests')) {
+    const query = {
+      'relations.areaId': areaId
+    };
+    return {
+      find: function () {
+        return LeaveRequests.find(query, {limit: limit});
+      },
+      children: [
+        {
+          find: function (leaveRequest) {
+            if (leaveRequest && leaveRequest.userId) {
+              return Meteor.users.find({_id: leaveRequest.userId}, {
+                fields: {
+                  'profile.firstname': 1,
+                  'profile.lastname': 1
+                }
+              });
+            } else {
+              this.ready();
+            }
+          }
+        }
+      ]
+    };
+  } else {
+    logger.error('Permission denied: publish [leaveRequests] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
+});

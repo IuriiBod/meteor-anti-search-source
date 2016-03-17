@@ -55,6 +55,32 @@ let publishAreaUsersFn = function (areaId) {
 Meteor.publish('areaDetailsUsers', publishAreaUsersFn); // used primarily on area's settings flyout
 Meteor.publish('areaUsersList', publishAreaUsersFn); // used anywhere else
 
+Meteor.publish('areaUnavailabilitiesList', function (areaId,limit) {
+  check(areaId, HospoHero.checkers.MongoId);
+  check(limit, Number);
+
+  const permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
+  if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'approve leave requests')) {
+
+    let fieldsToPublish = HospoHero.security.getPublishFieldsFor('users', {
+       unavailabilities: 1
+    });
+
+    let query = {
+       'relations.areaIds': areaId,
+       'unavailabilities.0': {'$exists':true}
+    };
+    let filter = {
+      limit:limit,
+      fields: fieldsToPublish
+    };
+    return Meteor.users.find(query,filter);
+  } else {
+    logger.error('Permission denied: publish [areaUnavailabilitiesList] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
+});
+
 
 Meteor.publish('selectedUsersList', function (usersIds) {
   check(usersIds, [HospoHero.checkers.MongoId]);
