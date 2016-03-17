@@ -219,15 +219,14 @@ Meteor.methods({
     check(firstDayOfWeek, String);
     check(isConfirmed, Match.Optional(Boolean));
 
-    let startAndEndOfWeek = TimeRangeQueryBuilder.forWeek(new Date(firstDayOfWeek));
-    let existingShifts = Shifts.find({startTime: startAndEndOfWeek});
+    let area = HospoHero.getCurrentArea(this.userId);
+    let startAndEndOfWeek = TimeRangeQueryBuilder.forWeek(new Date(firstDayOfWeek), area.locationId);
+    let existingShifts = Shifts.find({startTime: startAndEndOfWeek, 'relations.areaId': area._id});
 
     if (existingShifts.count() && isConfirmed === undefined) {
       throw new Meteor.Error(403, 'Shifts for selected week already exists!');
     } else if (existingShifts.count() && isConfirmed) {
-      existingShifts.forEach((shift) => {
-        Shifts.remove({_id: shift._id});
-      });
+      Shifts.remove({startTime: startAndEndOfWeek, 'relations.areaId': area._id});
     }
 
     let shiftsTypeTmpl = Shifts.find({
@@ -242,9 +241,12 @@ Meteor.methods({
       shift.startTime = toCurrentDayMoment(shift.startTime, firstDayOfWeek);
       shift.endTime = toCurrentDayMoment(shift.endTime, firstDayOfWeek);
 
-      check(shift, HospoHero.checkers.ShiftDocument);
-
-      Shifts.insert(shift);
+      try {
+        check(shift, HospoHero.checkers.ShiftDocument);
+        Shifts.insert(shift);
+      } catch(error) {
+        console.log(error);
+      }
     });
   }
 });

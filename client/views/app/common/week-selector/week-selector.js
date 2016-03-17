@@ -1,8 +1,9 @@
 Template.weekSelector.onCreated(function () {
-  this.sweetAlertOptions = (warnMsg) => {
-    return {
+  this.selectedWeek = new ReactiveVar();
+  this.showCopyShiftsAlert = (warningMessage, onPromptResult) => {
+    let options = {
       title: 'Warning',
-      text: `${warnMsg}\nDo you want to remove shifts for this week and copy it from template?`,
+      text: `${warningMessage}\nDo you want to remove shifts for this week and copy it from template?`,
       type: "warning",
       showCancelButton: true,
       cancelButtonText: 'No',
@@ -10,6 +11,10 @@ Template.weekSelector.onCreated(function () {
       closeOnConfirm: false,
       closeOnCancel: false
     };
+    let handleResult = (isConfirmed) => {
+      onPromptResult(isConfirmed);
+    };
+    return sweetAlert(options, handleResult);
   };
 
   this.closeModalAndShowMsg = (modalInstance, resType, msg) => {
@@ -50,20 +55,20 @@ Template.weekSelector.events({
   'click .saveShifts': function (event, tmpl) {
     event.preventDefault();
 
-    let selectedDayOfWeek = tmpl.get('selectedWeek');
+    let selectedDayOfWeek = tmpl.selectedWeek.get();
 
     if (selectedDayOfWeek) {
       let weekSelectorModal = ModalManager.getInstanceByElement(event.target);
       Meteor.call('copyShiftsFromTemplate', selectedDayOfWeek, (error) => {
         if (error) {
-          return sweetAlert(tmpl.sweetAlertOptions(error.reason), (isConfirmed) => {
+          tmpl.showCopyShiftsAlert(error.reason, (isConfirmed) => {
             Meteor.call('copyShiftsFromTemplate', selectedDayOfWeek, isConfirmed, (err) => {
               if (err) {
                 tmpl.closeModalAndShowMsg(weekSelectorModal, 'error', err);
               } else {
                 tmpl.closeModalAndShowMsg(weekSelectorModal, 'success', 'Template was copied to the selected week');
               }
-            });
+            })
           });
         } else {
           tmpl.closeModalAndShowMsg(weekSelectorModal, 'success', 'Template was copied to the selected week');
@@ -75,6 +80,6 @@ Template.weekSelector.events({
   },
 
   'ifChecked [name=week-radio]': function (event, tmpl) {
-    tmpl.set('selectedWeek', event.target.value);
+    tmpl.selectedWeek.set(event.target.value);
   }
 });
