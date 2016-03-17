@@ -1,38 +1,43 @@
 Template.stocktakeCounting.onCreated(function () {
-  this.set('editStockTake', false);
-  this.set('activeSpecialArea', null);
-  this.set('activeGeneralArea', null);
+  this.activeGeneralAreaId = new ReactiveVar(false);
+  this.activeSpecialAreaId = new ReactiveVar(false);
+  this.stocktakeEditMode = new ReactiveVar(false);
 });
 
 Template.stocktakeCounting.helpers({
-  stockTakeCountingContext: function () {
+  isEditMode: function () {
+    return Template.instance().stocktakeEditMode.get();
+  },
+
+  activeAreas: function () {
     var tmpl = Template.instance();
     return {
-      editableStockTake: tmpl.get('editStockTake'),
-      stockTakeId: tmpl.data.stocktakeId,
-      activeSpecialArea: tmpl.get('activeSpecialArea'),
-      activeGeneralArea: tmpl.get('activeGeneralArea'),
-      makeGeneralAreaActive: function (areaId) {
-        tmpl.set('activeGeneralArea', areaId);
-      },
-      makeSpecialAreaActive: function (areaId) {
-        tmpl.set('activeSpecialArea', areaId);
+      general: tmpl.activeGeneralAreaId.get(),
+      special: tmpl.activeSpecialAreaId.get()
+    };
+  },
+
+  onStockAreaSelect: function () {
+    let tmpl = Template.instance();
+    return function (stockArea) {
+      console.log('stockAreaSelect area=', stockArea);
+      if (stockArea) {
+        let isSpecialArea = !!stockArea.generalAreaId;
+        if (isSpecialArea) {
+          tmpl.activeSpecialAreaId.set(stockArea._id);
+        } else {
+          tmpl.activeGeneralAreaId.set(stockArea._id);
+        }
       }
     };
   },
 
   stockItemsList: function () {
-    let specialAreaId = Template.instance().get('activeSpecialArea');
+    let specialAreaId = Template.instance().activeSpecialAreaId.get();
     return StockItems.find({
       stocktakeId: this._id,
       specialAreaId: specialAreaId
     }, {sort: {place: 1}});
-  },
-
-  ingredientsList: function () {
-    let specialAreaId = Template.instance().get('activeSpecialArea');
-    let specialArea = StockAreas.findOne({_id: specialAreaId});
-    return Ingredients.findOne({_id: {$in: specialArea.ingredients}, status: "active"});
   },
 
   hasOrders: function () {
@@ -41,42 +46,40 @@ Template.stocktakeCounting.helpers({
 });
 
 Template.stocktakeCounting.events({
-  'click .saveStockTake': function (event, tmpl) {
+  'click .finish-template-editing-button': function (event, tmpl) {
     event.preventDefault();
-    tmpl.set('editStockTake', false);
-    tmpl.$(event.target).hide();
-    tmpl.$(".editStockTake").show();
+    tmpl.stocktakeEditMode.set(false);
   },
 
-  'click .editStockTake': function (event, tmpl) {
+  'click .edit-template-button': function (event, tmpl) {
     event.preventDefault();
-    tmpl.set('editStockTake', true);
-    tmpl.$(event.target).hide();
+    tmpl.stocktakeEditMode.set(true);
   },
 
-  'click .generateOrders': function (event, tmpl) {
+  'click .generate-orders-button': function (event, tmpl) {
     event.preventDefault();
-    tmpl.set('editStockTake', false);
-    var version = tmpl.data.stocktakeId;
-    if (version) {
-      Meteor.call("generateOrders", version, HospoHero.handleMethodResult(function () {
-        Router.go("stocktakeOrdering", {"_id": version});
-      }));
-    }
+    tmpl.stocktakeEditMode.set(false);
+    let stocktakeId = tmpl.data._id;
+
+    Meteor.call('generateOrders', stocktakeId, HospoHero.handleMethodResult(function () {
+      Router.go('stocktakeOrdering', {_id: stocktakeId});
+    }));
   },
 
-  'click .addStock': function (event, tmpl) {
+  'click .add-ingredient-button': function (event, tmpl) {
     event.preventDefault();
-    var currentSpecialAreaId = tmpl.get('activeSpecialArea');
-    var currentSpecialArea = StockAreas.findOne({_id: currentSpecialAreaId});
-    var idsOfItemsInList = currentSpecialArea.stocks;
-    var onAddStockItem = function (stockId) {
-      Meteor.call("assignStocksToAreas", stockId, currentSpecialAreaId, HospoHero.handleMethodResult());
+
+    let currentSpecialAreaId = tmpl.activeSpecialAreaId.get();
+    let currentSpecialArea = StockAreas.findOne({_id: currentSpecialAreaId});
+    let idsOfItemsInList = currentSpecialArea.stocks;
+
+    let onAddStockItem = function (ingredientId) {
+      Meteor.call("assignIngredientToStockArea", ingredientId, currentSpecialAreaId, HospoHero.handleMethodResult());
     };
 
     FlyoutManager.open('wrapperFlyout', {
       template: 'stocksList',
-      title: "Select Stocks",
+      title: 'Select Stocks',
       data: {
         inFlyout: true,
         onAddStockItem: onAddStockItem,

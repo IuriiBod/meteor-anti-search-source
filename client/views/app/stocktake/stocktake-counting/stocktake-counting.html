@@ -6,16 +6,18 @@
     <div class="row">
       <div class="col-lg-12">
         {{#if hasOrders}}
-          <a class="btn btn-primary btn-sm pull-right" href="{{pathFor route='stocktakeOrdering' _id=stocktakeId}}">
+          <a class="btn btn-primary btn-sm pull-right" href="{{pathFor route='stocktakeOrdering'}}">
             View Orders
           </a>
         {{else}}
-          <a class="btn btn-primary btn-sm pull-right generateOrders">Save stocktake &amp; generate orders</a>
+          <a class="btn btn-primary btn-sm pull-right generate-orders-button">Save stocktake &amp; generate orders</a>
 
-          {{#if stockTakeCountingContext.editableStockTake}}
-            <a class="btn btn-link btn-sm pull-right saveStockTake"><i class="fa fa-fw fa-save"></i>Save</a>
+          {{#if isEditMode}}
+            <a class="btn btn-link btn-sm pull-right finish-template-editing-button">
+              <i class="fa fa-fw fa-save"></i>Finish Template Editing
+            </a>
           {{else}}
-            <a class="btn btn-link btn-sm pull-right editStockTake">
+            <a class="btn btn-link btn-sm pull-right edit-template-button">
               <i class="fa fa-fw fa-edit"></i>Edit Stocktake Template
             </a>
           {{/if}}
@@ -27,45 +29,23 @@
     </div>
 
     <div class="row">
-      {{> stocktakeAreaFilter stockTakeData=stockTakeCountingContext}}
-      {{#if stockTakeCountingContext.activeSpecialArea}}
-        <div class="col-md-8">
-          {{#if stockTakeMain.hasOrderReceipts}}
-            <ul class="list-group">
-              {{#each stocktakeList}}
-                {{> stockCountingListItem stocktakeItem=this stockTakeData=stockTakeCountingContext}}
-              {{else}}
-                No items on this list
-              {{/each}}
-            </ul>
-          {{else}}
-            {{#if stockTakeCountingContext.editableStockTake}}
-              {{> stockItemsListSortable ingredientsList=ingredientsList stockTakeData=stockTakeCountingContext}}
-              <a class="btn btn-block btn-default btn-outline addStock">Add stock items to this area</a>
+      {{> stocktakeAreaFilter onStockAreaSelect=onStockAreaSelect activeAreas=activeAreas isEditMode=isEditMode}}
+      <div class="col-md-8">
+        {{#if activeAreas.special}}
+          <ul class="list-group">
+            {{#each stockItemsList}}
+              {{> stockCountingListItem stocktakeItem=this}}
             {{else}}
-              <ul class="list-group">
-                {{#each ingredientsList}}
-                  {{> stockCountingListItem ingredient=this stockTakeData=stockTakeCountingContext}}
-                {{else}}
-                  No items on this list
-                {{/each}}
-              </ul>
-            {{/if}}
+              No items on this list
+            {{/each}}
+          </ul>
+          {{#if isEditMode}}
+            <a class="btn btn-block btn-default btn-outline add-ingredient-button">Add stock items to this area</a>
           {{/if}}
-        </div>
-      {{else}}
-        Select areas to show list of stock items
-      {{/if}}
-    </div>
-
-    <div class="modal fade" id="addNewGeneralAreaModal" tabindex="-1" role="dialog" aria-labelledby="areasModal"
-         aria-hidden="true">
-      {{> newAreaModal name="general"}}
-    </div>
-
-    <div class="modal fade" id="addNewSpecialAreaModal" tabindex="-1" role="dialog" aria-labelledby="areasModal"
-         aria-hidden="true">
-      {{> newAreaModal name="special" generalArea=stockTakeCountingContext.activeGeneralArea}}
+        {{else}}
+          Select areas to show list of stock items
+        {{/if}}
+      </div>
     </div>
   </div>
 </template>

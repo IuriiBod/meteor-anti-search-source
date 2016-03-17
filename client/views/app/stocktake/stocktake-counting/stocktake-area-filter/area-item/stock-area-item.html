@@ -1,0 +1,37 @@
+<template name="stockAreaItem">
+  <div class="areaBox">
+    {{#if isEditMode}}
+      <div class="box-wrapper pull-right">
+        <span class="box-remove glyphicon glyphicon-remove remove-area-button"></span>
+      </div>
+    {{/if}}
+
+    <a class="btn btn-block {{#if isCurrentAreaActive}}btn-info{{else}}btn-default{{/if}} btn-sm m-b-sm select-current-area-button"
+       role="button" data-toggle="collapse" href="#"
+       aria-expanded="false">
+
+      {{#if isEditMode}}
+        {{> stockAreaNameEditable stockArea}}
+      {{else}}
+        {{stockArea.name}}
+      {{/if}}
+
+      {{> areasProgressBar stockArea=stockArea}}
+    </a>
+  </div>
+  {{#if isGeneralStockArea}}
+    <div class="collapse {{#if isCurrentAreaActive}} in {{/if}}">
+      <div class="well">
+        {{#each specialAreas}}
+          {{> stockAreaItem getStockAreaItemContext}}
+        {{else}}
+          No Special Areas
+        {{/each}}
+        <div class="button-wrapper">
+          <a href="#" data-toggle="modal"
+             class="btn btn-outline btn-primary col-md-12 no-margin add-special-area-button">Add</a>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</template>

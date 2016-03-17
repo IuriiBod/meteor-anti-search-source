@@ -20,9 +20,7 @@ Router.route('stocktakeCounting', {
     ];
   },
   data: function () {
-    return {
-      stocktake: Stocktakes.findOne({_id: this.params._id})
-    }
+    return Stocktakes.findOne({_id: this.params._id});
   }
 });
 

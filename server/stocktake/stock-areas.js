@@ -37,19 +37,19 @@ Meteor.methods({
     return newStockAreaId;
   },
 
-  editGeneralArea: function (generalAreaId, newName) {
-    check(generalAreaId, HospoHero.checkers.MongoId);
+  renameStockArea: function (stockAreaId, newName) {
+    check(stockAreaId, HospoHero.checkers.MongoId);
     check(newName, areaNameChecker);
 
-    var generalArea = StockAreas.findOne({_id: generalAreaId});
+    var stockArea = StockAreas.findOne({_id: stockAreaId});
 
-    if (!generalArea || !canUserEditStocks(generalArea.relations.areaId)) {
+    if (!stockArea || !canUserEditStocks(stockArea.relations.areaId)) {
       logger.error("User not permitted to edit general areas");
       throw new Meteor.Error(403, "User not permitted to edit general areas");
     }
 
-    if (newName !== generalArea.name) {
-      StockAreas.update({_id: generalAreaId}, {$set: {name: newName}});
+    if (newName !== stockArea.name) {
+      StockAreas.update({_id: stockAreaId}, {$set: {name: newName}});
     }
   },
 
@@ -108,22 +108,7 @@ Meteor.methods({
     return newSpecialAreaId;
   },
 
-  editSpecialArea: function (specialAreaId, newName) {
-    check(specialAreaId, HospoHero.checkers.MongoId);
-    check(newName, areaNameChecker);
-
-    var specialArea = StockAreas.findOne({_id: specialAreaId});
-    if (!specialArea || !canUserEditStocks(specialArea.relations.areaId)) {
-      logger.error("User not permitted to edit special areas");
-      throw new Meteor.Error(403, "User not permitted to edit special areas");
-    }
-
-    if (newName !== specialArea.name) {
-      StockAreas.update({_id: specialAreaId}, {$set: {name: newName}});
-    }
-  },
-
-  assignStocksToAreas: function (ingredientId, specialAreaId) {
+  assignIngredientToStockArea: function (ingredientId, specialAreaId) {
     check(ingredientId, HospoHero.checkers.MongoId);
     check(specialAreaId, HospoHero.checkers.MongoId);
 
