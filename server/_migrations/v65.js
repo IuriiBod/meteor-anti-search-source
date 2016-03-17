@@ -35,17 +35,17 @@ Migrations.add({
     });
 
     //remove everything from old stocktake
-    //todo: uncomment code below
-    //let collectionsToRemove = [
-    //  "generalAreas",
-    //  "specialAreas",
-    //  "stocktakeMain",
-    //  "stockOrders",
-    //  "orderReceipts"
-    //];
-    //
-    //collectionsToRemove.forEach(
-    //    name => Migrations.utils.removeCollection(name)
-    //);
+    let collectionsToRemove = [
+      "generalAreas",
+      "specialAreas",
+      "stocktakeMain",
+      "stockOrders",
+      "orderReceipts",
+      "stocktakes"
+    ];
+
+    collectionsToRemove.forEach(
+        name => Migrations.utils.removeCollection(name)
+    );
   }
 });

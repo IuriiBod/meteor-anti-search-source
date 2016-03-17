@@ -13,14 +13,21 @@ Meteor.methods({
 
     let relationsObject = HospoHero.getRelationsObject();
     let localDateMoment = HospoHero.dateUtils.getDateMomentForLocation(new Date(), relationsObject.locationId);
-    var newStocktakeDoc = {
-      date: localDateMoment.startOf('day').toDate(),
-      relations: relationsObject
-    };
+    let stocktakeDate = localDateMoment.startOf('day').toDate();
 
-    var newStocktakeId = Stocktakes.insert(newStocktakeDoc);
-    logger.info('Created new stocktake', newStocktakeId);
-    return newStocktakeId;
+    let existingStocktake = Stocktakes.findOne({date: stocktakeDate, 'relations.areaId': relationsObject.areaId});
+    if (!existingStocktake) {
+      let newStocktakeDoc = {
+        date: stocktakeDate,
+        relations: relationsObject
+      };
+
+      let newStocktakeId = Stocktakes.insert(newStocktakeDoc);
+      logger.info('Created new stocktake', newStocktakeId);
+      return newStocktakeId;
+    } else {
+      throw new Meteor.Error(500, 'Stocktake for today is already exists');
+    }
   },
 
   createStockItem: function (newStockItem) {

@@ -1,6 +1,6 @@
 Router.route('stocktakeList', {
   path: '/stocktake',
-  template: 'stockListMainView',
+  template: 'stocktakesList',
   waitOn: function () {
     return Meteor.subscribe('stocktakeList', HospoHero.getCurrentAreaId());
   }

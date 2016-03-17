@@ -114,11 +114,9 @@ Meteor.publish('stocktakeList', function (areaId) {
   }
 
   return [
-    //return last stocktake
     Stocktakes.find({
       'relations.areaId': areaId
-    }, {limit: 1, sort: {date: -1}}),
-
+    }),
     //todo: Looks pretty rough to return all stock items here
     StockItems.find({
       'relations.areaId': areaId
