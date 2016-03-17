@@ -133,11 +133,11 @@ Template.projectCreateEdit.helpers({
 
 
 Template.projectCreateEdit.events({
-  'click .add-lead' (event, tmpl) {
+  'click .add-lead-button' (event, tmpl) {
     tmpl.addMemberToTheProject('lead');
   },
 
-  'click .add-team' (event, tmpl) {
+  'click .add-team-button' (event, tmpl) {
     tmpl.addMemberToTheProject('team');
   }
 });

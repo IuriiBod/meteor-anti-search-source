@@ -51,7 +51,7 @@ Template.meetingDetailsTable.helpers({
 
 
 Template.meetingDetailsTable.events({
-  'click .add-user' (event, tmpl) {
+  'click .add-user-button' (event, tmpl) {
     let meeting = tmpl.data.meeting;
 
     let onUserSelect = (userId) => {
