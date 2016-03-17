@@ -1,15 +1,18 @@
 .stocktake-counting {
-  .area-modal {
-    .modal-body {
-      padding-bottom: 50px;
+  .filtering-area {
+    .area-box {
+      a {
+        position: relative;
+        white-space: inherit !important;
 
-      .form-group {
-        margin-bottom: 25px;
+        .remove-area-button {
+          position: absolute;
+          right: 5px;
+          top: 5px;
+        }
       }
     }
-  }
 
-  .filtering-area {
     .button-wrapper {
       height: 30px;
 
@@ -19,20 +22,4 @@
     }
   }
 
-  .editableAreaBox {
-    .box-wrapper {
-      display: block;
-
-      .remove-area-button {
-        margin: 2px;
-      }
-    }
-  }
-
-  .areaBox,
-  .editableAreaBox {
-    a {
-      white-space: inherit !important;
-    }
-  }
 }

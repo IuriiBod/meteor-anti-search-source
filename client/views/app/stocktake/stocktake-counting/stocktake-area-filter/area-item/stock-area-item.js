@@ -8,11 +8,6 @@ Template.stockAreaItem.getStockAreaItemContext = function () {
   }
 };
 
-
-Template.stockAreaItem.onCreated(function () {
-  console.log(this.data.stockArea.name, this.data);
-});
-
 Template.stockAreaItem.helpers({
   isCurrentAreaActive: function () {
     let isSpecial = !!this.stockArea.generalAreaId;
@@ -38,23 +33,20 @@ Template.stockAreaItem.events({
 
   'click .add-special-area-button': function (event, tmpl) {
     event.preventDefault();
-    let generalAreaId = tmpl.stockArea._id;
+    let generalAreaId = tmpl.data.stockArea._id;
 
     sweetAlert({
       title: "Add new special area",
       text: "Special area name",
       type: "input",
       showCancelButton: true,
-      closeOnConfirm: false,
+      closeOnConfirm: true,
       animation: "slide-from-top",
       inputPlaceholder: "area name"
     }, function (specialAreaName) {
-      if (specialAreaName === false) {
-        return false;
-      }
-      if (specialAreaName === "") {
-        sweetAlert.showInputError("You need to write area name!");
-        return false
+      if (!specialAreaName) {
+        HospoHero.error('Name is required!');
+        return;
       }
 
       Meteor.call('createSpecialArea', specialAreaName, generalAreaId, HospoHero.handleMethodResult());
@@ -63,10 +55,14 @@ Template.stockAreaItem.events({
 
   'click .remove-area-button': function (event, tmpl) {
     event.preventDefault();
-    let stockArea = tmpl.data.stockArea;
-    let isSpecial = !!sockArea.generalAreaId;
+    event.stopPropagation();
 
-    let removeMethodName = isSpecial ? 'deleteSpecialArea' : 'deleteGeneralArea';
-    Meteor.call(removeMethodName, stockArea._id, HospoHero.handleMethodResult());
+    let stockArea = tmpl.data.stockArea;
+    let confirmation = confirm(`Deleting {stockArea.name}.\nAre you sure?`);
+    if (confirmation) {
+      let isGeneral = !stockArea.generalAreaId;
+      let removeMethodName = isGeneral ? 'deleteGeneralArea' : 'deleteSpecialArea';
+      Meteor.call(removeMethodName, stockArea._id, HospoHero.handleMethodResult());
+    }
   }
 });

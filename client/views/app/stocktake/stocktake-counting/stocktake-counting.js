@@ -20,7 +20,6 @@ Template.stocktakeCounting.helpers({
   onStockAreaSelect: function () {
     let tmpl = Template.instance();
     return function (stockArea) {
-      console.log('stockAreaSelect area=', stockArea);
       if (stockArea) {
         let isSpecialArea = !!stockArea.generalAreaId;
         if (isSpecialArea) {

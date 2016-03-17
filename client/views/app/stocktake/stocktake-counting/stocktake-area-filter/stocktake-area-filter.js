@@ -28,16 +28,13 @@ Template.stocktakeAreaFilter.events({
       text: "General area name",
       type: "input",
       showCancelButton: true,
-      closeOnConfirm: false,
+      closeOnConfirm: true,
       animation: "slide-from-top",
       inputPlaceholder: "area name"
     }, function (generalAreaName) {
-      if (generalAreaName === false) {
-        return false;
-      }
-      if (generalAreaName === "") {
-        sweetAlert.showInputError("You need to write area name!");
-        return false
+      if (!generalAreaName) {
+        HospoHero.error("Area name is required!");
+        return;
       }
 
       Meteor.call('createGeneralArea', generalAreaName, HospoHero.handleMethodResult());
