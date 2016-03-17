@@ -58,7 +58,7 @@ Template.stockAreaItem.events({
     event.stopPropagation();
 
     let stockArea = tmpl.data.stockArea;
-    let confirmation = confirm(`Deleting {stockArea.name}.\nAre you sure?`);
+    let confirmation = confirm(`Deleting ${stockArea.name}.\nAre you sure?`);
     if (confirmation) {
       let isGeneral = !stockArea.generalAreaId;
       let removeMethodName = isGeneral ? 'deleteGeneralArea' : 'deleteSpecialArea';
