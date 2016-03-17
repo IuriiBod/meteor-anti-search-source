@@ -89,6 +89,24 @@ var ShiftPropertyChangeLogger = {
   }
 };
 
+let toCurrentDayMoment = (date, firstDayOfWeek) => {
+  date = moment(date);
+  // new Date(selectedWeek) for overcoming moment js deprecated error
+  var selectedWeekMoment = moment(new Date(firstDayOfWeek));
+  selectedWeekMoment.set({
+    hours: date.hour(),
+    minutes: date.minutes(),
+    seconds: 0,
+    day: date.day()
+  });
+
+  // The Crutch. Because of moment defaults week starts from Sunday
+  if (date.day() === 0) {
+    selectedWeekMoment.add(1, 'week');
+  }
+  return selectedWeekMoment.toDate();
+};
+
 /**
  * updates shift status if it needs to
  * @param updatedShift shift to adjust
@@ -191,5 +209,42 @@ Meteor.methods({
       Shifts.remove({_id: shiftToDeleteId});
       logger.info("Shift deleted", {"shiftId": shiftToDeleteId});
     }
+  },
+
+  copyShiftsFromTemplate(firstDayOfWeek, isConfirmed) {
+    if (!canUserEditRoster()) {
+      logger.error(403, "User not permitted to create shifts");
+    }
+
+    check(firstDayOfWeek, String);
+    check(isConfirmed, Match.Optional(Boolean));
+
+    let startAndEndOfWeek = TimeRangeQueryBuilder.forWeek(new Date(firstDayOfWeek));
+    let existingShifts = Shifts.find({startTime: startAndEndOfWeek});
+
+    if (existingShifts.count() && isConfirmed === undefined) {
+      throw new Meteor.Error(403, 'Shifts for selected week already exists!');
+    } else if (existingShifts.count() && isConfirmed) {
+      existingShifts.forEach((shift) => {
+        Shifts.remove({_id: shift._id});
+      });
+    }
+
+    let shiftsTypeTmpl = Shifts.find({
+      type: 'template',
+      'relations.areaId': HospoHero.getCurrentAreaId()
+    });
+
+    shiftsTypeTmpl.forEach(function (shift) {
+      delete shift._id;
+      shift.createdBy = Meteor.userId();
+      shift.type = null;
+      shift.startTime = toCurrentDayMoment(shift.startTime, firstDayOfWeek);
+      shift.endTime = toCurrentDayMoment(shift.endTime, firstDayOfWeek);
+
+      check(shift, HospoHero.checkers.ShiftDocument);
+
+      Shifts.insert(shift);
+    });
   }
 });
