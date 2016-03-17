@@ -116,11 +116,13 @@ Meteor.methods({
 
       _.extend(meetingDoc, defaultMeeting);
 
-      let meetingId = Meetings.insert(meetingDoc);
+      return Meetings.insert(meetingDoc);
 
-      if (meetingDoc.attendees.length) {
-        sendNotificationsAboutNewMeeting(meetingId, meetingDoc);
-      }
+      // if we will need sending messages about meeting creating
+      //let meetingId = Meetings.insert(meetingDoc);
+      //if (meetingDoc.attendees.length) {
+      //  sendNotificationsAboutNewMeeting(meetingId, meetingDoc);
+      //}
     }
   },
 
