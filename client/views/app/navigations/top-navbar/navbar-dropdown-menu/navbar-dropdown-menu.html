@@ -1,0 +1,22 @@
+<template name="navbarDropdownMenu">
+  <li class="dropdown">
+    <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fa {{icon}}"></i>
+    </a>
+    <ul class="dropdown-menu">
+      {{#each items}}
+        <li>
+          {{#if route}}
+            <a href="{{pathFor route=route data=routeParams}}" class="{{class}}">
+              {{title}}
+            </a>
+          {{else}}
+            <a href="#" class="{{class}}">
+              {{title}}
+            </a>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+  </li>
+</template>

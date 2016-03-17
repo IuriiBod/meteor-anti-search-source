@@ -111,8 +111,9 @@ Namespace('HospoHero.security', {
   isUserInAnyOrganization(userId = Meteor.userId()) {
     var user = Meteor.users.findOne({_id: userId});
     return user &&
-      user.relations &&
+      (user.relations &&
       _.isArray(user.relations.organizationIds) &&
-      user.relations.organizationIds.length > 0;
+      user.relations.organizationIds.length > 0 ||
+      PermissionChecker.prototype._isSuperUser.call({_user: user}));
   }
 });

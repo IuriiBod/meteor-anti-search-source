@@ -1,15 +1,38 @@
+// Maybe we should to make a separate method for quick fix the bug with
+// unpublished shifts, if it will be repeat in the future
+
 Migrations.add({
   version: 65,
-  name: 'Remove shifts with wrong date. Shifts with wrong date not shown in template and cause error',
+  name: 'Force shifts publishing',
   up: function () {
-    var dateRange = TimeRangeQueryBuilder.forWeek(moment(0).week(2).startOf('isoweek'));
-    var copiedShifts = Shifts.find({type: 'template', startTime: dateRange}).fetch();
+    let startDate = moment(new Date());
 
-    Shifts.remove({type: 'template'});
+    function publishShifts (areaId, date) {
+      let timeQuery = TimeRangeQueryBuilder.forWeek(date);
+      Shifts.update({
+        startTime: timeQuery,
+        published: false,
+        'relations.areaId': areaId
+      }, {
+        $set: {published: true}
+      }, {
+        multi: true
+      });
+    }
 
-    copiedShifts.forEach(function (shift) {
-      Shifts.insert(shift);
+    function areaCycle (areaId, startDate, endDate) {
+      if (startDate.isBefore(endDate)) {
+        publishShifts(areaId, startDate);
+        startDate = moment(startDate).add(7, 'days');
+        areaCycle(areaId, startDate, endDate);
+      }
+    }
+
+    Areas.find().forEach((area) => {
+      let lastShift = Shifts.findOne({published: true, 'relations.areaId': area._id}, {sort: {startTime: -1}});
+      let endDate = moment(lastShift.startTime);
+
+      areaCycle(area._id, moment(startDate), moment(endDate));
     });
-
   }
 });
