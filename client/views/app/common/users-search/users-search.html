@@ -5,7 +5,7 @@
 
   <div class="search-results">
     {{#each searchResults}}
-      {{> searchUserInfo user=this}}
+      {{> searchUserInfo user=this onUserSelect=onUserSelect}}
     {{/each}}
   </div>
 </template>

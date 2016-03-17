@@ -71,7 +71,7 @@ Template.createMeeting.events({
     tmpl.meetingDate.set(event.date);
   },
 
-  'click .add-attendee' (event, tmpl) {
+  'click .add-attendee-button' (event, tmpl) {
     event.preventDefault();
     tmpl.addNewAttendee.set(!tmpl.addNewAttendee.get());
   },
