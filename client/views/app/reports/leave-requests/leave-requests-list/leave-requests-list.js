@@ -11,11 +11,11 @@ Template.leaveRequestsList.helpers({
   leaveRequestsItems: function () {
     return LeaveRequests.find();
   },
-  date: function () {
-    return arguments[0].toLocaleDateString();
+  date: function (date) {
+    return HospoHero.dateUtils.dateFormat(date)
   },
-  username: function () {
-    var user = Meteor.users.findOne({_id: arguments[0]});
+  username: function (userId) {
+    var user = Meteor.users.findOne({_id: userId});
     return user && user.profile ?
     user.profile.firstname + ' ' + user.profile.lastname :
       '-';
@@ -29,9 +29,9 @@ Template.leaveRequestsList.helpers({
   }
 });
 Template.leaveRequestsList.events({
-  'click [data-action="load-more"]': (e, t) => {
-    e.preventDefault();
-    var page = t.page.get();
-    t.page.set(page + 1);
+  'click [data-action="load-more"]': (event, tmpl) => {
+    event.preventDefault();
+    var page = tmpl.page.get();
+    tmpl.page.set(page + 1);
   }
 });

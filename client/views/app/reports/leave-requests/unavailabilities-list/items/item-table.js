@@ -1,6 +1,6 @@
 Template.unavailabilitiesTable.helpers({
-  date: function () {
-    return arguments[0].toLocaleDateString();
+  date: function (date) {
+    return HospoHero.dateUtils.dateFormat(date)
   },
   comment: function () {
     return this.comment !== '' ? this.comment : '-';

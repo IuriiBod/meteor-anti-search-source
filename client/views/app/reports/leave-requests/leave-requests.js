@@ -5,15 +5,12 @@ Template.leaveRequests.onCreated(function () {
 Template.leaveRequests.helpers({
   isRequestTab(){
     return Template.instance().selectedType.get() === 'requsts';
-  },
-  isUnavailabilitiesTab(){
-    return Template.instance().selectedType.get() === 'unavailabilities';
   }
 });
 
 Template.leaveRequests.events({
-  'click [data-action="swap-tabs"]': function (e, t) {
-    var selectedType = $(e.currentTarget).attr('data-name');
-    t.selectedType.set(selectedType);
+  'click [data-action="swap-tabs"]': (event, tmpl) => {
+    var selectedType = $(event.currentTarget).attr('data-name');
+    tmpl.selectedType.set(selectedType);
   }
 });

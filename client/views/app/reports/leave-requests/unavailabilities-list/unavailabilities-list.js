@@ -4,7 +4,7 @@ Template.unavailabilitiesList.onCreated(function () {
   const currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
   this.autorun(() => {
     this.subscribe('areaUnavailabilitiesList', currentAreaId,
-      this.page.get() * this.data.temPerPage);
+      this.page.get() * this.data.itemPerPage);
   });
 });
 
@@ -19,9 +19,10 @@ Template.unavailabilitiesList.helpers({
   }
 });
 Template.unavailabilitiesList.events({
-  'click [data-action="load-more"]': (e, t) => {
-    e.preventDefault();
-    var page = t.page.get();
-    t.page.set(page + 1);
+  'click [data-action="load-more"]': (event, tmpl) => {
+    event.preventDefault();
+
+    var page = tmpl.page.get();
+    tmpl.page.set(page + 1);
   }
 });

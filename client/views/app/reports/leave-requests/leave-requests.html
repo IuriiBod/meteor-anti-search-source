@@ -15,8 +15,7 @@
           <div class="tab-content">
             {{#if isRequestTab}}
               {{> leaveRequestsList}}
-            {{/if}}
-            {{#if isUnavailabilitiesTab}}
+            {{else}}
               {{> unavailabilitiesList}}
             {{/if}}
           </div>
