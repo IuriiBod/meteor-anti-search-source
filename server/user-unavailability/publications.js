@@ -28,23 +28,23 @@ Meteor.publish('leaveRequestsApprovers', function () {
   });
 });
 
-Meteor.publishComposite('leaveRequests', function (areaId,limit) {
+Meteor.publishComposite('leaveRequests', function (areaId, limit) {
   check(areaId, HospoHero.checkers.MongoId);
   check(limit, Number);
   const permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
   if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'approve leave requests')) {
     const query = {
-      'relations.areaId':areaId
+      'relations.areaId': areaId
     };
     return {
       find: function () {
-        return LeaveRequests.find(query,{ limit:limit } );
+        return LeaveRequests.find(query, {limit: limit});
       },
       children: [
         {
           find: function (leaveRequest) {
             if (leaveRequest && leaveRequest.userId) {
-              return Meteor.users.find({_id: leaveRequest.userId},{
+              return Meteor.users.find({_id: leaveRequest.userId}, {
                 fields: {
                   'profile.firstname': 1,
                   'profile.lastname': 1
