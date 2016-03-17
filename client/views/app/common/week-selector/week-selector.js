@@ -9,13 +9,13 @@ Template.weekSelector.onCreated(function () {
       confirmButtonText: 'Yes',
       closeOnConfirm: false,
       closeOnCancel: false
-    }
+    };
   };
 
   this.closeModalAndShowMsg = (modalInstance, resType, msg) => {
     modalInstance.close();
     HospoHero[resType](msg);
-  }
+  };
 });
 
 Template.weekSelector.onRendered(function () {
