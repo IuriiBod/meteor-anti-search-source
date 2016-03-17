@@ -48,5 +48,21 @@ Template.totalValueDetails.events({
     tmpl.$('.search-stock-items').val('');
     tmpl.supplier.set(supplierId);
     tmpl.getValueDetails();
+  },
+
+  'click .edit-stock-item': function (event) {
+    event.preventDefault();
+
+    let ingredientId = this._id;
+
+    FlyoutManager.open('wrapperFlyout', {
+      template: 'ingredientEditor',
+      title: 'Edit ingredient',
+      data: {
+        inFlyout: true,
+        editMode: true,
+        ingredient: ingredientId
+      }
+    });
   }
 });
