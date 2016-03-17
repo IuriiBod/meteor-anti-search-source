@@ -1,0 +1,21 @@
+<template name="conversationsList">
+  <div class="conversations-list">
+    {{#if conversations}}
+      {{#each conversations}}
+        {{#if lastMessage}}
+          <div class="conversations-list-item" data-conversation-id="{{_id}}">
+            <img class="message-sender-avatar" src="{{profilePicture lastMessage.user._id}}" alt="">
+            <div class="message-body">
+              <small class="pull-right">{{timeAgoStr lastMessage.date}}</small>
+              <strong>{{username lastMessage.user._id}}</strong>
+              <br>
+              <p>{{lastMessage.body}}</p>
+            </div>
+          </div>
+        {{/if}}
+      {{/each}}
+    {{else}}
+      <div class="list-group-item">No conversations.</div>
+    {{/if}}
+  </div>
+</template>

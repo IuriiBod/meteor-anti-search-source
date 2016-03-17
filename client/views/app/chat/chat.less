@@ -1,0 +1,39 @@
+.chat {
+  .flyout-header {
+    ul {
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      & > li {
+        border: none;
+        margin: 0;
+        & > a {
+          padding: 20px 10px 20px 0;
+          display: block;
+          font-size: 14px;
+          font-weight: 600;
+          color: #999c9e;
+        }
+      }
+    }
+  }
+  .flyout-content {
+    .jumbotron {
+      p {
+        font-size: 14px;
+        margin: 0;
+      }
+
+      & + .conversation {
+        margin-top: -192px;
+        padding-top: 192px;
+      }
+    }
+    .conversation {
+      & {
+        overflow: hidden;
+      }
+    }
+  }
+}

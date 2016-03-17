@@ -1,0 +1,40 @@
+<template name="chat">
+  <div class="chat">
+    <div class="flyout-header">
+      {{> CloseFlyoutButton}}
+      <ul class="list-inline">
+        {{#if isConversationSelected}}
+          {{#unless isParticipantsListOpen}}
+            <li><a class="add-participant" href="#"><i class="fa fa-user-plus"></i></a></li>
+          {{/unless}}
+          <li><a class="show-all-conversations" href="#"><i class="fa fa-comments-o"></i></a></li>
+          <li><a class="leave-conversation" href="#"><i class="fa fa-sign-out"></i></a></li>
+        {{else}}
+          <li><a class="new-conversation" href="#"><i class="fa fa-plus"></i></a></li>
+        {{/if}}
+      </ul>
+    </div>
+    <div class="flyout-content">
+      {{#if isConversationSelected}}
+        {{#if isNoOtherParticipants}}
+          <div class="jumbotron">
+            <h3>No other participants.</h3>
+            <p>Click <i class="fa fa-user-plus"></i> to add a new participant,</p>
+            <p>or <i class="fa fa-comments-o"></i> to go to other conversations,</p>
+            <p>or <i class="fa fa-sign-out"></i> to leave the conversation.</p>
+          </div>
+        {{/if}}
+        {{> conversation id=currentConversationId}}
+      {{else}}
+        {{#if conversations.count}}
+          {{> conversationsList conversations=conversations onConversationSelected=changeConversation}}
+        {{else}}
+          <div class="jumbotron">
+            <h3>No conversations.</h3>
+            <p>Click <i class="fa fa-plus"></i> to start new conversation.</p>
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+</template>
