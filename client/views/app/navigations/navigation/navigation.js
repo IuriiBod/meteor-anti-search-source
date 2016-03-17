@@ -142,6 +142,11 @@ var menuEntries = [
     ]
   },
   {
+    title: 'Applications <span class="label label-info pull-right">NEW</span>',
+    icon: 'fa-commenting-o',
+    route: 'applications'
+  },
+  {
     title: "Help",
     icon: 'fa-question',
     subMenuEntries: [

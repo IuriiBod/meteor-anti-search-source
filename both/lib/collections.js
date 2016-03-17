@@ -46,3 +46,8 @@ Meetings = new Mongo.Collection('meetings');
 RelatedItems = new Mongo.Collection('relatedItems');
 Files = new Mongo.Collection('files');
 Projects = new Mongo.Collection('projects');
+
+//Applications (Recruitment)  functionality
+Applications = new Mongo.Collection('applications');
+ApplicationDefinitions = new Mongo.Collection('applicationDefinitions');
+Positions = new Mongo.Collection('positions');
