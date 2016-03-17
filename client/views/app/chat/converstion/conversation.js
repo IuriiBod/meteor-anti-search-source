@@ -3,6 +3,14 @@ Template.conversation.onCreated(function() {
   this.conversation = Meteor.conversations.findOne(this.data.id);
 });
 
+Template.conversation.onDestroyed(function() {
+  const messages = this.conversation.messages();
+  const participants = this.conversation.participants();
+  if (!messages.count() && !participants.count()) {
+    Meteor.call('removeOwnConversation', this.conversation._id);
+  }
+});
+
 Template.conversation.helpers({
   messages () {
     const tmpl = Template.instance();

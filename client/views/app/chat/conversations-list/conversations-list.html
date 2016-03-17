@@ -2,17 +2,17 @@
   <div class="conversations-list">
     {{#if conversations}}
       {{#each conversations}}
-        <div class="conversations-list-item" data-conversation-id="{{_id}}">
-          {{#with lastMessage}}
-            <img class="message-sender-avatar" src="{{profilePicture user._id}}" alt="">
+        {{#if lastMessage}}
+          <div class="conversations-list-item" data-conversation-id="{{_id}}">
+            <img class="message-sender-avatar" src="{{profilePicture lastMessage.user._id}}" alt="">
             <div class="message-body">
-              <small class="pull-right">{{timeAgoStr this.date}}</small>
-              <strong>{{username user._id}}</strong>
+              <small class="pull-right">{{timeAgoStr lastMessage.date}}</small>
+              <strong>{{username lastMessage.user._id}}</strong>
               <br>
-              <p>{{body}}</p>
+              <p>{{lastMessage.body}}</p>
             </div>
-          {{/with}}
-        </div>
+          </div>
+        {{/if}}
       {{/each}}
     {{else}}
       <div class="list-group-item">No conversations.</div>
