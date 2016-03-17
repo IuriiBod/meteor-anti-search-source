@@ -6,10 +6,13 @@ Template.conversation.onCreated(function() {
 Template.conversation.helpers({
   messages () {
     const tmpl = Template.instance();
-    return tmpl.conversation.messages(10, 0, 'date', 1);
+    return tmpl.conversation.messages(null, null, 'date', 1);
   },
   conversation () {
     return Template.instance().conversation;
+  },
+  isOwnMessage (ownerMessageId) {
+    return ownerMessageId === Meteor.userId();
   }
 });
 
