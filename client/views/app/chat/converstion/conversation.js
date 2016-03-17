@@ -16,7 +16,7 @@ Template.conversation.helpers({
 Template.conversation.events({
   'click .send-message': (event, tmpl) => {
     event.preventDefault();
-    const messageInput = tmpl.find('.message-input');
+    const messageInput = tmpl.find('.message-input textarea');
     const message = messageInput.value;
     if (message.length) {
       tmpl.conversation.sendMessage(message);
