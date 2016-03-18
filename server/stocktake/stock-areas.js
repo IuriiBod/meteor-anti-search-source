@@ -123,6 +123,19 @@ Meteor.methods({
     logger.info('Stock item added to area', {stock: ingredientId, sarea: specialAreaId});
   },
 
+  updateStockAreaIngredientsOrder: function (specialAreaId, ingredientsIds) {
+    check(specialAreaId, HospoHero.checkers.MongoId);
+    check(ingredientsIds, [HospoHero.checkers.MongoId]);
+
+    let specialArea = StockAreas.findOne({_id: specialAreaId, generalAreaId: {$exists: true}});
+    if (!specialArea || !canUserEditStocks(specialArea.relations.areaId)) {
+      logger.error("User not permitted to assign stock to areas");
+      throw new Meteor.Error(403, "User not permitted to assign stock to areas");
+    }
+
+    StockAreas.update({_id: specialAreaId}, {$set: {ingredientsIds: ingredientsIds}});
+  },
+
   removeIngredientFromStockArea: function (ingredientId, specialAreaId) {
     check(ingredientId, HospoHero.checkers.MongoId);
     check(specialAreaId, HospoHero.checkers.MongoId);

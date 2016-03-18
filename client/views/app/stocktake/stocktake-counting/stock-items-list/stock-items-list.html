@@ -1,5 +1,5 @@
 <template name="stockItemsList">
-  <ul class="list-group">
+  <ul class="list-group stock-items-sortable">
     {{#each stockAreaIngredients}}
       {{> stockItem getStockItemContext}}
     {{else}}
