@@ -30,6 +30,18 @@ Template.topNavbar.helpers({
       }
     ];
   },
+  applicationsMenuItems: function () {
+    return [
+      {
+        route: 'applications',
+        title: 'Applications'
+      },
+      {
+        route: 'interviews',
+        title: 'Interviews'
+      }
+    ];
+  },
 
   count: function () {
     return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}}).count();
