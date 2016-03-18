@@ -1,0 +1,64 @@
+Meteor.methods({
+	updateApplicationDefinition(areaId, schema){
+		check(areaId, HospoHero.checkers.MongoId);
+		check(schema.email, Boolean);
+		check(schema.name, Boolean);
+		check(schema.phone, Boolean);
+		check(schema.dateOfBirth, Boolean);
+		check(schema.numberOfHours, Boolean);
+		check(schema.availability, Boolean);
+		check(schema.message, Boolean);
+		check(schema.files, Boolean);
+
+		//todo: any security (permissions) checks here?
+
+		let area = Areas.findOne({_id: areaId});
+		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+
+		if (appDef) {
+			return ApplicationDefinitions.update({_id: appDef._id}, {$set: {schema: schema}});
+		} else {
+			let newAppDef = {
+				schema: schema,
+				relations: {
+					organizationId: area.organizationId,
+					locationId: area.locationId,
+					areaId: area._id
+				},
+				positions: []
+			};
+			return ApplicationDefinitions.insert(newAppDef);
+		}
+	},
+	addNewPosition(areaId, name){
+		check(areaId, HospoHero.checkers.MongoId);
+		check(name, String);
+
+		let area = Areas.findOne({_id: areaId});
+		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+
+		if (appDef) {
+			let positionId = Positions.insert({name: name});
+			appDef.positions.push(positionId);
+			return ApplicationDefinitions.update({_id: appDef._id}, {$set: {positions: appDef.positions}});
+		} else {
+			logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
+			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
+		}
+	},
+	removePosition(areaId, positionId){
+		check(areaId, HospoHero.checkers.MongoId);
+		check(positionId, HospoHero.checkers.MongoId);
+
+		let area = Areas.findOne({_id: areaId});
+		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+
+		if (appDef) {
+			Positions.remove(positionId);
+			return ApplicationDefinitions.update({_id: appDef._id}, {$pull: {positions: positionId}});
+		} else {
+			logger.error('Unexpected Err: method [removePosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
+			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
+		}
+	}
+});

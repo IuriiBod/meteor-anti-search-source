@@ -74,7 +74,7 @@ Template.topNavbar.helpers({
         route: 'projectsList',
         title: 'Projects'
       }
-    ]
+    ];
   }
 });
 

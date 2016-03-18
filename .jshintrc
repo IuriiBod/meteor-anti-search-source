@@ -195,6 +195,9 @@
     "RelatedItems": true,
     "Files": true,
     "Projects": true,
+    "Applications": true,
+    "ApplicationDefinitions": true,
+    "Positions": true,
 
     //misc
     "HospoHero": true,
