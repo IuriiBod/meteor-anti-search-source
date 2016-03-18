@@ -28,7 +28,7 @@ Template.createMeeting.helpers({
   timeComboEditableParams () {
     let tmpl = Template.instance();
     return {
-      minuteStepping: 10,
+      minuteStepping: 15,
       firstTime: tmpl.startTime.get(),
       secondTime: tmpl.endTime.get(),
       onSubmit: function (startTime, endTime) {
@@ -71,7 +71,7 @@ Template.createMeeting.events({
     tmpl.meetingDate.set(event.date);
   },
 
-  'click .add-attendee' (event, tmpl) {
+  'click .add-attendee-button' (event, tmpl) {
     event.preventDefault();
     tmpl.addNewAttendee.set(!tmpl.addNewAttendee.get());
   },

@@ -16,19 +16,9 @@
               </span>
         </li>
 
-        <li class="dropdown">
-          <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-user"></i>
-          </a>
-          {{> settingsDropdownMenu menuItems=profileMenuItems}}
-        </li>
+        {{> navbarDropdownMenu items=profileMenuItems icon='fa-user'}}
 
-        <li class="dropdown">
-          <a class="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-bars"></i>
-          </a>
-          {{> settingsDropdownMenu menuItems=barsIconMenuItems}}
-        </li>
+        {{> navbarDropdownMenu items=organizationScopeItems icon='fa-bars'}}
 
         <li>
           <a href="{{pathFor 'calendar' type=calendar.type date=calendar.date userId=currentUser._id}}">
@@ -51,6 +41,12 @@
             {{#if count}}
               <span class="label label-primary">{{count}}</span>
             {{/if}}
+          </a>
+        </li>
+
+        <li>
+          <a class="open-chat" href="#">
+            <i class="fa fa-comments-o"></i>
           </a>
         </li>
       </ul>
