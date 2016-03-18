@@ -1,6 +1,6 @@
 console.log('debug');
 Template.stockItemsList.onCreated(function () {
-  this.getStockAreaIngredients = () => StockAreas.findOne({_id: this.specialAreaId}).ingredientsIds;
+  this.getStockAreaIngredients = () => StockAreas.findOne({_id: this.data.specialAreaId}).ingredientsIds;
 });
 
 Template.stockItemsList.onRendered(function () {
@@ -55,9 +55,31 @@ var StockItemsSortableHelper = function (ui, ingredientsIds) {
 
 StockItemsSortableHelper.prototype._getIngredientIdByItem = function (item) {
   var element = item[0];
-  return element ? Blaze.getData(element) : null;
+  let elementData = element ? Blaze.getData(element) : false;
+  return HospoHero.utils.getNestedProperty(elementData, 'ingredient._id', false);
 };
 
 StockItemsSortableHelper.prototype.getNewIngredientsOrder = function () {
-  
+  if (!this._previousItem && !this._nextItem) {
+    return false;
+  }
+
+  let ingredients = this._ingredients.map(id=>id); //copy array to avoid external bugs
+
+  //remove dragged item
+  let draggedItemOldIndex = ingredients.indexOf(this._draggedItem);
+  ingredients.splice(draggedItemOldIndex, 1);
+
+  //find new position
+  let isInsertBefore = !this._previousItem && !!this._nextItem;
+  let draggedItemNewPosition;
+  if (isInsertBefore) {
+    draggedItemNewPosition = ingredients.indexOf(this._nextItem);
+  } else { //insert after position
+    draggedItemNewPosition = ingredients.indexOf(this._previousItem) + 1;
+  }
+
+  //put dragged item into position
+  ingredients.splice(draggedItemNewPosition, 0, this._draggedItem);
+  return ingredients;
 };

@@ -1,4 +1,3 @@
-console.log('debug');
 Template.stockItem.onCreated(function () {
   this.getStockItem = function () {
     return StockItems.findOne({
