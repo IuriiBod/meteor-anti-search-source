@@ -51,3 +51,4 @@ Projects = new Mongo.Collection('projects');
 Applications = new Mongo.Collection('applications');
 ApplicationDefinitions = new Mongo.Collection('applicationDefinitions');
 Positions = new Mongo.Collection('positions');
+Interviews = new Mongo.Collection('interviews');

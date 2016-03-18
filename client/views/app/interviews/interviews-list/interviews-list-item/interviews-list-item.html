@@ -1,0 +1,12 @@
+<template name="interviewsListItem">
+  <tr class="interview-list-item">
+    <td>Interview with {{interviewee}}</td>
+    <td>{{interviewTimeInterval}}</td>
+    <td>
+      <span class="label label-default">{{status}}</span>
+    </td>
+    <td class="project-people hidden-xs">
+      {{> projectPeople members=interviewers}}
+    </td>
+  </tr>
+</template>
