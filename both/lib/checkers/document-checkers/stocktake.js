@@ -31,12 +31,20 @@ let StockItemId = Match.Where(function (stockItemId) {
 let StockItemDocument = Match.Where(function (stockItemDoc) {
   check(stockItemDoc, {
     _id: Match.Optional(StockItemId),
-    orderItemId: HospoHero.checkers.OptionalMongoId,
     stocktakeId: HospoHero.checkers.MongoId,
     specialAreaId: HospoHero.checkers.MongoId,
     count: Match.Optional(Number),
-    place: Match.Optional(Number),
-    ingredient: HospoHero.checkers.IngredientDocument,
+    ingredient: {
+      id: HospoHero.checkers.MongoId,
+      cost: Number
+    },
+    orderItem: Match.Optional({
+      orderedCount: Number,
+      receivedCount: Number,
+      orderId: HospoHero.checkers.OrderId,
+      deliveryStatus: [String], //todo:stocktake clarify it
+      newCost: Match.Optional(Number)
+    }),
     relations: HospoHero.checkers.Relations
   });
 
@@ -45,7 +53,7 @@ let StockItemDocument = Match.Where(function (stockItemDoc) {
 
 
 Namespace('HospoHero.checkers', {
-  StocktakeId:  StocktakeId,
+  StocktakeId: StocktakeId,
   StockItemId: StockItemId,
   StocktakeDocument: StocktakeDocument,
   StockItemDocument: StockItemDocument

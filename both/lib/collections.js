@@ -23,6 +23,8 @@ Stocktakes = new Mongo.Collection("stocktakes");
 StockItems = new Mongo.Collection("stockItems");
 
 Orders = new Mongo.Collection("orders");
+
+//todo: remove it from app
 OrderItems = new Mongo.Collection("orderItems");
 
 //new roles functionality

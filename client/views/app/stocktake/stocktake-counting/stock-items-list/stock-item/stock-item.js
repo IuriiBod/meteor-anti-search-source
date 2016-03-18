@@ -40,8 +40,7 @@ Template.stockItem.onRendered(function () {
 
 Template.stockItem.helpers({
   isStockItemEditable: function () {
-    //todo: decide about orders
-    return this.stockItem && this.stockItem.orderItemId;
+    return !this.stockItem || !this.stockItem.orderItem;
   }
 });
 
@@ -54,7 +53,7 @@ Template.stockItem.events({
       let specialAreaId = tmpl.data.specialAreaId;
       var stockItem = tmpl.data.stockItem;
 
-      if (stockItem && stockItem.orderItemId) {
+      if (stockItem && stockItem.orderItem) {
         HospoHero.error("Order has been created. You can't delete this stocktake item.");
         return;
       }

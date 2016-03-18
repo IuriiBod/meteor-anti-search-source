@@ -27,36 +27,8 @@ let OrderDocument = Match.Where(function (orderDoc) {
   return true;
 });
 
-let OrderItemId = Match.Where(function (orderItemId) {
-  check(orderItemId, HospoHero.checkers.MongoId);
-
-  if (!OrderItems.findOne({_id: orderItemId})) {
-    throw new Meteor.Error(500, "Order item doesn't exists");
-  }
-
-  return true;
-});
-
-let OrderItemDocument = Match.Where(function (orderItemDoc) {
-  check(orderItemDoc, {
-    _id: Match.Optional(StocktakeId),
-    countNeeded: Number,
-    countOnHand: Number,
-    countOrdered: Number,
-    orderId: OrderId,
-    unit: String,
-    unitPrice: Number,
-    deliveryStatus: [String],
-    originalPrice: Number,
-    relations: HospoHero.checkers.Relations
-  });
-  return true;
-});
-
 
 Namespace('HospoHero.checkers', {
   OrderId: OrderId,
-  OrderDocument: OrderDocument,
-  OrderItemId: OrderItemId,
-  OrderItemDocument: OrderItemDocument
+  OrderDocument: OrderDocument
 });
