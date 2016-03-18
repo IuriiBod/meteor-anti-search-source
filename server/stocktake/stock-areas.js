@@ -123,7 +123,7 @@ Meteor.methods({
     logger.info('Stock item added to area', {stock: ingredientId, sarea: specialAreaId});
   },
 
-  removeStocksFromAreas: function (ingredientId, specialAreaId) {
+  removeIngredientFromStockArea: function (ingredientId, specialAreaId) {
     check(ingredientId, HospoHero.checkers.MongoId);
     check(specialAreaId, HospoHero.checkers.MongoId);
 

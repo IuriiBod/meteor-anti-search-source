@@ -30,20 +30,7 @@ Meteor.methods({
     }
   },
 
-  createStockItem: function (newStockItem) {
-    check(newStockItem, HospoHero.checkers.StockItemDocument);
-
-    if (!canUserEditStocks(newStockItem.relations.areaId)) {
-      logger.error("User not permitted to update stocktakes");
-      throw new Meteor.Error(403, "User not permitted to update stocktakes");
-    }
-
-    let newStockItemId = StockItems.insert(newStockItem);
-    logger.info('Create new stock item', newStockItemId);
-    return newStockItemId;
-  },
-
-  updateStockItem: function (updatedStockItem) {
+  upsertStockItem: function (updatedStockItem) {
     check(updatedStockItem, HospoHero.checkers.StockItemDocument);
 
     if (!canUserEditStocks(updatedStockItem.relations.areaId)) {
@@ -51,7 +38,12 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to update stocktakes");
     }
 
-    StockItems.update({_id: updatedStockItem._id}, {$set: updatedStockItem});
+    if (updatedStockItem._id) {
+      StockItems.update({_id: updatedStockItem._id}, {$set: updatedStockItem});
+    } else {
+      StockItems.insert(updatedStockItem);
+    }
+
     logger.info('Stock item updated', updatedStockItem._id);
   },
 
