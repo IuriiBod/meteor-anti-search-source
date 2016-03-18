@@ -70,7 +70,6 @@ Template.stocktakeCounting.events({
 
     let currentSpecialAreaId = tmpl.activeSpecialAreaId.get();
     let currentSpecialArea = StockAreas.findOne({_id: currentSpecialAreaId});
-    let idsOfItemsInList = currentSpecialArea.ingredients;
 
     let onAddStockItem = function (ingredientId) {
       Meteor.call("assignIngredientToStockArea", ingredientId, currentSpecialAreaId, HospoHero.handleMethodResult());
@@ -82,7 +81,7 @@ Template.stocktakeCounting.events({
       data: {
         inFlyout: true,
         onAddStockItem: onAddStockItem,
-        idsToExclude: idsOfItemsInList
+        idsToExclude: currentSpecialArea.ingredientsIds
       }
     });
   }

@@ -1,4 +1,3 @@
-console.log('debug');
 Template.stockItemsList.onCreated(function () {
   this.getStockAreaIngredients = () => StockAreas.findOne({_id: this.data.specialAreaId}).ingredientsIds;
 });
@@ -49,7 +48,6 @@ var StockItemsSortableHelper = function (ui, ingredientsIds) {
   this._draggedItem = this._getIngredientIdByItem(ui.item);
   this._previousItem = this._getIngredientIdByItem(ui.item.prev());
   this._nextItem = this._getIngredientIdByItem(ui.item.next());
-  console.log(this);
 };
 
 
