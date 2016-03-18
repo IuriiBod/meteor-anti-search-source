@@ -73,6 +73,14 @@ Template.topNavbar.helpers({
       {
         route: 'projectsList',
         title: 'Projects'
+      },
+      {
+        route: 'applications',
+        title: 'Applications'
+      },
+      {
+        route: 'interviews',
+        title: 'Interviews'
       }
     ]
   }
