@@ -1,9 +1,5 @@
 <template name="projectDetails">
-  {{#if createMode}}
-    {{> pageHeading title='Create Project' category='Projects'}}
-  {{else}}
-    {{> pageHeading title='Project' category='Projects'}}
-  {{/if}}
+  {{> pageHeading title='Project' category='Projects'}}
 
   <div class="row">
     <div class="col-sm-8">
@@ -14,54 +10,42 @@
               {{> projectCreateEdit project=project saveProject=saveProject}}
             {{/collapsibleElement}}
 
-            {{#if createMode}}
-              <div class="col-xs-12 white-bg text-right">
-                <button type="button" class="btn btn-primary m-b create-project">Create</button>
-              </div>
-            {{/if}}
-
-            {{#unless createMode}}
-              <div class="row m-t-sm">
-                <div class="col-lg-12">
-                  <div class="ibox float-e-margins">
-                    {{#collapsibleElement settings=agendaOptions}}
-                      {{> autosaveTextEditor text=agendaAndMinutes saveChanges=saveChanges readOnly=canNotEditProjectDetails}}
-                    {{/collapsibleElement}}
-                  </div>
+            <div class="row m-t-sm">
+              <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                  {{#collapsibleElement settings=agendaOptions}}
+                    {{> autosaveTextEditor text=agendaAndMinutes saveChanges=saveChanges readOnly=canNotEditProjectDetails}}
+                  {{/collapsibleElement}}
                 </div>
               </div>
-            {{/unless}}
+            </div>
           </div>
         </div>
       </div>
 
-      {{# unless createMode}}
-        <div class="row m-t-sm">
-          <div class="col-xs-12">
-            {{> taskWidget itemId=id type="project"}}
-          </div>
+      <div class="row m-t-sm">
+        <div class="col-xs-12">
+          {{> taskWidget itemId=id type="project"}}
         </div>
+      </div>
 
-        <div class="row m-t-sm">
-          <div class="col-xs-12">
-            {{> filesWidget referenceId=id type="project"}}
-          </div>
+      <div class="row m-t-sm">
+        <div class="col-xs-12">
+          {{> filesWidget referenceId=id type="project"}}
         </div>
+      </div>
 
-        <div class="row m-t-sm m-b-md">
-          <div class="col-xs-12">
-            {{> relatedItemsWidget referenceId=id type="project"}}
-          </div>
+      <div class="row m-t-sm m-b-md">
+        <div class="col-xs-12">
+          {{> relatedItemsWidget referenceId=id type="project"}}
         </div>
-      {{/unless}}
+      </div>
     </div>
 
-    {{# unless createMode}}
-      <div class="col-lg-4 col-md-4 col-sm-4 no-padding">
-        <div class="wrapper wrapper-content project-manager">
-          {{> commentsPanel id=id type='project'}}
-        </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 no-padding">
+      <div class="wrapper wrapper-content project-manager">
+        {{> commentsPanel id=id type='project'}}
       </div>
-    {{/unless}}
+    </div>
   </div>
 </template>

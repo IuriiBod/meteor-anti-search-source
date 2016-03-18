@@ -1,50 +1,21 @@
-const defaultProjectObject = {
-  title: 'Set project title',
-  startTime: moment().toDate(),
-  endTime: moment().add(1, 'hour').toDate(),
-  status: 'idea',
-  lead: [],
-  team: [],
-  agendaAndMinutes: ''
-};
-
-
 Template.projectDetails.onCreated(function () {
-  this.createProjectObject = new ReactiveVar(defaultProjectObject);
-
-  this.project = () => {
-    return this.data.project || this.createProjectObject.get();
-  };
-
   this.saveProject = () => {
     return (detailsToUpdate) => {
-      let project = this.project();
+      let project = this.data.project;
       _.extend(project, detailsToUpdate);
 
-      if (!this.data.project) {
-        this.createProjectObject.set(project);
-      } else {
-        Meteor.call('updateProject', project, HospoHero.handleMethodResult());
-      }
+      Meteor.call('updateProject', project, HospoHero.handleMethodResult());
     };
   };
 });
 
 
 Template.projectDetails.helpers({
-  createMode () {
-    return !this.project;
-  },
-
   canNotEditProjectDetails () {
     const userId = Meteor.userId();
-    const project = Template.instance().project();
+    const project = this.project;
     // the user can't edit project details if he is not a creator and not in project lead
     return project.createdBy !== userId && project.lead.indexOf(userId) === -1;
-  },
-
-  project () {
-    return Template.instance().project();
   },
 
   projectDetailsOptions () {
@@ -69,7 +40,7 @@ Template.projectDetails.helpers({
   },
 
   agendaAndMinutes () {
-    const project = Template.instance().project();
+    const project = this.project;
     return project.agendaAndMinutes || 'Click to edit...';
   },
 
@@ -79,14 +50,5 @@ Template.projectDetails.helpers({
     return function (newAgendaText) {
       saveProject({agendaAndMinutes: newAgendaText});
     };
-  }
-});
-
-
-Template.projectDetails.events({
-  'click .create-project' (event, tmpl) {
-    Meteor.call('createProject', tmpl.createProjectObject.get(), HospoHero.handleMethodResult(function (projectId) {
-      Router.go('projectDetails', {id: projectId});
-    }));
   }
 });
