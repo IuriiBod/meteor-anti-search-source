@@ -39,7 +39,9 @@ Meteor.methods({
     }
 
     if (updatedStockItem._id) {
-      StockItems.update({_id: updatedStockItem._id}, {$set: updatedStockItem});
+      let stockItemId = updatedStockItem._id;
+      delete updatedStockItem._id;
+      StockItems.update({_id: stockItemId}, {$set: updatedStockItem});
     } else {
       StockItems.insert(updatedStockItem);
     }

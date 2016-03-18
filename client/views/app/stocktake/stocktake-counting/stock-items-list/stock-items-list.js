@@ -9,7 +9,6 @@ Template.stockItemsList.helpers({
     return {
       stocktakeId: templateContext.stocktakeId,
       ingredient: Ingredients.findOne({_id: ingredientId}),
-      stockItem: StockItems.findOne({'ingredient.id': ingredientId}),
       specialAreaId: templateContext.specialAreaId,
       isEditMode: templateContext.isEditMode
     }
