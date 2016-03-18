@@ -119,7 +119,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to assign stock to areas");
     }
 
-    StockAreas.update({_id: specialAreaId}, {$addToSet: {ingredients: ingredientId}});
+    StockAreas.update({_id: specialAreaId}, {$addToSet: {ingredientsIds: ingredientId}});
     logger.info('Stock item added to area', {stock: ingredientId, sarea: specialAreaId});
   },
 
@@ -134,7 +134,7 @@ Meteor.methods({
       throw new Meteor.Error(404, "User not permitted to remove stocks from areas");
     }
 
-    StockAreas.update({_id: specialAreaId}, {$pull: {ingredients: ingredientId}});
+    StockAreas.update({_id: specialAreaId}, {$pull: {ingredientsIds: ingredientId}});
     logger.info('Stock item removed from area', {stock: ingredientId, specialArea: specialAreaId});
   },
 

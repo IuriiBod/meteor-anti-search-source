@@ -1,25 +1,29 @@
 Template.stockItem.onRendered(function () {
   this.$('[data-toggle="tooltip"]').tooltip();
 
-  var onCountChanged = (response, newValue) => {
+  let tmpl = this;
+  let onCountChanged = function (response, newValue) {
     let floatCount = parseFloat(newValue);
     if (_.isFinite(floatCount)) {
-      var count = Math.round(floatCount * 100) / 100; //round
+      let count = Math.round(floatCount * 100) / 100; //round
 
-      var stockItemDocument = {
-        stocktakeId: this.data.stocktakeId,
-        specialAreaId: this.data.specialAreaId,
+      let stockItemDocument = {
+        stocktakeId: tmpl.data.stocktakeId,
+        specialAreaId: tmpl.data.specialAreaId,
         ingredient: {
-          id: this.data.ingredient,
-          cost: this.data.ingredient.costPerPortion
+          id: tmpl.data.ingredient._id,
+          cost: tmpl.data.ingredient.costPerPortion
         },
-        count: count
+        count: count,
+        relations: HospoHero.getRelationsObject()
       };
 
+      let element = this;
       Meteor.call('upsertStockItem', stockItemDocument, HospoHero.handleMethodResult(function () {
         //move to next count x-editable
-        if ($(element).closest('li').next().length > 0) {
-          $(element).closest('li').next().find('a').click();
+        let nextEditables = $(element).closest('li').next();
+        if (nextEditables.length > 0) {
+          nextEditables.find('a').click();
         }
       }));
     }
@@ -51,7 +55,7 @@ Template.stockItem.events({
     if (confirmDelete) {
       let ingredientId = tmpl.data.ingredient._id;
       let specialAreaId = tmpl.data.specialAreaId;
-      var stockItem = tmpl.data.stockItem;
+      let stockItem = tmpl.data.stockItem;
 
       if (stockItem && stockItem.orderItem) {
         HospoHero.error("Order has been created. You can't delete this stocktake item.");

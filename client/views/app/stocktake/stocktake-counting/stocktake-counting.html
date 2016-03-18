@@ -32,7 +32,7 @@
       {{> stockAreasFilter onStockAreaSelect=onStockAreaSelect activeAreas=activeAreas isEditMode=isEditMode}}
       <div class="col-md-8">
         {{#if activeAreas.special}}
-          {{> stockItemsList specialAreaId=activeAreas.special isEditMode=isEditMode}}
+          {{> stockItemsList stocktakeId=_id specialAreaId=activeAreas.special isEditMode=isEditMode}}
 
           {{#if isEditMode}}
             <a class="btn btn-block btn-default btn-outline add-ingredient-button">Add stock items to this area</a>

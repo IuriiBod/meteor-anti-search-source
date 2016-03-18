@@ -31,14 +31,6 @@ Template.stocktakeCounting.helpers({
     };
   },
 
-  stockItemsList: function () {
-    let specialAreaId = Template.instance().activeSpecialAreaId.get();
-    return StockItems.find({
-      stocktakeId: this._id,
-      specialAreaId: specialAreaId
-    }, {sort: {place: 1}});
-  },
-
   hasOrders: function () {
     return !!Orders.findOne({stocktakeId: this._id});
   }

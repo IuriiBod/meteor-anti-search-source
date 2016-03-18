@@ -1,14 +1,15 @@
 Template.stockItemsList.helpers({
   stockAreaIngredients: function () {
-    return StockAreas.findOne({_id: this.specialAreaId}).ingredients;
+    return StockAreas.findOne({_id: this.specialAreaId}).ingredientsIds;
   },
 
   getStockItemContext: function () {
     let templateContext = Template.parentData(1);
-    let ingredientId = this;
+    let ingredientId = this.toString();
     return {
+      stocktakeId: templateContext.stocktakeId,
       ingredient: Ingredients.findOne({_id: ingredientId}),
-      stockItem: StockItems.findOne({'ingredient._id': ingredientId}),
+      stockItem: StockItems.findOne({'ingredient.id': ingredientId}),
       specialAreaId: templateContext.specialAreaId,
       isEditMode: templateContext.isEditMode
     }
