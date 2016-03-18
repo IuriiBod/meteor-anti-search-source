@@ -87,6 +87,7 @@ Meteor.methods({
     var existingSpecialArea = StockAreas.findOne({
       generalAreaId: {$exists: true},
       name: name,
+      ingredientsIds: [],
       'relations.areaId': relationsObject.areaId
     });
 

@@ -1,149 +1,138 @@
-var canUserReceiveDeliveries = function (areaId = null) {
+let canUserReceiveDeliveries = function (areaId = null) {
   var checker = new HospoHero.security.PermissionChecker();
   return checker.hasPermissionInArea(areaId, 'receive deliveries');
 };
 
-var getAreaIdFromOrder = function (orderId) {
+
+let getAreaIdFromOrder = function (orderId) {
   var order = OrderItems.findOne({_id: orderId});
   return (order && order.relations) ? order.relations.areaId : null;
 };
 
+
+class StockOrdersGenerator {
+  constructor(stocktake) {
+    this._stocktake = stocktake;
+  }
+
+  generate() {
+    if (this._checkIfStocktakeCompleted()) {
+      let stockItems = StockItems.find({stocktakeId: stocktakeId});
+      if (stockItems.count() === 0) {
+        throw new Meteor.Error(500, 'Cannot generate orders: there is no stocks inside this stocktake');
+      }
+
+      let relatedSuppliersIds = this._getRelatedSuppliersIds();
+
+      let suppliersAndOrdersMap = {};
+
+      //generate orders itself (order per supplier)
+      relatedSuppliersIds.forEach((supplierId) => {
+        suppliersAndOrdersMap[supplierId] = Orders.insert({
+          stocktakeId: this._stocktake._id,
+          supplierId: supplierId,
+          placedBy: Meteor.userId(),
+          createdAt: new Date(),
+          relations: this._stocktake.relations
+        });
+      });
+
+      //add order items to stock items
+      StockItems.find({
+        stocktakeId: this._stocktake._id
+      }, {
+        fields: {
+          _id: 1,
+          ingredientId: 1
+        }
+      }).forEach((stockItem) => {
+        let ingredient = Ingredients.findOne({_id: stockItem.ingredientId}, {fields: {suppliers: 1}});
+        StockItems.update({_id: stockItem._id}, {
+          $set: {
+            orderItem: {
+              orderId: suppliersAndOrdersMap[ingredient.suppliers]
+            }
+          }
+        });
+      });
+    }
+  }
+
+  /**
+   * Checks if all ingredients are counted
+   */
+  _checkIfStocktakeCompleted() {
+    let specialAreas = StockAreas.find({
+      generalAreaId: {$exists: true},
+      active: true,
+      'relations.areaId': this._stocktake.relations.areaId
+    });
+
+    let ingredientsCount = 0;
+    let stockItemsCount = 0;
+
+    specialAreas.forEach(specialArea => {
+      if (_.isArray(specialArea.ingredientsIds)) {
+        ingredientsCount += specialArea.ingredientsIds.length;
+        stockItemsCount += StockItems.find({
+          'ingredient.id': {$in: specialArea.ingredientsIds}
+        }).count();
+      }
+    });
+
+    return ingredientsCount === stockItemsCount;
+  }
+
+  _getRelatedSuppliersIds() {
+    //get all suppliers we need to order
+    let ingredientsArrays = StockAreas.find({
+      generalAreaId: {$exists: true},
+      active: true,
+      'relations.areaId': this._stocktake.relations.areaId
+    }).map(stockArea => stockArea.ingredientsIds);
+
+    let ingredientsIds = StockOrdersGenerator._arrayFlattenAndUnique(ingredientsArrays);
+    let suppliersIds = Ingredients.find({_id: {$in: ingredientsIds}}).map(ingredient => ingredient.suppliers);
+
+    return StockOrdersGenerator._arrayFlattenAndUnique(suppliersIds);
+  }
+
+  static _arrayFlattenAndUnique(array) {
+    return _.unique(_.flatten(array));
+  }
+}
+
 Meteor.methods({
   generateOrders: function (stocktakeId) {
-    if (!canUserReceiveDeliveries()) {
+    check(stocktakeId, HospoHero.checkers.StocktakeId);
+
+    let stocktake = Stocktakes.find({_id: stocktakeId});
+
+    if (!stocktake || !canUserReceiveDeliveries(stocktake.relations.areaId)) {
       logger.error("User not permitted to generate orders");
       throw new Meteor.Error(403, "User not permitted to generate orders");
     }
-    if (!stocktakeId) {
-      logger.error("Stocktake version should have a value");
-      throw new Meteor.Error("Stocktake version should have a value");
-    }
 
-    if (!Stocktakes.findOne({_id: stocktakeId})) {
-      logger.error("Stocktake version should exist");
-      throw new Meteor.Error("Stocktake version should exist");
-    }
-    var stockItems = StockItems.find({stocktakeId: stocktakeId}).fetch();
-    if (stockItems.length === 0) {
-      logger.error("No recorded stocktakes found");
-      throw new Meteor.Error(404, "No recorded stocktakes found");
-    }
-    stockItems.forEach(function (stockItem) {
-      if (!stockItem.status) {
-        var ingredient = stockItem.ingredient;
-        var count = stockItem.count;
-        var supplier = null;
-        if (ingredient && ingredient.hasOwnProperty("suppliers") && ingredient.suppliers) {
-          supplier = ingredient.suppliers;
-        }
-
-        var existingOrder = OrderItems.findOne({
-          stockId: ingredient.stockId,
-          version: stocktakeId,
-          supplier: supplier
-        });
-        //generate order
-        var orderRef = null;
-        if (existingOrder) {
-          orderRef = existingOrder._id;
-          OrderItems.update({"_id": existingOrder._id}, {$inc: {"countOnHand": count}});
-        } else {
-          var newOrder = {
-            "stockId": ingredient.stockId,
-            "version": stocktakeId,
-            "supplier": supplier,
-            "countOnHand": count,
-            "countNeeded": 0,
-            "unit": ingredient.portionOrdered,
-            "unitPrice": ingredient.costPerPortion,
-            "countOrdered": null,
-            "orderReceipt": null,
-            "received": false,
-            relations: HospoHero.getRelationsObject()
-          };
-          var id = OrderItems.insert(newOrder);
-          orderRef = id;
-          logger.info("New order created", id);
-        }
-
-        //update stocktake for order generated count
-        StockItems.update({_id: ingredient._id}, {
-          $set: {
-            "status": true,
-            "orderedCount": ingredient.counting,
-            "orderRef": orderRef
-          }
-        });
-        //update current stock with count
-      }
-    });
+    let ordersGenerator = new StockOrdersGenerator(stocktake);
+    ordersGenerator.generate();
   },
 
-  editOrderingCount: function (orderId, count) {
-    if (!canUserReceiveDeliveries(getAreaIdFromOrder(orderId))) {
+  editOrderingCount: function (stockItemId, count) {
+    check(stockItemId, HospoHero.checkers.StockItemId);
+    check(count, Number);
+
+    let stockItem = StockItems.find({_id: stockItemId});
+    if (!stockItem || !canUserReceiveDeliveries(stockItem.rations.areaId)) {
       logger.error("User not permitted to edit ordering count");
       throw new Meteor.Error(404, "User not permitted to edit ordering count");
     }
-    var order = OrderItems.findOne(orderId);
-    if (!order) {
-      logger.error('Stock order not found');
-      throw new Meteor.Error(401, "Stock order not found");
-    }
 
-    var countToOrder = parseFloat(count);
-    countToOrder = !isNaN(countToOrder) ? countToOrder : 0;
-    OrderItems.update({"_id": orderId}, {$set: {"countOrdered": countToOrder}});
-    logger.info("Stock order count updated", orderId);
+    count = _.isFinite(count) ? count : 0;
+    StockItems.update({_id: stockItemId}, {$set: {'orderItem.orderedCount': count}});
   },
 
-  removeOrder: function (id) {
-    if (!canUserReceiveDeliveries(getAreaIdFromOrder(id))) {
-      logger.error("User not permitted to remove placed orders");
-      throw new Meteor.Error(403, "User not permitted to remove placed orders");
-    }
-    if (!id) {
-      logger.error('Stock order id not found');
-      throw new Meteor.Error('Stock order id not found');
-    }
-    var order = OrderItems.findOne(id);
-    if (!order) {
-      logger.error("Order does not exist");
-      throw new Meteor.Error("Order does not exist");
-    }
 
-    if (Orders.findOne(order.orderReceipt)) {
-      logger.error("You can't delete this order. This has a order receipt");
-      throw new Meteor.Error("You can't delete this order. This has a order receipt");
-    }
-    OrderItems.remove({"_id": id});
-    StockItems.update({
-        orderId: id
-      }, {
-        $set: {
-          "status": false,
-          "orderedCount": 0,
-          "orderRef": null
-        }
-      },
-      {multi: true}
-    );
-    logger.info("Stock order removed");
-  }
-});
-
-/*** receipts ***/
-
-var canUserReceiveDeliveries = function (areaId = null) {
-  var checker = new HospoHero.security.PermissionChecker();
-  return checker.hasPermissionInArea(areaId, 'receive deliveries');
-};
-
-var getAreaIdFromReceipt = function (receiptId) {
-  var receipt = OrderItems.findOne({_id: receiptId});
-  return (receipt && receipt.relations) ? receipt.relations.areaId : null;
-};
-
-Meteor.methods({
+  /*** receipts ***/
   generateReceipts: function (stocktakeId, supplierId, info) {
     if (!canUserReceiveDeliveries()) {
       logger.error("User not permitted to generate receipts");
@@ -374,17 +363,7 @@ Meteor.methods({
 });
 
 
-/*** receive ***/
-
-var canUserReceiveDeliveries = function (areaId = null) {
-  var checker = new HospoHero.security.PermissionChecker();
-  return checker.hasPermissionInArea(areaId, 'receive deliveries');
-};
-
-var getAreaIdFromOrder = function (orderId) {
-  var order = OrderItems.findOne({_id: orderId});
-  return (order && order.relations) ? order.relations.areaId : null;
-};
+/*** receive delivery ***/
 
 var getAreaIdFromReceipt = function (receiptId) {
   var receipt = OrderItems.findOne({_id: receiptId});
