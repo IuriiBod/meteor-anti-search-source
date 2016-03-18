@@ -1,0 +1,32 @@
+<template name="userUnavailabilitiesList">
+  <div class="col-sm-12 col-md-6 col-lg-4">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h5>Unavailabilities</h5>
+      </div>
+      <div class="ibox-content">
+        {{#if and unavailabilities.length leaveRequests.count}}
+          {{#if unavailabilities.length}}
+            {{#each unavailabilities}}
+              <div>
+                {{intervalDateFormat startDate endDate "dateTime"}}
+              </div>
+            {{/each}}
+          {{/if}}
+
+          {{#if leaveRequests.count}}
+            <h4>Leave request</h4>
+            {{#each leaveRequests}}
+              <div>
+                {{intervalDateFormat startDate endDate "dateOnly"}}
+                <span class="text-{{leaveRequestStatusClass status}}">{{status}}</span>
+              </div>
+            {{/each}}
+          {{/if}}
+        {{else}}
+          No unavailabilities
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

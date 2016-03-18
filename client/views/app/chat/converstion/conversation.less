@@ -1,0 +1,67 @@
+@import "../../../../stylesheets/globals/variables.import.less";
+
+@chat-message-form-height: 48px;
+@send-message-button-width: 64px;
+
+.conversation {
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+  margin-bottom: -@chat-message-form-height;
+  padding-bottom: @chat-message-form-height;
+
+  .chat-discussion {
+    position: relative;
+    height: 100%;
+    min-height: 100%;
+    background: transparent;
+    padding: 0;
+
+    .message {
+      width: 100%;
+      padding: 0;
+      border: none;
+
+      &.own-message {
+        text-align: right;
+        clear: both;
+
+        .message-content {
+          background: @light-gray;
+          color: @text-color;
+        }
+      }
+
+      .message-content {
+        display: inline-block;
+        max-width: 80%;
+        min-width: 120px;
+        padding: 5px 10px;
+        border-radius: 6px;
+        overflow: hidden;
+        word-wrap: break-word;
+        background: @navy;
+        color: white;
+      }
+    }
+  }
+
+  .chat-message-form {
+    height: @chat-message-form-height;
+
+    .send-message {
+      float: right;
+      width: @send-message-button-width;
+      height: 100%;
+    }
+    .message-input {
+      height: @chat-message-form-height !important;
+      margin-right: @send-message-button-width;
+
+      textarea {
+        height: 100%;
+        line-height: 1.5;
+      }
+    }
+  }
+}

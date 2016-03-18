@@ -42,7 +42,7 @@ konecty:autolinker
 mizzao:autocomplete
 dbarrett:dropzonejs
 percolate:intercom
-kevohagan:sweetalert
+jss:sweetalert
 mrt:jquery-ui-sortable
 dbernhard:jquery-ui-draggable
 thesabbir:jquery-nestable
@@ -99,3 +99,4 @@ jss:ui-states
 
 
 # ===========> new
+socialize:messaging

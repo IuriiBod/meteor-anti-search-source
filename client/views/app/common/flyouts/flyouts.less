@@ -1,5 +1,4 @@
-@marginTop: 60px;
-@padding: 10px;
+@headerHeight: 60px;
 
 .flyout-container {
   z-index: 1050;
@@ -12,23 +11,29 @@
     transition: margin-top .5s;
 
     &:nth-child(2) {
-      margin-top: @marginTop;
+      margin-top: @headerHeight;
     }
     &:nth-child(3) {
-      margin-top: @marginTop * 2;
+      margin-top: @headerHeight * 2;
     }
     &:nth-child(4) {
-      margin-top: @marginTop * 3;
+      margin-top: @headerHeight * 3;
     }
     &:nth-child(5) {
-      margin-top: @marginTop * 4;
+      margin-top: @headerHeight * 4;
+    }
+    &:nth-child(6) {
+      margin-top: @headerHeight * 5;
+    }
+    &:nth-child(7) {
+      margin-top: @headerHeight * 6;
     }
 
     //some custom elements:
     .flyout-header {
       background: #e8e8e8;
       padding: 20px 10px;
-      height: 60px;
+      height: @headerHeight;
       box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.175);
       font-size: 13px;
       text-transform: uppercase;
@@ -51,14 +56,15 @@
     }
 
     .flyout-content {
-      margin-top: @padding;
-      padding: @padding;
+      padding: 10px;
       position: absolute;
-      top: 50px;
+      top: @headerHeight;
       bottom: 0;
       left: 0;
-      overflow: auto;
+      overflow-y: auto;
       right: 0;
+      z-index: 0;
+      overflow-x: hidden;
 
       .flyout-content-extra-padding {
         padding-top: 20px;

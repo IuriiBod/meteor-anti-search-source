@@ -62,6 +62,19 @@ Template.topNavbar.helpers({
       date: calendarUiStatesManager.getState('lastViewDate') || HospoHero.dateUtils.shortDateFormat(),
       type: calendarUiStatesManager.getState('type') || 'day'
     };
+  },
+
+  organizationScopeItems() {
+    return [
+      {
+        route: 'meetings',
+        title: 'Meetings'
+      },
+      {
+        route: 'projectsList',
+        title: 'Projects'
+      }
+    ]
   }
 });
 
@@ -78,11 +91,23 @@ Template.topNavbar.events({
   },
 
   'click .notifi-toggler': function () {
-    FlyoutManager.open('notifiFlyout', {});
+    FlyoutManager.open('wrapperFlyout', {
+      template: 'notifiFlyout',
+      title: "Notifications",
+      data: {}
+    });
   },
 
   'click .open-organization-structure-button': function () {
-    FlyoutManager.open('organizationStructure', {});
+    FlyoutManager.open('wrapperFlyout', {
+      template: 'organizationStructure',
+      title: "Organizations",
+      data: {}
+    });
+  },
+
+  'click .open-chat': function () {
+    FlyoutManager.open('chat', {});
   },
 
   'click .user-unavailabilities-flyout': function () {

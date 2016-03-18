@@ -69,3 +69,40 @@ Router.route('/stock-report/details/:stocktakeMainId/:date', {
     };
   }
 });
+
+Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', {
+  name: 'stockVarianceReport',
+  template: 'stockVarianceReport',
+  waitOn() {
+    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    let datePeriod = moment().subtract(3, 'month').startOf('day').toDate();
+    return [
+      Meteor.subscribe('suppliersNamesList', currentAreaId),
+      Meteor.subscribe('stocktakeDates', currentAreaId, datePeriod)
+    ];
+  },
+  data() {
+    return {
+      firstStocktakeDate: this.params.firstStocktakeDate,
+      secondStocktakeDate: this.params.secondStocktakeDate
+    };
+  }
+});
+
+Router.route('/leave-requests', {
+  name: "leaveRequests",
+  template: "leaveRequests",
+  waitOn() {
+    const currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    this.params.itemPerPage = 5;
+    return [
+      Meteor.subscribe('leaveRequests',currentAreaId,this.params.itemPerPage),
+      Meteor.subscribe('areaUnavailabilitiesList',currentAreaId,this.params.itemPerPage)
+      ];
+  },
+  data() {
+      return {
+        itemPerPage:this.params.itemPerPage
+      };
+  }
+});

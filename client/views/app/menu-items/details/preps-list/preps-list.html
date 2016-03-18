@@ -1,27 +1,24 @@
 <template name="prepsList">
-  <div class="flyout-header">
-    {{> CloseFlyoutButton}}
-    <div class="col-xs-11 col-xs-offset-1">
-      Select Preps
+  {{#if hasPermissionInAreaTo 'view jobs'}}
+    <input type="text" class="form-control input-lg search-for-preps-input" placeholder="Search for preps..."><br>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Active Time</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each jobItems}}
+        {{> prepsListItem item=this onAddPrepItem=onAddPrepItem}}
+      {{/each}}
+      </tbody>
+    </table>
+    <div class="alert alert-warning">If your jobs item is not in the list,
+      <a class="alert-link" data-action="add-new-job-item">click here</a> to add it. Once you save it, it will appear
+      next
+      time you search.
     </div>
-  </div>
-  <div class="flyout-content">
-    {{#if hasPermissionInAreaTo 'view jobs'}}
-      <input type="text" class="form-control input-lg search-for-preps-input" placeholder="Search for preps..."><br>
-      <table class="table table-striped">
-        <thead>
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Active Time</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each jobItems}}
-          {{> prepsListItem item=this onAddPrepItem=onAddPrepItem}}
-        {{/each}}
-        </tbody>
-      </table>
-    {{/if}}
-  </div>
+  {{/if}}
 </template>

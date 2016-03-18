@@ -1,0 +1,12 @@
+<template name="meetingUserInfo">
+  <div class="search-user-info-content">
+    <img src="{{profilePicture user}}" alt="Profile image" class="user-photo-min"/>
+
+    <span class="search-user-info-name">
+      <b>{{{username user}}}</b>
+      {{#if userEmail}} ({{userEmail}}) {{/if}}
+    </span>
+
+    <i class="fa fa-times pull-right search-user-info-plus"></i>
+  </div>
+</template>

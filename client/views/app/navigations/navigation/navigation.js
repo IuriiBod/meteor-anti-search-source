@@ -134,25 +134,12 @@ var menuEntries = [
       {
         title: 'Stock Report <span class="label label-info pull-right">NEW</span>',
         route: 'stockReport'
+      },
+      {
+        title: 'Leave Requests<span class="label label-info pull-right">NEW</span>',
+        route: 'leaveRequests'
       }
     ]
-  },
-  {
-    title: 'Meetings',
-    icon: 'fa-users',
-    route: 'meetings',
-    params: function () {
-      return {};
-    }
-  },
-  {
-    title: 'Projects',
-    icon: 'fa-file-text-o',
-    route: 'projectsList',
-    activeOnRoutes: ['projectsList', 'createProject', 'projectDetails'],
-    params: function () {
-      return {};
-    }
   },
   {
     title: "Help",
@@ -172,7 +159,6 @@ var menuEntries = [
       }
     ]
   }
-
 ];
 
 Template.navigation.helpers({

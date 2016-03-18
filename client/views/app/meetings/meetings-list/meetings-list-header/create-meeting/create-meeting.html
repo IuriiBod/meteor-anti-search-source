@@ -1,10 +1,4 @@
 <template name="createMeeting">
-  <div class="flyout-header">
-    {{> CloseFlyoutButton}}
-    Create Meeting
-  </div>
-
-  <div class="flyout-content">
     <form>
       <div class="form-group">
         <label for="title">Title</label>
@@ -31,7 +25,7 @@
 
       <div class="form-group">
         <label>Attendees</label>
-        <a href="#" class="add-attendee">
+        <a href="#" class="add-attendee-button">
           <i class="fa fa-{{#if addNewAttendee}}minus{{else}}plus{{/if}}"></i>
         </a>
 
@@ -58,5 +52,4 @@
         <button type="submit" class="btn btn-primary">Create</button>
       </div>
     </form>
-  </div>
 </template>

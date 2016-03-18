@@ -1,0 +1,30 @@
+<template name="profilePersonalInfo">
+  <h4>
+    <strong>
+      {{#if isEditPermitted}}
+        <a href="" id="firstname">{{firstName}}</a>
+        <a href="" id="lastname">{{lastName}}</a>
+      {{else}}
+        {{username _id}}
+      {{/if}}
+    </strong>
+  </h4>
+
+  <p>
+    <i class="fa fa-mobile-phone m-r-xs"></i>
+    {{#if isEditPermitted}}
+      <a href="#" id="phone" class="editable">{{profile.phone}}</a>
+    {{else}}
+      {{profile.phone}}
+    {{/if}}
+  </p>
+
+  <p>
+    <i class="fa fa-envelope m-r-xs"></i>
+    {{#if isEditPermitted}}
+      <a href="#" id="email" class="editable">{{email}}</a>
+    {{else}}
+      {{email}}
+    {{/if}}
+  </p>
+</template>
