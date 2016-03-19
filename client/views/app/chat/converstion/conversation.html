@@ -1,21 +1,29 @@
 <template name="conversation">
   <div class="conversation">
-    <div class="chat-discussion">
-      {{#each messages}}
-        <div class="message {{#if isOwnMessage userId}}own-message{{/if}}">
-          <div class="message-header">
-            <strong class="author">{{username userId}}</strong>
-            <small class="timestamp">{{timeFormattedWithDate date}}</small>
-          </div>
-          <p class="message-content">{{body}}</p>
-        </div>
-      {{/each}}
+    <div class="flyout-header">
+      {{> CloseFlyoutButton}}
     </div>
-    <div class="chat-message-form">
-      <button class="btn btn-primary send-message">Send</button>
-      <div class="message-input">
-        <textarea class="form-control" placeholder="Enter your message"></textarea>
+    <div class="flyout-content">
+      <div class="chat-discussion">
+        {{#each messages}}
+          <div class="message {{#if isOwnMessage userId}}own-message{{/if}}">
+            <div class="message-header">
+              <strong class="author">{{username userId}}</strong>
+              <small class="timestamp">{{timeFormattedWithDate date}}</small>
+            </div>
+            <p class="message-content">{{body}}</p>
+          </div>
+        {{/each}}
       </div>
+      <div class="chat-message-form">
+        <button class="btn btn-primary send-message">Send</button>
+        <div class="message-input">
+          <textarea class="form-control" placeholder="Enter your message"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="inner-flyout {{#if isParticipantsListOpen}}show-inner-flyout{{/if}}">
+      {{> participantsList conversationId=conversation._id}}
     </div>
   </div>
 </template>

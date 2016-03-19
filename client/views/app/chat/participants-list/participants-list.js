@@ -41,10 +41,6 @@ Template.participantsList.onRendered(function () {
   };
 });
 
-Template.participantsList.onDestroyed(function () {
-  this.data.onCloseFlyout();
-});
-
 Template.participantsList.helpers({
   conversation () {
     return Template.instance().conversation;

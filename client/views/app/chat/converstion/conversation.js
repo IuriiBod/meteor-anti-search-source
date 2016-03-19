@@ -9,6 +9,8 @@ Template.conversation.onDestroyed(function() {
   if (!messages.count() && !participants.count()) {
     Meteor.call('removeOwnConversation', this.conversation._id);
   }
+
+  this.data.onCloseConversation();
 });
 
 Template.conversation.helpers({
@@ -21,6 +23,9 @@ Template.conversation.helpers({
   },
   isOwnMessage (ownerMessageId) {
     return ownerMessageId === Meteor.userId();
+  },
+  isParticipantsListOpen () {
+    return false;
   }
 });
 
