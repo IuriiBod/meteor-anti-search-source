@@ -36,6 +36,23 @@ Meteor.methods({
       check(updatedProjectDoc, HospoHero.checkers.ProjectChecker);
       Projects.update({_id: updatedProjectDoc._id}, {$set: updatedProjectDoc});
     }
+  },
+
+  removeProject(projectId) {
+    check(projectId, HospoHero.checkers.MongoId);
+    let projectDoc = Projects.findOne({_id: projectId});
+    if (projectDoc) {
+      if (!(canUserEditProjects() || isInProjectTeam(projectDoc.lead))) {
+        throw new Meteor.Error('You can\'t remove project');
+      } else {
+        TaskList.remove({'reference.id': projectId});
+        Files.remove({referenceId: projectId});
+        RelatedItems.remove({referenceId: projectId});
+        Comments.remove({reference: projectId});
+
+        return Projects.remove({_id: projectId});
+      }
+    }
   }
 });
 
