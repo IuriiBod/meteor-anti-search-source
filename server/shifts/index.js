@@ -245,7 +245,7 @@ Meteor.methods({
         check(shift, HospoHero.checkers.ShiftDocument);
         Shifts.insert(shift);
       } catch(error) {
-        console.log(error);
+        logger.error(error);
       }
     });
   }
