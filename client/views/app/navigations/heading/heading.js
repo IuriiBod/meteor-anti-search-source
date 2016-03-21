@@ -16,7 +16,8 @@ var headingComponentsMap = {
   taskList: 'taskListHeader',
   meetings: 'meetingsHeader',
   projects: 'projectsListHeader',
-  profile: 'profileHeader'
+  profile: 'profileHeader',
+  applicationsView: 'applicationsViewHeader'
 };
 
 Template.pageHeading.onCreated(function () {
