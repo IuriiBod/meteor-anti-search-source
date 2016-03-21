@@ -1,6 +1,10 @@
 Template.interviewsListItem.helpers({
   interviewTimeInterval () {
     return this.startTime ? HospoHero.dateUtils.dateInterval(this.startTime, this.endTime) : 'No time set';
+  },
+
+  status () {
+    return this.status || 'created'
   }
 });
 
