@@ -58,8 +58,6 @@ Template.recruitmentForm.events({
 		event.preventDefault();
 		let deails = getDetailsData(tmpl);
 		let positionIds = getPositionsData(tmpl);
-		console.log('deails id ->',deails);
-		console.log('position id ->',positionIds);
 		Meteor.call('addApplication', tmpl.data.organizationId,deails, positionIds, (err)=> {
 			if (err) {
 				HospoHero.error(err);
@@ -86,7 +84,7 @@ function getDetailsData(tmpl){
 		res.dateOfBirth = new Date(tmpl.$('input[data-name="date-of-birth"]').val());
 	}
 	if(appDef.schema.numberOfHours){
-		res.namnumberOfHourse = parseInt(tmpl.$('input[data-name="number-of-hours"]').val());
+		res.numberOfHours = parseInt(tmpl.$('input[data-name="number-of-hours"]').val());
 	}
 	if(appDef.schema.message){
 		res.message = tmpl.$('textArea[data-name="message"]').val();

@@ -69,6 +69,17 @@ Meteor.methods({
 		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
 
 		if (appDef) {
+
+			check(details, {
+				name :appDef.schema.name ? String : undefined,
+				email :appDef.schema.email ? String : undefined,
+				phone :appDef.schema.phone ? String : undefined,
+				availability :appDef.schema.availability ? [Number] : undefined,
+				dateOfBirth :appDef.schema.dateOfBirth ? Date : undefined,
+				numberOfHours :appDef.schema.numberOfHours ? Number : undefined,
+				message :appDef.schema.message ? String : undefined
+			});
+
 			let application = {
 				_createdAt : new Date(),
 				appProgress:[],
@@ -86,5 +97,8 @@ Meteor.methods({
 			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
 		}
 	}
-
 });
+
+function checkDetails(schema,details,field,type){
+	schema[field] ? check(details[field], type) : check(details[field], undefined);
+}
