@@ -92,18 +92,21 @@
     min-height: 100%;
     background: white;
 
-    &.hidden-inner-flyout {
-      margin-left: @width;
-    }
 
     &.show-inner-flyout {
       margin-left: 0;
-      .animation(move-left);
+
+      &.with-animation {
+        .animation(move-left);
+      }
     }
 
     &.hide-inner-flyout {
       margin-left: @width;
-      .animation(move-right);
+
+      &.with-animation {
+        .animation(move-right);
+      }
     }
 
     @width: 100%;
