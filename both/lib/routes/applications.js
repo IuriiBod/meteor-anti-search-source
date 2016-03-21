@@ -18,6 +18,7 @@ Router.route('applications', {
 Router.route('recruitmentForm', {
 	path: '/recruitment-form/:_organizationId',
 	template: 'recruitmentForm',
+	layoutTemplate:'recruitmentLayout',
 	waitOn: function () {
 		return [
 			Meteor.subscribe('applicationDefinitionsByOrganization',this.params._organizationId)
