@@ -16,6 +16,7 @@ var headingComponentsMap = {
   taskList: 'taskListHeader',
   meetings: 'meetingsHeader',
   projects: 'projectsListHeader',
+  projectDetails: 'projectDetailsHeader',
   profile: 'profileHeader'
 };
 
