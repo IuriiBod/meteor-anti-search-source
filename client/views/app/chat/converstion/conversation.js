@@ -2,7 +2,8 @@ Template.conversation.onCreated(function() {
   this.subscribe('messagesFor', this.data.id);
 
   this.conversation = Meteor.conversations.findOne(this.data.id);
-  this.isParticipantsListOpen = new ReactiveVar(false);
+  this.isParticipantsListShifted = new ReactiveVar(false);
+  this.isParticipantsListOpened = new ReactiveVar(true);
 });
 
 Template.conversation.onDestroyed(function() {
@@ -26,13 +27,18 @@ Template.conversation.helpers({
   isOwnMessage (ownerMessageId) {
     return ownerMessageId === Meteor.userId();
   },
-  isParticipantsListOpen () {
-    return Template.instance().isParticipantsListOpen.get();
+  isParticipantsListOpened () {
+    return Template.instance().isParticipantsListOpened.get();
   },
-  hideInnerFlyout () {
+  isParticipantsListShifted () {
+    return Template.instance().isParticipantsListShifted.get();
+  },
+  hideParticipantsList () {
     const tmpl = Template.instance();
     return () => {
-      tmpl.isParticipantsListOpen.set(false);
+      console.log("hide!");
+      tmpl.isParticipantsListShifted.set(true);
+      tmpl.isParticipantsListOpened.set(false);
     }
   }
 });
@@ -49,7 +55,7 @@ Template.conversation.events({
   },
   'click .add-participant': (event, tmpl) => {
     event.preventDefault();
-    tmpl.isParticipantsListOpen.set(true);
+    tmpl.isParticipantsListOpened.set(true);
   },
   'click .leave-conversation': (event, tmpl) => {
     event.preventDefault();

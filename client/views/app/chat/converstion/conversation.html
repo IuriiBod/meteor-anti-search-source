@@ -3,7 +3,9 @@
     <div class="flyout-header">
       {{> CloseFlyoutButton}}
       <ul class="list-inline">
-        <li><a class="add-participant" href="#"><i class="fa fa-user-plus"></i></a></li>
+        {{#unless isParticipantsListOpened}}
+          <li><a class="add-participant" href="#"><i class="fa fa-user-plus"></i></a></li>
+        {{/unless}}
         <li class="dropdown">
           <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-ellipsis-h"></i>
@@ -33,8 +35,11 @@
         </div>
       </div>
     </div>
-    <div class="inner-flyout {{#if isParticipantsListOpen}}show-inner-flyout{{/if}}">
-      {{> participantsList conversationId=conversation._id onCloseFlyout=hideInnerFlyout}}
+    <div class="inner-flyout
+        {{#if isParticipantsListShifted}}
+          {{#if isParticipantsListOpened}}show-inner-flyout{{else}}hide-inner-flyout{{/if}}
+        {{/if}}">
+      {{> participantsList conversationId=conversation._id onCloseFlyout=hideParticipantsList}}
     </div>
   </div>
 </template>
