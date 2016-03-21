@@ -19,12 +19,11 @@ NewsFeeds = new Mongo.Collection("newsFeeds");
 Suppliers = new Mongo.Collection("suppliers");
 
 StockAreas = new Mongo.Collection("stockAreas");
+
 Stocktakes = new Mongo.Collection("stocktakes");
 StockItems = new Mongo.Collection("stockItems");
 
 Orders = new Mongo.Collection("orders");
-
-//todo: remove it from app
 OrderItems = new Mongo.Collection("orderItems");
 
 //new roles functionality

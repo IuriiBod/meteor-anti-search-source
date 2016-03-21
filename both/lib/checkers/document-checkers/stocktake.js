@@ -38,13 +38,6 @@ let StockItemDocument = Match.Where(function (stockItemDoc) {
       id: HospoHero.checkers.MongoId,
       cost: Number
     },
-    orderItem: Match.Optional({
-      orderedCount: Number,
-      receivedCount: Number,
-      orderId: HospoHero.checkers.OrderId,
-      deliveryStatus: [String], //todo:stocktake clarify it
-      newCost: Match.Optional(Number)
-    }),
     relations: HospoHero.checkers.Relations
   });
 

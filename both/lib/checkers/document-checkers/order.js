@@ -28,7 +28,37 @@ let OrderDocument = Match.Where(function (orderDoc) {
 });
 
 
+let OrderItemId = Match.Where(function (orderItemId) {
+  check(orderItemId, HospoHero.checkers.MongoId);
+
+  if (!OrderItems.findOne({_id: orderItemId})) {
+    throw new Meteor.Error(500, "Order doesn't exists");
+  }
+
+  return true;
+});
+
+
+let OrderItemDocument = Match.Where(function (orderItem) {
+  check(orderItem, {
+    _id: Match.Optional(OrderItemId),
+    orderedCount: Number,
+    receivedCount: Number,
+    orderId: HospoHero.checkers.OrderId,
+    deliveryStatus: Match.Optional([String]), //todo:stocktake clarify it
+    ingredient: {
+      id: HospoHero.checkers.MongoId,
+      cost: Number,
+      originalCost: Match.Optional(Number)
+    },
+    relations: HospoHero.checkers.Relations
+  });
+});
+
+
 Namespace('HospoHero.checkers', {
   OrderId: OrderId,
-  OrderDocument: OrderDocument
+  OrderDocument: OrderDocument,
+  OrderItemId: OrderItemId,
+  OrderItemDocument: OrderItemDocument
 });

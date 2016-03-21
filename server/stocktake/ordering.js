@@ -74,7 +74,9 @@ class StockOrdersGenerator {
     specialAreas.forEach(specialArea => {
       if (_.isArray(specialArea.ingredientsIds)) {
         ingredientsCount += specialArea.ingredientsIds.length;
+
         stockItemsCount += StockItems.find({
+          specialAreaId: specialArea._id,
           'ingredient.id': {$in: specialArea.ingredientsIds}
         }).count();
       }
