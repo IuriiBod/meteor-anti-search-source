@@ -25,7 +25,7 @@ Meteor.methods({
 					locationId: area.locationId,
 					areaId: area._id
 				},
-				positions: []
+				positionIds: []
 			};
 			return ApplicationDefinitions.insert(newAppDef);
 		}
@@ -39,8 +39,8 @@ Meteor.methods({
 
 		if (appDef) {
 			let positionId = Positions.insert({name: name});
-			appDef.positions.push(positionId);
-			return ApplicationDefinitions.update({_id: appDef._id}, {$set: {positions: appDef.positions}});
+			appDef.positionIds.push(positionId);
+			return ApplicationDefinitions.update({_id: appDef._id}, {$set: {positionIds: appDef.positionIds}});
 		} else {
 			logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
 			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
@@ -55,10 +55,36 @@ Meteor.methods({
 
 		if (appDef) {
 			Positions.remove(positionId);
-			return ApplicationDefinitions.update({_id: appDef._id}, {$pull: {positions: positionId}});
+			return ApplicationDefinitions.update({_id: appDef._id}, {$pull: {positionIds: positionId}});
 		} else {
 			logger.error('Unexpected Err: method [removePosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
 			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
 		}
+	},
+	addApplication(organizationId,details,positions){
+		check(organizationId, HospoHero.checkers.MongoId);
+		check(positions, [HospoHero.checkers.MongoId]);
+
+		let area = Areas.findOne({organizationId: organizationId});
+		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+
+		if (appDef) {
+			let application = {
+				_createdAt : new Date(),
+				appProgress:[],
+				positionIds:positions,
+				relations:{
+					organizationId: area.organizationId,
+					locationId: area.locationId,
+					areaId: area._id
+				},
+				details:details
+			}
+			return Applications.insert(application)
+		} else {
+			logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
+			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
+		}
 	}
+
 });

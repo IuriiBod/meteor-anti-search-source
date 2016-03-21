@@ -13,3 +13,20 @@ Router.route('applications', {
 		};
 	}
 });
+
+
+Router.route('recruitmentForm', {
+	path: '/recruitment-form/:_organizationId',
+	template: 'recruitmentForm',
+	waitOn: function () {
+		return [
+			Meteor.subscribe('applicationDefinitionsByOrganization',this.params._organizationId)
+		];
+	},
+	data: function () {
+		return {
+			applicationDefinition:ApplicationDefinitions.findOne(),
+			organizationId:this.params._organizationId
+		};
+	}
+});

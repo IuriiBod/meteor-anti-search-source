@@ -15,7 +15,7 @@ Meteor.publishComposite('applicationDefinitions', function (areaId) {
 			{
 				find: function (applicationDefinitionItem) {
 					if (applicationDefinitionItem) {
-						return Positions.find({_id: {$in: applicationDefinitionItem.positions}});
+						return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
 					} else {
 						this.ready();
 					}
@@ -27,4 +27,25 @@ Meteor.publishComposite('applicationDefinitions', function (areaId) {
 	//	logger.error('Permission denied: publish [applicationDefinitions] ', {areaId: areaId, userId: this.userId});
 	//	this.error(new Meteor.Error('Access denied. Not enough permissions.'));
 	//}
+});
+
+Meteor.publishComposite('applicationDefinitionsByOrganization', function (organizationId) {
+	check(organizationId, HospoHero.checkers.MongoId);
+
+	return {
+		find: function () {
+			return ApplicationDefinitions.find({'relations.organizationId': organizationId});
+		},
+		children: [
+			{
+				find: function (applicationDefinitionItem) {
+					if (applicationDefinitionItem) {
+						return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
+					} else {
+						this.ready();
+					}
+				}
+			}
+		]
+	};
 });

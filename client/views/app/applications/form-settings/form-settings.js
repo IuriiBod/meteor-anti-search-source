@@ -11,6 +11,13 @@ Template.applicationFormSettings.helpers({
 	},
 	isDefined(){
 		return ApplicationDefinitions.findOne() !== undefined;
+	},
+	organizationId(){
+		let area = HospoHero.getCurrentArea(Meteor.userId());
+		return area ? area.organizationId : '';
+	},
+	rootUrl(){
+		return document.location.origin;
 	}
 });
 
@@ -44,6 +51,19 @@ Template.applicationFormSettings.events({
 				HospoHero.error(err);
 			}
 		});
+	},
+	'click [data-action="copy-to-clipboard"]'(event,tmpl){
+		event.preventDefault();
+		var $input = tmpl.$('input[data-target="link"]');
+		$input.select();
+		try {
+			var successful = document.execCommand('copy');
+			if(!successful){
+				HospoHero.error('Browser permissions: unable to copy');
+			}
+		} catch (err) {
+			HospoHero.error(err);
+		}
 	}
 });
 
