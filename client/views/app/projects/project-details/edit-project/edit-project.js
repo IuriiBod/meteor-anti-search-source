@@ -6,7 +6,7 @@ const projectStatusButtons = {
 };
 
 
-Template.projectCreateEdit.onCreated(function () {
+Template.editProject.onCreated(function () {
   const project = this.data.project;
   this.selectedUsers = new ReactiveArray(_.union(project.lead, project.team));
 
@@ -41,7 +41,7 @@ Template.projectCreateEdit.onCreated(function () {
 });
 
 
-Template.projectCreateEdit.helpers({
+Template.editProject.helpers({
   onValueChanged() {
     let saveProject = this.saveProject();
     return (newValue) => {
@@ -132,7 +132,7 @@ Template.projectCreateEdit.helpers({
 });
 
 
-Template.projectCreateEdit.events({
+Template.editProject.events({
   'click .add-lead-button' (event, tmpl) {
     tmpl.addMemberToTheProject('lead');
   },
@@ -142,6 +142,6 @@ Template.projectCreateEdit.events({
   }
 });
 
-Template.projectCreateEdit.onDestroyed(function () {
+Template.editProject.onDestroyed(function () {
   this.selectedUsers.clear();
 });

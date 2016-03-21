@@ -1,5 +1,5 @@
 <template name="projectDetails">
-  {{> pageHeading title='Project' category='Projects' name='projectDetails' projectId=id}}
+  {{> pageHeading title='Project' category='Projects' name='projectDetails' projectId=project._id}}
 
   <div class="row">
     <div class="col-sm-8">
@@ -7,7 +7,7 @@
         <div class="ibox">
           <div class="ibox float-e-margins">
             {{#collapsibleElement settings=projectDetailsOptions}}
-              {{> projectCreateEdit project=project saveProject=saveProject}}
+              {{> editProject project=project saveProject=saveProject}}
             {{/collapsibleElement}}
 
             <div class="row m-t-sm">
@@ -25,26 +25,26 @@
 
       <div class="row m-t-sm">
         <div class="col-xs-12">
-          {{> taskWidget itemId=id type="project"}}
+          {{> taskWidget itemId=project._id type="project"}}
         </div>
       </div>
 
       <div class="row m-t-sm">
         <div class="col-xs-12">
-          {{> filesWidget referenceId=id type="project"}}
+          {{> filesWidget referenceId=project._id type="project"}}
         </div>
       </div>
 
       <div class="row m-t-sm m-b-md">
         <div class="col-xs-12">
-          {{> relatedItemsWidget referenceId=id type="project"}}
+          {{> relatedItemsWidget referenceId=project._id type="project"}}
         </div>
       </div>
     </div>
 
     <div class="col-lg-4 col-md-4 col-sm-4 no-padding">
       <div class="wrapper wrapper-content project-manager">
-        {{> commentsPanel id=id type='project'}}
+        {{> commentsPanel id=project._id type='project'}}
       </div>
     </div>
   </div>

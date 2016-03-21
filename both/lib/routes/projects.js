@@ -28,8 +28,7 @@ Router.route('/project/:id', {
 
   data() {
     return {
-      project: Projects.findOne({_id: this.params.id}),
-      id: this.params.id
+      project: Projects.findOne({_id: this.params.id})
     };
   }
 });
