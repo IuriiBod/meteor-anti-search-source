@@ -16,46 +16,38 @@ class StockOrdersGenerator {
   }
 
   generate() {
-    if (this._checkIfStocktakeCompleted()) {
-      let stockItems = StockItems.find({stocktakeId: stocktakeId});
-      if (stockItems.count() === 0) {
-        throw new Meteor.Error(500, 'Cannot generate orders: there is no stocks inside this stocktake');
-      }
-
-      let relatedSuppliersIds = this._getRelatedSuppliersIds();
-
-      let suppliersAndOrdersMap = {};
-
-      //generate orders itself (order per supplier)
-      relatedSuppliersIds.forEach((supplierId) => {
-        suppliersAndOrdersMap[supplierId] = Orders.insert({
-          stocktakeId: this._stocktake._id,
-          supplierId: supplierId,
-          placedBy: Meteor.userId(),
-          createdAt: new Date(),
-          relations: this._stocktake.relations
-        });
-      });
-
-      //add order items to stock items
-      StockItems.find({
-        stocktakeId: this._stocktake._id
-      }, {
-        fields: {
-          _id: 1,
-          ingredientId: 1
-        }
-      }).forEach((stockItem) => {
-        let ingredient = Ingredients.findOne({_id: stockItem.ingredientId}, {fields: {suppliers: 1}});
-        StockItems.update({_id: stockItem._id}, {
-          $set: {
-            orderItem: {
-              orderId: suppliersAndOrdersMap[ingredient.suppliers]
-            }
-          }
-        });
-      });
+    if (!this._checkIfStocktakeCompleted()) {
+      throw new Meteor.Error(500, 'Cannot generate orders: you should complete stocktake');
     }
+
+    let stockItems = StockItems.find({stocktakeId: stocktakeId});
+    if (stockItems.count() === 0) {
+      throw new Meteor.Error(500, 'Cannot generate orders: there is no stocks inside this stocktake');
+    }
+
+    let suppliersIngredientsMap = this._getRelatedSuppliersIngredientsMap();
+    let relationsObject = this._stocktake.relations;
+
+    //generate orders itself (order per supplier)
+    _.each(suppliersIngredientsMap, (ingredientEntries, supplierId) => {
+      let orderId = Orders.insert({
+        stocktakeId: this._stocktake._id,
+        supplierId: supplierId,
+        placedBy: Meteor.userId(),
+        createdAt: new Date(),
+        relations: relationsObject
+      });
+
+      //generate order item per ingredient
+      ingredientEntries.forEach((ingredientEntry) => {
+        OrderItems.insert({
+          orderId: orderId,
+          orderedCount: 0,
+          ingredient: ingredientEntry,
+          relations: relationsObject
+        });
+      });
+    });
   }
 
   /**
@@ -85,7 +77,27 @@ class StockOrdersGenerator {
     return ingredientsCount === stockItemsCount;
   }
 
-  _getRelatedSuppliersIds() {
+  /**
+   * Helps link suppliers and appropriate ingredients
+   *
+   * @returns {supplierId: [{id: String,cost: number}]} object where keys are suppliers ids and values are
+   * array of related ingredients
+   * @private
+   */
+  _getRelatedSuppliersIngredientsMap() {
+    const suppliersMap = {};
+
+    let addSupplierAndIngredientToMap = (supplierId, ingredientId, ingredientCost) => {
+      if (!suppliersMap[supplierId]) {
+        suppliersMap[supplierId] = [];
+      }
+
+      suppliersMap[supplierId].push({
+        id: ingredientId,
+        cost: ingredientCost
+      });
+    };
+
     //get all suppliers we need to order
     let ingredientsArrays = StockAreas.find({
       generalAreaId: {$exists: true},
@@ -94,9 +106,13 @@ class StockOrdersGenerator {
     }).map(stockArea => stockArea.ingredientsIds);
 
     let ingredientsIds = StockOrdersGenerator._arrayFlattenAndUnique(ingredientsArrays);
-    let suppliersIds = Ingredients.find({_id: {$in: ingredientsIds}}).map(ingredient => ingredient.suppliers);
 
-    return StockOrdersGenerator._arrayFlattenAndUnique(suppliersIds);
+    let relatedIngredientsCursor = Ingredients.find({_id: {$in: ingredientsIds}}, {fields: {suppliers: 1}});
+    relatedIngredientsCursor.forEach((ingredient) => {
+      addSupplierAndIngredientToMap(ingredient.suppliers, ingredient._id, ingredient.costPerPortion);
+    });
+
+    return suppliersMap;
   }
 
   static _arrayFlattenAndUnique(array) {

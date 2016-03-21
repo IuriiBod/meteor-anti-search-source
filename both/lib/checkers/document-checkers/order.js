@@ -42,9 +42,9 @@ let OrderItemId = Match.Where(function (orderItemId) {
 let OrderItemDocument = Match.Where(function (orderItem) {
   check(orderItem, {
     _id: Match.Optional(OrderItemId),
-    orderedCount: Number,
-    receivedCount: Number,
     orderId: HospoHero.checkers.OrderId,
+    orderedCount: Number,
+    receivedCount: Match.Optional(Number),
     deliveryStatus: Match.Optional([String]), //todo:stocktake clarify it
     ingredient: {
       id: HospoHero.checkers.MongoId,
