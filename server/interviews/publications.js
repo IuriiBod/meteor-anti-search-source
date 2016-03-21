@@ -60,17 +60,21 @@ Meteor.publishComposite('interview', function (interviewId, userId) {
 });
 
 function usersPublication(interview) {
-  return Meteor.users.find({
-    _id: {
-      $in: interview.interviewers
-    }
-  }, {
-    fields: {
-      _id: 1,
-      profile: 1,
-      'services.google.picture': 1
-    }
-  });
+  if (interview && interview.interviewers) {
+    return Meteor.users.find({
+      _id: {
+        $in: interview.interviewers
+      }
+    }, {
+      fields: {
+        _id: 1,
+        profile: 1,
+        'services.google.picture': 1
+      }
+    });
+  } else {
+    this.ready();
+  }
 }
 
 function applicationPublication(interview) {

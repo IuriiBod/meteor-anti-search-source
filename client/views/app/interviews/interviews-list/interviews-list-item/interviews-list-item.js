@@ -10,6 +10,6 @@ Template.interviewsListItem.helpers({
 
 Template.interviewsListItem.events({
   'click .interview-list-item': function (event, tmpl) {
-    Router.go('projectDetails', {id: tmpl.data._id});
+    Router.go('interviewDetails', {id: tmpl.data._id});
   }
 });

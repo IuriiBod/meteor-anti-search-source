@@ -19,17 +19,6 @@ Template.interviews.onCreated(function () {
     };
 
     //if (this.interviewType.get() === activeFilter) {
-    //  _.extend(query.$or, {
-    //    startTime: {$gt: new Date()},
-    //    startTime: {exists: false}
-    //  });
-    //
-    //  query.startTime = {
-    //    $or: [
-    //      {$gt: new Date()},
-    //      {exists: false}
-    //    ]
-    //  };
     //}
 
     this.searchSource.setMongoQuery(query);
@@ -41,9 +30,7 @@ Template.interviews.onCreated(function () {
 
 Template.interviews.helpers({
   interviews() {
-    let int = Template.instance().searchSource.searchResult({sort: {startTime: 1}});
-    console.log('INT', int);
-    return int;
+    return Template.instance().searchSource.searchResult({sort: {startTime: 1}});
   },
 
   filterTypes () {
