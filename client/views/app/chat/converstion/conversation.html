@@ -15,7 +15,11 @@
           </ul>
         </li>
       </ul>
-      {{#if isParticipantsListOpened}}Invite participants{{/if}}
+      {{#if isParticipantsListOpened}}
+        Invite participants
+      {{else}}
+        {{participantsListStr}}
+      {{/if}}
     </div>
     <div class="flyout-content">
       <div class="chat-discussion">

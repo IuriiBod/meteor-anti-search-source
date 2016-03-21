@@ -43,6 +43,23 @@ Template.conversation.helpers({
       tmpl.isParticipantsListOpened.set(false);
       tmpl.isInnerFlyoutAnimated.set(true);
     }
+  },
+  participantsListStr () {
+    const conversation = Template.instance().conversation;
+    const participants = conversation.participants().map((participant) => {
+      return HospoHero.username(participant.userId);
+    });
+    let participantsListStr = '';
+
+    if (participants.length) {
+      participantsListStr = participants.slice(0, 2).join(', ');
+
+      if (participants.length > 2) {
+        participantsListStr += `, (+${participants.length - 2})`;
+      }
+    }
+
+    return participantsListStr.length ? participantsListStr : 'No participants';
   }
 });
 
