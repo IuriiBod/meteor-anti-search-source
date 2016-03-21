@@ -5,16 +5,16 @@
 
   .ghost-editable-input {
     outline: none;
-    border: none;
+    border: 1px solid #1ab394;
     background: rgba(0, 0, 0, 0);
+  }
 
-    &:not(:focus) {
-      border-bottom: dashed 1px #0088cc;
-    }
-
-    &:focus {
-      outline: 1px solid @navy;
-    }
+  .ghost-editable-value {
+    outline: none;
+    border-bottom: 1px dashed #0088cc;
+    color: #0088cc;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0);
   }
 
   .ghost-editable-select-trigger {
@@ -27,11 +27,7 @@
     border-radius: 0;
   }
 
-  .submit-value-button {
-    color: @navy;
-  }
-
-  .hide-button {
-    display: none;
+  .ge-save-value {
+    margin: 0 2px;
   }
 }
