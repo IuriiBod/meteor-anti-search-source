@@ -66,11 +66,8 @@ Template.taskList.helpers({
     var filterType = tmpl.filterType.get();
     var filterUser = tmpl.filterUser.get();
 
-    var query = HospoHero.misc.getTasksQuery(filterUser);
+    var query = HospoHero.misc.getTasksQuery(Meteor.userId(), filterUser);
     query.done = false;
-    if (filterUser) {
-      query.assignedTo = filterUser;
-    }
 
     if (filterTypes.hasOwnProperty(filterType)) {
       _.extend(query, filterTypes[filterType]());
