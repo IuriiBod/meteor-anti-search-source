@@ -51,11 +51,11 @@ Template.projectCreateEdit.helpers({
 
   activeButton () {
     const templateData = Template.parentData(1);
-    return templateData.project.status;
+    return templateData.project && templateData.project.status;
   },
 
   projectCreator() {
-    return !this.project._id || this.project.createdBy === Meteor.userId();
+    return this.project && (!this.project._id || this.project.createdBy === Meteor.userId());
   },
 
   timeComboEditableParams () {
@@ -112,8 +112,8 @@ Template.projectCreateEdit.helpers({
   allowRemoveUser () {
     const project = this.project;
     const userId = Meteor.userId();
-    return project.createdBy === userId ||
-      project.lead.indexOf(userId) > -1;
+    return project && (project.createdBy === userId ||
+      project.lead.indexOf(userId) > -1);
   },
 
   onLeadMemberRemove () {
