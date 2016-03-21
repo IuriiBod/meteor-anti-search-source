@@ -10,7 +10,12 @@ Template.ingredientItemEdit.events({
   },
 
   'change .ing-qty': function (event, tmpl) {
-    var newQuantity = parseInt($(event.target).val());
-    tmpl.data.onChange('changed', {_id: tmpl.data.item._id, quantity: newQuantity});
+    var newQuantity = parseFloat($(event.target).val());
+
+    if (!_.isNaN(newQuantity)) {
+      tmpl.data.onChange('changed', {_id: tmpl.data.item._id, quantity: newQuantity});
+    } else {
+      HospoHero.error('Ingredient quantity must be a number!');
+    }
   }
 });
