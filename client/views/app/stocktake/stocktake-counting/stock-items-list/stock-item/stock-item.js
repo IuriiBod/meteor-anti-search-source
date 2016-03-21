@@ -64,9 +64,11 @@ Template.stockItem.helpers({
   stockItem: function () {
     return Template.instance().getStockItem();
   },
+
   isStockItemEditable: function () {
     let stockItem = Template.instance().getStockItem();
-    return !stockItem || !stockItem.orderItem;
+    let orderItem = stockItem && OrderItems.find({'ingredient.id': stockItem.ingredient.id});
+    return !orderItem;
   }
 });
 

@@ -13,8 +13,8 @@ Router.route('stocktakeCounting', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allStockAreas', currentAreaId),
-      Meteor.subscribe('stocktakes', this.params._id),
-      Meteor.subscribe('ordersPlaced', this.params._id),
+      Meteor.subscribe('fullStocktake', this.params._id),
+      Meteor.subscribe('allStocktakeOrders', this.params._id),
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('allIngredientsInArea', currentAreaId, 'active')
     ];
@@ -49,7 +49,6 @@ Router.route('stocktakeOrdering', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     if (currentAreaId) {
       return [
-        Meteor.subscribe('ordersPlaced', this.params._id),
         Meteor.subscribe('allStocktakeOrders', this.params._id),
         Meteor.subscribe('comments', this.params._id, currentAreaId),
         Meteor.subscribe('areaUsersList', currentAreaId),

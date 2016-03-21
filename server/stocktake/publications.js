@@ -20,7 +20,7 @@ Meteor.publish('allStockAreas', function (areaId) {
 });
 
 
-Meteor.publish('stocktakes', function (stocktakeId) {
+Meteor.publish('fullStocktake', function (stocktakeId) {
   check(stocktakeId, HospoHero.checkers.StocktakeId);
 
   if (!checkViewStocksPermissionByStocktakeId(this.userId, stocktakeId)) {
@@ -32,18 +32,6 @@ Meteor.publish('stocktakes', function (stocktakeId) {
     Stocktakes.find({_id: stocktakeId}),
     StockItems.find({stocktakeId: stocktakeId})
   ];
-});
-
-
-Meteor.publish('ordersPlaced', function (stocktakeId) {
-  check(stocktakeId, HospoHero.checkers.StocktakeId);
-
-  if (!checkViewStocksPermissionByStocktakeId(this.userId, stocktakeId)) {
-    this.ready();
-    return;
-  }
-
-  return OrderItems.find({stocktakeId: stocktakeId});
 });
 
 
@@ -65,15 +53,26 @@ Meteor.publish('fullOrderInfo', function (orderId) {
   ];
 });
 
-Meteor.publish('allStocktakeOrders', function (stocktakeId) {
+
+Meteor.publishComposite('allStocktakeOrders', function (stocktakeId) {
   check(stocktakeId, HospoHero.checkers.StocktakeId);
 
   if (!checkViewStocksPermissionByStocktakeId(this.userId, stocktakeId)) {
     this.ready();
     return;
   }
-
-  return Orders.find({stocktakeId: stocktakeId});
+  return {
+    find: function () {
+      return Orders.find({stocktakeId: stocktakeId});
+    },
+    children: [
+      {
+        find: function (order) {
+          return OrderItems.find({orderId: order._id});
+        }
+      }
+    ]
+  }
 });
 
 
@@ -115,10 +114,6 @@ Meteor.publish('stocktakeList', function (areaId) {
 
   return [
     Stocktakes.find({
-      'relations.areaId': areaId
-    }),
-    //todo: Looks pretty rough to return all stock items here
-    StockItems.find({
       'relations.areaId': areaId
     })
   ];
