@@ -1,7 +1,8 @@
 Template.taskUserFilter.onRendered(function () {
   this.$('.task-user-filter').select2({
     placeholder: 'Select user',
-    allowClear: true
+    allowClear: true,
+    width: '225px'
   });
 });
 

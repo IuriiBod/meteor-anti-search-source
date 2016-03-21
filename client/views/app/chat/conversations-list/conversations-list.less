@@ -1,0 +1,30 @@
+@import "../../../../stylesheets/globals/variables.import.less";
+
+.conversations-list {
+  cursor: pointer;
+
+  .conversations-list-item {
+    padding: 10px 0;
+    border-bottom: 1px solid @border-color;
+
+    &:last-child {
+      border: none;
+    }
+
+    .message-sender-avatar {
+      float: left;
+      width: 40px;
+      height: 40px;
+    }
+
+    .message-body {
+      margin-left: 50px;
+      p {
+        height: 40px;
+        margin: 0;
+        overflow: hidden;
+        word-wrap: break-word;
+      }
+    }
+  }
+}

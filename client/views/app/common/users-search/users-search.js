@@ -31,6 +31,16 @@ Template.usersSearch.helpers({
     return Template.instance().searchSource.searchResult({
       sort: {'profile.firstname': 1}
     });
+  },
+
+  onUserSelect () {
+    let userSearchTemplate = Template.instance();
+
+    return (user) => {
+      userSearchTemplate.$(".search-user-name").val('').focus();
+      userSearchTemplate.data.onUserSelect(user._id);
+      userSearchTemplate.users.push(user._id);
+    }
   }
 });
 
@@ -39,13 +49,5 @@ Template.usersSearch.events({
   'keyup .search-user-name' (event, tmpl) {
     let searchText = event.target.value;
     tmpl.searchSource.search(searchText);
-  },
-
-  'click .search-user-info-content' (event, tmpl) {
-    if (_.isFunction(tmpl.data.onUserSelect)) {
-      tmpl.$(".search-user-name").val('').focus();
-      tmpl.data.onUserSelect(this.user._id);
-      tmpl.users.push(this.user._id);
-    }
   }
 });

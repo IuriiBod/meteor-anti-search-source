@@ -158,13 +158,7 @@ var menuEntries = [
         }
       }
     ]
-  },
-  {
-    title: "Chat",
-    icon: 'fa-comment',
-    route: 'chat'
   }
-
 ];
 
 Template.navigation.helpers({
