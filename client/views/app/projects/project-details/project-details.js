@@ -15,7 +15,7 @@ Template.projectDetails.helpers({
     const userId = Meteor.userId();
     const project = this.project;
     // the user can't edit project details if he is not a creator and not in project lead
-    return project.createdBy !== userId && project.lead.indexOf(userId) === -1;
+    return project && project.createdBy !== userId && project.lead.indexOf(userId) === -1;
   },
 
   projectDetailsOptions () {
@@ -41,7 +41,7 @@ Template.projectDetails.helpers({
 
   agendaAndMinutes () {
     const project = this.project;
-    return project.agendaAndMinutes || 'Click to edit...';
+    return project && project.agendaAndMinutes || 'Click to edit...';
   },
 
   saveChanges() {
