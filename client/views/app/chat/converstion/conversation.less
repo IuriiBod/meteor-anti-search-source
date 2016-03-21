@@ -24,7 +24,7 @@
     }
   }
 
-  .flyout-content {
+  & > .flyout-content {
     overflow: hidden !important;
     padding: 0 0 @flyout-padding-bottom !important;
 
@@ -33,7 +33,7 @@
       height: 100%;
       min-height: 100%;
       background: white;
-      padding: 0 @padding @chat-message-form-height;
+      //padding: 0 @padding @chat-message-form-height;
 
       .message {
         width: 100%;
@@ -91,6 +91,10 @@
     height: 100%;
     min-height: 100%;
     background: white;
+
+    &.hidden-inner-flyout {
+      margin-left: @width;
+    }
 
     &.show-inner-flyout {
       margin-left: 0;

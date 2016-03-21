@@ -15,6 +15,7 @@
           </ul>
         </li>
       </ul>
+      {{#if isParticipantsListOpened}}Invite participants{{/if}}
     </div>
     <div class="flyout-content">
       <div class="chat-discussion">
@@ -36,9 +37,11 @@
       </div>
     </div>
     <div class="inner-flyout
-        {{#if isParticipantsListShifted}}
-          {{#if isParticipantsListOpened}}show-inner-flyout{{else}}hide-inner-flyout{{/if}}
-        {{/if}}">
+    {{#if isParticipantsListShifted}}
+      {{#if isParticipantsListOpened}}show-inner-flyout{{else}}hide-inner-flyout{{/if}}
+    {{else}}
+      {{#if isParticipantsListClosedAtStart}}hidden-inner-flyout{{/if}}
+    {{/if}}">
       {{> participantsList conversationId=conversation._id onCloseFlyout=hideParticipantsList}}
     </div>
   </div>
