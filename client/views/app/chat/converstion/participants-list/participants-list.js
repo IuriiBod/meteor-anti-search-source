@@ -63,8 +63,14 @@ Template.participantsList.helpers({
 });
 
 Template.participantsList.events({
-  'keyup .search-user-name': function (event, tmpl) {
+  'keyup .search-user-name': (event, tmpl) => {
     const text = event.target.value;
     tmpl.searchName.set(text);
+  },
+  'click .close-flyout-button': (event, tmpl) => {
+    event.preventDefault();
+    if (tmpl.data.onCloseFlyout) {
+      tmpl.data.onCloseFlyout();
+    }
   }
 });

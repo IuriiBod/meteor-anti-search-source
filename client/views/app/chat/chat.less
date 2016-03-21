@@ -1,6 +1,6 @@
 .chat {
   .flyout-header {
-    ul {
+    & > ul {
       position: absolute;
       right: 0;
       top: 0;
@@ -23,16 +23,6 @@
       p {
         font-size: 14px;
         margin: 0;
-      }
-
-      & + .conversation {
-        margin-top: -192px;
-        padding-top: 192px;
-      }
-    }
-    .conversation {
-      & {
-        overflow: hidden;
       }
     }
   }

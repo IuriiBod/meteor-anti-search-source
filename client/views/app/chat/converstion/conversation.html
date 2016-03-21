@@ -2,6 +2,17 @@
   <div class="conversation">
     <div class="flyout-header">
       {{> CloseFlyoutButton}}
+      <ul class="list-inline">
+        <li><a class="add-participant" href="#"><i class="fa fa-user-plus"></i></a></li>
+        <li class="dropdown">
+          <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-ellipsis-h"></i>
+          </a>
+          <ul class="dropdown-menu pull-right">
+            <li><a class="leave-conversation" href="#">Leave conversation</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
     <div class="flyout-content">
       <div class="chat-discussion">
@@ -23,7 +34,7 @@
       </div>
     </div>
     <div class="inner-flyout {{#if isParticipantsListOpen}}show-inner-flyout{{/if}}">
-      {{> participantsList conversationId=conversation._id}}
+      {{> participantsList conversationId=conversation._id onCloseFlyout=hideInnerFlyout}}
     </div>
   </div>
 </template>

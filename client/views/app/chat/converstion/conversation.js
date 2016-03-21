@@ -1,6 +1,8 @@
 Template.conversation.onCreated(function() {
   this.subscribe('messagesFor', this.data.id);
+
   this.conversation = Meteor.conversations.findOne(this.data.id);
+  this.isParticipantsListOpen = new ReactiveVar(false);
 });
 
 Template.conversation.onDestroyed(function() {
@@ -25,7 +27,13 @@ Template.conversation.helpers({
     return ownerMessageId === Meteor.userId();
   },
   isParticipantsListOpen () {
-    return false;
+    return Template.instance().isParticipantsListOpen.get();
+  },
+  hideInnerFlyout () {
+    const tmpl = Template.instance();
+    return () => {
+      tmpl.isParticipantsListOpen.set(false);
+    }
   }
 });
 
@@ -38,5 +46,16 @@ Template.conversation.events({
       tmpl.conversation.sendMessage(message);
       messageInput.value = '';
     }
+  },
+  'click .add-participant': (event, tmpl) => {
+    event.preventDefault();
+    tmpl.isParticipantsListOpen.set(true);
+  },
+  'click .leave-conversation': (event, tmpl) => {
+    event.preventDefault();
+
+    Meteor.call('removeCurrentUserFromConversations', tmpl.data.id);
+
+    FlyoutManager.getInstanceByElement(event.target).close();
   }
 });
