@@ -32,6 +32,6 @@ Template.projectDetailsHeader.events({
           }
         }));
       }
-    })
+    });
   }
 });
