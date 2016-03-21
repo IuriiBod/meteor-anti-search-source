@@ -9,8 +9,7 @@ let InterviewDocument = Match.Where(interview => {
     startTime: Match.Optional(Date),
     endTime: Match.Optional(Date),
     interviewers: Match.Optional([HospoHero.checkers.MongoId]),
-    agendaAndMinutes: Match.Optional(String),
-    status: String
+    agendaAndMinutes: Match.Optional(String)
   });
 
   return true;

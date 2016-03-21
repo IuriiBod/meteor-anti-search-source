@@ -64,7 +64,8 @@ Namespace('HospoHero.roles', {
     "Edit calendar": "edit calendar",
     "View calendar": "view calendar",
     "Create meetings": "create meetings",
-    "Edit projects": "edit projects"
+    "Edit projects": "edit projects",
+    "Edit interviews": "edit interviews"
   },
 
   getActions: function () {

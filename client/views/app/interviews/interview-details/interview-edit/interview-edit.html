@@ -1,0 +1,34 @@
+<template name="interviewEdit">
+  <table class="table border-bottom">
+    <tbody>
+    <tr>
+      <td><b>Interview Date:</b></td>
+      <td>
+        {{#if interviewCreator}}
+          {{> dateEditor date=interviewStartTime allowEditing=true onDateChange=onDateChange}}
+
+          <div class="time-editor">
+            {{> comboTimeEditable params=timeComboEditableParams}}
+          </div>
+        {{else}}
+          {{dateInterval project.startTime project.endTime}}
+        {{/if}}
+      </td>
+    </tr>
+    <tr>
+      <td><b>Interviewers:</b></td>
+      <td class="project-people">
+        <div class="pull-left">
+          {{> userIconWithRemove members=interview.interviewers allowRemove=allowRemoveUser onMemberRemove=onInterviewerRemove}}
+        </div>
+
+        <div class="col-md-4">
+          <button type="button" class="btn btn-default btn-sm pull-left add-interviewer-button">
+            Add
+          </button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</template>

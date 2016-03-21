@@ -18,12 +18,15 @@ Router.route('/interview-details/:id', {
   data () {
     let id = this.params.id;
     let interview = Interviews.findOne({_id: id});
-    let application = Applications.findOne({_id: interview.applicationId});
 
-    return {
-      id: id,
-      interview: interview,
-      application: application
-    };
+    if (interview) {
+      let application = Applications.findOne({_id: interview.applicationId});
+
+      return {
+        id: id,
+        interview: interview,
+        application: application
+      };
+    }
   }
 });

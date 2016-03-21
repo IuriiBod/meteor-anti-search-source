@@ -32,7 +32,10 @@ Meteor.publishComposite('interview', function (interviewId, userId) {
       if (this.userId) {
         return Interviews.find({
           _id: interviewId,
-          interviewers: userId
+          $or: [
+            {interviewers: userId},
+            {createdBy: userId}
+          ]
         });
       } else {
         this.ready();

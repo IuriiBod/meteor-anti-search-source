@@ -23,7 +23,8 @@ Meteor.publishComposite('taskList', function (userId) {
                 jobs: JobItems,
                 meetings: Meetings,
                 managerNotes: ManagerNotes,
-                project: Projects
+                project: Projects,
+                interviews: Interviews
               };
 
               var referenceCollection = references[reference.type];
