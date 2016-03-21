@@ -44,7 +44,7 @@ Template.recruitmentForm.helpers({
 				name:'Sunday',
 				day:7
 			}
-		]
+		];
 	}
 
 });
@@ -66,7 +66,7 @@ Template.recruitmentForm.events({
 			}
 		});
 	}
-})
+});
 
 function getDetailsData(tmpl){
 	let res= {};

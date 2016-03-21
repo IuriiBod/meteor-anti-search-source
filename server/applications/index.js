@@ -69,7 +69,6 @@ Meteor.methods({
 		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
 
 		if (appDef) {
-
 			check(details, {
 				name :appDef.schema.name ? String : undefined,
 				email :appDef.schema.email ? String : undefined,
@@ -90,15 +89,11 @@ Meteor.methods({
 					areaId: area._id
 				},
 				details:details
-			}
-			return Applications.insert(application)
+			};
+			return Applications.insert(application);
 		} else {
-			logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
+			logger.error('Unexpected Err: method [addApplication] Has not created ApplicationDefinitions in this area', {areaId: area._id});
 			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
 		}
 	}
 });
-
-function checkDetails(schema,details,field,type){
-	schema[field] ? check(details[field], type) : check(details[field], undefined);
-}
