@@ -8,7 +8,7 @@ Template.pinCode.onCreated(function () {
       closeOnConfirm: true
     };
     return sweetAlert(options, onPromptResult);
-  }
+  };
 });
 
 Template.pinCode.onRendered(function () {

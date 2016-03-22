@@ -68,7 +68,7 @@ Template.weekSelector.events({
               } else {
                 tmpl.closeModalAndShowMsg(weekSelectorModal, 'success', 'Template was copied to the selected week');
               }
-            })
+            });
           });
         } else {
           tmpl.closeModalAndShowMsg(weekSelectorModal, 'success', 'Template was copied to the selected week');
