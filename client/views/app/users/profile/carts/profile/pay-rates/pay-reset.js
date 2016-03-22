@@ -4,7 +4,6 @@ Template.profilePayRates.onRendered(function () {
     title: 'Edit Weekday rate',
     showbuttons: true,
     mode: 'inline',
-    emptytext: 'Empty',
     success: function (response, newValue) {
       var self = this;
       if (newValue) {
@@ -23,7 +22,6 @@ Template.profilePayRates.onRendered(function () {
     title: 'Edit Saturday rate',
     showbuttons: true,
     mode: 'inline',
-    emptytext: 'Empty',
     success: function (response, newValue) {
       var self = this;
       if (newValue) {
@@ -42,7 +40,6 @@ Template.profilePayRates.onRendered(function () {
     title: 'Edit Sunday rate',
     showbuttons: true,
     mode: 'inline',
-    emptytext: 'Empty',
     success: function (response, newValue) {
       var self = this;
       if (newValue) {
@@ -55,4 +52,19 @@ Template.profilePayRates.onRendered(function () {
     },
     display: false
   });
+});
+
+
+Template.profilePayRates.helpers({
+  weekdaysPayrate () {
+    return HospoHero.utils.getNestedProperty(this, 'profile.payrates.weekdays', 'Not added');
+  },
+
+  saturdayPayrate () {
+    return HospoHero.utils.getNestedProperty(this, 'profile.payrates.saturday', 'Not added');
+  },
+
+  sundayPayrate () {
+    return HospoHero.utils.getNestedProperty(this, 'profile.payrates.sunday', 'Not added');
+  }
 });
