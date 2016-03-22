@@ -200,6 +200,10 @@ Conversation.appendSchema({
     "_participants.$":{
         type:String,
         regEx:SimpleSchema.RegEx.Id
+    },
+    subject: {
+        type: String,
+        optional: true
     }
 });
 

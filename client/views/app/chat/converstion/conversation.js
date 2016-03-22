@@ -17,7 +17,6 @@ Template.conversation.onRendered(function() {
     display: false,
     mode: 'inline',
     success: (response, newValue) => {
-      console.log(newValue);
       Meteor.call('addSubjectOfConversation', this.data.id, newValue);
     }});
 });
@@ -74,8 +73,8 @@ Template.conversation.helpers({
     return participantsListStr.length ? participantsListStr : 'No participants';
   },
   subjectOfConversation () {
-    const tmpl = Template.instance();
-    return tmpl.conversation.subject ? tmpl.conversation.subject : 'Subject'
+    const subject = Meteor.conversations.findOne(this.id).subject;
+    return subject ? subject : 'Subject'
   }
 });
 
