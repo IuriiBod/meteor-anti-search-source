@@ -13,22 +13,36 @@ Package.onUse(function(api) {
     'check', 
     'socialize:user-model@0.1.7', 
     'socialize:user-presence@0.3.4', 
-    'socialize:server-time@0.1.2'
+    'socialize:server-time@0.1.2',
+    'mrt:publish-with-relations'
   ]);
 
   //Add the conversation-model files
-  api.addFiles('lib/conversation-model/common/conversation-model.js');
-  api.addFiles('lib/conversation-model/common/user-extensions.js');
-  api.addFiles('lib/conversation-model/server/publications.js', 'server');
-  api.addFiles('lib/conversation-model/server/server.js', 'server');
+  api.addFiles([
+    'lib/conversation-model/common/conversation-model.js',
+    'lib/conversation-model/common/user-extensions.js'
+  ], [
+      'client',
+      'server'
+  ]);
+  api.addFiles([
+    'lib/conversation-model/server/publications.js',
+    'lib/conversation-model/server/server.js'
+  ], [
+    'server'
+  ]);
 
   //Add the message-model files
-  api.addFiles('lib/message-model/common/message-model.js');
-  api.addFiles('lib/message-model/server/server.js', 'server');
+  api.addFiles(['lib/message-model/common/message-model.js']);
+  api.addFiles(['lib/message-model/server/server.js'], ['server']);
 
   //Add the participant-model files
-  api.addFiles('lib/participant-model/common/participant-model.js');
-  api.addFiles('lib/participant-model/server/server.js', 'server');
+  api.addFiles(['lib/participant-model/common/participant-model.js']);
+  api.addFiles(['lib/participant-model/server/server.js'], ['server']);
 
-  api.export(['Conversation', 'Message', 'Participant']);
+  api.export([
+    'Conversation',
+    'Message',
+    'Participant'
+  ]);
 });

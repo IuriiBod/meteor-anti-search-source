@@ -12,11 +12,17 @@ User.prototype.conversations = function (limit, skip, sortBy, sortOrder) {
 
     //since conversations are groups of people and not owned by anyone in particular
     //we have to get a list of conversations the user is participating in first.
-    var conversationIds = ParticipantsCollection.find({userId:this._id}, {fields:{conversationId:true}}).map(function (participant) {
+    var conversationIds = ParticipantsCollection.find({
+        userId:this._id
+    }, {
+        fields: {
+            conversationId:true
+        }
+    }).map(function (participant) {
         return participant.conversationId;
     });
 
-    if(limit){
+    if (limit) {
         options.limit = limit;
     }
     if(sortBy && sortOrder){
@@ -28,7 +34,11 @@ User.prototype.conversations = function (limit, skip, sortBy, sortOrder) {
 };
 
 User.prototype.isParticipatingIn = function (conversation) {
-    return !!ParticipantsCollection.findOne({userId:this._id, conversationId:conversation._id, deleted:{$exists:false}});
+    return !!ParticipantsCollection.findOne({
+        userId:this._id,
+        conversationId:conversation._id,
+        deleted:{$exists:false}
+    });
 };
 
 User.prototype.findExistingConversationWithUsers = function(users, callback) {
