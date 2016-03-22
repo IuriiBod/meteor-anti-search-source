@@ -1,5 +1,8 @@
 Template.stockItemsList.onCreated(function () {
-  this.getStockAreaIngredients = () => StockAreas.findOne({_id: this.data.specialAreaId}).ingredientsIds;
+  this.getStockAreaIngredients = () => {
+    let stockArea = StockAreas.findOne({_id: this.data.specialAreaId});
+    return stockArea && stockArea.ingredientsIds;
+  };
 });
 
 Template.stockItemsList.onRendered(function () {
