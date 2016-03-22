@@ -67,8 +67,8 @@ Meteor.methods({
       logger.info("Existing special areas. Can't delete. Archiving..", generalAreaId);
       StockAreas.update({_id: generalAreaId}, {$set: {active: false}});
     } else {
-      StockAreas.remove({_id: generalAreaId});
       logger.info("General area removed", generalAreaId);
+      StockAreas.remove({_id: generalAreaId});
     }
   },
 
@@ -162,11 +162,11 @@ Meteor.methods({
     }
 
     if (specialArea.stocks && specialArea.stocks.length > 0) {
-      logger.error("Existing stocks. Can't delete. Archiving..", specialAreaId);
       StockAreas.update({_id: specialAreaId}, {$set: {active: false}});
+      logger.info("Existing stocks. Can't delete. Archiving..", specialAreaId);
     } else {
       StockAreas.remove({_id: specialAreaId});
-      logger.error("Special area removed", specialAreaId);
+      logger.info("Special area removed", specialAreaId);
     }
   }
 });
