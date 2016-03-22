@@ -5,10 +5,13 @@ Template.profilePersonalInfo.helpers({
       Meteor.userId() && Meteor.userId() === this._id;
   },
   firstName: function () {
-    return HospoHero.utils.getNestedProperty(this, 'profile.firstname', '');
+    return HospoHero.utils.getNestedProperty(this, 'profile.firstname', 'Set firstname');
   },
   lastName: function () {
-    return HospoHero.utils.getNestedProperty(this, 'profile.lastname', '');
+    return HospoHero.utils.getNestedProperty(this, 'profile.lastname', 'Set lastname');
+  },
+  phone: function () {
+    return HospoHero.utils.getNestedProperty(this, 'profile.phone', 'Set phone');
   },
   email: function () {
     return HospoHero.utils.getNestedProperty(this, 'emails.0.address', 'Email not specified');
