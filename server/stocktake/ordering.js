@@ -20,8 +20,8 @@ class StockOrdersGenerator {
       throw new Meteor.Error(500, 'Cannot generate orders: you should complete stocktake');
     }
 
-    let stockItems = StockItems.find({stocktakeId: stocktakeId});
-    if (stockItems.count() === 0) {
+    let stockItemInStocktake = StockItems.findOne({stocktakeId: this._stocktake._id});
+    if (!stockItemInStocktake) {
       throw new Meteor.Error(500, 'Cannot generate orders: there is no stocks inside this stocktake');
     }
 
@@ -66,14 +66,10 @@ class StockOrdersGenerator {
       if (_.isArray(specialArea.ingredientsIds)) {
         ingredientsCount += specialArea.ingredientsIds.length;
 
-        let currentCount = StockItems.find({
+        stockItemsCount += StockItems.find({
           specialAreaId: specialArea._id,
           'ingredient.id': {$in: specialArea.ingredientsIds}
         }).count();
-
-        console.log(specialArea.name, specialArea.ingredientsIds.length, currentCount);
-
-        stockItemsCount += currentCount;
       }
     });
 
@@ -109,7 +105,13 @@ class StockOrdersGenerator {
 
     let ingredientsIds = StockOrdersGenerator._arrayFlattenAndUnique(ingredientsArrays);
 
-    let relatedIngredientsCursor = Ingredients.find({_id: {$in: ingredientsIds}}, {fields: {suppliers: 1}});
+    let relatedIngredientsCursor = Ingredients.find({_id: {$in: ingredientsIds}}, {
+      fields: {
+        suppliers: 1,
+        costPerPortion: 1
+      }
+    });
+
     relatedIngredientsCursor.forEach((ingredient) => {
       addSupplierAndIngredientToMap(ingredient.suppliers, ingredient._id, ingredient.costPerPortion);
     });
