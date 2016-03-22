@@ -56,7 +56,6 @@ class StockOrdersGenerator {
   _checkIfStocktakeCompleted() {
     let specialAreas = StockAreas.find({
       generalAreaId: {$exists: true},
-      active: true,
       'relations.areaId': this._stocktake.relations.areaId
     });
 
@@ -67,10 +66,14 @@ class StockOrdersGenerator {
       if (_.isArray(specialArea.ingredientsIds)) {
         ingredientsCount += specialArea.ingredientsIds.length;
 
-        stockItemsCount += StockItems.find({
+        let currentCount = StockItems.find({
           specialAreaId: specialArea._id,
           'ingredient.id': {$in: specialArea.ingredientsIds}
         }).count();
+
+        console.log(specialArea.name, specialArea.ingredientsIds.length, currentCount);
+
+        stockItemsCount += currentCount;
       }
     });
 
@@ -101,7 +104,6 @@ class StockOrdersGenerator {
     //get all suppliers we need to order
     let ingredientsArrays = StockAreas.find({
       generalAreaId: {$exists: true},
-      active: true,
       'relations.areaId': this._stocktake.relations.areaId
     }).map(stockArea => stockArea.ingredientsIds);
 
@@ -124,7 +126,7 @@ Meteor.methods({
   generateOrders: function (stocktakeId) {
     check(stocktakeId, HospoHero.checkers.StocktakeId);
 
-    let stocktake = Stocktakes.find({_id: stocktakeId});
+    let stocktake = Stocktakes.findOne({_id: stocktakeId});
 
     if (!stocktake || !canUserReceiveDeliveries(stocktake.relations.areaId)) {
       logger.error("User not permitted to generate orders");
@@ -139,8 +141,8 @@ Meteor.methods({
     check(stockItemId, HospoHero.checkers.StockItemId);
     check(count, Number);
 
-    let stockItem = StockItems.find({_id: stockItemId});
-    if (!stockItem || !canUserReceiveDeliveries(stockItem.rations.areaId)) {
+    let stockItem = StockItems.findOne({_id: stockItemId});
+    if (!stockItem || !canUserReceiveDeliveries(stockItem.relations.areaId)) {
       logger.error("User not permitted to edit ordering count");
       throw new Meteor.Error(404, "User not permitted to edit ordering count");
     }

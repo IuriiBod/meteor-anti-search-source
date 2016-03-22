@@ -1,5 +1,5 @@
 let stockAreaSortOption = {sort: {createdAt: 1}};
-let generalStockAreasQuery = {generalAreaId: {$exists: false}, active: true};
+let generalStockAreasQuery = {generalAreaId: {$exists: false}};
 
 Template.stockAreasFilter.onCreated(function () {
   if (!this.data.activeAreas.general) {

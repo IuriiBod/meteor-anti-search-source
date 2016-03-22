@@ -67,13 +67,13 @@ Template.stockItem.helpers({
 
   isStockItemEditable: function () {
     let stockItem = Template.instance().getStockItem();
-    let orderItem = stockItem && OrderItems.find({'ingredient.id': stockItem.ingredient.id});
+    let orderItem = stockItem && OrderItems.findOne({'ingredient.id': stockItem.ingredient.id});
     return !orderItem;
   }
 });
 
 Template.stockItem.events({
-  'click .removeFromList': function (event, tmpl) {
+  'click .remove-ingredient-button': function (event, tmpl) {
     event.preventDefault();
     var confirmDelete = confirm("This action will remove this stock item from this area. Are you sure you want to continue?");
     if (confirmDelete) {

@@ -19,7 +19,7 @@ Template.stockAreaItem.helpers({
   },
 
   specialAreas: function () {
-    return StockAreas.find({generalAreaId: this.stockArea._id, active: true}, {sort: {name: 1}});
+    return StockAreas.find({generalAreaId: this.stockArea._id}, {sort: {name: 1}});
   },
 
   getStockAreaItemContext: Template.stockAreaItem.getStockAreaItemContext
@@ -60,9 +60,7 @@ Template.stockAreaItem.events({
     let stockArea = tmpl.data.stockArea;
     let confirmation = confirm(`Deleting ${stockArea.name}.\nAre you sure?`);
     if (confirmation) {
-      let isGeneral = !stockArea.generalAreaId;
-      let removeMethodName = isGeneral ? 'deleteGeneralArea' : 'deleteSpecialArea';
-      Meteor.call(removeMethodName, stockArea._id, HospoHero.handleMethodResult());
+      Meteor.call('removeStockArea', stockArea._id, HospoHero.handleMethodResult());
     }
   }
 });

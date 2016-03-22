@@ -5,24 +5,21 @@ Migrations.add({
     let GeneralAreas = new Mongo.Collection("generalAreas");
     let SpecialAreas = new Mongo.Collection("specialAreas");
     //migrate special/general areas
-    GeneralAreas.find().forEach(garea => {
+    GeneralAreas.find({active: true}).forEach(garea => {
       let gareaId = StockAreas.insert({
         name: garea.name,
-        active: garea.active,
         createdAt: garea.createdAt,
         relations: garea.relations
       });
 
-      garea.specialAreas.forEach(sareaId => {
-        let sarea = SpecialAreas.findOne({_id: sareaId});
+      SpecialAreas.find({_id: garea.specialAreas, active: true}).forEach(sarea => {
         StockAreas.insert({
           name: sarea.name,
           generalAreaId: gareaId,
           ingredientsIds: sarea.stocks,
-          active: sarea.active,
           createdAt: sarea.createdAt,
           relations: sarea.relations
-        })
+        });
       });
     });
 
