@@ -1,0 +1,21 @@
+<template name="formFieldsSettings">
+  <div class="form-group">
+    {{#unless applicationId}}
+      <!-- Message  Part -->
+      <div class="alert alert-info">
+        <strong>This a configuration for Recruiting Form in your organization. First select fields that, will be
+          displayed, the enter some positions.</strong>
+      </div>
+    {{/unless}}
+
+    <label class="col-sm-2 control-label">Fields</label>
+    <!-- Fields  Part -->
+    <div class="col-sm-10">
+      <div class="thumbnail">
+        {{#each schema}}
+          {{> formFieldCheckbox checkboxSettings=this onCheckboxChange=onCheckboxChange}}
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</template>

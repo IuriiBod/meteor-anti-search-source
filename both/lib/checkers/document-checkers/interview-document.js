@@ -18,12 +18,3 @@ let InterviewDocument = Match.Where(interview => {
 Namespace('HospoHero.checkers', {
   InterviewDocument: InterviewDocument
 });
-
-//let i = {
-//  applicationId: 'WEqGEyJinEeMyrSxZ',
-//  createdAt: new Date(),
-//  interviewee: 'Vadym Vorobel',
-//  createdBy: 'kfZMbk62tgFSxmDen'
-//};
-//
-//Interviews.insert(i);

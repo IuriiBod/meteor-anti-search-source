@@ -1,99 +1,105 @@
+let canUpdateApplications = (application) => {
+  let permissionChecker = new HospoHero.security.PermissionChecker();
+  return application && permissionChecker.hasPermissionInArea(application.relations.areaId, 'edit interviews');
+};
+
 Meteor.methods({
-	updateApplicationDefinition(areaId, schema){
-		check(areaId, HospoHero.checkers.MongoId);
-		check(schema.email, Boolean);
-		check(schema.name, Boolean);
-		check(schema.phone, Boolean);
-		check(schema.dateOfBirth, Boolean);
-		check(schema.numberOfHours, Boolean);
-		check(schema.availability, Boolean);
-		check(schema.message, Boolean);
-		check(schema.files, Boolean);
+  updateApplicationDefinition(applicationId, changedSchema) {
+    check(applicationId, HospoHero.checkers.NullableMongoId);
+    check(changedSchema, HospoHero.checkers.ApplicationSchemaDocument);
 
-		//todo: any security (permissions) checks here?
+    let applicationDefinition = ApplicationDefinitions.findOne({_id: applicationId});
 
-		let area = Areas.findOne({_id: areaId});
-		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+    if (applicationDefinition && !canUpdateApplications(applicationDefinition)) {
+      throw new Meteor.Error('You can\'t update application schema');
+    }
 
-		if (appDef) {
-			return ApplicationDefinitions.update({_id: appDef._id}, {$set: {schema: schema}});
-		} else {
-			let newAppDef = {
-				schema: schema,
-				relations: {
-					organizationId: area.organizationId,
-					locationId: area.locationId,
-					areaId: area._id
-				},
-				positionIds: []
-			};
-			return ApplicationDefinitions.insert(newAppDef);
-		}
-	},
-	addNewPosition(areaId, name){
-		check(areaId, HospoHero.checkers.MongoId);
-		check(name, String);
+    if (applicationDefinition) {
+      _.extend(applicationDefinition.schema, changedSchema);
+      return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$set: applicationDefinition});
+    } else {
+      let newApplicationDefinition = {
+        schema: changedSchema,
+        relations: HospoHero.getRelationsObject(),
+        positionIds: []
+      };
+      return ApplicationDefinitions.insert(newApplicationDefinition);
+    }
+  },
 
-		let area = Areas.findOne({_id: areaId});
-		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+  addNewPosition(applicationId, name){
+    check(applicationId, HospoHero.checkers.MongoId);
+    check(name, String);
 
-		if (appDef) {
-			let positionId = Positions.insert({name: name});
-			appDef.positionIds.push(positionId);
-			return ApplicationDefinitions.update({_id: appDef._id}, {$set: {positionIds: appDef.positionIds}});
-		} else {
-			logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
-			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
-		}
-	},
-	removePosition(areaId, positionId){
-		check(areaId, HospoHero.checkers.MongoId);
-		check(positionId, HospoHero.checkers.MongoId);
+    let applicationDefinition = ApplicationDefinitions.findOne({_id: applicationId});
 
-		let area = Areas.findOne({_id: areaId});
-		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+    if (!canUpdateApplications(applicationDefinition)) {
+      throw new Meteor.Error('You can\'t update application schema');
+    }
 
-		if (appDef) {
-			Positions.remove(positionId);
-			return ApplicationDefinitions.update({_id: appDef._id}, {$pull: {positionIds: positionId}});
-		} else {
-			logger.error('Unexpected Err: method [removePosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
-			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
-		}
-	},
-	addApplication(organizationId,details,positions){
-		check(organizationId, HospoHero.checkers.MongoId);
-		check(positions, [HospoHero.checkers.MongoId]);
+    if (applicationDefinition) {
+      let positionId = Positions.insert({name: name});
+      return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$addToSet: {positionIds: positionId}});
+    } else {
+      logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
+      this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
+    }
+  },
 
-		let area = Areas.findOne({organizationId: organizationId});
-		let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+  removePosition(applicationId, positionId){
+    check(applicationId, HospoHero.checkers.MongoId);
+    check(positionId, HospoHero.checkers.MongoId);
 
-		if (appDef) {
-			check(details, {
-				name :appDef.schema.name ? String : undefined,
-				email :appDef.schema.email ? String : undefined,
-				phone :appDef.schema.phone ? String : undefined,
-				availability :appDef.schema.availability ? [Number] : undefined,
-				dateOfBirth :appDef.schema.dateOfBirth ? Date : undefined,
-				numberOfHours :appDef.schema.numberOfHours ? Number : undefined,
-				message :appDef.schema.message ? String : undefined
-			});
+    let applicationDefinition = ApplicationDefinitions.findOne({_id: applicationId});
 
-			let application = {
-				_createdAt : new Date(),
-				appProgress:[],
-				positionIds:positions,
-				relations:{
-					organizationId: area.organizationId,
-					locationId: area.locationId,
-					areaId: area._id
-				},
-				details:details
-			};
-			return Applications.insert(application);
-		} else {
-			logger.error('Unexpected Err: method [addApplication] Has not created ApplicationDefinitions in this area', {areaId: area._id});
-			this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
-		}
-	}
+    if (!canUpdateApplications(applicationDefinition)) {
+      throw new Meteor.Error('You can\'t update application schema');
+    }
+
+    if (applicationDefinition) {
+      Positions.remove(positionId);
+      return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$pull: {positionIds: positionId}});
+    } else {
+      logger.error('Unexpected Err: method [removePosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
+      this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
+    }
+  },
+
+  addApplication(organizationId, details, positions){
+    check(organizationId, HospoHero.checkers.MongoId);
+    check(positions, [HospoHero.checkers.MongoId]);
+
+    let area = Areas.findOne({organizationId: organizationId});
+    let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+
+    if (appDef) {
+      let fieldTypes = {
+        name: String,
+        email: String,
+        phone: String,
+        availability: [Number],
+        dateOfBirth: Date,
+        numberOfHours: Number,
+        message: String
+      };
+
+      _.each(appDef.schema, (value, field) => {
+        let fieldType = value ? fieldTypes[field] : undefined;
+        check(details, fieldType);
+      });
+
+      let application = {
+        createdAt: new Date(),
+        appProgress: [],
+        positionIds: positions,
+        relations: HospoHero.getRelationsObject(area._id),
+        details: details
+      };
+
+      return Applications.insert(application);
+    } else {
+      logger.error('Unexpected Err: method [addApplication] Has not created ApplicationDefinitions in this area', {areaId: area._id});
+      this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
+    }
+  }
 });
