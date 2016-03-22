@@ -17,6 +17,15 @@ let OrderDocument = Match.Where(function (orderDoc) {
       details: String,
       through: String
     }),
+    orderNote: Match.Optional(String),
+    receiveNote: Match.Optional(String),
+    invoiceImage: Match.Optional({
+      originalUrl: String,
+      convertedUrl: String,
+      type: Match.OneOf([
+        "pdf", "csv", "doc", "doc", "image"
+      ])
+    }),
     supplierId: HospoHero.checkers.MongoId,
     stocktakeId: HospoHero.checkers.MongoId,
     expectedDeliveryDate: Match.Optional(Date),

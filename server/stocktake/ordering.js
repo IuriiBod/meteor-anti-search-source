@@ -9,121 +9,6 @@ let getAreaIdFromOrder = function (orderId) {
   return (order && order.relations) ? order.relations.areaId : null;
 };
 
-
-class StockOrdersGenerator {
-  constructor(stocktake) {
-    this._stocktake = stocktake;
-  }
-
-  generate() {
-    if (!this._checkIfStocktakeCompleted()) {
-      throw new Meteor.Error(500, 'Cannot generate orders: you should complete stocktake');
-    }
-
-    let stockItemInStocktake = StockItems.findOne({stocktakeId: this._stocktake._id});
-    if (!stockItemInStocktake) {
-      throw new Meteor.Error(500, 'Cannot generate orders: there is no stocks inside this stocktake');
-    }
-
-    let suppliersIngredientsMap = this._getRelatedSuppliersIngredientsMap();
-    let relationsObject = this._stocktake.relations;
-
-    //generate orders itself (order per supplier)
-    _.each(suppliersIngredientsMap, (ingredientEntries, supplierId) => {
-      let orderId = Orders.insert({
-        stocktakeId: this._stocktake._id,
-        supplierId: supplierId,
-        placedBy: Meteor.userId(),
-        createdAt: new Date(),
-        relations: relationsObject
-      });
-
-      //generate order item per ingredient
-      ingredientEntries.forEach((ingredientEntry) => {
-        OrderItems.insert({
-          orderId: orderId,
-          orderedCount: 0,
-          ingredient: ingredientEntry,
-          relations: relationsObject
-        });
-      });
-    });
-  }
-
-  /**
-   * Checks if all ingredients are counted
-   */
-  _checkIfStocktakeCompleted() {
-    let specialAreas = StockAreas.find({
-      generalAreaId: {$exists: true},
-      'relations.areaId': this._stocktake.relations.areaId
-    });
-
-    let ingredientsCount = 0;
-    let stockItemsCount = 0;
-
-    specialAreas.forEach(specialArea => {
-      if (_.isArray(specialArea.ingredientsIds)) {
-        ingredientsCount += specialArea.ingredientsIds.length;
-
-        stockItemsCount += StockItems.find({
-          specialAreaId: specialArea._id,
-          'ingredient.id': {$in: specialArea.ingredientsIds}
-        }).count();
-      }
-    });
-
-    return ingredientsCount === stockItemsCount;
-  }
-
-  /**
-   * Helps link suppliers and appropriate ingredients
-   *
-   * @returns {supplierId: [{id: String,cost: number}]} object where keys are suppliers ids and values are
-   * array of related ingredients
-   * @private
-   */
-  _getRelatedSuppliersIngredientsMap() {
-    const suppliersMap = {};
-
-    let addSupplierAndIngredientToMap = (supplierId, ingredientId, ingredientCost) => {
-      if (!suppliersMap[supplierId]) {
-        suppliersMap[supplierId] = [];
-      }
-
-      suppliersMap[supplierId].push({
-        id: ingredientId,
-        cost: ingredientCost
-      });
-    };
-
-    //get all suppliers we need to order
-    let ingredientsArrays = StockAreas.find({
-      generalAreaId: {$exists: true},
-      'relations.areaId': this._stocktake.relations.areaId
-    }).map(stockArea => stockArea.ingredientsIds);
-
-    let ingredientsIds = StockOrdersGenerator._arrayFlattenAndUnique(ingredientsArrays);
-
-    let relatedIngredientsCursor = Ingredients.find({_id: {$in: ingredientsIds}}, {
-      fields: {
-        suppliers: 1,
-        costPerPortion: 1
-      }
-    });
-
-    relatedIngredientsCursor.forEach((ingredient) => {
-      addSupplierAndIngredientToMap(ingredient.suppliers, ingredient._id, ingredient.costPerPortion);
-    });
-
-    return suppliersMap;
-  }
-
-  static _arrayFlattenAndUnique(array) {
-    return _.unique(_.flatten(array));
-  }
-}
-
 Meteor.methods({
   generateOrders: function (stocktakeId) {
     check(stocktakeId, HospoHero.checkers.StocktakeId);
@@ -135,8 +20,22 @@ Meteor.methods({
       throw new Meteor.Error(403, "User not permitted to generate orders");
     }
 
-    let ordersGenerator = new StockOrdersGenerator(stocktake);
+    let ordersGenerator = new HospoHero.stocktake.OrdersGenerator(stocktake);
     ordersGenerator.generate();
+  },
+
+  updateOrder: function (updatedOrder) {
+    check(updatedOrder, HospoHero.checkers.OrderDocument);
+
+    let orderId = updatedOrder._id;
+    delete updatedOrder._id;
+
+    if (!canUserReceiveDeliveries(getAreaIdFromOrder(id))) {
+      logger.error("User not permitted to generate receipts");
+      throw new Meteor.Error(404, "User not permitted to generate receipts");
+    }
+
+    Orders.update({_id: orderId}, {$set: updatedOrder});
   },
 
   editOrderingCount: function (stockItemId, count) {
@@ -155,6 +54,7 @@ Meteor.methods({
 
 
   /*** receipts ***/
+  //todo:stocktake refactor it
   generateReceipts: function (stocktakeId, supplierId, info) {
     if (!canUserReceiveDeliveries()) {
       logger.error("User not permitted to generate receipts");
@@ -288,99 +188,6 @@ Meteor.methods({
 
     logger.info("Orders updated", {stocktakeDate: stocktakeMain.stocktakeDate, supplier: supplierId});
     Stocktakes.update({_id: stocktakeId}, {$addToSet: {orderReceipts: orderReceiptId}});
-  },
-
-  updateReceipt: function (id, info) {
-    if (!canUserReceiveDeliveries(getAreaIdFromReceipt(id))) {
-      logger.error("User not permitted to generate receipts");
-      throw new Meteor.Error(404, "User not permitted to generate receipts");
-    }
-
-    if (Orders.findOne(id)) {
-      var query = {};
-      if (info.hasOwnProperty("orderNote")) {
-        query.orderNote = info.orderNote;
-      }
-      if (info.hasOwnProperty("expectedDeliveryDate")) {
-        query.expectedDeliveryDate = info.expectedDeliveryDate;
-      }
-      if (info.hasOwnProperty("invoiceFaceValue")) {
-        query.invoiceFaceValue = info.invoiceFaceValue;
-      }
-      if (info.hasOwnProperty("receiveNote")) {
-        query.receiveNote = info.receiveNote;
-      }
-      if (info.hasOwnProperty("invoiceImage")) {
-        query.invoiceImage = info.invoiceImage;
-      }
-      if (info.hasOwnProperty("temperature")) {
-        query.temperature = info.temperature;
-      }
-      Orders.update({"_id": id}, {$set: query});
-      logger.info("Order receipt updated", id);
-    } else {
-      if (info.hasOwnProperty("orderNote") || info.hasOwnProperty("expectedDeliveryDate")) {
-        if (!info.hasOwnProperty("supplier")) {
-          logger.error("Supplier does not exist");
-          throw new Meteor.Error(404, "Supplier does not exist");
-        }
-        if (!info.hasOwnProperty("version")) {
-          logger.error("Version does not exist");
-          throw new Meteor.Error(404, "Version does not exist");
-        }
-        if (!info.hasOwnProperty("supplier")) {
-          logger.error("Supplier does not exist");
-          throw new Meteor.Error(404, "Supplier does not exist");
-        }
-        var stocktakeMain = Stocktakes.findOne({_id: info.version});
-        if (!stocktakeMain) {
-          logger.error("Stocktake main does not exist");
-          throw new Meteor.Error(404, "Stocktake main does not exist");
-        }
-        var doc = {
-          date: new Date(),
-          version: info.version,
-          stocktakeDate: stocktakeMain.stocktakeDate,
-          supplier: info.supplier,
-          orderedThrough: null,
-          orderPlacedBy: null,
-          expectedDeliveryDate: null,
-          received: false,
-          receivedDate: null,
-          invoiceFaceValue: 0,
-          relations: HospoHero.getRelationsObject()
-        };
-        if (info.hasOwnProperty("orderNote")) {
-          doc.orderNote = info.orderNote;
-        }
-        if (info.hasOwnProperty("expectedDeliveryDate")) {
-          doc.expectedDeliveryDate = info.expectedDeliveryDate;
-        }
-        var receiptId = Orders.insert(doc);
-        logger.info("New order receipt inserted ", receiptId);
-        return receiptId;
-      } else {
-        logger.error("Receipt does not exist");
-        throw new Meteor.Error("Receipt does not exist");
-      }
-    }
-  },
-
-  uploadInvoice: function (id, info) {
-    if (!canUserReceiveDeliveries(getAreaIdFromReceipt(id))) {
-      logger.error("User not permitted to generate receipts");
-      throw new Meteor.Error(404, "User not permitted to generate receipts");
-    }
-
-    check(id, HospoHero.checkers.MongoId);
-
-    var receipt = Orders.findOne(id);
-    if (!receipt) {
-      logger.error('Receipt not found');
-      throw new Meteor.Error("Receipt not found");
-    }
-    Orders.update({"_id": id}, {$addToSet: {"invoiceImage": info}});
-    logger.info("Invoice uploaded", id);
   }
 });
 

@@ -68,67 +68,81 @@ Template.orderReceive.events({
 
   'click .uploadInvoice': function (event, tmpl) {
     event.preventDefault();
-    filepicker.pickAndStore(
-      {
-        extensions: ['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'],
-        services: ['COMPUTER'],
-        multiple: true
-      },
-      {},
-      function (InkBlobs) {
-        var data = (InkBlobs);
 
-        if (data && data.length > 0) {
-          data.forEach(function (doc) {
-            var urls = null;
-            if (doc) {
-              var type = null;
-              if (doc.mimetype === "application/pdf") {
-                type = "pdf";
-              } else if (doc.mimetype === "text/csv") {
-                type = "csv";
-              } else if (doc.mimetype ===
-                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-                  doc.mimetype === "application/msword") {
-                type = "doc";
-              } else {
-                type = "image";
-              }
-              urls = {
-                "originalUrl": doc.url,
-                "type": type
-              };
+    let getDocumentTypeByMimetype = (mimetype) => {
+      let type = false;
+      switch (mimetype) {
+        case "application/pdf":
+          type = "pdf";
+          break;
 
-              if (type === "doc") {
-                urls.originalUrl = doc.url + "/convert?format=pdf";
-              }
+        case "text/csv":
+          type = "csv";
+          break;
 
-              //converting url to image
-              var blob = {
-                url: doc.url,
-                mimetype: 'image/png',
-                isWriteable: false,
-                size: 28683
-              };
+        case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+          type = "doc";
+          break;
 
-              filepicker.convert(
-                blob,
-                {
-                  width: 200,
-                  height: 200,
-                  format: 'png',
-                  compress: true,
-                  quality: 100
-                },
-                function (newBlob) {
-                  var receiptId = tmpl.data.currentReceipt._id;
-                  urls.convertedUrl = newBlob.url;
-                  Meteor.call("uploadInvoice", receiptId, urls, HospoHero.handleMethodResult());
-                }
-              );
-            }
-          });
-        }
-      });
+        case "application/msword":
+          type = "doc";
+          break;
+
+        default:
+          type = "image";
+      }
+
+      return type;
+    };
+
+    let createDocumentPreview = function (invoiceImage) {
+      let blob = {
+        url: invoiceImage.originalUrl,
+        mimetype: 'image/png',
+        isWriteable: false,
+        size: 28683
+      };
+
+      filepicker.convert(
+        blob, {
+          width: 200,
+          height: 200,
+          format: 'png',
+          compress: true,
+          quality: 100
+        }, function (newBlob) {
+          invoiceImage.convertedUrl = newBlob.url;
+
+          //todo:stocktake needs to be checked
+          let order = tmpl.data.currentReceipt;
+          order.invoiceImage = invoiceImage;
+          Meteor.call('updateOrder', order, HospoHero.handleMethodResult());
+        });
+    };
+
+    let handleUploadedDocument = function (document) {
+      if (!document) {
+        return;
+      }
+
+      var type = getDocumentTypeByMimetype(document.mimetype);
+
+      let invoiceImage = {
+        originalUrl: `${document.url}${(type === 'doc' ? '/convert?format=pdf' : '')}`,
+        type: type
+      };
+
+      createDocumentPreview(invoiceImage);
+    };
+
+    filepicker.pickAndStore({
+      extensions: ['.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf', '.xls', '.csv'],
+      services: ['COMPUTER'],
+      multiple: true
+    }, {}, function (InkBlobs) {
+      if (InkBlobs && InkBlobs.length > 0) {
+        InkBlobs.forEach(handleUploadedDocument);
+      }
+    });
   }
 });

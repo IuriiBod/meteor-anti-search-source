@@ -59,7 +59,7 @@ Router.route('stocktakeOrdering', {
   },
   data: function () {
     return {
-      stocktakeMainId: this.params._id
+      stocktakeId: this.params._id
     };
   }
 });
