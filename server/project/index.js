@@ -7,6 +7,10 @@ let isInProjectTeam = (users = []) => {
   return users.indexOf(Meteor.userId()) > -1;
 };
 
+let isProjectCreator = (projectCreatorId) => {
+  return projectCreatorId === Meteor.userId();
+};
+
 Meteor.methods({
   createProject(projectDoc) {
     if (!canUserEditProjects()) {
@@ -35,6 +39,24 @@ Meteor.methods({
     } else {
       check(updatedProjectDoc, HospoHero.checkers.ProjectChecker);
       Projects.update({_id: updatedProjectDoc._id}, {$set: updatedProjectDoc});
+    }
+  },
+
+  removeProject(projectId) {
+    check(projectId, HospoHero.checkers.MongoId);
+    let projectDoc = Projects.findOne({_id: projectId});
+    let condition = projectDoc && canUserEditProjects() &&
+        isProjectCreator(projectDoc.createdBy) || isInProjectTeam(projectDoc.lead);
+
+    if (condition) {
+      TaskList.remove({'reference.id': projectId});
+      Files.remove({referenceId: projectId});
+      RelatedItems.remove({referenceId: projectId});
+      Comments.remove({reference: projectId});
+
+      return Projects.remove({_id: projectId});
+    } else {
+      throw new Meteor.Error('You can\'t remove project');
     }
   }
 });

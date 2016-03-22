@@ -40,7 +40,7 @@ Template.usersSearch.helpers({
       userSearchTemplate.$(".search-user-name").val('').focus();
       userSearchTemplate.data.onUserSelect(user._id);
       userSearchTemplate.users.push(user._id);
-    }
+    };
   }
 });
 
