@@ -50,6 +50,7 @@ Router.route('stocktakeOrdering', {
     if (currentAreaId) {
       return [
         Meteor.subscribe('allStocktakeOrders', this.params._id),
+        Meteor.subscribe('fullStocktake', this.params._id),
         Meteor.subscribe('comments', this.params._id, currentAreaId),
         Meteor.subscribe('areaUsersList', currentAreaId),
         Meteor.subscribe('allIngredientsInArea', currentAreaId, null),

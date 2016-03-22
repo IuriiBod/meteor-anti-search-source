@@ -94,10 +94,6 @@ Meteor.methods({
     }
     Sections.update({"_id": id}, {$set: {"name": name}});
     logger.info("Section name updated", id);
-  },
-
-  renderSomeHandlebarsTemplate: function (tmplName, tmplData) {
-    return Handlebars.templates[tmplName](tmplData);
   }
 });
 

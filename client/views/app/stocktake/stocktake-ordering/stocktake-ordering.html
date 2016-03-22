@@ -8,9 +8,9 @@
         <div class="ibox">
           <div class="ibox-content">
             {{#if isNotEmpty}}
-              {{> supplierFilter onSupplierChanged=onSupplierChanged stocktakeMainId=stocktakeMainId}}
+              {{> supplierFilter onSupplierChanged=onSupplierChanged stocktakeId=stocktakeId activeSupplierId=activeSupplierId}}
               <hr>
-              {{> orderingStatus activeSupplierId=state$activeSupplierId stocktakeMainId=stocktakeMainId}}
+              {{> orderingStatus activeOrder}}
               <hr>
               <table class="table table-condensed table-hover table-striped">
                 <thead>
@@ -19,23 +19,23 @@
                   <th>On hand</th>
                   <th>Needed</th>
                   <th>To order</th>
-                  {{#unless state$activeSupplierId}}
+                  {{#if isOrderEditable activeOrder}}
                     <th>Action</th>
-                  {{/unless}}
+                  {{/if}}
                 </tr>
                 </thead>
                 <tbody>
-                {{#each stockOrdersList state$activeSupplierId}}
+                {{#each orderItems activeOrder}}
                   {{> stockOrderItem}}
                 {{/each}}
                 </tbody>
               </table>
 
               <hr>
-              {{#if orderNote state$activeSupplierId}}
+              {{#if orderNote}}
                 <div>
                   <p class="text-danger pull-left">Note: &nbsp;</p>
-                  {{orderNote state$activeSupplierId}}
+                  {{orderNote}}
                 </div>
               {{else}}
                 <textarea class="form-control message-input-post supplier-order-note"
@@ -43,15 +43,14 @@
               {{/if}}
             {{else}}
               <h4>You haven't created any orders.</h4>
-              <a href="{{pathFor route="stocktakeCounting" _id=stocktakeMainId}}">Click here</a> to go to the stocktake
+              <a href="{{pathFor route="stocktakeCounting" _id=stocktakeId}}">Click here</a> to go to the stocktake
               and create orders.
             {{/if}}
-
           </div>
         </div>
       </div>
 
-      {{> commentsPanel id=stocktakeMainId type='stockOrders'}}
+      {{> commentsPanel id=stocktakeId type='stockOrders'}}
     </div>
   </div>
 </template>

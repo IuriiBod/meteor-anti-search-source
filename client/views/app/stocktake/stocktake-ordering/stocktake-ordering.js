@@ -7,12 +7,17 @@ Template.stocktakeOrdering.helpers({
     return Template.instance().activeSupplierId.get();
   },
 
-  isNotEmpty: function () {
-    return !!OrderItems.findOne({});
+  activeOrder: function () {
+    let supplierId = Template.instance().activeSupplierId.get();
+    return Orders.findOne({supplierId: supplierId, stocktakeId: this.stocktakeId});
   },
 
-  stockOrdersList: function (activeSupplierId) {
-    return OrderItems.find({supplierId: activeSupplierId});
+  isNotEmpty: function () {
+    return !!Orders.findOne({stocktakeId: this.stocktakeId});
+  },
+
+  orderItems: function (activeOrder) {
+    return OrderItems.find({orderId: activeOrder._id});
   },
 
   orderNote: function (activeSupplierId) {
@@ -28,6 +33,10 @@ Template.stocktakeOrdering.helpers({
     return function (supplierId) {
       tmpl.activeSupplierId.set(supplierId);
     };
+  },
+
+  isOrderEditable: function (order) {
+    return !order.orderedThrough;
   }
 });
 

@@ -10,21 +10,20 @@ let OrderId = Match.Where(function (orderId) {
 
 let OrderDocument = Match.Where(function (orderDoc) {
   check(orderDoc, {
-    _id: Match.Optional(StocktakeId),
+    _id: Match.Optional(OrderId),
     createdAt: Date,
-    placedBy: Match.checkers.MongoId,
+    placedBy: HospoHero.checkers.MongoId,
     orderedThrough: Match.Optional({
-      details: String,
-      through: String
+      email: Match.Optional(HospoHero.checkers.Email),
+      date: Date,
+      type: Match.OneOf('phoned', 'emailed')
     }),
     orderNote: Match.Optional(String),
     receiveNote: Match.Optional(String),
     invoiceImage: Match.Optional({
       originalUrl: String,
       convertedUrl: String,
-      type: Match.OneOf([
-        "pdf", "csv", "doc", "doc", "image"
-      ])
+      type: Match.OneOf("pdf", "csv", "doc", "doc", "image")
     }),
     supplierId: HospoHero.checkers.MongoId,
     stocktakeId: HospoHero.checkers.MongoId,

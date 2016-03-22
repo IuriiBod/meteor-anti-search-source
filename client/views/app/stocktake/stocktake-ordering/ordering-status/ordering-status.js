@@ -1,50 +1,29 @@
 Template.orderingStatus.onCreated(function () {
-  this.getCurrentReceipt = function () {
-    return Orders.findOne({
-      version: this.data.stocktakeMainId,
-      supplier: this.data.activeSupplierId,
-      'orderedThrough.through': {$ne: null}
-    });
-  };
-
-  this.getDeliveryDate = function () {
-    var receipt = this.getCurrentReceipt();
-    return receipt && receipt.expectedDeliveryDate && new Date(receipt.expectedDeliveryDate);
-  };
-});
-
-Template.orderingStatus.onRendered(function () {
-  this.generateReceipts = function (orderType) {
-    var supplierId = this.data.activeSupplierId;
+  this.markOrderAsOrderedThrough = function (orderType) {
+    let order = this.data;
     if (orderType === 'emailed') {
-      ModalManager.open('composeStocktakeOrderingEmail', {
-        stocktakeMainId: this.data.stocktakeMainId,
-        supplier: Suppliers.findOne({_id: supplierId})
-      });
+      ModalManager.open('composeStocktakeOrderingEmail', order);
     } else {
-      var info = {
-        through: orderType,
-        details: null,
+      var newInfo = {
+        orderedThrough: {
+          type: orderType,
+          date: new Date()
+        },
         expectedDeliveryDate: moment().add(1, 'days').toDate()
       };
-      Meteor.call('generateReceipts', this.data.stocktakeMainId, supplierId, info, HospoHero.handleMethodResult());
+
+      let updatedOrder = _.extend(order, newInfo);
+
+      Meteor.call('updateOrder', updatedOrder, HospoHero.handleMethodResult());
     }
   };
 });
 
 
 Template.orderingStatus.helpers({
-  receipt: function () {
-    return Template.instance().getCurrentReceipt();
-  },
-
-  deliveryDate: function () {
-    return Template.instance().getDeliveryDate();
-  },
-
-  orderSentDetails: function (receipt) {
-    return receipt && receipt.orderedThrough.through === "emailed" && "Email sent " || "Phoned " +
-      moment(receipt.date).format("MMMM Do YYYY, h:mm:ss a");
+  orderSentDetails: function () {
+    return this && this.orderedThrough.type === "emailed" && "Email sent " || "Phoned " +
+      moment(this.orderedThrough.date).format("MMMM Do YYYY, h:mm:ss a");
   }
 });
 
@@ -52,12 +31,12 @@ Template.orderingStatus.helpers({
 Template.orderingStatus.events({
   'click .order-emailed-button': function (event, tmpl) {
     event.preventDefault();
-    tmpl.generateReceipts('emailed');
+    tmpl.markOrderAsOrderedThrough('emailed');
   },
 
   'click .order-phoned-button': function (event, tmpl) {
     event.preventDefault();
-    tmpl.generateReceipts('phoned');
+    tmpl.markOrderAsOrderedThrough('phoned');
   }
 });
 

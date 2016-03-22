@@ -66,9 +66,9 @@ Template.stockItem.helpers({
   },
 
   isStockItemEditable: function () {
-    let stockItem = Template.instance().getStockItem();
-    let orderItem = stockItem && OrderItems.findOne({'ingredient.id': stockItem.ingredient.id});
-    return !orderItem;
+    let supplierId = this.ingredient.suppliers;
+    let suppliersOrder = Orders.findOne({supplierId: supplierId});
+    return !suppliersOrder;
   }
 });
 

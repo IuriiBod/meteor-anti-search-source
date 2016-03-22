@@ -1,40 +1,33 @@
-Template.supplierFilter.onCreated(function () {
-  var stockOrder = OrderItems.findOne({
-    version: this.data.stocktakeMainId
-  }, {
-    fields: {supplier: 1}, sort: {supplier: 1}
-  });
-  this.set('activeSupplierId', stockOrder.supplier);
+let ordersQueryOptions = {
+  fields: {supplierId: 1}, sort: {supplier: 1}
+};
 
-  var tmpl = this;
-  this.autorun(function () {
-    var activeSupplierId = tmpl.get('activeSupplierId');
-    tmpl.data.onSupplierChanged(activeSupplierId);
-  });
+Template.supplierFilter.onCreated(function () {
+  var defaultOrder = Orders.findOne({
+    stocktakeId: this.data.stocktakeId
+  }, ordersQueryOptions);
+
+  //default active supplier
+  this.data.onSupplierChanged(defaultOrder.supplierId);
 });
 
 
 Template.supplierFilter.helpers({
   suppliers: function () {
-    var ordersList = OrderItems.find({
-      version: this.stocktakeMainId
-    }, {
-      fields: {supplier: 1}, sort: {supplier: 1}
-    });
+    let ordersList = Orders.find({
+      stocktakeId: this.stocktakeId
+    }, ordersQueryOptions);
 
-    var suppliersIds = ordersList.map(function (stockOrder) {
-      return stockOrder.supplier;
-    });
+    let suppliersIds = ordersList.map(stockOrder => stockOrder.supplierId);
 
     return Suppliers.find({_id: {$in: suppliersIds}});
   },
 
-  receiptExists: function () {
-    return !!Orders.findOne({
-      version: Template.parentData(1).stocktakeMainId,
-      supplier: this._id,
-      'orderedThrough.through': {$ne: null}
+  isOrderedThrough: function () {
+    let order = Orders.findOne({
+      supplierId: this._id
     });
+    return order && order.orderedThrough;
   }
 });
 
@@ -43,6 +36,6 @@ Template.supplierFilter.events({
   'click .activate-supplier-button': function (event, tmpl) {
     event.preventDefault();
     var supplier = Blaze.getData(event.target);
-    tmpl.set('activeSupplierId', supplier._id);
+    tmpl.data.onSupplierChanged(supplier._id);
   }
 });
