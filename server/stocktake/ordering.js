@@ -77,12 +77,19 @@ Meteor.methods({
     let convertStockOrder = function (orderItem) {
       let ingredient = Ingredients.findOne({
         _id: orderItem.ingredient.id
-      }, {fields: {code: 1, description: 1}});
+      }, {fields: {code: 1, description: 1, portionOrdered: 1}});
 
       let cost = orderItem.orderedCount * orderItem.ingredient.cost;
-      ingredient.cost = cost.toFixed(2);
+      orderItem.cost = cost.toFixed(2);
       total += cost;
-      return _.extend(orderItem, ingredient);
+
+      _.extend(orderItem.ingredient, {
+        description: ingredient.description,
+        code: ingredient.code,
+        portionOrdered: ingredient.portionOrdered
+      });
+
+      return orderItem;
     };
 
     let orderItemsData = OrderItems.find({
@@ -142,7 +149,7 @@ Meteor.methods({
       subject: mailInfo.subject,
       html: mailInfo.text
     });
-    logger.info("Email sent to supplier", supplierId);
+    logger.info("Email sent to supplier", {orderId: orderId});
 
     //mark order as ordered through email
     Orders.update({_id: orderId}, {

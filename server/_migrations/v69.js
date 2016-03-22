@@ -7,14 +7,14 @@ Migrations.add({
     //migrate special/general areas
     GeneralAreas.find({active: true}).forEach(garea => {
       let gareaId = StockAreas.insert({
-        name: garea.name,
+        name: garea.name.trim(),
         createdAt: garea.createdAt,
         relations: garea.relations
       });
 
       SpecialAreas.find({_id: {$in: garea.specialAreas}, active: true}).forEach(sarea => {
         StockAreas.insert({
-          name: sarea.name,
+          name: sarea.name.trim(),
           generalAreaId: gareaId,
           ingredientsIds: sarea.stocks,
           createdAt: sarea.createdAt,

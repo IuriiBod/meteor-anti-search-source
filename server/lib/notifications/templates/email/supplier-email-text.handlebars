@@ -24,10 +24,10 @@ Order Details: {{location.name}}, {{areaName}}<br>
     <tbody>
     {{# each orderData}}
       <tr>
-        <td>{{code}}</td>
-        <td>{{description}}</td>
-        <td>{{countOrdered}} [{{unit}}]</td>
-        <td>${{cost}}</td>
+        <td>{{ingredient.code}}</td>
+        <td>{{ingredient.description}}</td>
+        <td>{{orderedCount}} [{{ingredient.portionOrdered}}]</td>
+        <td>${{ingredient.cost}}</td>
       </tr>
     {{/each}}
 

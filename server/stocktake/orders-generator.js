@@ -54,10 +54,13 @@ class StockOrdersGenerator {
       if (_.isArray(specialArea.ingredientsIds)) {
         ingredientsCount += specialArea.ingredientsIds.length;
 
-        stockItemsCount += StockItems.find({
+        let currentCount = StockItems.find({
           specialAreaId: specialArea._id,
+          stocktakeId: this._stocktake._id,
           'ingredient.id': {$in: specialArea.ingredientsIds}
         }).count();
+
+        stockItemsCount += currentCount;
       }
     });
 
@@ -112,6 +115,6 @@ class StockOrdersGenerator {
   }
 }
 
-Namespace('HospoHero.stocktake',{
+Namespace('HospoHero.stocktake', {
   OrdersGenerator: StockOrdersGenerator
 });

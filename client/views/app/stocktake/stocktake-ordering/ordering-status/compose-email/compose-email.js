@@ -16,9 +16,9 @@ Template.composeStocktakeOrderingEmail.helpers({
     return Suppliers.findOne({_id: this.supplierId});
   },
 
-  subject: function () {
-    var location = Locations.findOne({_id: this.supplier.relations.locationId});
-    var area = Areas.findOne({_id: this.supplier.relations.areaId});
+  subject: function (supplier) {
+    var location = Locations.findOne({_id: supplier.relations.locationId});
+    var area = Areas.findOne({_id: supplier.relations.areaId});
     return "Order from " + location.name + ' ' + area.name;
   },
 

@@ -17,7 +17,7 @@ Meteor.methods({
     let relationsObject = HospoHero.getRelationsObject();
     var existingStockArea = StockAreas.findOne({
       generalAreaId: {$exists: false},
-      name: name,
+      name: name.trim(),
       'relations.areaId': relationsObject.areaId
     });
 
@@ -50,7 +50,7 @@ Meteor.methods({
     let relationsObject = HospoHero.getRelationsObject();
     var existingSpecialArea = StockAreas.findOne({
       generalAreaId: {$exists: true},
-      name: name,
+      name: name.trim(),
       ingredientsIds: [],
       'relations.areaId': relationsObject.areaId
     });

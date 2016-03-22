@@ -22,7 +22,7 @@ Template.orderingStatus.onCreated(function () {
 
 Template.orderingStatus.helpers({
   orderSentDetails: function () {
-    return this && this.orderedThrough.type === "emailed" && "Email sent " || "Phoned " +
+    return this && (this.orderedThrough.type === "emailed" && "Email sent " || "Phoned ") +
       moment(this.orderedThrough.date).format("MMMM Do YYYY, h:mm:ss a");
   }
 });
