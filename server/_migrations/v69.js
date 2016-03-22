@@ -12,7 +12,7 @@ Migrations.add({
         relations: garea.relations
       });
 
-      SpecialAreas.find({_id: garea.specialAreas, active: true}).forEach(sarea => {
+      SpecialAreas.find({_id: {$in: garea.specialAreas}, active: true}).forEach(sarea => {
         StockAreas.insert({
           name: sarea.name,
           generalAreaId: gareaId,
