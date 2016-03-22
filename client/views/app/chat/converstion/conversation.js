@@ -10,6 +10,18 @@ Template.conversation.onCreated(function() {
   }
 });
 
+Template.conversation.onRendered(function() {
+  this.$('.subject-of-conversation').editable({
+    type: 'text',
+    showbuttons: true,
+    display: false,
+    mode: 'inline',
+    success: (response, newValue) => {
+      console.log(newValue);
+      Meteor.call('addSubjectOfConversation', this.data.id, newValue);
+    }});
+});
+
 Template.conversation.onDestroyed(function() {
   const messages = this.conversation.messages();
   const participants = this.conversation.participants();
@@ -60,6 +72,10 @@ Template.conversation.helpers({
     }
 
     return participantsListStr.length ? participantsListStr : 'No participants';
+  },
+  subjectOfConversation () {
+    const tmpl = Template.instance();
+    return tmpl.conversation.subject ? tmpl.conversation.subject : 'Subject'
   }
 });
 

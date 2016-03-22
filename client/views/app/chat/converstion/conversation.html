@@ -15,11 +15,19 @@
           </ul>
         </li>
       </ul>
-      {{#if isParticipantsListOpened}}
-        Invite participants
-      {{else}}
-        {{participantsListStr}}
-      {{/if}}
+      <div class="conversation-title-wrapper">
+        {{#if isParticipantsListOpened}}
+          Invite participants
+        {{else}}
+          {{participantsListStr}}
+        {{/if}}
+        <br>
+        <a href="#"
+           class="subject-of-conversation"
+           data-type="text"
+           data-name="username"
+           data-original-title="Enter username">{{subjectOfConversation}}</a>
+      </div>
     </div>
     <div class="flyout-content">
       <div class="chat-discussion">

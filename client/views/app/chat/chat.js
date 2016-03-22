@@ -21,7 +21,8 @@ Template.chat.helpers({
     return !!Template.instance().currentConversationId.get();
   },
   conversations () {
-    return Meteor.conversations.find({_participants: Meteor.userId()});
+    //return Meteor.conversations.find({_participants: Meteor.userId()});
+    return Meteor.user().conversations();
   },
   changeConversation () {
     const tmpl = Template.instance();
