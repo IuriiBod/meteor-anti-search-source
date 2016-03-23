@@ -89,10 +89,10 @@ var ShiftPropertyChangeLogger = {
   }
 };
 
-let toCurrentDayMoment = (date, firstDayOfWeek) => {
-  date = moment(date);
+let toCurrentDayMoment = (date, firstDayOfWeek, locationId) => {
+  date = HospoHero.dateUtils.getDateMomentForLocation(date, locationId);
   // new Date(selectedWeek) for overcoming moment js deprecated error
-  var selectedWeekMoment = moment(new Date(firstDayOfWeek));
+  var selectedWeekMoment = HospoHero.dateUtils.getDateMomentForLocation(firstDayOfWeek, locationId);
   selectedWeekMoment.set({
     hours: date.hour(),
     minutes: date.minutes(),
@@ -238,8 +238,8 @@ Meteor.methods({
       delete shift._id;
       shift.createdBy = Meteor.userId();
       shift.type = null;
-      shift.startTime = toCurrentDayMoment(shift.startTime, firstDayOfWeek);
-      shift.endTime = toCurrentDayMoment(shift.endTime, firstDayOfWeek);
+      shift.startTime = toCurrentDayMoment(shift.startTime, firstDayOfWeek, area.locationId);
+      shift.endTime = toCurrentDayMoment(shift.endTime, firstDayOfWeek, area.locationId);
 
       try {
         check(shift, HospoHero.checkers.ShiftDocument);
