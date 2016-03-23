@@ -1,15 +1,15 @@
 <template name="conversationsList">
   <div class="conversations-list">
     {{#if conversations}}
-      {{#each conversations}}
-        {{#if lastMessage}}
-          <div class="conversations-list-item" data-conversation-id="{{_id}}">
-            <img class="message-sender-avatar" src="{{profilePicture lastMessage.user._id}}" alt="">
+      {{#each lastMessages}}
+        {{#if body}}
+          <div class="conversations-list-item" data-conversation-id="{{conversationId}}">
+            <img class="message-sender-avatar" src="{{profilePicture userId}}" alt="">
             <div class="message-body">
-              <small class="pull-right">{{timeAgoStr lastMessage.date}}</small>
-              <strong>{{username lastMessage.user._id}}</strong>
+              <small class="pull-right">{{timeAgoStr date}}</small>
+              <strong>{{username userId}}</strong>
               <br>
-              <p>{{lastMessage.body}}</p>
+              <p>{{body}}</p>
             </div>
           </div>
         {{/if}}
