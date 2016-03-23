@@ -11,13 +11,11 @@ Template.managerNoteWidget.onCreated(function () {
   let weekRange = TimeRangeQueryBuilder.forWeek(self.data.date);
 
   self.subscribe('managerNotes', weekRange, HospoHero.getCurrentAreaId(), function onReady () {
-    const notes = ManagerNotes.find();
-    notes.forEach((note) => {
-      if (note.noteDate.getDate() === self.data.date.getDate()) {
-        self.note = note;
-        self.subscribe('comments', note._id, HospoHero.getCurrentAreaId());
-      }
+    self.note = ManagerNotes.findOne({
+      noteDate: TimeRangeQueryBuilder.forDay(self.data.date),
+      'relations.areaId': HospoHero.getCurrentAreaId()
     });
+    self.subscribe('comments', self.note._id, HospoHero.getCurrentAreaId());
   });
 
   self.textForEmptyEditor = 'Leave your note here';
