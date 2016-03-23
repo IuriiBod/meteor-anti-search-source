@@ -1,4 +1,4 @@
-<template name="taskDateFilter">
+<template name="dropdownFilter">
   <div class="dropdown pull-left">
     <button class="btn btn-white btn-sm dropdown-toggle" type="button" id="filter-dropdown" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="true">
@@ -8,7 +8,7 @@
 
     <ul class="dropdown-menu" aria-labelledby="filter-dropdown">
       {{#each filterTypes}}
-        {{> taskDateFilterItem templateData}}
+        {{> dropdownFilterItem templateData}}
       {{/each}}
     </ul>
   </div>

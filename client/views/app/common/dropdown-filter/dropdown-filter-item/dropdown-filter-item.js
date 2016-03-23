@@ -1,11 +1,11 @@
-Template.taskDateFilterItem.helpers({
+Template.dropdownFilterItem.helpers({
   activeFilterClass: function () {
     return this.item === this.activeFilter ? 'active' : '';
   }
 });
 
 
-Template.taskDateFilterItem.events({
+Template.dropdownFilterItem.events({
   'click .task-filter-switcher': function (event, tmpl) {
     event.preventDefault();
     tmpl.data.onFilterChange(this.item);

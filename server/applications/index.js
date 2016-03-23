@@ -38,7 +38,11 @@ Meteor.methods({
     }
 
     if (applicationDefinition) {
-      let positionId = Positions.insert({name: name});
+      let positionId = Positions.insert({
+        name: name,
+        relations: HospoHero.getRelationsObject(applicationDefinition.relations.areaId)
+      });
+
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$addToSet: {positionIds: positionId}});
     } else {
       logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
@@ -84,13 +88,14 @@ Meteor.methods({
       };
 
       _.each(appDef.schema, (value, field) => {
-        let fieldType = value ? fieldTypes[field] : undefined;
-        check(details, fieldType);
+        if (value) {
+          check(details[field], fieldTypes[field]);
+        }
       });
 
       let application = {
         createdAt: new Date(),
-        appProgress: [],
+        appProgress: 'New Application',
         positionIds: positions,
         relations: HospoHero.getRelationsObject(area._id),
         details: details
