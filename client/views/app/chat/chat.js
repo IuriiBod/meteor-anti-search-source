@@ -21,7 +21,6 @@ Template.chat.helpers({
     return !!Template.instance().currentConversationId.get();
   },
   conversations () {
-    console.log(Meteor.user().conversations().count());
     return Meteor.user().conversations();
   },
   changeConversation () {
