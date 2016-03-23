@@ -50,22 +50,43 @@ Meteor.publish('fullStocktake', function (stocktakeId) {
 });
 
 
-Meteor.publish('fullOrderInfo', function (orderId) {
+Meteor.publishComposite('fullOrderInfo', function (orderId) {
   check(orderId, HospoHero.checkers.OrderId);
 
   let ordersCursor = Orders.find({_id: orderId});
 
   let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
   let areaId = ordersCursor.fetch()[0].relations.areaId; //it is safe because we checked order's ID
+  
   if (!permissionChecker || !permissionChecker.hasPermissionInArea(areaId, 'receive deliveries')) {
     this.ready();
     return;
   }
 
-  return [
-    ordersCursor,
-    OrderItems.find({orderId: orderId, countOrdered: {$gt: 0}})
-  ];
+  return {
+    find: function () {
+      return ordersCursor;
+    },
+    children: [
+      {
+        find: function (order) {
+          return OrderItems.find({orderId: order._id, countOrdered: {$gt: 0}});
+        },
+        children: [
+          {
+            find: function (orderItem) {
+              return Ingredients.find({_id: orderItem.ingredient.id});
+            }
+          }
+        ]
+      },
+      {
+        find: function (order) {
+          return Suppliers.find({_id: order.supplierId});
+        }
+      }
+    ]
+  };
 });
 
 

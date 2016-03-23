@@ -52,21 +52,15 @@ Router.route('orderReceiptsList', {
   template: 'orderReceiveList'
 });
 
+
 Router.route('orderReceive', {
   path: '/stocktake/order/receive/:_id',
   template: 'orderReceiveDetails',
   waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('fullOrderInfo', this.params._id),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
-      Meteor.subscribe('allSuppliers', currentAreaId)
-    ];
+    return Meteor.subscribe('fullOrderInfo', this.params._id);
   },
   data: function () {
-    return {
-      currentReceipt: Orders.findOne({_id: this.params._id})
-    };
+    return Orders.findOne({_id: this.params._id});
   }
 });
 

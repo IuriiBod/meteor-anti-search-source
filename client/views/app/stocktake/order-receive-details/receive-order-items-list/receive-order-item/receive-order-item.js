@@ -1,8 +1,8 @@
-Template.orderReceiveItem.onCreated(function() {
+Template.receiveOrderItem.onCreated(function () {
   this.isEditable = new ReactiveVar(false);
 });
 
-Template.orderReceiveItem.helpers({
+Template.receiveOrderItem.helpers({
   stock: function () {
     var ingredient = Ingredients.findOne({_id: this.item.stockId});
     if (ingredient) {
@@ -19,10 +19,10 @@ Template.orderReceiveItem.helpers({
     return this.item.unitPrice * quantity;
   },
 
-  delivery: function() {
+  delivery: function () {
     var delivery = {};
     var order = this.item;
-    if(order && order.deliveryStatus) {
+    if (order && order.deliveryStatus) {
       delivery.deliveredCorrectly = order.deliveryStatus.indexOf('Delivered Correctly') >= 0;
       delivery.wrongQuantity = order.deliveryStatus.indexOf('Wrong Quantity') >= 0;
       delivery.wrongPrice = order.deliveryStatus.indexOf('Wrong Price') >= 0;
@@ -31,7 +31,7 @@ Template.orderReceiveItem.helpers({
     return delivery;
   },
 
-  isReceived: function() {
+  isReceived: function () {
     var data = Orders.findOne({_id: this.item.orderReceipt});
     return data && data.received;
   },
@@ -41,7 +41,7 @@ Template.orderReceiveItem.helpers({
   }
 });
 
-Template.orderReceiveItem.events({
+Template.receiveOrderItem.events({
 
   'click .wrong-price-button': function (event, tmpl) {
     event.preventDefault();
