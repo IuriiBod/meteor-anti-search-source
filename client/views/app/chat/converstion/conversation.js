@@ -53,7 +53,7 @@ Template.conversation.helpers({
     return () => {
       tmpl.isParticipantsListOpened.set(false);
       tmpl.isInnerFlyoutAnimated.set(true);
-    }
+    };
   },
   participantsListStr () {
     const conversation = Template.instance().conversation;
@@ -74,7 +74,7 @@ Template.conversation.helpers({
   },
   subjectOfConversation () {
     const subject = Meteor.conversations.findOne(this.id).subject;
-    return subject ? subject : 'Subject'
+    return subject ? subject : 'Subject';
   }
 });
 
