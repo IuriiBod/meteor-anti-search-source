@@ -1,0 +1,17 @@
+<template name="recruitmentFormPositions">
+  {{#if isShow}}
+    <div class="form-group">
+      <label for="positions" class="col-lg-2 col-md-2">Positions </label>
+
+      <div class="col-lg-10 col-md-10">
+        {{#each positions}}
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" class="positions" data-id="{{_id}}"> {{name}}
+            </label>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+</template>

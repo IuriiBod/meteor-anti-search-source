@@ -89,7 +89,8 @@ Meteor.methods({
         availability: [Number],
         dateOfBirth: Date,
         numberOfHours: Number,
-        message: String
+        message: String,
+        files:Match.Optional([Object])
       };
 
       _.each(appDef.schema, (value, field) => {

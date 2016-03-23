@@ -8,17 +8,19 @@ Template.recruitmentForm.helpers({
 	numbersPattern () {
 		return HospoHero.regExp.toHtmlString(HospoHero.regExp.numbers);
 	},
-	positions(){
-		return Positions.find();
+	datePattern () {
+		return HospoHero.regExp.toHtmlString(HospoHero.regExp.dateMdDdYyyy);
 	},
-	isHasPosition(){
+	isHasPositions(){
 		return this.applicationDefinition.positionIds.length > 0;
 	},
-	availabilities () {
-		return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	files(){
+		return Template.instance().files;
 	}
 });
-
+Template.recruitmentForm.onCreated(function () {
+	this.files = new ReactiveArray([]);
+});
 Template.recruitmentForm.onRendered(function () {
 	this.$('.recruitment-form .dateOfBirth').datepicker({});
 });
@@ -29,9 +31,18 @@ Template.recruitmentForm.events({
 		let details = getDetailsData(tmpl);
 		let positionIds = getPositionsData(tmpl);
 		let captchaUrl = $('#g-recaptcha-response').val();
+
+		if(!positionIds) {
+			HospoHero.error('Please Select some position.');
+			return;
+		}
+		console.log('details ->',details);
 		Meteor.call('addApplication', tmpl.data.organizationId,details, positionIds, captchaUrl, (err)=> {
 			if(err) { HospoHero.error(err); }
-				else { $(event.target)[0].reset(); }
+			else {
+				$(event.target)[0].reset();
+				tmpl.files.clear();
+			}
 		});
 	}
 });
@@ -60,6 +71,10 @@ function getDetailsData(tmpl){
 				res[field] = new Date(val);
 				break;
 			}
+			case 'files' :{
+				res[field] = tmpl.files.array();
+				break;
+			}
 			default :	{
 				res[field] = val;
 			}
@@ -75,5 +90,5 @@ function getPositionsData(tmpl){
 			positions.push(positionId);
 		}
 	});
-	return positions;
+	return positions.length > 0 ? positions : false;
 }

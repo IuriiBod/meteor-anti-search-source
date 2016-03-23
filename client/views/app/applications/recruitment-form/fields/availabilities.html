@@ -1,0 +1,17 @@
+<template name="recruitmentFormAvailabilities">
+  {{#if isShow}}
+    <div class="form-group">
+      <label for="availability" class="col-lg-2 col-md-2">Availability </label>
+
+      <div class="col-lg-10 col-md-10">
+        {{#each availabilities}}
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" class="availability" data-number="{{@index}}"> {{this}}
+            </label>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+</template>

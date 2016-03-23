@@ -11,39 +11,24 @@
         <!-- Email Field-->
         {{> recruitmentFormField
           name='email' label="Eame" pattern=emailPattern
-          title="For example example@example.com"
+          title="for example email@email.com"
           isShow=applicationDefinition.schema.email }}
-
 
         <!-- Phone Field-->
         {{> recruitmentFormField
             name='phone' label="Phone" pattern=phonePattern
-            title="For example (123) 456 7899"
+            title="for example (123) 456 7899"
             span='(123) 456 7899'
             isShow=applicationDefinition.schema.phone }}
 
-
         <!-- Date of Birth -->
         {{> recruitmentFormField
-          name='dateOfBirth' label="Date bf birth"
+          name='dateOfBirth' label="Date bf birth" pattern=datePattern
           isShow=applicationDefinition.schema.dateOfBirth }}
 
         <!-- Availability Field-->
-        {{#if applicationDefinition.schema.availability}}
-          <div class="form-group">
-            <label for="availability" class="col-lg-2 col-md-2">Availability </label>
-
-            <div class="col-lg-10 col-md-10">
-              {{#each availabilities}}
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" class="availability" data-number="{{@index}}"> {{this}}
-                  </label>
-                </div>
-              {{/each}}
-            </div>
-          </div>
-        {{/if}}
+        {{> recruitmentFormAvailabilities
+          isShow=applicationDefinition.schema.availability}}
 
         <!-- Number of hours Field-->
         {{> recruitmentFormField
@@ -52,26 +37,17 @@
           isShow=applicationDefinition.schema.numberOfHours }}
 
         <!-- Positions Field-->
-        {{#if isHasPosition}}
-          <div class="form-group">
-            <label for="positions" class="col-lg-2 col-md-2">Positions </label>
-
-            <div class="col-lg-10 col-md-10">
-              {{#each positions}}
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" class="positions" data-id="{{_id}}"> {{name}}
-                  </label>
-                </div>
-              {{/each}}
-            </div>
-          </div>
-        {{/if}}
+        {{> recruitmentFormPositions
+          isShow=isHasPositions}}
 
         <!-- Message Field-->
         {{> recruitmentFormField
-          name='message' label="message" type='textarea'
+          name='message' label="Message" type='textarea'
           isShow=applicationDefinition.schema.message }}
+
+        <!-- Files Field-->
+        {{> recruitmentFormFilePicker files=files
+          isShow=applicationDefinition.schema.files}}
 
         <!-- Captcha Field-->
         <div class="form-group">
