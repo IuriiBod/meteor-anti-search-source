@@ -75,7 +75,7 @@ Meteor.methods({
 
     // Captcha verify
     let verifyCaptchaResponse = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captchaUrl);
-    if(!verifyCaptchaResponse.data.success){
+    if (!verifyCaptchaResponse.data.success) {
       logger.error('Captcha Err:' + verifyCaptchaResponse['error-codes']);
       throw new Meteor.Error('Captcha Err. Captcha not verified.');
     }
@@ -113,5 +113,15 @@ Meteor.methods({
       logger.error('Unexpected Err: method [addApplication] Has not created ApplicationDefinitions in this area', {areaId: area._id});
       throw new Meteor.Error('Unexpected Err. Not correct area.');
     }
+  },
+
+  updateApplication (application) {
+    check(application, Object);
+
+    if (!canUpdateApplications(application)) {
+      throw new Meteor.Error('You can\'t update application');
+    }
+
+    return Applications.update({_id: application._id}, {$set: application});
   }
 });

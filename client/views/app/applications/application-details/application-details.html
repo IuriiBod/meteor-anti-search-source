@@ -1,0 +1,19 @@
+<template name="applicationDetails">
+  {{> pageHeading title=application.details.name category='Applications'}}
+
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="wrapper wrapper-content fadeInUp">
+        <div class="ibox">
+          <div class="ibox float-e-margins">
+            {{#collapsibleElement settings=applicationDetailsOptions}}
+              {{> applicationEdit application=application
+                applicationSchema=applicationSchema
+                saveApplication=saveApplication}}
+            {{/collapsibleElement}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

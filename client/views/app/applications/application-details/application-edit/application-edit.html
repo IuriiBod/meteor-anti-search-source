@@ -1,0 +1,82 @@
+<template name="applicationEdit">
+  <table class="table border-bottom">
+    <tbody>
+    <tr>
+      <td><b>Name</b></td>
+      <td>{{details.name}}</td>
+    </tr>
+
+    {{#if fieldIsInSchema 'email'}}
+      <tr>
+        <td><b>Email</b></td>
+        <td>{{details.email}}</td>
+      </tr>
+    {{/if}}
+
+    {{#if fieldIsInSchema 'phone'}}
+      <tr>
+        <td><b>Phone</b></td>
+        <td>{{details.phone}}</td>
+      </tr>
+    {{/if}}
+
+    <tr>
+      <td><b>Application Date:</b></td>
+      <td>
+        {{shortDateFormat application.createdAt}}
+        {{timeFormat application.createdAt}}
+      </td>
+    </tr>
+
+    {{#if fieldIsInSchema 'dateOfBirth'}}
+      <tr>
+        <td><b>Date of Birth</b></td>
+        <td>{{details.dateOfBirth}}</td>
+      </tr>
+    {{/if}}
+
+    <tr>
+      <td><b>Application Progress</b></td>
+      <td>
+        {{#each applicationProgress}}
+          {{> formFieldCheckbox checkboxSettings=this onCheckboxChange=onCheckboxChange}}
+        {{/each}}
+      </td>
+    </tr>
+
+    <tr>
+      <td><b>Positions Applied for</b></td>
+      <td>
+        {{#each positions}}
+          <p><i class="fa fa-check"></i> {{this}}</p>
+        {{/each}}
+      </td>
+    </tr>
+
+    {{#if fieldIsInSchema 'availability'}}
+      <tr>
+        <td><b>Availability</b></td>
+        <td>
+          {{#each availability}}
+            <p><i class="fa fa-check"></i> {{this}}</p>
+          {{/each}}
+        </td>
+      </tr>
+    {{/if}}
+
+    {{#if fieldIsInSchema 'numberOfHours'}}
+      <tr>
+        <td><b>Ideal working hours per week</b></td>
+        <td>{{details.numberOfHours}}</td>
+      </tr>
+    {{/if}}
+
+    {{#if fieldIsInSchema 'message'}}
+      <tr>
+        <td><b>Message</b></td>
+        <td>{{details.message}}</td>
+      </tr>
+    {{/if}}
+    </tbody>
+  </table>
+</template>
