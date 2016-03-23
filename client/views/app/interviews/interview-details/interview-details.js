@@ -1,8 +1,4 @@
 Template.interviewDetails.onCreated(function () {
-  this.project = () => {
-    return this.data.project || this.createProjectObject.get();
-  };
-
   this.saveInterview = () => {
     return (detailsToUpdate) => {
       let interview = this.data.interview;
