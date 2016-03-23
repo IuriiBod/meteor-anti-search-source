@@ -2,7 +2,6 @@
 Template.stockOrderItem.onRendered(function () {
   let tmpl = this;
   let onCountChanged = function (response, newValue) {
-    console.log('count changed', newValue);
     if (newValue) {
       let count = parseFloat(newValue) || 0;
       if (_.isFinite(count) && count >= 0) {

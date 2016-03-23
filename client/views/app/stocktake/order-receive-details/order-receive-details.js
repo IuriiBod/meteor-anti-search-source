@@ -1,4 +1,4 @@
-Template.orderReceiveMainView.helpers({
+Template.orderReceiveDetails.helpers({
   title: function () {
     var receipt = this.currentReceipt;
     var title = "Supplier Orders Receive";

@@ -1,4 +1,4 @@
-Template.ordersReceiptsList.onCreated(function () {
+Template.orderReceiveList.onCreated(function () {
   this.showsReceivedOrders = new ReactiveVar(false);
   this.periodOfOrders = new ReactiveVar('week');
   this.ordersToShowLimit = new ReactiveVar(10);
@@ -27,7 +27,7 @@ Template.ordersReceiptsList.onCreated(function () {
   };
 });
 
-Template.ordersReceiptsList.helpers({
+Template.orderReceiveList.helpers({
   receivingOrdersButtons() {
     let showsReceivedOrders = Template.instance().showsReceivedOrders.get();
     let defaultButton = 'btn btn-white orders-status';
@@ -83,7 +83,7 @@ Template.ordersReceiptsList.helpers({
   }
 });
 
-Template.ordersReceiptsList.events({
+Template.orderReceiveList.events({
   'click .orders-status': function (event, tmpl) {
     event.preventDefault();
 
