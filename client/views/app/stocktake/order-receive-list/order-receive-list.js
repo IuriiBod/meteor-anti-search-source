@@ -1,105 +1,53 @@
 Template.orderReceiveList.onCreated(function () {
-  this.showsReceivedOrders = new ReactiveVar(false);
-  this.periodOfOrders = new ReactiveVar('week');
-  this.ordersToShowLimit = new ReactiveVar(10);
+  this.ordersFilter = new ReactiveVar({
+    isReceived: false,
+    timeRangeType: 'week'
+  });
+  this.defaultOrdersLimit = 10;
+  this.ordersToShowLimit = new ReactiveVar(this.defaultOrdersLimit);
 
-  let ordersPeriod = {
-    forWeek: TimeRangeQueryBuilder.forWeek(),
-    forMonth: TimeRangeQueryBuilder.forMonth(),
-    transformPeriodToQuery(period) {
-      return period === 'week' ? this.forWeek : period === 'month' ? this.forMonth : {};
-    }
+  let currentAreaId = HospoHero.getCurrentAreaId();
+  let onOrdersSearchParamsChange = () => {
+    let ordersFilter = this.ordersFilter.get();
+    let limit = this.ordersToShowLimit.get();
+
+    this.subscribe('allOrdersInArea', currentAreaId, ordersFilter.isReceived, ordersFilter.timeRangeType, limit);
   };
 
-  this.getOrderReceipts = () => {
-    let period = this.periodOfOrders.get();
-    let dateInterval = ordersPeriod.transformPeriodToQuery(period);
-
-    return Orders.find({
-      received: this.showsReceivedOrders.get(),
-      expectedDeliveryDate: dateInterval
-    }, {
-      sort: {
-        expectedDeliveryDate: 1, supplier: 1
-      },
-      limit: this.ordersToShowLimit.get()
-    });
-  };
+  this.autorun(onOrdersSearchParamsChange);
 });
 
 Template.orderReceiveList.helpers({
-  receivingOrdersButtons() {
-    let showsReceivedOrders = Template.instance().showsReceivedOrders.get();
-    let defaultButton = 'btn btn-white orders-status';
-    let activeButton = `${defaultButton} active`;
-    return [
-      {
-        status: 'toBeReceived',
-        text: 'To be received',
-        className: !showsReceivedOrders ? activeButton : defaultButton
-      },
-      {
-        status: 'received',
-        text: 'Received',
-        className: showsReceivedOrders ? activeButton : defaultButton
-      }
-    ];
-  },
-
-  periodOfOrdersButtons() {
-    let currentPeriod = Template.instance().periodOfOrders.get();
-    let defaultButton = 'btn btn-white period-of-orders';
-    let activeButton = `${defaultButton} active`;
-    return [
-      {
-        period: 'week',
-        text: 'This week',
-        className: currentPeriod === 'week' ? activeButton : defaultButton
-      },
-      {
-        period: 'month',
-        text: 'This month',
-        className: currentPeriod === 'month' ? activeButton : defaultButton
-      },
-      {
-        period: 'allTime',
-        text: 'All time',
-        className: currentPeriod === 'allTime' ? activeButton : defaultButton
-      }
-    ];
-  },
-
   tableHeaderItems() {
     return ['Date expected', 'Supplier', 'Ordered Value', 'Received Amount', 'Received', 'Invoice Uploaded'];
   },
 
   receipts() {
-    return Template.instance().getOrderReceipts();
+    return Orders.find({}, {
+      sort: {
+        expectedDeliveryDate: 1, supplier: 1
+      }
+    });
   },
 
-  showLoadMoreOrdersButton() {
-    let instance = Template.instance();
-    return instance.getOrderReceipts().count() < instance.ordersToShowLimit.get();
+  onOrderFilterChange() {
+    let tmpl = Template.instance();
+    return function (isReceived, timeRangeType) {
+      tmpl.ordersFilter.set({isReceived, timeRangeType});
+      tmpl.ordersToShowLimit.set(tmpl.defaultOrdersLimit);
+    };
+  },
+  
+  hideLoadMoreButton() {
+    let tmpl = Template.instance();
+    let currentLimit = tmpl.ordersToShowLimit.get();
+    return currentLimit - Orders.find().count() > 0;
   }
 });
 
 Template.orderReceiveList.events({
-  'click .orders-status': function (event, tmpl) {
-    event.preventDefault();
-
-    let status = this.status;
-    status = status === 'received';
-    tmpl.showsReceivedOrders.set(status);
-  },
-
-  'click .period-of-orders': function (event, tmpl) {
-    event.preventDefault();
-    tmpl.periodOfOrders.set(this.period);
-    tmpl.ordersToShowLimit.set(10);
-  },
-
   'click .load-more-orders': function (event, tmpl) {
     event.preventDefault();
-    tmpl.ordersToShowLimit.set(tmpl.ordersToShowLimit.get() + 10);
+    tmpl.ordersToShowLimit.set(tmpl.ordersToShowLimit.get() + tmpl.defaultOrdersLimit);
   }
 });

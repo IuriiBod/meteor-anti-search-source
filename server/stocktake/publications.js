@@ -8,6 +8,21 @@ let checkViewStocksPermissionByStocktakeId = function (userId, stocktakeId) {
   return checkViewStocksPermission(userId, stocktake.relations.areaId);
 };
 
+Meteor.publish('stocktakeList', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
+  if (!checkViewStocksPermission(this.userId, areaId)) {
+    this.ready();
+    return;
+  }
+
+  return [
+    Stocktakes.find({
+      'relations.areaId': areaId
+    })
+  ];
+});
+
 Meteor.publish('allStockAreas', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
@@ -41,7 +56,7 @@ Meteor.publish('fullOrderInfo', function (orderId) {
   let ordersCursor = Orders.find({_id: orderId});
 
   let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
-  let areaId = ordersCursor.fetch()[0].relations.areaId;
+  let areaId = ordersCursor.fetch()[0].relations.areaId; //it is safe because we checked order's ID
   if (!permissionChecker || !permissionChecker.hasPermissionInArea(areaId, 'receive deliveries')) {
     this.ready();
     return;
@@ -76,17 +91,37 @@ Meteor.publishComposite('allStocktakeOrders', function (stocktakeId) {
 });
 
 
-Meteor.publishComposite('allOrdersInArea', function (areaId) {
+Meteor.publishComposite('allOrdersInArea', function (areaId, isReceived, timeRangeType, limit) {
   check(areaId, HospoHero.checkers.MongoId);
+  check(isReceived, Boolean);
+  check(timeRangeType, Match.OneOf('week', 'month', 'all'));
+  check(limit, HospoHero.checkers.PositiveNumber);
 
-  if (!checkViewStocksPermission(this.userId, areaId)) {
+  let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
+
+  if (!permissionChecker || !permissionChecker.hasPermissionInArea(areaId, 'receive deliveries')) {
     this.ready();
     return;
   }
 
   return {
     find: function () {
-      return Orders.find({'relations.areaId': areaId});
+      let query = {
+        'relations.areaId': areaId,
+        receivedBy: {$exists: isReceived}
+      };
+
+      if (timeRangeType !== 'all') {
+        let rangesMap = {
+          week: 'forWeek',
+          month: 'forMonth'
+        };
+        let area = Areas.findOne({_id: areaId});
+        let methodName = rangesMap[timeRangeType];
+        query.createdAt = TimeRangeQueryBuilder[methodName](new Date(), area.locationId);
+      }
+
+      return Orders.find(query, {limit: limit});
     },
     children: [
       {
@@ -102,23 +137,6 @@ Meteor.publishComposite('allOrdersInArea', function (areaId) {
     ]
   };
 });
-
-
-Meteor.publish('stocktakeList', function (areaId) {
-  check(areaId, HospoHero.checkers.MongoId);
-
-  if (!checkViewStocksPermission(this.userId, areaId)) {
-    this.ready();
-    return;
-  }
-
-  return [
-    Stocktakes.find({
-      'relations.areaId': areaId
-    })
-  ];
-});
-
 
 Meteor.publish('stocktakeDates', function (areaId, timePeriod) {
   check(areaId, HospoHero.checkers.MongoId);

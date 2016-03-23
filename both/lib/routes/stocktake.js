@@ -49,10 +49,7 @@ Router.route('stocktakeOrdering', {
 
 Router.route('orderReceiptsList', {
   path: '/stocktake/order/receipts',
-  template: 'orderReceiveList',
-  waitOn: function () {
-    return Meteor.subscribe('allOrdersInArea', HospoHero.getCurrentAreaId());
-  }
+  template: 'orderReceiveList'
 });
 
 Router.route('orderReceive', {
