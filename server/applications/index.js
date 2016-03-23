@@ -41,7 +41,8 @@ Meteor.methods({
       let positionId = Positions.insert({name: name});
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$addToSet: {positionIds: positionId}});
     } else {
-      logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
+      logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area',
+        {areaId: applicationDefinition.relations.areaId});
       throw new Meteor.Error('Unexpected Err. Not correct area.');
     }
   },
@@ -60,7 +61,8 @@ Meteor.methods({
       Positions.remove(positionId);
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$pull: {positionIds: positionId}});
     } else {
-      logger.error('Unexpected Err: method [removePosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
+      logger.error('Unexpected Err: method [removePosition] Has not created ApplicationDefinitions in this area',
+        {areaId: applicationDefinition.relations.areaId});
       throw new Meteor.Error('Unexpected Err. Not correct area.');
     }
   },

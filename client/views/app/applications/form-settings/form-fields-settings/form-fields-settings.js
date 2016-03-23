@@ -29,6 +29,6 @@ Template.formFieldsSettings.helpers({
 
     return (fieldName, isChecked) => {
       Meteor.call('updateApplicationDefinition', applicationId, {[fieldName]: isChecked}, HospoHero.handleMethodResult());
-    }
+    };
   }
 });

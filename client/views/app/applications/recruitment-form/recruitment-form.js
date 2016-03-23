@@ -30,7 +30,8 @@ Template.recruitmentForm.events({
 		let positionIds = getPositionsData(tmpl);
 		let captchaUrl = $('#g-recaptcha-response').val();
 		Meteor.call('addApplication', tmpl.data.organizationId,details, positionIds, captchaUrl, (err)=> {
-			err ?  HospoHero.error(err) : $(event.target)[0].reset();
+			if(err) { HospoHero.error(err); }
+				else { $(event.target)[0].reset(); }
 		});
 	}
 });
@@ -38,7 +39,7 @@ Template.recruitmentForm.events({
 function getDetailsData(tmpl){
 	let res= {};
 	_.each(tmpl.data.applicationDefinition.schema, (value,field) => {
-		if(!value) return;
+		if(!value) { return; }
 		let val = tmpl.$('.recruitment-form .' + field).val();
 		switch (field) {
 			case 'availability' :{

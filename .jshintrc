@@ -161,6 +161,7 @@
     "Autolinker": false,
     "Modal": false,
     "Conversation": false,
+    "reCAPTCHA": false,
 
     //collections
     "MenuItems": true,
@@ -198,6 +199,7 @@
     "Applications": true,
     "ApplicationDefinitions": true,
     "Positions": true,
+    "Interviews":true,
 
     //misc
     "HospoHero": true,
@@ -221,6 +223,7 @@
     "OrdersReporter": true,
     "StaffCostCalculator": true,
     "DocumentCheckerHelper": true,
+    "StockVarianceReport":true,
 
     //temporal globals
     "RawOrders": true,
