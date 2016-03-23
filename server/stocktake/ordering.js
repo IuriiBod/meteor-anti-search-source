@@ -9,6 +9,14 @@ let getAreaIdFromOrder = function (orderId) {
   return (order && order.relations) ? order.relations.areaId : null;
 };
 
+//this method is used as temporal cap for email ordering
+//in future user should be able to change this date inside send email modal
+let getExpectedDeliveryLocalMoment = function (order) {
+  let locationId = order.relations.locationId;
+  let defaultDeliveryDate = moment().add(1, 'day');
+  return HospoHero.dateUtils.getDateMomentForLocation(defaultDeliveryDate, locationId).startOf('day');
+};
+
 Meteor.methods({
   generateOrders: function (stocktakeId) {
     check(stocktakeId, HospoHero.checkers.StocktakeId);
@@ -111,12 +119,11 @@ Meteor.methods({
     };
 
 
-    let deliveryDate = order && order.expectedDeliveryDate ? order.expectedDeliveryDate : moment().add(1, 'day');
     let supplier = Suppliers.findOne({_id: order.supplierId}, {fields: {name: 1}});
 
     let orderData = {
       supplierName: supplier.name,
-      deliveryDate: HospoHero.dateUtils.dateFormat(deliveryDate),
+      deliveryDate: getExpectedDeliveryLocalMoment(order).format('ddd DD/MM/YYYY'),
       orderNote: order && order.orderNote || '',
       location: location,
       areaName: area.name,
@@ -154,6 +161,7 @@ Meteor.methods({
     //mark order as ordered through email
     Orders.update({_id: orderId}, {
       $set: {
+        expectedDeliveryDate: getExpectedDeliveryLocalMoment(order).toDate(),
         orderedThrough: {
           date: new Date(),
           type: 'emailed',
