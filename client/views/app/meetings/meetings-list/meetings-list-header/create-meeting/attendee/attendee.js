@@ -11,6 +11,6 @@ Template.attendee.helpers({
   onUserSelect () {
     return (user) => {
       this.onUserRemove(user._id);
-    }
+    };
   }
 });

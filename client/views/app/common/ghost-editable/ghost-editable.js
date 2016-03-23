@@ -1,5 +1,5 @@
 Template.ghostEditable.onCreated(function () {
-  this.showSubmitButton = new ReactiveVar(false);
+  this.isEditableInput = new ReactiveVar(false);
 
   this.getInputValue = function () {
     return this.$('.ghost-editable-input').val();
@@ -11,30 +11,31 @@ Template.ghostEditable.onCreated(function () {
       if (_.isFunction(this.data.onValueChanged)) {
         this.data.onValueChanged(newValue);
       }
-      this.showSubmitButton.set(false);
+      this.isEditableInput.set(false);
     }
   };
 });
 
 
 Template.ghostEditable.helpers({
-  showSubmitButton: function () {
-    return Template.instance().showSubmitButton.get();
+  isEditable() {
+    return Template.instance().isEditableInput.get();
   }
 });
 
 
 Template.ghostEditable.events({
-  'keyup .ghost-editable-input': function (event, tmpl) {
-    tmpl.showSubmitButton.set(true);
-    if (event.keyCode === 13) {
-      tmpl.submitValue();
-    }
+  'click .ge-save-value': function (event, tmpl) {
+    event.preventDefault();
+    tmpl.submitValue();
   },
 
-  'click .submit-value-button': function (event, tmpl) {
-    tmpl.submitValue();
+  'click .ge-cancel-saving-value': function (event, tmpl) {
+    tmpl.isEditableInput.set(false);
+  },
+
+  'click .ghost-editable-value': function (event, tmpl) {
+    event.preventDefault();
+    tmpl.isEditableInput.set(true);
   }
 });
-
-

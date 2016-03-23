@@ -12,7 +12,7 @@ Template.leaveRequestsList.helpers({
     return LeaveRequests.find();
   },
   date: function (date) {
-    return HospoHero.dateUtils.dateFormat(date)
+    return HospoHero.dateUtils.dateFormat(date);
   },
   username: function (userId) {
     var user = Meteor.users.findOne({_id: userId});

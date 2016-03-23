@@ -79,7 +79,7 @@ Namespace('HospoHero.calendar', {
           return event.itemId;
         });
 
-        var query = HospoHero.misc.getTasksQuery(userId);
+        var query = HospoHero.misc.getTasksQuery(Meteor.userId(), userId);
 
         return _.extend(query, {
           _id: {

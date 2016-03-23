@@ -1,10 +1,10 @@
 <template name="projectsListHeader">
   <div class="title-action">
     {{#if hasPermissionInAreaTo "edit projects"}}
-      <a href="{{pathFor route='createProject'}}" class="btn btn-primary">
+      <button class="btn btn-primary create-new-project">
         <i class="fa fa-plus"></i>
         Project
-      </a>
+      </button>
     {{/if}}
   </div>
 </template>

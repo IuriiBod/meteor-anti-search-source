@@ -6,7 +6,7 @@ const projectStatusButtons = {
 };
 
 
-Template.projectCreateEdit.onCreated(function () {
+Template.editProject.onCreated(function () {
   const project = this.data.project;
   this.selectedUsers = new ReactiveArray(_.union(project.lead, project.team));
 
@@ -41,7 +41,7 @@ Template.projectCreateEdit.onCreated(function () {
 });
 
 
-Template.projectCreateEdit.helpers({
+Template.editProject.helpers({
   onValueChanged() {
     let saveProject = this.saveProject();
     return (newValue) => {
@@ -51,11 +51,11 @@ Template.projectCreateEdit.helpers({
 
   activeButton () {
     const templateData = Template.parentData(1);
-    return templateData.project.status;
+    return templateData.project && templateData.project.status;
   },
 
   projectCreator() {
-    return !this.project._id || this.project.createdBy === Meteor.userId();
+    return this.project && (!this.project._id || this.project.createdBy === Meteor.userId());
   },
 
   timeComboEditableParams () {
@@ -112,8 +112,8 @@ Template.projectCreateEdit.helpers({
   allowRemoveUser () {
     const project = this.project;
     const userId = Meteor.userId();
-    return project.createdBy === userId ||
-      project.lead.indexOf(userId) > -1;
+    return project && (project.createdBy === userId ||
+      project.lead.indexOf(userId) > -1);
   },
 
   onLeadMemberRemove () {
@@ -132,7 +132,7 @@ Template.projectCreateEdit.helpers({
 });
 
 
-Template.projectCreateEdit.events({
+Template.editProject.events({
   'click .add-lead-button' (event, tmpl) {
     tmpl.addMemberToTheProject('lead');
   },
@@ -142,6 +142,6 @@ Template.projectCreateEdit.events({
   }
 });
 
-Template.projectCreateEdit.onDestroyed(function () {
+Template.editProject.onDestroyed(function () {
   this.selectedUsers.clear();
 });

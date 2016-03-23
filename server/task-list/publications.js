@@ -5,7 +5,7 @@ Meteor.publishComposite('taskList', function (userId) {
       var query = {};
 
       if (userId) {
-        query = HospoHero.misc.getTasksQuery(userId);
+        query = HospoHero.misc.getTasksQuery(this.userId, userId);
       }
 
       return TaskList.find(query);
@@ -34,6 +34,18 @@ Meteor.publishComposite('taskList', function (userId) {
           } else {
             this.ready();
           }
+        }
+      },
+      // publish task's assigned users
+      {
+        find: function (task) {
+          return Meteor.users.find({
+            _id: {
+              $in: task.assignedTo
+            }
+          }, {
+            fields: HospoHero.security.getPublishFieldsFor('users')
+          });
         }
       },
       {
