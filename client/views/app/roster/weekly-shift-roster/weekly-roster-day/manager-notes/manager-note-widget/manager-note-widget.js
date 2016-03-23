@@ -8,17 +8,16 @@ var canUserEditRoster = function () {
 Template.managerNoteWidget.onCreated(function () {
   let self = this;
 
-  self.note = () => {
-    return ManagerNotes.findOne({
-      noteDate: self.data.date,
-      'relations.areaId': HospoHero.getCurrentAreaId()
-    });
-  };
-
   let weekRange = TimeRangeQueryBuilder.forWeek(self.data.date);
 
   self.subscribe('managerNotes', weekRange, HospoHero.getCurrentAreaId(), function onReady () {
-    self.subscribe('comments', self.note()._id, HospoHero.getCurrentAreaId());
+    const notes = ManagerNotes.find();
+    notes.forEach((note) => {
+      if (note.noteDate.getDate() === self.data.date.getDate()) {
+        self.note = note;
+        self.subscribe('comments', note._id, HospoHero.getCurrentAreaId());
+      }
+    });
   });
 
   self.textForEmptyEditor = 'Leave your note here';
@@ -26,10 +25,10 @@ Template.managerNoteWidget.onCreated(function () {
 
 Template.managerNoteWidget.helpers({
   note () {
-    return Template.instance().note();
+    return Template.instance().note;
   },
   textOfNote () {
-    let note = Template.instance().note();
+    let note = Template.instance().note;
     if (note && _.isString(note.text) && $.trim(note.text)) {
       return note.text;
     }
@@ -44,7 +43,7 @@ Template.managerNoteWidget.helpers({
         return;
       }
 
-      let note = tmpl.note();
+      let note = tmpl.note;
       note.text = text;
 
       if (!note.createdAt) {
