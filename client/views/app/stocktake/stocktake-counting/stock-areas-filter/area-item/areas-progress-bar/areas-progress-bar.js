@@ -1,4 +1,3 @@
-console.log('test');
 Template.areasProgressBar.helpers({
   widthOfBar: function () {
     let getFilledStockItemsCount = (specialAreaId) =>
