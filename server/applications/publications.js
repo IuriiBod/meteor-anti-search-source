@@ -59,3 +59,40 @@ Meteor.publish('applications', function (areaId) {
     return Applications.find({'relations.organizationId': area.organizationId});
   }
 });
+
+
+Meteor.publishComposite('application', function (applicationId) {
+  if (!this.userId) {
+    this.ready();
+  } else {
+    check(applicationId, HospoHero.checkers.MongoId);
+
+    return {
+      find () {
+        return Applications.find({_id: applicationId});
+      },
+
+      children: [
+        {
+          find (application) {
+            if (application) {
+              return ApplicationDefinitions.find({'relations.organizationId': application.relations.organizationId});
+            } else {
+              this.ready();
+            }
+          }
+        },
+
+        {
+          find (application) {
+            if (application) {
+              return Positions.find({_id: {$in: application.positionIds}});
+            } else {
+              this.ready();
+            }
+          }
+        }
+      ]
+    };
+  }
+});

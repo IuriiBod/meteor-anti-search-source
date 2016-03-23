@@ -18,6 +18,30 @@ Router.route('applications', {
 });
 
 
+Router.route('/application-details/:id', {
+  name: 'applicationDetails',
+
+  waitOn () {
+    return Meteor.subscribe('application', this.params.id);
+  },
+
+  data () {
+    let application = Applications.findOne({_id: this.params.id});
+
+    if (application) {
+      let applicationSchema = ApplicationDefinitions.findOne({
+        'relations.organizationId': application.relations.organizationId
+      });
+
+      return {
+        application: application,
+        applicationSchema: applicationSchema
+      }
+    }
+  }
+});
+
+
 Router.route('recruitmentForm', {
   path: '/recruitment-form/:organizationId',
   template: 'recruitmentForm',
