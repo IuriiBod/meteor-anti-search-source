@@ -57,8 +57,9 @@ Template.recruitmentForm.events({
 	'submit form'(event,tmpl){
 		event.preventDefault();
 		let deails = getDetailsData(tmpl);
+		let captchaUrl = $('#g-recaptcha-response').val();
 		let positionIds = getPositionsData(tmpl);
-		Meteor.call('addApplication', tmpl.data.organizationId,deails, positionIds, (err)=> {
+		Meteor.call('addApplication', tmpl.data.organizationId,deails, positionIds, captchaUrl, (err)=> {
 			if (err) {
 				HospoHero.error(err);
 			} else {
