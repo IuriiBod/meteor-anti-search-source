@@ -29,7 +29,7 @@ Migrations.add({
         specialAreas: '',
         generalAreas: ''
       }
-    });
+    }, {multi: true});
 
     //remove everything from old stocktake
     let collectionsToRemove = [

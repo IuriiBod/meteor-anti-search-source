@@ -10,13 +10,13 @@ Router.route('stocktakeCounting', {
   path: '/stocktake/:_id',
   template: 'stocktakeCounting',
   waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allStockAreas', currentAreaId),
       Meteor.subscribe('fullStocktake', this.params._id),
       Meteor.subscribe('allStocktakeOrders', this.params._id),
       Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId, 'active')
+      Meteor.subscribe('allIngredientsInArea', currentAreaId, null)
     ];
   },
   data: function () {

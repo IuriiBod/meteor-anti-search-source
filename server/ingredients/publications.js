@@ -1,6 +1,6 @@
 Meteor.publish('allIngredientsInArea', function (areaId, status) {
   check(areaId, HospoHero.checkers.MongoId);
-  check(status, Match.OneOf(String, null));
+  check(status, Match.OneOf('active', 'archived', null));
 
   let checkPermission = this.userId && new HospoHero.security.PermissionChecker(this.userId);
 
