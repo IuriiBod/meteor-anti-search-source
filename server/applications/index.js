@@ -42,7 +42,7 @@ Meteor.methods({
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$addToSet: {positionIds: positionId}});
     } else {
       logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
-      this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
+      throw new Meteor.Error('Unexpected Err. Not correct area.');
     }
   },
 
@@ -61,13 +61,20 @@ Meteor.methods({
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$pull: {positionIds: positionId}});
     } else {
       logger.error('Unexpected Err: method [removePosition] Has not created ApplicationDefinitions in this area', {areaId: areaId});
-      this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
+      throw new Meteor.Error('Unexpected Err. Not correct area.');
     }
   },
 
-  addApplication(organizationId, details, positions){
+  addApplication(organizationId, details, positions, captchaUrl) {
     check(organizationId, HospoHero.checkers.MongoId);
     check(positions, [HospoHero.checkers.MongoId]);
+
+    // Captcha verify
+    let verifyCaptchaResponse = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captchaUrl);
+    if(!verifyCaptchaResponse.data.success){
+      logger.error('Captcha Err:' + verifyCaptchaResponse['error-codes']);
+      throw new Meteor.Error('Captcha Err. Captcha not verified.');
+    }
 
     let area = Areas.findOne({organizationId: organizationId});
     let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
@@ -85,7 +92,7 @@ Meteor.methods({
 
       _.each(appDef.schema, (value, field) => {
         let fieldType = value ? fieldTypes[field] : undefined;
-        check(details, fieldType);
+        check(details[field], fieldType);
       });
 
       let application = {
@@ -99,7 +106,7 @@ Meteor.methods({
       return Applications.insert(application);
     } else {
       logger.error('Unexpected Err: method [addApplication] Has not created ApplicationDefinitions in this area', {areaId: area._id});
-      this.error(new Meteor.Error('Unexpected Err. Not correct area.'));
+      throw new Meteor.Error('Unexpected Err. Not correct area.');
     }
   }
 });
