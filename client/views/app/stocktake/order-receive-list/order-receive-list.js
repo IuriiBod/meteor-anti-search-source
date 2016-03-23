@@ -22,7 +22,7 @@ Template.orderReceiveList.helpers({
     return ['Date expected', 'Supplier', 'Ordered Value', 'Received Amount', 'Received', 'Invoice Uploaded'];
   },
 
-  receipts() {
+  orders() {
     return Orders.find({}, {
       sort: {
         expectedDeliveryDate: 1, supplier: 1

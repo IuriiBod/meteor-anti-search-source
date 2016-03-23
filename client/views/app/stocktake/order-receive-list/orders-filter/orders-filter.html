@@ -1,12 +1,16 @@
 <template name="ordersFilter">
   <div class="btn-group">
     {{#each receivingOrdersButtons}}
-      {{> orderReceiptsButtons}}
+      {{> orderFilterButton}}
     {{/each}}
   </div>
   <div class="btn-group">
     {{#each periodOfOrdersButtons}}
-      {{> orderReceiptsButtons}}
+      {{> orderFilterButton}}
     {{/each}}
   </div>
+</template>
+
+<template name="orderFilterButton">
+  <a href="#" class="{{className}}">{{text}}</a>
 </template>

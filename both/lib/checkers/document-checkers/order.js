@@ -19,17 +19,17 @@ let OrderDocument = Match.Where(function (orderDoc) {
       type: Match.OneOf('phoned', 'emailed')
     }),
     orderNote: Match.Optional(String),
+    supplierId: HospoHero.checkers.MongoId,
+    stocktakeId: HospoHero.checkers.MongoId,
+    expectedDeliveryDate: Match.Optional(Date),
+    receivedBy: HospoHero.checkers.OptionalMongoId,
+    receivedDate: Match.Optional(Date),
     receiveNote: Match.Optional(String),
     invoiceImage: Match.Optional({
       originalUrl: String,
       convertedUrl: String,
       type: Match.OneOf("pdf", "csv", "doc", "doc", "image")
     }),
-    supplierId: HospoHero.checkers.MongoId,
-    stocktakeId: HospoHero.checkers.MongoId,
-    expectedDeliveryDate: Match.Optional(Date),
-    receivedBy: HospoHero.checkers.OptionalMongoId,
-    receivedDate: Match.Optional(Date),
     relations: HospoHero.checkers.Relations
   });
   return true;
@@ -53,7 +53,6 @@ let OrderItemDocument = Match.Where(function (orderItem) {
     orderId: HospoHero.checkers.OrderId,
     orderedCount: Number,
     receivedCount: Match.Optional(Number),
-    deliveryStatus: Match.Optional([String]), //todo:stocktake clarify it
     ingredient: {
       id: HospoHero.checkers.MongoId,
       cost: Number,
