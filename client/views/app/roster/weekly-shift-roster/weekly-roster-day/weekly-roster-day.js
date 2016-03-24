@@ -50,6 +50,10 @@ Template.weeklyRosterDay.helpers({
       "relations.areaId": HospoHero.getCurrentAreaId()
     }, {
       sort: {order: 1}
+    }).map((shift) => {
+      shift.startTime = HospoHero.dateUtils.locationDate(shift.startTime, shift.relations.locationId);
+      shift.endTime = HospoHero.dateUtils.locationDate(shift.endTime, shift.relations.locationId);
+      return shift;
     });
   },
 

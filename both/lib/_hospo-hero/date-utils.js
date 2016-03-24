@@ -78,6 +78,12 @@ Namespace('HospoHero.dateUtils', {
     }
   },
 
+  locationDate(date, locationId) {
+    let dateFormat = 'ddd MMM DD YYYY h:mm:ss a';
+    let dateForTimeZone = HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
+    return new Date(dateForTimeZone);
+  },
+
   timeFormat: function (date) {
     return date ? moment(date).format('h:mm a') : '-';
   },

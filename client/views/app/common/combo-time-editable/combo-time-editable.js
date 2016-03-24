@@ -16,8 +16,8 @@ Template.comboTimeEditable.onCreated(function () {
   };
 
   self.submitTime = function () {
-    var firstTime = self.getTimeFromCombodate('.first-time');
-    var secondTime = self.isTimeRangeMode() ? self.getTimeFromCombodate('.second-time') : null;
+    var firstTime = self.getTimeFromCombodate('.first-time', 'firstTime');
+    var secondTime = self.isTimeRangeMode() ? self.getTimeFromCombodate('.second-time', 'secondTime') : null;
 
     if (secondTime && !self.data.params.ignoreDateRangeCheck) {
       let isRangeValid = checkTimeRange(firstTime, secondTime);
@@ -33,14 +33,17 @@ Template.comboTimeEditable.onCreated(function () {
     }
   };
 
-  self.getTimeFromCombodate = function (selector) {
+  self.getTimeFromCombodate = function (selector, option) {
     var $combodate = self.$(selector);
 
     var hours = $combodate.find('.hours').val();
     var minutes = $combodate.find('.minutes').val();
     var ampm = $combodate.find('.ampm').val();
+    //console.log(`${moment(self.data.params[option]).format('YYYY-MM-DD')}T${hours}:${minutes}:${ampm}`);
+    console.log(new Date(moment(self.data.params[option]).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm));
+    //return new Date(`${moment(self.data.params[option]).format('YYYY-MM-DD')}T${hours}:${minutes}:${ampm}`);
 
-    return new Date(moment(self.data.params.date).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm);
+    //return new Date(moment(self.data.params[option]).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm);
   };
 });
 
@@ -59,11 +62,11 @@ Template.comboTimeEditable.helpers({
   },
   firstTime: function () {
     var firstTime = Template.instance().data.params.firstTime;
-    return _.isDate(firstTime) ? HospoHero.dateUtils.timeFormat(firstTime) : firstTime;
+    return HospoHero.dateUtils.timeFormat(firstTime);
   },
   secondTime: function () {
     var secondTime = Template.instance().data.params.secondTime;
-    return _.isDate(secondTime) ? HospoHero.dateUtils.timeFormat(secondTime) : secondTime;
+    return HospoHero.dateUtils.timeFormat(secondTime);
   },
   icon: function () {
     return this.params.icon || 'fa-clock-o';

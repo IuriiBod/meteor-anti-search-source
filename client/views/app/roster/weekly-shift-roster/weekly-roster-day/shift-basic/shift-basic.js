@@ -3,14 +3,14 @@ Template.shiftBasic.onCreated(function () {
 
   self.editShiftTime = function (newStartTime, newEndTime) {
     let shift = this.data.shift;
-
+    console.log({oldStartTime: shift.startTime, oldEndTime: shift.endTime});
     let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
       start: shift.startTime,
       end: shift.endTime
     }, newStartTime, newEndTime);
-
-    shift.startTime = newShiftDuration.start;
-    shift.endTime = newShiftDuration.end;
+    console.log('newShiftDuration => ', newShiftDuration);
+    shift.startTime = moment(newShiftDuration.start).subtract(9, 'hours').toDate();
+    shift.endTime = moment(newShiftDuration.end).subtract(9, 'hours').toDate();
 
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
