@@ -1,9 +1,6 @@
 Meteor.publishComposite('applicationDefinitions', function (areaId) {
-  check(areaId, HospoHero.checkers.MongoId);
-
-  if (!this.userId) {
-    this.ready();
-  } else {
+  return HospoHero.publication.isUser(this, () => {
+    check(areaId, HospoHero.checkers.MongoId);
     return {
       find () {
         let area = Areas.findOne({_id: areaId});
@@ -12,21 +9,17 @@ Meteor.publishComposite('applicationDefinitions', function (areaId) {
       children: [
         {
           find (applicationDefinitionItem) {
-            if (applicationDefinitionItem) {
-              return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
-            } else {
-              this.ready();
-            }
+            return HospoHero.publication.isChild(this, applicationDefinitionItem,
+              Positions.find({_id: {$in: applicationDefinitionItem.positionIds}}));
           }
         }
       ]
     };
-  }
+  });
 });
 
 Meteor.publishComposite('applicationDefinitionsByOrganization', function (organizationId) {
   check(organizationId, HospoHero.checkers.MongoId);
-
   return {
     find () {
       return ApplicationDefinitions.find({'relations.organizationId': organizationId});
@@ -34,21 +27,14 @@ Meteor.publishComposite('applicationDefinitionsByOrganization', function (organi
     children: [
       {
         find (applicationDefinitionItem) {
-          if (applicationDefinitionItem) {
-            return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
-          } else {
-            this.ready();
-          }
+          return  HospoHero.publication.isChild(this, applicationDefinitionItem,
+            Positions.find({_id: {$in: applicationDefinitionItem.positionIds}}));
         }
       },
-
       {
         find (applicationDefinitionItem) {
-          if (applicationDefinitionItem) {
-            return Organizations.find({_id: applicationDefinitionItem.relations.organizationId}, {fields: {name: 1}});
-          } else {
-            this.ready();
-          }
+          return HospoHero.publication.isChild(this, applicationDefinitionItem,
+            Organizations.find({_id: applicationDefinitionItem.relations.organizationId}));
         }
       }
     ]
@@ -56,21 +42,16 @@ Meteor.publishComposite('applicationDefinitionsByOrganization', function (organi
 });
 
 Meteor.publish('applications', function (areaId) {
-  if (!this.userId) {
-    this.ready();
-  } else {
+  return HospoHero.publication.isUser(this, () => {
     check(areaId, HospoHero.checkers.MongoId);
-
     let area = Areas.findOne({_id: areaId});
     return Applications.find({'relations.organizationId': area.organizationId});
-  }
+  });
 });
 
 
 Meteor.publishComposite('application', function (applicationId) {
-  if (!this.userId) {
-    this.ready();
-  } else {
+  return HospoHero.publication.isUser(this, () => {
     check(applicationId, HospoHero.checkers.MongoId);
 
     return {
@@ -81,59 +62,41 @@ Meteor.publishComposite('application', function (applicationId) {
       children: [
         {
           find (application) {
-            if (application) {
-              return ApplicationDefinitions.find({'relations.organizationId': application.relations.organizationId});
-            } else {
-              this.ready();
-            }
+            return HospoHero.publication.isChild(this, application,
+              ApplicationDefinitions.find({'relations.organizationId': application.relations.organizationId}));
           }
         },
         {
           find (application) {
-            if (application) {
-              return Positions.find({_id: {$in: application.positionIds}});
-            } else {
-              this.ready();
-            }
+            return HospoHero.publication.isChild(this, application,
+              Positions.find({_id: {$in: application.positionIds}}));
           }
         },
         {
           find (application) {
-            if (application) {
-              return Files.find({referenceId: application._id});
-            } else {
-              this.ready();
-            }
+            return HospoHero.publication.isChild(this, application,
+              Files.find({referenceId: application._id}));
           }
         },
         {
           find (application) {
-            if (application) {
-              return Comments.find({reference: application._id});
-            } else {
-              this.ready();
-            }
+            return HospoHero.publication.isChild(this, application,
+             Comments.find({reference: application._id}));
           }
         },
         {
           find (application) {
-            if (application) {
-              return TaskList.find({'reference.id': application._id});
-            } else {
-              this.ready();
-            }
+            return HospoHero.publication.isChild(this, application,
+              TaskList.find({'reference.id': application._id}));
           }
         },
         {
           find (application) {
-            if (application) {
-              return RelatedItems.find({referenceId: application._id});
-            } else {
-              this.ready();
-            }
+            return HospoHero.publication.isChild(this, application,
+               RelatedItems.find({referenceId: application._id}));
           }
         }
       ]
     };
-  }
+  })
 });

@@ -31,7 +31,7 @@
     {{#if fieldIsInSchema 'dateOfBirth'}}
       <tr>
         <td><b>Date of Birth</b></td>
-        <td>{{details.dateOfBirth}}</td>
+        <td>{{ shortDateFormat application.createdAt details.dateOfBirth }}</td>
       </tr>
     {{/if}}
 

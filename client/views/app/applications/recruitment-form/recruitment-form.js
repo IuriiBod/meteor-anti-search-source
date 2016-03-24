@@ -44,6 +44,7 @@ Template.recruitmentForm.events({
 			HospoHero.handleMethodResult( ()=> {
 				$(event.target)[0].reset();
 				tmpl.files.clear();
+				HospoHero.success('Your resume was sended to our manager. Have a nice day.');
 		}));
 	}
 });
