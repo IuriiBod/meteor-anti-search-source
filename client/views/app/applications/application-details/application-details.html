@@ -17,10 +17,43 @@
         {{> relatedItemsWidget referenceId=application._id type="application"}}
       </div>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4 no-padding">
-      <div class="wrapper wrapper-content project-manager">
-        {{> commentsPanel id=application._id type='application'}}
+
+    <!-- Right widget -->
+    <div class="col-lg-4 col-md-4 col-sm-12 no-padding">
+      <div class="wrapper wrapper-content">
+        <div class="sidebar-container">
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="nav nav-tabs navs-3">
+                <li class="active">
+                  <a href="#tab-comment" data-toggle="tab" aria-expanded="true">
+                    Comments</a>
+                </li>
+                <li class="">
+                  <a href="#tab-applicant" data-toggle="tab" aria-expanded="false">
+                    Applicant</a>
+                </li>
+                <li class="">
+                  <a href="#tab-activity" data-toggle="tab" aria-expanded="false">
+                    Activity</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-comment">
+              {{> commentsPanel id=application._id type='application'}}
+            </div>
+            <div class="tab-pane" id="tab-applicant">
+              Coming soon...
+            </div>
+            <div class="tab-pane" id="tab-activity">
+              Coming soon...
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
   </div>
 </template>
