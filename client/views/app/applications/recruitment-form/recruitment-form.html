@@ -2,6 +2,7 @@
   <div class="row ">
     <div class="col-lg-6 col-md-8 col-lg-offset-3 col-md-offset-2 white-bg well recruitment-form-wrapper">
       <form id="recruitment-form" class="form-horizontal recruitment-form">
+        <legend> Recruitment form for {{ organizationName }} </legend>
 
         <!-- Name Field-->
         {{> recruitmentFormField
@@ -10,7 +11,7 @@
 
         <!-- Email Field-->
         {{> recruitmentFormField
-          name='email' label="Eame" pattern=emailPattern
+          name='email' label="Email" pattern=emailPattern
           title="for example email@email.com"
           isShow=applicationDefinition.schema.email }}
 
@@ -23,7 +24,7 @@
 
         <!-- Date of Birth -->
         {{> recruitmentFormField
-          name='dateOfBirth' label="Date bf birth" pattern=datePattern
+          name='dateOfBirth' label="Date of birth" pattern=datePattern
           isShow=applicationDefinition.schema.dateOfBirth }}
 
         <!-- Availability Field-->

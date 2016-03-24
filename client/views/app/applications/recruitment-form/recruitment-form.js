@@ -16,6 +16,9 @@ Template.recruitmentForm.helpers({
 	},
 	files(){
 		return Template.instance().files;
+	},
+	organizationName () {
+		return Organizations.findOne().name;
 	}
 });
 Template.recruitmentForm.onCreated(function () {
