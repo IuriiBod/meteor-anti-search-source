@@ -38,7 +38,11 @@ Meteor.methods({
     }
 
     if (applicationDefinition) {
-      let positionId = Positions.insert({name: name});
+      let positionId = Positions.insert({
+        name: name,
+        relations: HospoHero.getRelationsObject(applicationDefinition.relations.areaId)
+      });
+
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$addToSet: {positionIds: positionId}});
     } else {
       logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area',
@@ -73,7 +77,7 @@ Meteor.methods({
 
     // Captcha verify
     let verifyCaptchaResponse = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captchaUrl);
-    if(!verifyCaptchaResponse.data.success){
+    if (!verifyCaptchaResponse.data.success) {
       logger.error('Captcha Err:' + verifyCaptchaResponse['error-codes']);
       throw new Meteor.Error('Captcha Err. Captcha not verified.');
     }
@@ -94,13 +98,14 @@ Meteor.methods({
       };
 
       _.each(appDef.schema, (value, field) => {
-        let fieldType = value ? fieldTypes[field] : undefined;
-        check(details[field], fieldType);
+        if (value) {
+          check(details[field], fieldTypes[field]);
+        }
       });
 
       let application = {
         createdAt: new Date(),
-        appProgress: [],
+        appProgress: 'New Application',
         positionIds: positions,
         relations: HospoHero.getRelationsObject(area._id),
         details: details
@@ -111,5 +116,15 @@ Meteor.methods({
       logger.error('Unexpected Err: method [addApplication] Has not created ApplicationDefinitions in this area', {areaId: area._id});
       throw new Meteor.Error('Unexpected Err. Not correct area.');
     }
+  },
+
+  updateApplication (application) {
+    check(application, Object);
+
+    if (!canUpdateApplications(application)) {
+      throw new Meteor.Error('You can\'t update application');
+    }
+
+    return Applications.update({_id: application._id}, {$set: application});
   }
 });

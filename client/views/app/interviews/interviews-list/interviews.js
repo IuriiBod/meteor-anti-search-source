@@ -1,7 +1,4 @@
 Template.interviews.onCreated(function () {
-  let activeFilter = 'Future Interviews';
-  this.interviewType = new ReactiveVar(activeFilter);
-
   this.searchSource = this.AntiSearchSource({
     collection: 'interviews',
     fields: ['interviewee'],
@@ -18,9 +15,6 @@ Template.interviews.onCreated(function () {
       ]
     };
 
-    //if (this.interviewType.get() === activeFilter) {
-    //}
-
     this.searchSource.setMongoQuery(query);
   });
 
@@ -30,22 +24,7 @@ Template.interviews.onCreated(function () {
 
 Template.interviews.helpers({
   interviews() {
-    return Template.instance().searchSource.searchResult({sort: {startTime: 1}});
-  },
-
-  filterTypes () {
-    return ['Future Interviews', 'All Interviews'];
-  },
-
-  activeFilter () {
-    return Template.instance().interviewType.get();
-  },
-
-  onFilterChange () {
-    var tmpl = Template.instance();
-    return function (newFilterType) {
-      tmpl.interviewType.set(newFilterType);
-    };
+    return Template.instance().searchSource.searchResult({sort: {createdAt: 1}});
   }
 });
 

@@ -16,7 +16,7 @@ var headingComponentsMap = {
   taskList: 'taskListHeader',
   meetings: 'meetingsHeader',
   projects: 'projectsListHeader',
-  applicationsView: 'applicationsViewHeader',
+  applicationsList: 'applicationsListHeader',
   projectDetails: 'projectDetailsHeader',
   profile: 'profileHeader'
 };

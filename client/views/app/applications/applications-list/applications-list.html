@@ -1,0 +1,58 @@
+<template name="applicationsList">
+  <!-- Page heading -->
+  {{> pageHeading title='Applications' name="applicationsList"}}
+
+  <!-- Applications filter -->
+  <div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 m-t-sm m-b-sm">
+      <input type="text" class="form-control applications-search" placeholder="Search">
+    </div>
+
+    <div class="col-lg-2 col-sm-4 col-md-4 m-t-sm m-b-sm col-xs-12">
+      <!-- Status filter -->
+      {{> dropdownFilter filterTypes=statusFilterTypes activeFilter=activeStatus onFilterChange=onStatusFilterChange}}
+
+      <!-- Positions filter -->
+      {{> dropdownFilter filterTypes=positionsFilterTypes activeFilter=activePosition onFilterChange=onPositionFilterChange}}
+    </div>
+  </div>
+  <!-- /Applications filter -->
+
+
+  <!-- Applications list -->
+  {{#if applications.count}}
+    <div class="row projects-list">
+      <div class="float-e-margins col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="ibox-content no-padding">
+          <div class="table-responsive">
+            <table class="table text-left table-hover m-b-none">
+              <thead>
+              <tr>
+                <th>Application Date</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Positions</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              {{#each applications}}
+                {{> applicationsListItem this}}
+              {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="text-muted">
+          <h3>No applications</h3>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+  <!-- /Applications list -->
+</template>
