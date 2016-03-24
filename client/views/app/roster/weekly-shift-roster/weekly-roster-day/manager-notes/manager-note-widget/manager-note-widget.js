@@ -8,14 +8,15 @@ var canUserEditRoster = function () {
 Template.managerNoteWidget.onCreated(function () {
   let self = this;
 
+  self.note = () => ManagerNotes.findOne({
+    noteDate: TimeRangeQueryBuilder.forDay(self.data.date),
+    'relations.areaId': HospoHero.getCurrentAreaId()
+  });
+
   let weekRange = TimeRangeQueryBuilder.forWeek(self.data.date);
 
   self.subscribe('managerNotes', weekRange, HospoHero.getCurrentAreaId(), function onReady () {
-    self.note = ManagerNotes.findOne({
-      noteDate: TimeRangeQueryBuilder.forDay(self.data.date),
-      'relations.areaId': HospoHero.getCurrentAreaId()
-    });
-    self.subscribe('comments', self.note._id, HospoHero.getCurrentAreaId());
+    self.subscribe('comments', self.note()._id, HospoHero.getCurrentAreaId());
   });
 
   self.textForEmptyEditor = 'Leave your note here';
@@ -23,10 +24,10 @@ Template.managerNoteWidget.onCreated(function () {
 
 Template.managerNoteWidget.helpers({
   note () {
-    return Template.instance().note;
+    return Template.instance().note();
   },
   textOfNote () {
-    let note = Template.instance().note;
+    let note = Template.instance().note();
     if (note && _.isString(note.text) && $.trim(note.text)) {
       return note.text;
     }
@@ -41,7 +42,7 @@ Template.managerNoteWidget.helpers({
         return;
       }
 
-      let note = tmpl.note;
+      let note = tmpl.note();
       note.text = text;
 
       if (!note.createdAt) {
