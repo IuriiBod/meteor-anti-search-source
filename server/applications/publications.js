@@ -99,6 +99,33 @@ Meteor.publishComposite('application', function (applicationId) {
               this.ready();
             }
           }
+        },
+        {
+          find (application) {
+            if (application) {
+              return Comments.find({reference: application._id});
+            } else {
+              this.ready();
+            }
+          }
+        },
+        {
+          find (application) {
+            if (application) {
+              return TaskList.find({'reference.id': application._id});
+            } else {
+              this.ready();
+            }
+          }
+        },
+        {
+          find (application) {
+            if (application) {
+              return RelatedItems.find({referenceId: application._id});
+            } else {
+              this.ready();
+            }
+          }
         }
       ]
     };

@@ -2,7 +2,7 @@
   {{> pageHeading title=application.details.name category='Applications'}}
 
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-lg-8 col-md-8 col-xs-12 col-sm-12">
       <div class="wrapper wrapper-content fadeInUp">
         <div class="ibox">
           <div class="ibox float-e-margins">
@@ -13,6 +13,14 @@
             {{/collapsibleElement}}
           </div>
         </div>
+        {{> filesWidget referenceId=application._id type="application"}}
+        {{> taskWidget itemId=application._id type="application"}}
+        {{> relatedItemsWidget referenceId=application._id type="application"}}
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 no-padding">
+      <div class="wrapper wrapper-content project-manager">
+        {{> commentsPanel id=application._id type='application'}}
       </div>
     </div>
   </div>
