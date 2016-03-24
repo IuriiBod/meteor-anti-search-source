@@ -12,35 +12,7 @@
               <hr>
               {{> orderingStatus activeOrder}}
               <hr>
-              <table class="table table-condensed table-hover table-striped">
-                <thead>
-                <tr>
-                  <th>Stock item</th>
-                  <th>On hand</th>
-                  <th>Needed</th>
-                  <th>To order</th>
-                  {{#if isOrderEditable activeOrder}}
-                    <th>Action</th>
-                  {{/if}}
-                </tr>
-                </thead>
-                <tbody>
-                {{#each orderItems activeOrder}}
-                  {{> stockOrderItem}}
-                {{/each}}
-                </tbody>
-              </table>
-
-              <hr>
-              {{#if orderNote}}
-                <div>
-                  <p class="text-danger pull-left">Note: &nbsp;</p>
-                  {{orderNote}}
-                </div>
-              {{else}}
-                <textarea class="form-control message-input-post supplier-order-note"
-                          placeholder="Add notes here and press enter to submit"></textarea>
-              {{/if}}
+              {{> orderDetails activeOrder}}
             {{else}}
               <h4>You haven't created any orders.</h4>
               <a href="{{pathFor route="stocktakeCounting" _id=stocktakeId}}">Click here</a> to go to the stocktake

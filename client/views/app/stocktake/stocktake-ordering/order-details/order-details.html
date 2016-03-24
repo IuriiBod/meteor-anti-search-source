@@ -1,0 +1,31 @@
+<template name="orderDetails">
+  <table class="table table-condensed table-hover table-striped">
+    <thead>
+    <tr>
+      <th>Stock item</th>
+      <th>On hand</th>
+      <th>Needed</th>
+      <th>To order</th>
+      {{#if isOrderEditable}}
+        <th>Action</th>
+      {{/if}}
+    </tr>
+    </thead>
+    <tbody>
+    {{#each orderItems}}
+      {{> stockOrderItem}}
+    {{/each}}
+    </tbody>
+  </table>
+
+  <hr>
+  {{#if orderNote}}
+    <div>
+      <p class="text-danger pull-left">Note: &nbsp;</p>
+      {{orderNote}}
+    </div>
+  {{else}}
+    <textarea class="form-control message-input-post supplier-order-note"
+              placeholder="Add notes here and press enter to submit"></textarea>
+  {{/if}}
+</template>
