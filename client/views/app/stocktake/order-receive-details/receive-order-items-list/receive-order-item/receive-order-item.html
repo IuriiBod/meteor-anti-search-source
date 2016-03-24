@@ -1,37 +1,27 @@
 <template name="receiveOrderItem">
   <tr>
-    <td>{{stock.description}}</td>
-    {{#if delivery.wrongQuantity}}
-      <td>{{stock.countDelivered}} [{{stock.unit}}]</td>
-    {{else}}
-      <td>{{stock.countOrdered}} [{{stock.unit}}]</td>
-    {{/if}}
-    <td>$ {{roundCount stock.unitPrice}}</td>
-    <td>$ {{roundCount unitTotalPrice}}</td>
+    <td>{{ingredientItem.description}}</td>
     <td>
-      {{#if stock.received}}
-        {{#if isEditable}}
-          <a class="btn btn-sm btn-outline btn-danger wrong-quantity-button">Wrong Quantity</a>
-          <a class="btn btn-sm btn-outline btn-danger wrong-price-button">Wrong Price</a>
-          <button class="btn btn-info btn-circle btn-outline receive-order-item-button" type="button"><i class="fa fa-check"></i>
-          </button>
-        {{else}}
-          {{delivery.status}}
-          {{#unless isReceived}}
-            <a href="#" class="edit-permitted-button">[Edit]</a>
-          {{/unless}}
-        {{/if}}
+      {{orderItemCount}} [{{ingredientItem.portionOrdered}}]
+    </td>
+    <td>$ {{roundCount ingredient.cost}}</td>
+    <td>$ {{roundCount unitTotalPrice orderItemCount}}</td>
+    <td>
+      {{#if isDelivered}}
+        {{#if orderItemStatus.isWrongPrice}}Wrong Price{{/if}}
+        {{#if orderItemStatus.isWrongQuantity}}Wrong Quantity{{/if}}
+        {{#if orderItemStatus.isDeliveredCorrectly}}Delivered correctly{{/if}}
       {{else}}
-        {{#unless delivery.deliveredCorrectly}}
-          {{#unless delivery.wrongPrice}}
-            <a class="btn btn-sm btn-outline btn-danger wrong-price-button">Wrong Price</a>
-          {{/unless}}
-          {{#unless delivery.wrongQuantity}}
-            <a class="btn btn-sm btn-outline btn-danger wrong-quantity-button">Wrong Quantity</a>
-          {{/unless}}
+        {{#unless orderItemStatus.isDeliveredCorrectly}}
+          <a class="btn btn-sm btn-outline btn-danger wrong-price-button">Wrong Price</a>
+          <a class="btn btn-sm btn-outline btn-danger wrong-quantity-button">Wrong Quantity</a>
         {{/unless}}
-        <button class="btn btn-info btn-circle btn-outline receive-order-item-button" type="button"><i class="fa fa-check"></i>
-        </button>
+
+        {{#unless  orderItemStatus.isWrongQuantity}}
+          <button class="btn btn-info btn-circle btn-outline receive-order-item-button" type="button">
+            <i class="fa fa-check"></i> Correct
+          </button>
+        {{/unless}}
       {{/if}}
     </td>
   </tr>

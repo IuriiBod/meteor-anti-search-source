@@ -3,90 +3,67 @@
   {{> pageHeading title=title category="Stocktake"}}
 
   <div class="wrapper wrapper-content">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="ibox">
-          <div class="ibox-content">
-            <div class="row">
-              <div class="col-md-12">
-                <h3>What you ordered from {{supplierName supplierId}}</h3>
-                {{> receiveOrderItemsList}}
-                <hr>
-
-                {{#if receiveNote}}
-                  <div>
-                    <p class="text-danger pull-left">Note: &nbsp;</p>{{receiveNote}}
-                  </div>
-                {{else}}
-                  <textarea name="orderReceiveNotes" id="orderReceiveNotes" class="form-control message-input-post"
-                            placeholder="Add notes here."></textarea>
-                {{/if}}
-
-                {{#if temperature}}
-                  <div class="col-md-3 no-padding">
-                    <span class="pull-left">
-                      <label>Temperature: </label>
-                    </span>
-                    <span class="pull-right">{{temperature}}<img src="/images/celsius.png" width="18px"></span>
-                  </div>
-                {{/if}}
-
-                {{#unless isReceived}}
-                  {{#if invoiceImage}}
-                    <a class="btn btn-default uploadInvoice">Add more Invoices</a>
-                  {{else}}
-                    <a class="btn btn-primary uploadInvoice">Take a photo/ Upload Invoice</a>
-                  {{/if}}
-                  <a class="btn btn-primary" href="#temperatureModal" data-toggle="modal">Check temperatures</a>
-                {{/unless}}
-
-
-                <div class="row col-md-12 m-t-md m-b-md">
-                  {{#if invoiceImage}}
-                    {{> invoiceImage id=_id}}
-                  {{else}}
-                    <div class="file col-sm-2 uploadedInvoiceDiv hide">
-                      <a href="#">
-                        <span class="corner"></span>
-
-                        <div class="image">
-                          <img id="uploadedInvoiceUrl" src="" class="img-responsive">
-                        </div>
-                      </a>
-                    </div>
-                  {{/if}}
-                </div>
-
-                {{#unless isReceived}}
-                  <a class="btn btn-primary markDeliveryReceived">Mark delivery as received</a>
-                {{/unless}}
-              </div>
-            </div>
+    <div class="ibox">
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-md-12">
+            <h3>What you ordered from {{supplierName supplierId}}</h3>
+            {{> receiveOrderItemsList}}
+            <hr>
           </div>
         </div>
-      </div>
 
+        <div class="row">
+          <div class="col-md-12">
+            {{#if receiveNote}}
+              <p class="text-danger pull-left">Note: &nbsp;</p>{{receiveNote}}
+            {{else}}
+              <textarea class="form-control message-input-post receive-note-textarea"
+                        placeholder="Add notes here."></textarea>
+            {{/if}}
+          </div>
+        </div>
 
-      <!-- WRONG PRICE MODAL-->
-      <div class="modal fade" id="wrongPriceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-           aria-hidden="true">
-        {{> receiveModal name='wrongPrice' order=currentOrder receipt=this}}
-      </div>
-      <!-- /WRONG PRICE MODAL -->
+        {{#unless isReceived}}
+          <div class="row">
+            <div class="col-md-12">
+              {{> invoiceImageUpload}}
 
-      <!-- WRONG QUANTITY MODAL-->
-      <div class="modal fade" id="wrongQuantityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-           aria-hidden="true">
-        {{> receiveModal name='wrongQuantity' order=currentOrder receipt=this}}
-      </div>
-      <!-- /WRONG QUANTITY MODAL -->
+              <a class="btn btn-primary check-temperatures-button">Check temperatures</a>
+            </div>
+          </div>
+        {{/unless}}
 
-      <!-- TEMPERATURE MODAL-->
-      <div class="modal fade" id="temperatureModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-           aria-hidden="true">
-        {{> temperatureModal}}
+        {{#if temperature}}
+          <div class="row">
+            <div class="col-md-3 no-padding">
+              <span class="pull-left">
+                <label>Temperature: </label>
+              </span>
+              <span class="pull-right">{{temperature}} &#8451; <!--celsius character--> </span>
+            </div>
+          </div>
+        {{/if}}
+
+        {{#if invoiceImage}}
+          <div class="row">
+            <div class="col-md-12 m-t-md m-b-md">
+              {{> invoiceImage}}
+            </div>
+          </div>
+        {{/if}}
+
+        <div class="row">
+          <div class="col-md-12">
+            {{#unless isReceived}}
+              <a class="btn btn-primary mark-order-as-delivered-button">Mark delivery as received</a>
+            {{else}}
+              Status: delivered
+            {{/unless}}
+          </div>
+        </div>
+
       </div>
-      <!-- /TEMPERATURE MODAL -->
     </div>
   </div>
 </template>

@@ -1,72 +1,74 @@
-Template.receiveOrderItem.onCreated(function () {
-  this.isEditable = new ReactiveVar(false);
-});
+class OrderItemStatus {
+  constructor(orderItem) {
+    this._orderItem = orderItem;
+  }
+
+  isReceived() {
+    return _.isFinite(this._orderItem.receivedCount);
+  }
+
+  isWrongPrice() {
+    if (this.isReceived()) {
+      let receivedCount = this._orderItem.receivedCount;
+      return _.isFinite(receivedCount) && receivedCount !== this._orderItem.orderedCount;
+    } else {
+      return true; // until items isn't received it has wrong price
+    }
+  }
+
+  isWrongCount() {
+    if (this.isReceived()) {
+      let originalCost = this._orderItem.ingredient.originalCost;
+      return _.isFinite(originalCost) && this._orderItem.ingredient.cost !== originalCost;
+    } else {
+      return true; // until items isn't received it has wrong count
+    }
+  }
+
+  isDeliveredCorrectly() {
+    return !this.isWrongCount() && !this.isWrongPrice();
+  }
+}
 
 Template.receiveOrderItem.helpers({
-  stock: function () {
-    var ingredient = Ingredients.findOne({_id: this.item.stockId});
-    if (ingredient) {
-      this.item.description = ingredient.description;
-    }
-    return this.item;
+  //helper is called ingredientItem in order to avoid name conflict with order item's ingredient property.
+  ingredientItem: function () {
+    return Ingredients.findOne({_id: this.ingredient.id});
   },
 
-  unitTotalPrice: function () {
-    var quantity = this.item.countDelivered;
-    if (!_.isFinite(quantity) || quantity < 0) {
-      quantity = this.item.countOrdered;
-    }
-    return this.item.unitPrice * quantity;
+  unitTotalPrice: function (orderItemCount) {
+    return this.ingredient.cost * orderItemCount;
   },
 
-  delivery: function () {
-    var delivery = {};
-    var order = this.item;
-    if (order && order.deliveryStatus) {
-      delivery.deliveredCorrectly = order.deliveryStatus.indexOf('Delivered Correctly') >= 0;
-      delivery.wrongQuantity = order.deliveryStatus.indexOf('Wrong Quantity') >= 0;
-      delivery.wrongPrice = order.deliveryStatus.indexOf('Wrong Price') >= 0;
-      delivery.status = order.deliveryStatus;
-    }
-    return delivery;
+  orderItemCount: function () {
+    return _.isFinite(this.receivedCount) ? this.receivedCount : this.orderedCount;
   },
 
-  isReceived: function () {
-    var data = Orders.findOne({_id: this.item.orderReceipt});
-    return data && data.received;
+  orderItemStatus: function () {
+    return new OrderItemStatus(this);
   },
 
-  isEditable: function () {
-    return Template.instance().isEditable.get();
+  isDelivered: function () {
+    let order = Orders.findOne({_id: this.orderId});
+    return !!order.receivedBy;
   }
 });
 
 Template.receiveOrderItem.events({
-
   'click .wrong-price-button': function (event, tmpl) {
     event.preventDefault();
-    var id = tmpl.data.item._id;
-    tmpl.data.currentOrderCallback(id);
-    $("#wrongPriceModal").modal();
+    ModalManager.open('wrongPriceModal', tmpl.data);
   },
 
   'click .wrong-quantity-button': function (event, tmpl) {
     event.preventDefault();
-    var id = tmpl.data.item._id;
-    tmpl.data.currentOrderCallback(id);
-    $("#wrongQuantityModal").modal();
+    ModalManager.open('wrongQuantityModal', tmpl.data);
   },
 
   'click .receive-order-item-button': function (event, tmpl) {
     event.preventDefault();
-    var id = this.item._id;
-    tmpl.isEditable.set(false);
-    var receiptId = tmpl.data.item.orderReceipt;
-    Meteor.call("receiveOrderItems", id, receiptId, {"received": true}, HospoHero.handleMethodResult());
-  },
-
-  'click .edit-permitted-button': function (event, tmpl) {
-    event.preventDefault();
-    tmpl.isEditable.set(true);
+    let orderItem = tmpl.data;
+    orderItem.receivedCount = orderItem.orderedCount;
+    Meteor.call('updateOrderItem', orderItem, HospoHero.handleMethodResult());
   }
 });

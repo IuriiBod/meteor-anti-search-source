@@ -25,6 +25,7 @@ let OrderDocument = Match.Where(function (orderDoc) {
     receivedBy: HospoHero.checkers.OptionalMongoId,
     receivedDate: Match.Optional(Date),
     receiveNote: Match.Optional(String),
+    temperature: Match.Optional(Number),
     invoiceImage: Match.Optional({
       originalUrl: String,
       convertedUrl: String,

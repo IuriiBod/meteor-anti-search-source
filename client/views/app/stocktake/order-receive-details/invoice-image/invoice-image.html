@@ -1,0 +1,9 @@
+<template name="invoiceImage">
+  <div id="links">
+    {{#with invoiceImage}}
+      <a href="{{originalUrl}}" target='blank' title="Invoice">
+        <img src="{{convertedUrl}}" class="col-md-4 no-padding img-responsive">
+      </a>
+    {{/with}}
+  </div>
+</template>

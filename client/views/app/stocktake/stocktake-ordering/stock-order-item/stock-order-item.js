@@ -5,7 +5,9 @@ Template.stockOrderItem.onRendered(function () {
     if (newValue) {
       let count = parseFloat(newValue) || 0;
       if (_.isFinite(count) && count >= 0) {
-        Meteor.call('editOrderingCount', tmpl.data._id, count, HospoHero.handleMethodResult());
+        let orderItem = tmpl.data;
+        orderItem.orderedCount = count;
+        Meteor.call('updateOrderItem', orderItem, HospoHero.handleMethodResult());
       } else {
         HospoHero.error('Incorrect value!');
       }

@@ -1,21 +1,15 @@
-<template name="receiveModal">
+<template name="wrongPriceModal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
             class="sr-only">Close</span></button>
-        {{#if isWrongPrice}}
           <h4 class="modal-title" id="myModalLabel">Price is wrong..!</h4>
-        {{/if}}
-        {{#if isWrongQuantity}}
-          <h4 class="modal-title" id="myModalLabel">Quantity is wrong..!</h4>
-        {{/if}}
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col-md-1"></div>
           <div class="col-md-10">
-            {{#if isWrongPrice}}
               <p class="text-center">Enter the actual price the supplier charged you here.</p>
 
               <form class="form-horizontal price-form">
@@ -43,23 +37,6 @@
                   <button class="btn btn-small btn-default" data-dismiss="modal">Cancel</button>
                 </div>
               </form>
-            {{/if}}
-            {{#if isWrongQuantity}}
-              <p class="text-center">Do you want to update the quantity of the stock order?</p>
-
-              <form class="form-horizontal quantity-form">
-                <div class="form-group">
-                  <div class="col-sm-3"></div>
-                  <div class="col-sm-6">
-                    <input class="form-control text-center font-20 invoice-quantity-input"/>
-                  </div>
-                </div>
-                <div class="pull-right">
-                  <button class="btn btn-primary" type="submit" id="updateQuantity">Save</button>
-                  <button class="btn btn-small btn-default" data-dismiss="modal">Cancel</button>
-                </div>
-              </form>
-            {{/if}}
           </div>
         </div>
       </div>
