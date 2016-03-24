@@ -113,11 +113,13 @@ Meteor.methods({
 
       let applicationId = Applications.insert(application);
       _.each(files, file => {
-        _.extend(file, {
+        let newfile = {
           referenceId: applicationId,
-          createdAt: new Date()
-        });
-        Files.insert(file);
+          createdAt: new Date(),
+          name:file.filename,
+          url:file.url
+        };
+        Files.insert(newfile);
       });
       return applicationId;
     } else {
