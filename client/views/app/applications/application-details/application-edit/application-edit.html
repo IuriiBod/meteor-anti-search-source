@@ -38,9 +38,9 @@
     <tr>
       <td><b>Application Progress</b></td>
       <td>
-        {{#each applicationProgress}}
-          {{> formFieldCheckbox checkboxSettings=this onCheckboxChange=onCheckboxChange}}
-        {{/each}}
+        {{> applicationProgressCheckboxes
+            checked=application.appProgress
+            checkboxes=applicationProgress}}
       </td>
     </tr>
 

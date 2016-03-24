@@ -20,19 +20,6 @@ Template.applicationEdit.helpers({
     });
   },
 
-  onCheckboxChange () {
-    let applicationEditData = Template.parentData(1);
-    let application = applicationEditData.application;
-    let saveApplication = applicationEditData.saveApplication;
-
-    return (status, isChecked) => {
-      if (isChecked) {
-        application.appProgress = status;
-        saveApplication(application);
-      }
-    };
-  },
-
   positions () {
     let positionIds = this.application.positionIds;
     return Positions.find({_id: {$in: positionIds}}).map(position => position.name);

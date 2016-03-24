@@ -128,13 +128,16 @@ Meteor.methods({
     }
   },
 
-  updateApplication (application) {
-    check(application, Object);
+  updateApplicationStatus (applicationId, status) {
+    check(applicationId, HospoHero.checkers.MongoId);
+    check(status, String);
+
+    let application = Applications.findOne({_id: applicationId});
 
     if (!canUpdateApplications(application)) {
       throw new Meteor.Error('You can\'t update application');
     }
 
-    return Applications.update({_id: application._id}, {$set: application});
+    return Applications.update({_id: applicationId}, {$set: {appProgress: status}});
   }
 });

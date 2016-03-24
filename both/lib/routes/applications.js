@@ -47,9 +47,7 @@ Router.route('recruitmentForm', {
   template: 'recruitmentForm',
   layoutTemplate: 'recruitmentLayout',
   waitOn () {
-    return [
-      Meteor.subscribe('applicationDefinitionsByOrganization', this.params.organizationId)
-    ];
+    return Meteor.subscribe('applicationDefinitionsByOrganization', this.params.organizationId);
   },
   data () {
     return {

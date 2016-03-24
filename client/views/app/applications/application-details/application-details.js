@@ -5,11 +5,5 @@ Template.applicationDetails.helpers({
       uiStateId: 'details',
       title: 'Application Details'
     };
-  },
-
-  saveApplication () {
-    return (changedApplication) => {
-      Meteor.call('updateApplication', changedApplication, HospoHero.handleMethodResult());
-    }
   }
 });
