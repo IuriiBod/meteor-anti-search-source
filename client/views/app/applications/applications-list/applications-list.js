@@ -48,8 +48,8 @@ Template.applicationsList.helpers({
   },
 
   statusFilterTypes () {
-    let statuses = HospoHero.applications.statuses();
-    return _.union(['Active', 'All'], statuses);
+    return ['Active', 'All', 'New Application', 'Phone Interview', '1st Interview', '2nd Interview', 'Hired!',
+      'On Wait List', 'Rejected'];
   },
 
   activeStatus () {

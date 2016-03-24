@@ -8,15 +8,30 @@ Template.applicationEdit.helpers({
   },
 
   applicationProgress () {
-    let statuses = HospoHero.applications.statuses();
+    let statuses = ['New Application', 'Phone Interview', '1st Interview', '2nd Interview', 'Hired!',
+      'On Wait List', 'Rejected'];
+
     let currentStatusIndex = statuses.indexOf(this.application.appProgress);
 
+    let statusesActions = {
+      '1st Interview': createInterview,
+      '2nd Interview': createInterview,
+      'Hired!': inviteUser,
+      'Rejected': rejectApplication
+    };
+
     return statuses.map((status, index) => {
-      return {
-        fieldName: status,
-        fieldTitle: status,
-        isChecked: index <= currentStatusIndex
+      let statusObject = {
+        name: status,
+        checked: index <= currentStatusIndex
       };
+
+      // set the callback, which will be called after setting application to this status
+      if (statusesActions[status]) {
+        statusObject.afterSetCallback = statusesActions[status];
+      }
+
+      return statusObject;
     });
   },
 
@@ -36,3 +51,15 @@ Template.applicationEdit.helpers({
     }
   }
 });
+
+function createInterview (applicationId) {
+  console.log('CREATE INT', applicationId);
+}
+
+function inviteUser (applicationId) {
+  console.log('INVITE', applicationId);
+}
+
+function rejectApplication (applicationId) {
+  console.log('REJECT', applicationId);
+}

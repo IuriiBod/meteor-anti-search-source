@@ -1,5 +1,5 @@
 <template name="applicationProgressCheckboxes">
   {{#each checkboxes}}
-    {{> applicationProgressCheckbox checkbox=this onCheckboxChange=onCheckboxChange}}
+    {{> applicationProgressCheckbox checkbox=this checked=../checked onCheckboxChange=onCheckboxChange}}
   {{/each}}
 </template>

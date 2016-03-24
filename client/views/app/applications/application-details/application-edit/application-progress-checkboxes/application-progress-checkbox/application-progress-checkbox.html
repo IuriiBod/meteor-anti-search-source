@@ -1,7 +1,7 @@
 <template name="applicationProgressCheckbox">
   <div class="checkbox">
-    <label class="{{#if checkbox.isChecked}}checked-item{{/if}}">
-      <input type="checkbox" {{checkboxAttr}}> {{checkbox.fieldTitle}}
+    <label class="{{#if checked}}checked-item{{/if}}">
+      <input type="checkbox" {{checkboxAttr}}> {{checkbox.name}}
     </label>
   </div>
 </template>
