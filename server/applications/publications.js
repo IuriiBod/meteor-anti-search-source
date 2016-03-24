@@ -26,27 +26,31 @@ Meteor.publishComposite('applicationDefinitions', function (areaId) {
 
 Meteor.publishComposite('applicationDefinitionsByOrganization', function (organizationId) {
   check(organizationId, HospoHero.checkers.MongoId);
-
-  if (!this.userId) {
-    this.ready();
-  } else {
-    return {
-      find () {
-        return ApplicationDefinitions.find({'relations.organizationId': organizationId});
-      },
-      children: [
-        {
-          find (applicationDefinitionItem) {
-            if (applicationDefinitionItem) {
-              return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
-            } else {
-              this.ready();
-            }
+  return {
+    find () {
+      return ApplicationDefinitions.find({'relations.organizationId': organizationId});
+    },
+    children: [
+      {
+        find (applicationDefinitionItem) {
+          if (applicationDefinitionItem) {
+            return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
+          } else {
+            this.ready();
           }
         }
-      ]
-    };
-  }
+      },
+      {
+        find (applicationDefinitionItem) {
+          if (applicationDefinitionItem) {
+            return Organizations.find({_id: applicationDefinitionItem.relations.organizationId });
+          } else {
+            this.ready();
+          }
+        }
+      }
+    ]
+  };
 });
 
 Meteor.publish('applications', function (areaId) {
