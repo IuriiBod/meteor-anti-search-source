@@ -82,11 +82,19 @@ Meteor.publishComposite('application', function (applicationId) {
             }
           }
         },
-
         {
           find (application) {
             if (application) {
               return Positions.find({_id: {$in: application.positionIds}});
+            } else {
+              this.ready();
+            }
+          }
+        },
+        {
+          find (application) {
+            if (application) {
+              return Files.find({referenceId: application._id});
             } else {
               this.ready();
             }

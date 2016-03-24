@@ -36,14 +36,12 @@ Template.recruitmentForm.events({
 			HospoHero.error('Please Select some position.');
 			return;
 		}
-		console.log('details ->',details);
-		Meteor.call('addApplication', tmpl.data.organizationId,details, positionIds, captchaUrl, (err)=> {
-			if(err) { HospoHero.error(err); }
-			else {
+
+		Meteor.call('addApplication', tmpl.data.organizationId,details, positionIds, tmpl.files.array(), captchaUrl,
+			HospoHero.handleMethodResult( ()=> {
 				$(event.target)[0].reset();
 				tmpl.files.clear();
-			}
-		});
+		}));
 	}
 });
 
@@ -69,10 +67,6 @@ function getDetailsData(tmpl){
 			}
 			case 'dateOfBirth' :{
 				res[field] = new Date(val);
-				break;
-			}
-			case 'files' :{
-				res[field] = tmpl.files.array();
 				break;
 			}
 			default :	{

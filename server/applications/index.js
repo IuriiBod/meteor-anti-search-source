@@ -71,9 +71,10 @@ Meteor.methods({
     }
   },
 
-  addApplication(organizationId, details, positions, captchaUrl) {
+  addApplication(organizationId, details, positions, files, captchaUrl) {
     check(organizationId, HospoHero.checkers.MongoId);
     check(positions, [HospoHero.checkers.MongoId]);
+    check(files, Match.Optional([Object]));
 
     // Captcha verify
     let verifyCaptchaResponse = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captchaUrl);
@@ -94,7 +95,6 @@ Meteor.methods({
         dateOfBirth: Date,
         numberOfHours: Number,
         message: String,
-        files:Match.Optional([Object])
       };
 
       _.each(appDef.schema, (value, field) => {
@@ -111,7 +111,15 @@ Meteor.methods({
         details: details
       };
 
-      return Applications.insert(application);
+      let applicationId = Applications.insert(application);
+      _.each(files, file => {
+        _.extend(file, {
+          referenceId: applicationId,
+          createdAt: new Date()
+        });
+        Files.insert(file);
+      });
+      return applicationId;
     } else {
       logger.error('Unexpected Err: method [addApplication] Has not created ApplicationDefinitions in this area', {areaId: area._id});
       throw new Meteor.Error('Unexpected Err. Not correct area.');
