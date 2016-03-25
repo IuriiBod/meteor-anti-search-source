@@ -1,8 +1,10 @@
 {
   "public": {
     "intercom": {"id": "rc6uoqw0"},
-    "__superMail": "tom@farmcafe.com"
+    "__superMail": "tom@farmcafe.com",
+    "reCaptchaKey":"6Lf9fxsTAAAAAKxR50-I57o9GqBCoNCwj5yyQa_E"
   },
+  "reCaptchaKey":"6Lf9fxsTAAAAAC8-BDtwvBYaV72IZIqUJa-zHjqb",
   "intercom": {"secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"},
   "GoogleCloud": {
     "PROJECT_NAME": "HospoHero",
