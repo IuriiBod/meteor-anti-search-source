@@ -1,32 +1,19 @@
-Template.wrongQuantityModal.onRendered(function () {
-  this.$('[data-toggle="popover"]').popover();
-  this.$('.i-checks').iCheck({
-    checkboxClass: 'icheckbox_square-green'
-  });
-});
-
-Template.wrongQuantityModal.helpers({
-});
-
 Template.wrongQuantityModal.events({
-  'submit .quantity-form': function (event, tmpl) {
+  'click .update-quantity-button': function (event, tmpl) {
     event.preventDefault();
-    var $form =tmpl.$(event.target);
-    var $invoiceQuantityInput = $form.find('.invoice-quantity-input');
 
-    var invoiceQuantity = $invoiceQuantityInput.val();
+    let receivedCountStr = tmpl.$('.received-count-input').val();
+    let receivedCount = parseFloat(receivedCountStr);
 
-    var receipt = tmpl.data.receipt;
-    var order = tmpl.data.order;
-    var info = {
-      'quantity': Math.round(parseFloat(invoiceQuantity) * 100) / 100
-    };
+    if (_.isFinite(receivedCount) && receivedCount >= 0) {
+      let orderItem = tmpl.data;
+      orderItem.receivedCount = HospoHero.misc.rounding(receivedCount);
 
-    if (invoiceQuantity && order._id && receipt._id) {
-      Meteor.call('updateOrderItems', order._id, receipt._id, 'Wrong Quantity', info, HospoHero.handleMethodResult());
+      Meteor.call('updateOrderItem', orderItem, HospoHero.handleMethodResult(() => {
+        ModalManager.getInstanceByElement(event.target).close();
+      }));
+    } else {
+      HospoHero.error(`"${receivedCountStr}" is incorrect value. It should be positive number.`);
     }
-
-    $invoiceQuantityInput.val('');
-    $('#wrongQuantityModal').modal('hide');
   }
 });

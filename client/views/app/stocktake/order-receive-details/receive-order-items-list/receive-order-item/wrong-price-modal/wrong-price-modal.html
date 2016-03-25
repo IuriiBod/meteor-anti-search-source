@@ -1,42 +1,46 @@
 <template name="wrongPriceModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-            class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="myModalLabel">Price is wrong..!</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-1"></div>
-          <div class="col-md-10">
-              <p class="text-center">Enter the actual price the supplier charged you here.</p>
+  <div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close close-modal-button">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span></button>
+          <h4 class="modal-title">Price is wrong..!</h4>
+        </div>
 
-              <form class="form-horizontal price-form">
-                <div class="form-group">
-                  <div class="col-sm-3"></div>
-                  <div class="col-sm-6">
-                    <div class="input-group m-b">
-                      <div class="input-group-addon">$</div>
-                      <input class="form-control text-right font-20 price-input"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="text-center m-b-md">Do you also want to:</div>
-                <div class="text-center m-b-md">
-                  <div class="i-checks">
-                    <label>
-                      <input type="checkbox" value="" class="selectedIng update-stock-price-input">
-                    </label> Update stock item price
-                    <a href="#" data-placement="top" data-toggle="popover" title="Tip"
-                       data-content="This will update the price in your stocklist and all jobs & menu items. It’s an easy way to keep your costings up to date.">(?)</a>
-                  </div>
-                </div>
-                <div class="pull-right">
-                  <button class="btn btn-primary" type="submit" id="updatePrices">Save</button>
-                  <button class="btn btn-small btn-default" data-dismiss="modal">Cancel</button>
-                </div>
-              </form>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <p class="text-center">Enter the actual price the supplier charged you here.</p>
+            </div>
+          </div>
+
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label for="newPrice">New price</label>
+              <div class="input-group m-b">
+                <div class="input-group-addon">$</div>
+                <input id="newPrice" class="form-control text-right font-20 new-price-input"/>
+              </div>
+            </div>
+
+            <div class="text-center m-b-md">Do you also want to:</div>
+            <div class="text-center m-b-md">
+              <div class="i-checks">
+                <label>
+                  <input type="checkbox" class="update-stock-price-input">
+                  Update stock item price
+                </label>
+                <a href="#" data-placement="top" data-toggle="popover" title="Tip"
+                   data-content="This will update the price in your stocklist and all jobs & menu items. It’s an easy way to keep your costings up to date.">(?)</a>
+              </div>
+            </div>
+
+            <div class="pull-right">
+              <button class="btn btn-primary save-new-price-button">Save</button>
+              <button class="btn btn-small btn-default close-modal-button">Cancel</button>
+            </div>
           </div>
         </div>
       </div>

@@ -6,41 +6,35 @@ Template.wrongPriceModal.onRendered(function () {
 });
 
 
-Template.wrongPriceModal.helpers({
-});
-
-
 Template.wrongPriceModal.events({
-  'submit .price-form': function (event, tmpl) {
+  'click .save-new-price-button': function (event, tmpl) {
     event.preventDefault();
-    var $form = tmpl.$(event.target);
-    var $priceInput = $form.find('.price-input');
+    let newPriceStr = tmpl.$('.new-price-input').val();
+    let newPrice = parseFloat(newPriceStr);
 
-    var price = $priceInput.val();
-    var doUpdate = $form.find('.update-stock-price-input')[0].checked;
+    if (_.isFinite(newPrice) && newPrice > 0) {
+      let updateIngredientPrice = $('.update-stock-price-input:checked').val();
+      let orderItem = tmpl.data;
+      let ingredientId = tmpl.data.ingredient.id;
 
-    var receipt = tmpl.data.receipt;
-    var order = tmpl.data.order;
-    var info = {
-      'price': parseFloat(price),
-      'stockPriceUpdated': doUpdate
-    };
-
-    if (price && price > 0) {
-      Meteor.call('updateOrderItems', order._id, receipt._id, 'Wrong Price', info, HospoHero.handleMethodResult());
-    }
-
-    var stockId = order ? order.stockId : null;
-    if (doUpdate) {
-      info = {
-        'costPerPortion': parseFloat(price)
+      let closeModalFn = () => {
+        ModalManager.getInstanceByElement(event.target).close();
       };
-      if (price && price > 0) {
-        Meteor.call('editIngredient', stockId, info, HospoHero.handleMethodResult());
-      }
-    }
 
-    $priceInput.val('');
-    $('#wrongPriceModal').modal('hide');
+      let onOrderItemUpdatedSuccess = () => {
+        if (updateIngredientPrice) {
+          Meteor.call('editIngredient', ingredientId, {costPerPortion: newPrice}, HospoHero.handleMethodResult(closeModalFn));
+        } else {
+          closeModalFn();
+        }
+      };
+
+      orderItem.ingredient.originalCost = orderItem.ingredient.cost;
+      orderItem.ingredient.cost = newPrice;
+
+      Meteor.call('updateOrderItem', orderItem, HospoHero.handleMethodResult(onOrderItemUpdatedSuccess));
+    } else {
+      HospoHero.error(`"${newPriceStr}" should be positive number.`);
+    }
   }
 });

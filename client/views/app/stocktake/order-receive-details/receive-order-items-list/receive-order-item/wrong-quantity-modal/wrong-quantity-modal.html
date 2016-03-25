@@ -1,33 +1,35 @@
 <template name="wrongQuantityModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">
-          <span aria-hidden="true"> &times;</span>
-          <span class="sr-only">Close</span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel">Quantity is wrong..!</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-1"></div>
-          <div class="col-md-10">
-            <p class="text-center">Do you want to update the quantity of the stock order?</p>
+  <div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
 
-            <form class="form-horizontal quantity-form">
+        <div class="modal-header">
+          <button type="button" class="close close-modal-button">
+            <span aria-hidden="true"> &times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Quantity is wrong..!</h4>
+        </div>
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <p class="text-center">Do you want to update the quantity of the stock order?</p>
+            </div>
+
+            <div class="form-horizontal">
               <div class="form-group">
-                <div class="col-sm-3"></div>
-                <div class="col-sm-6">
-                  <input class="form-control text-center font-20 invoice-quantity-input"/>
-                </div>
+                <label for="receivedCount">Received count</label>
+                <input id="receivedCount" class="form-control text-center font-20 received-count-input"/>
               </div>
               <div class="pull-right">
-                <button class="btn btn-primary" type="submit" id="updateQuantity">Save</button>
-                <button class="btn btn-small btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary update-quantity-button">Save</button>
+                <button class="btn btn-small btn-default close-modal-button">Cancel</button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
