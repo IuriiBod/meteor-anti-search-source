@@ -8,18 +8,14 @@ var canUserEditRoster = function () {
 Template.managerNoteWidget.onCreated(function () {
   let self = this;
 
-  self.note = () => {
-    return ManagerNotes.findOne({
-      noteDate: self.data.date,
-      'relations.areaId': HospoHero.getCurrentAreaId()
-    });
-  };
+  self.note = () => ManagerNotes.findOne({
+    noteDate: TimeRangeQueryBuilder.forDay(self.data.date),
+    'relations.areaId': HospoHero.getCurrentAreaId()
+  });
 
   let weekRange = TimeRangeQueryBuilder.forWeek(self.data.date);
 
-  self.subscribe('managerNotes', weekRange, HospoHero.getCurrentAreaId(), function onReady () {
-    self.subscribe('comments', self.note()._id, HospoHero.getCurrentAreaId());
-  });
+  self.subscribe('managerNotes', weekRange, HospoHero.getCurrentAreaId());
 
   self.textForEmptyEditor = 'Leave your note here';
 });
