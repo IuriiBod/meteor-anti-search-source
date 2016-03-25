@@ -44,7 +44,8 @@ Template.applicationsList.onCreated(function () {
 
 Template.applicationsList.helpers({
   applications () {
-    return Template.instance().searchSource.searchResult({sort: {createdAt: 1}});
+    let tmpl = Template.instance();
+    return tmpl.searchSource.searchResult({sort: {createdAt: 1}});
   },
 
   statusFilterTypes () {

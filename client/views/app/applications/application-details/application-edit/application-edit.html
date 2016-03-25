@@ -38,9 +38,19 @@
     <tr>
       <td><b>Application Progress</b></td>
       <td>
-        {{> applicationProgressCheckboxes
-            checked=application.appProgress
-            checkboxes=applicationProgress}}
+        {{# if isClosed}}
+          {{# if isClosed 'hired'}}
+            <div class="text-success">
+              <b>Hired</b>
+            </div>
+          {{else}}
+            <div class="text-danger">
+              <b>Rejected</b>
+            </div>
+          {{/if}}
+        {{else}}
+          {{> applicationProgressCheckboxes checked=application.appProgress}}
+        {{/if}}
       </td>
     </tr>
 

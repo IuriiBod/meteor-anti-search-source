@@ -5,10 +5,27 @@ let canUserEditInterviews = (areaId = null) => {
 
 
 Meteor.methods({
+  crateInterview (interview) {
+    let areaId = HospoHero.getCurrentAreaId(this.userId);
+
+    if (!canUserEditInterviews(areaId)) {
+      throw new Meteor.Error('You can\'t edit interviews');
+    }
+    
+    _.extend(interview, {
+      createdAt: new Date(),
+      createdBy: Meteor.userId()
+    });
+    
+    check(interview, HospoHero.checkers.InterviewDocument);
+    
+    return Interviews.insert(interview);
+  },
+  
   updateInterview (interview) {
     let areaId = HospoHero.getCurrentAreaId(this.userId);
 
-    if (!canUserEditInterviews(areaId, interview)) {
+    if (!canUserEditInterviews(areaId)) {
       throw new Meteor.Error('You can\'t edit interviews');
     }
 

@@ -1,31 +1,24 @@
-Template.applicationProgressCheckbox.onCreated(function () {
-  let checkboxes = _.pluck(this.data.checkboxes, 'name');
-
-  let checkedItemIndex = checkboxes.indexOf(this.data.checked);
-  let currentIndex = checkboxes.indexOf(this.data.checkbox.name);
-
-  this.isChecked = currentIndex <= checkedItemIndex;
-});
-
 Template.applicationProgressCheckbox.helpers({
+  checked () {
+    return this.checked.indexOf(this.checkbox) > -1;
+  },
+
   checkboxAttr () {
-    if (Template.instance().isChecked) {
+    if (this.checked.indexOf(this.checkbox) > -1) {
       return {
         checked: true,
         disabled: true
-      }
+      };
     }
-  },
-
-  checked () {
-    return Template.instance().isChecked;
   }
 });
 
 Template.applicationProgressCheckbox.events({
-  'change input': function (event, tmpl) {
-    tmpl.data.onCheckboxChange(tmpl.data.checkbox, () => {
-      event.target.checked = false;
-    });
+  'click input': function (event, tmpl) {
+    let onChange = tmpl.data.onCheckboxChange;
+
+    if (_.isFunction(onChange)) {
+      onChange(tmpl.data.checkbox);
+    }
   }
 });

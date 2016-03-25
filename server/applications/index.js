@@ -94,7 +94,7 @@ Meteor.methods({
         availability: [Number],
         dateOfBirth: Date,
         numberOfHours: Number,
-        message: String,
+        message: String
       };
 
       _.each(appDef.schema, (value, field) => {
@@ -105,7 +105,7 @@ Meteor.methods({
 
       let application = {
         createdAt: new Date(),
-        appProgress: 'New Application',
+        appProgress: ['New Application'],
         positionIds: positions,
         relations: HospoHero.getRelationsObject(area._id),
         details: details
@@ -116,8 +116,8 @@ Meteor.methods({
         let newfile = {
           referenceId: applicationId,
           createdAt: new Date(),
-          name:file.filename,
-          url:file.url
+          name: file.filename,
+          url: file.url
         };
         Files.insert(newfile);
       });
@@ -138,6 +138,42 @@ Meteor.methods({
       throw new Meteor.Error('You can\'t update application');
     }
 
-    return Applications.update({_id: applicationId}, {$set: {appProgress: status}});
+    return Applications.update({_id: applicationId}, {$addToSet: {appProgress: status}});
+  },
+
+  closeApplication (applicationId, status) {
+    check(applicationId, HospoHero.checkers.MongoId);
+    check(status, String);
+
+    let application = Applications.findOne({_id: applicationId});
+
+    if (!canUpdateApplications(application)) {
+      throw new Meteor.Error('You can\'t update application');
+    }
+
+    return Applications.update({_id: applicationId}, {$set: {status: status}});
+  },
+
+  sendRejectApplicationEmail (application) {
+    let organization = Organizations.findOne({_id: application.relations.organizationId});
+    let sender = Meteor.users.findOne(this.userId);
+    
+    var notificationSender = new NotificationSender(
+      'Application rejected',
+      'reject-application',
+      {
+        applicantName: application.details.name,
+        organizationName: organization.name,
+        invitationSender: {
+          name: `${sender.profile.firstname} ${sender.profile.lastname}`,
+          tel: sender.profile.tel,
+          email: sender.emails[0].address
+        }
+      }
+    );
+
+    notificationSender.sendEmail(application.details.email);
+
+    Meteor.call('closeApplication', application._id, 'rejected');
   }
 });
