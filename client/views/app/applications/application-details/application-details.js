@@ -10,6 +10,6 @@ Template.applicationDetails.helpers({
   saveApplication () {
     return (changedApplication) => {
       Meteor.call('updateApplication', changedApplication, HospoHero.handleMethodResult());
-    }
+    };
   }
 });

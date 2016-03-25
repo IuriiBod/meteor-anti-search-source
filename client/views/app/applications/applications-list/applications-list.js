@@ -61,13 +61,13 @@ Template.applicationsList.helpers({
 
     return (status) => {
       tmpl.activeStatus.set(status);
-    }
+    };
   },
 
   positionsFilterTypes () {
     let positionsNames = this.positions.map(position => position.name);
     positionsNames.unshift('All');
-    return positionsNames
+    return positionsNames;
   },
 
   activePosition () {
@@ -79,7 +79,7 @@ Template.applicationsList.helpers({
 
     return (position) => {
       tmpl.activePosition.set(position);
-    }
+    };
   }
 });
 

@@ -98,5 +98,5 @@ Meteor.publishComposite('application', function (applicationId) {
         }
       ]
     };
-  })
+  });
 });
