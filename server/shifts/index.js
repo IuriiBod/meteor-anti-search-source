@@ -221,11 +221,11 @@ Meteor.methods({
 
     let area = HospoHero.getCurrentArea(this.userId);
     let startAndEndOfWeek = TimeRangeQueryBuilder.forWeek(new Date(firstDayOfWeek), area.locationId);
-    let existingShifts = Shifts.find({startTime: startAndEndOfWeek, 'relations.areaId': area._id});
+    let existingShift = Shifts.findOne({startTime: startAndEndOfWeek, 'relations.areaId': area._id});
 
-    if (existingShifts.count() && isConfirmed === undefined) {
+    if (existingShift && isConfirmed === undefined) {
       throw new Meteor.Error(403, 'Shifts for selected week already exists!');
-    } else if (existingShifts.count() && isConfirmed) {
+    } else if (existingShift && isConfirmed) {
       Shifts.remove({startTime: startAndEndOfWeek, 'relations.areaId': area._id});
     }
 
@@ -240,6 +240,7 @@ Meteor.methods({
       shift.type = null;
       shift.startTime = toCurrentDayMoment(shift.startTime, firstDayOfWeek, area.locationId);
       shift.endTime = toCurrentDayMoment(shift.endTime, firstDayOfWeek, area.locationId);
+      shift.published = existingShift && existingShift.published || false;
 
       try {
         check(shift, HospoHero.checkers.ShiftDocument);
