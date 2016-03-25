@@ -7,7 +7,7 @@ class OrderItemStatus {
     return _.isFinite(this._orderItem.receivedCount);
   }
 
-  isWrongPrice() {
+  isWrongCount() {
     if (this.isReceived()) {
       let receivedCount = this._orderItem.receivedCount;
       return _.isFinite(receivedCount) && receivedCount !== this._orderItem.orderedCount;
@@ -16,7 +16,7 @@ class OrderItemStatus {
     }
   }
 
-  isWrongCount() {
+  isWrongPrice() {
     if (this.isReceived()) {
       let originalCost = this._orderItem.ingredient.originalCost;
       return _.isFinite(originalCost) && this._orderItem.ingredient.cost !== originalCost;

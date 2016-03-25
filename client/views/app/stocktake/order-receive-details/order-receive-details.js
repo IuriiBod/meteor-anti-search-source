@@ -13,6 +13,10 @@ Template.orderReceiveDetails.helpers({
 
   isReceived() {
     return !!this.receivedBy;
+  },
+
+  hasTemperature(){
+    return this.hasOwnProperty('temperature');
   }
 });
 

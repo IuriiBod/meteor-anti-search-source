@@ -34,11 +34,11 @@
           </div>
         {{/unless}}
 
-        {{#if temperature}}
+        {{#if hasTemperature}}
           <div class="row">
             <div class="col-md-3">
               <span class="pull-left">
-                <label>Temperature: </label>
+                <label>Temperature:</label>
               </span>
               <span class="pull-right">{{temperature}} &#8451; <!--celsius character--> </span>
             </div>
@@ -54,11 +54,14 @@
         {{/if}}
 
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-3">
             {{#unless isReceived}}
               <a class="btn btn-primary mark-order-as-delivered-button">Mark delivery as received</a>
             {{else}}
-              Status: delivered
+              <span class="pull-left">
+                <label>Status:</label>
+              </span>
+              <span class="pull-right text-success">delivered</span>
             {{/unless}}
           </div>
         </div>
