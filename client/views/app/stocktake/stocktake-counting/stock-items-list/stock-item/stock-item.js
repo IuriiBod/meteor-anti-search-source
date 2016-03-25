@@ -81,11 +81,6 @@ Template.stockItem.events({
       let specialAreaId = tmpl.data.specialAreaId;
       let stockItem = tmpl.getStockItem();
 
-      if (stockItem && stockItem.orderItem) {
-        HospoHero.error("Order has been created. You can't delete this stocktake item.");
-        return;
-      }
-
       Meteor.call('removeIngredientFromStockArea', ingredientId, specialAreaId, HospoHero.handleMethodResult(() => {
         if (stockItem) {
           Meteor.call('removeStockItem', stockItem._id, HospoHero.handleMethodResult());

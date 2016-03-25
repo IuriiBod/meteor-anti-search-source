@@ -152,7 +152,7 @@ Meteor.methods({
         logger.error(404, error.join(''));
         throw new Meteor.Error(404, error.join(''));
       }
-      var existsInStockItems = StockItems.findOne({'ingredient._id': id});
+      var existsInStockItems = StockItems.findOne({'ingredient.id': id});
       if (existsInStockItems) {
         logger.error("Item found in stock counting, can't archive");
         throw new Meteor.Error("Item found in stock counting, can't archive");

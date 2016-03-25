@@ -45,9 +45,10 @@ class InvoiceUploader {
       compress: true,
       quality: 100
     }, (newBlob) => {
+      let order = this._order;
       invoiceImage.convertedUrl = newBlob.url;
 
-      this._order.invoiceImage = invoiceImage;
+      order.invoiceImage = invoiceImage;
       Meteor.call('updateOrder', order, HospoHero.handleMethodResult());
     });
   }
