@@ -1,58 +1,42 @@
 Meteor.publishComposite('managerNotes', function (weekRange, areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+  check(weekRange, HospoHero.checkers.WeekRange);
+  
   return {
     find: function() {
-      check(areaId, HospoHero.checkers.MongoId);
-      check(weekRange, HospoHero.checkers.WeekRange);
-
-      //todo: any security checks here?
-
-      let weekNotes = () => {
-        return ManagerNotes.find({
-          noteDate: weekRange,
-          'relations.areaId': areaId
-        });
-      };
-
-      let notes = weekNotes();
-
-      if (notes.fetch().length >= 7) {
-        return notes;
-      }
-
-      let daysOfWeek = HospoHero.dateUtils.getWeekDays(weekRange.$gte);
+      const daysOfWeek = HospoHero.dateUtils.getWeekDays(weekRange.$gte);
 
       daysOfWeek.forEach((date) => {
-        let note = ManagerNotes.find({
-          noteDate: date,
+        ManagerNotes.update({
+          noteDate: TimeRangeQueryBuilder.forDay(date),
           'relations.areaId': areaId
-        });
-
-        if (!note.fetch().length) {
-          ManagerNotes.insert({
+        }, {
+          $setOnInsert: {
             noteDate: date,
             relations: HospoHero.getRelationsObject(areaId)
-          });
-        }
+          }
+        }, {
+          upsert: true
+        })
       });
 
-      return weekNotes();
+      return ManagerNotes.find({
+        noteDate: weekRange,
+        'relations.areaId': areaId
+      });
     },
     children: [
       {
         find: function (note) {
-          if (this.userId) {
-            var query = {
-              "reference": note._id,
-              "relations.areaId": areaId
-            };
+          const query = {
+            reference: note._id,
+            'relations.areaId': areaId
+          };
 
-            return Comments.find(query, {
-              sort: {"createdOn": -1},
-              limit: 10
-            });
-          } else {
-            this.ready();
-          }
+          return Comments.find(query, {
+            sort: {createdOn: -1},
+            limit: 10
+          });
         },
         children: [
           {
