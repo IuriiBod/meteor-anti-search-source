@@ -12,7 +12,7 @@ Accounts.ui.config({
 
 //reCaptcha config
 reCAPTCHA.config({
-  sitekey: '6Lf9fxsTAAAAAKxR50-I57o9GqBCoNCwj5yyQa_E', //todo: Replace on deploy
+  sitekey: Meteor.settings.public.reCaptchaKey,
   theme: 'light', //OPTIONAL. <light|dark> Specifies the color theme of the widget
   type: 'image', //OPTIONAL. <audio|image> Specifies the type of captcha to serve
   size: 'normal' //OPTIONAL. <normal|compact> Specifies the type of captcha to serve

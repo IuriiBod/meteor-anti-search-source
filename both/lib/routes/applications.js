@@ -13,7 +13,7 @@ Router.route('applications', {
   data () {
     return {
       positions: Positions.find()
-    }
+    };
   }
 });
 
@@ -36,7 +36,7 @@ Router.route('/application-details/:id', {
       return {
         application: application,
         applicationSchema: applicationSchema
-      }
+      };
     }
   }
 });
