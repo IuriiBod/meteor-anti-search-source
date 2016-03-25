@@ -4,7 +4,7 @@ Template.formFieldsSettings.helpers({
     let schema = applicationDefinition && applicationDefinition.schema || {};
 
     let fieldTitles = {
-      name: 'Name',
+      name: 'Full Name',
       email: 'Email',
       phone: 'Phone',
       dateOfBirth: 'Date of Birth',
@@ -18,7 +18,9 @@ Template.formFieldsSettings.helpers({
       return {
         fieldName: field,
         fieldTitle: value,
-        isChecked: schema[field] || false
+        isChecked: schema[field] || false,
+        infoMessage: (field === 'name' || field === 'email') ? 'Required' : false,
+        isDisable:(field === 'name' || field === 'email') ? true : false
       };
     });
   },
