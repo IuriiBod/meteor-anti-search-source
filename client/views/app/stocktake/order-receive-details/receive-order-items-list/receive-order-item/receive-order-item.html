@@ -5,7 +5,7 @@
       {{orderItemCount}} [{{ingredientItem.portionOrdered}}]
     </td>
     <td>$ {{roundCount ingredient.cost}}</td>
-    <td>$ {{roundCount unitTotalPrice orderItemCount}}</td>
+    <td>$ {{unitTotalPrice orderItemCount}}</td>
     <td>
       {{#if isDelivered}}
         {{#if orderItemStatus.isWrongPrice}}Wrong Price{{/if}}
@@ -19,7 +19,7 @@
 
         {{#unless  orderItemStatus.isWrongQuantity}}
           <button class="btn btn-info btn-circle btn-outline receive-order-item-button" type="button">
-            <i class="fa fa-check"></i> Correct
+            <i class="fa fa-check"></i>
           </button>
         {{/unless}}
       {{/if}}

@@ -54,10 +54,9 @@ Meteor.publishComposite('fullOrderInfo', function (orderId) {
   check(orderId, HospoHero.checkers.OrderId);
 
   let ordersCursor = Orders.find({_id: orderId});
+  let areaId = ordersCursor.fetch()[0].relations.areaId; //it is safe because we checked order's ID
 
   let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
-  let areaId = ordersCursor.fetch()[0].relations.areaId; //it is safe because we checked order's ID
-  
   if (!permissionChecker || !permissionChecker.hasPermissionInArea(areaId, 'receive deliveries')) {
     this.ready();
     return;
@@ -70,7 +69,7 @@ Meteor.publishComposite('fullOrderInfo', function (orderId) {
     children: [
       {
         find: function (order) {
-          return OrderItems.find({orderId: order._id, countOrdered: {$gt: 0}});
+          return OrderItems.find({orderId: order._id, orderedCount: {$gt: 0}});
         },
         children: [
           {

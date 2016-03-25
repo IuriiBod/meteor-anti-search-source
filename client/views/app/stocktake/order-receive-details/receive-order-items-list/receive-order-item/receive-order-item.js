@@ -37,7 +37,7 @@ Template.receiveOrderItem.helpers({
   },
 
   unitTotalPrice: function (orderItemCount) {
-    return this.ingredient.cost * orderItemCount;
+    return HospoHero.misc.rounding(this.ingredient.cost * orderItemCount);
   },
 
   orderItemCount: function () {
