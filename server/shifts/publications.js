@@ -1,7 +1,22 @@
 Meteor.publishAuthorized('weeklyRoster', function (weekRange, areaId) {
   check(weekRange, HospoHero.checkers.WeekRange);
-
+  console.log(weekRange);
   logger.info("Shift date range in publisher", weekRange);
+
+  let shifts = Shifts.find({
+    'relations.areaId': areaId,
+    startTime: weekRange
+  }).fetch();
+
+  let sortedShifts = shifts.sort((a, b) => {
+    return a.startTime - b.startTime;
+  });
+
+  sortedShifts.forEach((item) => {
+    console.log(item.startTime);
+    console.log(item.endTime);
+    console.log('--------------');
+  });
 
   //get shifts
   return Shifts.find({

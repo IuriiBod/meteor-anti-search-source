@@ -2,29 +2,28 @@ Router.route('/roster/weekly/:date', {
   name: "weeklyRoster",
   template: "weeklyRosterMainView",
   waitOn: function () {
-    var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    let currentArea = HospoHero.getCurrentArea(Meteor.userId());
+    let location = currentArea && Locations.findOne({_id: currentArea.locationId});
+    if (location) {
+      let weekRange = TimeRangeQueryBuilder.forWeek(this.params.date, location._id);
 
-    if (!currentAreaId) {
-      return [];
+      var subscriptions = [
+        Meteor.subscribe('weeklyRoster', weekRange, currentArea._id),
+        Meteor.subscribe('areaUsersList', currentArea._id),
+        Meteor.subscribe('sections', currentArea._id),
+        Meteor.subscribe('areaMenuItems', currentArea._id),
+        Meteor.subscribe('managerNotes', weekRange, currentArea._id),
+        Meteor.subscribe('leaveRequest'),
+        Meteor.subscribe('taskList', Meteor.userId())
+      ];
+
+
+      var checker = new HospoHero.security.PermissionChecker();
+      if (checker.hasPermissionInArea(currentArea._id, 'view forecast')) {
+        subscriptions.push(Meteor.subscribe('dailySales', weekRange, currentArea._id));
+      }
+      return subscriptions;
     }
-
-    var subscriptions = [
-      Meteor.subscribe('weeklyRoster', weekRange, currentAreaId),
-      Meteor.subscribe('areaUsersList', currentAreaId),
-      Meteor.subscribe('sections', currentAreaId),
-      Meteor.subscribe('areaMenuItems', currentAreaId),
-      Meteor.subscribe('managerNotes', weekRange, currentAreaId),
-      Meteor.subscribe('leaveRequest'),
-      Meteor.subscribe('taskList', Meteor.userId())
-    ];
-
-
-    var checker = new HospoHero.security.PermissionChecker();
-    if (checker.hasPermissionInArea(currentAreaId, 'view forecast')) {
-      subscriptions.push(Meteor.subscribe('dailySales', weekRange, currentAreaId));
-    }
-    return subscriptions;
   },
   data: function () {
     return {

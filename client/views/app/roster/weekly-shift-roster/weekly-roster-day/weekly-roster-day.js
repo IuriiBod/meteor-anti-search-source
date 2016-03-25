@@ -44,10 +44,13 @@ Template.weeklyRosterDay.helpers({
   },
 
   shifts: function () {
-    return Shifts.find({
-      startTime: TimeRangeQueryBuilder.forDay(this.currentDate),
+    let currentArea = HospoHero.getCurrentArea(Meteor.userId());
+    let location = currentArea && Locations.findOne({_id: currentArea.locationId});
+
+    return location && Shifts.find({
+      startTime: TimeRangeQueryBuilder.forDay(this.currentDate, location._id),
       type: this.type,
-      "relations.areaId": HospoHero.getCurrentAreaId()
+      "relations.areaId": currentArea._id
     }, {
       sort: {order: 1}
     }).map((shift) => {

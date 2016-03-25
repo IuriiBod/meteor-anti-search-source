@@ -23,6 +23,13 @@ Namespace('HospoHero.dateUtils', {
     return moment(new Date(date)).tz(location.timezone);
   },
 
+  convertDateForLocation(date, location) {
+    if (_.isString(location)) {
+      location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
+    }
+    return moment.tz(date, location.timezone).toDate();
+  },
+
   formatDate: function (date, format) {
     return moment(date).format(format);
   },
@@ -80,7 +87,9 @@ Namespace('HospoHero.dateUtils', {
 
   locationDate(date, locationId) {
     let dateFormat = 'ddd MMM DD YYYY h:mm:ss a';
-    let dateForTimeZone = HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
+    let dateForTimeZone = HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId) ;
+    console.log('before initializing new date => ', date);
+    console.log('after init new date', new Date(dateForTimeZone));
     return new Date(dateForTimeZone);
   },
 
@@ -89,10 +98,15 @@ Namespace('HospoHero.dateUtils', {
   },
 
   applyTimeToDate: function (date, newTime) {
+    console.log('date => ', date);
+    console.log('newTime => ', newTime);
     // new Date lets us to avoid bugs with initial date modification
     // because moment doesn't copy initial date by itself
     let dateMoment = moment(new Date(date));
     let timeMoment = moment(new Date(newTime));
+
+    console.log('dateMoment => ', dateMoment);
+    console.log('newTime => ', timeMoment);
 
     dateMoment.hours(timeMoment.hours());
     dateMoment.minutes(timeMoment.minutes());

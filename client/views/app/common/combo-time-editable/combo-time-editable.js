@@ -39,9 +39,11 @@ Template.comboTimeEditable.onCreated(function () {
     var hours = $combodate.find('.hours').val();
     var minutes = $combodate.find('.minutes').val();
     var ampm = $combodate.find('.ampm').val();
-    //console.log(`${moment(self.data.params[option]).format('YYYY-MM-DD')}T${hours}:${minutes}:${ampm}`);
-    console.log(new Date(moment(self.data.params[option]).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm));
-    //return new Date(`${moment(self.data.params[option]).format('YYYY-MM-DD')}T${hours}:${minutes}:${ampm}`);
+
+    let date = new Date(`${moment(self.data.params[option]).format('YYYY-MM-DD')} ${hours}:${minutes} ${ampm}`);
+    let transformedDate = moment(date).format('YYYY-MM-DDTHH:mm:ss');
+    console.log(transformedDate);
+    return transformedDate;
 
     //return new Date(moment(self.data.params[option]).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm);
   };
