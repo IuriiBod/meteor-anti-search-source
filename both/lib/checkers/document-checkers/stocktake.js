@@ -33,10 +33,10 @@ let StockItemDocument = Match.Where(function (stockItemDoc) {
     _id: Match.Optional(StockItemId),
     stocktakeId: HospoHero.checkers.MongoId,
     specialAreaId: HospoHero.checkers.MongoId,
-    count: Match.Optional(Number),
+    count: Match.Optional(HospoHero.checkers.PositiveNumber),
     ingredient: {
       id: HospoHero.checkers.MongoId,
-      cost: Number
+      cost: HospoHero.checkers.PositiveNumber
     },
     relations: HospoHero.checkers.Relations
   });

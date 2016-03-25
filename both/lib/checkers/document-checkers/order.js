@@ -29,7 +29,7 @@ let OrderDocument = Match.Where(function (orderDoc) {
     invoiceImage: Match.Optional({
       originalUrl: String,
       convertedUrl: String,
-      type: Match.OneOf("pdf", "csv", "doc", "doc", "image")
+      type: Match.OneOf('pdf', 'csv', 'doc', 'doc', 'image')
     }),
     relations: HospoHero.checkers.Relations
   });
@@ -41,7 +41,7 @@ let OrderItemId = Match.Where(function (orderItemId) {
   check(orderItemId, HospoHero.checkers.MongoId);
 
   if (!OrderItems.findOne({_id: orderItemId})) {
-    throw new Meteor.Error(500, "Order doesn't exists");
+    throw new Meteor.Error(500, "Order item doesn't exists");
   }
 
   return true;
@@ -52,15 +52,17 @@ let OrderItemDocument = Match.Where(function (orderItem) {
   check(orderItem, {
     _id: Match.Optional(OrderItemId),
     orderId: HospoHero.checkers.OrderId,
-    orderedCount: Number,
-    receivedCount: Match.Optional(Number),
+    orderedCount: HospoHero.checkers.PositiveNumber,
+    receivedCount: Match.Optional(HospoHero.checkers.PositiveNumber),
     ingredient: {
       id: HospoHero.checkers.MongoId,
-      cost: Number,
-      originalCost: Match.Optional(Number)
+      cost: HospoHero.checkers.PositiveNumber,
+      originalCost: Match.Optional(HospoHero.checkers.PositiveNumber)
     },
     relations: HospoHero.checkers.Relations
   });
+
+  return true;
 });
 
 
