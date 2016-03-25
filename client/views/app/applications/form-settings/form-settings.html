@@ -6,7 +6,7 @@
         {{> formFieldsSettings applicationId=applicationId}}
         {{> positionsList applicationId=applicationId}}
       </div>
-      {{#if applicationId}}
+      {{#if isHasPositions}}
        {{> formShareLink}}
       {{/if}}
     </div>
