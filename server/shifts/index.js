@@ -89,10 +89,10 @@ var ShiftPropertyChangeLogger = {
   }
 };
 
-let toCurrentDayMoment = (date, firstDayOfWeek) => {
-  date = moment(date);
+let toCurrentDayMoment = (date, firstDayOfWeek, locationId) => {
+  date = HospoHero.dateUtils.getDateMomentForLocation(date, locationId);
   // new Date(selectedWeek) for overcoming moment js deprecated error
-  var selectedWeekMoment = moment(new Date(firstDayOfWeek));
+  var selectedWeekMoment = HospoHero.dateUtils.getDateMomentForLocation(firstDayOfWeek, locationId);
   selectedWeekMoment.set({
     hours: date.hour(),
     minutes: date.minutes(),
@@ -221,11 +221,11 @@ Meteor.methods({
 
     let area = HospoHero.getCurrentArea(this.userId);
     let startAndEndOfWeek = TimeRangeQueryBuilder.forWeek(new Date(firstDayOfWeek), area.locationId);
-    let existingShifts = Shifts.find({startTime: startAndEndOfWeek, 'relations.areaId': area._id});
+    let existingShift = Shifts.findOne({startTime: startAndEndOfWeek, 'relations.areaId': area._id});
 
-    if (existingShifts.count() && isConfirmed === undefined) {
+    if (existingShift && isConfirmed === undefined) {
       throw new Meteor.Error(403, 'Shifts for selected week already exists!');
-    } else if (existingShifts.count() && isConfirmed) {
+    } else if (existingShift && isConfirmed) {
       Shifts.remove({startTime: startAndEndOfWeek, 'relations.areaId': area._id});
     }
 
@@ -238,8 +238,9 @@ Meteor.methods({
       delete shift._id;
       shift.createdBy = Meteor.userId();
       shift.type = null;
-      shift.startTime = toCurrentDayMoment(shift.startTime, firstDayOfWeek);
-      shift.endTime = toCurrentDayMoment(shift.endTime, firstDayOfWeek);
+      shift.startTime = toCurrentDayMoment(shift.startTime, firstDayOfWeek, area.locationId);
+      shift.endTime = toCurrentDayMoment(shift.endTime, firstDayOfWeek, area.locationId);
+      shift.published = existingShift && existingShift.published || false;
 
       try {
         check(shift, HospoHero.checkers.ShiftDocument);

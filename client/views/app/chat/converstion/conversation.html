@@ -1,21 +1,58 @@
 <template name="conversation">
   <div class="conversation">
-    <div class="chat-discussion">
-      {{#each messages}}
-        <div class="message {{#if isOwnMessage userId}}own-message{{/if}}">
-          <div class="message-header">
-            <strong class="author">{{username userId}}</strong>
-            <small class="timestamp">{{timeFormattedWithDate date}}</small>
-          </div>
-          <p class="message-content">{{body}}</p>
-        </div>
-      {{/each}}
-    </div>
-    <div class="chat-message-form">
-      <button class="btn btn-primary send-message">Send</button>
-      <div class="message-input">
-        <textarea class="form-control" placeholder="Enter your message"></textarea>
+    <div class="flyout-header">
+      {{> CloseFlyoutButton}}
+      <ul class="list-inline">
+        {{#unless isParticipantsListOpened}}
+          <li><a class="add-participant" href="#"><i class="fa fa-user-plus"></i></a></li>
+        {{/unless}}
+        <li class="dropdown">
+          <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-ellipsis-h"></i>
+          </a>
+          <ul class="dropdown-menu pull-right">
+            <li><a class="leave-conversation" href="#">Leave conversation</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="conversation-title-wrapper">
+        {{#if isParticipantsListOpened}}
+          Invite participants
+        {{else}}
+          {{participantsListStr}}
+        {{/if}}
+        <br>
+        <a href="#"
+           class="subject-of-conversation"
+           data-type="text"
+           data-name="username"
+           data-original-title="Enter username">{{subjectOfConversation}}</a>
       </div>
+    </div>
+    <div class="flyout-content">
+      <div class="chat-discussion">
+        {{#each messages}}
+          <div class="message {{#if isOwnMessage userId}}own-message{{/if}}">
+            <div class="message-header">
+              <strong class="author">{{username userId}}</strong>
+              <small class="timestamp">{{timeFormattedWithDate date}}</small>
+            </div>
+            <p class="message-content">{{body}}</p>
+          </div>
+        {{/each}}
+      </div>
+      <div class="chat-message-form">
+        <button class="btn btn-primary send-message">Send</button>
+        <div class="message-input">
+          <textarea class="form-control" placeholder="Enter your message"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="inner-flyout
+    {{#if isParticipantsListOpened}}show-inner-flyout{{else}}hide-inner-flyout{{/if}}
+    {{#if isInnerFlyoutAnimated}}with-animation{{/if}}">
+
+      {{> participantsList conversationId=conversation._id onCloseFlyout=hideParticipantsList}}
     </div>
   </div>
 </template>

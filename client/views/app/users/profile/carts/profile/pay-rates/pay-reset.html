@@ -4,39 +4,27 @@
   <p>Weekdays ($):
     {{#if hasPermissionInAreaTo "edit user's payrate"}}
       <a href="#" id="weekdaysrate" data-id="{{_id}}"
-         class="editable">{{profile.payrates.weekdays}}</a>
+         class="editable">{{weekdaysPayrate}}</a>
     {{else}}
-      {{#if profile.payrates.weekdays}}
-        {{profile.payrates.weekdays}}
-      {{else}}
-        Not added
-      {{/if}}
+      {{weekdaysPayrate}}
     {{/if}}
   </p>
 
   <p>Saturday ($):
     {{#if hasPermissionInAreaTo "edit user's payrate"}}
       <a href="#" id="saturdayrate" data-id="{{_id}}"
-         class="editable">{{profile.payrates.saturday}}</a>
+         class="editable">{{saturdayPayrate}}</a>
     {{else}}
-      {{#if profile.payrates.saturday}}
-        {{profile.payrates.saturday}}
-      {{else}}
-        Not added
-      {{/if}}
+      {{saturdayPayrate}}
     {{/if}}
   </p>
 
   <p>Sunday ($):
     {{#if hasPermissionInAreaTo "edit user's payrate"}}
       <a href="#" id="sundayrate" data-id="{{_id}}"
-         class="editable">{{profile.payrates.sunday}}</a>
+         class="editable">{{sundayPayrate}}</a>
     {{else}}
-      {{#if profile.payrates.sunday}}
-        {{profile.payrates.sunday}}
-      {{else}}
-        Not added
-      {{/if}}
+      {{sundayPayrate}}
     {{/if}}
   </p>
 </template>
