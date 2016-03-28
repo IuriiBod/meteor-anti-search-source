@@ -9,7 +9,7 @@
     <td>
       {{#if isDelivered}}
         {{#if orderItemStatus.isWrongPrice}}Wrong Price{{/if}}
-        {{#if orderItemStatus.isWrongQuantity}}Wrong Quantity{{/if}}
+        {{#if orderItemStatus.isWrongCount}}Wrong Quantity{{/if}}
         {{#if orderItemStatus.isDeliveredCorrectly}}Delivered correctly{{/if}}
       {{else}}
         {{#unless orderItemStatus.isDeliveredCorrectly}}
@@ -17,7 +17,7 @@
           <a class="btn btn-sm btn-outline btn-danger wrong-quantity-button">Wrong Quantity</a>
         {{/unless}}
 
-        {{#unless  orderItemStatus.isWrongQuantity}}
+        {{#unless  orderItemStatus.isWrongCount}}
           <button class="btn btn-info btn-circle btn-outline receive-order-item-button" type="button">
             <i class="fa fa-check"></i>
           </button>
