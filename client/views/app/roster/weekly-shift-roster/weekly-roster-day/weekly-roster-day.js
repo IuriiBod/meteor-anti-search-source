@@ -108,10 +108,9 @@ Template.weeklyRosterDay.events({
 
     let pastedShift = tmpl.data.shiftBuffer;
 
-    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
-      start: zeroMoment,
-      end: zeroMoment
-    }, pastedShift.startTime, pastedShift.endTime);
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
+        zeroMoment, pastedShift.startTime, pastedShift.endTime, pastedShift.relations.locationId
+    );
 
     pastedShift.startTime = newShiftDuration.start;
     pastedShift.endTime = newShiftDuration.end;

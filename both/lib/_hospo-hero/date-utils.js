@@ -23,10 +23,6 @@ Namespace('HospoHero.dateUtils', {
     return moment(new Date(date)).tz(location.timezone);
   },
 
-  //convertDateForLocation(date, timezone) {
-  //  return moment.tz(date, timezone).toDate();
-  //},
-
   formatDate: function (date, format) {
     return moment(date).format(format);
   },

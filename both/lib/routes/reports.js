@@ -2,12 +2,14 @@ Router.route('/reports/:date', {
   name: "teamHours",
   template: "teamHoursMainView",
   waitOn: function () {
-    var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    if (currentAreaId) {
+    var currentArea = HospoHero.getCurrentArea(Meteor.userId());
+    let location = currentArea && Locations.findOne({_id: currentArea.locationId});
+    if (location) {
+      let weekRange = TimeRangeQueryBuilder.forWeek(this.params.date, location._id);
+
       return [
-        Meteor.subscribe('areaUsersList', currentAreaId),
-        Meteor.subscribe('weeklyRoster', weekRange, currentAreaId)
+        Meteor.subscribe('areaUsersList', currentArea._id),
+        Meteor.subscribe('weeklyRoster', weekRange, currentArea._id)
       ];
     }
   },
