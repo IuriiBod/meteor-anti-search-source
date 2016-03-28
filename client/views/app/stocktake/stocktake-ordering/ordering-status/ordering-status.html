@@ -1,13 +1,13 @@
 <template name="orderingStatus">
   <h2 class="ordering-status">
-    {{supplierName activeSupplierId}}
+    {{supplierName supplierId}}
     <small class="text-info pull-right">
-      {{#if deliveryDate}}
+      {{#if expectedDeliveryDate}}
         Expect delivery on
-        {{> expectedDeliveryDatePicker deliveryDate=deliveryDate receipt=receipt}}
+        {{> expectedDeliveryDatePicker}}
       {{/if}}
-      {{#if receipt}}
-        <i class="fa fa-fw fa-check"></i> Status: {{orderSentDetails receipt}}
+      {{#if orderedThrough}}
+        <i class="fa fa-fw fa-check"></i> Status: {{orderSentDetails}}
       {{else}}
         <a class="btn btn-primary order-emailed-button">
           <i class="fa fa-envelope-o fa-fw fa-lg"></i>Send email

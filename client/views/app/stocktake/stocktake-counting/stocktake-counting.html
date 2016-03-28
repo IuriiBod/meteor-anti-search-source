@@ -1,0 +1,47 @@
+<template name="stocktakeCounting">
+  <!-- Page heading -->
+  {{> pageHeading title='Stocktake Counting' category="Stocktake List"}}
+
+  <div class="wrapper wrapper-content stocktake-counting">
+    <div class="row">
+      <div class="col-lg-12">
+        {{#if hasOrders}}
+          <a class="btn btn-primary btn-sm pull-right" href="{{pathFor route='stocktakeOrdering'}}">
+            View Orders
+          </a>
+        {{else}}
+          <a class="btn btn-primary btn-sm pull-right generate-orders-button">Save stocktake &amp; generate orders</a>
+
+          {{#if isEditMode}}
+            <a class="btn btn-link btn-sm pull-right finish-template-editing-button">
+              <i class="fa fa-fw fa-save"></i>Finish Template Editing
+            </a>
+          {{else}}
+            <a class="btn btn-link btn-sm pull-right edit-template-button">
+              <i class="fa fa-fw fa-edit"></i>Edit Stocktake Template
+            </a>
+          {{/if}}
+        {{/if}}
+
+        {{dateFormat date}}: ${{roundCount totalStocktakeCost}}
+
+        <hr>
+      </div>
+    </div>
+
+    <div class="row">
+      {{> stockAreasFilter onStockAreaSelect=onStockAreaSelect activeAreas=activeAreas isEditMode=isEditMode}}
+      <div class="col-md-8">
+        {{#if activeAreas.special}}
+          {{> stockItemsList stocktakeId=_id specialAreaId=activeAreas.special isEditMode=isEditMode}}
+
+          {{#if isEditMode}}
+            <a class="btn btn-block btn-default btn-outline add-ingredient-button">Add stock items to this area</a>
+          {{/if}}
+        {{else}}
+          Select areas to show list of stock items
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

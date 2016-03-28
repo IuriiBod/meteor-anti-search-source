@@ -11,8 +11,8 @@ Meteor.publishAuthorized("suppliers", function (ids) {
 Meteor.publishAuthorized("supplierProfile", function (id) {
   return [
     Suppliers.find(id),
-    Ingredients.find({"suppliers": id}),
-    OrderReceipts.find({"supplier": id})
+    Ingredients.find({suppliers: id}),
+    Orders.find({supplierId: id})
   ];
 });
 

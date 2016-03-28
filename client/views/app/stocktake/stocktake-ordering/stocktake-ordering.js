@@ -1,60 +1,26 @@
 Template.stocktakeOrdering.onCreated(function () {
-  this.set('activeSupplierId', null);
+  this.activeSupplierId = new ReactiveVar(false);
 });
 
 Template.stocktakeOrdering.helpers({
+  activeSupplierId: function () {
+    return Template.instance().activeSupplierId.get();
+  },
+
+  activeOrder: function () {
+    let supplierId = Template.instance().activeSupplierId.get();
+    return Orders.findOne({supplierId: supplierId, stocktakeId: this.stocktakeId});
+  },
+
   isNotEmpty: function () {
-    return !!StockOrders.findOne({
-      version: this.stocktakeMainId
-    });
-  },
-
-  stockOrdersList: function (activeSupplierId) {
-    return StockOrders.find({
-      version: this.stocktakeMainId,
-      supplier: activeSupplierId
-    });
-  },
-
-  orderNote: function (activeSupplierId) {
-    var data = OrderReceipts.findOne({
-      version: this.stocktakeMainId,
-      supplier: activeSupplierId
-    });
-
-    return data && data.orderNote;
+    return !!Orders.findOne({stocktakeId: this.stocktakeId});
   },
 
   onSupplierChanged: function () {
     var tmpl = Template.instance();
     return function (supplierId) {
-      tmpl.set('activeSupplierId', supplierId);
+      tmpl.activeSupplierId.set(supplierId);
     };
   }
 });
 
-Template.stocktakeOrdering.events({
-  'keyup .supplier-order-note': function (event, tmpl) {
-    event.preventDefault();
-    if (event.keyCode === 13) {
-      var noteText = tmpl.$(event.target).val().trim();
-
-      if (noteText.length > 0) {
-        var activeSupplierId = tmpl.get('activeSupplierId');
-        var version = tmpl.data.stocktakeMainId;
-
-        var receipt = OrderReceipts.findOne({supplier: activeSupplierId, version: version});
-
-        if (receipt) {
-          var info = {
-            orderNote: noteText,
-            version: version,
-            supplier: activeSupplierId
-          };
-
-          Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult());
-        }
-      }
-    }
-  }
-});

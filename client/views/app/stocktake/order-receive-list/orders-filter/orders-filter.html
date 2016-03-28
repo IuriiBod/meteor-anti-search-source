@@ -1,0 +1,16 @@
+<template name="ordersFilter">
+  <div class="btn-group">
+    {{#each receivingOrdersButtons}}
+      {{> orderFilterButton}}
+    {{/each}}
+  </div>
+  <div class="btn-group">
+    {{#each periodOfOrdersButtons}}
+      {{> orderFilterButton}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="orderFilterButton">
+  <a href="#" class="{{className}}">{{text}}</a>
+</template>

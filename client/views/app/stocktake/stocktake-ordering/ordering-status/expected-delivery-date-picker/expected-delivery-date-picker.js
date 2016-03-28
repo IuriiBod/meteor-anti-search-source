@@ -5,7 +5,7 @@ Template.expectedDeliveryDatePicker.onRendered(function () {
     format: 'yyyy-mm-dd'
   });
   this.datePicker = datePickerElement;
-  this.datePicker.datepicker('setDate', this.data.deliveryDate);
+  this.datePicker.datepicker('setDate', this.data.expectedDeliveryDate);
 });
 
 
@@ -15,16 +15,12 @@ Template.expectedDeliveryDatePicker.events({
   },
 
   'changeDate .date-picker-input': function (event, tmpl) {
-    var date = event.date;
-    var receipt = tmpl.data.receipt;
+    let date = event.date;
+    let order = tmpl.data;
 
-    if (!moment(date).isSame(receipt.expectedDeliveryDate, 'day')) {
-      var info = {
-        expectedDeliveryDate: moment(date).startOf('day').valueOf(),
-        version: receipt.version,
-        supplier: receipt.supplierId
-      };
-      Meteor.call("updateReceipt", receipt._id, info, HospoHero.handleMethodResult());
+    if (!moment(date).isSame(order.expectedDeliveryDate, 'day')) {
+      order.expectedDeliveryDate = moment(date).startOf('day').toDate();
+      Meteor.call('updateOrder', order, HospoHero.handleMethodResult());
     }
   }
 });

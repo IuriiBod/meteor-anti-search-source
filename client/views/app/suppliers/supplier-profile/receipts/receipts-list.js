@@ -1,6 +1,6 @@
 Template.receiptsList.helpers({
   receipts: function () {
-    return OrderReceipts.find({
+    return Orders.find({
       supplier: this.id
     }, {
       sort: {

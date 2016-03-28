@@ -1,0 +1,72 @@
+<template name="orderReceiveDetails">
+  <!-- Page heading -->
+  {{> pageHeading title=title category="Stocktake"}}
+
+  <div class="wrapper wrapper-content order-receive-details-view">
+    <div class="ibox">
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-md-12">
+            <h3>What you ordered from {{supplierName supplierId}}</h3>
+            {{> receiveOrderItemsList}}
+            <hr>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            {{#if receiveNote}}
+              <p class="text-danger pull-left">Note: &nbsp;</p>{{receiveNote}}
+            {{else}}
+              <textarea class="form-control message-input-post receive-note-textarea"
+                        placeholder="Add notes here."></textarea>
+            {{/if}}
+          </div>
+        </div>
+
+        {{#unless isReceived}}
+          <div class="row">
+            <div class="col-md-12">
+              {{> invoiceImageUpload}}
+
+              <a class="btn btn-primary check-temperatures-button">Check temperatures</a>
+            </div>
+          </div>
+        {{/unless}}
+
+        {{#if hasTemperature}}
+          <div class="row">
+            <div class="col-md-3">
+              <span class="pull-left">
+                <label>Temperature:</label>
+              </span>
+              <span class="pull-right">{{temperature}} &#8451; <!--celsius character--> </span>
+            </div>
+          </div>
+        {{/if}}
+
+        {{#if invoiceImage}}
+          <div class="row">
+            <div class="col-md-12 m-t-md m-b-md">
+              {{> invoiceImage}}
+            </div>
+          </div>
+        {{/if}}
+
+        <div class="row">
+          <div class="col-md-3">
+            {{#unless isReceived}}
+              <a class="btn btn-primary mark-order-as-delivered-button">Mark delivery as received</a>
+            {{else}}
+              <span class="pull-left">
+                <label>Status:</label>
+              </span>
+              <span class="pull-right text-success">delivered</span>
+            {{/unless}}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</template>
