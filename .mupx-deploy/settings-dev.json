@@ -27,7 +27,7 @@
       "secret": "ALNUwQE9u31XHqj31fMYXxVb"
     }
   ],
-  "logLevel": "info",
+  "logLevel": "warn",
   "prediction": {
     "useRawOrders": true,
     "forecastIntervals": [
