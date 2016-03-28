@@ -23,12 +23,9 @@ Namespace('HospoHero.dateUtils', {
     return moment(new Date(date)).tz(location.timezone);
   },
 
-  convertDateForLocation(date, location) {
-    if (_.isString(location)) {
-      location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
-    }
-    return moment.tz(date, location.timezone).toDate();
-  },
+  //convertDateForLocation(date, timezone) {
+  //  return moment.tz(date, timezone).toDate();
+  //},
 
   formatDate: function (date, format) {
     return moment(date).format(format);
@@ -87,9 +84,7 @@ Namespace('HospoHero.dateUtils', {
 
   locationDate(date, locationId) {
     let dateFormat = 'ddd MMM DD YYYY h:mm:ss a';
-    let dateForTimeZone = HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId) ;
-    console.log('before initializing new date => ', date);
-    console.log('after init new date', new Date(dateForTimeZone));
+    let dateForTimeZone = HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
     return new Date(dateForTimeZone);
   },
 
@@ -97,16 +92,11 @@ Namespace('HospoHero.dateUtils', {
     return date ? moment(date).format('h:mm a') : '-';
   },
 
-  applyTimeToDate: function (date, newTime) {
-    console.log('date => ', date);
-    console.log('newTime => ', newTime);
+  applyTimeToDate: function (date, newTime, locationTimezone) {
     // new Date lets us to avoid bugs with initial date modification
     // because moment doesn't copy initial date by itself
-    let dateMoment = moment(new Date(date));
+    let dateMoment = date;
     let timeMoment = moment(new Date(newTime));
-
-    console.log('dateMoment => ', dateMoment);
-    console.log('newTime => ', timeMoment);
 
     dateMoment.hours(timeMoment.hours());
     dateMoment.minutes(timeMoment.minutes());
@@ -119,16 +109,21 @@ Namespace('HospoHero.dateUtils', {
    * Warning: Current implementation is working only
    * for intervals with duration less than 12 hours
    *
-   * @param {object} oldInterval
-   * @param {date} oldInterval.start
-   * @param {date} oldInterval.end
+   * @param {date} date
    * @param {date} newStartTime
    * @param {date} newEndTime
+   * @param {object, string} location
    */
-  updateTimeInterval: function (oldInterval, newStartTime, newEndTime) {
+  updateTimeInterval: function (date, newStartTime, newEndTime, location) {
+    if (_.isString(location)) {
+      location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
+    }
+
+    let dateIncludingTimezone = moment.tz(date, location.timezone);
+
     let newInterval = {
-      start: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newStartTime),
-      end: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newEndTime)
+      start: HospoHero.dateUtils.applyTimeToDate(dateIncludingTimezone, newStartTime),
+      end: HospoHero.dateUtils.applyTimeToDate(dateIncludingTimezone, newEndTime)
     };
 
     //in case start > end => we suppose interval should end after midnight
