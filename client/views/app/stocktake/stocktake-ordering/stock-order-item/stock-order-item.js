@@ -1,13 +1,25 @@
 //context: StockOrder
 Template.stockOrderItem.onRendered(function () {
   let tmpl = this;
+
+  let focusOnNextEditable = function (currentDomElement) {
+    let nextEditables = $(currentDomElement).closest('tr').next();
+    if (nextEditables.length > 0) {
+      nextEditables.find('a.ordering-count').click();
+    }
+  };
+
   let onCountChanged = function (response, newValue) {
     if (newValue) {
       let count = parseFloat(newValue) || 0;
       if (_.isFinite(count) && count >= 0) {
+        let currentDomElement = this;
+
         let orderItem = tmpl.data;
         orderItem.orderedCount = count;
-        Meteor.call('updateOrderItem', orderItem, HospoHero.handleMethodResult());
+        Meteor.call('updateOrderItem', orderItem, HospoHero.handleMethodResult(() => {
+          focusOnNextEditable(currentDomElement);
+        }));
       } else {
         HospoHero.error('Incorrect value!');
       }

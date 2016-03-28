@@ -26,11 +26,11 @@ let OrderDocument = Match.Where(function (orderDoc) {
     receivedDate: Match.Optional(Date),
     receiveNote: Match.Optional(String),
     temperature: Match.Optional(Number),
-    invoiceImage: Match.Optional({
+    invoiceImages: Match.Optional([{
       originalUrl: String,
       convertedUrl: String,
       type: Match.OneOf('pdf', 'csv', 'doc', 'doc', 'image')
-    }),
+    }]),
     relations: HospoHero.checkers.Relations
   });
   return true;

@@ -45,12 +45,19 @@ class InvoiceUploader {
       compress: true,
       quality: 100
     }, (newBlob) => {
-      let order = this._order;
       invoiceImage.convertedUrl = newBlob.url;
 
-      order.invoiceImage = invoiceImage;
-      Meteor.call('updateOrder', order, HospoHero.handleMethodResult());
+      let updatedOrder = this._addInvoiceImageToOrder(invoiceImage);
+      Meteor.call('updateOrder', updatedOrder, HospoHero.handleMethodResult());
     });
+  }
+
+  _addInvoiceImageToOrder(invoiceImage) {
+    if (!_.isArray(this._order.invoiceImages)) {
+      this._order.invoiceImages = [];
+    }
+    this._order.invoiceImages.push(invoiceImage);
+    return this._order;
   }
 
   _getDocumentTypeByMimetype(mimetype) {

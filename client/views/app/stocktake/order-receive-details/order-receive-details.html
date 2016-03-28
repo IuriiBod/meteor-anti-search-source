@@ -45,11 +45,13 @@
           </div>
         {{/if}}
 
-        {{#if invoiceImage}}
+        {{#if invoiceImages}}
           <div class="row">
-            <div class="col-md-12 m-t-md m-b-md">
-              {{> invoiceImage}}
-            </div>
+            {{#each invoiceImages}}
+              <div class="col-xs-12 col-sm-6 col-md-3 m-t-md m-b-md">
+                {{> invoiceImage}}
+              </div>
+            {{/each}}
           </div>
         {{/if}}
 
