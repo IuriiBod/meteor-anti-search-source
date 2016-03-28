@@ -1,9 +1,13 @@
 {
   "public": {
-    "intercom": {"id": "rc6uoqw0"},
+    "intercom": {
+      "id": "rc6uoqw0"
+    },
     "__superMail": "tom@farmcafe.com"
   },
-  "intercom": {"secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"},
+  "intercom": {
+    "secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"
+  },
   "GoogleCloud": {
     "PROJECT_NAME": "HospoHero",
     "PROJECT_ID": "hospohero",
@@ -23,10 +27,12 @@
       "secret": "ALNUwQE9u31XHqj31fMYXxVb"
     }
   ],
-  "logLevel": "warn",
+  "logLevel": "info",
   "prediction": {
     "useRawOrders": true,
-    "forecastIntervals": [14],
-    "threshold": "2016-01-25"
+    "forecastIntervals": [
+      7
+    ],
+    "threshold": "2016-03-29"
   }
 }
