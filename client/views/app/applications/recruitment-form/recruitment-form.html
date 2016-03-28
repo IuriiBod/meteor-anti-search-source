@@ -32,7 +32,8 @@
 
         <!-- Number of hours Field-->
         {{> recruitmentFormField
-          name='numberOfHours' label="Number of hours"
+        labelClass="col-lg-5 col-md-5" fieldClass="col-lg-3 col-md-3"
+          name='numberOfHours' label="Ideal numbers of hours you'd like to work each week?"
           pattern= numbersPattern type='number'
           isShow=applicationDefinition.schema.numberOfHours }}
 
@@ -43,6 +44,7 @@
         <!-- Message Field-->
         {{> recruitmentFormField
           name='message' label="Message" type='textarea'
+          labelClass="col-lg-12 col-md-12" fieldClass="col-lg-12 col-md-12"
           isShow=applicationDefinition.schema.message }}
 
         <!-- Files Field-->
