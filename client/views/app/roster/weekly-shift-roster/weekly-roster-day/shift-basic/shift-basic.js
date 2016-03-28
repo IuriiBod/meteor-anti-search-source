@@ -1,25 +1,17 @@
 Template.shiftBasic.onCreated(function () {
   var self = this;
 
-  let updateTimeIntervalForLocation = (startTime, endTime, locationId) => {
-    let newInterval = {
-      startTime: HospoHero.dateUtils.convertDateForLocation(startTime, locationId),
-      endTime: HospoHero.dateUtils.convertDateForLocation(endTime, locationId)
-    };
-
-    if (moment(newInterval.startTime).isAfter(newInterval.endTime)) {
-      newInterval.endTime = moment(newInterval.endTime).add(1, 'day').toDate();
-    }
-
-    return newInterval;
-  };
-
   self.editShiftTime = function (newStartTime, newEndTime) {
     let shift = this.data.shift;
-    let dateTimeInterval = updateTimeIntervalForLocation(newStartTime, newEndTime, shift.relations.locationId);
-    shift.startTime = dateTimeInterval.startTime;
-    shift.endTime = dateTimeInterval.endTime;
-    console.log('dateTimeInterval => ', dateTimeInterval);
+    let shiftCurrentDate = HospoHero.dateUtils.formatDate(newStartTime, 'YYYY-MM-DDTHH:mm:ss');
+
+    let dateTimeInterval = HospoHero.dateUtils.updateTimeInterval(
+        shiftCurrentDate, newStartTime, newEndTime, shift.relations.locationId
+    );
+
+    shift.startTime = dateTimeInterval.start;
+    shift.endTime = dateTimeInterval.end;
+
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
 });

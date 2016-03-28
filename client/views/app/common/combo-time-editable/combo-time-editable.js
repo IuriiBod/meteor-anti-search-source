@@ -40,12 +40,7 @@ Template.comboTimeEditable.onCreated(function () {
     var minutes = $combodate.find('.minutes').val();
     var ampm = $combodate.find('.ampm').val();
 
-    let date = new Date(`${moment(self.data.params[option]).format('YYYY-MM-DD')} ${hours}:${minutes} ${ampm}`);
-    let transformedDate = moment(date).format('YYYY-MM-DDTHH:mm:ss');
-    console.log(transformedDate);
-    return transformedDate;
-
-    //return new Date(moment(self.data.params[option]).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm);
+    return new Date(moment(self.data.params[option]).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm);
   };
 });
 

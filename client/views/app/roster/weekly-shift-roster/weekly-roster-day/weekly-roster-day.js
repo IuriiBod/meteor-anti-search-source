@@ -153,12 +153,11 @@ SortableHelper.prototype._getOrder = function () {
 SortableHelper.prototype.getSortedShift = function () {
   if (this._draggedShift) {
     var shift = this._draggedShift;
-    var newDate = this._draggedToDate;
+    var newShiftDate = HospoHero.dateUtils.formatDate(this._draggedToDate, 'YYYY-MM-DDTHH:mm:ss');
 
-    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
-      start: newDate,
-      end: newDate
-    }, shift.startTime, shift.endTime);
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
+        newShiftDate, shift.startTime, shift.endTime, shift.relations.locationId
+    );
 
     shift.startTime = newShiftDuration.start;
     shift.endTime = newShiftDuration.end;
