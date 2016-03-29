@@ -4,6 +4,6 @@ Template.applicationFormSettings.helpers({
     return applicationDefinition && applicationDefinition._id;
   },
   isHasPositions(){
-    return Positions.findOne() ?  true : false;
+    return Positions.findOne() ? true : false;
   }
 });

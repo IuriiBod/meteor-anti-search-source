@@ -1,3 +1,3 @@
 reCAPTCHA.config({
-	privatekey: Meteor.settings.reCaptchaKey
+  privatekey: Meteor.settings.reCaptchaKey
 });

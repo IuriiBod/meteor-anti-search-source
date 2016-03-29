@@ -120,7 +120,7 @@ var adjustShiftStatus = function (updatedShift) {
   }
 };
 
-var canUserEditRoster = function(areaId = null) {
+var canUserEditRoster = function (areaId = null) {
   var checker = new HospoHero.security.PermissionChecker();
   return checker.hasPermissionInArea(areaId, 'edit roster');
 };
@@ -245,7 +245,7 @@ Meteor.methods({
       try {
         check(shift, HospoHero.checkers.ShiftDocument);
         Shifts.insert(shift);
-      } catch(error) {
+      } catch (error) {
         logger.error(error);
       }
     });

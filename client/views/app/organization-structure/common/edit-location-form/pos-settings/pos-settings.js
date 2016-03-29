@@ -1,4 +1,4 @@
-Template.posSettings.onCreated(function() {
+Template.posSettings.onCreated(function () {
   this.posSystemTypes = ['Revel'];
   this.locationDoc = Template.currentData().locationDoc;
 
@@ -12,16 +12,16 @@ Template.posSettings.onCreated(function() {
 });
 
 Template.posSettings.helpers({
-  posSystemTypes: function() {
+  posSystemTypes: function () {
     return Template.instance().posSystemTypes;
   },
-  currentPosSystemName: function() {
+  currentPosSystemName: function () {
     return Template.instance().currentPosSystemName.get();
   },
-  isCurrentPosSystem: function(posSystemName) {
+  isCurrentPosSystem: function (posSystemName) {
     return Template.instance().currentPosSystemName.get() === posSystemName;
   },
-  posSettings: function() {
+  posSettings: function () {
     return Template.instance().locationDoc.pos || {};
   }
 });

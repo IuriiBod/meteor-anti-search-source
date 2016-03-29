@@ -5,7 +5,7 @@ let canUpdateApplications = (areaId) => {
 
 Meteor.methods({
   upsertsApplicationDefinition(changedSchema) {
-    _.extend(changedSchema, {name:true,email:true}); // this field is required
+    _.extend(changedSchema, {name: true, email: true}); // this field is required
     check(changedSchema, HospoHero.checkers.ApplicationSchemaDocument);
 
     let area = HospoHero.getCurrentArea(Meteor.user());
@@ -77,7 +77,7 @@ Meteor.methods({
     check(organizationId, HospoHero.checkers.MongoId);
     check(positions, [HospoHero.checkers.MongoId]);
     check(files, Match.Optional([Object]));
-    check(details,getSchemaCheckerObject(organizationId));
+    check(details, getSchemaCheckerObject(organizationId));
     check(captchaUrl, Match.Optional(String));
 
     // Captcha verify
@@ -175,7 +175,7 @@ Meteor.methods({
   }
 });
 
-function getSchemaCheckerObject(organizationId){
+function getSchemaCheckerObject(organizationId) {
   let res = {};
   let appDef = ApplicationDefinitions.findOne({'relations.organizationId': organizationId});
   if (appDef) {
@@ -191,7 +191,7 @@ function getSchemaCheckerObject(organizationId){
     // if fields in Application Definition is true,
     // than this field should be in Application details,
     // and have defined type
-    _.each(appDef.schema,(value, field) => {
+    _.each(appDef.schema, (value, field) => {
       if (value) {
         res[field] = fieldTypes[field];
       }

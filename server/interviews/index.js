@@ -22,7 +22,7 @@ Meteor.methods({
 
     return Interviews.insert(interview);
   },
-  
+
   updateInterview (interview) {
     check(interview, HospoHero.checkers.InterviewDocument);
     let areaId = HospoHero.utils.getNestedProperty(interview, 'relations.areaId', false);

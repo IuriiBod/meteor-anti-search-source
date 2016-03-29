@@ -1,5 +1,5 @@
 Template.recruitmentFormPositions.helpers({
-	positions(){
-		return Positions.find();
-	}
+  positions(){
+    return Positions.find();
+  }
 });

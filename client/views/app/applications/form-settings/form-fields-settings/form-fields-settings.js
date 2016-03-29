@@ -20,7 +20,7 @@ Template.formFieldsSettings.helpers({
         fieldTitle: value,
         isChecked: schema[field] || false,
         infoMessage: (field === 'name' || field === 'email') ? 'Required' : false,
-        isDisable:(field === 'name' || field === 'email') ? true : false
+        isDisable: (field === 'name' || field === 'email') ? true : false
       };
     });
   },

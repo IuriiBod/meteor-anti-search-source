@@ -75,7 +75,7 @@ Meteor.publishComposite('interview', function (interviewId, userId) {
   }
 });
 
-function interviewQuery (userId) {
+function interviewQuery(userId) {
   return [
     {createdBy: userId},
     {interviewers: userId}

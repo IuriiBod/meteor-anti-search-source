@@ -33,7 +33,7 @@ Template.applicationProgressCheckboxes.events({
   }
 });
 
-function createInterview (application) {
+function createInterview(application) {
   FlyoutManager.open('wrapperFlyout', {
     template: 'timeSelectFlyout',
     title: 'Select Interview time',
@@ -54,7 +54,7 @@ function createInterview (application) {
   });
 }
 
-function inviteUser (application) {
+function inviteUser(application) {
   let workerRole = Roles.getRoleByName('Worker');
   let areaId = HospoHero.getCurrentAreaId();
 
@@ -76,6 +76,6 @@ function inviteUser (application) {
   });
 }
 
-function sendRejectApplicationEmail (application) {
+function sendRejectApplicationEmail(application) {
   Meteor.call('sendRejectApplicationEmail', application, HospoHero.handleMethodResult());
 }

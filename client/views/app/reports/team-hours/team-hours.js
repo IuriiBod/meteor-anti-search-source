@@ -28,7 +28,7 @@ Template.teamHoursMainView.helpers({
       'relations.areaIds': HospoHero.getCurrentAreaId()
     };
     if (searchText) {
-      query['profile.firstname'] =  new RegExp(searchText, 'i');
+      query['profile.firstname'] = new RegExp(searchText, 'i');
     }
     return Meteor.users.find(query);
   },

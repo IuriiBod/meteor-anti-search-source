@@ -9,7 +9,7 @@ Meteor.publishComposite('applicationDefinitions', function (areaId) {
       children: [
         {
           find (applicationDefinitionItem) {
-             return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
+            return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
           }
         }
       ]

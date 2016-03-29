@@ -50,15 +50,15 @@ Router.route('recruitmentForm', {
     return Meteor.subscribe('applicationDefinitionsByOrganization', this.params._id);
   },
   onBeforeAction(){
-    if(!ApplicationDefinitions.findOne({'relations.organizationId':this.params._id}) || !Positions.findOne()){
+    if (!ApplicationDefinitions.findOne({'relations.organizationId': this.params._id}) || !Positions.findOne()) {
       this.render('notFound');
-    }else{
+    } else {
       this.next();
     }
   },
   data () {
     return {
-      applicationDefinition: ApplicationDefinitions.findOne({'relations.organizationId':this.params._id}),
+      applicationDefinition: ApplicationDefinitions.findOne({'relations.organizationId': this.params._id}),
       organizationId: this.params._id
     };
   }

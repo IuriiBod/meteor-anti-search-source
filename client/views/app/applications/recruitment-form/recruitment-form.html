@@ -6,50 +6,50 @@
 
         <!-- Name Field-->
         {{> recruitmentFormField
-            name='name' label="Full Name"
-            isShow=applicationDefinition.schema.name }}
+        name='name' label="Full Name"
+        isShow=applicationDefinition.schema.name }}
 
         <!-- Email Field-->
         {{> recruitmentFormField
-          name='email' label="Email" pattern=emailPattern
-          title="for example email@email.com"
-          isShow=applicationDefinition.schema.email }}
+        name='email' label="Email" pattern=emailPattern
+        title="for example email@email.com"
+        isShow=applicationDefinition.schema.email }}
 
         <!-- Phone Field-->
         {{> recruitmentFormField
-            name='phone' label="Phone" pattern=phonePattern
-            title="numbers only"
-            isShow=applicationDefinition.schema.phone }}
+        name='phone' label="Phone" pattern=phonePattern
+        title="numbers only"
+        isShow=applicationDefinition.schema.phone }}
 
         <!-- Date of Birth -->
         {{> recruitmentFormField
-          name='dateOfBirth' label="Date of birth" pattern=datePattern
-          isShow=applicationDefinition.schema.dateOfBirth }}
+        name='dateOfBirth' label="Date of birth" pattern=datePattern
+        isShow=applicationDefinition.schema.dateOfBirth }}
 
         <!-- Availability Field-->
         {{> recruitmentFormAvailabilities
-          isShow=applicationDefinition.schema.availability}}
+        isShow=applicationDefinition.schema.availability}}
 
         <!-- Number of hours Field-->
         {{> recruitmentFormField
         labelClass="col-lg-5 col-md-5" fieldClass="col-lg-3 col-md-3"
-          name='numberOfHours' label="Ideal numbers of hours you'd like to work each week?"
-          pattern= numbersPattern type='number'
-          isShow=applicationDefinition.schema.numberOfHours }}
+        name='numberOfHours' label="Ideal numbers of hours you'd like to work each week?"
+        pattern= numbersPattern type='number'
+        isShow=applicationDefinition.schema.numberOfHours }}
 
         <!-- Positions Field-->
         {{> recruitmentFormPositions
-          isShow=isHasPositions}}
+        isShow=isHasPositions}}
 
         <!-- Message Field-->
         {{> recruitmentFormField
-          name='message' label="Message" type='textarea'
-          labelClass="col-lg-12 col-md-12" fieldClass="col-lg-12 col-md-12"
-          isShow=applicationDefinition.schema.message }}
+        name='message' label="Message" type='textarea'
+        labelClass="col-lg-12 col-md-12" fieldClass="col-lg-12 col-md-12"
+        isShow=applicationDefinition.schema.message }}
 
         <!-- Files Field-->
         {{> recruitmentFormFilePicker files=files
-          isShow=applicationDefinition.schema.files}}
+        isShow=applicationDefinition.schema.files}}
 
         <!-- Captcha Field-->
         <div class="form-group">

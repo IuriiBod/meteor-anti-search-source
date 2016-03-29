@@ -62,7 +62,7 @@ class MeetingPropertyChangeLogger {
     }
   }
 
-  trackChanges () {
+  trackChanges() {
     let oldMeeting = Meetings.findOne({_id: this.meeting._id});
 
     var isPropertyChanged = (propertyName) => {
@@ -169,7 +169,7 @@ Meteor.methods({
   }
 });
 
-function sendNotificationsAboutNewMeeting (meetingId, meetingDoc) {
+function sendNotificationsAboutNewMeeting(meetingId, meetingDoc) {
   let templateData = {
     meeting: {
       title: meetingDoc.title,

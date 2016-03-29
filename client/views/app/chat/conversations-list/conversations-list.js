@@ -1,4 +1,4 @@
-Template.conversationsList.onCreated(function() {
+Template.conversationsList.onCreated(function () {
   let usersIds = new Set();
   this.data.conversations.forEach(conversation => {
     conversation._participants.forEach((participant) => usersIds.add(participant));

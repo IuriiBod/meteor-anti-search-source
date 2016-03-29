@@ -1,5 +1,5 @@
 Template.stocktakesList.helpers({
   stocktakes: function () {
-    return Stocktakes.find({},{sort: {date: -1}});
+    return Stocktakes.find({}, {sort: {date: -1}});
   }
 });

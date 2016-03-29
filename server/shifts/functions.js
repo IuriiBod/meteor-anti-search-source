@@ -1,4 +1,4 @@
-var canUserEditRoster = function() {
+var canUserEditRoster = function () {
   var checker = new HospoHero.security.PermissionChecker();
   return checker.hasPermissionInArea(null, 'edit roster');
 };
@@ -101,7 +101,7 @@ Meteor.methods({
       var shiftDate = HospoHero.dateUtils.getDateStringForRoute(shiftDateQuery.$gte, locationId);
 
       Object.keys(usersToNotify).forEach(function (notificationReceiverId) {
-        var user = Meteor.users.findOne({_id:Meteor.userId()});
+        var user = Meteor.users.findOne({_id: Meteor.userId()});
         new NotificationSender(
           'Weekly roster published',
           'roster-published',
@@ -112,10 +112,10 @@ Meteor.methods({
             publishedByName: HospoHero.username(Meteor.userId()),
             publishedByEmail: user.emails[0].address,
             publishedByPhone: user.profile.phone,
-            publishedForName:HospoHero.username(notificationReceiverId),
+            publishedForName: HospoHero.username(notificationReceiverId),
             rosterDate: shiftDate,
             areaName: HospoHero.getCurrentArea().name,
-            organizationName:Organizations.findOne({_id:HospoHero.getCurrentArea().organizationId}).name
+            organizationName: Organizations.findOne({_id: HospoHero.getCurrentArea().organizationId}).name
           },
           {
             helpers: {

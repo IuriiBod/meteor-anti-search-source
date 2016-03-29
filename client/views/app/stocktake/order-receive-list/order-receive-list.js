@@ -37,7 +37,7 @@ Template.orderReceiveList.helpers({
       tmpl.ordersToShowLimit.set(tmpl.defaultOrdersLimit);
     };
   },
-  
+
   hideLoadMoreButton() {
     let tmpl = Template.instance();
     let currentLimit = tmpl.ordersToShowLimit.get();

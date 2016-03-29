@@ -1,3 +1,2 @@
 //context: NewsFeed document
-Template.newsFeedPostComment.helpers({
-});
+Template.newsFeedPostComment.helpers({});

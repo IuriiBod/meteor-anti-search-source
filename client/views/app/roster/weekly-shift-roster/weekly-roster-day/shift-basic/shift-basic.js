@@ -3,7 +3,7 @@ Template.shiftBasic.onCreated(function () {
     let shift = this.data.shift;
 
     let dateTimeInterval = HospoHero.dateUtils.updateTimeInterval(
-        null, newStartTime, newEndTime, shift.relations.locationId
+      null, newStartTime, newEndTime, shift.relations.locationId
     );
 
     shift.startTime = dateTimeInterval.start;

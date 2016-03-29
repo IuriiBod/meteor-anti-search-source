@@ -23,7 +23,7 @@ Template.listOfIngredients.helpers({
     var itemsInList = this.ingredients;
     itemsInList.forEach(function (item) {
       var ingredient = Ingredients.findOne({_id: item._id});
-      if(ingredient) {
+      if (ingredient) {
         ingredient.quantity = item.quantity;
         ingredientObjectsWithQuantity.push(ingredient);
       }
@@ -50,8 +50,8 @@ Template.listOfIngredients.events({
     var idsOfItemsInList = _.pluck(tmpl.data.ingredients, '_id');
 
     FlyoutManager.open('wrapperFlyout', {
-      template:'ingredientsModalList',
-      title:"Select Stocks",
+      template: 'ingredientsModalList',
+      title: "Select Stocks",
       data: {
         inFlyout: true,
         onAddStockItem: onAddStockItem,

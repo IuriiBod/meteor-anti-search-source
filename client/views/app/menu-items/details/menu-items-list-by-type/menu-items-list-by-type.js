@@ -73,8 +73,8 @@ Template.menuItemsListByType.events({
     event.preventDefault();
     let idsOfItemsInList = _.pluck(tmpl.data.ingredients, '_id');
     FlyoutManager.open('wrapperFlyout', {
-      template:'ingredientsModalList',
-      title:"Select Stocks",
+      template: 'ingredientsModalList',
+      title: "Select Stocks",
       data: {
         inFlyout: true,
         onAddStockItem: tmpl.onAddItem,
@@ -87,8 +87,8 @@ Template.menuItemsListByType.events({
     event.preventDefault();
     let idsOfItemsInList = _.pluck(tmpl.data.jobItems, '_id');
     FlyoutManager.open('wrapperFlyout', {
-      template:'prepsList',
-      title:"Select Preps",
+      template: 'prepsList',
+      title: "Select Preps",
       data: {
         inFlyout: true,
         onAddPrepItem: tmpl.onAddItem,

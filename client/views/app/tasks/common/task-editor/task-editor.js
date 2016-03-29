@@ -11,8 +11,8 @@ Template.taskEditor.onCreated(function () {
 Template.taskEditor.onRendered(function () {
   this.$('.new-task-title').focus();
 
-  this.datepicker  = this.$('.date-picker-input');
-  this.datepicker .datepicker({
+  this.datepicker = this.$('.date-picker-input');
+  this.datepicker.datepicker({
     format: 'D dd/mm/yy',
     startDate: new Date()
   });
@@ -124,7 +124,7 @@ Template.taskEditor.events({
       var taggedUsers = [];
       var selectedOptions = tmpl.$('.user-selector').find('option:selected');
 
-      selectedOptions.each(function(index, option) {
+      selectedOptions.each(function (index, option) {
         taggedUsers.push(option.value);
       });
       return taggedUsers.length ? taggedUsers : [Meteor.userId()];
