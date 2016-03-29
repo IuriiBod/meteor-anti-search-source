@@ -3,9 +3,8 @@ Router.route('/reports/:date', {
   template: "teamHoursMainView",
   waitOn: function () {
     let currentArea = HospoHero.getCurrentArea(Meteor.userId());
-    let location = currentArea && Locations.findOne({_id: currentArea.locationId});
-    if (location) {
-      let weekRange = TimeRangeQueryBuilder.forWeek(this.params.date, location._id);
+    if (currentArea) {
+      let weekRange = TimeRangeQueryBuilder.forWeek(this.params.date, currentArea.locationId);
 
       return [
         Meteor.subscribe('areaUsersList', currentArea._id),

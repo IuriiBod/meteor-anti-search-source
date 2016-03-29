@@ -3,11 +3,10 @@ Router.route('/roster/weekly/:date', {
   template: "weeklyRosterMainView",
   waitOn: function () {
     let currentArea = HospoHero.getCurrentArea(Meteor.userId());
-    let location = currentArea && Locations.findOne({_id: currentArea.locationId});
-    if (location) {
-      let weekRange = TimeRangeQueryBuilder.forWeek(this.params.date, location._id);
+    if (currentArea) {
+      let weekRange = TimeRangeQueryBuilder.forWeek(this.params.date, currentArea.locationId);
 
-      var subscriptions = [
+      let subscriptions = [
         Meteor.subscribe('weeklyRoster', weekRange, currentArea._id),
         Meteor.subscribe('areaUsersList', currentArea._id),
         Meteor.subscribe('sections', currentArea._id),
@@ -18,7 +17,7 @@ Router.route('/roster/weekly/:date', {
       ];
 
 
-      var checker = new HospoHero.security.PermissionChecker();
+      let checker = new HospoHero.security.PermissionChecker();
       if (checker.hasPermissionInArea(currentArea._id, 'view forecast')) {
         subscriptions.push(Meteor.subscribe('dailySales', weekRange, currentArea._id));
       }
