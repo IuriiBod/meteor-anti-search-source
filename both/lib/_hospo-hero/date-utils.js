@@ -78,7 +78,14 @@ Namespace('HospoHero.dateUtils', {
     }
   },
 
-  locationDate(date, locationId) {
+  /**
+   * Converts client local date to date considering
+   * selected timezone (timezone takes from location)
+   *
+   * @param {date} date
+   * @param {string} locationId
+   */
+  formatTimeToLocationTimezone(date, locationId) {
     let dateFormat = 'ddd MMM DD YYYY h:mm:ss a';
     let dateForTimeZone = HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
     return new Date(dateForTimeZone);
@@ -107,12 +114,14 @@ Namespace('HospoHero.dateUtils', {
    * @param {date} date
    * @param {date} newStartTime
    * @param {date} newEndTime
-   * @param {object, string} location
+   * @param {object | string} location
    */
   updateTimeInterval: function (date, newStartTime, newEndTime, location) {
     if (_.isString(location)) {
       location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
     }
+
+    date = HospoHero.dateUtils.formatDate(date || newStartTime, 'YYYY-MM-DDTHH:mm:ss');
 
     let dateIncludingTimezone = moment.tz(date, location.timezone);
 

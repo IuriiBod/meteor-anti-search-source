@@ -1,6 +1,6 @@
 <template name="weeklyRosterMainView">
   <!-- Page heading -->
-  {{> pageHeading title="Weekly Roster" category='Roster' name="weeklyroster"}}
+  {{> pageHeading title='Weekly Roster' subtitle=subtitle category='Roster' name='weeklyroster'}}
 
   {{#if hasPermissionInAreaTo 'view forecast'}}
     {{> weeklyFigures date=date}}

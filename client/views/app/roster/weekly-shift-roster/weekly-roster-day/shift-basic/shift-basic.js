@@ -1,10 +1,9 @@
 Template.shiftBasic.onCreated(function () {
   this.editShiftTime = (newStartTime, newEndTime) => {
     let shift = this.data.shift;
-    let shiftCurrentDate = HospoHero.dateUtils.formatDate(newStartTime, 'YYYY-MM-DDTHH:mm:ss');
 
     let dateTimeInterval = HospoHero.dateUtils.updateTimeInterval(
-        shiftCurrentDate, newStartTime, newEndTime, shift.relations.locationId
+        null, newStartTime, newEndTime, shift.relations.locationId
     );
 
     shift.startTime = dateTimeInterval.start;

@@ -52,11 +52,12 @@ Template.weeklyRosterDay.helpers({
       type: this.type,
       "relations.areaId": currentArea._id
     }, {
-      sort: {order: 1}
-    }).map((shift) => {
-      shift.startTime = HospoHero.dateUtils.locationDate(shift.startTime, shift.relations.locationId);
-      shift.endTime = HospoHero.dateUtils.locationDate(shift.endTime, shift.relations.locationId);
-      return shift;
+      sort: {order: 1},
+      transform(shift) {
+        shift.startTime = HospoHero.dateUtils.formatTimeToLocationTimezone(shift.startTime, shift.relations.locationId);
+        shift.endTime = HospoHero.dateUtils.formatTimeToLocationTimezone(shift.endTime, shift.relations.locationId);
+        return shift;
+      }
     });
   },
 
@@ -152,7 +153,7 @@ SortableHelper.prototype._getOrder = function () {
 SortableHelper.prototype.getSortedShift = function () {
   if (this._draggedShift) {
     var shift = this._draggedShift;
-    var newShiftDate = HospoHero.dateUtils.formatDate(this._draggedToDate, 'YYYY-MM-DDTHH:mm:ss');
+    var newShiftDate = this._draggedToDate;
 
     let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
         newShiftDate, shift.startTime, shift.endTime, shift.relations.locationId
