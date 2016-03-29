@@ -30,7 +30,7 @@ Template.formFieldsSettings.helpers({
     let applicationId = formFieldsSettingsData.applicationId;
 
     return (fieldName, isChecked) => {
-      Meteor.call('updateApplicationDefinition', applicationId, {[fieldName]: isChecked}, HospoHero.handleMethodResult());
+      Meteor.call('upsertsApplicationDefinition', applicationId, {[fieldName]: isChecked}, HospoHero.handleMethodResult());
     };
   }
 });

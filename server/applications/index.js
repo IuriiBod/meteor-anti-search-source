@@ -4,7 +4,7 @@ let canUpdateApplications = (application) => {
 };
 
 Meteor.methods({
-  updateApplicationDefinition(applicationId, changedSchema) {
+  upsertsApplicationDefinition(applicationId, changedSchema) {
     check(applicationId, HospoHero.checkers.NullableMongoId);
     check(changedSchema, HospoHero.checkers.ApplicationSchemaDocument);
 
@@ -34,11 +34,7 @@ Meteor.methods({
 
     let applicationDefinition = ApplicationDefinitions.findOne({_id: applicationId});
 
-    if (!canUpdateApplications(applicationDefinition)) {
-      throw new Meteor.Error('You can\'t update application schema');
-    }
-
-    if (applicationDefinition) {
+    if (applicationDefinition && canUpdateApplications(applicationDefinition)) {
       let positionId = Positions.insert({
         name: name,
         relations: HospoHero.getRelationsObject(applicationDefinition.relations.areaId)
@@ -48,7 +44,7 @@ Meteor.methods({
     } else {
       logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area',
         {areaId: applicationDefinition.relations.areaId});
-      throw new Meteor.Error('Unexpected Err. Not correct area.');
+      throw new Meteor.Error('You can\'t update application schema');
     }
   },
 
@@ -58,17 +54,14 @@ Meteor.methods({
 
     let applicationDefinition = ApplicationDefinitions.findOne({_id: applicationId});
 
-    if (!canUpdateApplications(applicationDefinition)) {
-      throw new Meteor.Error('You can\'t update application schema');
-    }
+    if (applicationDefinition && canUpdateApplications(applicationDefinition)) {
 
-    if (applicationDefinition) {
       Positions.remove(positionId);
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$pull: {positionIds: positionId}});
     } else {
       logger.error('Unexpected Err: method [removePosition] Has not created ApplicationDefinitions in this area',
         {areaId: applicationDefinition.relations.areaId});
-      throw new Meteor.Error('Unexpected Err. Not correct area.');
+      throw new Meteor.Error('You can\'t update application schema');
     }
   },
 
@@ -76,6 +69,7 @@ Meteor.methods({
     check(organizationId, HospoHero.checkers.MongoId);
     check(positions, [HospoHero.checkers.MongoId]);
     check(files, Match.Optional([Object]));
+    check(captchaUrl, Match.Optional([String]));
 
     // Captcha verify
     let verifyCaptchaResponse = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captchaUrl);
@@ -135,7 +129,7 @@ Meteor.methods({
 
     let application = Applications.findOne({_id: applicationId});
 
-    if (!canUpdateApplications(application)) {
+    if (!application || !canUpdateApplications(application)) {
       throw new Meteor.Error('You can\'t update application');
     }
 
@@ -148,7 +142,7 @@ Meteor.methods({
 
     let application = Applications.findOne({_id: applicationId});
 
-    if (!canUpdateApplications(application)) {
+    if (application || !canUpdateApplications(application)) {
       throw new Meteor.Error('You can\'t update application');
     }
 

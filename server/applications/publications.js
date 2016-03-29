@@ -1,6 +1,6 @@
 Meteor.publishComposite('applicationDefinitions', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
   return HospoHero.publication.isUser(this, () => {
-    check(areaId, HospoHero.checkers.MongoId);
     return {
       find () {
         let area = Areas.findOne({_id: areaId});
@@ -9,8 +9,7 @@ Meteor.publishComposite('applicationDefinitions', function (areaId) {
       children: [
         {
           find (applicationDefinitionItem) {
-            return HospoHero.publication.isChild(this, applicationDefinitionItem,
-              Positions.find({_id: {$in: applicationDefinitionItem.positionIds}}));
+             return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
           }
         }
       ]
@@ -27,14 +26,12 @@ Meteor.publishComposite('applicationDefinitionsByOrganization', function (organi
     children: [
       {
         find (applicationDefinitionItem) {
-          return  HospoHero.publication.isChild(this, applicationDefinitionItem,
-            Positions.find({_id: {$in: applicationDefinitionItem.positionIds}}));
+          return Positions.find({_id: {$in: applicationDefinitionItem.positionIds}});
         }
       },
       {
         find (applicationDefinitionItem) {
-          return HospoHero.publication.isChild(this, applicationDefinitionItem,
-            Organizations.find({_id: applicationDefinitionItem.relations.organizationId}));
+          return Organizations.find({_id: applicationDefinitionItem.relations.organizationId});
         }
       }
     ]
@@ -42,8 +39,8 @@ Meteor.publishComposite('applicationDefinitionsByOrganization', function (organi
 });
 
 Meteor.publish('applications', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
   return HospoHero.publication.isUser(this, () => {
-    check(areaId, HospoHero.checkers.MongoId);
     let area = Areas.findOne({_id: areaId});
     return Applications.find({'relations.organizationId': area.organizationId});
   });
@@ -51,9 +48,8 @@ Meteor.publish('applications', function (areaId) {
 
 
 Meteor.publishComposite('application', function (applicationId) {
+  check(applicationId, HospoHero.checkers.MongoId);
   return HospoHero.publication.isUser(this, () => {
-    check(applicationId, HospoHero.checkers.MongoId);
-
     return {
       find () {
         return Applications.find({_id: applicationId});
@@ -62,38 +58,32 @@ Meteor.publishComposite('application', function (applicationId) {
       children: [
         {
           find (application) {
-            return HospoHero.publication.isChild(this, application,
-              ApplicationDefinitions.find({'relations.organizationId': application.relations.organizationId}));
+            return ApplicationDefinitions.find({'relations.organizationId': application.relations.organizationId});
           }
         },
         {
           find (application) {
-            return HospoHero.publication.isChild(this, application,
-              Positions.find({_id: {$in: application.positionIds}}));
+            return Positions.find({_id: {$in: application.positionIds}});
           }
         },
         {
           find (application) {
-            return HospoHero.publication.isChild(this, application,
-              Files.find({referenceId: application._id}));
+            return Files.find({referenceId: application._id});
           }
         },
         {
           find (application) {
-            return HospoHero.publication.isChild(this, application,
-             Comments.find({reference: application._id}));
+            return Comments.find({reference: application._id});
           }
         },
         {
           find (application) {
-            return HospoHero.publication.isChild(this, application,
-              TaskList.find({'reference.id': application._id}));
+            return TaskList.find({'reference.id': application._id});
           }
         },
         {
           find (application) {
-            return HospoHero.publication.isChild(this, application,
-               RelatedItems.find({referenceId: application._id}));
+            return RelatedItems.find({referenceId: application._id});
           }
         }
       ]

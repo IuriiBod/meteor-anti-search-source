@@ -43,16 +43,16 @@ Router.route('/application-details/:id', {
 
 
 Router.route('recruitmentForm', {
-  path: '/recruitment-form/:organizationId',
+  path: '/recruitment-form/:_id',
   template: 'recruitmentForm',
   layoutTemplate: 'recruitmentLayout',
   waitOn () {
-    return Meteor.subscribe('applicationDefinitionsByOrganization', this.params.organizationId);
+    return Meteor.subscribe('applicationDefinitionsByOrganization', this.params._id);
   },
   data () {
     return {
-      applicationDefinition: ApplicationDefinitions.findOne(),
-      organizationId: this.params.organizationId
+      applicationDefinition: ApplicationDefinitions.findOne({'relations.organizationId':this.params._id}),
+      organizationId: this.params._id
     };
   }
 });

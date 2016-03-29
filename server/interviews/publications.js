@@ -63,7 +63,7 @@ Meteor.publishComposite('interview', function (interviewId, userId) {
 });
 
 function usersPublication(interview) {
-  if (interview && interview.interviewers) {
+  if (interview.interviewers) {
     return Meteor.users.find({
       _id: {
         $in: interview.interviewers

@@ -1,7 +1,7 @@
 Template.formShareLink.helpers({
   linkToForm() {
     let area = HospoHero.getCurrentArea(Meteor.userId());
-    return Router.url('recruitmentForm', {organizationId: area.organizationId});
+    return Router.url('recruitmentForm', {_id: area.organizationId});
   }
 });
 
