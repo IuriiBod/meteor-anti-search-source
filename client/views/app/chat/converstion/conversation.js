@@ -24,8 +24,13 @@ Template.conversation.onRendered(function() {
 Template.conversation.onDestroyed(function() {
   const messages = this.conversation.messages();
   const participants = this.conversation.participants();
-  if (!messages.count() && !participants.count()) {
-    Meteor.call('removeOwnConversation', this.conversation._id);
+
+  if (!messages.count()) {
+    Meteor.call('removeCurrentUserFromConversations', this.conversation._id);
+  }
+
+  if (!participants.count()) {
+    Meteor.call('removeConversationWithoutParticipants', this.conversation._id);
   }
 
   this.data.onCloseConversation();

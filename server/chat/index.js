@@ -1,14 +1,20 @@
 Meteor.methods({
-  removeOwnConversation (conversationId) {
+  removeConversationWithoutParticipants (conversationId) {
     check(conversationId, HospoHero.checkers.MongoId);
 
     Meteor.conversations.remove({
       _id: conversationId,
-      _participants: {$eq: [this.userId]}
-    });
+      _participants: {$eq: []}
+    }, (error) => {
+      if (!error) {
+        const relatedMessagesIds = Meteor.messages
+            .find({conversationId: conversationId})
+            .map(message => _id);
 
-    Meteor.messages.remove({
-      conversationId: conversationId
+        Meteor.messages.remove({
+          _id: {$in: relatedMessagesIds}
+        });
+      }
     });
   },
 
