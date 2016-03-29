@@ -122,13 +122,13 @@ Template.weeklyRosterDay.events({
 
 var SortableHelper = function (ui) {
   this._draggedToDate = new Date(ui.item.parent().data('current-date'));
-  this._draggedShift = _.clone(this._getDataByItem(ui.item)); //clone it just in case
-  this._previousShift = this._getDataByItem(ui.item.prev());
-  this._nextShift = this._getDataByItem(ui.item.next());
+  this._draggedShift = _.clone(this._getIngredientIdByItem(ui.item)); //clone it just in case
+  this._previousShift = this._getIngredientIdByItem(ui.item.prev());
+  this._nextShift = this._getIngredientIdByItem(ui.item.next());
 };
 
 
-SortableHelper.prototype._getDataByItem = function (item) {
+SortableHelper.prototype._getIngredientIdByItem = function (item) {
   var element = item[0];
   return element ? Blaze.getData(element) : null;
 };

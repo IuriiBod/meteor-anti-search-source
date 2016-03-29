@@ -50,7 +50,7 @@ Template.listOfIngredients.events({
     var idsOfItemsInList = _.pluck(tmpl.data.ingredients, '_id');
 
     FlyoutManager.open('wrapperFlyout', {
-      template:'stocksList',
+      template:'ingredientsModalList',
       title:"Select Stocks",
       data: {
         inFlyout: true,

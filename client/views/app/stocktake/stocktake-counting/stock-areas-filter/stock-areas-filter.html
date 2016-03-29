@@ -1,0 +1,13 @@
+<template name="stockAreasFilter">
+  <div class="col-md-4 no-margin filtering-area">
+    {{#each generalAreas}}
+      {{> stockAreaItem getStockAreaItemContext}}
+    {{else}}
+      No General Areas
+    {{/each}}
+
+    {{#if isEditMode}}
+      <a href="#" class="btn btn-outline btn-primary col-md-12 no-margin add-general-area-button">Add</a>
+    {{/if}}
+  </div>
+</template>

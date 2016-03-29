@@ -1,0 +1,24 @@
+<template name="receiveOrderItemsList">
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>Stock Name</th>
+      <th>Qty</th>
+      <th>Price per unit</th>
+      <th>Total</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each orderItems}}
+      {{> receiveOrderItem}}
+    {{/each}}
+    <tr>
+      <td><b>Total</b></td>
+      <td></td>
+      <td></td>
+      <td><b>$ {{totalCost orderItems}}</b></td>
+    </tr>
+    </tbody>
+  </table>
+</template>

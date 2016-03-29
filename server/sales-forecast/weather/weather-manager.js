@@ -134,7 +134,9 @@ WeatherManager.prototype._isWeatherAvailableForMonth = function (monthMomentToCh
 WeatherManager.prototype._uploadHistoricalDataForMonth = function (monthMoment) {
   monthMoment = moment(monthMoment);//copy month moment
 
-  var nowMoment = this._getLocalMomentByDate();
+  // last day may be missing: 
+  // we don't know when weather forecast weather becomes historical
+  var nowMoment = this._getLocalMomentByDate().subtract(1, 'day');
 
   var start = moment(monthMoment.startOf('month'));
   monthMoment.endOf('month');

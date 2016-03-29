@@ -12,7 +12,7 @@ Meteor.methods({
       var typeCollectionRelations = {
         menu: MenuItems,
         job: JobItems,
-        stockOrders: StocktakeMain,
+        stockOrders: Stocktakes,
         supplier: Suppliers,
         taskItem: TaskList,
         meeting: Meetings,

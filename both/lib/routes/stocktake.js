@@ -1,6 +1,6 @@
 Router.route('stocktakeList', {
   path: '/stocktake',
-  template: 'stockListMainView',
+  template: 'stocktakesList',
   waitOn: function () {
     return Meteor.subscribe('stocktakeList', HospoHero.getCurrentAreaId());
   }
@@ -8,61 +8,19 @@ Router.route('stocktakeList', {
 
 Router.route('stocktakeCounting', {
   path: '/stocktake/:_id',
-  template: 'stocktakeCountingMainView',
+  template: 'stocktakeCounting',
   waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
-      Meteor.subscribe('allAreas', currentAreaId),
-      Meteor.subscribe("stocktakes", this.params._id),
-      Meteor.subscribe('ordersPlaced', this.params._id),
+      Meteor.subscribe('allStockAreas', currentAreaId),
+      Meteor.subscribe('fullStocktake', this.params._id),
+      Meteor.subscribe('allStocktakeOrders', this.params._id),
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('allIngredientsInArea', currentAreaId, null)
     ];
   },
   data: function () {
-    return {
-      stocktakeId: this.params._id
-    };
-  }
-});
-
-Router.route('stocktakeCountingEdit', {
-  path: '/stocktake/edit/:_id',
-  template: 'stocktakeCountingMainEdit',
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('allAreas', currentAreaId),
-      Meteor.subscribe('stocktakes', this.params._id),
-      Meteor.subscribe('ordersPlaced', this.params._id),
-      Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId, null)
-    ];
-  },
-  data: function () {
-    return {
-      stocktakeId: this.params._id
-    };
-  }
-});
-
-
-Router.route('orderReceive', {
-  path: '/stocktake/order/receive/:_id',
-  template: 'orderReceiveMainView',
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('receiptOrders', this.params._id),
-      Meteor.subscribe("orderReceipts", [this.params._id]),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
-      Meteor.subscribe('allSuppliers', currentAreaId)
-    ];
-  },
-  data: function () {
-    return {
-      currentReceipt: OrderReceipts.findOne({_id: this.params._id})
-    };
+    return Stocktakes.findOne({_id: this.params._id});
   }
 });
 
@@ -73,8 +31,8 @@ Router.route('stocktakeOrdering', {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     if (currentAreaId) {
       return [
-        Meteor.subscribe('ordersPlaced', this.params._id),
-        Meteor.subscribe('orderReceiptsByVersion', this.params._id, currentAreaId),
+        Meteor.subscribe('allStocktakeOrders', this.params._id),
+        Meteor.subscribe('fullStocktake', this.params._id),
         Meteor.subscribe('comments', this.params._id, currentAreaId),
         Meteor.subscribe('areaUsersList', currentAreaId),
         Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
@@ -84,16 +42,25 @@ Router.route('stocktakeOrdering', {
   },
   data: function () {
     return {
-      stocktakeMainId: this.params._id
+      stocktakeId: this.params._id
     };
   }
 });
 
-
 Router.route('orderReceiptsList', {
   path: '/stocktake/order/receipts',
-  template: 'orderReceiptsListMainView',
+  template: 'orderReceiveList'
+});
+
+
+Router.route('orderReceive', {
+  path: '/stocktake/order/receive/:_id',
+  template: 'orderReceiveDetails',
   waitOn: function () {
-    return Meteor.subscribe('allOrderReceipts', HospoHero.getCurrentAreaId(Meteor.userId()));
+    return Meteor.subscribe('fullOrderInfo', this.params._id);
+  },
+  data: function () {
+    return Orders.findOne({_id: this.params._id});
   }
 });
+

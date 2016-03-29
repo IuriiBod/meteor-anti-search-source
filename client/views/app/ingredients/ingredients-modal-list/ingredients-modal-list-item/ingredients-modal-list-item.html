@@ -1,0 +1,16 @@
+<template name="ingredientsModalListItem">
+  <tr>
+    <td>
+      <div class="i-checks selected-Ing">
+        <label>
+          <input type="checkbox" class="add-ing-checkbox">
+        </label>
+      </div>
+    </td>
+    <td>{{{stockItem.code}}}</td>
+    <td>{{{stockItem.description}}}</td>
+    <td>{{supplierName stockItem.suppliers}}</td>
+    <td>{{stockItem.portionUsed}}</td>
+    <td>${{costPerPortionUsed}}</td>
+  </tr>
+</template>

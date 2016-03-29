@@ -1,11 +1,28 @@
 //context: StockOrder
 Template.stockOrderItem.onRendered(function () {
-  var tmpl = this;
-  var onCountChanged = function (response, newValue) {
+  let tmpl = this;
+
+  let focusOnNextEditable = function (currentDomElement) {
+    let nextEditables = $(currentDomElement).closest('tr').next();
+    if (nextEditables.length > 0) {
+      nextEditables.find('a.ordering-count').click();
+    }
+  };
+
+  let onCountChanged = function (response, newValue) {
     if (newValue) {
-      var count = parseFloat(newValue) || 0;
-      Meteor.call('editOrderingCount', tmpl.data._id, count, HospoHero.handleMethodResult(function () {
-      }));
+      let count = parseFloat(newValue) || 0;
+      if (_.isFinite(count) && count >= 0) {
+        let currentDomElement = this;
+
+        let orderItem = tmpl.data;
+        orderItem.orderedCount = count;
+        Meteor.call('updateOrderItem', orderItem, HospoHero.handleMethodResult(() => {
+          focusOnNextEditable(currentDomElement);
+        }));
+      } else {
+        HospoHero.error('Incorrect value!');
+      }
     }
   };
 
@@ -14,20 +31,36 @@ Template.stockOrderItem.onRendered(function () {
     showbuttons: false,
     mode: 'inline',
     autotext: 'auto',
-    value: this.data.countOrdered,
+    display: () => {
+    },
     success: onCountChanged
   });
 });
 
 
 Template.stockOrderItem.helpers({
-  orderStockName: function () {
-    var stock = Ingredients.findOne({_id: this.stockId});
-    return stock && stock.description || this.stockName;
+  ingredient: function () {
+    return Ingredients.findOne({_id: this.ingredient.id});
+  },
+
+  countNeeded: function () {
+    //todo: this value should be calculated
+    //(see details https://trello.com/c/6Xq3fCYy/299-10-link-up-needed-value-in-stock-ordering-section-3)
+
+    return 0; //temporal cap
+  },
+
+  countOnHand: function () {
+    let stockItems = StockItems.find({'ingredient.id': this.ingredient.id});
+
+    let totalOnHand = 0;
+    stockItems.forEach((stockItem) => totalOnHand += stockItem.count);
+    return totalOnHand;
   },
 
   isEditable: function () {
-    return !this.orderReceipt;
+    let order = Orders.findOne({_id: this.orderId});
+    return order && !order.orderedThrough;
   }
 });
 
@@ -35,9 +68,9 @@ Template.stockOrderItem.helpers({
 Template.stockOrderItem.events({
   'click .remove-stock-order-button': function (event, tmpl) {
     event.preventDefault();
-    var confirmDelete = confirm("Are you sure you want to delete this order?");
+    let confirmDelete = confirm("Are you sure you want to delete this order?");
     if (confirmDelete) {
-      Meteor.call("removeOrder", tmpl.data._id, HospoHero.handleMethodResult());
+      Meteor.call('removeOrderItem', tmpl.data._id, HospoHero.handleMethodResult());
     }
   }
 });
