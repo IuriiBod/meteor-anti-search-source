@@ -1,0 +1,25 @@
+<template name="chat">
+  <div class="chat">
+    <div class="flyout-header">
+      {{> CloseFlyoutButton}}
+      Messages
+      <ul class="list-inline">
+        {{#unless isConversationSelected}}
+          <li><a class="new-conversation" href="#"><i class="fa fa-plus"></i></a></li>
+        {{/unless}}
+      </ul>
+    </div>
+    <div class="flyout-content">
+      {{#if Template.subscriptionsReady}}
+        {{#if conversations.count}}
+          {{> conversationsList conversations=conversations onConversationSelected=changeConversation}}
+        {{else}}
+          <div class="jumbotron">
+            <h3>No conversations.</h3>
+            <p>Click <i class="fa fa-plus"></i> to start new conversation.</p>
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+</template>

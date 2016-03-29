@@ -16,7 +16,7 @@ Template.stockVarianceReport.onCreated(function () {
       query.date = TimeRangeQueryBuilder.forInterval(moment(fromDate, 'DD-MM-YY'), moment());
     }
 
-    let stocktakesDates = StocktakeMain.find(query, {sort: {date: -1}})
+    let stocktakesDates = Stocktakes.find(query, {sort: {date: -1}})
         .map((item) => HospoHero.dateUtils.formatDate(item.date, 'DD-MM-YY'));
 
     return _.uniq(stocktakesDates);

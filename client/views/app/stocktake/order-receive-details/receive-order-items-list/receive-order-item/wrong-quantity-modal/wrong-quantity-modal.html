@@ -1,0 +1,33 @@
+<template name="wrongQuantityModal">
+  <div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button type="button" class="close close-modal-button">
+            <span aria-hidden="true"> &times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Quantity is wrong..!</h4>
+        </div>
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label for="receivedCount">Do you want to update the quantity of the stock order?</label>
+                  <input id="receivedCount" class="form-control text-center font-20 received-count-input"/>
+                </div>
+                <div class="pull-right">
+                  <button class="btn btn-primary update-quantity-button">Save</button>
+                  <button class="btn btn-small btn-default close-modal-button">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

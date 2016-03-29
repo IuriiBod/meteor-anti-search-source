@@ -1,0 +1,51 @@
+<p>Hi {{supplierName}},</p>
+
+<p>We'd like to place the order for delivery on {{deliveryDate}}.</p>
+
+<p>If there are any items you can't supply or any other problems with the order please contact me asap.</p><br>
+{{# if orderNote}}
+  <p>Note: {{orderNote}}</p>
+{{/if}}
+
+Order Details: {{location.name}}, {{areaName}}<br>
+{{location.address}}, {{location.city}}
+
+{{# if orderData}}
+  <br>
+  <table class='table table-condensed table-hover table-striped'>
+    <thead>
+    <tr>
+      <th>Code</th>
+      <th>Stock Item</th>
+      <th>Amount</th>
+      <th>Price ($)</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{# each orderData}}
+      <tr>
+        <td>{{ingredient.code}}</td>
+        <td>{{ingredient.description}}</td>
+        <td>{{orderedCount}} [{{ingredient.portionOrdered}}]</td>
+        <td>${{ingredient.cost}}</td>
+      </tr>
+    {{/each}}
+
+    <tr>
+      <td>
+        <b>Total</b>
+      </td>
+      <td></td>
+      <td></td>
+      <td>
+        <b>${{total}}</b>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+{{/if}}
+<br><br>
+
+<p>{{user.name}},</p>
+
+<p>{{user.type}} of {{areaName}}</p>

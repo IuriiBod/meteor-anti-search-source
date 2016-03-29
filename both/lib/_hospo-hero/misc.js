@@ -206,16 +206,17 @@ Namespace('HospoHero.misc', {
 
   /**
    * Returns query for task list only for passed user
+   * @param currentUserId - ID of current user (need for working in publications)
    * @param userId - ID of needed user
    * @returns {Object}
    */
-  getTasksQuery: function (userId) {
-    var user = Meteor.users.findOne({_id: userId});
-    var relations = user && user.relations;
+  getTasksQuery: function (currentUserId, userId) {
+    let user = Meteor.users.findOne({_id: currentUserId});
+    let relations = user && user.relations;
 
     if (relations && relations.organizationIds) {
-      var sharingObject = {
-        'private': [userId],
+      let sharingObject = {
+        'private': [currentUserId],
         organization: relations.organizationIds
       };
 
@@ -226,7 +227,7 @@ Namespace('HospoHero.misc', {
         sharingObject.area = relations.areaIds;
       }
 
-      var or = _.map(sharingObject, function (value, key) {
+      let or = _.map(sharingObject, function (value, key) {
         return {
           'sharing.type': key,
           'sharing.id': {
@@ -235,7 +236,15 @@ Namespace('HospoHero.misc', {
         };
       });
 
-      return {$or: or};
+      let taskQuery = {
+        $or: or
+      };
+
+      if (userId) {
+        taskQuery.assignedTo = userId;
+      }
+
+      return taskQuery;
     } else {
       return {};
     }

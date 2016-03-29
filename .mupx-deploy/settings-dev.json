@@ -1,1 +1,38 @@
-{"public": {"intercom": {"id": "rc6uoqw0"},"__superMail": "tom@farmcafe.com"},"intercom": {"secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"},"GoogleCloud": {"PROJECT_NAME": "HospoHero","PROJECT_ID": "hospohero","SERVICE_EMAIL": "24418709828-35oaus6ckd1fr24i0jdprhcprpapitfn@developer.gserviceaccount.com","PEM_FILE": "google-cloud.pem","BUCKET": "hospohero"},"WorldWeather": {"KEY": "2cd3869cfeb201cb9db94722d5e98","HOST": "https://api.worldweatheronline.com/premium/v1/"},"services": [{"service": "google","loginStyle": "popup","clientId": "24418709828-gcgojuj4t4gkfc5kke2u1vr7btmv093g.apps.googleusercontent.com","secret": "ALNUwQE9u31XHqj31fMYXxVb"}],"logLevel": "warn","prediction": {"useRawOrders": true,"forecastIntervals": [14],"threshold": "2016-01-25"}}
+{
+  "public": {
+    "intercom": {
+      "id": "rc6uoqw0"
+    },
+    "__superMail": "tom@farmcafe.com"
+  },
+  "intercom": {
+    "secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"
+  },
+  "GoogleCloud": {
+    "PROJECT_NAME": "HospoHero",
+    "PROJECT_ID": "hospohero",
+    "SERVICE_EMAIL": "24418709828-35oaus6ckd1fr24i0jdprhcprpapitfn@developer.gserviceaccount.com",
+    "PEM_FILE": "google-cloud.pem",
+    "BUCKET": "hospohero"
+  },
+  "WorldWeather": {
+    "KEY": "2cd3869cfeb201cb9db94722d5e98",
+    "HOST": "https://api.worldweatheronline.com/premium/v1/"
+  },
+  "services": [
+    {
+      "service": "google",
+      "loginStyle": "popup",
+      "clientId": "24418709828-gcgojuj4t4gkfc5kke2u1vr7btmv093g.apps.googleusercontent.com",
+      "secret": "ALNUwQE9u31XHqj31fMYXxVb"
+    }
+  ],
+  "logLevel": "warn",
+  "prediction": {
+    "useRawOrders": true,
+    "forecastIntervals": [
+      7
+    ],
+    "threshold": "2016-03-29"
+  }
+}

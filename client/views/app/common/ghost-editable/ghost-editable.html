@@ -1,6 +1,9 @@
 <template name="ghostEditable">
   <div class="ghost-editable-component">
-    <input type="text" class="ghost-editable-input" value="{{value}}">
-    <i class="fa fa-check submit-value-button {{#unless showSubmitButton}}hide-button{{/unless}}" title="Save"></i>
+    {{#if isEditable}}
+      {{> ghostEditableInput}}
+    {{else}}
+      <span class="ghost-editable-value">{{value}}</span>
+    {{/if}}
   </div>
 </template>

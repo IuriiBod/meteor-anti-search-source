@@ -26,7 +26,7 @@ Template.basics.helpers({
     return supplier && supplier.active;
   },
   lastOrder: function () {
-    return OrderReceipts.findOne({'supplier': this.id}, {sort: {'date': -1}});
+    return Orders.findOne({'supplier': this.id}, {sort: {'date': -1}});
   },
   deliveryDays: function () {
     return [

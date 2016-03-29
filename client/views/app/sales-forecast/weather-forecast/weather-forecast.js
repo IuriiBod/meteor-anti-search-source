@@ -6,7 +6,7 @@ Template.weatherForecast.helpers({
     return Math.round(this.temp);
   },
   iconClass: function () {
-    return WeatherIcons[this.main];
+    return WeatherIcons[this.main.trim()];
   }
 });
 
