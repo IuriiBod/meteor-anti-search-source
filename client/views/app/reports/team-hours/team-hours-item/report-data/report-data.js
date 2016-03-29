@@ -3,21 +3,24 @@ Template.reportData.helpers({
   startedTimeParams: function () {
     let defaultDate = this.date;
     let shift = this.shift;
-    let getShiftProperty = (propertyName, defaultValue) => shift && shift[propertyName] || defaultValue;
+
+    let getShiftDate = (propertyName, defaultValue) => {
+      let locationDate = () => HospoHero.dateUtils.formatTimeToLocationTimezone(shift[propertyName], shift.relations.locationId);
+      return shift && shift[propertyName] ? locationDate() : defaultValue;
+    };
 
     let isMidnight = this.shift && !moment(this.shift.finishedAt).isSame(this.shift.startedAt, 'day');
     return {
-      firstTime: getShiftProperty('startedAt', 'Start'),
-      secondTime: getShiftProperty('finishedAt', 'End'),
+      firstTime: getShiftDate('startedAt', 'Start'),
+      secondTime: getShiftDate('finishedAt', 'End'),
       minuteStepping: 5,
       date: defaultDate,
       ignoreDateRangeCheck: true,
       icon: isMidnight ? 'fa-moon-o midnight-icon' : false,
-      onSubmit: function (newStartTime, newEndTime) {
-        let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
-          start: getShiftProperty('startedAt', defaultDate),
-          end: getShiftProperty('finishedAt', defaultDate)
-        }, newStartTime, newEndTime);
+      onSubmit(newStartTime, newEndTime) {
+        let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
+          getShiftDate('startedAt', defaultDate), newStartTime, newEndTime, shift.relations.locationId
+        );
 
         shift.startedAt = newShiftDuration.start;
         shift.finishedAt = newShiftDuration.end;

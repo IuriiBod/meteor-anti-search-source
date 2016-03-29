@@ -1,6 +1,6 @@
 Meteor.publishAuthorized('weeklyRoster', function (weekRange, areaId) {
   check(weekRange, HospoHero.checkers.WeekRange);
-
+  check(areaId, HospoHero.checkers.MongoId);
   logger.info("Shift date range in publisher", weekRange);
 
   //get shifts
@@ -11,6 +11,7 @@ Meteor.publishAuthorized('weeklyRoster', function (weekRange, areaId) {
 });
 
 Meteor.publishAuthorized('weeklyRosterTemplate', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
   logger.info("Weekly shifts template");
 
   //get shifts
