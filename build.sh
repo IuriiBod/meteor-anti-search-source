@@ -36,6 +36,15 @@ rm -rf ${BUILD_FOLDER} ./.meteor/local/.build* ./.meteor/local/build ./.meteor/l
 # build project for production
 meteor build ${BUILD_FOLDER} --server=${SERVER_URL}
 
+
+# ==== iOS
+
+#open generated project inside Xcode
+open -a Xcode "${BUILD_FOLDER}/ios/project/Hospo Hero.xcodeproj"
+
+
+# ==== Android
+
 # sign APK
 cd "${BUILD_FOLDER}/android"
 
