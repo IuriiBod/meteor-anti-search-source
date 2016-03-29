@@ -1,18 +1,19 @@
-let canUpdateApplications = (application) => {
+let canUpdateApplications = (areaId) => {
   let permissionChecker = new HospoHero.security.PermissionChecker();
-  return application && permissionChecker.hasPermissionInArea(application.relations.areaId, 'edit interviews');
+  return areaId && permissionChecker.hasPermissionInArea(areaId, 'edit interviews');
 };
 
 Meteor.methods({
-  upsertsApplicationDefinition(applicationId, changedSchema) {
-    check(applicationId, HospoHero.checkers.NullableMongoId);
+  upsertsApplicationDefinition(changedSchema) {
     check(changedSchema, HospoHero.checkers.ApplicationSchemaDocument);
 
-    let applicationDefinition = ApplicationDefinitions.findOne({_id: applicationId});
+    let area = HospoHero.getCurrentArea(Meteor.user());
 
-    if (applicationDefinition && !canUpdateApplications(applicationDefinition)) {
+    if (canUpdateApplications(area._id)) {
       throw new Meteor.Error('You can\'t update application schema');
     }
+
+    let applicationDefinition = ApplicationDefinitions.findOne({'relations.organizationsId': area.organizationId});
 
     if (applicationDefinition) {
       _.extend(applicationDefinition.schema, changedSchema);
@@ -28,18 +29,21 @@ Meteor.methods({
     }
   },
 
-  addNewPosition(applicationId, name){
-    check(applicationId, HospoHero.checkers.MongoId);
+  addNewPosition(name){
     check(name, String);
 
-    let applicationDefinition = ApplicationDefinitions.findOne({_id: applicationId});
+    let area = HospoHero.getCurrentArea(Meteor.user());
+    if (canUpdateApplications(area._id)) {
+      throw new Meteor.Error('You can\'t update application schema');
+    }
 
-    if (applicationDefinition && canUpdateApplications(applicationDefinition)) {
+    let applicationDefinition = ApplicationDefinitions.findOne({'relations.organizationsId': area.organizationId});
+
+    if (applicationDefinition) {
       let positionId = Positions.insert({
         name: name,
         relations: HospoHero.getRelationsObject(applicationDefinition.relations.areaId)
       });
-
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$addToSet: {positionIds: positionId}});
     } else {
       logger.error('Unexpected Err: method [addNewPosition] Has not created ApplicationDefinitions in this area',
@@ -48,14 +52,17 @@ Meteor.methods({
     }
   },
 
-  removePosition(applicationId, positionId){
-    check(applicationId, HospoHero.checkers.MongoId);
+  removePosition(positionId){
     check(positionId, HospoHero.checkers.MongoId);
 
-    let applicationDefinition = ApplicationDefinitions.findOne({_id: applicationId});
+    let area = HospoHero.getCurrentArea(Meteor.user());
+    if (canUpdateApplications(area._id)) {
+      throw new Meteor.Error('You can\'t update application schema');
+    }
 
-    if (applicationDefinition && canUpdateApplications(applicationDefinition)) {
+    let applicationDefinition = ApplicationDefinitions.findOne({'relations.organizationsId': area.organizationId});
 
+    if (applicationDefinition) {
       Positions.remove(positionId);
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$pull: {positionIds: positionId}});
     } else {
@@ -106,7 +113,7 @@ Meteor.methods({
 
     let application = Applications.findOne({_id: applicationId});
 
-    if (!application || !canUpdateApplications(application)) {
+    if (!application || !canUpdateApplications(application.relations.areaId)) {
       throw new Meteor.Error('You can\'t update application');
     }
 
@@ -119,7 +126,7 @@ Meteor.methods({
 
     let application = Applications.findOne({_id: applicationId});
 
-    if (application || !canUpdateApplications(application)) {
+    if (application || !canUpdateApplications(application.relations.areaId)) {
       throw new Meteor.Error('You can\'t update application');
     }
 
