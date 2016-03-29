@@ -15,7 +15,9 @@ Template.conversationsList.helpers({
       }
     });
 
-    return lastMessages.sort((firstMessage, secondMessage) => {
+    return lastMessages
+        .filter(message => message)
+        .sort((firstMessage, secondMessage) => {
       return new Date(secondMessage.date) - new Date(firstMessage.date);
     });
   },
