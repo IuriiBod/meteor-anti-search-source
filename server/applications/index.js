@@ -5,6 +5,7 @@ let canUpdateApplications = (areaId) => {
 
 Meteor.methods({
   upsertsApplicationDefinition(changedSchema) {
+    _.extend(changedSchema, {name:true,email:true}); // this field is required
     check(changedSchema, HospoHero.checkers.ApplicationSchemaDocument);
 
     let area = HospoHero.getCurrentArea(Meteor.user());
@@ -19,7 +20,7 @@ Meteor.methods({
       _.extend(applicationDefinition.schema, changedSchema);
       return ApplicationDefinitions.update({_id: applicationDefinition._id}, {$set: applicationDefinition});
     } else {
-      _.extend(changedSchema, {name:true,email:true}); // this field is required
+
       let newApplicationDefinition = {
         schema: changedSchema,
         relations: HospoHero.getRelationsObject(),
