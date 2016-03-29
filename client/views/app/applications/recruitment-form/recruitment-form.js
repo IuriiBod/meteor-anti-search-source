@@ -61,13 +61,7 @@ function getDetailsData(tmpl) {
     switch (field) {
       case 'availability' :
       {
-        let availabilities = [];
-        _.each(tmpl.$('.recruitment-form .availability'), (input)=> {
-          if (input.checked) {
-            availabilities.push(parseInt($(input).attr('data-number')));
-          }
-        });
-        res.availability = availabilities;
+        res.availability = getAvailabilities(tmpl);
         break;
       }
       case 'numberOfHours' :
@@ -87,6 +81,16 @@ function getDetailsData(tmpl) {
     }
   });
   return res;
+}
+
+function getAvailabilities(tmpl) {
+  let availabilities = [];
+  _.each(tmpl.$('.recruitment-form .availability'), (input)=> {
+    if (input.checked) {
+      availabilities.push(parseInt($(input).attr('data-number')));
+    }
+  });
+  return availabilities;
 }
 
 function getPositionsData(tmpl) {

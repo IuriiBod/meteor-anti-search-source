@@ -26,11 +26,8 @@ Template.formFieldsSettings.helpers({
   },
 
   onCheckboxChange () {
-    let formFieldsSettingsData = Template.parentData(1);
-    let applicationId = formFieldsSettingsData.applicationId;
-
     return (fieldName, isChecked) => {
-      Meteor.call('upsertsApplicationDefinition', applicationId, {[fieldName]: isChecked}, HospoHero.handleMethodResult());
+      Meteor.call('upsertsApplicationDefinition', {[fieldName]: isChecked}, HospoHero.handleMethodResult());
     };
   }
 });
