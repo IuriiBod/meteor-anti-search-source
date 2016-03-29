@@ -3,6 +3,7 @@ Template.reportData.helpers({
   startedTimeParams: function () {
     let defaultDate = this.date;
     let shift = this.shift;
+
     let getShiftDate = (propertyName, defaultValue) => {
       let locationDate = () => HospoHero.dateUtils.locationDate(shift[propertyName], shift.relations.locationId);
       return shift && shift[propertyName] ? locationDate() : defaultValue;
@@ -17,7 +18,7 @@ Template.reportData.helpers({
       ignoreDateRangeCheck: true,
       icon: isMidnight ? 'fa-moon-o midnight-icon' : false,
       onSubmit: function (newStartTime, newEndTime) {
-        let date = moment(getShiftDate('startedAt', defaultDate)).format('YYYY-MM-DDT00:00:00');
+        let date = HospoHero.dateUtils.formatDate(getShiftDate('startedAt', defaultDate), 'YYYY-MM-DDT00:00:00');
         let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
             date, newStartTime, newEndTime, shift.relations.locationId
         );

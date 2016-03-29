@@ -88,16 +88,15 @@ Namespace('HospoHero.dateUtils', {
     return date ? moment(date).format('h:mm a') : '-';
   },
 
-  applyTimeToDate: function (date, newTime, locationTimezone) {
+  applyTimeToDate: function (date, newTime) {
     // new Date lets us to avoid bugs with initial date modification
     // because moment doesn't copy initial date by itself
-    let dateMoment = date;
     let timeMoment = moment(new Date(newTime));
 
-    dateMoment.hours(timeMoment.hours());
-    dateMoment.minutes(timeMoment.minutes());
+    date.hours(timeMoment.hours());
+    date.minutes(timeMoment.minutes());
 
-    return dateMoment.toDate();
+    return date.toDate();
   },
   /**
    * Updates interval's start and end times

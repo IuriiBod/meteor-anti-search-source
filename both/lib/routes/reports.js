@@ -2,7 +2,7 @@ Router.route('/reports/:date', {
   name: "teamHours",
   template: "teamHoursMainView",
   waitOn: function () {
-    var currentArea = HospoHero.getCurrentArea(Meteor.userId());
+    let currentArea = HospoHero.getCurrentArea(Meteor.userId());
     let location = currentArea && Locations.findOne({_id: currentArea.locationId});
     if (location) {
       let weekRange = TimeRangeQueryBuilder.forWeek(this.params.date, location._id);

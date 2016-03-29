@@ -1,7 +1,5 @@
 Template.shiftBasic.onCreated(function () {
-  var self = this;
-
-  self.editShiftTime = function (newStartTime, newEndTime) {
+  this.editShiftTime = (newStartTime, newEndTime) => {
     let shift = this.data.shift;
     let shiftCurrentDate = HospoHero.dateUtils.formatDate(newStartTime, 'YYYY-MM-DDTHH:mm:ss');
 
@@ -18,13 +16,13 @@ Template.shiftBasic.onCreated(function () {
 
 Template.shiftBasic.helpers({
   comboDateParams: function () {
-    var tmpl = Template.instance();
+    let tmpl = Template.instance();
     return {
       firstTime: tmpl.data.shift.startTime,
       secondTime: tmpl.data.shift.endTime,
       minuteStepping: 15,
       ignoreDateRangeCheck: true,
-      onSubmit: function (startTime, endTime) {
+      onSubmit(startTime, endTime) {
         tmpl.editShiftTime(startTime, endTime);
       }
     };
