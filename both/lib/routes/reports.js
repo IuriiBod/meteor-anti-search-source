@@ -2,12 +2,13 @@ Router.route('/reports/:date', {
   name: "teamHours",
   template: "teamHoursMainView",
   waitOn: function () {
-    var weekRange = HospoHero.misc.getWeekRangeQueryByRouter(this);
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    if (currentAreaId) {
+    let currentArea = HospoHero.getCurrentArea(Meteor.userId());
+    if (currentArea) {
+      let weekRange = TimeRangeQueryBuilder.forWeek(this.params.date, currentArea.locationId);
+
       return [
-        Meteor.subscribe('areaUsersList', currentAreaId),
-        Meteor.subscribe('weeklyRoster', weekRange, currentAreaId)
+        Meteor.subscribe('areaUsersList', currentArea._id),
+        Meteor.subscribe('weeklyRoster', weekRange, currentArea._id)
       ];
     }
   },
@@ -96,13 +97,13 @@ Router.route('/leave-requests', {
     const currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     this.params.itemPerPage = 5;
     return [
-      Meteor.subscribe('leaveRequests',currentAreaId,this.params.itemPerPage),
-      Meteor.subscribe('areaUnavailabilitiesList',currentAreaId,this.params.itemPerPage)
-      ];
+      Meteor.subscribe('leaveRequests', currentAreaId, this.params.itemPerPage),
+      Meteor.subscribe('areaUnavailabilitiesList', currentAreaId, this.params.itemPerPage)
+    ];
   },
   data() {
-      return {
-        itemPerPage:this.params.itemPerPage
-      };
+    return {
+      itemPerPage: this.params.itemPerPage
+    };
   }
 });

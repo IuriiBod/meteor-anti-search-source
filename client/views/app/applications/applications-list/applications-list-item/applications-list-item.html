@@ -1,0 +1,10 @@
+<template name="applicationsListItem">
+  <tr class="application-list-item">
+    <td>{{shortDateFormat createdAt}}</td>
+    <td>{{details.name}}</td>
+    <td>
+      <span class="label label-default">{{status}}</span>
+    </td>
+    <td>{{positions}}</td>
+  </tr>
+</template>

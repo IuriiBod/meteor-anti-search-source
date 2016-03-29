@@ -40,8 +40,8 @@ Template.stockReport.events({
     event.preventDefault();
 
     let params = {
-        firstStocktakeDate: this.firstStocktake.date.replace(/\//g, '-'),
-        secondStocktakeDate: this.secondStocktake.date.replace(/\//g, '-')
+      firstStocktakeDate: this.firstStocktake.date.replace(/\//g, '-'),
+      secondStocktakeDate: this.secondStocktake.date.replace(/\//g, '-')
     };
 
     Router.go('stockVarianceReport', params);

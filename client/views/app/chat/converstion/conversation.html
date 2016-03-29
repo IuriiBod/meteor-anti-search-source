@@ -50,7 +50,7 @@
     </div>
     <div class="inner-flyout
     {{#if isParticipantsListOpened}}show-inner-flyout{{else}}hide-inner-flyout{{/if}}
-    {{#if isInnerFlyoutAnimated}}with-animation{{/if}}">
+      {{#if isInnerFlyoutAnimated}}with-animation{{/if}}">
 
       {{> participantsList conversationId=conversation._id onCloseFlyout=hideParticipantsList}}
     </div>

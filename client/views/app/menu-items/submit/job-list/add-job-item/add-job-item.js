@@ -32,12 +32,12 @@ Template.addJobItem.events({
   'keyup .search-input': _.throttle(function (event, tmpl) {
     var text = event.target.value.trim();
     tmpl.jobItemsSearch.search(text);
-  },500, {leading: false}),
-  'click .add-new-job': function() {
+  }, 500, {leading: false}),
+  'click .add-new-job': function () {
     var prepJobTypeId = JobTypes.findOne({name: 'Prep'})._id;
     FlyoutManager.open('wrapperFlyout', {
-      template:'newJobItem',
-      title:"Create a new job",
+      template: 'newJobItem',
+      title: "Create a new job",
       data: {
         inFlyout: true,
         jobItem: {type: prepJobTypeId},

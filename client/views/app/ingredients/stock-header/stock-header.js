@@ -8,8 +8,8 @@ Template.stockHeader.helpers({
 Template.stockHeader.events({
   'click .add-new-ingredient': function () {
     FlyoutManager.open('wrapperFlyout', {
-      template:'ingredientEditor',
-      title:"Add ingredient",
+      template: 'ingredientEditor',
+      title: "Add ingredient",
       data: {
         inFlyout: true,
         ingredient: null

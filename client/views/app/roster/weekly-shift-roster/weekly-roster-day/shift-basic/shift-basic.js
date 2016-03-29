@@ -1,16 +1,13 @@
 Template.shiftBasic.onCreated(function () {
-  var self = this;
-
-  self.editShiftTime = function (newStartTime, newEndTime) {
+  this.editShiftTime = (newStartTime, newEndTime) => {
     let shift = this.data.shift;
 
-    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
-      start: shift.startTime,
-      end: shift.endTime
-    }, newStartTime, newEndTime);
+    let dateTimeInterval = HospoHero.dateUtils.updateTimeInterval(
+      null, newStartTime, newEndTime, shift.relations.locationId
+    );
 
-    shift.startTime = newShiftDuration.start;
-    shift.endTime = newShiftDuration.end;
+    shift.startTime = dateTimeInterval.start;
+    shift.endTime = dateTimeInterval.end;
 
     Meteor.call('editShift', shift, HospoHero.handleMethodResult());
   };
@@ -18,13 +15,13 @@ Template.shiftBasic.onCreated(function () {
 
 Template.shiftBasic.helpers({
   comboDateParams: function () {
-    var tmpl = Template.instance();
+    let tmpl = Template.instance();
     return {
       firstTime: tmpl.data.shift.startTime,
       secondTime: tmpl.data.shift.endTime,
       minuteStepping: 15,
       ignoreDateRangeCheck: true,
-      onSubmit: function (startTime, endTime) {
+      onSubmit(startTime, endTime) {
         tmpl.editShiftTime(startTime, endTime);
       }
     };

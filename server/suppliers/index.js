@@ -1,4 +1,4 @@
-var canUserEditStocks = function() {
+var canUserEditStocks = function () {
   var checker = new HospoHero.security.PermissionChecker();
   return checker.hasPermissionInArea(null, 'edit stocks');
 };

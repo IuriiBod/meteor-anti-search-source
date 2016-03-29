@@ -1,0 +1,9 @@
+<template name="userIconWithRemove">
+  {{#if members.length}}
+    {{#each members}}
+      {{> singleUserIcon member=this allowRemove=../allowRemove onMemberRemove=onMemberRemove}}
+    {{/each}}
+  {{else}}
+    No members yet
+  {{/if}}
+</template>

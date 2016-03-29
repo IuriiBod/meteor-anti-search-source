@@ -6,6 +6,11 @@ Template.teamHoursMainView.onCreated(function () {
 
 
 Template.teamHoursMainView.helpers({
+  subtitle() {
+    let shift = Shifts.findOne();
+    let location = shift && Locations.findOne({_id: shift.relations.locationId});
+    return location && `timezone: ${location.timezone}`;
+  },
   dayOfWeek: function (date) {
     return moment(date).format('dddd');
   },
@@ -23,7 +28,7 @@ Template.teamHoursMainView.helpers({
       'relations.areaIds': HospoHero.getCurrentAreaId()
     };
     if (searchText) {
-      query['profile.firstname'] =  new RegExp(searchText, 'i');
+      query['profile.firstname'] = new RegExp(searchText, 'i');
     }
     return Meteor.users.find(query);
   },

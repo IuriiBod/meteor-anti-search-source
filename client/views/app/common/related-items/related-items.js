@@ -28,8 +28,8 @@ Template.relatedItemsWidget.helpers({
 Template.relatedItemsWidget.events({
   'click .attach-item' (event, tmpl) {
     FlyoutManager.open('wrapperFlyout', {
-      template:'attachRelatedItem',
-      title:"Attach item",
+      template: 'attachRelatedItem',
+      title: "Attach item",
       data: {referenceId: tmpl.data.referenceId}
     });
   }

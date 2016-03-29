@@ -15,7 +15,7 @@ Template.training.helpers({
     }
   },
 
-  isSelectedSection: function(sectionId) {
+  isSelectedSection: function (sectionId) {
     var userId = Template.instance().data.userId;
     return !!Meteor.users.findOne({
       _id: userId,

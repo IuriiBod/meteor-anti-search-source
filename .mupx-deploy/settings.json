@@ -1,8 +1,10 @@
 {
   "public": {
     "intercom": {"id": "rc6uoqw0"},
-    "__superMail": "tom@hospohero.com"
+    "__superMail": "tom@hospohero.com",
+    "reCaptchaKey":"6Lda3RsTAAAAAGds87lAke6yVwh2RA9Rrt8vsQX8"
   },
+  "reCaptchaKey":"6Lda3RsTAAAAALy0Ga4FLoF8p-i371tDk1cnRC5a",
   "intercom": {"secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"},
   "GoogleCloud": {
     "PROJECT_NAME": "HospoHero",

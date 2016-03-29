@@ -1,0 +1,15 @@
+<template name="dropdownFilter">
+  <div class="dropdown pull-left">
+    <button class="btn btn-white btn-sm dropdown-toggle" type="button" id="filter-dropdown" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+      {{activeFilter}}
+      <span class="caret"></span>
+    </button>
+
+    <ul class="dropdown-menu" aria-labelledby="filter-dropdown">
+      {{#each filterTypes}}
+        {{> dropdownFilterItem templateData}}
+      {{/each}}
+    </ul>
+  </div>
+</template>

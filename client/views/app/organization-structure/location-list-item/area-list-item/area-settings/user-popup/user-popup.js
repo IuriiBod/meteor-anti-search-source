@@ -1,8 +1,8 @@
-Template.userPopup.onCreated(function() {
+Template.userPopup.onCreated(function () {
   this.subscribe('profileUser', Template.currentData().userId);
 });
 
-Template.userPopup.onRendered(function() {
+Template.userPopup.onRendered(function () {
   var target = Template.currentData().target;
   var popup = this.find('.user-popup');
   var modal = this.find('.modal-dialog');
@@ -12,7 +12,7 @@ Template.userPopup.onRendered(function() {
   };
   $(modal).offset(modalPosition);
 
-  var getModalSize = function() {
+  var getModalSize = function () {
     var modalRect = modal.getBoundingClientRect();
     if (modalRect.width !== 0 && modalRect.height !== 0) {
       return {
@@ -23,7 +23,7 @@ Template.userPopup.onRendered(function() {
     return null;
   };
 
-  var fitModalToWindow = function(modalSize, modalPosition) {
+  var fitModalToWindow = function (modalSize, modalPosition) {
     var windowWidth = window.innerWidth;
     var windowHeight = window.innerHeight;
     var newModalPosition = modalPosition;
@@ -36,8 +36,8 @@ Template.userPopup.onRendered(function() {
     $(modal).offset(newModalPosition);
   };
 
-  var checkModalPosition = function() {
-    Meteor.setTimeout(function() {
+  var checkModalPosition = function () {
+    Meteor.setTimeout(function () {
       var modalSize = getModalSize();
       if (!modalSize) {
         checkModalPosition();
@@ -52,10 +52,10 @@ Template.userPopup.onRendered(function() {
 });
 
 Template.userPopup.helpers({
-  userRole: function() {
+  userRole: function () {
     return HospoHero.roles.getUserRoleName(this.userId, this.areaId);
   },
-  roles: function() {
+  roles: function () {
     return Meteor.roles.find().fetch();
   }
 });
@@ -69,7 +69,7 @@ Template.userPopup.events({
       Modal.hide();
     }
   },
-  'click .filter-menus a': function(event, tmpl) {
+  'click .filter-menus a': function (event, tmpl) {
     var newRoleId = this._id;
     var userId = tmpl.data.userId;
     Meteor.call('changeUserRole', userId, newRoleId, tmpl.data.areaId, HospoHero.handleMethodResult());

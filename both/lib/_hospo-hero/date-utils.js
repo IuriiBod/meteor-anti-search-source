@@ -78,6 +78,19 @@ Namespace('HospoHero.dateUtils', {
     }
   },
 
+  /**
+   * Converts client local date to date considering
+   * selected timezone (timezone takes from location)
+   *
+   * @param {date} date
+   * @param {string} locationId
+   */
+  formatTimeToLocationTimezone(date, locationId) {
+    let dateFormat = 'ddd MMM DD YYYY h:mm:ss a';
+    let dateForTimeZone = HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
+    return new Date(dateForTimeZone);
+  },
+
   timeFormat: function (date) {
     return date ? moment(date).format('h:mm a') : '-';
   },
@@ -85,13 +98,12 @@ Namespace('HospoHero.dateUtils', {
   applyTimeToDate: function (date, newTime) {
     // new Date lets us to avoid bugs with initial date modification
     // because moment doesn't copy initial date by itself
-    let dateMoment = moment(new Date(date));
     let timeMoment = moment(new Date(newTime));
 
-    dateMoment.hours(timeMoment.hours());
-    dateMoment.minutes(timeMoment.minutes());
+    date.hours(timeMoment.hours());
+    date.minutes(timeMoment.minutes());
 
-    return dateMoment.toDate();
+    return date.toDate();
   },
   /**
    * Updates interval's start and end times
@@ -99,16 +111,23 @@ Namespace('HospoHero.dateUtils', {
    * Warning: Current implementation is working only
    * for intervals with duration less than 12 hours
    *
-   * @param {object} oldInterval
-   * @param {date} oldInterval.start
-   * @param {date} oldInterval.end
+   * @param {date} date
    * @param {date} newStartTime
    * @param {date} newEndTime
+   * @param {object | string} location
    */
-  updateTimeInterval: function (oldInterval, newStartTime, newEndTime) {
+  updateTimeInterval: function (date, newStartTime, newEndTime, location) {
+    if (_.isString(location)) {
+      location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
+    }
+
+    date = HospoHero.dateUtils.formatDate(date || newStartTime, 'YYYY-MM-DDTHH:mm:ss');
+
+    let dateIncludingTimezone = moment.tz(date, location.timezone);
+
     let newInterval = {
-      start: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newStartTime),
-      end: HospoHero.dateUtils.applyTimeToDate(oldInterval.start, newEndTime)
+      start: HospoHero.dateUtils.applyTimeToDate(dateIncludingTimezone, newStartTime),
+      end: HospoHero.dateUtils.applyTimeToDate(dateIncludingTimezone, newEndTime)
     };
 
     //in case start > end => we suppose interval should end after midnight

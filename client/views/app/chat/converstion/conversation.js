@@ -1,4 +1,4 @@
-Template.conversation.onCreated(function() {
+Template.conversation.onCreated(function () {
   this.subscribe('messagesFor', this.data.id);
 
   this.conversation = Meteor.conversations.findOne(this.data.id);
@@ -10,7 +10,7 @@ Template.conversation.onCreated(function() {
   }
 });
 
-Template.conversation.onRendered(function() {
+Template.conversation.onRendered(function () {
   this.$('.subject-of-conversation').editable({
     type: 'text',
     showbuttons: true,
@@ -18,7 +18,8 @@ Template.conversation.onRendered(function() {
     mode: 'inline',
     success: (response, newValue) => {
       Meteor.call('addSubjectOfConversation', this.data.id, newValue);
-    }});
+    }
+  });
 });
 
 Template.conversation.onDestroyed(function() {

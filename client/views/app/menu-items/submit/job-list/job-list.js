@@ -39,14 +39,14 @@ Template.menuItemJobsList.helpers({
 });
 
 Template.menuItemJobsList.events({
-  'click .add-job-item-button': function(event, tmpl) {
+  'click .add-job-item-button': function (event, tmpl) {
     var idsToExclude = _.pluck(tmpl.data.jobItems, '_id');
-    var onItemsAdded = function(jobItemId) {
-        tmpl.onJobItemUpdate('add', jobItemId);
+    var onItemsAdded = function (jobItemId) {
+      tmpl.onJobItemUpdate('add', jobItemId);
     };
     FlyoutManager.open('wrapperFlyout', {
-      template:'addJobItem',
-      title:"Select Prep Items",
+      template: 'addJobItem',
+      title: "Select Prep Items",
       data: {
         inFlyout: true,
         idsToExclude: idsToExclude,

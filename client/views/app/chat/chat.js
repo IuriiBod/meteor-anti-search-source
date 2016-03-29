@@ -1,4 +1,4 @@
-Template.chat.onCreated(function() {
+Template.chat.onCreated(function () {
   this.subscribe('conversations');
   this.currentConversationId = new ReactiveVar(null);
 

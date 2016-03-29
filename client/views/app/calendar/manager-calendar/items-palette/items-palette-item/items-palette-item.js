@@ -38,12 +38,12 @@ Template.itemsPaletteItem.onRendered(function () {
   });
 });
 
-  Template.itemsPaletteItem.helpers({
-    time: function () {
-      return Template.instance().duration.humanize();
-    },
+Template.itemsPaletteItem.helpers({
+  time: function () {
+    return Template.instance().duration.humanize();
+  },
 
-    name: function () {
-      return this.item[this.eventItem.eventSettings.titleField];
-    }
-  });
+  name: function () {
+    return this.item[this.eventItem.eventSettings.titleField];
+  }
+});

@@ -44,13 +44,21 @@ Template.weeklyRosterDay.helpers({
   },
 
   shifts: function () {
-    return Shifts.find({
-      startTime: TimeRangeQueryBuilder.forDay(this.currentDate),
-      type: this.type,
-      "relations.areaId": HospoHero.getCurrentAreaId()
-    }, {
-      sort: {order: 1}
-    });
+    let currentArea = HospoHero.getCurrentArea(Meteor.userId());
+    let location = currentArea && Locations.findOne({_id: currentArea.locationId});
+
+    return location && Shifts.find({
+        startTime: TimeRangeQueryBuilder.forDay(this.currentDate, location._id),
+        type: this.type,
+        "relations.areaId": currentArea._id
+      }, {
+        sort: {order: 1},
+        transform(shift) {
+          shift.startTime = HospoHero.dateUtils.formatTimeToLocationTimezone(shift.startTime, shift.relations.locationId);
+          shift.endTime = HospoHero.dateUtils.formatTimeToLocationTimezone(shift.endTime, shift.relations.locationId);
+          return shift;
+        }
+      });
   },
 
   managerNotesCount: function () {
@@ -101,10 +109,9 @@ Template.weeklyRosterDay.events({
 
     let pastedShift = tmpl.data.shiftBuffer;
 
-    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
-      start: zeroMoment,
-      end: zeroMoment
-    }, pastedShift.startTime, pastedShift.endTime);
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
+      zeroMoment, pastedShift.startTime, pastedShift.endTime, pastedShift.relations.locationId
+    );
 
     pastedShift.startTime = newShiftDuration.start;
     pastedShift.endTime = newShiftDuration.end;
@@ -146,12 +153,11 @@ SortableHelper.prototype._getOrder = function () {
 SortableHelper.prototype.getSortedShift = function () {
   if (this._draggedShift) {
     var shift = this._draggedShift;
-    var newDate = this._draggedToDate;
+    var newShiftDate = this._draggedToDate;
 
-    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval({
-      start: newDate,
-      end: newDate
-    }, shift.startTime, shift.endTime);
+    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
+      newShiftDate, shift.startTime, shift.endTime, shift.relations.locationId
+    );
 
     shift.startTime = newShiftDuration.start;
     shift.endTime = newShiftDuration.end;

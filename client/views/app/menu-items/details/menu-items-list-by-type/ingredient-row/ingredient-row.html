@@ -3,10 +3,10 @@
     {{#if hasPermissionInAreaTo 'edit menus'}}
       <td>
         {{#unless item.totalCost}}
-        <a class="btn btn-primary btn-xs view-button" href="#">
-          <i class="fa fa-edit fa-fw"></i>
-          Edit
-        </a>
+          <a class="btn btn-primary btn-xs view-button" href="#">
+            <i class="fa fa-edit fa-fw"></i>
+            Edit
+          </a>
         {{/unless}}
       </td>
     {{/if}}
@@ -22,12 +22,13 @@
         {{/if}}
       {{/if}}
     </td>
-    {{#if equal type 'ings'}}<td>{{itemMeasure}}</td>{{/if}}
+    {{#if equal type 'ings'}}
+      <td>{{itemMeasure}}</td>{{/if}}
     <td>$ {{price}}</td>
     {{#if hasPermissionInAreaTo 'edit menus'}}
       <td>
         {{#unless item.totalCost}}
-        <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>
+          <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>
         {{/unless}}
       </td>
     {{/if}}

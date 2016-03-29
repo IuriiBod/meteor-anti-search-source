@@ -65,14 +65,14 @@
 
         <!-- Approve/Decline -->
         {{#if isReviewMode leaveRequest}}
-            {{#if canBeApprovedOrDeclined isReviewMode leaveRequest}}
-              <div class="form-group col-xs-12">
-                <div class="col-xs-6 approve-decline-btn-wrapper">
-                  <button class="approve-button btn btn-primary" type="button">Approve</button>
-                  <button class="decline-button btn btn-danger" type="button">Decline</button>
-                </div>
+          {{#if canBeApprovedOrDeclined isReviewMode leaveRequest}}
+            <div class="form-group col-xs-12">
+              <div class="col-xs-6 approve-decline-btn-wrapper">
+                <button class="approve-button btn btn-primary" type="button">Approve</button>
+                <button class="decline-button btn btn-danger" type="button">Decline</button>
               </div>
-            {{/if}}
+            </div>
+          {{/if}}
         {{else}}
           <!-- Notify manager -->
           <div class="form-group col-xs-12">

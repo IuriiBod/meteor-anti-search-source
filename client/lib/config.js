@@ -10,6 +10,13 @@ Accounts.ui.config({
   passwordSignupFields: 'USERNAME_AND_EMAIL'
 });
 
+//reCaptcha config
+reCAPTCHA.config({
+  sitekey: Meteor.settings.public.reCaptchaKey,
+  theme: 'light', //OPTIONAL. <light|dark> Specifies the color theme of the widget
+  type: 'image', //OPTIONAL. <audio|image> Specifies the type of captcha to serve
+  size: 'normal' //OPTIONAL. <normal|compact> Specifies the type of captcha to serve
+});
 
 //x-editable config
 $.fn.editable.defaults.mode = 'inline';

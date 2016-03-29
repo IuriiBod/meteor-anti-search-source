@@ -1,9 +1,9 @@
 Meteor.publishComposite('managerNotes', function (weekRange, areaId) {
   check(areaId, HospoHero.checkers.MongoId);
   check(weekRange, HospoHero.checkers.WeekRange);
-  
+
   return {
-    find: function() {
+    find: function () {
       const daysOfWeek = HospoHero.dateUtils.getWeekDays(weekRange.$gte);
 
       daysOfWeek.forEach((date) => {

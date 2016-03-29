@@ -59,7 +59,7 @@ StockVarianceReport = class {
       let expectedCost = getExpectedCost.length ? getExpectedCost[0].expectedCost : 0;
       let ordersReceived = this._getOrderReceived(ingredient._id);
       let actualCost = ordersReceived +
-          (ingredient.costInFirstStocktake - ingredient.costInSecondStocktake); // calculations for actual cost for each ingredient
+        (ingredient.costInFirstStocktake - ingredient.costInSecondStocktake); // calculations for actual cost for each ingredient
 
       return _.extend(ingredient, {
         ordersReceived: ordersReceived,
@@ -80,7 +80,7 @@ StockVarianceReport = class {
 
     return stocksIds.map((stockId) => {
       let ingredientTotalExpectedCost = _.filter(stocks, (stock) => stock._id === stockId)
-          .reduce((memo, stock) => memo + stock.ingExpectedCost, 0);
+        .reduce((memo, stock) => memo + stock.ingExpectedCost, 0);
 
       return {
         stockId: stockId,
@@ -143,7 +143,7 @@ StockVarianceReport = class {
   }
 
   _getOrderReceived(stockId) {
-    let foundStock =  _.findWhere(this._stocktakesOrdersReceivedReport(), {stockId});
+    let foundStock = _.findWhere(this._stocktakesOrdersReceivedReport(), {stockId});
     return foundStock && foundStock.price || 0;
   }
 };

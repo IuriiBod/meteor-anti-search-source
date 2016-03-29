@@ -17,7 +17,7 @@ Template.stockVarianceReport.onCreated(function () {
     }
 
     let stocktakesDates = Stocktakes.find(query, {sort: {date: -1}})
-        .map((item) => HospoHero.dateUtils.formatDate(item.date, 'DD-MM-YY'));
+      .map((item) => HospoHero.dateUtils.formatDate(item.date, 'DD-MM-YY'));
 
     return _.uniq(stocktakesDates);
   };
@@ -70,7 +70,7 @@ Template.stockVarianceReport.helpers({
 
   tableHeader() {
     return ['Stock Item Name', 'Stocktake Total', 'Orders Received', 'Stocktake Total',
-            'Expected COGS', 'Actual COGS', 'Variance'];
+      'Expected COGS', 'Actual COGS', 'Variance'];
   },
 
   suppliers() {

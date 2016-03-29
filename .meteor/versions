@@ -11,6 +11,7 @@ aldeed:schema-index@1.0.1
 aldeed:simple-schema@1.5.3
 alonoslav:roles@0.0.1
 amplify@1.0.0
+appshore:recaptcha@2.1.0
 autoupdate@1.2.4
 babel-compiler@5.8.24_1
 babel-runtime@0.1.4

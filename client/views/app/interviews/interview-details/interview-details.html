@@ -1,0 +1,51 @@
+<template name="interviewDetails">
+  {{> pageHeading title=interviewTitle category='Interviews'}}
+
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="wrapper wrapper-content fadeInUp">
+        <div class="ibox">
+          <div class="ibox float-e-margins">
+            {{#collapsibleElement settings=interviewDetailsOptions}}
+              {{> interviewEdit interview=interview saveInterview=saveInterview}}
+            {{/collapsibleElement}}
+
+            <div class="row m-t-sm">
+              <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                  {{#collapsibleElement settings=agendaOptions}}
+                    {{> autosaveTextEditor text=agendaAndMinutes saveChanges=saveChanges readOnly=canNotEditInterviewDetails}}
+                  {{/collapsibleElement}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row m-t-sm">
+        <div class="col-xs-12">
+          {{> taskWidget itemId=id type="interview"}}
+        </div>
+      </div>
+
+      <div class="row m-t-sm">
+        <div class="col-xs-12">
+          {{> filesWidget referenceId=id type="interview"}}
+        </div>
+      </div>
+
+      <div class="row m-t-sm m-b-md">
+        <div class="col-xs-12">
+          {{> relatedItemsWidget referenceId=id type="interview"}}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-4 no-padding">
+      <div class="wrapper wrapper-content project-manager">
+        {{> commentsPanel id=id type='interview'}}
+      </div>
+    </div>
+  </div>
+</template>

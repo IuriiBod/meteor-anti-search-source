@@ -17,22 +17,26 @@
                 <small>Sale Price</small>
               </h4>
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+            <div
+                class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
               <h4>{{menuItemStats.ingCost}}
                 <small>Ing</small>
               </h4>
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+            <div
+                class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
               <h4>{{menuItemStats.prepCost}}
                 <small>Prep</small>
               </h4>
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+            <div
+                class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
               <h4>{{menuItemStats.tax}}
                 <small>Tax</small>
               </h4>
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
+            <div
+                class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-offset-6 col-lg-offset-0 col-md-offset-0 col-sm-offset-0">
               <h4>{{menuItemStats.contribution}}
                 <small>Contribution</small>
               </h4>
@@ -53,7 +57,8 @@
               <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
                 <h4 class="{{#if itemRank.up}}text-navy{{else}}{{#if itemRank.notChanged}}text-primary{{/if}}text-danger{{/if}} pull-right">
                   {{itemRank.changedPoints}} &nbsp;
-                  {{#unless itemRank.notChanged}}<i class="fa fa-arrow-{{#if itemRank.up}}up{{else}}down{{/if}}"></i>{{/unless}}
+                  {{#unless itemRank.notChanged}}<i
+                      class="fa fa-arrow-{{#if itemRank.up}}up{{else}}down{{/if}}"></i>{{/unless}}
                 </h4>
               </div>
             {{else}}
@@ -77,7 +82,8 @@
               <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
                 <h4 class="{{#if contribution.up}}text-navy{{else}}{{#if contribution.notChanged}}text-primary{{/if}}text-danger{{/if}}
                  pull-right">{{contribution.difference}}
-                  {{#unless contribution.notChanged}}<i class="fa fa-arrow-{{#if contribution.up}}up{{else}}down{{/if}}"></i>{{/unless}}
+                  {{#unless contribution.notChanged}}<i
+                      class="fa fa-arrow-{{#if contribution.up}}up{{else}}down{{/if}}"></i>{{/unless}}
                 </h4>
               </div>
             {{else}}

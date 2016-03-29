@@ -32,7 +32,7 @@ Template.editLocationForm.helpers({
     var locationDoc = Template.instance().data.locationDoc;
     return locationDoc && locationDoc.closingTime || Template.instance().defaultClosingTime;
   },
-  isPosSettingsShown: function() {
+  isPosSettingsShown: function () {
     return Template.instance().isPosSettingsShown.get();
   }
 });

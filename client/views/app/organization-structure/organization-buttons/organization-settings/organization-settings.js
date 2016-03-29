@@ -1,4 +1,4 @@
-Template.organizationDetailsPage.onCreated(function() {
+Template.organizationDetailsPage.onCreated(function () {
 });
 
 Template.organizationDetailsPage.events({
@@ -12,8 +12,8 @@ Template.organizationDetailsPage.events({
   },
   'click .change-billing-account-flyout': function () {
     FlyoutManager.open('wrapperFlyout', {
-      template:'changeBillingAccount',
-      title:"Change billing account",
+      template: 'changeBillingAccount',
+      title: "Change billing account",
       data: {}
     });
   },

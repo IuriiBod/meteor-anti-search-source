@@ -1,6 +1,6 @@
 Template.switchUser.helpers({
-  switchUserOnClick: function() {
-    return function(userId) {
+  switchUserOnClick: function () {
+    return function (userId) {
       Router.go('pinLock', {userId: userId});
     };
   }
