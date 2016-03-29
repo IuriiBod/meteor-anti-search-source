@@ -69,7 +69,8 @@ Meteor.methods({
     check(organizationId, HospoHero.checkers.MongoId);
     check(positions, [HospoHero.checkers.MongoId]);
     check(files, Match.Optional([Object]));
-    check(captchaUrl, Match.Optional([String]));
+    check(details,getSchemaCheckerObject(organizationId));
+    check(captchaUrl, Match.Optional(String));
 
     // Captcha verify
     let verifyCaptchaResponse = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captchaUrl);
@@ -77,50 +78,26 @@ Meteor.methods({
       logger.error('Captcha Err:' + verifyCaptchaResponse['error-codes']);
       throw new Meteor.Error('Captcha Err. Captcha not verified.');
     }
-
     let area = Areas.findOne({organizationId: organizationId});
-    let appDef = ApplicationDefinitions.findOne({'relations.organizationId': area.organizationId});
+    let application = {
+      createdAt: new Date(),
+      appProgress: ['New Application'],
+      positionIds: positions,
+      relations: HospoHero.getRelationsObject(area ? area._id : ''),
+      details: details
+    };
 
-    if (appDef) {
-      let fieldTypes = {
-        name: String,
-        email: String,
-        phone: String,
-        availability: [Number],
-        dateOfBirth: Date,
-        numberOfHours: Number,
-        message: String
-      };
-
-      _.each(appDef.schema, (value, field) => {
-        if (value) {
-          check(details[field], fieldTypes[field]);
-        }
-      });
-
-      let application = {
+    let applicationId = Applications.insert(application);
+    _.each(files, file => {
+      let newfile = {
+        referenceId: applicationId,
         createdAt: new Date(),
-        appProgress: ['New Application'],
-        positionIds: positions,
-        relations: HospoHero.getRelationsObject(area._id),
-        details: details
+        name: file.filename,
+        url: file.url
       };
-
-      let applicationId = Applications.insert(application);
-      _.each(files, file => {
-        let newfile = {
-          referenceId: applicationId,
-          createdAt: new Date(),
-          name: file.filename,
-          url: file.url
-        };
-        Files.insert(newfile);
-      });
-      return applicationId;
-    } else {
-      logger.error('Unexpected Err: method [addApplication] Has not created ApplicationDefinitions in this area', {areaId: area._id});
-      throw new Meteor.Error('Unexpected Err. Not correct area.');
-    }
+      Files.insert(newfile);
+    });
+    return applicationId;
   },
 
   updateApplicationStatus (applicationId, status) {
@@ -172,3 +149,31 @@ Meteor.methods({
     Meteor.call('closeApplication', application._id, 'rejected');
   }
 });
+
+function getSchemaCheckerObject(organizationId){
+  let res = {};
+  let appDef = ApplicationDefinitions.findOne({'relations.organizationId': organizationId});
+  if (appDef) {
+    let fieldTypes = {
+      name: String,
+      email: String,
+      phone: String,
+      availability: [Number],
+      dateOfBirth: Date,
+      numberOfHours: Number,
+      message: String
+    };
+    // if fields in Application Definition is true,
+    // than this field should be in Application details,
+    // and have defined type
+    _.each(appDef.schema,(value, field) => {
+      if (value) {
+        res[field] = fieldTypes[field];
+      }
+    });
+  } else {
+    logger.error('Unexpected Err: method [addApplication] Has not created ApplicationDefinitions in this organization', {organizationId: organizationId});
+    throw new Meteor.Error('Unexpected Err. Not correct area.');
+  }
+  return res;
+}
