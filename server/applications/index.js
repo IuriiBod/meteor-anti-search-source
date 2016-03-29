@@ -69,7 +69,7 @@ Meteor.methods({
     check(organizationId, HospoHero.checkers.MongoId);
     check(positions, [HospoHero.checkers.MongoId]);
     check(files, Match.Optional([Object]));
-    check(captchaUrl, Match.Optional([String]));
+    check(captchaUrl, Match.Optional(String));
 
     // Captcha verify
     let verifyCaptchaResponse = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, captchaUrl);
@@ -125,7 +125,17 @@ Meteor.methods({
 
   updateApplicationStatus (applicationId, status) {
     check(applicationId, HospoHero.checkers.MongoId);
-    check(status, String);
+    check(status, Match.OneOf(
+      'Active',
+      'All',
+      'New Application',
+      'Phone Interview',
+      '1st Interview',
+      '2nd Interview',
+      'Hired!',
+      'On Wait List',
+      'Rejected'
+    ));
 
     let application = Applications.findOne({_id: applicationId});
 
@@ -138,21 +148,30 @@ Meteor.methods({
 
   closeApplication (applicationId, status) {
     check(applicationId, HospoHero.checkers.MongoId);
-    check(status, String);
+    check(status, Match.OneOf('hired', 'rejected'));
 
     let application = Applications.findOne({_id: applicationId});
 
-    if (application || !canUpdateApplications(application)) {
-      throw new Meteor.Error('You can\'t update application');
+    if (!application || !canUpdateApplications(application)) {
+      throw new Meteor.Error('You can\'t close application');
     }
 
-    return Applications.update({_id: applicationId}, {$set: {status: status}});
+    Applications.update({_id: applicationId}, {$set: {status: status}});
+
+    let appProgress = status === 'hired' ? 'Hired!' : 'Rejected';
+    Meteor.call('updateApplicationStatus', applicationId, appProgress);
   },
 
   sendRejectApplicationEmail (application) {
+    if (!canUpdateApplications(application)) {
+      throw new Meteor.Error('You can\'t send a reject email');
+    }
+
+    Meteor.call('closeApplication', application._id, 'rejected');
+
     let organization = Organizations.findOne({_id: application.relations.organizationId});
-    let sender = Meteor.users.findOne(this.userId);
-    
+    let sender = Meteor.users.findOne({_id: this.userId});
+
     var notificationSender = new NotificationSender(
       'Application rejected',
       'reject-application',
@@ -168,7 +187,5 @@ Meteor.methods({
     );
 
     notificationSender.sendEmail(application.details.email);
-
-    Meteor.call('closeApplication', application._id, 'rejected');
   }
 });

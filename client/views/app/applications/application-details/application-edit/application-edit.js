@@ -14,7 +14,8 @@ Template.applicationEdit.helpers({
 
   availability () {
     let availableWeekdayNumber = this.application.details.availability;
-    if (availableWeekdayNumber.length) {
+
+    if (availableWeekdayNumber && availableWeekdayNumber.length) {
       return availableWeekdayNumber.map(weekdayNumber => {
         return moment().day(weekdayNumber).format('dddd');
       });

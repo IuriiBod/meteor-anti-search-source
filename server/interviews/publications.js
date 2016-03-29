@@ -1,83 +1,95 @@
-Meteor.publishComposite('interviews', function (userId) {
-  return {
-    find () {
-      if (this.userId) {
-        let query = {};
+let canUserEditInterviews = (userId, areaId = null) => {
+  let checker = new HospoHero.security.PermissionChecker(userId);
+  return checker.hasPermissionInArea(areaId, 'edit interviews');
+};
 
-        if (userId) {
-          query.interviewers = userId;
-        }
-        return Interviews.find(query);
-      } else {
-        this.ready();
-      }
-    },
+Meteor.publishComposite('interviews', function () {
+  if (!this.userId) {
+    this.ready();
+  } else {
+    let userId = this.userId;
+    let areaId = HospoHero.getCurrentAreaId(userId);
 
-    children: [
-      {
-        find: usersPublication
-      },
+    if (!canUserEditInterviews(userId, areaId)) {
+      this.ready();
+    } else {
+      return {
+        find () {
+          let query = {
+            $or: interviewQuery(userId)
+          };
 
-      {
-        find: applicationPublication
-      }
-    ]
-  };
+          return Interviews.find(query);
+        },
+
+        children: [
+          {
+            find: usersPublication
+          },
+
+          {
+            find: applicationPublication
+          }
+        ]
+      };
+    }
+  }
 });
 
 
 Meteor.publishComposite('interview', function (interviewId, userId) {
-  return {
-    find () {
-      if (this.userId) {
+  check(interviewId, HospoHero.checkers.MongoId);
+  check(userId, HospoHero.checkers.MongoId);
+
+  let areaId = HospoHero.getCurrentAreaId(userId);
+
+  if (!canUserEditInterviews(userId, areaId)) {
+    this.ready();
+  } else {
+    return {
+      find () {
         return Interviews.find({
           _id: interviewId,
-          $or: [
-            {interviewers: userId},
-            {createdBy: userId}
-          ]
+          $or: interviewQuery(userId)
         });
-      } else {
-        this.ready();
-      }
-    },
-
-    children: [
-      {
-        find: usersPublication
       },
 
-      {
-        find: applicationPublication
-      },
+      children: [
+        {
+          find: usersPublication
+        },
 
-      {
-        find (interview) {
-          return Comments.find({
-            reference: interview._id
-          });
+        {
+          find: applicationPublication
+        },
+
+        {
+          find (interview) {
+            return Comments.find({
+              reference: interview._id
+            });
+          }
         }
-      }
-    ]
-  };
+      ]
+    }
+  }
 });
 
+function interviewQuery (userId) {
+  return [
+    {createdBy: userId},
+    {interviewers: userId}
+  ];
+}
+
 function usersPublication(interview) {
-  if (interview.interviewers) {
-    return Meteor.users.find({
-      _id: {
-        $in: interview.interviewers
-      }
-    }, {
-      fields: {
-        _id: 1,
-        profile: 1,
-        'services.google.picture': 1
-      }
-    });
-  } else {
-    this.ready();
-  }
+  return Meteor.users.find({
+    _id: {
+      $in: interview.interviewers || []
+    }
+  }, {
+    fields: HospoHero.security.getPublishFieldsFor('users')
+  });
 }
 
 function applicationPublication(interview) {
