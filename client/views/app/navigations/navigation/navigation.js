@@ -97,11 +97,6 @@ var menuEntries = [
       {
         title: 'Suppliers',
         route: 'suppliersList'
-      },
-      {
-        title: 'Stock Areas',
-        route: 'stockAreasSettings',
-        permission: 'edit stocks'
       }
     ]
   },

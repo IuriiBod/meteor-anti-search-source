@@ -1,141 +1,172 @@
-var canUserReceiveDeliveries = function(areaId = null) {
+let canUserReceiveDeliveries = function (areaId = null) {
   var checker = new HospoHero.security.PermissionChecker();
   return checker.hasPermissionInArea(areaId, 'receive deliveries');
 };
 
-var getAreaIdFromOrder = function(orderId) {
-  var order = StockOrders.findOne({_id: orderId});
+
+let getAreaIdFromOrder = function (orderId) {
+  var order = OrderItems.findOne({_id: orderId});
   return (order && order.relations) ? order.relations.areaId : null;
 };
 
+//this method is used as temporal cap for email ordering
+//in future user should be able to change this date inside send email modal
+let getExpectedDeliveryLocalMoment = function (order) {
+  let locationId = order.relations.locationId;
+  let defaultDeliveryDate = moment().add(1, 'day');
+  return HospoHero.dateUtils.getDateMomentForLocation(defaultDeliveryDate, locationId).startOf('day');
+};
+
 Meteor.methods({
-  generateOrders: function (stocktakeVersion) {
-    if (!canUserReceiveDeliveries()) {
+  generateOrders: function (stocktakeId) {
+    check(stocktakeId, HospoHero.checkers.StocktakeId);
+
+    let stocktake = Stocktakes.findOne({_id: stocktakeId});
+
+    if (!stocktake || !canUserReceiveDeliveries(stocktake.relations.areaId)) {
       logger.error("User not permitted to generate orders");
       throw new Meteor.Error(403, "User not permitted to generate orders");
     }
-    if (!stocktakeVersion) {
-      logger.error("Stocktake version should have a value");
-      throw new Meteor.Error("Stocktake version should have a value");
+
+    let ordersGenerator = new HospoHero.stocktake.OrdersGenerator(stocktake);
+    ordersGenerator.generate();
+  },
+
+  updateOrder: function (updatedOrder) {
+    check(updatedOrder, HospoHero.checkers.OrderDocument);
+
+    let orderId = updatedOrder._id;
+    delete updatedOrder._id;
+
+    if (!canUserReceiveDeliveries(getAreaIdFromOrder(orderId))) {
+      logger.error("User not permitted to update orders");
+      throw new Meteor.Error(404, "User not permitted to update orders");
     }
 
-    if (!StocktakeMain.findOne(stocktakeVersion)) {
-      logger.error("Stocktake version should exist");
-      throw new Meteor.Error("Stocktake version should exist");
+    Orders.update({_id: orderId}, {$set: updatedOrder});
+  },
+
+  updateOrderItem: function (updatedOrderItem) {
+    check(updatedOrderItem, HospoHero.checkers.OrderItemDocument);
+
+    let oldOrderItem = OrderItems.findOne({_id: updatedOrderItem._id});
+    if (!oldOrderItem || !canUserReceiveDeliveries(oldOrderItem.relations.areaId)) {
+      logger.error("User not permitted to edit order items");
+      throw new Meteor.Error(404, "You are not permitted to edit order items");
     }
-    var stocktakes = Stocktakes.find({"version": stocktakeVersion}).fetch();
-    if (stocktakes.length === 0) {
-      logger.error("No recorded stocktakes found");
-      throw new Meteor.Error(404, "No recorded stocktakes found");
+
+    delete updatedOrderItem._id;
+    OrderItems.update({_id: oldOrderItem._id}, {$set: updatedOrderItem});
+  },
+
+  removeOrderItem: function (orderItemId) {
+    check(orderItemId, HospoHero.checkers.OrderItemId);
+
+    let orderItem = OrderItems.findOne({_id: orderItemId});
+    if (!orderItem || !canUserReceiveDeliveries(orderItem.relations.areaId)) {
+      logger.error("User not permitted to edit orders");
+      throw new Meteor.Error(404, "User not permitted to edit orders");
     }
-    stocktakes.forEach(function (stock) {
-      if (!stock.status) {
-        var stockItem = Ingredients.findOne(stock.stockId);
-        if (!stockItem) {
-          logger.error("Stock item not found");
-          throw new Meteor.Error(404, "Stock item not found");
-        }
 
-        var count = stock.counting;
-        if (stock.hasOwnProperty("orderedCount")) {
-          //if count was reduced it will be minus value which will decrement the value
-          count = stock.counting - stock.orderedCount;
-        }
-        var supplier = null;
-        if (stockItem && stockItem.hasOwnProperty("suppliers") && stockItem.suppliers) {
-          supplier = stockItem.suppliers;
-        }
+    OrderItems.remove({_id: orderItemId});
+  },
 
-        var existingOrder = StockOrders.findOne({
-          "stockId": stock.stockId,
-          "version": stocktakeVersion,
-          "supplier": supplier
-        });
-        //generate order
-        var orderRef = null;
-        if (existingOrder) {
-          orderRef = existingOrder._id;
-          StockOrders.update({"_id": existingOrder._id}, {$inc: {"countOnHand": count}});
-        } else {
-          var newOrder = {
-            "stockId": stock.stockId,
-            "version": stocktakeVersion,
-            "supplier": supplier,
-            "countOnHand": count,
-            "countNeeded": 0,
-            "unit": stockItem.portionOrdered,
-            "unitPrice": stockItem.costPerPortion,
-            "countOrdered": null,
-            "orderReceipt": null,
-            "received": false,
-            relations: HospoHero.getRelationsObject()
-          };
-          var id = StockOrders.insert(newOrder);
-          orderRef = id;
-          logger.info("New order created", id);
-        }
+  renderOrderTemplate: function (orderId) {
+    check(orderId, HospoHero.checkers.OrderId);
 
-        //update stocktake for order generated count
-        Stocktakes.update({"_id": stock._id}, {
-          $set: {
-            "status": true,
-            "orderedCount": stock.counting,
-            "orderRef": orderRef
-          }
-        });
-        //update current stock with count
+    let order = Orders.findOne({_id: orderId});
+    if (!order || !canUserReceiveDeliveries(order.relations.areaId)) {
+      logger.error("User not permitted to send orders");
+      throw new Meteor.Error(404, "You are not permitted to send orders");
+    }
+
+    let total = 0;
+    let convertStockOrder = function (orderItem) {
+      let ingredient = Ingredients.findOne({
+        _id: orderItem.ingredient.id
+      }, {fields: {code: 1, description: 1, portionOrdered: 1}});
+
+      let cost = orderItem.orderedCount * orderItem.ingredient.cost;
+      orderItem.cost = cost.toFixed(2);
+      total += cost;
+
+      _.extend(orderItem.ingredient, {
+        description: ingredient.description,
+        code: ingredient.code,
+        portionOrdered: ingredient.portionOrdered
+      });
+
+      return orderItem;
+    };
+
+    let orderItemsData = OrderItems.find({
+      orderId: orderId,
+      orderedCount: {$gt: 0}
+    }, {
+      fields: {
+        orderedCount: 1,
+        ingredient: 1
+      }
+    }).map(convertStockOrder);
+
+    let area = HospoHero.getCurrentArea(this.userId);
+    let location = Locations.findOne({_id: area.locationId});
+
+    let user = {
+      name: HospoHero.username(this.userId),
+      type: HospoHero.roles.getUserRoleName(this.userId, HospoHero.getCurrentAreaId(this.userId))
+    };
+
+
+    let supplier = Suppliers.findOne({_id: order.supplierId}, {fields: {name: 1}});
+
+    let orderData = {
+      supplierName: supplier.name,
+      deliveryDate: getExpectedDeliveryLocalMoment(order).format('ddd DD/MM/YYYY'),
+      orderNote: order && order.orderNote || '',
+      location: location,
+      areaName: area.name,
+      orderData: orderItemsData,
+      total: total.toFixed(2),
+      user: user
+    };
+
+    return Handlebars.templates['supplier-email-text'](orderData);
+  },
+
+  orderThroughEmail: function (orderId, mailInfo) {
+    check(orderId, HospoHero.checkers.OrderId);
+    check(mailInfo, {
+      mailTo: HospoHero.checkers.Email,
+      subject: String,
+      text: String
+    });
+
+    let order = Orders.findOne({_id: orderId});
+    if (!order || !canUserReceiveDeliveries(order.relations.areaId)) {
+      logger.error("User not permitted to send orders");
+      throw new Meteor.Error(404, "You are not permitted to send orders");
+    }
+
+    //send order to supplier
+    Email.send({
+      to: mailInfo.mailTo,
+      from: Meteor.user().emails[0].address,
+      subject: mailInfo.subject,
+      html: mailInfo.text
+    });
+    logger.info("Email sent to supplier", {orderId: orderId});
+
+    //mark order as ordered through email
+    Orders.update({_id: orderId}, {
+      $set: {
+        expectedDeliveryDate: getExpectedDeliveryLocalMoment(order).toDate(),
+        orderedThrough: {
+          date: new Date(),
+          type: 'emailed',
+          email: mailInfo.mailTo
+        }
       }
     });
-  },
-
-  editOrderingCount: function (orderId, count) {
-    if (!canUserReceiveDeliveries(getAreaIdFromOrder(orderId))) {
-      logger.error("User not permitted to edit ordering count");
-      throw new Meteor.Error(404, "User not permitted to edit ordering count");
-    }
-    var order = StockOrders.findOne(orderId);
-    if (!order) {
-      logger.error('Stock order not found');
-      throw new Meteor.Error(401, "Stock order not found");
-    }
-
-    var countToOrder = parseFloat(count);
-    countToOrder = !isNaN(countToOrder) ? countToOrder : 0;
-    StockOrders.update({"_id": orderId}, {$set: {"countOrdered": countToOrder}});
-    logger.info("Stock order count updated", orderId);
-  },
-
-  'removeOrder': function (id) {
-    if (!canUserReceiveDeliveries(getAreaIdFromOrder(id))) {
-      logger.error("User not permitted to remove placed orders");
-      throw new Meteor.Error(403, "User not permitted to remove placed orders");
-    }
-    if (!id) {
-      logger.error('Stock order id not found');
-      throw new Meteor.Error('Stock order id not found');
-    }
-    var order = StockOrders.findOne(id);
-    if (!order) {
-      logger.error("Order does not exist");
-      throw new Meteor.Error("Order does not exist");
-    }
-
-    if (OrderReceipts.findOne(order.orderReceipt)) {
-      logger.error("You can't delete this order. This has a order receipt");
-      throw new Meteor.Error("You can't delete this order. This has a order receipt");
-    }
-    StockOrders.remove({"_id": id});
-    Stocktakes.update({
-        "orderRef": id
-      }, {
-        $set: {
-          "status": false,
-          "orderedCount": 0,
-          "orderRef": null
-        }
-      },
-      {multi: true}
-    );
-    logger.info("Stock order removed");
   }
 });

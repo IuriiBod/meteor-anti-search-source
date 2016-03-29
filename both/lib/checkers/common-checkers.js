@@ -97,6 +97,11 @@ Namespace('HospoHero.checkers', {
     }
   }),
 
+  PositiveNumber: Match.Where(function (number) {
+    check(number, Number);
+    return number >= 0;
+  }),
+
   /**
    * Parametrized checker for non empty string
    *

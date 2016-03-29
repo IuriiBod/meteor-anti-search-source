@@ -1,6 +1,5 @@
 Template.stockReport.onCreated(function () {
   this.reports = new ReactiveArray();
-  let lastReportedStocktakeMainId = null;
 
   this.getRouteParams = (currentStocktake) => {
     return {
@@ -10,12 +9,7 @@ Template.stockReport.onCreated(function () {
   };
 
   this.uploadNextStockReport = () => {
-    Meteor.call('getNextStocktakeReport', lastReportedStocktakeMainId, HospoHero.handleMethodResult((result) => {
-      if (result) {
-        this.reports.push(result.report);
-        lastReportedStocktakeMainId = result.report.secondStocktake.stocktakeMainId;
-      }
-    }));
+    //todo: implement it using new stocktake
   };
 
   this.uploadNextStockReport();

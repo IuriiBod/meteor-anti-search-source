@@ -1,11 +1,15 @@
 {
   "public": {
-    "intercom": {"id": "rc6uoqw0"},
+    "intercom": {
+      "id": "rc6uoqw0"
+    },
     "__superMail": "tom@farmcafe.com",
-    "reCaptchaKey":"6Lf9fxsTAAAAAKxR50-I57o9GqBCoNCwj5yyQa_E"
+    "reCaptchaKey": "6Lf9fxsTAAAAAKxR50-I57o9GqBCoNCwj5yyQa_E"
   },
-  "reCaptchaKey":"6Lf9fxsTAAAAAC8-BDtwvBYaV72IZIqUJa-zHjqb",
-  "intercom": {"secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"},
+  "reCaptchaKey": "6Lf9fxsTAAAAAC8-BDtwvBYaV72IZIqUJa-zHjqb",
+  "intercom": {
+    "secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"
+  },
   "GoogleCloud": {
     "PROJECT_NAME": "HospoHero",
     "PROJECT_ID": "hospohero",
@@ -28,7 +32,9 @@
   "logLevel": "warn",
   "prediction": {
     "useRawOrders": true,
-    "forecastIntervals": [14],
-    "threshold": "2016-01-25"
+    "forecastIntervals": [
+      7
+    ],
+    "threshold": "2016-03-29"
   }
 }

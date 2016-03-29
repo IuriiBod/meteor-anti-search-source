@@ -1,19 +1,21 @@
 <template name="stockOrderItem">
   <tr>
-    <td>{{orderStockName}}</td>
-    <td>{{countOnHand}} [{{unit}}]</td>
-    <td>{{countNeeded}} [{{unit}}]</td>
+    <td>{{ingredient.description}}</td>
+    <td>{{countOnHand}} [{{ingredient.portionOrdered}}]</td>
+    <td>{{countNeeded}} [{{ingredient.portionOrdered}}]</td>
     <td>
       {{#if isEditable}}
-        <a href="#" class="ordering-count"></a> [{{unit}}]
+        <a href="#" class="ordering-count">{{orderedCount}}</a>
       {{else}}
-        {{countOrdered}} [{{unit}}]
+        {{orderedCount}}
       {{/if}}
+
+      [{{ingredient.portionOrdered}}]
     </td>
-    <td>
-      {{#unless orderedOn}}
+    {{#if isEditable}}
+      <td>
         <button type="button" class="btn btn-danger btn-sm remove-stock-order-button">Delete</button>
-      {{/unless}}
-    </td>
+      </td>
+    {{/if}}
   </tr>
 </template>

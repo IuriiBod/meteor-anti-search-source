@@ -1,0 +1,28 @@
+<template name="receiveOrderItem">
+  <tr>
+    <td>{{ingredientItem.description}}</td>
+    <td>
+      {{orderItemCount}} [{{ingredientItem.portionOrdered}}]
+    </td>
+    <td>$ {{roundCount ingredient.cost}}</td>
+    <td>$ {{unitTotalPrice orderItemCount}}</td>
+    <td>
+      {{#if isDelivered}}
+        {{#if orderItemStatus.isWrongPrice}}Wrong Price{{/if}}
+        {{#if orderItemStatus.isWrongCount}}Wrong Quantity{{/if}}
+        {{#if orderItemStatus.isDeliveredCorrectly}}Delivered correctly{{/if}}
+      {{else}}
+        {{#unless orderItemStatus.isDeliveredCorrectly}}
+          <a class="btn btn-sm btn-outline btn-danger wrong-price-button">Wrong Price</a>
+          <a class="btn btn-sm btn-outline btn-danger wrong-quantity-button">Wrong Quantity</a>
+        {{/unless}}
+
+        {{#unless  orderItemStatus.isWrongCount}}
+          <button class="btn btn-info btn-circle btn-outline receive-order-item-button" type="button">
+            <i class="fa fa-check"></i>
+          </button>
+        {{/unless}}
+      {{/if}}
+    </td>
+  </tr>
+</template>

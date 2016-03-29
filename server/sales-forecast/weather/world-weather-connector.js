@@ -109,7 +109,7 @@ WorldWeather.prototype._mapWeatherEntries = function (data) {
       result.push({
         date: new Date(weatherItem.date),
         temp: parseInt(hourly.tempC),
-        main: hourly.weatherDesc[0].value
+        main: hourly.weatherDesc[0].value.trim()
       });
     }
 
