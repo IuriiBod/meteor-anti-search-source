@@ -37,7 +37,9 @@ Template.breadcrumbs.events({
       Stocktake: 'orderReceiptsList',
       Stocks: 'suppliersList',
       Meetings: 'meetings',
-      Projects: 'projectsList'
+      Projects: 'projectsList',
+      Interviews: 'interviews',
+      Applications: 'applications'
     };
 
     let route = _.has(categories, category) && categories[category];

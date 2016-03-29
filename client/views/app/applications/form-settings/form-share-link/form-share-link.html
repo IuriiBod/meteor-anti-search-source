@@ -1,0 +1,20 @@
+<template name="formShareLink">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Shareable Link</label>
+
+    <div class="col-sm-10">
+      <div class="input-group">
+        <input type="text" class="form-control link-to-form" placeholder="Link to form" value="{{linkToForm}}">
+        <div class="input-group-btn">
+          <button class="copy-to-clipboard btn btn-white" title="Select link">
+            <i class="fa fa-clipboard"></i>
+          </button>
+
+          <a class="copy-to-clipboard btn btn-white" target="_blank" href="{{linkToForm}}" title="Go to form">
+            <i class="fa fa-link"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

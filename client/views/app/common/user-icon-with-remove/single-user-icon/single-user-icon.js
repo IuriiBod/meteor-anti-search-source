@@ -1,4 +1,4 @@
-Template.projectMember.onRendered(function () {
+Template.singleUserIcon.onRendered(function () {
   const username = HospoHero.username(this.data.member);
 
   this.$('.remove-user').popover({
@@ -9,16 +9,16 @@ Template.projectMember.onRendered(function () {
 });
 
 
-Template.projectMember.helpers({
+Template.singleUserIcon.helpers({
   allowRemove () {
-    return Template.parentData(2).allowRemove;
+    return this.allowRemove;
   }
 });
 
 
-Template.projectMember.events({
+Template.singleUserIcon.events({
   'click .accept-remove' (event, tmpl) {
-    let onMemberRemove = Template.parentData(2).onMemberRemove;
+    let onMemberRemove = tmpl.data.onMemberRemove;
 
     if (_.isFunction(onMemberRemove)) {
       onMemberRemove(tmpl.data.member);

@@ -1,4 +1,4 @@
-Template.taskDateFilter.helpers({
+Template.dropdownFilter.helpers({
   templateData: function () {
     var parentData = Template.parentData();
     return {

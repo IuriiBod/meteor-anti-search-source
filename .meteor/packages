@@ -70,6 +70,7 @@ jss:blaze-states
 trsdln:modals
 jss:reactive-fullcalendar
 jquery-sparkline
+appshore:recaptcha
 
 
 # ===========> backend
