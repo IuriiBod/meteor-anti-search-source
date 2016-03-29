@@ -22,17 +22,6 @@ Template.conversation.onRendered(function() {
 });
 
 Template.conversation.onDestroyed(function() {
-  const messages = this.conversation.messages();
-  const participants = this.conversation.participants();
-
-  if (!messages.count()) {
-    Meteor.call('removeCurrentUserFromConversations', this.conversation._id);
-  }
-
-  if (!participants.count()) {
-    Meteor.call('removeConversationWithoutParticipants', this.conversation._id);
-  }
-
   this.data.onCloseConversation();
 });
 
@@ -78,8 +67,8 @@ Template.conversation.helpers({
     return participantsListStr.length ? participantsListStr : 'No participants';
   },
   subjectOfConversation () {
-    const subject = Meteor.conversations.findOne(this.id).subject;
-    return subject ? subject : 'Subject';
+    const conversation = Meteor.conversations.findOne(this.id);
+    return conversation && conversation.subject  ? conversation.subject : 'Subject';
   }
 });
 

@@ -1,23 +1,4 @@
 Meteor.methods({
-  removeConversationWithoutParticipants (conversationId) {
-    check(conversationId, HospoHero.checkers.MongoId);
-
-    Meteor.conversations.remove({
-      _id: conversationId,
-      _participants: {$eq: []}
-    }, (error) => {
-      if (!error) {
-        const relatedMessagesIds = Meteor.messages
-            .find({conversationId: conversationId})
-            .map(message => _id);
-
-        Meteor.messages.remove({
-          _id: {$in: relatedMessagesIds}
-        });
-      }
-    });
-  },
-
   removeCurrentUserFromConversations (conversationId) {
     //this needed, because standard client method for removing participant from conversation not working
     check(conversationId, HospoHero.checkers.MongoId);
@@ -26,6 +7,11 @@ Meteor.methods({
       _id: conversationId
     }, {
       $pull: {_participants: this.userId}
+    });
+
+    Meteor.conversations.remove({
+      _id: conversationId,
+      _participants: []
     });
 
     Meteor.participants.remove({
