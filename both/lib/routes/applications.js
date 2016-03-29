@@ -49,6 +49,13 @@ Router.route('recruitmentForm', {
   waitOn () {
     return Meteor.subscribe('applicationDefinitionsByOrganization', this.params._id);
   },
+  onBeforeAction(){
+    if(!ApplicationDefinitions.findOne({'relations.organizationId':this.params._id}) || !Positions.findOne()){
+      this.render('notFound');
+    }else{
+      this.next();
+    }
+  },
   data () {
     return {
       applicationDefinition: ApplicationDefinitions.findOne({'relations.organizationId':this.params._id}),
