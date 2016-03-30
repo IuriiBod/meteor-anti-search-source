@@ -1,5 +1,22 @@
 Namespace('HospoHero.dateUtils', {
   /**
+   * @param {string|object} [location=currentLocationId] location document or it's ID
+   * @returns {String}
+   */
+  getLocationTimeZone: function (location) {
+    if (!location) {
+      let currentArea = HospoHero.getCurrentArea(Meteor.userId());
+      location = currentArea.locationId;
+    }
+
+    if (location && _.isString(location)) {
+      location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
+    }
+
+    return location.timezone;
+  },
+
+  /**
    * Convert date to the necessary timezone and format
    *
    * @param {String | Object} date - date string or Date object
@@ -16,17 +33,11 @@ Namespace('HospoHero.dateUtils', {
    *
    * @param {date|*} date Date or moment
    * @param {string|object} [location=currentLocationId] location document or it's ID
-   * @returns {*}
+   * @returns {moment.tz}
    */
   getDateMomentForLocation: function (date, location) {
-    if (!location) {
-      let currentArea = HospoHero.getCurrentArea(Meteor.userId());
-      location = currentArea.locationId;
-    }
-    if (location && _.isString(location)) {
-      location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
-    }
-    return moment(new Date(date)).tz(location.timezone);
+    let timezone = HospoHero.dateUtils.getLocationTimeZone(location);
+    return moment(new Date(date)).tz(timezone);
   },
 
   /**
@@ -142,7 +153,6 @@ Namespace('HospoHero.dateUtils', {
     return durationResult.length ? durationResult.join(' ') : '0m';
   },
 
-
   getWeekDays: function (weekDate) {
     var weekStart = moment(weekDate).startOf('isoWeek');
     var weekDays = [];
@@ -151,14 +161,6 @@ Namespace('HospoHero.dateUtils', {
       weekStart.add(1, 'day');
     }
     return weekDays;
-  },
-
-  formatDate: function (date, format) {
-    return moment(date).format(format);
-  },
-
-  shortDateFormat: function (date = new Date()) {
-    return moment(date).format('YYYY-MM-DD');
   },
 
   shiftDateInterval: function (shift) {
@@ -172,6 +174,41 @@ Namespace('HospoHero.dateUtils', {
     var endTime = HospoHero.dateUtils.formatDateWithTimezone(shift.endTime, timeFormat, locationId);
 
     return day + ' ' + startTime + ' - ' + endTime;
+  },
+
+  startOfWeekMoment: function (date = moment(), location = false) {
+    if (location) {
+      date = HospoHero.dateUtils.getDateMomentForLocation(date, location);
+    }
+    return date.startOf('isoWeek');
+  },
+
+  getDateStringForRoute: function (date, location) {
+    date = HospoHero.dateUtils.startOfWeekMoment(date, location);
+    return HospoHero.dateUtils.shortDateFormat(date);
+  },
+
+  dateInterval: function (startTime, endTime) {
+    var dayFormat = 'DD/MM/YY';
+    var timeFormat = 'h:mm a';
+
+    var day = HospoHero.dateUtils.formatDate(startTime, dayFormat);
+    startTime = HospoHero.dateUtils.formatDate(startTime, timeFormat);
+    endTime = HospoHero.dateUtils.formatDate(endTime, timeFormat);
+
+    return day + ' ' + startTime + ' - ' + endTime;
+  },
+
+  //todo: move this method to global helpers
+  formatDate: function (date, format) {
+    return moment(date).format(format);
+  },
+
+  // everything below this comment is useless and should be removed!!!
+  // https://trello.com/c/wbLph7j0/521-2-clean-up-hospohero-dateutils
+
+  shortDateFormat: function (date = new Date()) {
+    return moment(date).format('YYYY-MM-DD');
   },
 
   timeFormat: function (date) {
@@ -202,40 +239,11 @@ Namespace('HospoHero.dateUtils', {
     return secs / 60;
   },
 
-  //Formatted time with Ago
-  timeFromNow: function (time) {
-    return moment(time).fromNow();
-  },
-
-  startOfWeekMoment: function (date = moment(), location = false) {
-    if (location) {
-      date = HospoHero.dateUtils.getDateMomentForLocation(date, location);
-    }
-    return date.startOf('isoWeek');
-  },
-
-  getDateStringForRoute: function (date, location) {
-    date = HospoHero.dateUtils.startOfWeekMoment(date, location);
-    return HospoHero.dateUtils.shortDateFormat(date);
-  },
-
-
   truncateTimestamp: (timestamp = new Date().getTime()) => {
     return parseInt((timestamp).toString().substr(0, 10));
   },
 
   formatTimestamp: (timestamp = new Date().getTime()) => {
     return moment.unix(HospoHero.dateUtils.truncateTimestamp(timestamp)).format('DD/MM/YY');
-  },
-
-  dateInterval: function (startTime, endTime) {
-    var dayFormat = 'DD/MM/YY';
-    var timeFormat = 'h:mm a';
-
-    var day = HospoHero.dateUtils.formatDate(startTime, dayFormat);
-    startTime = HospoHero.dateUtils.formatDate(startTime, timeFormat);
-    endTime = HospoHero.dateUtils.formatDate(endTime, timeFormat);
-
-    return day + ' ' + startTime + ' - ' + endTime;
   }
 });
