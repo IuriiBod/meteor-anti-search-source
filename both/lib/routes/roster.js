@@ -1,6 +1,6 @@
 Router.route('/roster/weekly/:date', {
   name: "weeklyRoster",
-  template: "weeklyRosterMainView",
+  template: "weeklyRoster",
   waitOn: function () {
     let currentArea = HospoHero.getCurrentArea(Meteor.userId());
     if (currentArea) {
@@ -16,7 +16,6 @@ Router.route('/roster/weekly/:date', {
         Meteor.subscribe('taskList', Meteor.userId())
       ];
 
-
       let checker = new HospoHero.security.PermissionChecker();
       if (checker.hasPermissionInArea(currentArea._id, 'view forecast')) {
         subscriptions.push(Meteor.subscribe('dailySales', weekRange, currentArea._id));
@@ -26,15 +25,16 @@ Router.route('/roster/weekly/:date', {
   },
   data: function () {
     return {
-      date: new Date(this.params.date)
+      type: null,
+      localMoment: HospoHero.dateUtils.getDateMomentForLocation(this.params.date)
     };
   }
 });
 
 
 Router.route('/roster/template/weekly', {
-  name: "templateWeeklyRoster",
-  template: "weeklyRosterTemplateMainView",
+  name: 'templateWeeklyRoster',
+  template: 'weeklyRoster',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     if (currentAreaId) {
@@ -43,6 +43,14 @@ Router.route('/roster/template/weekly', {
         Meteor.subscribe('areaUsersList', currentAreaId),
         Meteor.subscribe('sections', currentAreaId)
       ];
+    }
+  },
+  data: function () {
+    let localMoment = HospoHero.dateUtils.getDateMomentForLocation(0);
+    return {
+      type: 'template',
+      // 0 means new Date(0) (date with 0 timestamp)
+      localMoment: localMoment.week(2).startOf('isoweek')
     }
   }
 });

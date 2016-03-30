@@ -1,0 +1,14 @@
+<template name="weeklyRoster">
+  <!-- Page heading -->
+  {{> pageHeading pageHeadingConfig}}
+
+  {{#unless isRosterTemplate}}
+    {{#if hasPermissionInAreaTo 'view forecast'}}
+      {{> weeklyFigures date=weeklyFiguresDate}}
+    {{/if}}
+  {{/unless}}
+
+  <div class="wrapper wrapper-content animated">
+    {{> weeklyShiftRoster}}
+  </div>
+</template>

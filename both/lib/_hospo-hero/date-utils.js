@@ -1,9 +1,10 @@
 Namespace('HospoHero.dateUtils', {
   /**
    * Convert date to the necessary timezone and format
+   *
    * @param {String | Object} date - date string or Date object
    * @param {String} dateFormat - moment format of output date
-   * @param {String} locationId - ID of location (get timezone from this location)
+   * @param {String} [locationId] - ID of location (get timezone from this location)
    * @returns {String}
    */
   formatDateWithTimezone: function (date, dateFormat, locationId) {
@@ -12,99 +13,39 @@ Namespace('HospoHero.dateUtils', {
 
   /**
    * Returns moment for specified date in timezone for specified location
+   *
    * @param {date|*} date Date or moment
-   * @param {string|object} location location document or it's ID
+   * @param {string|object} [location=currentLocationId] location document or it's ID
    * @returns {*}
    */
   getDateMomentForLocation: function (date, location) {
-    if (_.isString(location)) {
+    if (!location) {
+      let currentArea = HospoHero.getCurrentArea(Meteor.userId());
+      location = currentArea.locationId;
+    }
+    if (location && _.isString(location)) {
       location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
     }
     return moment(new Date(date)).tz(location.timezone);
   },
 
-  formatDate: function (date, format) {
-    return moment(date).format(format);
-  },
-
-  shortDateFormat: function (date = new Date()) {
-    return moment(date).format('YYYY-MM-DD');
-  },
-
-  hours: function () {
-    var hours = [];
-    for (var i = 0; i < 24; i++) {
-      hours.push({
-        value: i,
-        text: i
-      });
-    }
-    return hours;
-  },
-
-  minutes: function () {
-    var minutes = [];
-    for (var i = 0; i < 60; i++) {
-      if (i < 10) {
-        i = "0" + i;
-      }
-      minutes.push({
-        value: i,
-        text: i
-      });
-    }
-    return minutes;
-  },
-
-  shiftDateInterval: function (shift) {
-    var dayFormat = 'ddd, Do MMMM';
-    var timeFormat = 'h:mm A';
-
-    var locationId = shift.relations.locationId;
-
-    var day = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, dayFormat, locationId);
-    var startTime = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, timeFormat, locationId);
-    var endTime = HospoHero.dateUtils.formatDateWithTimezone(shift.endTime, timeFormat, locationId);
-
-    return day + ' ' + startTime + ' - ' + endTime;
-  },
-
-  locationTimeFormat: function (date, locationId) {
-    var dateFormat = 'h:mm A';
-    if (locationId && _.isString(locationId)) {
-      return HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
-    } else {
-      return HospoHero.dateUtils.formatDate(date, dateFormat);
-    }
-  },
-
   /**
-   * Converts client local date to date considering
-   * selected timezone (timezone takes from location)
-   *
-   * @param {date} date
-   * @param {string} locationId
+   * @param {Date|moment} date basic date
+   * @param {Date|moment} newTime time source
+   * @returns {date}
    */
-  formatTimeToLocationTimezone(date, locationId) {
-    let dateFormat = 'ddd MMM DD YYYY h:mm:ss a';
-    let dateForTimeZone = HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
-    return new Date(dateForTimeZone);
-  },
-
-  timeFormat: function (date) {
-    return date ? moment(date).format('h:mm a') : '-';
-  },
-
   applyTimeToDate: function (date, newTime) {
-    // new Date lets us to avoid bugs with initial date modification
-    // because moment doesn't copy initial date by itself
-    let timeMoment = moment(new Date(newTime));
+    // double moment constructor lets us to avoid bugs with initial date modification
+    // because internal date is copied only with parameter of moment type
+    let appliedDate = moment(moment(date));
+    let timeMoment = moment(newTime);
 
-    date.hours(timeMoment.hours());
-    date.minutes(timeMoment.minutes());
+    appliedDate.hours(timeMoment.hours());
+    appliedDate.minutes(timeMoment.minutes());
 
-    return date.toDate();
+    return appliedDate.toDate();
   },
+
   /**
    * Updates interval's start and end times
    *
@@ -138,6 +79,70 @@ Namespace('HospoHero.dateUtils', {
     return newInterval;
   },
 
+  /**
+   * Converts client local date to date considering
+   * selected timezone (timezone takes from location)
+   *
+   * @param {date} date
+   * @param {string} locationId
+   */
+  formatTimeToLocationTimezone(date, locationId) {
+    let dateFormat = 'ddd MMM DD YYYY h:mm:ss a';
+    let dateForTimeZone = HospoHero.dateUtils.formatDateWithTimezone(date, dateFormat, locationId);
+    return new Date(dateForTimeZone);
+  },
+
+  hours: function () {
+    var hours = [];
+    for (var i = 0; i < 24; i++) {
+      hours.push({
+        value: i,
+        text: i
+      });
+    }
+    return hours;
+  },
+
+  minutes: function () {
+    var minutes = [];
+    for (var i = 0; i < 60; i++) {
+      if (i < 10) {
+        i = "0" + i;
+      }
+      minutes.push({
+        value: i,
+        text: i
+      });
+    }
+    return minutes;
+  },
+
+  /**
+   * * Converts the duration to the hours and minutes string
+   * e.g. duration = 65, result will be 1h 5m
+   * @param {number} duration - time duration
+   * @param {string|'minutes'} timeUnit - the unit of duration measure (minutes, hours, ...)
+   * @returns {string}
+   */
+  humanizeTimeDuration: function (duration, timeUnit = 'minutes') {
+    duration = moment.duration(duration, timeUnit);
+
+    var durationResult = [];
+    var hours = duration.hours();
+    var minutes = duration.minutes();
+
+    if (hours > 0) {
+      durationResult.push(hours + 'h');
+    }
+
+    if (minutes > 0) {
+      durationResult.push(minutes + 'm');
+    }
+
+    return durationResult.length ? durationResult.join(' ') : '0m';
+  },
+
+
   getWeekDays: function (weekDate) {
     var weekStart = moment(weekDate).startOf('isoWeek');
     var weekDays = [];
@@ -146,6 +151,31 @@ Namespace('HospoHero.dateUtils', {
       weekStart.add(1, 'day');
     }
     return weekDays;
+  },
+
+  formatDate: function (date, format) {
+    return moment(date).format(format);
+  },
+
+  shortDateFormat: function (date = new Date()) {
+    return moment(date).format('YYYY-MM-DD');
+  },
+
+  shiftDateInterval: function (shift) {
+    var dayFormat = 'ddd, Do MMMM';
+    var timeFormat = 'h:mm A';
+
+    var locationId = shift.relations.locationId;
+
+    var day = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, dayFormat, locationId);
+    var startTime = HospoHero.dateUtils.formatDateWithTimezone(shift.startTime, timeFormat, locationId);
+    var endTime = HospoHero.dateUtils.formatDateWithTimezone(shift.endTime, timeFormat, locationId);
+
+    return day + ' ' + startTime + ' - ' + endTime;
+  },
+
+  timeFormat: function (date) {
+    return date ? moment(date).format('h:mm a') : '-';
   },
 
   weekDateName: function (date) {
@@ -189,30 +219,6 @@ Namespace('HospoHero.dateUtils', {
     return HospoHero.dateUtils.shortDateFormat(date);
   },
 
-  /**
-   * * Converts the duration to the hours and minutes string
-   * e.g. duration = 65, result will be 1h 5m
-   * @param {number} duration - time duration
-   * @param {string|'minutes'} timeUnit - the unit of duration measure (minutes, hours, ...)
-   * @returns {string}
-   */
-  humanizeTimeDuration: function (duration, timeUnit = 'minutes') {
-    duration = moment.duration(duration, timeUnit);
-
-    var durationResult = [];
-    var hours = duration.hours();
-    var minutes = duration.minutes();
-
-    if (hours > 0) {
-      durationResult.push(hours + 'h');
-    }
-
-    if (minutes > 0) {
-      durationResult.push(minutes + 'm');
-    }
-
-    return durationResult.length ? durationResult.join(' ') : '0m';
-  },
 
   truncateTimestamp: (timestamp = new Date().getTime()) => {
     return parseInt((timestamp).toString().substr(0, 10));
