@@ -13,7 +13,7 @@ Namespace('HospoHero.dateUtils', {
       location = Locations.findOne({_id: location}, {fields: {timezone: 1}});
     }
 
-    return location.timezone;
+    return location && location.timezone || moment.tz.guess();
   },
 
   /**
