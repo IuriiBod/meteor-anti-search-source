@@ -1,17 +1,12 @@
 var filterTypes = {
   'All tasks': function () {
-    return {dueDate: {$exists: 1}};
+    return {};
   },
 
   'Next 7 days': function () {
     var today = moment().startOf('day');
     var sevenDay = moment(today).add(7, 'days');
-    return {
-      $or: [
-        {dueDate: TimeRangeQueryBuilder.forInterval(today, sevenDay)},
-        {dueDate: {$lte: moment().startOf('day').toDate()}}
-      ]
-    };
+    return {dueDate: TimeRangeQueryBuilder.forInterval(today, sevenDay)};
   },
 
   'Today': function () {
@@ -70,7 +65,11 @@ Template.taskList.helpers({
     query.done = false;
 
     if (filterTypes.hasOwnProperty(filterType)) {
-      _.extend(query, filterTypes[filterType]());
+      let filterQuery = filterTypes[filterType]();
+
+      if (filterQuery) {
+        _.extend(query, filterQuery);
+      }
     }
 
     return TaskList.find(query, {

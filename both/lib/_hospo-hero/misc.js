@@ -211,6 +211,8 @@ Namespace('HospoHero.misc', {
    * @returns {Object}
    */
   getTasksQuery: function (currentUserId, userId) {
+    let taskQuery = {};
+
     let user = Meteor.users.findOne({_id: currentUserId});
     let relations = user && user.relations;
 
@@ -236,18 +238,16 @@ Namespace('HospoHero.misc', {
         };
       });
 
-      let taskQuery = {
+      taskQuery = {
         $or: or
       };
 
       if (userId) {
-        taskQuery.assignedTo = userId;
+        taskQuery.$or.push({assignedTo: {$in: [currentUserId, userId]}});
       }
-
-      return taskQuery;
-    } else {
-      return {};
     }
+
+    return taskQuery;
   },
 
   escapeRegExpString: function (str) {
