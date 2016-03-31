@@ -1,4 +1,15 @@
 //context: StockOrder
+Template.stockOrderItem.onCreated(function () {
+  this.stockItemsNeededCount = new ReactiveVar();
+
+  Meteor.call('countOfNeededOrderItems', this.data, (error, result) => {
+    if (error) {
+      this.stockItemsNeededCount.set('-');
+    }
+    this.stockItemsNeededCount.set(result);
+  });
+});
+
 Template.stockOrderItem.onRendered(function () {
   let tmpl = this;
 
@@ -44,10 +55,8 @@ Template.stockOrderItem.helpers({
   },
 
   countNeeded: function () {
-    //todo: this value should be calculated
-    //(see details https://trello.com/c/6Xq3fCYy/299-10-link-up-needed-value-in-stock-ordering-section-3)
-
-    return 0; //temporal cap
+    const tmpl = Template.instance();
+    return tmpl.stockItemsNeededCount.get();
   },
 
   countOnHand: function () {
