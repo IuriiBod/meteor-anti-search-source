@@ -9,7 +9,7 @@ Template.composeStocktakeOrderingEmail.onCreated(function () {
 
 Template.composeStocktakeOrderingEmail.helpers({
   initialHtml: function () {
-    return Template.instance().initialHtml.get()
+    return Template.instance().initialHtml.get();
   },
 
   supplier: function () {
