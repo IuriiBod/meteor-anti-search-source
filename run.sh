@@ -1,21 +1,29 @@
 #!/usr/bin/env bash
 SETTINGS_PATH=./.mupx-deploy/settings-dev.json
-#SERVER_URL=https://hospoherotesting.herokuapp.com
-SERVER_URL=https://hospohero.herokuapp.com
+
+case "$2" in
+  "staging")
+    SERVER_URL=https://hospohero.herokuapp.com
+    ;;
+  "testing")
+    SERVER_URL=https://hospoherotesting.herokuapp.com
+    ;;
+  *)
+    SERVER_URL=http://192.168.1.101:3000
+    ;;
+esac
 
 case "$1" in
   "android")
-    meteor run android-device --settings ${SETTINGS_PATH}
-    ;;
-  "ios")
-    meteor run ios-device --settings ${SETTINGS_PATH}
-    ;;
-  "android-testing")
-    echo "Start android app with server ${SERVER_URL}"
+    echo "Staring Android app on ${SERVER_URL}"
     meteor run android-device --settings ${SETTINGS_PATH} --mobile-server ${SERVER_URL}
     ;;
+  "ios")
+    echo "Staring iOS app on ${SERVER_URL}"
+    meteor run ios-device --settings ${SETTINGS_PATH} --mobile-server ${SERVER_URL}
+    ;;
   *)
-    echo "Start meteor app locally"
+    echo "Starting browser app only on localhost:3000"
     meteor run --settings ${SETTINGS_PATH}
     ;;
 esac
