@@ -26,7 +26,7 @@ less
 reactive-var
 
 force-ssl
-#crosswalk
+crosswalk
 
 accounts-ui
 accounts-google
@@ -41,7 +41,7 @@ okgrow:router-autoscroll
 konecty:autolinker
 mizzao:autocomplete
 dbarrett:dropzonejs
-percolate:intercom
+verso:intercom
 jss:sweetalert
 mrt:jquery-ui-sortable
 dbernhard:jquery-ui-draggable

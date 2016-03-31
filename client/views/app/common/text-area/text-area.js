@@ -12,11 +12,9 @@ Template.textArea.onRendered(function () {
       textArea.val('');
 
       //find tagged users
-      var mentionRegExp = /(?:^|\W)@(\w+)(?!\w)/g;
-      var match;
       var matches = [];
-      while (mentionRegExp.exec(text)) {
-        match = mentionRegExp.exec(text);
+      let match;
+      while ((match = HospoHero.regExp.mentionRegExp.exec(text))) {
         var user = Meteor.users.findOne({
           'profile.firstname': match[1],
           "relations.areaIds": {$all: [HospoHero.getCurrentAreaId()]}

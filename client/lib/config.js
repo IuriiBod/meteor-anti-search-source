@@ -1,5 +1,16 @@
-//enable push notification using raix:push package
-Push.enabled(true);
+//note: 2 empty lines between each configuration!
+
+//raix:push plugin config
+if (Meteor.isCordova) {
+  //enable push notification using raix:push package
+  Push.enabled(true);
+
+  Push.addListener('message', function () {
+    let count = Notifications.find().count();
+    //update badge with notifications count on iOS
+    Push.setBadge(count);
+  });
+}
 
 
 //accounts config
@@ -10,6 +21,7 @@ Accounts.ui.config({
   passwordSignupFields: 'USERNAME_AND_EMAIL'
 });
 
+
 //reCaptcha config
 reCAPTCHA.config({
   sitekey: Meteor.settings.public.reCaptchaKey,
@@ -18,10 +30,12 @@ reCAPTCHA.config({
   size: 'normal' //OPTIONAL. <normal|compact> Specifies the type of captcha to serve
 });
 
+
 //x-editable config
 $.fn.editable.defaults.mode = 'inline';
 
 
+//datepicker config
 var datepickerDefaults = {
   autoclose: true,
   todayHighlight: true,
