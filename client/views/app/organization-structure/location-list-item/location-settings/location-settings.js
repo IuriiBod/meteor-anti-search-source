@@ -87,8 +87,8 @@ Template.locationSettings.events({
     var location = tmpl.location();
     if (location) {
       FlyoutManager.open('wrapperFlyout', {
-        template:'createArea',
-        title:"Add Area",
+        template: 'createArea',
+        title: "Add Area",
         data: {
           organizationId: location.organizationId,
           locationId: location._id

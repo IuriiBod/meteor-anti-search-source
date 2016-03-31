@@ -1,29 +1,19 @@
-var MongoId = Match.Where(function (id) {
+let MongoId = Match.Where(function (id) {
   check(id, String);
   return /[0-9a-zA-Z]{17}/.test(id);
 });
 
-var NullableMongoId = Match.OneOf(MongoId, null);
+let NullableMongoId = Match.OneOf(MongoId, null);
 
-var PosKey = Match.Where(function (key) {
+let PosKey = Match.Where(function (key) {
   check(key, String);
   return /[0-9a-zA-Z]{32}/.test(key);
 });
 
-var PosSecret = Match.Where(function (key) {
+let PosSecret = Match.Where(function (key) {
   check(key, String);
   return /[0-9a-zA-Z]{64}/.test(key);
 });
-
-var forNonEmptyString = function (propertyName) {
-  return Match.Where(function (value) {
-    if (_.isString(value) && value.trim().length > 0) {
-      return true;
-    } else {
-      throw new Meteor.Error(propertyName + ' is required!');
-    }
-  });
-};
 
 Namespace('HospoHero.checkers', {
   /**
@@ -107,5 +97,13 @@ Namespace('HospoHero.checkers', {
    *
    * @param {string} propertyName
    */
-  forNonEmptyString: forNonEmptyString
+  forNonEmptyString: function (propertyName) {
+    return Match.Where(function (value) {
+      if (_.isString(value) && value.trim().length > 0) {
+        return true;
+      } else {
+        throw new Meteor.Error(propertyName + ' is required!');
+      }
+    });
+  }
 });

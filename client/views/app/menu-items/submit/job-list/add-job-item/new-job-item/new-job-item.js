@@ -1,4 +1,4 @@
-Template.newJobItem.onCreated(function() {
+Template.newJobItem.onCreated(function () {
   var currentAreaId = HospoHero.getCurrentAreaId();
   this.subscribe('jobTypes');
   this.subscribe('sections', currentAreaId);

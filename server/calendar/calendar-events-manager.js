@@ -1,5 +1,6 @@
 CalendarEventsManager = class CalendarEventsManager {
-  constructor() {}
+  constructor() {
+  }
 
   static insert(item, type, userId) {
     const area = HospoHero.getCurrentArea(Meteor.userId());

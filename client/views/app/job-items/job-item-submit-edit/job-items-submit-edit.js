@@ -38,7 +38,7 @@ Template.submitEditJobItem.onRendered(function () {
 });
 
 Template.submitEditJobItem.helpers({
-  isJobTypePreselected: function() {
+  isJobTypePreselected: function () {
     return !!Template.instance().preselectedJobType;
   },
   repeatAtComboEditableParams: function () {
@@ -110,7 +110,7 @@ Template.submitEditJobItem.helpers({
     var endsOn = moment().add(1, 'days');
     if (this.jobItem && this.jobItem.endsOn) {
       endsOn = moment(this.jobItem.endsOn.lastDate) ||
-          moment(this.jobItem.startsOn).add(1, 'days');
+        moment(this.jobItem.startsOn).add(1, 'days');
     }
     return HospoHero.dateUtils.shortDateFormat(endsOn);
   },
@@ -134,7 +134,7 @@ Template.submitEditJobItem.helpers({
 
   activeTime: function () {
     return this.jobItem && this.jobItem.activeTime ?
-      this.jobItem.activeTime / 60 : false;
+    this.jobItem.activeTime / 60 : false;
   }
 });
 
@@ -245,7 +245,7 @@ Template.submitEditJobItem.events({
         assignFieldsForPrep(jobItem);
       }
 
-      var closeFlyoutOrGoToDetails  = function(jobItemId) {
+      var closeFlyoutOrGoToDetails = function (jobItemId) {
         var isFlyout = tmpl.data.isPlacedInFlyout;
         if (isFlyout) {
           FlyoutManager.getInstanceByElement(e.target).close();

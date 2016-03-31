@@ -55,7 +55,7 @@ AccountsTemplates.addField({
   type: 'password',
   required: true,
   minLength: 8,
-  re:HospoHero.regExp.password,
+  re: HospoHero.regExp.password,
   errStr: 'error.minChar'
 });
 

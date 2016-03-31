@@ -1,7 +1,7 @@
 //context: item (Ingredient/JobItem), type ("ing"/"prep"), quantity (number), setCurrentEditedIngredient (function)
 Template.menuItemIngredientRow.helpers({
   itemName: function () {
-    return this.type === 'prep' ?  this.item.name : this.item.description;
+    return this.type === 'prep' ? this.item.name : this.item.description;
   },
 
   itemMeasure: function () {
@@ -65,21 +65,21 @@ Template.menuItemIngredientRow.events({
     event.preventDefault();
     if (tmpl.data.type === 'prep') {
       FlyoutManager.open('wrapperFlyout', {
-        template:'submitEditJobItem',
-        title:"Edit Job",
+        template: 'submitEditJobItem',
+        title: "Edit Job",
         data: {
           inFlyout: true,
-          editMode:true,
+          editMode: true,
           jobItem: tmpl.data.item
         }
       });
     } else {
       FlyoutManager.open('wrapperFlyout', {
-        template:'ingredientEditor',
-        title:"Edit ingredient",
+        template: 'ingredientEditor',
+        title: "Edit ingredient",
         data: {
           inFlyout: true,
-          editMode:true,
+          editMode: true,
           ingredient: tmpl.data.item
         }
       });

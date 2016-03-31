@@ -1,4 +1,4 @@
-Template.jobItemsListMainView.onCreated(function (){
+Template.jobItemsListMainView.onCreated(function () {
   this.selectedType = new ReactiveVar('Prep');
 });
 

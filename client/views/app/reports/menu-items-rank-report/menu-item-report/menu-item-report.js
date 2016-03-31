@@ -4,7 +4,7 @@ Template.menuItemReport.onCreated(function () {
   };
 });
 
-Template.menuItemReport.onRendered(function() {
+Template.menuItemReport.onRendered(function () {
   let itemWeeklyRanks = this.data.item.weeklyRanks;
   let itemsTotalCount = this.data.itemsCount;
   let itemRankValues = {};

@@ -1,6 +1,6 @@
 Template.projectsList.onCreated(function () {
   let activeFilter = 'Future Projects';
-  this.projectType = new ReactiveVar(activeFilter);
+  this.interviewType = new ReactiveVar(activeFilter);
 
   this.searchSource = this.AntiSearchSource({
     collection: 'projects',
@@ -19,7 +19,7 @@ Template.projectsList.onCreated(function () {
       ]
     };
 
-    if (this.projectType.get() === activeFilter) {
+    if (this.interviewType.get() === activeFilter) {
       query.startTime = {$gt: new Date()};
     }
 
@@ -40,13 +40,13 @@ Template.projectsList.helpers({
   },
 
   activeFilter () {
-    return Template.instance().projectType.get();
+    return Template.instance().interviewType.get();
   },
 
   onFilterChange () {
     var tmpl = Template.instance();
     return function (newFilterType) {
-      tmpl.projectType.set(newFilterType);
+      tmpl.interviewType.set(newFilterType);
     };
   }
 });

@@ -38,5 +38,15 @@ Template.referenceSelector.helpers({
         {createdBy: userId}
       ]
     }).fetch();
+  },
+
+  interviews () {
+    let userId = Meteor.userId();
+    return Interviews.find({
+      $or: [
+        {createdBy: userId},
+        {interviewers: userId}
+      ]
+    }).fetch();
   }
 });

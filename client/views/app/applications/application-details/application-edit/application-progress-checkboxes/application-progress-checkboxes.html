@@ -1,0 +1,34 @@
+<template name="applicationProgressCheckboxes">
+  <div class="checkbox">
+    {{> applicationProgressCheckbox checkbox="New Application" checked=checked onCheckboxChange=onCheckboxChange}}
+  </div>
+
+  <div class="checkbox">
+    {{> applicationProgressCheckbox checkbox="Phone Interview" checked=checked onCheckboxChange=onCheckboxChange}}
+  </div>
+
+  <div class="checkbox">
+    {{> applicationProgressCheckbox checkbox="1st Interview" checked=checked onCheckboxChange=onCheckboxChange}}
+    {{#if isItemChecked 'Phone Interview'}} / <a href="#" class="create-interview">create interview</a>{{/if}}
+  </div>
+
+  <div class="checkbox">
+    {{> applicationProgressCheckbox checkbox="2nd Interview" checked=checked onCheckboxChange=onCheckboxChange}}
+    {{#if isItemChecked '1st Interview'}} / <a href="#" class="create-interview">create interview</a>{{/if}}
+  </div>
+
+  <div class="checkbox">
+    {{> applicationProgressCheckbox checkbox="Hired!" checked=checked onCheckboxChange=onCheckboxChange}}
+    {{#if isItemChecked '2nd Interview'}} / <a href="#" class="invite-user">invite to HospoHero</a>{{/if}}
+  </div>
+
+  <div class="checkbox">
+    {{> applicationProgressCheckbox checkbox="On Wait List" checked=checked onCheckboxChange=onCheckboxChange}}
+  </div>
+
+  <div class="checkbox">
+    {{> applicationProgressCheckbox checkbox="Rejected" checked=checked onCheckboxChange=onCheckboxChange}}
+    / <a href="#" class="send-auto-email">send auto email</a>
+  </div>
+
+</template>

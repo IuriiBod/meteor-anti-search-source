@@ -1,4 +1,4 @@
-Template.chat.onCreated(function() {
+Template.chat.onCreated(function () {
   this.subscribe('conversations');
   this.currentConversationId = new ReactiveVar(null);
 
@@ -21,7 +21,7 @@ Template.chat.helpers({
     return !!Template.instance().currentConversationId.get();
   },
   conversations () {
-    return Meteor.user().conversations();
+    return Meteor.user().conversations(null, null, 'date', -1);
   },
   changeConversation () {
     const tmpl = Template.instance();

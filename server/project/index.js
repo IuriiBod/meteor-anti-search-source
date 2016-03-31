@@ -46,7 +46,7 @@ Meteor.methods({
     check(projectId, HospoHero.checkers.MongoId);
     let projectDoc = Projects.findOne({_id: projectId});
     let condition = projectDoc && canUserEditProjects() &&
-        isProjectCreator(projectDoc.createdBy) || isInProjectTeam(projectDoc.lead);
+      isProjectCreator(projectDoc.createdBy) || isInProjectTeam(projectDoc.lead);
 
     if (condition) {
       TaskList.remove({'reference.id': projectId});

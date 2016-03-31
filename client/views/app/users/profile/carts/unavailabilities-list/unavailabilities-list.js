@@ -4,9 +4,9 @@ Template.userUnavailabilitiesList.helpers({
     var user = Meteor.users.findOne({_id: this._id});
     var unavailabilities = user && user.unavailabilities || false;
 
-    return _.filter(unavailabilities, function(unavailability) {
+    return _.filter(unavailabilities, function (unavailability) {
       return unavailability.repeat === 'never' && unavailability.startDate >= today ||
-             unavailability.repeat !== 'never';
+        unavailability.repeat !== 'never';
     });
   },
 
@@ -15,8 +15,8 @@ Template.userUnavailabilitiesList.helpers({
     return LeaveRequests.find({
       userId: this._id,
       $or: [
-        { startDate: {$gte: startOfDay} },
-        { endDate: {$gte: startOfDay} }
+        {startDate: {$gte: startOfDay}},
+        {endDate: {$gte: startOfDay}}
       ]
     });
   },

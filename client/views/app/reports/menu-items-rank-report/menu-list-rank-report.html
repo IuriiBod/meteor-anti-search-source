@@ -41,23 +41,24 @@
       <div class="table-responsive">
         <table class="table">
           <thead>
-            <tr>
-              {{#each theadItems}}
-                <td>{{{this}}}</td>
-              {{/each}}
-            </tr>
+          <tr>
+            {{#each theadItems}}
+              <td>{{{this}}}</td>
+            {{/each}}
+          </tr>
           </thead>
           <tbody class="table-hover">
-            {{#each menuItems}}
-              <tr>
-                {{> menuItemReport item=this itemsCount=../menuItemsCount}}
-              </tr>
-            {{/each}}
+          {{#each menuItems}}
+            <tr>
+              {{> menuItemReport item=this itemsCount=../menuItemsCount}}
+            </tr>
+          {{/each}}
           </tbody>
         </table>
       </div>
     {{else}}
-      <h4 class="text-center">Menu items ranks for {{startDate}} {{#if endDate}} - {{endDate}}{{/if}} are not available now</h4>
+      <h4 class="text-center">Menu items ranks for {{startDate}} {{#if endDate}} - {{endDate}}{{/if}} are not available
+        now</h4>
     {{/if}}
   </div>
 </template>

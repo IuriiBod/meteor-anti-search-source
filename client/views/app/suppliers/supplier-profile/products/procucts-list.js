@@ -9,7 +9,7 @@ Template.productsList.events({
     event.preventDefault();
     var ingredient = Ingredients.findOne({_id: this.ingredientId});
     FlyoutManager.open('wrapperFlyout', {
-      template:'ingredientEditor',
+      template: 'ingredientEditor',
       title: (ingredient ? 'Edit' : 'Add') + " ingredient",
       data: {
         inFlyout: true,

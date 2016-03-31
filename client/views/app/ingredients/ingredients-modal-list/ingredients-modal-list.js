@@ -24,7 +24,7 @@ Template.ingredientsModalList.helpers({
   },
   onAddStockItem: function () {
     var tmpl = Template.instance();
-    return function(stockId) {
+    return function (stockId) {
       var idsToExclude = tmpl.idsToExclude.get();
       idsToExclude.push(stockId);
       tmpl.idsToExclude.set(idsToExclude);
@@ -36,8 +36,8 @@ Template.ingredientsModalList.helpers({
 Template.ingredientsModalList.events({
   'click .add-new-ingredient': function () {
     FlyoutManager.open('wrapperFlyout', {
-      template:'ingredientEditor',
-      title:"Add ingredient",
+      template: 'ingredientEditor',
+      title: "Add ingredient",
       data: {
         inFlyout: true,
         ingredient: null

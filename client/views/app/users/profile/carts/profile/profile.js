@@ -15,7 +15,7 @@ Template.profile.helpers({
       moment.duration(moment().diff(this.lastLoginDate)).humanize() || 'never';
   },
   isCanChangePassword: function () {
-      let  user  = Meteor.user();
-      return _.isEmpty(user.services);
+    let user = Meteor.user();
+    return _.isEmpty(user.services);
   }
 });

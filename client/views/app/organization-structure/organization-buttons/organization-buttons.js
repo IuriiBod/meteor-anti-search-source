@@ -11,16 +11,16 @@ Template.organizationButtons.helpers({
 Template.organizationButtons.events({
   'click .organization-details-flyout': function (event, tmpl) {
     FlyoutManager.open('wrapperFlyout', {
-      template:'organizationDetailsPage',
-      title:"Organization details",
+      template: 'organizationDetailsPage',
+      title: "Organization details",
       data: {organizationId: tmpl.data._id}
     });
   },
 
   'click .create-location-flyout': function (event, tmpl) {
     FlyoutManager.open('wrapperFlyout', {
-      template:'createLocation',
-      title:" Add Location",
+      template: 'createLocation',
+      title: " Add Location",
       data: {organization: tmpl.data}
     });
   },

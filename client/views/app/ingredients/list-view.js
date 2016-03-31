@@ -5,7 +5,7 @@ Template.listOfStocksMasterMainView.onCreated(function () {
         ingredient = Ingredients.findOne({_id: ingredient});
       }
       FlyoutManager.open('wrapperFlyout', {
-        template:'ingredientEditor',
+        template: 'ingredientEditor',
         title: (ingredient ? 'Edit' : 'Add') + " ingredient",
         data: {
           inFlyout: true,

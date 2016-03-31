@@ -5,8 +5,7 @@ Template.jobListItem.onRendered(function () {
   });
 });
 
-Template.jobListItem.helpers({
-});
+Template.jobListItem.helpers({});
 
 Template.jobListItem.events({
   'ifChecked .job-select-checkbox': function (event, tmpl) {

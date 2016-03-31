@@ -42,7 +42,7 @@ Template.jobItemDetailed.helpers({
               .ingredient(Ingredients.findOne({_id: ingredientInJobItem._id}));
             if (analyzedIngredient) {
               analyzedIngredient.totalCost = parseFloat(analyzedIngredient.costPerPortionUsed) *
-                  parseFloat(ingredientInJobItem.quantity);
+                parseFloat(ingredientInJobItem.quantity);
               jobItem.totalIngCost += parseFloat(analyzedIngredient.totalCost);
             }
           });

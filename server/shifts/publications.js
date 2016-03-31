@@ -1,25 +1,43 @@
+let checkViewRosterPermission = function (userId, areaId) {
+  let permissionChecker = userId && new HospoHero.security.PermissionChecker(userId);
+  return permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'view roster');
+};
+
 Meteor.publishAuthorized('weeklyRoster', function (weekRange, areaId) {
   check(weekRange, HospoHero.checkers.WeekRange);
+  check(areaId, HospoHero.checkers.MongoId);
+
+  if (!checkViewRosterPermission(this.userId, areaId)) {
+    this.ready();
+    return;
+  }
 
   logger.info("Shift date range in publisher", weekRange);
 
-  //get shifts
   return Shifts.find({
-    'relations.areaId': areaId,
-    startTime: weekRange
+    startTime: weekRange,
+    type: null,
+    'relations.areaId': areaId
   });
 });
 
 Meteor.publishAuthorized('weeklyRosterTemplate', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
+  if (!checkViewRosterPermission(this.userId, areaId)) {
+    this.ready();
+    return;
+  }
+
   logger.info("Weekly shifts template");
 
-  //get shifts
   return Shifts.find({
-    'relations.areaId': areaId,
-    type: 'template'
+    type: 'template',
+    'relations.areaId': areaId
   });
 });
 
+//todo:roster subs below should be refactored
 
 Meteor.publishComposite('daily', function (date, areaId, worker) {
   return {
@@ -51,7 +69,7 @@ Meteor.publishComposite('daily', function (date, areaId, worker) {
   };
 });
 
-Meteor.publishAuthorized("shift", function (id) {
+Meteor.publishAuthorized('shift', function (id) {
   check(id, HospoHero.checkers.MongoId);
   logger.info("Shift published", id);
   return Shifts.find({_id: id});

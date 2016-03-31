@@ -28,7 +28,7 @@ Meteor.methods({
     check(locationId, HospoHero.checkers.MongoId);
 
     let location = Locations.findOne({_id: locationId});
-    if (!checkOrganizationOwner(location.organizationId,this.userId)) {
+    if (!checkOrganizationOwner(location.organizationId, this.userId)) {
       logger.error("User not permitted to delete this location");
       throw new Meteor.Error(403, "User not permitted to delete this location");
     }

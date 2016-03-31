@@ -26,7 +26,7 @@ if [[ $OSTYPE == "darwin14" ]]; then # mac os x
   DB_WAIT_TIME=10
 else
   echo Using configuration for Linux
-  DB_WAIT_TIME=30
+  DB_WAIT_TIME=10
 fi
 
 if [[ $1 != "d" ]]; then
@@ -41,7 +41,7 @@ rm -rf .meteor/local/db
 mkdir .meteor/local .meteor/local/db
 
 echo "Starting local database ..."
-mongod --dbpath="${DB_PATH}" --port=3000 --storageEngine=mmapv1 > /dev/null & sleep ${DB_WAIT_TIME}
+mongod --dbpath="${DB_PATH}" --port=3000 --storageEngine=mmapv1 --nojournal > /dev/null & sleep ${DB_WAIT_TIME}
 
 mongorestore --host=127.0.0.1 --port=3000 --db=meteor --drop  "${DEST_DIR}/${MONGO_DB}"
 

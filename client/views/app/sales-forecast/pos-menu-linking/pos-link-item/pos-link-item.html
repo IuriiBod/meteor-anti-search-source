@@ -1,23 +1,23 @@
 <template name="revelLinkMenuItem">
   <div class="col-md-6">
     <div class="revel-link-menu-item-component">
-        <div class="menu-item-name">
-          <b>{{name}}</b>
-          <a href="#" class="pull-right text-info">
-            <i class="fa fa-plus-circle fa-lg add-pos-name"></i>
-          </a>
-        </div>
-        <div>
-          {{#each posNames}}
-            {{> posEditItem name=this item=..}}
-          {{/each}}
-        </div>
+      <div class="menu-item-name">
+        <b>{{name}}</b>
+        <a href="#" class="pull-right text-info">
+          <i class="fa fa-plus-circle fa-lg add-pos-name"></i>
+        </a>
+      </div>
+      <div>
+        {{#each posNames}}
+          {{> posEditItem name=this item=..}}
+        {{/each}}
+      </div>
 
-        <div>
-          {{#if state$attachPosName}}
-            {{> selectPos item=this}}
-          {{/if}}
-        </div>
+      <div>
+        {{#if state$attachPosName}}
+          {{> selectPos item=this}}
+        {{/if}}
+      </div>
     </div>
   </div>
 </template>

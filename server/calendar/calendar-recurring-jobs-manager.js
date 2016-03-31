@@ -1,4 +1,5 @@
-CalendarRecurringJobsManager = function () {};
+CalendarRecurringJobsManager = function () {
+};
 
 /**
  * Removes all events from calendar by query
@@ -15,7 +16,7 @@ CalendarRecurringJobsManager.removeEvents = function (query) {
  * @param query - search query
  * @returns {Cursor}
  */
-CalendarRecurringJobsManager.findEvents = function(query) {
+CalendarRecurringJobsManager.findEvents = function (query) {
   return CalendarEvents.find(query);
 };
 
@@ -118,7 +119,6 @@ CalendarRecurringJobsManager._anotherJobExistsAtThisTime = function (jobStartTim
 };
 
 
-
 /**
  * Finds recurring jobs from the shift and place it onto user's calendar
  * @param {Object} shift
@@ -154,8 +154,8 @@ CalendarRecurringJobsManager.addRecurringJobsToCalendar = function (shift) {
     });
 
     var notPlacedJobs = JobItems.find({
-      _id: { $nin: placedJobs },
-      startsOn: { $lte: startOfDay },
+      _id: {$nin: placedJobs},
+      startsOn: {$lte: startOfDay},
       $or: [
         {'endsOn.on': 'endsNever'},
         {'endsOn.lastDate': {$gte: startOfDay}}

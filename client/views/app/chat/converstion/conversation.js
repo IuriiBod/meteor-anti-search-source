@@ -1,4 +1,4 @@
-Template.conversation.onCreated(function() {
+Template.conversation.onCreated(function () {
   this.subscribe('messagesFor', this.data.id);
 
   this.conversation = Meteor.conversations.findOne(this.data.id);
@@ -10,7 +10,7 @@ Template.conversation.onCreated(function() {
   }
 });
 
-Template.conversation.onRendered(function() {
+Template.conversation.onRendered(function () {
   this.$('.subject-of-conversation').editable({
     type: 'text',
     showbuttons: true,
@@ -18,16 +18,11 @@ Template.conversation.onRendered(function() {
     mode: 'inline',
     success: (response, newValue) => {
       Meteor.call('addSubjectOfConversation', this.data.id, newValue);
-    }});
+    }
+  });
 });
 
 Template.conversation.onDestroyed(function() {
-  const messages = this.conversation.messages();
-  const participants = this.conversation.participants();
-  if (!messages.count() && !participants.count()) {
-    Meteor.call('removeOwnConversation', this.conversation._id);
-  }
-
   this.data.onCloseConversation();
 });
 
@@ -73,8 +68,8 @@ Template.conversation.helpers({
     return participantsListStr.length ? participantsListStr : 'No participants';
   },
   subjectOfConversation () {
-    const subject = Meteor.conversations.findOne(this.id).subject;
-    return subject ? subject : 'Subject';
+    const conversation = Meteor.conversations.findOne(this.id);
+    return conversation && conversation.subject  ? conversation.subject : 'Subject';
   }
 });
 

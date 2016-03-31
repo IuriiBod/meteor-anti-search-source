@@ -42,7 +42,7 @@ Migrations.add({
     ];
 
     collectionsToRemove.forEach(
-        name => Migrations.utils.removeCollection(name)
+      name => Migrations.utils.removeCollection(name)
     );
   }
 });

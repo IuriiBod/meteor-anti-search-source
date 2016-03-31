@@ -11,8 +11,8 @@ Template.taskEditor.onCreated(function () {
 Template.taskEditor.onRendered(function () {
   this.$('.new-task-title').focus();
 
-  this.datepicker  = this.$('.date-picker-input');
-  this.datepicker .datepicker({
+  this.datepicker = this.$('.date-picker-input');
+  this.datepicker.datepicker({
     format: 'D dd/mm/yy',
     startDate: new Date()
   });
@@ -124,7 +124,7 @@ Template.taskEditor.events({
       var taggedUsers = [];
       var selectedOptions = tmpl.$('.user-selector').find('option:selected');
 
-      selectedOptions.each(function(index, option) {
+      selectedOptions.each(function (index, option) {
         taggedUsers.push(option.value);
       });
       return taggedUsers.length ? taggedUsers : [Meteor.userId()];
@@ -135,7 +135,6 @@ Template.taskEditor.events({
 
       if (durationString.trim()) {
         var durationRegEx = /(\d+)\s?(\S+)/g;
-        var duration;
 
         var timeUnits = {
           hours: {
@@ -158,12 +157,14 @@ Template.taskEditor.events({
           };
         };
 
-        while (durationRegEx.exec(durationString)) {
-          duration = durationRegEx.exec(durationString);
-          var timeUnitsNumber = duration[1];
-          var timeUnitName = duration[2];
+        let duration;
+        while (duration = durationRegEx.exec(durationString)) {
+          if (duration) {
+            var timeUnitsNumber = duration[1];
+            var timeUnitName = duration[2];
 
-          Object.keys(timeUnits).forEach(helper());
+            Object.keys(timeUnits).forEach(helper());
+          }
         }
       }
 
