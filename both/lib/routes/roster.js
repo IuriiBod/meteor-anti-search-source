@@ -51,7 +51,7 @@ Router.route('/roster/template/weekly', {
       type: 'template',
       // 0 means new Date(0) (date with 0 timestamp)
       localMoment: localMoment.week(2).startOf('isoweek')
-    }
+    };
   }
 });
 

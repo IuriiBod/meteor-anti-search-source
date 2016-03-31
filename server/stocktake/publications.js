@@ -107,7 +107,7 @@ Meteor.publishComposite('allStocktakeOrders', function (stocktakeId) {
         }
       }
     ]
-  }
+  };
 });
 
 
