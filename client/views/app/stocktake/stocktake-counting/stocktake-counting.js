@@ -38,7 +38,7 @@ Template.stocktakeCounting.helpers({
   totalStocktakeCost: function () {
     let totalStocktakeCost = 0;
     StockItems.find({stocktakeId: this._id}).forEach((stockItem) => {
-      totalStocktakeCost += stockItem.count * stockItem.ingredient.cost
+      totalStocktakeCost += stockItem.count * stockItem.ingredient.cost;
     });
     return totalStocktakeCost;
   }

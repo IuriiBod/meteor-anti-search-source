@@ -135,7 +135,6 @@ Template.taskEditor.events({
 
       if (durationString.trim()) {
         var durationRegEx = /(\d+)\s?(\S+)/g;
-        var duration;
 
         var timeUnits = {
           hours: {
@@ -158,12 +157,14 @@ Template.taskEditor.events({
           };
         };
 
-        while (durationRegEx.exec(durationString)) {
-          duration = durationRegEx.exec(durationString);
-          var timeUnitsNumber = duration[1];
-          var timeUnitName = duration[2];
+        let duration;
+        while (duration = durationRegEx.exec(durationString)) {
+          if (duration) {
+            var timeUnitsNumber = duration[1];
+            var timeUnitName = duration[2];
 
-          Object.keys(timeUnits).forEach(helper());
+            Object.keys(timeUnits).forEach(helper());
+          }
         }
       }
 

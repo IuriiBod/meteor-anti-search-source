@@ -6,12 +6,13 @@ Template.weeklyShiftRoster.onCreated(function () {
 
 Template.weeklyShiftRoster.helpers({
   datesOfWeek: function () {
-    var weekDate = this.type !== 'template' ? moment(this.date) : moment(0).week(2).startOf('isoweek');
-    return HospoHero.dateUtils.getWeekDays(weekDate);
+    return HospoHero.dateUtils.getWeekDays(this.localMoment);
   },
+
   shiftBuffer: function () {
     return Template.instance().shiftBuffer.get();
   },
+
   onCopyShift: function () {
     const self = Template.instance();
     return shift => {
