@@ -5,7 +5,7 @@ Template.stockAreaItem.getStockAreaItemContext = function () {
     activeAreas: templateData.activeAreas,
     isEditMode: templateData.isEditMode,
     onStockAreaSelect: templateData.onStockAreaSelect
-  }
+  };
 };
 
 Template.stockAreaItem.helpers({

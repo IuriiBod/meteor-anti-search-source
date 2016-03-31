@@ -1,6 +1,12 @@
 Meteor.publishComposite('managerNotes', function (weekRange, areaId) {
-  check(areaId, HospoHero.checkers.MongoId);
   check(weekRange, HospoHero.checkers.WeekRange);
+  check(areaId, HospoHero.checkers.MongoId);
+
+  let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
+  if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'view roster')) {
+    this.ready();
+    return;
+  }
 
   return {
     find: function () {

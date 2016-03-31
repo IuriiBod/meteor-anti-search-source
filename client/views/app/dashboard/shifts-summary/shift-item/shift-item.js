@@ -76,8 +76,8 @@ Template.shiftItem.helpers({
   },
 
   formatLocationTime: function (time) {
-    var area = HospoHero.getCurrentArea();
-    return HospoHero.dateUtils.locationTimeFormat(time, area.locationId);
+    let area = HospoHero.getCurrentArea();
+    return area && HospoHero.dateUtils.formatDateWithTimezone(time, 'h:mm a', area.locationId);
   },
 
   timeDuration: function (time) {
