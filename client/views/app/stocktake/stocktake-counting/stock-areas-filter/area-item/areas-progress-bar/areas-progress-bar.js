@@ -16,8 +16,11 @@ Template.areasProgressBar.helpers({
       [isGeneralArea && 'generalAreaId' || '_id']: this.stockArea._id
     }).map(stockArea => stockArea._id);
 
-    let filledStockItemsCount = _.reduce(relatedSpecialAreaIds, (result, stockAreaId) => result + getFilledStockItemsCount(stockAreaId), 0);
-    let totalStockItemsCount = _.reduce(relatedSpecialAreaIds, (result, stockAreaId) => result + getTotalStockItemsCount(stockAreaId), 0);
+    let sumFilledStockItems = (result, stockAreaId) => result + getFilledStockItemsCount(stockAreaId);
+    let filledStockItemsCount = _.reduce(relatedSpecialAreaIds, sumFilledStockItems, 0);
+
+    let sumAllStockItems = (result, stockAreaId) => result + getTotalStockItemsCount(stockAreaId);
+    let totalStockItemsCount = _.reduce(relatedSpecialAreaIds, sumAllStockItems, 0);
 
     let progress = totalStockItemsCount > 0 ? (filledStockItemsCount / totalStockItemsCount) * 100 : 0;
     return `${progress}%`;

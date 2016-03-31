@@ -23,7 +23,7 @@ Template.stockItemsList.onRendered(function () {
   //enable/disable according to isEditMode
   this.autorun(() => {
     let currentData = Template.currentData();
-    sortableElement.sortable(currentData.isEditMode ? 'enable' : 'disable')
+    sortableElement.sortable(currentData.isEditMode ? 'enable' : 'disable');
   });
 });
 
@@ -41,7 +41,7 @@ Template.stockItemsList.helpers({
       ingredient: Ingredients.findOne({_id: ingredientId}),
       specialAreaId: templateContext.specialAreaId,
       isEditMode: templateContext.isEditMode
-    }
+    };
   }
 });
 
