@@ -229,7 +229,7 @@ Namespace('HospoHero.misc', {
         sharingObject.area = relations.areaIds;
       }
 
-      let or = _.map(sharingObject, function (value, key) {
+      let orQuery = _.map(sharingObject, function (value, key) {
         return {
           'sharing.type': key,
           'sharing.id': {
@@ -238,13 +238,17 @@ Namespace('HospoHero.misc', {
         };
       });
 
-      taskQuery = {
-        $or: or
+      let assignedToQuery = {
+        assignedTo: {$in: [currentUserId]}
       };
 
       if (userId) {
-        taskQuery.$or.push({assignedTo: {$in: [currentUserId, userId]}});
+        assignedToQuery.assignedTo.$in.push(userId);
       }
+
+      taskQuery = {
+        $or: _.union(orQuery, assignedToQuery)
+      };
     }
 
     return taskQuery;

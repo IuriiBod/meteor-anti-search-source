@@ -39,8 +39,7 @@ Meteor.publishComposite('taskList', function (userId) {
   return {
     // publish all user's tasks
     find: function () {
-      var query = {};
-
+      let query = HospoHero.misc.getTasksQuery(this.userId, userId);
       return TaskList.find(query);
     },
     children: [
