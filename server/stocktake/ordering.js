@@ -168,5 +168,70 @@ Meteor.methods({
         }
       }
     });
+  },
+
+  countOfNeededOrderItems: function (orderItem) {
+    //calculation of optimal delivery interval
+    const averageDaysInMonth = 30;
+    const supplierId = Ingredients.findOne(orderItem.ingredient.id).suppliers;
+    const deliveryCountPerMonth = Suppliers.findOne(supplierId).deliveryDays.length * 4;
+    const ingredientExpireDays = 5; //an approximate average value
+    const minimalDeliveryIntervalDays = Math.floor(averageDaysInMonth / deliveryCountPerMonth);
+    const expireImpact = Math.floor(ingredientExpireDays / minimalDeliveryIntervalDays);
+    const expireImpactCoefficient = expireImpact > 1 ? 1 / expireImpact : 1;
+    const optimalDeliveryIntervalDays = Math.ceil(
+        averageDaysInMonth / (deliveryCountPerMonth * expireImpactCoefficient));
+
+    //calculation of sales interval
+    const order = Orders.findOne(orderItem.orderId);
+    const salesInterval = TimeRangeQueryBuilder.forInterval(
+        moment(order.createdAt).startOf('day'),
+        moment(order.createdAt).startOf('day').add(optimalDeliveryIntervalDays, 'days')
+    );
+
+
+    //calculation quantity sales of ingredient
+    let ingredientExpectedQuantity = 0;
+
+    let getCountSalesOfMenuItem = (menuItem) => {
+      const salesCountArr = DailySales.find({
+        menuItemId: menuItem._id,
+        date: salesInterval,
+        predictionQuantity: {$exists: true}
+      }).map(dailySale => dailySale.predictionQuantity);
+
+      return salesCountArr.reduce((sum, current) => sum + current, 0);
+    };
+
+    const menuItemsWithIngredient = MenuItems.find({
+      'ingredients._id': orderItem.ingredient.id
+    }, {
+      fields: {
+        ingredients: {$elemMatch: {_id: orderItem.ingredient.id}}
+      }
+    });
+
+    if (menuItemsWithIngredient.count() === 0) {
+      return '-';
+    } else {
+      menuItemsWithIngredient.forEach((menuItem) => {
+        const menuItemIngredient = menuItem.ingredients[0];
+        ingredientExpectedQuantity += getCountSalesOfMenuItem(menuItem) * menuItemIngredient.quantity;
+
+      });
+    }
+
+    //calculation of portions of needed ingredient
+    const ingredient = Ingredients.findOne(orderItem.ingredient.id);
+    const neededIngredientExpectedCount = Math.floor(ingredientExpectedQuantity / ingredient.unitSize);
+
+    const stockItem = StockItems.findOne({
+      stocktakeId: order.stocktakeId,
+      'ingredient.id': orderItem.ingredient.id
+    });
+
+    const ingredientNeededCount = neededIngredientExpectedCount - stockItem.count;
+
+    return ingredientNeededCount > 0 ? ingredientNeededCount : 0;
   }
 });
