@@ -191,7 +191,7 @@ Meteor.methods({
 
 
     //calculation quantity sales of ingredient
-    let neededIngredientExpectedQuantity = 0;
+    let ingredientExpectedQuantity = 0;
 
     let getCountSalesOfMenuItem = (menuItem) => {
       const salesCountArr = DailySales.find({
@@ -204,24 +204,26 @@ Meteor.methods({
     };
 
     const menuItemsWithIngredient = MenuItems.find({
-      'ingredients._id': orderItem.ingredient.id,
-      'relations.areaId': orderItem.relations.areaId
+      'ingredients._id': orderItem.ingredient.id
+    }, {
+      fields: {
+        ingredients: {$elemMatch: {_id: orderItem.ingredient.id}}
+      }
     });
 
-    if (!menuItemsWithIngredient.count()) {
+    if (menuItemsWithIngredient.count() === 0) {
       return '-';
     } else {
       menuItemsWithIngredient.forEach((menuItem) => {
-        const menuItemIngredient = menuItem.ingredients.filter((ingredient) => {
-          return ingredient._id === orderItem.ingredient.id;
-        })[0];
-        neededIngredientExpectedQuantity += getCountSalesOfMenuItem(menuItem) * menuItemIngredient.quantity;
+        const menuItemIngredient = menuItem.ingredients[0];
+        ingredientExpectedQuantity += getCountSalesOfMenuItem(menuItem) * menuItemIngredient.quantity;
+
       });
     }
 
     //calculation of portions of needed ingredient
     const ingredient = Ingredients.findOne(orderItem.ingredient.id);
-    const neededIngredientExpectedCount = Math.ceil(neededIngredientExpectedQuantity / ingredient.unitSize);
+    const neededIngredientExpectedCount = Math.floor(ingredientExpectedQuantity / ingredient.unitSize);
 
     const stockItem = StockItems.findOne({
       stocktakeId: order.stocktakeId,
