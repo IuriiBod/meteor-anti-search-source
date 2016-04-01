@@ -78,8 +78,12 @@ Template.taskItem.helpers({
       }
 
       var referenceItem = reference.collection.findOne({_id: taskReference.id});
-      var nameField = reference.nameField || 'name';
 
+      if (!referenceItem) {
+        return false;
+      }
+
+      var nameField = reference.nameField || 'name';
       return {
         icon: reference.icon,
         name: referenceItem[nameField],

@@ -211,6 +211,8 @@ Namespace('HospoHero.misc', {
    * @returns {Object}
    */
   getTasksQuery: function (currentUserId, userId) {
+    let taskQuery = {};
+
     let user = Meteor.users.findOne({_id: currentUserId});
     let relations = user && user.relations;
 
@@ -227,7 +229,7 @@ Namespace('HospoHero.misc', {
         sharingObject.area = relations.areaIds;
       }
 
-      let or = _.map(sharingObject, function (value, key) {
+      let orQuery = _.map(sharingObject, function (value, key) {
         return {
           'sharing.type': key,
           'sharing.id': {
@@ -236,18 +238,20 @@ Namespace('HospoHero.misc', {
         };
       });
 
-      let taskQuery = {
-        $or: or
+      let assignedToQuery = {
+        assignedTo: {$in: [currentUserId]}
       };
 
       if (userId) {
-        taskQuery.assignedTo = userId;
+        assignedToQuery.assignedTo.$in.push(userId);
       }
 
-      return taskQuery;
-    } else {
-      return {};
+      taskQuery = {
+        $or: _.union(orQuery, assignedToQuery)
+      };
     }
+
+    return taskQuery;
   },
 
   escapeRegExpString: function (str) {

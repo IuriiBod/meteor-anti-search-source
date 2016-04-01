@@ -1,4 +1,6 @@
 Template.taskWidget.onCreated(function () {
+  this.subscribe('specifiedTasks', this.data.type, this.data.itemId);
+
   this.getReferenceObject = function () {
     var referenceId = this.data.itemId;
     var referenceType = this.data.type;

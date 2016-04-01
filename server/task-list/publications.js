@@ -1,37 +1,56 @@
+let commentsPublisher = {
+  // publish comments to the task
+  find: function (task) {
+    if (task) {
+      return Comments.find({
+        reference: task._id
+      });
+    }
+  },
+  children: [
+    {
+      find: function (comment) {
+        return Meteor.users.find({
+          _id: comment.createdBy
+        }, {
+          fields: HospoHero.security.getPublishFieldsFor('users')
+        });
+      }
+    }
+  ]
+};
+
+let getTaskReferenceCollection = (taskReference) => {
+  var references = {
+    suppliers: Suppliers,
+    menus: MenuItems,
+    jobs: JobItems,
+    meetings: Meetings,
+    managerNotes: ManagerNotes,
+    project: Projects,
+    interviews: Interviews
+  };
+
+  return references[taskReference.type];
+};
+
+
 Meteor.publishComposite('taskList', function (userId) {
   return {
     // publish all user's tasks
     find: function () {
-      var query = {};
-
-      if (userId) {
-        query = HospoHero.misc.getTasksQuery(this.userId, userId);
-      }
-
+      let query = HospoHero.misc.getTasksQuery(this.userId, userId);
       return TaskList.find(query);
     },
     children: [
       {
         // publish reference of the task
         find: function (task) {
-          if (task) {
-            var reference = task.reference;
-            if (reference && Object.keys(reference).length) {
-              var references = {
-                suppliers: Suppliers,
-                menus: MenuItems,
-                jobs: JobItems,
-                meetings: Meetings,
-                managerNotes: ManagerNotes,
-                project: Projects,
-                interviews: Interviews
-              };
+          if (task && task.reference && _.keys(task.reference).length) {
+            let reference = task.reference;
+            let referenceCollection = getTaskReferenceCollection(reference);
 
-              var referenceCollection = references[reference.type];
-              return referenceCollection.find({_id: reference.id});
-            } else {
-              this.ready();
-            }
+            return referenceCollection.find({_id: reference.id});
           } else {
             this.ready();
           }
@@ -49,27 +68,7 @@ Meteor.publishComposite('taskList', function (userId) {
           });
         }
       },
-      {
-        // publish comments to the task
-        find: function (task) {
-          if (task) {
-            return Comments.find({
-              reference: task._id
-            });
-          }
-        },
-        children: [
-          {
-            find: function (comment) {
-              return Meteor.users.find({
-                _id: comment.createdBy
-              }, {
-                fields: HospoHero.security.getPublishFieldsFor('users')
-              });
-            }
-          }
-        ]
-      }
+      commentsPublisher
     ]
   };
 });
@@ -100,4 +99,21 @@ Meteor.publish('todayTasks', function () {
   } else {
     this.ready();
   }
+});
+
+Meteor.publishComposite('specifiedTasks', function (referenceType, referenceId) {
+  check(referenceType, String);
+  check(referenceId, HospoHero.checkers.MongoId);
+
+  return {
+    find () {
+      // we don't ask any permissions, because we WANT to publish those tasks
+      return TaskList.find({
+        'reference.id': referenceId,
+        'reference.type': referenceType
+      });
+    },
+
+    children: [commentsPublisher]
+  };
 });
