@@ -16,8 +16,6 @@ $ ./reset_db.sh d
 
 This command takes less time (in case if you have existing dump in `.dump` folder).
 
-__Note for Linux users:__ Use `reset_db_linux.sh` instead. 
-
 ## Starting the app
 
 ```
@@ -75,5 +73,5 @@ $ git checkout develop
 $ git merge develop
 ```
 
-*2015/12/30*
+*2016/04/01*
 
