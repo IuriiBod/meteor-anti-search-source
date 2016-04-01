@@ -41,10 +41,6 @@ Meteor.publishComposite('taskList', function (userId) {
     find: function () {
       var query = {};
 
-      //if (userId) {
-      //  query = HospoHero.misc.getTasksQuery(this.userId, userId);
-      //}
-
       return TaskList.find(query);
     },
     children: [
