@@ -8,7 +8,16 @@
 #
 
 cd public/mobile
-rm -R res
-rm -R store
+
+#remove old icons
+rm -rf res
+rm -rf store
+
 splashicon-generator --imagespath="production-icon-and-splash"
+
+#remove redundant assets
+rm -rf res/icons/windows
+rm -rf res/icons/wp8
+rm -rf res/screens/windows
+rm -rf res/screens/wp8
 exit
