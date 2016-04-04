@@ -12,24 +12,40 @@
 # Google Play should be always signed with the same key, stored in `~/.keysore`.
 #
 
-APP_NAME="HospoHero"
+beep() {
+  echo -ne '\007'
+}
 
 # Initialize mobile server
-buildTesting () {
+setStagingServerUrl() {
+    SERVER_URL="https://hospohero.herokuapp.com"
+}
+
+setTestingServerUrl () {
     SERVER_URL="https://hospoherotesting.herokuapp.com"
 }
+
+setProductionServerUrl() {
+    SERVER_URL="https://app.hospohero.com"
+}
+
 case "$1" in
   "production")
-    SERVER_URL="https://app.hospohero.com"
+    setProductionServerUrl
     ;;
   "testing")
-    buildTesting()
+    setTestingServerUrl
+    ;;
+  "staging")
+    setStagingServerUrl
     ;;
   *)
-    buildTesting()
+    setTestingServerUrl
     ;;
 esac
 
+
+APP_NAME="HospoHero"
 MOBILE_SETTINGS=".mupx-deploy/settings.json"
 
 BUILD_FOLDER="../hospohero-build"
@@ -78,7 +94,7 @@ if [ -f ${SIGNED_APK_NAME} ]; then
   rm -f ${SIGNED_APK_NAME}
 fi
 
-echo -ne '\007' # sound signal about required password
+beep # sound signal about required password
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 ${UNSIGNED_APK_NAME} ${APP_NAME} > /dev/null
 ${ANDROID_HOME}/build-tools/${ANDROID_BUILD_TOOLS_VERSION}/zipalign 4 ${UNSIGNED_APK_NAME} ${SIGNED_APK_NAME} > /dev/null
 
@@ -89,7 +105,7 @@ cp ${SIGNED_APK_NAME} ${APK_OUTPUT_FOLDER}
 echo "APKs saved to ${APK_OUTPUT_FOLDER}"
 
 echo "Install APK on device (CTRL+C=Cancel)?"
-echo -ne '\007' # signal that confirmations required
+beep # signal that confirmations required
 read -rsn1
 
 echo "Remove old APK:"
