@@ -13,7 +13,23 @@
 #
 
 APP_NAME="HospoHero"
-SERVER_URL="https://hospoherotesting.herokuapp.com"
+
+# Initialize mobile server
+buildTesting () {
+    SERVER_URL="https://hospoherotesting.herokuapp.com"
+}
+case "$1" in
+  "production")
+    SERVER_URL="https://app.hospohero.com"
+    ;;
+  "testing")
+    buildTesting()
+    ;;
+  *)
+    buildTesting()
+    ;;
+esac
+
 MOBILE_SETTINGS=".mupx-deploy/settings.json"
 
 BUILD_FOLDER="../hospohero-build"
