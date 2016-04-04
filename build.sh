@@ -58,6 +58,7 @@ SIGNED_APK_NAME="${APP_NAME}.apk"
 ANDROID_HOME=~/Library/Android/sdk
 ANDROID_BUILD_TOOLS_VERSION="23.0.2"
 
+echo "Mobile server: ${SERVER_URL}"
 echo "Before building:"
 echo "1) remove 'crosswalk' package"
 echo "2) ensure 'force-ssl' package is enabled"
