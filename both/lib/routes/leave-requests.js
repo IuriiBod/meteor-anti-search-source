@@ -2,7 +2,8 @@ Router.route('viewLeaveRequest', {
   path: '/leaveRequests/:id',
   template: 'leaveRequestMainView',
   waitOn: function () {
-    return Meteor.subscribe('leaveRequest', this.params.id);
+    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    return Meteor.subscribe('leaveRequest',currentAreaId, this.params.id);
   },
   data: function () {
     return {

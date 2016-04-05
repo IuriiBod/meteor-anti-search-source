@@ -41,8 +41,7 @@ Router.route('profile', {
       Meteor.subscribe('profileUser', this.params._id),
       Meteor.subscribe('shifts', 'future', this.params._id, currentAreaId),
       Meteor.subscribe('shifts', 'opened', null, currentAreaId),
-      Meteor.subscribe('sections', currentAreaId),
-      Meteor.subscribe('userAllLeaveRequests', this.params._id)
+      Meteor.subscribe('sections', currentAreaId)
     ];
   }
 });

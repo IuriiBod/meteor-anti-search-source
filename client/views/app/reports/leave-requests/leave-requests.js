@@ -1,16 +1,16 @@
 Template.leaveRequests.onCreated(function () {
-  this.selectedType = new ReactiveVar('requsts');
+  this.selectedType = new ReactiveVar('requests');
 });
 
 Template.leaveRequests.helpers({
   isRequestTab(){
-    return Template.instance().selectedType.get() === 'requsts';
+    return Template.instance().selectedType.get() === 'requests';
   }
 });
 
 Template.leaveRequests.events({
-  'click [data-action="swap-tabs"]': (event, tmpl) => {
-    var selectedType = $(event.currentTarget).attr('data-name');
+  'click a.swap-tabs': (event, tmpl) => {
+    var selectedType = $(event.target).hasClass('unavailabilities') ? 'unavailabilities' : 'requests';
     tmpl.selectedType.set(selectedType);
   }
 });

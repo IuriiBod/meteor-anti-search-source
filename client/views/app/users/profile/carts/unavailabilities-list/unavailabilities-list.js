@@ -1,12 +1,17 @@
 Template.userUnavailabilitiesList.helpers({
   unavailabilities: function () {
     var today = moment().startOf('day').toDate();
-    var user = Meteor.users.findOne({_id: this._id});
-    var unavailabilities = user && user.unavailabilities || false;
 
-    return _.filter(unavailabilities, function (unavailability) {
-      return unavailability.repeat === 'never' && unavailability.startDate >= today ||
-        unavailability.repeat !== 'never';
+    return Unavailabilities.find({
+      $or: [
+        { repeat: { $not: 'never' } },
+        {
+          $and:[
+            { repeat: 'never' },
+            { startDate: { $gte: today } }
+          ]
+        }
+      ]
     });
   },
 
@@ -40,8 +45,10 @@ Template.userUnavailabilitiesList.helpers({
       return '';
     }
   },
-
+  leaveRequestStatus: function (status) {
+    return !status  ? 'Awaiting' : status === 'approved' ? 'Approved' : 'Rejected';
+  },
   leaveRequestStatusClass: function (status) {
-    return status === 'awaiting' ? 'warning' : status === 'approved' ? 'success' : 'danger';
+    return !status  ? 'warning' : status === 'approved' ? 'success' : 'danger';
   }
 });

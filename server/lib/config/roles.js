@@ -69,7 +69,9 @@ var defaultRoles = [
       "edit projects",
       "edit interviews",
       "approve applications",
-      "approve application definitions"
+      "approve application definitions",
+      "approve unavailability",
+      "approve requests"
     ]
   },
 
@@ -80,6 +82,8 @@ var defaultRoles = [
       "view menus",
       "view roster",
       "view stocks",
+      "view unavailability",
+      "view requests",
       "be rosted",
       "receive deliveries",
       "view calendar",

@@ -2,34 +2,35 @@ Template.leaveRequestsList.onCreated(function () {
   this.page = new Blaze.ReactiveVar(1);
   const currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
   this.autorun(() => {
-    this.subscribe('leaveRequests', currentAreaId,
-      this.page.get() * this.data.itemPerPage);
+    let limit = this.page.get() * this.data.itemPerPage;
+    let managerStatus = this.data.filter.get();
+    this.subscribe('leaveRequestsInArea', currentAreaId, limit, managerStatus);
   });
 });
 
 Template.leaveRequestsList.helpers({
-  leaveRequestsItems: function () {
-    return LeaveRequests.find();
+  leaveRequestsItems() {
+    let query = {};
+    let managerStatus = this.filter.get();
+    if (managerStatus && managerStatus !== 'all') {
+      _.extend(query, {'status.value': managerStatus});
+    }
+    return LeaveRequests.find(query);
   },
-  date: function (date) {
-    return HospoHero.dateUtils.dateFormat(date);
-  },
-  username: function (userId) {
-    var user = Meteor.users.findOne({_id: userId});
-    return user && user.profile ?
-    user.profile.firstname + ' ' + user.profile.lastname :
-      '-';
-  },
-  comment: function () {
-    return this.comment !== '' ? this.comment : '-';
-  },
-  isHasMoreItems: function () {
+  isHasMoreItems () {
     let page = Template.instance().page.get();
     return LeaveRequests.find().count() / (page * this.itemPerPage) >= 1;
+  },
+  headers(){
+    return ['User', 'Start Date', 'End Date', 'Status', 'Comment'];
+  },
+  filterValue(){
+    let res = this.filter.get();
+    return res === 'approved' ? '(Approved)' : res === 'rejected' ? '(Rejected)' : '';
   }
 });
 Template.leaveRequestsList.events({
-  'click [data-action="load-more"]': (event, tmpl) => {
+  'click .load-more': (event, tmpl) => {
     event.preventDefault();
     var page = tmpl.page.get();
     tmpl.page.set(page + 1);

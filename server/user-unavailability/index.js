@@ -1,24 +1,32 @@
+var canUserAction = function (areaId, action) {
+  let checker = new HospoHero.security.PermissionChecker();
+  return checker.hasPermissionInArea(areaId, action);
+};
 Meteor.methods({
   addUnavailability: function (newUnavailability) {
-    check(newUnavailability, HospoHero.checkers.UnavailabilityObject);
-
-    Meteor.users.update({_id: this.userId}, {$push: {unavailabilities: newUnavailability}});
+    if (!this.userId) {
+      throw new Meteor.Error('Permission denied', 'You are not logged in!');
+    }
+    newUnavailability.userId = this.userId;
+    newUnavailability.relations = HospoHero.getRelationsObject();
+    check(newUnavailability, HospoHero.checkers.UnavailabilityDocument);
+    return Unavailabilities.insert(newUnavailability);
   },
 
-  removeUnavailability: function (unavailability) {
-    check(unavailability, HospoHero.checkers.UnavailabilityObject);
-
-    Meteor.users.update({_id: this.userId}, {$pull: {unavailabilities: unavailability}});
+  removeUnavailability: function (id) {
+    check(id, HospoHero.checkers.UnavailabilityId);
+    if (!this.userId || !Unavailabilities.findOne({ _id:id, userId: this.userId })) {
+      throw new Meteor.Error('Permission denied', "You can't  remove this unavailability!");
+    }
+    return Unavailabilities.remove({_id: id});
   },
 
   createNewLeaveRequest: function (newLeaveRequest) {
-    var self = this;
     if (!this.userId) {
       throw new Meteor.Error('Permission denied', 'You are not logged in!');
     }
 
-    newLeaveRequest.userId = self.userId;
-    newLeaveRequest.status = 'awaiting';
+    newLeaveRequest.userId = this.userId;
     newLeaveRequest.relations = HospoHero.getRelationsObject();
     check(newLeaveRequest, HospoHero.checkers.LeaveRequestDocument);
 
@@ -29,12 +37,12 @@ Meteor.methods({
   },
 
   removeLeaveRequest: function (leaveRequestId) {
+    check(leaveRequestId, HospoHero.checkers.LeaveRequestId);
     if (!this.userId) {
       throw new Meteor.Error('Permission denied', 'You are not logged in!');
     }
-    check(leaveRequestId, HospoHero.checkers.MongoId);
 
-    var thisLeaveRequest = findLeaveRequest(leaveRequestId);
+    var thisLeaveRequest = LeaveRequests.findOne({ _id:leaveRequestId });
 
     if (thisLeaveRequest.notifyManagerId === this.userId || this.userId === thisLeaveRequest.userId) {
       LeaveRequests.remove({_id: leaveRequestId});
@@ -43,31 +51,52 @@ Meteor.methods({
       throw new Meteor.Error('Permission denied', 'You can\'t remove this leave request!');
     }
   },
-
   changeLeaveRequestStatus: function (leaveRequestId, newStatus) {
-    var thisLeaveRequest = findLeaveRequest(leaveRequestId);
+    check(leaveRequestId, HospoHero.checkers.LeaveRequestId);
+    check(newStatus, HospoHero.checkers.LeaveRequestStatusValue);
 
-    if (thisLeaveRequest.status !== 'awaiting') {
-      throw new Meteor.Error("'This request already approved/declined'");
+    let thisLeaveRequest = LeaveRequests.findOne({ _id:leaveRequestId });
+
+    if (!canUserAction(thisLeaveRequest.relations.areaId, 'approve leave requests')) {
+      logger.error("User not permitted to edit LeaveRequests");
+      throw new Meteor.Error(403, "User not remove to edit LeaveRequests");
     }
 
-    if (thisLeaveRequest.notifyManagerId !== this.userId) {
-      throw new Meteor.Error("'You can't approve or decline this request'");
+    if (!thisLeaveRequest.status || thisLeaveRequest.status.value !== newStatus) {
+      LeaveRequests.update(leaveRequestId, {
+        $set: {
+          status: {
+            value: newStatus,
+            setBy: this.userId,
+            setOn: new Date()
+          }
+        }
+      });
+    }
+  },
+  changeUnavailabilityStatus: function (unavailabilityId, newStatus) {
+    check(unavailabilityId, HospoHero.checkers.UnavailabilityId);
+    check(newStatus, HospoHero.checkers.LeaveRequestStatusValue);
+    let unavailability = Unavailabilities.findOne({ _id:unavailabilityId });
+
+    if (!canUserAction(unavailability.relations.areaId, 'approve unavailability')) {
+      logger.error("User not permitted to edit unavailability");
+      throw new Meteor.Error(403, "User not remove to edit unavailability");
     }
 
-    LeaveRequests.update(leaveRequestId, {$set: {status: newStatus}});
-    Notifications.remove({'meta.leaveRequestId': leaveRequestId});
+    if (!unavailability.managerStatus || unavailability.managerStatus.status !== newStatus) {
+      Unavailabilities.update(unavailabilityId, {
+        $set: {
+          status: {
+            value: newStatus,
+            setBy: this.userId,
+            setOn: new Date()
+          }
+        }
+      });
+    }
   }
 });
-
-var findLeaveRequest = function (leaveRequestId) {
-  var thisLeaveRequest = LeaveRequests.findOne({_id: leaveRequestId});
-  if (!thisLeaveRequest) {
-    throw  new Meteor.Error('Error', 'Leave request is not exist!');
-  }
-  return thisLeaveRequest;
-};
-
 
 var sendNotification = function (insertedLeaveRequestId) {
   var currentLeaveRequest = LeaveRequests.findOne({_id: insertedLeaveRequestId});

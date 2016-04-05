@@ -18,7 +18,8 @@ Router.route('/', {
         Meteor.subscribe('areaUsersList', currentAreaId),
         Meteor.subscribe('comments', Meteor.userId(), currentAreaId),
         Meteor.subscribe('newsfeeds'),
-        Meteor.subscribe('userAllLeaveRequests', Meteor.userId())
+        Meteor.subscribe('usersLeaveRequests',currentAreaId),
+        Meteor.subscribe('usersUnavailabilities',currentAreaId)
       ];
     }
   }

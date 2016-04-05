@@ -8,15 +8,10 @@ Template.unavailabilitiesOrLeaveRequests.helpers({
   },
   // Can be leave requests or unavailables
   items: function () {
-    if (Template.instance().get('isUnavailability')) {
-      var user = Meteor.user();
-      var unavailabilities = user && user.unavailabilities || [];
-      return _.sortBy(unavailabilities, 'startDate');
-    } else {
-      return LeaveRequests.find({
-        userId: Meteor.userId()
-      }, {sort: {startDate: 1}}).fetch();
-    }
+    var user = Meteor.user();
+    return Template.instance().get('isUnavailability') ?
+      Unavailabilities.find({userId: user._id}, {sort: {startDate: 1}}) :
+      LeaveRequests.find({userId: user._id}, {sort: {startDate: 1}});
   }
 });
 

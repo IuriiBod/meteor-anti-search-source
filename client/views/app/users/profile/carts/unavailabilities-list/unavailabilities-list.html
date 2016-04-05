@@ -5,24 +5,22 @@
         <h5>Unavailabilities</h5>
       </div>
       <div class="ibox-content">
-        {{#if and unavailabilities.length leaveRequests.count}}
-          {{#if unavailabilities.length}}
-            {{#each unavailabilities}}
-              <div>
-                {{intervalDateFormat startDate endDate "dateTime"}}
-              </div>
-            {{/each}}
-          {{/if}}
+        {{#if or unavailabilities.count leaveRequests.count}}
 
-          {{#if leaveRequests.count}}
-            <h4>Leave request</h4>
-            {{#each leaveRequests}}
-              <div>
-                {{intervalDateFormat startDate endDate "dateOnly"}}
-                <span class="text-{{leaveRequestStatusClass status}}">{{status}}</span>
-              </div>
-            {{/each}}
-          {{/if}}
+          {{#each unavailabilities}}
+            <div>
+              {{intervalDateFormat startDate endDate "dateTime"}}
+            </div>
+          {{/each}}
+
+          {{#if leaveRequests.count}} <h4>Leave request</h4> {{/if}}
+
+          {{#each leaveRequests}}
+            <div>
+              {{intervalDateFormat startDate endDate "dateOnly"}}
+              <span class="text-{{leaveRequestStatusClass status.value}}">{{leaveRequestStatus status.value}}</span>
+            </div>
+          {{/each}}
         {{else}}
           No unavailabilities
         {{/if}}

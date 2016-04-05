@@ -38,6 +38,7 @@ DailySales = new Mongo.Collection("dailySales");
 PosMenuItems = new Mongo.Collection('posMenuItems');
 
 LeaveRequests = new Mongo.Collection('leaveRequests');
+Unavailabilities = new Mongo.Collection('unavailabilities');
 
 // calendar functionality
 CalendarEvents = new Mongo.Collection('calendarEvents');

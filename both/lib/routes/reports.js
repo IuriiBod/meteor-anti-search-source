@@ -97,13 +97,14 @@ Router.route('/leave-requests', {
     const currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     this.params.itemPerPage = 5;
     return [
-      Meteor.subscribe('leaveRequests', currentAreaId, this.params.itemPerPage),
-      Meteor.subscribe('areaUnavailabilitiesList', currentAreaId, this.params.itemPerPage)
+      Meteor.subscribe('leaveRequestsInArea', currentAreaId, this.params.itemPerPage,'all'),
+      Meteor.subscribe('unavailabilitiesInArea', currentAreaId, this.params.itemPerPage,'all')
     ];
   },
   data() {
     return {
-      itemPerPage: this.params.itemPerPage
+      itemPerPage: this.params.itemPerPage,
+      filter:new ReactiveVar('all')
     };
   }
 });

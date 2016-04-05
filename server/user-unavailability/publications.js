@@ -1,64 +1,125 @@
-Meteor.publish('userAllLeaveRequests', function () {
+let approvePermission = (areaId,userId,permission) => {
+    let permissionChecker = new HospoHero.security.PermissionChecker(userId);
+    return areaId && userId && permissionChecker.hasPermissionInArea(areaId,permission);
+};
+
+Meteor.publish('usersLeaveRequests', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
+  if(!approvePermission(areaId,userId,'view requests')){
+    logger.error('Permission denied: publish [usersLeaveRequests] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
   return LeaveRequests.find({userId: this.userId});
 });
 
-Meteor.publish('leaveRequest', function (leaveRequestId) {
-  var query = leaveRequestId ? {_id: leaveRequestId} : {};
+Meteor.publish('usersUnavailabilities', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
 
-  var user = Meteor.users.findOne({_id: this.userId});
-  var areaIds = user && user.relations && _.isArray(user.relations.areaIds) ? user.relations.areaIds : [];
+  if(!approvePermission(areaId,userId,'view unavailability')){
+    logger.error('Permission denied: publish [usersUnavailabilities] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
 
-  query['relations.areaId'] = {$in: areaIds};
-  return LeaveRequests.find(query);
+  return Unavailabilities.find({userId: this.userId});
 });
 
-Meteor.publish('leaveRequestsApprovers', function () {
+Meteor.publishComposite('unavailabilitiesInArea', function (areaId, limit, managerStatus) {
+  check(areaId, HospoHero.checkers.MongoId);
+  check(limit, Number);
+  check(managerStatus, Match.OneOf('all', HospoHero.checkers.LeaveRequestStatusValue));
+
+  if(!approvePermission(areaId,this.userId,'approve unavailability')){
+    logger.error('Permission denied: publish [unavailabilitiesInArea] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
+
+  return {
+    find: function () {
+      const query = {'relations.areaId': areaId};
+      if (managerStatus !== 'all') {
+        _.extend(query, {'status.value': managerStatus});
+      }
+      return Unavailabilities.find(query, {sort: {startDate: 1}, limit: limit});
+    },
+    children: [{
+      find: function (unavailability) {
+        var query = {};
+        if (unavailability.managerStatus) {
+          query = {_id: {$in: [unavailability.userId, unavailability.managerStatus.setAt]}};
+        } else {
+          query = {_id: unavailability.userId};
+        }
+        return Meteor.users.find(query, HospoHero.security.getPublishFieldsFor('users'));
+      }
+    }]
+  };
+});
+
+Meteor.publishComposite('leaveRequestsInArea', function (areaId, limit, managerStatus) {
+  check(areaId, HospoHero.checkers.MongoId);
+  check(limit, Number);
+  check(managerStatus, Match.OneOf('all', HospoHero.checkers.LeaveRequestStatusValue));
+
+  if(!approvePermission(areaId,this.userId,'approve requests')){
+    logger.error('Permission denied: publish [leaveRequestsInArea] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
+
+  const query = {'relations.areaId': areaId};
+  if (managerStatus !== 'all') {
+    _.extend(query, {'status.value': managerStatus});
+  }
+  return {
+    find: function () {
+      return LeaveRequests.find(query, {sort: {startDate: 1}, limit: limit});
+    },
+    children: [
+      {
+        find: function (leaveRequest) {
+          var query = {};
+          if (leaveRequest.managerStatus) {
+            query = {_id: {$in: [leaveRequest.userId, leaveRequest.managerStatus.setAt]}};
+          } else {
+            query = {_id: leaveRequest.userId};
+          }
+          return Meteor.users.find(query, HospoHero.security.getPublishFieldsFor('users'));
+        }
+      }
+    ]
+  };
+});
+
+
+Meteor.publish('leaveRequest', function (areaId,leaveRequestId) {
+  check(areaId, HospoHero.checkers.MongoId);
+  check(leaveRequestId, HospoHero.checkers.MongoId);
+
+  if(!approvePermission(areaId,this.userId,'approve requests')){
+    logger.error('Permission denied: publish [leaveRequest] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
+
+  return LeaveRequests.find({_id:leaveRequestId});
+});
+
+Meteor.publish('leaveRequestsApprovers', function (areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+
+  if(!approvePermission(areaId,this.userId,'approve requests')){
+    logger.error('Permission denied: publish [leaveRequestsApprovers] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
+
   var roles = Roles.getRolesByAction('approve leave requests');
 
   var roleIds = _.map(roles.fetch(), function (role) {
     return role._id;
   });
 
-  var areaId = HospoHero.getCurrentAreaId(this.userId);
-
   return Meteor.users.find({
     [`roles.${areaId}`]: {$in: roleIds}
   }, {
     fields: HospoHero.security.getPublishFieldsFor('users')
   });
-});
-
-Meteor.publishComposite('leaveRequests', function (areaId, limit) {
-  check(areaId, HospoHero.checkers.MongoId);
-  check(limit, Number);
-  const permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
-  if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'approve leave requests')) {
-    const query = {
-      'relations.areaId': areaId
-    };
-    return {
-      find: function () {
-        return LeaveRequests.find(query, {limit: limit});
-      },
-      children: [
-        {
-          find: function (leaveRequest) {
-            if (leaveRequest && leaveRequest.userId) {
-              return Meteor.users.find({_id: leaveRequest.userId}, {
-                fields: {
-                  'profile.firstname': 1,
-                  'profile.lastname': 1
-                }
-              });
-            } else {
-              this.ready();
-            }
-          }
-        }
-      ]
-    };
-  } else {
-    logger.error('Permission denied: publish [leaveRequests] ', {areaId: areaId, userId: this.userId});
-    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
-  }
 });

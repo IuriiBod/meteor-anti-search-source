@@ -5,7 +5,6 @@ let fullPublicProfileFields = HospoHero.security.getPublishFieldsFor('users', {
   'profile.sections': 1,
   'profile.shiftsPerWeek': 1,
   emails: 1,
-  unavailabilities: 1,
   lastLoginDate: 1
 });
 
@@ -20,12 +19,28 @@ Meteor.publish(null, function () {
 });
 
 
-Meteor.publish('profileUser', function (userId) {
+Meteor.publishComposite('profileUser', function (userId) {
   check(userId, HospoHero.checkers.MongoId);
 
   //todo: any security (permissions) checks here?
 
-  return Meteor.users.find({_id: userId}, {fields: fullPublicProfileFields});
+  return {
+    find: function () {
+      return Meteor.users.find({_id: userId}, {fields: fullPublicProfileFields});
+    },
+    children: [
+      {
+        find: function (user) {
+          return LeaveRequests.find({userId: user._id});
+        }
+      },
+      {
+        find: function (user) {
+            return Unavailabilities.find({userId: user._id});
+        }
+      }
+    ]
+  };
 });
 
 

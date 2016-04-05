@@ -22,6 +22,6 @@ Template.unavailabilityItem.helpers({
 
 Template.unavailabilityItem.events({
   'click .remove-unavailability-button': function (event, tmpl) {
-    Meteor.call('removeUnavailability', tmpl.data.item, HospoHero.handleMethodResult());
+    Meteor.call('removeUnavailability', tmpl.data.item._id, HospoHero.handleMethodResult());
   }
 });

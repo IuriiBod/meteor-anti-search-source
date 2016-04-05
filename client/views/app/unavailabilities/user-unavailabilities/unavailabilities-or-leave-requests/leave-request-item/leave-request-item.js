@@ -10,7 +10,7 @@ Template.leaveRequestItem.helpers({
     return this.item.comment || false;
   },
   status: function () {
-    return this.item.status;
+    return this.item.status ? this.item.status.value : 'awaiting';
   }
 });
 

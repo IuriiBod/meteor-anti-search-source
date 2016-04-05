@@ -192,6 +192,7 @@
     "PosMenuItems": true,
 
     "LeaveRequests": true,
+    "Unavailabilities":true,
     "CalendarEvents": true,
     "TaskList": true,
     "Meetings": true,

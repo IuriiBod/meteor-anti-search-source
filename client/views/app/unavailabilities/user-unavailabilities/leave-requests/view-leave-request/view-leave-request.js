@@ -1,10 +1,9 @@
 //context: mode (?), leaveRequest (leaveRequest), currentFlyout (Flyout)
 Template.viewLeaveRequest.onCreated(function () {
-  this.subscribe('leaveRequestsApprovers');
-
+  this.subscribe('leaveRequestsApprovers',HospoHero.getCurrentAreaId(Meteor.userId()));
   this.changeLeaveRequestStatus = function (status) {
     var leaveRequest = this.data.leaveRequest;
-    status = status ? 'approved' : 'declined';
+    status = status ? 'approved' : 'rejected';
     Meteor.call('changeLeaveRequestStatus', leaveRequest._id, status, HospoHero.handleMethodResult(function () {
       Router.go('home');
     }));
@@ -90,7 +89,7 @@ Template.viewLeaveRequest.events({
     tmpl.changeLeaveRequestStatus(true);
   },
 
-  'click .decline-button': function (event, tmpl) {
+  'click .reject-button': function (event, tmpl) {
     tmpl.changeLeaveRequestStatus(false);
   }
 });

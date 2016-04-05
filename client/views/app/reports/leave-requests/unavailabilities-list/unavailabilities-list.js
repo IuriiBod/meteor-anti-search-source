@@ -1,27 +1,38 @@
 Template.unavailabilitiesList.onCreated(function () {
   this.page = new Blaze.ReactiveVar(1);
-  this.query = {'unavailabilities.0': {'$exists': true}};
   const currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
   this.autorun(() => {
-    this.subscribe('areaUnavailabilitiesList', currentAreaId,
-      this.page.get() * this.data.itemPerPage);
+    let limit = this.page.get() * this.data.itemPerPage;
+    let managerStatus = this.data.filter.get();
+    this.subscribe('unavailabilitiesInArea', currentAreaId, limit,  managerStatus);
   });
 });
 
 Template.unavailabilitiesList.helpers({
-  users: function () {
-    return Meteor.users.find(Template.instance().query);
+  unavailabilityItems() {
+    let query = {};
+    let managerStatus = this.filter.get();
+    if (managerStatus && managerStatus !== 'all') {
+      _.extend(query, {'status.value': managerStatus});
+    }
+    return Unavailabilities.find(query);
   },
-  isHasMoreItems: function () {
+  isHasMoreItems () {
     let page = Template.instance().page.get();
-    return Meteor.users.find(Template.instance().query).count() /
-      (page * this.itemPerPage) >= 1;
+    return Unavailabilities.find().count() / (page * this.itemPerPage) >= 1;
+  },
+  headers(){
+    return ['User', 'Start Date', 'End Date', 'Repeat', 'Is All Day', 'Comment'];
+  },
+  filterValue(){
+    let res = this.filter.get();
+    return res === 'approved' ? '(Approved)' : res === 'rejected' ? '(Rejected)' : '';
   }
 });
-Template.unavailabilitiesList.events({
-  'click [data-action="load-more"]': (event, tmpl) => {
-    event.preventDefault();
 
+Template.unavailabilitiesList.events({
+  'click .load-more': (event, tmpl) => {
+    event.preventDefault();
     var page = tmpl.page.get();
     tmpl.page.set(page + 1);
   }
