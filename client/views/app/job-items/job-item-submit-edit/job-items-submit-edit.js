@@ -246,7 +246,7 @@ Template.submitEditJobItem.events({
       }
 
       var closeFlyoutOrGoToDetails = function (jobItemId) {
-        var isFlyout = tmpl.data.isPlacedInFlyout;
+        var isFlyout = tmpl.data.inFlyout;
         if (isFlyout) {
           FlyoutManager.getInstanceByElement(e.target).close();
         }

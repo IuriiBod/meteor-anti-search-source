@@ -16,7 +16,9 @@ Router.route('stocktakeCounting', {
       Meteor.subscribe('fullStocktake', this.params._id),
       Meteor.subscribe('allStocktakeOrders', this.params._id),
       Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId, null)
+      Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
+      Meteor.subscribe('jobItemsInArea', currentAreaId, null),
+      Meteor.subscribe('jobTypes')
     ];
   },
   data: function () {

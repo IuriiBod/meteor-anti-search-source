@@ -22,6 +22,7 @@ StockAreas = new Mongo.Collection("stockAreas");
 
 Stocktakes = new Mongo.Collection("stocktakes");
 StockItems = new Mongo.Collection("stockItems");
+StockPrepItems = new Mongo.Collection('stockPrepItems');
 
 Orders = new Mongo.Collection("orders");
 OrderItems = new Mongo.Collection("orderItems");

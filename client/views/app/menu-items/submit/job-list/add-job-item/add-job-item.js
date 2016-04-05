@@ -6,7 +6,7 @@ Template.addJobItem.onCreated(function () {
     searchMode: 'local',
     limit: 10
   });
-  this.idsToExclude = new ReactiveVar(this.data.idsToExclude);
+  this.idsToExclude = new ReactiveVar(this.data.idsToExclude || []);
 });
 
 Template.addJobItem.helpers({

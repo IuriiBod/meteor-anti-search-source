@@ -2,6 +2,7 @@ Template.stocktakeCounting.onCreated(function () {
   this.activeGeneralAreaId = new ReactiveVar(false);
   this.activeSpecialAreaId = new ReactiveVar(false);
   this.stocktakeEditMode = new ReactiveVar(false);
+  this.isStockItemsSelected = new ReactiveVar(true);
 });
 
 Template.stocktakeCounting.helpers({
@@ -41,6 +42,10 @@ Template.stocktakeCounting.helpers({
       totalStocktakeCost += stockItem.count * stockItem.ingredient.cost;
     });
     return totalStocktakeCost;
+  },
+
+  isStockItemsShowing() {
+    return Template.instance().isStockItemsSelected.get();
   }
 });
 
@@ -68,21 +73,53 @@ Template.stocktakeCounting.events({
   'click .add-ingredient-button': function (event, tmpl) {
     event.preventDefault();
 
-    let currentSpecialAreaId = tmpl.activeSpecialAreaId.get();
-    let currentSpecialArea = StockAreas.findOne({_id: currentSpecialAreaId});
+    const currentSpecialAreaId = tmpl.activeSpecialAreaId.get();
+    const currentSpecialArea = StockAreas.findOne({_id: currentSpecialAreaId});
 
-    let onAddStockItem = function (ingredientId) {
-      Meteor.call("assignIngredientToStockArea", ingredientId, currentSpecialAreaId, HospoHero.handleMethodResult());
+    const onAddStockItem = (ingredientId) => {
+      Meteor.call('assignIngredientToStockArea', ingredientId, currentSpecialAreaId, HospoHero.handleMethodResult());
     };
 
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'ingredientsModalList',
-      title: 'Select Stocks',
-      data: {
-        inFlyout: true,
-        onAddStockItem: onAddStockItem,
-        idsToExclude: currentSpecialArea.ingredientsIds
-      }
-    });
+    const onAddPrepItem = (jobItemId) => {
+      const stockPrepItem =  {
+        stocktakeId: tmpl.data._id,
+        specialAreaId: currentSpecialAreaId,
+        jobItemId: jobItemId,
+        relations: HospoHero.getRelationsObject()
+      };
+      Meteor.call('upsertStockPrepItem', stockPrepItem, HospoHero.handleMethodResult());
+    };
+
+    const isStockItemsSelected = tmpl.isStockItemsSelected.get();
+
+    const selectedPrepItemsIds = StockPrepItems
+        .find({specialAreaId: currentSpecialAreaId})
+        .map(item => item.jobItemId);
+
+    getFlyoutOptions = () => {
+      const selectItemsProperty = isStockItemsSelected ? 'onAddStockItem' : 'onItemsAdded';
+
+      return {
+        template: isStockItemsSelected ? 'ingredientsModalList' : 'addJobItem',
+        title: `Select ${isStockItemsSelected ? 'Stocks' : 'Preps'}`,
+        data: {
+          inFlyout: true,
+          idsToExclude: isStockItemsSelected ? currentSpecialArea.ingredientsIds : selectedPrepItemsIds,
+          [selectItemsProperty]: isStockItemsSelected ? onAddStockItem : onAddPrepItem
+        }
+      };
+    };
+
+    FlyoutManager.open('wrapperFlyout', getFlyoutOptions());
+  },
+
+  'click .show-stock-items': (event, tmpl) => {
+    event.preventDefault();
+    tmpl.isStockItemsSelected.set(true);
+  },
+
+  'click .show-prep-stock-items': (event, tmpl) => {
+    event.preventDefault();
+    tmpl.isStockItemsSelected.set(false);
   }
 });

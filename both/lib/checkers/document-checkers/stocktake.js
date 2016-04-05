@@ -44,10 +44,35 @@ let StockItemDocument = Match.Where(function (stockItemDoc) {
   return true;
 });
 
+let StockPrepItemDocument = Match.Where((stockPrepItemDoc) => {
+  check(stockPrepItemDoc, {
+    _id: Match.Optional(StockPrepItemId),
+    stocktakeId: HospoHero.checkers.MongoId,
+    specialAreaId: HospoHero.checkers.MongoId,
+    count: Match.Optional(HospoHero.checkers.PositiveNumber),
+    jobItemId: HospoHero.checkers.MongoId,
+    relations: HospoHero.checkers.Relations
+  });
+
+  return true;
+});
+
+let StockPrepItemId = Match.Where((stockPrepItemId) => {
+  check(stockPrepItemId, HospoHero.checkers.MongoId);
+
+  if (!StockPrepItems.findOne({_id: stockPrepItemId})) {
+    throw new Meteor.Error(500, "Stock item doesn't exists");
+  }
+
+  return true;
+});
+
 
 Namespace('HospoHero.checkers', {
   StocktakeId: StocktakeId,
   StockItemId: StockItemId,
   StocktakeDocument: StocktakeDocument,
-  StockItemDocument: StockItemDocument
+  StockItemDocument: StockItemDocument,
+  StockPrepItemDocument: StockPrepItemDocument,
+  StockPrepItemId: StockPrepItemId
 });

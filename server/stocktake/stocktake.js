@@ -65,5 +65,37 @@ Meteor.methods({
 
     StockItems.remove({_id: stockItemId});
     logger.info("Stocktake removed", stockItemId);
+  },
+  
+  upsertStockPrepItem: (updatedStockPrepItem) =>  {
+    check(updatedStockPrepItem, HospoHero.checkers.StockPrepItemDocument);
+
+    if (!canUserEditStocks(updatedStockPrepItem.relations.areaId)) {
+      logger.error("User not permitted to update stocktakes");
+      throw new Meteor.Error(403, "User not permitted to update stocktakes");
+    }
+
+    if (updatedStockPrepItem._id) {
+      const stockPrepItemId = updatedStockPrepItem._id;
+      delete updatedStockPrepItem._id;
+      StockPrepItems.update({_id: stockPrepItemId}, {$set: updatedStockPrepItem});
+    } else {
+      StockPrepItems.insert(updatedStockPrepItem);
+    }
+
+    logger.info('Stock prep item updated', updatedStockPrepItem._id);
+  },
+
+  removeStockPrepItem: (stockPrepItemId) => {
+    check(stockPrepItemId, HospoHero.checkers.StockPrepItemId);
+
+    const stockPrepItem = StockPrepItems.findOne({_id: stockPrepItemId});
+    if (!canUserEditStocks(stockPrepItem.relations.areaId)) {
+      logger.error("User not permitted to remove stocktakes");
+      throw new Meteor.Error(403, "User not permitted to remove stocktakes");
+    }
+
+    StockPrepItems.remove({_id: stockPrepItemId});
+    logger.info("Stock prep item removed", stockPrepItemId);
   }
 });

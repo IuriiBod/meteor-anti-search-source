@@ -33,11 +33,31 @@
       {{> stockAreasFilter onStockAreaSelect=onStockAreaSelect activeAreas=activeAreas isEditMode=isEditMode}}
       <div class="col-md-8">
         {{#if activeAreas.special}}
-          {{> stockItemsList stocktakeId=_id specialAreaId=activeAreas.special isEditMode=isEditMode}}
+          <div class="tabs-container">
+            <ul class="nav nav-tabs">
+              <li role="presentation" class="{{#if isStockItemsShowing}}active{{/if}}">
+                <a href="#" class="show-stock-items">Stock Items</a>
+              </li>
+              <li role="presentation" class="{{#unless isStockItemsShowing}}active{{/unless}}">
+                <a href="#" class="show-prep-stock-items">Prep Items</a>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="panel-body no-top-border">
+                {{#if isStockItemsShowing}}
+                  {{> stockItemsList stocktakeId=_id specialAreaId=activeAreas.special isEditMode=isEditMode}}
+                {{else}}
+                  {{> stockPrepItemsList stocktakeId=_id specialAreaId=activeAreas.special isEditMode=isEditMode}}
+                {{/if}}
 
-          {{#if isEditMode}}
-            <a class="btn btn-block btn-default btn-outline add-ingredient-button">Add stock items to this area</a>
-          {{/if}}
+                {{#if isEditMode}}
+                  <a class="btn btn-block btn-default btn-outline add-ingredient-button">
+                    Add {{#if isStockItemsShowing}}stock{{else}}prep{{/if}} items to this area
+                  </a>
+                {{/if}}
+              </div>
+            </div>
+          </div>
         {{else}}
           Select areas to show list of stock items
         {{/if}}

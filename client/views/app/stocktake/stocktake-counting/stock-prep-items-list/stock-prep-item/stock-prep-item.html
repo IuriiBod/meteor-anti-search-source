@@ -1,0 +1,13 @@
+<template name="stockPrepItem">
+  <li class="list-group-item">
+    {{prepItem.name}}
+
+    {{#if isEditMode}}
+      <i class="fa fa-trash pull-right remove-item-button"></i>
+    {{/if}}
+
+    <span class="pull-right">
+      <a href="#" class="prep-item-count">{{stockPrepItem.count}}</a>
+    </span>
+  </li>
+</template>

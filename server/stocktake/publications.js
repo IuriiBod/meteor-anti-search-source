@@ -45,7 +45,8 @@ Meteor.publish('fullStocktake', function (stocktakeId) {
 
   return [
     Stocktakes.find({_id: stocktakeId}),
-    StockItems.find({stocktakeId: stocktakeId})
+    StockItems.find({stocktakeId: stocktakeId}),
+    StockPrepItems.find({stocktakeId: stocktakeId})
   ];
 });
 
