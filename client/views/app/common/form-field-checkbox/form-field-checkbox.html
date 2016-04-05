@@ -1,7 +1,7 @@
 <template name="formFieldCheckbox">
   <div class="checkbox">
     <label>
-      <input type="checkbox" disabled="{{checkboxSettings.isDisable}}"
+      <input type="checkbox" disabled="{{checkboxSettings.isDisable}}" class="{{checkboxSettings.className}}"
              checked="{{checkboxSettings.isChecked}}"> {{checkboxSettings.fieldTitle}}
       {{#if checkboxSettings.infoMessage}}<span class="label label-info">{{checkboxSettings.infoMessage}}</span>{{/if}}
     </label>

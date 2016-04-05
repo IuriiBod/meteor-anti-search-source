@@ -8,7 +8,7 @@ Template.applicationProgressCheckboxes.helpers({
 
     return (status) => {
       Meteor.call('updateApplicationStatus', applicationEditData.application._id, status);
-    }
+    };
   }
 });
 
@@ -43,7 +43,8 @@ function createInterview(application) {
           applicationId: application._id,
           startTime: startTime,
           endTime: endTime,
-          interviewee: application.details.name
+          interviewee: application.details.name,
+          relations: application.relations
         };
 
         Meteor.call('crateInterview', interview, HospoHero.handleMethodResult(() => {

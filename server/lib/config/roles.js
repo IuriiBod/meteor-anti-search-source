@@ -27,7 +27,9 @@ var actions = {
   "Edit calendar": "edit calendar",
   "Create meetings": "create meetings",
   "Edit projects": "edit projects",
-  "Edit interviews": "edit interviews"
+  "Edit interviews": "edit interviews",
+  "View applications": "View applications",
+  "view application definitions": "view application definitions"
 };
 
 var defaultRoles = [
@@ -65,7 +67,9 @@ var defaultRoles = [
       "edit calendar",
       "create meetings",
       "edit projects",
-      "edit interviews"
+      "edit interviews",
+      "approve applications",
+      "approve application definitions"
     ]
   },
 

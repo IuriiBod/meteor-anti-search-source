@@ -19,8 +19,7 @@ Template.applicationsList.onCreated(function () {
   this.searchSource = this.AntiSearchSource({
     collection: 'applications',
     fields: [
-      'details.name',
-      'details.email'
+      'details.name'
     ],
     searchMode: 'local',
     limit: 30
@@ -37,8 +36,6 @@ Template.applicationsList.onCreated(function () {
 
     this.searchSource.setMongoQuery(query);
   });
-
-  this.searchSource.search('');
 });
 
 

@@ -15,7 +15,10 @@
           </div>
           <div class="form-group">
             <div class="col-sm-12">
-              <button type="submit" class="btn btn-primary pull-right">Add To List</button>
+              <button type="submit" class="btn btn-primary pull-right"
+                disabled="{{#unless applicationId}}disabled{{/unless}}">
+                Add To List
+              </button>
             </div>
           </div>
         </form>

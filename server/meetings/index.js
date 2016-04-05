@@ -169,42 +169,42 @@ Meteor.methods({
   }
 });
 
-function sendNotificationsAboutNewMeeting(meetingId, meetingDoc) {
-  let templateData = {
-    meeting: {
-      title: meetingDoc.title,
-      location: meetingDoc.location,
-      time: HospoHero.dateUtils.dateInterval(meetingDoc.startTime, meetingDoc.endTime)
-    }
-  };
-
-  let options = {
-    interactive: true,
-    helpers: {
-      url () {
-        return NotificationSender.urlFor('meetingDetails', {id: meetingId}, this);
-      },
-
-      yesUrl () {
-        return NotificationSender.actionUrlFor('accept-meeting-invite', 'accepted', this);
-      },
-
-      maybeUrl () {
-        return NotificationSender.actionUrlFor('accept-meeting-invite', 'maybeAccepted', this);
-      },
-
-      noUrl () {
-        return NotificationSender.actionUrlFor('accept-meeting-invite', 'rejected', this);
-      }
-    },
-
-    meta: {
-      meetingId: meetingId
-    }
-  };
-
-  let notificationSender = new NotificationSender('New meeting', 'new-meeting', templateData, options);
-  meetingDoc.attendees.forEach((userId) => {
-    notificationSender.sendBoth(userId);
-  });
-}
+//function sendNotificationsAboutNewMeeting(meetingId, meetingDoc) {
+//  let templateData = {
+//    meeting: {
+//      title: meetingDoc.title,
+//      location: meetingDoc.location,
+//      time: HospoHero.dateUtils.dateInterval(meetingDoc.startTime, meetingDoc.endTime)
+//    }
+//  };
+//
+//  let options = {
+//    interactive: true,
+//    helpers: {
+//      url () {
+//        return NotificationSender.urlFor('meetingDetails', {id: meetingId}, this);
+//      },
+//
+//      yesUrl () {
+//        return NotificationSender.actionUrlFor('accept-meeting-invite', 'accepted', this);
+//      },
+//
+//      maybeUrl () {
+//        return NotificationSender.actionUrlFor('accept-meeting-invite', 'maybeAccepted', this);
+//      },
+//
+//      noUrl () {
+//        return NotificationSender.actionUrlFor('accept-meeting-invite', 'rejected', this);
+//      }
+//    },
+//
+//    meta: {
+//      meetingId: meetingId
+//    }
+//  };
+//
+//  let notificationSender = new NotificationSender('New meeting', 'new-meeting', templateData, options);
+//  meetingDoc.attendees.forEach((userId) => {
+//    notificationSender.sendBoth(userId);
+//  });
+//}

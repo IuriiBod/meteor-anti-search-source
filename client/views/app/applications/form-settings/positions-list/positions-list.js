@@ -5,7 +5,7 @@ Template.positionsList.helpers({
 
   onPositionRemove () {
     return (positionId) => {
-      Meteor.call('removePosition', positionId, HospoHero.handleMethodResult());
+      Meteor.call('deletePosition', positionId, HospoHero.handleMethodResult());
     };
   }
 });

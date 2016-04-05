@@ -8,16 +8,13 @@ Meteor.methods({
   crateInterview (interview) {
     check(interview, HospoHero.checkers.InterviewDocument);
 
-    let areaId = HospoHero.getCurrentAreaId(this.userId);
-
-    if (!canUserEditInterviews(areaId)) {
+    if (!canUserEditInterviews(interview.relations.areaId)) {
       throw new Meteor.Error('You can\'t edit interviews');
     }
 
     _.extend(interview, {
       createdAt: new Date(),
-      createdBy: Meteor.userId(),
-      relations: HospoHero.getRelationsObject(areaId)
+      createdBy: Meteor.userId()
     });
 
     return Interviews.insert(interview);
@@ -25,9 +22,7 @@ Meteor.methods({
 
   updateInterview (interview) {
     check(interview, HospoHero.checkers.InterviewDocument);
-    let areaId = HospoHero.utils.getNestedProperty(interview, 'relations.areaId', false);
-
-    if (!canUserEditInterviews(areaId)) {
+    if (!canUserEditInterviews(interview.relations.areaId)) {
       throw new Meteor.Error('You can\'t edit interviews');
     }
 

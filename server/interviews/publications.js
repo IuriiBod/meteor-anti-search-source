@@ -3,36 +3,31 @@ let canUserEditInterviews = (userId, areaId = null) => {
   return checker.hasPermissionInArea(areaId, 'edit interviews');
 };
 
-Meteor.publishComposite('interviews', function () {
-  if (!this.userId) {
-    this.ready();
-  } else {
-    let userId = this.userId;
-    let areaId = HospoHero.getCurrentAreaId(userId);
+Meteor.publishComposite('orgainzationInterviews', function (organizationId, areaId) {
+  let userId = this.userId;
 
-    if (!canUserEditInterviews(userId, areaId)) {
-      this.ready();
-    } else {
-      return {
-        find () {
-          let query = {
-            $or: interviewQuery(userId)
-          };
+  if (userId && areaId && canUserEditInterviews(userId, areaId)) {
+    return {
+      find () {
+        let query = {
+          $or: interviewQuery(userId)
+        };
 
-          return Interviews.find(query);
+        return Interviews.find(query);
+      },
+
+      children: [
+        {
+          find: usersPublication
         },
 
-        children: [
-          {
-            find: usersPublication
-          },
-
-          {
-            find: applicationPublication
-          }
-        ]
-      };
-    }
+        {
+          find: applicationPublication
+        }
+      ]
+    };
+  } else {
+    this.ready();
   }
 });
 
@@ -41,7 +36,8 @@ Meteor.publishComposite('interview', function (interviewId, userId) {
   check(interviewId, HospoHero.checkers.MongoId);
   check(userId, HospoHero.checkers.MongoId);
 
-  let areaId = HospoHero.getCurrentAreaId(userId);
+  let interview = Interviews.findOne({_id: interviewId});
+  let areaId = interview.relations.areaId;
 
   if (!canUserEditInterviews(userId, areaId)) {
     this.ready();
@@ -71,7 +67,7 @@ Meteor.publishComposite('interview', function (interviewId, userId) {
           }
         }
       ]
-    }
+    };
   }
 });
 

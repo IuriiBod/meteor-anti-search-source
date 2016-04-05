@@ -57,6 +57,18 @@ Meteor.methods({
       multi: true
     });
 
+    // remove Application Definition
+    ApplicationDefinitions.find({ organizationId: organizationId },{ fields: {_id: 1} }).
+      forEach(appDef => { Meteor.call('deleteApplicationDefinition', organizationId, appDef._id); });
+
+    // remove Application
+    Applications.find({ organizationId: organizationId },{ fields: {_id: 1} }).
+      forEach(app => { Meteor.call('deleteApplication', organizationId, app._id); });
+
+    // remove Position
+    Positions.find({ organizationId: organizationId },{ fields: {_id: 1} }).
+      forEach(pos => { Meteor.call('deletePosition', pos._id); });
+
     Organizations.remove({_id: organizationId});
     logger.info('Organization was deleted', {organizationId: organizationId});
   }

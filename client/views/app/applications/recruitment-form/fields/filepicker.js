@@ -20,19 +20,5 @@ Template.recruitmentFormFilePicker.events({
           });
         }
       });
-  },
-  'click .remove-file'(event, tmpl) {
-    let id = $(event.target).parent().parent().attr('id');
-    // Save item to remove
-    let blob = tmpl.data.files.find(item => item._id === id);
-    // Remove from Ui
-    tmpl.data.files.remove(item => item._id === id);
-    // Remove from server
-    filepicker.remove(blob, () => {
-    }, (FPError) => {
-      // If error return item into ui
-      tmpl.data.files.push(blob);
-      HospoHero.error(FPError);
-    });
   }
 });

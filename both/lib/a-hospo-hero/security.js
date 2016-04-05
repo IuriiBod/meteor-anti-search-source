@@ -41,6 +41,28 @@ class PermissionChecker {
   }
 
   /**
+   * @param {string} organizationId organization to check. If `null` is passed
+   * `currentOrganizationsId` will be used.
+   * @param {string} permission permission to check
+   * @returns {boolean}
+   */
+  hasPermissionInOrganization(organizationId, permission) {
+    if (this._isSuperUser()) {
+      return true;
+    }
+
+    if (organizationId === null && this._user) {
+      organizationId = HospoHero.getOrganizationIdBasedOnCurrentArea(this._user._id);
+    }
+
+    let organizationLocationIds = Locations.find({organizationId: organizationId}).map(location => location._id);
+
+    return this.isAuthorized() &&
+      this.isOrganizationOwner(organizationId) ||
+      organizationLocationIds.some(locationId => this.hasPermissionInLocation(locationId, permission));
+  }
+
+  /**
    * @param {string} areaId area to check. If `null` is passed
    * `currentAreaId` will be used.
    * @param {string} permission permission to check

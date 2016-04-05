@@ -7,26 +7,14 @@ Template.recruitmentForm.onRendered(function () {
 });
 
 Template.recruitmentForm.helpers({
-  emailPattern () {
-    return HospoHero.regExp.toHtmlString(HospoHero.regExp.email);
-  },
-  phonePattern () {
-    return HospoHero.regExp.toHtmlString(HospoHero.regExp.phone);
-  },
-  numbersPattern () {
-    return HospoHero.regExp.toHtmlString(HospoHero.regExp.numbers);
-  },
-  datePattern () {
-    return HospoHero.regExp.toHtmlString(HospoHero.regExp.dateMdDdYyyy);
-  },
   isHasPositions(){
-    return this.applicationDefinition.positionIds.length > 0;
+    return Positions.findOne();
   },
   files(){
     return Template.instance().files;
   },
   organizationName () {
-    return Organizations.findOne().name;
+    return this.organization.name;
   }
 });
 
@@ -42,7 +30,7 @@ Template.recruitmentForm.events({
       return;
     }
 
-    Meteor.call('addApplication', tmpl.data.organizationId, details, positionIds, tmpl.files.array(), captchaUrl,
+    Meteor.call('addApplication', tmpl.data.organization._id, details, positionIds, tmpl.files.array(), captchaUrl,
       HospoHero.handleMethodResult(()=> {
         $(event.target)[0].reset();
         tmpl.files.clear();

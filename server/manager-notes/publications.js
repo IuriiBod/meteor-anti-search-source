@@ -23,7 +23,7 @@ Meteor.publishComposite('managerNotes', function (weekRange, areaId) {
           }
         }, {
           upsert: true
-        })
+        });
       });
 
       return ManagerNotes.find({
@@ -57,5 +57,5 @@ Meteor.publishComposite('managerNotes', function (weekRange, areaId) {
         ]
       }
     ]
-  }
+  };
 });

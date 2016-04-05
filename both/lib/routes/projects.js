@@ -28,7 +28,6 @@ Router.route('/project/:id', {
 
   data() {
     return {
-      id: this.params.id,
       project: Projects.findOne({_id: this.params.id})
     };
   }

@@ -3,10 +3,9 @@ Router.route('applications', {
   template: 'applicationsList',
 
   waitOn () {
-    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('applicationDefinitions', currentAreaId),
-      Meteor.subscribe('applications', currentAreaId)
+    return  [
+      Meteor.subscribe('applicationDefinitions'),
+      Meteor.subscribe('applications')
     ];
   },
 
@@ -30,7 +29,7 @@ Router.route('/application-details/:id', {
 
     if (application) {
       let applicationSchema = ApplicationDefinitions.findOne({
-        'relations.organizationId': application.relations.organizationId
+        organizationId: application.organizationId
       });
 
       return {
@@ -50,7 +49,8 @@ Router.route('recruitmentForm', {
     return Meteor.subscribe('applicationDefinitionsByOrganization', this.params._id);
   },
   onBeforeAction(){
-    if (!ApplicationDefinitions.findOne({'relations.organizationId': this.params._id}) || !Positions.findOne()) {
+    if (!ApplicationDefinitions.findOne({organizationId: this.params._id}) ||
+      !Positions.findOne() || !Organizations.findOne({ _id: this.params._id})) {
       this.render('notFound');
     } else {
       this.next();
@@ -58,8 +58,8 @@ Router.route('recruitmentForm', {
   },
   data () {
     return {
-      applicationDefinition: ApplicationDefinitions.findOne({'relations.organizationId': this.params._id}),
-      organizationId: this.params._id
+      applicationDefinition: ApplicationDefinitions.findOne({organizationId: this.params._id}),
+      organization:Organizations.findOne({ _id: this.params._id})
     };
   }
 });

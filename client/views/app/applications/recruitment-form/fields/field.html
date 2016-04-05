@@ -8,7 +8,7 @@
           <textarea type="text" class="form-control {{name}}" required></textarea>
         {{else}}
           <input type="{{type}}" class="form-control {{name}}"
-                 pattern="{{pattern}}"
+                 pattern="{{htmlRegExp patternType}}"
                  title="{{title}}"
                  required>
           {{#if span}}<span class="help-block">{{span}}</span>{{/if}}

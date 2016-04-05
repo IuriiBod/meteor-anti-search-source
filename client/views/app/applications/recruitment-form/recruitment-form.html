@@ -11,19 +11,19 @@
 
         <!-- Email Field-->
         {{> recruitmentFormField
-        name='email' label="Email" pattern=emailPattern
+        name='email' label="Email" patternType='email'
         title="for example email@email.com"
         isShow=applicationDefinition.schema.email }}
 
         <!-- Phone Field-->
         {{> recruitmentFormField
-        name='phone' label="Phone" pattern=phonePattern
+        name='phone' label="Phone" patternType='phone'
         title="numbers only"
         isShow=applicationDefinition.schema.phone }}
 
         <!-- Date of Birth -->
         {{> recruitmentFormField
-        name='dateOfBirth' label="Date of birth" pattern=datePattern
+        name='dateOfBirth' label="Date of birth" patternType='dateMdDdYyyy'
         isShow=applicationDefinition.schema.dateOfBirth }}
 
         <!-- Availability Field-->
@@ -34,7 +34,7 @@
         {{> recruitmentFormField
         labelClass="col-lg-5 col-md-5" fieldClass="col-lg-3 col-md-3"
         name='numberOfHours' label="Ideal numbers of hours you'd like to work each week?"
-        pattern= numbersPattern type='number'
+        patternType='numbers' type='number'
         isShow=applicationDefinition.schema.numberOfHours }}
 
         <!-- Positions Field-->

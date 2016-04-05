@@ -41,7 +41,7 @@ Template.timeSelectFlyout.helpers({
 
       tmpl.startTime.set(applyTimeToDate(date, startTime));
       tmpl.endTime.set(applyTimeToDate(date, endTime));
-    }
+    };
   }
 });
 

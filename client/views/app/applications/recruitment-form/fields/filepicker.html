@@ -11,11 +11,7 @@
           <div class="col-lg-9 col-md-9">
             <ul class="list-group">
               {{#each files}}
-                <li class="list-group-item" id="{{_id}}">
-                  <a class="remove-file"><i class="fa pull-right  fa-times"></i></a>
-                  <a target="_blank" href="{{ url }}"><i class="fa pull-right fa-cloud-download"></i></a>
-                  {{ filename }}
-                </li>
+                {{> filepickerListItem }}
               {{/each}}
             </ul>
           </div>

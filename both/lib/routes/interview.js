@@ -3,7 +3,11 @@ Router.route('/interviews', {
   template: 'interviews',
 
   waitOn () {
-    return Meteor.subscribe('interviews');
+    let area = HospoHero.getCurrentArea();
+
+    if (area) {
+      return Meteor.subscribe('interviews', area.organizationId, area._id);
+    }
   }
 });
 
