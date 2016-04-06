@@ -1,5 +1,5 @@
 //context: date (Date), userId (User._id)
-Template.reportData.helpers({
+Template.teamHoursDayEntity.helpers({
   startedTimeParams: function () {
     let defaultDate = this.date;
     let shift = this.shift;
@@ -9,14 +9,13 @@ Template.reportData.helpers({
       return shift && shift[propertyName] ? locationDate() : defaultValue;
     };
 
-    let isMidnight = this.shift && !moment(this.shift.finishedAt).isSame(this.shift.startedAt, 'day');
     return {
       firstTime: getShiftDate('startedAt', 'Start'),
       secondTime: getShiftDate('finishedAt', 'End'),
       minuteStepping: 5,
       date: defaultDate,
       ignoreDateRangeCheck: true,
-      icon: isMidnight ? 'fa-moon-o midnight-icon' : false,
+      icon: isMidnight(shift) ? 'fa-moon-o midnight-icon' : false,
       onSubmit(newStartTime, newEndTime) {
         let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
           getShiftDate('startedAt', defaultDate), newStartTime, newEndTime, shift.relations.locationId
@@ -35,7 +34,7 @@ Template.reportData.helpers({
 });
 
 
-Template.reportData.events({
+Template.teamHoursDayEntity.events({
   'click .stop-current-shift-button': function (event, tmpl) {
     event.preventDefault();
     var confirmClockOut = confirm('Are you sure you want to clock out this shift?');
@@ -45,3 +44,8 @@ Template.reportData.events({
     }
   }
 });
+
+const isMidnight = (shift) => {
+  let localFinishedAtMoment = shift && shift.finishedAt && HospoHero.dateUtils.getDateMomentForLocation(shift.finishedAt);
+  return localFinishedAtMoment && !localFinishedAtMoment.isSame(shift.startedAt, 'day');
+};

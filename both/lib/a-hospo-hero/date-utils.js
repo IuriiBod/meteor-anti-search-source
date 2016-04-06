@@ -17,6 +17,18 @@ Namespace('HospoHero.dateUtils', {
   },
 
   /**
+   * Returns moment for specified date in timezone for specified location
+   *
+   * @param {date|*} date Date or moment
+   * @param {string|object} [location=currentLocationId] location document or it's ID
+   * @returns {moment.tz}
+   */
+  getDateMomentForLocation: function (date, location) {
+    let timezone = HospoHero.dateUtils.getLocationTimeZone(location);
+    return moment(new Date(date)).tz(timezone);
+  },
+
+  /**
    * Convert date to the necessary timezone and format
    *
    * @param {String | Object} date - date string or Date object
@@ -28,17 +40,6 @@ Namespace('HospoHero.dateUtils', {
     return HospoHero.dateUtils.getDateMomentForLocation(date, locationId).format(dateFormat);
   },
 
-  /**
-   * Returns moment for specified date in timezone for specified location
-   *
-   * @param {date|*} date Date or moment
-   * @param {string|object} [location=currentLocationId] location document or it's ID
-   * @returns {moment.tz}
-   */
-  getDateMomentForLocation: function (date, location) {
-    let timezone = HospoHero.dateUtils.getLocationTimeZone(location);
-    return moment(new Date(date)).tz(timezone);
-  },
 
   /**
    * @param {Date|moment} date basic date
@@ -53,6 +54,7 @@ Namespace('HospoHero.dateUtils', {
 
     appliedDate.hours(timeMoment.hours());
     appliedDate.minutes(timeMoment.minutes());
+    appliedDate.seconds(0);
 
     return appliedDate.toDate();
   },
@@ -74,8 +76,7 @@ Namespace('HospoHero.dateUtils', {
     }
 
     date = HospoHero.dateUtils.formatDate(date || newStartTime, 'YYYY-MM-DDTHH:mm:ss');
-
-    let dateIncludingTimezone = moment.tz(date, location.timezone);
+    let dateIncludingTimezone = moment.tz(date, location.timezone); // !! Don't use getDateMomentForLocation here
 
     let newInterval = {
       start: HospoHero.dateUtils.applyTimeToDate(dateIncludingTimezone, newStartTime),
@@ -84,7 +85,8 @@ Namespace('HospoHero.dateUtils', {
 
     //in case start > end => we suppose interval should end after midnight
     if (moment(newInterval.start).isAfter(newInterval.end)) {
-      newInterval.end = moment(newInterval.end).add(1, 'day').toDate();
+      let localEndMoment = HospoHero.dateUtils.getDateMomentForLocation(newInterval.end, location);
+      newInterval.end = localEndMoment.add(1, 'day').toDate();
     }
 
     return newInterval;
