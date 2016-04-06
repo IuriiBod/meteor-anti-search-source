@@ -7,7 +7,7 @@
       {{#if isShowShifts}}
         {{#each weekDays}}
           <td class="center activeTime">
-            {{> reportData date=this shift=dailyShift}}
+            {{> teamHoursDayEntity date=this shift=dailyShift}}
           </td>
         {{/each}}
       {{else}}
