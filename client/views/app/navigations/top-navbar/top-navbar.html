@@ -1,55 +1,71 @@
 <template name="topNavbar">
   <div class="row border-bottom">
     <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-      <div class="navbar-header">
-        <a id="navbar-minimalize" class="minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-      </div>
-      <ul class="nav navbar-top-links navbar-right">
-        <li>
-              <span class="open-organization-structure-button">
-                {{#if getCurrentArea}}
-                  <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
-                  {{getCurrentArea.name}}
-                {{else}}
-                  <i class="fa fa-sitemap"></i>
-                {{/if}}
-              </span>
-        </li>
 
-        {{> navbarDropdownMenu items=profileMenuItems icon='fa-user'}}
+            <div class="navbar-header">
+              <a id="navbar-minimalize" class="minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+            </div>
 
-        {{> navbarDropdownMenu items=organizationScopeItems icon='fa-bars'}}
 
-        <li>
-          <a href="{{pathFor 'calendar' type=calendar.type date=calendar.date userId=currentUser._id}}">
-            <i class="fa fa-calendar"></i>
-          </a>
-        </li>
-
-        <li>
-          <a href="{{pathFor 'taskList'}}" class="count-info">
-            <i class="fa fa-check-square-o"></i>
-            {{#if tasksCount}}
-              <span class="label label-danger">{{tasksCount}}</span>
+      <ul class="nav navbar-top-links  navbar-right area-nav ">
+        <li class="dropdown">
+          <span class="open-organization-structure-button">
+            {{#if getCurrentArea}}
+              <span class="area-color-icon" style="background-color: {{areaColor}};"></span>
+              {{getCurrentArea.name}}
+            {{else}}
+              <i class="fa fa-sitemap"></i>
             {{/if}}
-          </a>
-        </li>
-
-        <li>
-          <a class="count-info notifi-toggler" href="#">
-            <i class="fa fa-bell"></i>
-            {{#if count}}
-              <span class="label label-primary">{{count}}</span>
-            {{/if}}
-          </a>
-        </li>
-
-        <li>
-          <a class="open-chat" href="#">
-            <i class="fa fa-comments-o"></i>
-          </a>
+          </span>
         </li>
       </ul>
+      <div class="menu-nav-wrapper">
+        <ul class="nav navbar-top-links  menu-nav">
+
+          {{> navbarDropdownMenu items=profileMenuItems icon='fa-user'}}
+
+          {{> navbarDropdownMenu items=organizationScopeItems icon='fa-bars'}}
+
+          <li>
+            <a href="{{pathFor 'calendar' type=calendar.type date=calendar.date userId=currentUser._id}}">
+              <i class="fa fa-calendar"></i>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{pathFor 'taskList'}}" class="count-info">
+              <i class="fa fa-check-square-o"></i>
+              {{#if tasksCount}}
+                <span class="label label-danger">{{tasksCount}}</span>
+              {{/if}}
+            </a>
+          </li>
+
+          <li>
+            <a class="count-info notifi-toggler" href="#">
+              <i class="fa fa-bell"></i>
+              {{#if count}}
+                <span class="label label-primary">{{count}}</span>
+              {{/if}}
+            </a>
+          </li>
+
+          <li>
+            <a class="open-chat" href="#">
+              <i class="fa fa-comments-o"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+
+
+
+
+
+
+
+
     </nav>
   </div>
 </template>
