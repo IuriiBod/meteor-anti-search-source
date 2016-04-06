@@ -170,5 +170,10 @@ var submitIngredientFormFields = [
     name: 'unitSize',
     parse: 'float',
     type: 'number'
+  },
+  {
+    name: 'shelfLife',
+    parse: 'int',
+    type: 'number'
   }
 ];

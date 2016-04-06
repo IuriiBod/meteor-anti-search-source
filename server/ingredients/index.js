@@ -49,7 +49,8 @@ Meteor.methods({
       status: "active",
       createdOn: Date.now(),
       createdBy: Meteor.userId(),
-      relations: HospoHero.getRelationsObject()
+      relations: HospoHero.getRelationsObject(),
+      shelfLife: info.shelfLife
     };
     var id = Ingredients.insert(doc);
     logger.info("New ingredient inserted ", id);
@@ -109,6 +110,9 @@ Meteor.methods({
       if (item.portionUsed !== info.portionUsed) {
         updateDoc.portionUsed = info.portionUsed;
       }
+    }
+    if (info.shelfLife && info.shelfLife !== item.shelfLife) {
+      updateDoc.shelfLife = info.shelfLife;
     }
     if (Object.keys(updateDoc).length > 0) {
       updateDoc.editedOn = Date.now();

@@ -171,11 +171,13 @@ Meteor.methods({
   },
 
   countOfNeededOrderItems: function (orderItem) {
+    const ingredient = Ingredients.findOne({_id: orderItem.ingredient.id});
+
     //calculation of optimal delivery interval
     const averageDaysInMonth = 30;
-    const supplierId = Ingredients.findOne(orderItem.ingredient.id).suppliers;
+    const supplierId = ingredient.suppliers;
     const deliveryCountPerMonth = Suppliers.findOne(supplierId).deliveryDays.length * 4;
-    const ingredientExpireDays = 5; //an approximate average value
+    const ingredientExpireDays = ingredient.shelfLife;
     const minimalDeliveryIntervalDays = Math.floor(averageDaysInMonth / deliveryCountPerMonth);
     const expireImpact = Math.floor(ingredientExpireDays / minimalDeliveryIntervalDays);
     const expireImpactCoefficient = expireImpact > 1 ? 1 / expireImpact : 1;
@@ -222,7 +224,6 @@ Meteor.methods({
     }
 
     //calculation of portions of needed ingredient
-    const ingredient = Ingredients.findOne(orderItem.ingredient.id);
     const neededIngredientExpectedCount = Math.floor(ingredientExpectedQuantity / ingredient.unitSize);
 
     const stockItem = StockItems.findOne({

@@ -62,6 +62,25 @@
 
       <div class="form-group">
         <label class="col-sm-12 control-label">
+          Shelf Life
+        </label>
+
+        <div class="col-sm-12">
+          {{#if hasPermissionInAreaTo 'edit stocks'}}
+            <div class="input-group m-b">
+              <input type="number" min="0" name="shelfLife" class="form-control" placeholder="Shelf Life"
+                     value="{{ingredient.shelfLife}}" required/>
+              <span class="input-group-addon">Days</span>
+            </div>
+          {{else}}
+            <div class="form-control">{{ingredient.shelfLife}}</div>
+          {{/if}}
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label class="col-sm-12 control-label">
           Unit Ordered
           <i class="fa fa-question-circle unit-ordered-popover btn-link" data-toggle="popover"
              data-placement="top" data-trigger="focus" tabindex="0" role="button"></i>
