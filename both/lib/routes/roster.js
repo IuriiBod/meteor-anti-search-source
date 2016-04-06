@@ -12,14 +12,19 @@ Router.route('/roster/weekly/:date', {
         Meteor.subscribe('areaUsersList', currentAreaId),
         Meteor.subscribe('sections', currentAreaId),
         Meteor.subscribe('areaMenuItems', currentAreaId),
-        Meteor.subscribe('leaveRequest'),
         Meteor.subscribe('taskList', Meteor.userId())
       ];
 
       let checker = new HospoHero.security.PermissionChecker();
+
       if (checker.hasPermissionInArea(currentAreaId, 'view forecast')) {
         subscriptions.push(Meteor.subscribe('dailySales', weekRange, currentAreaId));
       }
+
+      if (checker.hasPermissionInArea(currentAreaId, 'approve requests')) {
+        subscriptions.push(Meteor.subscribe('leaveRequestsForWeek', weekRange, currentAreaId));
+      }
+
       return subscriptions;
     }
   },

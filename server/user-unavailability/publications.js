@@ -6,8 +6,7 @@ let approvePermission = (areaId,userId,permission) => {
 Meteor.publish('usersLeaveRequests', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
-  if(!approvePermission(areaId,this.userId,'view requests')){
-    logger.error('Permission denied: publish [usersLeaveRequests] ', {areaId: areaId, userId: this.userId});
+  if(!this.userId) {
     this.error(new Meteor.Error('Access denied. Not enough permissions.'));
   }
   return LeaveRequests.find({userId: this.userId});
@@ -16,8 +15,7 @@ Meteor.publish('usersLeaveRequests', function (areaId) {
 Meteor.publish('usersUnavailabilities', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
-  if(!approvePermission(areaId,this.userId,'view unavailability')){
-    logger.error('Permission denied: publish [usersUnavailabilities] ', {areaId: areaId, userId: this.userId});
+  if(!this.userId) {
     this.error(new Meteor.Error('Access denied. Not enough permissions.'));
   }
 
@@ -101,6 +99,35 @@ Meteor.publish('leaveRequest', function (areaId,leaveRequestId) {
   }
 
   return LeaveRequests.find({_id:leaveRequestId});
+});
+
+Meteor.publish('leaveRequestsForWeek', function (weekRange, areaId) {
+  check(areaId, HospoHero.checkers.MongoId);
+  check(weekRange, HospoHero.checkers.WeekRange);
+
+  if(!approvePermission(areaId, this.userId, 'approve requests')) {
+    logger.error('Permission denied: publish [leaveRequest] ', {areaId: areaId, userId: this.userId});
+    this.error(new Meteor.Error('Access denied. Not enough permissions.'));
+  }
+
+  return LeaveRequests.find({
+    'relations.areaId': areaId,
+    $or: [
+      {
+        startDate: weekRange
+      }, {
+        endDate: weekRange
+      }, {
+        $and: [
+          {
+            startDate: {$lt: weekRange.$lte}
+          }, {
+            endDate: {$gt: weekRange.$gte}
+          }
+        ]
+      }
+    ]
+  });
 });
 
 Meteor.publish('leaveRequestsApprovers', function (areaId) {

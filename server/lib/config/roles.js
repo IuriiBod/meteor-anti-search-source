@@ -82,8 +82,6 @@ var defaultRoles = [
       "view menus",
       "view roster",
       "view stocks",
-      "view unavailability",
-      "view requests",
       "be rosted",
       "receive deliveries",
       "view calendar",
