@@ -6,7 +6,7 @@ let approvePermission = (areaId,userId,permission) => {
 Meteor.publish('usersLeaveRequests', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
-  if(!approvePermission(areaId,userId,'view requests')){
+  if(!approvePermission(areaId,this.userId,'view requests')){
     logger.error('Permission denied: publish [usersLeaveRequests] ', {areaId: areaId, userId: this.userId});
     this.error(new Meteor.Error('Access denied. Not enough permissions.'));
   }
@@ -16,7 +16,7 @@ Meteor.publish('usersLeaveRequests', function (areaId) {
 Meteor.publish('usersUnavailabilities', function (areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
-  if(!approvePermission(areaId,userId,'view unavailability')){
+  if(!approvePermission(areaId,this.userId,'view unavailability')){
     logger.error('Permission denied: publish [usersUnavailabilities] ', {areaId: areaId, userId: this.userId});
     this.error(new Meteor.Error('Access denied. Not enough permissions.'));
   }
