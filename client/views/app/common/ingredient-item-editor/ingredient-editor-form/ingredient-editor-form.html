@@ -146,5 +146,11 @@
       {{/if}}
       <button type="button" class="btn btn-default cancel-button">Cancel</button>
     </div>
+
+    {{#if ingredient._id}}
+      <div class="related-items-widget">
+        {{> relatedItemsWidget referenceId=ingredient._id type="ingredient"}}
+      </div>
+    {{/if}}
   </div>
 </template>

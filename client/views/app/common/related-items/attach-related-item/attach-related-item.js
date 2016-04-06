@@ -57,12 +57,11 @@ Template.attachRelatedItem.helpers({
 
 
 Template.attachRelatedItem.events({
-  'change #type' (event, tmpl) {
+  'change #type': function (event, tmpl) {
     tmpl.type.set(event.target.value);
   },
 
-  'change #reference' (event, tmpl) {
-    // sorry, Taras
+  'change #reference': function (event, tmpl) {
     let $select = $(event.target);
     let id = $select.val();
     let name = $select.find('option:selected').text();
@@ -72,7 +71,7 @@ Template.attachRelatedItem.events({
     };
   },
 
-  'submit form' (event, tmpl) {
+  'submit form': function (event, tmpl) {
     event.preventDefault();
 
     let relatedItem = tmpl.relatedItem;
@@ -90,6 +89,9 @@ Template.attachRelatedItem.events({
       type: type
     };
 
-    Meteor.call('createRelatedItem', relatedItemDocument, HospoHero.handleMethodResult());
+    Meteor.call('createRelatedItem', relatedItemDocument, HospoHero.handleMethodResult(() => {
+      let flyout = FlyoutManager.getInstanceByElement(event.target);
+      flyout.close();
+    }));
   }
 });

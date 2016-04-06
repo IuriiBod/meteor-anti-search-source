@@ -1,3 +1,5 @@
+// context referecneId: MongoId, type: String
+
 Template.relatedItemsWidget.onCreated(function () {
   this.subscribe('relatedItems', this.data.referenceId);
 });
