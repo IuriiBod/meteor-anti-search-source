@@ -1,6 +1,6 @@
 Router.route('calendar', {
   path: '/calendar/:type/:date/:userId',
-  template: 'userCalendar',
+  template: 'calendar',
 
   waitOn: function () {
     var userId = this.params.userId;
@@ -28,7 +28,7 @@ Router.route('calendar', {
 
 Router.route('managerCalendar', {
   path: '/manager-calendar/:date',
-  template: 'managerCalendar',
+  template: 'calendar',
   waitOn: function () {
     var areaId = HospoHero.getCurrentAreaId();
     var date = this.params.date;
@@ -45,7 +45,8 @@ Router.route('managerCalendar', {
   },
   data: function () {
     return {
-      date: this.params.date
+      date: this.params.date,
+      type: 'manager'
     };
   }
 });

@@ -1,29 +1,14 @@
 <template name="calendarHeader">
-  <div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-sm-6 col-xs-12">
-      <h2>
-        {{#if isManagerCalendar}}
-          {{dayFormat date}}
-        {{else}}
-          Calendar of {{username userId}}
-        {{/if}}
-      </h2>
-    </div>
+  <div class="title-action">
+    {{#unless isTodayDate}}
+      <a href="{{pathFor route=routeName data=todayCalendarRouteData}}" class="btn btn-warning btn-sm">today</a>
+    {{/unless}}
 
-    <div class="col-sm-6 col-xs-12 title-action">
+    {{#unless isCalendarType "manager"}}
+      <button class="calendar-day btn btn-sm {{#if isCalendarType "day"}}btn-primary{{/if}}">day</button>
+      <button class="calendar-week btn btn-sm {{#if isCalendarType "week"}}btn-primary{{/if}}">week</button>
+    {{/unless}}
 
-      {{#unless isTodayDate}}
-        <a href="{{pathFor route=routeName data=todayCalendarRouteData}}" class="btn btn-warning btn-sm">today</a>
-      {{/unless}}
-
-      {{#unless isManagerCalendar}}
-        <button class="calendar-day btn btn-sm {{#if equal type "day"}}btn-primary{{/if}}">day</button>
-        <button class="calendar-week btn btn-sm {{#if equal type "week"}}btn-primary{{/if}}">week</button>
-      {{/unless}}
-
-      {{> weekPicker date=date onDateChanged=onDateChanged type=type}}
-
-      <!--<button class="btn btn-primary btn-sm add-item-to-calendar">Add item</button>-->
-    </div>
+    {{> weekPicker date=date onDateChanged=onDateChanged type=weekPickerType}}
   </div>
 </template>

@@ -48,7 +48,6 @@ dbernhard:jquery-ui-draggable
 thesabbir:jquery-nestable
 claudiojulio:blueimp-gallery
 summernote:summernote
-planettraining:jquery-fullcalendar
 rochal:slimscroll
 natestrauser:x-editable-bootstrap
 deepwell:bootstrap-datepicker2
@@ -68,7 +67,6 @@ hospohero:stale-session
 trsdln:flyouts
 jss:blaze-states
 trsdln:modals
-jss:reactive-fullcalendar
 jquery-sparkline
 appshore:recaptcha
 
@@ -100,4 +98,5 @@ jss:ui-states
 
 
 # ===========> new
+rubaxa:sortable
 jss-copleykj:socialize-messaging

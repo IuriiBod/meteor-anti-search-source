@@ -1,0 +1,8 @@
+<template name="calendarGreyZone">
+  {{#if greyZoneNeeded greyZoneTime}}
+    <li class="grey-zone m-b-sm">
+      {{timeFormat greyZoneTime.startTime}} -
+      {{timeFormat greyZoneTime.endTime}}
+    </li>
+  {{/if}}
+</template>

@@ -1,51 +1,83 @@
+let getAreaIdFromEvent = event => {
+  if (event.areaId) {
+    return event.areaId;
+  } else {
+    let shift = Shifts.findOne({_id: event.shiftId});
+    return shift.relations.areaId;
+  }
+};
+
+let eventsOverlapping = (event) => {
+  let startTime = event.startTime;
+  let endTime = event.endTime;
+
+  let existedCalendarEvents = CalendarEvents.findOne({
+    _id: {
+      $ne: event._id
+    },
+    userId: event.userId,
+
+    $or: [
+      {
+        startTime: {$lt: startTime},
+        endTime: {$gt: endTime}
+      },
+      {
+        $and: [
+          {startTime: {$gt: startTime}},
+          {startTime: {$lt: endTime}}
+        ]
+      },
+      {
+        $and: [
+          {endTime: {$gt: startTime}},
+          {endTime: {$lt: endTime}}
+        ]
+      }
+    ]
+  });
+
+  return !!existedCalendarEvents;
+};
+
 /**
  * Uses for update shift start/end time if the event doesn't
  * fit in shift time
  * @param {String} userId - ID of user which create/update event
  * @param {Object} event - CalendarEvent object
  */
-let calendarEventInsertUpdateHook = function (userId, event) {
-  let areaId = HospoHero.getCurrentAreaId(userId);
-  let shift = Shifts.findOne({
-    startTime: TimeRangeQueryBuilder.forDay(event.startTime, event.locationId),
-    'relations.areaId': areaId
-  });
-
-  // if there are a shift for current day, update it if need
-  if (!!shift) {
-    if (shift.startTime > event.startTime || shift.endTime < event.endTime) {
-      if (shift.startTime > event.startTime) {
-        shift.startTime = event.startTime;
-      }
-      if (shift.endTime < event.endTime) {
-        shift.endTime = event.endTime;
-      }
-      Meteor.call('editShift', shift);
-    }
-  } else {
-    // if there are no shifts, create a one
-    shift = _.pick(event, ['startTime', 'endTime']);
-    _.extend(shift, {
-      type: null,
+Namespace('HospoHero.calendar', {
+  eventInsertUpdateHook (event) {
+    let areaId = getAreaIdFromEvent(event);
+    let shift = Shifts.findOne({
+      startTime: TimeRangeQueryBuilder.forDay(event.startTime, event.locationId),
+      'relations.areaId': areaId,
       assignedTo: event.userId
     });
-    Meteor.call('createShift', shift);
+
+    // if there are a shift for current day, update it if need
+    if (!!shift) {
+      let startShiftMoment = moment(shift.startTime);
+      let endShiftMoment = moment(shift.endTime);
+
+      // check that event is placed in shift time
+      if (startShiftMoment.isAfter(event.startTime) || endShiftMoment.isBefore(event.endTime)) {
+        throw new Meteor.Error('Event isn\'t placed in shift time!');
+      }
+
+      if (eventsOverlapping(event)) {
+        throw new Meteor.Error('Events are overlapping!');
+      }
+    } else {
+      // if there are no shifts, create a one
+      shift = _.pick(event, ['startTime', 'endTime']);
+      _.extend(shift, {
+        type: null,
+        assignedTo: event.userId
+      });
+      Meteor.call('createShift', shift);
+    }
+
+    return true;
   }
-};
-
-
-CalendarEvents.before.insert(function (userId, event) {
-  calendarEventInsertUpdateHook(userId, event);
 });
-
-CalendarEvents.after.update(function (userId, event) {
-  calendarEventInsertUpdateHook(userId, event);
-});
-
-// TODO: Uncomment if we need to remove the shift after removing the last event
-//CalendarEvents.before.remove(function (userId, event) {
-//  // when we remove the last event of the day, remove the shift too
-//  if (CalendarEvents.find({shiftId: event.shiftId}).count() === 1) {
-//    Shifts.remove({_id: event.shiftId});
-//  }
-//});

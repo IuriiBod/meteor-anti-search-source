@@ -1,4 +1,4 @@
-var canUserEditCalendar = function (areaId) {
+let canUserEditCalendar = (areaId) => {
   if (areaId) {
     let checker = new HospoHero.security.PermissionChecker();
     return checker.hasPermissionInArea(areaId, 'edit calendar');
@@ -6,21 +6,37 @@ var canUserEditCalendar = function (areaId) {
   return false;
 };
 
-var getAreaIdFromShift = function (shiftId) {
+let getAreaIdFromShift = (shiftId) => {
   let shift = Shifts.findOne({_id: shiftId});
   return shift ? shift.relations.areaId : null;
+};
+
+let getEventAreaId = (eventObject) => {
+  return eventObject.shiftId ? getAreaIdFromShift(eventObject.shiftId) : eventObject.areaId;
+};
+
+let updateEventSeconds = (event) => {
+  let setSecondsToZero = (date) => {
+    date.setSeconds(0);
+    return date;
+  };
+
+  _.extend(event, {
+    startTime: setSecondsToZero(event.startTime),
+    endTime: setSecondsToZero(event.endTime)
+  });
+  return event;
 };
 
 Meteor.methods({
   addCalendarEvent: function (eventObject) {
     // when we don't know the shift ID
     // we pass area ID for find this shift
-    var areaId;
+    let areaId = getEventAreaId(eventObject);
 
     if (!eventObject.shiftId && eventObject.areaId) {
       var shiftTimeRange = TimeRangeQueryBuilder.forDay(eventObject.startTime, eventObject.locationId);
       // need for selecting query
-      areaId = eventObject.areaId;
       delete eventObject.areaId;
 
       // get the user's shift for current day
@@ -45,21 +61,30 @@ Meteor.methods({
 
     check(eventObject, HospoHero.checkers.CalendarEventDocument);
 
-    if (!canUserEditCalendar(getAreaIdFromShift(eventObject.shiftId))) {
+    if (!canUserEditCalendar(areaId)) {
       logger.error("User not permitted to add items onto calendar");
       throw new Meteor.Error(403, "User not permitted to add items onto calendar");
     } else {
-      CalendarEvents.insert(eventObject);
+      // set seconds of start/end times equal to 0
+      eventObject = updateEventSeconds(eventObject);
+
+      HospoHero.calendar.eventInsertUpdateHook(eventObject);
+      return CalendarEvents.insert(eventObject);
     }
   },
 
   editCalendarEvent: function (eventObject) {
     check(eventObject, HospoHero.checkers.CalendarEventDocument);
 
-    if (!canUserEditCalendar(getAreaIdFromShift(eventObject.shiftId))) {
+    let areaId = getEventAreaId(eventObject);
+
+    if (!canUserEditCalendar(areaId)) {
       logger.error("User not permitted to edit calendar items");
       throw new Meteor.Error(403, "User not permitted to edit calendar items");
     } else {
+      eventObject = updateEventSeconds(eventObject);
+
+      HospoHero.calendar.eventInsertUpdateHook(eventObject);
       CalendarEvents.update({_id: eventObject._id}, {$set: eventObject});
     }
   },
@@ -67,7 +92,9 @@ Meteor.methods({
   removeCalendarEvent: function (eventObject) {
     check(eventObject, HospoHero.checkers.CalendarEventDocument);
 
-    if (!canUserEditCalendar(getAreaIdFromShift(eventObject.shiftId))) {
+    let areaId = getEventAreaId(eventObject);
+
+    if (!canUserEditCalendar(areaId)) {
       logger.error("User not permitted to delete items from calendar");
       throw new Meteor.Error(403, "User not permitted to delete items from calendar");
     } else {

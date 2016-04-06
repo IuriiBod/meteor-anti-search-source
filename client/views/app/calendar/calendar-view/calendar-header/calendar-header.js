@@ -1,3 +1,9 @@
+// context title: (String), name: (String), type: (String), date: (Date)
+
+Template.calendarHeader.onCreated(function () {
+  this.isManagerCalendar = this.data.type === 'manager';
+});
+
 Template.calendarHeader.helpers({
   onDateChanged: function () {
     var self = this;
@@ -11,7 +17,7 @@ Template.calendarHeader.helpers({
   },
 
   routeName() {
-    return this.isManagerCalendar ? 'managerCalendar' : 'calendar';
+    return Template.instance().isManagerCalendar ? 'managerCalendar' : 'calendar';
   },
 
   todayCalendarRouteData() {
@@ -19,12 +25,20 @@ Template.calendarHeader.helpers({
       date: HospoHero.dateUtils.shortDateFormat()
     };
 
-    if (!this.isManagerCalendar) {
+    if (!Template.instance().isManagerCalendar) {
       routeData.type = 'day';
       routeData.userId = Meteor.userId();
     }
 
     return routeData;
+  },
+
+  isCalendarType (type) {
+    return this.type === type;
+  },
+
+  weekPickerType () {
+    return this.type === 'week' ? 'week' : 'day';
   }
 });
 

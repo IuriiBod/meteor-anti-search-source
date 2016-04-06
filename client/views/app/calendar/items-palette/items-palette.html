@@ -1,0 +1,24 @@
+<template name="itemsPalette">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <a role="button" data-toggle="collapse" href="#items-palette-{{panelId}}" class="text-primary">
+        <h4 class="panel-title">
+          Add {{paletteTitle}}
+        </h4>
+      </a>
+    </div>
+    <div id="items-palette-{{panelId}}" class="panel-collapse collapse">
+      <div class="panel-body items-palette-body">
+        <div class="form-group">
+          <input type="text" class="items-palette-filter form-control" placeholder="Search..."/>
+        </div>
+
+        <div class="items-palette-content">
+          {{#sortable items=items options=sortableOptions}}
+            {{> itemsPaletteItem this}}
+          {{/sortable}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

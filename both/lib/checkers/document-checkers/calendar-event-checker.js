@@ -10,7 +10,12 @@ var CalendarEventDocument = Match.Where(function (calendarEvent) {
     // Optional
     _id: HospoHero.checkers.OptionalMongoId,
     shiftId: HospoHero.checkers.OptionalMongoId,
-    doneCheckListItems: Match.Optional([Number])
+    doneCheckListItems: Match.Optional([Number]),
+    startedAt: Match.Optional(Date),
+    finishedAt: Match.Optional(Date),
+    duration: Match.Optional(Number),
+    status: Match.Optional(String),
+    areaId: HospoHero.checkers.OptionalMongoId
   });
 
   // I've commented this code to make calendar events

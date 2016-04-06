@@ -1,0 +1,22 @@
+<template name="calendarItemEvent">
+  <li class="success-element calendar-item-event {{status}}" style="border-left-color: {{borderColor}}">
+    <div class="agile-detail row">
+      <div class="pull-left">
+        <div>
+          <b class="calendar-item-event-title">{{eventTitle}}</b>
+        </div>
+        <div>{{eventTimeIntervalFormat}}</div>
+      </div>
+
+      <div class="pull-right text-center">
+        {{#if canToggleTimer}}
+          <i class="fa {{timeTogglerIconClass}} timer-toggle"></i>
+        {{/if}}
+
+        <div>
+          <b>{{eventDuration}}</b>
+        </div>
+      </div>
+    </div>
+  </li>
+</template>

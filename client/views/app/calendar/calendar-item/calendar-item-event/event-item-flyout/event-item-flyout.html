@@ -1,0 +1,10 @@
+<template name="eventItemFlyout">
+  <div class="flyout-header">
+    {{> CloseFlyoutButton}}
+    {{eventTitle}}
+  </div>
+
+  <div class="flyout-content">
+    {{> eventItemFlyoutContent event=event}}
+  </div>
+</template>

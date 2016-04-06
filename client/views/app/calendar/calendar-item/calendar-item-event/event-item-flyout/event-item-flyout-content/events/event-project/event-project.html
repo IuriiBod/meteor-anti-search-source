@@ -1,0 +1,12 @@
+<template name="eventProject">
+  <div class="container-fluid">
+    <div class="row">
+      {{> editProject project=project saveProject=saveProject}}
+
+      <div class="col-xs-12 event-description-row">
+        {{> eventGoTo route="projectDetails" templateData=goToItemTemplateData}}
+        {{> eventRemove}}
+      </div>
+    </div>
+  </div>
+</template>

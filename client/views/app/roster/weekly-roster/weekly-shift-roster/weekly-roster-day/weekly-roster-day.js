@@ -121,52 +121,51 @@ Template.weeklyRosterDay.events({
 });
 
 
-var SortableHelper = function (ui) {
-  this._draggedToDate = new Date(ui.item.parent().data('current-date'));
-  this._draggedShift = _.clone(this._getIngredientIdByItem(ui.item)); //clone it just in case
-  this._previousShift = this._getIngredientIdByItem(ui.item.prev());
-  this._nextShift = this._getIngredientIdByItem(ui.item.next());
-};
-
-
-SortableHelper.prototype._getIngredientIdByItem = function (item) {
-  var element = item[0];
-  return element ? Blaze.getData(element) : null;
-};
-
-
-SortableHelper.prototype._getOrder = function () {
-  var order = 0;
-
-  if (!this._nextShift && this._previousShift) {
-    order = this._previousShift.order + 1;
-  } else if (!this._previousShift && this._nextShift) {
-    order = this._nextShift.order - 1;
-  } else if (this._nextShift && this._previousShift) {
-    order = (this._nextShift.order + this._previousShift.order) / 2;
+class SortableHelper {
+  constructor(ui) {
+    this._draggedToDate = ui.item.parent().data('current-date');
+    this._draggedShift = _.clone(this._getDataByItem(ui.item)); //clone it just in case
+    this._previousShift = this._getDataByItem(ui.item.prev());
+    this._nextShift = this._getDataByItem(ui.item.next());
   }
 
-  return order;
-};
-
-
-SortableHelper.prototype.getSortedShift = function () {
-  if (this._draggedShift) {
-    var shift = this._draggedShift;
-    var newShiftDate = this._draggedToDate;
-
-    let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
-      newShiftDate, shift.startTime, shift.endTime, shift.relations.locationId
-    );
-
-    shift.startTime = newShiftDuration.start;
-    shift.endTime = newShiftDuration.end;
-
-    shift.order = this._getOrder();
-
-    check(shift, HospoHero.checkers.ShiftDocument);
-
-    return shift;
+  _getDataByItem(item) {
+    var element = item[0];
+    return element ? Blaze.getData(element) : null;
   }
-};
 
+  _getOrder() {
+    var order = 0;
+
+    if (!this._nextShift && this._previousShift) {
+      order = this._previousShift.order + 1;
+    } else if (!this._previousShift && this._nextShift) {
+      order = this._nextShift.order - 1;
+    } else if (this._nextShift && this._previousShift) {
+      order = (this._nextShift.order + this._previousShift.order) / 2;
+    }
+
+    return order;
+  }
+
+
+  getSortedShift() {
+    if (this._draggedShift) {
+      var shift = this._draggedShift;
+      var newShiftDate = this._draggedToDate;
+
+      let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
+        newShiftDate, shift.startTime, shift.endTime, shift.relations.locationId
+      );
+
+      shift.startTime = newShiftDuration.start;
+      shift.endTime = newShiftDuration.end;
+
+      shift.order = this._getOrder();
+
+      check(shift, HospoHero.checkers.ShiftDocument);
+
+      return shift;
+    }
+  }
+}

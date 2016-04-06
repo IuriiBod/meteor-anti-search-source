@@ -161,6 +161,7 @@
     "Autolinker": false,
     "Modal": false,
     "Conversation": false,
+    "Sortable": false,
     "reCAPTCHA": false,
 
     //collections
@@ -226,7 +227,10 @@
     "OrdersReporter": true,
     "StaffCostCalculator": true,
     "DocumentCheckerHelper": true,
+    "ReactiveTimer": true,
+    "MultiTimer": true,
     "StockVarianceReport":true,
+    "EventSortableHelper": true,
 
     //temporal globals
     "RawOrders": true,

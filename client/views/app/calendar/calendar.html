@@ -1,0 +1,41 @@
+<template name="calendar">
+  {{> pageHeading title=calendarTitle name="calendar" type=type date=date userId=userId}}
+
+  <div class="wrapper wrapper-content animated">
+    <div class="row m-b">
+      {{#if isManagerCalendar}}
+        <!-- calendar for manager -->
+
+        {{#if usersWithShifts.length}}
+          <div class="col-xs-6 col-sm-5 col-md-3 col-lg-2">
+            {{> itemsPalette type='prep job' calendarType=type date=date}}
+          </div>
+
+          <div class="col-xs-6 col-sm-7 col-md-9 col-lg-10">
+            {{#each usersWithShifts}}
+              {{> calendarItem userId=this date=../date type=../type}}
+            {{/each}}
+          </div>
+        {{else}}
+          <h3 class="text-center"><b>No users with shifts for today</b></h3>
+        {{/if}}
+      {{else}}
+        {{#if isDailyCalendar}}
+          <div class="col-xs-6 col-sm-5 col-md-3 col-lg-2">
+            {{> itemsPalette type='task' calendarType=type date=date}}
+          </div>
+
+          <div class="col-xs-6 col-sm-7 col-md-9 col-lg-10">
+            <!-- user's daily calendar -->
+            {{> calendarItem userId=userId date=date type=type}}
+          </div>
+        {{else}}
+          <!-- user's weekly calendar -->
+          {{# each weekdays}}
+            {{> calendarItem userId=../userId date=this type=../type}}
+          {{/each}}
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+</template>
