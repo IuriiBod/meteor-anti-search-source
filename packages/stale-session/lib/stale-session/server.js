@@ -41,12 +41,21 @@ Meteor.methods({
     check(loginTokens, LoginTokens);
 
     var validtokens = loginTokens.filter(function (loginTokenEntry) {
-      return !!Meteor.users.findOne({
-        _id: loginTokenEntry.userId,
-        'services.resume.loginTokens.token': loginTokenEntry.token
-      });
-    });
+      var  user =  Meteor.users.findOne({_id: loginTokenEntry.userId});
+      if(user && user.services && user.services.resume && user.services.resume.loginTokens) {
 
+        // searched token usually placed as last element of array
+        var loginTokens =  user.services.resume.loginTokens;
+        for(var i = loginTokens.length - 1; i>0; i--){
+            var hashStampedToken = Accounts._hashStampedToken({
+              token: loginTokenEntry.token,
+              when: loginTokens[i].when
+            });
+            if(loginTokens[i].hashedToken === hashStampedToken.hashedToken) {return true;}
+        }
+      }
+      return false;
+    });
     return validtokens;
   }
 });
