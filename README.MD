@@ -31,7 +31,7 @@ In order to contribute to this repository you should follow next steps:
 3. Create new branch based on `develop`. Give you branch name that makes sense (like `roster-timezones-bug`).
 4. Start working on your task. If you don't know how to do something, then google it. If you stuck on something for more that 15 minutes, ask your colleagues for help. 
 5. When card is finished, review your code and refactor complex/hard to understand parts of it (usually long functions or lines of code).
-6. Test all features that was changed/edited/improved by you. Fix all bugs you found.
+6. Test all features that was changed/edited/improved by you. Fix all bugs you found. Next, run `./lint.sh` and fix all linter errors.
 7. If there are new commits on `develop` merge `develop` to your branch using `--no-ff` flag (see "Merging" section for details).
 8. Create pull to `develop`. Put your pull request's url into related card's description.
 9. Move your card into Trello's "Review" column. Someone of your collegues will review\* it. If your pull request was merged go to step #10. If your pull request is closed you should review comments in pull request go to step #1. If you don't understand any comment on your pull request, ask reviewer about it.
