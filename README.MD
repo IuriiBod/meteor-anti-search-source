@@ -24,11 +24,20 @@ $ meteor --settings .mupx-deploy/settings-dev.json
 
 ## Contribution process
 
-If you started working on new feature or patch, create separate branch for it.
+In order to contribute to this repository you should follow next steps:
 
-When feature is finished, you should merge your branch with `develop` and create pull request to `develop` branch.
+1. Choose unassigned card from Trello's "Backlog" or take already assigned to you card.
+2. Move your card into "In progress" column.
+3. Create new branch based on `develop`. Give you branch name that makes sense (like `roster-timezones-bug`).
+4. Start working on your task. If you don't know how to do something, then google it. If you stuck on something for more that 15 minutes, ask your colleagues for help. 
+5. When card is finished, review your code and refactor complex/hard to understand parts of it (usually long functions or lines of code).
+6. Test all features that was changed/edited/improved by you. Fix all bugs you found.
+7. If there are new commits on `develop` merge `develop` to your branch using `--no-ff` flag (see "Merging" section for details).
+8. Create pull to `develop`. Put your pull request's url into related card's description.
+9. Move your card into Trello's "Review" column. Someone of your collegues will review\* it. If your pull request was merged go to step #10. If your pull request is closed you should review comments in pull request go to step #1. If you don't understand any comment on your pull request, ask reviewer about it.
+10. Congratulations! Your task is done! Go to step 1.
 
-All pull requests should be __reviewed__ by other team member before merging with `develop`.
+\* All pull requests should be __reviewed__ by other team member before merging with `develop`.
 
 
 ## Merging
@@ -36,6 +45,48 @@ All pull requests should be __reviewed__ by other team member before merging wit
 Always merge your code with `--no-ff` option, so git will create separate commit for merging and you will be able to review changes after merging on github.
 
 This approach allows to avoid old code appearing in merged version.
+
+
+## Style Guide
+
+### General recomendation: 
+
+* Use variable's names that makes sense.
+* Extract complex logic into separate class.
+* Don't use global variables.
+* Avoid unovious solutions. If you are using unobvious solution, then you should write a comment that expalins it.
+* Don't leave `console.log` or any other __debuging/commented__ code in pull request's code.
+* Do not put function into `Namespace` if it only used in 1 or 2 files.
+* If your function has more than 15 lines it makes sense to split it on 2 or couple separate functions.
+* Use single quotes instead of double (`'my string'` instead of `"my string"`).
+* Use `Collection.find({_id: id})` instead of `Collection.find(id)`.
+* Write `{someProperty: itsValue}` instead of `{"someProperty": itsValue}` (except cases when property contains dot or other special character like `{'profile.fristname': 'Test'}`).
+* Use ES6 string extrapolation (e.g. `"Hello, ${username}!"`) and dynamic attributes (e.g. `{[myPropertyName]: someValue}`).
+* IF YOU ARE WORKING WITH UNSATISFIED QUALITY CODE, PELASE, REWRITE IT FOLLOWING THIS GUIDE.
+
+### Client side (Blaze):
+
+* Don't use `Session` if you can pass data using template context.
+* Don't use global JQuery selectors (use `this.$('.my-element')` instead of `$('.my-element')`).
+* Don't use dynamic data attributes (e.g. `data-id="{{_id}}"`)
+* Use `this.autorun` and `this.subscribe` (not `Meteor.autorun` and `Meteor.subscribe`) inside template.
+* Don't use jquery if you can write the same thing through Blaze.
+* Don't use inline styles.
+* Isolate your styles using LESS's namespacing feature:
+
+```
+.my-custom-component{
+   ul > li {
+     width: 300px;
+   }
+}
+```
+
+### Server side:
+
+* Each argument should be checked using `check(target, Type)` inside all publishers and methods.
+* Use `HospoHero.security.PermissionChecker` for permission checks.
+* Use `NotificationSender` to send email/buildin/push notifications.
 
 
 ## Snapshots
