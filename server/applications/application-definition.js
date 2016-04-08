@@ -1,6 +1,6 @@
 let canUpdateApplications = (organizationId) => {
   let permissionChecker = new HospoHero.security.PermissionChecker();
-  return organizationId && permissionChecker.hasPermissionInOrganization(organizationId,'approve application definitions');
+  return organizationId && permissionChecker.hasPermissionInOrganization(organizationId, 'approve application definitions');
 };
 
 Meteor.methods({
@@ -17,20 +17,30 @@ Meteor.methods({
 
     delete applicationDefinitionDocument._id; //avoid exception about _id update.
 
-    ApplicationDefinitions.update({organizationId:applicationDefinitionDocument.organizationId},
+    ApplicationDefinitions.update({organizationId: applicationDefinitionDocument.organizationId},
       {$set: applicationDefinitionDocument}, {upsert: true});
     logger.info('Upsert object into [ApplicationsDefinitions] collection',
       {organizationId: applicationDefinitionDocument.organizationId});
   },
 
-  deleteApplicationDefinition(organizationId,applicationDefinitionId) {
+  deleteApplicationDefinition(organizationId) {
     if (!canUpdateApplications(organizationId)) {
       logger.error('Unexpected Err: Method [deleteApplicationDefinition] User can\'t update Application Definition.',
         {organizationId: organizationId, userId: this.userId});
       throw new Meteor.Error('You can\'t delete Application Definition');
     }
-    ApplicationDefinitions.remove({ _id: applicationDefinitionId });
-    logger.info('Removed object from [ApplicationDefinitions] collection', {_id: applicationDefinitionId});
+
+    let orgIdQuery = {organizationId: organizationId};
+    ApplicationDefinitions.remove(orgIdQuery);
+    
+    //clean up whole recruitment feature
+    Positions.remove(orgIdQuery);
+
+    let relatedAppIds = Applications.find(orgIdQuery).map(app => app._id);
+    Applications.remove({_id: {$in: relatedAppIds}});
+    Interviews.remove({applicationId: {$in: relatedAppIds}});
+
+    logger.info('Removed object from [ApplicationDefinitions] collection', {organizationId});
   },
 
   addNewPosition(name){
@@ -44,9 +54,9 @@ Meteor.methods({
       throw new Meteor.Error('You can\'t add new positions');
     }
 
-    let positionId  =  Positions.insert({
+    let positionId = Positions.insert({
       name: name,
-      organizationId:organizationId
+      organizationId: organizationId
     });
     logger.info('Add new object into [Positions] collection', {_id: positionId});
 

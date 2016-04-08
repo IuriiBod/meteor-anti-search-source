@@ -1,5 +1,8 @@
 <template name="selectComponent">
   <select name="{{name}}" class="form-control">
+    {{#if showEmptyValue values}}
+      <option disabled value>{{emptyValue}}</option>
+    {{/if}}
     {{#each values}}
       {{#if isSelected value}}
         <option value="{{value}}" selected="selected">

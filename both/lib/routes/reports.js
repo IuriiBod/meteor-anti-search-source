@@ -1,4 +1,4 @@
-Router.route('/reports/:date', {
+Router.route('/team-hours/:date', {
   name: "teamHours",
   template: "teamHoursMainView",
   waitOn: function () {
@@ -19,8 +19,9 @@ Router.route('/reports/:date', {
   }
 });
 
+
 Router.route('menuItemsRankReport', {
-  path: '/rank/:category/:rangeType/:startDate/:endDate?',
+  path: '/menu-rank/:category/:rangeType/:startDate/:endDate?',
   template: 'menuListRankReport',
   waitOn: function () {
     let dateInterval;
@@ -50,26 +51,19 @@ Router.route('menuItemsRankReport', {
   }
 });
 
+
 Router.route('/stock-report', {
   name: "stockReport",
-  template: "stockReport"
-});
-
-Router.route('/stock-report/details/:stocktakeMainId/:date', {
-  name: 'stockTotalValueDetails',
-  template: 'totalValueDetails',
+  template: "stockReport",
   waitOn() {
-    let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+    let currentAreaId = HospoHero.getCurrentAreaId();
+    let datePeriod = moment().subtract(3, 'month').startOf('day').toDate();
     return [
-      Meteor.subscribe('suppliersNamesList', currentAreaId)
+      Meteor.subscribe('stocktakeDates', currentAreaId, datePeriod)
     ];
-  },
-  data() {
-    return {
-      stocktakeMainId: this.params.stocktakeMainId
-    };
   }
 });
+
 
 Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', {
   name: 'stockVarianceReport',
@@ -83,12 +77,14 @@ Router.route('/stock-variance-report/:firstStocktakeDate/:secondStocktakeDate', 
     ];
   },
   data() {
+    let convertRouteParamToDate = (param) => moment(param, 'DD-MM-YY').toDate();
     return {
-      firstStocktakeDate: this.params.firstStocktakeDate,
-      secondStocktakeDate: this.params.secondStocktakeDate
+      firstStocktakeDate: convertRouteParamToDate(this.params.firstStocktakeDate),
+      secondStocktakeDate: convertRouteParamToDate(this.params.secondStocktakeDate)
     };
   }
 });
+
 
 Router.route('/leave-requests', {
   name: "leaveRequests",
@@ -97,14 +93,14 @@ Router.route('/leave-requests', {
     const currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     this.params.itemPerPage = 5;
     return [
-      Meteor.subscribe('leaveRequestsInArea', currentAreaId, this.params.itemPerPage,'all'),
-      Meteor.subscribe('unavailabilitiesInArea', currentAreaId, this.params.itemPerPage,'all')
+      Meteor.subscribe('leaveRequestsInArea', currentAreaId, this.params.itemPerPage, 'all'),
+      Meteor.subscribe('unavailabilitiesInArea', currentAreaId, this.params.itemPerPage, 'all')
     ];
   },
   data() {
     return {
       itemPerPage: this.params.itemPerPage,
-      filter:new ReactiveVar('all')
+      filter: new ReactiveVar('all')
     };
   }
 });

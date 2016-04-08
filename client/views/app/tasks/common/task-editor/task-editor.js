@@ -158,7 +158,7 @@ Template.taskEditor.events({
         };
 
         let duration;
-        while (duration = durationRegEx.exec(durationString)) {
+        while (!!(duration = durationRegEx.exec(durationString))) {
           if (duration) {
             var timeUnitsNumber = duration[1];
             var timeUnitName = duration[2];

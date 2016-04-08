@@ -1,49 +1,68 @@
 Template.stockReport.onCreated(function () {
-  this.reports = new ReactiveArray();
+  this.reports = new ReactiveVar();
 
-  this.getRouteParams = (currentStocktake) => {
-    return {
-      date: currentStocktake.date.replace(/\//g, '-'),
-      stocktakeMainId: currentStocktake.stocktakeMainId
-    };
-  };
+  this.firstSelectedDate = new ReactiveVar(false);
+  this.secondSelectedDate = new ReactiveVar(false);
 
-  this.uploadNextStockReport = () => {
-    //todo: implement it using new stocktake
+  this.detailedReportParams = new ReactiveVar();
+
+  this.uploadNextStockReport = (firstDate = null, secondDate = null) => {
+    Meteor.call('uploadStockReport', firstDate, secondDate, HospoHero.handleMethodResult((result) => {
+      this.reports.set(result);
+      if (this.firstSelectedDate.get() === false) {
+        this.firstSelectedDate.set(result.firstStocktake.date);
+        this.secondSelectedDate.set(result.secondStocktake.date);
+      }
+    }));
   };
 
   this.uploadNextStockReport();
 });
 
+
 Template.stockReport.helpers({
+  stocktakeIntervalSelectParams: function () {
+    let tmpl = Template.instance();
+    return {
+      firstStocktakeDate: tmpl.firstSelectedDate.get(),
+      secondStocktakeDate: tmpl.secondSelectedDate.get(),
+      onIntervalSubmit: function (firstDate, secondDate) {
+        tmpl.uploadNextStockReport(firstDate, secondDate);
+      }
+    };
+  },
+
   reports: function () {
-    return Template.instance().reports.list();
+    return Template.instance().reports.get();
+  },
+
+  detailedReportParams() {
+    return Template.instance().detailedReportParams.get();
   }
 });
 
+
 Template.stockReport.events({
-  'click #load-stocktake-report': function (event, tmpl) {
-    tmpl.uploadNextStockReport();
-  },
-
-  'click .first-stocktake-total': function (event, tmpl) {
-    event.preventDefault();
-    Router.go('stockTotalValueDetails', tmpl.getRouteParams(this.firstStocktake));
-  },
-
-  'click .second-stocktake-total': function (event, tmpl) {
-    event.preventDefault();
-    Router.go('stockTotalValueDetails', tmpl.getRouteParams(this.secondStocktake));
-  },
-
-  'click .difference-text': function (event) {
+  'click .stocktake-total': function (event, tmpl) {
     event.preventDefault();
 
-    let params = {
-      firstStocktakeDate: this.firstStocktake.date.replace(/\//g, '-'),
-      secondStocktakeDate: this.secondStocktake.date.replace(/\//g, '-')
-    };
+    let stocktakeType = $(event.target).data('type');
+    let firstStocktake = tmpl.reports.get()[stocktakeType];
 
-    Router.go('stockVarianceReport', params);
+    tmpl.detailedReportParams.set({
+      stocktakeDate: firstStocktake.date,
+      stocktakeTotal: firstStocktake.total
+    });
+  },
+
+  'click .difference-text': function (event, tmpl) {
+    event.preventDefault();
+
+    const reactiveVarDateToRouteParam = (reactiveDateVar) => moment(reactiveDateVar.get()).format('DD-MM-YY');
+
+    Router.go('stockVarianceReport', {
+      firstStocktakeDate: reactiveVarDateToRouteParam(tmpl.firstSelectedDate),
+      secondStocktakeDate: reactiveVarDateToRouteParam(tmpl.secondSelectedDate)
+    });
   }
 });

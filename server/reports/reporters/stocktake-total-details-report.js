@@ -1,38 +1,34 @@
-StocktakeTotalDetailedReport = class {
-  constructor(stocktakeGroup, areaId, searchingParams) {
-    this._stocktakeGroup = stocktakeGroup;
-    this._supplierId = searchingParams.supplierId;
-    this._searchText = searchingParams.searchText;
+StocktakeTotalReport = class {
+  constructor(stockItems, supplierId, searchText, areaId) {
+    this._stockItems = stockItems;
+    this._supplierId = supplierId;
+    this._searchText = searchText;
     this._areaId = areaId;
 
     this._getAllIngredients();
   }
-
-  _query() {
+  
+  _getAllIngredients() {
     let query = {
       'relations.areaId': this._areaId
     };
+
     if (this._supplierId) {
       query.suppliers = this._supplierId;
     }
     if (this._searchText) {
       query.description = {$regex: `${this._searchText}`, $options: 'i'};
     }
-
-    return query;
-  }
-
-  _options() {
-    return {
+    
+    let options = {
       fields: {
         _id: 1,
-        description: 1
+        description: 1,
+        portionOrdered: 1
       }
     };
-  }
-
-  _getAllIngredients() {
-    this._ingredientsList = Ingredients.find(this._query(), this._options()).fetch();
+    
+    this._ingredientsList = Ingredients.find(query, options).fetch();
   }
 
   _filterIngredient(stockId) {
@@ -41,15 +37,15 @@ StocktakeTotalDetailedReport = class {
 
   getIngredientsOfCurrentStocktake() {
     let ingredientsList = [];
-    this._stocktakeGroup.forEach((stock) => {
-      let filteredIng = this._filterIngredient(stock.stockId);
+    this._stockItems.forEach((item) => {
+      let filteredIng = this._filterIngredient(item.ingredient.id);
       if (filteredIng.length) {
         let ingredient = {
-          _id: stock.stockId,
+          _id: item.ingredient.id,
           description: filteredIng[0].description,
-          qty: stock.counting,
-          purchasePrice: `${stock.unitCost} / ${stock.unit}`,
-          stockTotalValue: HospoHero.misc.rounding(stock.counting * stock.unitCost, 100)
+          qty: item.count,
+          purchasePrice: `${item.ingredient.cost} / ${filteredIng[0].portionOrdered}`,
+          stockTotalValue: HospoHero.misc.rounding(item.count * item.ingredient.cost, 100)
         };
 
         ingredientsList.push(ingredient);

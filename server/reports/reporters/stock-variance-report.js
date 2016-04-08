@@ -11,9 +11,8 @@ StockVarianceReport = class {
   }
 
   _setDates() {
-    let formatDate = HospoHero.dateUtils.formatTimestamp;
-    this._fromDate = formatDate(this._firstStocktakeGroup[0].date);
-    this._toDate = formatDate(this._secondStocktakeGroup[0].date);
+    this._fromDate = this._firstStocktakeGroup.date;
+    this._toDate = this._secondStocktakeGroup.date;
   }
 
   _cacheMenuItems() {
@@ -30,8 +29,9 @@ StockVarianceReport = class {
   }
 
   _getStocktakesIngredients() {
-    let firstStocktakeDetails = this._getStocktakeDetailedReport(this._firstStocktakeGroup, this._areaId);
-    let secondStocktakeDetails = this._getStocktakeDetailedReport(this._secondStocktakeGroup, this._areaId);
+    let firstStocktakeDetails = this._getStocktakeDetailedReport(this._firstStocktakeGroup.stockItems, this._areaId);
+    let secondStocktakeDetails = this._getStocktakeDetailedReport(this._secondStocktakeGroup.stockItems, this._areaId);
+
     let stocktakesIngredients = [];
 
     firstStocktakeDetails.forEach((ingredient) => {
@@ -106,7 +106,7 @@ StockVarianceReport = class {
   }
 
   _getForecastedMenuItemsSales() {
-    let date = TimeRangeQueryBuilder.forInterval(moment(this._fromDate, 'DD/MM/YY'), moment(this._toDate, 'DD/MM/YY'));
+    let date = TimeRangeQueryBuilder.forInterval(this._fromDate, this._toDate);
     let query = {
       date: date,
       'relations.areaId': this._areaId,
@@ -125,11 +125,7 @@ StockVarianceReport = class {
   }
 
   _getStocktakeDetailedReport(stocktakeGroup, areaId) {
-    let searchingParams = {
-      supplierId: this._supplierId,
-      searchText: this._searchText
-    };
-    let currentStocktakeReport = new StocktakeTotalDetailedReport(stocktakeGroup, areaId, searchingParams);
+    let currentStocktakeReport = new StocktakeTotalReport(stocktakeGroup, this._supplierId, this._searchText, areaId);
     return currentStocktakeReport.getIngredientsOfCurrentStocktake();
   }
 
@@ -138,7 +134,12 @@ StockVarianceReport = class {
    */
 
   _stocktakesOrdersReceivedReport() {
-    let stocktakesOrders = new OrdersReporter(this._fromDate, this._toDate, this._areaId);
+    let stocktakesIds = [
+      this._firstStocktakeGroup.stockItems[0].stocktakeId,
+      this._secondStocktakeGroup.stockItems[0].stocktakeId
+    ];
+
+    let stocktakesOrders = new OrdersReporter(stocktakesIds, this._areaId);
     return stocktakesOrders.getDetailedOrdersReceived();
   }
 

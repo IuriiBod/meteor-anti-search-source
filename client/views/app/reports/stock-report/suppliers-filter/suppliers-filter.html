@@ -1,0 +1,8 @@
+<template name="suppliersFilter">
+  <select class="btn btn-white suppliers-filter-select">
+    <option value="All Suppliers">All Suppliers</option>
+    {{#each suppliers}}
+      <option value="{{_id}}">{{name}}</option>
+    {{/each}}
+  </select>
+</template>

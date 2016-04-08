@@ -27,6 +27,12 @@
       "loginStyle": "popup",
       "clientId": "24418709828-gcgojuj4t4gkfc5kke2u1vr7btmv093g.apps.googleusercontent.com",
       "secret": "ALNUwQE9u31XHqj31fMYXxVb"
+    },
+    {
+      "service": "facebook",
+      "loginStyle": "popup",
+      "appId": "218298795204661",
+      "secret": "0555a865eb2bdfbe9fa9b2835ba5ca89"
     }
   ],
   "logLevel": "warn",

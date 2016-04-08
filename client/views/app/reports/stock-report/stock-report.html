@@ -3,6 +3,11 @@
   <div class="wrapper wrapper-content animated stock-report">
     <div class="row">
       <div class="col-lg-12">
+        {{> stocktakeIntervalSelect stocktakeIntervalSelectParams}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
         <div class="ibox">
           <div class="ibox-content">
             <div class="table-responsive">
@@ -20,21 +25,21 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{#each reports}}
+                {{#if reports}}
                   <tr>
-                    <td><strong>{{firstStocktake.date}}</strong></td>
-                    <td class="first-stocktake-total">{{firstStocktake.total}}</td>
-                    <td>{{totalOrdersReceived}}</td>
-                    <td class="second-stocktake-total">{{secondStocktake.total}}</td>
-                    <td><strong>{{secondStocktake.date}}</strong></td>
-                    <td class="text-center expected-bg">$ {{costOfGoods.expected.amount}}</td>
-                    <td class="text-center expected-bg">{{costOfGoods.expected.ratio}} %</td>
-                    <td class="text-center actual-bg">$ {{costOfGoods.actual.amount}}</td>
-                    <td class="text-center actual-bg">{{costOfGoods.actual.ratio}} %</td>
-                    <td class="text-center difference-text">$ {{difference.amount}}</td>
-                    <td class="text-center difference-text">{{difference.ratio}} %</td>
+                    <td><strong>{{formatDate reports.firstStocktake.date 'DD/MM/YY'}}</strong></td>
+                    <td class="stocktake-total" data-type="firstStocktake"> $ {{reports.firstStocktake.total}}</td>
+                    <td> $ {{reports.totalOrdersReceived}}</td>
+                    <td class="stocktake-total" data-type="secondStocktake"> $ {{reports.secondStocktake.total}}</td>
+                    <td><strong>{{formatDate reports.secondStocktake.date 'DD/MM/YY'}}</strong></td>
+                    <td class="text-center expected-bg">$ {{reports.costOfGoods.expected.amount}}</td>
+                    <td class="text-center expected-bg">{{reports.costOfGoods.expected.ratio}} %</td>
+                    <td class="text-center actual-bg">$ {{reports.costOfGoods.actual.amount}}</td>
+                    <td class="text-center actual-bg">{{reports.costOfGoods.actual.ratio}} %</td>
+                    <td class="text-center difference-text">$ {{reports.difference.amount}}</td>
+                    <td class="text-center difference-text">{{reports.difference.ratio}} %</td>
                   </tr>
-                {{/each}}
+                {{/if}}
                 </tbody>
               </table>
             </div>
@@ -42,10 +47,8 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="load-more-button-wrapper">
-        <button id="load-stocktake-report" class="btn btn-white center-block" type="button">Load more</button>
-      </div>
-    </div>
+    {{#if detailedReportParams}}
+      {{> totalValueDetails params=detailedReportParams}}
+    {{/if}}
   </div>
 </template>

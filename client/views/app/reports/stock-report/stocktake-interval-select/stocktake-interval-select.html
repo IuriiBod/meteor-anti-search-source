@@ -1,0 +1,8 @@
+<template name="stocktakeIntervalSelect">
+  <div class="stocktake-interval-select">
+    {{> selectComponent createSelectParams 'firstStocktakeDate'}}
+    {{> selectComponent createSelectParams 'secondStocktakeDate'}}
+
+    <button type="button" class="btn btn-primary submit-date-interval-button">Submit</button>
+  </div>
+</template>

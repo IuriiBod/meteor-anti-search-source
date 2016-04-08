@@ -1,24 +1,20 @@
 StocktakesReporter = class {
-  constructor(firstStocktakeGroup, secondStocktakeGroup, areaId) {
+  constructor(stocktakeGroups, areaId) {
+    this._firstStocktakeItems = stocktakeGroups.firstStocktake.stockItems;
+    this._secondStocktakeItems = stocktakeGroups.secondStocktake.stockItems;
+    this._fromDate = stocktakeGroups.firstStocktake.date;
+    this._toDate = stocktakeGroups.secondStocktake.date;
     this._areaId = areaId;
-    this._firstStocktakeGroup = firstStocktakeGroup;
-    this._secondStocktakeGroup = secondStocktakeGroup;
 
-    this._setDates();
-  }
-
-  _setDates() {
-    let formatDate = HospoHero.dateUtils.formatTimestamp;
-    this._fromDate = formatDate(this._secondStocktakeGroup[0].date);
-    this._toDate = formatDate(this._firstStocktakeGroup[0].date);
+    this._menuItemsCache = new MenuItemsCostCache(this._areaId);
   }
 
   getReport() {
-    let ordersReporter = new OrdersReporter(this._fromDate, this._toDate, this._areaId);
+    let ordersReporter = new OrdersReporter(this._getStocktakeIdsFromStockItem(), this._areaId);
     let expectedReporter = new ExpectedCostOfGoodsReporter(this._fromDate, this._toDate, this._areaId);
     let actualReporter = new ActualCostOfGoodsReporter(
-      this._firstStocktakeGroup,
-      this._secondStocktakeGroup,
+      this._firstStocktakeItems,
+      this._secondStocktakeItems,
       expectedReporter.getTotalRevenue(),
       ordersReporter.getTotalOrdersReceived()
     );
@@ -28,12 +24,12 @@ StocktakesReporter = class {
 
     return {
       firstStocktake: {
-        stocktakeMainId: this._firstStocktakeGroup[0].version,
+        stocktakeId: this._firstStocktakeItems[0].stocktakeId,
         date: this._fromDate,
         total: actualReporter.firstStocktakeTotal
       },
       secondStocktake: {
-        stocktakeMainId: this._secondStocktakeGroup[0].version,
+        stocktakeId: this._secondStocktakeItems[0].stocktakeId,
         date: this._toDate,
         total: actualReporter.secondStocktakeTotal
       },
@@ -44,6 +40,13 @@ StocktakesReporter = class {
       },
       difference: this._getExpectedActualDifference(actualReport, expectedReport)
     };
+  }
+
+  _getStocktakeIdsFromStockItem() {
+    let firstStocktakeId = this._firstStocktakeItems[0].stocktakeId;
+    let secondStocktakeId = this._secondStocktakeItems[0].stocktakeId;
+
+    return [firstStocktakeId, secondStocktakeId];
   }
 
   _getExpectedActualDifference(actualCostOfGoodsReport, expectedCostOfGoodsReport) {

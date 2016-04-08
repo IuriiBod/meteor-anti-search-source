@@ -81,7 +81,7 @@ Template.stocktakeCounting.events({
     };
 
     const onAddPrepItem = (jobItemId) => {
-      const stockPrepItem =  {
+      const stockPrepItem = {
         stocktakeId: tmpl.data._id,
         specialAreaId: currentSpecialAreaId,
         jobItemId: jobItemId,
@@ -93,10 +93,10 @@ Template.stocktakeCounting.events({
     const isStockItemsSelected = tmpl.isStockItemsSelected.get();
 
     const selectedPrepItemsIds = StockPrepItems
-        .find({specialAreaId: currentSpecialAreaId})
-        .map(item => item.jobItemId);
+      .find({specialAreaId: currentSpecialAreaId})
+      .map(item => item.jobItemId);
 
-    getFlyoutOptions = () => {
+    const getFlyoutOptions = () => {
       const selectItemsProperty = isStockItemsSelected ? 'onAddStockItem' : 'onItemsAdded';
 
       return {

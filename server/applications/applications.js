@@ -116,16 +116,6 @@ Meteor.methods({
 
     notificationSender.sendEmail(application.details.email);
     logger.info('Sended notification to email', {email: application.details.email});
-  },
-
-  deleteApplication(organizationId,applicationId){
-    if (!application || !canUpdateApplications(organizationId)) {
-      logger.error('Unexpected Err: Method [deleteApplication] User can\'t remove application.',
-        {organizationId: organizationId, userId: this.userId });
-      throw new Meteor.Error('You can\'t remove application');
-    }
-    Applications.remove({ _id: applicationId });
-    logger.info('Removed object from [Applications] collection', {_id: applicationId});
   }
 });
 

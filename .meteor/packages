@@ -30,6 +30,7 @@ crosswalk
 
 accounts-ui
 accounts-google
+accounts-facebook
 accounts-password
 service-configuration
 

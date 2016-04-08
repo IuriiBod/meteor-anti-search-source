@@ -14,10 +14,14 @@ ExpectedCostOfGoodsReporter = class {
     this._fromDate = fromDate;
     this._toDate = toDate;
     this._areaId = areaId;
-
-    this._dateQuery = TimeRangeQueryBuilder.forInterval(moment(fromDate, 'DD/MM/YY'), moment(toDate, 'DD/MM/YY'));
-
     this._menuItemsCostCache = new MenuItemsCostCache(areaId);
+  }
+
+  _dateQuery() {
+    let fromDate = this._fromDate > this._toDate ? this._toDate : this._fromDate;
+    let toDate = fromDate === this._fromDate ? this._toDate : this._fromDate;
+
+    return TimeRangeQueryBuilder.forInterval(fromDate, toDate);
   }
 
   getReport() {

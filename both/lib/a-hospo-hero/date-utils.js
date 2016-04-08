@@ -239,13 +239,5 @@ Namespace('HospoHero.dateUtils', {
 
   secondsToMinutes: function (secs) {
     return secs / 60;
-  },
-
-  truncateTimestamp: (timestamp = new Date().getTime()) => {
-    return parseInt((timestamp).toString().substr(0, 10));
-  },
-
-  formatTimestamp: (timestamp = new Date().getTime()) => {
-    return moment.unix(HospoHero.dateUtils.truncateTimestamp(timestamp)).format('DD/MM/YY');
   }
 });

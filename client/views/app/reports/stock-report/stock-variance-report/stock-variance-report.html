@@ -1,5 +1,6 @@
 <template name="stockVarianceReport">
   {{> pageHeading title="Stock Variance Report" category="Stock" name="stocktake"}}
+
   <div class="wrapper wrapper-content animated value-details-report">
     <div class="row">
       <div class="col-lg-12">
@@ -8,32 +9,20 @@
             <input type="text" class="form-control search-stock-items" placeholder="Search"/>
           </div>
           <div class="col-md-4 col-lg-3">
-            <select class="btn btn-white suppliers-list">
-              <option value="All Suppliers">All Suppliers</option>
-              {{#each suppliers}}
-                <option value="{{_id}}">{{name}}</option>
-              {{/each}}
-            </select>
+            {{> suppliersFilter onSupplierChanged=onSupplierChanged}}
           </div>
           <div class="col-md-5 col-lg-4">
-            <select class="btn btn-white first-stocktake">
-              {{#each firstStocktakesDateSelector}}
-                <option value="{{this}}">{{this}}</option>
-              {{/each}}
-            </select>
-            <select class="btn btn-white second-stocktake">
-              {{#each secondStocktakesDateSelector}}
-                <option value="{{this}}">{{this}}</option>
-              {{/each}}
-            </select>
-            <button type="button" class="btn btn-primary change-reports-dates">Submit</button>
+            {{> stocktakeIntervalSelect
+            firstStocktakeDate=firstStocktakeDate
+            secondStocktakeDate=secondStocktakeDate
+            onIntervalSubmit=onStocktakeIntervalSubmit}}
           </div>
         </div>
         <div class="ibox">
           {{#if emptyStocktake}}
             <hr>
             <h4 class="text-center">
-              {{emptyStocktake}}
+              There's no data to compare. Stocktake by {{emptyStocktake}} is empty
             </h4>
           {{else}}
             <div class="ibox-content no-padding">
@@ -49,13 +38,13 @@
                   <tbody>
                   {{#each stockItems}}
                     <tr>
-                      <td>{{description}}</td>
-                      <td>{{costInFirstStocktake}}</td>
-                      <td>{{ordersReceived}}</td>
-                      <td>{{costInSecondStocktake}}</td>
-                      <td>{{expectedCost}}</td>
-                      <td>{{actualCost}}</td>
-                      <td>{{variance}}</td>
+                      <td class="edit-stock-item">{{description}}</td>
+                      <td>$ {{costInFirstStocktake}}</td>
+                      <td>$ {{ordersReceived}}</td>
+                      <td>$ {{costInSecondStocktake}}</td>
+                      <td>$ {{expectedCost}}</td>
+                      <td>$ {{actualCost}}</td>
+                      <td>$ {{variance}}</td>
                     </tr>
                   {{/each}}
                   </tbody>

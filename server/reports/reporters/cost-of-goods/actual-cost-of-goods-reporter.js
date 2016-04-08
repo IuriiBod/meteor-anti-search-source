@@ -43,7 +43,7 @@ ActualCostOfGoodsReporter = class {
 
   _getTotalStocktakesGroupValue(stocktakesGroup) {
     let stocktakeTotalValue = _.reduce(stocktakesGroup, (memo, stocktake) => {
-      return memo + (stocktake.counting * stocktake.unitCost);
+      return memo + (stocktake.count * stocktake.ingredient.cost);
     }, 0);
     return HospoHero.misc.rounding(stocktakeTotalValue, 100);
   }
