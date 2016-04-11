@@ -6,7 +6,7 @@ App.info({
   // Version rules:
   // odd (1) - testing
   // even (2) - production
-  version: '0.0.5',
+  version: '0.0.6',
   author: 'Tom Hay',
   email: 'info@hospohero.com',
   website: 'https://app.hospohero.com'
