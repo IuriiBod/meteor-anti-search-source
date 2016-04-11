@@ -49,7 +49,7 @@ This approach allows to avoid old code appearing in merged version.
 
 ## Style Guide
 
-### General recomendation: 
+### General recomendations: 
 
 * Use variable's names that makes sense.
 * Extract complex logic into separate class.
@@ -66,6 +66,7 @@ This approach allows to avoid old code appearing in merged version.
 
 ### Client side (Blaze):
 
+* Correct order for Blaze's template configuration methods: `onCreated, onRendered, helpers, events, onDestroyed`.
 * Don't use `Session` if you can pass data using template context.
 * Don't use global JQuery selectors (use `this.$('.my-element')` instead of `$('.my-element')`).
 * Don't use dynamic data attributes (e.g. `data-id="{{_id}}"`)
