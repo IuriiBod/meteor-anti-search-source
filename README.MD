@@ -86,7 +86,7 @@ This approach allows to avoid old code appearing in merged version.
 ### Server side:
 
 * Each argument should be checked using `check(target, Type)` inside all publishers and methods.
-* Use `HospoHero.security.PermissionChecker` for permission checks.
+* Usually each method or publisher should perform permission checks using `HospoHero.security.PermissionChecker`.
 * Use `NotificationSender` to send email/buildin/push notifications.
 
 
