@@ -113,7 +113,7 @@ var createSelectWorkerEditableConfig = function (templateInstance) {
   var assignWorkerToShift = function (workerId) {
     var shift = Shifts.findOne({_id: templateInstance.data._id});
     shift.assignedTo = workerId;
-    Meteor.call('editShift', shift, HospoHero.handleMethodResult());
+    Meteor.call('editShift', shift, Template.shiftBasic.errorHandlerForShiftEdit(shift));
   };
 
   var onEditSuccess = function (response, workerId) {

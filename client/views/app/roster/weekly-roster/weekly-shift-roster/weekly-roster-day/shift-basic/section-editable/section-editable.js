@@ -4,7 +4,7 @@ Template.shiftBasicSectionEditable.onRendered(function () {
 
 Template.shiftBasicSectionEditable.helpers({
   sectionName: function (sectionId) {
-    if (sectionId !== "Open") {
+    if (sectionId !== 'Open') {
       var section = Sections.findOne({_id: sectionId});
       return section && section.name;
     } else {
@@ -13,35 +13,6 @@ Template.shiftBasicSectionEditable.helpers({
   }
 });
 
-var onEditError = function (shift) {
-  return function (err) {
-    if (err) {
-      if (err.reason === 'User not trained for this section') {
-        return sweetAlert({
-          title: 'Error!',
-          text: `${err.reason}\nDo you want to mark user as trained for this section?`,
-          type: "error",
-          showCancelButton: true,
-          cancelButtonText: 'No',
-          confirmButtonText: 'Yes',
-          closeOnConfirm: true
-        }, () => {
-          Meteor.call(
-            'toggleUserTrainingSection',
-            shift.assignedTo,
-            shift.section,
-            true,
-            HospoHero.handleMethodResult()
-          );
-
-          Meteor.call('editShift', shift, HospoHero.handleMethodResult());
-        });
-      } else {
-        HospoHero.error(err);
-      }
-    }
-  };
-};
 
 var sectionSourceAssignMixin = function (editableConfig) {
   var sourceFn = function () {
@@ -64,7 +35,7 @@ var createSectionToAssignEditableConfig = function (shiftId) {
     newSection = newSection === "Open" ? null : newSection;
 
     shift.section = newSection;
-    Meteor.call('editShift', shift, onEditError(shift));
+    Meteor.call('editShift', shift, Template.shiftBasic.errorHandlerForShiftEdit(shift));
   };
 
   var editableConfig = {
