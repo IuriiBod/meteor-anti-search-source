@@ -52,6 +52,7 @@ This approach allows to avoid old code appearing in merged version.
 ### General recomendations: 
 
 * Use variable's names that makes sense.
+* Use `let` and `const` instead of `var`.
 * Extract complex logic into separate class.
 * Don't use global variables.
 * Avoid unovious solutions. If you are using unobvious solution, then you should write a comment that expalins it.
