@@ -111,11 +111,7 @@ Meteor.methods({
 
     let area = HospoHero.getCurrentArea(this.userId);
     let location = Locations.findOne({_id: area.locationId});
-
-    let user = {
-      name: HospoHero.username(this.userId),
-      type: HospoHero.roles.getUserRoleName(this.userId, HospoHero.getCurrentAreaId(this.userId))
-    };
+    let organization = Organizations.findOne({_id: area.organizationId});
 
 
     let supplier = Suppliers.findOne({_id: order.supplierId}, {fields: {name: 1}});
@@ -123,12 +119,13 @@ Meteor.methods({
     let orderData = {
       supplierName: supplier.name,
       deliveryDate: getExpectedDeliveryLocalMoment(order).format('ddd DD/MM/YYYY'),
-      orderNote: order && order.orderNote || '',
+      orderNote: order && order.orderNote || '-',
       location: location,
+      organization: organization,
       areaName: area.name,
+      userName: HospoHero.username(this.userId),
       orderData: orderItemsData,
-      total: total.toFixed(2),
-      user: user
+      total: total.toFixed(2)
     };
 
     return Handlebars.templates['supplier-email-text'](orderData);
@@ -182,13 +179,13 @@ Meteor.methods({
     const expireImpact = Math.floor(ingredientExpireDays / minimalDeliveryIntervalDays);
     const expireImpactCoefficient = expireImpact > 1 ? 1 / expireImpact : 1;
     const optimalDeliveryIntervalDays = Math.ceil(
-        averageDaysInMonth / (deliveryCountPerMonth * expireImpactCoefficient));
+      averageDaysInMonth / (deliveryCountPerMonth * expireImpactCoefficient));
 
     //calculation of sales interval
     const order = Orders.findOne(orderItem.orderId);
     const salesInterval = TimeRangeQueryBuilder.forInterval(
-        moment(order.createdAt).startOf('day'),
-        moment(order.createdAt).startOf('day').add(optimalDeliveryIntervalDays, 'days')
+      moment(order.createdAt).startOf('day'),
+      moment(order.createdAt).startOf('day').add(optimalDeliveryIntervalDays, 'days')
     );
 
 

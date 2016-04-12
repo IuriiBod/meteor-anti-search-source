@@ -7,7 +7,7 @@
   <p>Note: {{orderNote}}</p>
 {{/if}}
 
-Order Details: {{location.name}}, {{areaName}}<br>
+Order Details: {{areaName}}, {{location.name}}, {{organization.name}}. <br>
 {{location.address}}, {{location.city}}
 
 {{# if orderData}}
@@ -46,6 +46,6 @@ Order Details: {{location.name}}, {{areaName}}<br>
 {{/if}}
 <br><br>
 
-<p>{{user.name}},</p>
+<p>{{userName}},</p>
 
-<p>{{user.type}} of {{areaName}}</p>
+<p>{{areaName}}, {{location.name}}, {{organization.name}}.</p>
