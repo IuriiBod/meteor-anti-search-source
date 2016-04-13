@@ -9,6 +9,7 @@ Template.submitEditJobItem.onCreated(function () {
   this.addedIngredientsToThisJob = new ReactiveVar((jobItem && jobItem.ingredients) || []);
   this.repeatAt = new ReactiveVar((jobItem && jobItem.repeatAt) || moment().hours(8).minutes(0).toDate());
   this.checklistItems = new ReactiveVar((jobItem && jobItem.checklist) || []);
+  this.producedMeasure = new ReactiveVar(false);
 
   this.isSelectedJobType = function (typeName) {
     var selectedJobType = JobTypes.findOne({_id: this.selectedJobTypeId.get()});
@@ -41,6 +42,11 @@ Template.submitEditJobItem.helpers({
   isJobTypePreselected: function () {
     return !!Template.instance().preselectedJobType;
   },
+
+  producedMeasure: function () {
+    return Template.instance().producedMeasure.get() || this.jobItem.producedMeasure || '-';
+  },
+
   repeatAtComboEditableParams: function () {
     var tmpl = Template.instance();
     return {
@@ -140,137 +146,137 @@ Template.submitEditJobItem.helpers({
 
 
 Template.submitEditJobItem.events({
-  'change .type-select': function (e, tmpl) {
-    var selectedVal = $(e.target).val();
+  'change .type-select': function (event, tmpl) {
+    var selectedVal = $(event.target).val();
     tmpl.selectedJobTypeId.set(selectedVal);
   },
-  'change .frequency-select': function (e, tmpl) {
-    var selectedVal = $(e.target).val();
+  'change .frequency-select': function (event, tmpl) {
+    var selectedVal = $(event.target).val();
     tmpl.selectedFrequency.set(selectedVal);
   },
 
-  'submit .job-item-submit-edit-form': function (e, tmpl) {
-    var saveJobItem = function () {
-      var assignCommonFields = function (jobItem) {
-        var MINUTE = 60;
+  'submit .job-item-submit-edit-form': function (event, tmpl) {
+    event.preventDefault();
 
-        jobItem.name = tmpl.$('.name-input').val();
-        jobItem.type = tmpl.selectedJobTypeId.get();
-        jobItem.activeTime = parseInt(tmpl.$('.active-time').val()) * MINUTE;
-        jobItem.wagePerHour = parseInt(tmpl.$('.avg-wage-per-hour').val());
+    var assignCommonFields = function (jobItem) {
+      var MINUTE = 60;
 
-        if (tmpl.data.jobItem._id) {
-          assignOriginJobItemFields(jobItem);
-        }
-      };
-
-      var assignFieldsForRecurring = function (jobItem) {
-        var getSelectedDays = function () {
-          var $selectedDays = tmpl.$('.repeat-on-checkbox:checked');
-          return _.map($selectedDays, function (item) {
-            return $(item).val();
-          });
-        };
-        var getEndsOnDate = function () {
-          var $checkedButton = tmpl.$('.ends-on-radio:checked');
-          var checkedButtonFor = $checkedButton.val();
-
-          if (checkedButtonFor === 'never') {
-            return {
-              on: 'endsNever'
-            };
-          } else if (checkedButtonFor === 'occurrences') {
-            var afterOccurrences = parseInt(tmpl.$('.occurrences-number-input').val());
-            return {
-              after: afterOccurrences
-            };
-
-          } else if (checkedButtonFor === 'on-date') {
-            var lastDate = tmpl.$('.ends-on-date-picker').datepicker('getDate');
-            return {
-              lastDate: lastDate
-            };
-          }
-        };
-
-
-        jobItem.description = tmpl.$('.summernote').summernote('code');
-        jobItem.section = tmpl.$('.sections-select').val();
-        jobItem.checklist = tmpl.checklistItems.get();
-        jobItem.frequency = tmpl.selectedFrequency.get();
-
-        // if repeat every week
-        if (tmpl.selectedFrequency.get() === 'weekly' || 'everyXWeeks') {
-          jobItem.repeatOn = getSelectedDays();
-
-          // if repeat every X weeks
-          if (tmpl.selectedFrequency.get() === 'everyXWeeks') {
-            jobItem.repeatEvery = parseInt(tmpl.$('.repeat-every-weeks-input').val()) || 0;
-          }
-        }
-        jobItem.repeatAt = tmpl.repeatAt.get();
-        jobItem.startsOn = tmpl.$('.starts-on-date-picker').datepicker('getDate');
-        jobItem.endsOn = getEndsOnDate();
-      };
-
-      var assignFieldsForPrep = function (jobItem) {
-        jobItem.recipe = tmpl.$('.summernote').summernote('code');
-        jobItem.ingredients = tmpl.addedIngredientsToThisJob.get();
-        jobItem.portions = parseInt(tmpl.$('.portions').val());
-        jobItem.shelfLife = parseInt(tmpl.$('.shelf-life').val());
-      };
-
-      var assignOriginJobItemFields = function (jobItem) {
-        var originJobItem = tmpl.data.jobItem;
-        jobItem._id = originJobItem._id;
-        jobItem.createdOn = originJobItem.createdOn;
-        jobItem.createdBy = originJobItem.createdBy;
-        jobItem.relations = originJobItem.relations;
-        jobItem.status = originJobItem.status;
-      };
-
-      var jobItem = {};
-
-      // job item fields
-      // common fields
-      assignCommonFields(jobItem);
-
-      // for recurring
-      if (tmpl.isSelectedJobType('Recurring')) {
-        assignFieldsForRecurring(jobItem);
-      }
-
-      // for prep
-      if (tmpl.isSelectedJobType('Prep')) {
-        assignFieldsForPrep(jobItem);
-      }
-
-      var closeFlyoutOrGoToDetails = function (jobItemId) {
-        var isFlyout = tmpl.data.inFlyout;
-        if (isFlyout) {
-          FlyoutManager.getInstanceByElement(e.target).close();
-        }
-        else {
-          Router.go('jobItemDetailed', {_id: jobItemId});
-        }
-      };
+      jobItem.name = tmpl.$('.name-input').val();
+      jobItem.type = tmpl.selectedJobTypeId.get();
+      jobItem.activeTime = parseInt(tmpl.$('.active-time').val()) * MINUTE;
+      jobItem.wagePerHour = parseInt(tmpl.$('.avg-wage-per-hour').val());
 
       if (tmpl.data.jobItem._id) {
-        Meteor.call('editJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
-          closeFlyoutOrGoToDetails(jobItemId);
-        }));
-      } else {
-        Meteor.call('createJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
-          closeFlyoutOrGoToDetails(jobItemId);
-        }));
+        assignOriginJobItemFields(jobItem);
       }
     };
 
-    e.preventDefault();
-    saveJobItem();
+    var assignFieldsForRecurring = function (jobItem) {
+      var getSelectedDays = function () {
+        var $selectedDays = tmpl.$('.repeat-on-checkbox:checked');
+        return _.map($selectedDays, function (item) {
+          return $(item).val();
+        });
+      };
+      var getEndsOnDate = function () {
+        var $checkedButton = tmpl.$('.ends-on-radio:checked');
+        var checkedButtonFor = $checkedButton.val();
+
+        if (checkedButtonFor === 'never') {
+          return {
+            on: 'endsNever'
+          };
+        } else if (checkedButtonFor === 'occurrences') {
+          var afterOccurrences = parseInt(tmpl.$('.occurrences-number-input').val());
+          return {
+            after: afterOccurrences
+          };
+
+        } else if (checkedButtonFor === 'on-date') {
+          var lastDate = tmpl.$('.ends-on-date-picker').datepicker('getDate');
+          return {
+            lastDate: lastDate
+          };
+        }
+      };
+
+
+      jobItem.description = tmpl.$('.summernote').summernote('code');
+      jobItem.section = tmpl.$('.sections-select').val();
+      jobItem.checklist = tmpl.checklistItems.get();
+      jobItem.frequency = tmpl.selectedFrequency.get();
+
+      // if repeat every week
+      if (tmpl.selectedFrequency.get() === 'weekly' || 'everyXWeeks') {
+        jobItem.repeatOn = getSelectedDays();
+
+        // if repeat every X weeks
+        if (tmpl.selectedFrequency.get() === 'everyXWeeks') {
+          jobItem.repeatEvery = parseInt(tmpl.$('.repeat-every-weeks-input').val()) || 0;
+        }
+      }
+      jobItem.repeatAt = tmpl.repeatAt.get();
+      jobItem.startsOn = tmpl.$('.starts-on-date-picker').datepicker('getDate');
+      jobItem.endsOn = getEndsOnDate();
+    };
+
+    var assignFieldsForPrep = function (jobItem) {
+      jobItem.recipe = tmpl.$('.summernote').summernote('code');
+      jobItem.ingredients = tmpl.addedIngredientsToThisJob.get();
+
+      jobItem.producedMeasure = tmpl.producedMeasure.get();
+      jobItem.producedAmount = parseFloat(tmpl.$('.produced-amount').val());
+
+      jobItem.shelfLife = parseInt(tmpl.$('.shelf-life').val());
+    };
+
+    var assignOriginJobItemFields = function (jobItem) {
+      var originJobItem = tmpl.data.jobItem;
+      jobItem._id = originJobItem._id;
+      jobItem.createdOn = originJobItem.createdOn;
+      jobItem.createdBy = originJobItem.createdBy;
+      jobItem.relations = originJobItem.relations;
+      jobItem.status = originJobItem.status;
+    };
+
+    var jobItem = {};
+
+    // job item fields
+    // common fields
+    assignCommonFields(jobItem);
+
+    // for recurring
+    if (tmpl.isSelectedJobType('Recurring')) {
+      assignFieldsForRecurring(jobItem);
+    }
+
+    // for prep
+    if (tmpl.isSelectedJobType('Prep')) {
+      assignFieldsForPrep(jobItem);
+    }
+
+    var closeFlyoutOrGoToDetails = function (jobItemId) {
+      var isFlyout = tmpl.data.inFlyout;
+      if (isFlyout) {
+        FlyoutManager.getInstanceByElement(event.target).close();
+      }
+      else {
+        Router.go('jobItemDetailed', {_id: jobItemId});
+      }
+    };
+
+    if (tmpl.data.jobItem._id) {
+      Meteor.call('editJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
+        closeFlyoutOrGoToDetails(jobItemId);
+      }));
+    } else {
+      Meteor.call('createJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
+        closeFlyoutOrGoToDetails(jobItemId);
+      }));
+    }
   },
 
-  'keypress .add-item-to-checklist': function (e, tmpl) {
+  'keypress .add-item-to-checklist': function (event, tmpl) {
     var addCheckListItem = function (item) {
       var items = tmpl.checklistItems.get();
       items.push(item);
@@ -286,7 +292,7 @@ Template.submitEditJobItem.events({
       $input.val('');
     }
   },
-  'click .remove-check-list-item': function (e, tmpl) {
+  'click .remove-check-list-item': function (event, tmpl) {
     var removeCheckListItem = function (itemToRemove) {
       var items = tmpl.checklistItems.get();
       items = _.reject(items, function (item) {
@@ -296,5 +302,10 @@ Template.submitEditJobItem.events({
     };
     var itemToRemove = this.toString();
     removeCheckListItem(itemToRemove);
+  },
+
+  'keyup .produced-measure': function (event, tmpl) {
+    let newMeasure = tmpl.$('.produced-measure').val();
+    tmpl.producedMeasure.set(newMeasure);
   }
 });

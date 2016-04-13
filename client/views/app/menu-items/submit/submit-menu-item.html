@@ -52,14 +52,14 @@
 
               <div class="form-group">
                 <label class="col-sm-2 control-label">Prep items used</label>
-                {{> menuItemJobsList jobItems=state$menuItemJobs onChange=getOnJobItemsListChanged}}
+                {{> menuItemJobsList jobItems=menuItemJobs onChange=getOnJobItemsListChanged}}
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label">Ingredients used</label>
 
                 <div class="col-sm-10">
-                  {{> listOfIngredients ingredients=state$menuItemIngredients onChange=getOnIngredientsListChanged}}
+                  {{> listOfIngredients ingredients=menuItemIngredients onChange=getOnIngredientsListChanged}}
                 </div>
               </div>
 
@@ -79,13 +79,13 @@
                 <div class="col-sm-10">
                   <button type="button" class="btn btn-sm btn-info upload-image-button">Upload Image</button>
 
-                  {{#if state$image}}
+                  {{#if image}}
                     <div class="file col-sm-2 uploadedImageDiv">
                       <a href="#">
                         <span class="corner"></span>
 
                         <div class="image">
-                          <img id="uploadedImageUrl" src="{{state$image}}" class="img-responsive menu-item-image">
+                          <img id="uploadedImageUrl" src="{{image}}" class="img-responsive menu-item-image">
                         </div>
                       </a>
                     </div>

@@ -1,19 +1,25 @@
 <template name="jobItemDetailed">
-  <tr data-id="{{job._id}}">
+  <tr>
     <td>
       <button class="btn btn-primary btn-sm viewDetail" title="View Item">
         <i class="fa fa-eye"></i> View
       </button>
     </td>
-    <td>{{{job.name}}}</td>
-    <td>{{secondsToMinutes job.activeTime}} mins</td>
+    <td>{{{jobItem.name}}}</td>
+    <td>{{secondsToMinutes jobItem.activeTime}} mins</td>
     {{#if isRecurring}}
-      <td>{{sectionById job.section}}</td>
+      <td>{{sectionById jobItem.section}}</td>
       <td>{{jobFrequency}}</td>
     {{else}}
-      <td>{{#if job.shelfLife}}{{job.shelfLife}} days {{else}} -NA- {{/if}}</td>
-      <td>{{#if job.portions}} {{job.portions}} {{else}} -NA- {{/if}}</td>
-      <td>{{#if cost}}${{cost}}{{else}}-NA-{{/if}}</td>
+      <td>{{#if jobItem.shelfLife}} {{jobItem.shelfLife}} days {{else}} -NA- {{/if}}</td>
+      <td>
+        {{#if jobItem.producedAmount}}
+          {{jobItem.producedAmount}} {{jobItem.producedMeasure}}
+        {{else}}
+          -NA-
+        {{/if}}
+      </td>
+      <td>{{#if prepCostPerMeasure}} ${{prepCostPerMeasure}} {{else}} -NA- {{/if}}</td>
     {{/if}}
   </tr>
 </template>

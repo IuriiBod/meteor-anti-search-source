@@ -1,10 +1,13 @@
 <template name="menuItemJobsListItem">
   <tr>
     <td>{{jobItem.name}}</td>
-    <td>${{jobItemStatistics.prepCostPerPortion}}</td>
-    <td><input type="number" name="job-quantity" class="job-quantity" value="{{quantity}}" min="1"/></td>
+    <td>${{jobItemStatistics.prepCostPerMeasure}}/{{jobItem.producedMeasure}}</td>
     <td>
-      <a href="">
+      <input type="number" name="job-quantity" class="job-quantity" placeholder="{{jobItem.producedMeasure}}"
+             value="{{quantity}}" min="1"/>
+    </td>
+    <td>
+      <a href="#">
         <i class="fa fa-trash remove-job-item"></i>
       </a>
     </td>

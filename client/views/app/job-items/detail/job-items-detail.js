@@ -82,27 +82,8 @@ Template.jobItemDetail.helpers({
     return Template.instance().getLabourCost();
   },
 
-  prepCostPerPortion: function () {
-    var self = this;
-    var getPrepCostPerPortion = function () {
-      var getTotalIngredientCost = function () {
-        var totalIngCost = 0;
-        self.jobItem.ingredients.forEach(function (ingredientInJobItem) {
-          var analyzedIngredient = HospoHero.analyze
-            .ingredient(Ingredients.findOne({_id: ingredientInJobItem._id}));
-          if (analyzedIngredient) {
-            totalIngCost += parseFloat(analyzedIngredient.costPerPortionUsed) *
-              parseFloat(ingredientInJobItem.quantity);
-          }
-        });
-        return totalIngCost;
-      };
-
-      var totalCost = (Template.instance().getLabourCost() + getTotalIngredientCost());
-      return HospoHero.misc.rounding(totalCost / self.jobItem.portions);
-    };
-
-    return getPrepCostPerPortion();
+  prepCostPerMeasure: function () {
+    return HospoHero.analyze.jobItem(this.jobItem).prepCostPerMeasure;
   },
 
   relatedMenus: function () {

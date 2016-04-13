@@ -1,27 +1,16 @@
 //context: item (Ingredient/JobItem), type ("ing"/"prep"), quantity (number), setCurrentEditedIngredient (function)
 Template.menuItemIngredientRow.helpers({
   itemName: function () {
-    return this.type === 'prep' ? this.item.name : this.item.description;
+    return this.itemDocument[this.type === 'prep' ? 'name' : 'description'];
   },
 
   itemMeasure: function () {
-    return this.type === 'ings' && this.item.portionUsed || 'portion';
+    return this.itemDocument[this.type === 'ings' ? 'portionUsed' : 'producedMeasure'];
   },
 
-  price: function () {
-    let price;
-    if (this.item.totalCost) {
-      price = this.item.totalCost;
-    } else {
-      let quantity = this.type === 'ings' ? this.quantity : this.item.quantity;
-      let itemCost = this.analyzeItemCost(this.item, this.type, quantity);
-      price = HospoHero.misc.rounding(itemCost);
-    }
-    return price;
-  },
-
-  quantity() {
-    return this.type === 'ings' ? this.quantity : this.item.quantity;
+  itemPrice: function () {
+    let itemCost = Template.menuItemsListByType.analyzeItemCost(this.itemDocument, this.type, this.quantity);
+    return HospoHero.misc.rounding(itemCost);
   },
 
   getOnQuantityEditableSuccess: function () {
@@ -37,7 +26,7 @@ Template.menuItemIngredientRow.helpers({
         var type = tmpl.data.type === 'prep' ? 'jobItems' : 'ingredients';
 
         Meteor.call('editItemOfMenu', menuItemId, {
-          _id: tmpl.data.item._id,
+          _id: tmpl.data.itemDocument._id,
           quantity: newValue
         }, 'updateQuantity', type, HospoHero.handleMethodResult());
       }
@@ -55,7 +44,7 @@ Template.menuItemIngredientRow.events({
     if (confirmRemove) {
       var queryProperty = tmpl.data.type === 'prep' ? 'jobItems' : 'ingredients';
       var query = {};
-      query[queryProperty] = {_id: tmpl.data.item._id};
+      query[queryProperty] = {_id: tmpl.data.itemDocument._id};
 
       Meteor.call("editItemOfMenu", menuItemId, query, 'remove', HospoHero.handleMethodResult());
     }
@@ -70,7 +59,7 @@ Template.menuItemIngredientRow.events({
         data: {
           inFlyout: true,
           editMode: true,
-          jobItem: tmpl.data.item
+          jobItem: tmpl.data.itemDocument
         }
       });
     } else {
@@ -80,7 +69,7 @@ Template.menuItemIngredientRow.events({
         data: {
           inFlyout: true,
           editMode: true,
-          ingredient: tmpl.data.item
+          ingredient: tmpl.data.itemDocument
         }
       });
     }

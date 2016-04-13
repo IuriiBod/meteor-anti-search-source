@@ -12,7 +12,7 @@
             <tr>
               <th>Name</th>
               <th>Active Time (mins)</th>
-              <th>Portions</th>
+              <th>Produces</th>
               <th>Shelf Life</th>
             </tr>
             </thead>
@@ -23,7 +23,7 @@
                   <a href="{{pathFor 'jobItemDetailed' _id=_id}}" target="_blank">{{name}}</a>
                 </td>
                 <td>{{secondsToMinutes activeTime}}</td>
-                <td>{{portions}}</td>
+                <td>{{producedAmount}} {{producedMeasure}}</td>
                 <td>{{shelfLife}}</td>
               </tr>
               </tbody>

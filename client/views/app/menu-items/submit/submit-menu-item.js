@@ -1,13 +1,22 @@
 var DEFAULT_INSTRUCTIONS = 'Add instructions here';
 
 Template.menuItemSubmitMainView.onCreated(function () {
-  this.set('image', false);
-  this.set('menuItemIngredients', []);
-  this.set('menuItemJobs', []);
+  this.image = new ReactiveVar(false);
+  this.menuItemIngredients = new ReactiveVar([]);
+  this.menuItemJobs = new ReactiveVar([]);
 });
 
 
 Template.menuItemSubmitMainView.helpers({
+  image: function () {
+    return Template.instance().image.get();
+  },
+  menuItemIngredients: function () {
+    return Template.instance().menuItemIngredients.get();
+  },
+  menuItemJobs: function () {
+    return Template.instance().menuItemJobs.get();
+  },
   statuses: function () {
     return HospoHero.misc.getMenuItemsStatuses(false);
   },
@@ -24,14 +33,14 @@ Template.menuItemSubmitMainView.helpers({
   getOnIngredientsListChanged: function () {
     var tmpl = Template.instance();
     return function (newIngredientsList) {
-      tmpl.set('menuItemIngredients', newIngredientsList);
+      tmpl.menuItemIngredients.set(newIngredientsList);
     };
   },
 
   getOnJobItemsListChanged: function () {
     var tmpl = Template.instance();
     return function (newJobItemsList) {
-      tmpl.set('menuItemJobs', newJobItemsList);
+      tmpl.menuItemJobs.set(newJobItemsList);
     };
   }
 });
@@ -58,10 +67,10 @@ Template.menuItemSubmitMainView.events({
     var info = HospoHero.misc.getValuesFromEvent(event, menuItemFieldsConfig, true);
 
     _.extend(info, {
-      image: tmpl.get('image') || '',
+      image: tmpl.image.get() || '',
       instructions: instructions,
-      ingredients: tmpl.get('menuItemIngredients'),
-      jobItems: tmpl.get('menuItemJobs'),
+      ingredients: tmpl.menuItemIngredients.get(),
+      jobItems: tmpl.menuItemJobs.get(),
       relations: HospoHero.getRelationsObject()
     });
 
@@ -83,7 +92,7 @@ Template.menuItemSubmitMainView.events({
     filepicker.pickAndStore({mimetype: "image/*", services: ['COMPUTER']}, {},
       function (InkBlobs) {
         if (_.isArray(InkBlobs) && InkBlobs[0]) {
-          tmpl.set('image', InkBlobs[0].url);
+          tmpl.image.set(InkBlobs[0].url);
         }
       });
   }

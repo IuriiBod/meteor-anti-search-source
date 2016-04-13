@@ -2,34 +2,29 @@
   <tr>
     {{#if hasPermissionInAreaTo 'edit menus'}}
       <td>
-        {{#unless item.totalCost}}
-          <a class="btn btn-primary btn-xs view-button" href="#">
-            <i class="fa fa-edit fa-fw"></i>
-            Edit
-          </a>
-        {{/unless}}
+        <a class="btn btn-primary btn-xs view-button" href="#">
+          <i class="fa fa-edit fa-fw"></i>
+          Edit
+        </a>
       </td>
     {{/if}}
     <td>{{itemName}}</td>
-    <td class="{{#if item.totalCost}}text-right{{/if}}">
-      {{#if item.totalCost}}
-        Total
-      {{else}}
+
+    <td>
         {{#if hasPermissionInAreaTo 'edit menus'}}
           {{> ingredientRowQuantityEditable quantity=quantity onQuantityEditableSuccess=getOnQuantityEditableSuccess}}
         {{else}}
           {{quantity}}
         {{/if}}
-      {{/if}}
     </td>
-    {{#if equal type 'ings'}}
-      <td>{{itemMeasure}}</td>{{/if}}
-    <td>$ {{price}}</td>
+
+    <td>{{itemMeasure}}</td>
+
+    <td>$ {{itemPrice}}</td>
+
     {{#if hasPermissionInAreaTo 'edit menus'}}
       <td>
-        {{#unless item.totalCost}}
-          <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>
-        {{/unless}}
+        <i class="fa fa-trash text-danger remove-button" style="cursor: pointer;"></i>
       </td>
     {{/if}}
   </tr>

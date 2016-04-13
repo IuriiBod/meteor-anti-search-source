@@ -36,17 +36,13 @@ var JobItemDocument = Match.Where(function (jobItem) {
     });
   } else if (jobItemType === 'Prep') {
     check(jobItem, {
+      _id: HospoHero.checkers.OptionalMongoId,
+
       name: String,
       type: HospoHero.checkers.MongoId,
       activeTime: Number,
       wagePerHour: Number,
 
-      _id: HospoHero.checkers.OptionalMongoId,
-      relations: Match.Optional(HospoHero.checkers.Relations),
-      createdBy: HospoHero.checkers.OptionalNullableMongoId,
-      createdOn: Match.Optional(Date),
-      editedBy: HospoHero.checkers.OptionalNullableMongoId,
-      editedOn: Match.Optional(Date),
       status: Match.Optional(HospoHero.checkers.JobItemStatus),
 
       recipe: String,
@@ -54,8 +50,15 @@ var JobItemDocument = Match.Where(function (jobItem) {
         _id: HospoHero.checkers.MongoId,
         quantity: Number
       }],
-      portions: Number,
-      shelfLife: Number
+      producedAmount: Number,
+      producedMeasure: String,
+      shelfLife: Number,
+
+      createdBy: HospoHero.checkers.OptionalNullableMongoId,
+      createdOn: Match.Optional(Date),
+      editedBy: HospoHero.checkers.OptionalNullableMongoId,
+      editedOn: Match.Optional(Date),
+      relations: Match.Optional(HospoHero.checkers.Relations)
     });
   }
 

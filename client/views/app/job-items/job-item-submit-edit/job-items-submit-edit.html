@@ -256,14 +256,28 @@
                 </div>
               </div>
 
-              <!-- Portions -->
+              <!-- Produced measure-->
               <div class="form-group">
                 <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
-                  Portions</label>
+                  Produced measure</label>
 
                 <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
-                  <input type="number" class="form-control portions" placeholder="No. of Portions"
-                         value="{{jobItem.portions}}" required>
+                  <input type="text" class="form-control produced-measure" placeholder="Produced measure"
+                         value="{{jobItem.producedMeasure}}" required>
+                </div>
+              </div>
+
+              <!-- Produced amount-->
+              <div class="form-group">
+                <label class="{{#if inFlyout}}col-sm-12{{else}}col-sm-2{{/if}} control-label">
+                  Produced amount</label>
+
+                <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
+                  <div class="input-group m-b">
+                    <input type="text" class="form-control produced-amount" placeholder="Produced amount"
+                           value="{{jobItem.producedAmount}}" required>
+                    <span class="input-group-addon">{{producedMeasure}}</span>
+                  </div>
                 </div>
               </div>
 
@@ -274,7 +288,7 @@
 
                 <div class="{{#if inFlyout}}col-sm-12{{else}}col-sm-10{{/if}}">
                   <div class="input-group m-b">
-                    <input type="number" min="0"  class="form-control shelf-life" placeholder="Shelf Life"
+                    <input type="number" min="0" class="form-control shelf-life" placeholder="Shelf Life"
                            value="{{jobItem.shelfLife}}" required>
                     <span class="input-group-addon">Days</span>
                   </div>

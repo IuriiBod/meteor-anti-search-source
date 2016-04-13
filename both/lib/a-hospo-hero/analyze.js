@@ -4,11 +4,10 @@ Namespace('HospoHero.analyze', {
       return false;
     }
 
-    var hasRequiredValues = ingredient.costPerPortion > 0 && ingredient.unitSize > 0;
+    let hasRequiredValues = ingredient.costPerPortion > 0 && ingredient.unitSize > 0;
 
-    var calculateCost = function () {
-      return HospoHero.misc.rounding(ingredient.costPerPortion / ingredient.unitSize, 10000);
-    };
+    let calculateCost = () =>
+      HospoHero.misc.rounding(ingredient.costPerPortion / ingredient.unitSize, 10000);
 
     return {
       costPerPortionUsed: hasRequiredValues && calculateCost() || 0
@@ -20,24 +19,24 @@ Namespace('HospoHero.analyze', {
       return false;
     }
 
-    var round = HospoHero.misc.rounding;
+    let round = HospoHero.misc.rounding;
 
-    var totalIngredientCost = _.reduce(jobItem.ingredients || [], function (totalCost, ingredientItem) {
-      var ingredientProps = HospoHero.analyze.ingredient(Ingredients.findOne(ingredientItem._id));
+    let totalIngredientCost = _.reduce(jobItem.ingredients || [], (totalCost, ingredientItem) => {
+      let ingredientProps = HospoHero.analyze.ingredient(Ingredients.findOne(ingredientItem._id));
       totalCost += ingredientProps.costPerPortionUsed * ingredientItem.quantity;
       return totalCost;
     }, 0);
 
-    var labourCost = jobItem.wagePerHour && ((jobItem.wagePerHour * jobItem.activeTime) / 3600) || 0;
+    let labourCost = jobItem.wagePerHour && ((jobItem.wagePerHour * jobItem.activeTime) / 3600) || 0;
 
-    var totalCost = totalIngredientCost + labourCost;
+    let totalCost = totalIngredientCost + labourCost;
 
-    var prepCostPerPortion = totalCost > 0 && jobItem.portions > 0 && round(totalCost / jobItem.portions) || 0;
+    let prepCostPerMeasure = totalCost > 0 && jobItem.producedAmount > 0 && round(totalCost / jobItem.producedAmount) || 0;
 
     return {
       labourCost: round(labourCost),
       totalIngredientCost: totalIngredientCost,
-      prepCostPerPortion: prepCostPerPortion
+      prepCostPerMeasure: prepCostPerMeasure
     };
   },
 
@@ -46,26 +45,25 @@ Namespace('HospoHero.analyze', {
       return {};
     }
 
-    var self = this;
-    var round = HospoHero.misc.rounding;
+    let round = HospoHero.misc.rounding;
 
-    var processMenuEntry = function (propertyName, predicate) {
-      var entriesField = menuItem[propertyName];
+    let processMenuEntry = (propertyName, predicate) => {
+      let entriesField = menuItem[propertyName];
       return _.isArray(entriesField) && round(_.reduce(entriesField, predicate, 0)) || 0;
     };
 
-    var result = {
-      ingCost: processMenuEntry('ingredients', function (total, ingredientEntry) {
-        var ingredient = Ingredients.findOne({_id: ingredientEntry._id});
-        var ingredientProps = self.ingredient(ingredient);
+    let result = {
+      ingCost: processMenuEntry('ingredients', (total, ingredientEntry) => {
+        let ingredient = Ingredients.findOne({_id: ingredientEntry._id});
+        let ingredientProps = this.ingredient(ingredient);
         total += ingredientProps.costPerPortionUsed * ingredientEntry.quantity;
         return total;
       }),
 
-      prepCost: processMenuEntry('jobItems', function (total, jobEntry) {
-        var job = JobItems.findOne({_id: jobEntry._id});
-        var jobItemProps = self.jobItem(job);
-        total += jobItemProps.prepCostPerPortion * jobEntry.quantity;
+      prepCost: processMenuEntry('jobItems', (total, jobEntry) => {
+        let job = JobItems.findOne({_id: jobEntry._id});
+        let jobItemProps = this.jobItem(job);
+        total += jobItemProps.prepCostPerMeasure * jobEntry.quantity;
         return total;
       }),
 
