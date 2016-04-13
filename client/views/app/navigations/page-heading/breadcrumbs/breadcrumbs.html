@@ -1,0 +1,40 @@
+<template name="breadcrumbs">
+  <!-- BREADCRUMBS -->
+  <div class="col-sm-6 col-xs-12">
+    {{#if isTitleTemplate}}
+      {{> Template.dynamic template=title.templateName data=title.context}}
+    {{else}}
+      <h2>
+        {{title}}
+      </h2>
+      {{#if subtitle}}
+        <h4>
+          {{subtitle}}
+        </h4>
+      {{/if}}
+    {{/if}}
+
+    <ol class="breadcrumb">
+      <li>
+        <a href="{{pathFor route='dashboard'}}">Home</a>
+      </li>
+      {{#if heading.category}}
+        <li>
+          <a href="#" class="breadcrumbCategory"
+             data-category="{{heading.category}}">{{heading.category}}</a>
+        </li>
+      {{/if}}
+      {{#if heading.subCategory}}
+        <li>
+          <a href="#" class="breadcrumbSubCategory">{{heading.subCategory}}</a>
+        </li>
+      {{/if}}
+      {{#unless isTitleTemplate}}
+        <li class="active">
+          <strong>{{title}}</strong>
+        </li>
+      {{/unless}}
+    </ol>
+  </div>
+  <!-- /BREADCRUMBS -->
+</template>

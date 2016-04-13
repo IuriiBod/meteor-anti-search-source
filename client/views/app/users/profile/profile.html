@@ -1,16 +1,12 @@
 <template name="profileMainView">
   <!-- Page heading -->
-  {{#if me}}
-    {{> pageHeading title='My Profile' name='profile'}}
-  {{else}}
-    {{> pageHeading title=name category="Settings" name='profile'}}
-  {{/if}}
+  {{> pageHeading title=pageHeadingTitle name='profile' category=pageHeadingCategory}}
   <div class="wrapper wrapper-content">
     <div class="row animated">
-      {{> profile user}}
-      {{> userUnavailabilitiesList user}}
-      {{> rosteredShifts user}}
-      {{> training userId=user._id}}
+      {{> profile}}
+      {{> userUnavailabilitiesList}}
+      {{> rosteredShifts}}
+      {{> training userId=_id}}
     </div>
   </div>
 </template>

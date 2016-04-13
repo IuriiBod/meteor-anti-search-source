@@ -1,0 +1,11 @@
+<template name="profileHeaderTitle">
+  <div class="user-profiles-select">
+    <select class="user-profile-select">
+      {{#each users}}
+        <option value="{{_id}}">
+          {{username this}} {{isMeIndicator}}
+        </option>
+      {{/each}}
+    </select>
+  </div>
+</template>

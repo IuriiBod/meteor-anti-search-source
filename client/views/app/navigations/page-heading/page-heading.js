@@ -18,8 +18,7 @@ var headingComponentsMap = {
   projects: 'projectsListHeader',
   calendar: 'calendarHeader',
   applicationsList: 'applicationsListHeader',
-  projectDetails: 'projectDetailsHeader',
-  profile: 'profileHeader'
+  projectDetails: 'projectDetailsHeader'
 };
 
 Template.pageHeading.onCreated(function () {
@@ -34,19 +33,23 @@ Template.pageHeading.helpers({
       return Router.current().params._id;
     }
   },
+
   heading: function () {
     return {
       category: this.category,
       subCategory: this.subCategory
     };
   },
+
   title: function () {
-    var title = this.title;
-    if (Router.current().params.type === "archive" || Router.current().params.status === "archived") {
-      title = "Archived " + title;
+    let title = this.title;
+    let routeParams = Router.current().params;
+    if (!_.isObject(title) && (routeParams.type === 'archive' || routeParams.status === 'archived')) {
+      title = `Archived ${title}`;
     }
     return title;
   },
+
   headingToLoad: function () {
     var name = this.name;
     return headingComponentsMap.hasOwnProperty(name) ? headingComponentsMap[name] : false;

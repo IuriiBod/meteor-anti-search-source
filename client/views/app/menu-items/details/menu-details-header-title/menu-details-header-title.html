@@ -1,0 +1,12 @@
+<template name="menuDetailsHeaderTitle">
+  <h2 class="menu-details-header-title">
+    {{#if hasPermissionInAreaTo 'edit menus'}}
+      <a href="#" class="menu-item-name-editable"
+         style="color: #676a6c; border-color: #676a6c;">
+        {{name}}
+      </a>
+    {{else}}
+      {{name}}
+    {{/if}}
+  </h2>
+</template>

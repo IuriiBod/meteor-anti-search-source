@@ -43,6 +43,9 @@ Router.route('profile', {
       Meteor.subscribe('shifts', 'opened', null, currentAreaId),
       Meteor.subscribe('sections', currentAreaId)
     ];
+  },
+  data: function () {
+    return Meteor.users.findOne({_id: this.params._id});
   }
 });
 
