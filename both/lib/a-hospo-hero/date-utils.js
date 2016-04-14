@@ -6,7 +6,7 @@ Namespace('HospoHero.dateUtils', {
   getLocationTimeZone: function (location) {
     if (!location) {
       let currentArea = HospoHero.getCurrentArea(Meteor.userId());
-      location = currentArea.locationId;
+      location = currentArea && currentArea.locationId;
     }
 
     if (location && _.isString(location)) {
@@ -76,7 +76,7 @@ Namespace('HospoHero.dateUtils', {
     }
 
     date = HospoHero.dateUtils.formatDate(date || newStartTime, 'YYYY-MM-DDTHH:mm:ss');
-    let dateIncludingTimezone = moment.tz(date, location.timezone); // !! Don't use getDateMomentForLocation here
+    let dateIncludingTimezone =location ? moment.tz(date, location.timezone) : date; // !! Don't use getDateMomentForLocation here
 
     let newInterval = {
       start: HospoHero.dateUtils.applyTimeToDate(dateIncludingTimezone, newStartTime),

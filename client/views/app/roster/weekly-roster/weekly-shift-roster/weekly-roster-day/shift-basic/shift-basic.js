@@ -18,16 +18,17 @@ Template.shiftBasic.helpers({
     let tmpl = Template.instance();
     return {
       firstTime: tmpl.data.shift.startTime,
-      secondTime: tmpl.data.shift.endTime,
+      secondTime:tmpl.data.shift.endTime,
       minuteStepping: 15,
       ignoreDateRangeCheck: true,
+      considerLocationTime:true,
       onSubmit(startTime, endTime) {
         tmpl.editShiftTime(startTime, endTime);
       }
     };
   },
   isMidnight: function () {
-    return !moment(this.startTime).isSame(this.endTime, 'day');
+    return !HospoHero.dateUtils.getDateMomentForLocation(this.startTime).isSame(this.endTime, 'day');
   }
 });
 

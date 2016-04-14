@@ -102,8 +102,14 @@ var ShiftDocument = Match.Where(function (shift) {
       });
 
       if (existInShift) {
-        logger.error("User already exist in a shift", {date: shift.startTime});
-        throw new Meteor.Error(404, "Worker has already been assigned to a shift");
+        let area = Areas.findOne({_id: existInShift.relations.areaId});
+        let location = Locations.findOne({_id:area.locationId});
+        let date = HospoHero.dateUtils.getDateMomentForLocation(existInShift.startTime,location).format('YYYY-MM-DD');
+        let startTime =  HospoHero.dateUtils.getDateMomentForLocation(existInShift.startTime,location).format('h:mm a');
+        let endTime = HospoHero.dateUtils.getDateMomentForLocation(existInShift.endTime,location).format('h:mm a');
+        logger.error("User already exist in a shift", {areaId:area._id, date: existInShift.startTime});
+        throw new Meteor.Error(404,
+          `Worker has already been assigned to a shift in ${area.name} area at ${date} from ${startTime} to ${endTime}.`);
       }
     });
 

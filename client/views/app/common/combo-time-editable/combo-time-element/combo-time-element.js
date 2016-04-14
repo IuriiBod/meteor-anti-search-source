@@ -15,7 +15,16 @@ Template.comboTimeElement.onCreated(function () {
     return roundingSign ? numberToRound + persistence - remainder : numberToRound - remainder;
   };
 
-  var defaultMoment = _.isDate(this.data.value) ? moment(this.data.value) : moment();
+  var defaultMoment = moment();
+
+  if(_.isDate(this.data.value)){
+    if(this.data.considerLocationTime){
+      defaultMoment = HospoHero.dateUtils.getDateMomentForLocation(this.data.value);
+    } else {
+      defaultMoment = moment(this.data.value);
+    }
+  }
+
   var hours = moment(defaultMoment).format('h');
   var ampm = moment(defaultMoment).format('a');
   var minutes = moment(defaultMoment).minutes();

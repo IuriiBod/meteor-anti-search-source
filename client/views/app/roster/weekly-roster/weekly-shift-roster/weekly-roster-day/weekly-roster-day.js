@@ -49,16 +49,11 @@ Template.weeklyRosterDay.helpers({
     let location = currentArea && Locations.findOne({_id: currentArea.locationId});
 
     return location && Shifts.find({
-        startTime: TimeRangeQueryBuilder.forDay(this.currentDate, location._id),
+        startTime: TimeRangeQueryBuilder.forDay(getDateString(this.currentDate), location._id,'YYYY-MM-DD'),
         type: this.type,
         "relations.areaId": currentArea._id
       }, {
-        sort: {order: 1},
-        transform(shift) {
-          shift.startTime = HospoHero.dateUtils.formatTimeToLocationTimezone(shift.startTime, shift.relations.locationId);
-          shift.endTime = HospoHero.dateUtils.formatTimeToLocationTimezone(shift.endTime, shift.relations.locationId);
-          return shift;
-        }
+        sort: {order: 1}
       });
   },
 
@@ -86,8 +81,9 @@ Template.weeklyRosterDay.helpers({
 
 Template.weeklyRosterDay.events({
   'click .add-shift-button': function (event, tmpl) {
+
     //copy currentDate and convert to moment
-    var zeroMoment = moment(new Date(tmpl.data.currentDate));
+    var zeroMoment =HospoHero.dateUtils.getDateMomentForLocation(getDateString(tmpl.data.currentDate));
 
     var startHour = new Date(zeroMoment.hours(8));
     var endHour = new Date(zeroMoment.hours(17));
@@ -106,12 +102,14 @@ Template.weeklyRosterDay.events({
   },
 
   'click .paste-shift-button': function (event, tmpl) {
-    let zeroMoment = moment(new Date(tmpl.data.currentDate));
+
+    //copy currentDate and convert to moment
+    let zeroMoment = HospoHero.dateUtils.getDateMomentForLocation(getDateString(tmpl.data.currentDate));
 
     let pastedShift = tmpl.data.shiftBuffer;
 
     let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
-      zeroMoment, pastedShift.startTime, pastedShift.endTime, pastedShift.relations.locationId
+      zeroMoment, pastedShift.startTime, pastedShift.endTime
     );
 
     pastedShift.startTime = newShiftDuration.start;
@@ -120,6 +118,11 @@ Template.weeklyRosterDay.events({
     Meteor.call("createShift", pastedShift, HospoHero.handleMethodResult());
   }
 });
+
+function getDateString (date){
+  // need string format to get correct time range in all time zone
+  return  moment(date).format('YYYY-MM-DD');
+}
 
 
 class SortableHelper {
@@ -153,10 +156,10 @@ class SortableHelper {
   getSortedShift() {
     if (this._draggedShift) {
       var shift = this._draggedShift;
-      var newShiftDate = this._draggedToDate;
+      var newShiftDate = _.isDate(this._draggedToDate) ? this._draggedToDate : new Date(this._draggedToDate);
 
       let newShiftDuration = HospoHero.dateUtils.updateTimeInterval(
-        newShiftDate, shift.startTime, shift.endTime, shift.relations.locationId
+        newShiftDate, shift.startTime, shift.endTime
       );
 
       shift.startTime = newShiftDuration.start;

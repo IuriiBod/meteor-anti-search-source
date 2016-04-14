@@ -51,22 +51,17 @@ Template.comboTimeEditable.helpers({
   isEditMode: function () {
     return Template.instance().isEditMode.get();
   },
-  defaultTime: function () {
-    return Template.instance().data.params;
-  },
   isTimeRangeMode: function () {
     return Template.instance().isTimeRangeMode();
   },
   minuteStepping: function () {
-    return Template.instance().data.params.minuteStepping || 1;
+    return this.params.minuteStepping || 1;
   },
   firstTime: function () {
-    var firstTime = Template.instance().data.params.firstTime;
-    return _.isDate(firstTime) ? HospoHero.dateUtils.timeFormat(firstTime) : firstTime;
+    return getCurrentTime(this.params.firstTime,this.params.considerLocationTime);
   },
   secondTime: function () {
-    var secondTime = Template.instance().data.params.secondTime;
-    return _.isDate(secondTime) ? HospoHero.dateUtils.timeFormat(secondTime) : secondTime;
+    return getCurrentTime(this.params.secondTime,this.params.considerLocationTime);
   },
   icon: function () {
     return this.params.icon || 'fa-clock-o';
@@ -86,3 +81,14 @@ Template.comboTimeEditable.events({
     tmpl.exitFromEditMode();
   }
 });
+
+function  getCurrentTime(dete,considerLocationTime){
+  if(_.isDate(dete)){
+    if(considerLocationTime ){
+      return HospoHero.dateUtils.getDateMomentForLocation(dete).format('h:mm a')
+    }else {
+      return  HospoHero.dateUtils.timeFormat(dete);
+    }
+  }
+  return dete;
+}

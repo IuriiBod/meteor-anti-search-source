@@ -31,7 +31,7 @@ Router.route('/roster/weekly/:date', {
   data: function () {
     return {
       type: null,
-      localMoment: HospoHero.dateUtils.getDateMomentForLocation(this.params.date)
+      localMoment: moment(this.params.date)
     };
   }
 });
@@ -51,10 +51,10 @@ Router.route('/roster/template/weekly', {
     }
   },
   data: function () {
+    // 0 means new Date(0) (date with 0 timestamp)
     let localMoment = HospoHero.dateUtils.getDateMomentForLocation(0);
     return {
       type: 'template',
-      // 0 means new Date(0) (date with 0 timestamp)
       localMoment: localMoment.week(2).startOf('isoweek')
     };
   }

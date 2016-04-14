@@ -3,13 +3,13 @@
     {{#if isEditMode}}
       <div class="time-range-selector">
         <div class="first-time">
-          {{> comboTimeElement value=defaultTime.firstTime minuteStepping=minuteStepping}}
+          {{> comboTimeElement value=params.firstTime minuteStepping=minuteStepping considerLocationTime=params.considerLocationTime}}
         </div>
         {{#if isTimeRangeMode}}
           <p class="separator">-</p>
 
           <div class="second-time">
-            {{> comboTimeElement value=defaultTime.secondTime minuteStepping=minuteStepping}}
+            {{> comboTimeElement value=params.secondTime minuteStepping=minuteStepping considerLocationTime=params.considerLocationTime}}
           </div>
         {{/if}}
         <div class="control-group submit-cancel-buttons-wrapper">
