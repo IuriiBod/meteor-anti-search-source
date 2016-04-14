@@ -1,5 +1,6 @@
-//context: type ("template"/null), currentDate (Date), shiftBuffer (ReactiveVar), onCopyShift (function)
+let SORTABLE_SCREEN_WIDTH = 1200; //lg screen size
 
+//context: type ("template"/null), currentDate (Date), shiftBuffer (ReactiveVar), onCopyShift (function)
 Template.weeklyRosterDay.onCreated(function () {
   this.subscribe('managerNote', this.data.currentDate, HospoHero.getCurrentAreaId());
   this.hasTemplateType = function () {
@@ -16,7 +17,7 @@ Template.weeklyRosterDay.onCreated(function () {
 Template.weeklyRosterDay.onRendered(function () {
   var checker = new HospoHero.security.PermissionChecker();
 
-  if (checker.hasPermissionInArea(null, `edit roster`)) {
+  if (checker.hasPermissionInArea(null, `edit roster`) && document.body.scrollWidth >= SORTABLE_SCREEN_WIDTH) {
     this.$(".sortable-list").sortable({
       connectWith: ".sortable-list",
       revert: true,
