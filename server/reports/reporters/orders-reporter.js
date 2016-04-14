@@ -1,4 +1,4 @@
-OrdersReporter = class {
+class OrdersReporter {
   /**
    * @param {array} stocktakeIds Mongo IDs
    * @param {string} areaId Mongo ID
@@ -56,4 +56,9 @@ OrdersReporter = class {
 
     return _.pluck(Orders.find(findQuery, projectionQuery).fetch(), '_id');
   }
-};
+}
+
+
+Namespace('HospoHero.reporting', {
+  OrdersReporter: OrdersReporter
+});

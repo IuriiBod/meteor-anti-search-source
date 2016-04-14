@@ -142,7 +142,6 @@
     "Roles": true,
     "Push": false,            //raix:push
     "AntiSearchSource": true,
-    "MenuItemsCostCache": true,
     "through": true,
     "gcloud": true,
     "SunCalc": true,
@@ -221,16 +220,10 @@
     "DataVector": true,
     "Revel": true,
     "CalendarEventsManager": true,
-    "StocktakesReporter": true,
-    "StocktakeTotalReport": true,
-    "ActualCostOfGoodsReporter": true,
-    "ExpectedCostOfGoodsReporter": true,
-    "OrdersReporter": true,
     "StaffCostCalculator": true,
     "DocumentCheckerHelper": true,
     "ReactiveTimer": true,
     "MultiTimer": true,
-    "StockVarianceReport":true,
     "EventSortableHelper": true,
 
     //temporal globals

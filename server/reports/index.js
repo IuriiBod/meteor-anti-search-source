@@ -24,7 +24,7 @@ let getStockReport = (firstStocktakeDate, secondStocktakeDate, areaId) => {
           {firstStocktake: secondStocktake, secondStocktake: firstStocktake} :
           {firstStocktake: firstStocktake, secondStocktake: secondStocktake};
 
-      let stockReport = new StocktakesReporter(stocktakeGroups, areaId);
+      let stockReport = new HospoHero.reporting.StocktakesReporter(stocktakeGroups, areaId);
       return stockReport.getReport();
     }
   }
@@ -32,7 +32,7 @@ let getStockReport = (firstStocktakeDate, secondStocktakeDate, areaId) => {
 
 let stocktakeTotalReport = (params, areaId) => {
   let stocktake = getStocktake(TimeRangeQueryBuilder.forDay(params.stocktakeDate), areaId);
-  let stocktakeTotalReport = new StocktakeTotalReport(
+  let stocktakeTotalReport = new HospoHero.reporting.StocktakeTotalReport(
       stocktake.stockItems, 
       params.supplierId, 
       params.searchText, 
@@ -48,7 +48,7 @@ let stockVarianceReport = (currentAreaId, params) => {
   let result;
 
   if (firstStocktakeGroup.stockItems.length && secondStocktakeGroup.stockItems.length) {
-    let stockVarianceReport = new StockVarianceReport(
+    let stockVarianceReport = new HospoHero.reporting.StockVarianceReport(
       currentAreaId,
       firstStocktakeGroup,
       secondStocktakeGroup,

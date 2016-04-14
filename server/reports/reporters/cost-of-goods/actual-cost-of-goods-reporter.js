@@ -1,36 +1,31 @@
-ActualCostOfGoodsReporter = class {
+class ActualCostOfGoodsReporter {
   constructor(firstStocktakeGroup, secondStocktakeGroup, totalRevenue, ordersReceived) {
     this._firstStocktakeGroup = firstStocktakeGroup;
     this._secondStocktakeGroup = secondStocktakeGroup;
     this._totalRevenue = totalRevenue;
     this._ordersReceived = ordersReceived;
 
-    this._setTotalValues();
-  }
-
-  _setTotalValues() {
     this._firstStocktakeTotalValue = this._getTotalStocktakesGroupValue(this._firstStocktakeGroup);
     this._secondStocktakeTotalValue = this._getTotalStocktakesGroupValue(this._secondStocktakeGroup);
   }
 
+  getStocktakesTotals() {
+    return {
+      first: this._firstStocktakeTotalValue,
+      second: this._secondStocktakeTotalValue
+    };
+  }
+
   getReport() {
-    return StocktakesReporter.roundReportValues({
-      amount: this._getTotalActualCost(),
-      ratio: this._getTotalActualRatio()
-    });
-  }
-
-  get firstStocktakeTotal() {
-    return this._firstStocktakeTotalValue;
-  }
-
-  get secondStocktakeTotal() {
-    return this._secondStocktakeTotalValue;
+    return {
+      amount: HospoHero.misc.rounding(this._getTotalActualCost(), 10),
+      ratio: HospoHero.misc.rounding(this._getTotalActualRatio(), 100)
+    };
   }
 
   _getTotalActualCost() {
     return this._getTotalAmountOrdersReceived() +
-      this.firstStocktakeTotal - this.secondStocktakeTotal;
+      this._firstStocktakeTotalValue - this._secondStocktakeTotalValue;
   }
 
   _getTotalAmountOrdersReceived() {
@@ -47,4 +42,8 @@ ActualCostOfGoodsReporter = class {
     }, 0);
     return HospoHero.misc.rounding(stocktakeTotalValue, 100);
   }
-};
+}
+
+Namespace('HospoHero.reporting', {
+  ActualCostOfGoodsReporter: ActualCostOfGoodsReporter
+});

@@ -1,4 +1,4 @@
-StockVarianceReport = class {
+class StockVarianceReport {
   constructor(areaId, firstStocktakeGroup, secondStocktakeGroup, supplierId, searchText) {
     this._areaId = areaId;
     this._firstStocktakeGroup = firstStocktakeGroup;
@@ -125,7 +125,9 @@ StockVarianceReport = class {
   }
 
   _getStocktakeDetailedReport(stocktakeGroup, areaId) {
-    let currentStocktakeReport = new StocktakeTotalReport(stocktakeGroup, this._supplierId, this._searchText, areaId);
+    let currentStocktakeReport = new HospoHero.reporting.StocktakeTotalReport(
+      stocktakeGroup, this._supplierId, this._searchText, areaId);
+
     return currentStocktakeReport.getIngredientsOfCurrentStocktake();
   }
 
@@ -139,7 +141,7 @@ StockVarianceReport = class {
       this._secondStocktakeGroup.stockItems[0].stocktakeId
     ];
 
-    let stocktakesOrders = new OrdersReporter(stocktakesIds, this._areaId);
+    let stocktakesOrders = new HospoHero.reporting.OrdersReporter(stocktakesIds, this._areaId);
     return stocktakesOrders.getDetailedOrdersReceived();
   }
 
@@ -147,4 +149,8 @@ StockVarianceReport = class {
     let foundStock = _.findWhere(this._stocktakesOrdersReceivedReport(), {stockId});
     return foundStock && foundStock.price || 0;
   }
-};
+}
+
+Namespace('HospoHero.reporting', {
+  StockVarianceReport: StockVarianceReport
+});

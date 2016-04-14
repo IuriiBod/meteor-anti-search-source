@@ -1,4 +1,4 @@
-MenuItemsCostCache = class {
+class MenuItemsCostCache {
   /**
    * @param {string} areaId
    */
@@ -28,4 +28,8 @@ MenuItemsCostCache = class {
   lookup(menuItemId) {
     return _.findWhere(this._cache, {menuItemId});
   }
-};
+}
+
+Namespace('HospoHero.reporting', {
+  MenuItemsCostCache: MenuItemsCostCache
+});

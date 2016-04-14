@@ -1,10 +1,4 @@
-let _renameObjectProperty = function (object, oldKeyName, newKeyName) {
-  object[newKeyName] = object[oldKeyName];
-  delete object[oldKeyName];
-  return object;
-};
-
-ExpectedCostOfGoodsReporter = class {
+class ExpectedCostOfGoodsReporter {
   /**
    * @param {string} fromDate DD/MM/YY
    * @param {string} toDate DD/MM/YY
@@ -14,66 +8,56 @@ ExpectedCostOfGoodsReporter = class {
     this._fromDate = fromDate;
     this._toDate = toDate;
     this._areaId = areaId;
-    this._menuItemsCostCache = new MenuItemsCostCache(areaId);
-  }
 
-  _dateQuery() {
-    let fromDate = this._fromDate > this._toDate ? this._toDate : this._fromDate;
-    let toDate = fromDate === this._fromDate ? this._toDate : this._fromDate;
+    this._menuSalesAndCostComposition = this._getDailySalesMenuItemCostComposition();
 
-    return TimeRangeQueryBuilder.forInterval(fromDate, toDate);
-  }
-
-  getReport() {
-    return StocktakesReporter.roundReportValues({
-      amount: this._getTotalExpectedCost(),
-      ratio: this._getTotalExpectedRatio()
-    });
+    this._totalRevenue = this._calculateTotalRevenue();
+    this._totalExpectedCost = this._calculateTotalExpectedCost();
+    this._totalExpectedRatio = this._calculateTotalExpectedRatio();
   }
 
   getTotalRevenue() {
-    return this._sumMenuItemProperty((menuItem) => {
-      return this._getRevenueForMenuItem(menuItem);
+    return this._totalRevenue;
+  }
+
+  getReport() {
+    return {
+      amount: HospoHero.misc.rounding(this._totalExpectedCost, 10),
+      ratio: HospoHero.misc.rounding(this._totalExpectedRatio, 100)
+    };
+  }
+
+  _calculateTotalRevenue() {
+    return this._sumCompositionProperty((menuItem) => {
+      let tax = menuItem.salePrice * 0.1;
+      return menuItem.actualQuantity * (menuItem.salePrice - tax);
     });
   }
 
-  _getTotalExpectedCost() {
-    return this._sumMenuItemProperty((menuItem) => {
-      return this._getExpectedCostForMenuItem(menuItem);
+  _calculateTotalExpectedCost() {
+    return this._sumCompositionProperty((menuItem) => {
+      return menuItem.actualQuantity * (menuItem.totalIngredientCost + menuItem.totalPreparationCost);
     });
   }
 
-  _getTotalExpectedRatio() {
-    return 100 * this._getTotalExpectedCost() / (this.getTotalRevenue() || 1);
+  _calculateTotalExpectedRatio() {
+    return 100 * this._totalExpectedCost / (this._totalRevenue || 1);
   }
 
-  _getRevenueForMenuItem(menuItem) {
-    let tax = menuItem.salePrice * 0.1;
-    return menuItem.soldAmount * (menuItem.salePrice - tax);
-  }
-
-  _getExpectedCostForMenuItem(menuItem) {
-    return menuItem.soldAmount * (menuItem.totalIngredientCost + menuItem.totalPreparationCost);
-  }
-
-  _sumMenuItemProperty(mapFunction) {
+  _sumCompositionProperty(mapFunction) {
     let sumFunction = (memo, value) => memo + value;
-    return _.chain(this._getMenuItems())
+
+    return _.chain(this._menuSalesAndCostComposition)
       .map(mapFunction)
       .reduce(sumFunction, 0)
       .value();
   }
 
-  _getMenuItems() {
-    let soldAmountMenuItems = this._getSoldAmountMenuItems();
-    return _.map(soldAmountMenuItems, (item) => {
-      return _.extend(item, this._getMenuItemCost(item.menuItemId));
-    });
-  }
+  _getDailySalesMenuItemCostComposition() {
+    let menuItemsCostCache = new HospoHero.reporting.MenuItemsCostCache(this._areaId);
 
-  _getSoldAmountMenuItems() {
     let findQuery = {
-      date: this._dateQuery,
+      date: this._dateQuery(),
       actualQuantity: {$exists: true},
       'relations.areaId': this._areaId
     };
@@ -86,13 +70,20 @@ ExpectedCostOfGoodsReporter = class {
       }
     };
 
-    let menuItemsSales = DailySales.find(findQuery, queryOptions).fetch();
-    return _.map(menuItemsSales, (item) => {
-      return _renameObjectProperty(item, 'actualQuantity', 'soldAmount');
+    return DailySales.find(findQuery, queryOptions).map((dailySale) => {
+      let menuItemCosts = menuItemsCostCache.lookup(dailySale.menuItemId);
+      return _.extend(dailySale, menuItemCosts);
     });
   }
 
-  _getMenuItemCost(menuItemId) {
-    return this._menuItemsCostCache.lookup(menuItemId);
+  _dateQuery() {
+    let fromDate = this._fromDate > this._toDate ? this._toDate : this._fromDate;
+    let toDate = fromDate === this._fromDate ? this._toDate : this._fromDate;
+
+    return TimeRangeQueryBuilder.forInterval(fromDate, toDate);
   }
-};
+}
+
+Namespace('HospoHero.reporting', {
+  ExpectedCostOfGoodsReporter: ExpectedCostOfGoodsReporter
+});

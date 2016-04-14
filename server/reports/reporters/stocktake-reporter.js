@@ -1,4 +1,4 @@
-StocktakesReporter = class {
+class StocktakesReporter {
   constructor(stocktakeGroups, areaId) {
     this._firstStocktakeItems = stocktakeGroups.firstStocktake.stockItems;
     this._secondStocktakeItems = stocktakeGroups.secondStocktake.stockItems;
@@ -6,13 +6,14 @@ StocktakesReporter = class {
     this._toDate = stocktakeGroups.secondStocktake.date;
     this._areaId = areaId;
 
-    this._menuItemsCache = new MenuItemsCostCache(this._areaId);
+    this._menuItemsCache = new HospoHero.reporting.MenuItemsCostCache(this._areaId);
   }
 
   getReport() {
-    let ordersReporter = new OrdersReporter(this._getStocktakeIdsFromStockItem(), this._areaId);
-    let expectedReporter = new ExpectedCostOfGoodsReporter(this._fromDate, this._toDate, this._areaId);
-    let actualReporter = new ActualCostOfGoodsReporter(
+    let ordersReporter = new HospoHero.reporting.OrdersReporter(this._getStocktakeIdsFromStockItem(), this._areaId);
+    let expectedReporter = new HospoHero.reporting.ExpectedCostOfGoodsReporter(this._fromDate, this._toDate, this._areaId);
+
+    let actualReporter = new HospoHero.reporting.ActualCostOfGoodsReporter(
       this._firstStocktakeItems,
       this._secondStocktakeItems,
       expectedReporter.getTotalRevenue(),
@@ -21,17 +22,18 @@ StocktakesReporter = class {
 
     let expectedReport = expectedReporter.getReport();
     let actualReport = actualReporter.getReport();
+    let actualStocktakesTotals = actualReporter.getStocktakesTotals();
 
     return {
       firstStocktake: {
         stocktakeId: this._firstStocktakeItems[0].stocktakeId,
         date: this._fromDate,
-        total: actualReporter.firstStocktakeTotal
+        total: actualStocktakesTotals.first
       },
       secondStocktake: {
         stocktakeId: this._secondStocktakeItems[0].stocktakeId,
         date: this._toDate,
-        total: actualReporter.secondStocktakeTotal
+        total: actualStocktakesTotals.second
       },
       totalOrdersReceived: ordersReporter.getTotalOrdersReceived(),
       costOfGoods: {
@@ -50,16 +52,15 @@ StocktakesReporter = class {
   }
 
   _getExpectedActualDifference(actualCostOfGoodsReport, expectedCostOfGoodsReport) {
-    return StocktakesReporter.roundReportValues({
-      amount: actualCostOfGoodsReport.amount - expectedCostOfGoodsReport.amount,
-      ratio: actualCostOfGoodsReport.ratio - expectedCostOfGoodsReport.ratio
-    });
-  }
-
-  static roundReportValues(report) {
+    let round = HospoHero.misc.rounding;
     return {
-      amount: HospoHero.misc.rounding(report.amount, 10),
-      ratio: HospoHero.misc.rounding(report.ratio, 100)
+      amount: round(actualCostOfGoodsReport.amount - expectedCostOfGoodsReport.amount, 10),
+      ratio: round(actualCostOfGoodsReport.ratio - expectedCostOfGoodsReport.ratio, 100)
     };
   }
-};
+}
+
+
+Namespace('HospoHero.reporting', {
+  StocktakesReporter: StocktakesReporter
+});

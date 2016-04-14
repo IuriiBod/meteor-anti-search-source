@@ -1,4 +1,4 @@
-StocktakeTotalReport = class {
+class StocktakeTotalReport {
   constructor(stockItems, supplierId, searchText, areaId) {
     this._stockItems = stockItems;
     this._supplierId = supplierId;
@@ -7,7 +7,7 @@ StocktakeTotalReport = class {
 
     this._getAllIngredients();
   }
-  
+
   _getAllIngredients() {
     let query = {
       'relations.areaId': this._areaId
@@ -19,7 +19,7 @@ StocktakeTotalReport = class {
     if (this._searchText) {
       query.description = {$regex: `${this._searchText}`, $options: 'i'};
     }
-    
+
     let options = {
       fields: {
         _id: 1,
@@ -27,7 +27,7 @@ StocktakeTotalReport = class {
         portionOrdered: 1
       }
     };
-    
+
     this._ingredientsList = Ingredients.find(query, options).fetch();
   }
 
@@ -54,4 +54,9 @@ StocktakeTotalReport = class {
 
     return ingredientsList;
   }
-};
+}
+
+
+Namespace('HospoHero.reporting', {
+  StocktakeTotalReport: StocktakeTotalReport
+});
