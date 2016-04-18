@@ -52,7 +52,7 @@ Router.route('/roster/template/weekly', {
   },
   data: function () {
     // 0 means new Date(0) (date with 0 timestamp)
-    let localMoment = HospoHero.dateUtils.getDateMomentForLocation(0);
+    let localMoment = moment(0);
     return {
       type: 'template',
       localMoment: localMoment.week(2).startOf('isoweek')
