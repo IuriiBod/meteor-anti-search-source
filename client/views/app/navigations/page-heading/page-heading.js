@@ -1,26 +1,3 @@
-var headingComponentsMap = {
-  //props.name : 'headerComponent',
-  menuList: 'menuListHeader',
-  menuDetails: 'menuDetailsHeader',
-  jobslist: 'jobListHeader',
-  jobitemdetailed: 'jobDetailsHeader',
-  ingredientslist: 'stockHeader',
-  teamHoursReport: 'reportsHeader',
-  currentStocksReport: 'reportsHeader',
-  weeklyroster: 'weeklyHeader',
-  weeklyrostertemplate: 'weeklyTemplateHeader',
-  salesPrediction: 'salesPredictionHeader',
-  stocktakeList: 'stocktakeHeader',
-  suppliersListHeader: 'suppliersListHeader',
-  posMenuLinking: 'posMenuLinkingHeader',
-  taskList: 'taskListHeader',
-  meetings: 'meetingsHeader',
-  projects: 'projectsListHeader',
-  calendar: 'calendarHeader',
-  applicationsList: 'applicationsListHeader',
-  projectDetails: 'projectDetailsHeader'
-};
-
 Template.pageHeading.onCreated(function () {
   this.subscribe('todayTasks');
 });
@@ -48,11 +25,6 @@ Template.pageHeading.helpers({
       title = `Archived ${title}`;
     }
     return title;
-  },
-
-  headingToLoad: function () {
-    var name = this.name;
-    return headingComponentsMap.hasOwnProperty(name) ? headingComponentsMap[name] : false;
   },
 
   templateData: function () {

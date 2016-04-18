@@ -14,11 +14,12 @@
 
     <span class="pull-right">
       {{#if isStockItemEditable}}
-        <a href="" class="stock-item-count">{{stockItem.count}}</a> &nbsp; [{{ingredient.portionOrdered}}]
+        {{> ghostEditable value=stockItem.count onValueChanged=onStockItemCountChanged}}
+        &nbsp;[{{ingredient.portionOrdered}}]
       {{else}}
         <p data-toggle="tooltip" data-placement="top"
            title="You have already placed an order for this stockItem. Can't edit now. Create a new stocktake to place another order.">
-          {{stockItem.count}} &nbsp; [{{ingredient.portionOrdered}}]
+          {{stockItem.count}}&nbsp;[{{ingredient.portionOrdered}}]
         </p>
       {{/if}}
     </span>

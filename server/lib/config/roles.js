@@ -76,7 +76,7 @@ var defaultRoles = [
   },
 
   {
-    name: 'Worker',
+    name: 'Team Member',
     actions: [
       "view jobs",
       "view menus",

@@ -85,7 +85,7 @@ Template.comboTimeEditable.events({
 function  getCurrentTime(dete,considerLocationTime){
   if(_.isDate(dete)){
     if(considerLocationTime ){
-      return HospoHero.dateUtils.getDateMomentForLocation(dete).format('h:mm a')
+      return HospoHero.dateUtils.getDateMomentForLocation(dete).format('h:mm a');
     }else {
       return  HospoHero.dateUtils.timeFormat(dete);
     }

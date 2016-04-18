@@ -1,5 +1,5 @@
 <template name="taskList">
-  {{> pageHeading title='Tasks' name='taskList' onCreateTaskAction=onCreateTaskAction}}
+  {{> pageHeading title="Tasks" headingTemplate="taskListHeader" onCreateTaskAction=onCreateTaskAction}}
 
   <div class="task-list-content">
     {{#if isNewTaskCreating}}

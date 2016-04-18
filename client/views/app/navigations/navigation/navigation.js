@@ -19,7 +19,7 @@ var menuEntries = [
     }
   },
   {
-    title: 'Schedules',
+    title: 'Roster',
     icon: 'fa-calendar-o',
     permission: 'view roster',
     activeOnRoutes: ['managerCalendar', 'weeklyRoster', 'templateWeeklyRoster'],

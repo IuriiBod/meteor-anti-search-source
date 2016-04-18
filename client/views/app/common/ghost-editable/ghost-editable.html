@@ -3,7 +3,7 @@
     {{#if isEditable}}
       {{> ghostEditableInput}}
     {{else}}
-      <span class="ghost-editable-value">{{value}}</span>
+      <span class="ghost-editable-value {{valueClass}}">{{valueToDisplay}}</span>
     {{/if}}
   </div>
 </template>

@@ -1,10 +1,10 @@
 <template name="listOfStocksMasterMainView">
   <!-- Page heading -->
-  {{> pageHeading title='Stock List' category="Stocks" name="ingredientslist"}}
+  {{> pageHeading title='Stock List' category="Stocks" headingTemplate="stockHeader"}}
 
   <div class="wrapper wrapper-content animated">
     <div class="row">
-      {{> ingredientsList onIngredientIdChange=onIngredientIdChange}}
+      {{> ingredientsList onIngredientIdChange=onIngredientIdChange status=status}}
     </div>
   </div>
 </template>

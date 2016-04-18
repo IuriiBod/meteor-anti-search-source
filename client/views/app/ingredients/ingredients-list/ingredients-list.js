@@ -8,6 +8,13 @@ Template.ingredientsList.onCreated(function () {
     searchMode: 'local',
     limit: this.searchLimit
   });
+
+  this.autorun(() => {
+    let data = Template.currentData();
+    if (data.status) {
+      this.searchSource.setMongoQuery({status: data.status});
+    }
+  });
 });
 
 Template.ingredientsList.onRendered(function () {

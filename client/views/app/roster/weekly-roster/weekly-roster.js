@@ -16,12 +16,12 @@ Template.weeklyRoster.helpers({
     if (this.type === 'template') {
       extension = {
         title: 'Template Weekly Roster',
-        name: 'weeklyrostertemplate'
+        headingTemplate: 'weeklyTemplateHeader'
       };
     } else {
       extension = {
         title: 'Weekly Roster',
-        name: 'weeklyroster'
+        headingTemplate: 'weeklyHeader'
       };
     }
 

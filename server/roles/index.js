@@ -48,9 +48,9 @@ Meteor.methods({
       throw new Meteor.Error(403, 'User has no permissions to delete roles');
     }
 
-    var roleToDelete = Roles.getRoleById(roleToDeleteId);
-    var currentAreaId = roleToDelete.relations.areaId;
-    var worker = Roles.getRoleByName('Worker');
+    let roleToDelete = Roles.getRoleById(roleToDeleteId);
+    let currentAreaId = roleToDelete.relations.areaId;
+    let worker = Roles.getRoleByName(Roles.WORKER_ROLE_NAME);
 
     Meteor.roles.remove({_id: roleToDeleteId});
 

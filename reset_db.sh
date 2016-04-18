@@ -10,10 +10,11 @@ DB_PATH=$(pwd)/.meteor/local/db
 #credentials
 
 #testing
-MONGO_USER="admin"
-MONGO_PASSWORD="djf2i3rfjkweh"
-MONGO_DOMAIN="ds027744.mongolab.com:27744"
-MONGO_DB="heroku_5dd8c4xw"
+#mongodb://heroku_hs84b9x2:2roa8aitcd29rlm9fkukvs6b2s@ds013041-a0.mlab.com:13041,ds013041-a1.mlab.com:13041/heroku_hs84b9x2?replicaSet=rs-ds013041
+MONGO_USER="heroku_hs84b9x2"
+MONGO_PASSWORD="2roa8aitcd29rlm9fkukvs6b2s"
+MONGO_DOMAIN="ds013041-a0.mlab.com:13041"
+MONGO_DB="heroku_hs84b9x2"
 
 #production
 #MONGO_USER="cloudninja"

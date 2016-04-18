@@ -7,7 +7,7 @@
     {{/if}}
 
     <span class="pull-right">
-      <a href="#" class="prep-item-count">{{stockPrepItem.count}}</a>
+      {{> ghostEditable value=stockPrepItem.count onValueChanged=onStockPrepItemCountChanged}}
 
       [{{prepItem.producedAmount}}{{prepItem.producedMeasure}}]
     </span>

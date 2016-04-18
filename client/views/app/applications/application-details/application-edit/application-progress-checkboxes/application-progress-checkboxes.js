@@ -56,7 +56,7 @@ function createInterview(application) {
 }
 
 function inviteUser(application) {
-  let workerRole = Roles.getRoleByName('Worker');
+  let workerRole = Roles.getRoleByName(Roles.WORKER_ROLE_NAME);
   let areaId = HospoHero.getCurrentAreaId();
 
   let userToInvite = {

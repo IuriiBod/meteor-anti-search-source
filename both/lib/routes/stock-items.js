@@ -1,29 +1,27 @@
 // ---------------------INGREDIENTS
-Router.route('/stocklist', {
-  name: "ingredientsList",
+Router.route('ingredientsList', {
   path: '/stocklist',
-  template: "listOfStocksMasterMainView",
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
-      Meteor.subscribe("ingredientsRelatedJobs")
-    ];
+  template: 'listOfStocksMasterMainView',
+  onBeforeAction: function () {
+    this.redirect('ingredientsListType', {status: 'active'});
   }
 });
 
 
-Router.route('/stocklist/:type', {
-  name: "ingredientsListType",
-  path: '/stocklist/:type',
-  template: "listOfStocksMasterMainView",
+Router.route('ingredientsListType', {
+  path: '/stocklist/:status',
+  template: 'listOfStocksMasterMainView',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('ingredientsRelatedJobs'),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId, 'archived')
+      Meteor.subscribe('allIngredientsInArea', currentAreaId, this.params.status)
     ];
+  },
+  data: function () {
+    return {
+      status: this.params.status
+    };
   }
 });

@@ -1,13 +1,21 @@
 <template name="ghostEditableSelect">
   <div class="ghost-editable-component">
-    {{#if state$isInline}}
-      <a href="#" class="ghost-editable-select-trigger">
+    {{#if isInline}}
+      <a href="#" class="ghost-editable-select-trigger ghost-editable-value {{emptyValueClass}}">
         {{selectedText}}
       </a>
     {{else}}
       <select class="ghost-editable-select">
+        {{#if emptyValue}}
+          <option value="{{emptyValue}}">{{emptyValue}}</option>
+        {{/if}}
         {{#each values}}
           <option {{optionAttrs}}>{{text}}</option>
+
+          <!--sub options-->
+          {{#each options}}
+            <option {{optionAttrs}}>  {{text}}</option>
+          {{/each}}
         {{/each}}
       </select>
     {{/if}}

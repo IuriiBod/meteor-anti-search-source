@@ -10,44 +10,6 @@ Template.stockOrderItem.onCreated(function () {
   });
 });
 
-Template.stockOrderItem.onRendered(function () {
-  let tmpl = this;
-
-  let focusOnNextEditable = function (currentDomElement) {
-    let nextEditables = $(currentDomElement).closest('tr').next();
-    if (nextEditables.length > 0) {
-      nextEditables.find('a.ordering-count').click();
-    }
-  };
-
-  let onCountChanged = function (response, newValue) {
-    if (newValue) {
-      let count = parseFloat(newValue) || 0;
-      if (_.isFinite(count) && count >= 0) {
-        let currentDomElement = this;
-
-        let orderItem = tmpl.data;
-        orderItem.orderedCount = count;
-        Meteor.call('updateOrderItem', orderItem, HospoHero.handleMethodResult(() => {
-          focusOnNextEditable(currentDomElement);
-        }));
-      } else {
-        HospoHero.error('Incorrect value!');
-      }
-    }
-  };
-
-  this.$('.ordering-count').editable({
-    title: 'Edit count',
-    showbuttons: false,
-    mode: 'inline',
-    autotext: 'auto',
-    display: () => {
-    },
-    success: onCountChanged
-  });
-});
-
 
 Template.stockOrderItem.helpers({
   ingredient: function () {
@@ -70,6 +32,24 @@ Template.stockOrderItem.helpers({
   isEditable: function () {
     let order = Orders.findOne({_id: this.orderId});
     return order && !order.orderedThrough;
+  },
+
+  onOrderedCountChange: function () {
+    let tmpl = Template.instance();
+    return function (newValue) {
+      if (newValue) {
+        let count = parseFloat(newValue) || 0;
+        if (_.isFinite(count) && count >= 0) {
+          let orderItem = tmpl.data;
+          orderItem.orderedCount = count;
+          Meteor.call('updateOrderItem', orderItem, HospoHero.handleMethodResult(() => {
+            Template.ghostEditable.focusNextGhost(tmpl, 'tr');
+          }));
+        } else {
+          HospoHero.error('Incorrect value!');
+        }
+      }
+    };
   }
 });
 

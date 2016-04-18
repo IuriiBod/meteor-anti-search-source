@@ -93,3 +93,5 @@ Roles.hasAction = function (roleId, action) {
     actions: action
   });
 };
+
+Roles.WORKER_ROLE_NAME = 'Team Member';

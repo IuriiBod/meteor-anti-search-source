@@ -5,7 +5,7 @@
     <td>{{countNeeded}} [{{ingredient.portionOrdered}}]</td>
     <td>
       {{#if isEditable}}
-        <a href="#" class="ordering-count">{{orderedCount}}</a>
+        {{> ghostEditable value=orderedCount onValueChanged=onOrderedCountChange}}
       {{else}}
         {{orderedCount}}
       {{/if}}

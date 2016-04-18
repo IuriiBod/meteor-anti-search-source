@@ -1,7 +1,7 @@
 Template.ingredientEditorForm.onCreated(function () {
   this.changeIngredientState = function (newState) {
     var self = this;
-    Meteor.call("archiveIngredient", this.data.ingredient._id, newState, HospoHero.handleMethodResult(function () {
+    Meteor.call('archiveIngredient', this.data.ingredient._id, newState, HospoHero.handleMethodResult(function () {
       self.modalInstance.close();
       HospoHero.info('Stock item ' + newState + 'd');
     }));
@@ -133,7 +133,7 @@ Template.ingredientEditorForm.events({
     tmpl.changeIngredientState('restore');
   },
   'click .delete-button': function (event, tmpl) {
-    if (confirm('Are you sure you want to delete this ingredient?')) {
+    if (confirm('Are you sure you want to delete this ingredient?\nIt will be removed from all menu items as well.')) {
       tmpl.changeIngredientState('delete');
     }
   },

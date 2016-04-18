@@ -74,6 +74,7 @@ This approach allows to avoid old code appearing in merged version.
 * Use `this.autorun` and `this.subscribe` (not `Meteor.autorun` and `Meteor.subscribe`) inside template.
 * Don't use jquery if you can write the same thing through Blaze.
 * Don't use inline styles.
+* Always use double quotes inside blaze templates (e.g. `{{> Test some="value"}}`).
 * Isolate your styles using LESS's namespacing feature:
 
 ```

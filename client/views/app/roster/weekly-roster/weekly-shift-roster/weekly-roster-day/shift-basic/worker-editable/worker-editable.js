@@ -1,37 +1,29 @@
-Template.shiftBasicWorkerEditable.onRendered(function () {
-  this.$('.select-worker').editable(createSelectWorkerEditableConfig(this));
-});
-
-Template.shiftBasicWorkerEditable.helpers({
-  assignedTo: function () {
-    return this.assignedTo ? this.assignedTo : 'Open';
+class WorkerEditableDataSource {
+  constructor(shift) {
+    this._shift = shift;
   }
-});
 
+  _getAlreadyAssignedWorkersIds() {
+    let shift = this._shift;
+    let occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
 
-var workersSourceMixin = function (editableConfig, templateInstance) {
-  var getAlreadyAssignedWorkersIds = function (shift) {
-    var occupiedTimeRange = TimeRangeQueryBuilder.forInterval(shift.startTime, shift.endTime);
-
-    var assignedUserIds = Shifts.find({
+    let assignedUserIds = Shifts.find({
       _id: {$ne: shift._id},
       startTime: occupiedTimeRange,
-      'relations.areaId': HospoHero.getCurrentAreaId(),
       assignedTo: {$ne: null},
-      type: shift.type
-    }).map(function (shiftEntry) {
-      return shiftEntry.assignedTo;
-    });
+      type: shift.type,
+      'relations.areaId': HospoHero.getCurrentAreaId()
+    }).map(shiftEntry => shiftEntry.assignedTo);
 
     // this is a very strange functionality for checking
     // if the shift is placed in unavailable for user time
     // need to refactor
-    var unavailableUserIds = Meteor.users.find().map(function (user) {
-      return HospoHero.misc.hasUnavailability(user.unavailabilities, shift) ? user._id : false;
-    });
+    let unavailableUserIds = Meteor.users.find().map(user =>
+      HospoHero.misc.hasUnavailability(user.unavailabilities, shift) ? user._id : false
+    );
     unavailableUserIds = _.compact(unavailableUserIds);
 
-    var leaveRequestsUserIds = LeaveRequests.find({
+    let leaveRequestsUserIds = LeaveRequests.find({
       status: "approved",
       $or: [
         {
@@ -43,101 +35,78 @@ var workersSourceMixin = function (editableConfig, templateInstance) {
           endDate: {$gte: shift.endTime}
         }
       ]
-    }).map(function (leaveRequest) {
-      return leaveRequest.userId;
-    });
+    }).map(leaveRequest => leaveRequest.userId);
 
     return _.union(assignedUserIds, unavailableUserIds, leaveRequestsUserIds);
-  };
+  }
 
-  // Get roles which can be rosted
-  var getCanBeRostedRoles = function (areaId) {
-    return Roles.getRolesByAction('be rosted', areaId).map(function (role) {
-      return role._id;
-    });
-  };
+  _getCanBeRostedRoles() {
+    return Roles.getRolesByAction('be rosted', this._shift.relations.areaId).map(role => role._id);
+  }
 
-  var getTrainedWorkers = function (shift) {
-    var shiftSection = shift.section;
+  _getTrainedWorkers() {
+    let shiftSection = this._shift.section;
 
     if (shiftSection) {
-      return Meteor.users.find({'profile.sections': shiftSection}).map(function (user) {
-        return user._id;
-      });
+      return Meteor.users.find({'profile.sections': shiftSection}).map(user => user._id);
     } else {
       return [];
     }
-  };
+  }
 
-  var sourceFn = function (getAvailableWorkers, showTrainedWorkers) {
-    var shift = Shifts.findOne({_id: templateInstance.data._id});
-    var workersQuery = {
-      $or: [
-        {"profile.resignDate": null},
-        {"profile.resignDate": {$gt: shift.startTime}}
-      ]
-    };
+  _getWorkersByCriteria(getAvailableWorkers, showTrainedWorkers) {
+    let shift = this._shift;
 
-    var assignedWorkers = getAlreadyAssignedWorkersIds(shift);
-    var trainedWorkers = getTrainedWorkers(shift);
+    let assignedWorkers = this._getAlreadyAssignedWorkersIds();
+    let trainedWorkers = this._getTrainedWorkers();
     if (showTrainedWorkers) {
       assignedWorkers = _.difference(trainedWorkers, assignedWorkers);
     } else if (getAvailableWorkers) {
       assignedWorkers = _.union(trainedWorkers, assignedWorkers);
     }
 
-    workersQuery._id = getAvailableWorkers ? {$nin: assignedWorkers} : {$in: assignedWorkers};
+    let workersQuery = {
+      _id: getAvailableWorkers ? {$nin: assignedWorkers} : {$in: assignedWorkers},
+      [`roles.${shift.relations.areaId}`]: {$in: this._getCanBeRostedRoles()},
+      $or: [
+        {"profile.resignDate": null},
+        {"profile.resignDate": {$gt: shift.startTime}}
+      ]
+    };
 
-    workersQuery["roles." + shift.relations.areaId] = {$in: getCanBeRostedRoles(shift.relations.areaId)};
-
-    return Meteor.users.find(workersQuery, {sort: {"profile.firstname": 1}}).map(function (worker) {
+    let workersCursor = Meteor.users.find(workersQuery, {sort: {'profile.firstname': 1}});
+    return workersCursor.map(function (worker) {
       return {
         value: worker._id,
         text: HospoHero.username(worker)
       };
     });
-  };
+  }
 
-  editableConfig.source = function () {
+  getWorkersOptions() {
     return [
-      {text: '-- Available & Trained --', children: sourceFn(false, true)},
-      {text: '-- Available --', children: sourceFn(true, false)},
-      {text: '-- Not available --', children: sourceFn(false, false)}
+      {text: '-- Available & Trained --', options: this._getWorkersByCriteria(false, true)},
+      {text: '-- Available --', options: this._getWorkersByCriteria(true, false)},
+      {text: '-- Not available --', options: this._getWorkersByCriteria(false, false)}
     ];
-  };
-  return editableConfig;
-};
+  }
+}
 
 
-var createSelectWorkerEditableConfig = function (templateInstance) {
-  var assignWorkerToShift = function (workerId) {
-    var shift = Shifts.findOne({_id: templateInstance.data._id});
-    shift.assignedTo = workerId;
-    Meteor.call('editShift', shift, Template.shiftBasic.errorHandlerForShiftEdit(shift));
-  };
-
-  var onEditSuccess = function (response, workerId) {
-    workerId = workerId === 'Open' ? null : workerId;
-    assignWorkerToShift(workerId);
-  };
-
-  var editableOptions = {
-    type: "select",
-    title: 'Select worker to assign',
-    prepend: [{value: "Open", text: "Open"}],
-    inputclass: "editableWidth",
-    showbuttons: false,
-    emptytext: 'Open',
-    defaultValue: "Open",
-    //block internal x-editable displaying because we are using blaze for it
-    display: function () {
-      return '';
-    },
-    success: onEditSuccess
-  };
-
-  //apply data source
-  workersSourceMixin(editableOptions, templateInstance);
-
-  return editableOptions;
-};
+Template.shiftBasicWorkerEditable.helpers({
+  workerSelectConfig() {
+    let tmpl = Template.instance();
+    let workersDataSource = new WorkerEditableDataSource(tmpl.data);
+    
+    return {
+      values: workersDataSource.getWorkersOptions(),
+      emptyValue: 'Open',
+      selected: this.assignedTo,
+      onValueChanged: function (workerId) {
+        let shift = Shifts.findOne({_id: tmpl.data._id});
+        shift.assignedTo = workerId;
+        Meteor.call('editShift', shift, Template.shiftBasic.errorHandlerForShiftEdit(shift));
+      }
+    };
+  }
+});
