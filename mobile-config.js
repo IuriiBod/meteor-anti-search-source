@@ -2,11 +2,7 @@ App.info({
   id: 'com.tomhay.hospohero',
   name: 'Hospo Hero',
   description: 'Taking a lot of the kitchen manual tasks and making them quick, easy and accurate',
-
-  // Version rules:
-  // odd (1) - testing
-  // even (2) - production
-  version: '0.0.7',
+  version: '0.0.9',
   author: 'Tom Hay',
   email: 'info@hospohero.com',
   website: 'https://app.hospohero.com'
