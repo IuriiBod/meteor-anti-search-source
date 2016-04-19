@@ -34,30 +34,7 @@ Meteor.methods({
     // we pass area ID for find this shift
     let areaId = getEventAreaId(eventObject);
 
-    if (!eventObject.shiftId && eventObject.areaId) {
-      var shiftTimeRange = TimeRangeQueryBuilder.forDay(eventObject.startTime, eventObject.locationId);
-      // need for selecting query
-      delete eventObject.areaId;
-
-      // get the user's shift for current day
-      var shift = Shifts.findOne({
-        startTime: shiftTimeRange,
-        assignedTo: eventObject.userId,
-        'relations.areaId': areaId
-      });
-
-      if (shift) {
-        eventObject.shiftId = shift._id;
-      } else {
-        // if there are no shifts, create a one
-        shift = _.pick(eventObject, ['startTime', 'endTime']);
-        _.extend(shift, {
-          type: null,
-          assignedTo: eventObject.userId
-        });
-        eventObject.shiftId = Meteor.call('createShift', shift);
-      }
-    }
+    HospoHero.calendar.eventInsertUpdateHook(eventObject);
 
     check(eventObject, HospoHero.checkers.CalendarEventDocument);
 
@@ -68,7 +45,6 @@ Meteor.methods({
       // set seconds of start/end times equal to 0
       eventObject = updateEventSeconds(eventObject);
 
-      HospoHero.calendar.eventInsertUpdateHook(eventObject);
       return CalendarEvents.insert(eventObject);
     }
   },
