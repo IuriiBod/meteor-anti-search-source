@@ -3,12 +3,34 @@
     display: inline-block;
   }
 
+  h1 {
+    position: relative;
+  }
+
   .organization-buttons-container {
+    width: 110px;
     display: inline-block;
-    float: right;
+    position: absolute;
+    right: 1px;
+    top: 2px;
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 21%,rgba(255,255,255,1) 35%); /* Chrome10-25,Safari5.1-6 */
+    background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 21%, rgba(255,255,255,1) 35%); /* FF3.6-15 */
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 21%,rgba(255,255,255,1) 35%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+    box-shadow: rgb(255, 255, 255) 12px 12px 45px;
+    -webkit-box-shadow: rgb(255, 255, 255) 12px 12px 45px;
+    -moz-box-shadow: rgb(255, 255, 255) 12px 12px 45px;
 
     i.fa {
       font-size: 20px;
+    }
+
+    .btn-group.organization-settings-buttons {
+      float: right;
+
+      button {
+        padding: 5px 12px;
+      }
     }
   }
 
@@ -28,6 +50,31 @@
         font-weight: bold;
         text-decoration: underline;
       }
+    }
+  }
+
+  .list-group-item {
+    padding: 10px 11px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .organizations-list {
+
+    h1 {
+      font-size: 24px;
+    }
+
+    .organization-buttons-container {
+      top: 1px;
+
+      i.fa {
+        font-size: 18px;
+      }
+    }
+
+    .list-group-item {
+      padding: 10px 9px;
     }
   }
 }
