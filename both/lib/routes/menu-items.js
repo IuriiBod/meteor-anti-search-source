@@ -1,6 +1,6 @@
 Router.route('menuItemsMaster', {
   path: '/menuItems/:category/:status',
-  template: "menuItemsListMainView",
+  template: 'menuItemsListMainView',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
@@ -20,7 +20,7 @@ Router.route('menuItemsMaster', {
 
 Router.route('menuItemDetail', {
   path: '/menuItem/:_id',
-  template: "menuItemDetailedMainView",
+  template: 'menuItemDetailedMainView',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     if (currentAreaId) {
@@ -46,13 +46,14 @@ Router.route('menuItemDetail', {
 
 Router.route('submitMenuItem', {
   path: '/menuItems/submit',
-  template: "menuItemSubmitMainView",
+  template: 'menuItemSubmitMainView',
   waitOn: function () {
     var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
     return [
       Meteor.subscribe('allCategories', currentAreaId),
       Meteor.subscribe('allSuppliers', currentAreaId),
       Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
+      Meteor.subscribe('jobItemsInArea', currentAreaId, null),
       Meteor.subscribe('jobTypes')
     ];
   }

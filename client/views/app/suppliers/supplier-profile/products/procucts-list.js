@@ -10,10 +10,10 @@ Template.productsList.events({
     var ingredient = Ingredients.findOne({_id: this.ingredientId});
     FlyoutManager.open('wrapperFlyout', {
       template: 'ingredientEditor',
-      title: (ingredient ? 'Edit' : 'Add') + " ingredient",
+      title: `${ingredient ? 'Edit' : 'Add'} ingredient`,
       data: {
         inFlyout: true,
-        editMode: ingredient !== undefined,
+        editMode: !_.isUndefined(ingredient),
         ingredient: ingredient
       }
     });

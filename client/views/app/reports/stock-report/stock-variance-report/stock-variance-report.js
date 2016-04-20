@@ -83,7 +83,6 @@ Template.stockVarianceReport.events({
 
   'click .edit-stock-item': function (event) {
     event.preventDefault();
-
     let ingredientId = this._id;
 
     FlyoutManager.open('wrapperFlyout', {
@@ -92,7 +91,7 @@ Template.stockVarianceReport.events({
       data: {
         inFlyout: true,
         editMode: true,
-        ingredient: ingredientId
+        ingredientId: ingredientId
       }
     });
   }

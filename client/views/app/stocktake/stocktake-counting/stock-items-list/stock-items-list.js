@@ -15,7 +15,7 @@ Template.stockItemsList.onRendered(function () {
       let sortableHelper = new StockItemsSortableHelper(ui, tmpl.getStockAreaIngredients());
       let newOrderOfIngredients = sortableHelper.getNewIngredientsOrder();
       if (newOrderOfIngredients) {
-        Meteor.call("updateStockAreaIngredientsOrder", tmpl.data.specialAreaId, newOrderOfIngredients, HospoHero.handleMethodResult());
+        Meteor.call('updateStockAreaIngredientsOrder', tmpl.data.specialAreaId, newOrderOfIngredients, HospoHero.handleMethodResult());
       }
     }
   });
@@ -46,41 +46,42 @@ Template.stockItemsList.helpers({
 });
 
 
-var StockItemsSortableHelper = function (ui, ingredientsIds) {
-  this._ingredients = ingredientsIds;
-  this._draggedItem = this._getIngredientIdByItem(ui.item);
-  this._previousItem = this._getIngredientIdByItem(ui.item.prev());
-  this._nextItem = this._getIngredientIdByItem(ui.item.next());
-};
-
-
-StockItemsSortableHelper.prototype._getIngredientIdByItem = function (item) {
-  var element = item[0];
-  let elementData = element ? Blaze.getData(element) : false;
-  return HospoHero.utils.getNestedProperty(elementData, 'ingredient._id', false);
-};
-
-StockItemsSortableHelper.prototype.getNewIngredientsOrder = function () {
-  if (!this._previousItem && !this._nextItem) {
-    return false;
+class StockItemsSortableHelper {
+  constructor(ui, ingredientsIds) {
+    this._ingredients = ingredientsIds;
+    this._draggedItem = this._getIngredientIdByItem(ui.item);
+    this._previousItem = this._getIngredientIdByItem(ui.item.prev());
+    this._nextItem = this._getIngredientIdByItem(ui.item.next());
   }
 
-  let ingredients = this._ingredients.map(id=>id); //copy array to avoid external bugs
-
-  //remove dragged item
-  let draggedItemOldIndex = ingredients.indexOf(this._draggedItem);
-  ingredients.splice(draggedItemOldIndex, 1);
-
-  //find new position
-  let isInsertBefore = !this._previousItem && !!this._nextItem;
-  let draggedItemNewPosition;
-  if (isInsertBefore) {
-    draggedItemNewPosition = ingredients.indexOf(this._nextItem);
-  } else { //insert after position
-    draggedItemNewPosition = ingredients.indexOf(this._previousItem) + 1;
+  _getIngredientIdByItem(item) {
+    var element = item[0];
+    let elementData = element ? Blaze.getData(element) : false;
+    return HospoHero.utils.getNestedProperty(elementData, 'ingredient._id', false);
   }
 
-  //put dragged item into position
-  ingredients.splice(draggedItemNewPosition, 0, this._draggedItem);
-  return ingredients;
-};
+  getNewIngredientsOrder() {
+    if (!this._previousItem && !this._nextItem) {
+      return false;
+    }
+
+    let ingredients = this._ingredients.map(id=>id); //copy array to avoid external bugs
+
+    //remove dragged item
+    let draggedItemOldIndex = ingredients.indexOf(this._draggedItem);
+    ingredients.splice(draggedItemOldIndex, 1);
+
+    //find new position
+    let isInsertBefore = !this._previousItem && !!this._nextItem;
+    let draggedItemNewPosition;
+    if (isInsertBefore) {
+      draggedItemNewPosition = ingredients.indexOf(this._nextItem);
+    } else { //insert after position
+      draggedItemNewPosition = ingredients.indexOf(this._previousItem) + 1;
+    }
+
+    //put dragged item into position
+    ingredients.splice(draggedItemNewPosition, 0, this._draggedItem);
+    return ingredients;
+  }
+}

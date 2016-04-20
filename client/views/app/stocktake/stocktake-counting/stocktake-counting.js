@@ -70,42 +70,28 @@ Template.stocktakeCounting.events({
     }));
   },
 
-  'click .add-ingredient-button': function (event, tmpl) {
+  'click .add-item-button': function (event, tmpl) {
     event.preventDefault();
 
     const currentSpecialAreaId = tmpl.activeSpecialAreaId.get();
     const currentSpecialArea = StockAreas.findOne({_id: currentSpecialAreaId});
+    const isStockTabSelected = tmpl.isStockItemsSelected.get();
 
-    const onAddStockItem = (ingredientId) => {
-      Meteor.call('assignIngredientToStockArea', ingredientId, currentSpecialAreaId, HospoHero.handleMethodResult());
+    const onAssignItemToArea = (itemId) => {
+      let itemType = isStockTabSelected ? 'stock' : 'prep';
+
+      Meteor.call('assignItemToStockArea', itemId, currentSpecialAreaId, itemType, HospoHero.handleMethodResult());
     };
-
-    const onAddPrepItem = (jobItemId) => {
-      const stockPrepItem = {
-        stocktakeId: tmpl.data._id,
-        specialAreaId: currentSpecialAreaId,
-        jobItemId: jobItemId,
-        relations: HospoHero.getRelationsObject()
-      };
-      Meteor.call('upsertStockPrepItem', stockPrepItem, HospoHero.handleMethodResult());
-    };
-
-    const isStockItemsSelected = tmpl.isStockItemsSelected.get();
-
-    const selectedPrepItemsIds = StockPrepItems
-      .find({specialAreaId: currentSpecialAreaId})
-      .map(item => item.jobItemId);
 
     const getFlyoutOptions = () => {
-      const selectItemsProperty = isStockItemsSelected ? 'onAddStockItem' : 'onItemsAdded';
-
+      const selectItemsProperty = isStockTabSelected ? 'onAddStockItem' : 'onItemsAdded';
       return {
-        template: isStockItemsSelected ? 'ingredientsModalList' : 'addJobItem',
-        title: `Select ${isStockItemsSelected ? 'Stocks' : 'Preps'}`,
+        template: isStockTabSelected ? 'ingredientsModalList' : 'addJobItem',
+        title: `Select ${isStockTabSelected ? 'Stocks' : 'Preps'}`,
         data: {
           inFlyout: true,
-          idsToExclude: isStockItemsSelected ? currentSpecialArea.ingredientsIds : selectedPrepItemsIds,
-          [selectItemsProperty]: isStockItemsSelected ? onAddStockItem : onAddPrepItem
+          idsToExclude: currentSpecialArea[isStockTabSelected ? 'ingredientsIds' : 'prepItemIds'] || [],
+          [selectItemsProperty]: onAssignItemToArea
         }
       };
     };

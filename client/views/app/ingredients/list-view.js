@@ -9,7 +9,7 @@ Template.listOfStocksMasterMainView.onCreated(function () {
         title: (ingredient ? 'Edit' : 'Add') + " ingredient",
         data: {
           inFlyout: true,
-          editMode: ingredient !== undefined,
+          editMode: !_.isUndefined(ingredient),
           ingredient: ingredient
         }
       });

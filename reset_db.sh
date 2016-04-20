@@ -6,6 +6,7 @@
 
 DEST_DIR="./.dump"
 DB_PATH=$(pwd)/.meteor/local/db
+DB_WAIT_TIME=10
 
 #credentials
 
@@ -22,13 +23,6 @@ MONGO_DB="heroku_hs84b9x2"
 #MONGO_DOMAIN="c144.capital.3.mongolayer.com:10144"
 #MONGO_DB="herochef"
 
-if [[ $OSTYPE == "darwin14" ]]; then # mac os x
-  echo Using configuration for Mac OS X
-  DB_WAIT_TIME=10
-else
-  echo Using configuration for Linux
-  DB_WAIT_TIME=10
-fi
 
 if [[ $1 != "d" ]]; then
   # refresh dump

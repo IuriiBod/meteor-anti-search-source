@@ -46,20 +46,25 @@ Template.ghostEditableSelect.helpers({
     let tmpl = Template.instance();
     let selectedValue = tmpl.selectedValue.get();
 
-    let searchPredicate = valueEntry => valueEntry.value === selectedValue;
-    let selectedOption = this.values.find(searchPredicate);
+    let selectedOption;
+    if (!_.isUndefined(selectedValue)) {
+      let searchPredicate = valueEntry => valueEntry.value === selectedValue;
+      selectedOption = this.values.find(searchPredicate);
 
-    //if not found -> search on second level
-    if (_.isUndefined(selectedOption)) {
-      this.values.some(valueGroup => {
-        if (_.isArray(valueGroup.options)) {
-          selectedOption = valueGroup.options.find(searchPredicate);
-          if (!_.isUndefined(selectedOption)) {
-            return true;
+      //if not found -> search on second level
+      if (_.isUndefined(selectedOption)) {
+        this.values.some(valueGroup => {
+          if (_.isArray(valueGroup.options)) {
+            selectedOption = valueGroup.options.find(searchPredicate);
+            if (!_.isUndefined(selectedOption)) {
+              return true;
+            }
           }
-        }
-        return false;
-      });
+          return false;
+        });
+      }
+    } else {
+      selectedOption = false;
     }
 
     return selectedOption && selectedOption.text || tmpl.data.emptyValue || '- select -';

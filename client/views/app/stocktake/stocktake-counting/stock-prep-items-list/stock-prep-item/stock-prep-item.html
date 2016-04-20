@@ -1,6 +1,6 @@
 <template name="stockPrepItem">
   <li class="list-group-item">
-    {{prepItem.name}}
+    {{prepJobItem.name}}
 
     {{#if isEditMode}}
       <i class="fa fa-trash pull-right remove-item-button"></i>
@@ -9,7 +9,7 @@
     <span class="pull-right">
       {{> ghostEditable value=stockPrepItem.count onValueChanged=onStockPrepItemCountChanged}}
 
-      [{{prepItem.producedAmount}}{{prepItem.producedMeasure}}]
+      [{{prepJobItem.producedAmount}}{{prepJobItem.producedMeasure}}]
     </span>
   </li>
 </template>

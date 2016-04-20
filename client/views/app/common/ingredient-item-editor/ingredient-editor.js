@@ -1,19 +1,18 @@
-//context: ingredient (Ingredient/undefined)
+//context: ingredient (Ingredient/null) or ingredientId (ID<Ingredient>)
 Template.ingredientEditor.onCreated(function () {
-  if (!(_.isObject(this.data.ingredient))) {
-    this.subscribe('ingredient', this.data.ingredient);
+  if (this.data.ingredientId) {
+    this.subscribe('ingredient', this.data.ingredientId);
   }
 });
 
 Template.ingredientEditor.helpers({
   ingredient() {
     let ingredient;
-    if (_.isObject(this.ingredient)) {
-      ingredient = this.ingredient;
+    if (this.ingredientId) {
+      ingredient = Ingredients.findOne({_id: this.ingredientId});
     } else {
-      ingredient = Ingredients.findOne({_id: this.ingredient});
+      ingredient = this.ingredient;
     }
-
     return ingredient;
   }
 });

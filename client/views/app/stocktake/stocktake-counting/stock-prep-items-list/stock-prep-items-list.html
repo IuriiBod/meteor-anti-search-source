@@ -1,7 +1,7 @@
 <template name="stockPrepItemsList">
   <ul class="list-group">
-    {{#each stockAreaPrepItems}}
-      {{> stockPrepItem}}
+    {{#each stockAreaPrepItemsIds}}
+      {{> stockPrepItem stockPrepItemContext}}
     {{else}}
       No items in this list
     {{/each}}

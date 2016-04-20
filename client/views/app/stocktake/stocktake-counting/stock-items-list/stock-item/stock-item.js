@@ -51,7 +51,7 @@ Template.stockItem.helpers({
         let stockItemDocument = getUpdatedStockItemDocument(count);
 
         Meteor.call('upsertStockItem', stockItemDocument, HospoHero.handleMethodResult(function () {
-          Template.ghostEditable.focusNextGhost(tmpl,'li');
+          Template.ghostEditable.focusNextGhost(tmpl, 'li');
         }));
       }
     };
@@ -65,13 +65,7 @@ Template.stockItem.events({
     if (confirmDelete) {
       let ingredientId = tmpl.data.ingredient._id;
       let specialAreaId = tmpl.data.specialAreaId;
-      let stockItem = tmpl.getStockItem();
-
-      Meteor.call('removeIngredientFromStockArea', ingredientId, specialAreaId, HospoHero.handleMethodResult(() => {
-        if (stockItem) {
-          Meteor.call('removeStockItem', stockItem._id, HospoHero.handleMethodResult());
-        }
-      }));
+      Meteor.call('removeItemFromStockArea', ingredientId, specialAreaId, 'stock', HospoHero.handleMethodResult());
     }
   }
 });

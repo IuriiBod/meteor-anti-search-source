@@ -52,16 +52,15 @@ Template.totalValueDetails.events({
 
   'click .edit-stock-item': function (event) {
     event.preventDefault();
-
     let ingredientId = this._id;
-
+    
     FlyoutManager.open('wrapperFlyout', {
       template: 'ingredientEditor',
       title: 'Edit ingredient',
       data: {
         inFlyout: true,
         editMode: true,
-        ingredient: ingredientId
+        ingredientId: ingredientId
       }
     });
   }
