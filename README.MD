@@ -63,6 +63,7 @@ This approach allows to avoid old code appearing in merged version.
 * Use `Collection.find({_id: id})` instead of `Collection.find(id)`.
 * Write `{someProperty: itsValue}` instead of `{"someProperty": itsValue}` (except cases when property contains dot or other special character like `{'profile.fristname': 'Test'}`).
 * Use ES6 string extrapolation (e.g. `"Hello, ${username}!"`) and dynamic attributes (e.g. `{[myPropertyName]: someValue}`).
+* If you need to initizlize multiple propertyies of the same object, you should use `_.extend` or `Object.assign` functions.
 * IF YOU ARE WORKING WITH UNSATISFIED QUALITY CODE, PELASE, REWRITE IT FOLLOWING THIS GUIDE.
 
 ### Client side (Blaze):
