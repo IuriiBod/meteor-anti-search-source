@@ -27,14 +27,14 @@ $ meteor --settings .mupx-deploy/settings-dev.json
 In order to contribute to this repository you should follow next steps:
 
 1. Choose unassigned card from Trello's "Backlog" or take already assigned to you card.
-2. Move your card into "In progress" column.
+2. Move your card into "In progress" column. Read card's description and comments. Based on this information estimate card using [Scrum for Trello](https://chrome.google.com/webstore/detail/scrum-for-trello/jdbcdblgjdpmfninkoogcfpnkjmndgje?hl=en) chrome extension (1 point = 1 hour). 
 3. Create new branch based on `develop`. Give you branch name that makes sense (like `roster-timezones-bug`).
 4. Start working on your task. If you don't know how to do something, then google it. If you stuck on something for more that 15 minutes, ask your colleagues for help. 
 5. When card is finished, review your code and refactor complex/hard to understand parts of it (usually long functions or lines of code).
 6. Test all features that was changed/edited/improved by you. Fix all bugs you found. Next, run `./lint.sh` and fix all linter errors.
 7. If there are new commits on `develop` merge `develop` to your branch using `--no-ff` flag (see "Merging" section for details).
 8. Create pull to `develop`. Put your pull request's url into related card's description.
-9. Move your card into Trello's "Review" column. Someone of your collegues will review\* it. If your pull request was merged go to step #10. If your pull request is closed you should review comments in pull request go to step #1. If you don't understand any comment on your pull request, ask reviewer about it.
+9. Move your card into Trello's "Review" column and add estimated points using *Scrum for Trello* (see step 2). Someone of your collegues will review\* it. If your pull request was merged go to step #10. If your pull request is closed you should review comments in pull request go to step #1. If you don't understand any comment on your pull request, ask reviewer about it.
 10. Congratulations! Your task is done! Go to step 1.
 
 \* All pull requests should be __reviewed__ by other team member before merging with `develop`.
