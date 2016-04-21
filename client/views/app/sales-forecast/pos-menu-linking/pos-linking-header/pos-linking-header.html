@@ -1,14 +1,6 @@
 <template name="posMenuLinkingHeader">
   <div class="title-action pos-menu-liking-header">
-    <button class="btn btn-warning update-pos-menu-items-button">Update POS Menu Items</button>
-    {{#if isSalesSynced}}
-      <button class="btn white-bg sync-sales-button">
-        Sales are synced
-      </button>
-    {{else}}
-      <button class="btn btn-primary sync-sales-button">
-        Sync sales
-      </button>
-    {{/if}}
+    {{> waitButton classNames="btn btn-warning update-pos-menu-items-button" text="Update POS Menu Items"}}
+    {{> waitButton syncSalesWaitButtonConfig}}
   </div>
 </template>

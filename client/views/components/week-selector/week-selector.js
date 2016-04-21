@@ -68,11 +68,14 @@ Template.weekSelector.events({
               } else {
                 tmpl.closeModalAndShowMsg(weekSelectorModal, 'success', 'Template was copied to the selected week');
               }
+              event.target.ready();
             });
           });
         } else {
           tmpl.closeModalAndShowMsg(weekSelectorModal, 'success', 'Template was copied to the selected week');
+          event.target.ready();
         }
+
       });
     } else {
       HospoHero.error('You should select week at first');

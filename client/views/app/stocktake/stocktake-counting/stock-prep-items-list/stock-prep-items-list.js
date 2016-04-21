@@ -1,4 +1,3 @@
-console.log('test');
 Template.stockPrepItemsList.helpers({
   stockAreaPrepItemsIds() {
     let stockArea = StockAreas.findOne({_id: this.specialAreaId});

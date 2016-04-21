@@ -6,14 +6,17 @@ Template.stockReport.onCreated(function () {
 
   this.detailedReportParams = new ReactiveVar();
 
-  this.uploadNextStockReport = (firstDate = null, secondDate = null) => {
-    Meteor.call('uploadStockReport', firstDate, secondDate, HospoHero.handleMethodResult((result) => {
+  this.uploadNextStockReport = (firstDate = null, secondDate = null, event = false) => {
+    let onUploadReportSuccess = (result) => {
       this.reports.set(result);
       if (this.firstSelectedDate.get() === false) {
         this.firstSelectedDate.set(result.firstStocktake.date);
         this.secondSelectedDate.set(result.secondStocktake.date);
       }
-    }));
+    };
+
+    Meteor.call('uploadStockReport', firstDate, secondDate,
+      Template.waitButton.handleMethodResult(event, onUploadReportSuccess));
   };
 
   this.uploadNextStockReport();
@@ -26,8 +29,8 @@ Template.stockReport.helpers({
     return {
       firstStocktakeDate: tmpl.firstSelectedDate.get(),
       secondStocktakeDate: tmpl.secondSelectedDate.get(),
-      onIntervalSubmit: function (firstDate, secondDate) {
-        tmpl.uploadNextStockReport(firstDate, secondDate);
+      onIntervalSubmit: function (firstDate, secondDate, event) {
+        tmpl.uploadNextStockReport(firstDate, secondDate, event);
       }
     };
   },

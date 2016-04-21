@@ -5,7 +5,7 @@ var autolinker = new Autolinker({
 });
 
 Template.textArea.onRendered(function () {
-  this.sendNewsfeed = function () {
+  this.sendNewsfeed = function (event) {
     var textArea = this.$('.message-area');
     var text = textArea.val();
     if (text) {
@@ -50,9 +50,10 @@ Template.textArea.onRendered(function () {
           text: linkedText,
           reference: this.data.reference,
         };
-
-        Meteor.call("createComment", comment, this.data.refType, matches, HospoHero.handleMethodResult());
+        Meteor.call("createComment", comment, this.data.refType, matches, Template.waitButton.handleMethodResult(event));
       }
+    }else{
+      event.target.ready();
     }
   };
 });

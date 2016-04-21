@@ -60,7 +60,7 @@ Template.stocktakeIntervalSelect.events({
     if (_.isFunction(tmpl.data.onIntervalSubmit)) {
       let first = tmpl.firstStocktakeDate.get() || tmpl.data.firstStocktakeDate;
       let second = tmpl.secondStocktakeDate.get() || tmpl.data.secondStocktakeDate;
-      tmpl.data.onIntervalSubmit(first, second);
+      tmpl.data.onIntervalSubmit(first, second, event);
     }
   }
 });

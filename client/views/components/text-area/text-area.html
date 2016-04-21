@@ -1,8 +1,6 @@
 <template name="textArea">
   {{#textareaAutocomplete settings=settings name="message" class="form-control message-area" placeholder=placeholder}}{{/textareaAutocomplete}}
-  <button class="btn btn-sm btn-primary pull-right submit-comment-button">
-    {{buttonCaption}}
-  </button>
+  {{> waitButton classNames="btn btn-sm btn-primary pull-right submit-comment-button" text=buttonCaption}}
 </template>
 
 <!--

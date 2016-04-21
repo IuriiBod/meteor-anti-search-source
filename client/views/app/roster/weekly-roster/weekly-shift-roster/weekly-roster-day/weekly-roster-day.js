@@ -18,15 +18,15 @@ Template.weeklyRosterDay.onRendered(function () {
   var checker = new HospoHero.security.PermissionChecker();
 
   if (checker.hasPermissionInArea(null, `edit roster`) && document.body.scrollWidth >= SORTABLE_SCREEN_WIDTH) {
-    this.$(".sortable-list").sortable({
-      connectWith: ".sortable-list",
+    this.$('.sortable-list').sortable({
+      connectWith: '.sortable-list',
       revert: true,
       stop: function (event, ui) {
         try {
           var sortedShift = new SortableHelper(ui).getSortedShift();
 
           if (sortedShift) {
-            Meteor.call("editShift", sortedShift, HospoHero.handleMethodResult());
+            Meteor.call('editShift', sortedShift, HospoHero.handleMethodResult());
           }
         } catch (err) {
           //cancel drop if shift isn't valid
@@ -49,7 +49,7 @@ Template.weeklyRosterDay.helpers({
     let location = currentArea && Locations.findOne({_id: currentArea.locationId});
 
     return location && Shifts.find({
-        startTime: TimeRangeQueryBuilder.forDay(getDateString(this.currentDate), location._id,'YYYY-MM-DD'),
+        startTime: TimeRangeQueryBuilder.forDay(getDateString(this.currentDate), location._id, 'YYYY-MM-DD'),
         type: this.type,
         "relations.areaId": currentArea._id
       }, {
@@ -81,20 +81,18 @@ Template.weeklyRosterDay.helpers({
 
 Template.weeklyRosterDay.events({
   'click .add-shift-button': function (event, tmpl) {
-
     //copy currentDate and convert to moment
-    var zeroMoment =HospoHero.dateUtils.getDateMomentForLocation(getDateString(tmpl.data.currentDate));
+    let zeroMoment = HospoHero.dateUtils.getDateMomentForLocation(getDateString(tmpl.data.currentDate));
+    let startHour = new Date(zeroMoment.hours(8));
+    let endHour = new Date(zeroMoment.hours(17));
 
-    var startHour = new Date(zeroMoment.hours(8));
-    var endHour = new Date(zeroMoment.hours(17));
-
-    var newShiftInfo = {
+    let newShiftInfo = {
       startTime: startHour,
       endTime: endHour,
-      type: this.type
+      type: tmpl.data.type
     };
 
-    Meteor.call("createShift", newShiftInfo, HospoHero.handleMethodResult());
+    Meteor.call('createShift', newShiftInfo, Template.waitButton.handleMethodResult(event));
   },
 
   'click .manager-note-flyout': function (event, tmpl) {
@@ -115,13 +113,13 @@ Template.weeklyRosterDay.events({
     pastedShift.startTime = newShiftDuration.start;
     pastedShift.endTime = newShiftDuration.end;
 
-    Meteor.call("createShift", pastedShift, HospoHero.handleMethodResult());
+    Meteor.call('createShift', pastedShift, HospoHero.handleMethodResult());
   }
 });
 
-function getDateString (date){
+function getDateString(date) {
   // need string format to get correct time range in all time zone
-  return  moment(date).format('YYYY-MM-DD');
+  return moment(date).format('YYYY-MM-DD');
 }
 
 

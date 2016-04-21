@@ -25,9 +25,7 @@
     {{#if hasPermissionInAreaTo 'edit roster'}}
       <div class="input-group">
           <span class="input-group-btn">
-            <button type="button" class="btn btn-sm btn-white btn-block add-shift-button">
-              <i class="fa fa-plus"></i> Add Shift
-            </button>
+            {{> waitButton classNames="btn btn-sm btn-white btn-block add-shift-button" text="Add Shift" icon="fa fa-plus"}}
           </span>
 
         {{#if hasCopiedShift}}

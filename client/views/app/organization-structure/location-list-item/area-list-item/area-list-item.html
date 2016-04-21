@@ -1,8 +1,7 @@
 <template name="areaListItem">
   <li class="list-group-item area-list-item"
       style="border-left-color: {{color}};">
-
-    <a href="#" class="change-current-area-button {{#if isCurrentArea}}active{{/if}}">{{name}}</a>
+    {{> waitButton type="link" classNames=changeAreaButtonClass text=name iconAfterText=true}}
 
     {{#if canEditArea}}
       <span class="badge open-flyout area-settings-button">

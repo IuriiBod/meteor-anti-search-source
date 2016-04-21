@@ -50,7 +50,7 @@ Template.stockVarianceReport.helpers({
   onStocktakeIntervalSubmit() {
     let tmpl = Template.instance();
 
-    return function (firstDate, secondDate) {
+    return function (firstDate, secondDate, event) {
       const formatStocktakeDate = (date) => moment(date).format('DD-MM-YY');
       tmpl.report.set(false);
 
@@ -58,6 +58,9 @@ Template.stockVarianceReport.helpers({
         firstStocktakeDate: formatStocktakeDate(firstDate),
         secondStocktakeDate: formatStocktakeDate(secondDate)
       });
+
+      //hide loading animation of submit button (see waitButton component)
+      Template.waitButton.handleMethodResult(event)();
     };
   },
 

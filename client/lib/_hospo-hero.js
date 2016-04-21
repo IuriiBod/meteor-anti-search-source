@@ -22,7 +22,7 @@ Namespace('HospoHero', {
       }
     };
   },
-
+  
   // Alert error message
   error: function (err) {
     if (err) {

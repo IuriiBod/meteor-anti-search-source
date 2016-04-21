@@ -1,0 +1,7 @@
+<template name="waitButtonContent">
+  {{#if iconAfterText}}{{text}}&nbsp;{{/if}}
+
+  {{#if iconClassNames}}<i class="wait-icon {{iconClassNames}}"></i>{{/if}}
+
+  {{#unless iconAfterText}}&nbsp;{{text}}{{/unless}}
+</template>

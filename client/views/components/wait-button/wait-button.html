@@ -1,0 +1,11 @@
+<template name="waitButton">
+  {{#if isLink}}
+    <a {{buttonAttributes}}>
+      {{> waitButtonContent buttonContentContext}}
+    </a>
+  {{else}}
+    <button {{buttonAttributes}}>
+      {{> waitButtonContent buttonContentContext}}
+    </button>
+  {{/if}}
+</template>
