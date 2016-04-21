@@ -7,15 +7,12 @@ var canUserEditRoster = function () {
 
 Template.managerNoteWidget.onCreated(function () {
   let self = this;
+  const area = HospoHero.getCurrentArea();
 
   self.note = () => ManagerNotes.findOne({
-    noteDate: TimeRangeQueryBuilder.forDay(self.data.date),
-    'relations.areaId': HospoHero.getCurrentAreaId()
+    noteDate: TimeRangeQueryBuilder.forDay(self.data.date, area.locationId),
+    'relations.areaId': area._id
   });
-
-  let weekRange = TimeRangeQueryBuilder.forWeek(self.data.date);
-
-  self.subscribe('managerNotes', weekRange, HospoHero.getCurrentAreaId());
 
   self.textForEmptyEditor = 'Leave your note here';
 });
@@ -41,20 +38,26 @@ Template.managerNoteWidget.helpers({
       }
 
       let note = tmpl.note();
-      note.text = text;
 
-      if (!note.createdAt) {
-        note.createdAt = new Date();
-      }
-
-      if (!note.createdBy) {
-        note.createdBy = Meteor.userId();
-      }
+      note = Object.assign({
+        updatedAt: new Date(),
+        updatedBy: Meteor.userId()
+      }, note, {
+        text: text
+      });
 
       Meteor.call('upsertManagerNote', note);
     };
   },
   readOnly () {
     return !canUserEditRoster();
+  },
+  commentsSettings () {
+    return {
+      namespace: 'weeklyRoster',
+      uiStateId: 'dailyNoteComments',
+      title: 'Comments',
+      contentPadding: '20px'
+    };
   }
 });

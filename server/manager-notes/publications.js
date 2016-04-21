@@ -3,29 +3,13 @@ Meteor.publishComposite('managerNotes', function (weekRange, areaId) {
   check(areaId, HospoHero.checkers.MongoId);
 
   let permissionChecker = this.userId && new HospoHero.security.PermissionChecker(this.userId);
-  if (permissionChecker && permissionChecker.hasPermissionInArea(areaId, 'view roster')) {
+  if (!permissionChecker || !permissionChecker.hasPermissionInArea(areaId, 'view roster')) {
     this.ready();
     return;
   }
 
   return {
     find: function () {
-      const daysOfWeek = HospoHero.dateUtils.getWeekDays(weekRange.$gte);
-
-      daysOfWeek.forEach((date) => {
-        ManagerNotes.update({
-          noteDate: TimeRangeQueryBuilder.forDay(date),
-          'relations.areaId': areaId
-        }, {
-          $setOnInsert: {
-            noteDate: date,
-            relations: HospoHero.getRelationsObject(areaId)
-          }
-        }, {
-          upsert: true
-        });
-      });
-
       return ManagerNotes.find({
         noteDate: weekRange,
         'relations.areaId': areaId

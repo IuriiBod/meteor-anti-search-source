@@ -1,5 +1,38 @@
 .manager-note-widget {
+  .note-wrapper {
+    min-height: 160px;
+    padding: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+  }
+
   .autosave-text-editor-container .status-text {
     top: 56px;
+  }
+
+  .panel {
+    border: none;
+  }
+
+  .ibox-title {
+    padding: 14px 15px 7px 0;
+  }
+
+  #comments {
+    & > div:first-child {
+      padding: 0 !important;
+    }
+    .ibox.chat-view {
+      margin-bottom: 0;
+    }
+  }
+
+  .task-list-widget {
+    .ibox.hidden-print.task-list-content {
+      & > hr:first-child {
+        display: none;
+      }
+    }
   }
 }

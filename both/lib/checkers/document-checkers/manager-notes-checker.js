@@ -1,10 +1,10 @@
 var ManagerNotesDocument = Match.Where(function (note) {
   check(note, {
     _id: HospoHero.checkers.OptionalMongoId,
-    text: String,
+    text: Match.Optional(String),
     noteDate: Date,
-    createdAt: Date,
-    createdBy: HospoHero.checkers.MongoId,
+    updatedAt: Match.Optional(Date),
+    updatedBy: HospoHero.checkers.OptionalMongoId,
     relations: HospoHero.checkers.Relations
   });
   return true;

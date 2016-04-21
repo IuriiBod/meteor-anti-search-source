@@ -11,11 +11,16 @@ Meteor.methods({
       logger.error('User not permitted to add manager notes!', {userId: Meteor.userId()});
       throw new Meteor.Error('User not permitted to add manager notes!', {userId: Meteor.userId()});
     } else {
-      if (noteObject._id) {
-        return ManagerNotes.update({_id: noteObject._id}, {$set: noteObject});
-      } else {
-        return ManagerNotes.insert(noteObject);
-      }
+      const noteId = noteObject._id;
+      delete noteObject._id;
+
+      ManagerNotes.update({
+        _id: noteId
+      }, {
+        $set: noteObject
+      }, {
+        upsert: true
+      });
     }
   }
 });

@@ -1,8 +1,15 @@
 <template name="managerNoteWidget">
   <div class="manager-note-widget">
-    {{#if Template.subscriptionsReady}}
+    <h3>Notes</h3>
+    <div class="note-wrapper">
       {{> autosaveTextEditor text=textOfNote saveChanges=saveNote readOnly=readOnly}}
-      {{> commentsPanel id=note._id type='noteItem'}}
+    </div>
+    {{#if note}}
+      <div class="ibox panel panel-default">
+        {{#collapsibleElement settings=commentsSettings}}
+          {{> commentsPanel id=note._id type='noteItem'}}
+        {{/collapsibleElement}}
+      </div>
       {{> taskWidget type='managerNotes' itemId=note._id dueDate=date}}
     {{/if}}
   </div>

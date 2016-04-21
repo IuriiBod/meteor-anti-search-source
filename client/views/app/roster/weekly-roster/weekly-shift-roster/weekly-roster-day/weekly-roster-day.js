@@ -2,7 +2,6 @@ let SORTABLE_SCREEN_WIDTH = 1200; //lg screen size
 
 //context: type ("template"/null), currentDate (Date), shiftBuffer (ReactiveVar), onCopyShift (function)
 Template.weeklyRosterDay.onCreated(function () {
-  this.subscribe('managerNote', this.data.currentDate, HospoHero.getCurrentAreaId());
   this.hasTemplateType = function () {
     return this.data.type === 'template';
   };
@@ -58,12 +57,16 @@ Template.weeklyRosterDay.helpers({
   },
 
   managerNotesCount: function () {
-    return ManagerNotes.find({
+    const currentArea = HospoHero.getCurrentArea(Meteor.userId());
+    const locationId = currentArea && currentArea.locationId;
+
+    return currentArea && ManagerNotes.find({
       text: {$exists: true},
-      noteDate: this.currentDate,
-      'relations.areaId': HospoHero.getCurrentAreaId()
+      noteDate: TimeRangeQueryBuilder.forDay(this.currentDate, locationId),
+      'relations.areaId': currentArea._id
     }).count();
   },
+
   shiftDateFormat: function (date) {
     return HospoHero.dateUtils.shortDateFormat(moment(date));
   },
@@ -96,7 +99,22 @@ Template.weeklyRosterDay.events({
   },
 
   'click .manager-note-flyout': function (event, tmpl) {
-    FlyoutManager.open('managerNotes', {date: tmpl.data.currentDate});
+    const date = tmpl.data.currentDate;
+    const relations = HospoHero.getRelationsObject();
+    const note = ManagerNotes.findOne({noteDate: TimeRangeQueryBuilder.forDay(date, relations.locationId)});
+    const localMoment = HospoHero.dateUtils.getDateMomentForLocation(date, relations.locationId);
+    const openFlyout = () => FlyoutManager.open('managerNotes', {date: date});
+
+    if (!note) {
+      Meteor.call('upsertManagerNote', {
+        noteDate: localMoment.startOf('day').toDate(),
+        relations: relations
+      }, () => {
+        openFlyout();
+      });
+    } else {
+      openFlyout();
+    }
   },
 
   'click .paste-shift-button': function (event, tmpl) {
