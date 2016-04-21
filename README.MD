@@ -155,7 +155,7 @@ We have Android, iOS support based on Cordova build system.
 
 #### Mobile app versioning
 
-* __even__ (e.g. 0.1.0, 0.1.2) build for __testing__ server
+* __even__ (e.g. 0.1.2, 0.1.4) build for __testing__ server
 * __odd__ (e.g. 0.1.1, 0.1.3) build for __production__ server
 
-*This rule is true for app versions higher that __0.1.0__*
+*This rule is true for app versions higher than __0.1.0__*
