@@ -24,11 +24,5 @@ Template.forceForecast.events({
 
   'click .update-forecast': function () {
     Meteor.call('updatePredictions', processMethodResult);
-  },
-
-  'click .reset-data': function () {
-    if (confirm('Resetting forecast data... \nAre you sure?')) {
-      Meteor.call('resetForecastData', processMethodResult);
-    }
   }
 });

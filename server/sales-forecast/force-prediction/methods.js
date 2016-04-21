@@ -27,26 +27,23 @@ Meteor.methods({
     return true;
   },
 
-  //resetForecastData: function () {
-  //  checkOrganizationOwner(this.userId);
-  //  var currentArea = HospoHero.getCurrentArea(this.userId);
-  //
-  //  //remove only sales with actual quantity
-  //  DailySales.remove({
-  //    predictionQuantity: {$exists: false},
-  //    'relations.locationId': currentArea.locationId
-  //  });
-  //
-  //  DailySales.update({
-  //    'relations.locationId': currentArea.locationId
-  //  }, {
-  //    $unset: {
-  //      actualQuantity: ''
-  //    }
-  //  }, {multi: true});
-  //
-  //  return true;
-  //},
+  resetForecastData: function () {
+    checkOrganizationOwner(this.userId);
+    let currentArea = HospoHero.getCurrentArea(this.userId);
+
+    //remove only sales with actual quantity
+    DailySales.remove({
+      'relations.locationId': currentArea.locationId
+    });
+
+    MenuItems.update({
+      'relations.locationId': currentArea.locationId
+    }, {
+      $unset: {lastForecastModelUpdateDate: ''}
+    });
+
+    return true;
+  },
 
   updatePredictions: function () {
     checkOrganizationOwner(this.userId);

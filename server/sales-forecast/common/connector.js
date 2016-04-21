@@ -13,11 +13,11 @@ GooglePredictionApi = function GooglePredictionApi(locationId) {
 
 
 GooglePredictionApi.prototype._getModelName = (menuItemId) =>
-  `${HospoHero.isDevelopmentMode() ? "dev-" : ""}menu-item-${menuItemId}`;
+  `menu-item-${menuItemId}`;
 
 
 GooglePredictionApi.prototype._getTrainingFileName = (menuItemId) =>
-  `${HospoHero.isDevelopmentMode() ? "dev-" : ""}menu-item-${menuItemId}.csv`;
+  `${this._getModelName(menuItemId)}.csv`;
 
 
 GooglePredictionApi.prototype._buildPredictionModelForMenuItem = function (menuItem) {
