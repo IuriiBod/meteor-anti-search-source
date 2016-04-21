@@ -18,8 +18,16 @@ This command takes less time (in case if you have existing dump in `.dump` folde
 
 ## Starting the app
 
+Execute from project's root directory:
+
 ```
 $ meteor --settings .mupx-deploy/settings-dev.json
+```
+
+or simply:
+
+```
+$ ./run.sh
 ```
 
 ## Contribution process
