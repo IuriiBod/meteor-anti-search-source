@@ -136,5 +136,24 @@ $ git checkout develop
 $ git merge develop
 ```
 
-*2016/04/01*
+### Servers
 
+* production
+* testing
+* development [hospohero.herokuapp.com](https://hospohero.herokuapp.com)
+
+#### Configuration
+
+Config files are located at `.mupx-deploy`:
+* `settings.json` - testing/production configuration;
+* `settings-dev.json` - development configuration (should be used while running app on `localhost`).
+
+
+### Mobile app
+
+We have Android, iOS support based on Cordova build system. 
+
+#### Mobile app versioning
+
+* __even__ (e.g. 0.1.0, 0.1.2) build for __testing__ server
+* __odd__ (e.g. 0.1.1, 0.1.3) build for __production__ server
