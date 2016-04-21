@@ -1,6 +1,6 @@
 # HospoHero
 
-## Importing database
+### Importing database
 
 In order to import database you need to execute this command inside of project's root directory (requires MongoDB v3.x.x):
 
@@ -16,7 +16,7 @@ $ ./reset_db.sh d
 
 This command takes less time (in case if you have existing dump in `.dump` folder).
 
-## Starting the app
+### Starting the app
 
 Execute from project's root directory:
 
@@ -30,7 +30,7 @@ or simply:
 $ ./run.sh
 ```
 
-## Contribution process
+### Contribution process
 
 In order to contribute to this repository you should follow next steps:
 
@@ -48,16 +48,16 @@ In order to contribute to this repository you should follow next steps:
 \* All pull requests should be __reviewed__ by other team member before merging with `develop`.
 
 
-## Merging
+### Merging
 
 Always merge your code with `--no-ff` option, so git will create separate commit for merging and you will be able to review changes after merging on github.
 
 This approach allows to avoid old code appearing in merged version.
 
 
-## Style Guide
+### Style Guide
 
-### General recomendations: 
+#### General recomendations: 
 
 * Use variable's names that makes sense.
 * Use `let` and `const` instead of `var`.
@@ -74,7 +74,7 @@ This approach allows to avoid old code appearing in merged version.
 * If you need to initizlize multiple propertyies of the same object, you should use `_.extend` or `Object.assign` functions.
 * IF YOU ARE WORKING WITH UNSATISFIED QUALITY CODE, PELASE, REWRITE IT FOLLOWING THIS GUIDE.
 
-### Client side (Blaze):
+#### Client side (Blaze):
 
 * Correct order for Blaze's template configuration methods: `onCreated, onRendered, helpers, events, onDestroyed`.
 * Don't use `Session` if you can pass data using template context.
@@ -94,14 +94,14 @@ This approach allows to avoid old code appearing in merged version.
 }
 ```
 
-### Server side:
+#### Server side:
 
 * Each argument should be checked using `check(target, Type)` inside all publishers and methods.
 * Usually each method or publisher should perform permission checks using `HospoHero.security.PermissionChecker`.
 * Use `NotificationSender` to send email/buildin/push notifications.
 
 
-## Snapshots
+### Snapshots
 
 In order to simplify shipping features and fixes to multiple servers and reduce deployment complexity we are using snapshots.
 
@@ -117,7 +117,7 @@ hh-12-21
 
 While deploying snapshots next rule should be always true: __you cannot deploy next snapshot until previous ones wasn't deployed.__
 
-### Snapshot patching
+#### Snapshot patching
 
 Patches are created for snapshots deployed on testing server (if any bugs were found).
 
@@ -142,7 +142,7 @@ $ git merge develop
 * testing
 * development [hospohero.herokuapp.com](https://hospohero.herokuapp.com)
 
-#### Configuration
+### Configuration
 
 Config files are located at `.mupx-deploy`:
 * `settings.json` - testing/production configuration;
