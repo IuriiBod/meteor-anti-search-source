@@ -13,29 +13,37 @@
         <div class="modal-body">
           <form class="form-horizontal">
             <div class="form-group">
-              <label class="col-sm-2 control-label">To:</label>
+              <label for="emailTo" class="col-sm-2 control-label">To:</label>
 
               <div class="col-sm-10">
-                <input type="text" class="form-control emailTo" value="{{supplier.email}}">
+                <input id="emailTo" type="text" class="form-control" value="{{supplier.email}}">
               </div>
             </div>
             <div class="form-group">
-              <label class="col-sm-2 control-label">Subject:</label>
+              <label for="emailSubject" class="col-sm-2 control-label">Subject:</label>
 
               <div class="col-sm-10">
-                <input type="text" class="form-control emailSubject" value="{{subject supplier}}">
+                <input id="emailSubject" type="text" class="form-control" value="{{subject supplier}}">
               </div>
             </div>
             <div class="form-group">
-              <label class="col-sm-2 control-label">Reply To:</label>
+              <label for="replyTo" class="col-sm-2 control-label">Reply To:</label>
 
               <div class="col-sm-10">
-                <input type="text" class="form-control replyTo" value="{{replyToEmail}}">
+                <input id="replyTo" type="text" class="form-control" value="{{replyToEmail}}">
               </div>
             </div>
           </form>
           <div class="clearfix"></div>
           {{> textEditor initialHtml=initialHtml}}
+          <div class="form-group" name="duplicate-email">
+            <label for="duplicate" class="col-sm-11 control-label align-right">Also send to {{usersEmail}}:</label>
+
+            <div class="col-sm-1 align-right">
+              <input id="duplicate" type="checkbox">
+            </div>
+          </div>
+          <div class="clearfix"></div>
         </div>
 
         <div class="modal-footer text-right">

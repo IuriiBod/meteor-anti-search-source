@@ -17,13 +17,17 @@ Template.composeStocktakeOrderingEmail.helpers({
   },
 
   subject: function (supplier) {
-    var location = Locations.findOne({_id: supplier.relations.locationId});
-    var area = Areas.findOne({_id: supplier.relations.areaId});
+    let location = Locations.findOne({_id: supplier.relations.locationId});
+    let area = Areas.findOne({_id: supplier.relations.areaId});
     return "Order from " + location.name + ' ' + area.name;
   },
 
   replyToEmail: function () {
-    var user = Meteor.user();
+    let user = Meteor.user();
+    return user.emails[0].address;
+  },
+  usersEmail: function () {
+    let user = Meteor.user();
     return user.emails[0].address;
   }
 });
@@ -32,10 +36,17 @@ Template.composeStocktakeOrderingEmail.helpers({
 Template.composeStocktakeOrderingEmail.events({
   'click .send-email-button': function (event, tmpl) {
     event.preventDefault();
+    let mailTo = [tmpl.$('#emailTo').val()];
+    let usersEmail = Meteor.user().emails[0].address;
+    let duplicate = tmpl.$('#duplicate').prop('checked');
+
+    if (duplicate) {
+      mailTo.push(usersEmail);
+    }
 
     let mailInfo = {
-      mailTo: tmpl.$('.emailTo').val(),
-      subject: tmpl.$('.emailSubject').val(),
+      mailTo: mailTo,
+      subject: tmpl.$('#emailSubject').val(),
       text: tmpl.$('.summernote').data('summernote').code()
     };
 
