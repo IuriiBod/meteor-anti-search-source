@@ -1,14 +1,15 @@
 # HospoHero
 
-### Importing database
+### Get Started
+#### Importing database
 
-In order to import database you need to execute this command inside of project's root directory (requires MongoDB v3.x.x):
+Instead of fixtures we are using database from testing server. In order to import this database you need to execute this command inside of project's root directory (requires MongoDB v3.x.x):
 
 ```
 $ ./reset_db.sh
 ```
 
-Database dump will be stored in folder `.dump`. So, next time it is possible to restore database from existing dump:
+The databases dump will be stored in folder `.dump`. So, next time it is possible to restore database from existing dump:
 
 ```
 $ ./reset_db.sh -d
@@ -16,7 +17,7 @@ $ ./reset_db.sh -d
 
 This command takes less time (in case if you have existing dump in `.dump` folder).
 
-### Starting the app
+#### Starting the app
 
 Execute from project's root directory:
 
