@@ -33,14 +33,18 @@ ActualSalesImporter = class ActualSalesImporter {
   }
 
   _getLastImportedSaleMoment() {
-    var lastImportedSale = DailySales.findOne({
+    if (Meteor.settings.prediction.revelCustomOffset) {
+      return moment().subtract(1, 'year').endOf('day');
+    }
+
+    let lastImportedSale = DailySales.findOne({
       'relations.locationId': this._location._id,
       actualQuantity: {$gt: 0}
     }, {
       sort: {date: -1}
     });
 
-    var lastMoment;
+    let lastMoment;
     if (lastImportedSale) {
       lastMoment = HospoHero.dateUtils.getDateMomentForLocation(lastImportedSale.date, this._location._id);
     } else {
@@ -84,8 +88,8 @@ ActualSalesImporter = class ActualSalesImporter {
   }
 
   _createOnDailySaleUploadCallback(lastMomentToImport) {
-    var self = this;
-    var ignoredPosMenuItems = {};
+    let self = this;
+    let ignoredPosMenuItems = {};
 
     return {
       processSalesFn(salesData) {
@@ -94,13 +98,13 @@ ActualSalesImporter = class ActualSalesImporter {
           return false;
         }
 
-        var createdDate = salesData.createdMoment.toDate();
+        let createdDate = salesData.createdMoment.toDate();
 
         _.each(salesData.menuItems, function (actualQuantity, posMenuItemName) {
-          var menuItem = self._getMenuItemByPosName(posMenuItemName);
+          let menuItem = self._getMenuItemByPosName(posMenuItemName);
 
           if (menuItem) {
-            var item = {
+            let item = {
               actualQuantity: actualQuantity,
               date: createdDate,
               menuItemId: menuItem._id,
@@ -129,7 +133,7 @@ ActualSalesImporter = class ActualSalesImporter {
    * @private
    */
   _resetActualSales() {
-    var locationDocumentQuery = {
+    let locationDocumentQuery = {
       'relations.locationId': this._location._id
     };
 
@@ -153,11 +157,11 @@ ActualSalesImporter = class ActualSalesImporter {
       this._resetActualSales();
     }
 
-    var lastMomentToImport = this._getLastImportedSaleMoment();
+    let lastMomentToImport = this._getLastImportedSaleMoment();
 
     //this function is used as callback in revel connector
     //it should return false if loading is finished
-    var onDateUploaded = this._createOnDailySaleUploadCallback(lastMomentToImport);
+    let onDateUploaded = this._createOnDailySaleUploadCallback(lastMomentToImport);
 
     logger.info('Started actual sales import', {locationId: this._location._id});
     this._revelClient.uploadAndReduceOrderItems(onDateUploaded.processSalesFn);

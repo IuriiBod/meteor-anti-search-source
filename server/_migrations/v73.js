@@ -6,7 +6,7 @@ Migrations.add({
 
     Areas.find().forEach((area) => {
       setDatesOfNotesToStartDay(area.locationId);
-      combineNotesWithSameDate(area._id)
+      combineNotesWithSameDate(area._id);
     });
   }
 });

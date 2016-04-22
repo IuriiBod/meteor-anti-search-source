@@ -139,7 +139,7 @@ class ForecastMaker {
     var shouldBeUpdatedBy = moment(HospoHero.prediction.getDateThreshold()).subtract(halfOfInterval, 'day');
 
     return !predictionUpdatedDate || moment(predictionUpdatedDate).isBefore(shouldBeUpdatedBy);
-  };
+  }
 
 
   makeForecast() {

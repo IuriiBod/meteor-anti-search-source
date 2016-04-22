@@ -41,6 +41,7 @@
     "forecastIntervals": [
       7
     ],
-    "threshold": "2016-03-29"
+    "threshold": "2016-03-29",
+    "revelCustomOffset": 0
   }
 }
