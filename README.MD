@@ -1,6 +1,6 @@
 # HospoHero
 
-### Get Started
+### Getting Started
 #### Importing database
 
 Instead of fixtures we are using database from testing server. In order to import this database you need to execute this command inside of project's root directory (requires MongoDB v3.x.x):
