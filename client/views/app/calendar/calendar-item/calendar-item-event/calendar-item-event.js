@@ -84,6 +84,14 @@ Template.calendarItemEvent.events({
   'click .calendar-item-event-title': function (event, tmpl) {
     event.preventDefault();
     FlyoutManager.open('eventItemFlyout', {event: tmpl.data});
+  },
+
+  'click .status-info': (event) => {
+    $(event.target).popover('show');
+  },
+
+  'mouseleave .status-info': (event) => {
+    $(event.target).popover('destroy');
   }
 });
 

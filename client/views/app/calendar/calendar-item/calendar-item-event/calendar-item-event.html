@@ -1,5 +1,6 @@
 <template name="calendarItemEvent">
-  <li class="success-element calendar-item-event {{status}}" style="border-left-color: {{borderColor}}">
+  <li class="success-element calendar-item-event {{status}}
+    {{#if isAutomaticallyAllocated}}automatic-event{{/if}}" style="border-left-color: {{borderColor}}">
     <div class="agile-detail row">
       <div class="pull-left">
         <div>
@@ -18,5 +19,15 @@
         </div>
       </div>
     </div>
+    {{#if isAutomaticallyAllocated}}
+      <a>
+        <i class="fa fa-info-circle status-info"
+           data-container="body"
+           data-toggle="popover"
+           data-placement="top"
+           data-content="Event was added automatically">
+        </i>
+      </a>
+    {{/if}}
   </li>
 </template>

@@ -15,7 +15,8 @@ var CalendarEventDocument = Match.Where(function (calendarEvent) {
     finishedAt: Match.Optional(Date),
     duration: Match.Optional(Number),
     status: Match.Optional(String),
-    areaId: HospoHero.checkers.OptionalMongoId
+    areaId: HospoHero.checkers.OptionalMongoId,
+    isAutomaticallyAllocated: Match.Optional(Boolean)
   });
 
   // I've commented this code to make calendar events

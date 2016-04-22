@@ -1,5 +1,4 @@
 // context date: (String), type: (String), userId: (MongoId)
-
 Template.calendar.helpers({
   calendarTitle () {
     return this.type === 'manager' ? 'Daily Schedules' : `Calendar of ${HospoHero.username(this.userId)}`;
