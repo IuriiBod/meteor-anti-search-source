@@ -70,6 +70,11 @@ var JobItemDocument = Match.Where(function (jobItem) {
       }
     }
   });
+  checkerHelper.checkProperty('producedAmount', function () {
+    if (jobItemType === 'Prep' && (!_.isFinite(jobItem.producedAmount) || jobItem.producedAmount <= 0)) {
+      throw new Meteor.Error('Produced amount should be more than zero');
+    }
+  });
 
   return true;
 });

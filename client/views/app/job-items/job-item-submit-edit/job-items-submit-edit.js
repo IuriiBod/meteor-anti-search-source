@@ -224,7 +224,7 @@ Template.submitEditJobItem.events({
       jobItem.recipe = tmpl.$('.summernote').summernote('code');
       jobItem.ingredients = tmpl.addedIngredientsToThisJob.get();
 
-      jobItem.producedMeasure = tmpl.producedMeasure.get();
+      jobItem.producedMeasure = tmpl.producedMeasure.get() || tmpl.data.jobItem.producedMeasure;
       jobItem.producedAmount = parseFloat(tmpl.$('.produced-amount').val());
 
       jobItem.shelfLife = parseInt(tmpl.$('.shelf-life').val());
