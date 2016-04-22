@@ -10,7 +10,7 @@ Revel = class Revel {
   constructor(posCredentials) {
     this._posCredentials = posCredentials;
     this.DATA_LIMIT = 5000;
-    this._delayAfterFailedRquest = 5000; // in ms
+    this._delayAfterFailedRquest = 3000; // in ms
     this._maximumFailsBeforeQuit = 3;
   }
 
@@ -45,11 +45,14 @@ Revel = class Revel {
    */
   _queryResource(resourceName, options) {
     let failsCount = 0;
+    let needToDoRequestAgain = () => failsCount < this._maximumFailsBeforeQuit;
+
     let pos = this._posCredentials;
     let queryParams = this._convertOptionsToQueryParams(options);
     let queryResult = false;
 
-    while (failsCount < this._maximumFailsBeforeQuit) {
+
+    while (needToDoRequestAgain()) {
       try {
         let response = HTTP.get(pos.host + '/resources/' + resourceName, {
           headers: {
@@ -66,14 +69,17 @@ Revel = class Revel {
         }
       } catch (err) {
         failsCount++;
-        logger.error(`Revel API Fail #${failsCount}:`, {response: err});
-        Meteor._sleepForMs(this._delayAfterFailedRquest);
+        logger.error(`Revel API Fail #${failsCount}:`, {response: err.stack});
+
+        if (needToDoRequestAgain()) {
+          Meteor._sleepForMs(this._delayAfterFailedRquest); //wait before repeating request
+        }
       }
     }
 
     return queryResult;
   }
-  
+
   _getOrdersOffset() {
     return Meteor.settings.prediction.revelCustomOffset || 0;
   }
@@ -124,7 +130,7 @@ Revel = class Revel {
    */
   uploadAndReduceOrderItems(onDateReceived) {
     let offset = this._getOrdersOffset();
-    let totalCount = false;
+    let totalCount = Infinity;
     let toContinue = true;
 
     let bucket = new RevelSalesDataBucket();
@@ -168,7 +174,7 @@ Revel = class Revel {
    */
   uploadRawOrderItems(onOrdersLoaded) {
     let offset = this._getOrdersOffset();
-    let totalCount = false;
+    let totalCount = Infinity;
     let yearBackMoment = moment().subtract(1, 'year');
 
     while (true) {
