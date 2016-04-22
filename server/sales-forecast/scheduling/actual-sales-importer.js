@@ -163,7 +163,6 @@ ActualSalesImporter = class ActualSalesImporter {
     //it should return false if loading is finished
     let onDateUploaded = this._createOnDailySaleUploadCallback(lastMomentToImport);
 
-    logger.info('Started actual sales import', {locationId: this._location._id});
     this._revelClient.uploadAndReduceOrderItems(onDateUploaded.processSalesFn);
 
     onDateUploaded.onUploadFinished();
