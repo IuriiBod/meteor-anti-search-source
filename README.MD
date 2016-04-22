@@ -72,6 +72,7 @@ This approach allows to avoid old code appearing in merged version.
 * Write `{someProperty: itsValue}` instead of `{"someProperty": itsValue}` (except cases when property contains dot or other special character like `{'profile.fristname': 'Test'}`).
 * Use ES6 string extrapolation (e.g. `"Hello, ${username}!"`) and dynamic attributes (e.g. `{[myPropertyName]: someValue}`).
 * If you need to initizlize multiple propertyies of the same object, you should use `_.extend` or `Object.assign` functions.
+* If you need to get value with high nesting level like `let obj = {a:{b:{c:'value'}}}` consider using this method `HospoHero.utils.getNestedProperty(obj,'a.b.c',false)`. 
 * IF YOU ARE WORKING WITH UNSATISFIED QUALITY CODE, PELASE, REWRITE IT FOLLOWING THIS GUIDE.
 
 #### Client side (Blaze):
