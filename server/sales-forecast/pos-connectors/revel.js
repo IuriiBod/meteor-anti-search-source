@@ -153,7 +153,7 @@ Revel = class Revel {
         return;
       }
 
-      if (!totalCount) {
+      if (totalCount === Infinity) {
         totalCount = result.meta.total_count;
         bucket.timezone(result.meta.time_zone);
       }
