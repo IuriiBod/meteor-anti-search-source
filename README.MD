@@ -11,7 +11,7 @@ $ ./reset_db.sh
 Database dump will be stored in folder `.dump`. So, next time it is possible to restore database from existing dump:
 
 ```
-$ ./reset_db.sh d
+$ ./reset_db.sh -d
 ```
 
 This command takes less time (in case if you have existing dump in `.dump` folder).
