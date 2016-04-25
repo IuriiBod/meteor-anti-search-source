@@ -70,6 +70,9 @@ read -rsn1
 #echo "Remove old build in ${BUILD_FOLDER} and ./.meteor/local folders"
 #rm -rf ${BUILD_FOLDER} ./.meteor/local/.build* ./.meteor/local/build ./.meteor/local/cordova-build ./.meteor/local/bundler-cache
 
+# android build folder retains old app version after new build
+rm -rf "${BUILD_FOLDER}/android"
+
 # build project for production
 meteor build ${BUILD_FOLDER} --server=${SERVER_URL} --mobile-settings=${MOBILE_SETTINGS}
 
