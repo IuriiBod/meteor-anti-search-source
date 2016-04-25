@@ -4,9 +4,7 @@ class StockOrdersGenerator {
   }
 
   generate() {
-    if (!this._checkIfStocktakeCompleted()) {
-      throw new Meteor.Error(500, 'Cannot generate orders: you should complete stocktake');
-    }
+    this._checkIfStocktakeCompleted();
 
     let stockItemInStocktake = StockItems.findOne({stocktakeId: this._stocktake._id});
     if (!stockItemInStocktake) {
@@ -47,24 +45,51 @@ class StockOrdersGenerator {
       'relations.areaId': this._stocktake.relations.areaId
     });
 
-    let ingredientsCount = 0;
-    let stockItemsCount = 0;
+    let requiredIngsObj = {};
 
     specialAreas.forEach(specialArea => {
       if (_.isArray(specialArea.ingredientsIds)) {
-        ingredientsCount += specialArea.ingredientsIds.length;
-
-        let currentCount = StockItems.find({
-          specialAreaId: specialArea._id,
-          stocktakeId: this._stocktake._id,
-          'ingredient.id': {$in: specialArea.ingredientsIds}
-        }).count();
-
-        stockItemsCount += currentCount;
+        specialArea.ingredientsIds.forEach(ingredientId => requiredIngsObj[ingredientId] = true);
       }
     });
 
-    return ingredientsCount === stockItemsCount;
+    let requiredIngsArray = Object.keys(requiredIngsObj);
+
+    let existingStockItems = StockItems.find({
+      stocktakeId: this._stocktake._id
+    }).map(stockItem => stockItem.ingredient.id);
+
+    let missingIngredientsIds = _.difference(requiredIngsArray, existingStockItems);
+
+    if (missingIngredientsIds.length > 0) {
+      let errorMessage = this._generateErrorMessageAboutMissingIngredients(missingIngredientsIds);
+      throw new Meteor.Error(500, errorMessage);
+    } else {
+      return true;
+    }
+  }
+
+  /**
+   * List first 10 missing ingredients names
+   * Warning: method modifies missingIngredientsIds array
+   *
+   * @param missingIngredientsIds
+   * @returns {string}
+   * @private
+   */
+  _generateErrorMessageAboutMissingIngredients(missingIngredientsIds) {
+    let missingIngsToDisplay = missingIngredientsIds.splice(0, 10);
+
+    let missingIngredientsNames = Ingredients.find({
+      _id: {$in: missingIngsToDisplay}
+    }, {
+      fields: {
+        description: 1
+      }
+    }).map(ingredient => ingredient.description);
+
+    let moreMessage = missingIngredientsIds.length > 0 ? `and ${missingIngredientsIds.length} more` : '';
+    return `Cannot generate orders: You should specify count of ${missingIngredientsNames.join(', ')} ${moreMessage} ingredients`;
   }
 
   /**
