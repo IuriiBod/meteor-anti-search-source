@@ -289,7 +289,7 @@ const allocatePrepJobsForWeek = (location) => {
 
 if (!HospoHero.isDevelopmentMode()) {
   HospoHero.LocationScheduler.addDailyJob('Allocate prep jobs', () => {
-    return 4; //4:00 AM
+    return 5; //5:00 AM
   }, (location) => {
     logger.info('Started prep jobs allocation', {locationId: location._id});
     allocatePrepJobsForWeek(location);

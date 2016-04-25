@@ -161,11 +161,10 @@ updateForecastForLocation = function (location) {
 };
 
 
-// if (!HospoHero.isDevelopmentMode()) {
-//   HospoHero.LocationScheduler.addDailyJob('Update forecast', function () {
-//     return 3; //3:00 AM
-//   }, function (location) {
-//     logger.info('Started forecast generation', {locationId: location._id});
-//     updateForecastForLocation(location);
-//   });
-// }
+if (!HospoHero.isDevelopmentMode()) {
+  HospoHero.LocationScheduler.addDailyJob('Update forecast', function () {
+    return 4; //4:00 AM
+  }, function (location) {
+    updateForecastForLocation(location);
+  });
+}
