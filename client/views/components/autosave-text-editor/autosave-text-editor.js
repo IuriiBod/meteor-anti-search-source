@@ -35,7 +35,7 @@ Template.autosaveTextEditor.onRendered(function () {
     }
   };
 
-  $("body").bind('click', onBodyClick);
+  $('body').bind('click', onBodyClick);
 });
 
 
@@ -48,6 +48,7 @@ Template.autosaveTextEditor.helpers({
     return Template.instance().statusText.get();
   }
 });
+
 
 Template.autosaveTextEditor.events({
   'click .text-editor-content'(event, tmpl) {
