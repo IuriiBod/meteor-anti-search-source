@@ -6,9 +6,9 @@ Router.route('/interviews', {
     let area = HospoHero.getCurrentArea();
 
     if (area) {
-      return Meteor.subscribe('interviews', area.organizationId, area._id);
+      return Meteor.subscribe('orgainzationInterviews', area.organizationId, area._id);
     }
-  }
+   }
 });
 
 Router.route('/interview-details/:id', {
