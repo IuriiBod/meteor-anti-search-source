@@ -1,11 +1,11 @@
 let canUserReceiveDeliveries = function (areaId = null) {
-  var checker = new HospoHero.security.PermissionChecker();
+  let checker = new HospoHero.security.PermissionChecker();
   return checker.hasPermissionInArea(areaId, 'receive deliveries');
 };
 
 
 let getAreaIdFromOrder = function (orderId) {
-  var order = OrderItems.findOne({_id: orderId});
+  let order = OrderItems.findOne({_id: orderId});
   return (order && order.relations) ? order.relations.areaId : null;
 };
 
@@ -139,6 +139,8 @@ Meteor.methods({
       text: String
     });
 
+    let user = Meteor.user();
+
     let order = Orders.findOne({_id: orderId});
     if (!order || !canUserReceiveDeliveries(order.relations.areaId)) {
       logger.error("User not permitted to send orders");
@@ -148,7 +150,7 @@ Meteor.methods({
     //send order to supplier
     Email.send({
       to: mailInfo.mailTo,
-      from: Meteor.user().emails[0].address,
+      from: HospoHero.utils.getNestedProperty(user, 'emails.0.address', false),
       subject: mailInfo.subject,
       html: mailInfo.text
     });
