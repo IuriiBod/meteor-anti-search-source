@@ -333,7 +333,9 @@
                 {{#unless inFlyout }}
                   <a href="{{pathFor route="jobItemsMaster"}}" class="btn btn-white" type="button">Cancel</a>
                 {{/unless}}
-                <button class="btn btn-primary submit-button" type="submit">Save changes</button>
+                {{#if hasPermissionInAreaTo 'edit jobs'}}
+                  <button class="btn btn-primary submit-button" type="submit">Save changes</button>
+                {{/if}}
               </div>
             </div>
           </form>

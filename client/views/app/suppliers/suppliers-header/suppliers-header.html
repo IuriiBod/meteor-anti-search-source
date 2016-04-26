@@ -1,5 +1,7 @@
 <template name="suppliersListHeader">
   <div class="title-action">
-    <a class="btn btn-primary" href="#addNewSupplierModal" data-toggle="modal">Add new supplier</a>
+    {{#if hasPermissionInAreaTo 'edit stocks'}}
+      <a class="btn btn-primary" href="#addNewSupplierModal" data-toggle="modal">Add new supplier</a>
+    {{/if}}
   </div>
 </template>

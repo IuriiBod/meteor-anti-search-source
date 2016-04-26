@@ -151,20 +151,22 @@
 
       <button type="submit" class="hide submit-form-button">save</button>
     </form>
-    <div class="pull-right">
-      {{#if editMode}} <!-- is edit mode -->
-        <button type="button" class="btn btn-primary submit-ingredient-button">Save changes</button>
-        {{#if isArchive}}
-          <button type="button" class="btn btn-warning restore-button">Restore</button>
-          <button type="button" class="btn btn-danger delete-button">Delete</button>
-        {{else}}
-          <button type="button" class="btn btn-warning archive-button">Archive</button>
+    {{#if hasPermissionInAreaTo 'edit stocks'}}
+      <div class="pull-right">
+        {{#if editMode}} <!-- is edit mode -->
+          <button type="button" class="btn btn-primary submit-ingredient-button">Save changes</button>
+          {{#if isArchive}}
+            <button type="button" class="btn btn-warning restore-button">Restore</button>
+            <button type="button" class="btn btn-danger delete-button">Delete</button>
+          {{else}}
+            <button type="button" class="btn btn-warning archive-button">Archive</button>
+          {{/if}}
+        {{else}} <!-- create mode -->
+          <button class="btn btn-primary submit-ingredient-button">Add ingredient</button>
         {{/if}}
-      {{else}} <!-- create mode -->
-        <button class="btn btn-primary submit-ingredient-button">Add ingredient</button>
-      {{/if}}
-      <button type="button" class="btn btn-default cancel-button">Cancel</button>
-    </div>
+        <button type="button" class="btn btn-default cancel-button">Cancel</button>
+      </div>
+    {{/if}}
 
     {{#if ingredient._id}}
       <div class="related-items-widget">

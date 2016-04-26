@@ -45,7 +45,11 @@ RoutePermissionChecker._permissionsByRouteName = {
   stocktake: 'edit stocks',
   stocktakeCounting: 'edit stocks',
   orderReceive: 'receive deliveries',
-  stocktakeOrdering: 'receive deliveries'
+  stocktakeOrdering: 'receive deliveries',
+  submitMenuItem: 'edit menu',
+  submitJobItem: 'edit jobs',
+  jobItemEdit: 'edit jobs',
+  ingredientsList: 'view stocks'
 };
 
 

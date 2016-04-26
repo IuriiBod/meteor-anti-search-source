@@ -77,7 +77,12 @@ Meteor.startup(function () {
 
   Accounts.onLogin(function () {
     StaleSession.reset();
-    Meteor.subscribe('organizationInfo');
+    let userProfile = Meteor.user();
+
+    if (userProfile) {
+      Meteor.subscribe('organizationInfo', userProfile);
+    }
+    
     Meteor.subscribe('todayTasks');
   });
 });

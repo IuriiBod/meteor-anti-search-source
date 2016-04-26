@@ -1,6 +1,8 @@
 <template name="jobListHeader">
   <div class="title-action">
-    <a class="btn btn-primary" href="{{pathFor route='submitJobItem'}}">Add new job</a>
+    {{#if hasPermissionInAreaTo 'edit jobs'}}
+      <a class="btn btn-primary" href="{{pathFor route='submitJobItem'}}">Add new job</a>
+    {{/if}}
     {{#if isArchived}}
       <a href="{{pathFor route='jobItemsMaster' status=''}}" class="btn btn-info">
         <i class="fa fa-long-arrow-left"></i> Active Items
@@ -14,7 +16,7 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" style="margin-left: -56px;">
-          {{#if hasPermissionInAreaTo 'edit jobs'}}
+          {{#if hasPermissionInAreaTo 'view jobs'}}
             <li>
               <a href="{{pathFor route='jobItemsMaster' status='archived'}}">Archived
                 Items</a>

@@ -1,8 +1,8 @@
 // Publishing organization and all what depends on it
-Meteor.publishComposite('organizationInfo', function () {
+Meteor.publishComposite('organizationInfo', function (userProfile) {
   logger.info('Organization info subscription');
 
-  let user = this.userId && Meteor.users.findOne(this.userId);
+  let user = this.userId && userProfile;
 
   if (user) {
     let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
@@ -22,7 +22,7 @@ Meteor.publishComposite('organizationInfo', function () {
           $or: [{owners: user._id}]
         };
 
-        if (user.relations && user.relations.organizationIds) {
+        if (user.relations) {
           query.$or.push({_id: {$in: user.relations.organizationIds}});
         }
       }

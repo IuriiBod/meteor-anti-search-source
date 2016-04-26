@@ -2,13 +2,15 @@
   <tr>
     <td>{{dateFormat date}}</td>
     <td>
-      <a href="{{pathFor route="stocktakeCounting"}}" class="btn btn-primary">
-        <i class="fa -o fa-fw fa-lg fa-eye"></i>View stocktake
-      </a>
+      {{#if hasPermissionInAreaTo 'view stocks'}}
+        <a href="{{pathFor route="stocktakeCounting"}}" class="btn btn-primary">
+          <i class="fa -o fa-fw fa-lg fa-eye"></i>View stocktake
+        </a>
 
-      <a href="{{pathFor route="stocktakeOrdering"}}" class="btn btn-primary">
-        <i class="fa -o fa-fw fa-lg fa-eye"></i>View orders placed
-      </a>
+        <a href="{{pathFor route="stocktakeOrdering"}}" class="btn btn-primary">
+          <i class="fa -o fa-fw fa-lg fa-eye"></i>View orders placed
+        </a>
+      {{/if}}
     </td>
   </tr>
 </template>

@@ -1,6 +1,13 @@
 let registerGlobalSubs = function () {
   Meteor.startup(function () {
-    Meteor.subscribe('organizationInfo');
+    Tracker.autorun(function () {
+      let userProfile = Meteor.user();
+
+      if (userProfile) {
+        Meteor.subscribe('organizationInfo', userProfile);
+      }
+    });
+    
     Meteor.subscribe('todayTasks');
   });
 };

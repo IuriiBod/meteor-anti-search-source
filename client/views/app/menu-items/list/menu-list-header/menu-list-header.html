@@ -1,6 +1,8 @@
 <template name="menuListHeader">
   <div class="title-action menu-list-header">
-    <a class="btn btn-primary" href="{{pathFor route='submitMenuItem'}}">Add new menu</a>
+    {{#if hasPermissionInAreaTo 'edit menus'}}
+      <a class="btn btn-primary" href="{{pathFor route='submitMenuItem'}}">Add new menu</a>
+    {{/if}}
     {{#if isArchived}}
       {{#linkTo route="menuItemsMaster" category="all" status="all" class="btn btn-info"}}
         <i class="fa fa-long-arrow-left"></i> Active Items
@@ -14,10 +16,10 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu list-header-dropdown">
-          {{#if hasPermissionInAreaTo 'edit menus'}}
+          {{#if hasPermissionInAreaTo 'view menus'}}
             <li>
               {{#linkTo route="menuItemsMaster" category="all" status="archived"}}
-                Archive Items
+                Archived Items
               {{/linkTo}}
             </li>
           {{/if}}

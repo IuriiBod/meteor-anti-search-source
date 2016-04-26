@@ -1,9 +1,11 @@
 <template name="jobDetailsHeader">
   <div class="title-action">
-    <button class="btn btn-primary hidden-print edit-job-item">
-      <i class="fa fa-edit"></i>
-      Edit Job
-    </button>
+    {{#if hasPermissionInAreaTo 'edit jobs'}}
+      <button class="btn btn-primary hidden-print edit-job-item">
+        <i class="fa fa-edit"></i>
+        Edit Job
+      </button>
+    {{/if}}
     <div class="btn-group">
       <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
