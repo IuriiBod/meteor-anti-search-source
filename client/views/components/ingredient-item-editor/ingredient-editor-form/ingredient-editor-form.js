@@ -32,16 +32,25 @@ Template.ingredientEditorForm.onCreated(function () {
 Template.ingredientEditorForm.onRendered(function () {
   this.$('.unit-ordered-popover').popover({
     content: "Put the amount that you usually order in here. " +
-    "If it's a 20kg bag of flour, put '20kg bag'. If it's a 1lt bottle, put '1lt Bottle."
+    "If it's a 20kg bag of flour, put '20kg bag'. If it's a 1lt bottle, put '1lt Bottle.",
+    placement: function (context, source) {
+      return calculatePlacement(source);
+    }
   });
   this.$('.unit-used-popover').popover({
     content: "What is the measure that you prefer to use in your recipes. " +
     "This is usually small. If you order 20kg's of flour, you might use grams of flour in your recipes. " +
-    "In this box you'd simple put 'grams' or 'gms'."
+    "In this box you'd simple put 'grams' or 'gms'.",
+    placement: function (context, source) {
+      return calculatePlacement(source);
+    }
   });
   this.$('.unit-size-popover').popover({
     content: "If you use mls of milk and order 1lt you'd put 1000 in this box, as there is 1000 mls in every litre. " +
-    "If you use grams of flour and order 20kg bags you'd put 20000, as there is 20000 grams in 20kgs."
+    "If you use grams of flour and order 20kg bags you'd put 20000, as there is 20000 grams in 20kgs.",
+    placement: function (context, source) {
+      return calculatePlacement(source);
+    }
   });
 });
 
@@ -142,6 +151,15 @@ Template.ingredientEditorForm.events({
   }
 });
 
+let calculatePlacement = function(source) {
+  let position = $(source).position();
+
+  if (position.left < 120) {
+    return 'right';
+  } else {
+    return 'top';
+  }
+};
 
 var submitIngredientFormFields = [
   'code',

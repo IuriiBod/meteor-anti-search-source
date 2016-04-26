@@ -63,6 +63,7 @@ settinghead:auto-nprogress
 dsyko:jquery-ui-touch-punch
 fronteed:icheck
 manuel:reactivearray
+rubaxa:sortable
 
 hospohero:stale-session
 trsdln:flyouts
@@ -90,6 +91,7 @@ jss:suncalc
 iron:router
 zephraph:namespace
 dburles:mongo-collection-instances
+jss-copleykj:socialize-messaging
 raix:push
 
 alonoslav:roles
@@ -99,5 +101,3 @@ jss:ui-states
 
 
 # ===========> new
-rubaxa:sortable
-jss-copleykj:socialize-messaging
