@@ -6,7 +6,7 @@
       {{# if isEditableMode}}
         <div>
           <div class="status-text text-muted">{{statusText}}</div>
-          {{> autosaveTextEditorWrapper}}
+          {{> textEditor initialHtml=text}}
         </div>
       {{else}}
         <div class="text-editor-content">

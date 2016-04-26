@@ -1,10 +1,14 @@
 Template.interviewDetails.onCreated(function () {
   this.saveInterview = () => {
-    return (detailsToUpdate) => {
+    return (detailsToUpdate, onDataSaved) => {
       let interview = this.data.interview;
       _.extend(interview, detailsToUpdate);
 
-      Meteor.call('updateInterview', interview, HospoHero.handleMethodResult());
+      Meteor.call('updateInterview', interview, HospoHero.handleMethodResult(() => {
+        if (_.isFunction(onDataSaved)) {
+          onDataSaved();
+        }
+      }));
     };
   };
 });
@@ -48,11 +52,11 @@ Template.interviewDetails.helpers({
     return this.interview.agendaAndMinutes || 'Click to edit...';
   },
 
-  saveChanges() {
+  onSaveAgenda() {
     let saveProject = Template.instance().saveInterview();
 
-    return function (newAgendaText) {
-      saveProject({agendaAndMinutes: newAgendaText});
+    return function (newAgendaText, onDataSaved) {
+      saveProject({agendaAndMinutes: newAgendaText}, onDataSaved);
     };
   }
 });

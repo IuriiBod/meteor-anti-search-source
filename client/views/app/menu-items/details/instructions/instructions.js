@@ -3,12 +3,12 @@ Template.menuItemInstructions.helpers({
     return this.instructions || "Add instructions here";
   },
 
-  saveChanges() {
+  onSaveInstructions() {
     let self = this;
-    return function (instructions) {
+    return function (instructions, onDataSaved) {
       let menuItem = MenuItems.findOne({_id: self._id});
       menuItem.instructions = instructions;
-      Meteor.call("editMenuItem", menuItem, HospoHero.handleMethodResult());
+      Meteor.call('editMenuItem', menuItem, HospoHero.handleMethodResult(() => onDataSaved()));
     };
   },
 

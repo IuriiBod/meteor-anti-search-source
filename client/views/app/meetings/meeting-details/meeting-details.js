@@ -7,10 +7,15 @@ Template.meetingDetails.onCreated(function () {
 
 Template.meetingDetails.onRendered(function () {
   let success = (field) => {
-    return (undefinedParam, newValue) => {
+    return (undefinedParam, newValue, onDataSaved) => {
       let meeting = this.meeting();
       meeting[field] = newValue;
-      Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
+      Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult(() => {
+        if (_.isFunction(onDataSaved)) {
+          // this callback is required by autosave text editor
+          onDataSaved();
+        }
+      }));
     };
   };
 
@@ -27,10 +32,11 @@ Template.meetingDetails.onRendered(function () {
    * Saves the new meeting document
    * @param {String} field - the name of field to save
    * @param {String} value - the value to save
+   * @param {Function} [onDataSaved] - notifies editor about successful saving
    * @returns {Function}
    */
-  this.saveMeeting = (field, value) => {
-    return success(field)(false, value);
+  this.saveMeeting = (field, value, onDataSaved) => {
+    return success(field)(false, value, onDataSaved);
   };
 });
 
@@ -45,10 +51,10 @@ Template.meetingDetails.helpers({
     return meeting.agendaAndMinutes || 'Click to edit...';
   },
 
-  saveChanges () {
+  onSaveAgenda () {
     let tmpl = Template.instance();
-    return (agendaAndMinutes) => {
-      tmpl.saveMeeting('agendaAndMinutes', agendaAndMinutes);
+    return (agendaAndMinutes, onDataSaved) => {
+      tmpl.saveMeeting('agendaAndMinutes', agendaAndMinutes, onDataSaved);
     };
   },
 

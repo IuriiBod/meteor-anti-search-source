@@ -17,15 +17,16 @@ Template.autosaveTextEditor.onCreated(function () {
 Template.autosaveTextEditor.onRendered(function () {
   this.saveChanges = () => {
     if (!this.data.readOnly && _.isFunction(this.data.saveChanges)) {
-      var text = this.$('.summernote').summernote('code');
-      this.data.saveChanges(text);
-      this.statusText.set('Saved');
+      let text = this.$('.summernote').summernote('code');
+
+      this.statusText.set('Saving...');
+      this.data.saveChanges(text, () => this.statusText.set('Saved'));
     }
   };
 
-  var onBodyClick = (event) => {
+  let onBodyClick = (event) => {
     if (this.$('.note-editor').length) {
-      var isClickOnNoteEditor = $.contains(this.$('.note-editor')[0], event.target);
+      let isClickOnNoteEditor = $.contains(this.$('.note-editor')[0], event.target);
       if (!isClickOnNoteEditor) {
         this.editableMode.set(false);
         this.timer.clearTimeout();
@@ -58,10 +59,7 @@ Template.autosaveTextEditor.events({
 
   'keyup .note-editor'(event, tmpl) {
     event.preventDefault();
-
-    tmpl.statusText.set('Saving...');
-
-    var timeout = tmpl.data.timeout || 1500;
+    let timeout = tmpl.data.timeout || 1500;
     tmpl.timer.clearTimeout();
     tmpl.timer.setTimeout(tmpl.saveChanges, timeout);
   }

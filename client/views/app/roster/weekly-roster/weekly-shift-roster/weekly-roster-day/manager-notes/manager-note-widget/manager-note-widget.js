@@ -6,15 +6,14 @@ var canUserEditRoster = function () {
 //Context: date (Date)
 
 Template.managerNoteWidget.onCreated(function () {
-  let self = this;
   const area = HospoHero.getCurrentArea();
 
-  self.note = () => ManagerNotes.findOne({
-    noteDate: TimeRangeQueryBuilder.forDay(self.data.date, area.locationId),
+  this.note = () => ManagerNotes.findOne({
+    noteDate: TimeRangeQueryBuilder.forDay(this.data.date, area.locationId),
     'relations.areaId': area._id
   });
 
-  self.textForEmptyEditor = 'Leave your note here';
+  this.textForEmptyEditor = 'Leave your note here';
 });
 
 Template.managerNoteWidget.helpers({
@@ -28,10 +27,11 @@ Template.managerNoteWidget.helpers({
     }
     return canUserEditRoster() ? Template.instance().textForEmptyEditor : 'No notes';
   },
+
   saveNote () {
     let tmpl = Template.instance();
 
-    return (text) => {
+    return (text, onDataSaved) => {
 
       if (text === tmpl.textForEmptyEditor) {
         return;
@@ -46,12 +46,14 @@ Template.managerNoteWidget.helpers({
         text: text
       });
 
-      Meteor.call('upsertManagerNote', note);
+      Meteor.call('upsertManagerNote', note, HospoHero.handleMethodResult(() => onDataSaved()));
     };
   },
+
   readOnly () {
     return !canUserEditRoster();
   },
+  
   commentsSettings () {
     return {
       namespace: 'weeklyRoster',
