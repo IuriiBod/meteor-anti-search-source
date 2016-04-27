@@ -1,16 +1,17 @@
-let canUserEditInterviews = (userId, areaId = null) => {
+let canUserEditInterviews = (userId, organizationId = null) => {
   let checker = new HospoHero.security.PermissionChecker(userId);
-  return checker.hasPermissionInArea(areaId, 'edit interviews');
+  return checker.hasPermissionInOrganization(organizationId, 'edit interviews');
 };
 
-Meteor.publishComposite('orgainzationInterviews', function (organizationId, areaId) {
+Meteor.publishComposite('orgainzationInterviews', function (organizationId) {
   let userId = this.userId;
 
-  if (userId && areaId && canUserEditInterviews(userId, areaId)) {
+  if (userId && organizationId && canUserEditInterviews(userId, organizationId)) {
     return {
       find () {
         let query = {
-          $or: interviewQuery(userId)
+          $or: interviewQuery(userId),
+          organizationId: organizationId
         };
 
         return Interviews.find(query);
@@ -37,9 +38,9 @@ Meteor.publishComposite('interview', function (interviewId, userId) {
   check(userId, HospoHero.checkers.MongoId);
 
   let interview = Interviews.findOne({_id: interviewId});
-  let areaId = interview.relations.areaId;
+  let organizationId = interview.organizationId;
 
-  if (!canUserEditInterviews(userId, areaId)) {
+  if (!canUserEditInterviews(userId, organizationId)) {
     this.ready();
   } else {
     return {

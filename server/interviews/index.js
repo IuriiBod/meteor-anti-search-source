@@ -1,6 +1,6 @@
-let canUserEditInterviews = (areaId = null) => {
+let canUserEditInterviews = (organizationId = null) => {
   let checker = new HospoHero.security.PermissionChecker();
-  return checker.hasPermissionInArea(areaId, 'edit interviews');
+  return checker.hasPermissionInOrganization(organizationId, 'edit interviews');
 };
 
 
@@ -8,7 +8,7 @@ Meteor.methods({
   crateInterview (interview) {
     check(interview, HospoHero.checkers.InterviewDocument);
 
-    if (!canUserEditInterviews(interview.relations.areaId)) {
+    if (!canUserEditInterviews(interview.organizationId)) {
       throw new Meteor.Error('You can\'t edit interviews');
     }
 
@@ -22,7 +22,7 @@ Meteor.methods({
 
   updateInterview (interview) {
     check(interview, HospoHero.checkers.InterviewDocument);
-    if (!canUserEditInterviews(interview.relations.areaId)) {
+    if (!canUserEditInterviews(interview.organizationId)) {
       throw new Meteor.Error('You can\'t edit interviews');
     }
 

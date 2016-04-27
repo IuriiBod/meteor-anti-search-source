@@ -44,7 +44,7 @@ function createInterview(application) {
           startTime: startTime,
           endTime: endTime,
           interviewee: application.details.name,
-          relations: application.relations
+          organizationId: application.organizationId
         };
 
         Meteor.call('crateInterview', interview, HospoHero.handleMethodResult(() => {

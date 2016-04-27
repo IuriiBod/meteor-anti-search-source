@@ -4,7 +4,7 @@ let InterviewDocument = Match.Where(interview => {
     startTime: Date,
     endTime: Date,
     interviewee: String,
-    relations: HospoHero.checkers.Relations,
+    organizationId: HospoHero.checkers.MongoId,
 
     _id: HospoHero.checkers.OptionalMongoId,
     interviewers: Match.Optional([HospoHero.checkers.MongoId]),
