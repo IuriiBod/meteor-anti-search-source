@@ -8,7 +8,7 @@ Template.conversationsList.onCreated(function () {
 
 Template.conversationsList.helpers({
   timeAgoStr (date) {
-    return `${moment(date).toNow()} ago`.substr(3);
+    return moment(date).fromNow();
   }
 });
 
