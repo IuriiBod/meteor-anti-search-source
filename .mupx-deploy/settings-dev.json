@@ -4,9 +4,9 @@
       "id": "rc6uoqw0"
     },
     "__superMail": "tom@farmcafe.com",
-    "reCaptchaKey": "6Lf9fxsTAAAAAKxR50-I57o9GqBCoNCwj5yyQa_E"
+    "reCaptchaKey": "6LfeeR4TAAAAAKzglkqmHuoRyjrKOIG6gRcvRgK9"
   },
-  "reCaptchaKey": "6Lf9fxsTAAAAAC8-BDtwvBYaV72IZIqUJa-zHjqb",
+  "reCaptchaKey": "6LfeeR4TAAAAALCZO8Cqgg6TfOG7zSz3-_a_e28B",
   "intercom": {
     "secret": "fF3c2THd9ILbXpPuvNs7Q-_UpisGchsbjMj2W4Y-"
   },
@@ -40,8 +40,6 @@
     "useRawOrders": true,
     "forecastIntervals": [
       7
-    ],
-    "threshold": "2016-03-29",
-    "revelCustomOffset": 0
+    ]
   }
 }
