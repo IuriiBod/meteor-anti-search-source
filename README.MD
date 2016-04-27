@@ -147,7 +147,8 @@ $ git merge develop
 ### Configuration
 
 Config files are located at `.mupx-deploy`:
-* `settings.json` - testing/production configuration;
+* `settings.json` - production configuration;
+* `settings-test.json` - testing configuration;
 * `settings-dev.json` - development configuration (should be used while running app on `localhost`).
 
 

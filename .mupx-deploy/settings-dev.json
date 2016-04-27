@@ -3,7 +3,7 @@
     "intercom": {
       "id": "rc6uoqw0"
     },
-    "__superMail": "tom@farmcafe.com",
+    "__superMail": "tom@hospohero.com",
     "reCaptchaKey": "6LfeeR4TAAAAAKzglkqmHuoRyjrKOIG6gRcvRgK9"
   },
   "reCaptchaKey": "6LfeeR4TAAAAALCZO8Cqgg6TfOG7zSz3-_a_e28B",
@@ -33,6 +33,12 @@
       "loginStyle": "popup",
       "appId": "218298795204661",
       "secret": "0555a865eb2bdfbe9fa9b2835ba5ca89"
+    },
+    {
+      "service": "microsoft",
+      "loginStyle": "popup",
+      "clientId": "000000004C18D10E",
+      "secret": "-EW5QnnALm-sL4oeJxOueMOwudPNQHbI"
     }
   ],
   "logLevel": "warn",

@@ -31,6 +31,7 @@ crosswalk
 accounts-ui
 accounts-google
 accounts-facebook
+q42:accounts-microsoft
 accounts-password
 service-configuration
 

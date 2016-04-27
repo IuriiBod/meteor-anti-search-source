@@ -37,8 +37,8 @@
     {
       "service": "microsoft",
       "loginStyle": "popup",
-      "clientId": "000000004C18D10D",
-      "secret": "xmAZ73S9GFlTmIt52JZQVk4GciKhffUP"
+      "clientId": "000000004C18D10E",
+      "secret": "-EW5QnnALm-sL4oeJxOueMOwudPNQHbI"
     }
   ],
   "logLevel": "info",

@@ -19,14 +19,17 @@ beep() {
 # Initialize mobile server
 setStagingServerUrl() {
     SERVER_URL="https://hospohero.herokuapp.com"
+    MOBILE_SETTINGS=".mupx-deploy/settings-test.json"
 }
 
 setTestingServerUrl () {
     SERVER_URL="https://hospoherotesting.herokuapp.com"
+    MOBILE_SETTINGS=".mupx-deploy/settings-test.json"
 }
 
 setProductionServerUrl() {
     SERVER_URL="https://app.hospohero.com"
+    MOBILE_SETTINGS=".mupx-deploy/settings.json"
 }
 
 case "$1" in
@@ -46,7 +49,6 @@ esac
 
 
 APP_NAME="HospoHero"
-MOBILE_SETTINGS=".mupx-deploy/settings.json"
 
 BUILD_FOLDER="../hospohero-build"
 

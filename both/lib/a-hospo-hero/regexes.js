@@ -5,7 +5,7 @@ Namespace('HospoHero.regExp', {
    */
   escape: /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,
   email: /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/,
-  password: /^[a-zA-Z0-9]\w{3,14}$/i,
+  password: /^[a-zA-Z0-9 | _ | . | -]{8,16}$/i,
   pin: /^\d{4}$/,
   phone: /^[0-9]{0,20}/,
   numbers: /^\d/,

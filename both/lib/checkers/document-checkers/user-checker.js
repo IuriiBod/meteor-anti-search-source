@@ -26,6 +26,12 @@ var UserChecker = Match.Where(function (user) {
   return true;
 });
 
+var UserPassword =  Match.Where(function (password) {
+  check(password, String)
+  return HospoHero.regExp.password.test(password);
+});
+
 Namespace('HospoHero.checkers', {
-  UserChecker: UserChecker
+  UserChecker: UserChecker,
+  UserPassword:UserPassword
 });

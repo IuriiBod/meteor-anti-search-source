@@ -31,7 +31,7 @@ AccountsTemplates.addField({
 });
 
 AccountsTemplates.addField({
-  _id: "tel",
+  _id: "phone",
   type: "tel",
   displayName: "Phone number",
   required: false,

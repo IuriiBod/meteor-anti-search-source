@@ -181,6 +181,23 @@ Meteor.methods({
       }
     };
     Meteor.users.update({_id: userId}, query);
+  },
+  setUserPassword: function (password) {
+    check(password,HospoHero.checkers.UserPassword);
+    let user = Meteor.users.findOne({_id:this.userId});
+    if(!user) {
+      logger.error('User does not exist');
+      throw new Meteor.Error(401, "User does not exist");
+    }
+    if(!_.isEmpty(user.services.password)){
+      logger.error('User already have password', {userId:user._id});
+      throw new Meteor.Error('User not permitted to set password', {userId: user._id});
+    }
+    return Accounts.setPassword(user._id, password,{logout:false});
+  },
+  hasUserPassword: function() {
+    let user =  Meteor.users.findOne({_id:this.userId});
+    return user && !!user.services.password;
   }
 });
 

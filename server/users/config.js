@@ -1,36 +1,6 @@
 Accounts.onCreateUser(function (options, user) {
-  user.profile = options.profile || {};
-
-  if (user.services.google || user.services.facebook) {
-    var result = options.profile.name.indexOf(' ');
-    if (result > 0) {
-      var splitName = options.profile.name.split(' ');
-      user.profile.firstname = splitName[0];
-      user.profile.lastname = splitName[1];
-    } else {
-      user.profile.firstname = options.profile.name;
-      user.profile.lastname = '';
-    }
-  }
-  if (user.services.google){
-    user.emails = [{address: null}];
-    user.emails[0].address = user.services.google.email;
-    user.emails[0].verified = user.services.google.verified_email;// jshint ignore:line
-    if (options.profile.picture) {
-      user.profile.image = options.profile.picture;
-    }
-  }
-  if (user.services.facebook) {
-      user.emails = [{address: null}];
-      user.emails[0].address = user.services.facebook.email;
-      user.emails[0].verified = user.services.facebook.email;
-      user.profile.image = "http://graph.facebook.com/" + user.services.facebook.id + "/picture/?type=large";
-  }
-  user.pinCode = user.profile.pinCode || '1111';
-  delete user.profile.pinCode;
-  return user;
+  return new UserAccount().create(options,user);
 });
-
 
 Accounts.onLogin(function (loginInfo) {
   Meteor.users.update({_id: loginInfo.user._id}, {$set: {lastLoginDate: new Date()}});
@@ -44,3 +14,78 @@ AntiSearchSource.allow('users', {
   },
   allowedFields: ['profile.firstname', 'profile.lastname', 'emails.address']
 });
+
+
+class UserAccount {
+  constructor(){
+    this._defaultPin = '1111';
+  }
+
+  _createAccountUser(options,user)  {
+    user.profile = options.profile;
+    user.pinCode = user.profile.pinCode;
+    delete user.profile.pinCode;
+    return user;
+  }
+
+  _createServiceUser(user) {
+    let serviceName =  this._getServiceName(user);
+    let email = this._getServicesEmail(user.services[serviceName]);
+    var existingUser = Meteor.users.findOne({'emails.address':email});
+    if (!existingUser) {
+      this._setUserProfile(user,user.services[serviceName],serviceName);
+      this._setUserEmail(user,email)
+      user.pinCode = this._defaultPin;
+      return user;
+    } else {
+      this._setUserProfile(existingUser,user.services[serviceName],serviceName);
+      existingUser.services[serviceName] = user.services[serviceName];
+      Meteor.users.remove({_id: existingUser._id});
+      delete existingUser._document;
+      return existingUser;
+    }
+  }
+
+  _getServiceName(user){
+    if(user.services.facebook){
+      return 'facebook';
+    }else if(user.services.google){
+      return 'google';
+    }else if(user.services.microsoft){
+      return 'microsoft';
+    }
+  }
+
+  _getServicesEmail(service){
+    return service.email ? service.email : service.emails.preferred;
+  }
+
+  _setUserProfile(user,service,serviceName) {
+    user.profile = user.profile || {};
+    if(serviceName === 'google'){
+      user.profile.fullName = user.profile.fullName || `${service.given_name} ${service.family_name}`;
+      user.profile.image = user.profile.image || service.picture;
+    }
+    if(serviceName === 'facebook'){
+      user.profile.fullName =  user.profile.fullName || `${service.first_name} ${service.last_name}`;
+      user.profile.image = user.profile.image || `http://graph.facebook.com/${service.id}/picture/?type=large`;
+    }
+    if(serviceName === 'microsoft'){
+      user.profile.fullName =  user.profile.fullName || `${service.first_name} ${service.last_name}`;
+    }
+  }
+
+  _setUserEmail(user,email) {
+    user.emails = [{address: null}];
+    user.emails[0].address = email;
+    user.emails[0].verified = false;
+  }
+
+  create(options,user) {
+    if(user.services.password){
+      return this._createAccountUser(options,user);
+    }else {
+      return this._createServiceUser(user);
+    }
+  }
+}
