@@ -38,18 +38,19 @@ Meteor.methods({
       throw new Meteor.Error(403, 'User not permitted to update stocktakes');
     }
 
+    let stockItemId;
     if (updatedStockItem._id) {
-      let stockItemId = updatedStockItem._id;
+      stockItemId = updatedStockItem._id;
       delete updatedStockItem._id;
       StockItems.update({_id: stockItemId}, {$set: updatedStockItem});
     } else {
-      StockItems.insert(updatedStockItem);
+      stockItemId = StockItems.insert(updatedStockItem);
     }
 
-    logger.info('Stock item updated', updatedStockItem._id);
+    logger.info('Stock item updated', stockItemId);
   },
-  
-  upsertStockPrepItem: (updatedStockPrepItem) =>  {
+
+  upsertStockPrepItem: (updatedStockPrepItem) => {
     check(updatedStockPrepItem, HospoHero.checkers.StockPrepItemDocument);
 
     if (!canUserEditStocks(updatedStockPrepItem.relations.areaId)) {
