@@ -22,7 +22,7 @@ Template.leaveRequestsList.helpers({
     return LeaveRequests.find().count() / (page * this.itemPerPage) >= 1;
   },
   headers(){
-    return ['User', 'Start Date', 'End Date', 'Status', 'Comment'];
+    return ['User', 'Start Date', 'End Date', 'Comment'];
   },
   filterValue(){
     let res = this.filter.get();
