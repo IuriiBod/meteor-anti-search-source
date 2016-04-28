@@ -8,6 +8,7 @@ Template.conversation.onCreated(function () {
   if (this.conversation.participants().count()) {
     this.isParticipantsListOpened.set(false);
   }
+  this.discussionAreaFirstHeight = null;
 });
 
 Template.conversation.onRendered(function () {
@@ -20,6 +21,10 @@ Template.conversation.onRendered(function () {
       Meteor.call('addSubjectOfConversation', this.data.id, newValue);
     }
   });
+
+  this.discussionAreaFirstHeight = this.$('.chat-discussion').outerHeight();
+  showLastMessage(this);
+
 });
 
 Template.conversation.onDestroyed(function() {
@@ -34,8 +39,9 @@ Template.conversation.helpers({
   conversation () {
     return Template.instance().conversation;
   },
-  isOwnMessage (ownerMessageId) {
-    return ownerMessageId === Meteor.userId();
+  countOfNotRead () {
+    var user = Meteor.user();
+    return user ? user.conversationsNotReadMessages(this.id).count() : false;
   },
   isParticipantsListOpened () {
     return Template.instance().isParticipantsListOpened.get();
@@ -70,19 +76,27 @@ Template.conversation.helpers({
   subjectOfConversation () {
     const conversation = Meteor.conversations.findOne(this.id);
     return conversation && conversation.subject  ? conversation.subject : 'Subject';
+  },
+  textAreaAutocompleteSettings () {
+     return {
+      limit: 10,
+      position:'top',
+      rules: [{
+        token: '@',
+        collection: Meteor.users,
+        field: ["profile.firstname", "profile.lastname"],
+        filter: {
+          "_id": {$nin: [Meteor.userId()]}
+        },
+        sort: true,
+        template: Template.username,
+        noMatchTemplate: Template.noMatchTemplate
+      }]
+    };
   }
 });
 
 Template.conversation.events({
-  'click .send-message': (event, tmpl) => {
-    event.preventDefault();
-    const messageInput = tmpl.find('.message-input textarea');
-    const message = messageInput.value;
-    if (message.length) {
-      tmpl.conversation.sendMessage(message);
-      messageInput.value = '';
-    }
-  },
   'click .add-participant': (event, tmpl) => {
     event.preventDefault();
     tmpl.isParticipantsListOpened.set(true);
@@ -94,5 +108,45 @@ Template.conversation.events({
     Meteor.call('removeCurrentUserFromConversations', tmpl.data.id);
 
     FlyoutManager.getInstanceByElement(event.target).close();
+  },
+  'keypress .message-area': function (event, tmpl) {
+    if(event.which === 13 && !event.shiftKey){
+      if (event.target.value.length) {
+        tmpl.conversation.sendMessage(event.target.value);
+        event.target.value = '';
+        showLastMessage(tmpl);
+      }
+    }
+  },
+  'keyup .message-area': function (event, tmpl) {
+     if(resizeTextArea(event, tmpl)){
+       resizeChatDiscussionArea(event, tmpl)
+     }
   }
 });
+
+function resizeTextArea(event, tmpl) {
+  event.target.style.height = "5px";
+  event.target.style.height = (event.target.scrollHeight)+"px";
+  if(event.target.scrollHeight < pxToInt(tmpl.$(event.target).css('max-height'))) {
+    tmpl.$(event.target).css('overflow-y','hidden');
+    return true;
+  }else {
+    tmpl.$(event.target).css('overflow-y','scroll');
+    return false;
+  }
+}
+
+function resizeChatDiscussionArea(event, tmpl) {
+  var discussionAreaHeight = tmpl.discussionAreaFirstHeight - event.target.scrollHeight;
+  tmpl.$('.chat-discussion').height(discussionAreaHeight);
+}
+
+function pxToInt(string){
+  return string ? parseInt(string.split('px')[0]) : 0
+}
+
+function showLastMessage(tmpl){
+ const discussionClass = '.chat-discussion';
+ tmpl.$(discussionClass).scrollTop(tmpl.$(discussionClass).prop("scrollHeight"));
+}

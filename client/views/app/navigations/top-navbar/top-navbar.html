@@ -51,8 +51,11 @@
           </li>
 
           <li>
-            <a class="open-chat" href="#">
+            <a class="count-info open-chat" href="#">
               <i class="fa fa-comments-o"></i>
+              {{#if countOfNotReadMessage}}
+                <span class="label label-primary">{{countOfNotReadMessage}}</span>
+              {{/if}}
             </a>
           </li>
         </ul>

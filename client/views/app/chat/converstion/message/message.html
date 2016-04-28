@@ -1,0 +1,9 @@
+<template name="conversationMessage">
+  <div class="message {{#if isOwnMessage userId}}own-message{{/if}} {{#if isNotReadYet}}not-read-yet{{/if}}">
+    <div class="message-header">
+      <strong class="author">{{username userId}}</strong>
+      <small class="timestamp">{{timeFormattedWithDate date}}</small>
+    </div>
+    <p class="message-content">{{body}}</p>
+  </div>
+</template>

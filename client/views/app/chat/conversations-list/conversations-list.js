@@ -9,6 +9,10 @@ Template.conversationsList.onCreated(function () {
 Template.conversationsList.helpers({
   timeAgoStr (date) {
     return moment(date).fromNow();
+  },
+  countOfNotRead (conversationId) {
+    var user = Meteor.user();
+    return user ? user.conversationsNotReadMessages(conversationId).count() : false;
   }
 });
 

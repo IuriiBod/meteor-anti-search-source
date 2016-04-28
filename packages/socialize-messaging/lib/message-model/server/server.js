@@ -1,13 +1,13 @@
 MessagesCollection.allow({
     //If the user is a participant, allow them to insert (send) a message
     insert:function (userId, message) {
-        if(userId &&ParticipantsCollection.findOne({userId:userId, conversationId:message.conversationId})){
+        if(userId && ParticipantsCollection.findOne({userId:userId, conversationId:message.conversationId})){
             return true;
         }
     },
     //If the user sent the message, let them modify it.
     update: function (userId, message) {
-        return userId && message.checkOwnership();
+        return userId && message.isUserInConversation(userId);
     }
 });
 
@@ -38,4 +38,11 @@ MessagesCollection.after.insert(function (userId, document) {
 
     //update the date on the conversation for sorting the conversation from newest to oldest
     ConversationsCollection.update(document.conversationId, {$set:{date:date}});
+});
+
+Meteor.methods({
+    "setMessageAsRead": function(messageId) {
+        check(messageId, String);
+        return Meteor.messages.update({_id:messageId},{$addToSet:{readBy:this.userId}});
+    }
 });

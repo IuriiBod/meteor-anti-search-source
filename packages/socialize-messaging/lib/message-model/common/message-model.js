@@ -39,6 +39,14 @@ Message.prototype.isInFlight = function() {
     return this.inFlight;
 };
 
+Message.prototype.isReadBy = function (userId) {
+    return  this.readBy ? this.readBy.indexOf(userId) >= 0 : false;
+};
+
+Message.prototype.isUserInConversation = function (userId) {
+    return !!Meteor.conversations.findOne({_id:this.conversationId,_participants:userId});
+};
+
 MessagesCollection = Message.collection;
 
 
@@ -73,6 +81,10 @@ Message.appendSchema({
         },
         index: -1,
         denyUpdate:true
+    },
+    readBy:{
+        type:[String],
+        optional:true
     },
     "inFlight":{
         type:Boolean,

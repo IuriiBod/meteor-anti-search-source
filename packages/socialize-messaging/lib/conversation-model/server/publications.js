@@ -42,15 +42,23 @@ Meteor.publish("messagesFor", function(conversationId, options){
     var self = this;
     var user = User.createEmpty(self.userId);
 
-    if(!self.userId){
-        return this.ready();
+    if (!self.userId) {
+      return this.ready();
     }
 
     var conversation = Conversation.createEmpty(conversationId);
 
-    if(user.isParticipatingIn(conversation)){
-        return conversation.messages(options.limit, options.skip, "date", -1);
+    if (user.isParticipatingIn(conversation)) {
+      return conversation.messages(options.limit, options.skip, "date", -1);
     }
+});
+Meteor.publish("notReadMessages", function(){
+  if (!this.userId) {
+    return this.ready();
+  }
+  var user = Meteor.users.findOne({_id:this.userId});
+  var  conversationIds = user._conversationIds();
+  return Meteor.messages.find({conversationId:{$in:conversationIds}, userId:{$ne:user._id},  readBy:{$ne:user._id}});
 });
 
 /**

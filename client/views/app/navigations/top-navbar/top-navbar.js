@@ -1,3 +1,7 @@
+Template.topNavbar.onCreated(function () {
+  this.subscribe('notReadMessages');
+});
+
 Template.topNavbar.helpers({
   today: function () {
     return moment(new Date()).format("YYYY-MM-DD");
@@ -48,7 +52,17 @@ Template.topNavbar.helpers({
   notifications: function () {
     return Notifications.find({"read": false, "to": Meteor.userId()}, {sort: {"createdOn": -1}, limit: 5});
   },
-
+  countOfNotReadMessage:function (){
+    var user = Meteor.user();
+    if(user){
+      var count = user.conversationsNotReadMessages().count();
+      if(count <= 50){
+        return count;
+      }else {
+        return '50+';
+      }
+    }
+  },
   areaColor: function () {
     var area = HospoHero.getCurrentArea();
     if (area) {

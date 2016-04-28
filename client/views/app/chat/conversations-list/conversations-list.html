@@ -8,7 +8,13 @@
               <img class="message-sender-avatar" src="{{profilePicture userId}}" alt="">
               <div class="message-body">
                 <small class="pull-right">{{timeAgoStr date}}</small>
-                <strong>{{username userId}}</strong>
+                {{#if countOfNotRead conversationId}}
+                  <a class="count-info">
+                    <i class="fa fa-envelope"></i>
+                    <span class="label label-primary">{{countOfNotRead conversationId}}</span>
+                  </a>
+                {{/if}}
+                <strong>{{username userId}} </strong>
                 <br>
                 <p>{{body}}</p>
               </div>
