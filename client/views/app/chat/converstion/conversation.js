@@ -27,7 +27,7 @@ Template.conversation.onRendered(function () {
 
 });
 
-Template.conversation.onDestroyed(function() {
+Template.conversation.onDestroyed(function () {
   this.data.onCloseConversation();
 });
 
@@ -75,12 +75,12 @@ Template.conversation.helpers({
   },
   subjectOfConversation () {
     const conversation = Meteor.conversations.findOne(this.id);
-    return conversation && conversation.subject  ? conversation.subject : 'Subject';
+    return conversation && conversation.subject ? conversation.subject : 'Subject';
   },
   textAreaAutocompleteSettings () {
-     return {
+    return {
       limit: 10,
-      position:'top',
+      position: 'top',
       rules: [{
         token: '@',
         collection: Meteor.users,
@@ -110,7 +110,7 @@ Template.conversation.events({
     FlyoutManager.getInstanceByElement(event.target).close();
   },
   'keypress .message-area': function (event, tmpl) {
-    if(event.which === 13 && !event.shiftKey){
+    if (event.which === 13 && !event.shiftKey) {
       if (event.target.value.length) {
         tmpl.conversation.sendMessage(event.target.value);
         event.target.value = '';
@@ -119,20 +119,20 @@ Template.conversation.events({
     }
   },
   'keyup .message-area': function (event, tmpl) {
-     if(resizeTextArea(event, tmpl)){
-       resizeChatDiscussionArea(event, tmpl)
-     }
+    if (resizeTextArea(event, tmpl)) {
+      resizeChatDiscussionArea(event, tmpl);
+    }
   }
 });
 
 function resizeTextArea(event, tmpl) {
   event.target.style.height = "5px";
-  event.target.style.height = (event.target.scrollHeight)+"px";
-  if(event.target.scrollHeight < pxToInt(tmpl.$(event.target).css('max-height'))) {
-    tmpl.$(event.target).css('overflow-y','hidden');
+  event.target.style.height = (event.target.scrollHeight) + "px";
+  if (event.target.scrollHeight < pxToInt(tmpl.$(event.target).css('max-height'))) {
+    tmpl.$(event.target).css('overflow-y', 'hidden');
     return true;
-  }else {
-    tmpl.$(event.target).css('overflow-y','scroll');
+  } else {
+    tmpl.$(event.target).css('overflow-y', 'scroll');
     return false;
   }
 }
@@ -142,11 +142,11 @@ function resizeChatDiscussionArea(event, tmpl) {
   tmpl.$('.chat-discussion').height(discussionAreaHeight);
 }
 
-function pxToInt(string){
-  return string ? parseInt(string.split('px')[0]) : 0
+function pxToInt(string) {
+  return string ? parseInt(string.split('px')[0]) : 0;
 }
 
-function showLastMessage(tmpl){
- const discussionClass = '.chat-discussion';
- tmpl.$(discussionClass).scrollTop(tmpl.$(discussionClass).prop("scrollHeight"));
+function showLastMessage(tmpl) {
+  const discussionClass = '.chat-discussion';
+  tmpl.$(discussionClass).scrollTop(tmpl.$(discussionClass).prop("scrollHeight"));
 }
