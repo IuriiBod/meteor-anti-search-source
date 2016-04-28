@@ -54,7 +54,7 @@ let sendEmailInvitation = function (createdUser, password, area) {
       areaName: area.name,
       invitationSender: {
         name: `${sender.profile.firstname} ${sender.profile.lastname}`,
-        tel: sender.profile.tel,
+        phone: sender.profile.phone,
         email: sender.emails[0].address
       }
     },
