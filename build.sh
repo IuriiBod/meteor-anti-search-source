@@ -62,8 +62,8 @@ ANDROID_BUILD_TOOLS_VERSION="23.0.2"
 
 echo "Mobile server: ${SERVER_URL}"
 echo "Before building:"
-echo "1) remove 'crosswalk' package"
-echo "2) ensure 'force-ssl' package is enabled"
+echo "1) ensure 'force-ssl' package is enabled"
+echo "2) mobile app has correct version (odd '1' - production, even '2' - testing)"
 echo
 echo "Press ANY key to continue"
 read -rsn1
