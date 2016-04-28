@@ -30,7 +30,7 @@ Template.locationSettings.helpers({
 
   checkOrganizationOwner: function (location) {
     let permissionChecker = new HospoHero.security.PermissionChecker();
-    return permissionChecker.isOrganizationOwner(location.relations.organizationId);
+    return permissionChecker.isOrganizationOwner(location.organizationId);
   },
 
   onLocationSubmit: function () {
