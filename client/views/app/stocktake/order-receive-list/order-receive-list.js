@@ -17,6 +17,19 @@ Template.orderReceiveList.onCreated(function () {
   this.autorun(onOrdersSearchParamsChange);
 });
 
+Template.orderReceiveList.onRendered(function () {
+  $('#wrapper').scroll(event => {
+    let wrapper = event.target;
+    let wrapperHeight = wrapper.clientHeight;
+    let wrapperScrollHeight = wrapper.scrollHeight;
+    let wrapperScrollTop = wrapper.scrollTop;
+
+    if (wrapperHeight + wrapperScrollTop === wrapperScrollHeight) {
+      this.ordersToShowLimit.set(this.ordersToShowLimit.get() + this.defaultOrdersLimit);
+    }
+  });
+});
+
 Template.orderReceiveList.helpers({
   tableHeaderItems() {
     return ['Date expected', 'Supplier', 'Ordered Value', 'Received Amount', 'Received', 'Invoice Uploaded'];
@@ -36,18 +49,9 @@ Template.orderReceiveList.helpers({
       tmpl.ordersFilter.set({isReceived, timeRangeType});
       tmpl.ordersToShowLimit.set(tmpl.defaultOrdersLimit);
     };
-  },
-
-  hideLoadMoreButton() {
-    let tmpl = Template.instance();
-    let currentLimit = tmpl.ordersToShowLimit.get();
-    return currentLimit - Orders.find().count() > 0;
   }
 });
 
-Template.orderReceiveList.events({
-  'click .load-more-orders': function (event, tmpl) {
-    event.preventDefault();
-    tmpl.ordersToShowLimit.set(tmpl.ordersToShowLimit.get() + tmpl.defaultOrdersLimit);
-  }
+Template.orderReceiveList.onDestroyed(function () {
+  $('#wrapper').unbind('scroll');
 });

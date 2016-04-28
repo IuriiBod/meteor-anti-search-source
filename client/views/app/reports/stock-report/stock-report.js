@@ -48,14 +48,20 @@ Template.stockReport.helpers({
 Template.stockReport.events({
   'click .stocktake-total': function (event, tmpl) {
     event.preventDefault();
-
-    let stocktakeType = $(event.target).data('type');
+    
+    let $eventTarget = $(event.target);
+    let stocktakeType = $eventTarget.data('type') || $eventTarget.parent().data('type');
     let firstStocktake = tmpl.reports.get()[stocktakeType];
+
+    let ibox = tmpl.$('.ibox');
+    let scrollTo = ibox.offset().top + ibox.height();
 
     tmpl.detailedReportParams.set({
       stocktakeDate: firstStocktake.date,
       stocktakeTotal: firstStocktake.total
     });
+
+    $('#wrapper').animate({ 'scrollTop': scrollTo }, 1000, 'swing');
   },
 
   'click .difference-text': function (event, tmpl) {

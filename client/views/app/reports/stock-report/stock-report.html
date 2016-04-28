@@ -28,16 +28,16 @@
                 {{#if reports}}
                   <tr>
                     <td><strong>{{formatDate reports.firstStocktake.date 'DD/MM/YY'}}</strong></td>
-                    <td class="stocktake-total" data-type="firstStocktake"> $ {{reports.firstStocktake.total}}</td>
+                    <td class="stocktake-total" data-type="firstStocktake"> $ {{reports.firstStocktake.total}} <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span></td>
                     <td> $ {{reports.totalOrdersReceived}}</td>
-                    <td class="stocktake-total" data-type="secondStocktake"> $ {{reports.secondStocktake.total}}</td>
+                    <td class="stocktake-total" data-type="secondStocktake"> $ {{reports.secondStocktake.total}} <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span></td>
                     <td><strong>{{formatDate reports.secondStocktake.date 'DD/MM/YY'}}</strong></td>
                     <td class="text-center expected-bg">$ {{reports.costOfGoods.expected.amount}}</td>
                     <td class="text-center expected-bg">{{reports.costOfGoods.expected.ratio}} %</td>
                     <td class="text-center actual-bg">$ {{reports.costOfGoods.actual.amount}}</td>
                     <td class="text-center actual-bg">{{reports.costOfGoods.actual.ratio}} %</td>
-                    <td class="text-center difference-text">$ {{reports.difference.amount}}</td>
-                    <td class="text-center difference-text">{{reports.difference.ratio}} %</td>
+                    <td class="text-center difference-text"><span>$ {{reports.difference.amount}}</span></td>
+                    <td class="text-center difference-text"><span>{{reports.difference.ratio}} %</span></td>
                   </tr>
                 {{/if}}
                 </tbody>
