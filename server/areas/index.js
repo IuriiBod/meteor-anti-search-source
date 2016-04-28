@@ -119,7 +119,7 @@ Meteor.methods({
       //check if user already added
       if (userToAdd.relations && userToAdd.relations.areaIds &&
         userToAdd.relations.areaIds.indexOf(addedUserInfo.areaId) > -1) {
-        throw new Meteor.Error(`${userToAdd.profile.firstname} is already invited to ${area.name}`);
+        throw new Meteor.Error(`${userToAdd.profile.fullName} is already invited to ${area.name}`);
       }
 
       var updateUserDocument = {

@@ -15,7 +15,7 @@ Template.taskUserFilter.helpers({
       }
     }, {
       sort: {
-        'profile.firstname': 1
+        'profile.fullName': 1
       }
     });
   }

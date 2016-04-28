@@ -9,7 +9,7 @@ Template.addUserPopup.onCreated(function () {
 
   this.searchSource = this.AntiSearchSource({
     collection: Meteor.users,
-    fields: ['profile.firstname', 'profile.lastname', 'emails.address'],
+    fields: ['profile.fullName','emails.address'],
     searchMode: 'global',
     mongoQuery: selector,
     limit: 10
@@ -38,7 +38,7 @@ Template.addUserPopup.onRendered(function () {
 Template.addUserPopup.helpers({
   searchedUsers() {
     return Template.instance().searchSource.searchResult({
-      sort: {'profile.firstname': 1}
+      sort: {'profile.fullName': 1}
     });
   },
 

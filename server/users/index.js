@@ -60,11 +60,8 @@ Meteor.methods({
     if (editDetails.profileImage) {
       query['profile.image'] = editDetails.profileImage;
     }
-    if (editDetails.firstname) {
-      query['profile.firstname'] = editDetails.firstname;
-    }
-    if (editDetails.lastname) {
-      query['profile.lastname'] = editDetails.lastname;
+    if (editDetails.fullname) {
+      query['profile.fullName'] = editDetails.fullName;
     }
     if (Object.keys(query).length > 0) {
       Meteor.users.update({"_id": id}, {$set: query});

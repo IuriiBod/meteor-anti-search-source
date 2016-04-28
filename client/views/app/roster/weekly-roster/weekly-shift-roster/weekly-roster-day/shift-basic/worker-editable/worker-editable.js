@@ -74,7 +74,7 @@ class WorkerEditableDataSource {
       ]
     };
 
-    let workersCursor = Meteor.users.find(workersQuery, {sort: {'profile.firstname': 1}});
+    let workersCursor = Meteor.users.find(workersQuery, {sort: {'profile.fullName': 1}});
     return workersCursor.map(function (worker) {
       return {
         value: worker._id,

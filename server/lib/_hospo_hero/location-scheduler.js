@@ -69,7 +69,7 @@ class LocationScheduler {
       timeCallback: timeCallback,
       jobCallback: jobCallback
     });
-  };
+  }
 
   /**
    * Initialize job execution

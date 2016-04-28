@@ -3,7 +3,7 @@ Template.usersSearch.onCreated(function () {
 
   this.searchSource = this.AntiSearchSource({
     collection: 'users',
-    fields: ['profile.firstname', 'profile.lastname', 'emails.address'],
+    fields: ['profile.fullName','emails.address'],
     searchMode: 'global',
     limit: 15
   });
@@ -29,7 +29,7 @@ Template.usersSearch.onRendered(function () {
 Template.usersSearch.helpers({
   searchResults () {
     return Template.instance().searchSource.searchResult({
-      sort: {'profile.firstname': 1}
+      sort: {'profile.fullName': 1}
     });
   },
 

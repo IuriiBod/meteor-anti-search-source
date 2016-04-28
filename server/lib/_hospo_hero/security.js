@@ -1,8 +1,7 @@
 Namespace('HospoHero.security', {
   publishFields: {
     users: {
-      'profile.firstname': 1,
-      'profile.lastname': 1,
+      'profile.fullName': 1,
       'profile.image': 1,
       'services.google.picture': 1,
       relations: 1,

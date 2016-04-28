@@ -30,24 +30,10 @@ Namespace('HospoHero', {
    * @returns {string}
    */
   username: function (user) {
-    let fullNameStr = false;
-    let appendName = namePart =>
-      fullNameStr = (fullNameStr ? fullNameStr : '') + namePart;
-
     if (_.isString(user)) {
       user = Meteor.users.findOne({_id: user});
     }
-
-    if (_.isObject(user) && user.profile) {
-      if (user.profile.firstname) {
-        appendName(user.profile.firstname);
-      }
-
-      if (user.profile.lastname) {
-        appendName(' ' + user.profile.lastname);
-      }
-    }
-
-    return fullNameStr || 'No name';
+    return user && user.profile && user.profile.fullName ?
+      user.profile.fullName : 'No name';
   }
 });

@@ -6,15 +6,13 @@ Accounts.onLogin(function (loginInfo) {
   Meteor.users.update({_id: loginInfo.user._id}, {$set: {lastLoginDate: new Date()}});
 });
 
-
 AntiSearchSource.allow('users', {
   maxLimit: 15,
   securityCheck (userId) {
     return !!userId;
   },
-  allowedFields: ['profile.firstname', 'profile.lastname', 'emails.address']
+  allowedFields: ['profile.fullName', 'emails.address']
 });
-
 
 class UserAccount {
   constructor(){
@@ -34,7 +32,7 @@ class UserAccount {
     var existingUser = Meteor.users.findOne({'emails.address':email});
     if (!existingUser) {
       this._setUserProfile(user,user.services[serviceName],serviceName);
-      this._setUserEmail(user,email)
+      this._setUserEmail(user,email);
       user.pinCode = this._defaultPin;
       return user;
     } else {
@@ -62,6 +60,7 @@ class UserAccount {
 
   _setUserProfile(user,service,serviceName) {
     user.profile = user.profile || {};
+    /*jshint -W106 */
     if(serviceName === 'google'){
       user.profile.fullName = user.profile.fullName || `${service.given_name} ${service.family_name}`;
       user.profile.image = user.profile.image || service.picture;
@@ -73,7 +72,9 @@ class UserAccount {
     if(serviceName === 'microsoft'){
       user.profile.fullName =  user.profile.fullName || `${service.first_name} ${service.last_name}`;
     }
+    /*jshint +W106 */
   }
+
 
   _setUserEmail(user,email) {
     user.emails = [{address: null}];

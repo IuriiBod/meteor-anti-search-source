@@ -1,14 +1,3 @@
-let extractFirstAndLastName = function (username) {
-  var tokenizeName = username.split(' ');
-  var firstName = tokenizeName.splice(0, 1)[0];
-  var lastName = tokenizeName.join(' ');
-  return {
-    firstname: firstName,
-    lastname: lastName
-  };
-};
-
-
 let randomPassword = function () {
   return Math.random().toString(36).slice(-8); // generates random 8 characters password
 };
@@ -47,13 +36,13 @@ let sendEmailInvitation = function (createdUser, password, area) {
     'You have been added to the ' + area.name + ' area',
     'invitation',
     {
-      firstName: createdUser.profile.firstname,
+      fullName: createdUser.profile.fullName,
       password: password,
       pinCode: createdUser.pinCode,
       email: createdUserEmail,
       areaName: area.name,
       invitationSender: {
-        name: `${sender.profile.firstname} ${sender.profile.lastname}`,
+        name: sender.profile.fullName,
         phone: sender.profile.phone,
         email: sender.emails[0].address
       }
@@ -100,7 +89,7 @@ Meteor.methods({
         var newUserDocument = {
           email: invitationMeta.email,
           password: password,
-          profile: _.extend(extractFirstAndLastName(invitationMeta.name), {
+          profile: _.extend({fullName:invitationMeta.name}, {
             pinCode: randomPinCode() // write PIN code into profile because of /server/users/index.js:22
           })
         };

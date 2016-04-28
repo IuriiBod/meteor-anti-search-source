@@ -1,18 +1,8 @@
 //Fields
 AccountsTemplates.addField({
-  _id: 'firstname',
+  _id: 'fullName',
   type: 'text',
-  displayName: 'First Name',
-  required: true,
-  minLength: 3,
-  errStr: 'error.minChar',
-  trim: true
-});
-
-AccountsTemplates.addField({
-  _id: 'lastname',
-  type: 'text',
-  displayName: 'Last Name',
+  displayName: 'Full Name',
   required: true,
   minLength: 3,
   errStr: 'error.minChar',

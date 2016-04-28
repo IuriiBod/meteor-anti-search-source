@@ -18,7 +18,7 @@ Template.participantsList.onCreated(function () {
 
   this.searchSource = this.AntiSearchSource({
     collection: 'users',
-    fields: ['profile.firstname', 'profile.lastname'],
+    fields: ['profile.fullName'],
     searchMode: 'global',
     limit: 10
   });
@@ -49,7 +49,7 @@ Template.participantsList.helpers({
     const tmpl = Template.instance();
     if (tmpl.searchName.get()) {
       return tmpl.searchSource.searchResult({
-        sort: {'profile.firstname': 1}
+        sort: {'profile.fullName': 1}
       });
     }
   },

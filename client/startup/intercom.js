@@ -7,7 +7,7 @@ Meteor.startup(function () {
       return false;
     } else {
       info.email = user.emails[0].address;
-      info.name = user.profile.firstname + ' ' + user.profile.lastname;
+      info.name = user.profile.fullName;
       info.created_at = new Date(user.createdAt).getTime();
     }
   };

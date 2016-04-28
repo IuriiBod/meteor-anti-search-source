@@ -16,7 +16,7 @@ Template.profileHeaderTitle.onRendered(function () {
 Template.profileHeaderTitle.helpers({
   users () {
     return Meteor.users.find({}, {
-      sort: {'profile.firstname': 1}
+      sort: {'profile.fullName': 1}
     });
   },
 

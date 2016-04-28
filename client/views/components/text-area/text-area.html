@@ -10,11 +10,8 @@
 <template name="username">
   <td data-id="{{this._id}}">
     <small>
-      {{#if this.profile.firstname}}
-        {{this.profile.firstname}}
-      {{/if}}
-      {{#if this.profile.lastname}}
-        {{this.profile.lastname}}
+      {{#if this.profile.fullName}}
+        {{this.profile.fullName}}
       {{/if}}
     </small>
   </td>

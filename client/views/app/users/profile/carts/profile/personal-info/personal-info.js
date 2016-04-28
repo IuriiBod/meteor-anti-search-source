@@ -4,11 +4,8 @@ Template.profilePersonalInfo.helpers({
     return HospoHero.security.hasPermissionInAreaTo("edit user's payrate") ||
       Meteor.userId() && Meteor.userId() === this._id;
   },
-  firstName: function () {
-    return HospoHero.utils.getNestedProperty(this, 'profile.firstname', 'Set firstname');
-  },
-  lastName: function () {
-    return HospoHero.utils.getNestedProperty(this, 'profile.lastname', 'Set lastname');
+  fullName: function () {
+    return HospoHero.utils.getNestedProperty(this, 'profile.fullName', 'Set full name');
   },
   phone: function () {
     return HospoHero.utils.getNestedProperty(this, 'profile.phone', 'Set phone');
@@ -21,30 +18,15 @@ Template.profilePersonalInfo.helpers({
 Template.profilePersonalInfo.onRendered(function () {
   let getUserId = () => this.data._id;
 
-  this.$('#firstname').editable({
+  this.$('#fullName').editable({
     type: 'text',
-    title: 'Edit first name',
+    title: 'Edit full name',
     showbuttons: true,
     mode: 'inline',
-    placeholder: "Enter first name here",
+    placeholder: "Enter full name here",
     success: function (response, newValue) {
       if (newValue) {
-        var editDetail = {"firstname": newValue.trim()};
-        Meteor.call("editBasicDetails", getUserId(), editDetail, HospoHero.handleMethodResult());
-      }
-    },
-    display: false
-  });
-
-  this.$('#lastname').editable({
-    type: 'text',
-    title: 'Edit last name',
-    showbuttons: true,
-    mode: 'inline',
-    placeholder: "Enter last name here",
-    success: function (response, newValue) {
-      if (newValue) {
-        var editDetail = {"lastname": newValue.trim()};
+        var editDetail = {"fullName": newValue.trim()};
         Meteor.call("editBasicDetails", getUserId(), editDetail, HospoHero.handleMethodResult());
       }
     },

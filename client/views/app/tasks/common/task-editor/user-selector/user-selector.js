@@ -9,7 +9,7 @@ Template.userSelector.helpers({
   users: function () {
     return Meteor.users.find({}, {
       sort: {
-        'profile.firstname': 1
+        'profile.fullName': 1
       }
     });
   },

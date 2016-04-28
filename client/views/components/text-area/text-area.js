@@ -16,7 +16,7 @@ Template.textArea.onRendered(function () {
       let match;
       while ((match = HospoHero.regExp.mentionRegExp.exec(text))) {
         var user = Meteor.users.findOne({
-          'profile.firstname': match[1],
+          'profile.fullName': match[1],
           "relations.areaIds": {$all: [HospoHero.getCurrentAreaId()]}
         });
         if (user) {
@@ -26,8 +26,8 @@ Template.textArea.onRendered(function () {
 
       var taggedUsers = [];
       matches.forEach(function (user) {
-        var filter = new RegExp(user.profile.firstname);
-        var subscriber = Meteor.users.findOne({"profile.firstname": filter});
+        var filter = new RegExp(user.profile.fullName);
+        var subscriber = Meteor.users.findOne({"profile.fullName": filter});
         if (subscriber) {
           taggedUsers.push({
             name: '@' + HospoHero.username(subscriber._id)
@@ -68,7 +68,7 @@ Template.textArea.helpers({
       rules: [{
         token: '@',
         collection: Meteor.users,
-        field: ["profile.firstname", "profile.lastname"],
+        field: ["profile.fullName"],
         filter: {
           "_id": {$nin: [Meteor.userId()]}
         },

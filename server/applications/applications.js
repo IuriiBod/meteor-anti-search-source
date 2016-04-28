@@ -107,7 +107,7 @@ Meteor.methods({
         applicantName: application.details.name,
         organizationName: organization.name,
         invitationSender: {
-          name: `${sender.profile.firstname} ${sender.profile.lastname}`,
+          name: sender.profile.fullName,
           phone: sender.profile.phone,
           email: sender.emails[0].address
         }
