@@ -62,8 +62,10 @@ Template.stocktakeIntervalSelect.events({
       let second = tmpl.secondStocktakeDate.get() || tmpl.data.secondStocktakeDate;
       let parentTemplateInstance = Blaze.currentView.parentView.parentView.templateInstance();
       
-      parentTemplateInstance.firstSelectedDate.set(first);
-      parentTemplateInstance.secondSelectedDate.set(second);
+      if (parentTemplateInstance.hasOwnProperty('firstSelectedDate') && parentTemplateInstance.hasOwnProperty('secondSelectedDate')) {
+        parentTemplateInstance.firstSelectedDate.set(first);
+        parentTemplateInstance.secondSelectedDate.set(second);
+      }
       tmpl.data.onIntervalSubmit(first, second, event);
     }
   }

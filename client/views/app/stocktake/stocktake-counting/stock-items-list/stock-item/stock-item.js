@@ -55,6 +55,15 @@ Template.stockItem.helpers({
         }));
       }
     };
+  },
+
+  totalValue: function () {
+    let order = Template.instance().getStockItem();
+    let cost = HospoHero.utils.getNestedProperty(order, 'ingredient.cost', 0);
+    let totalValue = order && order.count * cost;
+    let round = HospoHero.misc.rounding(totalValue);
+
+    return round || 0;
   }
 });
 
