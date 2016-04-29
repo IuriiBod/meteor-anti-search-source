@@ -52,9 +52,8 @@ Template.stockReport.events({
     let $eventTarget = $(event.target);
     let stocktakeType = $eventTarget.data('type') || $eventTarget.parent().data('type');
     let firstStocktake = tmpl.reports.get()[stocktakeType];
-
-    let ibox = tmpl.$('.ibox');
-    let scrollTo = ibox.offset().top + ibox.height();
+    
+    let scrollTo = getCoordinates(tmpl);
 
     tmpl.detailedReportParams.set({
       stocktakeDate: firstStocktake.date,
@@ -75,3 +74,15 @@ Template.stockReport.events({
     });
   }
 });
+
+function getCoordinates(tmpl) {
+  let currentScrollPosition = $('#wrapper').scrollTop();
+  let ibox = tmpl.$('.ibox');
+  let iboxMargin = parseInt(ibox.css('margin-bottom'));
+  let iboxContentPadding = parseInt(tmpl.$('.ibox-content').css('padding-bottom'));
+  let iboxBottom = ibox.offset() && ibox.offset().top + ibox.height() + iboxContentPadding + iboxMargin + currentScrollPosition;
+  let $header = $('h4');
+  let headerTop = $header && $header.offset() && $header.offset().top + currentScrollPosition;
+
+  return headerTop || iboxBottom;
+}

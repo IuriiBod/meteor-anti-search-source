@@ -28,16 +28,16 @@
                 {{#if reports}}
                   <tr>
                     <td><strong>{{formatDate reports.firstStocktake.date 'DD/MM/YY'}}</strong></td>
-                    <td class="stocktake-total" data-type="firstStocktake"> $ {{reports.firstStocktake.total}} <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span></td>
+                    <td class="stocktake-total" data-type="firstStocktake"> $ {{reports.firstStocktake.total}} <i class="fa fa-caret-down" aria-hidden="true"></i></td>
                     <td> $ {{reports.totalOrdersReceived}}</td>
-                    <td class="stocktake-total" data-type="secondStocktake"> $ {{reports.secondStocktake.total}} <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span></td>
+                    <td class="stocktake-total" data-type="secondStocktake"> $ {{reports.secondStocktake.total}} <i class="fa fa-caret-down" aria-hidden="true"></i></td>
                     <td><strong>{{formatDate reports.secondStocktake.date 'DD/MM/YY'}}</strong></td>
                     <td class="text-center expected-bg">$ {{reports.costOfGoods.expected.amount}}</td>
                     <td class="text-center expected-bg">{{reports.costOfGoods.expected.ratio}} %</td>
                     <td class="text-center actual-bg">$ {{reports.costOfGoods.actual.amount}}</td>
                     <td class="text-center actual-bg">{{reports.costOfGoods.actual.ratio}} %</td>
-                    <td class="text-center difference-text"><span>$ {{reports.difference.amount}}</span></td>
-                    <td class="text-center difference-text"><span>{{reports.difference.ratio}} %</span></td>
+                    <td class="text-center difference-text">$ {{reports.difference.amount}}  <i class="fa fa-caret-right" aria-hidden="true"></i></td>
+                    <td class="text-center difference-text">{{reports.difference.ratio}} % <i class="fa fa-caret-right" aria-hidden="true"></i></td>
                   </tr>
                 {{/if}}
                 </tbody>
