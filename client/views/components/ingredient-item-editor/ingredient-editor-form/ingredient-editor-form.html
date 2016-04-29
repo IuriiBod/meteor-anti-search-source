@@ -152,7 +152,7 @@
       <button type="submit" class="hide submit-form-button">save</button>
     </form>
     {{#if hasPermissionInAreaTo 'edit stocks'}}
-      <div class="pull-right">
+      <div class="text-right">
         {{#if editMode}} <!-- is edit mode -->
           <button type="button" class="btn btn-primary submit-ingredient-button">Save changes</button>
           {{#if isArchive}}
@@ -165,12 +165,6 @@
           <button class="btn btn-primary submit-ingredient-button">Add ingredient</button>
         {{/if}}
         <button type="button" class="btn btn-default cancel-button">Cancel</button>
-      </div>
-    {{/if}}
-
-    {{#if ingredient._id}}
-      <div class="related-items-widget">
-        {{> relatedItemsWidget referenceId=ingredient._id type="ingredient"}}
       </div>
     {{/if}}
   </div>

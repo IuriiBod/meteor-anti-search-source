@@ -48,5 +48,9 @@ Template.referenceSelector.helpers({
         {interviewers: userId}
       ]
     }).fetch();
+  },
+
+  ingredients () {
+    return Ingredients.find().fetch();
   }
 });

@@ -1,8 +1,11 @@
 Template.ingredientEditorForm.onCreated(function () {
-  this.changeIngredientState = function (newState) {
-    var self = this;
-    Meteor.call('archiveIngredient', this.data.ingredient._id, newState, HospoHero.handleMethodResult(function () {
-      self.modalInstance.close();
+  this.closeFlyout = (event) => {
+    FlyoutManager.getInstanceByElement(event.target).close();
+  };
+
+  this.changeIngredientState = function (newState, event) {
+    Meteor.call('archiveIngredient', this.data.ingredient._id, newState, HospoHero.handleMethodResult(() => {
+      this.closeFlyout(event);
       HospoHero.info('Stock item ' + newState + 'd');
     }));
   };
@@ -99,17 +102,17 @@ Template.ingredientEditorForm.events({
     event.preventDefault();
     event.stopPropagation();
 
-    var info = HospoHero.misc.getValuesFromEvent(event, submitIngredientFormFields, true);
+    var ingredient = HospoHero.misc.getValuesFromEvent(event, submitIngredientFormFields, true);
 
-    if (!info.code) {
+    if (!ingredient.code) {
       return HospoHero.error("You need to add a code");
     }
 
-    if (!info.description) {
+    if (!ingredient.description) {
       return HospoHero.error("You need to a description");
     }
 
-    info.costPerPortion = HospoHero.misc.rounding(info.costPerPortion);
+    ingredient.costPerPortion = HospoHero.misc.rounding(ingredient.costPerPortion);
 
     var handleMethodResultClose = HospoHero.handleMethodResult(function () {
       FlyoutManager.getInstanceByElement(event.target).close();
@@ -117,9 +120,10 @@ Template.ingredientEditorForm.events({
 
     var oldIngredient = tmpl.data.ingredient;
     if (oldIngredient) {
-      Meteor.call("editIngredient", oldIngredient._id, info, handleMethodResultClose);
+      let updatedIngredient = _.extend(oldIngredient, ingredient);
+      Meteor.call("editIngredient", updatedIngredient, handleMethodResultClose);
     } else {
-      Meteor.call("createIngredients", info, handleMethodResultClose);
+      Meteor.call("createIngredients", ingredient, handleMethodResultClose);
     }
   },
 
@@ -136,18 +140,18 @@ Template.ingredientEditorForm.events({
   },
 
   'click .archive-button': function (event, tmpl) {
-    tmpl.changeIngredientState('archive');
+    tmpl.changeIngredientState('archive', event);
   },
   'click .restore-button': function (event, tmpl) {
-    tmpl.changeIngredientState('restore');
+    tmpl.changeIngredientState('restore', event);
   },
   'click .delete-button': function (event, tmpl) {
     if (confirm('Are you sure you want to delete this ingredient?\nIt will be removed from all menu items as well.')) {
-      tmpl.changeIngredientState('delete');
+      tmpl.changeIngredientState('delete', event);
     }
   },
   'click .cancel-button': function (event) {
-    FlyoutManager.getInstanceByElement(event.target).close();
+    Template.instance().closeFlyout(event);
   }
 });
 

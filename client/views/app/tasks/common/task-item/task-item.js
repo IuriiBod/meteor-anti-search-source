@@ -28,6 +28,11 @@ var references = {
     route: 'projectDetails',
     routeIdParam: 'id',
     nameField: 'title'
+  },
+  ingredients: {
+    collection: Ingredients,
+    icon: 'fa-list',
+    nameField: 'description'
   }
 };
 
@@ -84,10 +89,11 @@ Template.taskItem.helpers({
       }
 
       var nameField = reference.nameField || 'name';
+      let route = reference.route ? Router.url(reference.route, {[reference.routeIdParam || '_id']: taskReference.id}) : false;
       return {
         icon: reference.icon,
         name: referenceItem[nameField],
-        route: Router.url(reference.route, {[reference.routeIdParam || '_id']: taskReference.id})
+        route: route
       };
     } else {
       return false;

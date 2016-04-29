@@ -1,3 +1,20 @@
 <template name="ingredientEditor">
   {{> ingredientEditorForm ingredient=ingredient inFlyout=inFlyout editMode=editMode}}
+
+  {{#if ingredient._id}}
+    <div class="panel panel-default m-t-md">
+      <div class="panel-heading">
+        Comments
+      </div>
+      <div class="panel-body">
+        {{> commentsPanel id=ingredient._id type="ingredient"}}
+      </div>
+    </div>
+
+    {{> taskWidget itemId=ingredient._id type="ingredients"}}
+
+    <div class="related-items-widget">
+      {{> relatedItemsWidget referenceId=ingredient._id type="ingredient"}}
+    </div>
+  {{/if}}
 </template>

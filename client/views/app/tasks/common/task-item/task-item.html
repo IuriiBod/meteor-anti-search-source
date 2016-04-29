@@ -30,10 +30,15 @@
     </td>
 
     <td>
-      <a href="{{referenceObject.route}}" class="text-primary">
+      {{#if referenceObject.route}}
+        <a href="{{referenceObject.route}}" class="text-primary">
+          <i class="text-info fa {{referenceObject.icon}}"></i>
+          {{referenceObject.name}}
+        </a>
+      {{else}}
         <i class="text-info fa {{referenceObject.icon}}"></i>
         {{referenceObject.name}}
-      </a>
+      {{/if}}
     </td>
 
     <td class="text-right mail-date">

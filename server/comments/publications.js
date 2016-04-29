@@ -1,15 +1,14 @@
-Meteor.publishComposite('comments', function (ref, areaId) {
+Meteor.publishComposite('comments', function (referenceId, areaId) {
   return {
     find: function () {
       if (this.userId) {
         var query = {
-          "reference": ref,
-          "relations.areaId": areaId
+          reference: referenceId,
+          'relations.areaId': areaId
         };
 
-        logger.info("Comments published", ref);
         return Comments.find(query, {
-          sort: {"createdOn": -1},
+          sort: {createdOn: -1},
           limit: 10
         });
       } else {

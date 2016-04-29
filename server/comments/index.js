@@ -19,8 +19,8 @@ Meteor.methods({
         noteItem: ManagerNotes,
         project: Projects,
         interview: Interviews,
-        application: Applications
-
+        application: Applications,
+        ingredient: Ingredients
       };
       return typeCollectionRelations[referenceType].findOne({_id: referenceId});
     };

@@ -30,7 +30,22 @@ Template.ingredientsModalListItem.helpers({
 
 Template.ingredientsModalListItem.events({
   'ifChecked .add-ing-checkbox': function (event, tmpl) {
+    event.stopPropagation();
     tmpl.data.onAddStockItem(tmpl.data.stock._id);
+  },
+
+  'click .ingredients-list-item': function (event, tmpl) {
+    event.preventDefault();
+
+    FlyoutManager.open('wrapperFlyout', {
+      template: 'ingredientEditor',
+      title: 'Edit Ingredient',
+      data: {
+        inFlyout: true,
+        editMode: true,
+        ingredient: tmpl.data.stock
+      }
+    });
   }
 });
 

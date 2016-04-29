@@ -15,7 +15,8 @@ Template.wrongPriceModal.events({
     if (_.isFinite(newPrice) && newPrice > 0) {
       let updateIngredientPrice = $('.update-stock-price-input:checked').val();
       let orderItem = tmpl.data;
-      let ingredientId = tmpl.data.ingredient.id;
+      let ingredient = tmpl.data.ingredient;
+      ingredient.costPerPortion = newPrice;
 
       let closeModalFn = () => {
         ModalManager.getInstanceByElement(event.target).close();
@@ -23,7 +24,7 @@ Template.wrongPriceModal.events({
 
       let onOrderItemUpdatedSuccess = () => {
         if (updateIngredientPrice) {
-          Meteor.call('editIngredient', ingredientId, {costPerPortion: newPrice}, HospoHero.handleMethodResult(closeModalFn));
+          Meteor.call('editIngredient', ingredient, HospoHero.handleMethodResult(closeModalFn));
         } else {
           closeModalFn();
         }
