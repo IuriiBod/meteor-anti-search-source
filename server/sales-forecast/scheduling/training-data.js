@@ -17,10 +17,10 @@ updateTrainingDataForLocation = function (location, forceUpdate) {
 };
 
 
-// if (!HospoHero.isDevelopmentMode()) {
-//   HospoHero.LocationScheduler.addDailyJob('Training data uploading', function () {
-//     return 3; //at 3:00 AM
-//   }, function (location) {
-//     updateTrainingDataForLocation(location, false);
-//   });
-// }
+if (!HospoHero.isDevelopmentMode()) {
+  HospoHero.LocationScheduler.addDailyJob('Training data uploading', function () {
+    return 3; //at 3:00 AM
+  }, function (location) {
+    updateTrainingDataForLocation(location, false);
+  });
+}
