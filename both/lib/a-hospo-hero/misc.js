@@ -217,34 +217,35 @@ Namespace('HospoHero.misc', {
     let relations = user && user.relations;
 
     if (relations && relations.organizationIds) {
-      let sharingObject = {
-        'private': [currentUserId],
-        organization: relations.organizationIds
-      };
+      let orQuery = [];
 
-      if (relations.locationIds) {
-        sharingObject.location = relations.locationIds;
-      }
-      if (relations.areaIds) {
-        sharingObject.area = relations.areaIds;
-      }
-
-      let orQuery = _.map(sharingObject, function (value, key) {
-        return {
-          'sharing.type': key,
-          'sharing.id': {
-            $in: value
-          }
+      if (!userId) {
+        let sharingObject = {
+          'private': [currentUserId]
         };
-      });
+
+        sharingObject.organization = relations.organizationIds;
+
+        if (relations.locationIds) {
+          sharingObject.location = relations.locationIds;
+        }
+        if (relations.areaIds) {
+          sharingObject.area = relations.areaIds;
+        }
+
+        orQuery = _.map(sharingObject, function (value, key) {
+          return {
+            'sharing.type': key,
+            'sharing.id': {
+              $in: value
+            }
+          };
+        });
+      }
 
       let assignedToQuery = {
-        assignedTo: {$in: [currentUserId]}
+        assignedTo: !!userId ? userId : currentUserId
       };
-
-      if (userId) {
-        assignedToQuery.assignedTo.$in.push(userId);
-      }
 
       taskQuery = {
         $or: _.union(orQuery, assignedToQuery)

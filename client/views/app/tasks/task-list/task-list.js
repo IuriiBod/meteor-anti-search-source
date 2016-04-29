@@ -1,11 +1,11 @@
-var filterTypes = {
+let filterTypes = {
   'All tasks': function () {
     return {};
   },
 
   'Next 7 days': function () {
-    var today = moment().startOf('day');
-    var sevenDay = moment(today).add(7, 'days');
+    let today = moment().startOf('day');
+    let sevenDay = moment(today).add(7, 'days');
     return {dueDate: TimeRangeQueryBuilder.forInterval(today, sevenDay)};
   },
 
@@ -37,18 +37,18 @@ Template.taskList.onCreated(function () {
 
 Template.taskList.helpers({
   onCreateTaskAction: function () {
-    var self = Template.instance();
+    let tmpl = Template.instance();
     return function () {
-      self.task = {};
-      self.isNewTaskCreating.set(!self.isNewTaskCreating.get());
+      tmpl.task = {};
+      tmpl.isNewTaskCreating.set(!tmpl.isNewTaskCreating.get());
     };
   },
 
   onEditTaskAction: function () {
-    var self = Template.instance();
+    let tmpl = Template.instance();
     return function (task) {
-      self.task = task;
-      self.isNewTaskCreating.set(true);
+      tmpl.task = task;
+      tmpl.isNewTaskCreating.set(true);
     };
   },
 
@@ -57,11 +57,11 @@ Template.taskList.helpers({
   },
 
   tasks: function () {
-    var tmpl = Template.instance();
-    var filterType = tmpl.filterType.get();
-    var filterUser = tmpl.filterUser.get();
+    let tmpl = Template.instance();
+    let filterType = tmpl.filterType.get();
+    let filterUser = tmpl.filterUser.get();
 
-    var query = HospoHero.misc.getTasksQuery(Meteor.userId(), filterUser);
+    let query = HospoHero.misc.getTasksQuery(Meteor.userId(), filterUser);
     query.done = false;
 
     if (filterTypes.hasOwnProperty(filterType)) {
@@ -92,16 +92,16 @@ Template.taskList.helpers({
   },
 
   onDateFilterChange: function () {
-    var self = Template.instance();
+    let tmpl = Template.instance();
     return function (filterType) {
-      self.filterType.set(filterType);
+      tmpl.filterType.set(filterType);
     };
   },
 
   onUserFilterChange: function () {
-    var self = Template.instance();
+    let tmpl = Template.instance();
     return function (user) {
-      self.filterUser.set(user);
+      tmpl.filterUser.set(user);
     };
   }
 });
