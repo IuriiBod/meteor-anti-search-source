@@ -39,11 +39,15 @@ Template.comboTimeEditable.onCreated(function () {
 
     let date = tmplParams.date ? tmplParams.date : selector === 'first-time' ? tmplParams.firstTime : tmplParams.secondTime;
 
-    let hours = $combodate.find('.hours').val();
-    let minutes = $combodate.find('.minutes').val();
+    let hours = parseInt($combodate.find('.hours').val());
+    let minutes = parseInt($combodate.find('.minutes').val());
     let ampm = $combodate.find('.ampm').val();
 
-    return new Date(moment(date).format('YYYY.MM.DD ') + hours + ':' + minutes + ' ' + ampm);
+    return moment(date).set({
+      hours: ampm === 'pm' ? hours + 12 : hours,
+      minutes,
+      seconds: 0
+    }).toDate();
   };
 });
 
