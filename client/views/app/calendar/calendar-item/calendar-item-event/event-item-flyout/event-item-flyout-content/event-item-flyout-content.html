@@ -1,5 +1,14 @@
 <template name="eventItemFlyoutContent">
-  {{> eventTimePicker start=newEvent.startTime end=newEvent.endTime onTimeSave=onTimeSave onEventSave=onEventSave}}
-
+  {{> eventTimePicker event=event onTimeSave=onTimeSave}}
   {{> Template.dynamic template=eventContentTemplate data=this}}
+  <div class="row m-t-sm confirm-event-wrapper">
+    {{#if event._id}}
+      <div class="col-xs-6">
+        {{> eventRemove}}
+      </div>
+    {{/if}}
+    <div class="col-xs-6">
+      <button class="btn btn-warning save-event">Save</button>
+    </div>
+  </div>
 </template>

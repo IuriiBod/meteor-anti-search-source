@@ -63,6 +63,11 @@
       }
     }
   }
+  .confirm-event-wrapper {
+    button {
+      width: 100%;
+    }
+  }
 }
 
 .items-palette-body {
@@ -97,11 +102,16 @@
   .grey-zone {
     background: @light-gray;
     padding: 0 10px;
+    text-align: center;
+
+    &:hover {
+      background: #e7eaec;
+    }
   }
 }
 
 .user-calendar-container {
-  .calendar-item-title {
+  .calendar-item-title span {
     cursor: pointer;
     text-decoration: underline;
   }

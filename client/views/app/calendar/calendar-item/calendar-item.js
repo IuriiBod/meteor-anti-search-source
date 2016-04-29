@@ -22,6 +22,21 @@ Template.calendarItem.helpers({
     }
   },
 
+  userSection () {
+    if (this.type !== 'manager') {
+      return false;
+    }
+
+    const shift = Shifts.findOne({
+      startTime: TimeRangeQueryBuilder.forDay(this.date),
+      assignedTo: this.userId
+    });
+
+    const section = Sections.findOne({_id: shift.section});
+
+    return section && section.name;
+  },
+
   isDailyUserCalendar () {
     return this.type === 'day';
   },
@@ -41,7 +56,16 @@ Template.calendarItem.helpers({
 
       onAdd (event) {
         let addedEvent = new EventSortableHelper(event).getSortedEvent();
-        FlyoutManager.open('eventItemFlyout', {event: addedEvent});
+        addedEvent = setEventToLastPositionInShift(addedEvent);
+
+        const addEvent = () => Meteor.call('addCalendarEvent', addedEvent);
+
+        if (addedEvent.type === 'prep job' && !isUserHasSkillsForJob(addedEvent.userId, addedEvent.itemId)) {
+          const jobItem = JobItems.findOne({_id: addedEvent.itemId});
+          addNewSectionForUserDialog(addedEvent.userId, jobItem.section, addEvent);          
+        } else {
+          addEvent();
+        }
       },
 
       // don't remove this!
@@ -63,3 +87,61 @@ Template.calendarItem.events({
     });
   }
 });
+
+function isUserHasSkillsForJob(userId, jobId) {
+  const jobItem = JobItems.findOne({_id: jobId});
+
+  return !!jobItem && !!Meteor.users.findOne({
+    _id: userId,
+    'profile.sections': jobItem.section
+  });
+}
+
+function addNewSectionForUserDialog(userId, sectionId, successfulCallback) {
+  sweetAlert({
+    title: 'Error!',
+    text: 'User not trained for this section. Do you want to mark user as trained for this section?',
+    type: 'error',
+    showCancelButton: true,
+    cancelButtonText: 'No',
+    confirmButtonText: 'Yes',
+    closeOnConfirm: true
+  }, () => {
+    Meteor.call(
+        'toggleUserTrainingSection',
+        userId,
+        sectionId,
+        true,
+        HospoHero.handleMethodResult(successfulCallback)
+    );
+  });
+}
+
+function setEventToLastPositionInShift(event) {
+  if (event.shiftId && !event._id) {
+    const duration = moment(event.endTime).diff(event.startTime, 'minutes');
+
+
+    let lastEvent = CalendarEvents.findOne({
+      shiftId: event.shiftId
+    }, {
+      sort: {startTime: -1}
+    });
+
+    // when we create a new event, we change it start/end time
+    // according to the latest existing event time or shift time
+    let startTime;
+
+    if (lastEvent) {
+      startTime = lastEvent.endTime;
+    } else {
+      let shift = Shifts.findOne(event.shiftId);
+      startTime = shift.startTime;
+    }
+
+    return Object.assign(event, {
+      startTime: startTime,
+      endTime: moment(startTime).add(duration, 'minutes').toDate()
+    });
+  }
+}

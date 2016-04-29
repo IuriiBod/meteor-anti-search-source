@@ -2,7 +2,11 @@
   <div class="user-calendar-container {{#if isDailyUserCalendar}}col-lg-12{{else}}col-lg-13{{/if}}">
     {{# if calendarItemTitle}}
       <h4 class="text-center calendar-item-title">
-        {{calendarItemTitle}}
+        <span>{{calendarItemTitle}}</span>
+        {{#if userSection}}
+          <br>
+          <small>{{userSection}}</small>
+        {{/if}}
       </h4>
     {{/if}}
 

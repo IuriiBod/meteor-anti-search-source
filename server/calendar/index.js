@@ -61,6 +61,7 @@ Meteor.methods({
       eventObject = updateEventSeconds(eventObject);
 
       HospoHero.calendar.eventInsertUpdateHook(eventObject);
+
       CalendarEvents.update({_id: eventObject._id}, {$set: eventObject});
     }
   },

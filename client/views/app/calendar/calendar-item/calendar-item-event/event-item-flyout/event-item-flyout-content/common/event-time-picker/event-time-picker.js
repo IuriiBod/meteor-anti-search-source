@@ -3,16 +3,9 @@ Template.eventTimePicker.helpers({
     return {
       withoutIcon: true,
       minuteStepping: 5,
-      firstTime: this.start,
-      secondTime: this.end,
+      firstTime: this.event.startTime,
+      secondTime: this.event.type !== 'prep job' ? this.event.endTime : null,
       onSubmit: this.onTimeSave
     };
-  }
-});
-
-
-Template.eventTimePicker.events({
-  'click .save-event' (event, tmpl) {
-    tmpl.data.onEventSave(event.target);
   }
 });

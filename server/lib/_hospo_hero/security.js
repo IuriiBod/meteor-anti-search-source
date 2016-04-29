@@ -3,6 +3,7 @@ Namespace('HospoHero.security', {
     users: {
       'profile.fullName': 1,
       'profile.image': 1,
+      'profile.sections': 1,
       'services.google.picture': 1,
       relations: 1,
       createdAt: 1,
