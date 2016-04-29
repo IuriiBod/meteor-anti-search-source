@@ -117,6 +117,8 @@ hh-12-21
 
 12 is number of month, 21 is date when snapshot was created.
 
+__Snapshots strategy should be used while deploying on both testing and production servers and publishing mobile apps.__
+
 While deploying snapshots next rule should be always true: __you cannot deploy next snapshot until previous ones wasn't deployed.__
 
 #### Snapshot patching
