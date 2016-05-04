@@ -3,7 +3,6 @@ Template.stocktakeCounting.onCreated(function () {
   this.activeSpecialAreaId = new ReactiveVar(false);
   this.stocktakeEditMode = new ReactiveVar(false);
   this.isStockItemsSelected = new ReactiveVar(true);
-  this.supplier = new ReactiveVar(null);
 });
 
 Template.stocktakeCounting.helpers({
@@ -47,17 +46,6 @@ Template.stocktakeCounting.helpers({
 
   isStockItemsShowing() {
     return Template.instance().isStockItemsSelected.get();
-  },
-
-  supplier: function () {
-    return Template.instance().supplier.get();
-  },
-
-  onSupplierChanged() {
-    let tmpl = Template.instance();
-    return function (supplierId) {
-      tmpl.supplier.set(supplierId);
-    };
   }
 });
 

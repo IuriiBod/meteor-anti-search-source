@@ -4,32 +4,29 @@
 
   <div class="wrapper wrapper-content stocktake-counting">
     <div class="row">
-      <div class="col-lg-2 col-md-3 date-and-cost">
+      <div class="col-lg-12">
+        {{#if hasOrders}}
+          <a class="btn btn-primary btn-sm pull-right" href="{{pathFor route='stocktakeOrdering'}}">
+            View Orders
+          </a>
+        {{else}}
+          <a class="btn btn-primary btn-sm pull-right generate-orders-button">Save stocktake &amp; generate orders</a>
+
+          {{#if isEditMode}}
+            <a class="btn btn-link btn-sm pull-right finish-template-editing-button">
+              <i class="fa fa-fw fa-save"></i>Finish Template Editing
+            </a>
+          {{else}}
+            <a class="btn btn-link btn-sm pull-right edit-template-button">
+              <i class="fa fa-fw fa-edit"></i>Edit Stocktake Template
+            </a>
+          {{/if}}
+        {{/if}}
+
         {{dateFormat date}}: ${{roundCount totalStocktakeCost}}
+
+        <hr>
       </div>
-      <div class="col-lg-10 col-md-9">
-        <div class="row">
-          <div class="col-lg-4"></div>
-          <div class="col-lg-8 col-md-12 controls-block">
-            <div class="suppliers-filter">
-              {{> suppliersFilter onSupplierChanged=onSupplierChanged}}
-            </div>
-            {{#if hasOrders}}
-              <a class="btn btn-primary btn-sm" href="{{pathFor route='stocktakeOrdering'}}">
-                View Orders
-              </a>
-            {{else}}
-              {{#if isEditMode}}
-                <a class="btn btn-link btn-sm finish-template-editing-button"><i class="fa fa-fw fa-save"></i>Finish Template Editing</a>
-              {{else}}
-                <a class="btn btn-link btn-sm edit-template-button"><i class="fa fa-fw fa-edit"></i>Edit Stocktake Template</a>
-              {{/if}}
-                <a class="btn btn-primary btn-sm generate-orders-button">Save stocktake &amp; generate orders</a>
-            {{/if}}
-          </div>
-        </div>
-      </div>
-      <hr>
     </div>
 
     <div class="row">
@@ -48,7 +45,7 @@
             <div class="tab-content">
               <div class="panel-body no-top-border">
                 {{#if isStockItemsShowing}}
-                  {{> stockItemsList stocktakeId=_id specialAreaId=activeAreas.special isEditMode=isEditMode supplier=supplier}}
+                  {{> stockItemsList stocktakeId=_id specialAreaId=activeAreas.special isEditMode=isEditMode}}
                 {{else}}
                   {{> stockPrepItemsList stocktakeId=_id specialAreaId=activeAreas.special isEditMode=isEditMode}}
                 {{/if}}
