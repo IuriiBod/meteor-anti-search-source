@@ -1,0 +1,18 @@
+<template name="profileShiftsPerWeek">
+  <div class="profile-details-section">
+    <h4>No. of shifts per week</h4>
+    {{#if hasPermissionInAreaTo "edit user's payrate"}}
+      <select class="form-control shiftsPerWeek">
+        {{#each shiftsPerWeek}}
+          <option selected="{{selected}}">{{shift}}</option>
+        {{/each}}
+      </select>
+    {{else}}
+      {{#if profile.shiftsPerWeek}}
+        {{profile.shiftsPerWeek}}
+      {{else}}
+        Not added
+      {{/if}}
+    {{/if}}
+  </div>
+</template>

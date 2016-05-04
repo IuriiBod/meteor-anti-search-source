@@ -1,0 +1,39 @@
+<template name="profileResignedDate">
+  <div class="profile-details-section">
+    <h4>Resigned date</h4>
+    {{#if isViewMode}}
+      <div>
+        {{#if resignDate}}
+          {{resignDate}}
+        {{else}}
+          Not set
+        {{/if}}
+      </div>
+    {{else}}
+      <div class="input-group">
+        <input type="text"
+               class="form-control open-resigned-date-picker"
+               placeholder="No resign date"
+               aria-describedby="user-resign-addon"
+               value="{{resignDate}}">
+        <span class="input-group-btn">
+          {{#if resignDate}}
+            <button class="btn btn-warning set-resign-date-button">
+              <i class="fa fa-user-times"></i>
+              Update Date
+            </button>
+            <button class="btn btn-info remove-resign-date-button">
+              <i class="fa fa-user"></i>
+              Restore User
+            </button>
+          {{else}}
+            <button class="btn btn-danger set-resign-date-button">
+              <i class="fa fa-user-times"></i>
+              Resign User
+            </button>
+          {{/if}}
+        </span>
+      </div>
+    {{/if}}
+  </div>
+</template>

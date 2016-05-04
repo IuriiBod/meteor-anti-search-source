@@ -1,7 +1,7 @@
 var ShiftId = Match.Where(function (id) {
   check(id, HospoHero.checkers.MongoId);
   if (!Shifts.findOne({_id: id})) {
-    throw new Meteor.Error(404, "Shift not found");
+    throw new Meteor.Error(404, 'Shift not found');
   }
   return true;
 });
@@ -32,13 +32,13 @@ var ShiftDocument = Match.Where(function (shift) {
 
   checkerHelper.checkPropertiesGroup(['startTime', 'endTime'], function () {
     if (shift.startTime.getTime() > shift.endTime.getTime()) {
-      throw new Meteor.Error("'Start time' should be less then 'end time'");
+      throw new Meteor.Error("Start time' should be less then 'end time'");
     }
   });
 
   checkerHelper.checkPropertiesGroup(['startedAt', 'finishedAt'], function () {
     if (shift.startedAt > shift.finishedAt) {
-      throw new Meteor.Error("Started time should be less then finished");
+      throw new Meteor.Error('Started time should be less then finished');
     }
   });
 
@@ -58,7 +58,7 @@ var ShiftDocument = Match.Where(function (shift) {
       const isUserHasUnavailability = HospoHero.misc.hasUnavailability(user.unavailabilities, shift);
       const isUserHasApprovedLeaveRequest = !!LeaveRequests.findOne({
         userId: assignedUserId,
-        status: "approved",
+        status: 'approved',
         $or: [
           {
             startDate: occupiedTimeRange
@@ -72,23 +72,22 @@ var ShiftDocument = Match.Where(function (shift) {
       });
 
       if (isUserHasUnavailability || isUserHasApprovedLeaveRequest) {
-        logger.error("User unavailable at selected time", {
-          "startTime": shift.startTime,
-          "endTime": shift.endTime
+        logger.error('User unavailable at selected time', {
+          startTime: shift.startTime,
+          endTime: shift.endTime
         });
         throw new Meteor.Error('This user unavailable at this time!');
       }
     });
 
     checkerHelper.checkPropertiesGroup(['assignedTo', 'startTime', 'endTime'], function () {
-      var assignedWorker = Meteor.users.findOne({_id: assignedUserId});
+      const assignedWorker = Meteor.users.findOne({_id: assignedUserId});
       if (!assignedWorker) {
-        logger.error("Worker not found");
-        throw new Meteor.Error(404, "Worker not found");
+        logger.error('Worker not found');
+        throw new Meteor.Error(404, 'Worker not found');
       }
 
-      //var existInShift = !!Shifts.findOne({
-      var existInShift = Shifts.findOne({
+      const existInShift = Shifts.findOne({
         _id: {$ne: shift._id},
         $or: [
           {startTime: occupiedTimeRange},
@@ -103,11 +102,11 @@ var ShiftDocument = Match.Where(function (shift) {
 
       if (existInShift) {
         let area = Areas.findOne({_id: existInShift.relations.areaId});
-        let location = Locations.findOne({_id:area.locationId});
-        let date = HospoHero.dateUtils.getDateMomentForLocation(existInShift.startTime,location).format('YYYY-MM-DD');
-        let startTime =  HospoHero.dateUtils.getDateMomentForLocation(existInShift.startTime,location).format('h:mm a');
-        let endTime = HospoHero.dateUtils.getDateMomentForLocation(existInShift.endTime,location).format('h:mm a');
-        logger.error("User already exist in a shift", {areaId:area._id, date: existInShift.startTime});
+        let location = Locations.findOne({_id: area.locationId});
+        let date = HospoHero.dateUtils.getDateMomentForLocation(existInShift.startTime, location).format('YYYY-MM-DD');
+        let startTime = HospoHero.dateUtils.getDateMomentForLocation(existInShift.startTime, location).format('h:mm a');
+        let endTime = HospoHero.dateUtils.getDateMomentForLocation(existInShift.endTime, location).format('h:mm a');
+        logger.error('User already exist in a shift', {areaId: area._id, date: existInShift.startTime});
         throw new Meteor.Error(404,
           `Worker has already been assigned to a shift in ${area.name} area at ${date} from ${startTime} to ${endTime}.`);
       }
@@ -116,8 +115,8 @@ var ShiftDocument = Match.Where(function (shift) {
     if (shift.section) {
       checkerHelper.checkPropertiesGroup(['assignedTo', 'section'], function () {
         if (!Meteor.users.findOne({_id: shift.assignedTo, 'profile.sections': shift.section})) {
-          logger.error("User not trained for this section", {sectionId: shift.section});
-          throw new Meteor.Error(404, "User not trained for this section");
+          logger.error('User not trained for this section', {sectionId: shift.section});
+          throw new Meteor.Error(404, 'User not trained for this section');
         }
       });
     }

@@ -1,5 +1,5 @@
-<template name="profile">
-  <div class="col-sm-12 col-md-6 col-lg-4">
+<template name="profileDetails">
+  <div class="col-sm-12 col-md-6 col-lg-4 profile-details">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
         <h5>Profile Detail</h5>
@@ -8,17 +8,11 @@
         {{> profileImage}}
         <div class="ibox-content profile-content">
           {{> profilePersonalInfo}}
-          <br>
           {{> profileChangePin}}
-          <br>
           {{> profileChangePassword}}
-          <br>
           {{> profilePayRates}}
-          <br>
           {{> profileShiftsPerWeek}}
-          <br>
           {{> profileResignedDate}}
-          <br>
           <h4>Last login: {{lastLoginDate}}</h4>
         </div>
       </div>

@@ -1,13 +1,17 @@
 <template name="teamHoursItem">
   {{#if hasWage weeklyValues}}
     <tr class="gradeX">
-      <td><a href="/user/profile/{{user._id}}">{{username user._id}}</a></td>
+      <td><a href="{{pathFor route="profile" _id=user._id}}">{{username user._id}}</a></td>
       <td>{{weeklyValues.time}}</td>
       <td>${{weeklyValues.wage}}</td>
       {{#if isShowShifts}}
         {{#each weekDays}}
           <td class="center activeTime">
-            {{> teamHoursDayEntity date=this shift=dailyShift}}
+            {{#each dailyShifts}}
+              {{> teamHoursDayEntity date=.. shift=this}}
+            {{else}}
+              -
+            {{/each}}
           </td>
         {{/each}}
       {{else}}

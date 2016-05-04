@@ -1,11 +1,9 @@
 <template name="teamHoursDayEntity">
-  {{#if shift}}
-    {{> comboTimeEditable params=startedTimeParams}}
+  <div class="team-hours-day-entity">
+      {{> comboTimeEditable params=startedTimeParams}}
 
-    {{#if isClockedIn}}
-      <a href="#" class="stop-current-shift-button">Stop</a>
-    {{/if}}
-  {{else}}
-    -
-  {{/if}}
+      {{#if isClockedIn}}
+        <a href="#" class="stop-current-shift-button">Stop</a>
+      {{/if}}
+  </div>
 </template>

@@ -13,29 +13,29 @@ Meteor.methods({
       }
     });
   },
-
+  //todo:refactor this method
   editBasicDetails: function (id, editDetails) {
     check(id, HospoHero.checkers.MongoId);
 
     let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
     let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
-    if (!permissionChecker.hasPermissionInArea(currentAreaId, "edit user's payrate")) {
-      logger.error("User not permitted to edit users details");
-      throw new Meteor.Error(403, "User not permitted to edit users details");
+    if (!permissionChecker.hasPermissionInArea(currentAreaId, 'edit user\'s payrate')) {
+      logger.error('User not permitted to edit users details');
+      throw new Meteor.Error(403, 'User not permitted to edit users details');
     }
 
     if (!id) {
       logger.error('No user has found');
-      throw new Meteor.Error(401, "User not found");
+      throw new Meteor.Error(401, 'User not found');
     }
     var userDoc = Meteor.users.findOne(id);
     if (!userDoc) {
       logger.error('User does not exist');
-      throw new Meteor.Error(401, "User does not exist");
+      throw new Meteor.Error(401, 'User does not exist');
     }
     if (!editDetails) {
       logger.error('Edit details not found');
-      throw new Meteor.Error(401, "Edit details not found");
+      throw new Meteor.Error(401, 'Edit details not found');
     }
 
     var query = {};
@@ -64,48 +64,60 @@ Meteor.methods({
       query['profile.fullName'] = editDetails.fullName;
     }
     if (Object.keys(query).length > 0) {
-      Meteor.users.update({"_id": id}, {$set: query});
-      logger.info("Users details updated ", editDetails);
+      Meteor.users.update({'_id': id}, {$set: query});
+      logger.info('Users details updated ', editDetails);
     }
   },
 
-  resignDate: function (type, id, val) {
+  setResignDate: function (userId, date) {
+    check(userId, HospoHero.checkers.MongoId);
+    check(date, Date);
+
+    let currentArea = HospoHero.getCurrentArea(this.userId);
+    let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
+
+    if (!currentArea || this.userId === userId ||
+      !permissionChecker.hasPermissionInArea(currentArea._id, 'edit user\'s payrate')) {
+      logger.error('User not permitted to resign workers');
+      throw new Meteor.Error(403, 'User not permitted to resign workers');
+    }
+
+    Meteor.users.update({_id: userId}, {
+      $set: {
+        'profile.resignDate': date
+      }
+    });
+
+    Shifts.update({
+      assignedTo: userId,
+      startTime: {
+        $gte: date
+      },
+      'relations.organizationId': currentArea.organizationId
+    }, {
+      $unset: {
+        assignedTo: ''
+      }
+    }, {
+      multi: true
+    });
+  },
+
+  removeResignDate: function (userId) {
+    check(userId, HospoHero.checkers.MongoId);
+
     let currentAreaId = HospoHero.getCurrentAreaId(this.userId);
     let permissionChecker = new HospoHero.security.PermissionChecker(this.userId);
-    if (!permissionChecker.hasPermissionInArea(currentAreaId, "edit user's payrate")) {
-      logger.error("User not permitted to resign workers");
-      throw new Meteor.Error(403, "User not permitted to resign workers");
+
+    if (!currentAreaId || this.userId === userId ||
+      !permissionChecker.hasPermissionInArea(currentAreaId, 'edit user\'s payrate')) {
+      logger.error('User not permitted to resign workers');
+      throw new Meteor.Error(403, 'User not permitted to resign workers');
     }
 
-    check(id, HospoHero.checkers.MongoId);
-    if (!Meteor.users.findOne(id)) {
-      logger.error("User not found ", id);
-      throw new Meteor.Error("User not found ", id);
-    }
-
-    val = new Date(val);
-
-    if (type === "set" || type === "update") {
-      Meteor.users.update({_id: id}, {
-        $set: {
-          "profile.resignDate": val.getTime()
-        }
-      });
-
-      Shifts.update({
-        assignedTo: id,
-        startTime: {
-          $gte: val
-        }
-      }, {
-        $set: {
-          assignedTo: "null"
-        }
-      }, {
-        multi: true
-      });
-    }
+    Meteor.users.update({_id: userId}, {$unset: {'profile.resignDate': ''}});
   },
+
 
   changeDefaultArea: function (areaId) {
     if (Meteor.userId() && areaId) {
@@ -126,8 +138,8 @@ Meteor.methods({
     areaId = areaId || HospoHero.getCurrentAreaId();
 
     if (!canUserEditUsers(areaId)) {
-      logger.error("User not permitted to change roles");
-      throw new Meteor.Error(403, "User not permitted to change roles");
+      logger.error('User not permitted to change roles');
+      throw new Meteor.Error(403, 'User not permitted to change roles');
     }
 
     var area = Areas.findOne({_id: areaId});
@@ -169,7 +181,7 @@ Meteor.methods({
 
     if (!canUserEditUsers()) {
       logger.error('User not permitted to edit other users', {userId: Meteor.userId()});
-      throw new Meteor.Error('User not permitted to edit other users', {userId: Meteor.userId()});
+      throw new Meteor.Error('User not permitted to edit other users');
     }
 
     var query = {
@@ -180,20 +192,20 @@ Meteor.methods({
     Meteor.users.update({_id: userId}, query);
   },
   setUserPassword: function (password) {
-    check(password,HospoHero.checkers.UserPassword);
-    let user = Meteor.users.findOne({_id:this.userId});
-    if(!user) {
+    check(password, HospoHero.checkers.UserPassword);
+    let user = Meteor.users.findOne({_id: this.userId});
+    if (!user) {
       logger.error('User does not exist');
-      throw new Meteor.Error(401, "User does not exist");
+      throw new Meteor.Error(401, 'User does not exist');
     }
-    if(!_.isEmpty(user.services.password)){
-      logger.error('User already have password', {userId:user._id});
+    if (!_.isEmpty(user.services.password)) {
+      logger.error('User already have password', {userId: user._id});
       throw new Meteor.Error('User not permitted to set password', {userId: user._id});
     }
-    return Accounts.setPassword(user._id, password,{logout:false});
+    return Accounts.setPassword(user._id, password, {logout: false});
   },
-  hasUserPassword: function() {
-    let user =  Meteor.users.findOne({_id:this.userId});
+  hasUserPassword: function () {
+    let user = Meteor.users.findOne({_id: this.userId});
     return user && !!user.services.password;
   }
 });

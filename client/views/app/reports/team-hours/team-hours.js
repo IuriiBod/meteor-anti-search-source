@@ -1,11 +1,20 @@
 Template.teamHoursMainView.onCreated(function () {
-  this.set('weekDate', moment(this.data.date));
-  this.set('tableViewMode', 'shifts');
-  this.set('searchText', '');
+  this.weekDate = new ReactiveVar(moment(this.data.date));
+  this.tableViewMode = new ReactiveVar('shifts');
+  this.searchText = new ReactiveVar('');
 });
 
 
 Template.teamHoursMainView.helpers({
+  weekDate() {
+    return Template.instance().weekDate.get();
+  },
+  tableViewMode() {
+    return Template.instance().tableViewMode.get();
+  },
+  searchText() {
+    return Template.instance().searchText.get();
+  },
   subtitle() {
     let shift = Shifts.findOne();
     let location = shift && Locations.findOne({_id: shift.relations.locationId});
@@ -20,7 +29,7 @@ Template.teamHoursMainView.helpers({
   onKeyUp: function () {
     var tmpl = Template.instance();
     return function (searchText) {
-      tmpl.set('searchText', searchText);
+      tmpl.searchText.set(searchText);
     };
   },
   users: function (searchText) {
@@ -40,10 +49,10 @@ Template.teamHoursMainView.helpers({
 
 Template.teamHoursMainView.events({
   'click .shiftView': function (event, tmpl) {
-    tmpl.set('tableViewMode', 'shifts');
+    tmpl.tableViewMode.set('shifts');
   },
 
   'click .hoursView': function (event, tmpl) {
-    tmpl.set('tableViewMode', 'hours');
+    tmpl.tableViewMode.set('hours');
   }
 });
