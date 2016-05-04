@@ -112,7 +112,10 @@ Template.ingredientEditorForm.events({
       return HospoHero.error("You need to a description");
     }
 
-    ingredient.costPerPortion = HospoHero.misc.rounding(ingredient.costPerPortion);
+    _.extend(ingredient, {
+      costPerPortion: HospoHero.misc.rounding(ingredient.costPerPortion),
+      status: ingredient.status || 'active'
+    });
 
     var handleMethodResultClose = HospoHero.handleMethodResult(function () {
       FlyoutManager.getInstanceByElement(event.target).close();
@@ -155,7 +158,7 @@ Template.ingredientEditorForm.events({
   }
 });
 
-let calculatePlacement = function(source) {
+let calculatePlacement = function (source) {
   let position = $(source).position();
 
   if (position.left < 120) {

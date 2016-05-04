@@ -20,7 +20,7 @@ let IngredientDocument = Match.Where(function (stockItemDoc) {
     portionOrdered: Match.Optional(String),
     unitSize: Match.Optional(Number),
     portionUsed: Match.Optional(String),
-    status: Match.Optional(String),
+    status: Match.OneOf('active', 'archived'),
     createdBy: HospoHero.checkers.OptionalMongoId,
     createdOn: Match.Optional(Number),
     editedBy: HospoHero.checkers.OptionalMongoId,

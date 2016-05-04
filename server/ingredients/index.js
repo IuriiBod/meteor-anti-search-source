@@ -32,7 +32,6 @@ Meteor.methods({
       unitSize: parseFloat(ingredientDoc.unitSize) || 0,
       portionOrdered: ingredientDoc.portionOrdered || null,
       portionUsed: ingredientDoc.portionUsed || null,
-      status: 'active',
       createdOn: Date.now(),
       createdBy: Meteor.userId(),
       relations: HospoHero.getRelationsObject()
@@ -58,55 +57,27 @@ Meteor.methods({
   },
 
   archiveIngredient: function (id, status) {
+    check(id, HospoHero.checkers.MongoId);
+
     if (!canUserEditStocks(getAreaIdFromIngredient(id))) {
       logger.error('User not permitted to create ingredients');
       throw new Meteor.Error(403, 'User not permitted to create ingredients');
     }
 
-    check(id, HospoHero.checkers.MongoId);
-
-    let item = Ingredients.findOne(id);
-    if (!item) {
-      logger.error('Item not found');
-      throw new Meteor.Error(404, 'Item not found');
-    }
-
     if (status === 'archive') {
-      let prepId = JobTypes.findOne({name: 'Prep'})._id;
-      let existInPreps = JobItems.find(
-        {type: prepId, ingredients: {$elemMatch: {_id: id}}, status: 'active'},
-        {fields: {ingredients: {$elemMatch: {_id: id}}, name: 1}}
-      );
-      let existInMenuItems = MenuItems.find(
-        {ingredients: {$elemMatch: {_id: id}}, status: 'active'},
-        {fields: {ingredients: {$elemMatch: {_id: id}}, name: 1}}
-      );
-
-      if (existInPreps.count() || existInMenuItems.count()) {
-        let error = [];
-        error.push('Can\'t archive item! Remove it form next items first:\n');
-        error.push(existingItemsFormat(existInPreps, 'Jobs'));
-        error.push(existingItemsFormat(existInMenuItems, 'Menus'));
-
-        logger.error(404, error.join(''));
-        throw new Meteor.Error(404, error.join(''));
+      let ingredientIsInRelatedItems = findIngredientInRelatedItems(id);
+      if (ingredientIsInRelatedItems) {
+        throw new Meteor.Error(404, ingredientIsInRelatedItems);
       }
 
-      // remove ingredient from stocktake
-      OrderItems.remove({'ingredient.id': id});
-      StockItems.remove({'ingredient.id': id});
-      StockAreas.remove({ingredientIds: id});
+      removeIngredientFromRelatedCollections(id);
     }
 
-    if (status === 'archive') {
-      Ingredients.update({_id: id}, {$set: {status: 'archived'}});
-      logger.error('Stock item archived ', id);
-    } else if (status === 'restore') {
-      Ingredients.update({_id: id}, {$set: {status: 'active'}});
-      logger.error('Stock item restored ', id);
+    if (status === 'delete') {
+      return Ingredients.remove({_id: id});
     } else {
-      Ingredients.remove(id);
-      logger.info('Ingredient deleted', id);
+      let statusName = status === 'archive' ? 'archived' : 'active';
+      return Ingredients.update({_id: id}, {$set: {status: statusName}});
     }
   },
 
@@ -151,6 +122,35 @@ let duplicateSupplier = function (supplierId, areaId) {
   return supplierId;
 };
 
+let findIngredientInRelatedItems = function (id) {
+  let prepId = JobTypes.findOne({name: 'Prep'})._id;
+  let existInPreps = JobItems.find({
+    type: prepId,
+    ingredients: {
+      $elemMatch: {_id: id}
+    },
+    status: 'active'
+  });
+
+  let existInMenuItems = MenuItems.find({
+    ingredients: {
+      $elemMatch: {_id: id}
+    },
+    status: 'active'
+  });
+
+  if (existInPreps.count() || existInMenuItems.count()) {
+    let error = [];
+    error.push('Can\'t archive item! Remove it form next items first:\n');
+    error.push(existingItemsFormat(existInPreps, 'Jobs'));
+    error.push(existingItemsFormat(existInMenuItems, 'Menus'));
+
+    return error.join('');
+  } else {
+    return false;
+  }
+};
+
 let existingItemsFormat = function (items, title) {
   let error = [];
   if (items.count()) {
@@ -160,4 +160,15 @@ let existingItemsFormat = function (items, title) {
     });
   }
   return error.join('');
+};
+
+let removeIngredientFromRelatedCollections = function (id) {
+  // remove ingredient from stocktake
+  OrderItems.remove({'ingredient.id': id});
+  StockItems.remove({'ingredient.id': id});
+  StockAreas.remove({ingredientIds: id});
+
+  // remove related items from collection
+  TaskList.remove({'reference.id': id});
+  RelatedItems.remove({referenceId: id});
 };

@@ -8,15 +8,15 @@ Template.referenceSelector.onRendered(function () {
 
 Template.referenceSelector.helpers({
   menuItems () {
-    return MenuItems.find().fetch();
+    return MenuItems.find();
   },
 
   jobItems () {
-    return JobItems.find().fetch();
+    return JobItems.find();
   },
 
   suppliers () {
-    return Suppliers.find().fetch();
+    return Suppliers.find();
   },
 
   meetings () {
@@ -26,7 +26,7 @@ Template.referenceSelector.helpers({
         {attendees: userId},
         {createdBy: userId}
       ]
-    }).fetch();
+    });
   },
 
   projects () {
@@ -37,7 +37,7 @@ Template.referenceSelector.helpers({
         {team: userId},
         {createdBy: userId}
       ]
-    }).fetch();
+    });
   },
 
   interviews () {
@@ -47,10 +47,10 @@ Template.referenceSelector.helpers({
         {createdBy: userId},
         {interviewers: userId}
       ]
-    }).fetch();
+    });
   },
 
   ingredients () {
-    return Ingredients.find().fetch();
+    return Ingredients.find();
   }
 });
