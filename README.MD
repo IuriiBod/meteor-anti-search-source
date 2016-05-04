@@ -86,6 +86,7 @@ This approach allows to avoid old code appearing in merged version.
 * Don't use jquery if you can write the same thing through Blaze.
 * Don't use inline styles.
 * Always use double quotes inside blaze templates (e.g. `{{> Test some="value"}}`).
+* Alsways use classes to add event handlers in blaze. So if your button creates new record event handler select is going to look like `click .new-rectord-button`. We are using `-button` suffix in order to differentiate "style" and "logic" classes.
 * Isolate your styles using LESS's namespacing feature:
 
 ```
