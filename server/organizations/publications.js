@@ -30,7 +30,8 @@ Meteor.publishComposite('organizationInfo', function (userProfile) {
       return Organizations.find(query, {
         fields: {
           name: 1,
-          owners: 1
+          owners: 1,
+          createdAt: 1
         }
       });
     };
@@ -39,7 +40,7 @@ Meteor.publishComposite('organizationInfo', function (userProfile) {
       return Meteor.roles.find({
         $or: [
           {'default': true},
-          {"relations.organizationId": organization._id}
+          {'relations.organizationId': organization._id}
         ]
       });
     };
