@@ -4,7 +4,7 @@ Template.stockVarianceReport.onCreated(function () {
   this.report = new ReactiveVar(false);
   this.searchText = new ReactiveVar();
 
-  this.supplier = new ReactiveVar(null);
+  this.supplierId = new ReactiveVar(null);
 
   this.getStockVariance = () => {
     let currentData = Template.currentData();
@@ -13,7 +13,7 @@ Template.stockVarianceReport.onCreated(function () {
     let params = {
       firstStocktakeDate: currentData.firstStocktakeDate,
       secondStocktakeDate: currentData.secondStocktakeDate,
-      supplierId: this.supplier.get(),
+      supplierId: this.supplierId.get(),
       searchText: searchText && searchText.length > 0 ? searchText : null
     };
 
@@ -64,11 +64,11 @@ Template.stockVarianceReport.helpers({
     };
   },
 
-  onSupplierChanged(){
+  onSupplierIdChanged(){
     let tmpl = Template.instance();
 
-    return function (selectedSupplierId) {
-      tmpl.supplier.set(selectedSupplierId);
+    return function (supplierId) {
+      tmpl.supplierId.set(supplierId);
       tmpl.searchText.set(null);
       tmpl.$('.search-stock-items').val('');
     };

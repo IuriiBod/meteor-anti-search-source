@@ -8,7 +8,7 @@
         <div class="ibox">
           <div class="ibox-content">
             {{#if isNotEmpty}}
-              {{> supplierFilter onSupplierChanged=onSupplierChanged stocktakeId=stocktakeId activeSupplierId=activeSupplierId}}
+              {{> stocktakeOrderingSuppliersTags onSupplierChanged=onSupplierChanged stocktakeId=stocktakeId activeSupplierId=activeSupplierId}}
               <hr>
               {{> orderingStatus activeOrder}}
               <hr>

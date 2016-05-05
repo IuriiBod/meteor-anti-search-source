@@ -2,7 +2,7 @@ let ordersQueryOptions = {
   fields: {supplierId: 1}, sort: {supplier: 1}
 };
 
-Template.supplierFilter.onCreated(function () {
+Template.stocktakeOrderingSuppliersTags .onCreated(function () {
   var defaultOrder = Orders.findOne({
     stocktakeId: this.data.stocktakeId
   }, ordersQueryOptions);
@@ -12,7 +12,7 @@ Template.supplierFilter.onCreated(function () {
 });
 
 
-Template.supplierFilter.helpers({
+Template.stocktakeOrderingSuppliersTags .helpers({
   suppliers: function () {
     let ordersList = Orders.find({
       stocktakeId: this.stocktakeId
@@ -32,7 +32,7 @@ Template.supplierFilter.helpers({
 });
 
 
-Template.supplierFilter.events({
+Template.stocktakeOrderingSuppliersTags .events({
   'click .activate-supplier-button': function (event, tmpl) {
     event.preventDefault();
     var supplier = Blaze.getData(event.target);

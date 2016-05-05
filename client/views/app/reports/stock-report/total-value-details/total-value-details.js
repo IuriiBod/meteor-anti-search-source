@@ -2,14 +2,14 @@ Template.totalValueDetails.onCreated(function () {
   this.subscribe('suppliersNamesList', HospoHero.getCurrentAreaId());
 
   this.stockItems = new ReactiveVar();
-  this.supplier = new ReactiveVar(null);
+  this.supplierId = new ReactiveVar(null);
 
   this.getValueDetails = (currentData, searchText = false) => {
     let stocktakeDate = currentData.params.stocktakeDate;
 
     let params = {
       stocktakeDate: stocktakeDate,
-      supplierId: this.supplier.get(),
+      supplierId: this.supplierId.get(),
       searchText: searchText && searchText.length > 0 ? searchText : null
     };
 
@@ -28,10 +28,10 @@ Template.totalValueDetails.onCreated(function () {
 
 
 Template.totalValueDetails.helpers({
-  onSupplierChanged() {
+  onSupplierIdChanged() {
     let tmpl = Template.instance();
     return function (supplierId) {
-      tmpl.supplier.set(supplierId);
+      tmpl.supplierId.set(supplierId);
       tmpl.$('.search-stock-items').val('');
     };
   },

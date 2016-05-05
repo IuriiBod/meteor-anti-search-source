@@ -14,11 +14,11 @@ Template.suppliersFilter.events({
   'change .suppliers-filter-select': function (event, tmpl) {
     event.preventDefault();
 
-    if (_.isFunction(tmpl.data.onSupplierChanged)) {
+    if (_.isFunction(tmpl.data.onSupplierIdChanged)) {
       let supplierId = event.target.value;
 
       supplierId = supplierId === 'All Suppliers' ? null : supplierId;
-      tmpl.data.onSupplierChanged(supplierId);
+      tmpl.data.onSupplierIdChanged(supplierId);
     }
   }
 });
