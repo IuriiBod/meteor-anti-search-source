@@ -55,13 +55,16 @@ BUILD_FOLDER="../hospohero-build"
 APK_OUTPUT_FOLDER=~/Dropbox/HH/mobile_apps/android
 UNSIGNED_APK_NAME="release-unsigned.apk"
 ALTERNATIVE_APK_PATH="./project/build/outputs/apk/android-armv7-release-unsigned.apk"
-SIGNED_APK_NAME="${APP_NAME}.apk"
 
 ANDROID_HOME=~/Library/Android/sdk
 ANDROID_BUILD_TOOLS_VERSION="23.0.2"
 
 #GET SOME PRE BUILD INFO
 MOBILE_APP_VERSION=$(sed '5q;d' mobile-config.js)
+MOBILE_APP_VERSION=${MOBILE_APP_VERSION#*\'}
+MOBILE_APP_VERSION=${MOBILE_APP_VERSION%\'*}
+SIGNED_APK_NAME="${APP_NAME}_${MOBILE_APP_VERSION}.apk"
+
 if grep -Fxq "force-ssl" ./.meteor/packages; then
   IS_FORCE_SSL_ENABLED='YES'
 else
@@ -70,7 +73,7 @@ fi
 
 echo "==== Building summary ===="
 echo "* mobile server: ${SERVER_URL}"
-echo "* mobile app ${MOBILE_APP_VERSION}"
+echo "* mobile app version: ${MOBILE_APP_VERSION}"
 echo "* force-ssl is enabled: ${IS_FORCE_SSL_ENABLED}"
 echo "=========================="
 echo "TIP: odd '1' - production, even '2' - testing"
