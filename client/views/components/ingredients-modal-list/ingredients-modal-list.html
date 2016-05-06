@@ -1,28 +1,30 @@
 <template name="ingredientsModalList">
-  <div>
-    {{#if hasPermissionInAreaTo 'view stocks'}}
-      <input type="text" class="form-control input-lg search-for-stocks-input" placeholder="Search for stocks..."><br>
-      <table class="table table-striped ingredients-table">
-        <thead>
-        <tr>
-          <th>Action</th>
-          <th>Code</th>
-          <th>Name</th>
-          <th>Supplier</th>
-          <th>Unit used</th>
-          <th>Unit cost</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each ingredients}}
-          {{> ingredientsModalListItem stock=this onAddStockItem=onAddStockItem}}
-        {{/each}}
-        </tbody>
-      </table>
-      <div class="alert alert-warning">If your stock item is not in the list,
-        <a class="alert-link add-new-ingredient">click here</a> to add it. Once you save it, it will appear next
-        time you search.
-      </div>
-    {{/if}}
-  </div>
+  {{#wrapperFlyout title="Select Stocks"}}
+    <div>
+      {{#if hasPermissionInAreaTo 'view stocks'}}
+        <input type="text" class="form-control input-lg search-for-stocks-input" placeholder="Search for stocks..."><br>
+        <table class="table table-striped ingredients-table">
+          <thead>
+          <tr>
+            <th>Action</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Supplier</th>
+            <th>Unit used</th>
+            <th>Unit cost</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each ingredients}}
+            {{> ingredientsModalListItem stock=this onAddStockItem=onAddStockItem}}
+          {{/each}}
+          </tbody>
+        </table>
+        <div class="alert alert-warning">If your stock item is not in the list,
+          <a class="alert-link add-new-ingredient">click here</a> to add it. Once you save it, it will appear next
+          time you search.
+        </div>
+      {{/if}}
+    </div>
+  {{/wrapperFlyout}}
 </template>

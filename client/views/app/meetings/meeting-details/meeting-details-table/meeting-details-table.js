@@ -59,13 +59,9 @@ Template.meetingDetailsTable.events({
       Meteor.call('editMeeting', meeting, HospoHero.handleMethodResult());
     };
 
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'usersSearch',
-      title: "Searching users",
-      data: {
-        selectedUsers: meeting.attendees,
-        onUserSelect: onUserSelect
-      }
+    FlyoutManager.open('usersSearch', {
+      selectedUsers: meeting.attendees,
+      onUserSelect: onUserSelect
     });
   }
 });

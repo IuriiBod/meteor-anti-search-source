@@ -11,6 +11,8 @@ Template.locationListItem.helpers({
 
 Template.locationListItem.events({
   'click .location-settings-button': function (event, tmpl) {
-    FlyoutManager.open('locationSettings', {locationId: tmpl.data._id});
+    FlyoutManager.open('locationSettings', {
+      locationId: tmpl.data._id
+    });
   }
 });

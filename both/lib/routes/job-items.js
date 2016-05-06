@@ -20,27 +20,6 @@ Router.route('/jobItems', {
   }
 });
 
-Router.route('/jobItem/submit', {
-  name: 'submitJobItem',
-  path: '/jobItem/submit',
-  template: 'submitEditJobItem',
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('sections', currentAreaId),
-      Meteor.subscribe('allSuppliers', currentAreaId),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId, null)
-    ];
-  },
-  data: function () {
-    return {
-      jobItem: {},
-      mode: 'submit'
-    };
-  }
-});
-
 Router.route('/jobItem/:_id', {
   name: 'jobItemDetailed',
   path: '/jobItem/:_id',
@@ -55,27 +34,6 @@ Router.route('/jobItem/:_id', {
         Meteor.subscribe('userSubscriptions', currentAreaId)
       ];
     }
-  },
-  data: function () {
-    return {
-      jobItem: JobItems.findOne({_id: this.params._id})
-    };
-  }
-});
-
-Router.route('/jobItem/:_id/edit', {
-  name: 'jobItemEdit',
-  path: '/jobItem/:_id/edit',
-  template: 'submitEditJobItem',
-  waitOn: function () {
-    var currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
-    return [
-      Meteor.subscribe('jobItem', this.params._id),
-      Meteor.subscribe('jobTypes'),
-      Meteor.subscribe('sections', currentAreaId),
-      Meteor.subscribe('allIngredientsInArea', currentAreaId, null),
-      Meteor.subscribe('allSuppliers', currentAreaId)
-    ];
   },
   data: function () {
     return {

@@ -41,13 +41,9 @@ Template.prepsList.events({
   }, 500, {leading: false}),
 
   'click a[data-action="add-new-job-item"]': function () {
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'submitEditJobItem',
-      title: "Add Job",
-      data: {
-        inFlyout: true,
-        jobItem: null
-      }
+    FlyoutManager.open('submitEditJobItem', {
+      title: 'Add new job',
+      jobItem: null
     });
   }
 });

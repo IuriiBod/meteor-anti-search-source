@@ -95,20 +95,18 @@ Template.stocktakeCounting.events({
       Meteor.call('assignItemToStockArea', itemId, currentSpecialAreaId, itemType, HospoHero.handleMethodResult());
     };
 
+    let _template = isStockTabSelected ? 'ingredientsModalList' : 'addJobItem';
+
     const getFlyoutOptions = () => {
       const selectItemsProperty = isStockTabSelected ? 'onAddStockItem' : 'onItemsAdded';
       return {
-        template: isStockTabSelected ? 'ingredientsModalList' : 'addJobItem',
         title: `Select ${isStockTabSelected ? 'Stocks' : 'Preps'}`,
-        data: {
-          inFlyout: true,
-          idsToExclude: currentSpecialArea[isStockTabSelected ? 'ingredientsIds' : 'prepItemIds'] || [],
-          [selectItemsProperty]: onAssignItemToArea
-        }
+        idsToExclude: currentSpecialArea[isStockTabSelected ? 'ingredientsIds' : 'prepItemIds'] || [],
+        [selectItemsProperty]: onAssignItemToArea
       };
     };
 
-    FlyoutManager.open('wrapperFlyout', getFlyoutOptions());
+    FlyoutManager.open(_template, getFlyoutOptions());
   },
 
   'click .show-stock-items': (event, tmpl) => {

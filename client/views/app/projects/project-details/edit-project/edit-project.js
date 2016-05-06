@@ -23,13 +23,9 @@ Template.editProject.onCreated(function () {
       this.selectedUsers.push(userId);
     };
 
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'usersSearch',
-      title: "Searching users",
-      data: {
-        selectedUsers: this.selectedUsers.array(),
-        onUserSelect: onUserSelect
-      }
+    FlyoutManager.open('usersSearch', {
+      selectedUsers: this.selectedUsers.array(),
+      onUserSelect: onUserSelect
     });
   };
 

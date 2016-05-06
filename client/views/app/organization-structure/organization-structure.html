@@ -1,18 +1,20 @@
 <template name="organizationStructure">
-  <div class="organizations-list">
-    {{#each organizations}}
-      <h1>
-        <div class="organization-name">
-          {{name}}
-        </div>
+  {{#wrapperFlyout title="Organizations"}}
+    <div class="organizations-list">
+      {{#each organizations}}
+        <h1>
+          <div class="organization-name">
+            {{name}}
+          </div>
 
-        {{> organizationButtons}}
-      </h1>
+          {{> organizationButtons}}
+        </h1>
 
 
-      {{#each locations}}
-        {{> locationListItem}}
+        {{#each locations}}
+          {{> locationListItem}}
+        {{/each}}
       {{/each}}
-    {{/each}}
-  </div>
+    </div>
+  {{/wrapperFlyout}}
 </template>

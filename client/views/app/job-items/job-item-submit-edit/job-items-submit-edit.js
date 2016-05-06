@@ -1,20 +1,36 @@
 Template.submitEditJobItem.onCreated(function () {
-  var jobItem = this.data.jobItem;
+  let jobItem = {};
+  let jobItemId = this.data.jobItemId;
+  let currentAreaId = HospoHero.getCurrentAreaId(Meteor.userId());
+  
+  this.autorun(() => {
+    this.subscribe('jobTypes');
+    this.subscribe('sections', currentAreaId);
+    this.subscribe('allSuppliers', currentAreaId);
+    this.subscribe('allIngredientsInArea', currentAreaId, null);
 
-  this.preselectedJobType = jobItem ? jobItem.type : undefined;
+    if (jobItemId) {
+      this.subscribe('jobItem', jobItemId);
+      jobItem = JobItems.findOne({_id: jobItemId});
+    }
 
-  // Write data into reactive var
-  this.selectedJobTypeId = new ReactiveVar(this.preselectedJobType || JobTypes.findOne()._id);
-  this.selectedFrequency = new ReactiveVar((jobItem && jobItem.frequency) || 'daily');
-  this.addedIngredientsToThisJob = new ReactiveVar((jobItem && jobItem.ingredients) || []);
-  this.repeatAt = new ReactiveVar((jobItem && jobItem.repeatAt) || moment().hours(8).minutes(0).toDate());
-  this.checklistItems = new ReactiveVar((jobItem && jobItem.checklist) || []);
-  this.producedMeasure = new ReactiveVar(false);
+    this.preselectedJobType = jobItem ? jobItem.type : undefined;
+    
+    // Write data into reactive var
+    this.selectedJobTypeId = new ReactiveVar(this.preselectedJobType || JobTypes.findOne()._id);
+    this.selectedFrequency = new ReactiveVar((jobItem && jobItem.frequency) || 'daily');
+    this.addedIngredientsToThisJob = new ReactiveVar((jobItem && jobItem.ingredients) || []);
+    this.repeatAt = new ReactiveVar((jobItem && jobItem.repeatAt) || moment().hours(8).minutes(0).toDate());
+    this.checklistItems = new ReactiveVar((jobItem && jobItem.checklist) || []);
+    this.producedMeasure = new ReactiveVar(false);
 
-  this.isSelectedJobType = function (typeName) {
-    var selectedJobType = JobTypes.findOne({_id: this.selectedJobTypeId.get()});
-    return selectedJobType.name === typeName;
-  };
+    this.isSelectedJobType = function (typeName) {
+      let selectedJobType = JobTypes.findOne({_id: this.selectedJobTypeId.get()});
+      return selectedJobType.name === typeName;
+    };
+    
+    this.jobItem = jobItem;
+  });
 });
 
 Template.submitEditJobItem.onRendered(function () {
@@ -44,7 +60,7 @@ Template.submitEditJobItem.helpers({
   },
 
   producedMeasure: function () {
-    return Template.instance().producedMeasure.get() || this.jobItem.producedMeasure || '-';
+    return Template.instance().producedMeasure.get() || Template.instance().jobItem.producedMeasure || '-';
   },
 
   repeatAtComboEditableParams: function () {
@@ -86,6 +102,9 @@ Template.submitEditJobItem.helpers({
   },
   sections: function () {
     return Sections.find();
+  },
+  jobItem: function () {
+    return Template.instance().jobItem;
   },
 
   frequencies: function () {
@@ -255,23 +274,17 @@ Template.submitEditJobItem.events({
       assignFieldsForPrep(jobItem);
     }
 
-    var closeFlyoutOrGoToDetails = function (jobItemId) {
-      var isFlyout = tmpl.data.inFlyout;
-      if (isFlyout) {
-        FlyoutManager.getInstanceByElement(event.target).close();
-      }
-      else {
-        Router.go('jobItemDetailed', {_id: jobItemId});
-      }
+    var closeFlyout = function () {
+      FlyoutManager.getInstanceByElement(event.target).close();
     };
 
     if (tmpl.data.jobItem._id) {
-      Meteor.call('editJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
-        closeFlyoutOrGoToDetails(jobItemId);
+      Meteor.call('editJobItem', jobItem, HospoHero.handleMethodResult(function () {
+        closeFlyout();
       }));
     } else {
-      Meteor.call('createJobItem', jobItem, HospoHero.handleMethodResult(function (jobItemId) {
-        closeFlyoutOrGoToDetails(jobItemId);
+      Meteor.call('createJobItem', jobItem, HospoHero.handleMethodResult(function () {
+        closeFlyout();
       }));
     }
   },

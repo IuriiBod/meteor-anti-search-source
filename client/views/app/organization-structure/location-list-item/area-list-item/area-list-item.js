@@ -14,7 +14,9 @@ Template.areaListItem.helpers({
 
 Template.areaListItem.events({
   'click .area-settings-button': function (event, tmpl) {
-    FlyoutManager.open('areaSettings', {areaId: tmpl.data._id});
+    FlyoutManager.open('areaSettings', {
+      areaId: tmpl.data._id
+    });
   },
 
   [`click .${CHANGE_AREA_BUTTON_CLASS}`]: function (event, tmpl) {

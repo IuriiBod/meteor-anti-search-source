@@ -11,28 +11,15 @@ Template.organizationDetailsPage.events({
     //}
   },
   'click .change-billing-account-flyout': function () {
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'changeBillingAccount',
-      title: "Change billing account",
-      data: {}
-    });
+    FlyoutManager.open('changeBillingAccount');
   },
   'click .open-roles-settings-flyout': function () {
-    FlyoutManager.open('wrapperFlyout', {
-      title: 'Roles Settings',
-      template: 'rolesSettings'
-    });
+    FlyoutManager.open('rolesSettings');
   },
   'click .open-inactivity-timeout-settings-flyout': function () {
-    FlyoutManager.open('wrapperFlyout', {
-      title: 'Inactivity Timeout',
-      template: 'inactivityTimeoutField'
-    });
+    FlyoutManager.open('inactivityTimeoutField');
   },
   'click .open-archiving-settings-flyout': function () {
-    FlyoutManager.open('wrapperFlyout', {
-      title: 'Locations/Areas archiving',
-      template: 'locationAreaArchiving'
-    });
+    FlyoutManager.open('locationAreaArchiving');
   }
 });

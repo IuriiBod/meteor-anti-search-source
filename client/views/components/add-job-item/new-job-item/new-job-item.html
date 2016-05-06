@@ -1,3 +1,5 @@
 <template name="newJobItem">
-  {{> submitEditJobItem getSettings}}
+  {{#wrapperFlyout title="Create a new job"}}
+    {{> submitEditJobItem getSettings}}
+  {{/wrapperFlyout}}
 </template>

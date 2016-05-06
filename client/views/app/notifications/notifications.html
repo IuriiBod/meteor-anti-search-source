@@ -1,26 +1,28 @@
 <template name="notifiFlyout">
-  <div class="notifications-list-flyout">
-    {{#if count}}
-      <div class="notifications-list">
-        {{#each notifications}}
-          <div class="ibox float-e-margins">
-            <div class="ibox-content">
-              <div class="feed-activity-list">
-                {{> notifiText notification=this}}
+  {{#wrapperFlyout title="Notifications"}}
+    <div class="notifications-list-flyout">
+      {{#if count}}
+        <div class="notifications-list">
+          {{#each notifications}}
+            <div class="ibox float-e-margins">
+              <div class="ibox-content">
+                <div class="feed-activity-list">
+                  {{> notifiText notification=this}}
+                </div>
               </div>
             </div>
-          </div>
-        {{/each}}
-      </div>
-      <div class="text-center link-block mark-all-as-read-wrapper">
-        <a href="#" class="markAllAsRead">
-          <strong>Mark All As Read</strong>
-        </a>
-      </div>
-    {{else}}
-      <div class="text-center link-block">
-        <strong>Hooray! You have no unread notifications.</strong>
-      </div>
-    {{/if}}
-  </div>
+          {{/each}}
+        </div>
+        <div class="text-center link-block mark-all-as-read-wrapper">
+          <a href="#" class="markAllAsRead">
+            <strong>Mark All As Read</strong>
+          </a>
+        </div>
+      {{else}}
+        <div class="text-center link-block">
+          <strong>Hooray! You have no unread notifications.</strong>
+        </div>
+      {{/if}}
+    </div>
+  {{/wrapperFlyout}}
 </template>

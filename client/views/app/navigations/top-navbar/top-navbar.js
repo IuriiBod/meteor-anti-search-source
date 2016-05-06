@@ -113,26 +113,18 @@ Template.topNavbar.events({
   },
 
   'click .notifi-toggler': function () {
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'notifiFlyout',
-      title: "Notifications",
-      data: {}
-    });
+    FlyoutManager.open('notifiFlyout');
   },
 
   'click .open-organization-structure-button': function () {
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'organizationStructure',
-      title: "Organizations",
-      data: {}
-    });
+    FlyoutManager.open('organizationStructure');
   },
 
   'click .open-chat': function () {
-    FlyoutManager.open('chat', {});
+    FlyoutManager.open('chat');
   },
 
   'click .user-unavailabilities-flyout': function () {
-    FlyoutManager.open('userUnavailability', {});
+    FlyoutManager.open('userUnavailability');
   }
 });

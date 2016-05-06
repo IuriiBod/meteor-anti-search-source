@@ -1,9 +1,11 @@
 <template name="wrapperFlyout">
-  <div class="flyout-header">
-    {{> CloseFlyoutButton}}
-    {{title}}
-  </div>
-  <div class="flyout-content">
-    {{>Template.dynamic template=template data=data}}
-  </div>
+  {{#if this}}
+    <div class="flyout-header">
+      {{> CloseFlyoutButton}}
+      {{title}}
+    </div>
+    <div class="flyout-content">
+      {{> Template.contentBlock}}
+    </div>
+  {{/if}}
 </template>

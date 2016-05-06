@@ -53,7 +53,9 @@ Template.calendarHeader.events({
   },
 
   'click .add-item-to-calendar': function (event, tmpl) {
-    FlyoutManager.open('addEventItemFlyout', {onEventChange: tmpl.onEventChange()});
+    FlyoutManager.open('addEventItemFlyout', {
+      onEventChange: tmpl.onEventChange()
+    });
   }
 });
 

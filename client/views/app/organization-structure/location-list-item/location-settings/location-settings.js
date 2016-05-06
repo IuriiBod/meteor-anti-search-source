@@ -86,13 +86,9 @@ Template.locationSettings.events({
   'click .create-area-flyout': function (event, tmpl) {
     var location = tmpl.location();
     if (location) {
-      FlyoutManager.open('wrapperFlyout', {
-        template: 'createArea',
-        title: "Add Area",
-        data: {
-          organizationId: location.organizationId,
-          locationId: location._id
-        }
+      FlyoutManager.open('createArea', {
+        organizationId: location.organizationId,
+        locationId: location._id
       });
     }
   }

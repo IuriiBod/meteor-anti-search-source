@@ -1,11 +1,13 @@
 <template name="rolesSettings">
-  <div class="panel-body">
-    <button class="btn btn-primary add-role">Add Role</button>
+  {{#wrapperFlyout title="Roles Settings"}}
+    <div class="panel-body">
+      <button class="btn btn-primary add-role">Add Role</button>
 
-    <div class="add-role-container hide">
-      {{> addRole}}
+      <div class="add-role-container hide">
+        {{> addRole}}
+      </div>
+
+      {{> rolesList}}
     </div>
-
-    {{> rolesList}}
-  </div>
+  {{/wrapperFlyout}}
 </template>

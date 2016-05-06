@@ -1,7 +1,7 @@
 <template name="jobListHeader">
   <div class="title-action">
     {{#if hasPermissionInAreaTo 'edit jobs'}}
-      <a class="btn btn-primary" href="{{pathFor route='submitJobItem'}}">Add new job</a>
+      <a class="btn btn-primary add-job-item-button">Add new job</a><!-- href="{{pathFor route='submitJobItem'}}" -->
     {{/if}}
     {{#if isArchived}}
       <a href="{{pathFor route='jobItemsMaster' status=''}}" class="btn btn-info">

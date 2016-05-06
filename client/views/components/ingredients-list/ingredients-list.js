@@ -49,14 +49,9 @@ Template.listOfIngredients.events({
 
     var idsOfItemsInList = _.pluck(tmpl.data.ingredients, '_id');
 
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'ingredientsModalList',
-      title: "Select Stocks",
-      data: {
-        inFlyout: true,
-        onAddStockItem: onAddStockItem,
-        idsToExclude: idsOfItemsInList
-      }
+    FlyoutManager.open('ingredientsModalList', {
+      onAddStockItem: onAddStockItem,
+      idsToExclude: idsOfItemsInList
     });
   }
 });

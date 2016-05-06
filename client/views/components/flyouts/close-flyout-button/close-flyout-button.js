@@ -16,7 +16,7 @@ Template.CloseFlyoutButton.helpers({
 
     //provides helper's reactiveness before rendering
     tmpl.isRendered.get();
-
+    
     let flyout = tmpl.currentFlyout;
     return flyout && flyout.isTopBack();
   }

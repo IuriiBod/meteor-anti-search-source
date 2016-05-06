@@ -1,15 +1,17 @@
 <template name="locationAreaArchiving">
-  <div class="panel-body">
-    <div class="panel-group" role="tablist" aria-multiselectable="true">
-      {{#each locations}}
-        <div class="panel panel-default">
-          {{> locationItem location=this}}
-          <div id="body-{{_id}}" class="panel-collapse collapse" role="tabpanel"
-               aria-labelledby="heading-{{_id}}">
-            {{> areaList locationId=_id}}
+  {{#wrapperFlyout title="Locations/Areas archiving"}}
+    <div class="panel-body">
+      <div class="panel-group" role="tablist" aria-multiselectable="true">
+        {{#each locations}}
+          <div class="panel panel-default">
+            {{> locationItem location=this}}
+            <div id="body-{{_id}}" class="panel-collapse collapse" role="tabpanel"
+                 aria-labelledby="heading-{{_id}}">
+              {{> areaList locationId=_id}}
+            </div>
           </div>
-        </div>
-      {{/each}}
+        {{/each}}
+      </div>
     </div>
-  </div>
+  {{/wrapperFlyout}}
 </template>

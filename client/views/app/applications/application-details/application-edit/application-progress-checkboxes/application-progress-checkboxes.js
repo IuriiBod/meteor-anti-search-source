@@ -34,23 +34,19 @@ Template.applicationProgressCheckboxes.events({
 });
 
 function createInterview(application) {
-  FlyoutManager.open('wrapperFlyout', {
-    template: 'timeSelectFlyout',
-    title: 'Select Interview time',
-    data: {
-      onInterviewSubmit (startTime, endTime) {
-        let interview = {
-          applicationId: application._id,
-          startTime: startTime,
-          endTime: endTime,
-          interviewee: application.details.name,
-          organizationId: application.organizationId
-        };
+  FlyoutManager.open('timeSelectFlyout', {
+    onInterviewSubmit (startTime, endTime) {
+      let interview = {
+        applicationId: application._id,
+        startTime: startTime,
+        endTime: endTime,
+        interviewee: application.details.name,
+        organizationId: application.organizationId
+      };
 
-        Meteor.call('crateInterview', interview, HospoHero.handleMethodResult(() => {
-          HospoHero.success('Interview created!');
-        }));
-      }
+      Meteor.call('crateInterview', interview, HospoHero.handleMethodResult(() => {
+        HospoHero.success('Interview created!');
+      }));
     }
   });
 }

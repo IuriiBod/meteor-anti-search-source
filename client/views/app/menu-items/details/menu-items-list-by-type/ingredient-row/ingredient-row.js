@@ -53,24 +53,16 @@ Template.menuItemIngredientRow.events({
   'click .view-button': function (event, tmpl) {
     event.preventDefault();
     if (tmpl.data.type === 'prep') {
-      FlyoutManager.open('wrapperFlyout', {
-        template: 'submitEditJobItem',
-        title: "Edit Job",
-        data: {
-          inFlyout: true,
-          editMode: true,
-          jobItem: tmpl.data.itemDocument
-        }
+      FlyoutManager.open('submitEditJobItem', {
+        title: 'Edit Job',
+        editMode: true,
+        jobItemId: tmpl.data.itemDocument._id
       });
     } else {
-      FlyoutManager.open('wrapperFlyout', {
-        template: 'ingredientEditor',
-        title: "Edit ingredient",
-        data: {
-          inFlyout: true,
-          editMode: true,
-          ingredient: tmpl.data.itemDocument
-        }
+      FlyoutManager.open('ingredientEditor', {
+        title: 'Edit ingredient',
+        editMode: true,
+        ingredient: tmpl.data.itemDocument
       });
     }
   }

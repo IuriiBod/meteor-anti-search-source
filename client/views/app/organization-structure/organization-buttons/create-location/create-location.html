@@ -1,5 +1,7 @@
 <template name="createLocation">
-  <div class="container-fluid">
-    {{> editLocationForm submitCaption="Create" onSubmit=onLocationSubmit onCancel=onCancel}}
-  </div>
+  {{#wrapperFlyout title="Add Location"}}
+    <div class="container-fluid">
+      {{> editLocationForm submitCaption="Create" onSubmit=onLocationSubmit onCancel=onCancel}}
+    </div>
+  {{/wrapperFlyout}}
 </template>

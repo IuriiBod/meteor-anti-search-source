@@ -44,14 +44,9 @@ Template.menuItemJobsList.events({
     var onItemsAdded = function (jobItemId) {
       tmpl.onJobItemUpdate('add', jobItemId);
     };
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'addJobItem',
-      title: "Select Prep Items",
-      data: {
-        inFlyout: true,
-        idsToExclude: idsToExclude,
-        onItemsAdded: onItemsAdded
-      }
+    FlyoutManager.open('addJobItem', {
+      idsToExclude: idsToExclude,
+      onItemsAdded: onItemsAdded
     });
   }
 });

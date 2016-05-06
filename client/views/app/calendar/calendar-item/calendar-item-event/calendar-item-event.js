@@ -83,7 +83,9 @@ Template.calendarItemEvent.events({
 
   'click .calendar-item-event-title': function (event, tmpl) {
     event.preventDefault();
-    FlyoutManager.open('eventItemFlyout', {event: tmpl.data});
+    FlyoutManager.open('eventItemFlyout', {
+      event: tmpl.data
+    });
   },
 
   'click .status-info': (event) => {

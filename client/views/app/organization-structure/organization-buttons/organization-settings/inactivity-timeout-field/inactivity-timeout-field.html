@@ -1,17 +1,19 @@
 <template name="inactivityTimeoutField">
-  <div class="panel-body">
-    <p>This will prompt users to log in with a pin once they've been inactive for a period of time. Specify how long you
-      would like this to be below. </p>
+  {{#wrapperFlyout title="Inactivity Timeout"}}
+    <div class="panel-body">
+      <p>This will prompt users to log in with a pin once they've been inactive for a period of time. Specify how long you
+        would like this to be below. </p>
 
-    <div class="input-group">
-      <span class="input-group-addon"><i class="fa fa-clock-o fa-fw"></i></span>
-      <input type="number"
-             class="form-control inactivity-timeout-field"
-             placeholder="10"
-             title="Minutes."
-             min="1"
-             max="65536"
-             value="{{inactivityTimeout}}">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-clock-o fa-fw"></i></span>
+        <input type="number"
+               class="form-control inactivity-timeout-field"
+               placeholder="10"
+               title="Minutes."
+               min="1"
+               max="65536"
+               value="{{inactivityTimeout}}">
+      </div>
     </div>
-  </div>
+  {{/wrapperFlyout}}
 </template>

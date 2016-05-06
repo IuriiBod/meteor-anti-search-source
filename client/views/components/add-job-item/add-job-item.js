@@ -35,14 +35,9 @@ Template.addJobItem.events({
   }, 500, {leading: false}),
   'click .add-new-job': function () {
     var prepJobTypeId = JobTypes.findOne({name: 'Prep'})._id;
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'newJobItem',
-      title: "Create a new job",
-      data: {
-        inFlyout: true,
-        jobItem: {type: prepJobTypeId},
-        mode: 'submit'
-      }
+    FlyoutManager.open('newJobItem', {
+      jobItem: {type: prepJobTypeId},
+      mode: 'submit'
     });
   }
 });

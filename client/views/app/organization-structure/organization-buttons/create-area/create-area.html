@@ -1,31 +1,33 @@
 <template name="createArea">
-  <form method="get" class="form-horizontal edit-area-form-component">
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Area Name</label>
+  {{#wrapperFlyout title="Add Area"}}
+    <form method="get" class="form-horizontal edit-area-form-component">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Area Name</label>
 
-      <div class="col-sm-10">
-        <input type="text" class="form-control" name="name" required="required">
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="name" required="required">
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Area Location</label>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Area Location</label>
 
-      <div class="col-sm-10">
-        {{> selectComponent name='locationId' values=locations selected=locationId}}
+        <div class="col-sm-10">
+          {{> selectComponent name='locationId' values=locations selected=locationId}}
+        </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Area Color</label>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Area Color</label>
 
-      <div class="col-sm-10">
-        {{> colorPicker onColorChange=onColorChange checkedColor=color}}
+        <div class="col-sm-10">
+          {{> colorPicker onColorChange=onColorChange checkedColor=color}}
+        </div>
       </div>
-    </div>
 
-    <div class="btn-group col-xs-12">
-      <button type="submit" class="btn btn-primary col-xs-6">Create</button>
-      <button type="button" class="btn btn-default col-xs-6 close-flyout">Close</button>
-    </div>
-  </form>
+      <div class="btn-group col-xs-12">
+        <button type="submit" class="btn btn-primary col-xs-6">Create</button>
+        <button type="button" class="btn btn-default col-xs-6 close-flyout">Close</button>
+      </div>
+    </form>
+  {{/wrapperFlyout}}
 </template>

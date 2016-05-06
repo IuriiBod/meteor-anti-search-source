@@ -88,14 +88,10 @@ Template.stockVarianceReport.events({
     event.preventDefault();
     let ingredientId = this._id;
 
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'ingredientEditor',
+    FlyoutManager.open('ingredientEditor', {
       title: 'Edit ingredient',
-      data: {
-        inFlyout: true,
-        editMode: true,
-        ingredientId: ingredientId
-      }
+      editMode: true,
+      ingredientId: ingredientId
     });
   }
 });

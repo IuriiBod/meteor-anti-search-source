@@ -16,7 +16,12 @@ Template.jobDetailsHeader.events({
   'click .edit-job-item': function (event, tmpl) {
     event.preventDefault();
     var jobItemId = tmpl.data.id;
-    Router.go("jobItemEdit", {'_id': jobItemId});
+    // Router.go("jobItemEdit", {'_id': jobItemId});
+    FlyoutManager.open('submitEditJobItem', {
+      title: 'Edit Job',
+      editMode: true,
+      jobItemId: jobItemId
+    });
   },
 
   'click .print-job-item-button': function (event) {

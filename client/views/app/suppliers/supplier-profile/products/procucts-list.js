@@ -8,14 +8,10 @@ Template.productsList.events({
   'click .editProduct': function (event) {
     event.preventDefault();
     var ingredient = Ingredients.findOne({_id: this.ingredientId});
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'ingredientEditor',
+    FlyoutManager.open('ingredientEditor', {
       title: `${ingredient ? 'Edit' : 'Add'} ingredient`,
-      data: {
-        inFlyout: true,
-        editMode: !_.isUndefined(ingredient),
-        ingredient: ingredient
-      }
+      editMode: !_.isUndefined(ingredient),
+      ingredient: ingredient
     });
   }
 });

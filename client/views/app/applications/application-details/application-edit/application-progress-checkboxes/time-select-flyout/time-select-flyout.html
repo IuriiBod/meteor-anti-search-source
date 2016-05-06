@@ -1,26 +1,28 @@
 <template name="timeSelectFlyout">
-  <div class="row">
-    <div class="col-xs-3">
-      <b>Date</b>
-    </div>
-    <div class="col-xs-9">
-      {{> dateEditor date=startTime allowEditing=true onDateChange=onDateChange}}
-    </div>
-  </div>
-
-
-  <div class="row">
-    <div class="col-xs-3">
-      <b>Time</b>
-    </div>
-    <div class="col-xs-9">
-      <div class="time-editor">
-        {{> comboTimeEditable params=timeComboEditableParams}}
+  {{#wrapperFlyout title="Select Interview time"}}
+    <div class="row">
+      <div class="col-xs-3">
+        <b>Date</b>
+      </div>
+      <div class="col-xs-9">
+        {{> dateEditor date=startTime allowEditing=true onDateChange=onDateChange}}
       </div>
     </div>
-  </div>
 
-  <div class="m-t-sm">
-    <button class="btn btn-primary create-interview">Create Interview</button>
-  </div>
+
+    <div class="row">
+      <div class="col-xs-3">
+        <b>Time</b>
+      </div>
+      <div class="col-xs-9">
+        <div class="time-editor">
+          {{> comboTimeEditable params=timeComboEditableParams}}
+        </div>
+      </div>
+    </div>
+
+    <div class="m-t-sm">
+      <button class="btn btn-primary create-interview">Create Interview</button>
+    </div>
+  {{/wrapperFlyout}}
 </template>

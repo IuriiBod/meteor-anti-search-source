@@ -19,5 +19,13 @@ Template.jobListHeader.events({
     e.preventDefault();
     var subscription = HospoHero.misc.getSubscriptionDocument('job', 'all');
     Meteor.call('unsubscribe', subscription, HospoHero.handleMethodResult());
-  }
+  },
+  'click .add-job-item-button': function (event) {
+    event.preventDefault();
+    FlyoutManager.open('submitEditJobItem', {
+      title: 'Add new job',
+      editMode: true,
+      mode: 'submit'
+    });
+  },
 });

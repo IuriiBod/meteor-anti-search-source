@@ -96,13 +96,9 @@ Template.interviewEdit.events({
       tmpl.selectedUsers.push(userId);
     };
 
-    FlyoutManager.open('wrapperFlyout', {
-      template: 'usersSearch',
-      title: "Searching users",
-      data: {
-        selectedUsers: tmpl.selectedUsers.array(),
-        onUserSelect: onUserSelect
-      }
+    FlyoutManager.open('usersSearch', {
+      selectedUsers: tmpl.selectedUsers.array(),
+      onUserSelect: onUserSelect
     });
   }
 });
