@@ -36,17 +36,15 @@ Template.composeStocktakeOrderingEmail.helpers({
 Template.composeStocktakeOrderingEmail.events({
   'click .send-email-button': function (event, tmpl) {
     event.preventDefault();
-    let mailTo = [tmpl.$('#emailTo').val()];
+    let mailTo = tmpl.$('#emailTo').val();
     let user = Meteor.user();
     let usersEmail = HospoHero.utils.getNestedProperty(user, 'emails.0.address', false);
     let duplicate = tmpl.$('#duplicate').prop('checked');
 
-    if (duplicate) {
-      mailTo.push(usersEmail);
-    }
 
     let mailInfo = {
       mailTo: mailTo,
+      mailToCopy: usersEmail,
       subject: tmpl.$('#emailSubject').val(),
       text: tmpl.$('.summernote').data('summernote').code()
     };

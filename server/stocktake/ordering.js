@@ -134,7 +134,8 @@ Meteor.methods({
   orderThroughEmail: function (orderId, mailInfo) {
     check(orderId, HospoHero.checkers.OrderId);
     check(mailInfo, {
-      mailTo: [HospoHero.checkers.Email],
+      mailTo: HospoHero.checkers.Email,
+      mailToCopy: Match.Optional(HospoHero.checkers.Email),
       subject: String,
       text: String
     });
