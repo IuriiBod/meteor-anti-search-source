@@ -9,8 +9,8 @@
       </div>
       <div class="col-lg-10 col-md-9">
         <div class="row">
-          <div class="col-lg-4"></div>
-          <div class="col-lg-8 col-md-12 controls-block">
+          <div class="col-lg-1"></div>
+          <div class="col-lg-11 col-md-12 controls-block">
             <div class="suppliers-filter">
               {{> suppliersFilter onSupplierIdChanged=onSupplierIdChanged}}
             </div>
@@ -25,6 +25,11 @@
                 <a class="btn btn-link btn-sm edit-template-button"><i class="fa fa-fw fa-edit"></i>Edit Stocktake Template</a>
               {{/if}}
                 <a class="btn btn-primary btn-sm generate-orders-button">Save stocktake &amp; generate orders</a>
+                {{#if isEmpty}}
+                  <a class="btn btn-danger btn-sm remove-stocktake-button">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Remove stocktake
+                  </a>
+                {{/if}}
             {{/if}}
           </div>
         </div>

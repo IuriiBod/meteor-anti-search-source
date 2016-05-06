@@ -49,6 +49,10 @@ Template.stocktakeCounting.helpers({
     return Template.instance().isStockItemsSelected.get();
   },
 
+  isEmpty: function () {
+    return !StockItems.find().count();
+  },
+
   supplierId: function () {
     return Template.instance().supplierId.get();
   },
@@ -117,5 +121,23 @@ Template.stocktakeCounting.events({
   'click .show-prep-stock-items': (event, tmpl) => {
     event.preventDefault();
     tmpl.isStockItemsSelected.set(false);
+  },
+
+  'click .remove-stocktake-button': (event, tmpl) => {
+    const stocktakeId = tmpl.data._id;
+    let stockItems = StockItems.find({stocktakeId: stocktakeId});
+
+    if (!stockItems.count()) {
+      HospoHero.confirm('You will not be able to recover this stocktake!', function () {
+        Meteor.call('removeEmptyStocktake', stocktakeId, HospoHero.handleMethodResult(function () {
+
+          sweetAlert('Removed!', 'Your stocktake has been deleted.', 'success');
+
+          Router.go('stocktakeList');
+        }));
+      });
+    } else {
+      HospoHero.error('Stocktake is not empty');
+    }
   }
 });

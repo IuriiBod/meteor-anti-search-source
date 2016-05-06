@@ -70,12 +70,12 @@ Template.stockItem.helpers({
 Template.stockItem.events({
   'click .remove-ingredient-button': function (event, tmpl) {
     event.preventDefault();
-    var confirmDelete = confirm("This action will remove this stock item from this area. Are you sure you want to continue?");
-    if (confirmDelete) {
+    
+    HospoHero.confirm('This action will remove this stock item from this area. Are you sure you want to continue?', function () {
       let ingredientId = tmpl.data.ingredient._id;
       let specialAreaId = tmpl.data.specialAreaId;
       Meteor.call('removeItemFromStockArea', ingredientId, specialAreaId, 'stock', HospoHero.handleMethodResult());
-    }
+    });
   }
 });
 

@@ -28,27 +28,27 @@ Namespace('HospoHero', {
     if (err) {
       console.log(err);
       if (err.reason) {
-        return sweetAlert("Error!", err.reason, "error");
+        return sweetAlert('Error!', err.reason, 'error');
       } else if (err.error) {
-        return sweetAlert("Error!", err.error, "error");
+        return sweetAlert('Error!', err.error, 'error');
       } else if (err.message) {
-        return sweetAlert("Error!", err.message, "error");
+        return sweetAlert('Error!', err.message, 'error');
       } else {
-        return sweetAlert("Error!", err, "error");
+        return sweetAlert('Error!', err, 'error');
       }
     } else {
-      return sweetAlert("Error!", "", "error");
+      return sweetAlert('Error!', '', 'error');
     }
   },
 
   // Alert success message
   success: function (message) {
-    sweetAlert("Success!", message, "success");
+    sweetAlert('Success!', message, 'success');
   },
 
   // Alert info message
   info: function (message) {
-    sweetAlert("Info!", message, "info");
+    sweetAlert('Info!', message, 'info');
   },
 
   getParamsFromRoute: function (params, routeContext) {
@@ -62,6 +62,20 @@ Namespace('HospoHero', {
       });
       return result;
     }
+  },
+
+  // Confirm action
+  confirm: function (message, callback, confirmButtonText = 'Yes') {
+    sweetAlert({
+      title: 'Are you sure?',
+      text: message,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#DD6B55',
+      confirmButtonText: confirmButtonText,
+      closeOnConfirm: true,
+      html: false
+    }, callback);
   }
 });
 
