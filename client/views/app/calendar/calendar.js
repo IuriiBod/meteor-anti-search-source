@@ -14,9 +14,10 @@ Template.calendar.helpers({
 
   usersWithShifts () {
     let queryType = this.type === 'week' ? 'forWeek' : 'forDay';
+    let area = HospoHero.getCurrentArea();
 
     let usersWithShifts = Shifts.find({
-      startTime: TimeRangeQueryBuilder[queryType](this.date)
+      startTime: TimeRangeQueryBuilder[queryType](this.date, area.locationId)
     }, {
       sort: {
         assignedTo: 1
@@ -28,5 +29,10 @@ Template.calendar.helpers({
 
   weekdays () {
     return HospoHero.dateUtils.getWeekDays(new Date(this.date));
+  },
+
+  locationId () {
+    let area = HospoHero.getCurrentArea();
+    return area && area.locationId;
   }
 });

@@ -20,6 +20,10 @@ Template.calendarGreyZone.helpers({
     if (greyZoneTimes) {
       return moment(greyZoneTimes.endTime).diff(greyZoneTimes.startTime, 'minutes') >= 5;
     }
+  },
+
+  timeFormat (time) {
+    return HospoHero.dateUtils.formatDateWithTimezone(time, 'h:mm a', this.locationId);
   }
 });
 
@@ -33,7 +37,7 @@ function getShift (templateData) {
     let shiftDate = new Date(templateData.date);
 
     _.extend(query, {
-      startTime: TimeRangeQueryBuilder.forDay(shiftDate),
+      startTime: TimeRangeQueryBuilder.forDay(shiftDate, templateData.locationId),
       assignedTo: templateData.userId
     });
   }
@@ -71,5 +75,5 @@ function getNextCalendarEvent (currentEvent, shift) {
     ]
   });
 
-  return CalendarEvents.findOne(query);
+  return CalendarEvents.findOne(query, {sort: {startTime: 1}});
 }

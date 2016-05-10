@@ -20,7 +20,7 @@ Template.calendarItemEvent.helpers({
   },
 
   eventTimeIntervalFormat () {
-    let format = (time) => moment(time).format('h:mm a');
+    let format = (time) => HospoHero.dateUtils.formatDateWithTimezone(time, 'h:mm a', this.locationId);
     return `${format(this.startTime)} - ${format(this.endTime)}`;
   },
 

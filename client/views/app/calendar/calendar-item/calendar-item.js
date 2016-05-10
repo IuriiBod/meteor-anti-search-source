@@ -3,7 +3,7 @@
 Template.calendarItem.helpers({
   todayEvents () {
     return CalendarEvents.find({
-      startTime: TimeRangeQueryBuilder.forDay(this.date),
+      startTime: TimeRangeQueryBuilder.forDay(this.date, this.locationId),
       userId: this.userId
     }, {
       sort: {
@@ -28,7 +28,7 @@ Template.calendarItem.helpers({
     }
 
     const shift = Shifts.findOne({
-      startTime: TimeRangeQueryBuilder.forDay(this.date),
+      startTime: TimeRangeQueryBuilder.forDay(this.date, this.locationId),
       assignedTo: this.userId
     });
 
@@ -82,7 +82,7 @@ Template.calendarItem.events({
 
     Router.go('calendar', {
       type: 'day',
-      date: HospoHero.dateUtils.shortDateFormat(tmplData.date),
+      date: HospoHero.dateUtils.formatDateWithTimezone(tmplData.date, 'YYYY-MM-DD', tmpl.data.locationId),
       userId: tmplData.userId
     });
   }
@@ -143,5 +143,7 @@ function setEventToLastPositionInShift(event) {
       startTime: startTime,
       endTime: moment(startTime).add(duration, 'minutes').toDate()
     });
+  } else {
+    return event;
   }
 }
