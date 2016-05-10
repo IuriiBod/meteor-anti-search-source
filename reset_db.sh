@@ -23,7 +23,7 @@ JS_SCRIPT
 
 #credentials
 
-testingDbCredetials() {
+testingDbCredentials() {
   echo "Selected TESTING DB";
   MONGO_USER="heroku_hs84b9x2"
   MONGO_PASSWORD="2roa8aitcd29rlm9fkukvs6b2s"
@@ -69,13 +69,13 @@ done
 # set up server credentials
 case "${SERVER_TYPE}" in
   "testing")
-    testingDbCredetials
+    testingDbCredentials
     ;;
   "production")
     productionDbCredentials
     ;;
   *)
-    testingDbCredetials
+    testingDbCredentials
     ;;
 esac
 
@@ -96,8 +96,8 @@ mongod --dbpath="${DB_PATH}" --port="${LOCAL_DB_PORT}" --storageEngine=mmapv1 --
 
 mongorestore --host=${LOCAL_DB_HOST} --port=${LOCAL_DB_PORT} --db=${LOCAL_DB_NAME} --drop  "${DEST_DIR}/${MONGO_DB}"
 
-#reset admin password
-if [[ PREVENT_PASSWORD_RESET != "YES" ]]; then
+if [[ "${PREVENT_PASSWORD_RESET}" != "YES" ]]; then
+  #reset admin password
   echo "Reset admin password ..."
   mongo  --host=${LOCAL_DB_HOST} --port=${LOCAL_DB_PORT} --eval "${RESET_ADMIN_SCRIPT}"
 fi
