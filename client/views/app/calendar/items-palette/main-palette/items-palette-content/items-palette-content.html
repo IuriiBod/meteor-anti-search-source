@@ -1,0 +1,7 @@
+<template name="itemsPaletteContent">
+  <div class="items-palette-content">
+    {{#sortable items=items options=sortableOptions}}
+      {{> itemsPaletteItem this}}
+    {{/sortable}}
+  </div>
+</template>

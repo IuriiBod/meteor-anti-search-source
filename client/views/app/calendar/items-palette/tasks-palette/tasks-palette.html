@@ -1,0 +1,9 @@
+<template name="tasksPalette">
+  {{#itemsPalette title="tasks" id="tasks" color=color}}
+
+    {{> itemsPaletteSearch searchSettings}}
+
+    {{> itemsPaletteContent items=items}}
+
+  {{/itemsPalette}}
+</template>

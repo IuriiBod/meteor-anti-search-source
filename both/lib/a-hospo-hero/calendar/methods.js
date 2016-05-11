@@ -1,8 +1,4 @@
 Namespace('HospoHero.calendar', {
-  getQueryType (calendarType) {
-    return calendarType === 'day' ? 'forDay' : 'forWeek';
-  },
-
   /**
    * Returns event object by event type
    * @param eventType

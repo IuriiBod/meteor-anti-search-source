@@ -118,7 +118,7 @@ function addNewSectionForUserDialog(userId, sectionId, successfulCallback) {
 }
 
 function setEventToLastPositionInShift(event) {
-  if (event.shiftId && !event._id) {
+  if ((event.areaId || event.shiftId) && !event._id) {
     const duration = moment(event.endTime).diff(event.startTime, 'minutes');
 
 
@@ -135,7 +135,17 @@ function setEventToLastPositionInShift(event) {
     if (lastEvent) {
       startTime = lastEvent.endTime;
     } else {
-      let shift = Shifts.findOne(event.shiftId);
+      let query;
+
+      if (event.shiftId) {
+        query = {_id: event.shiftId};
+      } else {
+        query = {
+          'relations.areaId': event.areaId,
+          startTime: TimeRangeQueryBuilder.forDay(event.startTime)
+        };
+      }
+      let shift = Shifts.findOne(query);
       startTime = shift.startTime;
     }
 

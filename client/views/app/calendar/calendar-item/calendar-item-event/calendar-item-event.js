@@ -10,8 +10,6 @@ Template.calendarItemEvent.onCreated(function () {
   //when event have been already started, start the timer
   let timerAction = event.status === 'started' ? 'start' : 'pause';
   this.timer[timerAction](event._id);
-
-  this.eventSettings = HospoHero.calendar.getEventByType(event.type);
 });
 
 Template.calendarItemEvent.helpers({
@@ -55,7 +53,8 @@ Template.calendarItemEvent.helpers({
   },
 
   borderColor () {
-    return Template.instance().eventSettings.borderColor;
+    let eventSettings = HospoHero.calendar.getEventByType(this.type);
+    return eventSettings.borderColor;
   }
 });
 
